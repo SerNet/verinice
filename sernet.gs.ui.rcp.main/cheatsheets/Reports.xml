@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Reports">
+
+	<intro 
+		>
+		<description>
+		So erzeugen Sie die nötigen Referenzdokumente.
+		</description>
+	</intro>
+
+	<item title="Reports">
+		<description>
+		Mit Verinice können Sie alle nötigen Referenzdokumente erzeugen, die für ein Audit benötigt 
+		werden. Die Reports werden direkt in OpenOffice erstellt, wo Sie sie beliebig weiter
+		bearbeiten und formatieren können.
+		</description>
+	</item>
+	
+	<item title="Pfad einstellen">
+		<description>
+		Wählen Sie im Menü: "Bearbeiten", "Einstellungen". Öffnen Sie die Seite "Reporting / Export".
+		Geben Sie den korrekten Pfad zu der OpenOffice Installation an, die Sie verwenden möchten. 
+		<br/><br/>
+		OpenOffice können Sie kostenfrei downloaden unter http://www.openoffice.org.
+		</description>
+	</item>
+	
+	<item title="Vorlagen">
+		<description>
+		Den Pfad zu den Vorlagen lassen Sie am besten unangetastet. Wenn Sie wollen, 
+		können Sie später die Vorlagen an ihr Unternehmen anpassen.
+		<br/><br/>
+		Schließen Sie die Einstellungen mit "OK".
+		</description>
+	</item>
+	
+	<item title="Report auswählen">
+		<description>
+		Wählen Sie im Menü: "Bearbeiten", "Report erstellen". Wählen Sie aus der Liste den Report
+		"Basis-Sicherheitscheck" und gehen Sie weiter.
+		<br/><br/>
+		Auf der folgenden Seite können Sie den Pfad zu OpenOffice noch einmal überprüfen. 
+		Wählen Sie "weiter".
+		<br/><br/>
+		Nun können Sie den Report anpassen, indem Sie weitere Felder auswählen oder auch 
+		Felder abwählen. Für's erste belassen SIe es bei der Voreinstellung. Wählen Sie
+		"Fertig stellen".
+		</description>
+	</item>
+	
+	<item title="Report wird erzeugt">
+		<description>
+		OpenOffice wird gestartet und der Report anhand der Vorlage erstellt. Sie können ihn 
+		editieren, speichern oder verwerfen.
+		</description>
+		<onCompletion>
+	    Fertig. Probieren Sie noch aus, auch einige andere Reports zu generieren.
+		</onCompletion>
+	</item>
+	
+	
+	
+</cheatsheet>

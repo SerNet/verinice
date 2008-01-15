@@ -1,0 +1,154 @@
+package sernet.gs.ui.rcp.main;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
+
+/**
+ * URLs and ImageDescriptors for all images used by the application.
+ * 
+ * @author koderman@sernet.de
+ *
+ */
+public class ImageCache {
+
+	public static final String UNKNOWN = "generic_elements.gif";
+
+	public static final String PRODUCT_LG = "product_lg.gif";
+
+	public static final String GEBAEUDE = "building.png";
+
+	public static final String RAUM= "door_open.png";
+
+	public static final String PERSON = "user_suit.png";
+
+	public static final String SERVER = "server_database.png";
+
+	public static final String TELEFON = "phone.png";
+
+	public static final String NETWORK = "drive_network.png";
+
+	public static final String SHIELD = "shield.png";
+	
+	public static final String TOOL= "24-tool-a.png";
+
+	public static final String EXPLORER = "tree_explorer.gif";
+
+	public static final String BAUSTEIN_UMSETZUNG = "16-cube-blue.png";
+	
+	public static final String BAUSTEIN_UMSETZUNG_A = "baustein_a.png";
+	public static final String BAUSTEIN_UMSETZUNG_B = "baustein_b.png";
+	public static final String BAUSTEIN_UMSETZUNG_C = "baustein_c.png";
+	
+	public static final String MASSNAHMEN_UMSETZUNG_UNBEARBEITET = "exclamation.png";
+	public static final String MASSNAHMEN_UMSETZUNG_NEIN = "16-em-cross.png";
+	public static final String MASSNAHMEN_UMSETZUNG_JA = "16-em-check.png";
+	public static final String MASSNAHMEN_UMSETZUNG_ENTBEHRLICH = "progress_rem.gif";
+	public static final String MASSNAHMEN_UMSETZUNG_TEILWEISE = "16-clock.png";
+	
+	public static final String BAUSTEIN = "16-cube-blue.png";
+
+	public static final String STUFE_A = "stufe_a.png";
+	public static final String STUFE_B = "stufe_b.png";
+	public static final String STUFE_C = "stufe_c.png";
+	public static final String STUFE_Z = "stufe_z.png";
+
+	public static final String ANWENDUNG = "application_osx.png";
+	
+	public static final String CLIENT= "computer.png";
+
+	public static final String FILTER= "filter_tsk.gif";
+
+	//public static final String REPORT = "rosette.png";
+	public static final String REPORT = "report.png";
+
+	public static final String DBCONNECT = "database_connect.png";
+	
+	public static final String DBCLOSE = "database_delete.png";
+
+	public static final String VIEW_BROWSER = "tag.png";
+	public static final String VIEW_MASSNAHMEN = "de.png";
+	public static final String VIEW_BSIMODEL = "tree_explorer.gif";
+	public static final String VIEW_DSMODEL = "shield.png";
+	public static final String VIEW_TODO = "24-em-check.png";
+	public static final String VIEW_AUDIT = "24-zoom.png";
+
+	public static final String EXPANDALL   = "expandall.gif";
+	public static final String COLLAPSEALL = "collapseall.gif";
+	
+	public static final String OPEN_EDIT = "edtsrclkup_co.gif";
+
+	public static final String CASCADE = "application_cascade.png";
+
+	public static final String KONSOLIDATOR = "konsolidator.png";
+
+	public static final String GEFAEHRDUNG = "dialog-warning.png";
+
+	public static final String SONSTIT = "sonstit.png";
+
+	public static final String LINKS = "link.png";
+
+
+	
+	
+	
+	
+	private static ImageCache instance;
+
+	private static URL imagePath;
+
+	
+	private final Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
+
+	public static ImageCache getInstance() {
+		if (instance == null) {
+			instance = new ImageCache();
+			imagePath = Activator.getDefault().getBundle().getEntry("icons/");
+		}
+		return instance;
+	}
+	
+	public ImageDescriptor getImageDescriptor(String url) {
+		ImageDescriptor descriptor;
+		try {
+			descriptor = ImageDescriptor.createFromURL(new URL(imagePath, url));
+		} catch (MalformedURLException e) {
+			descriptor = ImageDescriptor.getMissingImageDescriptor();
+		}
+		return descriptor;
+	
+	}
+	
+	public Image getImage(String url) {
+		ImageDescriptor descriptor;
+		try {
+			descriptor = ImageDescriptor.createFromURL(new URL(imagePath, url));
+		} catch (MalformedURLException e) {
+			descriptor = ImageDescriptor.getMissingImageDescriptor();
+		}
+		return getImage(descriptor);
+	}
+
+	public Image getImage(ImageDescriptor id) {
+		if (id == null)
+			return null;
+		Image image = imageMap.get(id);
+		if (image == null) {
+			image = id.createImage();
+			imageMap.put(id, image);
+		}
+		return image;
+	}
+	
+	public void dispose() {
+		for (Image image : imageMap.values()) {
+			image.dispose();
+		}
+		imageMap.clear();
+	}
+	
+}
