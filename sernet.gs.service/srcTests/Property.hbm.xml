@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="sernet.hui.common.connect">
+
+    <class name="Property" table="property">
+	    <id name="dbId" column="dbId" type="java.lang.Integer" 
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+        <property name="propertyType"/>
+        
+        <property name="propertyValue"/>
+
+		<many-to-one 
+			name="parent"
+			class="Entity" />
+            
+    </class>
+</hibernate-mapping>
