@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Hitro-UI Common
+Bundle-SymbolicName: sernet.hui.common
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .,
+ lib/log4j-1.2.13.jar
+Bundle-Localization: plugin
+Export-Package: sernet.hui.common.connect,
+ sernet.hui.common.multiselectionlist,
+ sernet.hui.common.rules,
+ sernet.snutils
