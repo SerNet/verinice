@@ -1,0 +1,370 @@
+
+package sernet.hui.swt.widgets;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.jface.bindings.keys.ParseException;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.PopupList;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+
+import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.IEntityChangedListener;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyChangedEvent;
+import sernet.hui.common.connect.PropertyGroup;
+import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
+import sernet.hui.common.multiselectionlist.IMLPropertyType;
+import sernet.hui.swt.widgets.multiselectionlist.MultiSelectionControl;
+import sernet.snutils.AssertException;
+import sernet.snutils.DBException;
+import sernet.snutils.ExceptionHandlerFactory;
+
+/**
+ * Creates the editable SWT view of a collection of properties as defined
+ * by a <code>DynamicDocumentation</code> instance. 
+ * The user can select or enter values, which are saved to and retrieved from
+ * a relational database.
+ * 
+ * 
+ * @author koderman@sernet.de
+ * 
+ */
+public class HitroUIView implements IEntityChangedListener   {
+
+	private Composite huiComposite;
+
+	private Entity entity;
+
+	// map of typeid : widget
+	private Map<String, IHuiControl> fields = new HashMap<String, IHuiControl>();
+
+	private Composite formComp;
+
+	private ScrolledComposite scrolledComp;
+
+	private boolean editable;
+
+	private IHuiControl focusField;
+
+	private boolean useRules;
+
+
+	/**
+	 * Create a new view for dynamic documentation.
+	 * 
+	 * All new fields are put into sysdoccomposite. Then, composite2 will be
+	 * resized according to the calculated size of sysTabComposite.
+	 * 
+	 * @param scrolledComposite
+	 *            the top scrolled composite, height will be adapted to created fields
+	 * @param formComposite
+	 *            parent container for dynamic - and possibly additional - widgets
+	 * @param huiComposite
+	 *            container in which dynamic fields will be generated
+	 * @param tabFolderMain
+	 */
+	public HitroUIView(ScrolledComposite scrolledComposite, 
+			Composite formComposite, Composite huiComposite) {
+		this.huiComposite = huiComposite;
+		this.formComp = formComposite;
+		this.scrolledComp = scrolledComposite;
+		this.editable = false;
+	}
+	
+	/**
+	 * Enables simple content assist for text fields.
+	 * 
+	 * @param typeID
+	 * @param helper
+	 */
+	public void setInputHelper(String typeID, final IInputHelper helper) {
+		IHuiControl field = this.fields.get(typeID);
+		if (field == null)
+			return;
+		
+		final Control control = field.getControl();
+		if (!(control instanceof Text))
+			return;
+
+		//char[] autoActivationCharacters = new char[] { ' ' };
+		KeyStroke keyStroke = null;
+		try {
+			keyStroke = KeyStroke.getInstance("ARROW_DOWN");
+		} catch (ParseException e) {
+		}
+		ContentProposalAdapter adapter = new ContentProposalAdapter(
+				control, 
+				new TextContentAdapter(), 
+				new SimpleContentProposalProvider(helper.getSuggestions()),
+				keyStroke, 
+				null);
+		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+		
+		final FocusAdapter focusAdapter = new FocusAdapter() {
+			Shell tip = null;
+			public void focusGained(FocusEvent arg0) {
+				if (helper.getSuggestions().length<1)
+					return; // no suggestions
+				
+				tip = new Shell (control.getShell(),
+						SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
+				FillLayout layout = new FillLayout ();
+				layout.marginWidth = 2;
+				tip.setLayout (layout);
+			
+				Label label = new Label (tip, SWT.NONE);
+				label.setText ("Hilfe: Pfeil-Runter-Taste");
+			
+				Point size = tip.computeSize (SWT.DEFAULT, SWT.DEFAULT);
+				Rectangle rect = control.getBounds ();
+				Point pt = control.getParent().toDisplay (rect.x, rect.y);
+				tip.setBounds (pt.x, pt.y + rect.height, size.x, size.y);
+				tip.setVisible (true);
+			}
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (tip != null) {
+					tip.dispose();
+					tip=null;
+				}
+			}
+		};
+		
+		control.addFocusListener(focusAdapter);
+		control.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent arg0) {
+				control.removeFocusListener(focusAdapter);
+			}
+		});
+		
+	}
+
+	protected void showPopupList(Control control, IInputHelper helper) {
+			PopupList popup = new PopupList(
+					new Shell(control.getShell(), SWT.ON_TOP | SWT.TOOL));
+			popup.setItems(helper.getSuggestions());
+			Rectangle rect = control.getBounds();
+			Point pt = control.getParent().toDisplay (rect.x, rect.y);
+			String choice = popup.open(new Rectangle(
+					pt.x,
+					pt.y,
+					control.getBounds().width,
+					control.getBounds().height));
+			if (choice != null && choice.length() > 0)
+				((Text)control).setText(choice);
+	}
+
+	public void closeView() {
+		entity.removeListener(this);
+	}
+	
+	/**
+	 * Create form fields for all defined property types and fill them with
+	 * property values.
+	 * 
+	 * @param entity
+	 * @throws DBException
+	 * @throws AssertException
+	 */
+	public void createView(Entity entity, boolean edit, boolean useRules) throws DBException {
+		
+		this.editable = edit;
+		this.useRules = useRules;
+		
+		huiComposite.setVisible(false);
+		this.entity = entity;
+		entity.addChangeListener(this);
+		clearComposite();
+		HUITypeFactory fact = HUITypeFactory.getInstance();
+
+		// create all form fields:
+		List allElements = fact.getEntityType(entity.getEntityType()).getElements();
+		for (Iterator iter = allElements.iterator(); iter.hasNext();) {
+			Object obj = iter.next();
+			if (obj instanceof PropertyType) {
+				PropertyType type = (PropertyType) obj; 
+				createField(type, huiComposite);
+			} else if (obj instanceof PropertyGroup) {
+				PropertyGroup group = (PropertyGroup) obj;
+				createGroup(group, huiComposite);
+			}
+		}
+		huiComposite.layout();
+		huiComposite.setVisible(true);
+		resizeContainer();
+		setInitialFocus();
+	}
+
+	private void createGroup(PropertyGroup group, Composite parent) {
+		if (!(group.dependenciesFulfilled(entity)))
+			return;
+		
+		PropertyTwistie twistie = new PropertyTwistie(this, parent, group);
+		twistie.create();
+		for (PropertyType type: group.getPropertyTypes() ) {
+			createField(type, twistie.getFieldsComposite());
+		}
+		
+	}
+
+	private void createField(PropertyType type, Composite parent) {
+		
+		// do not show fields if dependencies are not fulfilled:
+		if (!type.dependenciesFulfilled(entity))
+			return;
+		
+		// only allow edit if both view and field settings are true:
+		boolean editableField = editable && type.isEditable();
+		
+		if (!type.isVisible())
+			return;
+		
+		if (type.isLine())
+			createTextField(type, editableField, parent, type.isFocus(), 1 /*one line high*/);
+		else if (type.isSingleSelect())
+			createSingleOptionField(type, editableField, parent, type.isFocus());
+		else if (type.isMultiselect())
+			createMultiOptionField(type, editableField, parent, type.isFocus());
+		else if (type.isDate())
+			createDateField(type, editableField, parent, type.isFocus());
+		else if (type.isText())
+			createTextField(type, editableField, parent, type.isFocus(), 3 /*three lines high*/);
+	}
+
+	public void resizeContainer() {
+		formComp.layout(true);
+		scrolledComp.setMinHeight(calculateMinHeight(formComp));
+		scrolledComp.layout(true);
+	}
+
+	private int calculateMinHeight(Composite comp) {
+		int size = 0;
+		Control[] children = comp.getChildren();
+		for (int i = 0; i < children.length; i++) {
+			size += children[i].getSize().y;
+		}
+		return size;
+	}
+
+	private void createTextField(PropertyType type, boolean editable, Composite parent,
+			boolean focus, int lines) {
+		TextControl textControl = new TextControl(entity, type, parent, editable, lines, useRules);
+		textControl.create();
+		if (focus)
+			focusField = textControl;
+		fields.put(type.getId(), textControl);
+		textControl.validate();
+	}
+
+	/**
+	 * Create a selection list for the given property with all defined options.
+	 * 
+	 * @param props
+	 * @throws AssertException
+	 */
+	private void createMultiOptionField(PropertyType type, boolean editable, Composite parent,
+			boolean focus) {
+		MultiSelectionControl mlControl = new MultiSelectionControl(entity, type,
+				parent, editable);
+		mlControl.create();
+		if (focus)
+			focusField = mlControl;
+		fields.put(type.getId(), mlControl);
+		mlControl.validate();
+	}
+	
+	private void createSingleOptionField(PropertyType fieldType, boolean editable, 
+			Composite parent, boolean focus) {
+		SingleSelectionControl sglControl = new SingleSelectionControl(entity, fieldType,
+				parent, editable);
+		sglControl.create();
+		if (focus)
+			focusField = sglControl;
+		fields.put(fieldType.getId(), sglControl);
+		sglControl.validate();
+	}
+	
+	public void setInitialFocus() {
+		if (focusField != null)
+			focusField.setFocus();
+	}
+	
+	private void createDateField(PropertyType fieldType, boolean editable, Composite parent,
+			boolean focus) {
+		DateSelectionControl dateCtl = 
+			new DateSelectionControl(entity, fieldType, parent, editable, this.useRules);
+		dateCtl.create();
+		if (focus)
+			focusField = dateCtl;
+		fields.put(fieldType.getId(), dateCtl);
+		dateCtl.validate();
+	}
+	
+	/**
+	 * Clear all fields.
+	 * 
+	 */
+	private void clearComposite() {
+		Control[] children = huiComposite.getChildren();
+		for (int i = 0; i < children.length; i++) {
+			children[i].dispose();
+		}
+		fields = new HashMap<String, IHuiControl>();
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.snkdb.connect.docproperties.IDynDocChangedListener#dependencyChanged(sernet.snkdb.guiswt.multiselectionlist.MLPropertyType, sernet.snkdb.guiswt.multiselectionlist.MLPropertyOption)
+	 */
+	public void dependencyChanged(IMLPropertyType type, IMLPropertyOption opt) {
+		try {
+			closeView();
+			createView(entity, editable, useRules);
+		} catch (DBException e) {
+			ExceptionHandlerFactory.getDefaultHandler().handleException(e);
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.snkdb.connect.docproperties.IDynDocChangedListener#selectionChanged(sernet.snkdb.guiswt.multiselectionlist.MLPropertyType, sernet.snkdb.guiswt.multiselectionlist.MLPropertyOption)
+	 */
+	public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
+		Object object = fields.get(type.getId());
+		MultiSelectionControl control;
+		if (object instanceof MultiSelectionControl) {
+			control = (MultiSelectionControl) object;
+			control.writeToTextField();
+		}
+		// FIXME this really should be handeled by ML field itself
+	}
+
+	public void propertyChanged(PropertyChangedEvent event) {
+		IHuiControl control = fields.get(event.getProperty().getPropertyTypeID());
+		if (control != null)
+			control.update();
+	}
+
+}
