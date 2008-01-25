@@ -11,8 +11,8 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
 import sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+
 
 public class AddGebaudeActionDelegate implements IObjectActionDelegate {
 	private IWorkbenchPart targetPart;

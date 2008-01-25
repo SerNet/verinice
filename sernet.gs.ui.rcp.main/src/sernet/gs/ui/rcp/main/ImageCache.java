@@ -63,7 +63,6 @@ public class ImageCache {
 
 	public static final String FILTER= "filter_tsk.gif";
 
-	//public static final String REPORT = "rosette.png";
 	public static final String REPORT = "report.png";
 
 	public static final String DBCONNECT = "database_connect.png";

@@ -10,6 +10,10 @@ public class Messages extends NLS {
 	public static String CnALink_dependant;
 
 	public static String CnALink_used;
+
+	public static String Krischan_0;
+
+	public static String Krischan_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

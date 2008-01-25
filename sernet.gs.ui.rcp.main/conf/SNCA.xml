@@ -1277,6 +1277,9 @@ Template:
 			<option
 				id="person_40"
 				name="Pressestelle" />
+			<option
+				id="person_41"
+				name="Vertretung" />
 		</huiproperty>
 	</huientity>
 

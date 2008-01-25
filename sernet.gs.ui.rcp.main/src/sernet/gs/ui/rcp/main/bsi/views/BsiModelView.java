@@ -1,19 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import java.io.IOException;
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.StringTokenizer;
 
-import org.apache.commons.collections.ComparatorUtils;
-import org.apache.log4j.Logger;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.action.Action;
@@ -26,7 +14,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -43,29 +30,19 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
-import org.hibernate.HibernateException;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
-import sernet.gs.ui.rcp.main.bsi.dnd.BSIMassnahmenViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
-import sernet.gs.ui.rcp.main.bsi.dnd.CopyBSIMassnahmenViewAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.CopyBSIModelViewAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.PasteBsiModelViewAction;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -74,8 +51,6 @@ import sernet.gs.ui.rcp.main.bsi.filter.LebenszyklusPropertyFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.ObjektLebenszyklusPropertyFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.StringPropertyFilter;
-import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
@@ -85,12 +60,13 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewCloseDBAction;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewFilterAction;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogWatcher;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
+import sernet.gs.ui.rcp.main.common.model.ObjectDeletedException;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
@@ -498,12 +474,11 @@ public class BsiModelView extends ViewPart {
 			public void run() {
 				Object sel = ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement();
-				if (sel instanceof CnATreeElement) {
-					EditorFactory.getInstance().openEditor(sel);
-				}
+				EditorFactory.getInstance().updateAndOpenObject(sel);
 			}
 		};
 
+		
 		filterAction = new BSIModelViewFilterAction(viewer,
 				Messages.BsiModelView_3, new MassnahmenUmsetzungFilter(viewer),
 				new MassnahmenSiegelFilter(viewer),

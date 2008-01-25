@@ -13,21 +13,24 @@
 	</intro>
 
 	<item
-		title="IT-Grundschutz-Kataloge konfigurieren">
+		title="Grundschutz Kataloge downloaden">
 
 	<action 
 			pluginId="sernet.gs.ui.rcp.main"
 			class="sernet.gs.ui.rcp.main.bsi.actions.DownloadBsiCataloguesAction"
 			confirm="true"/>
 	<description>
-		Zunächst müssen sie die IT-Grundschutz-Kataloge des BSI als Datenquelle einstellen. 
+		Zunächst müssen sie die aktuelle Version der Grundschutz-Kataloge
+		downloaden.
 			<br/>
 			<br/>
-		Diese CD enthält die IT-Grundschutz-Kataloge in der Version 2006.
+		Gehen Sie auf die Webseite des BSI und ziehen Sie dort die
+		'HTML-Seiten IT-Grundschutz-Kataloge inclusive der Hilfsmittel' (ZIP ca. 42MB).
+		<br/>
+		<b>http://www.bsi.de/gshb/deutsch/download/</b>
 		<br/>
 		<br/>
-		Weitere Informationen über die Grundschutz-Kataloge erhalten Sie auf der Webseite des BSI.
-		 Wenn Sie jetzt die Webseite des BSI öffnen möchten, klicken Sie auf "Ausführen", sonst klicken Sie auf "Erledigt".
+		Speichern Sie die ZIP-Datei auf ihrer lokalen Festplatte.
 		</description>
 	</item>
 	
@@ -38,22 +41,23 @@
 			class="sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction"/>
 			 -->
 	<description>
+		Nun müssen Sie einstellen, wo sich der gespeicherte Download der
+		Grundschutz Kataloge befindet.
+		<br/>
+		<br/>
 		Öffnen Sie die Einstellungen über das Menü "Bearbeiten" -> "Einstellungen".
 		<br/>
 		<br/>
-		Öffnen Sie die Seite mit dem Namen "BSI IT-Grundschutz". Stellen Sie dort die Datenquelle auf "ZIP-Datei" und setzen Sie den korrekten Pfad zur Datei.
+		Öffnen Sie die Seite mit dem Namen "BSI IT-Grundschutz". Stellen Sie dort die Datenquelle auf "ZIP-Datei" und setzen Sie den korrekten Pfad zur heruntergeladenen Datei.
 		<br/>
 		<br/>
-		Die ZIP-Datei befindet sich auf der Verinice-CD im Ordner <br/>"BSI_IT-Grundschutz".
-		<br/>
-		<br/>
-		Schließen Sie dann die Einstellungen mit "OK".
+		Schließen Sie dann die Einstellungen mit "Okay".
 	</description>
 	</item>
 
 	<item title="Kataloge werden geladen">
 	<description>
-	Die Grundschutz Kataloge wurden nun von der CD geladen. Sobald der
+	Die Grundschutz Kataloge wurden nun aus der ZIP-Datei geladen. Sobald der
 	Parser mit seiner Arbeit fertig ist, erscheinen alle Bausteine im Fenster
 	"IT-Grundschutz".
 	<br/><br/>

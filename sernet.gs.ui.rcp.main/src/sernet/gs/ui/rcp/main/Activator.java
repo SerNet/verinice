@@ -63,7 +63,7 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		CnAWorkspace.getInstance().prepare();
 
-		// TODO add feature: link between objects
+		// TODO add feature: link description between objects
 		// FIXME fix model report
 		// TODO add save / load to file
 		// FIXME derby warning ("sql error 10000") caused  by hibernate derby-dialect error

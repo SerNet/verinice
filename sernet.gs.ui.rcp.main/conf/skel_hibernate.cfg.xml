@@ -52,7 +52,8 @@
         <mapping resource="Entity.hbm.xml"/>
         <mapping resource="CnALink.hbm.xml"/>
         <mapping resource="PropertyList.hbm.xml"/>
-        <mapping resource="CnATreeElement.hbm.xml"/>
+        <mapping resource="CnATreeElement.hbm.xml"/> 
+        <mapping resource="ChangeLogEntry.hbm.xml"/> 
 
     </session-factory>
 

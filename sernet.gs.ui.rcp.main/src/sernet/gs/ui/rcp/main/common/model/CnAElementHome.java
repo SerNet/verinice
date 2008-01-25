@@ -2,6 +2,7 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -41,13 +42,19 @@ public class CnAElementHome {
 	private static final String QUERY_FIND_BY_ID = "from "
 			+ CnATreeElement.class.getName() + " as element "
 			+ "where element.dbId = ?";
-
+	
+	private static final String QUERY_FIND_CHANGES_SINCE = "from "
+			+ ChangeLogEntry.class.getName() + " as change "
+			+ "where change.timestamp > ? "
+			+ "and not change.stationId = ? "
+			+ "order by timestamp";
+	
 	private SessionFactory sessionFactory = null;
 
 	private Session session;
 
 	private CnAElementHome() {
-
+		// singleton
 	}
 
 	public static CnAElementHome getInstance() {
@@ -119,7 +126,8 @@ public class CnAElementHome {
 			try {
 				tx = session.beginTransaction();
 				session.save(element);
-			//	session.save(new ChangeLogEntry(element));
+				session.save(new ChangeLogEntry(element,
+						ChangeLogEntry.INSERT));
 				tx.commit();
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
@@ -131,7 +139,7 @@ public class CnAElementHome {
 	}
 	
 	
-	public void remove(Object element) throws Exception {
+	public void remove(CnATreeElement element) throws Exception {
 		synchronized (mutex) {
 
 			Logger.getLogger(this.getClass()).debug(
@@ -140,6 +148,30 @@ public class CnAElementHome {
 			try {
 				tx = session.beginTransaction();
 				session.delete(element);
+				session.save(new ChangeLogEntry(element,
+						ChangeLogEntry.DELETE));
+				tx.commit();
+			} catch (Exception e) {
+				Logger.getLogger(this.getClass()).error(e);
+				if (tx != null)
+					tx.rollback();
+				throw e;
+			}
+
+		}
+	}
+	
+	public void remove(CnALink element) throws Exception {
+		synchronized (mutex) {
+
+			Logger.getLogger(this.getClass()).debug(
+					"Deleting element: " + element);
+			Transaction tx = null;
+			try {
+				tx = session.beginTransaction();
+				session.delete(element);
+				session.save(new ChangeLogEntry(element.getDependant(), 
+						ChangeLogEntry.DELETE));
 				tx.commit();
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
@@ -159,7 +191,7 @@ public class CnAElementHome {
 			try {
 				tx = session.beginTransaction();
 				session.persist(element);
-		//		session.save(new ChangeLogEntry(element));
+				session.save(new ChangeLogEntry(element));
 				tx.commit();
 			} catch (StaleObjectStateException se) {
 				Logger.getLogger(this.getClass()).error(se);
@@ -173,20 +205,19 @@ public class CnAElementHome {
 					tx.rollback();
 				throw e;
 			}
-
 		}
 	}
 	
-	public void update(List elements) throws StaleObjectStateException {
+	public void update(List<? extends CnATreeElement> elements) throws StaleObjectStateException {
 		synchronized (mutex) {
 			Logger.getLogger(this.getClass()).debug(
 					"Updating multiple elements");
 			Transaction tx = null;
 			try {
 				tx = session.beginTransaction();
-				for (Object element : elements) {
+				for (CnATreeElement element : elements) {
 					session.persist(element);
-				//	session.save(new ChangeLogEntry());
+					session.save(new ChangeLogEntry(element));
 				}
 				tx.commit();
 			} catch (StaleObjectStateException se) {
@@ -205,9 +236,9 @@ public class CnAElementHome {
 		}
 	}
 
-	public void refresh(List elements) {
-		for (Object object : elements) {
-			refresh((CnATreeElement)object);
+	public void refresh(List<? extends CnATreeElement> elements) {
+		for (CnATreeElement object : elements) {
+			refresh(object);
 		}
 	}
 
@@ -230,11 +261,31 @@ public class CnAElementHome {
 		return (CnATreeElement) list.get(0);
 	}
 
+	/**
+	 * Load object with given ID of given class name.
+	 * Object must exist in the database.
+	 * 
+	 * @param className Simple name of the object's class.
+	 * @param id database ID of the object to load
+	 * @return object of the given class with given ID
+	 */
+	public CnATreeElement loadById(String className, int id) {
+		Logger.getLogger(this.getClass()).debug(
+				"Load " + className + " for id: " + id);
+		Query query = session.createQuery(QUERY_FIND_BY_ID);
+		query.setInteger(0, id);
+		List list = query.list();
+		if (list == null || list.size() == 0)
+			return null;
+		return (CnATreeElement) list.get(0);
+	}
+
 
 	
 
 	/**
-	 * Load whole model from DB.
+	 * Load whole model from DB (lazy). Proxies will be instantiated by hibernate on first access.
+	 * 
 	 * @param nullMonitor 
 	 * 
 	 * @return BSIModel object which is the top level object of the model
@@ -289,7 +340,8 @@ public class CnAElementHome {
 			try {
 				tx = session.beginTransaction();
 				session.save(link);
-				//session.save(new ChangeLogEntry(link.getDependant()));
+				session.save(new ChangeLogEntry(link.getDependant(), 
+						ChangeLogEntry.INSERT));
 				tx.commit();
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
@@ -298,6 +350,23 @@ public class CnAElementHome {
 				throw e;
 			}
 		}
-	
 	}
+
+	public List<ChangeLogEntry> loadChangesSince(Date lastUpdate) {
+		Logger.getLogger(this.getClass()).debug(
+				"Looking for changes since " + lastUpdate);
+		Query query = session.createQuery(QUERY_FIND_CHANGES_SINCE);
+		query.setTimestamp(0, lastUpdate);
+		query.setString(1, ChangeLogEntry.STATION_ID);
+		List<ChangeLogEntry> list = query.list();
+		if (list == null)
+			list = new ArrayList<ChangeLogEntry>();
+		return list;
+	}
+	
+	public Object getElementInSession(String clazz, Integer id) {
+		return session.get(clazz, id);
+	}
+
+	
 }

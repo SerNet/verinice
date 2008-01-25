@@ -21,9 +21,13 @@
 
 		<property name="elementClass"/>
 
+		<property name="change"/>
+
+		<property name="stationId"/>
+
 		<property name="timestamp" 
 			type="timestamp"
-			generated="insert"/>
+		/>
 		
 		
 	</class>

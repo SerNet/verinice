@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
+import org.hibernate.HibernateException;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -20,8 +23,10 @@ import sernet.gs.ui.rcp.main.bsi.model.Raum;
 import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogWatcher;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.ObjectDeletedException;
 import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
 import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
 import sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB;
@@ -111,11 +116,29 @@ public class EditorFactory {
 		if (( fact = typedFactories.get(sel.getClass()) ) != null) {
 			try {
 				fact.openEditorFor(sel);
+			} catch (HibernateException e) {
+				MessageDialog.openError(Display.getCurrent().getActiveShell(),
+						"Error", "Der Editor kann nicht geöffnet werden.");
 			} catch (Exception e) {
 				ExceptionUtil.log(e, "Konnte Editor nicht öffnen.");
 			}
 		}
 	}
+	
+	public void updateAndOpenObject(Object sel) {
+		try {
+			ChangeLogWatcher.getInstance().updateChanges(sel);
+			if (sel instanceof CnATreeElement) {
+				EditorFactory.getInstance().openEditor(sel);
+			}
+		} catch (ObjectDeletedException e) {
+			MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
+					"Achtung", "Der Editor kann nicht geöffnet werden: " +
+					"das Objekt wurde von einem anderen Benutzer gelöscht.");
+		}
+	}
+
+	
 	
 	
 }
