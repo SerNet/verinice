@@ -25,18 +25,21 @@ public class ChangeLogEntry {
 	
 	private Integer elementId;
 	private String elementClass;
-	private Date timestamp;
+	private Date changetime;
 	private int change;
 	private String stationId;
 	
-	public static String  STATION_ID = UUID.randomUUID().toString();
+	/**
+	 * Session ID to identify changes made by this particular client during its lifetime.
+	 */
+	public final static String  STATION_ID = UUID.randomUUID().toString();
 	
 	public String getStationId() {
 		return stationId;
 	}
 
 
-	public ChangeLogEntry() {
+	private ChangeLogEntry() {
 		// default constructor for hibernate
 	}
 
@@ -44,20 +47,15 @@ public class ChangeLogEntry {
 		elementId = element.getDbId();
 		elementClass = element.getClass().getName();
 		this.change = change;
-		timestamp = GregorianCalendar.getInstance().getTime();
 		stationId = STATION_ID;
-	}
-
-	public ChangeLogEntry(CnATreeElement element) {
-		this(element, UPDATE);
 	}
 
 	public String getElementClass() {
 		return elementClass;
 	}
 
-	public Date getTimestamp() {
-		return timestamp;
+	public Date getChangetime() {
+		return changetime;
 	}
 
 	public Integer getElementId() {
@@ -80,8 +78,8 @@ public class ChangeLogEntry {
 		this.elementClass = elementClass;
 	}
 
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
+	public void setChangetime(Date changetime) {
+		this.changetime = changetime;
 	}
 
 	public Integer getDbId() {

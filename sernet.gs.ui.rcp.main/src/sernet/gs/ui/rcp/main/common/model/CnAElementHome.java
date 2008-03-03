@@ -1,7 +1,9 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +17,7 @@ import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
+import org.hibernate.UnresolvableObjectException;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
 
@@ -45,9 +48,9 @@ public class CnAElementHome {
 	
 	private static final String QUERY_FIND_CHANGES_SINCE = "from "
 			+ ChangeLogEntry.class.getName() + " as change "
-			+ "where change.timestamp > ? "
+			+ "where change.changetime > ? "
 			+ "and not change.stationId = ? "
-			+ "order by timestamp";
+			+ "order by changetime";
 	
 	private SessionFactory sessionFactory = null;
 
@@ -126,8 +129,7 @@ public class CnAElementHome {
 			try {
 				tx = session.beginTransaction();
 				session.save(element);
-				session.save(new ChangeLogEntry(element,
-						ChangeLogEntry.INSERT));
+				logChange(element, ChangeLogEntry.INSERT);
 				tx.commit();
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
@@ -139,6 +141,27 @@ public class CnAElementHome {
 	}
 	
 	
+	private void logChange(CnATreeElement element, int changeType) {
+		ChangeLogEntry logEntry = new ChangeLogEntry(element, changeType);
+		logEntry.setChangetime(Calendar.getInstance().getTime());
+		session.save(logEntry);
+		
+//		Query query = session.createQuery("insert into ChangeLogEntry( " +
+//				"elementId, elementClass, change, stationId, changetime) " +
+//				"select el.dbId, :elementClass, :changeType, :stationId, current_timestamp() " +
+//				"from CnATreeElement el where el.dbId = :elementId");
+//		
+//		query.setInteger("elementId", element.getDbId());
+//		query.setString("elementClass", element.getClass().getName());
+//		query.setInteger("changeType", changeType);
+//		query.setString("stationId", ChangeLogEntry.STATION_ID);
+//		
+//		
+//		query.executeUpdate();
+		
+	}
+	// FIXME parameters are not set check syntax
+
 	public void remove(CnATreeElement element) throws Exception {
 		synchronized (mutex) {
 
@@ -148,8 +171,7 @@ public class CnAElementHome {
 			try {
 				tx = session.beginTransaction();
 				session.delete(element);
-				session.save(new ChangeLogEntry(element,
-						ChangeLogEntry.DELETE));
+				logChange(element, ChangeLogEntry.DELETE);
 				tx.commit();
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
@@ -170,8 +192,7 @@ public class CnAElementHome {
 			try {
 				tx = session.beginTransaction();
 				session.delete(element);
-				session.save(new ChangeLogEntry(element.getDependant(), 
-						ChangeLogEntry.DELETE));
+				logChange(element.getDependant(), ChangeLogEntry.DELETE);
 				tx.commit();
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
@@ -191,7 +212,7 @@ public class CnAElementHome {
 			try {
 				tx = session.beginTransaction();
 				session.persist(element);
-				session.save(new ChangeLogEntry(element));
+				logChange(element, ChangeLogEntry.UPDATE);
 				tx.commit();
 			} catch (StaleObjectStateException se) {
 				Logger.getLogger(this.getClass()).error(se);
@@ -217,7 +238,7 @@ public class CnAElementHome {
 				tx = session.beginTransaction();
 				for (CnATreeElement element : elements) {
 					session.persist(element);
-					session.save(new ChangeLogEntry(element));
+					logChange(element, ChangeLogEntry.UPDATE);
 				}
 				tx.commit();
 			} catch (StaleObjectStateException se) {
@@ -319,7 +340,61 @@ public class CnAElementHome {
 	 */
 	public void refresh(CnATreeElement cnAElement) {
 		Logger.getLogger(this.getClass()).debug("Refreshing object " + cnAElement.getTitle());
-		session.refresh(cnAElement);
+		try {
+			session.refresh(cnAElement);
+			
+		} catch (UnresolvableObjectException e) {
+			session.close();
+			session = sessionFactory.openSession();
+			try {
+				CnAElementFactory.getInstance().loadOrCreateModel(new IProgressMonitor() {
+
+					public void beginTask(String name, int totalWork) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public void done() {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public void internalWorked(double work) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public boolean isCanceled() {
+						// TODO Auto-generated method stub
+						return false;
+					}
+
+					public void setCanceled(boolean value) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public void setTaskName(String name) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public void subTask(String name) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public void worked(int work) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+				});
+			} catch (Exception e1) {
+				ExceptionUtil.log(e, "");
+			}
+		}
+		
 // should be sufficient
 //		session.refresh(cnAElement.getEntity());
 //		for (PropertyList list : cnAElement.getEntity().getTypedPropertyLists().values() ) {
@@ -340,8 +415,7 @@ public class CnAElementHome {
 			try {
 				tx = session.beginTransaction();
 				session.save(link);
-				session.save(new ChangeLogEntry(link.getDependant(), 
-						ChangeLogEntry.INSERT));
+				logChange(link.getDependant(), ChangeLogEntry.INSERT);
 				tx.commit();
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
@@ -366,6 +440,11 @@ public class CnAElementHome {
 	
 	public Object getElementInSession(String clazz, Integer id) {
 		return session.get(clazz, id);
+	}
+
+	public Timestamp getCurrentTime() {
+		Query query = session.createQuery("select current_timestamp() from ITVerbund itv");
+		return (Timestamp) query.list().get(0);
 	}
 
 	

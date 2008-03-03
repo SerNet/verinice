@@ -10,6 +10,12 @@
 
 ###########################################################################
     	DO NOT EDIT. ANY CHANGES YOU MAKE WILL BE OVERWRITTEN
+    	
+    	Please configure your databse in the preferences dialog of
+    	the application.
+    	
+    	Or edit skel_hibernate.cfg.xml in the application .jar file, 
+    	but if you break it, you fix it.
 ###########################################################################
 
 
@@ -42,7 +48,7 @@
         <property name="hibernate.format_sql">false</property>
         <property name="hibernate.use_sql_comments">false</property>
 
-        <!-- Drop and re-create the database schema on startup
+        <!-- Drop and re-create the database schema on startup only for development, oviously:
          <property name="hbm2ddl.auto">create-drop</property>
         <property name="hbm2ddl.auto">validate</property>
 		-->

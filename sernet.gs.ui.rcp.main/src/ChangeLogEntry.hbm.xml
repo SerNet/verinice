@@ -25,10 +25,15 @@
 
 		<property name="stationId"/>
 
-		<property name="timestamp" 
+		<property name="changetime" 
 			type="timestamp"
 		/>
 		
+	<!--
+		<sql-insert>
+			insert into ChangeLogEntry (elementId, elementClass, change, stationId, changetime, dbId) values (?, ?, ?, ?, now(), ?)
+		</sql-insert>
+	 -->
 		
 	</class>
 </hibernate-mapping>
