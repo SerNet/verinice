@@ -44,7 +44,7 @@ public class ZIPGSSource implements IGSSource {
 	private static final String SUFFIX = ".htm";
 	static final Pattern relPath = Pattern.compile("^../baust/");
 	
-	private static final String GEFAEHRDUNG_PATH_2005 = "gshb/deutsch/g";
+	private static final String GEFAEHRDUNG_PATH_2005 = "gshb/deutsch/g/";
 	private static final String GEFAEHRDUNG_PATH_2006 = "g/";
 	
 	public ZIPGSSource(String fileName) throws IOException {

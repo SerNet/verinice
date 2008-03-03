@@ -1,19 +1,13 @@
 package sernet.gs.scraper;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.TitlePaneLayout;
-import javax.xml.transform.stream.StreamSource;
-
 import net.sf.saxon.Configuration;
 import net.sf.saxon.dom.DocumentWrapper;
-import net.sf.saxon.om.Axis;
-import net.sf.saxon.om.Item;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.query.DynamicQueryContext;
@@ -178,8 +172,8 @@ public class GSScraper {
 	}
 
 	private void getStand(String kapitel, Node root) throws XPathException {
-		if (stand != null)
-			return;
+//		if (stand != null)
+//			return;
 		
 		titleContext.setContextItem(new DocumentWrapper(root, kapitel, config));
 		SequenceIterator iterator = getTitleExp.iterator(titleContext);
@@ -236,6 +230,7 @@ public class GSScraper {
 			    	matcher = pat2.matcher(found);
 			    	if (matcher.matches()) {
 			    		Massnahme mn = new Massnahme();
+			    		mn.setStand(stand);
 				    	setLebenszyklus(mn, matcher.group(1));
 				    	mn.setId(matcher.group(2));
 				    	mn.setUrl(matcher.group(3));
