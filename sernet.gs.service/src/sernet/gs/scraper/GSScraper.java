@@ -72,6 +72,7 @@ public class GSScraper {
 		" for $t in //html:title" +
 		" let $d := data($t)" +
 		" return <title>{$d}</title>";
+	
 	final Pattern standPat = Pattern.compile("(\\d{4})");
 	private String stand;
 
@@ -277,23 +278,23 @@ public class GSScraper {
 	}
 	
 	public InputStream getBaustein(String url, String stand) throws GSServiceException {
-		if (!stand.equals(this.stand))
-			throw new GSServiceException("Versionstand des Bausteins weicht von geladenen " +
-					"Grundschutz-Katalogen ab."); 
+//		if (!stand.equals(this.stand))
+//			throw new GSServiceException("Versionstand des Bausteins weicht von geladenen " +
+//					"Grundschutz-Katalogen ab."); 
 		return source.getBausteinAsStream(url);
 	}
 	
 	public InputStream getMassnahme(String url, String stand) throws GSServiceException {
-		if (!stand.equals(this.stand))
-			throw new GSServiceException("Versionstand der Massnahme weicht von geladenen " +
-					"Grundschutz-Katalogen ab.");
+//		if (!stand.equals(this.stand))
+//			throw new GSServiceException("Versionstand der Massnahme weicht von geladenen " +
+//					"Grundschutz-Katalogen ab.");
 		return source.getMassnahmeAsStream(url);
 	}
 	
 	public InputStream getGefaehrdung(String url, String stand) throws GSServiceException {
-		if (!stand.equals(this.stand))
-			throw new GSServiceException("Versionstand des Bausteins weicht von geladenen " +
-					"Grundschutz-Katalogen ab.");
+//		if (!stand.equals(this.stand))
+//			throw new GSServiceException("Versionstand des Bausteins weicht von geladenen " +
+//					"Grundschutz-Katalogen ab.");
 		return source.getGefaehrdungAsStream(url);
 	}
 
