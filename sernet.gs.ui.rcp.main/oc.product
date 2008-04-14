@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.1"?>
 
-<product name="verinice 0.6" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" useFeatures="false">
+<product name="verinice 0.6.2" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" useFeatures="false">
 
    <aboutInfo>
       <image path="icons/product_lg.gif"/>
       <text>
          SerNet verinice
-Ver 0.6
+Ver 0.6.2
 
 (c) SerNet Service Network GmbH and others
 1996-2008
@@ -35,6 +35,7 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
    </launcherArgs>
 
    <windowImages i16="/sernet.gs.ui.rcp.main/icons/window16.gif" i32="/sernet.gs.ui.rcp.main/icons/window32.gif"/>
+
 
    <launcher name="verinice">
       <linux icon="/sernet.gs.ui.rcp.main/wxcas.xpm"/>

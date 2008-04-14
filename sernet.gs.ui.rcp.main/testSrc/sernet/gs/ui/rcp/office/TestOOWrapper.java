@@ -58,49 +58,49 @@ public class TestOOWrapper extends TestCase {
 
 
 		 inst.openDocument("/home/akoderman/sncaWorkspace/office/report.odt");
-		 inst.createTextReport("Testreport", daten, 5, new IProgressMonitor() {
-		
-		 public void beginTask(String name, int totalWork) {
-		 // TODO Auto-generated method stub
-							
-		 }
-		
-		 public void done() {
-		 // TODO Auto-generated method stub
-							
-		 }
-		
-		 public void internalWorked(double work) {
-		 // TODO Auto-generated method stub
-							
-		 }
-		
-		 public boolean isCanceled() {
-		 // TODO Auto-generated method stub
-		 return false;
-		 }
-		
-		 public void setCanceled(boolean value) {
-		 // TODO Auto-generated method stub
-							
-		 }
-		
-		 public void setTaskName(String name) {
-		 // TODO Auto-generated method stub
-							
-		 }
-		
-		 public void subTask(String name) {
-		 // TODO Auto-generated method stub
-							
-		 }
-		
-		 public void worked(int work) {
-		 // TODO Auto-generated method stub
-							
-		 }
-						
-		 });
+		 //inst.createTextReport("Testreport", daten, 5, new IProgressMonitor() {
+//		
+//		 public void beginTask(String name, int totalWork) {
+//		 // TODO Auto-generated method stub
+//							
+//		 }
+//		
+//		 public void done() {
+//		 // TODO Auto-generated method stub
+//							
+//		 }
+//		
+//		 public void internalWorked(double work) {
+//		 // TODO Auto-generated method stub
+//							
+//		 }
+//		
+//		 public boolean isCanceled() {
+//		 // TODO Auto-generated method stub
+//		 return false;
+//		 }
+//		
+//		 public void setCanceled(boolean value) {
+//		 // TODO Auto-generated method stub
+//							
+//		 }
+//		
+//		 public void setTaskName(String name) {
+//		 // TODO Auto-generated method stub
+//							
+//		 }
+//		
+//		 public void subTask(String name) {
+//		 // TODO Auto-generated method stub
+//							
+//		 }
+//		
+//		 public void worked(int work) {
+//		 // TODO Auto-generated method stub
+//							
+//		 }
+//						
+//		 });
 
 		// inst.fillSpreadsheet("Testreport", daten, new IProgressMonitor() {
 		// public void beginTask(String arg0, int arg1) {

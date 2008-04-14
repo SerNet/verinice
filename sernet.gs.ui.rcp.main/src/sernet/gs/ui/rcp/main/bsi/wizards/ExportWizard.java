@@ -127,17 +127,17 @@ public class ExportWizard extends Wizard implements IExportWizard {
 			OOWrapper ooWrap = new OOWrapper(ooPath);
 			mon.beginTask("Exportiere nach OpenOffice...", rows.size());
 			mon.subTask("");
-			if (report instanceof TextReport) {
-				File tmp = File.createTempFile("report_tmp",".odt");
-				CnAWorkspace.getInstance().copyFile(textTemplatePath, tmp);
-				ooWrap.openDocument(tmp.getAbsolutePath());
-				ooWrap.createTextReport(getReport().getTitle(), rows, 2, mon);
-			} else {
+//			if (report instanceof TextReport) {
+//				File tmp = File.createTempFile("report_tmp",".odt");
+//				CnAWorkspace.getInstance().copyFile(textTemplatePath, tmp);
+//				ooWrap.openDocument(tmp.getAbsolutePath());
+//				ooWrap.createTextReport(getReport().getTitle(), rows, 2, mon);
+//			} else {
 				File tmp = File.createTempFile("report_tmp",".ods");
 				CnAWorkspace.getInstance().copyFile(templatePath,tmp);
 				ooWrap.openSpreadhseet(tmp.getAbsolutePath());
 				ooWrap.fillSpreadsheet(getReport().getTitle(), rows, mon);
-			}
+//			}
 			mon.done();
 		} catch (java.lang.Exception e) {
 			ExceptionHandlerFactory.getDefaultHandler().handleException(e);

@@ -152,7 +152,11 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	}
 	
 	public String getUmsetzung( ) {
-		Property property = getEntity().getProperties(P_UMSETZUNG).getProperty(0);
+		PropertyList properties = getEntity().getProperties(P_UMSETZUNG);
+		if (properties == null || properties.getProperties() == null|| properties.getProperties().size() < 1) 
+			return P_UMSETZUNG_UNBEARBEITET;
+			
+		Property property = properties.getProperty(0);
 		if (property != null && !property.getPropertyValue().equals(""))
 			return property.getPropertyValue();
 		return P_UMSETZUNG_UNBEARBEITET;

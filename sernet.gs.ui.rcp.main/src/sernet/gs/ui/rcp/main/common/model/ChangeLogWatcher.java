@@ -59,41 +59,41 @@ public class ChangeLogWatcher {
 	 * @throws Exception 
 	 */
 	public void updateChanges(Object watchOutFor) throws ObjectDeletedException {
-		List<ChangeLogEntry> changes = getNewChanges();
-		if (changes.size() < 1)
-			return;
-		
-		for(ChangeLogEntry change : changes) {
-			switch (change.getChange()) {
-			case ChangeLogEntry.UPDATE:
-				refresh(change);
-				break;
-			
-			case ChangeLogEntry.INSERT:
-				CnATreeElement newObject = CnAElementHome
-					.getInstance()
-					.loadById(change.getElementClass(), change.getElementId());
-				CnAElementHome.getInstance().refresh(newObject.getParent());
-				newObject.getParent().childAdded(newObject.getParent(), newObject);
-				CnAElementFactory.getCurrentModel().refreshAllListeners();
-				break;
-			
-			case ChangeLogEntry.DELETE:
-				Object object = CnAElementHome.getInstance()
-					.getElementInSession(change.getElementClass(), change.getElementId());
-				((CnATreeElement)object).remove();
-				if (object.equals(watchOutFor))
-					throw new ObjectDeletedException("Object was deleted.");
-				break;
-			}
-		}
+//		List<ChangeLogEntry> changes = getNewChanges();
+//		if (changes.size() < 1)
+//			return;
+//		
+//		for(ChangeLogEntry change : changes) {
+//			switch (change.getChange()) {
+//			case ChangeLogEntry.UPDATE:
+//				refresh(change);
+//				break;
+//			
+//			case ChangeLogEntry.INSERT:
+//				CnATreeElement newObject = CnAElementHome
+//					.getInstance()
+//					.loadById(change.getElementClass(), change.getElementId());
+//				CnAElementHome.getInstance().refresh(newObject.getParent());
+//				newObject.getParent().childAdded(newObject.getParent(), newObject);
+//				CnAElementFactory.getCurrentModel().refreshAllListeners();
+//				break;
+//			
+//			case ChangeLogEntry.DELETE:
+//				Object object = CnAElementHome.getInstance()
+//					.getElementInSession(change.getElementClass(), change.getElementId());
+//				((CnATreeElement)object).remove();
+//				if (object.equals(watchOutFor))
+//					throw new ObjectDeletedException("Object was deleted.");
+//				break;
+//			}
+//		}
 	}
 	
 	public void refresh(ChangeLogEntry change) {
-		Object object = CnAElementHome.getInstance().getElementInSession(change.getElementClass(), change.getDbId());
-		if (object != null) {
-			Logger.getLogger(this.getClass()).debug("Refreshing updated object " + object);
-			CnAElementHome.getInstance().refresh((CnATreeElement)object);
-		}
+//		Object object = CnAElementHome.getInstance().getElementInSession(change.getElementClass(), change.getDbId());
+//		if (object != null) {
+//			Logger.getLogger(this.getClass()).debug("Refreshing updated object " + object);
+//			CnAElementHome.getInstance().refresh((CnATreeElement)object);
+//		}
 	}
 }

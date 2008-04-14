@@ -21,7 +21,9 @@
 
 		<property name="elementClass"/>
 
-		<property name="change"/>
+		<property name="change"
+			column="elementChange"
+		/>
 
 		<property name="stationId"/>
 

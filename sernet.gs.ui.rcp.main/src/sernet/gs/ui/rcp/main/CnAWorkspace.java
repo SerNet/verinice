@@ -61,9 +61,12 @@ public class CnAWorkspace {
 	 */
 	public void prepare() {
 		URL url = Platform.getInstanceLocation().getURL();
-		workDir = (new File(url.getPath())).getAbsolutePath();
-
+		String path = url.getPath().replaceAll("/", "\\" + File.separator);
+		workDir = (new File(path)).getAbsolutePath();
+		
 		File confDir = new File(url.getPath() + File.separator + "conf");
+		
+		
 		if (confDir.exists() && confDir.isDirectory()) {
 			Logger.getLogger(CnAWorkspace.class).debug(
 					"Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: "
@@ -132,7 +135,7 @@ public class CnAWorkspace {
 	}
 
 	/**
-	 * Copy resource from claspath (i.e. inside JAR file) to local filesystem.
+	 * Copy resource from classpath (i.e. inside JAR file) to local filesystem.
 	 * 
 	 * @param infile
 	 * @param toDir

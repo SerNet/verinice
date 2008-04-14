@@ -126,7 +126,6 @@ public class BrowserView extends ViewPart {
 							+ "html"+ File.separator + "screen.css"; //$NON-NLS-1$ //$NON-NLS-2$
 			
 			
-			
 			while ((line = buffRead.readLine()) != null) {
 				if (!skipComplete) {
 					if (line.matches(".*div.*class=\"standort\".*")) //$NON-NLS-1$
@@ -137,12 +136,18 @@ public class BrowserView extends ViewPart {
 					}
 				}
 				
+//				Logger.getLogger(this.getClass()).debug("PRE:  " + line);
+	
 				// we strip away images et al to keep just the information we need:
-				line = line.replaceAll("../screen.css", cssDir); //$NON-NLS-1$
+				line = line.replace("../../../screen.css", cssDir); //$NON-NLS-1$
+				line = line.replace("../../screen.css", cssDir); //$NON-NLS-1$
+				line = line.replace("../screen.css", cssDir); //$NON-NLS-1$
 				line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
 				line = line.replaceAll("</a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
 				line = line.replaceAll("<img.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
 				line = line.replace((char)160,' '); // replace non-breaking spaces 
+				
+//				Logger.getLogger(this.getClass()).debug("POST: " + line);
 				
 				if (!skip) {
 					//Logger.getLogger(BrowserView.class).debug(line);
