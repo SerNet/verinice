@@ -72,7 +72,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 			return false;
 		
 		try {
-			Job dropJob = new Job("Baustein konsolidieren") {
+			Job dropJob = new Job(Messages.getString("BSIModelViewDropListener.0")) { //$NON-NLS-1$
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
@@ -82,7 +82,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 								(BausteinUmsetzung)target);
 						CnAElementHome.getInstance().update(target);
 					} catch (Exception e) {
-						Logger.getLogger(this.getClass()).error("Drop failed", e);
+						Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
 						return Status.CANCEL_STATUS;
 					}
 					DNDItems.clear();
@@ -91,7 +91,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 			};
 			dropJob.schedule();
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error("Fehler bei DragnDrop.", e);
+			Logger.getLogger(this.getClass()).error(Messages.getString("BSIModelViewDropListener.2"), e); //$NON-NLS-1$
 			return false;
 		}
 		return true;
@@ -123,13 +123,13 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 		}
 
 		try {
-			Job dropJob = new Job("Bausteine zuordnen") {
+			Job dropJob = new Job(Messages.getString("BSIModelViewDropListener.3")) { //$NON-NLS-1$
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						createBausteinUmsetzung(toDrop, target);
 					} catch (Exception e) {
-						Logger.getLogger(this.getClass()).error("Drop failed", e);
+						Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
 						return Status.CANCEL_STATUS;
 					}
 					DNDItems.clear();
@@ -138,7 +138,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 			};
 			dropJob.schedule();
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error("Fehler bei DragnDrop.", e);
+			Logger.getLogger(this.getClass()).error(Messages.getString("BSIModelViewDropListener.5"), e); //$NON-NLS-1$
 			return false;
 		}
 		return true;

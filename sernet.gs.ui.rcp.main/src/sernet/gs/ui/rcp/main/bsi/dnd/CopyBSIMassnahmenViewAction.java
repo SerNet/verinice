@@ -30,7 +30,7 @@ public class CopyBSIMassnahmenViewAction extends Action {
 				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		setDisabledImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
 				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
-		setToolTipText("Kopiert die selektierten Bausteine.");
+		setToolTipText(Messages.getString("CopyBSIMassnahmenViewAction.0")); //$NON-NLS-1$
 		
 	}
 	

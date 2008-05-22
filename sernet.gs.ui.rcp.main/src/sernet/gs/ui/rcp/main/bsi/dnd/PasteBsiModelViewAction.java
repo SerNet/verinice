@@ -41,7 +41,7 @@ public class PasteBsiModelViewAction extends Action {
 				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		setDisabledImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
 				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
-		setToolTipText("Kopierte Objekte zuordnen.");
+		setToolTipText(Messages.getString("PasteBsiModelViewAction.0")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class PasteBsiModelViewAction extends Action {
 				dropJob.setUser(true);
 				dropJob.schedule();
 			} catch (Exception e) {
-				Logger.getLogger(this.getClass()).error("Fehler bei DragnDrop.", e);
+				Logger.getLogger(this.getClass()).error(Messages.getString("PasteBsiModelViewAction.1"), e); //$NON-NLS-1$
 			}
 			
 		}
@@ -94,10 +94,10 @@ public class PasteBsiModelViewAction extends Action {
 	}
 
 	private Job bausteinDropJob(final IStructuredSelection targets) {
-		Job dropJob = new Job("Bausteine zuordnen") {
+		Job dropJob = new Job(Messages.getString("PasteBsiModelViewAction.2")) { //$NON-NLS-1$
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Erstelle Verknüpfung", targets.size());
+				monitor.beginTask(Messages.getString("PasteBsiModelViewAction.3"), targets.size()); //$NON-NLS-1$
 				try {
 					for (Iterator iter = targets.iterator(); iter.hasNext();) {
 						Object o = (Object) iter.next();
@@ -108,7 +108,7 @@ public class PasteBsiModelViewAction extends Action {
 						monitor.worked(1);
 					}
 				} catch (Exception e) {
-					Logger.getLogger(this.getClass()).error("Drop failed",
+					Logger.getLogger(this.getClass()).error("Drop failed", //$NON-NLS-1$
 							e);
 					return Status.CANCEL_STATUS;
 				}
@@ -168,7 +168,7 @@ public class PasteBsiModelViewAction extends Action {
 								new BuildInput<Baustein>(baustein));
 					} catch (Exception e) {
 						Logger.getLogger(this.getClass()).error(
-								"Fehler beim Einfügen.", e);
+								Messages.getString("PasteBsiModelViewAction.5"), e); //$NON-NLS-1$
 					}
 				}
 			}

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -174,5 +175,6 @@ public class BSIModel extends CnATreeElement
 		return result;
 	}
 
+	
 
 }

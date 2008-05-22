@@ -19,7 +19,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
-class BSIKatalogInvisibleRoot {
+public class BSIKatalogInvisibleRoot {
 	
 	/**
 	 * Listen for preference changes and update model if necessary:
@@ -122,5 +122,13 @@ class BSIKatalogInvisibleRoot {
 	public void loadModel(IProgressMonitor monitor) throws GSServiceException, IOException {
 		setBausteine(
 				BSIMassnahmenModel.loadBausteine(monitor));
+	}
+
+	public Baustein getBaustein(String id) {
+		for (Baustein baustein : bausteine) {
+			if (baustein.getId().equals(id))
+				return baustein;
+		}
+		return null;
 	}
 }

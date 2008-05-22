@@ -31,7 +31,7 @@ public class CopyBSIModelViewAction extends Action {
 				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		setDisabledImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
 				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
-		setToolTipText("Kopiert die selektierten Elemente.");
+		setToolTipText(Messages.getString("CopyBSIModelViewAction.0")); //$NON-NLS-1$
 		
 	}
 	

@@ -118,7 +118,7 @@
                value="SerNet verinice&#x0A;Ver 0.6.2&#x0A;&#x0A;(c) SerNet Service Network GmbH and others&#x0A;1996-2008&#x0A;&#x0A;&#x0A;Contact the author:&#x0A;verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage:&#x0A;http://www.verinice.org&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3.&#x0A;See the LICENSE.txt contained in the program folder or the verinice Plugin-Details for details."/>
          <property
                name="windowImages"
-               value="icons/window16.gif,icons/window32.gif"/>
+               value="/sernet.gs.ui.rcp.main/icons/window16.gif,/sernet.gs.ui.rcp.main/icons/window32.gif"/>
          <property
                name="aboutImage"
                value="icons/product_lg.gif"/>
@@ -179,6 +179,14 @@
                     <objectClass name="sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung"/>
                    </or>
                 </enablement>
+             </action>
+             <action
+                   class="sernet.gs.ui.rcp.main.bsi.risikoanalyse.actions.NeueRisikoanalyseAction"
+                   enablesFor="+"
+                   icon="icons/16-message-warn.png"
+                   id="sernet.gs.ui.rcp.main.neueRisikoanalyse"
+                   label="Neue Risikoanalyse"
+                   menubarPath="content">
              </action>
       </objectContribution>
       

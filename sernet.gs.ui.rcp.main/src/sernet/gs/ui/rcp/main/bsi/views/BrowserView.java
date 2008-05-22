@@ -114,6 +114,11 @@ public class BrowserView extends ViewPart {
 		browser.setFocus();
 	}
 	
+	/**
+	 * Sets the contents to be displayed in the browser window.
+	 * 
+	 * @param is The HTML page to be displayed as an input stream
+	 */
 	public void setUrl(InputStream is) {
 		try {
 			InputStreamReader read = new InputStreamReader(is, "iso-8859-1"); //$NON-NLS-1$

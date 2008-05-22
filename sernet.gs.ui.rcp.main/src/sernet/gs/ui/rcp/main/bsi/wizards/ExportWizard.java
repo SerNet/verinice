@@ -35,7 +35,6 @@ import sernet.snutils.ExceptionHandlerFactory;
  */
 public class ExportWizard extends Wizard implements IExportWizard {
 
-	private IStructuredSelection initialSelection;
 	private ChooseReportPage chooseReportPage;
 	private IBSIReport report;
 	private String ooPath;
@@ -89,7 +88,6 @@ public class ExportWizard extends Wizard implements IExportWizard {
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		initialSelection = selection;
 	}
 
 	public boolean needsProgressMonitor() {

@@ -19,13 +19,13 @@ public class LinkDropper {
 			
 			
 			try {
-				Job dropJob = new Job("Elemente verknüpfen.") {
+				Job dropJob = new Job(Messages.getString("LinkDropper.0")) { //$NON-NLS-1$
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
 						try {
 							createLink(target, toDrop);
 						} catch (Exception e) {
-							Logger.getLogger(this.getClass()).error("Drop failed", e);
+							Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
 							return Status.CANCEL_STATUS;
 						}
 						DNDItems.clear();
@@ -35,7 +35,7 @@ public class LinkDropper {
 				};
 				dropJob.schedule();
 			} catch (Exception e) {
-				Logger.getLogger(this.getClass()).error("Fehler bei DragnDrop.", e);
+				Logger.getLogger(this.getClass()).error(Messages.getString("LinkDropper.2"), e); //$NON-NLS-1$
 				return false;
 			}
 			return true;
@@ -50,7 +50,7 @@ public class LinkDropper {
 						try {
 							CnAElementHome.getInstance().save(link);
 						} catch (Exception e) {
-							Logger.getLogger(this.getClass()).debug("Saving link failed.");
+							Logger.getLogger(this.getClass()).debug("Saving link failed."); //$NON-NLS-1$
 							link.remove();
 						}
 					}

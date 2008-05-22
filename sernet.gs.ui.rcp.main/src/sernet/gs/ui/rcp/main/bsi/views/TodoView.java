@@ -5,11 +5,14 @@ import java.util.Date;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -185,13 +188,60 @@ public class TodoView extends ViewPart {
 		createFilters();
 		createPullDownMenu();
 
-		viewer.setContentProvider(new MassnahmenUmsetzungContentProvider());
-		viewer.setLabelProvider(new TodoLabelProvider());
-		viewer.setInput(CnAElementFactory.getCurrentModel());
+//		viewer.setContentProvider(new MassnahmenUmsetzungContentProvider());
+//		viewer.setLabelProvider(new TodoLabelProvider());
+//		viewer.setInput(CnAElementFactory.getCurrentModel());
+		
+		String[] inhalt = new String[] {
+				"eins", "zwei", "drei"
+		};
+		
+		viewer.setContentProvider(new ArrayContentProvider());
+		viewer.setLabelProvider(new ITableLabelProvider() {
+
+			public Image getColumnImage(Object element, int columnIndex) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public String getColumnText(Object element, int columnIndex) {
+				String string = (String) element;
+				switch (columnIndex) {
+				case 0:
+					return string.substring(0, 1);
+				case 1:
+					return string.substring(1, 2);
+				default:
+					return "";
+				}
+			}
+
+			public void addListener(ILabelProviderListener listener) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void dispose() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public boolean isLabelProperty(Object element, String property) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public void removeListener(ILabelProviderListener listener) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		viewer.setInput(inhalt);
 		
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 		
-		viewer.setSorter(new TodoSorter());
+//		viewer.setSorter(new TodoSorter());
 		makeActions();
 		hookActions();
 		

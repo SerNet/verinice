@@ -59,7 +59,10 @@
         <mapping resource="CnALink.hbm.xml"/>
         <mapping resource="PropertyList.hbm.xml"/>
         <mapping resource="CnATreeElement.hbm.xml"/> 
-        <mapping resource="ChangeLogEntry.hbm.xml"/> 
+        <mapping resource="ChangeLogEntry.hbm.xml"/>
+        <mapping resource="OwnGefaehrdung.hbm.xml"/>
+        <mapping resource="GefaehrdungsUmsetzung.hbm.xml"/>  
+        
 
     </session-factory>
 
