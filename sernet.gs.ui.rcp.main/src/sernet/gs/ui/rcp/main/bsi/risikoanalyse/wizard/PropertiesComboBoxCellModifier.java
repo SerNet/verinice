@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.TableItem;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
@@ -30,9 +31,10 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 	  }
 
 	public void modify(Object element, String property, Object value) {
-	
-		if (element instanceof GefaehrdungsUmsetzung) {
-			GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
+		Object elmt = ((TableItem)element).getData();
+		
+		if (elmt instanceof GefaehrdungsUmsetzung) {
+			GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) elmt;
 			if (RiskHandlingPage.CHOICE_COLUMN_ID.equals(property)) {
 				gef.setAlternative((String) value);
 			}
