@@ -14,6 +14,11 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 
 public class PropertiesComboBoxCellModifier implements ICellModifier {
+	private Viewer viewer;
+
+	public PropertiesComboBoxCellModifier(Viewer viewer) {
+		this.viewer = viewer;
+	}
 
 	public boolean canModify(Object element, String property) {
 		 if (RiskHandlingPage.CHOICE_COLUMN_ID.equals(property))
@@ -36,7 +41,26 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 		if (elmt instanceof GefaehrdungsUmsetzung) {
 			GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) elmt;
 			if (RiskHandlingPage.CHOICE_COLUMN_ID.equals(property)) {
-				gef.setAlternative((String) value);
+				// gef.setAlternative((String) value);
+				int index = (Integer) value;
+				switch (index) {
+				case 0:
+					gef.setAlternative(GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_A);
+					break;
+				case 1:
+					gef.setAlternative(GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_B);
+					break;
+				case 2:
+					gef.setAlternative(GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_C);
+					break;
+				case 3:
+					gef.setAlternative(GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_D);
+					break;
+				default:
+					break;
+				}
+				
+				viewer.refresh();
 			}
 		}
 	}

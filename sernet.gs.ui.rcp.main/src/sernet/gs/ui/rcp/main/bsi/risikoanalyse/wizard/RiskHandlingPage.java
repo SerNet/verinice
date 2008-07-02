@@ -145,7 +145,7 @@ public class RiskHandlingPage extends WizardPage {
 		
 	    viewer.setCellEditors(new CellEditor[] {null,null,null,choiceEditor});
 
-	    viewer.setCellModifier(new PropertiesComboBoxCellModifier());
+	    viewer.setCellModifier(new PropertiesComboBoxCellModifier(viewer));
 	    
 		/* group the Filter checkboxes with composite */
 		Composite compositeFilter = new Composite(container, SWT.NULL);
