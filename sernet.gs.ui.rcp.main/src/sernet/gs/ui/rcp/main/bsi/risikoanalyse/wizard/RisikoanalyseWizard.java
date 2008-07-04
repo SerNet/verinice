@@ -28,11 +28,13 @@ import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
+import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RisikoanalyseWizard;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.bsi.wizards.ChooseExportMethodPage;
@@ -49,6 +51,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.snutils.ExceptionHandlerFactory;
 
 
+
 /**
  * Processing of Gefährdungen.
  * 
@@ -60,6 +63,7 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	private ChooseGefaehrdungPage chooseGefaehrdungPage;
 	private EstimateGefaehrdungPage estimateGefaehrdungPage;
 	private RiskHandlingPage riskHandlingPage;
+	private AdditionalSecurityMeasuresPage additionalSecurityMeasuresPage;
 	private IStructuredSelection selection;
 	private IWorkbench workbench;
 	private CnATreeElement cnaElement;
@@ -68,6 +72,12 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	private ArrayList<OwnGefaehrdung> ownGefaehrdungen = new ArrayList<OwnGefaehrdung>();
 	private ArrayList<Gefaehrdung> notOKGefaehrdungen = new ArrayList<Gefaehrdung>();
 	private ArrayList<GefaehrdungsUmsetzung> gefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
+	
+	// Liste der als "A" eingestuften Risiken - RiskHandlingPage
+	private ArrayList<GefaehrdungsUmsetzung> risikoGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
+	
+	// Liste der MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage
+	private ArrayList<MassnahmenUmsetzung> massnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
 	
 	/* hier Anwendungslogik einfügen */
 	@Override
@@ -107,9 +117,8 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 		riskHandlingPage = new RiskHandlingPage();
 		addPage(riskHandlingPage);
 		
-		/* dummy page */
-		Page2Page page2Page = new Page2Page();
-		addPage(page2Page);
+		additionalSecurityMeasuresPage = new AdditionalSecurityMeasuresPage();
+		addPage(additionalSecurityMeasuresPage);
 	}
 
 	/**
@@ -252,6 +261,51 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 				allGefaehrdungen.add(element);
 			}
 		}
+	}
+
+	/**
+	 * @return the risikoGefaehrdungsUmsetzungen (list of GefaehrdungsUmsetzungen)
+	 */
+	public ArrayList<GefaehrdungsUmsetzung> getRisikoGefaehrdungsUmsetzungen() {
+		return risikoGefaehrdungsUmsetzungen;
+	}
+
+	/**
+	 * @param risikoGefaehrdungsUmsetzungen the risikoGefaehrdungsUmsetzungen to set
+	 */
+	public void setRisikoGefaehrdungsUmsetzungen(
+			ArrayList<GefaehrdungsUmsetzung> newRisikoGefaehrdungsUmsetzungen) {
+		risikoGefaehrdungsUmsetzungen = newRisikoGefaehrdungsUmsetzungen;
+	}
+
+	/**
+	 * Adds all GefaehrdungsUmsetzungen with Alternative "A" to the ArrayList
+	 * gefaehrdungsUmsetzungen. Only run once, to initialize the List.
+	 */
+	public void addRisikoGefaehrdungsUmsetzungen() {
+		for (GefaehrdungsUmsetzung element : gefaehrdungsUmsetzungen) {
+			/* add to List of "A" categorized risks if needed */
+			if (element.getAlternative() == GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_A
+					&& !(risikoGefaehrdungsUmsetzungen.contains(element))) {
+				risikoGefaehrdungsUmsetzungen.add(element);
+				Logger.getLogger(this.getClass()).debug("Add Risiko: " + element.getTitel());
+			}
+		}
+	}
+
+	/**
+	 * @return the massnahmenUmsetzungen ArrayList
+	 */
+	public ArrayList<MassnahmenUmsetzung> getMassnahmenUmsetzungen() {
+		return massnahmenUmsetzungen;
+	}
+
+	/**
+	 * @param massnahmenUmsetzungen the massnahmenUmsetzungen to set
+	 */
+	public void setMassnahmenUmsetzungen(
+			ArrayList<MassnahmenUmsetzung> newMassnahmenUmsetzungen) {
+		massnahmenUmsetzungen = newMassnahmenUmsetzungen;
 	}
 	
 }

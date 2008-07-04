@@ -41,7 +41,6 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 		if (elmt instanceof GefaehrdungsUmsetzung) {
 			GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) elmt;
 			if (RiskHandlingPage.CHOICE_COLUMN_ID.equals(property)) {
-				// gef.setAlternative((String) value);
 				int index = (Integer) value;
 				switch (index) {
 				case 0:
@@ -59,6 +58,8 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 				default:
 					break;
 				}
+				
+				// TODO Alternative in DB speichern
 				
 				viewer.refresh();
 			}

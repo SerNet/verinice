@@ -158,6 +158,8 @@ public class RiskHandlingPage extends WizardPage {
         data6.verticalAlignment = SWT.TOP;
 	    compositeFilter.setLayoutData(data6);
 	    
+	    // TODO Suche-Textfelder auf einheitliche Laenge bringen
+	    
 	    /* filter button - search */
 	    new Label(compositeFilter, SWT.NULL).setText("suche:");
 	    Text search = new Text(compositeFilter, SWT.SINGLE | SWT.BORDER);
