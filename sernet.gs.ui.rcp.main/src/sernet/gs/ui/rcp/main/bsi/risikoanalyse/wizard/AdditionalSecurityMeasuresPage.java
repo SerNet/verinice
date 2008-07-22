@@ -113,10 +113,6 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		imgColumn.setText("");
 		imgColumn.setWidth(35);
 		
-		numberColumn = new TableColumn(table, SWT.LEFT);
-		numberColumn.setText("Nummer");
-		numberColumn.setWidth(100);
-		
 		nameColumn = new TableColumn(table, SWT.LEFT);
 		nameColumn.setText("Name");
 		nameColumn.setWidth(100);
@@ -128,7 +124,6 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		/* dies sollte überflüssig sein */
 		viewer.setColumnProperties(new String[] {
 				"_img",
-				"_number",
 				"_name",
 				"_descr"
 		});
@@ -242,11 +237,13 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    	public void widgetSelected(SelectionEvent event) {
 	    		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzung = 
 	    			((RisikoanalyseWizard)getWizard()).getMassnahmenUmsetzungen();
-	    		//final NewGefaehrdungDialog dialog = 
-	    		//	new NewGefaehrdungDialog(container.getShell(), arrListMassnahmenUmsetzung);
-	    		//dialog.open();
-	    		((RisikoanalyseWizard)getWizard()).addOwnGefaehrdungen();
+	    		final NewMassnahmenUmsetzungDialog dialog = new NewMassnahmenUmsetzungDialog(
+						container.getShell(), arrListMassnahmenUmsetzung,
+						((RisikoanalyseWizard)getWizard()).getSelectionElement());
+	    		dialog.open();
+	    		packAllColumns();
 	    		viewer.refresh();
+	    		Logger.getLogger(this.getClass()).debug("#MU: " + arrListMassnahmenUmsetzung.size());
 	    	}
 	    });
 	    
@@ -257,20 +254,25 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    button3.setLayoutData(data4);
 	    button3.addSelectionListener(new SelectionAdapter() {
 	    	public void widgetSelected(SelectionEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-				Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection.getFirstElement();
-				if (selectedGefaehrdung instanceof OwnGefaehrdung) {
-					/* ask user to confirm */
-					boolean confirmed = MessageDialog.openQuestion(container
-							.getShell(), "Bestätigung",
-							"Wollen Sie die Gefährdung mit dem Titel \""
-									+ selectedGefaehrdung.getTitel()
-									+ "\" wirklich löschen?");
-					if (confirmed) {
-						deleteOwnGefaehrdung(selectedGefaehrdung);
-						viewer.refresh();
-					}
+				IStructuredSelection selection = (IStructuredSelection) viewer
+						.getSelection();
+				MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection
+						.getFirstElement();
+
+				/* ask user to confirm */
+				boolean confirmed = MessageDialog.openQuestion(container
+						.getShell(), "Bestätigung",
+						"Wollen Sie die Massnahme mit dem Titel \""
+								+ selectedMassnahmenUmsetzung.getTitle()
+								+ "\" wirklich löschen?");
+				if (confirmed) {
+					deleteMassnahmenUmsetzung(selectedMassnahmenUmsetzung);
+					viewer.refresh();
 				}
+				ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzung = 
+	    			((RisikoanalyseWizard)getWizard()).getMassnahmenUmsetzungen();
+				Logger.getLogger(this.getClass()).debug(
+						"#MU: " + arrListMassnahmenUmsetzung.size());
 			}
 		});
 	    
@@ -322,7 +324,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		/* associate domain model with viewer */
 		viewer.setInput(arrListGefaehrdungsMassnahmen);
 		
-		// viewer.setSorter(new GefaehrdungenSorter());
+		// TODO viewer.setSorter(new GefaehrdungenSorter());
 	    
 		packAllColumns();
 		
@@ -335,7 +337,6 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 */
 	private void packAllColumns() {
 		imgColumn.pack();
-		numberColumn.pack();
 		nameColumn.pack();
 		descrColumn.pack();
 	}
@@ -351,34 +352,19 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		}
 	}
 	
-	
-	
-	private void deleteOwnGefaehrdung(Gefaehrdung delGefaehrdung) {
-		ArrayList<Gefaehrdung> allList = ((RisikoanalyseWizard)getWizard()).getAllGefaehrdungen();
- 		ArrayList<Gefaehrdung> list = ((RisikoanalyseWizard)getWizard()).getAssociatedGefaehrdungen();
- 		ArrayList<OwnGefaehrdung> ownList =
- 			((RisikoanalyseWizard)getWizard()).getOwnGefaehrdungen();
- 		
+	private void deleteMassnahmenUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung) {
+		ArrayList<MassnahmenUmsetzung> listMassnahmenUmsetzungen = ((RisikoanalyseWizard)getWizard()).getMassnahmenUmsetzungen();
+		
  		try {
-			if (ownList.contains(delGefaehrdung)) {
-				OwnGefaehrdungHome.getInstance().remove((OwnGefaehrdung)delGefaehrdung);
+			if (listMassnahmenUmsetzungen.contains(massnahmenUmsetzung)) {
+				// TODO  OwnGefaehrdungHome.getInstance().remove((OwnGefaehrdung)delGefaehrdung);
 				
-				/* delete from List of OwnGefaehrdungen */
-				ownList.remove(delGefaehrdung);
-				((RisikoanalyseWizard)getWizard()).setOwnGefaehrdungen(ownList);
-				
-				/* delete from List of selected Gefaehrdungen */
-				if (list.contains(delGefaehrdung)) { 
-					list.remove(delGefaehrdung);
-				}
-				
-				/* delete from list of all Gefaehrdungen */
-				if (allList.contains(delGefaehrdung)) { 
-					allList.remove(delGefaehrdung);
-				}
+				/* delete from List of MassnahmenUmsetzungen */
+				listMassnahmenUmsetzungen.remove(massnahmenUmsetzung);
+				((RisikoanalyseWizard)getWizard()).setMassnahmenUmsetzungen(listMassnahmenUmsetzungen);
 			}
 		} catch (Exception e) {
-			ExceptionUtil.log(e, "Gefährdung konnte nicht gelöscht werden.");
+			ExceptionUtil.log(e, "MassnahmenUmsetzung konnte nicht gelöscht werden.");
 		}
 	}
 	
@@ -408,9 +394,9 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		}
 		
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			Gefaehrdung gefaehrdung = (Gefaehrdung) element;
-			String gefTitle = gefaehrdung.getTitel();
-			Matcher matcher = pattern.matcher(gefTitle);
+			MassnahmenUmsetzung massnahmeUmsetzung = (MassnahmenUmsetzung) element;
+			String title = massnahmeUmsetzung.getTitle();
+			Matcher matcher = pattern.matcher(title);
 			
 			if (matcher.find()) {
 				return true;

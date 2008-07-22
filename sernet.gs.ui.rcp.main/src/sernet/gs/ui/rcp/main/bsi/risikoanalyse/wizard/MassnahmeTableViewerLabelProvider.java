@@ -26,11 +26,9 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 		case 0:
 			return null;
 		case 1:
-			return massnahme.getId();
-		case 2:
 			return massnahme.getTitle();
-		case 3:
-			return massnahme.getTypeId();
+		case 2:
+			return "keine Beschreibung";
 		};
 		return "";
 	}

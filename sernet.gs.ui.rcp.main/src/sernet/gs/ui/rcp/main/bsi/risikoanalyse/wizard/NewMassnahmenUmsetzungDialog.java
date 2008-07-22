@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
@@ -27,23 +28,18 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
  */
 public class NewMassnahmenUmsetzungDialog extends Dialog {
 
-	private Text textNumber;
 	private Text textName;
-	private Text textDescr;
-	private Combo textCategory;
 	private ArrayList<MassnahmenUmsetzung> listMassnahmenUmsetzung;
+	private CnATreeElement cnaElement;
+	private MassnahmenUmsetzung newMassnahmenUmsetzung = new MassnahmenUmsetzung(cnaElement);
 	
-	// 2008-07-04 ah - Hier weiter machen.
-	// Übergeben werden muss an die MassnahmenUmsetzung:
-	// RisikoanalyseWizard.cnaElement
-	// private MassnahmenUmsetzung newMassnahmenUmsetzung = new MassnahmenUmsetzung();
-	
-	public NewMassnahmenUmsetzungDialog(Shell parentShell, ArrayList<MassnahmenUmsetzung> newListGef) {
+	public NewMassnahmenUmsetzungDialog(Shell parentShell, ArrayList<MassnahmenUmsetzung> newListGef, CnATreeElement newCnaElement) {
 		// TODO übergabe des Feldes gibt Probleme, wenn der dialog nicht mehr modal ist!!
-		// komme ich von hier an den RisikoAnlayseWizard ??
+		// komme ich von hier anders den RisikoAnlayseWizard ??
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		listMassnahmenUmsetzung = newListGef;
+		cnaElement = newCnaElement;
 	}
 	
 	@Override
@@ -52,23 +48,6 @@ public class NewMassnahmenUmsetzungDialog extends Dialog {
 		final GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		container.setLayout(gridLayout);
-		
-		/* label number */
-		final Label label1 = new Label(container, SWT.NONE);
-		GridData data1 = new GridData();
-		data1.horizontalAlignment = SWT.LEFT;
-	    data1.verticalAlignment = SWT.CENTER;
-	    label1.setText("Nummer:");
-		label1.setLayoutData(data1);
-		
-		/* text number */
-		textNumber = new Text(container, SWT.BORDER);
-		GridData data2 = new GridData();
-		data2.horizontalAlignment = SWT.FILL;
-	    data2.verticalAlignment = SWT.CENTER;
-	    data2.grabExcessHorizontalSpace = true;
-		textNumber.setLayoutData(data2);
-		//textNumber.set
 		
 		/* label name */
 		final Label label2 = new Label(container, SWT.NONE);
@@ -86,77 +65,24 @@ public class NewMassnahmenUmsetzungDialog extends Dialog {
 	    data4.grabExcessHorizontalSpace = true;
 		textName.setLayoutData(data4);
 		
-		/* label description */
-		final Label label3 = new Label(container, SWT.NONE);
-		GridData data5 = new GridData();
-		data5.horizontalAlignment = SWT.LEFT;
-	    data5.verticalAlignment = SWT.TOP;
-	    label3.setText("Beschreibung:");
-		label3.setLayoutData(data5);
-		
-		/* text description */
-		GridData data6 = new GridData();
-		textDescr = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.WRAP);
-		data6.horizontalAlignment = SWT.FILL;
-	    data6.verticalAlignment = SWT.FILL;
-	    data6.grabExcessHorizontalSpace = true;
-	    data6.grabExcessVerticalSpace = true;
-	    data6.widthHint = 400;
-	    data6.heightHint = 200;
-		textDescr.setLayoutData(data6);
-		
-		/* label category */
-		final Label label4 = new Label(container, SWT.NONE);
-		GridData data7 = new GridData();
-		data7.horizontalAlignment = SWT.LEFT;
-	    data7.verticalAlignment = SWT.TOP;
-	    label4.setText("Kategorie:");
-		label4.setLayoutData(data7);
-		
-		/* text category */
-		textCategory = new Combo(container, SWT.DROP_DOWN);
-		GridData data8 = new GridData();
-		data8.horizontalAlignment = SWT.FILL;
-		data8.verticalAlignment = SWT.CENTER;
-		data8.grabExcessHorizontalSpace = true;
-		textCategory.setLayoutData(data8);
-		textCategory.setItems(loadCategories());
-		textCategory.setText("[neue Kategorie]");
-		
 		 //add controls to composite as necessary
 		 return container;
 	}
 
-	private String[] loadCategories() {
-		ArrayList<String> newString =  new ArrayList<String> ();
-		newString.add("[neue Kategorie]");
-		newString.add(Gefaehrdung.KAT_STRING_HOEHERE_GEWALT);
-		newString.add(Gefaehrdung.KAT_STRING_ORG_MANGEL);
-		newString.add(Gefaehrdung.KAT_STRING_MENSCH);
-		newString.add(Gefaehrdung.KAT_STRING_TECHNIK);
-		newString.add(Gefaehrdung.KAT_STRING_VORSATZ);
-
-		// TODO alle eigenen Gefährdungs-Kategorien hinzufügen (aus DB)
-		
-		return newString.toArray(new String[newString.size()]);
-	}
-	
 	@Override
 	protected void okPressed() {
 		
+		newMassnahmenUmsetzung.setName(textName.getText());
+		listMassnahmenUmsetzung.add(newMassnahmenUmsetzung);
+
 		/*
-		newOwnGef.setId(textNumber.getText());
-		newOwnGef.setTitel(textName.getText());
-		newOwnGef.setBeschreibung(textDescr.getText());
-		newOwnGef.setOwnkategorie(textCategory.getText());
-		listMassnahmenUmsetzung.add(newOwnGef);
+		// TODO neue Massnahme in DB speichern 
 		
 		try {
 			OwnGefaehrdungHome.getInstance().saveNew(newOwnGef);
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Eigene Gefährdung konnte nicht gespeichert werden.");
 		}
-		
 		*/
 		
 		super.okPressed();

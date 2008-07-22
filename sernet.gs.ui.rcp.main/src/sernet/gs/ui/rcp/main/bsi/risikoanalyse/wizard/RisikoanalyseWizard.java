@@ -246,7 +246,8 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 		cnaElement = treeElement;
 	}
 	
-	private CnATreeElement getSelectionElement() {
+	// TODO habe ich von private auf public gesetzt - ist das ein Problem?
+	public CnATreeElement getSelectionElement() {
 		return cnaElement;
 	}
 	
