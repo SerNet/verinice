@@ -67,12 +67,19 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 	private Composite container;
-	private TableColumn checkboxColumn;
-	private TableColumn imgColumn;
-	private TableColumn numberColumn;
-	private TableColumn nameColumn;
-	private TableColumn descrColumn;
-	private TableViewer viewer;
+	private TableViewer viewerGefaehrdung;
+	private TableViewer viewerMassnahme;
+	
+	private TableColumn imgColumnGefaehrdung;
+	private TableColumn numberColumnGefaehrdung;
+	private TableColumn nameColumnGefaehrdung;
+	private TableColumn descrColumnGefaehrdung;
+	
+	private TableColumn imgColumnMassnahme;
+	private TableColumn numberColumnMassnahme;
+	private TableColumn nameColumnMassnahme;
+	private TableColumn descrColumnMassnahme;
+	
 	private OwnMassnahmenFilter ownMassnahmenFilter = new OwnMassnahmenFilter();
 	private MassnahmenFilter massnahmenFilter = new MassnahmenFilter();
 	private SearchFilter searchFilter = new SearchFilter();
@@ -80,59 +87,83 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	protected AdditionalSecurityMeasuresPage() {
 		super("Zusätzliche IT-Sicherheitsmaßnahmen");
 		setTitle("Zusätzliche IT-Sicherheitsmaßnahmen");
-		setDescription("Fügen Sie den Gefährdungen weitere IT-Sicherheitsmaßnhamen hinzu.");
+		setDescription("Fügen Sie den Gefährdungen weitere IT-Sicherheitsmaßnahmen hinzu.");
 	}
 	
 	/* must be implemented - content of wizard page! */
 	public void createControl(Composite parent) {
 		container = new Composite(parent, SWT.NULL);
 		final GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
+		gridLayout.numColumns = 4;
 		container.setLayout(gridLayout);
 		
 		/* TODO brauche ich das control (s.u.)? */
 		setControl(container);
 
-		/* table viewer */
-		viewer = new TableViewer(container, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
+		/* table viewer: Gefaehrdungen */
+		viewerGefaehrdung = new TableViewer(container, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
 		
-		final Table table = viewer.getTable();
-		
+		final Table tableGefaehrdung = viewerGefaehrdung.getTable();
 		GridData data1 = new GridData();
 	    data1.grabExcessHorizontalSpace = true;
 	    data1.grabExcessVerticalSpace = true;
 	    data1.horizontalSpan = 2;
 	    data1.horizontalAlignment = SWT.FILL;
 	    data1.verticalAlignment = SWT.FILL;
-	    table.setLayoutData(data1);
-		
-	    table.setHeaderVisible(true);
-		table.setLinesVisible(true);
+	    tableGefaehrdung.setLayoutData(data1);
+	    tableGefaehrdung.setHeaderVisible(true);
+		tableGefaehrdung.setLinesVisible(true);
 	    
-		imgColumn = new TableColumn(table, SWT.LEFT);
-		imgColumn.setText("");
-		imgColumn.setWidth(35);
+		imgColumnGefaehrdung = new TableColumn(tableGefaehrdung, SWT.LEFT);
+		imgColumnGefaehrdung.setText("");
+		imgColumnGefaehrdung.setWidth(35);
 		
-		nameColumn = new TableColumn(table, SWT.LEFT);
-		nameColumn.setText("Name");
-		nameColumn.setWidth(100);
+		nameColumnGefaehrdung = new TableColumn(tableGefaehrdung, SWT.LEFT);
+		nameColumnGefaehrdung.setText("Name");
+		nameColumnGefaehrdung.setWidth(100);
 		
-		descrColumn = new TableColumn(table, SWT.LEFT);
-		descrColumn.setText("Beschreibung");
-		descrColumn.setWidth(200);
+		descrColumnGefaehrdung = new TableColumn(tableGefaehrdung, SWT.LEFT);
+		descrColumnGefaehrdung.setText("Beschreibung");
+		descrColumnGefaehrdung.setWidth(200);
 		
-		/* dies sollte überflüssig sein */
+		/* tableViewer: Massnahmen */
+		viewerMassnahme = new TableViewer(container, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
+		
+		final Table tableMassnahme = viewerMassnahme.getTable();
+		GridData data2 = new GridData();
+		data2.grabExcessHorizontalSpace = true;
+		data2.grabExcessVerticalSpace = true;
+		data2.horizontalSpan = 2;
+		data2.horizontalAlignment = SWT.FILL;
+		data2.verticalAlignment = SWT.FILL;
+		tableMassnahme.setLayoutData(data2);
+		tableMassnahme.setHeaderVisible(true);
+		tableMassnahme.setLinesVisible(true);
+		
+		imgColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
+		imgColumnMassnahme.setText("");
+		imgColumnMassnahme.setWidth(35);
+		
+		nameColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
+		nameColumnMassnahme.setText("Name");
+		nameColumnMassnahme.setWidth(100);
+		
+		descrColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
+		descrColumnMassnahme.setText("Beschreibung");
+		descrColumnMassnahme.setWidth(200);
+		
+		/* dies sollte überflüssig sein
 		viewer.setColumnProperties(new String[] {
 				"_img",
 				"_name",
 				"_descr"
 		});
-		
+		*/
 		
 		/**
 		 *  listener opens edit Dialog for selected Gefaehrdung
 		 */
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
+		viewerMassnahme.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 	    		Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection.getFirstElement();
@@ -142,22 +173,27 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    			final EditGefaehrdungDialog dialog = 
 	    				new EditGefaehrdungDialog(container.getShell(), ownGefSelected);
 	    			dialog.open();
-	    			viewer.refresh();
+	    			viewerMassnahme.refresh();
 	    		}
 		    }
 		});
 		
 	    /* group the Filter checkboxes with composite */
+		/*
 		Composite compositeFilter = new Composite(container, SWT.NULL);
+		
 		GridLayout gridLayoutFilters = new GridLayout();
         gridLayoutFilters.numColumns = 2;
         compositeFilter.setLayout(gridLayoutFilters);
+        
         GridData data6 = new GridData();
-        data6.horizontalAlignment = SWT.LEFT;
+        data6.horizontalSpan = 3;
+        data6.horizontalAlignment = SWT.RIGHT;
         data6.verticalAlignment = SWT.TOP;
 	    compositeFilter.setLayoutData(data6);
-	    
+	    */
 	    /* filter button - own Massnahmen only */
+		/*
 	    Button button5 = new Button(compositeFilter, SWT.CHECK);
 	    button5.setText("nur eigene Maßnahmen anzeigen");
 	    GridData data7 = new GridData();
@@ -167,17 +203,17 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    	public void widgetSelected(SelectionEvent event) {
 	    		Button thisButton = (Button) event.widget;
 	    		if(thisButton.getSelection()){
-	    			viewer.addFilter(ownMassnahmenFilter);
-	    			viewer.refresh();
+	    			viewerMassnahme.addFilter(ownMassnahmenFilter);
+	    			viewerMassnahme.refresh();
 	    		} else {
-	    			viewer.removeFilter(ownMassnahmenFilter);
-	    			viewer.refresh();
+	    			viewerMassnahme.removeFilter(ownMassnahmenFilter);
+	    			viewerMassnahme.refresh();
 	    		}
 	    	}
-
 	    });
-	    
+	    */
 	    /* filter button - Gefaehrdungen only */
+		/*
 	    Button button6 = new Button(compositeFilter, SWT.CHECK);
 	    button6.setText("nur BSI Maßnahmen anzeigen");
 	    GridData data8 = new GridData();
@@ -187,17 +223,18 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    	public void widgetSelected(SelectionEvent event) {
 	    		Button thisButton = (Button) event.widget;
 	    		if(thisButton.getSelection()){
-	    			viewer.addFilter(massnahmenFilter);
-	    			viewer.refresh();
+	    			viewerMassnahme.addFilter(massnahmenFilter);
+	    			viewerMassnahme.refresh();
 	    		} else {
-	    			viewer.removeFilter(massnahmenFilter);
-	    			viewer.refresh();
+	    			viewerMassnahme.removeFilter(massnahmenFilter);
+	    			viewerMassnahme.refresh();
 	    		}
 	    	}
 
 	    });
-	    
+	    */
 	    /* filter button - search */
+		/*
 	    new Label(compositeFilter, SWT.NULL).setText("suche:");
 	    Text search = new Text(compositeFilter, SWT.SINGLE | SWT.BORDER);
 	    GridData data9 = new GridData();
@@ -209,30 +246,31 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    		Text text = (Text) event.widget;
 	    		if (text.getText().length() > 0) {
 	    			searchFilter.setPattern(text.getText());
-	    			viewer.addFilter(searchFilter);
-	    			viewer.refresh();
+	    			viewerMassnahme.addFilter(searchFilter);
+	    			viewerMassnahme.refresh();
 	    		} else {
-	    			viewer.removeFilter(searchFilter);
-	    			viewer.refresh();
+	    			viewerMassnahme.removeFilter(searchFilter);
+	    			viewerMassnahme.refresh();
 	    		}
 	    	}
 	    });
-		
+		*/
 		/* group the buttons with composite */
 		Composite composite = new Composite(container, SWT.NULL);
 		GridLayout gridLayoutButtons = new GridLayout();
         gridLayoutButtons.numColumns = 5;
         composite.setLayout(gridLayoutButtons);
-        GridData data2 = new GridData();
-        data2.horizontalAlignment = SWT.RIGHT;
-        data2.verticalAlignment = SWT.TOP;
-	    composite.setLayoutData(data2);
+        GridData data3 = new GridData();
+        data3.horizontalSpan = 4;
+        data3.horizontalAlignment = SWT.RIGHT;
+        data3.verticalAlignment = SWT.TOP;
+	    composite.setLayoutData(data3);
 
 	    /* new button */
 	    Button button2 = new Button(composite, SWT.PUSH);
 	    button2.setText("neu");
-	    GridData data3 = new GridData();
-	    button2.setLayoutData(data3);
+	    GridData data4 = new GridData();
+	    button2.setLayoutData(data4);
 	    button2.addSelectionListener(new SelectionAdapter() {
 	    	public void widgetSelected(SelectionEvent event) {
 	    		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzung = 
@@ -241,8 +279,8 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 						container.getShell(), arrListMassnahmenUmsetzung,
 						((RisikoanalyseWizard)getWizard()).getSelectionElement());
 	    		dialog.open();
-	    		packAllColumns();
-	    		viewer.refresh();
+	    		viewerMassnahme.refresh();
+	    		packAllMassnahmeColumns();
 	    		Logger.getLogger(this.getClass()).debug("#MU: " + arrListMassnahmenUmsetzung.size());
 	    	}
 	    });
@@ -250,11 +288,11 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    /* delete button */
 	    Button button3 = new Button(composite, SWT.PUSH);
 	    button3.setText("löschen");
-	    GridData data4 = new GridData();
-	    button3.setLayoutData(data4);
+	    GridData data5 = new GridData();
+	    button3.setLayoutData(data5);
 	    button3.addSelectionListener(new SelectionAdapter() {
 	    	public void widgetSelected(SelectionEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) viewer
+				IStructuredSelection selection = (IStructuredSelection) viewerMassnahme
 						.getSelection();
 				MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection
 						.getFirstElement();
@@ -267,7 +305,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 								+ "\" wirklich löschen?");
 				if (confirmed) {
 					deleteMassnahmenUmsetzung(selectedMassnahmenUmsetzung);
-					viewer.refresh();
+					viewerMassnahme.refresh();
 				}
 				ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzung = 
 	    			((RisikoanalyseWizard)getWizard()).getMassnahmenUmsetzungen();
@@ -279,21 +317,21 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    /* edit button */
 	    Button button4 = new Button(composite, SWT.PUSH);
 	    button4.setText("bearbeiten");
-	    GridData data5 = new GridData();
-	    button4.setLayoutData(data5);
+	    GridData data10 = new GridData();
+	    button4.setLayoutData(data10);
 	    button4.addSelectionListener(new SelectionAdapter() {
 	    	public void widgetSelected(SelectionEvent event) {
-	    		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-	    		Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection.getFirstElement();
-	    		if (selectedGefaehrdung instanceof OwnGefaehrdung) {
-	    			Logger.getLogger(this.getClass()).debug("edit own gef");
-	    			OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
-	    			final EditGefaehrdungDialog dialog = 
-	    				new EditGefaehrdungDialog(container.getShell(), ownGefSelected);
-	    		dialog.open();
-	    		viewer.refresh();
-	    		}
-	    	}
+				/* retrieve selected element and open edit dialog with it */
+				IStructuredSelection selection = (IStructuredSelection) viewerMassnahme
+						.getSelection();
+				MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection
+						.getFirstElement();
+				final EditMassnahmeUmsetzungDialog dialog = new EditMassnahmeUmsetzungDialog(
+						container.getShell(), selectedMassnahmenUmsetzung);
+				dialog.open();
+				viewerMassnahme.refresh();
+				packAllMassnahmeColumns();
+			}
 	    });
 	}
 
@@ -318,27 +356,27 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 			((RisikoanalyseWizard)getWizard()).getMassnahmenUmsetzungen();
 
 		/* map a domain model object into multiple images and text labels */
-		viewer.setLabelProvider(new MassnahmeTableViewerLabelProvider());
+		viewerMassnahme.setLabelProvider(new MassnahmeTableViewerLabelProvider());
 		/* map domain model into array */
-		viewer.setContentProvider(new ArrayContentProvider());
+		viewerMassnahme.setContentProvider(new ArrayContentProvider());
 		/* associate domain model with viewer */
-		viewer.setInput(arrListGefaehrdungsMassnahmen);
+		viewerMassnahme.setInput(arrListGefaehrdungsMassnahmen);
 		
 		// TODO viewer.setSorter(new GefaehrdungenSorter());
 	    
-		packAllColumns();
+		packAllMassnahmeColumns();
 		
 		// vs. overriding method WizardPage.canFilpToNextPage 
 		checkPageComplete();
 	}
 
 	/**
-	 * packs all columns of Table containing Gefaehrdungen
+	 * packs all columns of Table "Massnahme" containing MassnahmeUmsetzungen
 	 */
-	private void packAllColumns() {
-		imgColumn.pack();
-		nameColumn.pack();
-		descrColumn.pack();
+	private void packAllMassnahmeColumns() {
+		imgColumnMassnahme.pack();
+		nameColumnMassnahme.pack();
+		descrColumnMassnahme.pack();
 	}
 	
 	/**
@@ -353,7 +391,8 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	}
 	
 	private void deleteMassnahmenUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung) {
-		ArrayList<MassnahmenUmsetzung> listMassnahmenUmsetzungen = ((RisikoanalyseWizard)getWizard()).getMassnahmenUmsetzungen();
+		ArrayList<MassnahmenUmsetzung> listMassnahmenUmsetzungen = ((RisikoanalyseWizard) getWizard())
+				.getMassnahmenUmsetzungen();
 		
  		try {
 			if (listMassnahmenUmsetzungen.contains(massnahmenUmsetzung)) {
