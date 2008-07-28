@@ -145,7 +145,7 @@ public class RiskHandlingPage extends WizardPage {
 		
 	    viewer.setCellEditors(new CellEditor[] {null,null,null,choiceEditor});
 
-	    viewer.setCellModifier(new PropertiesComboBoxCellModifier(viewer));
+	    viewer.setCellModifier(new PropertiesComboBoxCellModifier(viewer, (RisikoanalyseWizard)getWizard(), this));
 	    
 		/* group the Filter checkboxes with composite */
 		Composite compositeFilter = new Composite(container, SWT.NULL);
@@ -203,11 +203,13 @@ public class RiskHandlingPage extends WizardPage {
 		viewer.setContentProvider(new ArrayContentProvider());
 		/* associate domain model with viewer */
 		viewer.setInput(arrListRiskGefaehrdungen);
-		
+		/* sort elements */
 		viewer.setSorter(new GefaehrdungenSorter());
-
 		packAllColumns();
-		checkPageComplete();
+		
+		// TODO sollte es moeglich sein, dass eine GefaehrdungsUmsetzung zu Beginnn
+		// vom Typ "A" ist, so darf diese Zeile hier nicht stehen bleiben !!!
+		setPageComplete(false);
 	}
 
 	/**
@@ -218,17 +220,6 @@ public class RiskHandlingPage extends WizardPage {
 		numberColumn.pack();
 		nameColumn.pack();
 		choiceColumn.pack();
-	}
-	
-	/**
-	 * activates next button if List of selected Gefaehrdungen is not empty
-	 */
-	private void checkPageComplete() {
-		if (((RisikoanalyseWizard)getWizard()).getAssociatedGefaehrdungen().isEmpty()) {
-			setPageComplete(false);
-		} else {
-			setPageComplete(true);
-		}
 	}
 	
 	class SearchFilter extends ViewerFilter {

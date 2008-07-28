@@ -67,16 +67,27 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	private IStructuredSelection selection;
 	private IWorkbench workbench;
 	private CnATreeElement cnaElement;
+	
+	/* Liste aller Gefaehrdungen - ChooseGefaehrungPage */
 	private ArrayList<Gefaehrdung> allGefaehrdungen = new ArrayList<Gefaehrdung>();
+	
+	/* Liste der vorausgewaehlten Gefaehrdungen - ChooseGefaehrungPage, EstimateGefaehrungPage */
 	private ArrayList<Gefaehrdung> associatedGefaehrdungen = new ArrayList<Gefaehrdung>();
+	
+	/* Liste der eigenen Gefaehrdungen - ChooseGefaehrungPage */
 	private ArrayList<OwnGefaehrdung> ownGefaehrdungen = new ArrayList<OwnGefaehrdung>();
+	
+	/* Liste der vorselektierten Gefaehrdungen fuer die eine Risikobewertung duchgefuehrt
+	 * werden muss - EstimateGefaehrungPage */
 	private ArrayList<Gefaehrdung> notOKGefaehrdungen = new ArrayList<Gefaehrdung>();
+	
+	/* Liste der gefaehrdungsUmsetzungen - EstimateGefaehrungPage */
 	private ArrayList<GefaehrdungsUmsetzung> gefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 	
-	// Liste der als "A" eingestuften Risiken - RiskHandlingPage
+	/* Liste der als "A" eingestuften Risiken - RiskHandlingPage */
 	private ArrayList<GefaehrdungsUmsetzung> risikoGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 	
-	// Liste der MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage
+	/* Liste der MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
 	private ArrayList<MassnahmenUmsetzung> massnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
 	
 	/* hier Anwendungslogik einfügen */
