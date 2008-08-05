@@ -212,7 +212,8 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	 * fills the CheckboxTableViewer with all Gefaehrdungen available
 	 */
 	private void initContents() {
-		ArrayList<Gefaehrdung> selectedArrayList = ((RisikoanalyseWizard)getWizard()).getAssociatedGefaehrdungen();
+		ArrayList<Gefaehrdung> selectedArrayList = ((RisikoanalyseWizard) getWizard())
+				.getAssociatedGefaehrdungen();
 		
 		/* map a domain model object into multiple images and text labels */
 		viewer.setLabelProvider(new CheckboxTableViewerLabelProvider());
@@ -237,6 +238,8 @@ public class EstimateGefaehrdungPage extends WizardPage {
 
 				// TODO statt contains: auf gleiche ID überprüfen
 				// -> vergl. ChooseGefaehrdungPage
+				
+				/* hier von Gefaehrdung auf GefaehrdungsUmsetzung */
 				if (event.getChecked()) {
 					/* in liste notOkay hinzufügen */
 					if (!notOKArrayList.contains(currentGefaehrdung)) {

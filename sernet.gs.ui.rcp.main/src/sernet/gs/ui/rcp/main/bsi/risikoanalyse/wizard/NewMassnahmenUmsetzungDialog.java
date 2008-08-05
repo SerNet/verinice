@@ -35,7 +35,9 @@ public class NewMassnahmenUmsetzungDialog extends Dialog {
 	
 	public NewMassnahmenUmsetzungDialog(Shell parentShell, ArrayList<MassnahmenUmsetzung> newListGef, CnATreeElement newCnaElement) {
 		// TODO übergabe des Feldes gibt Probleme, wenn der dialog nicht mehr modal ist!!
-		// komme ich von hier anders den RisikoAnlayseWizard ??
+		// komme ich von hier anders an den RisikoAnlayseWizard ??
+		//   2008-07-29 ah - ja: wizard übergeben. aber will man das?
+		// 	   vergl. PropertiescomboBoxCellModifier 
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		listMassnahmenUmsetzung = newListGef;

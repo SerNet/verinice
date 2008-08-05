@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
@@ -48,6 +49,7 @@ import org.eclipse.ui.ISelectionListener;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
@@ -101,8 +103,19 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		setControl(container);
 
 		/* table viewer: Gefaehrdungen */
-		viewerGefaehrdung = new TableViewer(container, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
 		
+		ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = 
+			((RisikoanalyseWizard)getWizard()).getRisikoGefaehrdungsUmsetzungen();
+		
+		final TreeViewer viewerGefaehrdung = new TreeViewer(container, SWT.SINGLE);
+		// viewerGefaehrdung.setLabelProvider(new GefaehrdungTreeViewerLabelProvider());
+		// viewerGefaehrdung.setContentProvider(new GefaehrdungTreeViewerContentProvider(arrListGefaehrdungsUmsetzungen));
+		// viewerGefaehrdung.setInput(arrListGefaehrdungsUmsetzungen);
+		// viewerGefaehrdung.expandAll();
+		
+		viewerGefaehrdung.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		/*
 		final Table tableGefaehrdung = viewerGefaehrdung.getTable();
 		GridData data1 = new GridData();
 	    data1.grabExcessHorizontalSpace = true;
@@ -125,6 +138,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		descrColumnGefaehrdung = new TableColumn(tableGefaehrdung, SWT.LEFT);
 		descrColumnGefaehrdung.setText("Beschreibung");
 		descrColumnGefaehrdung.setWidth(200);
+		*/
 		
 		/* tableViewer: Massnahmen */
 		viewerMassnahme = new TableViewer(container, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
@@ -179,19 +193,16 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		});
 		
 	    /* group the Filter checkboxes with composite */
-		/*
 		Composite compositeFilter = new Composite(container, SWT.NULL);
+		GridLayout gridLayoutSearch = new GridLayout();
+        gridLayoutSearch.numColumns = 2;
+        compositeFilter.setLayout(gridLayoutSearch);
+        GridData data12 = new GridData();
+        data12.horizontalSpan = 4;
+        data12.horizontalAlignment = SWT.RIGHT;
+        data12.verticalAlignment = SWT.TOP;
+	    compositeFilter.setLayoutData(data12);
 		
-		GridLayout gridLayoutFilters = new GridLayout();
-        gridLayoutFilters.numColumns = 2;
-        compositeFilter.setLayout(gridLayoutFilters);
-        
-        GridData data6 = new GridData();
-        data6.horizontalSpan = 3;
-        data6.horizontalAlignment = SWT.RIGHT;
-        data6.verticalAlignment = SWT.TOP;
-	    compositeFilter.setLayoutData(data6);
-	    */
 	    /* filter button - own Massnahmen only */
 		/*
 	    Button button5 = new Button(compositeFilter, SWT.CHECK);
@@ -233,8 +244,8 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 	    });
 	    */
+	    
 	    /* filter button - search */
-		/*
 	    new Label(compositeFilter, SWT.NULL).setText("suche:");
 	    Text search = new Text(compositeFilter, SWT.SINGLE | SWT.BORDER);
 	    GridData data9 = new GridData();
@@ -254,11 +265,11 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    		}
 	    	}
 	    });
-		*/
+	    
 		/* group the buttons with composite */
 		Composite composite = new Composite(container, SWT.NULL);
 		GridLayout gridLayoutButtons = new GridLayout();
-        gridLayoutButtons.numColumns = 5;
+        gridLayoutButtons.numColumns = 3;
         composite.setLayout(gridLayoutButtons);
         GridData data3 = new GridData();
         data3.horizontalSpan = 4;
@@ -274,7 +285,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    button2.addSelectionListener(new SelectionAdapter() {
 	    	public void widgetSelected(SelectionEvent event) {
 	    		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzung = 
-	    			((RisikoanalyseWizard)getWizard()).getMassnahmenUmsetzungen();
+	    			((RisikoanalyseWizard)getWizard()).getAllMassnahmenUmsetzungen();
 	    		final NewMassnahmenUmsetzungDialog dialog = new NewMassnahmenUmsetzungDialog(
 						container.getShell(), arrListMassnahmenUmsetzung,
 						((RisikoanalyseWizard)getWizard()).getSelectionElement());
@@ -308,7 +319,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 					viewerMassnahme.refresh();
 				}
 				ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzung = 
-	    			((RisikoanalyseWizard)getWizard()).getMassnahmenUmsetzungen();
+	    			((RisikoanalyseWizard)getWizard()).getAllMassnahmenUmsetzungen();
 				Logger.getLogger(this.getClass()).debug(
 						"#MU: " + arrListMassnahmenUmsetzung.size());
 			}
@@ -349,18 +360,15 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		
 		((RisikoanalyseWizard)getWizard()).addRisikoGefaehrdungsUmsetzungen();
 		
-		ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = 
-			((RisikoanalyseWizard)getWizard()).getRisikoGefaehrdungsUmsetzungen();
+		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = 
+			((RisikoanalyseWizard)getWizard()).getAllMassnahmenUmsetzungen();
 		
-		ArrayList<MassnahmenUmsetzung> arrListGefaehrdungsMassnahmen = 
-			((RisikoanalyseWizard)getWizard()).getMassnahmenUmsetzungen();
-
 		/* map a domain model object into multiple images and text labels */
 		viewerMassnahme.setLabelProvider(new MassnahmeTableViewerLabelProvider());
 		/* map domain model into array */
 		viewerMassnahme.setContentProvider(new ArrayContentProvider());
 		/* associate domain model with viewer */
-		viewerMassnahme.setInput(arrListGefaehrdungsMassnahmen);
+		viewerMassnahme.setInput(arrListMassnahmenUmsetzungen);
 		
 		// TODO viewer.setSorter(new GefaehrdungenSorter());
 	    
@@ -392,7 +400,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	
 	private void deleteMassnahmenUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung) {
 		ArrayList<MassnahmenUmsetzung> listMassnahmenUmsetzungen = ((RisikoanalyseWizard) getWizard())
-				.getMassnahmenUmsetzungen();
+				.getAllMassnahmenUmsetzungen();
 		
  		try {
 			if (listMassnahmenUmsetzungen.contains(massnahmenUmsetzung)) {
@@ -400,7 +408,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 				
 				/* delete from List of MassnahmenUmsetzungen */
 				listMassnahmenUmsetzungen.remove(massnahmenUmsetzung);
-				((RisikoanalyseWizard)getWizard()).setMassnahmenUmsetzungen(listMassnahmenUmsetzungen);
+				((RisikoanalyseWizard)getWizard()).setAllMassnahmenUmsetzungen(listMassnahmenUmsetzungen);
 			}
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "MassnahmenUmsetzung konnte nicht gelöscht werden.");

@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
@@ -71,6 +72,12 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	/* Liste aller Gefaehrdungen - ChooseGefaehrungPage */
 	private ArrayList<Gefaehrdung> allGefaehrdungen = new ArrayList<Gefaehrdung>();
 	
+	/* Liste aller Massnahmen - AdditionalSecurityMeasuresPage */
+	private ArrayList<Massnahme> allMassnahmen = new ArrayList<Massnahme>();
+	
+	/* Liste aller MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
+	private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
+	
 	/* Liste der vorausgewaehlten Gefaehrdungen - ChooseGefaehrungPage, EstimateGefaehrungPage */
 	private ArrayList<Gefaehrdung> associatedGefaehrdungen = new ArrayList<Gefaehrdung>();
 	
@@ -81,14 +88,16 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	 * werden muss - EstimateGefaehrungPage */
 	private ArrayList<Gefaehrdung> notOKGefaehrdungen = new ArrayList<Gefaehrdung>();
 	
-	/* Liste der gefaehrdungsUmsetzungen - EstimateGefaehrungPage */
+	/* Liste der gefaehrdungsUmsetzungen (Liste der weiter zu behandelnden
+	 *  Gefährdungen) - EstimateGefaehrungPage, RiskHandlingPage */
 	private ArrayList<GefaehrdungsUmsetzung> gefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 	
 	/* Liste der als "A" eingestuften Risiken - RiskHandlingPage */
 	private ArrayList<GefaehrdungsUmsetzung> risikoGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 	
 	/* Liste der MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
-	private ArrayList<MassnahmenUmsetzung> massnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
+	// überflüssig. durch allMassnahmen ersetzt.
+	// private ArrayList<MassnahmenUmsetzung> massnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
 	
 	/* hier Anwendungslogik einfügen */
 	@Override
@@ -109,6 +118,7 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		loadAllGefaehrdungen();
+		loadAllMassnahmen();
 		loadAssociatedGefaehrdungen();
 		loadOwnGefaehrdungen();
 		addOwnGefaehrdungen();
@@ -175,8 +185,36 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	}
 	
 	/**
+	 * Selects All Gefaehrdungen
+	 */
+	private void loadAllMassnahmen() {
+		List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance().getBausteine();
+        alleBausteine: for (Baustein baustein : bausteine) {
+        	alleMassnahmen: for (Massnahme massnahme : baustein.getMassnahmen()) {
+        		Boolean duplicate = false;
+        		alleTitel: for (Massnahme element : allMassnahmen) {
+					if (element.getTitel().equals(massnahme.getTitel())) {
+						duplicate = true;
+						break alleTitel;
+					}
+				}
+        		if (!duplicate) {
+					// TODO: könnte ich auch von Massnahme nach
+					// MassnahmenUmsetzung konvertieren?
+					MassnahmenUmsetzung massnahmeUmsetzung = new MassnahmenUmsetzung(
+							cnaElement);
+					massnahmeUmsetzung.setName(massnahme.getTitel());
+					allMassnahmen.add(massnahme);
+					allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
+				}
+			}
+        }
+	}
+	
+	/**
 	 * Selects All GefaehrdungsUmsetzungen
 	 */
+	/*
 	private void loadGefaehrdungsUmsetzungen() {
 		for (Gefaehrdung element : associatedGefaehrdungen) {
 			GefaehrdungsUmsetzung newGefaehrdungsUmsetzung = new GefaehrdungsUmsetzung(
@@ -184,6 +222,7 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 			gefaehrdungsUmsetzungen.add(newGefaehrdungsUmsetzung);
 		}
 	}
+	*/
 	
 	/**
 	 * Get all Gefaehrdungen for a given Baustein by it's ID.
@@ -308,16 +347,31 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	/**
 	 * @return the massnahmenUmsetzungen ArrayList
 	 */
-	public ArrayList<MassnahmenUmsetzung> getMassnahmenUmsetzungen() {
-		return massnahmenUmsetzungen;
-	}
+	// public ArrayList<MassnahmenUmsetzung> getMassnahmenUmsetzungen() {
+	//	return massnahmenUmsetzungen;
+	// }
 
 	/**
 	 * @param massnahmenUmsetzungen the massnahmenUmsetzungen to set
 	 */
-	public void setMassnahmenUmsetzungen(
-			ArrayList<MassnahmenUmsetzung> newMassnahmenUmsetzungen) {
-		massnahmenUmsetzungen = newMassnahmenUmsetzungen;
+	// public void setMassnahmenUmsetzungen(
+	// 		ArrayList<MassnahmenUmsetzung> newMassnahmenUmsetzungen) {
+	// 	massnahmenUmsetzungen = newMassnahmenUmsetzungen;
+	// }
+
+	/**
+	 * @return the allMassnahmenUmsetzungen
+	 */
+	public ArrayList<MassnahmenUmsetzung> getAllMassnahmenUmsetzungen() {
+		return allMassnahmenUmsetzungen;
 	}
-	
+
+	/**
+	 * @param allMassnahmenUmsetzungen the allMassnahmenUmsetzungen to set
+	 */
+	public void setAllMassnahmenUmsetzungen(
+			ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen) {
+		this.allMassnahmenUmsetzungen = allMassnahmenUmsetzungen;
+	}
+
 }

@@ -158,9 +158,6 @@ public class RiskHandlingPage extends WizardPage {
         data6.verticalAlignment = SWT.TOP;
 	    compositeFilter.setLayoutData(data6);
 	    
-	    // TODO Suche-Textfelder auf einheitliche Laenge bringen
-	    // koennte mit RowLayout einfacher gehen
-	    
 	    /* filter button - search */
 	    new Label(compositeFilter, SWT.NULL).setText("suche:");
 	    Text search = new Text(compositeFilter, SWT.SINGLE | SWT.BORDER);
@@ -207,9 +204,7 @@ public class RiskHandlingPage extends WizardPage {
 		viewer.setSorter(new GefaehrdungenSorter());
 		packAllColumns();
 		
-		// TODO sollte es moeglich sein, dass eine GefaehrdungsUmsetzung zu Beginnn
-		// vom Typ "A" ist, so darf diese Zeile hier nicht stehen bleiben !!!
-		setPageComplete(false);
+		checkPageComplete();
 	}
 
 	/**
@@ -220,6 +215,31 @@ public class RiskHandlingPage extends WizardPage {
 		numberColumn.pack();
 		nameColumn.pack();
 		choiceColumn.pack();
+	}
+	
+	/**
+	 * initializes list of Gefaerhrdungen of risk-handling Type "A"
+	 */
+	private void checkPageComplete() {
+		ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = 
+			((RisikoanalyseWizard)getWizard()).getGefaehrdungsUmsetzungen();
+		Boolean complete = false;
+		
+		/* setPageComplete(false) if no GefaehrdungsUmsetzung is of alternative "A" */
+		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : arrListGefaehrdungsUmsetzungen) {
+			Logger.getLogger(this.getClass()).debug("GefaehrdungsUmsetzung: "
+					+ gefaehrdungsUmsetzung.getTitel());
+			if (gefaehrdungsUmsetzung.getAlternative().equals("A")) {
+				complete = true;
+				break;
+			}
+		}
+		
+		if (complete) {
+			setPageComplete(true);
+		} else {
+			setPageComplete(false);
+		}
 	}
 	
 	class SearchFilter extends ViewerFilter {
