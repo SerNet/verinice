@@ -227,8 +227,6 @@ public class RiskHandlingPage extends WizardPage {
 		
 		/* setPageComplete(false) if no GefaehrdungsUmsetzung is of alternative "A" */
 		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : arrListGefaehrdungsUmsetzungen) {
-			Logger.getLogger(this.getClass()).debug("GefaehrdungsUmsetzung: "
-					+ gefaehrdungsUmsetzung.getTitel());
 			if (gefaehrdungsUmsetzung.getAlternative().equals("A")) {
 				complete = true;
 				break;

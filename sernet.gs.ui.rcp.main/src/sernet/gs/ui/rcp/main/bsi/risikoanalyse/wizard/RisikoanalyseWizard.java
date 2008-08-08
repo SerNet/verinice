@@ -374,4 +374,13 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 		this.allMassnahmenUmsetzungen = allMassnahmenUmsetzungen;
 	}
 
+	// TODO 
+	/*
+	public boolean canFinish(boolean bool) {
+		// TODO Auto-generated method stub
+		// return super.canFinish();
+		return bool;
+	}
+	*/
+
 }

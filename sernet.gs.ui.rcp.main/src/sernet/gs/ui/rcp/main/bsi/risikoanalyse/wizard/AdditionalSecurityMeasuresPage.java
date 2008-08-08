@@ -69,7 +69,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 	private Composite container;
-	private TableViewer viewerGefaehrdung;
+	private TreeViewer viewerGefaehrdung;
 	private TableViewer viewerMassnahme;
 	
 	private TableColumn imgColumnGefaehrdung;
@@ -101,19 +101,17 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		
 		/* TODO brauche ich das control (s.u.)? */
 		setControl(container);
-
+		
 		/* table viewer: Gefaehrdungen */
-		
-		ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = 
-			((RisikoanalyseWizard)getWizard()).getRisikoGefaehrdungsUmsetzungen();
-		
-		final TreeViewer viewerGefaehrdung = new TreeViewer(container, SWT.SINGLE);
-		// viewerGefaehrdung.setLabelProvider(new GefaehrdungTreeViewerLabelProvider());
-		// viewerGefaehrdung.setContentProvider(new GefaehrdungTreeViewerContentProvider(arrListGefaehrdungsUmsetzungen));
-		// viewerGefaehrdung.setInput(arrListGefaehrdungsUmsetzungen);
-		// viewerGefaehrdung.expandAll();
-		
-		viewerGefaehrdung.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
+		viewerGefaehrdung = new TreeViewer(container, SWT.SINGLE);
+		GridData data14 = new GridData();
+		data14.grabExcessHorizontalSpace = true;
+		data14.grabExcessVerticalSpace = true;
+		data14.horizontalSpan = 2;
+		data14.horizontalAlignment = SWT.FILL;
+		data14.verticalAlignment = SWT.FILL;
+		viewerGefaehrdung.getTree().setLayoutData(data14);
+		//viewerGefaehrdung.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		/*
 		final Table tableGefaehrdung = viewerGefaehrdung.getTable();
@@ -360,6 +358,17 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		
 		((RisikoanalyseWizard)getWizard()).addRisikoGefaehrdungsUmsetzungen();
 		
+		ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = 
+			((RisikoanalyseWizard)getWizard()).getRisikoGefaehrdungsUmsetzungen();
+		
+		/* root of TreeViewer */
+		IGefaehrdungsBaumElement baum = new GefaehrdungsBaumRoot(arrListGefaehrdungsUmsetzungen);
+		
+		viewerGefaehrdung.setLabelProvider(new GefaehrdungTreeViewerLabelProvider());
+		viewerGefaehrdung.setContentProvider(new GefaehrdungTreeViewerContentProvider());
+		viewerGefaehrdung.setInput(baum);
+		// viewerGefaehrdung.expandAll();
+		
 		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = 
 			((RisikoanalyseWizard)getWizard()).getAllMassnahmenUmsetzungen();
 		
@@ -369,13 +378,13 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		viewerMassnahme.setContentProvider(new ArrayContentProvider());
 		/* associate domain model with viewer */
 		viewerMassnahme.setInput(arrListMassnahmenUmsetzungen);
+		packAllMassnahmeColumns();
 		
 		// TODO viewer.setSorter(new GefaehrdungenSorter());
-	    
-		packAllMassnahmeColumns();
 		
 		// vs. overriding method WizardPage.canFilpToNextPage 
 		checkPageComplete();
+		((RisikoanalyseWizard)getWizard()).canFinish();
 	}
 
 	/**

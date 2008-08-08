@@ -1,17 +1,25 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
+import java.util.List;
+import org.eclipse.swt.graphics.Image;
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.GefaehrdungsBaumRoot;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement;
 import sernet.hui.common.connect.Entity;
 
-public class GefaehrdungsUmsetzung extends Gefaehrdung {
-	
+public class GefaehrdungsUmsetzung extends Gefaehrdung
+	implements IGefaehrdungsBaumElement {
+
 	private int dbId;
-	
 	private String id;
 	private String titel;
 	private String kategorie;
 	private Boolean okay;
 	private String alternative;
+	private GefaehrdungsBaumRoot parent;
+	private List<IGefaehrdungsBaumElement> children;
+	private Image image = ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
 
 	public static final String GEFAEHRDUNG_ALTERNATIVE_A = "A";
 	public static final String GEFAEHRDUNG_ALTERNATIVE_B = "B";
@@ -107,5 +115,34 @@ public class GefaehrdungsUmsetzung extends Gefaehrdung {
 	 */
 	public void setOkay(Boolean newOkay) {
 		this.okay = newOkay;
+	}
+
+	/**
+	 * returns the list of children (RisikoMassnahmenUmsetzungen)
+	 *  in the tree.
+	 */
+	public List<IGefaehrdungsBaumElement> getGefaehrdungsBaumChildren() {
+		return children;
+	}
+
+	/**
+	 * returns the parent element (GefaehrdungsbaumRoot) in the tree
+	 */
+	public IGefaehrdungsBaumElement getGefaehrdungsBaumParent() {
+		return parent;
+	}
+
+	/**
+	 *  returns the image to display in viewer.
+	 */
+	public Image getImage() {
+		return image;
+	}
+	
+	/**
+	 *   returns the Name of the GefaehrdungsUmsetzung
+	 */
+	public String getText() {
+		return this.getTitel();
 	}
 }
