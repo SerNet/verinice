@@ -49,7 +49,7 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate{
 		
 		Shell shell = new Shell();
 		RisikoanalyseWizard wizard =  new RisikoanalyseWizard();
-		wizard.setSelectionElement(struktElement);
+		wizard.setCnaElement(struktElement);
     	wizard.init(PlatformUI.getWorkbench(), null);
     	WizardDialog wizDialog =  new org.eclipse.jface.wizard.WizardDialog(shell, wizard);
     	wizDialog.open();

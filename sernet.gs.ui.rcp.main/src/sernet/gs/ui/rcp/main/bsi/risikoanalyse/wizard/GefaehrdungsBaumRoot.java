@@ -10,6 +10,13 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 
 public class GefaehrdungsBaumRoot implements IGefaehrdungsBaumElement {
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement#getDescription()
+	 */
+	public String getDescription() {
+		return "";
+	}
+
 	private List<IGefaehrdungsBaumElement> children = new ArrayList<IGefaehrdungsBaumElement>();
 	private Image image = ImageCache.getInstance().getImage(ImageCache.BAUSTEIN);
 

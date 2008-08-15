@@ -86,6 +86,15 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	}
 	
 	/**
+	 * sets the parent element in the tree, which is a
+	 * GefaehrdungsUmsetzung.
+	 */
+	public void setGefaehrdungsBaumParent(GefaehrdungsUmsetzung newParent) {
+		// TODO Auto-generated method stub
+		parent = newParent;
+	}
+	
+	/**
 	 *  returns the image to display in viewer.
 	 */
 	public Image getImage() {
@@ -97,5 +106,13 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 */
 	public String getText() {
 		return this.getTitle();
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement#getDescription()
+	 */
+	public String getDescription() {
+		// TODO implement Description
+		return "";
 	}
 }

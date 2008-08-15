@@ -9,6 +9,7 @@ public class DNDItems {
 	public static final String BAUSTEIN = "baustein"; //$NON-NLS-1$
 	public static final Object BAUSTEINUMSETZUNG = "bausteinumsetzung"; //$NON-NLS-1$
 	public static final Object CNAITEM = "cnaitem"; //$NON-NLS-1$
+	public static final Object RISIKOMASSNAHMENUMSETZUNG = "risikomassnahmenumsetzung";
 	
 	private static List dndItems = new ArrayList();
 
@@ -24,6 +25,4 @@ public class DNDItems {
 		dndItems = null;
 	}
 	
-	
-
 }

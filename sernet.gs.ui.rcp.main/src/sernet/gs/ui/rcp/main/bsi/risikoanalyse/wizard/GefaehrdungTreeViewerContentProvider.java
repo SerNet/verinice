@@ -47,7 +47,12 @@ public class GefaehrdungTreeViewerContentProvider
 		Logger.getLogger(this.getClass()).debug("content - hasChildren");
 		try {
 			IGefaehrdungsBaumElement elmt = (IGefaehrdungsBaumElement) element;
-			return elmt.getGefaehrdungsBaumChildren().size() > 0;
+			// TODO if-else eleganter lösen
+			if (elmt.getGefaehrdungsBaumChildren() == null) {
+				return false;
+			} else {
+				return elmt.getGefaehrdungsBaumChildren().size() > 0;
+			}
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass()).debug("error: " + e.toString());
 			return false;

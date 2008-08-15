@@ -8,4 +8,5 @@ public interface IGefaehrdungsBaumElement {
 	public IGefaehrdungsBaumElement getGefaehrdungsBaumParent();
 	public Image getImage();
 	public String getText();
+	public String getDescription();
 }

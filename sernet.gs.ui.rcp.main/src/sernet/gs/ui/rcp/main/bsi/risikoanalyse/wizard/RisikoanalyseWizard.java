@@ -292,12 +292,11 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 		return notOKGefaehrdungen;
 	}
 	
-	public void setSelectionElement(CnATreeElement treeElement) {
+	public void setCnaElement(CnATreeElement treeElement) {
 		cnaElement = treeElement;
 	}
 	
-	// TODO habe ich von private auf public gesetzt - ist das ein Problem?
-	public CnATreeElement getSelectionElement() {
+	public CnATreeElement getCnaElement() {
 		return cnaElement;
 	}
 	

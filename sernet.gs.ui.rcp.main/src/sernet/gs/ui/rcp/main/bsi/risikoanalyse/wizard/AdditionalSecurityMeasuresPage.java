@@ -26,6 +26,9 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -57,6 +60,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 
 /**
@@ -190,6 +194,15 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		    }
 		});
 		
+		/* add drag and drop support */
+		CnATreeElement cnaElement = ((RisikoanalyseWizard)getWizard()).getCnaElement();
+		Transfer[] types = new Transfer[] { RisikoMassnahmenUmsetzungTransfer.getInstance() };
+		int operations = DND.DROP_COPY | DND.DROP_MOVE;
+		viewerGefaehrdung.addDropSupport(operations, types,
+				new RisikoMassnahmenUmsetzungDropListener(viewerGefaehrdung));
+		viewerMassnahme.addDragSupport(operations, types,
+				new RisikoMassnahmenUmsetzungDragListener(viewerMassnahme,cnaElement));
+		
 	    /* group the Filter checkboxes with composite */
 		Composite compositeFilter = new Composite(container, SWT.NULL);
 		GridLayout gridLayoutSearch = new GridLayout();
@@ -286,7 +299,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    			((RisikoanalyseWizard)getWizard()).getAllMassnahmenUmsetzungen();
 	    		final NewMassnahmenUmsetzungDialog dialog = new NewMassnahmenUmsetzungDialog(
 						container.getShell(), arrListMassnahmenUmsetzung,
-						((RisikoanalyseWizard)getWizard()).getSelectionElement());
+						((RisikoanalyseWizard)getWizard()).getCnaElement());
 	    		dialog.open();
 	    		viewerMassnahme.refresh();
 	    		packAllMassnahmeColumns();
