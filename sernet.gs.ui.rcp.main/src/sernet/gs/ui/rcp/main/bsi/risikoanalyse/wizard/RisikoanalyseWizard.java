@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -69,16 +70,19 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	private IWorkbench workbench;
 	private CnATreeElement cnaElement;
 	
-	/* Liste aller Gefaehrdungen - ChooseGefaehrungPage */
+	/* Liste of all Gefaehrdungen - ChooseGefaehrungPage */
 	private ArrayList<Gefaehrdung> allGefaehrdungen = new ArrayList<Gefaehrdung>();
 	
-	/* Liste aller Massnahmen - AdditionalSecurityMeasuresPage */
+	/* Liste of all Massnahmen - AdditionalSecurityMeasuresPage */
 	private ArrayList<Massnahme> allMassnahmen = new ArrayList<Massnahme>();
 	
-	/* Liste aller MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
+	/* List of all MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
 	private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
 	
-	/* Liste der vorausgewaehlten Gefaehrdungen - ChooseGefaehrungPage, EstimateGefaehrungPage */
+	/* List of all RisikoMassnahmenUmsetzungen - AdditionalSecurityMeasuresPage*/
+	private ArrayList<RisikoMassnahmenUmsetzung> allRisikoMassnahmenUmsetzungen = new ArrayList<RisikoMassnahmenUmsetzung>();
+	
+	/* List of preselected Gefaehrdungen - ChooseGefaehrungPage, EstimateGefaehrungPage */
 	private ArrayList<Gefaehrdung> associatedGefaehrdungen = new ArrayList<Gefaehrdung>();
 	
 	/* Liste der eigenen Gefaehrdungen - ChooseGefaehrungPage */
@@ -94,6 +98,8 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	
 	/* Liste der als "A" eingestuften Risiken - RiskHandlingPage */
 	private ArrayList<GefaehrdungsUmsetzung> risikoGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
+	
+	
 	
 	/* Liste der MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
 	// überflüssig. durch allMassnahmen ersetzt.
@@ -312,6 +318,15 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 			}
 		}
 	}
+	
+	public void addRisikoMassnahmenUmsetzungen() {
+		for (RisikoMassnahmenUmsetzung element : allRisikoMassnahmenUmsetzungen) {
+			/* add to list of all MassnahmenUmsetzungen */
+			if (!(allMassnahmenUmsetzungen.contains(element))) { 
+				allMassnahmenUmsetzungen.add(element);
+			}
+		}
+	}
 
 	/**
 	 * @return the risikoGefaehrdungsUmsetzungen (list of GefaehrdungsUmsetzungen)
@@ -368,9 +383,24 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	/**
 	 * @param allMassnahmenUmsetzungen the allMassnahmenUmsetzungen to set
 	 */
-	public void setAllMassnahmenUmsetzungen(
+	private void setAllMassnahmenUmsetzungen(
 			ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen) {
 		this.allMassnahmenUmsetzungen = allMassnahmenUmsetzungen;
+	}
+
+	/**
+	 * @return the allRisikoMassnahmenUmsetzungen
+	 */
+	public ArrayList<RisikoMassnahmenUmsetzung> getAllRisikoMassnahmenUmsetzungen() {
+		return allRisikoMassnahmenUmsetzungen;
+	}
+
+	/**
+	 * @param allRisikoMassnahmenUmsetzungen the allRisikoMassnahmenUmsetzungen to set
+	 */
+	public void setAllRisikoMassnahmenUmsetzungen(
+			ArrayList<RisikoMassnahmenUmsetzung> allRisikoMassnahmenUmsetzungen) {
+		this.allRisikoMassnahmenUmsetzungen = allRisikoMassnahmenUmsetzungen;
 	}
 
 	// TODO 

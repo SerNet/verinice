@@ -58,6 +58,7 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -295,15 +296,19 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    button2.setLayoutData(data4);
 	    button2.addSelectionListener(new SelectionAdapter() {
 	    	public void widgetSelected(SelectionEvent event) {
-	    		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzung = 
-	    			((RisikoanalyseWizard)getWizard()).getAllMassnahmenUmsetzungen();
+	    		
+	    		ArrayList<RisikoMassnahmenUmsetzung> arrListRisikoMassnahmenUmsetzung = 
+	    			((RisikoanalyseWizard)getWizard()).getAllRisikoMassnahmenUmsetzungen();
+	    		
+	    		/* Add new RisikoMassnahmenUmsetzungen to viewer */
+	    		
 	    		final NewMassnahmenUmsetzungDialog dialog = new NewMassnahmenUmsetzungDialog(
-						container.getShell(), arrListMassnahmenUmsetzung,
+						container.getShell(), arrListRisikoMassnahmenUmsetzung,
 						((RisikoanalyseWizard)getWizard()).getCnaElement());
 	    		dialog.open();
+	    		((RisikoanalyseWizard)getWizard()).addRisikoMassnahmenUmsetzungen();
 	    		viewerMassnahme.refresh();
 	    		packAllMassnahmeColumns();
-	    		Logger.getLogger(this.getClass()).debug("#MU: " + arrListMassnahmenUmsetzung.size());
 	    	}
 	    });
 	    
@@ -429,8 +434,10 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 				// TODO  OwnGefaehrdungHome.getInstance().remove((OwnGefaehrdung)delGefaehrdung);
 				
 				/* delete from List of MassnahmenUmsetzungen */
-				listMassnahmenUmsetzungen.remove(massnahmenUmsetzung);
-				((RisikoanalyseWizard)getWizard()).setAllMassnahmenUmsetzungen(listMassnahmenUmsetzungen);
+				
+				// TODO - löschen
+				// listMassnahmenUmsetzungen.remove(massnahmenUmsetzung);
+				// ((RisikoanalyseWizard)getWizard()).setAllMassnahmenUmsetzungen(listMassnahmenUmsetzungen);
 			}
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "MassnahmenUmsetzung konnte nicht gelöscht werden.");

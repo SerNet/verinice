@@ -44,41 +44,33 @@ import sernet.snutils.ExceptionHandlerFactory;
 public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IGefaehrdungsBaumElement {
 	
 	private GefaehrdungsUmsetzung parent;
-	private Image image = ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+	private Image image = ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+	private String description;
 	
 	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, GefaehrdungsUmsetzung myParent) {
 		super(superParent);
 		this.parent = myParent;
 	}
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung#getTitle()
-	 */
-	@Override
-	public String getTitle() {
-		return super.getTitle();
-	}
-
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung#setName(java.lang.String)
-	 */
-	public void setTitle(String name) {
-		super.setName(name);
-	}
-
 	/**
-	 *  Inherited by IGefaehrdungsBaumElement.
-	 *  A RisikoMassnahmenUmsetzung has no children.
+	 * Must be implemented due to Interface IGefaehrdungsBaumElement.
+	 * 
+	 * A RisikoMassnahmenUmsetzung never has children, therefore
+	 * always returns null.
 	 *  
-	 *  returns null
+	 * @return - null
 	 */
 	public List<IGefaehrdungsBaumElement> getGefaehrdungsBaumChildren() {
 		return null;
 	}
 
 	/**
-	 * returns the parent element in the tree, which is a
+	 * Must be implemented due to Interface IGefaehrdungsBaumElement.
+	 * 
+	 * Returns the parent element in the tree, which is a
 	 * GefaehrdungsUmsetzung.
+	 * 
+	 * @return - the parent element "parent" (IGefaehrdungsBaumElement)
 	 */
 	public IGefaehrdungsBaumElement getGefaehrdungsBaumParent() {
 		// TODO Auto-generated method stub
@@ -86,33 +78,77 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	}
 	
 	/**
-	 * sets the parent element in the tree, which is a
-	 * GefaehrdungsUmsetzung.
+	 * Sets the parent element "parent" (GefaehrdungsUmsetzung) in the tree
+	 * if the parent is null, else nothing.
+	 * 
+	 * @param newParent - new GefaehrdungsUmsetzung which is to be
+	 * 		  the new parent
 	 */
 	public void setGefaehrdungsBaumParent(GefaehrdungsUmsetzung newParent) {
-		// TODO Auto-generated method stub
-		parent = newParent;
+		if (parent == null ) { 
+			parent = newParent;
+		}
 	}
 	
 	/**
-	 *  returns the image to display in viewer.
+	 * Must be implemented due to Interface IGefaehrdungsBaumElement.
+	 * 
+	 * @return - Image "image" to display in the viewer
 	 */
 	public Image getImage() {
 		return image;
 	}
 	
 	/**
-	 *   returns the Name of the RisikoMassnahmenUmsetzung
+	 * Must be implemented due to Interface IGefaehrdungsBaumElement.
+	 * 
+	 * Calls the local getTitle() method.
+	 * 
+	 * @return - name of the RisikoMassnahmenUmsetzung
 	 */
 	public String getText() {
 		return this.getTitle();
 	}
+	
+	/**
+	 * Overrides and calls MassnahmenUmsetzung.getTitle().
+	 * 
+	 * @return - title of the RisikoMassnahmenUmsetzung
+	 */
+	@Override
+	public String getTitle() {
+		return super.getTitle();
+	}
+	
+	/**
+	 * Implemented for reasons of conformity.
+	 * 
+	 * Calls MassnahmenUmsetzung.setName() to set the title of a
+	 * RisikoMassnahmenUmsetzung.
+	 * 
+	 * @param name - new name of the RisikoMassnahmenUmsetzung
+	 */
+	public void setTitle(String name) {
+		super.setName(name);
+	}
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement#getDescription()
+	/**
+	 * Must be implemented due to Interface IGefaehrdungsBaumElement.
+	 * 
+	 * @return - description (String) of the RisikoMassnahmenUmsetzung.
 	 */
 	public String getDescription() {
-		// TODO implement Description
-		return "";
+		return description;
 	}
+	
+	/**
+	 * Sets the description of the RisikoMassnahmenUmsetzung.
+	 * 
+	 * @param newDescription - new description (String) of the
+	 * 		  RisikoMassnahmenUmsetzung
+	 */
+	public void setDescription(String newDescription) {
+		description = newDescription;
+	}
+	
 }

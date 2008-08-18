@@ -9,27 +9,45 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 
 public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		
 		if (columnIndex == 0)
-		  return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+			if (element instanceof RisikoMassnahmenUmsetzung) {
+				return ((RisikoMassnahmenUmsetzung) element).getImage();
+			} else {
+				return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+			}
 		
 		return null;
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		MassnahmenUmsetzung massnahme = (MassnahmenUmsetzung) element;
-		switch (columnIndex) {
-		case 0:
-			return null;
-		case 1:
-			return massnahme.getTitle();
-		case 2:
-			return "keine Beschreibung";
-		};
+		
+		if (element instanceof RisikoMassnahmenUmsetzung) {
+			RisikoMassnahmenUmsetzung massnahme = (RisikoMassnahmenUmsetzung) element;
+			switch (columnIndex) {
+			case 0:
+				return null;
+			case 1:
+				return massnahme.getTitle();
+			case 2:
+				return massnahme.getDescription();
+			};
+		} else {
+			MassnahmenUmsetzung massnahme = (MassnahmenUmsetzung) element;
+			switch (columnIndex) {
+			case 0:
+				return null;
+			case 1:
+				return massnahme.getTitle();
+			case 2:
+				return "keine Beschreibung";
+			};
+		}
 		return "";
 	}
 
