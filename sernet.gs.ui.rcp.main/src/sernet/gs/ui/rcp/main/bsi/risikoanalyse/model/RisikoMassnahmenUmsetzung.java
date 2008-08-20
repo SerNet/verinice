@@ -44,7 +44,7 @@ import sernet.snutils.ExceptionHandlerFactory;
 public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IGefaehrdungsBaumElement {
 	
 	private GefaehrdungsUmsetzung parent;
-	private Image image = ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+	private Image image = ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
 	private String description;
 	
 	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, GefaehrdungsUmsetzung myParent) {

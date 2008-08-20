@@ -87,8 +87,8 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	private TableColumn nameColumnMassnahme;
 	private TableColumn descrColumnMassnahme;
 	
-	private OwnMassnahmenFilter ownMassnahmenFilter = new OwnMassnahmenFilter();
-	private MassnahmenFilter massnahmenFilter = new MassnahmenFilter();
+	private RisikoMassnahmenUmsetzungenFilter risikoMassnahmenUmsetzungenFilter = new RisikoMassnahmenUmsetzungenFilter();
+	private MassnahmenUmsetzungenFilter massnahmenUmsetzungenFilter = new MassnahmenUmsetzungenFilter();
 	private SearchFilter searchFilter = new SearchFilter();
 	
 	protected AdditionalSecurityMeasuresPage() {
@@ -215,8 +215,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
         data12.verticalAlignment = SWT.TOP;
 	    compositeFilter.setLayoutData(data12);
 		
-	    /* filter button - own Massnahmen only */
-		/*
+	    /* filter button - RisikoMassnahmenUmsetzungen only */
 	    Button button5 = new Button(compositeFilter, SWT.CHECK);
 	    button5.setText("nur eigene Maßnahmen anzeigen");
 	    GridData data7 = new GridData();
@@ -226,17 +225,16 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    	public void widgetSelected(SelectionEvent event) {
 	    		Button thisButton = (Button) event.widget;
 	    		if(thisButton.getSelection()){
-	    			viewerMassnahme.addFilter(ownMassnahmenFilter);
+	    			viewerMassnahme.addFilter(risikoMassnahmenUmsetzungenFilter);
 	    			viewerMassnahme.refresh();
 	    		} else {
-	    			viewerMassnahme.removeFilter(ownMassnahmenFilter);
+	    			viewerMassnahme.removeFilter(risikoMassnahmenUmsetzungenFilter);
 	    			viewerMassnahme.refresh();
 	    		}
 	    	}
 	    });
-	    */
-	    /* filter button - Gefaehrdungen only */
-		/*
+	    
+	    /* filter button - MassnahmenUmsetzungen only */
 	    Button button6 = new Button(compositeFilter, SWT.CHECK);
 	    button6.setText("nur BSI Maßnahmen anzeigen");
 	    GridData data8 = new GridData();
@@ -246,16 +244,15 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    	public void widgetSelected(SelectionEvent event) {
 	    		Button thisButton = (Button) event.widget;
 	    		if(thisButton.getSelection()){
-	    			viewerMassnahme.addFilter(massnahmenFilter);
+	    			viewerMassnahme.addFilter(massnahmenUmsetzungenFilter);
 	    			viewerMassnahme.refresh();
 	    		} else {
-	    			viewerMassnahme.removeFilter(massnahmenFilter);
+	    			viewerMassnahme.removeFilter(massnahmenUmsetzungenFilter);
 	    			viewerMassnahme.refresh();
 	    		}
 	    	}
 
 	    });
-	    */
 	    
 	    /* filter button - search */
 	    new Label(compositeFilter, SWT.NULL).setText("suche:");
@@ -302,7 +299,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    		
 	    		/* Add new RisikoMassnahmenUmsetzungen to viewer */
 	    		
-	    		final NewMassnahmenUmsetzungDialog dialog = new NewMassnahmenUmsetzungDialog(
+	    		final NewRisikoMassnahmenUmsetzungDialog dialog = new NewRisikoMassnahmenUmsetzungDialog(
 						container.getShell(), arrListRisikoMassnahmenUmsetzung,
 						((RisikoanalyseWizard)getWizard()).getCnaElement());
 	    		dialog.open();
@@ -322,7 +319,10 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 				IStructuredSelection selection = (IStructuredSelection) viewerMassnahme
 						.getSelection();
 				MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection
-						.getFirstElement();
+				.getFirstElement();
+				
+				if (selectedMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) {
+				/* only RisikoMassnahmenUmsetzungen can be deleted */
 
 				/* ask user to confirm */
 				boolean confirmed = MessageDialog.openQuestion(container
@@ -331,13 +331,17 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 								+ selectedMassnahmenUmsetzung.getTitle()
 								+ "\" wirklich löschen?");
 				if (confirmed) {
-					deleteMassnahmenUmsetzung(selectedMassnahmenUmsetzung);
+					deleteRisikoMassnahmenUmsetzung(selectedMassnahmenUmsetzung);
 					viewerMassnahme.refresh();
 				}
 				ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzung = 
 	    			((RisikoanalyseWizard)getWizard()).getAllMassnahmenUmsetzungen();
+				ArrayList<RisikoMassnahmenUmsetzung> arrListRisikoMassnahmenUmsetzung = 
+	    			((RisikoanalyseWizard)getWizard()).getAllRisikoMassnahmenUmsetzungen();
 				Logger.getLogger(this.getClass()).debug(
-						"#MU: " + arrListMassnahmenUmsetzung.size());
+						"#MU: " + arrListMassnahmenUmsetzung.size() +
+						" #RMU: " + arrListRisikoMassnahmenUmsetzung.size());
+				}
 			}
 		});
 	    
@@ -353,11 +357,16 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 						.getSelection();
 				MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection
 						.getFirstElement();
-				final EditMassnahmeUmsetzungDialog dialog = new EditMassnahmeUmsetzungDialog(
-						container.getShell(), selectedMassnahmenUmsetzung);
-				dialog.open();
-				viewerMassnahme.refresh();
-				packAllMassnahmeColumns();
+				if (selectedMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) {
+					RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung =
+						(RisikoMassnahmenUmsetzung) selectedMassnahmenUmsetzung;
+					final EditRisikoMassnahmenUmsetzungDialog dialog = new EditRisikoMassnahmenUmsetzungDialog(
+							container.getShell(),
+							selectedRisikoMassnahmenUmsetzung);
+					dialog.open();
+					viewerMassnahme.refresh();
+					packAllMassnahmeColumns();
+				}
 			}
 	    });
 	}
@@ -425,36 +434,56 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		}
 	}
 	
-	private void deleteMassnahmenUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung) {
-		ArrayList<MassnahmenUmsetzung> listMassnahmenUmsetzungen = ((RisikoanalyseWizard) getWizard())
+	private void deleteRisikoMassnahmenUmsetzung(
+			MassnahmenUmsetzung massnahmenUmsetzung) {
+		ArrayList<RisikoMassnahmenUmsetzung> arrListRisikoMassnahmenUmsetzungen = ((RisikoanalyseWizard) getWizard())
+				.getAllRisikoMassnahmenUmsetzungen();
+
+		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = ((RisikoanalyseWizard) getWizard())
 				.getAllMassnahmenUmsetzungen();
-		
- 		try {
-			if (listMassnahmenUmsetzungen.contains(massnahmenUmsetzung)) {
-				// TODO  OwnGefaehrdungHome.getInstance().remove((OwnGefaehrdung)delGefaehrdung);
+
+		try {
+			if (arrListRisikoMassnahmenUmsetzungen
+					.contains(massnahmenUmsetzung)) {
+				// TODO
+				// OwnGefaehrdungHome.getInstance().remove((OwnGefaehrdung)delGefaehrdung);
+
+				/* delete from List of RisikoMassnahmenUmsetzungen */
+				arrListRisikoMassnahmenUmsetzungen
+				.remove(massnahmenUmsetzung);
 				
 				/* delete from List of MassnahmenUmsetzungen */
-				
-				// TODO - löschen
-				// listMassnahmenUmsetzungen.remove(massnahmenUmsetzung);
-				// ((RisikoanalyseWizard)getWizard()).setAllMassnahmenUmsetzungen(listMassnahmenUmsetzungen);
+				if (arrListMassnahmenUmsetzungen.contains(massnahmenUmsetzung)) {
+					arrListMassnahmenUmsetzungen.remove(massnahmenUmsetzung);
+				}
+
+				// TODO an dieser Stelle müssten eigentlich auch die
+				// RisikoMassnahmenUmsetzungen,
+				// die duch DND diser RisikoMassnahmenUmsetzungen in den
+				// TreeViewer
+				// gelangt sind, geloescht werden..
 			}
 		} catch (Exception e) {
-			ExceptionUtil.log(e, "MassnahmenUmsetzung konnte nicht gelöscht werden.");
+			ExceptionUtil.log(e,
+					"RisikoMassnahmenUmsetzung konnte nicht gelöscht werden.");
 		}
 	}
 	
-	class OwnMassnahmenFilter extends ViewerFilter {
-		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			if (element instanceof OwnGefaehrdung)
+	class RisikoMassnahmenUmsetzungenFilter extends ViewerFilter {
+		public boolean select(Viewer viewer, Object parentElement,
+				Object element) {
+			if (element instanceof RisikoMassnahmenUmsetzung) {
 				return true;
-			return false;
+			} else {
+				return false;
+			}
 		}
 	}
-	
-	class MassnahmenFilter extends ViewerFilter {
-		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			if (!(element instanceof OwnGefaehrdung)) {
+
+	class MassnahmenUmsetzungenFilter extends ViewerFilter {
+		public boolean select(Viewer viewer, Object parentElement,
+				Object element) {
+			if (!(element instanceof RisikoMassnahmenUmsetzung)) {
 				return true;
 			} else {
 				return false;

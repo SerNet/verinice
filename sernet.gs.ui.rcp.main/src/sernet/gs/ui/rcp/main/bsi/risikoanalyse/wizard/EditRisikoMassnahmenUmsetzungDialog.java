@@ -2,6 +2,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -14,7 +15,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
@@ -22,52 +22,23 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 
 /**
- * Dialog to enter a new MassnahmenUmsetzung.
+ * modal dialog to enter a new security measure ("Massnahme").
  * 
  * @author ahanekop@sernet.de
  *
  */
-public class NewMassnahmenUmsetzungDialog extends Dialog {
+public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 
 	private Text textName;
 	private Text textDescription;
-	private ArrayList<RisikoMassnahmenUmsetzung> listRisikoMassnahmenUmsetzung;
-	private CnATreeElement cnaElement;
-	private RisikoMassnahmenUmsetzung newRisikoMassnahmenUmsetzung = new RisikoMassnahmenUmsetzung(cnaElement, null);
+	private RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung;
 	
-	/**
-	 * Constructor of NewMassnahmenUmsetzungDialog.
-	 * The dialog creates a new RiskoMassnahmenUmsetzung and adds it to
-	 * the given list.
-	 * 
-	 * @param parentShell (Shell) - shell of the viewer in which the Dialog
-	 * 		  is called
-	 * @param newListGef (ArrayList<RisikoMassnahmenUmsetzung>) - list of
-	 * 		  RiskoMassnahmenUmsetzung to add the new RisikoMassnahmenUmsetzung
-	 * 		  to
-	 * @param  newCnaElement (CnATreeElement) - the parent Element, which the
-	 * 		   RisikoAnalayse is made for 
-	 */
-	public NewMassnahmenUmsetzungDialog(Shell parentShell,
-			ArrayList<RisikoMassnahmenUmsetzung> newListGef,
-			CnATreeElement newCnaElement) {
-		// TODO übergabe des Feldes gibt Probleme, wenn der dialog nicht mehr
-		// modal ist!!
-		// komme ich von hier anders an den RisikoAnlayseWizard ??
-		// 2008-07-29 ah - ja: wizard übergeben. aber will man das?
-		// vergl. PropertiescomboBoxCellModifier
+	public EditRisikoMassnahmenUmsetzungDialog(Shell parentShell, RisikoMassnahmenUmsetzung massnahme) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		listRisikoMassnahmenUmsetzung = newListGef;
-		cnaElement = newCnaElement;
+		risikoMassnahmenUmsetzung = massnahme;
 	}
 	
-	/**
-	 * Creates and returns the contents of the upper part of this dialog (above
-	 * the button bar). Overrides dialog.createDialogArea(Composite parent).
-	 * 
-	 * @return the dialog area control
-	 */
 	@Override
 	protected Control createDialogArea(Composite parentShell) {
 		Composite container = (Composite) super.createDialogArea(parentShell);
@@ -90,6 +61,7 @@ public class NewMassnahmenUmsetzungDialog extends Dialog {
 	    gridTextName.verticalAlignment = SWT.CENTER;
 	    gridTextName.grabExcessHorizontalSpace = true;
 		textName.setLayoutData(gridTextName);
+		textName.setText(risikoMassnahmenUmsetzung.getTitle());
 		
 		/* label description */
 		final Label labelDescription = new Label(container, SWT.NONE);
@@ -105,27 +77,23 @@ public class NewMassnahmenUmsetzungDialog extends Dialog {
 		gridTextDescription.horizontalAlignment = SWT.FILL;
 	    gridTextDescription.verticalAlignment = SWT.CENTER;
 	    gridTextDescription.grabExcessHorizontalSpace = true;
+	    textDescription.setText(risikoMassnahmenUmsetzung.getDescription());
 		textDescription.setLayoutData(gridTextDescription);
 		
-		return container;
+		 //add controls to composite as necessary
+		 return container;
 	}
-
-	/**
-	 * Notifies that the ok button of this dialog has been pressed.
-	 */
+	
 	@Override
 	protected void okPressed() {
-		newRisikoMassnahmenUmsetzung.setTitle(textName.getText());
-		newRisikoMassnahmenUmsetzung.setDescription(textDescription.getText());
-		listRisikoMassnahmenUmsetzung.add(newRisikoMassnahmenUmsetzung);
+		risikoMassnahmenUmsetzung.setName(textName.getText());
+		risikoMassnahmenUmsetzung.setDescription(textDescription.getText());
 
-		/*
-		// TODO neue RisikoMassnahmenUmsetzung in DB speichern 
-		
+		/* TODO persistent speichern 
 		try {
-			OwnGefaehrdungHome.getInstance().saveNew(newOwnGef);
+			OwnGefaehrdungHome.getInstance().saveUpdate(ownGefaehrdung);
 		} catch (Exception e) {
-			ExceptionUtil.log(e, "Eigene Gefährdung konnte nicht gespeichert werden.");
+			ExceptionUtil.log(e, "Änderung konnte nicht gespeichert werden.");
 		}
 		*/
 		

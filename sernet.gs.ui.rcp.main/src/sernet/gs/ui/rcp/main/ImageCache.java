@@ -50,6 +50,8 @@ public class ImageCache {
 	public static final String MASSNAHMEN_UMSETZUNG_ENTBEHRLICH = "progress_rem.gif";
 	public static final String MASSNAHMEN_UMSETZUNG_TEILWEISE = "16-clock.png";
 	
+	public static final String RISIKO_MASSNAHMEN_UMSETZUNG = "16-message-warn.png";
+	
 	public static final String BAUSTEIN = "16-cube-blue.png";
 
 	public static final String STUFE_A = "stufe_a.png";

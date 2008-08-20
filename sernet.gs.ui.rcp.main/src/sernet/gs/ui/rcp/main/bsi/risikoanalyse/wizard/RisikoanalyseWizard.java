@@ -383,7 +383,7 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	/**
 	 * @param allMassnahmenUmsetzungen the allMassnahmenUmsetzungen to set
 	 */
-	private void setAllMassnahmenUmsetzungen(
+	public void setAllMassnahmenUmsetzungen(
 			ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen) {
 		this.allMassnahmenUmsetzungen = allMassnahmenUmsetzungen;
 	}

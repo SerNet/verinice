@@ -346,7 +346,6 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	    		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 	    		Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection.getFirstElement();
 	    		if (selectedGefaehrdung instanceof OwnGefaehrdung) {
-	    			Logger.getLogger(this.getClass()).debug("edit own gef");
 	    			OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
 	    			final EditGefaehrdungDialog dialog = 
 	    				new EditGefaehrdungDialog(container.getShell(), ownGefSelected);
