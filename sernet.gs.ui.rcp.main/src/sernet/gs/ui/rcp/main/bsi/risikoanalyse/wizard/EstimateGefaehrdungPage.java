@@ -282,6 +282,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					notOKArrayList.remove(currentGefaehrdung);
 				}
 
+				((RisikoanalyseWizard)getWizard()).setCanFinish(false);
 				checkPageComplete();
 			}
 		});

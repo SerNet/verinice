@@ -204,6 +204,7 @@ public class RiskHandlingPage extends WizardPage {
 		viewer.setSorter(new GefaehrdungenSorter());
 		packAllColumns();
 		
+		((RisikoanalyseWizard)getWizard()).setCanFinish(true);
 		checkPageComplete();
 	}
 

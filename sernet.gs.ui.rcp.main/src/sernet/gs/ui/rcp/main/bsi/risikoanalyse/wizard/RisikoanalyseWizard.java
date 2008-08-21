@@ -15,6 +15,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IExportWizard;
@@ -62,6 +63,7 @@ import sernet.snutils.ExceptionHandlerFactory;
  */
 public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 
+	private boolean canFinish = false;
 	private ChooseGefaehrdungPage chooseGefaehrdungPage;
 	private EstimateGefaehrdungPage estimateGefaehrdungPage;
 	private RiskHandlingPage riskHandlingPage;
@@ -82,10 +84,10 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	/* List of all RisikoMassnahmenUmsetzungen - AdditionalSecurityMeasuresPage*/
 	private ArrayList<RisikoMassnahmenUmsetzung> allRisikoMassnahmenUmsetzungen = new ArrayList<RisikoMassnahmenUmsetzung>();
 	
-	/* List of preselected Gefaehrdungen - ChooseGefaehrungPage, EstimateGefaehrungPage */
+	/* List of preselected Gefaehrdungen - ChooseGefaehrungPage_OK, EstimateGefaehrungPage */
 	private ArrayList<Gefaehrdung> associatedGefaehrdungen = new ArrayList<Gefaehrdung>();
 	
-	/* Liste der eigenen Gefaehrdungen - ChooseGefaehrungPage */
+	/* Liste der eigenen Gefaehrdungen - ChooseGefaehrungPage_OK */
 	private ArrayList<OwnGefaehrdung> ownGefaehrdungen = new ArrayList<OwnGefaehrdung>();
 	
 	/* Liste der vorselektierten Gefaehrdungen fuer die eine Risikobewertung duchgefuehrt
@@ -93,7 +95,7 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	private ArrayList<Gefaehrdung> notOKGefaehrdungen = new ArrayList<Gefaehrdung>();
 	
 	/* Liste der gefaehrdungsUmsetzungen (Liste der weiter zu behandelnden
-	 *  Gefährdungen) - EstimateGefaehrungPage, RiskHandlingPage */
+	 *  Gefährdungen) - ChooseGefaehrdungPage_OK, EstimateGefaehrungPage, RiskHandlingPage */
 	private ArrayList<GefaehrdungsUmsetzung> gefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 	
 	/* Liste der als "A" eingestuften Risiken - RiskHandlingPage */
@@ -403,13 +405,23 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 		this.allRisikoMassnahmenUmsetzungen = allRisikoMassnahmenUmsetzungen;
 	}
 
-	// TODO 
-	/*
-	public boolean canFinish(boolean bool) {
-		// TODO Auto-generated method stub
-		// return super.canFinish();
-		return bool;
-	}
-	*/
+	@Override
+	public boolean canFinish() {
+		/*
+		IWizardPage[] pages = this.getPages();
+		for (IWizardPage wizardPage : pages) {
+			if (wizardPage.getTitle() == "Gefährdungsbewertung") {
+				Logger.getLogger(this.getClass()).debug("wizardPage gefunden!");
+				return true;
+			}
+		}
+		return false;
+		*/
 
+		return canFinish;
+	}
+
+	public void setCanFinish(boolean newCanFinish) {
+		canFinish = newCanFinish;
+	}
 }
