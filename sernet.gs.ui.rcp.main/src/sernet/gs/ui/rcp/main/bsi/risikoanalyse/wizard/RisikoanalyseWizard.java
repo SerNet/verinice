@@ -72,7 +72,7 @@ public class RisikoanalyseWizard extends Wizard implements IExportWizard {
 	private IWorkbench workbench;
 	private CnATreeElement cnaElement;
 	
-	/* Liste of all Gefaehrdungen - ChooseGefaehrungPage */
+	/* Liste of all Gefaehrdungen - ChooseGefaehrungPage_OK */
 	private ArrayList<Gefaehrdung> allGefaehrdungen = new ArrayList<Gefaehrdung>();
 	
 	/* Liste of all Massnahmen - AdditionalSecurityMeasuresPage */

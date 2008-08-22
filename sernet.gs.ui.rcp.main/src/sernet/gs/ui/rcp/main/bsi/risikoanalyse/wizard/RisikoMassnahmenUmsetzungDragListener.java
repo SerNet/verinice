@@ -31,12 +31,10 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
 	 */
 	public void dragFinished(DragSourceEvent event) {
 		// nothing to do
-		Logger.getLogger(this.getClass()).debug("drag start - dragFinished()");
 	}
 
 	public void dragSetData(DragSourceEvent event) {
 		event.data = DNDItems.RISIKOMASSNAHMENUMSETZUNG;
-		Logger.getLogger(this.getClass()).debug("drag start - dragSetData()");
 	}
 
 	/**

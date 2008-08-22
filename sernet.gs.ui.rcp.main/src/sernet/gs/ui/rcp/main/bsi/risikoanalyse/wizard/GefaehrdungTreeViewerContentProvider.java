@@ -21,7 +21,6 @@ public class GefaehrdungTreeViewerContentProvider
 		implements ITreeContentProvider {
 
 	public Object[] getChildren(Object parentElement) {
-		Logger.getLogger(this.getClass()).debug("content - getChildren");
 		try {
 			IGefaehrdungsBaumElement elmt = (IGefaehrdungsBaumElement) parentElement;
 			return elmt.getGefaehrdungsBaumChildren().toArray();
@@ -33,7 +32,6 @@ public class GefaehrdungTreeViewerContentProvider
 	}
 
 	public Object getParent(Object element) {
-		Logger.getLogger(this.getClass()).debug("content - getParent");
 		try {
 			IGefaehrdungsBaumElement elmt = (IGefaehrdungsBaumElement) element;
 			return elmt.getGefaehrdungsBaumParent();
@@ -44,7 +42,6 @@ public class GefaehrdungTreeViewerContentProvider
 	}
 
 	public boolean hasChildren(Object element) {
-		Logger.getLogger(this.getClass()).debug("content - hasChildren");
 		try {
 			IGefaehrdungsBaumElement elmt = (IGefaehrdungsBaumElement) element;
 			// TODO if-else eleganter lösen
@@ -60,17 +57,14 @@ public class GefaehrdungTreeViewerContentProvider
 	}
 
 	public Object[] getElements(Object inputElement) {
-		Logger.getLogger(this.getClass()).debug("content - getElements");
 		return getChildren(inputElement);
 	}
 
 	public void dispose() {
-		Logger.getLogger(this.getClass()).debug("content - dispose");
 		// TODO Auto-generated method stub
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		Logger.getLogger(this.getClass()).debug("content - inputChanged");
 		// TODO Auto-generated method stub
 	}
 }

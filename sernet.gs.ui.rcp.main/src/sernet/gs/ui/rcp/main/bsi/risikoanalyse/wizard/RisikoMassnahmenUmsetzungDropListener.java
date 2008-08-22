@@ -4,6 +4,7 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -45,8 +46,6 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 	 */
 	@Override
 	public boolean performDrop(Object data) {
-		Logger.getLogger(this.getClass()).debug("drop finish - performDrop()");
-
 		/* get Object on which the drop is being applied */
 		Object receiver = getCurrentTarget();
 
@@ -57,9 +56,12 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 			parent = (GefaehrdungsUmsetzung) receiver;
 			child = (RisikoMassnahmenUmsetzung) toDrop;
 
+			List<IGefaehrdungsBaumElement> children = parent.getGefaehrdungsBaumChildren();
+			
 			if (child != null && child instanceof RisikoMassnahmenUmsetzung
 					&& parent != null
-					&& parent instanceof GefaehrdungsUmsetzung) {
+					&& parent instanceof GefaehrdungsUmsetzung
+					&& !(children.contains(child))) {
 				child.setGefaehrdungsBaumParent(parent);
 				parent.addGefaehrdungsBaumChild(child);
 				viewer.refresh();
@@ -80,7 +82,6 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 	@Override
 	public boolean validateDrop(Object target, int operation,
 			TransferData transferType) {
-		Logger.getLogger(this.getClass()).debug("drop finish - validateDrop()");
 		if (target == null || ! (target instanceof GefaehrdungsUmsetzung)) {
 			return false;
 		} else {

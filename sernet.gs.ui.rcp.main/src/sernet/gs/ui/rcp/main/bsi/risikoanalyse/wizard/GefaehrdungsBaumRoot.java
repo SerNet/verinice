@@ -22,7 +22,6 @@ public class GefaehrdungsBaumRoot implements IGefaehrdungsBaumElement {
 
 	public GefaehrdungsBaumRoot(
 			ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen) {
-		Logger.getLogger(this.getClass()).debug("root - constructor");
 		/* convert from ArrayList<GefaehrdungsUmsetzung> into List<IGefaehrdungsBaumElement> */
 		// TODO gibt's hier eine elegantere Methode?
 		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : arrListGefaehrdungsUmsetzungen) {
@@ -36,7 +35,6 @@ public class GefaehrdungsBaumRoot implements IGefaehrdungsBaumElement {
 	 * RisikoMassnahmenUmsetzungen.
 	 */
 	public List<IGefaehrdungsBaumElement> getGefaehrdungsBaumChildren() {
-		Logger.getLogger(this.getClass()).debug("root - getGefaehrdungsBaumChildren");
 		return children;
 	}
 
@@ -45,7 +43,6 @@ public class GefaehrdungsBaumRoot implements IGefaehrdungsBaumElement {
 	 * No parent to return.
 	 */
 	public IGefaehrdungsBaumElement getGefaehrdungsBaumParent() {
-		Logger.getLogger(this.getClass()).debug("root - getGefaehrdungsBaumParent");
 		return null;
 	}
 
@@ -53,7 +50,6 @@ public class GefaehrdungsBaumRoot implements IGefaehrdungsBaumElement {
 	 *  returns the image for the root element of viewer
 	 */
 	public Image getImage() {
-		Logger.getLogger(this.getClass()).debug("root - getImage");
 		return image;
 	}
 
@@ -61,8 +57,6 @@ public class GefaehrdungsBaumRoot implements IGefaehrdungsBaumElement {
 	 *   returns the text for the root element of viewer
 	 */
 	public String getText() {
-		Logger.getLogger(this.getClass()).debug("root - getText");
 		return "root";
 	}
-
 }

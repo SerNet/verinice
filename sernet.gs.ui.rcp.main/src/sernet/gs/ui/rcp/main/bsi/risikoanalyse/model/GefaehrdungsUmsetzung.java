@@ -138,7 +138,17 @@ public class GefaehrdungsUmsetzung extends Gefaehrdung
 	 *  in the tree.
 	 */
 	public void addGefaehrdungsBaumChild(IGefaehrdungsBaumElement newChild) {
-		children.add(newChild);
+		if (! (children.contains(newChild))) {
+			children.add(newChild);
+		}
+	}
+	
+	/**
+	 * returns the list of children (RisikoMassnahmenUmsetzungen)
+	 *  in the tree.
+	 */
+	public void removeGefaehrdungsBaumChild(IGefaehrdungsBaumElement child) {
+		children.remove(child);
 	}
 
 	/**

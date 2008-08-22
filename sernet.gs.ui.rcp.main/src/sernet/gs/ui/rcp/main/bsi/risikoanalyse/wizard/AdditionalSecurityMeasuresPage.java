@@ -94,7 +94,9 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	protected AdditionalSecurityMeasuresPage() {
 		super("Zusätzliche IT-Sicherheitsmaßnahmen");
 		setTitle("Zusätzliche IT-Sicherheitsmaßnahmen");
-		setDescription("Fügen Sie den Gefährdungen weitere IT-Sicherheitsmaßnahmen hinzu.");
+		setDescription("Fügen Sie den Gefährdungen weitere" +
+				" IT-Sicherheitsmaßnahmen hinzu. Legen Sie ggf." +
+				" zusätzlich eigene Maßnahmen an.");
 	}
 	
 	/* must be implemented - content of wizard page! */
@@ -103,11 +105,9 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		final GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 4;
 		container.setLayout(gridLayout);
-		
-		/* TODO brauche ich das control (s.u.)? */
 		setControl(container);
 		
-		/* table viewer: Gefaehrdungen */
+		/* TreeViewer: Gefaehrdungen */
 		viewerGefaehrdung = new TreeViewer(container, SWT.SINGLE);
 		GridData data14 = new GridData();
 		data14.grabExcessHorizontalSpace = true;
@@ -116,34 +116,8 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		data14.horizontalAlignment = SWT.FILL;
 		data14.verticalAlignment = SWT.FILL;
 		viewerGefaehrdung.getTree().setLayoutData(data14);
-		//viewerGefaehrdung.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		/*
-		final Table tableGefaehrdung = viewerGefaehrdung.getTable();
-		GridData data1 = new GridData();
-	    data1.grabExcessHorizontalSpace = true;
-	    data1.grabExcessVerticalSpace = true;
-	    data1.horizontalSpan = 2;
-	    data1.horizontalAlignment = SWT.FILL;
-	    data1.verticalAlignment = SWT.FILL;
-	    tableGefaehrdung.setLayoutData(data1);
-	    tableGefaehrdung.setHeaderVisible(true);
-		tableGefaehrdung.setLinesVisible(true);
-	    
-		imgColumnGefaehrdung = new TableColumn(tableGefaehrdung, SWT.LEFT);
-		imgColumnGefaehrdung.setText("");
-		imgColumnGefaehrdung.setWidth(35);
-		
-		nameColumnGefaehrdung = new TableColumn(tableGefaehrdung, SWT.LEFT);
-		nameColumnGefaehrdung.setText("Name");
-		nameColumnGefaehrdung.setWidth(100);
-		
-		descrColumnGefaehrdung = new TableColumn(tableGefaehrdung, SWT.LEFT);
-		descrColumnGefaehrdung.setText("Beschreibung");
-		descrColumnGefaehrdung.setWidth(200);
-		*/
-		
-		/* tableViewer: Massnahmen */
+		/* TableViewer: Massnahmen */
 		viewerMassnahme = new TableViewer(container, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
 		
 		final Table tableMassnahme = viewerMassnahme.getTable();
@@ -169,29 +143,26 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		descrColumnMassnahme.setText("Beschreibung");
 		descrColumnMassnahme.setWidth(200);
 		
-		/* dies sollte überflüssig sein
-		viewer.setColumnProperties(new String[] {
-				"_img",
-				"_name",
-				"_descr"
-		});
-		*/
-		
 		/**
 		 *  listener opens edit Dialog for selected Gefaehrdung
 		 */
 		viewerMassnahme.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-	    		Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection.getFirstElement();
-	    		if (selectedGefaehrdung instanceof OwnGefaehrdung) {
-	    			Logger.getLogger(this.getClass()).debug("edit own gef");
-	    			OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
-	    			final EditGefaehrdungDialog dialog = 
-	    				new EditGefaehrdungDialog(container.getShell(), ownGefSelected);
-	    			dialog.open();
-	    			viewerMassnahme.refresh();
-	    		}
+				/* retrieve selected element and open edit dialog with it */
+				IStructuredSelection selection = (IStructuredSelection) viewerMassnahme
+						.getSelection();
+				MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection
+						.getFirstElement();
+				if (selectedMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) {
+					RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung =
+						(RisikoMassnahmenUmsetzung) selectedMassnahmenUmsetzung;
+					final EditRisikoMassnahmenUmsetzungDialog dialog = new EditRisikoMassnahmenUmsetzungDialog(
+							container.getShell(),
+							selectedRisikoMassnahmenUmsetzung);
+					dialog.open();
+					viewerMassnahme.refresh();
+					packAllMassnahmeColumns();
+				}
 		    }
 		});
 		
@@ -204,19 +175,54 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		viewerMassnahme.addDragSupport(operations, types,
 				new RisikoMassnahmenUmsetzungDragListener(viewerMassnahme,cnaElement));
 		
+		/* group the buttons for viewerGefaehrdung with group */
+	    Group groupButtonsGefaehrdung = new Group(container, SWT.SHADOW_ETCHED_OUT);
+	    groupButtonsGefaehrdung.setText("Maßnahmen");
+        GridLayout gridLayoutButtonsGefaehrdung = new GridLayout();
+        gridLayoutButtonsGefaehrdung.numColumns = 3;
+        groupButtonsGefaehrdung.setLayout(gridLayoutButtonsGefaehrdung);
+        GridData gridGroupButtonsGefaehrdung = new GridData();
+        gridGroupButtonsGefaehrdung.horizontalSpan = 2;
+        gridGroupButtonsGefaehrdung.horizontalAlignment = SWT.LEFT;
+	    gridGroupButtonsGefaehrdung.verticalAlignment = SWT.TOP;
+	    groupButtonsGefaehrdung.setLayoutData(gridGroupButtonsGefaehrdung);
 	    
-	    
-		/* group the buttons with group */
-	    Group groupButtons = new Group(container, SWT.SHADOW_ETCHED_OUT);
-	    groupButtons.setText("eigene Maßnahmen");
-        GridLayout gridLayoutButtons = new GridLayout();
-        gridLayoutButtons.numColumns = 3;
-        groupButtons.setLayout(gridLayoutButtons);
-        GridData gridGroupButtons = new GridData();
-        gridGroupButtons.horizontalSpan = 4;
-        gridGroupButtons.horizontalAlignment = SWT.RIGHT;
-	    gridGroupButtons.verticalAlignment = SWT.TOP;
-	    groupButtons.setLayoutData(gridGroupButtons);
+	    /* delete button for viewerGefaehrdung */
+	    Button buttonDeleteGefaehrdung = new Button(groupButtonsGefaehrdung, SWT.PUSH);
+	    buttonDeleteGefaehrdung.setText("löschen");
+	    GridData gridDeleteGefaehrdung = new GridData();
+	    buttonDeleteGefaehrdung.setLayoutData(gridDeleteGefaehrdung);
+	    buttonDeleteGefaehrdung.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) viewerGefaehrdung
+						.getSelection();
+				RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) selection
+						.getFirstElement();
+
+				/* ask user to confirm */
+				boolean confirmed = MessageDialog.openQuestion(container
+						.getShell(), "Bestätigung",
+						"Wollen Sie die Massnahme mit dem Titel \""
+								+ selectedRisikoMassnahmenUmsetzung.getTitle()
+								+ "\" wirklich löschen?");
+				if (confirmed) {
+					deleteTreeViewerRisikoMassnahmenUmsetzung(selectedRisikoMassnahmenUmsetzung);
+					viewerGefaehrdung.refresh();
+				}
+			}
+		});
+		
+		/* group the buttons for viewerMassnahme with group */
+	    Group groupButtonsMassnahme = new Group(container, SWT.SHADOW_ETCHED_OUT);
+	    groupButtonsMassnahme.setText("eigene Maßnahmen");
+        GridLayout gridLayoutButtonsMassnahme = new GridLayout();
+        gridLayoutButtonsMassnahme.numColumns = 3;
+        groupButtonsMassnahme.setLayout(gridLayoutButtonsMassnahme);
+        GridData gridGroupButtonsMassnahme = new GridData();
+        gridGroupButtonsMassnahme.horizontalSpan = 2;
+        gridGroupButtonsMassnahme.horizontalAlignment = SWT.RIGHT;
+	    gridGroupButtonsMassnahme.verticalAlignment = SWT.TOP;
+	    groupButtonsMassnahme.setLayoutData(gridGroupButtonsMassnahme);
 	    
 	    /*
 		Composite composite = new Composite(container, SWT.NULL);
@@ -231,7 +237,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    */
 
 	    /* new button */
-	    Button button2 = new Button(groupButtons, SWT.PUSH);
+	    Button button2 = new Button(groupButtonsMassnahme, SWT.PUSH);
 	    button2.setText("neu");
 	    GridData data4 = new GridData();
 	    button2.setLayoutData(data4);
@@ -254,7 +260,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    });
 	    
 	    /* delete button */
-	    Button button3 = new Button(groupButtons, SWT.PUSH);
+	    Button button3 = new Button(groupButtonsMassnahme, SWT.PUSH);
 	    button3.setText("löschen");
 	    GridData data5 = new GridData();
 	    button3.setLayoutData(data5);
@@ -290,7 +296,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		});
 	    
 	    /* edit button */
-	    Button button4 = new Button(groupButtons, SWT.PUSH);
+	    Button button4 = new Button(groupButtonsMassnahme, SWT.PUSH);
 	    button4.setText("bearbeiten");
 	    GridData data10 = new GridData();
 	    button4.setLayoutData(data10);
@@ -451,6 +457,28 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		}
 	}
 	*/
+	
+	private void deleteTreeViewerRisikoMassnahmenUmsetzung(
+			RisikoMassnahmenUmsetzung massnahme) {
+		try {
+			GefaehrdungsUmsetzung parent = (GefaehrdungsUmsetzung) massnahme
+					.getGefaehrdungsBaumParent();
+
+			if (massnahme != null
+					&& massnahme instanceof RisikoMassnahmenUmsetzung
+					&& parent != null
+					&& parent instanceof GefaehrdungsUmsetzung) {
+				
+				/* delete child from List of Children in parent */
+				parent.removeGefaehrdungsBaumChild(massnahme);
+
+				/* refresh viewer */
+				viewerGefaehrdung.refresh();
+			}
+		} catch (Exception e) {
+			Logger.getLogger(this.getClass()).debug(e.toString());
+		}
+	}
 	
 	private void deleteRisikoMassnahmenUmsetzung(
 			MassnahmenUmsetzung massnahmenUmsetzung) {

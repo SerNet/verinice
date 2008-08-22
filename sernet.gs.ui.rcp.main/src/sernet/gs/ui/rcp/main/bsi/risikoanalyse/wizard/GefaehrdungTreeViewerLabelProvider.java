@@ -22,7 +22,6 @@ public class GefaehrdungTreeViewerLabelProvider implements ILabelProvider {
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 	 */
 	public Image getImage(Object element) {
-		Logger.getLogger(this.getClass()).debug("label - getImage");
 		try {
 			IGefaehrdungsBaumElement iGefaehrdungsBaumElement = (IGefaehrdungsBaumElement) element;
 			return iGefaehrdungsBaumElement.getImage();
@@ -36,7 +35,6 @@ public class GefaehrdungTreeViewerLabelProvider implements ILabelProvider {
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
 	public String getText(Object element) {
-		Logger.getLogger(this.getClass()).debug("label - getText");
 		try {
 			IGefaehrdungsBaumElement iGefaehrdungsBaumElement = (IGefaehrdungsBaumElement) element;
 			return iGefaehrdungsBaumElement.getText();
@@ -50,7 +48,6 @@ public class GefaehrdungTreeViewerLabelProvider implements ILabelProvider {
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
 	 */
 	public void addListener(ILabelProviderListener listener) {
-		Logger.getLogger(this.getClass()).debug("label - addListener");
 		// TODO Auto-generated method stub
 
 	}
@@ -59,7 +56,6 @@ public class GefaehrdungTreeViewerLabelProvider implements ILabelProvider {
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 	 */
 	public void dispose() {
-		Logger.getLogger(this.getClass()).debug("label - dispose");
 		// TODO Auto-generated method stub
 
 	}
@@ -68,7 +64,6 @@ public class GefaehrdungTreeViewerLabelProvider implements ILabelProvider {
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
 	 */
 	public boolean isLabelProperty(Object element, String property) {
-		Logger.getLogger(this.getClass()).debug("label - isLabelProperty");
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -77,8 +72,6 @@ public class GefaehrdungTreeViewerLabelProvider implements ILabelProvider {
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
 	 */
 	public void removeListener(ILabelProviderListener listener) {
-		Logger.getLogger(this.getClass()).debug("label - removeListener");
 		// TODO Auto-generated method stub
 	}
-
 }
