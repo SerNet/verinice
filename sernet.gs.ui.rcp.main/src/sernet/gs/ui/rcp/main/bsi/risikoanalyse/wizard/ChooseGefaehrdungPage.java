@@ -65,7 +65,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * Adds widgets to the wizardPage.
 	 * Called once at startup of Wizard.
 	 * 
-	 *  @param parent parent Composite  
+	 *  @param parent the parent Composite
 	 */
 	public void createControl(Composite parent) {
 		composite = new Composite(parent, SWT.NULL);

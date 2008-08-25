@@ -2,6 +2,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -22,131 +23,164 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
  * Dialog to enter a new Gefaehrdung.
  * 
  * @author ahanekop@sernet.de
- *
  */
 public class NewGefaehrdungDialog extends Dialog {
-
+	
 	private Text textNumber;
 	private Text textName;
-	private Text textDescr;
+	private Text textDescription;
 	private Combo textCategory;
-	private ArrayList<OwnGefaehrdung> listGef;
-	private OwnGefaehrdung newOwnGef = new OwnGefaehrdung();
+	private ArrayList<OwnGefaehrdung> ownGefaehrdungen;
+	private OwnGefaehrdung ownGefaehrdung = new OwnGefaehrdung();
 	
-	public NewGefaehrdungDialog(Shell parentShell, ArrayList<OwnGefaehrdung> newListGef) {
+	/**
+	 * Constructor initializes the new Gefaehrdung.
+	 * 
+	 * @param parentShell shell of parent (WizardPage)
+	 * @param newOwnGefaehrdungen List of all currently existing
+	 * 		  OwnGefaehrdungen
+	 */
+	public NewGefaehrdungDialog(Shell parentShell, ArrayList<OwnGefaehrdung> newOwnGefaehrdungen) {
 		// TODO übergabe des Feldes gibt Probleme, wenn der dialog nicht mehr modal ist!!
 		// komme ich von hier an den RisikoAnlayseWizard ??
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		listGef = newListGef;
+		ownGefaehrdungen = newOwnGefaehrdungen;
 	}
 	
+	/**
+	 * Creates the content area of the Dialog.
+	 * 
+	 * @param parent the parent Composite
+	 */
 	@Override
-	protected Control createDialogArea(Composite parentShell) {
-		Composite container = (Composite) super.createDialogArea(parentShell);
+	protected Control createDialogArea(Composite parent) {
+		Composite composite = (Composite) super.createDialogArea(parent);
 		final GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
-		container.setLayout(gridLayout);
+		composite.setLayout(gridLayout);
 		
 		/* label number */
-		final Label label1 = new Label(container, SWT.NONE);
-		GridData data1 = new GridData();
-		data1.horizontalAlignment = SWT.LEFT;
-	    data1.verticalAlignment = SWT.CENTER;
-	    label1.setText("Nummer:");
-		label1.setLayoutData(data1);
+		final Label labelNumber = new Label(composite, SWT.NONE);
+		GridData gridLabelNumber = new GridData();
+		gridLabelNumber.horizontalAlignment = SWT.LEFT;
+	    gridLabelNumber.verticalAlignment = SWT.CENTER;
+	    labelNumber.setText("Nummer:");
+		labelNumber.setLayoutData(gridLabelNumber);
 		
 		/* text number */
-		textNumber = new Text(container, SWT.BORDER);
-		GridData data2 = new GridData();
-		data2.horizontalAlignment = SWT.FILL;
-	    data2.verticalAlignment = SWT.CENTER;
-	    data2.grabExcessHorizontalSpace = true;
-		textNumber.setLayoutData(data2);
-		//textNumber.set
+		textNumber = new Text(composite, SWT.BORDER);
+		GridData gridTextNumber = new GridData();
+		gridTextNumber.horizontalAlignment = SWT.FILL;
+	    gridTextNumber.verticalAlignment = SWT.CENTER;
+	    gridTextNumber.grabExcessHorizontalSpace = true;
+		textNumber.setLayoutData(gridTextNumber);
 		
 		/* label name */
-		final Label label2 = new Label(container, SWT.NONE);
-		GridData data3 = new GridData();
-		data3.horizontalAlignment = SWT.LEFT;
-	    data3.verticalAlignment = SWT.CENTER;
-	    label2.setText("Name:");
-		label2.setLayoutData(data3);
+		final Label labelName = new Label(composite, SWT.NONE);
+		GridData gridLabelName = new GridData();
+		gridLabelName.horizontalAlignment = SWT.LEFT;
+	    gridLabelName.verticalAlignment = SWT.CENTER;
+	    labelName.setText("Name:");
+		labelName.setLayoutData(gridLabelName);
 		
 		/* text name */
-		textName = new Text(container, SWT.BORDER);
-		GridData data4 = new GridData();
-		data4.horizontalAlignment = SWT.FILL;
-	    data4.verticalAlignment = SWT.CENTER;
-	    data4.grabExcessHorizontalSpace = true;
-		textName.setLayoutData(data4);
+		textName = new Text(composite, SWT.BORDER);
+		GridData gridTextName = new GridData();
+		gridTextName.horizontalAlignment = SWT.FILL;
+	    gridTextName.verticalAlignment = SWT.CENTER;
+	    gridTextName.grabExcessHorizontalSpace = true;
+		textName.setLayoutData(gridTextName);
 		
 		/* label description */
-		final Label label3 = new Label(container, SWT.NONE);
-		GridData data5 = new GridData();
-		data5.horizontalAlignment = SWT.LEFT;
-	    data5.verticalAlignment = SWT.TOP;
-	    label3.setText("Beschreibung:");
-		label3.setLayoutData(data5);
+		final Label labelDescription = new Label(composite, SWT.NONE);
+		GridData gridLabelDescription = new GridData();
+		gridLabelDescription.horizontalAlignment = SWT.LEFT;
+	    gridLabelDescription.verticalAlignment = SWT.TOP;
+	    labelDescription.setText("Beschreibung:");
+		labelDescription.setLayoutData(gridLabelDescription);
 		
 		/* text description */
-		GridData data6 = new GridData();
-		textDescr = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.WRAP);
-		data6.horizontalAlignment = SWT.FILL;
-	    data6.verticalAlignment = SWT.FILL;
-	    data6.grabExcessHorizontalSpace = true;
-	    data6.grabExcessVerticalSpace = true;
-	    data6.widthHint = 400;
-	    data6.heightHint = 200;
-		textDescr.setLayoutData(data6);
+		textDescription = new Text(composite, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.WRAP);
+		GridData gridTextDescription = new GridData();
+		gridTextDescription.horizontalAlignment = SWT.FILL;
+	    gridTextDescription.verticalAlignment = SWT.FILL;
+	    gridTextDescription.grabExcessHorizontalSpace = true;
+	    gridTextDescription.grabExcessVerticalSpace = true;
+	    gridTextDescription.widthHint = 400;
+	    gridTextDescription.heightHint = 200;
+		textDescription.setLayoutData(gridTextDescription);
 		
 		/* label category */
-		final Label label4 = new Label(container, SWT.NONE);
+		final Label labelCategory = new Label(composite, SWT.NONE);
 		GridData data7 = new GridData();
 		data7.horizontalAlignment = SWT.LEFT;
 	    data7.verticalAlignment = SWT.TOP;
-	    label4.setText("Kategorie:");
-		label4.setLayoutData(data7);
+	    labelCategory.setText("Kategorie:");
+		labelCategory.setLayoutData(data7);
 		
 		/* text category */
-		textCategory = new Combo(container, SWT.DROP_DOWN);
-		GridData data8 = new GridData();
-		data8.horizontalAlignment = SWT.FILL;
-		data8.verticalAlignment = SWT.CENTER;
-		data8.grabExcessHorizontalSpace = true;
-		textCategory.setLayoutData(data8);
+		textCategory = new Combo(composite, SWT.DROP_DOWN);
+		GridData gridTextCategory = new GridData();
+		gridTextCategory.horizontalAlignment = SWT.FILL;
+		gridTextCategory.verticalAlignment = SWT.CENTER;
+		gridTextCategory.grabExcessHorizontalSpace = true;
+		textCategory.setLayoutData(gridTextCategory);
 		textCategory.setItems(loadCategories());
 		textCategory.setText("[neue Kategorie]");
 		
-		 //add controls to composite as necessary
-		 return container;
+		return composite;
 	}
 
+	/**
+	 * Loads all categories for OwnGefaehrdungen from database.
+	 * 
+	 * @return an array of all categories as Strings
+	 */
 	private String[] loadCategories() {
-		ArrayList<String> newString =  new ArrayList<String> ();
-		newString.add("[neue Kategorie]");
-		newString.add(Gefaehrdung.KAT_STRING_HOEHERE_GEWALT);
-		newString.add(Gefaehrdung.KAT_STRING_ORG_MANGEL);
-		newString.add(Gefaehrdung.KAT_STRING_MENSCH);
-		newString.add(Gefaehrdung.KAT_STRING_TECHNIK);
-		newString.add(Gefaehrdung.KAT_STRING_VORSATZ);
+		ArrayList<String> allCategories =  new ArrayList<String> ();
+		allCategories.add("[neue Kategorie]");
+		allCategories.add(Gefaehrdung.KAT_STRING_HOEHERE_GEWALT);
+		allCategories.add(Gefaehrdung.KAT_STRING_ORG_MANGEL);
+		allCategories.add(Gefaehrdung.KAT_STRING_MENSCH);
+		allCategories.add(Gefaehrdung.KAT_STRING_TECHNIK);
+		allCategories.add(Gefaehrdung.KAT_STRING_VORSATZ);
 
-		// TODO alle eigenen Gefährdungs-Kategorien hinzufügen (aus DB)
+		ArrayList<OwnGefaehrdung> allOwnGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
+		Boolean contains = false;
 		
-		return newString.toArray(new String[newString.size()]);
+		for (OwnGefaehrdung gefaehrdung : allOwnGefaehrdungen) {
+			for (String category : allCategories) {
+				if (category.equalsIgnoreCase(gefaehrdung.getKategorieAsString())) {
+					/* category already in List */
+					contains = true;
+					break;
+				}
+			}
+			if (!contains) {
+				allCategories.add(gefaehrdung.getKategorieAsString());
+			} else {
+				contains = false;
+			}
+		}
+		return allCategories.toArray(new String[allCategories.size()]);
 	}
-	
+
+	/**
+	 * Saves the new OwnGefaehrung in the database, if okay button
+	 * is pressed.
+	 */
 	@Override
 	protected void okPressed() {
 		
-		newOwnGef.setId(textNumber.getText());
-		newOwnGef.setTitel(textName.getText());
-		newOwnGef.setBeschreibung(textDescr.getText());
-		newOwnGef.setOwnkategorie(textCategory.getText());
-		listGef.add(newOwnGef);
+		ownGefaehrdung.setId(textNumber.getText());
+		ownGefaehrdung.setTitel(textName.getText());
+		ownGefaehrdung.setBeschreibung(textDescription.getText());
+		ownGefaehrdung.setOwnkategorie(textCategory.getText());
+		ownGefaehrdungen.add(ownGefaehrdung);
 		
 		try {
-			OwnGefaehrdungHome.getInstance().saveNew(newOwnGef);
+			OwnGefaehrdungHome.getInstance().saveNew(ownGefaehrdung);
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Eigene Gefährdung konnte nicht gespeichert werden.");
 		}
