@@ -46,15 +46,18 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
 	private Composite composite;
 	private TableColumn checkboxColumn;
-	private TableColumn imgColumn;
+	private TableColumn imageColumn;
 	private TableColumn numberColumn;
 	private TableColumn nameColumn;
-	private TableColumn descrColumn;
+	private TableColumn descriptionColumn;
 	private CheckboxTableViewer viewer;
 	private OwnGefaehrdungenFilter ownGefaehrdungFilter = new OwnGefaehrdungenFilter();
 	private GefaehrdungenFilter gefaehrdungFilter = new GefaehrdungenFilter();
 	private SearchFilter searchFilter = new SearchFilter();
 
+	/**
+	 * Constructor sets title an description of WizardPage.
+	 */
 	protected ChooseGefaehrdungPage() {
 		super("Gefährdungsübersicht");
 		setTitle("Gefährdungsübersicht");
@@ -72,8 +75,6 @@ public class ChooseGefaehrdungPage extends WizardPage {
 		final GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		composite.setLayout(gridLayout);
-
-		/* TODO brauche ich das control (s.u.)? */
 		setControl(composite);
 
 		/* CheckboxTableViewer */
@@ -93,9 +94,9 @@ public class ChooseGefaehrdungPage extends WizardPage {
 		checkboxColumn.setText("");
 		checkboxColumn.setWidth(35);
 
-		imgColumn = new TableColumn(table, SWT.LEFT);
-		imgColumn.setText("");
-		imgColumn.setWidth(35);
+		imageColumn = new TableColumn(table, SWT.LEFT);
+		imageColumn.setText("");
+		imageColumn.setWidth(35);
 
 		numberColumn = new TableColumn(table, SWT.LEFT);
 		numberColumn.setText("Nummer");
@@ -105,9 +106,9 @@ public class ChooseGefaehrdungPage extends WizardPage {
 		nameColumn.setText("Name");
 		nameColumn.setWidth(100);
 
-		descrColumn = new TableColumn(table, SWT.LEFT);
-		descrColumn.setText("Beschreibung");
-		descrColumn.setWidth(200);
+		descriptionColumn = new TableColumn(table, SWT.LEFT);
+		descriptionColumn.setText("Beschreibung");
+		descriptionColumn.setWidth(200);
 
 		/* listener adds/removes Gefaehrdungen to Array of selected Gefaehrdungen */
 		viewer.addCheckStateListener(new ICheckStateListener() {
@@ -183,6 +184,12 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
 		/* Listener adds/removes Filter ownGefaehrdungFilter */
 		buttonOwnGefaehrdungen.addSelectionListener(new SelectionAdapter() {
+			
+			/**
+	    	 * Adds/removes Filter depending on event.
+	    	 * 
+	    	 * @param event event containing information about the selection
+	    	 */
 			public void widgetSelected(SelectionEvent event) {
 				Button button = (Button) event.widget;
 				if (button.getSelection()) {
@@ -193,7 +200,6 @@ public class ChooseGefaehrdungPage extends WizardPage {
 					viewer.refresh();
 				}
 			}
-
 		});
 
 		/* filter button - BSI Gefaehrdungen only */
@@ -205,6 +211,12 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
 		/* Listener adds/removes Filter gefaehrdungFilter*/
 		buttonGefaehrdungen.addSelectionListener(new SelectionAdapter() {
+			
+			/**
+	    	 * Adds/removes Filter depending on event.
+	    	 * 
+	    	 * @param event event containing information about the selection
+	    	 */
 			public void widgetSelected(SelectionEvent event) {
 				Button button = (Button) event.widget;
 				if (button.getSelection()) {
@@ -226,6 +238,12 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
 		/* Listener adds/removes Filter searchFilter */
 		textSearch.addModifyListener(new ModifyListener() {
+			
+			/**
+	    	 * Adds/removes Filter when Text is modified depending on event.
+	    	 * 
+	    	 * @param event event containing information about the selection
+	    	 */
 			public void modifyText(ModifyEvent event) {
 				Text text = (Text) event.widget;
 				if (text.getText().length() > 0) {
@@ -384,14 +402,14 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 */
 	private void packAllColumns() {
 		checkboxColumn.pack();
-		imgColumn.pack();
+		imageColumn.pack();
 		numberColumn.pack();
 		nameColumn.pack();
-		descrColumn.pack();
+		descriptionColumn.pack();
 	}
 
 	/**
-	 * Activates the next button if the List of selected Gefaehrdungen is not empty.
+	 * Activates the next button, if the List of selected Gefaehrdungen is not empty.
 	 */
 	private void checkPageComplete() {
 		if (((RisikoanalyseWizard) getWizard()).getAssociatedGefaehrdungen()
@@ -447,6 +465,15 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * @author ahanekop@sernet.de
 	 */
 	class OwnGefaehrdungenFilter extends ViewerFilter {
+		
+		/**
+		 * Returns true, if the given element is an OwnGefaehrdung.
+		 * 
+		 * @param viewer the Viewer to operate on
+		 * @param parentElement not used
+		 * @param element given element
+		 * @return true if element passes test, false else
+		 */
 		public boolean select(Viewer viewer, Object parentElement,
 				Object element) {
 			if (element instanceof OwnGefaehrdung)
@@ -461,6 +488,15 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * @author ahanekop@sernet.de
 	 */
 	class GefaehrdungenFilter extends ViewerFilter {
+		
+		/**
+		 * Returns true, if the given element is a Gefaehrdung.
+		 * 
+		 * @param viewer the Viewer to operate on
+		 * @param parentElement not used
+		 * @param element given element
+		 * @return true if element passes test, false else
+		 */
 		public boolean select(Viewer viewer, Object parentElement,
 				Object element) {
 			if (!(element instanceof OwnGefaehrdung)) {
@@ -477,6 +513,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * @author ahanekop@sernet.de
 	 */
 	class SearchFilter extends ViewerFilter {
+		
 		private Pattern pattern;
 
 		/**
@@ -500,8 +537,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
 		public boolean select(Viewer viewer, Object parentElement,
 				Object element) {
 			Gefaehrdung gefaehrdung = (Gefaehrdung) element;
-			String gefTitle = gefaehrdung.getTitel();
-			Matcher matcher = pattern.matcher(gefTitle);
+			String gefaehrdungTitle = gefaehrdung.getTitel();
+			Matcher matcher = pattern.matcher(gefaehrdungTitle);
 
 			if (matcher.find()) {
 				return true;

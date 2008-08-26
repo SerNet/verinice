@@ -42,7 +42,6 @@ public class NewGefaehrdungDialog extends Dialog {
 	 */
 	public NewGefaehrdungDialog(Shell parentShell, ArrayList<OwnGefaehrdung> newOwnGefaehrdungen) {
 		// TODO übergabe des Feldes gibt Probleme, wenn der dialog nicht mehr modal ist!!
-		// komme ich von hier an den RisikoAnlayseWizard ??
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		ownGefaehrdungen = newOwnGefaehrdungen;
