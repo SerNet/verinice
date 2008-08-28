@@ -16,10 +16,10 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 
 public class PropertiesComboBoxCellModifier implements ICellModifier {
 	private Viewer viewer;
-	private RisikoanalyseWizard wizard;
+	private RiskAnalysisWizard wizard;
 	private RiskHandlingPage page;
 
-	public PropertiesComboBoxCellModifier(Viewer viewer, RisikoanalyseWizard wizard, RiskHandlingPage page) {
+	public PropertiesComboBoxCellModifier(Viewer viewer, RiskAnalysisWizard wizard, RiskHandlingPage page) {
 		this.viewer = viewer;
 		this.wizard = wizard;
 		this.page = page;
@@ -44,7 +44,7 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 		Object elmt = ((TableItem)element).getData();
 		
 		ArrayList<GefaehrdungsUmsetzung> arrListRiskGefaehrdungen = 
-			wizard.getRisikoGefaehrdungsUmsetzungen();
+			wizard.getNotOKGefaehrdungsUmsetzungen();
 		
 		if (elmt instanceof GefaehrdungsUmsetzung) {
 			GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) elmt;
@@ -81,10 +81,10 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 				
 				// TODO Alternative in DB speichern
 				
-				wizard.setRisikoGefaehrdungsUmsetzungen(arrListRiskGefaehrdungen);
+				wizard.setNotOKGefaehrdungsUmsetzungen(arrListRiskGefaehrdungen);
 				viewer.refresh();
 				
-				if (wizard.getRisikoGefaehrdungsUmsetzungen().isEmpty()) {
+				if (wizard.getNotOKGefaehrdungsUmsetzungen().isEmpty()) {
 					page.setPageComplete(false);
 				} else {
 					page.setPageComplete(true);

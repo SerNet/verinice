@@ -18,7 +18,7 @@ import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RisikoanalyseWizard;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
@@ -48,7 +48,7 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate{
 		CnATreeElement struktElement = (CnATreeElement) sel;
 		
 		Shell shell = new Shell();
-		RisikoanalyseWizard wizard =  new RisikoanalyseWizard();
+		RiskAnalysisWizard wizard =  new RiskAnalysisWizard();
 		wizard.setCnaElement(struktElement);
     	wizard.init(PlatformUI.getWorkbench(), null);
     	WizardDialog wizDialog =  new org.eclipse.jface.wizard.WizardDialog(shell, wizard);

@@ -33,8 +33,10 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 			case 0:
 				return null;
 			case 1:
-				return massnahme.getTitle();
+				return massnahme.getNumber();
 			case 2:
+				return massnahme.getTitle();
+			case 3:
 				return massnahme.getDescription();
 			};
 		} else {
@@ -43,8 +45,10 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 			case 0:
 				return null;
 			case 1:
-				return massnahme.getTitle();
+				return "???";
 			case 2:
+				return massnahme.getTitle();
+			case 3:
 				return "keine Beschreibung";
 			};
 		}

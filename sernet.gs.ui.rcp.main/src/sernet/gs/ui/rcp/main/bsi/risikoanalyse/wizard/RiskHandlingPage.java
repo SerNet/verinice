@@ -145,7 +145,7 @@ public class RiskHandlingPage extends WizardPage {
 		
 	    viewer.setCellEditors(new CellEditor[] {null,null,null,choiceEditor});
 
-	    viewer.setCellModifier(new PropertiesComboBoxCellModifier(viewer, (RisikoanalyseWizard)getWizard(), this));
+	    viewer.setCellModifier(new PropertiesComboBoxCellModifier(viewer, (RiskAnalysisWizard)getWizard(), this));
 	    
 		/* group the Filter checkboxes with composite */
 		Composite compositeFilter = new Composite(container, SWT.NULL);
@@ -192,7 +192,7 @@ public class RiskHandlingPage extends WizardPage {
 	 */
 	private void initContents() {
 		ArrayList<GefaehrdungsUmsetzung> arrListRiskGefaehrdungen = 
-			((RisikoanalyseWizard)getWizard()).getGefaehrdungsUmsetzungen();
+			((RiskAnalysisWizard)getWizard()).getAllGefaehrdungsUmsetzungen();
 
 		/* map a domain model object into multiple images and text labels */
 		viewer.setLabelProvider(new TableViewerLabelProvider());
@@ -204,7 +204,7 @@ public class RiskHandlingPage extends WizardPage {
 		viewer.setSorter(new GefaehrdungenSorter());
 		packAllColumns();
 		
-		((RisikoanalyseWizard)getWizard()).setCanFinish(true);
+		((RiskAnalysisWizard)getWizard()).setCanFinish(true);
 		checkPageComplete();
 	}
 
@@ -223,7 +223,7 @@ public class RiskHandlingPage extends WizardPage {
 	 */
 	private void checkPageComplete() {
 		ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = 
-			((RisikoanalyseWizard)getWizard()).getGefaehrdungsUmsetzungen();
+			((RiskAnalysisWizard)getWizard()).getAllGefaehrdungsUmsetzungen();
 		Boolean complete = false;
 		
 		/* setPageComplete(false) if no GefaehrdungsUmsetzung is of alternative "A" */

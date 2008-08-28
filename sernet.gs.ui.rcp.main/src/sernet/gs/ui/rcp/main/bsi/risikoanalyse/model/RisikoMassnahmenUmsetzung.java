@@ -21,7 +21,7 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RisikoanalyseWizard;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.bsi.wizards.ChooseExportMethodPage;
 import sernet.gs.ui.rcp.main.bsi.wizards.ChoosePropertiesPage;
@@ -45,6 +45,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	
 	private GefaehrdungsUmsetzung parent;
 	private Image image = ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
+	private String number;
 	private String description;
 	
 	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, GefaehrdungsUmsetzung myParent) {
@@ -150,5 +151,22 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	public void setDescription(String newDescription) {
 		description = newDescription;
 	}
-	
+
+	/**
+	 * Returns the nuber of the Massnahme.
+	 * 
+	 * @return the number
+	 */
+	public String getNumber() {
+		return number;
+	}
+
+	/**
+	 * Sets the number of the Massnahme.
+	 * 
+	 * @param newNumber the number to set
+	 */
+	public void setNumber(String newNumber) {
+		number = newNumber;
+	}
 }

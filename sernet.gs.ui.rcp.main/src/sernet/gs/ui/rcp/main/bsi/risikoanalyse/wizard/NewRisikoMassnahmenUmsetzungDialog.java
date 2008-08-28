@@ -29,6 +29,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
  */
 public class NewRisikoMassnahmenUmsetzungDialog extends Dialog {
 
+	private Text textNumber;
 	private Text textName;
 	private Text textDescription;
 	private ArrayList<RisikoMassnahmenUmsetzung> listRisikoMassnahmenUmsetzung;
@@ -75,6 +76,22 @@ public class NewRisikoMassnahmenUmsetzungDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		container.setLayout(gridLayout);
 		
+		/* label number */
+		final Label labelNumber = new Label(container, SWT.NONE);
+		GridData gridLabelNumber = new GridData();
+		gridLabelNumber.horizontalAlignment = SWT.LEFT;
+	    gridLabelNumber.verticalAlignment = SWT.CENTER;
+	    labelNumber.setText("Nummer:");
+		labelNumber.setLayoutData(gridLabelNumber);
+		
+		/* text number */
+		textNumber = new Text(container, SWT.BORDER);
+		GridData gridTextNumber = new GridData();
+		gridTextNumber.horizontalAlignment = SWT.FILL;
+	    gridTextNumber.verticalAlignment = SWT.CENTER;
+	    gridTextNumber.grabExcessHorizontalSpace = true;
+		textNumber.setLayoutData(gridTextNumber);
+		
 		/* label name */
 		final Label labelName = new Label(container, SWT.NONE);
 		GridData gridLabelName = new GridData();
@@ -100,11 +117,14 @@ public class NewRisikoMassnahmenUmsetzungDialog extends Dialog {
 		labelDescription.setLayoutData(gridLabelDescription);
 		
 		/* text description */
-		textDescription = new Text(container, SWT.BORDER);
+		textDescription = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.WRAP);
 		GridData gridTextDescription = new GridData();
 		gridTextDescription.horizontalAlignment = SWT.FILL;
-	    gridTextDescription.verticalAlignment = SWT.CENTER;
+		gridTextDescription.verticalAlignment = SWT.FILL;
 	    gridTextDescription.grabExcessHorizontalSpace = true;
+	    gridTextDescription.grabExcessVerticalSpace = true;
+	    gridTextDescription.widthHint = 400;
+	    gridTextDescription.heightHint = 200;
 		textDescription.setLayoutData(gridTextDescription);
 		
 		return container;
@@ -115,6 +135,7 @@ public class NewRisikoMassnahmenUmsetzungDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
+		newRisikoMassnahmenUmsetzung.setNumber(textNumber.getText());
 		newRisikoMassnahmenUmsetzung.setTitle(textName.getText());
 		newRisikoMassnahmenUmsetzung.setDescription(textDescription.getText());
 		listRisikoMassnahmenUmsetzung.add(newRisikoMassnahmenUmsetzung);

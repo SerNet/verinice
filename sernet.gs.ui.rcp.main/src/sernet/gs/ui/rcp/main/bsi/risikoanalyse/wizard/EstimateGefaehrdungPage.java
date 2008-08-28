@@ -114,10 +114,10 @@ public class EstimateGefaehrdungPage extends WizardPage {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				Gefaehrdung currentGefaehrdung = (Gefaehrdung) event
 						.getElement();
-				ArrayList<Gefaehrdung> arrListNotOK = ((RisikoanalyseWizard)
+				ArrayList<Gefaehrdung> arrListNotOK = ((RiskAnalysisWizard)
 						getWizard()).getNotOKGefaehrdungen();
 				ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen =
-					((RisikoanalyseWizard) getWizard()).getGefaehrdungsUmsetzungen();
+					((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen();
 
 				// TODO statt contains: auf gleiche ID überprüfen
 				// -> vergl. ChooseGefaehrdungPage
@@ -148,14 +148,14 @@ public class EstimateGefaehrdungPage extends WizardPage {
 							break;
 						}
 					}
-					((RisikoanalyseWizard) getWizard())
-							.setGefaehrdungsUmsetzungen(arrListGefaehrdungsUmsetzungen);
+					((RiskAnalysisWizard) getWizard())
+							.setAllGefaehrdungsUmsetzungen(arrListGefaehrdungsUmsetzungen);
 
 					/* remove from arrListNotOK */
 					arrListNotOK.remove(currentGefaehrdung);
 				}
 
-				((RisikoanalyseWizard) getWizard()).setCanFinish(false);
+				((RiskAnalysisWizard) getWizard()).setCanFinish(false);
 				checkPageComplete();
 			}
 		});
@@ -273,7 +273,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	 */
 	private void initContents() {
 		ArrayList<Gefaehrdung> arrListAssociatedGefaehrdungen =
-			((RisikoanalyseWizard) getWizard()).getAssociatedGefaehrdungen();
+			((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen();
 
 		/* map a domain model object into multiple images and text labels */
 		viewer.setLabelProvider(new CheckboxTableViewerLabelProvider());
@@ -302,7 +302,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	 * Activates the next button, if the List of selected Gefaehrdungen is not empty.
 	 */
 	private void checkPageComplete() {
-		if (((RisikoanalyseWizard) getWizard()).getNotOKGefaehrdungen()
+		if (((RiskAnalysisWizard) getWizard()).getNotOKGefaehrdungen()
 				.isEmpty()) {
 			setPageComplete(false);
 		} else {

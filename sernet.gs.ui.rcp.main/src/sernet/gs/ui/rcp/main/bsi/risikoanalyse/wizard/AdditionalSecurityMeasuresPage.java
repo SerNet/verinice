@@ -135,6 +135,10 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		imgColumnMassnahme.setText("");
 		imgColumnMassnahme.setWidth(35);
 		
+		numberColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
+		numberColumnMassnahme.setText("Nummer");
+		numberColumnMassnahme.setWidth(100);
+		
 		nameColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
 		nameColumnMassnahme.setText("Name");
 		nameColumnMassnahme.setWidth(100);
@@ -167,7 +171,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		});
 		
 		/* add drag and drop support */
-		CnATreeElement cnaElement = ((RisikoanalyseWizard)getWizard()).getCnaElement();
+		CnATreeElement cnaElement = ((RiskAnalysisWizard)getWizard()).getCnaElement();
 		Transfer[] types = new Transfer[] { RisikoMassnahmenUmsetzungTransfer.getInstance() };
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		viewerGefaehrdung.addDropSupport(operations, types,
@@ -245,15 +249,15 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    	public void widgetSelected(SelectionEvent event) {
 	    		
 	    		ArrayList<RisikoMassnahmenUmsetzung> arrListRisikoMassnahmenUmsetzung = 
-	    			((RisikoanalyseWizard)getWizard()).getAllRisikoMassnahmenUmsetzungen();
+	    			((RiskAnalysisWizard)getWizard()).getAllRisikoMassnahmenUmsetzungen();
 	    		
 	    		/* Add new RisikoMassnahmenUmsetzungen to viewer */
 	    		
 	    		final NewRisikoMassnahmenUmsetzungDialog dialog = new NewRisikoMassnahmenUmsetzungDialog(
 						container.getShell(), arrListRisikoMassnahmenUmsetzung,
-						((RisikoanalyseWizard)getWizard()).getCnaElement());
+						((RiskAnalysisWizard)getWizard()).getCnaElement());
 	    		dialog.open();
-	    		((RisikoanalyseWizard)getWizard()).addRisikoMassnahmenUmsetzungen();
+	    		((RiskAnalysisWizard)getWizard()).addRisikoMassnahmenUmsetzungen();
 	    		viewerMassnahme.refresh();
 	    		packAllMassnahmeColumns();
 	    	}
@@ -285,9 +289,9 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 					viewerMassnahme.refresh();
 				}
 				ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzung = 
-	    			((RisikoanalyseWizard)getWizard()).getAllMassnahmenUmsetzungen();
+	    			((RiskAnalysisWizard)getWizard()).getAllMassnahmenUmsetzungen();
 				ArrayList<RisikoMassnahmenUmsetzung> arrListRisikoMassnahmenUmsetzung = 
-	    			((RisikoanalyseWizard)getWizard()).getAllRisikoMassnahmenUmsetzungen();
+	    			((RiskAnalysisWizard)getWizard()).getAllRisikoMassnahmenUmsetzungen();
 				Logger.getLogger(this.getClass()).debug(
 						"#MU: " + arrListMassnahmenUmsetzung.size() +
 						" #RMU: " + arrListRisikoMassnahmenUmsetzung.size());
@@ -403,10 +407,10 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 */
 	private void initContents() {
 		
-		((RisikoanalyseWizard)getWizard()).addRisikoGefaehrdungsUmsetzungen();
+		((RiskAnalysisWizard)getWizard()).addRisikoGefaehrdungsUmsetzungen();
 		
 		ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = 
-			((RisikoanalyseWizard)getWizard()).getRisikoGefaehrdungsUmsetzungen();
+			((RiskAnalysisWizard)getWizard()).getNotOKGefaehrdungsUmsetzungen();
 		
 		/* root of TreeViewer */
 		IGefaehrdungsBaumElement baum = new GefaehrdungsBaumRoot(arrListGefaehrdungsUmsetzungen);
@@ -417,7 +421,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		// viewerGefaehrdung.expandAll();
 		
 		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = 
-			((RisikoanalyseWizard)getWizard()).getAllMassnahmenUmsetzungen();
+			((RiskAnalysisWizard)getWizard()).getAllMassnahmenUmsetzungen();
 		
 		/* map a domain model object into multiple images and text labels */
 		viewerMassnahme.setLabelProvider(new MassnahmeTableViewerLabelProvider());
@@ -430,7 +434,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		// TODO viewer.setSorter(new GefaehrdungenSorter());
 		
 		// vs. overriding method WizardPage.canFilpToNextPage
-		((RisikoanalyseWizard)getWizard()).setCanFinish(true);
+		((RiskAnalysisWizard)getWizard()).setCanFinish(true);
 		// TODO wird das benötigt? s.u.
 		// checkPageComplete();
 	}
@@ -482,10 +486,10 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	
 	private void deleteRisikoMassnahmenUmsetzung(
 			MassnahmenUmsetzung massnahmenUmsetzung) {
-		ArrayList<RisikoMassnahmenUmsetzung> arrListRisikoMassnahmenUmsetzungen = ((RisikoanalyseWizard) getWizard())
+		ArrayList<RisikoMassnahmenUmsetzung> arrListRisikoMassnahmenUmsetzungen = ((RiskAnalysisWizard) getWizard())
 				.getAllRisikoMassnahmenUmsetzungen();
 
-		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = ((RisikoanalyseWizard) getWizard())
+		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = ((RiskAnalysisWizard) getWizard())
 				.getAllMassnahmenUmsetzungen();
 
 		try {

@@ -115,10 +115,10 @@ public class ChooseGefaehrdungPage extends WizardPage {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				Gefaehrdung currentGefaehrdung = (Gefaehrdung) event
 						.getElement();
-				ArrayList<Gefaehrdung> selectedArrayList = ((RisikoanalyseWizard) getWizard())
+				ArrayList<Gefaehrdung> selectedArrayList = ((RiskAnalysisWizard) getWizard())
 						.getAssociatedGefaehrdungen();
-				ArrayList<GefaehrdungsUmsetzung> umsetzungenArrayList = ((RisikoanalyseWizard) getWizard())
-						.getGefaehrdungsUmsetzungen();
+				ArrayList<GefaehrdungsUmsetzung> umsetzungenArrayList = ((RiskAnalysisWizard) getWizard())
+						.getAllGefaehrdungsUmsetzungen();
 
 				// TODO statt contains: auf gleiche ID überprüfen (warum ??)
 				if (event.getChecked()) {
@@ -288,12 +288,12 @@ public class ChooseGefaehrdungPage extends WizardPage {
 		/* Listener opens Dialog for creation of new OwnGefaehrdung */
 		buttonNew.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				ArrayList<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RisikoanalyseWizard) getWizard())
-						.getOwnGefaehrdungen();
+				ArrayList<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard())
+						.getAllOwnGefaehrdungen();
 				final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(
 						composite.getShell(), arrListOwnGefaehrdungen);
 				dialog.open();
-				((RisikoanalyseWizard) getWizard()).addOwnGefaehrdungen();
+				((RiskAnalysisWizard) getWizard()).addOwnGefaehrdungen();
 				viewer.refresh();
 				selectAssignedGefaehrdungen();
 			}
@@ -370,7 +370,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * Is processed each time the WizardPage is set visible.
 	 */
 	private void initContents() {
-		ArrayList<Gefaehrdung> arrListAllGefaehrdungen = ((RisikoanalyseWizard) getWizard())
+		ArrayList<Gefaehrdung> arrListAllGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAllGefaehrdungen();
 
 		/* map a domain model object into multiple images and text labels */
@@ -383,7 +383,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 		selectAssignedGefaehrdungen();
 		packAllColumns();
 
-		((RisikoanalyseWizard) getWizard()).setCanFinish(false);
+		((RiskAnalysisWizard) getWizard()).setCanFinish(false);
 		checkPageComplete();
 	}
 
@@ -391,7 +391,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * Marks all checkboxes of Gefaehrdungen associated to the selected Baustein.
 	 */
 	private void selectAssignedGefaehrdungen() {
-		ArrayList<Gefaehrdung> list = ((RisikoanalyseWizard) getWizard())
+		ArrayList<Gefaehrdung> list = ((RiskAnalysisWizard) getWizard())
 				.getAssociatedGefaehrdungen();
 		viewer.setCheckedElements((Gefaehrdung[]) list
 				.toArray(new Gefaehrdung[list.size()]));
@@ -412,7 +412,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * Activates the next button, if the List of selected Gefaehrdungen is not empty.
 	 */
 	private void checkPageComplete() {
-		if (((RisikoanalyseWizard) getWizard()).getAssociatedGefaehrdungen()
+		if (((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen()
 				.isEmpty()) {
 			setPageComplete(false);
 		} else {
@@ -426,12 +426,12 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * @param delGefaehrdung the (Own)Gefaehrdung to delete
 	 */
 	private void deleteOwnGefaehrdung(Gefaehrdung delGefaehrdung) {
-		ArrayList<Gefaehrdung> arrListAllGefaehrdungen = ((RisikoanalyseWizard) getWizard())
+		ArrayList<Gefaehrdung> arrListAllGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAllGefaehrdungen();
-		ArrayList<Gefaehrdung> arrListAssociatedGefaehrdungen = ((RisikoanalyseWizard) getWizard())
+		ArrayList<Gefaehrdung> arrListAssociatedGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAssociatedGefaehrdungen();
-		ArrayList<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RisikoanalyseWizard) getWizard())
-				.getOwnGefaehrdungen();
+		ArrayList<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard())
+				.getAllOwnGefaehrdungen();
 
 		try {
 			if (arrListOwnGefaehrdungen.contains(delGefaehrdung)) {
@@ -441,8 +441,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
 				/* delete OwnGefaehrdung from List of OwnGefaehrdungen */
 				arrListOwnGefaehrdungen.remove(delGefaehrdung);
-				((RisikoanalyseWizard) getWizard())
-						.setOwnGefaehrdungen(arrListOwnGefaehrdungen);
+				((RiskAnalysisWizard) getWizard())
+						.setAllOwnGefaehrdungen(arrListOwnGefaehrdungen);
 
 				/* delete OwnGefaehrdung from List of selected Gefaehrdungen */
 				if (arrListAssociatedGefaehrdungen.contains(delGefaehrdung)) {

@@ -29,6 +29,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
  */
 public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 
+	private Text textNumber;
 	private Text textName;
 	private Text textDescription;
 	private RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung;
@@ -45,6 +46,23 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 		final GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		container.setLayout(gridLayout);
+		
+		/* label number */
+		final Label labelNumber = new Label(container, SWT.NONE);
+		GridData gridLabelNumber = new GridData();
+		gridLabelNumber.horizontalAlignment = SWT.LEFT;
+	    gridLabelNumber.verticalAlignment = SWT.CENTER;
+	    labelNumber.setText("Nummer:");
+		labelNumber.setLayoutData(gridLabelNumber);
+		
+		/* text number */
+		textNumber = new Text(container, SWT.BORDER);
+		GridData gridTextNumber = new GridData();
+		gridTextNumber.horizontalAlignment = SWT.FILL;
+	    gridTextNumber.verticalAlignment = SWT.CENTER;
+	    gridTextNumber.grabExcessHorizontalSpace = true;
+		textNumber.setLayoutData(gridTextNumber);
+		textNumber.setText(risikoMassnahmenUmsetzung.getNumber());
 		
 		/* label name */
 		final Label labelName = new Label(container, SWT.NONE);
@@ -72,15 +90,17 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 		labelDescription.setLayoutData(gridLabelDescription);
 		
 		/* text description */
-		textDescription = new Text(container, SWT.BORDER);
+		textDescription = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.WRAP);
 		GridData gridTextDescription = new GridData();
 		gridTextDescription.horizontalAlignment = SWT.FILL;
-	    gridTextDescription.verticalAlignment = SWT.CENTER;
+	    gridTextDescription.verticalAlignment = SWT.FILL;
 	    gridTextDescription.grabExcessHorizontalSpace = true;
-	    textDescription.setText(risikoMassnahmenUmsetzung.getDescription());
+	    gridTextDescription.grabExcessVerticalSpace = true;
+	    gridTextDescription.widthHint = 400;
+	    gridTextDescription.heightHint = 200;
 		textDescription.setLayoutData(gridTextDescription);
+		textDescription.setText(risikoMassnahmenUmsetzung.getDescription());
 		
-		 //add controls to composite as necessary
 		 return container;
 	}
 	
