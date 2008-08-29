@@ -70,7 +70,6 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
  * @author ahanekop@sernet.de
  *
  */
-
 public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 	private Composite container;
@@ -91,6 +90,9 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	private MassnahmenUmsetzungenFilter massnahmenUmsetzungenFilter = new MassnahmenUmsetzungenFilter();
 	private SearchFilter searchFilter = new SearchFilter();
 	
+	/**
+	 * Constructor sets title an description of WizardPage.
+	 */
 	protected AdditionalSecurityMeasuresPage() {
 		super("Zusätzliche IT-Sicherheitsmaßnahmen");
 		setTitle("Zusätzliche IT-Sicherheitsmaßnahmen");

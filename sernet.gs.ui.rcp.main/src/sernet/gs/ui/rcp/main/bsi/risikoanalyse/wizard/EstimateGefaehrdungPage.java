@@ -34,7 +34,6 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
  * 
  * @author ahanekop@sernet.de
  */
-
 public class EstimateGefaehrdungPage extends WizardPage {
 
 	private Composite composite;

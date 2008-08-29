@@ -45,7 +45,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 			new ArrayList<OwnGefaehrdung>();
 
 	/* list of all Gefaehrdungen of type GefaehrdungsUmsetzung -
-	 * ChooseGefaehrdungPage_OK, EstimateGefaehrungPage_OK, RiskHandlingPage */
+	 * ChooseGefaehrdungPage_OK, EstimateGefaehrungPage_OK, RiskHandlingPage_OK */
 	private ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen =
 			new ArrayList<GefaehrdungsUmsetzung>();
 
@@ -70,7 +70,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	private ArrayList<Gefaehrdung> notOKGefaehrdungen =
 			new ArrayList<Gefaehrdung>();
 
-	/* list of Gefaehrdungen, which need additional security measures. - RiskHandlingPage */
+	/* list of Gefaehrdungen, which need additional security measures -
+	 * RiskHandlingPage, PropertiesComboBoxCellModifier_OK */
 	private ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen =
 			new ArrayList<GefaehrdungsUmsetzung>();
 
