@@ -15,7 +15,6 @@ public class PropertyList {
 	private Integer dbId;
 	
 	
-	
 	public Integer getDbId() {
 		return dbId;
 	}
@@ -44,11 +43,11 @@ public class PropertyList {
 	}
 	
 	
-	public Property getProperty(int idx) {
-		if (properties != null)
-			return properties.get(idx);
-		else
-			return null;
+	public Property getProperty(int idx)  {
+			if (properties != null && properties.size() > 0)
+				return properties.get(idx);
+			else
+				return null;
 	}
 
 }

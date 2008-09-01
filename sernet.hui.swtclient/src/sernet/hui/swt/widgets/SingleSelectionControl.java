@@ -34,7 +34,7 @@ import sernet.snutils.AssertException;
 import sernet.snutils.Tester;
 
 /**
- * The DomDom version of a dropdown box.
+ * The HUI version of a dropdown box.
  * 
  * @author koderman@sernet.de
  */
@@ -68,7 +68,7 @@ public class SingleSelectionControl implements IHuiControl {
 			240);
 
 	/**
-	 * The dynamic
+	 * Constructor for DropDownBox.
 	 * 
 	 * @param dyndoc
 	 * @param type
@@ -170,7 +170,8 @@ public class SingleSelectionControl implements IHuiControl {
 
 	public void update() {
 		PropertyList propList = entity.getProperties(fieldType.getId());
-		Property entityProp = propList != null ? propList.getProperty(0) : null;
+		Property entityProp;
+			entityProp = propList != null ? propList.getProperty(0) : null;
 		if (entityProp != null) {
 			savedProp = entityProp;
 			final int index = indexForOption(savedProp.getPropertyValue());
@@ -188,7 +189,6 @@ public class SingleSelectionControl implements IHuiControl {
 			}
 
 		}
-
 	}
 
 }

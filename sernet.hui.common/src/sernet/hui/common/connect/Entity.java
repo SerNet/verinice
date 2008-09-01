@@ -140,7 +140,7 @@ public class Entity implements ISelectOptionHandler {
 			createNewProperty(type, value);
 		}
 		else {
-			list.getProperty(0).setPropertyValue(value);
+				list.getProperty(0).setPropertyValue(value);
 		}
 	}
 	

@@ -19,6 +19,7 @@
 package sernet.hui.swt.widgets;
 
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -78,9 +79,9 @@ public class TextControl implements IHuiControl {
 		label.setText(fieldType.getName());
 
 		PropertyList propList = entity.getProperties(fieldType.getId());
-		savedProp = propList != null ? 
-									propList.getProperty(0) 
-									: null;
+			savedProp = propList != null ? 
+										propList.getProperty(0) 
+										: null;
 
 				if (savedProp == null) {
 					// create property in which to save entered value:
@@ -163,9 +164,10 @@ public class TextControl implements IHuiControl {
 	
 	public void update() {
 		PropertyList propList = entity.getProperties(fieldType.getId());
-		Property entityProp = propList != null ? 
-									propList.getProperty(0) 
-									: null;
+		Property entityProp;
+			entityProp = propList != null ? 
+										propList.getProperty(0) 
+										: null;
 		if (entityProp != null
 				&& !text.getText().equals(entityProp.getPropertyValue())) {
 			savedProp = entityProp;
@@ -181,7 +183,5 @@ public class TextControl implements IHuiControl {
 				});
 			}
 		}
-									
-	
 	}
 }
