@@ -32,54 +32,10 @@ import sernet.gs.service.GSServiceException;
  */
 public class GSScraper {
 
+	private IGSPatterns patterns;
 	
-	private static final String gefName = 
-		"//html:a[contains(@href,'../g/g')]/../following-sibling::html:td/following-sibling::html:td";
-
-	final String GET_BAUSTEINE = 
-		" declare namespace html = \"http://www.w3.org/1999/xhtml\";" +
-	    " for $a in //html:a " +
-	    " let $u := data($a/@href)" +
-	    " where contains($a/@href, \"b0\")" +
-	    " return <b>{$a}°{$u}</b>"; // id titel, url
-	
-	final String GET_MASSNAHMEN = 
-		" declare namespace html = \"http://www.w3.org/1999/xhtml\";" +
-		" for $a in //html:a" +
-		" let $u := data($a/@href)" +
-		" let $h := $a/../../../preceding-sibling::html:h3[position()=1]" + // LZ: a/td/tr/table/h3
-		" let $s := $a/../../html:td[position()=3]" + // a/td/tr/3th column: Siegelstufe
-		" let $t := $a/../../html:td[position()=4]" + // a/td/tr/4th column: Titel
-		" where   contains($a/@href, \"../m/m\")" + //link to massnahme
-		" and not ( contains($a/@href, \"../m/m01.htm\"))" + // not link to overview
-		" and $h" + // header must exist
-		" return <mn>{$h}°{$a}°{$t}°{$u}°{$s}</mn>"; // return lebenszyklus, id, titel, url, siegel
-
-	
-	final String GET_GEFAEHRDUNGEN = 
-		" declare namespace html = \"http://www.w3.org/1999/xhtml\";" +
-		" for $a in //html:a" + // id (filename in url)
-		" let $u := data($a/@href)" + //url
-		" let $h := $a/../../../preceding-sibling::html:h3[position()=1]" + // KAT: a/td/tr/table/h3
-		" let $t := $a/../../html:td[position()=3]" + // a/td/tr/3rd column: Titel
-		" where   contains($a/@href, \"../g/g\")" + //link
-		" and not ( contains($a/@href, \"../g/g01.htm\"))" + // not link to overview
-		" and $h" + // header must exist
-		// return kategorie, id, titel, url
-		" return <mn>{$h}°{$a}°{$t}°{$u}</mn>"; 
-	
-	final String GET_TITLE = " declare namespace html = \"http://www.w3.org/1999/xhtml\";" +
-		" for $t in //html:title" +
-		" let $d := data($t)" +
-		" return <title>{$d}</title>";
-	
-	final Pattern standPat = Pattern.compile("(\\d{4})");
 	private String stand;
 
-	final Pattern baustPat = Pattern.compile("(B \\d+.\\d+)\\s+(\\w*.*)°(.*)");
-	
-	final Pattern schichtPat = Pattern.compile("(\\d)\\.\\d+");
-	
 	private IGSSource source;
 	private Configuration config;
 	private XQueryExpression getBausteineExp;
@@ -95,24 +51,25 @@ public class GSScraper {
 	private DynamicQueryContext gefaehrdungenContext;
 
 
-	public GSScraper(IGSSource source) throws  GSServiceException {
+	public GSScraper(IGSSource source, IGSPatterns patterns) throws  GSServiceException {
 		
 		try {
+			this.patterns = patterns;
 			this.source = source;
 			config = new Configuration();
 			StaticQueryContext staticContext;
 			staticContext = new StaticQueryContext(config);
 			
-			getBausteineExp = staticContext.compileQuery(GET_BAUSTEINE);
+			getBausteineExp = staticContext.compileQuery(patterns.getBausteinPattern());
 			bausteinContext = new DynamicQueryContext(config);
 			
-			getMassnahmenExp = staticContext.compileQuery(GET_MASSNAHMEN);
+			getMassnahmenExp = staticContext.compileQuery(patterns.getMassnahmePattern());
 			massnahmenContext = new DynamicQueryContext(config);
 			
-			getGefaehrdungenExp = staticContext.compileQuery(GET_GEFAEHRDUNGEN);
+			getGefaehrdungenExp = staticContext.compileQuery(patterns.getGefaehrdungPattern());
 			gefaehrdungenContext = new DynamicQueryContext(config);
 
-			getTitleExp = staticContext.compileQuery(GET_TITLE);
+			getTitleExp = staticContext.compileQuery(patterns.getTitlePattern());
 			titleContext = new DynamicQueryContext(config);
 			
 			
@@ -147,7 +104,7 @@ public class GSScraper {
 			    found = found.replaceAll(".htm", "");
 			    
 			    
-			    Matcher matcher = baustPat.matcher(found);
+			    Matcher matcher = patterns.getBaustPat().matcher(found);
 			    if (matcher.matches()) {
 			    	Baustein b = new Baustein();
 			    	b.setStand(stand);
@@ -155,7 +112,7 @@ public class GSScraper {
 			    	b.setTitel(matcher.group(2));
 			    	b.setUrl(matcher.group(3));
 			    	
-			    	Matcher schichtMatcher = schichtPat.matcher(matcher.group(1));
+			    	Matcher schichtMatcher = patterns.getSchichtPat().matcher(matcher.group(1));
 			    	String schicht="0";
 			    	if (schichtMatcher.find()) 
 			    		schicht = schichtMatcher.group(1);
@@ -180,7 +137,7 @@ public class GSScraper {
 		SequenceIterator iterator = getTitleExp.iterator(titleContext);
 		NodeInfo title = (NodeInfo)iterator.next();
 		if (title != null) {
-		 Matcher matcher = standPat.matcher(title.getStringValue());
+		 Matcher matcher = patterns.getStandPat().matcher(title.getStringValue());
 		 if (matcher.find()) {
 			 stand = matcher.group(1);
 		 }
@@ -203,9 +160,11 @@ public class GSScraper {
 			    NodeInfo mnNode = (NodeInfo)iterator.next();
 			    if (mnNode==null) break;
 			    String found = mnNode.getStringValue();
+			    // clear up paths, remove relative paths (don't work in zipfile)
 			    found = found.replaceAll("\n", "");
 			    found = found.replaceAll(".htm", "");
-			    found = found.replaceAll("../m/", "");
+			    found = found.replaceAll("\\.\\./m/", "");
+			    found = found.replaceAll("\\.\\./\\.\\./", "");
 //			    System.out.println(found);
 			    
 			    Matcher matcher = pat.matcher(found);
@@ -277,7 +236,7 @@ public class GSScraper {
 			mn.setLebenszyklus(Massnahme.LZ_UMSETZUNG);
 	}
 	
-	public InputStream getBaustein(String url, String stand) throws GSServiceException {
+	public InputStream getBausteinText(String url, String stand) throws GSServiceException {
 //		if (!stand.equals(this.stand))
 //			throw new GSServiceException("Versionstand des Bausteins weicht von geladenen " +
 //					"Grundschutz-Katalogen ab."); 

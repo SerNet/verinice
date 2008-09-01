@@ -37,15 +37,19 @@ public class ZIPGSSource implements IGSSource {
 	private ZipFile zf;
 	private static final String BAUSTEIN_PATH_2005 = "gshb/deutsch/baust/";
 	private static final String BAUSTEIN_PATH_2006 = "baust/";
+	private static final String BAUSTEIN_PATH_DATENSCHUTZ = "B1.5-Datenschutz/www.bsi.de/gshb/baustein-datenschutz/html/";
 	
 	private static final String MASSNAHME_PATH_2005 = "gshb/deutsch/m/";
 	private static final String MASSNAHME_PATH_2006 = "m/";
+	private static final String MASSNAHME_PATH_DATENSCHUTZ1 = "B1.5-Datenschutz/www.bsi.de/gshb/baustein-datenschutz/html/";
+	private static final String MASSNAHME_PATH_DATENSCHUTZ2 = "B1.5-Datenschutz/www.bsi.de/gshb/";
 	
 	private static final String SUFFIX = ".htm";
 	static final Pattern relPath = Pattern.compile("^../baust/");
 	
 	private static final String GEFAEHRDUNG_PATH_2005 = "gshb/deutsch/g/";
 	private static final String GEFAEHRDUNG_PATH_2006 = "g/";
+	private static final String GEFAEHRDUNG_PATH_DATENSCHUTZ = "B1.5-Datenschutz/www.bsi.de/gshb/baustein-datenschutz/html/";
 	
 	public ZIPGSSource(String fileName) throws IOException {
 		zf = new ZipFile(fileName);
@@ -58,11 +62,16 @@ public class ZIPGSSource implements IGSSource {
 			ZipEntry entry = zf.getEntry(BAUSTEIN_PATH_2006 + baustein + SUFFIX); 
 			return zf.getInputStream(entry);
 		} catch (Exception e) {
-			ZipEntry entry = zf.getEntry(BAUSTEIN_PATH_2005 + baustein + SUFFIX); 
 			try {
+				ZipEntry entry = zf.getEntry(BAUSTEIN_PATH_2005 + baustein + SUFFIX); 
 				return zf.getInputStream(entry);
-			} catch (IOException e1) {
-				throw new GSServiceException(e);
+			} catch (Exception e1) {
+				try {
+					ZipEntry entry = zf.getEntry(BAUSTEIN_PATH_DATENSCHUTZ + baustein + SUFFIX); 
+					return zf.getInputStream(entry);
+				} catch (Exception e2) {
+					throw new GSServiceException(e2);
+				}
 			}
 		}
 	}
@@ -75,8 +84,14 @@ public class ZIPGSSource implements IGSSource {
 			
 			ZipEntry entry = zf.getEntry(BAUSTEIN_PATH_2006 + baustein + SUFFIX); 
 			if (entry == null)
-				entry = zf.getEntry(BAUSTEIN_PATH_2005 + baustein + SUFFIX); 
+				entry = zf.getEntry(BAUSTEIN_PATH_2005 + baustein + SUFFIX);
+			if (entry == null)
+				entry = zf.getEntry(BAUSTEIN_PATH_DATENSCHUTZ + baustein + SUFFIX);
 				
+			if (entry == null)
+				throw new GSServiceException("Feler beim Laden des Bausteins: " + baustein);
+			
+			
 			InputStream zipIS = zf.getInputStream(entry);
 			InputStreamReader reader = new InputStreamReader(zipIS, "ISO-8859-1");
 			BufferedReader buffRead = new BufferedReader(reader);
@@ -121,7 +136,17 @@ public class ZIPGSSource implements IGSSource {
 				ZipEntry entry = zf.getEntry(MASSNAHME_PATH_2005 + massnahme + SUFFIX); 
 				return zf.getInputStream(entry);
 			} catch (Exception e2) {
-				throw new GSServiceException("Massnahme nicht gefunden: " + massnahme, e2);
+				try {
+					ZipEntry entry = zf.getEntry(MASSNAHME_PATH_DATENSCHUTZ1 + massnahme + SUFFIX); 
+					return zf.getInputStream(entry);
+				} catch (Exception e3) {
+					try {
+						ZipEntry entry = zf.getEntry(MASSNAHME_PATH_DATENSCHUTZ2 + massnahme + SUFFIX); 
+						return zf.getInputStream(entry);
+					} catch (Exception e4) {
+						throw new GSServiceException("Massnahme nicht gefunden: " + massnahme, e4);
+					}
+				}
 			}
 		}
 	}
@@ -136,7 +161,12 @@ public class ZIPGSSource implements IGSSource {
 				ZipEntry entry = zf.getEntry(GEFAEHRDUNG_PATH_2005 + gefaehrdung + SUFFIX); 
 				return zf.getInputStream(entry);
 			} catch (Exception e2) {
-				throw new GSServiceException("Gefaehrdung nicht gefunden: " + gefaehrdung, e2);
+				try {
+					ZipEntry entry = zf.getEntry(GEFAEHRDUNG_PATH_DATENSCHUTZ + gefaehrdung + SUFFIX); 
+					return zf.getInputStream(entry);
+				} catch (Exception e3) {
+					throw new GSServiceException("Gefaehrdung nicht gefunden: " + gefaehrdung, e3);
+				}
 			}
 		}
 	}

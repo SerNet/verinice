@@ -12,7 +12,8 @@ public class TestScraperMassnahmen extends TestCase {
 
 	public void testMassnahmenGefaehrdungen() throws Exception {
 		String zipfile = "/home/aprack/down/gshb/it-grundschutz2006_html_de.zip";
-		GSScraper scrape = new GSScraper(new ZIPGSSource(zipfile));
+		GSScraper scrape = new GSScraper(new ZIPGSSource(zipfile),
+				new PatternGSHB2005_2006());
 		
 		List<Massnahme>  massnahmen = scrape.getMassnahmen("b05013");
 		for (Massnahme massnahme : massnahmen) {

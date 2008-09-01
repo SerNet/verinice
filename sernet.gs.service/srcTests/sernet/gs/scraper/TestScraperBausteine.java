@@ -12,7 +12,8 @@ public class TestScraperBausteine extends TestCase {
 	protected void setUp() throws Exception {
 		String zipfile = "/home/aprack/down/gshb/it-grundschutz2006_html_de.zip";
 //		String zipfile = "/home/aprack/down/gshb/gshbdeutschhtml2005.zip";
-		scrape = new GSScraper(new ZIPGSSource(zipfile));
+		scrape = new GSScraper(new ZIPGSSource(zipfile),
+				new PatternGSHB2005_2006());
 
 	}
 	
