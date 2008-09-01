@@ -72,8 +72,6 @@ public class OwnGefaehrdungHome {
 	}
 	
 	public ArrayList<OwnGefaehrdung> loadAll() throws RuntimeException {
-		Logger.getLogger(this.getClass()).debug("Loading all own threats.");
-
 		Transaction transaction = session.beginTransaction();
 		Criteria criteria = session.createCriteria(OwnGefaehrdung.class);
 		List models = criteria.list();

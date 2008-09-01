@@ -132,11 +132,10 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				} else {
 					/* remove from List of Associated Gefaehrdungen */
 					selectedArrayList.remove(currentGefaehrdung);
-					/* remove from List of GefaehrdungsUmstzezungen an dispose GefaehrungsUmsetzung
+					/* remove from List of GefaehrdungsUmstzezungen
 					for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : umsetzungenArrayList) {
 						if (gefaehrdungsUmsetzung.getId().equals(currentGefaehrdung.getId())) {
 							umsetzungenArrayList.remove(gefaehrdungsUmsetzung);
-							// TODO klären, ob gefaehrdungsUmsetzung dispose()d werden kann/muss
 							break;
 						}
 					}
@@ -149,7 +148,14 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
 		/* listener opens edit Dialog for the selected Gefaehrdung */
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			/**
+			 * Notifies of a double click.
+			 *  
+			 * @param event event object describing the double-click
+			 */
 			public void doubleClick(DoubleClickEvent event) {
+				/* retrieve selected Gefaehrdung and open edit dialog with it */
 				IStructuredSelection selection = (IStructuredSelection) event
 						.getSelection();
 				Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection
