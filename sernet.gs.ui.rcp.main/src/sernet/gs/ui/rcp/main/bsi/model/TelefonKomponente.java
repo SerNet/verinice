@@ -62,13 +62,7 @@ public class TelefonKomponente extends CnATreeElement
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof BausteinUmsetzung)
-			return true;
-		if (obj instanceof Baustein)
-			return true;
-		if (obj instanceof LinkKategorie)
-			return true;
-		return false;
+		return TreeStructureValidator.canContain(obj);
 	}
 	
 	@Override

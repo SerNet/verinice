@@ -32,7 +32,11 @@ public class BSIKatalogInvisibleRoot {
 						|| event.getProperty().equals(
 								PreferenceConstants.BSIDIR)
 						|| event.getProperty().equals(
-								PreferenceConstants.GSACCESS))
+								PreferenceConstants.GSACCESS)
+						|| event.getProperty().equals(
+								PreferenceConstants.DSZIPFILE)
+								
+					)
 
 					try {
 						WorkspaceJob job = new OpenCataloguesJob(Messages.BSIMassnahmenView_0);

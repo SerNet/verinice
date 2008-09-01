@@ -24,6 +24,7 @@ import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 
@@ -66,10 +67,11 @@ public class CnAImageProvider {
 		if (elmt instanceof ITVerbund)
 			return ImageCache.getInstance().getImage(ImageCache.EXPLORER);
 		
-		
 		if (elmt instanceof IDatenschutzElement)
 			return ImageCache.getInstance().getImage(ImageCache.SHIELD);
-		
+
+		if (elmt instanceof FinishedRiskAnalysis)
+			return ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
 		
 		return ImageCache.getInstance().getImage(
 				ImageCache.UNKNOWN);

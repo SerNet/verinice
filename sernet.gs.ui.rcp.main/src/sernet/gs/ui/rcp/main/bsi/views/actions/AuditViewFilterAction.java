@@ -5,6 +5,7 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Shell;
 
+import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.TodoFilterDialog;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
@@ -32,6 +33,8 @@ public class AuditViewFilterAction extends Action {
 		this.umsetzungDurchFilter = new StringPropertyFilter(viewer,
 				MassnahmenUmsetzung.P_NAECHSTEREVISIONDURCH);
 		this.zielobjektFilter = new ZielobjektPropertyFilter(viewer);
+		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
+		
 	}
 	
 	@Override

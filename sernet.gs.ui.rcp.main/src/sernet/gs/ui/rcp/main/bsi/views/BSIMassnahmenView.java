@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -175,6 +176,10 @@ public class BSIMassnahmenView extends ViewPart {
 
 	private GefaehrdungenFilter gefaehrdungenFilter;
 
+	private Action expandAllAction;
+
+	private Action collapseAction;
+
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.BORDER);
@@ -217,6 +222,26 @@ public class BSIMassnahmenView extends ViewPart {
 
 	private void createActions() {
 		copyAction = new CopyBSIMassnahmenViewAction(this, "Kopieren");
+		
+		expandAllAction = new Action() {
+			@Override
+			public void run() {
+				viewer.expandAll();
+			}
+		};
+		expandAllAction.setText("Alle aufklappen");
+		expandAllAction.setImageDescriptor(ImageCache.getInstance()
+				.getImageDescriptor(ImageCache.EXPANDALL));
+
+		collapseAction = new Action() {
+			@Override
+			public void run() {
+				viewer.collapseAll();
+			}
+		};
+		collapseAction.setText("Alle zuklappen");
+		collapseAction.setImageDescriptor(ImageCache.getInstance()
+				.getImageDescriptor(ImageCache.COLLAPSEALL));
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -224,6 +249,8 @@ public class BSIMassnahmenView extends ViewPart {
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		
 		manager.add(filterAction);
+		manager.add(expandAllAction);
+		manager.add(collapseAction);
 		
 		manager.add(new Separator());
 		manager.add(copyAction);
@@ -279,6 +306,8 @@ public class BSIMassnahmenView extends ViewPart {
 				this.gefaehrdungenFilter);
 		menuManager.add(filterAction);
 		menuManager.add(copyAction);
+		menuManager.add(expandAllAction);
+		menuManager.add(collapseAction);
 	}
 
 	@Override

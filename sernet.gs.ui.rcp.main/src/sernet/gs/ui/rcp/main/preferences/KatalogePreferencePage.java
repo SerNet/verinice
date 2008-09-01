@@ -27,6 +27,7 @@ public class KatalogePreferencePage
 	implements IWorkbenchPreferencePage {
 
 	private StringFieldEditor zipfilePath;
+	private StringFieldEditor datenschutzZipPath;
 	private RadioGroupFieldEditor gsAccessMethod;
 	private DirectoryFieldEditor bsiUrl;
 
@@ -67,6 +68,11 @@ public class KatalogePreferencePage
 				"ZIP-Datei mit GS-Katalogen",
 				getFieldEditorParent());
 		addField(zipfilePath);
+
+		datenschutzZipPath = new FileFieldEditor(PreferenceConstants.DSZIPFILE, 
+				"ZIP-Datei mit Datenschutzbaustein",
+				getFieldEditorParent());
+		addField(datenschutzZipPath);
 	}
 	
 	@Override

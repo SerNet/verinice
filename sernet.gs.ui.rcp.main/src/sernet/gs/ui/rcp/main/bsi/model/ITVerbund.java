@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
@@ -81,6 +82,7 @@ public class ITVerbund extends CnATreeElement
 				|| obj instanceof RaeumeKategorie 
 				|| obj instanceof ServerKategorie
 				|| obj instanceof TKKategorie
+				|| obj instanceof FinishedRiskAnalysis
 				)
 			return true;
 		return false;

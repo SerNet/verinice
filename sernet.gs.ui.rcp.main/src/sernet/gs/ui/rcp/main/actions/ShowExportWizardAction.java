@@ -46,6 +46,7 @@ public class ShowExportWizardAction extends Action {
 		setImageDescriptor(ImageCache.getInstance()
 				.getImageDescriptor(ImageCache.REPORT));
 		setEnabled(false);
+		
 		CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
 
 			public void closed(BSIModel model) {
@@ -66,6 +67,7 @@ public class ShowExportWizardAction extends Action {
 			busyCursorWhile(new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("Öffne OpenOffice Export...", IProgressMonitor.UNKNOWN);
+					
 					ExportWizard wizard = new ExportWizard();
 					wizard.init(window.getWorkbench(), null);
 					final WizardDialog dialog = new WizardDialog(window.getShell(), wizard);

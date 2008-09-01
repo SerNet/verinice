@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -19,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -191,10 +194,11 @@ public class AuditView extends ViewPart {
 		
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 		createFilters();
-		createPullDownMenu();
 		viewer.setSorter(new AuditSorter());
 		makeActions();
+		createPullDownMenu();
 		hookActions();
+		fillLocalToolBar();
 		
 		getSite().setSelectionProvider(viewer);
 		packColumns();
@@ -212,6 +216,11 @@ public class AuditView extends ViewPart {
 				EditorFactory.getInstance().openEditor(sel);
 			}
 		};
+		
+		filterAction = new AuditViewFilterAction(viewer, 
+				Messages.AuditView_19,
+				this.umsetzungFilter,
+				this.siegelFilter);
 	}
 
 	private void hookActions() {
@@ -231,12 +240,16 @@ public class AuditView extends ViewPart {
 		dateColumn.pack();
 	}
 	
+	
+	private void fillLocalToolBar() {
+		IActionBars bars = getViewSite().getActionBars();
+		IToolBarManager manager = bars.getToolBarManager();
+		manager.add(this.filterAction);
+	}
+	
+	
 	private void createPullDownMenu() {
 		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
-		filterAction = new AuditViewFilterAction(viewer, 
-				Messages.AuditView_19,
-				this.umsetzungFilter,
-				this.siegelFilter);
 		menuManager.add(filterAction);
 	}
 	

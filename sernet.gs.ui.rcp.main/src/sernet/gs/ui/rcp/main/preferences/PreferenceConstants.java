@@ -12,6 +12,7 @@ public class PreferenceConstants {
 	
 	// locatio of ZIP-file or URL:
 	public static final String BSIZIPFILE = "cna_bsizipfile";
+	public static final String DSZIPFILE = "cna_dszipfile";
 	public static final String BSIDIR = "cna_bsiurl";
 	
 	public static final String OODIR = "cna_oodir";

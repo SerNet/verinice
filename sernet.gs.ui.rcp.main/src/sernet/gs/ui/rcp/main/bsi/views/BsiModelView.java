@@ -337,6 +337,12 @@ public class BsiModelView extends ViewPart {
 
 		});
 	}
+	
+	@Override
+	public void dispose() {
+		CnAElementFactory.getInstance().closeModel();
+		super.dispose();
+	}
 
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
