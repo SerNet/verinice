@@ -186,7 +186,19 @@
                    icon="icons/16-message-warn.png"
                    id="sernet.gs.ui.rcp.main.neueRisikoanalyse"
                    label="Neue Risikoanalyse"
-                   menubarPath="content">
+                   menubarPath="content"
+                   tooltip="Risikoanalyse durchführen">
+                <enablement>
+                   <and>
+                   <or>
+                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement"/>
+                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung"/>
+                   </or>
+                   <not>
+                      <objectClass name="sernet.gs.ui.rcp.main.bsi.model.ITVerbund"/>
+                   </not>
+                   </and>
+                </enablement>
              </action>
       </objectContribution>
       

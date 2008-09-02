@@ -206,6 +206,14 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 		getEntity().setSimpleValue(entityType.getPropertyType(P_STAND), stand);
 	}
 
+	/**
+	 * Returns the name of the MassnahnenUmsetzung.
+	 * 
+	 * @author ahanekop@sernet.de
+	 * @return the name of the MassnahnenUmsetzung
+	 */
+	public String getName() {
+		return getEntity().getSimpleValue(P_NAME);
+	}
 	
-
 }

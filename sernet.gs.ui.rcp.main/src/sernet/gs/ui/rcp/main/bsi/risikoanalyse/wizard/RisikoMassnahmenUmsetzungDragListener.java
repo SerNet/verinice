@@ -61,14 +61,10 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
 				return;	
 			} else if (object instanceof MassnahmenUmsetzung) {
 				/* object is of type MassnahmenUmsetzung - convert to
-				 * RisikoMassnahmenUmsetzung
+				 * RisikoMassnahmenUmsetzung before adding it
 				 */
-				// TODO warum wird das nicht bemängelt?
-				// der cast dürfte doch gar nicht erlabut sein !?
-				// RisikoMassnahmenUmsetzung foo = (RisikoMassnahmenUmsetzung) object;
 				RisikoMassnahmenUmsetzung umsetzung = new RisikoMassnahmenUmsetzung(cnaElement, null);
-				umsetzung.setName(((MassnahmenUmsetzung) object).getTitle());
-				// umsetzung.setName(((MassnahmenUmsetzung) object).getDecription());
+				umsetzung.setName(((MassnahmenUmsetzung) object).getName());
 				risikoMassnahmenUmsetzung.add(umsetzung);
 				Logger.getLogger(this.getClass()).debug("drag start - MassnahmenUmsetzung " + ((MassnahmenUmsetzung) object).getTitle());
 			} else {

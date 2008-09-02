@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.SearchFilter;
 
 /**
  * WizardPage lists all previously selected Gefaehrdungen for the
@@ -241,14 +242,34 @@ public class EstimateGefaehrdungPage extends WizardPage {
 			public void modifyText(ModifyEvent event) {
 				Text text = (Text) event.widget;
 				if (text.getText().length() > 0) {
-					searchFilter.setPattern(text.getText());
-					viewer.addFilter(searchFilter);
-					viewer.refresh();
+					
+					ViewerFilter[] filters = viewer.getFilters();
+					SearchFilter thisFilter = null;
+					boolean contains = false;
+					
+					for (ViewerFilter item : filters) {
+						if (item instanceof SearchFilter) {
+							contains = true;
+							thisFilter = (SearchFilter) item;
+						}
+					}
+					if (contains) {
+						/* filter is already active - update filter */
+						thisFilter.setPattern(text.getText());
+						viewer.refresh();
+						
+					} else {
+						/* filter is not active - add */
+						searchFilter.setPattern(text.getText());
+						viewer.addFilter(searchFilter);
+						viewer.refresh();
+					}
 				} else {
 					viewer.removeFilter(searchFilter);
 					viewer.refresh();
 				}
 			}
+			
 		});
 	}
 

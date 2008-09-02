@@ -47,6 +47,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	private Image image = ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
 	private String number;
 	private String description;
+	public static final String SIEGEL = "Z";
 	
 	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, GefaehrdungsUmsetzung myParent) {
 		super(superParent);
@@ -118,7 +119,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 */
 	@Override
 	public String getTitle() {
-		return super.getTitle();
+		return super.getName();
 	}
 	
 	/**
@@ -168,5 +169,15 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 */
 	public void setNumber(String newNumber) {
 		number = newNumber;
+	}
+	
+	/**
+	 * Returns the Siegelstufe of the Massnahme, which is always "Z" (for
+	 * additional Massnahmen).
+	 * 
+	 * @return the Siegelstufe of the Massnahme
+	 */
+	public String getSiegel() {
+		return SIEGEL;
 	}
 }

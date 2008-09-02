@@ -35,7 +35,7 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 			case 1:
 				return massnahme.getNumber();
 			case 2:
-				return massnahme.getTitle();
+				return "[" + massnahme.getSiegel() + "] " + massnahme.getTitle();
 			case 3:
 				return massnahme.getDescription();
 			};
@@ -47,7 +47,7 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 			case 1:
 				return "???";
 			case 2:
-				return massnahme.getTitle();
+				return "[" + massnahme.getStufe() + "] " + massnahme.getName();
 			case 3:
 				return "keine Beschreibung";
 			};

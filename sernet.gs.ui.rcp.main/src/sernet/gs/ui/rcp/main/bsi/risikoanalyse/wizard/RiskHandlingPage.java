@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.SearchFilter;
 
 /**
  * Choose an alternative, how to deal with the Gefaerdungen.
@@ -136,16 +137,35 @@ public class RiskHandlingPage extends WizardPage {
 			 * @param event event containing information about the selection
 			 */
 	    	public void modifyText(ModifyEvent event) {
-	    		Text text = (Text) event.widget;
-	    		if (text.getText().length() > 0) {
-	    			searchFilter.setPattern(text.getText());
-	    			viewer.addFilter(searchFilter);
-	    			viewer.refresh();
-	    		} else {
-	    			viewer.removeFilter(searchFilter);
-	    			viewer.refresh();
-	    		}
-	    	}
+				Text text = (Text) event.widget;
+				if (text.getText().length() > 0) {
+					
+					ViewerFilter[] filters = viewer.getFilters();
+					SearchFilter thisFilter = null;
+					boolean contains = false;
+					
+					for (ViewerFilter item : filters) {
+						if (item instanceof SearchFilter) {
+							contains = true;
+							thisFilter = (SearchFilter) item;
+						}
+					}
+					if (contains) {
+						/* filter is already active - update filter */
+						thisFilter.setPattern(text.getText());
+						viewer.refresh();
+						
+					} else {
+						/* filter is not active - add */
+						searchFilter.setPattern(text.getText());
+						viewer.addFilter(searchFilter);
+						viewer.refresh();
+					}
+				} else {
+					viewer.removeFilter(searchFilter);
+					viewer.refresh();
+				}
+			}
 	    });
 	}
 	

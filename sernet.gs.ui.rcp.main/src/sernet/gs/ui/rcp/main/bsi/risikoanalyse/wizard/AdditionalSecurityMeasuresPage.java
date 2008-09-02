@@ -34,6 +34,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.SearchFilter;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -448,13 +449,30 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    	 * @param event event containing information about the modify
 	    	 */
 			public void modifyText(ModifyEvent event) {
-				
 				Text text = (Text) event.widget;
-				
 				if (text.getText().length() > 0) {
-					searchFilter.setPattern(text.getText());
-					viewerMassnahme.addFilter(searchFilter);
-					viewerMassnahme.refresh();
+					
+					ViewerFilter[] filters = viewerMassnahme.getFilters();
+					SearchFilter thisFilter = null;
+					boolean contains = false;
+					
+					for (ViewerFilter item : filters) {
+						if (item instanceof SearchFilter) {
+							contains = true;
+							thisFilter = (SearchFilter) item;
+						}
+					}
+					if (contains) {
+						/* filter is already active - update filter */
+						thisFilter.setPattern(text.getText());
+						viewerMassnahme.refresh();
+						
+					} else {
+						/* filter is not active - add */
+						searchFilter.setPattern(text.getText());
+						viewerMassnahme.addFilter(searchFilter);
+						viewerMassnahme.refresh();
+					}
 				} else {
 					viewerMassnahme.removeFilter(searchFilter);
 					viewerMassnahme.refresh();
