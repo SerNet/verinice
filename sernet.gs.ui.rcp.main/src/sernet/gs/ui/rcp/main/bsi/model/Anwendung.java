@@ -74,7 +74,7 @@ public class Anwendung extends CnATreeElement
 	public boolean canContain(Object obj) {
 		if (obj instanceof IDatenschutzElement)
 			return true;
-		return TreeStructureValidator.canContain(obj);
+		return CnaStructureHelper.canContain(obj);
 	}
 
 	@Override

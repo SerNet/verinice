@@ -131,6 +131,10 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 				+ getEntity().getSimpleValue(P_NAME);
 	}
 	
+	public String getKapitel() {
+		return getEntity().getSimpleValue(P_KAPITEL);
+	}
+	
 	public int[] getKapitelValue() {
 		int[] kapitel = new int[2];
 		Matcher m = kapitelPattern.matcher(getEntity().getSimpleValue(P_KAPITEL));

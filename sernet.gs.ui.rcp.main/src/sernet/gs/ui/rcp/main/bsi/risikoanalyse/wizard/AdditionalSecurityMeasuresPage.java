@@ -265,10 +265,9 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 								.getAllRisikoMassnahmenUmsetzungen();
 
 				/* create new RisikoMassnahmenUmsetzung */
-				final NewRisikoMassnahmenUmsetzungDialog dialog =
-						new NewRisikoMassnahmenUmsetzungDialog(
-							composite.getShell(), arrListRisikoMassnahmenUmsetzung,
-							((RiskAnalysisWizard) getWizard()).getCnaElement());
+				final NewRisikoMassnahmenUmsetzungDialog dialog = new NewRisikoMassnahmenUmsetzungDialog(
+						composite.getShell(), arrListRisikoMassnahmenUmsetzung,
+						(RiskAnalysisWizard) getWizard());
 				dialog.open();
 				
 				/* add new RisikoMassnahmenUmsetzung to List and viewer */

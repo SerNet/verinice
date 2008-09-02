@@ -60,7 +60,7 @@ private final ILinkChangeListener linkChangeListener
 	
 	@Override
 	public boolean canContain(Object obj) {
-		return TreeStructureValidator.canContain(obj);
+		return CnaStructureHelper.canContain(obj);
 	}
 	
 	

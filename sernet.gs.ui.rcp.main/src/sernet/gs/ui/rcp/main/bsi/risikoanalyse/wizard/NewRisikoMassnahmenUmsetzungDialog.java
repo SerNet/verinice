@@ -27,7 +27,9 @@ public class NewRisikoMassnahmenUmsetzungDialog extends Dialog {
 	private Text textDescription;
 	private ArrayList<RisikoMassnahmenUmsetzung> listRisikoMassnahmenUmsetzung;
 	private CnATreeElement cnaElement;
-	private RisikoMassnahmenUmsetzung newRisikoMassnahmenUmsetzung = new RisikoMassnahmenUmsetzung(cnaElement, null);
+	private RisikoMassnahmenUmsetzung newRisikoMassnahmenUmsetzung;
+	private RiskAnalysisWizard wizard;
+	
 	
 	/**
 	 * Constructor of NewMassnahmenUmsetzungDialog.
@@ -36,24 +38,25 @@ public class NewRisikoMassnahmenUmsetzungDialog extends Dialog {
 	 * 
 	 * @param parentShell (Shell) - shell of the viewer in which the Dialog
 	 * 		  is called
+	 * 
 	 * @param newListGef (ArrayList<RisikoMassnahmenUmsetzung>) - list of
 	 * 		  RiskoMassnahmenUmsetzung to add the new RisikoMassnahmenUmsetzung
 	 * 		  to
-	 * @param  newCnaElement (CnATreeElement) - the parent Element, which the
-	 * 		   RisikoAnalayse is made for 
+	 * 
+	 * @param wizard The wizard that opens this dialog
+	 * 
 	 */
 	public NewRisikoMassnahmenUmsetzungDialog(Shell parentShell,
 			ArrayList<RisikoMassnahmenUmsetzung> newListGef,
-			CnATreeElement newCnaElement) {
+			RiskAnalysisWizard wizard) {
+		super(parentShell);
+		this.wizard = wizard;
+		newRisikoMassnahmenUmsetzung = new RisikoMassnahmenUmsetzung(wizard.getFinishedRiskAnalysis(), null);
 		// TODO übergabe des Feldes gibt Probleme, wenn der dialog nicht mehr
 		// modal ist!!
-		// komme ich von hier anders an den RisikoAnlayseWizard ??
-		// 2008-07-29 ah - ja: wizard übergeben. aber will man das?
-		// vergl. PropertiescomboBoxCellModifier
-		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		listRisikoMassnahmenUmsetzung = newListGef;
-		cnaElement = newCnaElement;
+		cnaElement = wizard.getCnaElement();
 	}
 	
 	/**

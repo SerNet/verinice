@@ -12,7 +12,7 @@ import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
  * $LastChangedBy$
  *
  */
-public final class TreeStructureValidator {
+public final class CnaStructureHelper {
 
 	public static boolean canContain(Object obj) {
 		if (obj instanceof BausteinUmsetzung)

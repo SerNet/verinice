@@ -190,12 +190,12 @@
                    tooltip="Risikoanalyse durchführen">
                 <enablement>
                    <and>
-                   <or>
-                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement"/>
-                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung"/>
-                   </or>
+                   		<objectClass name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement"/>
                    <not>
-                      <objectClass name="sernet.gs.ui.rcp.main.bsi.model.ITVerbund"/>
+                      <or>
+                      		<objectClass name="sernet.gs.ui.rcp.main.bsi.model.ITVerbund"/>
+                      		<objectClass name="sernet.gs.ui.rcp.main.bsi.model.Person"/>
+                      </or>
                    </not>
                    </and>
                 </enablement>

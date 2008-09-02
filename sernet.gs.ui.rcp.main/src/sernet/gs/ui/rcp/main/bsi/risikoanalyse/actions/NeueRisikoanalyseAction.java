@@ -52,6 +52,7 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate{
 		wizard.setCnaElement(struktElement);
     	wizard.init(PlatformUI.getWorkbench(), null);
     	WizardDialog wizDialog =  new org.eclipse.jface.wizard.WizardDialog(shell, wizard);
+    	wizDialog.setPageSize(800, 600);
     	wizDialog.open();
     	
 	}

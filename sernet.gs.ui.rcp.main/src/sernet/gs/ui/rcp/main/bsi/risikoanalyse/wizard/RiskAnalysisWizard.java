@@ -13,12 +13,15 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
+import sernet.gs.ui.rcp.main.common.model.BuildInput;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -34,54 +37,58 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	private EstimateGefaehrdungPage estimateGefaehrdungPage;
 	private RiskHandlingPage riskHandlingPage;
 	private AdditionalSecurityMeasuresPage additionalSecurityMeasuresPage;
+	
+	/**
+	 * Element to save all relevant data in DB on completion of wizard. 
+	 * Also parent for all RisikoMassnahmenUmsetzung and MassnahmenUmsetzung objects
+	 */
+	private FinishedRiskAnalysis finishedRiskAnalysis;
 
 	/* list of all Gefaehrdungen - ChooseGefaehrungPage_OK */
-	private ArrayList<Gefaehrdung> allGefaehrdungen =
-			new ArrayList<Gefaehrdung>();
+	private ArrayList<Gefaehrdung> allGefaehrdungen = new ArrayList<Gefaehrdung>();
 
-	/* list of all own Gefaehrdungen of type OwnGefaehrdung -
-	 * ChooseGefaehrungPage_OK */
-	private ArrayList<OwnGefaehrdung> allOwnGefaehrdungen =
-			new ArrayList<OwnGefaehrdung>();
+	/*
+	 * list of all own Gefaehrdungen of type OwnGefaehrdung -
+	 * ChooseGefaehrungPage_OK
+	 */
+	private ArrayList<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<OwnGefaehrdung>();
 
-	/* list of all Gefaehrdungen of type GefaehrdungsUmsetzung -
-	 * ChooseGefaehrdungPage_OK, EstimateGefaehrungPage_OK, RiskHandlingPage_OK */
-	private ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen =
-			new ArrayList<GefaehrdungsUmsetzung>();
+	/*
+	 * list of all Gefaehrdungen of type GefaehrdungsUmsetzung -
+	 * ChooseGefaehrdungPage_OK, EstimateGefaehrungPage_OK, RiskHandlingPage_OK
+	 */
+	private ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 
 	/* list of all Massnahmen - AdditionalSecurityMeasuresPage */
 	private ArrayList<Massnahme> allMassnahmen = new ArrayList<Massnahme>();
 
 	/* list of all MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
-	private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen =
-			new ArrayList<MassnahmenUmsetzung>();
+	private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
 
-	/* list of all RisikoMassnahmenUmsetzungen - AdditionalSecurityMeasuresPage*/
-	private ArrayList<RisikoMassnahmenUmsetzung> allRisikoMassnahmenUmsetzungen =
-			new ArrayList<RisikoMassnahmenUmsetzung>();
+	/* list of all RisikoMassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
+	private ArrayList<RisikoMassnahmenUmsetzung> allRisikoMassnahmenUmsetzungen = new ArrayList<RisikoMassnahmenUmsetzung>();
 
-	/* list of Gefaehrdungen associated to the chosen IT-system -
-	 * ChooseGefaehrungPage_OK, EstimateGefaehrungPage_OK */
-	private ArrayList<Gefaehrdung> associatedGefaehrdungen =
-			new ArrayList<Gefaehrdung>();
-
-	/* list of Gefaehrdungen, which need further processing -
-	 * EstimateGefaehrungPage_OK */
-	private ArrayList<Gefaehrdung> notOKGefaehrdungen =
-			new ArrayList<Gefaehrdung>();
-
-	/* list of Gefaehrdungen, which need additional security measures -
-	 * RiskHandlingPage, PropertiesComboBoxCellModifier_OK */
-	private ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen =
-			new ArrayList<GefaehrdungsUmsetzung>();
-
-	/**
-	 * No special finish processing necessary.
-	 * 
-	 * @return always true
+	/*
+	 * list of Gefaehrdungen associated to the chosen IT-system -
+	 * ChooseGefaehrungPage_OK, EstimateGefaehrungPage_OK
 	 */
+	private ArrayList<Gefaehrdung> associatedGefaehrdungen = new ArrayList<Gefaehrdung>();
+
+	/*
+	 * list of Gefaehrdungen, which need further processing -
+	 * EstimateGefaehrungPage_OK
+	 */
+	private ArrayList<Gefaehrdung> notOKGefaehrdungen = new ArrayList<Gefaehrdung>();
+
+	/*
+	 * list of Gefaehrdungen, which need additional security measures -
+	 * RiskHandlingPage, PropertiesComboBoxCellModifier_OK
+	 */
+	private ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
+
 	@Override
 	public boolean performFinish() {
+		cnaElement.addChild(finishedRiskAnalysis);
 		return true;
 	}
 
@@ -96,11 +103,13 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	}
 
 	/**
-	 * Needs to be implemented because of IExportWizard/IWorkbenchWizard.
-	 * Entry point.
+	 * Needs to be implemented because of IExportWizard/IWorkbenchWizard. Entry
+	 * point.
 	 * 
-	 * @param workbench the current workbench
-	 * @param selection the current object selection
+	 * @param workbench
+	 *            the current workbench
+	 * @param selection
+	 *            the current object selection
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		loadAllGefaehrdungen();
@@ -130,9 +139,10 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	}
 
 	/**
-	 * Sets the List of Gefaehrdungen associated to the chosen IT-system. 
+	 * Sets the List of Gefaehrdungen associated to the chosen IT-system.
 	 * 
-	 * @param newAssociatedGefaehrdungen ArrayList of Gefaehrdungen
+	 * @param newAssociatedGefaehrdungen
+	 *            ArrayList of Gefaehrdungen
 	 */
 	public void setAssociatedGefaehrdungen(
 			ArrayList<Gefaehrdung> newAssociatedGefaehrdungen) {
@@ -188,11 +198,18 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 					}
 				}
 				if (!duplicate) {
-					MassnahmenUmsetzung massnahmeUmsetzung =
-							new MassnahmenUmsetzung(cnaElement);
-					massnahmeUmsetzung.setName(massnahme.getTitel());
-					allMassnahmen.add(massnahme);
-					allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
+					MassnahmenUmsetzung massnahmeUmsetzung;
+					try {
+						massnahmeUmsetzung = (MassnahmenUmsetzung) CnAElementFactory
+								.getInstance().saveNew(finishedRiskAnalysis,
+										MassnahmenUmsetzung.TYPE_ID,
+										new BuildInput<Massnahme>(massnahme));
+						allMassnahmen.add(massnahme);
+						allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
+					} catch (Exception e) {
+						Logger.getLogger(this.getClass()).error("Fehler beim Erstellen der Massnahmenumsetzung: ", e);
+					}
+
 				}
 			}
 		}
@@ -203,9 +220,11 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 */
 	private void loadAssociatedGefaehrdungen() {
 		Set<CnATreeElement> children = cnaElement.getChildren();
-		for (CnATreeElement cnATreeElement : children) {
-			BausteinUmsetzung bausteinUmsetzung =
-					(BausteinUmsetzung) cnATreeElement;
+		CollectBausteine: for (CnATreeElement cnATreeElement : children) {
+			if (!(cnATreeElement instanceof BausteinUmsetzung))
+				continue CollectBausteine;
+
+			BausteinUmsetzung bausteinUmsetzung = (BausteinUmsetzung) cnATreeElement;
 			Baustein baustein = BSIKatalogInvisibleRoot.getInstance()
 					.getBaustein(bausteinUmsetzung.getKapitel());
 			if (baustein == null)
@@ -236,15 +255,16 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	/**
 	 * Sets the List of all Gefaehrdungen.
 	 * 
-	 * @param newAllGefaehrdungen ArrayList of all Gefaehrdungen
+	 * @param newAllGefaehrdungen
+	 *            ArrayList of all Gefaehrdungen
 	 */
 	public void setAllGefaehrdungen(ArrayList<Gefaehrdung> newAllGefaehrdungen) {
 		allGefaehrdungen = newAllGefaehrdungen;
 	}
 
 	/**
-	 * Returns the List of all Gefaehrdungen availiable from
-	 * BSI IT-Grundschutz-Kataloge plus the own Gefaehrdungen.
+	 * Returns the List of all Gefaehrdungen availiable from BSI
+	 * IT-Grundschutz-Kataloge plus the own Gefaehrdungen.
 	 * 
 	 * @return ArrayList of all Gefaehrdungen
 	 */
@@ -255,7 +275,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	/**
 	 * Sets the List of all own Gefaehrdungen.
 	 * 
-	 * @param newAllOwnGefaehrdungen List of own Gefaehrdungen
+	 * @param newAllOwnGefaehrdungen
+	 *            List of own Gefaehrdungen
 	 */
 	public void setAllOwnGefaehrdungen(
 			ArrayList<OwnGefaehrdung> newAllOwnGefaehrdungen) {
@@ -293,7 +314,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	/**
 	 * Sets the List of all Gefaehrdungen which need further processing.
 	 * 
-	 * @param newNotOKGefaehrdungen ArrayList of Gefaehrdungen
+	 * @param newNotOKGefaehrdungen
+	 *            ArrayList of Gefaehrdungen
 	 */
 	public void setNotOKGefaehrdungen(
 			ArrayList<Gefaehrdung> newNotOKGefaehrdungen) {
@@ -312,10 +334,12 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	/**
 	 * Sets the chosen IT-system to make the risk-analysis for.
 	 * 
-	 * @param treeElement the IT-system to make the risk-analysis for
+	 * @param treeElement
+	 *            the IT-system to make the risk-analysis for
 	 */
 	public void setCnaElement(CnATreeElement treeElement) {
 		cnaElement = treeElement;
+		finishedRiskAnalysis = new FinishedRiskAnalysis(cnaElement);
 	}
 
 	/**
@@ -358,7 +382,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	}
 
 	/**
-	 * Returns the List of Gefaehrdungen which need additional security measures.
+	 * Returns the List of Gefaehrdungen which need additional security
+	 * measures.
 	 * 
 	 * @return the List of Gefaehrdungen of type GefaehrdungsUmsetzung
 	 */
@@ -369,8 +394,9 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	/**
 	 * Sets the List of Gefaehrdungen which need additional security measures.
 	 * 
-	 * @param notOKGefaehrdungsUmsetzungen List of Gefaehrdungen of type
-	 * 		  GefaehrdungsUmsetzung, which need additional security measures
+	 * @param notOKGefaehrdungsUmsetzungen
+	 *            List of Gefaehrdungen of type GefaehrdungsUmsetzung, which
+	 *            need additional security measures
 	 */
 	public void setNotOKGefaehrdungsUmsetzungen(
 			ArrayList<GefaehrdungsUmsetzung> newNotOKGefaehrdungsUmsetzungen) {
@@ -384,8 +410,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	public void addRisikoGefaehrdungsUmsetzungen() {
 		for (GefaehrdungsUmsetzung element : allGefaehrdungsUmsetzungen) {
 			/* add to List of "A" categorized risks if needed */
-			if (element.getAlternative() == 
-					GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_A
+			if (element.getAlternative() == GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_A
 					&& !(notOKGefaehrdungsUmsetzungen.contains(element))) {
 				notOKGefaehrdungsUmsetzungen.add(element);
 				Logger.getLogger(this.getClass()).debug(
@@ -406,7 +431,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	/**
 	 * Saves the List of all Massnahmen of type MassnahmenUmsetzung.
 	 * 
-	 * @param newAllMassnahmenUmsetzungen the allMassnahmenUmsetzungen to set
+	 * @param newAllMassnahmenUmsetzungen
+	 *            the allMassnahmenUmsetzungen to set
 	 */
 	public void setAllMassnahmenUmsetzungen(
 			ArrayList<MassnahmenUmsetzung> newAllMassnahmenUmsetzungen) {
@@ -425,8 +451,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	/**
 	 * Saves the List of all Massnahmen of type RisikoMassnahmenUmsetzung
 	 * 
-	 * @param newAllRisikoMassnahmenUmsetzungen ArrayList of all Massnahmen of
-	 * 		  type RisikoMassnahmenUmsetzung
+	 * @param newAllRisikoMassnahmenUmsetzungen
+	 *            ArrayList of all Massnahmen of type RisikoMassnahmenUmsetzung
 	 */
 	public void setAllRisikoMassnahmenUmsetzungen(
 			ArrayList<RisikoMassnahmenUmsetzung> newAllRisikoMassnahmenUmsetzungen) {
@@ -447,10 +473,14 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	/**
 	 * Saves a new state of canFinish.
 	 * 
-	 * @param newCanFinish set true, if wizard can be finished at this point,
-	 * 		  false else
+	 * @param newCanFinish
+	 *            set true, if wizard can be finished at this point, false else
 	 */
 	public void setCanFinish(boolean newCanFinish) {
 		canFinish = newCanFinish;
+	}
+
+	public CnATreeElement getFinishedRiskAnalysis() {
+		return this.finishedRiskAnalysis;
 	}
 }

@@ -62,7 +62,7 @@ public class Server extends CnATreeElement
 	
 	@Override
 	public boolean canContain(Object obj) {
-		return TreeStructureValidator.canContain(obj);
+		return CnaStructureHelper.canContain(obj);
 	}
 	
 	@Override

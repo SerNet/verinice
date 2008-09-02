@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -56,7 +55,6 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewCloseDBAction;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewFilterAction;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction;
@@ -65,57 +63,11 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
-import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
 import sernet.gs.ui.rcp.main.common.model.ObjectDeletedException;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 public class BsiModelView extends ViewPart {
-	class NameSorter extends ViewerSorter {
-		NumericStringComparator numComp = new NumericStringComparator();
-		
-		@Override
-		public int category(Object element) {
-			return element instanceof BausteinUmsetzung ? 0 : 1;
-		}
-
-		@Override
-		public int compare(Viewer viewer, Object e1, Object e2) {
-			if (e1 instanceof MassnahmenUmsetzung
-					&& e2 instanceof MassnahmenUmsetzung) {
-				// sort chapters correctly by converting 2.45, 2.221, 3.42
-				// to 2045, 2221, 3024
-				int[] kap1 = ((MassnahmenUmsetzung) e1).getKapitelValue();
-				int[] kap2 = ((MassnahmenUmsetzung) e2).getKapitelValue();
-				return (new Integer(kap1[0] * 1000 + kap1[1])
-						.compareTo((kap2[0] * 1000 + kap2[1])));
-			}
-
-			if (e1 instanceof BausteinUmsetzung
-
-			&& e2 instanceof BausteinUmsetzung) {
-				// sort chapters correctly by converting 2.45, 2.221, 3.42
-				// to 2045, 2221, 3024
-				int[] kap1 = ((BausteinUmsetzung) e1).getKapitelValue();
-				int[] kap2 = ((BausteinUmsetzung) e2).getKapitelValue();
-				return (new Integer(kap1[0] * 1000 + kap1[1])
-						.compareTo((kap2[0] * 1000 + kap2[1])));
-			}
-			
-			if (e1 instanceof IBSIStrukturElement
-					&& e2 instanceof IBSIStrukturElement) {
-//				String k1 = ((IBSIStrukturElement)e1).getKuerzel();
-//				String k2 = ((IBSIStrukturElement)e2).getKuerzel();
-				String k1 = ((IBSIStrukturElement)e1).getKuerzel() + ((CnATreeElement)e1).getTitle();
-				String k2 = ((IBSIStrukturElement)e2).getKuerzel() + ((CnATreeElement)e2).getTitle();
-				return numComp.compare(k1, k2);
-			}
-
-			return super.compare(viewer, e1, e2);
-		}
-
-	}
-
 	/**
 	 * Content provider for BSI model elements.
 	 * 
