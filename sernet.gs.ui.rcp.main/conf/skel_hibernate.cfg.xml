@@ -61,6 +61,7 @@
         <mapping resource="CnATreeElement.hbm.xml"/> 
         <mapping resource="ChangeLogEntry.hbm.xml"/>
         <mapping resource="OwnGefaehrdung.hbm.xml"/>
+        <mapping resource="Risikomassnahme.hbm.xml"/>
         <mapping resource="GefaehrdungsUmsetzung.hbm.xml"/>  
         
 

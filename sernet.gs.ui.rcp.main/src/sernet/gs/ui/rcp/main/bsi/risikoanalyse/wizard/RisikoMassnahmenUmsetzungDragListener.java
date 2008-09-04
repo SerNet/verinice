@@ -42,7 +42,7 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
 	 */
 	public void dragStart(DragSourceEvent event) {
 		IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
-		ArrayList<RisikoMassnahmenUmsetzung> risikoMassnahmenUmsetzung =
+		ArrayList<RisikoMassnahmenUmsetzung> risikoMassnahmenUmsetzungen =
 			new ArrayList<RisikoMassnahmenUmsetzung>();
 		
 		/* leave, if selcetion is empty */
@@ -65,16 +65,16 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
 				 */
 				RisikoMassnahmenUmsetzung umsetzung = new RisikoMassnahmenUmsetzung(cnaElement, null);
 				umsetzung.setName(((MassnahmenUmsetzung) object).getName());
-				risikoMassnahmenUmsetzung.add(umsetzung);
+				risikoMassnahmenUmsetzungen.add(umsetzung);
 				Logger.getLogger(this.getClass()).debug("drag start - MassnahmenUmsetzung " + ((MassnahmenUmsetzung) object).getTitle());
 			} else {
 				/* object is of type RisikoMassnahmenUmsetzung - add it */
-				risikoMassnahmenUmsetzung.add((RisikoMassnahmenUmsetzung) object);
+				risikoMassnahmenUmsetzungen.add((RisikoMassnahmenUmsetzung) object);
 				Logger.getLogger(this.getClass()).debug("drag start - RisikoMassnahmenUmsetzung " + ((RisikoMassnahmenUmsetzung) object).getTitle());
 			}
 				
 		}
 		event.doit = true;
-		DNDItems.setItems(risikoMassnahmenUmsetzung);
+		DNDItems.setItems(risikoMassnahmenUmsetzungen);
 	}
 }

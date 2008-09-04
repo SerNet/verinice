@@ -41,99 +41,19 @@ import sernet.snutils.ExceptionHandlerFactory;
  * @author ahanekop@sernet.de
  *
  */
-public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IGefaehrdungsBaumElement {
+public class RisikoMassnahme extends Massnahme {
 	
-	private GefaehrdungsUmsetzung parent;
-	private Image image = ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
+	private int dbId;
 	private String number;
+	private String name;
 	private String description;
 	public static final String SIEGEL = "Z";
 	
-	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
-			GefaehrdungsUmsetzung myParent) {
-		super(superParent);
-		this.parent = myParent;
-	}
-
-	/**
-	 * Must be implemented due to Interface IGefaehrdungsBaumElement.
-	 * 
-	 * A RisikoMassnahmenUmsetzung never has children, therefore
-	 * always returns null.
-	 *  
-	 * @return - null
-	 */
-	public List<IGefaehrdungsBaumElement> getGefaehrdungsBaumChildren() {
-		return null;
-	}
-
-	/**
-	 * Must be implemented due to Interface IGefaehrdungsBaumElement.
-	 * 
-	 * Returns the parent element in the tree, which is a
-	 * GefaehrdungsUmsetzung.
-	 * 
-	 * @return - the parent element "parent" (IGefaehrdungsBaumElement)
-	 */
-	public IGefaehrdungsBaumElement getGefaehrdungsBaumParent() {
-		// TODO Auto-generated method stub
-		return parent;
+	
+	public RisikoMassnahme() {
+		// default constructor
 	}
 	
-	/**
-	 * Sets the parent element "parent" (GefaehrdungsUmsetzung) in the tree
-	 * if the parent is null, else nothing.
-	 * 
-	 * @param newParent - new GefaehrdungsUmsetzung which is to be
-	 * 		  the new parent
-	 */
-	public void setGefaehrdungsBaumParent(GefaehrdungsUmsetzung newParent) {
-		if (parent == null ) { 
-			parent = newParent;
-		}
-	}
-	
-	/**
-	 * Must be implemented due to Interface IGefaehrdungsBaumElement.
-	 * 
-	 * @return - Image "image" to display in the viewer
-	 */
-	public Image getImage() {
-		return image;
-	}
-	
-	/**
-	 * Must be implemented due to Interface IGefaehrdungsBaumElement.
-	 * 
-	 * Calls the local getTitle() method.
-	 * 
-	 * @return - name of the RisikoMassnahmenUmsetzung
-	 */
-	public String getText() {
-		return this.getTitle();
-	}
-	
-	/**
-	 * Overrides and calls MassnahmenUmsetzung.getTitle().
-	 * 
-	 * @return - title of the RisikoMassnahmenUmsetzung
-	 */
-	@Override
-	public String getTitle() {
-		return super.getName();
-	}
-	
-	/**
-	 * Implemented for reasons of conformity.
-	 * 
-	 * Calls MassnahmenUmsetzung.setName() to set the title of a
-	 * RisikoMassnahmenUmsetzung.
-	 * 
-	 * @param name - new name of the RisikoMassnahmenUmsetzung
-	 */
-	public void setTitle(String name) {
-		super.setName(name);
-	}
 
 	/**
 	 * Must be implemented due to Interface IGefaehrdungsBaumElement.
@@ -180,5 +100,21 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 */
 	public String getSiegel() {
 		return SIEGEL;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getDbId() {
+		return dbId;
+	}
+
+	public void setDbId(int dbId) {
+		this.dbId = dbId;
 	}
 }

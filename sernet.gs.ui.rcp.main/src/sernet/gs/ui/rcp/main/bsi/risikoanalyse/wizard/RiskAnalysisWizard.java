@@ -17,6 +17,8 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
@@ -40,7 +42,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	
 	/**
 	 * Element to save all relevant data in DB on completion of wizard. 
-	 * Also parent for all RisikoMassnahmenUmsetzung and MassnahmenUmsetzung objects
+	 * Also parent for all Gefährdungsumsetzung objects
 	 */
 	private FinishedRiskAnalysis finishedRiskAnalysis;
 
@@ -59,14 +61,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 */
 	private ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 
-	/* list of all Massnahmen - AdditionalSecurityMeasuresPage */
-	private ArrayList<Massnahme> allMassnahmen = new ArrayList<Massnahme>();
-
 	/* list of all MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
 	private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
-
-	/* list of all RisikoMassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
-	private ArrayList<RisikoMassnahmenUmsetzung> allRisikoMassnahmenUmsetzungen = new ArrayList<RisikoMassnahmenUmsetzung>();
 
 	/*
 	 * list of Gefaehrdungen associated to the chosen IT-system -
@@ -115,8 +111,16 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 		loadAllGefaehrdungen();
 		loadAllMassnahmen();
 		loadAssociatedGefaehrdungen();
+		
 		loadOwnGefaehrdungen();
 		addOwnGefaehrdungen();
+		
+		addRisikoMassnahmenUmsetzungen(loadRisikomassnahmen());
+		
+	}
+
+	private ArrayList<RisikoMassnahme> loadRisikomassnahmen() {
+		return RisikoMassnahmeHome.getInstance().loadAll();
 	}
 
 	/**
@@ -191,8 +195,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 		alleBausteine: for (Baustein baustein : bausteine) {
 			alleMassnahmen: for (Massnahme massnahme : baustein.getMassnahmen()) {
 				Boolean duplicate = false;
-				alleTitel: for (Massnahme element : allMassnahmen) {
-					if (element.getTitel().equals(massnahme.getTitel())) {
+				alleTitel: for (MassnahmenUmsetzung vorhandeneMassnahmenumsetzung: allMassnahmenUmsetzungen) {
+					if (vorhandeneMassnahmenumsetzung.getName().equals(massnahme.getTitel())) {
 						duplicate = true;
 						break alleTitel;
 					}
@@ -204,7 +208,6 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 								.getInstance().saveNew(finishedRiskAnalysis,
 										MassnahmenUmsetzung.TYPE_ID,
 										new BuildInput<Massnahme>(massnahme));
-						allMassnahmen.add(massnahme);
 						allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
 					} catch (Exception e) {
 						Logger.getLogger(this.getClass()).error("Fehler beim Erstellen der Massnahmenumsetzung: ", e);
@@ -372,13 +375,26 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * Adds the own Massnahmen to the List of all Massnahmen from BSI
 	 * IT-Grundschutz-Kataloge.
 	 */
-	public void addRisikoMassnahmenUmsetzungen() {
-		for (RisikoMassnahmenUmsetzung element : allRisikoMassnahmenUmsetzungen) {
-			/* add to list of all MassnahmenUmsetzungen */
-			if (!(allMassnahmenUmsetzungen.contains(element))) {
-				allMassnahmenUmsetzungen.add(element);
-			}
+	public void addRisikoMassnahmenUmsetzungen(List<RisikoMassnahme> allRisikoMassnahmen) {
+		for (RisikoMassnahme massnahme : allRisikoMassnahmen) {
+			addRisikoMassnahmeUmsetzung(massnahme);
+			
 		}
+	}
+
+	public void addRisikoMassnahmeUmsetzung(RisikoMassnahme massnahme) {
+		RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung;
+		try {
+			RisikoMassnahmenUmsetzung massnahmeUmsetzung = new RisikoMassnahmenUmsetzung(null, null);
+			massnahmeUmsetzung.setName(massnahme.getName());
+			
+			/* add to list of all MassnahmenUmsetzungen */
+			if (!(allMassnahmenUmsetzungen.contains(massnahmeUmsetzung))) {
+				allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
+			}
+		} catch (Exception e) {
+			Logger.getLogger(this.getClass()).error("Fehler beim Erstellen der Massnahmenumsetzung: ", e);
+		}		
 	}
 
 	/**
@@ -439,25 +455,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 		allMassnahmenUmsetzungen = newAllMassnahmenUmsetzungen;
 	}
 
-	/**
-	 * Returns all Massnahmen of type RisikoMassnahmenUmsetzung.
-	 * 
-	 * @return ArrayList of all Massnahmen of type RisikoMassnahmenUmsetzung
-	 */
-	public ArrayList<RisikoMassnahmenUmsetzung> getAllRisikoMassnahmenUmsetzungen() {
-		return allRisikoMassnahmenUmsetzungen;
-	}
-
-	/**
-	 * Saves the List of all Massnahmen of type RisikoMassnahmenUmsetzung
-	 * 
-	 * @param newAllRisikoMassnahmenUmsetzungen
-	 *            ArrayList of all Massnahmen of type RisikoMassnahmenUmsetzung
-	 */
-	public void setAllRisikoMassnahmenUmsetzungen(
-			ArrayList<RisikoMassnahmenUmsetzung> newAllRisikoMassnahmenUmsetzungen) {
-		allRisikoMassnahmenUmsetzungen = newAllRisikoMassnahmenUmsetzungen;
-	}
+	
 
 	/**
 	 * Returns whether this wizard could be finished without further user

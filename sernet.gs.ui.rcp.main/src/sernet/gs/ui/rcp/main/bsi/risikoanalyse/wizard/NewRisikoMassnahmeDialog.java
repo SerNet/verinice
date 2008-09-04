@@ -11,7 +11,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 
 /**
@@ -20,45 +23,42 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
  * @author ahanekop@sernet.de
  *
  */
-public class NewRisikoMassnahmenUmsetzungDialog extends Dialog {
+public class NewRisikoMassnahmeDialog extends Dialog {
 
 	private Text textNumber;
 	private Text textName;
 	private Text textDescription;
-	private ArrayList<RisikoMassnahmenUmsetzung> listRisikoMassnahmenUmsetzung;
-	private CnATreeElement cnaElement;
-	private RisikoMassnahmenUmsetzung newRisikoMassnahmenUmsetzung;
-	private RiskAnalysisWizard wizard;
+	private RisikoMassnahme newRisikoMassnahme;
 	
 	
 	/**
-	 * Constructor of NewMassnahmenUmsetzungDialog.
-	 * The dialog creates a new RiskoMassnahmenUmsetzung and adds it to
+	 * Constructor of NewMassnahmenDialog.
+	 * The dialog creates a new RiskoMassnahmen and adds it to
 	 * the given list.
 	 * 
 	 * @param parentShell (Shell) - shell of the viewer in which the Dialog
 	 * 		  is called
 	 * 
 	 * @param newListGef (ArrayList<RisikoMassnahmenUmsetzung>) - list of
-	 * 		  RiskoMassnahmenUmsetzung to add the new RisikoMassnahmenUmsetzung
+	 * 		  RiskoMassnahmen to add the new RisikoMassnahme
 	 * 		  to
 	 * 
-	 * @param wizard The wizard that opens this dialog
 	 * 
 	 */
-	public NewRisikoMassnahmenUmsetzungDialog(Shell parentShell,
-			ArrayList<RisikoMassnahmenUmsetzung> newListGef,
-			RiskAnalysisWizard wizard) {
+	public NewRisikoMassnahmeDialog(Shell parentShell) {
 		super(parentShell);
-		this.wizard = wizard;
-		newRisikoMassnahmenUmsetzung = new RisikoMassnahmenUmsetzung(wizard.getFinishedRiskAnalysis(), null);
-		// TODO übergabe des Feldes gibt Probleme, wenn der dialog nicht mehr
-		// modal ist!!
+		newRisikoMassnahme = new RisikoMassnahme();
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		listRisikoMassnahmenUmsetzung = newListGef;
-		cnaElement = wizard.getCnaElement();
 	}
 	
+	
+	
+	public RisikoMassnahme getNewRisikoMassnahme() {
+		return newRisikoMassnahme;
+	}
+
+
+
 	/**
 	 * Creates and returns the contents of the upper part of this dialog (above
 	 * the button bar). Overrides dialog.createDialogArea(Composite parent).
@@ -131,20 +131,17 @@ public class NewRisikoMassnahmenUmsetzungDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
-		newRisikoMassnahmenUmsetzung.setNumber(textNumber.getText());
-		newRisikoMassnahmenUmsetzung.setTitle(textName.getText());
-		newRisikoMassnahmenUmsetzung.setDescription(textDescription.getText());
-		listRisikoMassnahmenUmsetzung.add(newRisikoMassnahmenUmsetzung);
+		newRisikoMassnahme.setNumber(textNumber.getText());
+		newRisikoMassnahme.setName(textName.getText());
+		newRisikoMassnahme.setDescription(textDescription.getText());
 
-		/*
-		// TODO neue RisikoMassnahmenUmsetzung in DB speichern 
+		// DONE neue RisikoMassnahmenUmsetzung in DB speichern
 		
 		try {
-			OwnGefaehrdungHome.getInstance().saveNew(newOwnGef);
+			RisikoMassnahmeHome.getInstance().saveNew(newRisikoMassnahme);
 		} catch (Exception e) {
-			ExceptionUtil.log(e, "Eigene Gefährdung konnte nicht gespeichert werden.");
+			ExceptionUtil.log(e, "Neue Massnahme konnte nicht gespeichert werden!");
 		}
-		*/
 		
 		super.okPressed();
 	}

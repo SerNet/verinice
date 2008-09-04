@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -33,6 +35,8 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.SearchFilter;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -259,22 +263,17 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	    	 */
 			public void widgetSelected(SelectionEvent event) {
 
-				/* get all RisikoMassnahmenUmsetzung */
-				ArrayList<RisikoMassnahmenUmsetzung> arrListRisikoMassnahmenUmsetzung =
-						((RiskAnalysisWizard) getWizard())
-								.getAllRisikoMassnahmenUmsetzungen();
-
 				/* create new RisikoMassnahmenUmsetzung */
-				final NewRisikoMassnahmenUmsetzungDialog dialog = new NewRisikoMassnahmenUmsetzungDialog(
-						composite.getShell(), arrListRisikoMassnahmenUmsetzung,
-						(RiskAnalysisWizard) getWizard());
-				dialog.open();
+				final NewRisikoMassnahmeDialog dialog = new NewRisikoMassnahmeDialog(composite.getShell());
+				int result = dialog.open();
 				
-				/* add new RisikoMassnahmenUmsetzung to List and viewer */
-				((RiskAnalysisWizard) getWizard())
-						.addRisikoMassnahmenUmsetzungen();
-				viewerMassnahme.refresh();
-				packAllMassnahmeColumns();
+				if (result == Dialog.OK) {
+					/* add new RisikoMassnahmenUmsetzung to List and viewer */
+					((RiskAnalysisWizard) getWizard())
+						.addRisikoMassnahmeUmsetzung(dialog.getNewRisikoMassnahme());
+					viewerMassnahme.refresh();
+					packAllMassnahmeColumns();
+				}
 			}
 		});
 
@@ -301,6 +300,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 				/* only RisikoMassnahmenUmsetzungen can be deleted */
 				if (selectedMassnahmenUmsetzung instanceof
 							RisikoMassnahmenUmsetzung) {
+					RisikoMassnahmenUmsetzung rsUmsetzung = (RisikoMassnahmenUmsetzung) selectedMassnahmenUmsetzung;
 
 					/* ask user to confirm */
 					boolean confirmed = MessageDialog.openQuestion(composite
@@ -310,7 +310,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 									+ "\" wirklich löschen?");
 					/* delete */
 					if (confirmed) {
-						deleteRisikoMassnahmenUmsetzung(selectedMassnahmenUmsetzung);
+						deleteRisikoMassnahmenUmsetzung(rsUmsetzung);
 						viewerMassnahme.refresh();
 					}
 				}
@@ -582,36 +582,27 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 * @param massnahme the Massnahme to delete
 	 */
 	private void deleteRisikoMassnahmenUmsetzung(
-			MassnahmenUmsetzung massnahmenUmsetzung) {
-		
-		ArrayList<RisikoMassnahmenUmsetzung> arrListRisikoMassnahmenUmsetzungen =
-				((RiskAnalysisWizard) getWizard())
-						.getAllRisikoMassnahmenUmsetzungen();
-		
-		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen =
-				((RiskAnalysisWizard) getWizard())
-					.getAllMassnahmenUmsetzungen();
+			RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung) {
+
+
+		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = ((RiskAnalysisWizard) getWizard())
+				.getAllMassnahmenUmsetzungen();
 
 		try {
-			if (arrListRisikoMassnahmenUmsetzungen
-					.contains(massnahmenUmsetzung)) {
-				// TODO
-				// OwnGefaehrdungHome.getInstance().remove((OwnGefaehrdung)delGefaehrdung);
+			// TODO
+			// OwnGefaehrdungHome.getInstance().remove((OwnGefaehrdung)delGefaehrdung);
 
-				/* delete from List of RisikoMassnahmenUmsetzungen */
-				arrListRisikoMassnahmenUmsetzungen.remove(massnahmenUmsetzung);
-
-				/* delete from List of MassnahmenUmsetzungen */
-				if (arrListMassnahmenUmsetzungen.contains(massnahmenUmsetzung)) {
-					arrListMassnahmenUmsetzungen.remove(massnahmenUmsetzung);
-				}
-
-				// TODO an dieser Stelle müssten eigentlich auch die
-				// RisikoMassnahmenUmsetzungen,
-				// die duch DND dieser RisikoMassnahmenUmsetzungen in den
-				// TreeViewer
-				// gelangt sind, geloescht werden..
+			/* delete from List of MassnahmenUmsetzungen */
+			if (arrListMassnahmenUmsetzungen.contains(risikoMassnahmenUmsetzung)) {
+				arrListMassnahmenUmsetzungen.remove(risikoMassnahmenUmsetzung);
+				RisikoMassnahmeHome.getInstance().remove(risikoMassnahmenUmsetzung.getName());
 			}
+
+			// TODO an dieser Stelle müssten eigentlich auch die
+			// RisikoMassnahmenUmsetzungen,
+			// die duch DND dieser RisikoMassnahmenUmsetzungen in den
+			// TreeViewer
+			// gelangt sind, geloescht werden..
 		} catch (Exception e) {
 			ExceptionUtil.log(e,
 					"RisikoMassnahmenUmsetzung konnte nicht gelöscht werden.");
