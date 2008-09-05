@@ -46,10 +46,10 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 		GEFAEHRDUNG_ALTERNATIVE_D,};
 	
 	public static final String[] ALTERNATIVEN_TEXT = {
-	GEFAEHRDUNG_ALTERNATIVE_TEXT_A,
-	GEFAEHRDUNG_ALTERNATIVE_TEXT_B, 
-	GEFAEHRDUNG_ALTERNATIVE_TEXT_C, 
-	GEFAEHRDUNG_ALTERNATIVE_TEXT_D, 
+		GEFAEHRDUNG_ALTERNATIVE_TEXT_A,
+		GEFAEHRDUNG_ALTERNATIVE_TEXT_B, 
+		GEFAEHRDUNG_ALTERNATIVE_TEXT_C, 
+		GEFAEHRDUNG_ALTERNATIVE_TEXT_D, 
 	};
 	
 	private static final String TYPE_ID = "gefaehrdungsumsetzung";
@@ -64,7 +64,8 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 		return -1;
 	}
 	
-	public GefaehrdungsUmsetzung(Gefaehrdung source) {
+	public GefaehrdungsUmsetzung(CnATreeElement parent, Gefaehrdung source) {
+		super(parent);
 		this.id = source.getId();
 		this.titel = source.getTitel();
 		this.kategorie = source.getKategorieAsString();

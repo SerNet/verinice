@@ -132,6 +132,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					}
 					/* add to arrListGefaehrdungsUmsetzungen */
 					GefaehrdungsUmsetzung newGefaehrdungsUmsetzung = new GefaehrdungsUmsetzung(
+							((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis(),
 							currentGefaehrdung);
 					newGefaehrdungsUmsetzung.setOkay(false);
 					arrListGefaehrdungsUmsetzungen

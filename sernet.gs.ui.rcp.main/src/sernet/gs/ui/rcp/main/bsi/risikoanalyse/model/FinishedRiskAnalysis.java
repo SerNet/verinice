@@ -19,15 +19,6 @@ public class FinishedRiskAnalysis extends CnATreeElement {
 		setParent(cnaElement);
 	}
 	
-	@Override
-	public Set<CnATreeElement> getChildren() {
-		return emptyList;
-	}
-	
-	@Override
-	public CnATreeElement[] getChildrenAsArray() {
-		return emptyArray;
-	}
 
 	@Override
 	public String getTitel() {
@@ -36,13 +27,12 @@ public class FinishedRiskAnalysis extends CnATreeElement {
 
 	@Override
 	public String getTypeId() {
-		return this.TYPE_ID;
+		return TYPE_ID;
 	}
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof MassnahmenUmsetzung
-				|| obj instanceof GefaehrdungsUmsetzung)
+		if (obj instanceof GefaehrdungsUmsetzung)
 			return true;
 		return CnaStructureHelper.canContain(obj);
 	}

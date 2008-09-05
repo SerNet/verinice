@@ -11,6 +11,7 @@ import org.eclipse.ui.IWorkbench;
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
@@ -25,6 +26,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 
@@ -87,6 +89,11 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	@Override
 	public boolean performFinish() {
 		cnaElement.addChild(finishedRiskAnalysis);
+		try {
+			CnAElementHome.getInstance().save(finishedRiskAnalysis);
+		} catch (Exception e) {
+			ExceptionUtil.log(e, "Konnte Risikoanalyse nicht speichern.");
+		}
 		return true;
 	}
 
