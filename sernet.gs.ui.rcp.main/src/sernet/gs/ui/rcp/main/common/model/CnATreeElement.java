@@ -199,7 +199,7 @@ public abstract class CnATreeElement {
 		return parent;
 	}
 
-	public abstract String getTitle();
+	public abstract String getTitel();
 
 	public String getId() {
 		return ENTITY_TITLE + getEntity().getDbId();

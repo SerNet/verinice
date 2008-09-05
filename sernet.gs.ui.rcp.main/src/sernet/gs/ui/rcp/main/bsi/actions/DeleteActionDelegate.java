@@ -65,7 +65,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 							CnATreeElement el = (CnATreeElement) sel;
 							
 							try {
-								monitor.setTaskName("Lösche: " + el.getTitle());
+								monitor.setTaskName("Lösche: " + el.getTitel());
 								monitor.worked(1);
 								el.remove();
 								CnAElementHome.getInstance().remove(el);

@@ -9,7 +9,7 @@ import sernet.gs.ui.rcp.main.bsi.model.CnaStructureHelper;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
-public class FinishedRiskAnalysis extends CnATreeElement{
+public class FinishedRiskAnalysis extends CnATreeElement {
 
 	public static final String TYPE_ID = "riskanalysis";
 	private Set<CnATreeElement> emptyList = new HashSet<CnATreeElement>();
@@ -30,7 +30,7 @@ public class FinishedRiskAnalysis extends CnATreeElement{
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitel() {
 		return "Risikoanalyse";
 	}
 

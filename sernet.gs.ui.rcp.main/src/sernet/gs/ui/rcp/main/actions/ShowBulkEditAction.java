@@ -85,7 +85,7 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 					.getEntityType());
 			selectedElements.add( elmt);
 			Logger.getLogger(this.getClass()).debug("Adding to bulk edit: "
-					+ elmt.getTitle());
+					+ elmt.getTitel());
 		}
 
 		final BulkEditDialog dialog = new BulkEditDialog(window.getShell(), entType);

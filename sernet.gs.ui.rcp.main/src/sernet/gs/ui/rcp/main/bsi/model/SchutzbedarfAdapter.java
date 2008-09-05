@@ -220,10 +220,10 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 		CascadingTransaction ta = CascadingTransaction.getInstance();
 		if (ta.hasBeenVisited(parent)) {
 			StatusLine.setErrorMessage(Messages.SchutzbedarfAdapter_3
-					+ parent.getTitle());
-			Logger.getLogger(this.getClass()).debug("(Verfügbarkeit) Loop on object " + parent.getTitle()); //$NON-NLS-1$
+					+ parent.getTitel());
+			Logger.getLogger(this.getClass()).debug("(Verfügbarkeit) Loop on object " + parent.getTitel()); //$NON-NLS-1$
 
-			showLoopWarning(parent.getTitle());
+			showLoopWarning(parent.getTitel());
 			
 			
 			return; // we have already been down this path
@@ -267,9 +267,9 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 		CascadingTransaction ta = CascadingTransaction.getInstance();
 		if (ta.hasBeenVisited(parent)) {
 			StatusLine.setErrorMessage(Messages.SchutzbedarfAdapter_14
-					+ parent.getTitle());
-			Logger.getLogger(this.getClass()).debug("(Vertraulichkeit) Loop on object " + parent.getTitle());			 //$NON-NLS-1$
-			showLoopWarning(parent.getTitle());
+					+ parent.getTitel());
+			Logger.getLogger(this.getClass()).debug("(Vertraulichkeit) Loop on object " + parent.getTitel());			 //$NON-NLS-1$
+			showLoopWarning(parent.getTitel());
 			return; // we have already been down this path
 		}
 		try {
@@ -295,9 +295,9 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 		CascadingTransaction ta = CascadingTransaction.getInstance();
 		if (ta.hasBeenVisited(parent)) {
 			StatusLine.setErrorMessage(Messages.SchutzbedarfAdapter_17
-					+ parent.getTitle());
-			Logger.getLogger(this.getClass()).debug("(Integrität) Loop on object " + parent.getTitle());			 //$NON-NLS-1$
-			showLoopWarning(parent.getTitle());
+					+ parent.getTitel());
+			Logger.getLogger(this.getClass()).debug("(Integrität) Loop on object " + parent.getTitel());			 //$NON-NLS-1$
+			showLoopWarning(parent.getTitel());
 			return; // we have already been down this path
 		}
 		try {

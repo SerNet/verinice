@@ -47,7 +47,7 @@ public class BSIElementEditorInput implements IEditorInput {
 	}
 
 	public String getName() {
-		return element.getTitle();
+		return element.getTitel();
 	}
 
 	public IPersistableElement getPersistable() {

@@ -82,9 +82,7 @@ public class RisikoMassnahmeHome {
 		return result;
 	}
 
-	public void remove(String name) {
-		// FIXME not implemented yet
-	}
+	
 	
 	
 }

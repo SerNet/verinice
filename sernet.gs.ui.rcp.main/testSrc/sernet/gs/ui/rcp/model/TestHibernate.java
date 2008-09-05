@@ -46,7 +46,7 @@ public class TestHibernate extends TestCase {
 		GebaeudeKategorie category2 = (GebaeudeKategorie) itverbund.iterator().next()
 		.getCategory(GebaeudeKategorie.TYPE_ID);
 		for (CnATreeElement elmt: category2.getChildren()) {
-			String title = elmt.getTitle();
+			String title = elmt.getTitel();
 			Logger.getLogger(this.getClass()).debug(title);
 			assertTrue(title.length() > 0);
 		}

@@ -47,7 +47,15 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	private Image image = ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
 	private String number;
 	private String description;
+	private RisikoMassnahme massahme;
 	public static final String SIEGEL = "Z";
+	
+	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
+			GefaehrdungsUmsetzung myParent, RisikoMassnahme massnahme) {
+		super(superParent);
+		this.parent = myParent;
+		this.massahme = massnahme;
+	}
 	
 	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
 			GefaehrdungsUmsetzung myParent) {
@@ -110,7 +118,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 * @return - name of the RisikoMassnahmenUmsetzung
 	 */
 	public String getText() {
-		return this.getTitle();
+		return this.getTitel();
 	}
 	
 	/**
@@ -119,7 +127,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 * @return - title of the RisikoMassnahmenUmsetzung
 	 */
 	@Override
-	public String getTitle() {
+	public String getTitel() {
 		return super.getName();
 	}
 	
@@ -181,4 +189,9 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	public String getSiegel() {
 		return SIEGEL;
 	}
+
+	public RisikoMassnahme getRisikoMassahme() {
+		return massahme;
+	}
+
 }

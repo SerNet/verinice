@@ -125,7 +125,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitel() {
 		return getEntity().getSimpleValue(P_KAPITEL) //$NON-NLS-1$
 			+ " [" + getEntity().getSimpleValue(P_SIEGEL) + "] "
 				+ getEntity().getSimpleValue(P_NAME);

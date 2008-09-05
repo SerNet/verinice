@@ -105,7 +105,7 @@ public class RiskHandlingPage extends WizardPage {
 		});
 		
 		final ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(table, 
-				GefaehrdungsUmsetzung.ALTERNATIVEN, 
+				GefaehrdungsUmsetzung.ALTERNATIVEN_TEXT, 
 				SWT.READ_ONLY | SWT.DROP_DOWN);
 		
 	    viewer.setCellEditors(new CellEditor[] {null,null,null,choiceEditor});

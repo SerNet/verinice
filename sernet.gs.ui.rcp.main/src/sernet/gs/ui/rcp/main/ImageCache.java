@@ -97,7 +97,6 @@ public class ImageCache {
 	
 	
 	
-	
 	private static ImageCache instance;
 
 	private static URL imagePath;

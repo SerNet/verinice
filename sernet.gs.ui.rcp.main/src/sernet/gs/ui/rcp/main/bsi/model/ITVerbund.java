@@ -60,7 +60,7 @@ public class ITVerbund extends CnATreeElement
 	}
 	
 	@Override
-	public String getTitle() {
+	public String getTitel() {
 		return getEntity().getSimpleValue(PROP_NAME);
 		}
 

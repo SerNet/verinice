@@ -71,7 +71,7 @@ public class KonsolidatorDialog extends Dialog {
 			@Override
 			public String getText(Object element) {
 				BausteinUmsetzung bst = (BausteinUmsetzung) element;
-				return bst.getKapitel() + ": " + bst.getParent().getTitle();
+				return bst.getKapitel() + ": " + bst.getParent().getTitel();
 			}
 		});
 

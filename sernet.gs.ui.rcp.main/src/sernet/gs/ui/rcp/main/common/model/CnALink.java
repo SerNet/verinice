@@ -129,7 +129,7 @@ public class CnALink {
 	}
 
 	public String getTitle() {
-		return typeTitle() + dependency.getTitle();
+		return typeTitle() + dependency.getTitel();
 	}
 
 	private String typeTitle() {

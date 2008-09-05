@@ -180,7 +180,7 @@ public class BsiModelView extends ViewPart {
 			if (obj instanceof IBSIStrukturElement) {
 				IBSIStrukturElement el = (IBSIStrukturElement) obj;
 				CnATreeElement el2 = (CnATreeElement) obj;
-				return el.getKuerzel() + " " + el2.getTitle();
+				return el.getKuerzel() + " " + el2.getTitel();
 			}
 			else if (obj instanceof LinkKategorie)
 				return ((LinkKategorie)obj).getTitle();
@@ -189,7 +189,7 @@ public class BsiModelView extends ViewPart {
 				return link.getTitle(); 
 			}
 			CnATreeElement el = (CnATreeElement) obj;
-			return el.getTitle();
+			return el.getTitel();
 		}
 	}
 

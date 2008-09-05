@@ -71,7 +71,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 	
 	
 	@Override
-	public String getTitle() {
+	public String getTitel() {
 		return getEntity().getSimpleValue(P_NR) 
 			+ " " + getEntity().getSimpleValue(P_NAME); //$NON-NLS-1$
 	}

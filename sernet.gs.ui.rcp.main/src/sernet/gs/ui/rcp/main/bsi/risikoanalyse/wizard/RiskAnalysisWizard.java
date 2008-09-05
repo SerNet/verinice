@@ -11,6 +11,7 @@ import org.eclipse.ui.IWorkbench;
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
@@ -25,6 +26,7 @@ import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.NullModel;
 
 /**
  * Wizard to accomplish a 'BSI-Standard 100-3' risk-analysis. RiskAnalysisWizard
@@ -192,6 +194,14 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	private void loadAllMassnahmen() {
 		List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance()
 				.getBausteine();
+		
+		NullModel nullModel = new NullModel() {
+			@Override
+			public boolean canContain(Object obj) {
+				return true;
+			}
+		};
+		
 		alleBausteine: for (Baustein baustein : bausteine) {
 			alleMassnahmen: for (Massnahme massnahme : baustein.getMassnahmen()) {
 				Boolean duplicate = false;
@@ -205,7 +215,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 					MassnahmenUmsetzung massnahmeUmsetzung;
 					try {
 						massnahmeUmsetzung = (MassnahmenUmsetzung) CnAElementFactory
-								.getInstance().saveNew(finishedRiskAnalysis,
+								.getInstance().saveNew(nullModel,
 										MassnahmenUmsetzung.TYPE_ID,
 										new BuildInput<Massnahme>(massnahme));
 						allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
@@ -383,10 +393,11 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	}
 
 	public void addRisikoMassnahmeUmsetzung(RisikoMassnahme massnahme) {
-		RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung;
 		try {
-			RisikoMassnahmenUmsetzung massnahmeUmsetzung = new RisikoMassnahmenUmsetzung(null, null);
+			RisikoMassnahmenUmsetzung massnahmeUmsetzung = new RisikoMassnahmenUmsetzung(null, null, massnahme);
 			massnahmeUmsetzung.setName(massnahme.getName());
+			massnahmeUmsetzung.setNumber(massnahme.getNumber());
+			massnahmeUmsetzung.setDescription(massnahme.getDescription());
 			
 			/* add to list of all MassnahmenUmsetzungen */
 			if (!(allMassnahmenUmsetzungen.contains(massnahmeUmsetzung))) {

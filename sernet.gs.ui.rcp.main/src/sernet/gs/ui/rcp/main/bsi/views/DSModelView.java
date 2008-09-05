@@ -159,7 +159,7 @@ public class DSModelView extends ViewPart {
 				return Messages.DSModelView_2;
 			
 			CnATreeElement el = (CnATreeElement) obj;
-			return el.getTitle();
+			return el.getTitel();
 		}
 		
 		public Image getImage(Object obj) {

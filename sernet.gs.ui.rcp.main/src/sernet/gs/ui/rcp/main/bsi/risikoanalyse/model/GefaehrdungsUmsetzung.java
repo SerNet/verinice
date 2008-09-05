@@ -7,9 +7,10 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.GefaehrdungsBaumRoot;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
 
-public class GefaehrdungsUmsetzung extends Gefaehrdung
+public class GefaehrdungsUmsetzung extends CnATreeElement
 	implements IGefaehrdungsBaumElement {
 
 	/* (non-Javadoc)
@@ -19,7 +20,6 @@ public class GefaehrdungsUmsetzung extends Gefaehrdung
 		return "";
 	}
 
-	private int dbId;
 	private String id;
 	private String titel;
 	private String kategorie;
@@ -27,20 +27,32 @@ public class GefaehrdungsUmsetzung extends Gefaehrdung
 	private String alternative;
 	private GefaehrdungsBaumRoot parent;
 	private List<IGefaehrdungsBaumElement> children = new ArrayList<IGefaehrdungsBaumElement>();
-	private Image image = ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
+	
 
 	public static final String GEFAEHRDUNG_ALTERNATIVE_A = "A";
 	public static final String GEFAEHRDUNG_ALTERNATIVE_B = "B";
 	public static final String GEFAEHRDUNG_ALTERNATIVE_C = "C";
 	public static final String GEFAEHRDUNG_ALTERNATIVE_D = "D";
+	
+	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_A = "A Reduktion";
+	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_B = "B Umstrukturierung";
+	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_C = "C Übernahme";
+	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_D = "D Transfer";
+	
 
 	public static final String[] ALTERNATIVEN = {GEFAEHRDUNG_ALTERNATIVE_A,
 		GEFAEHRDUNG_ALTERNATIVE_B,
 		GEFAEHRDUNG_ALTERNATIVE_C,
 		GEFAEHRDUNG_ALTERNATIVE_D,};
 	
-	// TODO eigener Entity-Typ für eigene Gefährundengen
-	private Entity entity;
+	public static final String[] ALTERNATIVEN_TEXT = {
+	GEFAEHRDUNG_ALTERNATIVE_TEXT_A,
+	GEFAEHRDUNG_ALTERNATIVE_TEXT_B, 
+	GEFAEHRDUNG_ALTERNATIVE_TEXT_C, 
+	GEFAEHRDUNG_ALTERNATIVE_TEXT_D, 
+	};
+	
+	private static final String TYPE_ID = "gefaehrdungsumsetzung";
 	
 	public int getAlternativeIndex() {
 		int i=-1;
@@ -60,30 +72,7 @@ public class GefaehrdungsUmsetzung extends Gefaehrdung
 		this.alternative = GEFAEHRDUNG_ALTERNATIVE_C;
 	}
 	
-	@Override
-	public String getId() {
-		return this.id;
-	}
 	
-	@Override
-	public void setId(String newId) {
-		this.id = newId;
-	}
-	
-	@Override
-	public String getTitel() {
-		return this.titel;
-	}
-	
-	@Override
-	public void setTitel(String newTitle) {
-		this.titel = newTitle;
-	}
-	
-	@Override
-	public String getKategorieAsString() {
-		return this.kategorie;
-	}
 	
 	public void setKategorieAsString(String newKategorie) {
 		this.kategorie = newKategorie;
@@ -97,19 +86,7 @@ public class GefaehrdungsUmsetzung extends Gefaehrdung
 		return alternative;
 	}
 
-	/**
-	 * @return the dbId
-	 */
-	public int getDbId() {
-		return this.dbId;
-	}
 
-	/**
-	 * @param dbId the dbId to set
-	 */
-	public void setDbId(int dbId) {
-		this.dbId = dbId;
-	}
 
 	/**
 	 * @return the okay
@@ -158,17 +135,55 @@ public class GefaehrdungsUmsetzung extends Gefaehrdung
 		return parent;
 	}
 
-	/**
-	 *  returns the image to display in viewer.
-	 */
-	public Image getImage() {
-		return image;
+
+	public String getTitel() {
+		return this.titel;
 	}
 	
-	/**
-	 *   returns the Name of the GefaehrdungsUmsetzung
-	 */
+
+	
+	@Override
+	public String getTypeId() {
+		return this.TYPE_ID;
+	}
+
 	public String getText() {
-		return this.getTitel();
+		return titel;
+	}
+
+	public Image getImage() {
+		return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getKategorie() {
+		return kategorie;
+	}
+
+	public void setKategorie(String kategorie) {
+		this.kategorie = kategorie;
+	}
+
+
+	public void setParent(GefaehrdungsBaumRoot parent) {
+		this.parent = parent;
+	}
+
+	
+
+
+	public void setTitel(String titel) {
+		this.titel = titel;
+	}
+
+	public String getAlternativeText() {
+		return ALTERNATIVEN_TEXT[getAlternativeIndex()];
 	}
 }

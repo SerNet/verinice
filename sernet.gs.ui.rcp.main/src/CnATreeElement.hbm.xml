@@ -72,6 +72,15 @@
 	>
 		<key column="dbId"/>
 	</joined-subclass>
+	
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung"
+		extends="CnATreeElement"
+		batch-size="100"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
 
 	<joined-subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.Gebaeude"
@@ -80,6 +89,12 @@
 		<key column="dbId"/>
 	</joined-subclass>
 
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
 	
 	
 	<joined-subclass 
@@ -273,7 +288,8 @@
 	>
 		<key column="dbId"/>
 	</joined-subclass>
-
+	
+	
 
 	</class>
 </hibernate-mapping>

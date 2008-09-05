@@ -44,7 +44,7 @@ public class BSIModel extends CnATreeElement
 	}
 	
 	@Override
-	public String getTitle() {
+	public String getTitel() {
 		return Messages.BSIModel_1;
 	}
 	

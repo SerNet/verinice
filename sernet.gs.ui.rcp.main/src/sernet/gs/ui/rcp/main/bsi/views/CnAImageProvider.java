@@ -25,6 +25,7 @@ import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 
@@ -33,6 +34,9 @@ public class CnAImageProvider {
 	public static Image getImage(CnATreeElement elmt) {
 		if (elmt instanceof MassnahmenUmsetzung)
 			return getImage((MassnahmenUmsetzung)elmt);
+		
+		if (elmt instanceof GefaehrdungsUmsetzung)
+			return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
 		
 		if (elmt instanceof BausteinUmsetzung)
 			return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
@@ -69,7 +73,7 @@ public class CnAImageProvider {
 		
 		if (elmt instanceof IDatenschutzElement)
 			return ImageCache.getInstance().getImage(ImageCache.SHIELD);
-
+		
 		if (elmt instanceof FinishedRiskAnalysis)
 			return ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
 		
@@ -99,6 +103,14 @@ public class CnAImageProvider {
 		//else:
 		return ImageCache.getInstance().getImage(
 					ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
+	}
+	
+	public static Image getImage(FinishedRiskAnalysis elmt) {
+		if (elmt instanceof FinishedRiskAnalysis)
+			return ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
+		return ImageCache.getInstance().getImage(
+				ImageCache.UNKNOWN);
+		
 	}
 	
 }

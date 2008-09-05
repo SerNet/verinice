@@ -126,10 +126,7 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 					break;
 				}
 
-				// TODO Alternative in DB speichern
-
-				wizard
-						.setNotOKGefaehrdungsUmsetzungen(arrListNotOKGefaehrdungsUmsetzungen);
+				wizard.setNotOKGefaehrdungsUmsetzungen(arrListNotOKGefaehrdungsUmsetzungen);
 				viewer.refresh();
 
 				if (wizard.getNotOKGefaehrdungsUmsetzungen().isEmpty()) {

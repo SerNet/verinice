@@ -74,9 +74,9 @@ public class AuditView extends ViewPart {
 			case 3: // siegelstufe
 				return "" + mn.getStufe(); //$NON-NLS-1$
 			case 4: // zielobjekt
-				return (mn.getParent().getParent()).getTitle(); // mn -> baustein -> zielobjekt
+				return (mn.getParent().getParent()).getTitel(); // mn -> baustein -> zielobjekt
 			case 5: // title
-				return mn.getTitle();
+				return mn.getTitel();
 			}
 			return ""; //$NON-NLS-1$
 		}

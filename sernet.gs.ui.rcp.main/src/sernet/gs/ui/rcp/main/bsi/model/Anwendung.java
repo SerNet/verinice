@@ -60,7 +60,7 @@ public class Anwendung extends CnATreeElement
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitel() {
 		return getEntity().getProperties(PROP_NAME).getProperty(0)
 				.getPropertyValue();
 	}

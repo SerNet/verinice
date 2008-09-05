@@ -19,6 +19,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 
 /**
@@ -62,7 +63,7 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	    gridTextNumber.verticalAlignment = SWT.CENTER;
 	    gridTextNumber.grabExcessHorizontalSpace = true;
 		textNumber.setLayoutData(gridTextNumber);
-		textNumber.setText(risikoMassnahmenUmsetzung.getNumber());
+		textNumber.setText(notNull(risikoMassnahmenUmsetzung.getNumber()));
 		
 		/* label name */
 		final Label labelName = new Label(container, SWT.NONE);
@@ -79,7 +80,7 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	    gridTextName.verticalAlignment = SWT.CENTER;
 	    gridTextName.grabExcessHorizontalSpace = true;
 		textName.setLayoutData(gridTextName);
-		textName.setText(risikoMassnahmenUmsetzung.getTitle());
+		textName.setText(notNull(risikoMassnahmenUmsetzung.getTitel()));
 		
 		/* label description */
 		final Label labelDescription = new Label(container, SWT.NONE);
@@ -99,24 +100,32 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	    gridTextDescription.widthHint = 400;
 	    gridTextDescription.heightHint = 200;
 		textDescription.setLayoutData(gridTextDescription);
-		textDescription.setText(risikoMassnahmenUmsetzung.getDescription());
+		textDescription.setText(notNull(risikoMassnahmenUmsetzung.getDescription()));
 		
 		 return container;
 	}
 	
+	private String notNull(String string) {
+		return string != null ? string : "";
+	}
+
 	@Override
 	protected void okPressed() {
-		risikoMassnahmenUmsetzung.setName(textName.getText());
+		risikoMassnahmenUmsetzung.setName( textName.getText());
 		risikoMassnahmenUmsetzung.setDescription(textDescription.getText());
-
-		/* TODO persistent speichern 
+		risikoMassnahmenUmsetzung.setNumber(textNumber.getText());
+		
+		risikoMassnahmenUmsetzung.getRisikoMassahme().setName(textName.getText());
+		risikoMassnahmenUmsetzung.getRisikoMassahme().setDescription(textDescription.getText());
+		risikoMassnahmenUmsetzung.getRisikoMassahme().setNumber(textNumber.getText());
+		
+		
 		try {
-			OwnGefaehrdungHome.getInstance().saveUpdate(ownGefaehrdung);
+			RisikoMassnahmeHome.getInstance().saveUpdate(risikoMassnahmenUmsetzung.getRisikoMassahme());
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Änderung konnte nicht gespeichert werden.");
 		}
-		*/
-		
+
 		super.okPressed();
 	}
 }

@@ -121,7 +121,7 @@ public class MassnahmenTodoReport extends Report
 
 			// only add if header + items present:
 			if (categoryRows.size() > 1) {
-				rows.add(new SimpleRow(IOOTableRow.ROW_STYLE_HEADER, category.getTitle()));
+				rows.add(new SimpleRow(IOOTableRow.ROW_STYLE_HEADER, category.getTitel()));
 				rows.addAll(categoryRows);
 			}
 				

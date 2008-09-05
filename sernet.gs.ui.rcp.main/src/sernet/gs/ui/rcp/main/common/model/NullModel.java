@@ -13,7 +13,7 @@ public class NullModel extends BSIModel {
 		public NullModel() {
 			ITVerbund nullVerbund = new ITVerbund(this) {
 				@Override
-				public String getTitle() {
+				public String getTitel() {
 					return "DB-Verbindung: geschlossen";
 				}
 			};
@@ -21,7 +21,7 @@ public class NullModel extends BSIModel {
 		}
 	
 		@Override
-		public String getTitle() {
+		public String getTitel() {
 			return "";
 		}
 		

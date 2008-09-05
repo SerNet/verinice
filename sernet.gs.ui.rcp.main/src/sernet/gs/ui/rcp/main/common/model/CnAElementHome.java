@@ -207,7 +207,7 @@ public class CnAElementHome {
 	public void update(CnATreeElement element) throws Exception {
 		synchronized (mutex) {
 			Logger.getLogger(this.getClass()).debug(
-					"Updating element " + element.getTitle());
+					"Updating element " + element.getTitel());
 			Transaction tx = null;
 			try {
 				tx = session.beginTransaction();
@@ -339,7 +339,7 @@ public class CnAElementHome {
 	 * @param cnAElement
 	 */
 	public void refresh(CnATreeElement cnAElement) {
-		Logger.getLogger(this.getClass()).debug("Refreshing object " + cnAElement.getTitle());
+		Logger.getLogger(this.getClass()).debug("Refreshing object " + cnAElement.getTitel());
 		try {
 			session.refresh(cnAElement);
 			

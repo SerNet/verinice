@@ -29,7 +29,7 @@ public class TableViewerLabelProvider implements ITableLabelProvider {
 		case 2:
 			return gef.getTitel();
 		case 3:
-			return gef.getAlternative();
+			return gef.getAlternativeText();
 		};
 		return "";
 	}

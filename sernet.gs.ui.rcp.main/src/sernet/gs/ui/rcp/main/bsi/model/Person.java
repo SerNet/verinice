@@ -48,7 +48,7 @@ implements IBSIStrukturElement {
 	
 	
 	@Override
-	public String getTitle() {
+	public String getTitel() {
 		if (getEntity() == null)
 			return "";
 		

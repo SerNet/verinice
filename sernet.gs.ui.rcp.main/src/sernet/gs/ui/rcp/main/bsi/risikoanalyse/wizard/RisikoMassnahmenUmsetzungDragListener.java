@@ -66,11 +66,16 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
 				RisikoMassnahmenUmsetzung umsetzung = new RisikoMassnahmenUmsetzung(cnaElement, null);
 				umsetzung.setName(((MassnahmenUmsetzung) object).getName());
 				risikoMassnahmenUmsetzungen.add(umsetzung);
-				Logger.getLogger(this.getClass()).debug("drag start - MassnahmenUmsetzung " + ((MassnahmenUmsetzung) object).getTitle());
+				Logger.getLogger(this.getClass()).debug("drag start - MassnahmenUmsetzung " + ((MassnahmenUmsetzung) object).getTitel());
 			} else {
-				/* object is of type RisikoMassnahmenUmsetzung - add it */
-				risikoMassnahmenUmsetzungen.add((RisikoMassnahmenUmsetzung) object);
-				Logger.getLogger(this.getClass()).debug("drag start - RisikoMassnahmenUmsetzung " + ((RisikoMassnahmenUmsetzung) object).getTitle());
+				/* object is of type RisikoMassnahmenUmsetzung - create instance for target object and add it */
+				RisikoMassnahmenUmsetzung draftRisikoMassnahmeUmsetzung = (RisikoMassnahmenUmsetzung) object;
+				RisikoMassnahmenUmsetzung umsetzung = new RisikoMassnahmenUmsetzung(cnaElement, null, 
+						draftRisikoMassnahmeUmsetzung.getRisikoMassahme());
+				umsetzung.setName(((MassnahmenUmsetzung) object).getName());
+				risikoMassnahmenUmsetzungen.add(umsetzung);
+				
+				Logger.getLogger(this.getClass()).debug("drag start - RisikoMassnahmenUmsetzung " + ((RisikoMassnahmenUmsetzung) object).getTitel());
 			}
 				
 		}

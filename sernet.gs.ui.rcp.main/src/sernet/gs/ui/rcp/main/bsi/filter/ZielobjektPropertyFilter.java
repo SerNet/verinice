@@ -27,7 +27,7 @@ public class ZielobjektPropertyFilter extends StringPropertyFilter {
 		
 		
 		
-		String value = ((CnATreeElement)element).getParent().getParent().getTitle();
+		String value = ((CnATreeElement)element).getParent().getParent().getTitel();
 		Matcher matcher = super.regex.matcher(value);
 		if (matcher.find())
 			return true;
