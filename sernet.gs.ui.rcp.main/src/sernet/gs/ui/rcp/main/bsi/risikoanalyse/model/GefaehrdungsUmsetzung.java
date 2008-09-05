@@ -2,13 +2,19 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.apache.lucene.demo.html.Entities;
 import org.eclipse.swt.graphics.Image;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.Messages;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.GefaehrdungsBaumRoot;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.EntityType;
 
 public class GefaehrdungsUmsetzung extends CnATreeElement
 	implements IGefaehrdungsBaumElement {
@@ -20,14 +26,10 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 		return "";
 	}
 
-	private String id;
-	private String titel;
-	private String kategorie;
-	private Boolean okay;
-	private String alternative;
-	private GefaehrdungsBaumRoot parent;
-	private List<IGefaehrdungsBaumElement> children = new ArrayList<IGefaehrdungsBaumElement>();
+	private List<IGefaehrdungsBaumElement> gefaehrdungsChildren = new ArrayList<IGefaehrdungsBaumElement>();
+	private IGefaehrdungsBaumElement gefaehrdungsParent;
 	
+	private static EntityType entityType;
 
 	public static final String GEFAEHRDUNG_ALTERNATIVE_A = "A";
 	public static final String GEFAEHRDUNG_ALTERNATIVE_B = "B";
@@ -52,13 +54,21 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 		GEFAEHRDUNG_ALTERNATIVE_TEXT_D, 
 	};
 	
-	private static final String TYPE_ID = "gefaehrdungsumsetzung";
+	public static final String TYPE_ID 				= "gefaehrdungsumsetzung";
+	public static final String PROP_ID 				= "gefaehrdungsumsetzung_id";
+	public static final String PROP_TITEL			= "gefaehrdungsumsetzung_titel";
+	public static final String PROP_KATEGORIE 		= "gefaehrdungsumsetzung_kategorie";
+	public static final String PROP_ALTERNATIVE 	= "gefaehrdungsumsetzung_alternative";
+	public static final String PROP_OKAY 			= "gefaehrdungsumsetzung_okay";
+	public static final String PROP_OKAY_YES 		= "gefaehrdungsumsetzung_okay_yes";
+	public static final String PROP_OKAY_NO 		= "gefaehrdungsumsetzung_okay_no";
+
 	
 	public int getAlternativeIndex() {
 		int i=-1;
 		for (String alt : ALTERNATIVEN) {
 			i++;
-			if (alt.equals(alternative))
+			if (alt.equals(getAlternative()))
 				return i;
 		}
 		return -1;
@@ -66,25 +76,39 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	
 	public GefaehrdungsUmsetzung(CnATreeElement parent, Gefaehrdung source) {
 		super(parent);
-		this.id = source.getId();
-		this.titel = source.getTitel();
-		this.kategorie = source.getKategorieAsString();
-		this.okay = true;
-		this.alternative = GEFAEHRDUNG_ALTERNATIVE_C;
+		
+		if (entityType == null)
+			entityType = typeFactory.getEntityType(TYPE_ID);
+		setEntity(new Entity(TYPE_ID));
+		
+		getEntity().createNewProperty(entityType.getPropertyType(PROP_ID), source.getId() );
+		getEntity().createNewProperty(entityType.getPropertyType(PROP_TITEL), source.getTitel() );
+		getEntity().createNewProperty(entityType.getPropertyType(PROP_KATEGORIE), source.getKategorieAsString() );
+		getEntity().createNewProperty(entityType.getPropertyType(PROP_ALTERNATIVE), GEFAEHRDUNG_ALTERNATIVE_C );
+		getEntity().createNewProperty(entityType.getPropertyType(PROP_OKAY), PROP_OKAY_YES);
+		
+	}
+	
+
+	
+	private GefaehrdungsUmsetzung() {
+		// hibernate constructor
 	}
 	
 	
 	
 	public void setKategorieAsString(String newKategorie) {
-		this.kategorie = newKategorie;
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KATEGORIE),
+				newKategorie);
 	}
 	
 	public void setAlternative(String newAlternative) {
-		this.alternative = newAlternative;
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ALTERNATIVE),
+				newAlternative);
 	}
 	
 	public String getAlternative() {
-		return alternative;
+		return getEntity().getSimpleValue(PROP_ALTERNATIVE);
 	}
 
 
@@ -93,14 +117,20 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	 * @return the okay
 	 */
 	public Boolean getOkay() {
-		return okay;
+		return getEntity().isSelected(PROP_OKAY_YES);
 	}
 
 	/**
-	 * @param okay the okay to set
+	 * @param okay
+	 *            the okay to set
 	 */
 	public void setOkay(Boolean newOkay) {
-		this.okay = newOkay;
+		if (newOkay)
+			getEntity().setSimpleValue(entityType.getPropertyType(PROP_OKAY),
+					PROP_OKAY_YES);
+		else
+			getEntity().setSimpleValue(entityType.getPropertyType(PROP_OKAY),
+					PROP_OKAY_NO);
 	}
 
 	/**
@@ -108,7 +138,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	 *  in the tree.
 	 */
 	public List<IGefaehrdungsBaumElement> getGefaehrdungsBaumChildren() {
-		return children;
+		return gefaehrdungsChildren;
 	}
 	
 	/**
@@ -116,9 +146,16 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	 *  in the tree.
 	 */
 	public void addGefaehrdungsBaumChild(IGefaehrdungsBaumElement newChild) {
-		if (! (children.contains(newChild))) {
-			children.add(newChild);
+		if (! (gefaehrdungsChildren.contains(newChild))) {
+			gefaehrdungsChildren.add(newChild);
 		}
+	}
+	
+	@Override
+	public boolean canContain(Object obj) {
+		if (obj instanceof MassnahmenUmsetzung)
+			return true;
+		return false;
 	}
 	
 	/**
@@ -126,22 +163,15 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	 *  in the tree.
 	 */
 	public void removeGefaehrdungsBaumChild(IGefaehrdungsBaumElement child) {
-		children.remove(child);
+		gefaehrdungsChildren.remove(child);
 	}
-
-	/**
-	 * returns the parent element (GefaehrdungsbaumRoot) in the tree
-	 */
-	public IGefaehrdungsBaumElement getGefaehrdungsBaumParent() {
-		return parent;
-	}
-
 
 	public String getTitel() {
-		return this.titel;
+		return  "[" + getAlternative() + "] " + 
+			getEntity().getSimpleValue(PROP_TITEL)
+			+ " (" + getAlternativeText() + ")";
 	}
 	
-
 	
 	@Override
 	public String getTypeId() {
@@ -149,7 +179,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	}
 
 	public String getText() {
-		return titel;
+		return getEntity().getSimpleValue(PROP_TITEL);
 	}
 
 	public Image getImage() {
@@ -157,34 +187,44 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	}
 
 	public String getId() {
-		return id;
+		return getEntity().getSimpleValue(PROP_ID);
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ID),
+				id);
 	}
 
 	public String getKategorie() {
-		return kategorie;
+		return getEntity().getSimpleValue(PROP_KATEGORIE);
 	}
 
 	public void setKategorie(String kategorie) {
-		this.kategorie = kategorie;
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KATEGORIE),
+				kategorie);
 	}
 
 
-	public void setParent(GefaehrdungsBaumRoot parent) {
-		this.parent = parent;
+	public void setGefaehrdungsParent(GefaehrdungsBaumRoot parent) {
+		this.gefaehrdungsParent = parent;
 	}
 
 	
-
-
 	public void setTitel(String titel) {
-		this.titel = titel;
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_TITEL),
+				titel);
 	}
 
 	public String getAlternativeText() {
-		return ALTERNATIVEN_TEXT[getAlternativeIndex()];
+		try {
+			return ALTERNATIVEN_TEXT[getAlternativeIndex()];
+		} catch (IndexOutOfBoundsException e) {
+			Logger.getLogger(this.getClass()).debug(e);
+		}
+		return "";
+	}
+
+	public IGefaehrdungsBaumElement getGefaehrdungsBaumParent() {
+		return this.gefaehrdungsParent;
 	}
 }

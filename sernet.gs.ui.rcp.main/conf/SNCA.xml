@@ -1435,6 +1435,39 @@ Template:
             inputtype="text"
 			name="Erläuterung" />
 	</huientity>
+	
+	
+	<huientity
+		id="gefaehrdungsumsetzung"
+		name="Gefährdungsumsetzung">
+		<huiproperty
+				id="gefaehrdungsumsetzung_id"
+                editable="false"
+				name="Id" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_titel"
+                editable="false"
+				name="Titel" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_kategorie"
+                editable="false"
+				name="Kategorie" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_alternative"
+                editable="false"
+				name="Behandlung" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_okay"
+                editable="false"
+                inputtype="singleoption"
+				name="">
+		<option	id="gefaehrdungsumsetzung_okay_yes"
+				name="Ja" />
+		<option	id="gefaehrdungsumsetzung_okay_no"
+				name="Nein" />
+		</huiproperty>
+	</huientity>
+
 
 	<huientity
 		id="mnums"

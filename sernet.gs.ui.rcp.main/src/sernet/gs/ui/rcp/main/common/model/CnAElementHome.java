@@ -350,42 +350,34 @@ public class CnAElementHome {
 				CnAElementFactory.getInstance().loadOrCreateModel(new IProgressMonitor() {
 
 					public void beginTask(String name, int totalWork) {
-						// TODO Auto-generated method stub
 						
 					}
 
 					public void done() {
-						// TODO Auto-generated method stub
 						
 					}
 
 					public void internalWorked(double work) {
-						// TODO Auto-generated method stub
 						
 					}
 
 					public boolean isCanceled() {
-						// TODO Auto-generated method stub
 						return false;
 					}
 
 					public void setCanceled(boolean value) {
-						// TODO Auto-generated method stub
 						
 					}
 
 					public void setTaskName(String name) {
-						// TODO Auto-generated method stub
 						
 					}
 
 					public void subTask(String name) {
-						// TODO Auto-generated method stub
 						
 					}
 
 					public void worked(int work) {
-						// TODO Auto-generated method stub
 						
 					}
 					
@@ -395,11 +387,6 @@ public class CnAElementHome {
 			}
 		}
 		
-// should be sufficient
-//		session.refresh(cnAElement.getEntity());
-//		for (PropertyList list : cnAElement.getEntity().getTypedPropertyLists().values() ) {
-//			session.refresh(list);	
-//		}
 	}
 
 	public Session getSession() {

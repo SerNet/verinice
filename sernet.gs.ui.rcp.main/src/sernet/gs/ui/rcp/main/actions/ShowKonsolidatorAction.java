@@ -56,7 +56,7 @@ public class ShowKonsolidatorAction extends Action implements
 		this.window = window;
 		setText(label);
 		setId(ID);
-		setActionDefinitionId(ID);
+		//setActionDefinitionId(ID);
 		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(
 				ImageCache.KONSOLIDATOR));
 		window.getSelectionService().addSelectionListener(this);

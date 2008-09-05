@@ -64,6 +64,10 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 					&& !(children.contains(child))) {
 				child.setGefaehrdungsBaumParent(parent);
 				parent.addGefaehrdungsBaumChild(child);
+				
+				child.setParent(parent);
+				parent.addChild(child);
+				
 				viewer.refresh();
 				return true;
 			} else {

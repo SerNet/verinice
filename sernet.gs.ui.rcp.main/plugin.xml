@@ -157,6 +157,7 @@
                    <or>
                    	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement"/>
                    	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung"/>
+                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis"/>
                    </or>
                    <not>
                       <objectClass name="sernet.gs.ui.rcp.main.bsi.model.ITVerbund"/>

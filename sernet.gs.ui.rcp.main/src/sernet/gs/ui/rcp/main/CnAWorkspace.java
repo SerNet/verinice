@@ -14,6 +14,7 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,10 +69,25 @@ public class CnAWorkspace {
 		
 		
 		if (confDir.exists() && confDir.isDirectory()) {
-			Logger.getLogger(CnAWorkspace.class).debug(
-					"Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: "
-							+ confDir.getAbsolutePath());
-			return;
+			File confFile = new File(confDir, "configuration.version");
+			if (confFile.exists()) {
+				Properties props = new Properties();
+				FileInputStream fis;
+				try {
+					fis = new FileInputStream(confFile);
+					props.load(fis);
+					
+					if (props.get("version").equals("0.7.0")) {
+						Logger.getLogger(CnAWorkspace.class).debug(
+								"Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: "
+								+ confDir.getAbsolutePath());
+						return;
+					}
+				} catch (Exception e) {
+					Logger.getLogger(this.getClass()).debug(e);
+				}
+			}
+			
 		}
 
 		CnAWorkspace instance = new CnAWorkspace();
@@ -101,10 +117,12 @@ public class CnAWorkspace {
 		File confDir = new File(url.getPath() + File.separator + "conf");
 		confDir.mkdirs();
 
+		
 		createTextFile("conf" + File.separator + "hitro.xsd", workDir);
 		createTextFile("conf" + File.separator + "SNCA.xml", workDir);
 		createTextFile("conf" + File.separator + "reports.properties_skeleton",
 				workDir, "conf" + File.separator + "reports.properties");
+		createTextFile("conf" + File.separator + "configuration.version", workDir);
 	}
 	
 	public void createReportTempFile() {
@@ -143,6 +161,9 @@ public class CnAWorkspace {
 	 */
 	private void createBinaryFile(String infile, String toDir)
 			throws IOException {
+		
+		backupFile(toDir, infile);
+		
 		String infileResource = infile.replace('\\', '/');
 		InputStream in = getClass().getClassLoader()
 				.getResourceAsStream(infileResource);
@@ -247,6 +268,7 @@ public class CnAWorkspace {
 	private void createTextFile(String infile, String toDir, String outfile,
 			Map<String, String> variables) throws NullPointerException,
 			IOException {
+		
 		String infileResource = infile.replace('\\', '/');
 		InputStream is = getClass().getClassLoader()
 				.getResourceAsStream(infileResource);
@@ -272,12 +294,21 @@ public class CnAWorkspace {
 		inRead.close();
 		is.close();
 
+		backupFile(toDir, outfile);
 		FileOutputStream fout = new FileOutputStream(toDir + File.separator
 				+ outfile, false);
 		OutputStreamWriter outWrite = new OutputStreamWriter(fout);
 		outWrite.write(skelFile.toString());
 		outWrite.close();
 		fout.close();
+	}
+
+	private void backupFile(String dir, String filepath) throws IOException {
+		File file = new File(dir + File.separator + filepath);
+		if (file.exists()) {
+			File outfile = new File(dir + File.separator + filepath + ".bak");
+			copyFile(file.getAbsolutePath(), outfile);
+		}
 	}
 
 	public synchronized boolean isDatabaseConfigUpToDate() {

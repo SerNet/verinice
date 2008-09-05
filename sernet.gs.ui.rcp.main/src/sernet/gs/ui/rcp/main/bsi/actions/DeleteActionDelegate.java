@@ -20,6 +20,8 @@ import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -61,7 +63,9 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 						
 						if (!(sel instanceof ITVerbund)
 								&& sel instanceof IBSIStrukturElement
-								|| sel instanceof BausteinUmsetzung) {
+								|| sel instanceof BausteinUmsetzung
+								|| sel instanceof FinishedRiskAnalysis
+								|| sel instanceof GefaehrdungsUmsetzung) {
 							CnATreeElement el = (CnATreeElement) sel;
 							
 							try {

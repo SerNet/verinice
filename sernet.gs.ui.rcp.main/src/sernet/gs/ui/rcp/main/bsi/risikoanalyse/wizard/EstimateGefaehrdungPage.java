@@ -134,6 +134,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					GefaehrdungsUmsetzung newGefaehrdungsUmsetzung = new GefaehrdungsUmsetzung(
 							((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis(),
 							currentGefaehrdung);
+					((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().addChild(newGefaehrdungsUmsetzung);
 					newGefaehrdungsUmsetzung.setOkay(false);
 					arrListGefaehrdungsUmsetzungen
 							.add(newGefaehrdungsUmsetzung);
@@ -144,6 +145,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					for (GefaehrdungsUmsetzung gefaehrdung : arrListGefaehrdungsUmsetzungen) {
 						if (currentGefaehrdung.getId().equals(
 								gefaehrdung.getId())) {
+							((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().removeChild(gefaehrdung);
 							gefaehrdung.setOkay(true);
 							arrListGefaehrdungsUmsetzungen.remove(gefaehrdung);
 							break;
