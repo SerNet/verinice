@@ -45,22 +45,24 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	
 	private GefaehrdungsUmsetzung parent;
 	private Image image = ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
-	private String number;
-	private String description;
-	private RisikoMassnahme massahme;
-	public static final String SIEGEL = "Z";
+	private RisikoMassnahme massnahme;
 	
 	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
 			GefaehrdungsUmsetzung myParent, RisikoMassnahme massnahme) {
 		super(superParent);
 		this.parent = myParent;
-		this.massahme = massnahme;
+		this.massnahme = massnahme;
+		setStufe('Z');
 	}
 	
 	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
 			GefaehrdungsUmsetzung myParent) {
 		super(superParent);
 		this.parent = myParent;
+	}
+	
+	private RisikoMassnahmenUmsetzung() {
+		// hibernate constructor
 	}
 
 	/**
@@ -149,7 +151,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 * @return - description (String) of the RisikoMassnahmenUmsetzung.
 	 */
 	public String getDescription() {
-		return description;
+		return massnahme.getDescription();
 	}
 	
 	/**
@@ -159,7 +161,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 * 		  RisikoMassnahmenUmsetzung
 	 */
 	public void setDescription(String newDescription) {
-		description = newDescription;
+		massnahme.setDescription(newDescription);
 	}
 
 	/**
@@ -168,7 +170,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 * @return the number
 	 */
 	public String getNumber() {
-		return number;
+		return getKapitel();
 	}
 
 	/**
@@ -177,21 +179,12 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 * @param newNumber the number to set
 	 */
 	public void setNumber(String newNumber) {
-		number = newNumber;
+		setKapitel(newNumber);
 	}
 	
-	/**
-	 * Returns the Siegelstufe of the Massnahme, which is always "Z" (for
-	 * additional Massnahmen).
-	 * 
-	 * @return the Siegelstufe of the Massnahme
-	 */
-	public String getSiegel() {
-		return SIEGEL;
-	}
 
 	public RisikoMassnahme getRisikoMassahme() {
-		return massahme;
+		return massnahme;
 	}
 
 }

@@ -71,8 +71,15 @@
 		batch-size="100"
 	>
 		<key column="dbId"/>
+		
+		<joined-subclass
+			name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung"
+			extends="MassnahmenUmsetzung"
+		>
+			<key column="dbId"/>
+		</joined-subclass>
+		
 	</joined-subclass>
-	
 	
 	<joined-subclass 
 		name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung"

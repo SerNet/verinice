@@ -35,7 +35,7 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 			case 1:
 				return massnahme.getNumber();
 			case 2:
-				return "[" + massnahme.getSiegel() + "] " + massnahme.getTitel();
+				return "[" + massnahme.getStufe() + "] " + massnahme.getTitel();
 			case 3:
 				return massnahme.getDescription();
 			};

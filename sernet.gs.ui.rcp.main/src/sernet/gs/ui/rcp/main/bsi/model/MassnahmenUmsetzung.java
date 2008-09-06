@@ -52,7 +52,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 		setEntity(new Entity(TYPE_ID));
 	}
 
-	private MassnahmenUmsetzung() {
+	protected MassnahmenUmsetzung() {
 
 	}
 	
