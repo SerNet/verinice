@@ -47,7 +47,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	private Image image = ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
 	private RisikoMassnahme massnahme;
 	
-	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
+	protected RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
 			GefaehrdungsUmsetzung myParent, RisikoMassnahme massnahme) {
 		super(superParent);
 		this.parent = myParent;
@@ -55,7 +55,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 		setStufe('Z');
 	}
 	
-	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
+	protected RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
 			GefaehrdungsUmsetzung myParent) {
 		super(superParent);
 		this.parent = myParent;
@@ -151,19 +151,9 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 * @return - description (String) of the RisikoMassnahmenUmsetzung.
 	 */
 	public String getDescription() {
-		return massnahme.getDescription();
+		return getMassnahme().getDescription();
 	}
 	
-	/**
-	 * Sets the description of the RisikoMassnahmenUmsetzung.
-	 * 
-	 * @param newDescription - new description (String) of the
-	 * 		  RisikoMassnahmenUmsetzung
-	 */
-	public void setDescription(String newDescription) {
-		massnahme.setDescription(newDescription);
-	}
-
 	/**
 	 * Returns the nuber of the Massnahme.
 	 * 
@@ -183,8 +173,12 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	}
 	
 
-	public RisikoMassnahme getRisikoMassahme() {
+	public RisikoMassnahme getMassnahme() {
+		if (massnahme == null)
+			massnahme = RisikoMassnahmeHome.getInstance().loadByNumber(getNumber());
+
 		return massnahme;
+		
 	}
 
 }

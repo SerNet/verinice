@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class RisikoMassnahmeHome {
 	
@@ -80,6 +82,19 @@ public class RisikoMassnahmeHome {
 		ArrayList<RisikoMassnahme> result = new ArrayList<RisikoMassnahme>();
 		result.addAll(models);
 		return result;
+	}
+	
+	private static final String QUERY_FIND_BY_ID = "from "
+		+ RisikoMassnahme.class.getName() + " as element "
+		+ "where element.number = ?";
+
+	public RisikoMassnahme loadByNumber(String number) {
+		Query query = session.createQuery(QUERY_FIND_BY_ID);
+		query.setString(0, number);
+		List list = query.list();
+		if (list == null || list.size() == 0)
+			return null;
+		return (RisikoMassnahme) list.get(0);
 	}
 
 	

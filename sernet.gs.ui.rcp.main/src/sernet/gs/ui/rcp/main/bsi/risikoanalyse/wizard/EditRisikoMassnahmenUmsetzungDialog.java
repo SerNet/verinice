@@ -113,15 +113,14 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	protected void okPressed() {
 		risikoMassnahmenUmsetzung.setNumber(textNumber.getText());
 		risikoMassnahmenUmsetzung.setName( textName.getText());
-		risikoMassnahmenUmsetzung.setDescription(textDescription.getText());
 		
-		risikoMassnahmenUmsetzung.getRisikoMassahme().setNumber(textNumber.getText());
-		risikoMassnahmenUmsetzung.getRisikoMassahme().setName(textName.getText());
-		risikoMassnahmenUmsetzung.getRisikoMassahme().setDescription(textDescription.getText());
+		risikoMassnahmenUmsetzung.getMassnahme().setNumber(textNumber.getText());
+		risikoMassnahmenUmsetzung.getMassnahme().setName(textName.getText());
+		risikoMassnahmenUmsetzung.getMassnahme().setDescription(textDescription.getText());
 		
 		
 		try {
-			RisikoMassnahmeHome.getInstance().saveUpdate(risikoMassnahmenUmsetzung.getRisikoMassahme());
+			RisikoMassnahmeHome.getInstance().saveUpdate(risikoMassnahmenUmsetzung.getMassnahme());
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Änderung konnte nicht gespeichert werden.");
 		}

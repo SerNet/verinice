@@ -37,7 +37,7 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 			case 2:
 				return "[" + massnahme.getStufe() + "] " + massnahme.getTitel();
 			case 3:
-				return massnahme.getDescription();
+				return shorten(massnahme.getDescription());
 			};
 		} else {
 			MassnahmenUmsetzung massnahme = (MassnahmenUmsetzung) element;
@@ -53,6 +53,20 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 			};
 		}
 		return "";
+	}
+
+	/**
+	 * Shorten description for single-line table display
+	 * 
+	 * @param description The full length description.
+	 * @return shortened version of the description qithout newline-characters
+	 */
+	private String shorten(String description) {
+		String oneline = description.replaceAll("\\n", " ");
+		if (oneline.length() > 100)
+			return oneline.substring(0, 100) + "...";
+		return oneline;
+		
 	}
 
 	public void addListener(ILabelProviderListener listener) {

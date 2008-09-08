@@ -1449,23 +1449,37 @@ Template:
                 editable="false"
 				name="Titel" />
 		<huiproperty
+				id="gefaehrdungsumsetzung_url"
+                editable="false"
+                visible="false"
+				name="Url" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_stand"
+                editable="false"
+				name="Stand" />
+		<huiproperty
 				id="gefaehrdungsumsetzung_kategorie"
                 editable="false"
 				name="Kategorie" />
 		<huiproperty
-				id="gefaehrdungsumsetzung_alternative"
-                editable="false"
-				name="Behandlung" />
-		<huiproperty
 				id="gefaehrdungsumsetzung_okay"
+				name="Risikoabdeckung"
                 editable="false"
                 inputtype="singleoption"
-				name="">
-		<option	id="gefaehrdungsumsetzung_okay_yes"
-				name="Ja" />
-		<option	id="gefaehrdungsumsetzung_okay_no"
-				name="Nein" />
+		>
+			<option	id="gefaehrdungsumsetzung_okay_yes"
+					name="Ja" />
+			<option	id="gefaehrdungsumsetzung_okay_no"
+					name="Nein" />
 		</huiproperty>
+		<huiproperty
+				id="gefaehrdungsumsetzung_alternative"
+                editable="false"
+				name="Risikobehandlung" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_erlaeuterung"
+				inputtype="text"
+				name="Erläuterung" />
 	</huientity>
 
 

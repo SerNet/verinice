@@ -22,6 +22,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzungFactory;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
@@ -401,10 +402,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
 	public void addRisikoMassnahmeUmsetzung(RisikoMassnahme massnahme) {
 		try {
-			RisikoMassnahmenUmsetzung massnahmeUmsetzung = new RisikoMassnahmenUmsetzung(null, null, massnahme);
-			massnahmeUmsetzung.setName(massnahme.getName());
-			massnahmeUmsetzung.setNumber(massnahme.getNumber());
-			massnahmeUmsetzung.setDescription(massnahme.getDescription());
+			RisikoMassnahmenUmsetzung massnahmeUmsetzung  = RisikoMassnahmenUmsetzungFactory
+				.buildFromRisikomassnahme(massnahme, null, null);
 			
 			/* add to list of all MassnahmenUmsetzungen */
 			if (!(allMassnahmenUmsetzungen.contains(massnahmeUmsetzung))) {

@@ -24,6 +24,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogWatcher;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -91,6 +92,7 @@ public class EditorFactory {
 		typedFactories.put(BausteinUmsetzung.class, bsiEditorFactory);
 		typedFactories.put(MassnahmenUmsetzung.class, bsiEditorFactory);
 		typedFactories.put(GefaehrdungsUmsetzung.class, bsiEditorFactory);
+		typedFactories.put(RisikoMassnahmenUmsetzung.class, bsiEditorFactory);
 		
 		typedFactories.put(Verarbeitungsangaben.class, bsiEditorFactory);
 		typedFactories.put(VerantwortlicheStelle.class, bsiEditorFactory);

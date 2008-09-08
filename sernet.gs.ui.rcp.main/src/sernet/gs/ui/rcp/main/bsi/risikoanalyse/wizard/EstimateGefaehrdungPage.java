@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.SearchFilter;
 
@@ -131,9 +132,9 @@ public class EstimateGefaehrdungPage extends WizardPage {
 						arrListNotOK.add(currentGefaehrdung);
 					}
 					/* add to arrListGefaehrdungsUmsetzungen */
-					GefaehrdungsUmsetzung newGefaehrdungsUmsetzung = new GefaehrdungsUmsetzung(
-							((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis(),
+					GefaehrdungsUmsetzung newGefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory.build(((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis(),
 							currentGefaehrdung);
+					
 					((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().addChild(newGefaehrdungsUmsetzung);
 					newGefaehrdungsUmsetzung.setOkay(false);
 					arrListGefaehrdungsUmsetzungen

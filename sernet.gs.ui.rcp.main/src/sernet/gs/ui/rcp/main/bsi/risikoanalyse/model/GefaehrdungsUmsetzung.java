@@ -55,13 +55,18 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	};
 	
 	public static final String TYPE_ID 				= "gefaehrdungsumsetzung";
+	
 	public static final String PROP_ID 				= "gefaehrdungsumsetzung_id";
 	public static final String PROP_TITEL			= "gefaehrdungsumsetzung_titel";
 	public static final String PROP_KATEGORIE 		= "gefaehrdungsumsetzung_kategorie";
 	public static final String PROP_ALTERNATIVE 	= "gefaehrdungsumsetzung_alternative";
+	
 	public static final String PROP_OKAY 			= "gefaehrdungsumsetzung_okay";
 	public static final String PROP_OKAY_YES 		= "gefaehrdungsumsetzung_okay_yes";
 	public static final String PROP_OKAY_NO 		= "gefaehrdungsumsetzung_okay_no";
+	
+	public static final String PROP_URL 			= "gefaehrdungsumsetzung_url";
+	public static final String PROP_STAND 			= "gefaehrdungsumsetzung_stand";
 
 	
 	public int getAlternativeIndex() {
@@ -74,18 +79,12 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 		return -1;
 	}
 	
-	public GefaehrdungsUmsetzung(CnATreeElement parent, Gefaehrdung source) {
+	protected GefaehrdungsUmsetzung(CnATreeElement parent) {
 		super(parent);
 		
 		if (entityType == null)
 			entityType = typeFactory.getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
-		
-		getEntity().createNewProperty(entityType.getPropertyType(PROP_ID), source.getId() );
-		getEntity().createNewProperty(entityType.getPropertyType(PROP_TITEL), source.getTitel() );
-		getEntity().createNewProperty(entityType.getPropertyType(PROP_KATEGORIE), source.getKategorieAsString() );
-		getEntity().createNewProperty(entityType.getPropertyType(PROP_ALTERNATIVE), GEFAEHRDUNG_ALTERNATIVE_C );
-		getEntity().createNewProperty(entityType.getPropertyType(PROP_OKAY), PROP_OKAY_YES);
 		
 	}
 	
@@ -226,5 +225,23 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 
 	public IGefaehrdungsBaumElement getGefaehrdungsBaumParent() {
 		return this.gefaehrdungsParent;
+	}
+
+	public String getUrl() {
+		return getEntity().getSimpleValue(PROP_URL);
+	}
+	
+	public void setUrl(String url) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_URL),
+				url);
+	}
+	
+	public String getStand() {
+		return getEntity().getSimpleValue(PROP_STAND);
+	}
+	
+	public void setStand(String stand) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_STAND),
+				stand);
 	}
 }
