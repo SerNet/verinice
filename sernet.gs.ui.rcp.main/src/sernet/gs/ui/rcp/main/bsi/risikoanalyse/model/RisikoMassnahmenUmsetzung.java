@@ -151,7 +151,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 * @return - description (String) of the RisikoMassnahmenUmsetzung.
 	 */
 	public String getDescription() {
-		return getMassnahme().getDescription();
+		return getRisikoMassnahme().getDescription();
 	}
 	
 	/**
@@ -173,12 +173,16 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	}
 	
 
-	public RisikoMassnahme getMassnahme() {
-		if (massnahme == null)
+	/**
+	 * Returns an instance of the RisikoMassnahme.
+	 *  
+	 * @return an instance of the RisikoMassnahme
+	 */
+	public RisikoMassnahme getRisikoMassnahme() {
+		if (massnahme == null) {
 			massnahme = RisikoMassnahmeHome.getInstance().loadByNumber(getNumber());
+		}
 
 		return massnahme;
-		
 	}
-
 }

@@ -31,7 +31,7 @@ public class RisikoMassnahmenUmsetzungFactory {
 			CnATreeElement superParent, 
 			GefaehrdungsUmsetzung myParent) {
 		
-		RisikoMassnahme massnahme = draftMnUms.getMassnahme();
+		RisikoMassnahme massnahme = draftMnUms.getRisikoMassnahme();
 		RisikoMassnahmenUmsetzung massnahmenUmsetzung = new RisikoMassnahmenUmsetzung(superParent, myParent, massnahme);
 
 		

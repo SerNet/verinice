@@ -565,7 +565,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 					.contains(risikoMassnahmenUmsetzung)) {
 				arrListMassnahmenUmsetzungen.remove(risikoMassnahmenUmsetzung);
 				RisikoMassnahmeHome.getInstance().remove(
-						risikoMassnahmenUmsetzung.getMassnahme());
+						risikoMassnahmenUmsetzung.getRisikoMassnahme());
 			}
 
 			// TODO an dieser Stelle müssten eigentlich auch die

@@ -131,14 +131,24 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					if (!arrListNotOK.contains(currentGefaehrdung)) {
 						arrListNotOK.add(currentGefaehrdung);
 					}
-					/* add to arrListGefaehrdungsUmsetzungen */
-					GefaehrdungsUmsetzung newGefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory.build(((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis(),
-							currentGefaehrdung);
 					
-					((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().addChild(newGefaehrdungsUmsetzung);
-					newGefaehrdungsUmsetzung.setOkay(false);
-					arrListGefaehrdungsUmsetzungen
-							.add(newGefaehrdungsUmsetzung);
+					try {
+						
+						GefaehrdungsUmsetzung newGefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory
+						.build(((RiskAnalysisWizard) getWizard())
+								.getFinishedRiskAnalysis(),
+								currentGefaehrdung);
+						
+						((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().addChild(newGefaehrdungsUmsetzung);
+						newGefaehrdungsUmsetzung.setOkay(false);
+						
+						/* add to arrListGefaehrdungsUmsetzungen */
+						arrListGefaehrdungsUmsetzungen.add(newGefaehrdungsUmsetzung);
+						
+					} catch (Exception e) {
+						Logger.getLogger(this.getClass()).debug(e.toString());
+					}
+					
 				} else {
 					/* checkbox unset */
 

@@ -113,7 +113,7 @@ public class BrowserView extends ViewPart {
 
 			if (element instanceof RisikoMassnahmenUmsetzung) {
 				RisikoMassnahmenUmsetzung ums = (RisikoMassnahmenUmsetzung) element;
-				if (ums.getMassnahme() != null) {
+				if (ums.getRisikoMassnahme() != null) {
 					browser.stop();
 					browser.setText(toHtml(ums));
 					return;

@@ -47,7 +47,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	
 	/**
 	 * Element to save all relevant data in DB on completion of wizard. 
-	 * Also parent for all Gefährdungsumsetzung objects
+	 * Also parent for all GefährdungsUmsetzung objects.
 	 */
 	private FinishedRiskAnalysis finishedRiskAnalysis;
 
@@ -495,6 +495,11 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 		canFinish = newCanFinish;
 	}
 
+	/**
+	 * Returns the parent Element of .
+	 * 
+	 * @return the parent Element
+	 */
 	public CnATreeElement getFinishedRiskAnalysis() {
 		return this.finishedRiskAnalysis;
 	}
