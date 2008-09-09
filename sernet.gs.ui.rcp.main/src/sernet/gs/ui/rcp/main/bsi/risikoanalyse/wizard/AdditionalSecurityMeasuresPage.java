@@ -530,6 +530,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		try {
 			GefaehrdungsUmsetzung parent = (GefaehrdungsUmsetzung) massnahme
 					.getGefaehrdungsBaumParent();
+			// FIXME massnahme wird nicht aus liste entfernt -> Umsetzung taucht später im hauptbaum mit auf obwohl sie hier gelöscht wurde.
 
 			if (massnahme != null
 					&& massnahme instanceof RisikoMassnahmenUmsetzung
@@ -658,6 +659,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 * @author ahanekop@sernet.de
 	 */
 	class SearchFilter extends ViewerFilter {
+		// FIXME gesetzte Häckchen verschwinden nach Suche
 
 		private Pattern pattern;
 
