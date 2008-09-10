@@ -135,9 +135,9 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					try {
 						
 						GefaehrdungsUmsetzung newGefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory
-						.build(((RiskAnalysisWizard) getWizard())
-								.getFinishedRiskAnalysis(),
-								currentGefaehrdung);
+								.build(((RiskAnalysisWizard) getWizard())
+										.getFinishedRiskAnalysis(),
+										currentGefaehrdung);
 						
 						((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().addChild(newGefaehrdungsUmsetzung);
 						newGefaehrdungsUmsetzung.setOkay(false);
