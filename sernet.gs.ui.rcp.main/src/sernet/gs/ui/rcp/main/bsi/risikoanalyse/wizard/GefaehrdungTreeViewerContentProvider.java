@@ -1,21 +1,8 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
-import java.util.ArrayList;
-
-import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
-import org.apache.log4j.Logger;
-import sernet.gs.model.Baustein;
-import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
-import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 
 public class GefaehrdungTreeViewerContentProvider  
 		implements ITreeContentProvider {
