@@ -1,7 +1,6 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.layout.GridData;
@@ -13,7 +12,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;

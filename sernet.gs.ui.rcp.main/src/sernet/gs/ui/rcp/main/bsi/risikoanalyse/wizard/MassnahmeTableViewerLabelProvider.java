@@ -2,29 +2,45 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
-
-import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 
+/**
+ * Provides an image or text for each column per item in the TableViewer.
+ * 
+ * @author ahanekop@sernet.de
+ */
 public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 
+	/**
+	 * Returns the image of the element for the given column.
+	 * 
+	 * @param element the element representing the row
+	 * @param columnIndex zero-based index of the column
+	 * @return the image of the element if it's the first column, null else
+	 */
 	public Image getColumnImage(Object element, int columnIndex) {
 		
-		if (columnIndex == 0)
+		if (columnIndex == 0) {
 			if (element instanceof RisikoMassnahmenUmsetzung) {
 				return ((RisikoMassnahmenUmsetzung) element).getImage();
 			} else {
 				return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
 			}
-		
-		return null;
+		} else {
+			return null;
+		}
 	}
 
+	/**
+	 * Returns the text of the element for the given column.
+	 * 
+	 * @param element the element representing the row
+	 * @param columnIndex zero-based index of the column
+	 * @return the element's text for the column, empty string else
+	 */
 	public String getColumnText(Object element, int columnIndex) {
 		
 		if (element instanceof RisikoMassnahmenUmsetzung) {
@@ -69,21 +85,37 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 		
 	}
 
-	public void addListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
-	}
+	/**
+	 * Not used.
+	 * Must be implemented due to IBaseLabelProvider.
+	 * 
+	 * @param listener a label provider listener
+	 */
+	public void addListener(ILabelProviderListener listener) {}
 
-	public void dispose() {
-		// TODO Auto-generated method stub
-	}
+	/**
+	 * Not used.
+	 * Must be implemented due to IBaseLabelProvider.
+	 */
+	public void dispose() {}
 
+	/**
+	 * Returns whether the label would be affected 
+     * by a change to the given property of the given element.
+     * 
+     * @param element the element
+     * @param property the property
+     * @return always false
+	 */
 	public boolean isLabelProperty(Object element, String property) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public void removeListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
-	}
-
+	/**
+	 * Not used.
+	 * Must be implemented due to IBaseLabelProvider.
+	 * 
+	 * @param listener a label provider listener
+	 */
+	public void removeListener(ILabelProviderListener listener) {}
 }
