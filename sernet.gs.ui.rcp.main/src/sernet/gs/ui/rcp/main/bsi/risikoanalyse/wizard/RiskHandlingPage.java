@@ -164,6 +164,7 @@ public class RiskHandlingPage extends WizardPage {
 				} else {
 					viewer.removeFilter(searchFilter);
 					viewer.refresh();
+					packAllColumns();
 				}
 			}
 	    });

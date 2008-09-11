@@ -16,7 +16,11 @@ public class GefaehrdungsUmsetzungFactory {
 		gefaehrdungsUmsetzung.setOkay(true);
 		gefaehrdungsUmsetzung.setUrl(source.getUrl());
 		gefaehrdungsUmsetzung.setStand(source.getStand());
-		
+
+		if (source instanceof OwnGefaehrdung) {
+			OwnGefaehrdung gefaehrdungSource = (OwnGefaehrdung) source;
+			gefaehrdungsUmsetzung.setDescription(gefaehrdungSource.getBeschreibung());
+		}
 		return gefaehrdungsUmsetzung;
 	}
 

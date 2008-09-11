@@ -60,30 +60,34 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 */
 	private ArrayList<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<OwnGefaehrdung>();
 
-	/*
-	 * list of all Gefaehrdungen of type GefaehrdungsUmsetzung -
-	 * ChooseGefaehrdungPage_OK, EstimateGefaehrungPage_OK, RiskHandlingPage_OK
-	 */
-	private ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 
 	/* list of all MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
 	private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
 
+	
+	/*
+	 * list of all Gefaehrdungen of type GefaehrdungsUmsetzung -
+	 * ChooseGefaehrdungPage_OK, EstimateGefaehrungPage_OK, RiskHandlingPage_OK	XXX
+	 */
+	private ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
+
 	/*
 	 * list of Gefaehrdungen associated to the chosen IT-system -
-	 * ChooseGefaehrungPage_OK, EstimateGefaehrungPage_OK
+	 * ChooseGefaehrungPage_OK, EstimateGefaehrungPage_OK					XXX 
 	 */
 	private ArrayList<Gefaehrdung> associatedGefaehrdungen = new ArrayList<Gefaehrdung>();
 
 	/*
 	 * list of Gefaehrdungen, which need further processing -
-	 * EstimateGefaehrungPage_OK
+	 * EstimateGefaehrungPage_OK			XXX
 	 */
 	private ArrayList<Gefaehrdung> notOKGefaehrdungen = new ArrayList<Gefaehrdung>();
 
 	/*
 	 * list of Gefaehrdungen, which need additional security measures -
 	 * RiskHandlingPage, PropertiesComboBoxCellModifier_OK
+	 * 
+	 * XXX
 	 */
 	private ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 
@@ -314,33 +318,12 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	}
 
 	/**
-	 * Saves the List of all Gefaehrdungen of type GefaehrdungsUmsetzung.
-	 * 
-	 * @param newAllGefaehrdungsUmsetzungen
-	 */
-	public void setAllGefaehrdungsUmsetzungen(
-			ArrayList<GefaehrdungsUmsetzung> newAllGefaehrdungsUmsetzungen) {
-		allGefaehrdungsUmsetzungen = newAllGefaehrdungsUmsetzungen;
-	}
-
-	/**
 	 * Returns the List of all Gefaehrdungen of type GefaehrdungsUmsetzung.
 	 * 
 	 * @return ArrayList of GefaehrdungsUmsetzung
 	 */
 	public ArrayList<GefaehrdungsUmsetzung> getAllGefaehrdungsUmsetzungen() {
 		return allGefaehrdungsUmsetzungen;
-	}
-
-	/**
-	 * Sets the List of all Gefaehrdungen which need further processing.
-	 * 
-	 * @param newNotOKGefaehrdungen
-	 *            ArrayList of Gefaehrdungen
-	 */
-	public void setNotOKGefaehrdungen(
-			ArrayList<Gefaehrdung> newNotOKGefaehrdungen) {
-		notOKGefaehrdungen = newNotOKGefaehrdungen;
 	}
 
 	/**
@@ -422,18 +405,6 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 */
 	public ArrayList<GefaehrdungsUmsetzung> getNotOKGefaehrdungsUmsetzungen() {
 		return notOKGefaehrdungsUmsetzungen;
-	}
-
-	/**
-	 * Sets the List of Gefaehrdungen which need additional security measures.
-	 * 
-	 * @param notOKGefaehrdungsUmsetzungen
-	 *            List of Gefaehrdungen of type GefaehrdungsUmsetzung, which
-	 *            need additional security measures
-	 */
-	public void setNotOKGefaehrdungsUmsetzungen(
-			ArrayList<GefaehrdungsUmsetzung> newNotOKGefaehrdungsUmsetzungen) {
-		notOKGefaehrdungsUmsetzungen = newNotOKGefaehrdungsUmsetzungen;
 	}
 
 	/**

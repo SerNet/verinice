@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -137,7 +138,8 @@ public class BSIModel extends CnATreeElement
 			ArrayList<MassnahmenUmsetzung> result ) {
 		
 		for (CnATreeElement elmt : elmnt.getChildren()) {
-			if (elmt instanceof BausteinUmsetzung) {
+			if (elmt instanceof BausteinUmsetzung 
+					|| elmt instanceof GefaehrdungsUmsetzung) {
 				Set<CnATreeElement> massnahmen = elmt.getChildren();
 				for (CnATreeElement obj : massnahmen) {
 					if (obj instanceof MassnahmenUmsetzung)

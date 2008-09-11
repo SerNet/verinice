@@ -48,10 +48,10 @@ public class RisikoMassnahmenUmsetzungFactory {
 	public static RisikoMassnahmenUmsetzung buildFromMassnahmenUmsetzung(MassnahmenUmsetzung draftMnUms,
 			CnATreeElement superParent,
 			GefaehrdungsUmsetzung myParent) {
-
 		
 		RisikoMassnahmenUmsetzung massnahmenUmsetzung = new RisikoMassnahmenUmsetzung(superParent, myParent);
 		
+		massnahmenUmsetzung.setLebenszyklus(draftMnUms.getLebenszyklus());
 		massnahmenUmsetzung.setName(draftMnUms.getName());
 		massnahmenUmsetzung.setNumber(draftMnUms.getKapitel());
 		massnahmenUmsetzung.setUrl(draftMnUms.getUrl());

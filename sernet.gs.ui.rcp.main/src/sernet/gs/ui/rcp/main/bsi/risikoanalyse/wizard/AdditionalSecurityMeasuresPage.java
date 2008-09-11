@@ -659,7 +659,6 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 * @author ahanekop@sernet.de
 	 */
 	class SearchFilter extends ViewerFilter {
-		// FIXME gesetzte Häckchen verschwinden nach Suche
 
 		private Pattern pattern;
 
@@ -670,6 +669,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		 *            the String to search for
 		 */
 		void setPattern(String searchString) {
+			
 			pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
 		}
 

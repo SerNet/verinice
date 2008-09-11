@@ -19,13 +19,6 @@ import sernet.hui.common.connect.EntityType;
 public class GefaehrdungsUmsetzung extends CnATreeElement
 	implements IGefaehrdungsBaumElement {
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement#getDescription()
-	 */
-	public String getDescription() {
-		return "";
-	}
-
 	private List<IGefaehrdungsBaumElement> gefaehrdungsChildren = new ArrayList<IGefaehrdungsBaumElement>();
 	private IGefaehrdungsBaumElement gefaehrdungsParent;
 	
@@ -67,6 +60,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	
 	public static final String PROP_URL 			= "gefaehrdungsumsetzung_url";
 	public static final String PROP_STAND 			= "gefaehrdungsumsetzung_stand";
+	public static final String PROP_DESCRIPTION 	= "gefaehrdungsumsetzung_description";
 
 	
 	public int getAlternativeIndex() {
@@ -243,5 +237,14 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	public void setStand(String stand) {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_STAND),
 				stand);
+	}
+
+	public void setDescription(String beschreibung) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_DESCRIPTION),
+				beschreibung);
+	}
+	
+	public String getDescription() {
+		return getEntity().getSimpleValue(PROP_DESCRIPTION);
 	}
 }

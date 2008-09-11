@@ -29,6 +29,7 @@ import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.actions.AuditViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -74,7 +75,11 @@ public class AuditView extends ViewPart {
 			case 3: // siegelstufe
 				return "" + mn.getStufe(); //$NON-NLS-1$
 			case 4: // zielobjekt
-				return (mn.getParent().getParent()).getTitel(); // mn -> baustein -> zielobjekt
+				if (mn.getParent() instanceof GefaehrdungsUmsetzung)
+					return "RA: " + 
+						(mn.getParent().getParent().getParent()).getTitel(); // mn -> gefaehrdung -> risikoanalyse -> ziel
+				else
+					return (mn.getParent().getParent()).getTitel(); // mn -> baustein -> ziel
 			case 5: // title
 				return mn.getTitel();
 			}

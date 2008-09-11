@@ -219,5 +219,9 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	public String getName() {
 		return getEntity().getSimpleValue(P_NAME);
 	}
+
+	public String getLebenszyklus() {
+		return getEntity().getSimpleValue(P_LEBENSZYKLUS);
+	}
 	
 }

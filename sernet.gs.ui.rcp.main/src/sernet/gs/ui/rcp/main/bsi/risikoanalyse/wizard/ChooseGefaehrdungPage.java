@@ -116,30 +116,14 @@ public class ChooseGefaehrdungPage extends WizardPage {
 						.getElement();
 				ArrayList<Gefaehrdung> selectedArrayList = ((RiskAnalysisWizard) getWizard())
 						.getAssociatedGefaehrdungen();
-				ArrayList<GefaehrdungsUmsetzung> umsetzungenArrayList = ((RiskAnalysisWizard) getWizard())
-						.getAllGefaehrdungsUmsetzungen();
 
-				// TODO statt contains: auf gleiche ID überprüfen (warum ??)
 				if (event.getChecked()) {
 					if (!selectedArrayList.contains(currentGefaehrdung))
 						/* Add to List of Associated Gefaehrdungen */
 						selectedArrayList.add(currentGefaehrdung);
-					/* create GefaehrungsUmsetzung an add to List of GefaehrdungsUmstzezungen
-					GefaehrdungsUmsetzung newGefaehrdungsUmsetzung =
-							new GefaehrdungsUmsetzung(currentGefaehrdung);
-					umsetzungenArrayList.add(newGefaehrdungsUmsetzung);
-					 */
 				} else {
 					/* remove from List of Associated Gefaehrdungen */
 					selectedArrayList.remove(currentGefaehrdung);
-					/* remove from List of GefaehrdungsUmstzezungen
-					for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : umsetzungenArrayList) {
-						if (gefaehrdungsUmsetzung.getId().equals(currentGefaehrdung.getId())) {
-							umsetzungenArrayList.remove(gefaehrdungsUmsetzung);
-							break;
-						}
-					}
-					 */
 				}
 
 				checkPageComplete();
@@ -203,6 +187,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				} else {
 					viewer.removeFilter(ownGefaehrdungFilter);
 					viewer.refresh();
+					selectAssignedGefaehrdungen();
 				}
 			}
 		});
@@ -230,6 +215,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				} else {
 					viewer.removeFilter(gefaehrdungFilter);
 					viewer.refresh();
+					selectAssignedGefaehrdungen();
 				}
 			}
 		});
@@ -277,6 +263,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				} else {
 					viewer.removeFilter(searchFilter);
 					viewer.refresh();
+					selectAssignedGefaehrdungen();
 				}
 			}
 		});
@@ -360,6 +347,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
 		/* Listener opens Dialog for editing the selected Gefaehrdung */
 		buttonEdit.addSelectionListener(new SelectionAdapter() {
+			// FIXME bereits selektierte Gefährdungen werden nicht verändert -> erscheinen hinterher in der Risikoanalyse mit den alten Werten
 			public void widgetSelected(SelectionEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) viewer
 						.getSelection();

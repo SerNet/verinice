@@ -120,9 +120,6 @@ public class EstimateGefaehrdungPage extends WizardPage {
 				ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen =
 					((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen();
 
-				// TODO statt contains: auf gleiche ID überprüfen
-				// -> vergl. ChooseGefaehrdungPage
-
 				/* switch from Gefaehrdung to GefaehrdungsUmsetzung */
 				if (event.getChecked()) {
 					/* checkbox set */
@@ -135,9 +132,9 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					try {
 						
 						GefaehrdungsUmsetzung newGefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory
-								.build(((RiskAnalysisWizard) getWizard())
-										.getFinishedRiskAnalysis(),
-										currentGefaehrdung);
+						.build(((RiskAnalysisWizard) getWizard())
+								.getFinishedRiskAnalysis(),
+								currentGefaehrdung);
 						
 						((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().addChild(newGefaehrdungsUmsetzung);
 						newGefaehrdungsUmsetzung.setOkay(false);
@@ -162,8 +159,6 @@ public class EstimateGefaehrdungPage extends WizardPage {
 							break;
 						}
 					}
-					((RiskAnalysisWizard) getWizard())
-							.setAllGefaehrdungsUmsetzungen(arrListGefaehrdungsUmsetzungen);
 
 					/* remove from arrListNotOK */
 					arrListNotOK.remove(currentGefaehrdung);
@@ -207,6 +202,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 				} else {
 					viewer.removeFilter(ownGefaehrdungFilter);
 					viewer.refresh();
+					selectAssignedGefaehrdungen();
 				}
 			}
 		});
@@ -234,6 +230,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 				} else {
 					viewer.removeFilter(gefaehrdungFilter);
 					viewer.refresh();
+					selectAssignedGefaehrdungen();
 				}
 			}
 		});
@@ -281,10 +278,21 @@ public class EstimateGefaehrdungPage extends WizardPage {
 				} else {
 					viewer.removeFilter(searchFilter);
 					viewer.refresh();
+					selectAssignedGefaehrdungen();
 				}
 			}
 			
 		});
+	}
+	
+	/**
+	 * Marks all checkboxes of Gefaehrdungen that are selected as not okay.
+	 */
+	private void selectAssignedGefaehrdungen() {
+		ArrayList<Gefaehrdung> list = ((RiskAnalysisWizard)
+				getWizard()).getNotOKGefaehrdungen();
+		viewer.setCheckedElements((Gefaehrdung[]) list
+				.toArray(new Gefaehrdung[list.size()]));
 	}
 
 	/**

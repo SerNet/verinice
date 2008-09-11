@@ -126,7 +126,6 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 					break;
 				}
 
-				wizard.setNotOKGefaehrdungsUmsetzungen(arrListNotOKGefaehrdungsUmsetzungen);
 				viewer.refresh();
 
 				if (wizard.getNotOKGefaehrdungsUmsetzungen().isEmpty()) {

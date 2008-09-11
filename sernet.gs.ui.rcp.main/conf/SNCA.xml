@@ -1446,8 +1446,13 @@ Template:
 				name="Id" />
 		<huiproperty
 				id="gefaehrdungsumsetzung_titel"
-                editable="false"
+                editable="true"
 				name="Titel" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_description"
+                editable="true"
+                inputtype="multiline"
+				name="Beschreibung" />
 		<huiproperty
 				id="gefaehrdungsumsetzung_url"
                 editable="false"
@@ -1459,7 +1464,7 @@ Template:
 				name="Stand" />
 		<huiproperty
 				id="gefaehrdungsumsetzung_kategorie"
-                editable="false"
+                editable="true"
 				name="Kategorie" />
 		<huiproperty
 				id="gefaehrdungsumsetzung_okay"

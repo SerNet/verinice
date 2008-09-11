@@ -12,9 +12,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 public class FinishedRiskAnalysis extends CnATreeElement  {
 
 	public static final String TYPE_ID = "riskanalysis";
-	private Set<CnATreeElement> emptyList = new HashSet<CnATreeElement>();
-	private CnATreeElement[] emptyArray = new CnATreeElement[] {};
-	
+
 	public FinishedRiskAnalysis(CnATreeElement cnaElement) {
 		setParent(cnaElement);
 	}
