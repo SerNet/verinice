@@ -93,7 +93,7 @@ public class TextControl implements IHuiControl {
 				} else {
 					text = createText();
 					// use saved property:
-					text.setText(savedProp.getPropertyValue());
+					text.setText(notNull(savedProp.getPropertyValue()));
 				}
 				
 				bgColor = text.getBackground();
@@ -154,8 +154,12 @@ public class TextControl implements IHuiControl {
 		if (!editable)
 			text.setBackground(Colors.GREY);
 		text.setToolTipText(fieldType.getTooltiptext());
-		text.setText(this.savedProp.getPropertyValue());
+		text.setText(notNull(this.savedProp.getPropertyValue()));
 		return text;
+	}
+
+	private String notNull(String propertyValue) {
+		return (propertyValue != null) ? propertyValue : "";
 	}
 
 	public void setFocus() {
