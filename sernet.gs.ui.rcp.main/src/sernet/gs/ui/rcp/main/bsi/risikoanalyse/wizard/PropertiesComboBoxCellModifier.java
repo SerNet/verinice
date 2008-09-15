@@ -20,12 +20,9 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 	/**
 	 * Constructor sets the needed data.
 	 * 
-	 * @param newViewer
-	 *            Viewer, which the CellModifier is associated to
-	 * @param newWizard
-	 *            the RiskAnalysisWizard
-	 * @param newPage
-	 *            Page, which newViewer is asscoiated to
+	 * @param newViewer Viewer, which the CellModifier is associated to
+	 * @param newWizard the RiskAnalysisWizard
+	 * @param newPage Page, which newViewer is asscoiated to
 	 */
 	public PropertiesComboBoxCellModifier(Viewer newViewer,
 			RiskAnalysisWizard newWizard, RiskHandlingPage newPage) {
@@ -37,10 +34,8 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 	/**
 	 * Checks whether the given property of the given element can be modified.
 	 * 
-	 * @param element
-	 *            the selected GefaehrdungsUmsetzung
-	 * @param property
-	 *            the selected column
+	 * @param element the selected GefaehrdungsUmsetzung
+	 * @param property the selected column
 	 * @return true, if column "Risikoalternative", false else
 	 */
 	public boolean canModify(Object element, String property) {
@@ -52,14 +47,13 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 	/**
 	 * Returns the value for the given property of the given element.
 	 * 
-	 * @param element
-	 *            the selected GefaehrdungsUmsetzung
-	 * @param property
-	 *            the selected column
+	 * @param element the selected GefaehrdungsUmsetzung
+	 * @param property the selected column
 	 * @return alternative as integer, if column "Risikoalternative", null else
 	 */
 	public Object getValue(Object element, String property) {
-		GefaehrdungsUmsetzung gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) element;
+		GefaehrdungsUmsetzung gefaehrdungsUmsetzung =
+				(GefaehrdungsUmsetzung) element;
 
 		if (RiskHandlingPage.CHOICE_COLUMN_ID.equals(property)) {
 			return gefaehrdungsUmsetzung.getAlternativeIndex();
@@ -71,18 +65,15 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 	/**
 	 * Modifies the value for the given property of the given element.
 	 * 
-	 * @param element
-	 *            the selected GefaehrdungsUmsetzung
-	 * @param property
-	 *            the selected column
-	 * @param value
-	 *            the selected GefaehrdungsUmsetzung's alternative
+	 * @param element the selected GefaehrdungsUmsetzung
+	 * @param property the selected column
+	 * @param value the selected GefaehrdungsUmsetzung's alternative
 	 */
 	public void modify(Object element, String property, Object value) {
+		
 		Object item = ((TableItem) element).getData();
-
-		ArrayList<GefaehrdungsUmsetzung> arrListNotOKGefaehrdungsUmsetzungen = wizard
-				.getNotOKGefaehrdungsUmsetzungen();
+		ArrayList<GefaehrdungsUmsetzung> arrListNotOKGefaehrdungsUmsetzungen =
+				wizard.getNotOKGefaehrdungsUmsetzungen();
 
 		if (item instanceof GefaehrdungsUmsetzung) {
 			GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) item;
@@ -91,32 +82,32 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 				int index = (Integer) value;
 				switch (index) {
 				case 0:
-					gefaehrdung
-							.setAlternative(GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_A);
+					gefaehrdung.setAlternative(GefaehrdungsUmsetzung.
+							GEFAEHRDUNG_ALTERNATIVE_A);
 					if (!arrListNotOKGefaehrdungsUmsetzungen
 							.contains(gefaehrdung)) {
 						arrListNotOKGefaehrdungsUmsetzungen.add(gefaehrdung);
 					}
 					break;
 				case 1:
-					gefaehrdung
-							.setAlternative(GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_B);
+					gefaehrdung.setAlternative(GefaehrdungsUmsetzung.
+							GEFAEHRDUNG_ALTERNATIVE_B);
 					if (arrListNotOKGefaehrdungsUmsetzungen
 							.contains(gefaehrdung)) {
 						arrListNotOKGefaehrdungsUmsetzungen.remove(gefaehrdung);
 					}
 					break;
 				case 2:
-					gefaehrdung
-							.setAlternative(GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_C);
+					gefaehrdung.setAlternative(GefaehrdungsUmsetzung.
+							GEFAEHRDUNG_ALTERNATIVE_C);
 					if (arrListNotOKGefaehrdungsUmsetzungen
 							.contains(gefaehrdung)) {
 						arrListNotOKGefaehrdungsUmsetzungen.remove(gefaehrdung);
 					}
 					break;
 				case 3:
-					gefaehrdung
-							.setAlternative(GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_D);
+					gefaehrdung.setAlternative(GefaehrdungsUmsetzung.
+							GEFAEHRDUNG_ALTERNATIVE_D);
 					if (arrListNotOKGefaehrdungsUmsetzungen
 							.contains(gefaehrdung)) {
 						arrListNotOKGefaehrdungsUmsetzungen.remove(gefaehrdung);

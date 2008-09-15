@@ -2,15 +2,11 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.jface.viewers.TableViewer;
-
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;

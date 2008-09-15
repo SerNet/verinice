@@ -39,7 +39,9 @@ public class NewGefaehrdungDialog extends Dialog {
 	 * 		  OwnGefaehrdungen
 	 */
 	public NewGefaehrdungDialog(Shell parentShell, ArrayList<OwnGefaehrdung> newOwnGefaehrdungen) {
-		// TODO übergabe des Feldes gibt Probleme, wenn der dialog nicht mehr modal ist!!
+		/* note: you need to hand the ArrayList over differently, if you don't
+		 * use this this dialog modally!
+		 */
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		ownGefaehrdungen = newOwnGefaehrdungen;
@@ -49,6 +51,7 @@ public class NewGefaehrdungDialog extends Dialog {
 	 * Creates the content area of the Dialog.
 	 * 
 	 * @param parent the parent Composite
+	 * @return the dialog area control
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
@@ -110,11 +113,11 @@ public class NewGefaehrdungDialog extends Dialog {
 		
 		/* label category */
 		final Label labelCategory = new Label(composite, SWT.NONE);
-		GridData data7 = new GridData();
-		data7.horizontalAlignment = SWT.LEFT;
-	    data7.verticalAlignment = SWT.TOP;
+		GridData gridLabelCategory = new GridData();
+		gridLabelCategory.horizontalAlignment = SWT.LEFT;
+	    gridLabelCategory.verticalAlignment = SWT.TOP;
 	    labelCategory.setText("Kategorie:");
-		labelCategory.setLayoutData(data7);
+		labelCategory.setLayoutData(gridLabelCategory);
 		
 		/* text category */
 		textCategory = new Combo(composite, SWT.DROP_DOWN);
@@ -130,7 +133,7 @@ public class NewGefaehrdungDialog extends Dialog {
 	}
 
 	/**
-	 * Loads all categories for OwnGefaehrdungen from database.
+	 * Loads all categories of OwnGefaehrdungen from database.
 	 * 
 	 * @return an array of all categories as Strings
 	 */

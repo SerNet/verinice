@@ -1,6 +1,5 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
-import java.util.ArrayList;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -10,18 +9,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 
 /**
  * Dialog to enter a new MassnahmenUmsetzung.
  * 
  * @author ahanekop@sernet.de
- *
  */
 public class NewRisikoMassnahmeDialog extends Dialog {
 
@@ -30,20 +25,13 @@ public class NewRisikoMassnahmeDialog extends Dialog {
 	private Text textDescription;
 	private RisikoMassnahme newRisikoMassnahme;
 	
-	
 	/**
 	 * Constructor of NewMassnahmenDialog.
 	 * The dialog creates a new RiskoMassnahmen and adds it to
 	 * the given list.
 	 * 
-	 * @param parentShell (Shell) - shell of the viewer in which the Dialog
+	 * @param parentShell shell of the viewer in which the Dialog
 	 * 		  is called
-	 * 
-	 * @param newListGef (ArrayList<RisikoMassnahmenUmsetzung>) - list of
-	 * 		  RiskoMassnahmen to add the new RisikoMassnahme
-	 * 		  to
-	 * 
-	 * 
 	 */
 	public NewRisikoMassnahmeDialog(Shell parentShell) {
 		super(parentShell);
@@ -51,23 +39,19 @@ public class NewRisikoMassnahmeDialog extends Dialog {
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 	
-	
-	
 	public RisikoMassnahme getNewRisikoMassnahme() {
 		return newRisikoMassnahme;
 	}
 
-
-
 	/**
-	 * Creates and returns the contents of the upper part of this dialog (above
-	 * the button bar). Overrides dialog.createDialogArea(Composite parent).
+	 * Creates the content area of the Dialog.
 	 * 
+	 * @param parent the parent Composite
 	 * @return the dialog area control
 	 */
 	@Override
-	protected Control createDialogArea(Composite parentShell) {
-		Composite container = (Composite) super.createDialogArea(parentShell);
+	protected Control createDialogArea(Composite parent) {
+		Composite container = (Composite) super.createDialogArea(parent);
 		final GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		container.setLayout(gridLayout);
@@ -127,7 +111,8 @@ public class NewRisikoMassnahmeDialog extends Dialog {
 	}
 
 	/**
-	 * Notifies that the ok button of this dialog has been pressed.
+	 * Saves the new RisikoMassnahme in the database, if okay button
+	 * is pressed.
 	 */
 	@Override
 	protected void okPressed() {
@@ -135,8 +120,6 @@ public class NewRisikoMassnahmeDialog extends Dialog {
 		newRisikoMassnahme.setName(textName.getText());
 		newRisikoMassnahme.setDescription(textDescription.getText());
 
-		// DONE neue RisikoMassnahmenUmsetzung in DB speichern
-		
 		try {
 			RisikoMassnahmeHome.getInstance().saveNew(newRisikoMassnahme);
 		} catch (Exception e) {

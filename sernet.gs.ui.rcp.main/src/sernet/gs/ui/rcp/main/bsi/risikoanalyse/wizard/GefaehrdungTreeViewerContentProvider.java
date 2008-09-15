@@ -60,7 +60,6 @@ public class GefaehrdungTreeViewerContentProvider implements
 				return elmt.getGefaehrdungsBaumChildren().size() > 0;
 			}
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).debug("error: " + e.toString());
 			return false;
 		}
 	}

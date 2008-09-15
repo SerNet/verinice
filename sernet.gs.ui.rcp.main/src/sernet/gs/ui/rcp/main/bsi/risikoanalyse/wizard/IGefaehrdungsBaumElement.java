@@ -4,9 +4,8 @@ import java.util.List;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * Interface must be implemented by elements, which can be added to a tree
- * of Gefaehrdungen.
- * Used for TreeViewer of Gefaehrdungen.
+ * Interface must be implemented by elements, which can be added to
+ * the TreeViewer containing Gefaehrdungen and Massnahmen.
  * 
  * @author ahanekop@sernet.de
  */

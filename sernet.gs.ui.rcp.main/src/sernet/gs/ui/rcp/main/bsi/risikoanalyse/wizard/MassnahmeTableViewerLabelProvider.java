@@ -72,20 +72,6 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 	}
 
 	/**
-	 * Shorten description for single-line table display
-	 * 
-	 * @param description The full length description.
-	 * @return shortened version of the description qithout newline-characters
-	 */
-	private String shorten(String description) {
-		String oneline = description.replaceAll("\\n", " ");
-		if (oneline.length() > 100)
-			return oneline.substring(0, 100) + "...";
-		return oneline;
-		
-	}
-
-	/**
 	 * Not used.
 	 * Must be implemented due to IBaseLabelProvider.
 	 * 
@@ -118,4 +104,18 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 	 * @param listener a label provider listener
 	 */
 	public void removeListener(ILabelProviderListener listener) {}
+	
+	/**
+	 * Shortens the description for single-line table display.
+	 * 
+	 * @param description the full length description
+	 * @return shortened version of the description without newline-characters
+	 */
+	private String shorten(String description) {
+		String oneline = description.replaceAll("\\n", " ");
+		if (oneline.length() > 100)
+			return oneline.substring(0, 100) + "...";
+		return oneline;
+		
+	}
 }
