@@ -16,6 +16,8 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisListsHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
@@ -44,10 +46,10 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	private EstimateGefaehrdungPage estimateGefaehrdungPage;
 	private RiskHandlingPage riskHandlingPage;
 	private AdditionalSecurityMeasuresPage additionalSecurityMeasuresPage;
-	
+
 	/**
-	 * Element to save all relevant data in DB on completion of wizard. 
-	 * Also parent for all GefährdungsUmsetzung objects.
+	 * Element to save all relevant data in DB on completion of wizard. Also
+	 * parent for all GefährdungsUmsetzung objects.
 	 */
 	private FinishedRiskAnalysis finishedRiskAnalysis;
 
@@ -60,44 +62,31 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 */
 	private ArrayList<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<OwnGefaehrdung>();
 
-
 	/* list of all MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
 	private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
-
 	
-	/*
-	 * list of all Gefaehrdungen of type GefaehrdungsUmsetzung -
-	 * ChooseGefaehrdungPage_OK, EstimateGefaehrungPage_OK, RiskHandlingPage_OK	XXX
-	 */
-	private ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
-
-	/*
-	 * list of Gefaehrdungen associated to the chosen IT-system -
-	 * ChooseGefaehrungPage_OK, EstimateGefaehrungPage_OK					XXX 
-	 */
-	private ArrayList<Gefaehrdung> associatedGefaehrdungen = new ArrayList<Gefaehrdung>();
-
-	/*
-	 * list of Gefaehrdungen, which need further processing -
-	 * EstimateGefaehrungPage_OK			XXX
-	 */
-	private ArrayList<Gefaehrdung> notOKGefaehrdungen = new ArrayList<Gefaehrdung>();
-
-	/*
-	 * list of Gefaehrdungen, which need additional security measures -
-	 * RiskHandlingPage, PropertiesComboBoxCellModifier_OK
-	 * 
-	 * XXX
-	 */
-	private ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
+	// Are we editing a previous Risk Analysis?
+	private boolean previousAnalysis = false;
+	private FinishedRiskAnalysisLists riskLists;
 
 	@Override
 	public boolean performFinish() {
 		cnaElement.addChild(finishedRiskAnalysis);
-		try {
-			CnAElementHome.getInstance().save(finishedRiskAnalysis);
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Konnte Risikoanalyse nicht speichern.");
+		if (!previousAnalysis) {
+			try {
+				CnAElementHome.getInstance().save(finishedRiskAnalysis);
+				FinishedRiskAnalysisListsHome.getInstance().saveNew(riskLists);
+			} catch (Exception e) {
+				ExceptionUtil.log(e, "Konnte Risikoanalyse nicht speichern.");
+			}
+		}
+		else {
+			try {
+				CnAElementHome.getInstance().update(finishedRiskAnalysis);
+				FinishedRiskAnalysisListsHome.getInstance().update(riskLists);
+			} catch (Exception e) {
+				ExceptionUtil.log(e, "Konnte Risikoanalyse nicht speichern.");
+			}
 		}
 		return true;
 	}
@@ -122,15 +111,21 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 *            the current object selection
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		if (finishedRiskAnalysis == null) {
+			finishedRiskAnalysis = new FinishedRiskAnalysis(cnaElement);
+			riskLists = new FinishedRiskAnalysisLists();
+			previousAnalysis = true;
+		}
+		
 		loadAllGefaehrdungen();
 		loadAllMassnahmen();
 		loadAssociatedGefaehrdungen();
-		
+
 		loadOwnGefaehrdungen();
 		addOwnGefaehrdungen();
-		
+
 		addRisikoMassnahmenUmsetzungen(loadRisikomassnahmen());
-		
+
 	}
 
 	private ArrayList<RisikoMassnahme> loadRisikomassnahmen() {
@@ -164,7 +159,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 */
 	public void setAssociatedGefaehrdungen(
 			ArrayList<Gefaehrdung> newAssociatedGefaehrdungen) {
-		associatedGefaehrdungen = newAssociatedGefaehrdungen;
+		riskLists.setAssociatedGefaehrdungen( newAssociatedGefaehrdungen);
 	}
 
 	/**
@@ -174,7 +169,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * @return ArrayList of currently associated Gefaehrdungen
 	 */
 	public ArrayList<Gefaehrdung> getAssociatedGefaehrdungen() {
-		return associatedGefaehrdungen;
+		return riskLists.getAssociatedGefaehrdungen();
 	}
 
 	/**
@@ -206,19 +201,20 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	private void loadAllMassnahmen() {
 		List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance()
 				.getBausteine();
-		
+
 		NullModel nullModel = new NullModel() {
 			@Override
 			public boolean canContain(Object obj) {
 				return true;
 			}
 		};
-		
+
 		alleBausteine: for (Baustein baustein : bausteine) {
 			alleMassnahmen: for (Massnahme massnahme : baustein.getMassnahmen()) {
 				Boolean duplicate = false;
-				alleTitel: for (MassnahmenUmsetzung vorhandeneMassnahmenumsetzung: allMassnahmenUmsetzungen) {
-					if (vorhandeneMassnahmenumsetzung.getName().equals(massnahme.getTitel())) {
+				alleTitel: for (MassnahmenUmsetzung vorhandeneMassnahmenumsetzung : allMassnahmenUmsetzungen) {
+					if (vorhandeneMassnahmenumsetzung.getName().equals(
+							massnahme.getTitel())) {
 						duplicate = true;
 						break alleTitel;
 					}
@@ -232,7 +228,11 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 										new BuildInput<Massnahme>(massnahme));
 						allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
 					} catch (Exception e) {
-						Logger.getLogger(this.getClass()).error("Fehler beim Erstellen der Massnahmenumsetzung: ", e);
+						Logger
+								.getLogger(this.getClass())
+								.error(
+										"Fehler beim Erstellen der Massnahmenumsetzung: ",
+										e);
 					}
 
 				}
@@ -257,14 +257,14 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
 			for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
 				Boolean duplicate = false;
-				alleTitel: for (Gefaehrdung element : associatedGefaehrdungen) {
+				alleTitel: for (Gefaehrdung element : riskLists.getAssociatedGefaehrdungen()) {
 					if (element.getTitel().equals(gefaehrdung.getTitel())) {
 						duplicate = true;
 						break alleTitel;
 					}
 				}
 				if (!duplicate) {
-					associatedGefaehrdungen.add(gefaehrdung);
+					riskLists.getAssociatedGefaehrdungen().add(gefaehrdung);
 				}
 			}
 		}
@@ -323,7 +323,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * @return ArrayList of GefaehrdungsUmsetzung
 	 */
 	public ArrayList<GefaehrdungsUmsetzung> getAllGefaehrdungsUmsetzungen() {
-		return allGefaehrdungsUmsetzungen;
+		return riskLists.getAllGefaehrdungsUmsetzungen();
 	}
 
 	/**
@@ -332,7 +332,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * @return ArrayList of Gefaehrdungen which need further processing
 	 */
 	public ArrayList<Gefaehrdung> getNotOKGefaehrdungen() {
-		return notOKGefaehrdungen;
+		return riskLists.getNotOKGefaehrdungen();
+		
 	}
 
 	/**
@@ -343,7 +344,14 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 */
 	public void setCnaElement(CnATreeElement treeElement) {
 		cnaElement = treeElement;
-		finishedRiskAnalysis = new FinishedRiskAnalysis(cnaElement);
+	}
+	
+	/**
+	 * Allows repeating the Wizard with result from a previous anaylsis.
+	 * @param oldAnalysis old analysis to repeat all steps.
+	 */
+	public void setOldAnalysis(FinishedRiskAnalysis oldAnalysis) {
+		this.finishedRiskAnalysis = oldAnalysis;
 	}
 
 	/**
@@ -362,8 +370,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	public void addOwnGefaehrdungen() {
 		for (OwnGefaehrdung element : allOwnGefaehrdungen) {
 			/* add to List of selected Gefaehrdungen */
-			if (!(associatedGefaehrdungen.contains(element))) {
-				associatedGefaehrdungen.add(element);
+			if (!(riskLists.getAssociatedGefaehrdungen().contains(element))) {
+				riskLists.getAssociatedGefaehrdungen().add(element);
 			}
 			/* add to list of all Gefaehrdungen */
 			if (!(allGefaehrdungen.contains(element))) {
@@ -376,25 +384,27 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * Adds the own Massnahmen to the List of all Massnahmen from BSI
 	 * IT-Grundschutz-Kataloge.
 	 */
-	public void addRisikoMassnahmenUmsetzungen(List<RisikoMassnahme> allRisikoMassnahmen) {
+	public void addRisikoMassnahmenUmsetzungen(
+			List<RisikoMassnahme> allRisikoMassnahmen) {
 		for (RisikoMassnahme massnahme : allRisikoMassnahmen) {
 			addRisikoMassnahmeUmsetzung(massnahme);
-			
+
 		}
 	}
 
 	public void addRisikoMassnahmeUmsetzung(RisikoMassnahme massnahme) {
 		try {
-			RisikoMassnahmenUmsetzung massnahmeUmsetzung  = RisikoMassnahmenUmsetzungFactory
-				.buildFromRisikomassnahme(massnahme, null, null);
-			
+			RisikoMassnahmenUmsetzung massnahmeUmsetzung = RisikoMassnahmenUmsetzungFactory
+					.buildFromRisikomassnahme(massnahme, null, null);
+
 			/* add to list of all MassnahmenUmsetzungen */
 			if (!(allMassnahmenUmsetzungen.contains(massnahmeUmsetzung))) {
 				allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
 			}
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error("Fehler beim Erstellen der Massnahmenumsetzung: ", e);
-		}		
+			Logger.getLogger(this.getClass()).error(
+					"Fehler beim Erstellen der Massnahmenumsetzung: ", e);
+		}
 	}
 
 	/**
@@ -404,7 +414,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * @return the List of Gefaehrdungen of type GefaehrdungsUmsetzung
 	 */
 	public ArrayList<GefaehrdungsUmsetzung> getNotOKGefaehrdungsUmsetzungen() {
-		return notOKGefaehrdungsUmsetzungen;
+		return riskLists.getNotOKGefaehrdungsUmsetzungen();
 	}
 
 	/**
@@ -412,11 +422,11 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * Gefaehrdungen which need additional security measures.
 	 */
 	public void addRisikoGefaehrdungsUmsetzungen() {
-		for (GefaehrdungsUmsetzung element : allGefaehrdungsUmsetzungen) {
+		for (GefaehrdungsUmsetzung element : riskLists.getAllGefaehrdungsUmsetzungen()) {
 			/* add to List of "A" categorized risks if needed */
 			if (element.getAlternative() == GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_A
-					&& !(notOKGefaehrdungsUmsetzungen.contains(element))) {
-				notOKGefaehrdungsUmsetzungen.add(element);
+					&& !(riskLists.getNotOKGefaehrdungsUmsetzungen().contains(element))) {
+				riskLists.getNotOKGefaehrdungsUmsetzungen().add(element);
 				Logger.getLogger(this.getClass()).debug(
 						"Add Risiko: " + element.getTitel());
 			}
@@ -442,8 +452,6 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 			ArrayList<MassnahmenUmsetzung> newAllMassnahmenUmsetzungen) {
 		allMassnahmenUmsetzungen = newAllMassnahmenUmsetzungen;
 	}
-
-	
 
 	/**
 	 * Returns whether this wizard could be finished without further user

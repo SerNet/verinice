@@ -1,5 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.util.Collection;
+
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
@@ -14,6 +16,7 @@ public class Raum extends CnATreeElement
 	public static final String TYPE_ID = "raum"; //$NON-NLS-1$
 	public static final String PROP_NAME = "raum_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "raum_kuerzel"; //$NON-NLS-1$
+	public static final String PROP_TAG			= "raum_tag";
 	
 	private static EntityType entityType;
 
@@ -39,6 +42,9 @@ public class Raum extends CnATreeElement
 	
 	public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);
+	}
+	public Collection<? extends String> getTags() {
+		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
 	public int getSchicht() {

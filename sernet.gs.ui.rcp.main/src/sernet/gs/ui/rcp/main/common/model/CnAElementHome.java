@@ -25,6 +25,9 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisListsHome;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
@@ -163,6 +166,11 @@ public class CnAElementHome {
 	// FIXME parameters are not set check syntax
 
 	public void remove(CnATreeElement element) throws Exception {
+		FinishedRiskAnalysisLists analysisLists = null;
+		if (element instanceof FinishedRiskAnalysis) {
+			analysisLists = FinishedRiskAnalysisListsHome.getInstance().loadById(((FinishedRiskAnalysis)element).getDbId());
+		}
+		
 		synchronized (mutex) {
 
 			Logger.getLogger(this.getClass()).debug(
@@ -171,6 +179,8 @@ public class CnAElementHome {
 			try {
 				tx = session.beginTransaction();
 				session.delete(element);
+				if (analysisLists != null)
+					session.delete(analysisLists);
 				logChange(element, ChangeLogEntry.DELETE);
 				tx.commit();
 			} catch (Exception e) {

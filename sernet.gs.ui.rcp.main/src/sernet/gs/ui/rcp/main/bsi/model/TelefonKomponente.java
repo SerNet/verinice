@@ -1,5 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.util.Collection;
+
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
@@ -15,6 +17,7 @@ public class TelefonKomponente extends CnATreeElement
 	public static final String PROP_KUERZEL	= "tkkomponente_kuerzel"; //$NON-NLS-1$
 	public static final String P_ADMIN 		= "tkkomponente_admin";
 	public static final String P_ANWENDER	 	= "tkkomponente_anwender";
+	public static final String PROP_TAG			= "tkkomponente_tag";
 	
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 		= new SchutzbedarfAdapter(this);
@@ -36,6 +39,9 @@ public class TelefonKomponente extends CnATreeElement
 		setEntity(new Entity(TYPE_ID));
 		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME), 
 				Messages.TelefonKomponente_2);
+	}
+	public Collection<? extends String> getTags() {
+		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
 	public String getKuerzel() {

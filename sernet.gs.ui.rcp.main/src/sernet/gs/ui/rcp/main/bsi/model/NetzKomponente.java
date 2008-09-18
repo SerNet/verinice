@@ -1,5 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.util.Collection;
+
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
@@ -12,6 +14,7 @@ public class NetzKomponente extends CnATreeElement
 	public static final String TYPE_ID = "netzkomponente"; //$NON-NLS-1$
 	public static final String PROP_NAME = "netzkomponente_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "netzkomponente_kuerzel"; //$NON-NLS-1$
+	public static final String PROP_TAG			= "netzkomponente_tag";
 	
 	private static EntityType entityType;
 	
@@ -35,6 +38,12 @@ public class NetzKomponente extends CnATreeElement
 	public int getSchicht() {
 		return 4;
 	}
+	
+	public Collection<? extends String> getTags() {
+		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+	}
+	
+	
 	
 	private NetzKomponente() {
 		

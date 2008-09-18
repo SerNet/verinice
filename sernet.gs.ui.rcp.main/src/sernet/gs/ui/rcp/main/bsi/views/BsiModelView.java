@@ -50,6 +50,7 @@ import sernet.gs.ui.rcp.main.bsi.filter.LebenszyklusPropertyFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.ObjektLebenszyklusPropertyFilter;
+import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
@@ -442,7 +443,8 @@ public class BsiModelView extends ViewPart {
 				new MassnahmenSiegelFilter(viewer),
 				new LebenszyklusPropertyFilter(viewer),
 				new ObjektLebenszyklusPropertyFilter(viewer),
-				new BSIModelElementFilter(viewer));
+				new BSIModelElementFilter(viewer),
+				new TagFilter(viewer));
 
 		expandAllAction = new Action() {
 			@Override

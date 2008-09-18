@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 public class Gefaehrdung implements IGSModel {
+	private int dbId;
+	
 	private String id;
 	private String titel;
 	private String url;
@@ -131,6 +133,14 @@ public class Gefaehrdung implements IGSModel {
 	
 	public String getStand() {
 		return stand;
+	}
+
+	public int getDbId() {
+		return dbId;
+	}
+
+	public void setDbId(int dbId) {
+		this.dbId = dbId;
 	}
 
 	

@@ -1,5 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.util.Collection;
+
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
@@ -14,6 +16,7 @@ public class Server extends CnATreeElement
 	public static final String PROP_NAME = "server_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "server_kuerzel"; //$NON-NLS-1$
 	public static final String P_ADMIN = "server_admin";
+	public static final String PROP_TAG			= "server_tag";
 	
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 	= new SchutzbedarfAdapter(this);
@@ -40,6 +43,9 @@ public class Server extends CnATreeElement
 	
 	public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);
+	}
+	public Collection<? extends String> getTags() {
+		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
 	public int getSchicht() {

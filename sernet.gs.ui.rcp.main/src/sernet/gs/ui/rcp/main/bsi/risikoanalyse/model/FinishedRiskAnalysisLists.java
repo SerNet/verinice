@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import sernet.gs.model.Gefaehrdung;
 
 public class FinishedRiskAnalysisLists {
+	
+	private int dbId;
+	private int finishedRiskAnalysisId;
+	
 	/*
 	 * list of all Gefaehrdungen of type GefaehrdungsUmsetzung 
 	 */
@@ -26,19 +30,20 @@ public class FinishedRiskAnalysisLists {
 	 */
 	private ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 
-	public FinishedRiskAnalysisLists(
+	public FinishedRiskAnalysisLists(int analysisId,
 			ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen,
 			ArrayList<Gefaehrdung> associatedGefaehrdungen,
 			ArrayList<Gefaehrdung> notOKGefaehrdungen,
 			ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen) {
+		this.finishedRiskAnalysisId = analysisId;
 		this.allGefaehrdungsUmsetzungen = allGefaehrdungsUmsetzungen;
 		this.associatedGefaehrdungen = associatedGefaehrdungen;
 		this.notOKGefaehrdungen = notOKGefaehrdungen;
 		this.notOKGefaehrdungsUmsetzungen = notOKGefaehrdungsUmsetzungen;
 	}
 	
-	private FinishedRiskAnalysisLists() {
-		// hibernate constructor
+	public FinishedRiskAnalysisLists() {
+		
 	}
 
 	public ArrayList<GefaehrdungsUmsetzung> getAllGefaehrdungsUmsetzungen() {
@@ -55,5 +60,40 @@ public class FinishedRiskAnalysisLists {
 
 	public ArrayList<GefaehrdungsUmsetzung> getNotOKGefaehrdungsUmsetzungen() {
 		return notOKGefaehrdungsUmsetzungen;
+	}
+
+	public int getDbId() {
+		return dbId;
+	}
+
+	public void setDbId(int dbId) {
+		this.dbId = dbId;
+	}
+
+	public int getFinishedRiskAnalysisId() {
+		return finishedRiskAnalysisId;
+	}
+
+	public void setFinishedRiskAnalysisId(int finishedRiskAnalysisId) {
+		this.finishedRiskAnalysisId = finishedRiskAnalysisId;
+	}
+
+	public void setAllGefaehrdungsUmsetzungen(
+			ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen) {
+		this.allGefaehrdungsUmsetzungen = allGefaehrdungsUmsetzungen;
+	}
+
+	public void setAssociatedGefaehrdungen(
+			ArrayList<Gefaehrdung> associatedGefaehrdungen) {
+		this.associatedGefaehrdungen = associatedGefaehrdungen;
+	}
+
+	public void setNotOKGefaehrdungen(ArrayList<Gefaehrdung> notOKGefaehrdungen) {
+		this.notOKGefaehrdungen = notOKGefaehrdungen;
+	}
+
+	public void setNotOKGefaehrdungsUmsetzungen(
+			ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen) {
+		this.notOKGefaehrdungsUmsetzungen = notOKGefaehrdungsUmsetzungen;
 	}
 }

@@ -46,6 +46,14 @@ Template:
         <huiproperty
             name="Name"
             id="raum_name" />
+
+        <huiproperty
+            id="raum_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+
+            
         <huiproperty
             name="Anzahl"
             id="raum_anzahl" />
@@ -163,6 +171,14 @@ Template:
         <huiproperty
             name="Name"
             id="server_name" />
+
+        <huiproperty
+            id="server_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+
+            
         <huiproperty
             name="Anzahl"
             id="server_anzahl" />
@@ -323,6 +339,14 @@ Template:
         <huiproperty
             name="Name"
             id="tkkomponente_name" />
+            
+        <huiproperty
+            id="tkkomponente_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+
+            
         <huiproperty
             name="Anzahl"
             id="tkkomponente_anzahl" />
@@ -482,6 +506,12 @@ Template:
         <huiproperty
             name="Name"
             id="netzkomponente_name"/>
+        <huiproperty
+            id="netzkomponente_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+            
         <huiproperty
             name="Kabel / Komm.anbindung"
             id="netzkomponente_kabel"/>
@@ -745,6 +775,13 @@ Template:
         <huiproperty
             name="Name"
             id="client_name" />
+        
+        <huiproperty
+            id="client_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+        
         <huiproperty
             name="Anzahl"
             id="client_anzahl" />
@@ -929,6 +966,14 @@ Template:
         <huiproperty
             name="Name"
             id="sonstit_name" />
+            
+        <huiproperty
+            id="sonstit_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+
+            
         <huiproperty
             name="Anzahl"
             id="sonstit_anzahl" />
@@ -1131,6 +1176,12 @@ Template:
 			name="Name"
 			id="nachname" />
 
+        <huiproperty
+            id="person_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+
 		<huiproperty
 			name="Anzahl"
 			id="person_anzahl" />
@@ -1298,6 +1349,14 @@ Template:
 			name="Name"
 			id="gebaeude_name">
 		</huiproperty>
+		
+        <huiproperty
+            id="gebaeude_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+		
+		
 		<huiproperty
 			id="gebaeude_erlaeuterung"
             inputtype="text"
@@ -1451,7 +1510,7 @@ Template:
 		<huiproperty
 				id="gefaehrdungsumsetzung_description"
                 editable="true"
-                inputtype="multiline"
+                inputtype="text"
 				name="Beschreibung" />
 		<huiproperty
 				id="gefaehrdungsumsetzung_url"
@@ -1656,9 +1715,16 @@ Template:
                 	<param>A-</param>
                 </defaultRule>
 		</huiproperty>
+        
         <huiproperty
             id="anwendung_name"
             name="Name" 
+        />
+		
+		<huiproperty
+            id="anwendung_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
         />
 		
 		

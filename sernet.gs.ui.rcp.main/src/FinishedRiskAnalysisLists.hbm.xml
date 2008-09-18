@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+	Saved lists to restore every step for risk analysis for later editing.
+	@author ahanekop@sernet.de
+ -->
+ 
+<hibernate-mapping package="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model">
+	<class name="FinishedRiskAnalysisLists">
+		
+		<id name="dbId" 
+			type="java.lang.Integer" 
+			column="dbId"
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+		<property name="finishedRiskAnalysisId" />
+		
+		<list name="allGefaehrdungsUmsetzungen" cascade="all">
+            <key column="riskanalysislists_id" not-null="true"/>
+            <index column="idx"/>
+            <one-to-many class="GefaehrdungsUmsetzung"/>
+        </list>
+
+		<list name="associatedGefaehrdungen" cascade="all">
+            <key column="riskanalysislists_id" not-null="true"/>
+            <index column="idx"/>
+            <one-to-many class="Gefaehrdung"/>
+        </list>
+
+		<list name="notOKGefaehrdungen" cascade="all">
+            <key column="riskanalysislists_id" not-null="true"/>
+            <index column="idx"/>
+            <one-to-many class="Gefaehrdung"/>
+        </list>
+
+		<list name="notOKGefaehrdungsUmsetzungen" cascade="all">
+            <key column="riskanalysislists_id" not-null="true"/>
+            <index column="idx"/>
+            <one-to-many class="GefaehrdungsUmsetzung"/>
+        </list>
+		
+		
+	</class>
+</hibernate-mapping>

@@ -1,5 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.util.Collection;
+
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
@@ -15,6 +17,7 @@ public class Client extends CnATreeElement
 	public static final String PROP_KUERZEL = "client_kuerzel"; //$NON-NLS-1$
 	public static final String P_ADMIN = "client_admin"; //$NON-NLS-1$
 	public static final String P_ANWENDER = "client_anwender"; //$NON-NLS-1$
+	public static final String PROP_TAG			= "client_tag";
 	
 	private static EntityType entityType;
 
@@ -34,6 +37,9 @@ private final ILinkChangeListener linkChangeListener
 			entityType = typeFactory.getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME), Messages.Client_2);
+	}
+	public Collection<? extends String> getTags() {
+		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
 	public String getKuerzel() {

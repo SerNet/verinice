@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import sernet.hui.common.connect.PropertyType;
 
 public class Person extends CnATreeElement
 implements IBSIStrukturElement {
+	
+	public static final String PROP_TAG			= "person_tag";
 	private static final String P_NAME = "nachname"; //$NON-NLS-1$
 	private static final String P_VORNAME = "vorname"; //$NON-NLS-1$
 	private static final String PROP_KUERZEL = "person_kuerzel"; //$NON-NLS-1$
@@ -36,6 +39,9 @@ implements IBSIStrukturElement {
 	
 	public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);
+	}
+	public Collection<? extends String> getTags() {
+		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
 	private Person() {

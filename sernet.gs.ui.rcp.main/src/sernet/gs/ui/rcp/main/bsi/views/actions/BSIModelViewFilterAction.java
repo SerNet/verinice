@@ -17,6 +17,7 @@ import sernet.gs.ui.rcp.main.bsi.filter.BSISchichtFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.StringPropertyFilter;
+import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 
@@ -33,6 +34,7 @@ public class BSIModelViewFilterAction extends Action {
 	private StringPropertyFilter lebenszyklusFilter;
 	private StringPropertyFilter objektLebenszyklusFilter;
 	private BSIModelElementFilter elementFilter;
+	private TagFilter tagFilter;
 	
 
 	public BSIModelViewFilterAction(StructuredViewer viewer,
@@ -41,15 +43,17 @@ public class BSIModelViewFilterAction extends Action {
 			MassnahmenSiegelFilter filter2,
 			StringPropertyFilter filter3,
 			StringPropertyFilter filter5,
-			BSIModelElementFilter filter4) {
+			BSIModelElementFilter filter4,
+			TagFilter filter6) {
 		super(title);
-		shell = viewer.getControl().getShell();
+		shell = new Shell();
 		
 		this.umsetzungFilter = filter1;
 		this.siegelFilter = filter2;
 		this.lebenszyklusFilter = filter3;
 		this.elementFilter = filter4;
 		this.objektLebenszyklusFilter = filter5;
+		this.tagFilter = filter6;
 		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
 	
 	}
@@ -62,9 +66,11 @@ public class BSIModelViewFilterAction extends Action {
 				siegelFilter.getPattern(),
 				lebenszyklusFilter.getPattern(),
 				objektLebenszyklusFilter.getPattern(),
-				elementFilter.getPattern()
+				elementFilter.getPattern(),
+				tagFilter.getPattern()
 				);
 
+		
 		if (dialog.open() != InputDialog.OK)
 			return;
 		
@@ -75,5 +81,6 @@ public class BSIModelViewFilterAction extends Action {
 		objektLebenszyklusFilter.setPattern(dialog.getObjektLebenszyklus());
 		
 		elementFilter.setPattern(dialog.getAusblendenSelection());
+		tagFilter.setPattern(dialog.getCheckedElements());
 	}
 }

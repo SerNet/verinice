@@ -1,5 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.util.Collection;
+
 import sernet.hui.common.connect.PropertyList;
 
 /**
@@ -14,6 +16,8 @@ public interface IBSIStrukturElement {
 	public int getSchicht();
 	
 	public String getKuerzel();
+
+	public Collection<? extends String> getTags();
 
 
 }

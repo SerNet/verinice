@@ -1,6 +1,8 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -177,6 +179,25 @@ public class BSIModel extends CnATreeElement
 		return result;
 	}
 
-	
+	public List<String> getTags() {
+		ArrayList<String> tags = new ArrayList<String>(50);
+		Set<CnATreeElement> verbuende = getChildren();
+		for (CnATreeElement verbund : verbuende) {
+			for (CnATreeElement kategorie : verbund.getChildren()) {
+				for (CnATreeElement zielobjekt : kategorie.getChildren()) {
+					if (zielobjekt instanceof IBSIStrukturElement) {
+						IBSIStrukturElement ziel = (IBSIStrukturElement) zielobjekt;
+						tags.addAll(ziel.getTags());
+					}
+				}
+			}
+		}
+		// remove doubles:
+		HashSet<String> set = new HashSet<String>(tags);
+		tags = new ArrayList<String>(set);
+		
+		Collections.sort(tags);
+		return tags;
+	}
 
 }

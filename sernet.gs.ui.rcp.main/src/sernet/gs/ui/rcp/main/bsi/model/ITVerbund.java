@@ -1,5 +1,8 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -32,6 +35,10 @@ public class ITVerbund extends CnATreeElement
 	
 	public int getSchicht() {
 		return 1;
+	}
+	
+	public Collection<? extends String> getTags() {
+		return new HashSet<String>(0);
 	}
 	
 	private ITVerbund() {

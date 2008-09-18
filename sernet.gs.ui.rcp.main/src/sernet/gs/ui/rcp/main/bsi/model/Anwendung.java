@@ -1,5 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.util.Collection;
+
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -31,6 +33,8 @@ public class Anwendung extends CnATreeElement
 	public static final String PROP_BENUTZER = "anwendung_benutzer"; //$NON-NLS-1$
 	public static final String PROP_EIGENTUEMER = "anwendung_eigentümer"; //$NON-NLS-1$
 
+	public static final String PROP_TAG			= "anwendung_tag";
+	
 	private static EntityType entityType;
 
 	public int getSchicht() {
@@ -85,6 +89,10 @@ public class Anwendung extends CnATreeElement
 	@Override
 	public ISchutzbedarfProvider getSchutzbedarfProvider() {
 		return schutzbedarfProvider;
+	}
+
+	public Collection<? extends String> getTags() {
+		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 
 }
