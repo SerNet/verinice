@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
@@ -115,20 +116,13 @@ public class EstimateGefaehrdungPage extends WizardPage {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				Gefaehrdung currentGefaehrdung = (Gefaehrdung) event
 						.getElement();
-				ArrayList<Gefaehrdung> arrListNotOK = ((RiskAnalysisWizard)
-						getWizard()).getNotOKGefaehrdungen();
-				ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen =
+				List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen =
 					((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen();
 
 				/* switch from Gefaehrdung to GefaehrdungsUmsetzung */
 				if (event.getChecked()) {
 					/* checkbox set */
 
-					/* add to arrListNotOK */
-					if (!arrListNotOK.contains(currentGefaehrdung)) {
-						arrListNotOK.add(currentGefaehrdung);
-					}
-					
 					try {
 						
 						GefaehrdungsUmsetzung newGefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory
@@ -159,9 +153,6 @@ public class EstimateGefaehrdungPage extends WizardPage {
 							break;
 						}
 					}
-
-					/* remove from arrListNotOK */
-					arrListNotOK.remove(currentGefaehrdung);
 				}
 
 				((RiskAnalysisWizard) getWizard()).setCanFinish(false);
@@ -289,10 +280,19 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	 * Marks all checkboxes of Gefaehrdungen that are selected as not okay.
 	 */
 	private void selectAssignedGefaehrdungen() {
-		ArrayList<Gefaehrdung> list = ((RiskAnalysisWizard)
-				getWizard()).getNotOKGefaehrdungen();
-		viewer.setCheckedElements((Gefaehrdung[]) list
-				.toArray(new Gefaehrdung[list.size()]));
+		List<GefaehrdungsUmsetzung> gefaehrdungenToCheck
+			= ((RiskAnalysisWizard)getWizard()).getNotOKGefaehrdungsUmsetzungen();
+		List<Gefaehrdung> associatedGefaehrdungen =
+			((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen();
+
+		alleGefaehrdungen: for (Gefaehrdung gefaehrdung : associatedGefaehrdungen) {
+				for (GefaehrdungsUmsetzung toCheck : gefaehrdungenToCheck) {
+					if (gefaehrdung.getId().equals(toCheck.getId())) {
+						viewer.setChecked(gefaehrdung, true);
+						continue alleGefaehrdungen; 
+				}
+			}
+		}		
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	 * Is processed each time the WizardPage is set visible.
 	 */
 	private void initContents() {
-		ArrayList<Gefaehrdung> arrListAssociatedGefaehrdungen =
+		List<Gefaehrdung> arrListAssociatedGefaehrdungen =
 			((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen();
 
 		/* map a domain model object into multiple images and text labels */
@@ -344,8 +344,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	 * Activates the next button, if the List of selected Gefaehrdungen is not empty.
 	 */
 	private void checkPageComplete() {
-		if (((RiskAnalysisWizard) getWizard()).getNotOKGefaehrdungen()
-				.isEmpty()) {
+		if (((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen().isEmpty()) {
 			setPageComplete(false);
 		} else {
 			setPageComplete(true);

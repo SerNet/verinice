@@ -166,13 +166,14 @@ public class CnAElementHome {
 	// FIXME parameters are not set check syntax
 
 	public void remove(CnATreeElement element) throws Exception {
-		FinishedRiskAnalysisLists analysisLists = null;
-		if (element instanceof FinishedRiskAnalysis) {
-			analysisLists = FinishedRiskAnalysisListsHome.getInstance().loadById(((FinishedRiskAnalysis)element).getDbId());
-		}
+		
 		
 		synchronized (mutex) {
-
+			FinishedRiskAnalysisLists analysisLists = null;
+			if (element instanceof FinishedRiskAnalysis) {
+				analysisLists = FinishedRiskAnalysisListsHome.getInstance().loadById(((FinishedRiskAnalysis)element).getDbId());
+			}
+			
 			Logger.getLogger(this.getClass()).debug(
 					"Deleting element: " + element);
 			Transaction tx = null;

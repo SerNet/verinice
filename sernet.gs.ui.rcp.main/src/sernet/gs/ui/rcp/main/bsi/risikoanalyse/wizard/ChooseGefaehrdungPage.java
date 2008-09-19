@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
@@ -75,7 +76,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 		gridLayout.numColumns = 2;
 		composite.setLayout(gridLayout);
 		setControl(composite);
-
+		
 		/* CheckboxTableViewer */
 		viewer = CheckboxTableViewer.newCheckList(composite, SWT.BORDER);
 		final Table table = viewer.getTable();
@@ -114,7 +115,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				Gefaehrdung currentGefaehrdung = (Gefaehrdung) event
 						.getElement();
-				ArrayList<Gefaehrdung> selectedArrayList = ((RiskAnalysisWizard) getWizard())
+				List<Gefaehrdung> selectedArrayList = ((RiskAnalysisWizard) getWizard())
 						.getAssociatedGefaehrdungen();
 
 				if (event.getChecked()) {
@@ -403,7 +404,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * Marks all checkboxes of Gefaehrdungen associated to the selected Baustein.
 	 */
 	private void selectAssignedGefaehrdungen() {
-		ArrayList<Gefaehrdung> list = ((RiskAnalysisWizard) getWizard())
+		List<Gefaehrdung> list = ((RiskAnalysisWizard) getWizard())
 				.getAssociatedGefaehrdungen();
 		viewer.setCheckedElements((Gefaehrdung[]) list
 				.toArray(new Gefaehrdung[list.size()]));
@@ -440,7 +441,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	private void deleteOwnGefaehrdung(Gefaehrdung delGefaehrdung) {
 		ArrayList<Gefaehrdung> arrListAllGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAllGefaehrdungen();
-		ArrayList<Gefaehrdung> arrListAssociatedGefaehrdungen = ((RiskAnalysisWizard) getWizard())
+		List<Gefaehrdung> arrListAssociatedGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAssociatedGefaehrdungen();
 		ArrayList<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAllOwnGefaehrdungen();

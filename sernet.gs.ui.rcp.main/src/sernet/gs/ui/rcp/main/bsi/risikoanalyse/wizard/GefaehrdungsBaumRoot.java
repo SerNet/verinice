@@ -29,7 +29,7 @@ public class GefaehrdungsBaumRoot implements IGefaehrdungsBaumElement {
 	 *            root element
 	 */
 	public GefaehrdungsBaumRoot(
-			ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen) {
+			List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen) {
 		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : arrListGefaehrdungsUmsetzungen) {
 			children.add(gefaehrdungsUmsetzung);
 		}

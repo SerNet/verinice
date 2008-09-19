@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 public class Gefaehrdung implements IGSModel {
-	private int dbId;
+	private Integer dbId;
 	
 	private String id;
 	private String titel;
@@ -23,8 +23,8 @@ public class Gefaehrdung implements IGSModel {
 	public static final int KAT_VORSATZ 		= 5;
 	
 	// do not output these values, they are used for string matching:
-	public static final String KAT_MATCH_HOEHERE_GEWALT	= "Gewalt";
-	public static final String KAT_MATCH_ORG_MANGEL		= "Organisatorisch";
+	public static final String KAT_MATCH_HOEHERE_GEWALT		= "Gewalt";
+	public static final String KAT_MATCH_ORG_MANGEL			= "Organisatorisch";
 	public static final String KAT_MATCH_MENSCH 			= "Menschliche Fehlhandlungen";
 	public static final String KAT_MATCH_TECHNIK 			= "Technisches Versagen";
 	public static final String KAT_MATCH_VORSATZ 			= "tzliche Handlungen";
@@ -135,13 +135,15 @@ public class Gefaehrdung implements IGSModel {
 		return stand;
 	}
 
-	public int getDbId() {
+	public Integer getDbId() {
 		return dbId;
 	}
 
-	public void setDbId(int dbId) {
+	public void setDbId(Integer dbId) {
 		this.dbId = dbId;
 	}
+
+	
 
 	
 

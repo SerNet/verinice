@@ -1,6 +1,8 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.Viewer;
@@ -72,7 +74,7 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 	public void modify(Object element, String property, Object value) {
 		
 		Object item = ((TableItem) element).getData();
-		ArrayList<GefaehrdungsUmsetzung> arrListNotOKGefaehrdungsUmsetzungen =
+		List<GefaehrdungsUmsetzung> arrListNotOKGefaehrdungsUmsetzungen =
 				wizard.getNotOKGefaehrdungsUmsetzungen();
 
 		if (item instanceof GefaehrdungsUmsetzung) {

@@ -89,38 +89,7 @@ public class RisikoMassnahmenUmsetzungTransfer extends ByteArrayTransfer {
 	
 	
 	public Object nativeToJava(TransferData transferData) {
-		/*
-		if (isSupportedType(transferData)) {
-			byte[] bytes = (byte[]) super.nativeToJava(transferData);
-			if (bytes == null)
-				return null;
-
-			// MyType[] myData = new MyType[0];
-			DataInputStream dataIn = new DataInputStream(
-					new ByteArrayInputStream(bytes));
-
-			try {
-				int count = dataIn.readInt();
-				List items = new ArrayList(count);
-				for (int i = 0; i < count; i++) {
-					String titel = dataIn.readUTF();
-					// String description = dataIn.readUTF();
-					RisikoMassnahmenUmsetzung umsetzung = new RisikoMassnahmenUmsetzung();
-					umsetzung.setName(titel);
-					// umsetzung.setDescription;
-					items.add(umsetzung);
-				}
-				dataIn.close();
-				//return (IGefaehrdungsBaumElement[]) items.toArrray(new IGefaehrdungsBaumElement[items.size()]);
-				return items;
-
-			} catch (IOException e) {
-				Logger.getLogger(this.getClass()).debug(e.toString());
-				return null;
-			}
-			return null;
-		}
-		 */
+		// no native transfer provided
 		return null;
 	}
 }

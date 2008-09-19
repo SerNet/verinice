@@ -102,7 +102,6 @@
 		extends="CnATreeElement"
 	>
 		<key column="dbId"/>
-		<property name="savedlist"/>
 	</joined-subclass>
 	
 	

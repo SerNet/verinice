@@ -49,34 +49,35 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 		/* get Object on which the drop is being applied */
 		Object receiver = getCurrentTarget();
 
-		/* get Object, which is beeing dropped */
-		Object toDrop = DNDItems.getItems().get(0);
-
-		try {
-			parent = (GefaehrdungsUmsetzung) receiver;
-			child = (RisikoMassnahmenUmsetzung) toDrop;
-
-			List<IGefaehrdungsBaumElement> children = parent.getGefaehrdungsBaumChildren();
-			
-			if (child != null && child instanceof RisikoMassnahmenUmsetzung
-					&& parent != null
-					&& parent instanceof GefaehrdungsUmsetzung
-					&& !(children.contains(child))) {
-				child.setGefaehrdungsBaumParent(parent);
-				parent.addGefaehrdungsBaumChild(child);
+		/* get Objects, which are being dropped */
+		for (Object toDrop : DNDItems.getItems()) {
+			try {
+				parent = (GefaehrdungsUmsetzung) receiver;
+				child = (RisikoMassnahmenUmsetzung) toDrop;
 				
-				child.setParent(parent);
-				parent.addChild(child);
+				List<IGefaehrdungsBaumElement> children = parent.getGefaehrdungsBaumChildren();
 				
-				viewer.refresh();
-				return true;
-			} else {
+				if (child != null && child instanceof RisikoMassnahmenUmsetzung
+						&& parent != null
+						&& parent instanceof GefaehrdungsUmsetzung
+						&& !(children.contains(child))) {
+					child.setGefaehrdungsBaumParent(parent);
+					parent.addGefaehrdungsBaumChild(child);
+					
+					child.setParent(parent);
+					parent.addChild(child);
+					
+					viewer.refresh();
+					return true;
+				} else {
+					return false;
+				}
+			} catch (Exception e) {
+				Logger.getLogger(this.getClass()).debug(e.toString());
 				return false;
 			}
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).debug(e.toString());
-			return false;
 		}
+		return false;
 	}
 
 	/**

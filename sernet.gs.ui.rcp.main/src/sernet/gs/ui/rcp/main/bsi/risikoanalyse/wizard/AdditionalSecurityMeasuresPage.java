@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
@@ -86,7 +87,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		setControl(composite);
 
 		/* TreeViewer: Gefaehrdungen */
-		viewerGefaehrdung = new TreeViewer(composite, SWT.SINGLE);
+		viewerGefaehrdung = new TreeViewer(composite, SWT.MULTI);
 		GridData gridViewerGefaehrdung = new GridData();
 		gridViewerGefaehrdung.grabExcessHorizontalSpace = true;
 		gridViewerGefaehrdung.grabExcessVerticalSpace = true;
@@ -476,8 +477,10 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 */
 	private void initContents() {
 
-		((RiskAnalysisWizard) getWizard()).addRisikoGefaehrdungsUmsetzungen();
-		ArrayList<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = ((RiskAnalysisWizard) getWizard())
+		
+		//FIXME not necessary?? ((RiskAnalysisWizard) getWizard()).addRisikoGefaehrdungsUmsetzungen();
+		
+		List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = ((RiskAnalysisWizard) getWizard())
 				.getNotOKGefaehrdungsUmsetzungen();
 
 		/* root of TreeViewer */

@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
@@ -190,7 +191,7 @@ public class RiskHandlingPage extends WizardPage {
 	 * Is processed each time the WizardPage is set visible.
 	 */
 	private void initContents() {
-		ArrayList<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = 
+		List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = 
 			((RiskAnalysisWizard)getWizard()).getAllGefaehrdungsUmsetzungen();
 
 		/* map a domain model object into multiple images and text labels */
@@ -223,7 +224,7 @@ public class RiskHandlingPage extends WizardPage {
 	 * Activates the next button, if any of the Gefaehrdungen's alternative is "A" .
 	 */
 	private void checkPageComplete() {
-		ArrayList<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = 
+		List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = 
 			((RiskAnalysisWizard)getWizard()).getAllGefaehrdungsUmsetzungen();
 		Boolean complete = false;
 		

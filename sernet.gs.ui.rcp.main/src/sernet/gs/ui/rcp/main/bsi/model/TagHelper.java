@@ -16,11 +16,12 @@ public class TagHelper {
 	}
 
 	private static Collection<String> removeEmptyTags(List<String> tags) {
+		ArrayList<String> result = new ArrayList<String>(tags.size());
 		for (String tag : tags) {
-			if (tag.length() < 1 || tag.equals(" "))
-				tags.remove(tag);
+			if ( ! (tag.length() < 1 || tag.equals(" ")) )
+				result.add(tag);
 		}
-		return tags;
+		return result;
 	}
 
 }

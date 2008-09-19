@@ -45,7 +45,7 @@ public class RisikoMassnahmenUmsetzungDragListener implements
 		ArrayList<RisikoMassnahmenUmsetzung> risikoMassnahmenUmsetzungen = new ArrayList<RisikoMassnahmenUmsetzung>();
 
 		/* leave, if selcetion is empty */
-		if (selection.size() != 1) {
+		if (selection.size() < 1) {
 			event.doit = false;
 			return;
 		}

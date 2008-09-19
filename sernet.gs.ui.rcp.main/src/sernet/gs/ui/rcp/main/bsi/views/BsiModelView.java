@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -30,8 +31,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
@@ -56,6 +59,8 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewCloseDBAction;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewFilterAction;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction;
@@ -433,7 +438,16 @@ public class BsiModelView extends ViewPart {
 			public void run() {
 				Object sel = ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement();
-				EditorFactory.getInstance().updateAndOpenObject(sel);
+				if (sel instanceof FinishedRiskAnalysis) {
+					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
+					RiskAnalysisWizard wizard =  new RiskAnalysisWizard(analysis.getParent(), analysis);
+					wizard.init(PlatformUI.getWorkbench(), null);
+					WizardDialog wizDialog =  new org.eclipse.jface.wizard.WizardDialog(new Shell(), wizard);
+					wizDialog.setPageSize(800, 600);
+					wizDialog.open();
+				}
+				else
+					EditorFactory.getInstance().updateAndOpenObject(sel);
 			}
 		};
 

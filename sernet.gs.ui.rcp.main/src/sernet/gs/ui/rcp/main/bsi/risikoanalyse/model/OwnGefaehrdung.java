@@ -5,7 +5,7 @@ import sernet.hui.common.connect.Entity;
 
 public class OwnGefaehrdung extends Gefaehrdung {
 	
-	private int dbId;
+	private Integer dbId;
 	
 	private String id;
 	private String titel;
@@ -63,17 +63,13 @@ public class OwnGefaehrdung extends Gefaehrdung {
 	
 	
 
-	/**
-	 * @return the dbId
-	 */
-	public int getDbId() {
-		return this.dbId;
+	
+
+	public Integer getDbId() {
+		return dbId;
 	}
 
-	/**
-	 * @param dbId the dbId to set
-	 */
-	public void setDbId(int dbId) {
+	public void setDbId(Integer dbId) {
 		this.dbId = dbId;
 	}
 
