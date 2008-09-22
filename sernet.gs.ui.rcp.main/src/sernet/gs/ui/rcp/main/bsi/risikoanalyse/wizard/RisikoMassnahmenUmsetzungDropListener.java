@@ -1,79 +1,75 @@
-/**
- * 
- */
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
-import org.w3c.dom.Node;
-
-import sernet.gs.scraper.GSScraper;
-import sernet.gs.scraper.IGSSource;
-import sernet.gs.service.GSServiceException;
+import org.eclipse.swt.dnd.TransferData;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
+ * Defines what to do when an item is dropped into the TreeViewer.
+ * 
  * @author ahanekop@sernet.de
- *
  */
 public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
-	
+
 	private GefaehrdungsUmsetzung parent;
 	private RisikoMassnahmenUmsetzung child;
 	private TreeViewer viewer;
-	
+
+	/**
+	 * Constructor sets the needed data.
+	 * 
+	 * @param newViewer the viewer to add the dropped element to
+	 */
 	public RisikoMassnahmenUmsetzungDropListener(TreeViewer newViewer) {
 		super(newViewer);
 		viewer = newViewer;
 	}
 
 	/**
-	 * Adds a RiskoMassnahmenUmsetzung, which is being dropped onto a
-	 * RiskoGefaehrdungsMassnahme.
+	 * Adds a RiskoMassnahmenUmsetzung to the RiskoGefaehrdungsMassnahme
+	 * is is dropped onto.
+	 * 
+	 * @param data the data to drop (not used - DNDItems instead)
+	 * @return true if RiskoMassnahmenUmsetzung has been added successfully
+	 *			to the GefaehrdungsUmsetzung, false else
 	 */
 	@Override
 	public boolean performDrop(Object data) {
-		/* get Object on which the drop is being applied */
+		
+		/* get the target object */
 		Object receiver = getCurrentTarget();
 
-		/* get Objects, which are being dropped */
+		/* get dropped elements*/
 		for (Object toDrop : DNDItems.getItems()) {
 			try {
 				parent = (GefaehrdungsUmsetzung) receiver;
 				child = (RisikoMassnahmenUmsetzung) toDrop;
-				
-				List<IGefaehrdungsBaumElement> children = parent.getGefaehrdungsBaumChildren();
-				
+
+				List<IGefaehrdungsBaumElement> children = parent
+						.getGefaehrdungsBaumChildren();
+
 				if (child != null && child instanceof RisikoMassnahmenUmsetzung
 						&& parent != null
 						&& parent instanceof GefaehrdungsUmsetzung
 						&& !(children.contains(child))) {
-					child.setGefaehrdungsBaumParent(parent);
+					
 					parent.addGefaehrdungsBaumChild(child);
-					
-					child.setParent(parent);
 					parent.addChild(child);
-					
+					child.setGefaehrdungsBaumParent(parent);
+					child.setParent(parent);
+
 					viewer.refresh();
 					return true;
+					
 				} else {
 					return false;
 				}
 			} catch (Exception e) {
-				Logger.getLogger(this.getClass()).debug(e.toString());
 				return false;
 			}
 		}
@@ -81,13 +77,18 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 	}
 
 	/**
-	 * retruns true, if drop is allowed. Which is only the case if
-	 * the target is a GefaehrdungsUmsetzung.
+	 * Returns true, if drop is allowed (which is only the case if the
+	 * target is a GefaehrdungsUmsetzung).
+	 * 
+	 * @param target the target object
+	 * @param operation the current drag operation (copy, move, etc.)
+	 * @param transferType the current transfer type
+	 * @return true if target is a GefaehrdungsUmsetzung, false else
 	 */
 	@Override
 	public boolean validateDrop(Object target, int operation,
 			TransferData transferType) {
-		if (target == null || ! (target instanceof GefaehrdungsUmsetzung)) {
+		if (target == null || !(target instanceof GefaehrdungsUmsetzung)) {
 			return false;
 		} else {
 			return true;
