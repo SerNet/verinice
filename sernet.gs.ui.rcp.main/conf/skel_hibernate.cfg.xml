@@ -44,7 +44,7 @@
         <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
 
         <!-- Echo all executed SQL to stdout -->
-        <property name="show_sql">false</property>
+        <property name="show_sql">true</property>
         <property name="hibernate.format_sql">false</property>
         <property name="hibernate.use_sql_comments">false</property>
 
@@ -60,7 +60,6 @@
         <mapping resource="PropertyList.hbm.xml"/>
         <mapping resource="CnATreeElement.hbm.xml"/> 
         <mapping resource="ChangeLogEntry.hbm.xml"/>
-        <mapping resource="OwnGefaehrdung.hbm.xml"/>
         <mapping resource="Gefaehrdung.hbm.xml"/>
         <mapping resource="Risikomassnahme.hbm.xml"/>
         <mapping resource="FinishedRiskAnalysisLists.hbm.xml"/>

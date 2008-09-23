@@ -26,6 +26,18 @@
 		<property name="url"/>
 
 		<property name="stand"/>
+		
+		<joined-subclass
+			name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung"
+			extends="Gefaehrdung">
+			
+			<key column="dbId"/>
+			
+			<property name="ownkategorie"/>
+			
+			<property name="beschreibung"/>
+			
+		</joined-subclass>
 
 	</class>
 </hibernate-mapping>

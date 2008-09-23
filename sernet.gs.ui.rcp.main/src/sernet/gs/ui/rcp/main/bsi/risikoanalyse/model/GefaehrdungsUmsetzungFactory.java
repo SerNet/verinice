@@ -11,10 +11,12 @@ public class GefaehrdungsUmsetzungFactory {
 		
 		gefaehrdungsUmsetzung.setId(source.getId());
 		gefaehrdungsUmsetzung.setTitel(source.getTitel());
-		gefaehrdungsUmsetzung.setKategorie(source.getKategorieAsString());
 		gefaehrdungsUmsetzung.setAlternative(GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_C);
 		gefaehrdungsUmsetzung.setOkay(true);
 		gefaehrdungsUmsetzung.setUrl(source.getUrl());
+
+		
+		gefaehrdungsUmsetzung.setKategorie(source.getKategorieAsString());
 		gefaehrdungsUmsetzung.setStand(source.getStand());
 
 		if (source instanceof OwnGefaehrdung) {

@@ -22,7 +22,7 @@
 		<list name="allGefaehrdungsUmsetzungen" cascade="all-delete-orphan">
             <key column="riskanalysislists_id1" />
             <index column="idx1"/>
-            <one-to-many class="GefaehrdungsUmsetzung"/>
+            <many-to-many class="GefaehrdungsUmsetzung"/>
         </list>
 
 		<list name="associatedGefaehrdungen" cascade="all-delete-orphan">
@@ -34,7 +34,7 @@
 		<list name="notOKGefaehrdungsUmsetzungen" cascade="all-delete-orphan">
             <key column="riskanalysislists_id3" />
             <index column="idx3"/>
-            <one-to-many class="GefaehrdungsUmsetzung"/>
+            <many-to-many class="GefaehrdungsUmsetzung"/>
         </list>
 		
 		

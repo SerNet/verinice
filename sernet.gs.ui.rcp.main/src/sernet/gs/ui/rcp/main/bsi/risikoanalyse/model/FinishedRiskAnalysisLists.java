@@ -20,6 +20,7 @@ public class FinishedRiskAnalysisLists {
 	 */
 	private List<Gefaehrdung> associatedGefaehrdungen = new ArrayList<Gefaehrdung>();
 
+
 	/*
 	 * list of Gefaehrdungen, which need additional security measures 
 	 * 
@@ -32,8 +33,8 @@ public class FinishedRiskAnalysisLists {
 			ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen) {
 		this.finishedRiskAnalysisId = analysisId;
 		this.allGefaehrdungsUmsetzungen = allGefaehrdungsUmsetzungen;
-		this.associatedGefaehrdungen = associatedGefaehrdungen;
 		this.notOKGefaehrdungsUmsetzungen = notOKGefaehrdungsUmsetzungen;
+		this.associatedGefaehrdungen = associatedGefaehrdungen;
 	}
 	
 	public FinishedRiskAnalysisLists() {
@@ -47,6 +48,7 @@ public class FinishedRiskAnalysisLists {
 	public List<Gefaehrdung> getAssociatedGefaehrdungen() {
 		return associatedGefaehrdungen;
 	}
+	
 
 	public List<GefaehrdungsUmsetzung> getNotOKGefaehrdungsUmsetzungen() {
 		return notOKGefaehrdungsUmsetzungen;

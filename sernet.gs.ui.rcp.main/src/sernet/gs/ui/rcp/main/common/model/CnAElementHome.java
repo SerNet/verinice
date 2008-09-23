@@ -169,6 +169,8 @@ public class CnAElementHome {
 		
 		
 		synchronized (mutex) {
+			
+			// if this is a finishedRiskanalysis we need to delete the intermediate steps as well:
 			FinishedRiskAnalysisLists analysisLists = null;
 			if (element instanceof FinishedRiskAnalysis) {
 				analysisLists = FinishedRiskAnalysisListsHome.getInstance().loadById(((FinishedRiskAnalysis)element).getDbId());

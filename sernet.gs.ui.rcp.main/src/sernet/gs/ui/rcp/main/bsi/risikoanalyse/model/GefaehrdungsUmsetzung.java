@@ -24,6 +24,8 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	
 	private static EntityType entityType;
 
+	
+	
 	public static final String GEFAEHRDUNG_ALTERNATIVE_A = "A";
 	public static final String GEFAEHRDUNG_ALTERNATIVE_B = "B";
 	public static final String GEFAEHRDUNG_ALTERNATIVE_C = "C";
@@ -82,13 +84,21 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 		
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof GefaehrdungsUmsetzung))
+			return false;
+		GefaehrdungsUmsetzung gef2 = (GefaehrdungsUmsetzung) obj;
 
+		if (gef2.getDbId() == null || this.getDbId() == null)
+			return super.equals(obj);
+		
+		return gef2.getDbId().equals(this.getDbId());
+	}
 	
 	private GefaehrdungsUmsetzung() {
 		// hibernate constructor
 	}
-	
-	
 	
 	public void setKategorieAsString(String newKategorie) {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KATEGORIE),

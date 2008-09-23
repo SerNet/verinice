@@ -16,11 +16,9 @@ public class FinishedRiskAnalysisListsHome {
 		+ FinishedRiskAnalysisLists.class.getName() + " as element "
 		+ "where element.finishedRiskAnalysisId = ?";
 	
-	private Session session;
 	private static FinishedRiskAnalysisListsHome instance;
 
 	private FinishedRiskAnalysisListsHome() {
-		session = CnAElementHome.getInstance().getSession();
 	}
 	
 	public synchronized static FinishedRiskAnalysisListsHome getInstance() {
@@ -32,8 +30,8 @@ public class FinishedRiskAnalysisListsHome {
 	public void saveNew(FinishedRiskAnalysisLists list) throws Exception {
 		Transaction tx = null;
 		try {
-			tx = session.beginTransaction();
-			session.save(list);
+			tx = CnAElementHome.getInstance().getSession().beginTransaction();
+			CnAElementHome.getInstance().getSession().save(list);
 			tx.commit();
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass()).error(e);
@@ -44,7 +42,7 @@ public class FinishedRiskAnalysisListsHome {
 	}
 
 	public void update(FinishedRiskAnalysisLists list) throws Exception {
-
+		Session session = CnAElementHome.getInstance().getSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -59,7 +57,7 @@ public class FinishedRiskAnalysisListsHome {
 	}
 	
 	public void remove(FinishedRiskAnalysisLists list) throws Exception {
-
+		Session session = CnAElementHome.getInstance().getSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -76,6 +74,7 @@ public class FinishedRiskAnalysisListsHome {
 	}
 	
 	public FinishedRiskAnalysisLists loadById(int id) {
+		Session session = CnAElementHome.getInstance().getSession();
 		Query query = session.createQuery(QUERY_FIND_BY_PARENT_ID);
 		query.setInteger(0, id);
 		List list = query.list();

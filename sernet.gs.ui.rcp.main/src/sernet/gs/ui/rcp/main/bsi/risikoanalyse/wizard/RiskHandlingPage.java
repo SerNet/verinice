@@ -1,5 +1,6 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.SearchFilter;
 
 /**
  * Choose an alternative, how to deal with the Gefaerdungen.
@@ -32,13 +34,12 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 public class RiskHandlingPage extends WizardPage {
 
 	private Composite composite;
-	private SearchFilter searchFilter = new SearchFilter();
 	private TableColumn imgColumn;
 	private TableColumn numberColumn;
 	private TableColumn nameColumn;
 	private TableColumn choiceColumn;
 	private TableViewer viewer;
-	
+	private SearchFilter searchFilter = new SearchFilter();
 	public static final String IMG_COLUMN_ID = "image";
 	public static final String NUMBER_COLUMN_ID = "number";
 	public static final String NAME_COLUMN_ID = "name";
@@ -136,10 +137,9 @@ public class RiskHandlingPage extends WizardPage {
 			 * @param event event containing information about the selection
 			 */
 	    	public void modifyText(ModifyEvent event) {
-	    		
 				Text text = (Text) event.widget;
-				
 				if (text.getText().length() > 0) {
+					
 					ViewerFilter[] filters = viewer.getFilters();
 					SearchFilter thisFilter = null;
 					boolean contains = false;
@@ -185,11 +185,12 @@ public class RiskHandlingPage extends WizardPage {
 
 	/**
 	 * Fills the TableViewer with all previously selected
-	 * Gefaehrdungen in order to choose an alternate proceeding.
-	 * 
+	 * Gefaehrdungen in order to choose an alternate
+	 * proceeding.
 	 * Is processed each time the WizardPage is set visible.
 	 */
 	private void initContents() {
+		cleanUpNotOKGefaehrdungsUmsetzungen();
 		List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = 
 			((RiskAnalysisWizard)getWizard()).getAllGefaehrdungsUmsetzungen();
 
@@ -210,6 +211,33 @@ public class RiskHandlingPage extends WizardPage {
 	}
 
 	/**
+	 * For repeated execution of the wizard:
+	 * 
+	 * Remove objects that were previously selected in this list, during the last execution of the wizard 
+	 * but have been removed this time by the user on the previous page.
+	 */
+	private void cleanUpNotOKGefaehrdungsUmsetzungen() {
+		List<GefaehrdungsUmsetzung> currentUmsetzungen = ((RiskAnalysisWizard)getWizard())
+		.getAllGefaehrdungsUmsetzungen();
+
+		oldUmsetzungen: for (GefaehrdungsUmsetzung oldUmsetzung: ((RiskAnalysisWizard)getWizard())
+				.getNotOKGefaehrdungsUmsetzungen()) {
+			boolean umsetzungFound = false;
+			for (GefaehrdungsUmsetzung currentUmsetzung : currentUmsetzungen) {
+				if (currentUmsetzung.getId().equals(oldUmsetzung.getId())) {
+					umsetzungFound = true;
+					continue oldUmsetzungen; 
+				}
+			}
+			if (!umsetzungFound) {
+				((RiskAnalysisWizard)getWizard()).getObjectsToDelete().add(oldUmsetzung);
+			}
+			
+			((RiskAnalysisWizard)getWizard()).removeOldObjects();
+		}
+	}
+
+	/**
 	 * Adjusts all columns of the TableViewer.
 	 */
 	private void packAllColumns() {
@@ -223,7 +251,6 @@ public class RiskHandlingPage extends WizardPage {
 	 * Activates the next button, if any of the Gefaehrdungen's alternative is "A" .
 	 */
 	private void checkPageComplete() {
-		
 		List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = 
 			((RiskAnalysisWizard)getWizard()).getAllGefaehrdungsUmsetzungen();
 		Boolean complete = false;
@@ -278,7 +305,7 @@ public class RiskHandlingPage extends WizardPage {
 				return true;
 			} else {
 				return false;
-			} /* end if */
-		} /* end select() */
-	} /* end class SearchFilter */
-} /* end RiskHandlingPage */
+			}
+		}
+	}
+}

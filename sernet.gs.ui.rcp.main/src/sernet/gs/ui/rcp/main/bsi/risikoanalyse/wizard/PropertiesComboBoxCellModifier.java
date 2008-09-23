@@ -72,6 +72,8 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 	 * @param value the selected GefaehrdungsUmsetzung's alternative
 	 */
 	public void modify(Object element, String property, Object value) {
+		if (element == null)
+			return;
 		
 		Object item = ((TableItem) element).getData();
 		List<GefaehrdungsUmsetzung> arrListNotOKGefaehrdungsUmsetzungen =

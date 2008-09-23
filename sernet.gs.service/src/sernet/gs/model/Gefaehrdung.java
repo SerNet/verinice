@@ -42,6 +42,18 @@ public class Gefaehrdung implements IGSModel {
 		return id + " "+ titel + " ["  + getKategorieAsString() + "]"; 
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Gefaehrdung))
+			return false;
+		Gefaehrdung gef2 = (Gefaehrdung) obj;
+
+		if (gef2.getDbId() == null || this.getDbId() == null)
+			return super.equals(obj);
+		
+		return gef2.getDbId().equals(this.getDbId());
+	}
+	
 	public String getId() {
 		return id;
 	}

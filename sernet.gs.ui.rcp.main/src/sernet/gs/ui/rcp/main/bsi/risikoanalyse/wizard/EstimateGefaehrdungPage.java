@@ -49,6 +49,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	private OwnGefaehrdungenFilter ownGefaehrdungFilter = new OwnGefaehrdungenFilter();
 	private GefaehrdungenFilter gefaehrdungFilter = new GefaehrdungenFilter();
 	private SearchFilter searchFilter = new SearchFilter();
+	private RiskAnalysisWizard wizard;
 
 	/**
 	 * Constructor sets title and description of WizardPage.
@@ -314,8 +315,11 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	 * Is processed each time the WizardPage is set visible.
 	 */
 	private void initContents() {
+		wizard = ((RiskAnalysisWizard) getWizard());
+		cleanUpAllGefaehrdungsUmsetzungen();
 		List<Gefaehrdung> arrListAssociatedGefaehrdungen =
-			((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen();
+			wizard.getAssociatedGefaehrdungen();
+		
 
 		/* map a domain model object into multiple images and text labels */
 		viewer.setLabelProvider(new CheckboxTableViewerLabelProvider());
@@ -327,6 +331,33 @@ public class EstimateGefaehrdungPage extends WizardPage {
 		packAllColumns();
 		
 		checkPageComplete();
+	}
+
+	/**
+	 * For repeated execution of the wizard:
+	 * 
+	 * Remove objects that were previously selected in this list, during the last execution of the wizard 
+	 * but have been removed this time by the user on the previous page.
+	 */
+	private void cleanUpAllGefaehrdungsUmsetzungen() {
+
+	List<Gefaehrdung> currentGefaehrdungen = wizard.getAssociatedGefaehrdungen();
+
+		oldGefaehrdungen: for (GefaehrdungsUmsetzung oldGefaehrdung: wizard.getAllGefaehrdungsUmsetzungen()) {
+			boolean umsetzungFound = false;
+			for (Gefaehrdung currentGefaehrdung: currentGefaehrdungen) {
+				if (oldGefaehrdung.getId().equals(currentGefaehrdung.getId())) {
+					umsetzungFound = true;
+					continue oldGefaehrdungen;
+				}
+			}
+			if (!umsetzungFound) {
+				wizard.getObjectsToDelete().add(oldGefaehrdung);
+			}
+		}
+		
+		wizard.removeOldObjects();
+	
 	}
 
 	/**

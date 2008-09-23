@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.model.IGSModel;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
@@ -54,6 +55,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	private OwnGefaehrdungenFilter ownGefaehrdungFilter = new OwnGefaehrdungenFilter();
 	private GefaehrdungenFilter gefaehrdungFilter = new GefaehrdungenFilter();
 	private SearchFilter searchFilter = new SearchFilter();
+	private RiskAnalysisWizard wizard;
 
 	/**
 	 * Constructor sets title an description of WizardPage.
@@ -143,7 +145,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				/* retrieve selected Gefaehrdung and open edit dialog with it */
 				IStructuredSelection selection = (IStructuredSelection) event
 						.getSelection();
-				Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection
+				IGSModel selectedGefaehrdung = (IGSModel) selection
 						.getFirstElement();
 				if (selectedGefaehrdung instanceof OwnGefaehrdung) {
 					OwnGefaehrdung selectedOwnGefaehrdung = (OwnGefaehrdung) selectedGefaehrdung;
@@ -322,7 +324,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 			public void widgetSelected(SelectionEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) viewer
 						.getSelection();
-				Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection
+				IGSModel selectedGefaehrdung = (IGSModel) selection
 						.getFirstElement();
 				if (selectedGefaehrdung instanceof OwnGefaehrdung) {
 					/* ask user to confirm */
@@ -348,11 +350,10 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
 		/* Listener opens Dialog for editing the selected Gefaehrdung */
 		buttonEdit.addSelectionListener(new SelectionAdapter() {
-			// FIXME bereits selektierte Gefährdungen werden nicht verändert -> erscheinen hinterher in der Risikoanalyse mit den alten Werten
 			public void widgetSelected(SelectionEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) viewer
 						.getSelection();
-				Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection
+				IGSModel selectedGefaehrdung = (IGSModel) selection
 						.getFirstElement();
 				if (selectedGefaehrdung instanceof OwnGefaehrdung) {
 					OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
@@ -383,7 +384,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * Is processed each time the WizardPage is set visible.
 	 */
 	private void initContents() {
-		ArrayList<Gefaehrdung> arrListAllGefaehrdungen = ((RiskAnalysisWizard) getWizard())
+		wizard = ((RiskAnalysisWizard) getWizard());
+		ArrayList<Gefaehrdung> arrListAllGefaehrdungen = wizard
 				.getAllGefaehrdungen();
 
 		/* map a domain model object into multiple images and text labels */
@@ -400,14 +402,23 @@ public class ChooseGefaehrdungPage extends WizardPage {
 		checkPageComplete();
 	}
 
+
 	/**
 	 * Marks all checkboxes of Gefaehrdungen associated to the selected Baustein.
 	 */
 	private void selectAssignedGefaehrdungen() {
 		List<Gefaehrdung> list = ((RiskAnalysisWizard) getWizard())
 				.getAssociatedGefaehrdungen();
-		viewer.setCheckedElements((Gefaehrdung[]) list
-				.toArray(new Gefaehrdung[list.size()]));
+		
+		ArrayList<Gefaehrdung> toCheck = new ArrayList<Gefaehrdung>(50);
+		for (Gefaehrdung selectedGefaehrdung : list) {
+			for (Gefaehrdung gefaehrdung : wizard.getAllGefaehrdungen()) {
+				if (gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
+					toCheck.add(gefaehrdung);
+				}
+			}
+		}
+		viewer.setCheckedElements(toCheck.toArray(new Object[toCheck.size()]));
 	}
 
 	/**
@@ -432,13 +443,15 @@ public class ChooseGefaehrdungPage extends WizardPage {
 			setPageComplete(true);
 		}
 	}
+	
+	
 
 	/**
 	 * Deletes a OwnGefaehrdung.
 	 * 
 	 * @param delGefaehrdung the (Own)Gefaehrdung to delete
 	 */
-	private void deleteOwnGefaehrdung(Gefaehrdung delGefaehrdung) {
+	private void deleteOwnGefaehrdung(IGSModel delGefaehrdung) {
 		ArrayList<Gefaehrdung> arrListAllGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAllGefaehrdungen();
 		List<Gefaehrdung> arrListAssociatedGefaehrdungen = ((RiskAnalysisWizard) getWizard())

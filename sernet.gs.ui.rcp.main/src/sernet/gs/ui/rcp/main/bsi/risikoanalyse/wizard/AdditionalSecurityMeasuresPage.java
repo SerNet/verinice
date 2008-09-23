@@ -477,9 +477,6 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 */
 	private void initContents() {
 
-		
-		//FIXME not necessary?? ((RiskAnalysisWizard) getWizard()).addRisikoGefaehrdungsUmsetzungen();
-		
 		List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = ((RiskAnalysisWizard) getWizard())
 				.getNotOKGefaehrdungsUmsetzungen();
 

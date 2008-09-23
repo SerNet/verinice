@@ -17,10 +17,8 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 public class RisikoMassnahmeHome {
 	
 	private static RisikoMassnahmeHome instance;
-	private Session session;
 
 	private RisikoMassnahmeHome() {
-		session = CnAElementHome.getInstance().getSession();
 	}
 	
 	public synchronized static RisikoMassnahmeHome getInstance() {
@@ -30,6 +28,7 @@ public class RisikoMassnahmeHome {
 	}
 	
 	public void saveNew(RisikoMassnahme mn) throws Exception {
+		Session session = CnAElementHome.getInstance().getSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -44,6 +43,7 @@ public class RisikoMassnahmeHome {
 	}
 	
 	public void saveUpdate(RisikoMassnahme mn) throws Exception {
+		Session session = CnAElementHome.getInstance().getSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -59,6 +59,7 @@ public class RisikoMassnahmeHome {
 	}
 	
 	public void remove(RisikoMassnahme mn) throws Exception {
+		Session session = CnAElementHome.getInstance().getSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -74,6 +75,7 @@ public class RisikoMassnahmeHome {
 	}
 	
 	public ArrayList<RisikoMassnahme> loadAll() throws RuntimeException {
+		Session session = CnAElementHome.getInstance().getSession();
 		Transaction transaction = session.beginTransaction();
 		Criteria criteria = session.createCriteria(RisikoMassnahme.class);
 		List models = criteria.list();
@@ -89,6 +91,7 @@ public class RisikoMassnahmeHome {
 		+ "where element.number = ?";
 
 	public RisikoMassnahme loadByNumber(String number) {
+		Session session = CnAElementHome.getInstance().getSession();
 		Query query = session.createQuery(QUERY_FIND_BY_ID);
 		query.setString(0, number);
 		List list = query.list();

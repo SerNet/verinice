@@ -15,10 +15,9 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 public class OwnGefaehrdungHome {
 	
 	private static OwnGefaehrdungHome instance;
-	private Session session;
 
 	private OwnGefaehrdungHome() {
-		session = CnAElementHome.getInstance().getSession();
+		
 	}
 	
 	public synchronized static OwnGefaehrdungHome getInstance() {
@@ -28,6 +27,7 @@ public class OwnGefaehrdungHome {
 	}
 	
 	public void saveNew(OwnGefaehrdung gefaehrdung) throws Exception {
+		Session session = CnAElementHome.getInstance().getSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -42,6 +42,7 @@ public class OwnGefaehrdungHome {
 	}
 	
 	public void saveUpdate(OwnGefaehrdung gefaehrdung) throws Exception {
+		Session session = CnAElementHome.getInstance().getSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -57,6 +58,7 @@ public class OwnGefaehrdungHome {
 	}
 	
 	public void remove(OwnGefaehrdung gefaehrdung) throws Exception {
+		Session session = CnAElementHome.getInstance().getSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -72,6 +74,7 @@ public class OwnGefaehrdungHome {
 	}
 	
 	public ArrayList<OwnGefaehrdung> loadAll() throws RuntimeException {
+		Session session = CnAElementHome.getInstance().getSession();
 		Transaction transaction = session.beginTransaction();
 		Criteria criteria = session.createCriteria(OwnGefaehrdung.class);
 		List models = criteria.list();
