@@ -32,12 +32,12 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 public class RiskHandlingPage extends WizardPage {
 
 	private Composite composite;
+	private SearchFilter searchFilter = new SearchFilter();
 	private TableColumn imgColumn;
 	private TableColumn numberColumn;
 	private TableColumn nameColumn;
 	private TableColumn choiceColumn;
 	private TableViewer viewer;
-	private SearchFilter searchFilter = new SearchFilter();
 	
 	public static final String IMG_COLUMN_ID = "image";
 	public static final String NUMBER_COLUMN_ID = "number";
@@ -136,9 +136,10 @@ public class RiskHandlingPage extends WizardPage {
 			 * @param event event containing information about the selection
 			 */
 	    	public void modifyText(ModifyEvent event) {
+	    		
 				Text text = (Text) event.widget;
+				
 				if (text.getText().length() > 0) {
-					
 					ViewerFilter[] filters = viewer.getFilters();
 					SearchFilter thisFilter = null;
 					boolean contains = false;
@@ -184,8 +185,8 @@ public class RiskHandlingPage extends WizardPage {
 
 	/**
 	 * Fills the TableViewer with all previously selected
-	 * Gefaehrdungen in order to choose an alternate
-	 * proceeding.
+	 * Gefaehrdungen in order to choose an alternate proceeding.
+	 * 
 	 * Is processed each time the WizardPage is set visible.
 	 */
 	private void initContents() {
@@ -222,6 +223,7 @@ public class RiskHandlingPage extends WizardPage {
 	 * Activates the next button, if any of the Gefaehrdungen's alternative is "A" .
 	 */
 	private void checkPageComplete() {
+		
 		List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = 
 			((RiskAnalysisWizard)getWizard()).getAllGefaehrdungsUmsetzungen();
 		Boolean complete = false;
@@ -276,7 +278,7 @@ public class RiskHandlingPage extends WizardPage {
 				return true;
 			} else {
 				return false;
-			}
-		}
-	}
-}
+			} /* end if */
+		} /* end select() */
+	} /* end class SearchFilter */
+} /* end RiskHandlingPage */
