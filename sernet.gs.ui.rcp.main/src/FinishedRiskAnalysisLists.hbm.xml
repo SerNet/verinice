@@ -28,7 +28,7 @@
 		<list name="associatedGefaehrdungen" cascade="all-delete-orphan">
             <key column="riskanalysislists_id2" />
             <index column="idx2"/>
-            <one-to-many class="sernet.gs.model.Gefaehrdung"/>
+            <many-to-many class="GefaehrdungsUmsetzung"/>
         </list>
 
 		<list name="notOKGefaehrdungsUmsetzungen" cascade="all-delete-orphan">

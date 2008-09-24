@@ -34,6 +34,7 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 
@@ -117,20 +118,13 @@ public class ChooseGefaehrdungPage extends WizardPage {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				Gefaehrdung currentGefaehrdung = (Gefaehrdung) event
 						.getElement();
-				List<Gefaehrdung> selectedArrayList = ((RiskAnalysisWizard) getWizard())
-						.getAssociatedGefaehrdungen();
 
-				if (event.getChecked()) {
-					if (!selectedArrayList.contains(currentGefaehrdung))
-						/* Add to List of Associated Gefaehrdungen */
-						selectedArrayList.add(currentGefaehrdung);
-				} else {
-					/* remove from List of Associated Gefaehrdungen */
-					selectedArrayList.remove(currentGefaehrdung);
-				}
-
-				checkPageComplete();
+				if (event.getChecked())
+					associateGefaehrdung(currentGefaehrdung, true);
+				else 
+					associateGefaehrdung(currentGefaehrdung, false);
 			}
+
 		});
 
 		/* listener opens edit Dialog for the selected Gefaehrdung */
@@ -190,7 +184,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				} else {
 					viewer.removeFilter(ownGefaehrdungFilter);
 					viewer.refresh();
-					selectAssignedGefaehrdungen();
+					assignBausteinGefaehrdungen();
 				}
 			}
 		});
@@ -218,7 +212,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				} else {
 					viewer.removeFilter(gefaehrdungFilter);
 					viewer.refresh();
-					selectAssignedGefaehrdungen();
+					assignBausteinGefaehrdungen();
 				}
 			}
 		});
@@ -266,7 +260,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				} else {
 					viewer.removeFilter(searchFilter);
 					viewer.refresh();
-					selectAssignedGefaehrdungen();
+					assignBausteinGefaehrdungen();
 				}
 			}
 		});
@@ -309,7 +303,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				dialog.open();
 				((RiskAnalysisWizard) getWizard()).addOwnGefaehrdungen();
 				viewer.refresh();
-				selectAssignedGefaehrdungen();
+				assignBausteinGefaehrdungen();
 			}
 		});
 
@@ -324,7 +318,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 			public void widgetSelected(SelectionEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) viewer
 						.getSelection();
-				IGSModel selectedGefaehrdung = (IGSModel) selection
+				Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection
 						.getFirstElement();
 				if (selectedGefaehrdung instanceof OwnGefaehrdung) {
 					/* ask user to confirm */
@@ -336,7 +330,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 					if (confirmed) {
 						deleteOwnGefaehrdung(selectedGefaehrdung);
 						viewer.refresh();
-						selectAssignedGefaehrdungen();
+						assignBausteinGefaehrdungen();
 					}
 				}
 			}
@@ -364,6 +358,26 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				}
 			}
 		});
+	}
+
+	protected void associateGefaehrdung(Gefaehrdung currentGefaehrdung, boolean select) {
+			RiskAnalysisWizard wizard = ((RiskAnalysisWizard) getWizard());
+			List<GefaehrdungsUmsetzung> selectedArrayList = wizard
+					.getAssociatedGefaehrdungen();
+
+			if (select) {
+				if (!GefaehrdungsUtil.listContainsById(selectedArrayList, currentGefaehrdung)) {
+					/* Add to List of Associated Gefaehrdungen */
+					selectedArrayList.add(
+							GefaehrdungsUmsetzungFactory.build(wizard.getFinishedRiskAnalysis(), currentGefaehrdung)
+							);
+				}
+			} else {
+				/* remove from List of Associated Gefaehrdungen */
+				GefaehrdungsUtil.removeBySameId(selectedArrayList, currentGefaehrdung);
+			}
+			checkPageComplete();
+	
 	}
 
 	/**
@@ -395,7 +409,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
 		/* associate domain model with viewer */
 		viewer.setInput(arrListAllGefaehrdungen);
 		viewer.setSorter(new GefaehrdungenSorter());
-		selectAssignedGefaehrdungen();
+		assignBausteinGefaehrdungen();
+		checkAllSelectedGefaehrdungen();
 		packAllColumns();
 
 		((RiskAnalysisWizard) getWizard()).setCanFinish(false);
@@ -403,22 +418,35 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	}
 
 
+	private void checkAllSelectedGefaehrdungen() {
+		List<Gefaehrdung> toCheck = new ArrayList<Gefaehrdung>();
+		for (GefaehrdungsUmsetzung associatedGefaehrdung: wizard.getAssociatedGefaehrdungen()) {
+			for (Gefaehrdung gefaehrdung: wizard.getAllGefaehrdungen()) {
+				if (gefaehrdung.getId().equals(associatedGefaehrdung.getId()))
+					toCheck.add(gefaehrdung);
+			}
+		}
+		
+		Gefaehrdung[] checkarray = (Gefaehrdung[]) toCheck.toArray(new Gefaehrdung[toCheck
+				.size()]);
+		viewer.setCheckedElements(checkarray);
+	}
+
 	/**
 	 * Marks all checkboxes of Gefaehrdungen associated to the selected Baustein.
 	 */
-	private void selectAssignedGefaehrdungen() {
-		List<Gefaehrdung> list = ((RiskAnalysisWizard) getWizard())
+	private void assignBausteinGefaehrdungen() {
+		List<GefaehrdungsUmsetzung> list = ((RiskAnalysisWizard) getWizard())
 				.getAssociatedGefaehrdungen();
 		
 		ArrayList<Gefaehrdung> toCheck = new ArrayList<Gefaehrdung>(50);
-		for (Gefaehrdung selectedGefaehrdung : list) {
+		for (GefaehrdungsUmsetzung selectedGefaehrdung : list) {
 			for (Gefaehrdung gefaehrdung : wizard.getAllGefaehrdungen()) {
 				if (gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
-					toCheck.add(gefaehrdung);
+					associateGefaehrdung(gefaehrdung, true);
 				}
 			}
 		}
-		viewer.setCheckedElements(toCheck.toArray(new Object[toCheck.size()]));
 	}
 
 	/**
@@ -451,10 +479,10 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * 
 	 * @param delGefaehrdung the (Own)Gefaehrdung to delete
 	 */
-	private void deleteOwnGefaehrdung(IGSModel delGefaehrdung) {
+	private void deleteOwnGefaehrdung(Gefaehrdung delGefaehrdung) {
 		ArrayList<Gefaehrdung> arrListAllGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAllGefaehrdungen();
-		List<Gefaehrdung> arrListAssociatedGefaehrdungen = ((RiskAnalysisWizard) getWizard())
+		List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAssociatedGefaehrdungen();
 		ArrayList<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAllOwnGefaehrdungen();
@@ -467,13 +495,9 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
 				/* delete OwnGefaehrdung from List of OwnGefaehrdungen */
 				arrListOwnGefaehrdungen.remove(delGefaehrdung);
-				((RiskAnalysisWizard) getWizard())
-						.setAllOwnGefaehrdungen(arrListOwnGefaehrdungen);
 
 				/* delete OwnGefaehrdung from List of selected Gefaehrdungen */
-				if (arrListAssociatedGefaehrdungen.contains(delGefaehrdung)) {
-					arrListAssociatedGefaehrdungen.remove(delGefaehrdung);
-				}
+				GefaehrdungsUtil.removeBySameId(arrListAssociatedGefaehrdungen, delGefaehrdung);
 
 				/* delete OwnGefaehrdung from list of all Gefaehrdungen */
 				if (arrListAllGefaehrdungen.contains(delGefaehrdung)) {

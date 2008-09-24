@@ -115,27 +115,20 @@ public class EstimateGefaehrdungPage extends WizardPage {
 			 * Notifies of a change to the checked state of an element.
 			 */
 			public void checkStateChanged(CheckStateChangedEvent event) {
-				Gefaehrdung currentGefaehrdung = (Gefaehrdung) event
+				GefaehrdungsUmsetzung gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) event
 						.getElement();
 				List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen =
 					((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen();
 
-				/* switch from Gefaehrdung to GefaehrdungsUmsetzung */
 				if (event.getChecked()) {
 					/* checkbox set */
 
 					try {
-						
-						GefaehrdungsUmsetzung newGefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory
-						.build(((RiskAnalysisWizard) getWizard())
-								.getFinishedRiskAnalysis(),
-								currentGefaehrdung);
-						
-						((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().addChild(newGefaehrdungsUmsetzung);
-						newGefaehrdungsUmsetzung.setOkay(false);
+						((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().addChild(gefaehrdungsUmsetzung);
+						gefaehrdungsUmsetzung.setOkay(false);
 						
 						/* add to arrListGefaehrdungsUmsetzungen */
-						arrListGefaehrdungsUmsetzungen.add(newGefaehrdungsUmsetzung);
+						arrListGefaehrdungsUmsetzungen.add(gefaehrdungsUmsetzung);
 						
 					} catch (Exception e) {
 						Logger.getLogger(this.getClass()).debug(e.toString());
@@ -145,15 +138,9 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					/* checkbox unset */
 
 					/* remove from arrListGefaehrdungsUmsetzungen */
-					for (GefaehrdungsUmsetzung gefaehrdung : arrListGefaehrdungsUmsetzungen) {
-						if (currentGefaehrdung.getId().equals(
-								gefaehrdung.getId())) {
-							((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().removeChild(gefaehrdung);
-							gefaehrdung.setOkay(true);
-							arrListGefaehrdungsUmsetzungen.remove(gefaehrdung);
-							break;
-						}
-					}
+					GefaehrdungsUtil.removeBySameId(arrListGefaehrdungsUmsetzungen, gefaehrdungsUmsetzung);
+					((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().removeChild(gefaehrdungsUmsetzung);
+					gefaehrdungsUmsetzung.setOkay(true);
 				}
 
 				((RiskAnalysisWizard) getWizard()).setCanFinish(false);
@@ -283,10 +270,10 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	private void selectAssignedGefaehrdungen() {
 		List<GefaehrdungsUmsetzung> gefaehrdungenToCheck
 			= ((RiskAnalysisWizard)getWizard()).getNotOKGefaehrdungsUmsetzungen();
-		List<Gefaehrdung> associatedGefaehrdungen =
+		List<GefaehrdungsUmsetzung> associatedGefaehrdungen =
 			((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen();
 
-		alleGefaehrdungen: for (Gefaehrdung gefaehrdung : associatedGefaehrdungen) {
+		alleGefaehrdungen: for (GefaehrdungsUmsetzung gefaehrdung : associatedGefaehrdungen) {
 				for (GefaehrdungsUmsetzung toCheck : gefaehrdungenToCheck) {
 					if (gefaehrdung.getId().equals(toCheck.getId())) {
 						viewer.setChecked(gefaehrdung, true);
@@ -317,7 +304,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	private void initContents() {
 		wizard = ((RiskAnalysisWizard) getWizard());
 		cleanUpAllGefaehrdungsUmsetzungen();
-		List<Gefaehrdung> arrListAssociatedGefaehrdungen =
+		List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen =
 			wizard.getAssociatedGefaehrdungen();
 		
 
@@ -341,11 +328,11 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	 */
 	private void cleanUpAllGefaehrdungsUmsetzungen() {
 
-	List<Gefaehrdung> currentGefaehrdungen = wizard.getAssociatedGefaehrdungen();
+	List<GefaehrdungsUmsetzung> currentGefaehrdungen = wizard.getAssociatedGefaehrdungen();
 
 		oldGefaehrdungen: for (GefaehrdungsUmsetzung oldGefaehrdung: wizard.getAllGefaehrdungsUmsetzungen()) {
 			boolean umsetzungFound = false;
-			for (Gefaehrdung currentGefaehrdung: currentGefaehrdungen) {
+			for (GefaehrdungsUmsetzung currentGefaehrdung: currentGefaehrdungen) {
 				if (oldGefaehrdung.getId().equals(currentGefaehrdung.getId())) {
 					umsetzungFound = true;
 					continue oldGefaehrdungen;

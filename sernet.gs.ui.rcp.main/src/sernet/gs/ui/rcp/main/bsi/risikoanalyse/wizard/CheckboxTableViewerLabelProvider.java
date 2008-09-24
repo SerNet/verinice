@@ -5,6 +5,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 
 /**
  *  Provides text or image for each column per item in the CheckboxTableViewer.
@@ -39,9 +40,18 @@ public class CheckboxTableViewerLabelProvider implements ITableLabelProvider {
 	 *            the zero-based index of the column in which the label appears
 	 */
 	public String getColumnText(Object element, int columnIndex) {
-		
-		Gefaehrdung gef = (Gefaehrdung) element;
-		
+		if (element instanceof GefaehrdungsUmsetzung) {
+			GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
+			return getText(gef, columnIndex);
+		}
+		if (element instanceof Gefaehrdung) {
+			Gefaehrdung gef = (Gefaehrdung) element;
+			return getText(gef, columnIndex);
+		}
+		return "";
+	}
+
+	private String getText(Gefaehrdung gef, int columnIndex) {
 		switch (columnIndex) {
 		case 0:
 			return null;
@@ -53,6 +63,22 @@ public class CheckboxTableViewerLabelProvider implements ITableLabelProvider {
 			return gef.getTitel();
 		case 4:
 			return gef.getKategorieAsString();
+		};
+		return "";
+	}
+
+	private String getText(GefaehrdungsUmsetzung gef, int columnIndex) {
+		switch (columnIndex) {
+		case 0:
+			return null;
+		case 1:
+			return null;
+		case 2:
+			return gef.getId();
+		case 3:
+			return gef.getTitel();
+		case 4:
+			return gef.getKategorie();
 		};
 		return "";
 	}

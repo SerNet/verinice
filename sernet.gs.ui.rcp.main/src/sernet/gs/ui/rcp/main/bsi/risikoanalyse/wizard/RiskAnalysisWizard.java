@@ -23,6 +23,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisListsHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
@@ -188,7 +189,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 *            ArrayList of Gefaehrdungen
 	 */
 	public void setAssociatedGefaehrdungen(
-			ArrayList<Gefaehrdung> newAssociatedGefaehrdungen) {
+			ArrayList<GefaehrdungsUmsetzung> newAssociatedGefaehrdungen) {
 		finishedRiskLists.setAssociatedGefaehrdungen( newAssociatedGefaehrdungen);
 	}
 
@@ -198,7 +199,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * 
 	 * @return ArrayList of currently associated Gefaehrdungen
 	 */
-	public List<Gefaehrdung> getAssociatedGefaehrdungen() {
+	public List<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
 		return finishedRiskLists.getAssociatedGefaehrdungen();
 	}
 
@@ -286,15 +287,9 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 				continue;
 
 			for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
-				Boolean duplicate = false;
-				alleTitel: for (Gefaehrdung element : finishedRiskLists.getAssociatedGefaehrdungen()) {
-					if (element.getTitel().equals(gefaehrdung.getTitel())) {
-						duplicate = true;
-						break alleTitel;
-					}
-				}
-				if (!duplicate) {
-					finishedRiskLists.getAssociatedGefaehrdungen().add(gefaehrdung);
+				if (!GefaehrdungsUtil.listContainsById(finishedRiskLists.getAssociatedGefaehrdungen(), gefaehrdung)) {
+					finishedRiskLists.getAssociatedGefaehrdungen().add(
+							GefaehrdungsUmsetzungFactory.build(finishedRiskAnalysis, gefaehrdung));
 				}
 			}
 		}
@@ -379,10 +374,6 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 */
 	public void addOwnGefaehrdungen() {
 		for (OwnGefaehrdung element : allOwnGefaehrdungen) {
-			/* add to List of selected Gefaehrdungen */
-			if (!(finishedRiskLists.getAssociatedGefaehrdungen().contains(element))) {
-				finishedRiskLists.getAssociatedGefaehrdungen().add(element);
-			}
 			/* add to list of all Gefaehrdungen */
 			if (!(allGefaehrdungen.contains(element))) {
 				allGefaehrdungen.add(element);

@@ -18,7 +18,7 @@ public class FinishedRiskAnalysisLists {
 	/*
 	 * list of Gefaehrdungen associated to the chosen IT-system 
 	 */
-	private List<Gefaehrdung> associatedGefaehrdungen = new ArrayList<Gefaehrdung>();
+	private List<GefaehrdungsUmsetzung> associatedGefaehrdungen = new ArrayList<GefaehrdungsUmsetzung>();
 
 
 	/*
@@ -29,7 +29,7 @@ public class FinishedRiskAnalysisLists {
 
 	public FinishedRiskAnalysisLists(int analysisId,
 			ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen,
-			ArrayList<Gefaehrdung> associatedGefaehrdungen,
+			ArrayList<GefaehrdungsUmsetzung> associatedGefaehrdungen,
 			ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen) {
 		this.finishedRiskAnalysisId = analysisId;
 		this.allGefaehrdungsUmsetzungen = allGefaehrdungsUmsetzungen;
@@ -45,7 +45,7 @@ public class FinishedRiskAnalysisLists {
 		return allGefaehrdungsUmsetzungen;
 	}
 
-	public List<Gefaehrdung> getAssociatedGefaehrdungen() {
+	public List<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
 		return associatedGefaehrdungen;
 	}
 	
@@ -76,7 +76,7 @@ public class FinishedRiskAnalysisLists {
 	}
 
 	public void setAssociatedGefaehrdungen(
-			List<Gefaehrdung> associatedGefaehrdungen) {
+			List<GefaehrdungsUmsetzung> associatedGefaehrdungen) {
 		this.associatedGefaehrdungen = associatedGefaehrdungen;
 	}
 

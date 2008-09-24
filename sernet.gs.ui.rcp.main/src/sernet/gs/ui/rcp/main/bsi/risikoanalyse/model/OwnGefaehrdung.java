@@ -50,8 +50,5 @@ public class OwnGefaehrdung extends Gefaehrdung {
 		this.ownkategorie = ownkategorie;
 	}
 
-	public String getUrl() {
-		return getId();
-	}
 	
 }
