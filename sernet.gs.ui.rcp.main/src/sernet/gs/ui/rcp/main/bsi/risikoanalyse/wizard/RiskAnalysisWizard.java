@@ -214,7 +214,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 					.getGefaehrdungen()) {
 				Boolean duplicate = false;
 				alleTitel: for (IGSModel element : allGefaehrdungen) {
-					if (element.getTitel().equals(gefaehrdung.getTitel())) {
+					if (element.getId().equals(gefaehrdung.getId())) {
 						duplicate = true;
 						break alleTitel;
 					}
