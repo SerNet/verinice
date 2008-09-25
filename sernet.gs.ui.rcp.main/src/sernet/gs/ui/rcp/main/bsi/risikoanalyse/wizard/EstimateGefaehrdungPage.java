@@ -268,18 +268,12 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	 * Marks all checkboxes of Gefaehrdungen that are selected as not okay.
 	 */
 	private void selectAssignedGefaehrdungen() {
-		List<GefaehrdungsUmsetzung> gefaehrdungenToCheck
-			= ((RiskAnalysisWizard)getWizard()).getNotOKGefaehrdungsUmsetzungen();
 		List<GefaehrdungsUmsetzung> associatedGefaehrdungen =
 			((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen();
 
-		alleGefaehrdungen: for (GefaehrdungsUmsetzung gefaehrdung : associatedGefaehrdungen) {
-				for (GefaehrdungsUmsetzung toCheck : gefaehrdungenToCheck) {
-					if (gefaehrdung.getId().equals(toCheck.getId())) {
-						viewer.setChecked(gefaehrdung, true);
-						continue alleGefaehrdungen; 
-				}
-			}
+		for (GefaehrdungsUmsetzung gefaehrdung : associatedGefaehrdungen) {
+			if (!gefaehrdung.getOkay())
+				viewer.setChecked(gefaehrdung, true);
 		}		
 	}
 
@@ -315,6 +309,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 		/* associate domain model with viewer */
 		viewer.setInput(arrListAssociatedGefaehrdungen);
 		viewer.setSorter(new GefaehrdungenSorter());
+		selectAssignedGefaehrdungen();
 		packAllColumns();
 		
 		checkPageComplete();

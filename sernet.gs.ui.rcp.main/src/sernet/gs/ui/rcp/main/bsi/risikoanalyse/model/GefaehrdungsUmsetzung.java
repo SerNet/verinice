@@ -19,12 +19,9 @@ import sernet.hui.common.connect.EntityType;
 public class GefaehrdungsUmsetzung extends CnATreeElement
 	implements IGefaehrdungsBaumElement {
 
-	private List<IGefaehrdungsBaumElement> gefaehrdungsChildren = new ArrayList<IGefaehrdungsBaumElement>();
 	private IGefaehrdungsBaumElement gefaehrdungsParent;
 	
 	private static EntityType entityType;
-
-	
 	
 	public static final String GEFAEHRDUNG_ALTERNATIVE_A = "A";
 	public static final String GEFAEHRDUNG_ALTERNATIVE_B = "B";
@@ -141,17 +138,21 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	 *  in the tree.
 	 */
 	public List<IGefaehrdungsBaumElement> getGefaehrdungsBaumChildren() {
-		return gefaehrdungsChildren;
+		List<IGefaehrdungsBaumElement> children = new ArrayList<IGefaehrdungsBaumElement>(getChildren().size());
+		for (Object object: getChildren()) {
+			if (object instanceof IGefaehrdungsBaumElement)
+				children.add((IGefaehrdungsBaumElement)object);
+		}
+		return children;
 	}
 	
 	/**
-	 * returns the list of children (RisikoMassnahmenUmsetzungen)
+	 * 	adds a child (RisikoMassnahmenUmsetzungen)
 	 *  in the tree.
 	 */
 	public void addGefaehrdungsBaumChild(IGefaehrdungsBaumElement newChild) {
-		if (! (gefaehrdungsChildren.contains(newChild))) {
-			gefaehrdungsChildren.add(newChild);
-		}
+		if (newChild instanceof CnATreeElement)
+			addChild((CnATreeElement) newChild);
 	}
 	
 	@Override
@@ -166,7 +167,8 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	 *  in the tree.
 	 */
 	public void removeGefaehrdungsBaumChild(IGefaehrdungsBaumElement child) {
-		gefaehrdungsChildren.remove(child);
+		if (child instanceof CnATreeElement)
+			removeChild((CnATreeElement) child);
 	}
 
 	public String getTitel() {
