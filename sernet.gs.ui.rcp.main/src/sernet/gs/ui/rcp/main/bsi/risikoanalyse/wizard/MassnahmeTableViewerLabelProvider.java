@@ -112,7 +112,7 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 	 * @return shortened version of the description without newline-characters
 	 */
 	private String shorten(String description) {
-		String oneline = description.replaceAll("\\n", " ");
+		String oneline = description.replaceAll(System.getProperty("line.separator"), " ");
 		if (oneline.length() > 100)
 			return oneline.substring(0, 100) + "...";
 		return oneline;

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?pde version="3.1"?>
+<?pde version="3.4"?>
 
-<product name="verinice 0.6.2" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" useFeatures="false">
+<product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="0.7.0" useFeatures="false">
 
    <aboutInfo>
       <image path="icons/product_lg.gif"/>
       <text>
          SerNet verinice
-Ver 0.6.2
 
 (c) SerNet Service Network GmbH and others
 1996-2008
@@ -28,14 +27,14 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
       </text>
    </aboutInfo>
 
-   <configIni use="default"/>
+   <configIni use="default">
+   </configIni>
 
    <launcherArgs>
       <vmArgs>-Xms64m -Xmx512m</vmArgs>
    </launcherArgs>
 
    <windowImages i16="/sernet.gs.ui.rcp.main/icons/window16.gif" i32="/sernet.gs.ui.rcp.main/icons/window32.gif"/>
-
 
    <launcher name="verinice">
       <linux icon="/sernet.gs.ui.rcp.main/wxcas.xpm"/>
@@ -53,7 +52,6 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
       </win>
    </launcher>
 
-
    <vm>
    </vm>
 
@@ -62,7 +60,6 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
       <plugin id="com.ibm.icu.source"/>
       <plugin id="org.apache.lucene"/>
       <plugin id="org.apache.lucene.analysis"/>
-      <plugin id="org.eclipse.core.boot"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>
@@ -77,9 +74,7 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
       <plugin id="org.eclipse.core.filesystem.solaris.sparc" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.core.jobs"/>
-      <plugin id="org.eclipse.core.net"/>
       <plugin id="org.eclipse.core.resources"/>
-      <plugin id="org.eclipse.core.resources.compatibility" fragment="true"/>
       <plugin id="org.eclipse.core.resources.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.core.runtime"/>
       <plugin id="org.eclipse.equinox.app"/>
@@ -112,20 +107,10 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
       <plugin id="org.eclipse.ui.editors"/>
       <plugin id="org.eclipse.ui.forms"/>
       <plugin id="org.eclipse.ui.ide"/>
-      <plugin id="org.eclipse.ui.ide.application"/>
       <plugin id="org.eclipse.ui.intro"/>
-      <plugin id="org.eclipse.ui.navigator"/>
-      <plugin id="org.eclipse.ui.navigator.resources"/>
-      <plugin id="org.eclipse.ui.views"/>
-      <plugin id="org.eclipse.ui.views.properties.tabbed"/>
       <plugin id="org.eclipse.ui.win32" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
-      <plugin id="org.eclipse.update.configurator"/>
-      <plugin id="org.eclipse.update.core"/>
-      <plugin id="org.eclipse.update.core.linux" fragment="true"/>
-      <plugin id="org.eclipse.update.core.win32" fragment="true"/>
-      <plugin id="org.eclipse.update.ui"/>
       <plugin id="sernet.gs.service"/>
       <plugin id="sernet.gs.ui.rcp.main"/>
       <plugin id="sernet.hui.common"/>
