@@ -181,6 +181,8 @@ public abstract class CnATreeElement {
 				huiConfig = String.format("%s%sconf%sSNCA.xml", CnAWorkspace
 						.getInstance().getWorkdir(), File.separator,
 						File.separator);
+				huiConfig = (new File(huiConfig)).toURI().toString();
+				Logger.getLogger(this.getClass()).debug("Getting type definition from: " + huiConfig);
 				HUITypeFactory.initialize(huiConfig);
 				typeFactory = HUITypeFactory.getInstance();
 				Logger.getLogger(this.getClass()).debug("HUI initialized.");
