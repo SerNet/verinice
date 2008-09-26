@@ -38,16 +38,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.vafada.swtcalendar.SWTCalendarEvent;
-import org.vafada.swtcalendar.SWTCalendarListener;
 
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
-import sernet.hui.swt.dialogs.SWTCalendarDialog;
 import sernet.snutils.AssertException;
 import sernet.snutils.ExceptionHandlerFactory;
 import sernet.snutils.FormInputParser;
@@ -72,9 +70,7 @@ public class DateSelectionControl implements IHuiControl {
 
 	private Label label;
 
-	private Text dateText;
-
-	private Button button;
+	private DateTime dateTime;
 
 	private Color oldBgColor;
 
@@ -83,7 +79,7 @@ public class DateSelectionControl implements IHuiControl {
 	private boolean useRule;
 	
 	public Control getControl() {
-		return dateText;
+		return dateTime;
 	}
 
 	/**
@@ -108,7 +104,7 @@ public class DateSelectionControl implements IHuiControl {
 		label = new Label(composite, SWT.NULL);
 
 		Composite container = new Composite(composite, SWT.NULL);
-		GridLayout contLayout = new GridLayout(2, false);
+		GridLayout contLayout = new GridLayout(1, false);
 		contLayout.horizontalSpacing = 0;
 		contLayout.marginHeight = 0;
 		contLayout.marginLeft = 0;
@@ -120,8 +116,8 @@ public class DateSelectionControl implements IHuiControl {
 		containerLData.grabExcessHorizontalSpace = true;
 		container.setLayoutData(containerLData);
 
-		dateText = new Text(container, SWT.BORDER);
-		button = new Button(container, SWT.PUSH | SWT.CENTER);
+		
+		dateTime = new DateTime(container, SWT.CALENDAR);
 
 		GridData label36LData = new GridData();
 		label36LData.verticalAlignment = GridData.CENTER;
@@ -140,63 +136,40 @@ public class DateSelectionControl implements IHuiControl {
 		startWvTextLData.horizontalAlignment = GridData.FILL;
 		startWvTextLData.horizontalSpan = 1;
 		startWvTextLData.grabExcessHorizontalSpace = true;
-		dateText.setLayoutData(startWvTextLData);
-		dateText.setEditable(editable);
+		dateTime.setLayoutData(startWvTextLData);
+		dateTime.setEnabled(editable);
 		if (!editable)
-			dateText.setBackground(Colors.GREY);
-		oldBgColor = dateText.getBackground();
-		oldFgColor = dateText.getForeground();
-		dateText.setDoubleClickEnabled(editable);
-		dateText.addMouseListener(new MouseAdapter() {
-			public void mouseDoubleClick(MouseEvent evt) {
-				showCalendarDialog();
-			}
-		});
-		dateText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent arg0) {
-				validate();
-			}
-		});
-		dateText.addFocusListener(new FocusAdapter() {
+			dateTime.setBackground(Colors.GREY);
+		oldBgColor = dateTime.getBackground();
+		oldFgColor = dateTime.getForeground();
+		dateTime.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void focusLost(FocusEvent arg0) {
-				try {
-					// try to fix user input on exit:
-					java.sql.Date userDate = FormInputParser
-							.stringToDate(dateText.getText());
-					dateText.setText(sernet.snutils.FormInputParser
-							.dateToString(userDate));
-					java.sql.Date fixedDate = FormInputParser
-							.stringToDate(dateText.getText());
-					savedProp.setPropertyValue(Long.toString(fixedDate
-							.getTime()));
-					dateText.setBackground(oldBgColor);
-					dateText.setForeground(oldFgColor);
-				} catch (AssertException e) {
-					dateText.setBackground(Colors.YELLOW);
-					dateText.setForeground(Colors.BLACK);
-				}
+			public void widgetSelected(SelectionEvent e) {
+				savedProp.setPropertyValue(Long.toString(getDateInMillis()), true, dateTime);
 			}
 		});
 
-		GridData button4LData = new GridData();
-		button4LData.verticalAlignment = GridData.CENTER;
-		button4LData.horizontalAlignment = GridData.BEGINNING;
-		button4LData.widthHint = -1;
-		button4LData.heightHint = -1;
-		button4LData.horizontalIndent = 0;
-		button4LData.horizontalSpan = 1;
-		button4LData.verticalSpan = 1;
-		button4LData.grabExcessHorizontalSpace = false;
-		button4LData.grabExcessVerticalSpace = false;
-		button.setLayoutData(button4LData);
-		button.setText("Kalender...");
-		button.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent evt) {
-				showCalendarDialog();
-			}
-		});
-		button.setEnabled(editable);
+//		dateTime.addFocusListener(new FocusAdapter() {
+//			@Override
+//			public void focusLost(FocusEvent arg0) {
+//				try {
+//					// try to fix user input on exit:
+//					java.sql.Date userDate = FormInputParser
+//							.stringToDate(dateTime.getText());
+//					dateTime.setText(sernet.snutils.FormInputParser
+//							.dateToString(userDate));
+//					java.sql.Date fixedDate = FormInputParser
+//							.stringToDate(dateTime.getText());
+//					savedProp.setPropertyValue(Long.toString(fixedDate
+//							.getTime()));
+//					dateTime.setBackground(oldBgColor);
+//					dateTime.setForeground(oldFgColor);
+//				} catch (AssertException e) {
+//					dateTime.setBackground(Colors.YELLOW);
+//					dateTime.setForeground(Colors.BLACK);
+//				}
+//			}
+//		});
 
 		List savedProps = entity.getProperties(fieldType.getId())
 				.getProperties();
@@ -211,81 +184,40 @@ public class DateSelectionControl implements IHuiControl {
 			savedProp = entity.createNewProperty(fieldType, millis);
 		}
 
-		String displayDate = "";
-		try {
-			if (millis != null && millis.length() > 0)
-				displayDate = FormInputParser.dateToString(new java.sql.Date(
-						Long.parseLong(millis)));
-		} catch (AssertException e) {
-			Logger.getLogger(DateSelectionControl.class).error(e);
-		}
-
-		dateText.setText(displayDate);
-		dateText.setToolTipText(fieldType.getTooltiptext());
+		setDisplayedTime(millis);
+		dateTime.setToolTipText(fieldType.getTooltiptext());
 	}
 
-	/**
-	 * Show date picker dialog - date set to value entered by the user in the
-	 * text field if possible.
-	 * 
-	 */
-	protected void showCalendarDialog() {
-		final SWTCalendarDialog cal = new SWTCalendarDialog(Display
-				.getCurrent());
-
+	private void setDisplayedTime(String millis) {
+		Calendar calendar = Calendar.getInstance();
 		try {
-			cal.setDate(FormInputParser.stringToDate(dateText.getText()));
-		} catch (AssertException e) {
-			cal.setDate(new Date(Calendar.getInstance().getTimeInMillis()));
+			calendar.setTimeInMillis(Long.parseLong(millis));
 		}
+		catch (Exception e) {
+			// do nothing, use todays date
+		}
+		dateTime.setDate(calendar.get(Calendar.YEAR),
+				calendar.get(Calendar.MONTH),
+				calendar.get(Calendar.DAY_OF_MONTH));
+	}
 
-		cal.addDateChangedListener(new SWTCalendarListener() {
-			public void dateChanged(SWTCalendarEvent event) {
-				try {
-					savedProp.setPropertyValue(Long.toString(event
-							.getCalendar().getTimeInMillis()), true, dateText);
-					java.sql.Date newDate = new java.sql.Date(event
-							.getCalendar().getTimeInMillis());
-					dateText.setText(sernet.snutils.FormInputParser
-							.dateToString(newDate));
-				} catch (AssertException e) {
-					ExceptionHandlerFactory.getDefaultHandler()
-							.handleException(e);
-				}
-			}
-		});
-		cal.open();
+	protected long getDateInMillis() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+		return calendar.getTimeInMillis();
 	}
 
 	public void setFocus() {
-		this.dateText.setFocus();
+		this.dateTime.setFocus();
 	}
 
 	public void update() {
 		// not implemented
 	}
-	
-	public boolean validate() {
-		// check general rules:
-		if (!fieldType.validate(dateText.getText(), null)) {
-			dateText.setBackground(Colors.YELLOW);
-			dateText.setForeground(Colors.BLACK);
-			return false;
-		}
 
-		// check date:
-		try {
-			java.sql.Date userDate;
-			userDate = FormInputParser.stringToDate(dateText.getText());
-			sernet.snutils.FormInputParser.dateToString(userDate);
-			dateText.setBackground(oldBgColor);
-			dateText.setForeground(oldFgColor);
-			return true;
-		} catch (AssertException e) {
-			dateText.setBackground(Colors.YELLOW);
-			dateText.setForeground(Colors.BLACK);
-			return false;
-		}
+	public boolean validate() {
+		return true;
 	}
+	
 
 }

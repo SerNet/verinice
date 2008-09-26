@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <jardesc>
 <jar path="/work/home/aprack/java/workspace/sernet.gs.ui.rcp.main/lib/sernet.hui.swtclient.jar"/>
 <options buildIfNeeded="true" compress="true" descriptionLocation="/sernet.hui.swtclient/jar.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
@@ -16,4 +16,5 @@
 <javaElement handleIdentifier="=sernet.hui.common/src"/>
 <folder path="/sernet.hui.common/xml"/>
 </selectedElements>
+<fatjar builder="org.eclipse.jdt.ui.plain_jar_builder" launchConfig=""/>
 </jardesc>

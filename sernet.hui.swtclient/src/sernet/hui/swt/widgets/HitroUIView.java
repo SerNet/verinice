@@ -99,7 +99,7 @@ public class HitroUIView implements IEntityChangedListener   {
 	 * @param typeID
 	 * @param helper
 	 */
-	public void setInputHelper(String typeID, final IInputHelper helper) {
+	public void setInputHelper(String typeID, final IInputHelper helper, int type) {
 		IHuiControl field = this.fields.get(typeID);
 		if (field == null)
 			return;
@@ -120,7 +120,10 @@ public class HitroUIView implements IEntityChangedListener   {
 				new SimpleContentProposalProvider(helper.getSuggestions()),
 				keyStroke, 
 				null);
-		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+		if (type == IInputHelper.TYPE_REPLACE)
+			adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+		else 
+			adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_INSERT);
 		
 		final FocusAdapter focusAdapter = new FocusAdapter() {
 			Shell tip = null;

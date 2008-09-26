@@ -14,6 +14,7 @@ import sernet.snutils.DBException;
 
 public class HitroUIComposite extends ScrolledComposite {
 	
+	
 	private HitroUIView huiView;
 	
 	public HitroUIComposite(Composite parent, int style, boolean twistie) {
@@ -32,8 +33,8 @@ public class HitroUIComposite extends ScrolledComposite {
 		
 	}
 	
-	public void setInputHelper(String typeid, IInputHelper helper) {
-		huiView.setInputHelper(typeid, helper);
+	public void setInputHelper(String typeid, IInputHelper helper, int type) {
+		huiView.setInputHelper(typeid, helper, type);
 	}
 	
 	public void resetInitialFocus() {

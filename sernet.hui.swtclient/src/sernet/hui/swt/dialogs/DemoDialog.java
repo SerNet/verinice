@@ -65,7 +65,8 @@ public class DemoDialog extends org.eclipse.swt.widgets.Composite {
 						};
 					}
 					
-				});
+				},
+				IInputHelper.TYPE_REPLACE);
 				
 			} catch (DBException e) {
 				ExceptionHandlerFactory.getDefaultHandler().handleException(e);

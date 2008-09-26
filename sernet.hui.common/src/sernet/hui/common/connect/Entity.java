@@ -178,7 +178,7 @@ public class Entity implements ISelectOptionHandler {
 			return false;
 		
 		for (Property prop : entries) {
-			if (prop.getPropertyValue().equals(optionId))
+			if (prop.getPropertyValue() != null && prop.getPropertyValue().equals(optionId))
 				return true;
 		}
 		return false;
