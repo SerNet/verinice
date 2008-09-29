@@ -23,8 +23,6 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate {
 	
 	private IWorkbenchPart targetPart;
 	
-	// public NeueRisikoanalyseAction() {}
-
 	/**
 	 * Sets the active part for the delegate.
 	 * This method will be called every time the action appears in a popup menu.
