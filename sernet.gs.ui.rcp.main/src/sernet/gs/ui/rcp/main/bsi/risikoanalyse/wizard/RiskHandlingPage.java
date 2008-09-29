@@ -1,6 +1,5 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +23,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.SearchFilter;
 
 /**
  * Choose an alternative, how to deal with the Gefaerdungen.
@@ -215,13 +213,15 @@ public class RiskHandlingPage extends WizardPage {
 	 * 
 	 * Remove objects that were previously selected in this list, during the last execution of the wizard 
 	 * but have been removed this time by the user on the previous page.
+	 * 
+	 * @author akoderman@sernet.de
 	 */
 	private void cleanUpNotOKGefaehrdungsUmsetzungen() {
-		List<GefaehrdungsUmsetzung> currentUmsetzungen = ((RiskAnalysisWizard)getWizard())
-		.getAllGefaehrdungsUmsetzungen();
+		List<GefaehrdungsUmsetzung> currentUmsetzungen =
+			((RiskAnalysisWizard)getWizard()).getAllGefaehrdungsUmsetzungen();
 
-		oldUmsetzungen: for (GefaehrdungsUmsetzung oldUmsetzung: ((RiskAnalysisWizard)getWizard())
-				.getNotOKGefaehrdungsUmsetzungen()) {
+		oldUmsetzungen: for (GefaehrdungsUmsetzung oldUmsetzung:
+			((RiskAnalysisWizard)getWizard()).getNotOKGefaehrdungsUmsetzungen()) {
 			boolean umsetzungFound = false;
 			for (GefaehrdungsUmsetzung currentUmsetzung : currentUmsetzungen) {
 				if (currentUmsetzung.getId().equals(oldUmsetzung.getId())) {
