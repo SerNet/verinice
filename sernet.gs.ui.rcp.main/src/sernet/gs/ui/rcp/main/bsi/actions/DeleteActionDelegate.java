@@ -44,16 +44,17 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
 	public void run(IAction action) {
 
+		final IStructuredSelection selection = ((IStructuredSelection) targetPart
+				.getSite().getSelectionProvider().getSelection());
+
 		if (!MessageDialog.openQuestion((Shell) targetPart
 				.getAdapter(Shell.class), "Wirklich löschen?",
-				"Alle markierten Elemente werden entfernt. Vorsicht: diese Operation "
+				"Alle " + selection.size() + " markierten Elemente werden entfernt. Vorsicht: diese Operation "
 						+ "kann nicht rückgängig gemacht werden!\n\n"
 						+ "Wirklich löschen?")) {
 			return;
 		}
 
-		final IStructuredSelection selection = ((IStructuredSelection) targetPart
-				.getSite().getSelectionProvider().getSelection());
 
 		try {
 			PlatformUI.getWorkbench().getProgressService().
