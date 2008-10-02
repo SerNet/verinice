@@ -52,8 +52,7 @@ Template:
             name="Tags"
             tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
         />
-
-            
+        
         <huiproperty
             name="Anzahl"
             id="raum_anzahl" />

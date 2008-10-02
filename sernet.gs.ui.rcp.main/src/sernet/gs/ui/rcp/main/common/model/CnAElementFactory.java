@@ -279,6 +279,26 @@ public class CnAElementFactory {
 						return mu;
 					}
 				});
+		
+		bsiElementbuilders.put(ITVerbund.TYPE_ID,
+				new IElementBuilder() {
+					public ITVerbund build(CnATreeElement container,
+							BuildInput input) throws Exception {
+						
+						ITVerbund verbund = new ITVerbund(loadedModel);
+						loadedModel.addChild(verbund);
+						dbHome.save(verbund);
+						
+						verbund.createNewCategories();
+						
+						for (CnATreeElement kategorie : verbund.getChildren()) {
+							dbHome.save(kategorie);
+						}
+						return verbund;
+					}
+				});
+		
+		
 	}
 
 	public static CnAElementFactory getInstance() {

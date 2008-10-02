@@ -55,6 +55,8 @@ public class BSIModel extends CnATreeElement
 	public void childAdded(CnATreeElement category, CnATreeElement child) {
 		for (IBSIModelListener listener : listeners) {
 			listener.childAdded(category, child);
+			if (child instanceof ITVerbund)
+				listener.modelRefresh();
 		}
 	}
 	
@@ -93,6 +95,13 @@ public class BSIModel extends CnATreeElement
 		Set itvs = new HashSet<ITVerbund>();
 		itvs.addAll(getChildren());
 		return itvs;
+	}
+	
+	@Override
+	public void removeChild(CnATreeElement child) {
+		if (getChildren().remove(child)) {
+			this.childRemoved(this, child);
+		}
 	}
 	
 	@Override

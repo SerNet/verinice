@@ -67,6 +67,8 @@ public abstract class CnATreeElement {
 			children.add(child);
 			if (getParent() != null)
 				getParent().childAdded(this, child);
+			else
+				this.childAdded(this, child);
 		} else {
 			Logger.getLogger(this.getClass()).debug(
 					"Element not added. Parent refuses " + child);

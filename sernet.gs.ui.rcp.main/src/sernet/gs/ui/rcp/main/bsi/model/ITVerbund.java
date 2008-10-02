@@ -12,7 +12,7 @@ import sernet.hui.common.connect.EntityType;
 public class ITVerbund extends CnATreeElement 
 	implements IBSIStrukturElement {
 	
-	private static final String TYPE_ID = "itverbund"; //$NON-NLS-1$
+	public static final String TYPE_ID = "itverbund"; //$NON-NLS-1$
 	public static final String PROP_NAME = "itverbund_name"; //$NON-NLS-1$
 	
 	private String kuerzel = " ";

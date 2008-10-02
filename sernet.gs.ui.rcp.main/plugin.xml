@@ -153,16 +153,11 @@
                    menubarPath="content"
                    tooltip="BSI Objekt löschen">
                 <enablement>
-                   <and>
                    <or>
                    	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement"/>
                    	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung"/>
                    	<objectClass name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis"/>
                    </or>
-                   <not>
-                      <objectClass name="sernet.gs.ui.rcp.main.bsi.model.ITVerbund"/>
-                   </not>
-                   </and>
                 </enablement>
              </action>
              <action
@@ -201,6 +196,7 @@
                    </and>
                 </enablement>
              </action>
+            
       </objectContribution>
       
       <objectContribution
@@ -363,6 +359,21 @@
                menubarPath="additions"
                style="push"
                tooltip="Neuen Raum hinzufügen"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.itverbundcontrib"
+            objectClass="sernet.gs.ui.rcp.main.bsi.model.ITVerbund">
+             <action
+                   class="sernet.gs.ui.rcp.main.bsi.actions.AddITVerbundActionDelegate"
+                   enablesFor="+"
+                   icon="icons/tree_explorer.gif"
+                   id="sernet.gs.ui.rcp.main.additverbund"
+                   label="Neuer IT-Verbund"
+                   menubarPath="additions"
+                   style="push"
+                   tooltip="Neuen IT Verbund hinzufügen">
+             </action>
       </objectContribution>
    </extension>
    <extension

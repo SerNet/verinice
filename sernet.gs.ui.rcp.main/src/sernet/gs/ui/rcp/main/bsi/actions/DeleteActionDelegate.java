@@ -15,6 +15,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
@@ -22,6 +23,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -61,11 +63,18 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 					for (Iterator iter = selection.iterator(); iter.hasNext();) {
 						Object sel = (Object) iter.next();
 						
-						if (!(sel instanceof ITVerbund)
-								&& sel instanceof IBSIStrukturElement
+						if (sel instanceof IBSIStrukturElement
 								|| sel instanceof BausteinUmsetzung
 								|| sel instanceof FinishedRiskAnalysis
-								|| sel instanceof GefaehrdungsUmsetzung) {
+								|| sel instanceof GefaehrdungsUmsetzung
+								|| sel instanceof ITVerbund) {
+							
+							// do not delete last ITVerbund:
+							if (sel instanceof ITVerbund
+								&& CnAElementFactory.getCurrentModel().getItverbuende().size() < 2) {
+								return;
+							}
+							
 							CnATreeElement el = (CnATreeElement) sel;
 							
 							try {

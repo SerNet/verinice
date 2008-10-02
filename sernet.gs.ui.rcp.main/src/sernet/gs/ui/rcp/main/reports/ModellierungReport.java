@@ -94,8 +94,9 @@ public class ModellierungReport extends Report
 
 		Set<ITVerbund> itverbuende = CnAElementFactory.getCurrentModel()
 			.getItverbuende();
-		ITVerbund verbund = itverbuende.iterator().next();
-		getModellierung(verbund);
+		for (ITVerbund verbund : itverbuende) {
+			getModellierung(verbund);
+		}
 		return modell.getFlatList();
 	}
 
