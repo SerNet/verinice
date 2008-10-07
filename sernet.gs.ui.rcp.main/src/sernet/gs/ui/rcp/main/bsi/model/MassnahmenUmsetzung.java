@@ -223,5 +223,12 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	public String getLebenszyklus() {
 		return getEntity().getSimpleValue(P_LEBENSZYKLUS);
 	}
+
+	public boolean isCompleted() {
+		if (getUmsetzung().equals(P_UMSETZUNG_JA)
+				|| getUmsetzung().equals(P_UMSETZUNG_ENTBEHRLICH))
+			return true;
+		return false;
+	}
 	
 }

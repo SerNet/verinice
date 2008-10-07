@@ -21,6 +21,7 @@ import org.eclipse.ui.internal.cheatsheets.actions.CheatSheetCategoryBasedSelect
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
+import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
@@ -34,6 +35,7 @@ import sernet.gs.ui.rcp.main.bsi.views.DSModelView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewCloseDBAction;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction;
+import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 
 /**
@@ -97,6 +99,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	private CheatSheetCategoryBasedSelectionAction showCheatSheetListAction;
 
+	private OpenMultipleViewAction openChartViewAction;
+
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
 		removeExtraneousActions();
@@ -156,6 +160,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		openTodoViewAction = new OpenViewAction(window, "Realisierungsplan",
 				TodoView.ID, ImageCache.VIEW_TODO);
 		register(openTodoViewAction);
+		
+
+		openChartViewAction = new OpenMultipleViewAction(window, "Charts",
+				ChartView.ID, ImageCache.CHART_PIE);
+		register(openChartViewAction);
 
 		openAuditViewAction = new OpenViewAction(window, "Prüfplan",
 				AuditView.ID, ImageCache.VIEW_AUDIT);
@@ -255,6 +264,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		viewsMenu.add(openTodoViewAction);
 		viewsMenu.add(openAuditViewAction);
 		viewsMenu.add(openDSViewAction);
+		viewsMenu.add(openChartViewAction);
 		// viewsMenu.add(viewList);
 
 //		MenuManager perspectivesMenu = new MenuManager("Öffne Perspektive...");
@@ -283,6 +293,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		myToolbar.add(openBSIBrowserAction);
 		myToolbar.add(openTodoViewAction);
 		myToolbar.add(openAuditViewAction);
+		myToolbar.add(openChartViewAction);
 		//myToolbar.add(openDSViewAction);
 	}
 	

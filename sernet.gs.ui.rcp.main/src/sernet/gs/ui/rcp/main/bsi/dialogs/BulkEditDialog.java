@@ -40,6 +40,7 @@ public class BulkEditDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Bulk Edit");
+		newShell.setSize(400, 800);
 	}
 	
 	@Override

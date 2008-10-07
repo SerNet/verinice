@@ -191,8 +191,11 @@ public class BSIModel extends CnATreeElement
 	public List<String> getTags() {
 		ArrayList<String> tags = new ArrayList<String>(50);
 		Set<CnATreeElement> verbuende = getChildren();
+		
 		for (CnATreeElement verbund : verbuende) {
+			
 			for (CnATreeElement kategorie : verbund.getChildren()) {
+				
 				for (CnATreeElement zielobjekt : kategorie.getChildren()) {
 					if (zielobjekt instanceof IBSIStrukturElement) {
 						IBSIStrukturElement ziel = (IBSIStrukturElement) zielobjekt;

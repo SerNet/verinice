@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -19,6 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -196,6 +198,7 @@ public class TodoView extends ViewPart {
 		viewer.setSorter(new TodoSorter());
 		makeActions();
 		hookActions();
+		fillLocalToolBar();
 		
 		getSite().setSelectionProvider(viewer);
 		
@@ -213,6 +216,12 @@ public class TodoView extends ViewPart {
 				this.umsetzungFilter,
 				this.siegelFilter);
 		menuManager.add(filterAction);
+	}
+	
+	private void fillLocalToolBar() {
+		IActionBars bars = getViewSite().getActionBars();
+		IToolBarManager manager = bars.getToolBarManager();
+		manager.add(this.filterAction);
 	}
 	
 	private void createFilters() {

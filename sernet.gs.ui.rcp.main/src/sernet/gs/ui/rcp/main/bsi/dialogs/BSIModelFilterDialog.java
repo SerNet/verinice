@@ -148,7 +148,7 @@ public class BSIModelFilterDialog extends FilterDialog {
 		
 		comp.setContent(viewer.getControl());
 		
-		//FIXME workaround to prevent tableviewer size from exceeding shell size:
+		// workaround to prevent tableviewer size from exceeding shell size:
 		comp.setMinSize(100,100);
 
 		TableColumn checkboxColumn = new TableColumn(table, SWT.LEFT);
@@ -320,9 +320,9 @@ private void createAusblendenCheckboxes(Group parent) {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Maßnahmen Filter Einstellungen");
+		newShell.setText("Filter Einstellungen");
 		
-		// FIXME workaround to prevent tableviewer size from exceeding shell size:
+		// workaround to prevent tableviewer size from exceeding shell size:
 		newShell.setSize(400,500);
 	}
 

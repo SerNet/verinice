@@ -602,6 +602,8 @@ Template:
         <huiproperty
             name="Geltungsbereich"
             id="itverbund_geltungsbereich" />
+            
+		
          <huipropertygroup
 			id="itverbund_group_schutzbedarf_normal"
 			name="Schutzbedarfskategorie: Normal">

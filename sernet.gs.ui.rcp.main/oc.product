@@ -56,6 +56,7 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
    </vm>
 
    <plugins>
+      <plugin id="SpringClient"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.ibm.icu.source"/>
       <plugin id="org.apache.lucene"/>

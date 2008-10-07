@@ -77,7 +77,7 @@ public class DateSelectionControl implements IHuiControl {
 	private Color oldFgColor;
 
 	private boolean useRule;
-	
+
 	public Control getControl() {
 		return dateTime;
 	}
@@ -142,34 +142,14 @@ public class DateSelectionControl implements IHuiControl {
 			dateTime.setBackground(Colors.GREY);
 		oldBgColor = dateTime.getBackground();
 		oldFgColor = dateTime.getForeground();
+		
 		dateTime.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				savedProp.setPropertyValue(Long.toString(getDateInMillis()), true, dateTime);
+				if (!isSameDay(savedProp.getPropertyValue(), getDateInMillis()))				
+					savedProp.setPropertyValue(Long.toString(getDateInMillis()), true, dateTime);
 			}
 		});
-
-//		dateTime.addFocusListener(new FocusAdapter() {
-//			@Override
-//			public void focusLost(FocusEvent arg0) {
-//				try {
-//					// try to fix user input on exit:
-//					java.sql.Date userDate = FormInputParser
-//							.stringToDate(dateTime.getText());
-//					dateTime.setText(sernet.snutils.FormInputParser
-//							.dateToString(userDate));
-//					java.sql.Date fixedDate = FormInputParser
-//							.stringToDate(dateTime.getText());
-//					savedProp.setPropertyValue(Long.toString(fixedDate
-//							.getTime()));
-//					dateTime.setBackground(oldBgColor);
-//					dateTime.setForeground(oldFgColor);
-//				} catch (AssertException e) {
-//					dateTime.setBackground(Colors.YELLOW);
-//					dateTime.setForeground(Colors.BLACK);
-//				}
-//			}
-//		});
 
 		List savedProps = entity.getProperties(fieldType.getId())
 				.getProperties();
@@ -188,27 +168,42 @@ public class DateSelectionControl implements IHuiControl {
 		dateTime.setToolTipText(fieldType.getTooltiptext());
 	}
 
+	protected boolean isSameDay(String propertyValue, long dateInMillis2) {
+		try {
+			long dateInMillis1 = Long.parseLong(propertyValue);
+			Calendar cal1 = Calendar.getInstance();
+			Calendar cal2 = Calendar.getInstance();
+			cal1.setTimeInMillis(dateInMillis1);
+			cal2.setTimeInMillis(dateInMillis2);
+			return (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+					&& cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
+					&& cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH)
+					);
+			
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 	private void setDisplayedTime(String millis) {
 		Calendar calendar = Calendar.getInstance();
 		try {
 			calendar.setTimeInMillis(Long.parseLong(millis));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			// do nothing, use todays date
 		}
-		dateTime.setDate(calendar.get(Calendar.YEAR),
-				calendar.get(Calendar.MONTH),
-				calendar.get(Calendar.DAY_OF_MONTH));
+		dateTime.setDate(calendar.get(Calendar.YEAR), calendar
+				.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 	}
 
 	protected long getDateInMillis() {
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+		calendar.set(dateTime.getYear(), dateTime.getMonth(),
+				dateTime.getDay());
 		return calendar.getTimeInMillis();
 	}
 
 	public void setFocus() {
-		this.dateTime.setFocus();
 	}
 
 	public void update() {
@@ -218,6 +213,5 @@ public class DateSelectionControl implements IHuiControl {
 	public boolean validate() {
 		return true;
 	}
-	
 
 }

@@ -14,3 +14,4 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.ui.forms,
  org.eclipse.ui,
  com.ibm.icu
+Import-Package: org.apache.log4j
