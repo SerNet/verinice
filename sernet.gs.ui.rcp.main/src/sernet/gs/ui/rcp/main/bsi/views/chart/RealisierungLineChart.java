@@ -42,11 +42,11 @@ public class RealisierungLineChart implements IChartGenerator {
 	private JFreeChart createProgressChart(Object dataset) {
 		 XYDataset data1 = (XYDataset) dataset;
 	        XYItemRenderer renderer1 = new StandardXYItemRenderer();
-	        NumberAxis rangeAxis1 = new NumberAxis("Maßnahmen");
+	        NumberAxis rangeAxis1 = new NumberAxis("Anzahl Maßnahmen");
 	        XYPlot subplot1 = new XYPlot(data1, null, rangeAxis1, renderer1);
 	        subplot1.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
 	        
-	        CombinedDomainXYPlot plot = new CombinedDomainXYPlot(new DateAxis("Datum"));
+	        CombinedDomainXYPlot plot = new CombinedDomainXYPlot(new DateAxis("fällig bis"));
 	        plot.setGap(10.0);
 	        
 	        plot.add(subplot1, 1);
@@ -73,8 +73,8 @@ public class RealisierungLineChart implements IChartGenerator {
 	}
 
 	private Object createProgressDataset() {
-		TimeSeries ts1 =new TimeSeries("Fälligkeit", Day.class);
-		TimeSeries ts2 =new TimeSeries("Plan", Day.class);
+		TimeSeries ts1 =new TimeSeries("umgesetzt", Day.class);
+		TimeSeries ts2 =new TimeSeries("alle", Day.class);
 		ArrayList<MassnahmenUmsetzung> massnahmen = CnAElementFactory.getCurrentModel().getMassnahmen();
 		
 		DateValues dateTotal1 = new DateValues();

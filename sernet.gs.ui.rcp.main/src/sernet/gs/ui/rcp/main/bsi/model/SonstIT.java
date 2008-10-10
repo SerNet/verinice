@@ -18,6 +18,7 @@ public class SonstIT extends CnATreeElement
 	public static final String P_ADMIN = "sonstit_admin";
 	public static final String P_ANWENDER = "sonstit_anwender";
 	public static final String PROP_TAG			= "sonstit_tag";
+	public static final String PROP_ERLAEUTERUNG = "sonstit_erlaeuterung";
 	
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 	= new SchutzbedarfAdapter(this);
@@ -55,6 +56,10 @@ public class SonstIT extends CnATreeElement
 		
 	}
 	
+	public void setTitel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+	}
+	
 	@Override
 	public String getTitel() {
 		return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
@@ -79,5 +84,13 @@ public class SonstIT extends CnATreeElement
 	@Override
 	public ISchutzbedarfProvider getSchutzbedarfProvider() {
 		return schutzbedarfProvider;
+	}
+
+	public void setErlaeuterung(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+	}
+	
+	public void setKuerzel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
 	}
 }

@@ -26,6 +26,7 @@ implements IBSIStrukturElement {
 
 	// ID must correspond to entity definition in entitytype XML description:
 	public static final String TYPE_ID = "person"; //$NON-NLS-1$
+	public static final String PROP_ERLAEUTERUNG = "person_erlaeuterung";
 	
 	
 	public Person(CnATreeElement parent) {
@@ -52,6 +53,9 @@ implements IBSIStrukturElement {
 		return 0;
 	}
 	
+	public void setTitel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(P_NAME), name);
+	}
 	
 	@Override
 	public String getTitel() {
@@ -101,6 +105,14 @@ implements IBSIStrukturElement {
 	@Override
 	public void addChild(CnATreeElement child) {
 		// Person doesn't have children
+	}
+
+	public void setErlaeuterung(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+	}
+	
+	public void setKuerzel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
 	}
 	
 	

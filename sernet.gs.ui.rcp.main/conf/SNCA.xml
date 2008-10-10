@@ -602,6 +602,10 @@ Template:
         <huiproperty
             name="Geltungsbereich"
             id="itverbund_geltungsbereich" />
+        <huiproperty
+            name="Dokument"
+            id="itverbund_dokument"
+            isURL="true" />
             
 		
          <huipropertygroup

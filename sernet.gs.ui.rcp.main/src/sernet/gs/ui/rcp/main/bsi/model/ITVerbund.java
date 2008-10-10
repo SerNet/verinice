@@ -95,4 +95,10 @@ public class ITVerbund extends CnATreeElement
 		return false;
 	}
 
+
+	public void setTitel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+	}
+
+
 }

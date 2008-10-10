@@ -13,9 +13,11 @@ implements IBSIStrukturElement {
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "gebaeude"; //$NON-NLS-1$
 	
-	private static final String PROP_NAME = "gebaeude_name"; //$NON-NLS-1$
-	private static final String PROP_KUERZEL = "gebaeude_kuerzel"; //$NON-NLS-1$
+	public static final String PROP_NAME = "gebaeude_name"; //$NON-NLS-1$
+	public static final String PROP_KUERZEL = "gebaeude_kuerzel"; //$NON-NLS-1$
 	public static final String PROP_TAG			= "gebaeude_tag";
+
+	public static final String PROP_ERLAEUTERUNG = "gebaeude_erlaeuterung";
 	private static EntityType entityType;
 
 	
@@ -70,6 +72,9 @@ implements IBSIStrukturElement {
 		return CnaStructureHelper.canContain(obj);
 	}
 
+	public void setTitel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+	}
 	
 	@Override
 	public ILinkChangeListener getLinkChangeListener() {
@@ -79,5 +84,13 @@ implements IBSIStrukturElement {
 	@Override
 	public ISchutzbedarfProvider getSchutzbedarfProvider() {
 		return schutzbedarfProvider;
+	}
+
+	public void setErlaeuterung(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+	}
+	
+	public void setKuerzel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
 	}
 }

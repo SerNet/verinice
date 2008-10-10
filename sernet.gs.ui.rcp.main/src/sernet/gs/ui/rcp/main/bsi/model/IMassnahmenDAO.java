@@ -17,4 +17,8 @@ public interface IMassnahmenDAO {
 
 	Map<String, Integer> getCompletedZyklusSummary();
 
+	Map<String, Integer> getSchichtenSummary();
+
+	Map<String, Integer> getCompletedSchichtenSummary();
+
 }

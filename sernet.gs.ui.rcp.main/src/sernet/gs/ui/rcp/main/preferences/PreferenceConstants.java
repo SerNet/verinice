@@ -27,6 +27,7 @@ public class PreferenceConstants {
 	public static final String DB_DRIVER_POSTGRES = "org.postgresql.Driver";
 	public static final String DB_DRIVER_MYSQL = "org.gjt.mm.mysql.Driver";
 	
+	// Verinice DB:
 	public static final String DB_USER = "cna_dbuser";
 	public static final String DB_PASS = "cna_dbpass";
 	
@@ -34,11 +35,17 @@ public class PreferenceConstants {
 	public static final String DB_URL_DERBY = "jdbc:derby:%s/verinicedb;create=true";
 	public static final String DB_URL_POSTGRES = "jdbc:postgresql://127.0.0.1:5432/verinicedb";
 	public static final String DB_URL_MYSQL = "jdbc:mysql://127.0.0.1:3306/verinicedb";
-	
+
 	public static final String DB_DIALECT = "cna_dbdialect";
 	public static final String DB_DIALECT_derby = "org.hibernate.dialect.DerbyDialect";
 	public static final String DB_DIALECT_postgres= "org.hibernate.dialect.PostgreSQLDialect";
 	public static final String DB_DIALECT_mysql = "org.hibernate.dialect.MySQLInnoDBDialect";
+	
+	
+	//gstool db for import:
+	public static final String GS_DB_USER = "gs_cna_dbuser";
+	public static final String GS_DB_PASS = "gs_cna_dbpass";
+	public static final String GS_DB_URL = "gs_cna_dburl";
 	
 	
 }

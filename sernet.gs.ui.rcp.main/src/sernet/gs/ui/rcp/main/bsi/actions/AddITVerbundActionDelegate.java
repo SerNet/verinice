@@ -25,8 +25,6 @@ public class AddITVerbundActionDelegate implements IObjectActionDelegate {
 	public void run(IAction action) {
 		
 		try {
-			Object sel = ((IStructuredSelection)targetPart.getSite()
-					.getSelectionProvider().getSelection()).getFirstElement();
 			CnATreeElement newElement=null;
 			
 			newElement = CnAElementFactory.getInstance()

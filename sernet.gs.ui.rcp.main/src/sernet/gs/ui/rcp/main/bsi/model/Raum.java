@@ -17,6 +17,7 @@ public class Raum extends CnATreeElement
 	public static final String PROP_NAME = "raum_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "raum_kuerzel"; //$NON-NLS-1$
 	public static final String PROP_TAG			= "raum_tag";
+	public static final String PROP_ERLAEUTERUNG = "raum_erlaeuterung";
 	
 	private static EntityType entityType;
 
@@ -70,7 +71,9 @@ public class Raum extends CnATreeElement
 		return CnaStructureHelper.canContain(obj);
 	}
 	
-	
+	public void setTitel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+	}
 	
 
 	@Override
@@ -81,5 +84,13 @@ public class Raum extends CnATreeElement
 	@Override
 	public ISchutzbedarfProvider getSchutzbedarfProvider() {
 		return schutzbedarfProvider;
+	}
+
+	public void setErlaeuterung(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+	}
+	
+	public void setKuerzel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
 	}
 }

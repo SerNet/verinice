@@ -107,6 +107,10 @@ public class ChartView extends ViewPart {
 
 	private Action chooseZyklusDiagramAction;
 
+	private SchichtenBarChart schichtenChart;
+
+	private Action chooseSchichtDiagramAction;
+
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -129,6 +133,7 @@ public class ChartView extends ViewPart {
 		emptyChart = new Emptychart();
 		stufenChart = new StufenBarChart();
 		zyklusChart = new LebenszyklusBarChart();
+		schichtenChart = new SchichtenBarChart();
 	}
 
 	private void createMenus() {
@@ -170,10 +175,18 @@ public class ChartView extends ViewPart {
 			}
 		};
 
+		chooseSchichtDiagramAction = new Action("Schichten", SWT.CHECK) {
+			@Override
+			public void run() {
+				chartType = schichtenChart;
+				drawChart();
+			}
+		};
 		menuManager.add(chooseBarDiagramAction);
 		menuManager.add(chooseProgressDiagramAction);
 		menuManager.add(chooseStufenDiagramAction);
 		menuManager.add(chooseZyklusDiagramAction);
+		menuManager.add(chooseSchichtDiagramAction);
 		
 		fillLocalToolBar();
 	}

@@ -63,8 +63,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				derbyUrl);
 		
 		store.setDefault(PreferenceConstants.DB_USER, "");
-		
 		store.setDefault(PreferenceConstants.DB_PASS, "");
+
+		store.setDefault(PreferenceConstants.GS_DB_URL, "jdbc:jtds:sqlserver://127.0.0.1/BSIDB_V45");
+		store.setDefault(PreferenceConstants.GS_DB_USER, "sa");
+		store.setDefault(PreferenceConstants.GS_DB_PASS, "");
+		
+		
 
 	}
 

@@ -21,7 +21,10 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sun.misc.Regexp;
 
@@ -46,6 +49,25 @@ public class CnAWorkspace {
 
 	private static CnAWorkspace instance;
 
+	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+			if ((event.getProperty().equals(PreferenceConstants.GS_DB_URL)
+					|| event.getProperty().equals(PreferenceConstants.GS_DB_USER) 
+					|| event.getProperty().equals(PreferenceConstants.GS_DB_PASS))) {
+				
+				Preferences prefs = Activator.getDefault().getPluginPreferences();
+				try {
+					createGstoolImportDatabaseConfig(prefs
+							.getString(PreferenceConstants.GS_DB_URL), prefs
+							.getString(PreferenceConstants.GS_DB_USER), prefs
+							.getString(PreferenceConstants.GS_DB_PASS));
+				} catch (Exception e) {
+					ExceptionUtil.log(e, "Fehler beim Schreiben der Konfiguration für GSTool-Import.");
+				}
+			}
+		}
+	};
+
 	public static CnAWorkspace getInstance() {
 		if (instance == null)
 			instance = new CnAWorkspace();
@@ -64,10 +86,9 @@ public class CnAWorkspace {
 		URL url = Platform.getInstanceLocation().getURL();
 		String path = url.getPath().replaceAll("/", "\\" + File.separator);
 		workDir = (new File(path)).getAbsolutePath();
-		
+
 		File confDir = new File(url.getPath() + File.separator + "conf");
-		
-		
+
 		if (confDir.exists() && confDir.isDirectory()) {
 			File confFile = new File(confDir, "configuration.version");
 			if (confFile.exists()) {
@@ -76,18 +97,18 @@ public class CnAWorkspace {
 				try {
 					fis = new FileInputStream(confFile);
 					props.load(fis);
-					
+
 					if (props.get("version").equals("0.7.0")) {
 						Logger.getLogger(CnAWorkspace.class).debug(
 								"Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: "
-								+ confDir.getAbsolutePath());
+										+ confDir.getAbsolutePath());
 						return;
 					}
 				} catch (Exception e) {
 					Logger.getLogger(this.getClass()).debug(e);
 				}
 			}
-			
+
 		}
 
 		CnAWorkspace instance = new CnAWorkspace();
@@ -117,18 +138,18 @@ public class CnAWorkspace {
 		File confDir = new File(url.getPath() + File.separator + "conf");
 		confDir.mkdirs();
 
-		
 		createTextFile("conf" + File.separator + "hitro.xsd", workDir);
 		createTextFile("conf" + File.separator + "SNCA.xml", workDir);
 		createTextFile("conf" + File.separator + "reports.properties_skeleton",
 				workDir, "conf" + File.separator + "reports.properties");
-		createTextFile("conf" + File.separator + "configuration.version", workDir);
+		createTextFile("conf" + File.separator + "configuration.version",
+				workDir);
 	}
-	
+
 	public void createReportTempFile() {
 		URL url = Platform.getInstanceLocation().getURL();
 		File officeDir = new File(url.getPath() + File.separator + OFFICEDIR);
-		
+
 	}
 
 	private void createOfficeDir() throws NullPointerException, IOException {
@@ -161,12 +182,12 @@ public class CnAWorkspace {
 	 */
 	private void createBinaryFile(String infile, String toDir)
 			throws IOException {
-		
+
 		backupFile(toDir, infile);
-		
+
 		String infileResource = infile.replace('\\', '/');
-		InputStream in = getClass().getClassLoader()
-				.getResourceAsStream(infileResource);
+		InputStream in = getClass().getClassLoader().getResourceAsStream(
+				infileResource);
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(toDir + File.separator + infile);
@@ -188,7 +209,7 @@ public class CnAWorkspace {
 			}
 		}
 	}
-	
+
 	public void copyFile(String infileName, File outfile) throws IOException {
 		FileInputStream in = new FileInputStream((new File(infileName)));
 		OutputStream out = null;
@@ -211,7 +232,7 @@ public class CnAWorkspace {
 				out.close();
 			}
 		}
-	
+
 	}
 
 	/**
@@ -236,9 +257,19 @@ public class CnAWorkspace {
 		settings.put("driver", driver);
 		settings.put("dialect", dialect);
 		createTextFile("conf" + File.separator + "skel_hibernate.cfg.xml",
-				workDir,
-				"conf" + File.separator + "hibernate.cfg.xml",
+				workDir, "conf" + File.separator + "hibernate.cfg.xml",
 				settings);
+	}
+
+	public void createGstoolImportDatabaseConfig(String url, String user,
+			String pass) throws NullPointerException, IOException {
+		settings = new HashMap<String, String>(5);
+		settings.put("url", url);
+		settings.put("user", user);
+		settings.put("pass", pass);
+		createTextFile("conf" + File.separator
+				+ "skel_hibernate-vampire.cfg.xml", workDir, "conf"
+				+ File.separator + "hibernate-vampire.cfg.xml", settings);
 	}
 
 	private void createTextFile(String infile, String toDir)
@@ -268,10 +299,10 @@ public class CnAWorkspace {
 	private void createTextFile(String infile, String toDir, String outfile,
 			Map<String, String> variables) throws NullPointerException,
 			IOException {
-		
+
 		String infileResource = infile.replace('\\', '/');
-		InputStream is = getClass().getClassLoader()
-				.getResourceAsStream(infileResource);
+		InputStream is = getClass().getClassLoader().getResourceAsStream(
+				infileResource);
 		InputStreamReader inRead = new InputStreamReader(is);
 		BufferedReader bufRead = new BufferedReader(inRead);
 		StringBuffer skelFile = new StringBuffer();
@@ -325,7 +356,7 @@ public class CnAWorkspace {
 							prefs.getString(PreferenceConstants.DB_DRIVER))
 					&& settings.get("dialect").equals(
 							prefs.getString(PreferenceConstants.DB_DIALECT));
-			
+
 			String s1 = prefs.getString(PreferenceConstants.DB_URL);
 			String s2 = prefs.getString(PreferenceConstants.DB_PASS);
 			String s3 = prefs.getString(PreferenceConstants.DB_DRIVER);
@@ -335,13 +366,19 @@ public class CnAWorkspace {
 		return result;
 	}
 
-	public synchronized void createDatabaseConfig() throws NullPointerException, IOException {
+	public synchronized void createDatabaseConfig()
+			throws NullPointerException, IOException {
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		createDatabaseConfig(prefs.getString(PreferenceConstants.DB_URL), prefs
 				.getString(PreferenceConstants.DB_USER), prefs
 				.getString(PreferenceConstants.DB_PASS), prefs
 				.getString(PreferenceConstants.DB_DRIVER), prefs
 				.getString(PreferenceConstants.DB_DIALECT));
+
+		createGstoolImportDatabaseConfig(prefs
+				.getString(PreferenceConstants.GS_DB_URL), prefs
+				.getString(PreferenceConstants.GS_DB_USER), prefs
+				.getString(PreferenceConstants.GS_DB_PASS));
 	}
 
 }

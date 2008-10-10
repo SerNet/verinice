@@ -21,6 +21,7 @@ import org.eclipse.ui.internal.cheatsheets.actions.CheatSheetCategoryBasedSelect
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
+import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
 import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
@@ -101,6 +102,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	private OpenMultipleViewAction openChartViewAction;
 
+	private ImportGstoolAction importGstoolAction;
+
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
 		removeExtraneousActions();
@@ -173,6 +176,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		showWizardAction = new ShowExportWizardAction(window,
 				"Report erstellen...");
 		register(showWizardAction);
+		
+		importGstoolAction = new ImportGstoolAction(window,
+		"GSTool-Daten importieren");
+		register(importGstoolAction);
 
 		showPreferencesAction = new ShowPreferencesAction();
 //		showPreferencesAction = ActionFactory.PREFERENCES.create(window);
@@ -243,6 +250,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		fileMenu.add(closeAction);
 		fileMenu.add(closeAllAction);
 		fileMenu.add(closeOthersAction);
+		
+		fileMenu.add(new Separator());
+		fileMenu.add(importGstoolAction);
+
 		
 		fileMenu.add(new Separator());
 		fileMenu.add(exitAction);

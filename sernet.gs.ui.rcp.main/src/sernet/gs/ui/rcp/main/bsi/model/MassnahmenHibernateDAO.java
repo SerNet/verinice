@@ -1,5 +1,6 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,8 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.classic.Session;
 
+import sernet.gs.model.Baustein;
+import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.bsi.views.chart.MassnahmeCount;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -90,6 +93,54 @@ public class MassnahmenHibernateDAO implements IMassnahmenDAO {
 				result.put(lz, 0);
 			Integer count = result.get(lz);
 			result.put(lz, ++count);
+		}
+		return result;
+	}
+
+	public Map<String, Integer> getSchichtenSummary() {
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		ArrayList<BausteinUmsetzung> bausteine = CnAElementFactory.getCurrentModel().getBausteine();
+		for (BausteinUmsetzung baustein: bausteine) {
+			Baustein baustein2 = BSIKatalogInvisibleRoot.getInstance().getBaustein(baustein.getKapitel());
+			if (baustein2 == null) {
+				Logger.getLogger(this.getClass()).debug("Kein Baustein gefunden für ID" + baustein.getId());
+				continue;
+			}
+			
+			String schicht = Integer.toString(baustein2.getSchicht());
+
+			if (result.get(schicht) == null)
+				result.put(schicht, baustein.getMassnahmenUmsetzungen().size());
+			else {
+				Integer count = result.get(schicht);
+				result.put(schicht, count + baustein.getMassnahmenUmsetzungen().size());
+			}
+		}
+		return result;
+	}
+
+	public Map<String, Integer> getCompletedSchichtenSummary() {
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		ArrayList<BausteinUmsetzung> bausteine = CnAElementFactory.getCurrentModel().getBausteine();
+		for (BausteinUmsetzung baustein: bausteine) {
+			Baustein baustein2 = BSIKatalogInvisibleRoot.getInstance().getBaustein(baustein.getKapitel());
+			if (baustein2 == null) {
+				Logger.getLogger(this.getClass()).debug("Kein Baustein gefunden für ID" + baustein.getId());
+				continue;
+			}
+			String schicht = Integer.toString(baustein2.getSchicht());
+			int umgesetztSum = 0;
+			for (MassnahmenUmsetzung ums: baustein.getMassnahmenUmsetzungen()) {
+				if (ums.isCompleted())
+					umgesetztSum++;
+			}
+			
+			if (result.get(schicht) == null)
+				result.put(schicht, umgesetztSum);
+			else {
+				Integer count = result.get(schicht);
+				result.put(schicht, count + umgesetztSum);
+			}
 		}
 		return result;
 	}

@@ -18,6 +18,7 @@ public class TelefonKomponente extends CnATreeElement
 	public static final String P_ADMIN 		= "tkkomponente_admin";
 	public static final String P_ANWENDER	 	= "tkkomponente_anwender";
 	public static final String PROP_TAG			= "tkkomponente_tag";
+	public static final String PROP_ERLAEUTERUNG = "tkkomponente_erlaeuterung";
 	
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 		= new SchutzbedarfAdapter(this);
@@ -71,6 +72,10 @@ public class TelefonKomponente extends CnATreeElement
 		return CnaStructureHelper.canContain(obj);
 	}
 	
+	public void setTitel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+	}
+	
 	@Override
 	public ILinkChangeListener getLinkChangeListener() {
 		return linkChangeListener;
@@ -79,6 +84,13 @@ public class TelefonKomponente extends CnATreeElement
 	@Override
 	public ISchutzbedarfProvider getSchutzbedarfProvider() {
 		return schutzbedarfProvider;
+	}
+	public void setErlaeuterung(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+	}
+	
+	public void setKuerzel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
 	}
 
 }

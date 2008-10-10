@@ -15,6 +15,7 @@ public class NetzKomponente extends CnATreeElement
 	public static final String PROP_NAME = "netzkomponente_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "netzkomponente_kuerzel"; //$NON-NLS-1$
 	public static final String PROP_TAG			= "netzkomponente_tag";
+	public static final String PROP_ERLAEUTERUNG = "netzkomponente_erlaeuterung";
 	
 	private static EntityType entityType;
 	
@@ -64,7 +65,17 @@ public class NetzKomponente extends CnATreeElement
 		return CnaStructureHelper.canContain(obj);
 	}
 	
+	public void setTitel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+	}
+
+	public void setErlaeuterung(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+	}
 	
+	public void setKuerzel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+	}
 
 
 

@@ -170,6 +170,14 @@ public class BausteinUmsetzung extends CnATreeElement {
 	public static String[] getSchichtenBezeichnung() {
 		return schichtenBezeichnung;
 	}
+	
+	public static String getSchichtenBezeichnung(String schichtNummer) {
+		for (int i = 0; i < schichten.length; i++) {
+			if (schichten[i].equals(schichtNummer))
+				return schichtenBezeichnung[i];
+		}
+		return "";
+	}
 
 	public String getUrl() {
 		return getEntity().getSimpleValue(P_URL);

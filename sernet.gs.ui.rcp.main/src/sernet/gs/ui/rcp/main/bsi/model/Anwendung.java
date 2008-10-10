@@ -34,7 +34,9 @@ public class Anwendung extends CnATreeElement
 	public static final String PROP_EIGENTUEMER = "anwendung_eigentümer"; //$NON-NLS-1$
 
 	public static final String PROP_TAG			= "anwendung_tag";
-	
+
+	public static final String PROP_ERLAEUTERUNG = "anwendung_erlaeuterung";
+
 	private static EntityType entityType;
 
 	public int getSchicht() {
@@ -68,6 +70,20 @@ public class Anwendung extends CnATreeElement
 		return getEntity().getProperties(PROP_NAME).getProperty(0)
 				.getPropertyValue();
 	}
+	
+	public void setTitel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+	}
+
+	public void setErlaeuterung(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+	}
+	
+	public void setKuerzel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+	}
+	
+	
 
 	@Override
 	public String getTypeId() {

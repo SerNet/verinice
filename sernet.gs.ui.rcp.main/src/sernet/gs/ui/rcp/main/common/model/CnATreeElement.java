@@ -163,8 +163,6 @@ public abstract class CnATreeElement {
 		}
 	};
 
-	private EntityType entityType;
-
 	public CnATreeElement(CnATreeElement parent) {
 		this();
 		this.parent = parent;
@@ -315,10 +313,6 @@ public abstract class CnATreeElement {
 		return getSchutzbedarfProvider() != null;
 	}
 
-	public EntityType getEntityType() {
-		return entityType;
-	}
-	
 	public boolean isAdditionalMgmtReviewNeeded() {
 		if (getEntity()==null)
 			return false;

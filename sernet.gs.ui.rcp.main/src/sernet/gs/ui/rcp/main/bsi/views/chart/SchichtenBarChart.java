@@ -18,38 +18,26 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RectangleEdge;
 
+import sernet.gs.model.Baustein;
+import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IMassnahmenDAO;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenHibernateDAO;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 
-public class LebenszyklusBarChart implements IChartGenerator {
-	
-	
+public class SchichtenBarChart implements IChartGenerator {
 
 	public JFreeChart createChart() {
-		return createBarChart(createBarDataset());
-		//return createSpiderChart(createBarDataset());
+		// return createBarChart(createBarDataset());
+		return createSpiderChart(createBarDataset());
 	}
 
-	protected JFreeChart createSpiderChart(Object dataset) {
-		 SpiderWebPlot plot = new SpiderWebPlot((CategoryDataset) dataset);
-	        plot.setStartAngle(54);
-	        plot.setInteriorGap(0.40);
-	        plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
-	        JFreeChart chart = new JFreeChart("Lebenszyklus",
-	                TextTitle.DEFAULT_FONT, plot, false);
-	        LegendTitle legend = new LegendTitle(plot);
-	        legend.setPosition(RectangleEdge.BOTTOM);
-	        chart.addSubtitle(legend);
-	        return chart;
-	}
-	
 	protected JFreeChart createBarChart(Object dataset) {
-		JFreeChart chart = ChartFactory.createStackedBarChart3D(null,
-				"Lebenszyklus", "Maßnahmen", (CategoryDataset) dataset,
-				PlotOrientation.HORIZONTAL, false, true, false);
+		JFreeChart chart = ChartFactory.createBarChart3D(null,
+				"Umsetzung nach Schichten", "Maßnahmen",
+				(CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false,
+				true, false);
 		chart.setBackgroundPaint(Color.white);
 		chart.getPlot().setForegroundAlpha(0.6f);
 		chart.setBackgroundPaint(Color.white);
@@ -61,39 +49,45 @@ public class LebenszyklusBarChart implements IChartGenerator {
 
 	}
 
+	protected JFreeChart createSpiderChart(Object dataset) {
+		SpiderWebPlot plot = new SpiderWebPlot((CategoryDataset) dataset);
+		//plot.setStartAngle(54);
+		//plot.setInteriorGap(0.40);
+		plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
+		
+		JFreeChart chart = new JFreeChart("Umsetzung nach Schichten",
+				TextTitle.DEFAULT_FONT, plot, false);
+
+		LegendTitle legend = new LegendTitle(plot);
+		legend.setPosition(RectangleEdge.BOTTOM);
+		chart.addSubtitle(legend);
+		
+		return chart;
+	}
+
 	protected Object createBarDataset() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		IMassnahmenDAO dao = new MassnahmenHibernateDAO();
-		
-		Map<String, Integer> items1 = dao.getNotCompletedZyklusSummary();
+
+		Map<String, Integer> items1 = dao.getSchichtenSummary();
 		Set<Entry<String, Integer>> entrySet = items1.entrySet();
 		for (Entry<String, Integer> entry : entrySet) {
-			dataset.addValue(entry.getValue(), 
-					"Nicht umgesetzt",
-					entry.getKey()
-					);
+			dataset.addValue(entry.getValue(), "zugeordnet", getLabel(entry
+					.getKey()));
 		}
 
-		Map<String, Integer> completedItems = dao.getCompletedZyklusSummary();
-		Set<Entry<String, Integer>> entrySet2 = completedItems.entrySet();
+		Map<String, Integer> items2 = dao.getCompletedSchichtenSummary();
+		Set<Entry<String, Integer>> entrySet2 = items2.entrySet();
 		for (Entry<String, Integer> entry : entrySet2) {
-			dataset.addValue(entry.getValue(), 
-					"Umgesetzt",
-					entry.getKey()
-				);
+			dataset.addValue(entry.getValue(), "umgesetzt", getLabel(entry
+					.getKey()));
 		}
-		
-		
-		
+
 		return dataset;
 	}
-	
+
 	private String getLabel(String key) {
-		PropertyType type = HUITypeFactory.getInstance().getPropertyType(
-				MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
-		if (type == null || type.getOption(key) == null)
-			return "unbearbeitet";
-		return type.getOption(key).getName();
+		return BausteinUmsetzung.getSchichtenBezeichnung(key);
 	}
 
 }

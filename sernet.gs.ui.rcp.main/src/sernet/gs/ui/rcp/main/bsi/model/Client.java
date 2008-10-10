@@ -18,6 +18,7 @@ public class Client extends CnATreeElement
 	public static final String P_ADMIN = "client_admin"; //$NON-NLS-1$
 	public static final String P_ANWENDER = "client_anwender"; //$NON-NLS-1$
 	public static final String PROP_TAG			= "client_tag";
+	public static final String PROP_ERLAEUTERUNG = "client_erlaeuterung";
 	
 	private static EntityType entityType;
 
@@ -58,6 +59,10 @@ private final ILinkChangeListener linkChangeListener
 	public String getTitel() {
 		return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
 	}
+	
+	public void setTitel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+	}
 
 	@Override
 	public String getTypeId() {
@@ -78,6 +83,13 @@ private final ILinkChangeListener linkChangeListener
 	@Override
 	public ISchutzbedarfProvider getSchutzbedarfProvider() {
 		return schutzbedarfProvider;
+	}
+	public void setErlaeuterung(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+	}
+	
+	public void setKuerzel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
 	}
 
 }

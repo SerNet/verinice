@@ -100,6 +100,12 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 				Character.toString(stufe));
 	}
 	
+	public void setUmsetzung(String status) {
+		PropertyType type = entityType.getPropertyType(P_UMSETZUNG);
+		getEntity().setSimpleValue(type, 
+				status);
+	}
+	
 	public char getStufe() {
 		return getEntity().getSimpleValue(P_SIEGEL).length() > 0 
 			? getEntity().getSimpleValue(P_SIEGEL).charAt(0)

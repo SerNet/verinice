@@ -26,6 +26,7 @@ public class Server extends CnATreeElement
 	= new MaximumSchutzbedarfListener(this);
 
 	public static final String P_ANWENDER = "server_anwender";
+	public static final String PROP_ERLAEUTERUNG = "server_erlaeuterung";
 				private static EntityType entityType;
 
 	/**
@@ -56,6 +57,10 @@ public class Server extends CnATreeElement
 		
 	}
 	
+	public void setTitel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+	}
+	
 	@Override
 	public String getTitel() {
 		return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
@@ -79,6 +84,14 @@ public class Server extends CnATreeElement
 	@Override
 	public ISchutzbedarfProvider getSchutzbedarfProvider() {
 		return schutzbedarfProvider;
+	}
+
+	public void setErlaeuterung(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+	}
+	
+	public void setKuerzel(String name) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
 	}
 
 }

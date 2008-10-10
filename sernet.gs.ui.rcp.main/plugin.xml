@@ -411,6 +411,11 @@
             class="sernet.gs.ui.rcp.main.preferences.GeneralSettingsPage"
             id="sernet.gs.ui.rcp.main.page4"
             name="Allgemeine Einstellungen"/>
+      <page
+            class="sernet.gs.ui.rcp.main.preferences.GSImportPreferencePage"
+            id="sernet.gs.ui.rcp.main.page5"
+            name="GSTool Import">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
