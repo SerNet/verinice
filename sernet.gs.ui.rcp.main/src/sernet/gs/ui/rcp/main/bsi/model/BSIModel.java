@@ -212,4 +212,23 @@ public class BSIModel extends CnATreeElement
 		return tags;
 	}
 
+	public List<CnATreeElement> getAllElements() {
+		List<CnATreeElement> result = new ArrayList<CnATreeElement>();
+		for (CnATreeElement child : getChildren()) {
+			result.add(child);
+			addChildren(result, child);
+		}
+		return result;
+	}
+
+	private void addChildren(List<CnATreeElement> result, CnATreeElement parent) {
+		Set<CnATreeElement> children = parent.getChildren();
+		if (children != null) {
+			result.addAll(children);
+			for (CnATreeElement child : children) {
+				addChildren(result, child);
+			}
+		}
+	}
+
 }

@@ -3,10 +3,14 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.AbstractCellEditor;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
+import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -66,7 +70,7 @@ public class RiskHandlingPage extends WizardPage {
 		setControl(composite);
 
 		/* TableViewer */
-		viewer = new TableViewer(composite);
+		viewer = new TableViewer(composite, SWT.FULL_SELECTION);
 		final Table table = viewer.getTable();
 		GridData gridTable = new GridData();
 	    gridTable.grabExcessHorizontalSpace = true;
@@ -104,7 +108,9 @@ public class RiskHandlingPage extends WizardPage {
 		
 		final ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(table, 
 				GefaehrdungsUmsetzung.ALTERNATIVEN_TEXT, 
-				SWT.READ_ONLY | SWT.DROP_DOWN);
+				SWT.READ_ONLY);
+		choiceEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
+		
 		
 	    viewer.setCellEditors(new CellEditor[] {null,null,null,choiceEditor});
 	    viewer.setCellModifier(new PropertiesComboBoxCellModifier(viewer, (RiskAnalysisWizard)getWizard(), this));

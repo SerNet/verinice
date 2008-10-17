@@ -82,6 +82,14 @@
             id="sernet.gs.ui.rcp.main.chartview"
             name="Charts">
       </view>
+      <view
+            allowMultiple="false"
+            category="sernet.gs.ui.rcp.main.views"
+            class="sernet.gs.ui.rcp.main.bsi.views.DocumentView"
+            icon="icons/script.png"
+            id="sernet.gs.ui.rcp.main.documentview"
+            name="Richtlinien">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">

@@ -405,7 +405,7 @@ public class CnAElementHome {
 	}
 
 	public Session getSession() {
-		return session;
+			return session;
 	}
 
 	public void save(CnALink link) throws Exception {
@@ -444,10 +444,10 @@ public class CnAElementHome {
 		return session.get(clazz, id);
 	}
 
-	public Timestamp getCurrentTime() {
-		Query query = session.createQuery("select current_timestamp() from ITVerbund itv");
-		return (Timestamp) query.list().get(0);
-	}
+//	public Timestamp getCurrentTime() {
+//		Query query = session.createQuery("select current_timestamp() from ITVerbund itv");
+//		return (Timestamp) query.list().get(0);
+//	}
 
 	
 }

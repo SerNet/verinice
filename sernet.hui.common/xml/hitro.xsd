@@ -4,6 +4,9 @@
 
   XML Schema for Hitro-UI.
 
+  Author:  <koderman@sernet.de>
+  
+
   Hitro is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -110,7 +113,7 @@ be displayed when one of the given options has been previously selected.
         			type="hitro:referencestype"
         		    minOccurs="0" maxOccurs="1"/>
         		    
-        <xs:element name="fillRule" minOccurs="0" maxOccurs="1">
+        <xs:element name="defaultRule" minOccurs="0" maxOccurs="1">
         	<xs:complexType>
         	<xs:sequence>
         		<xs:element name="param" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
@@ -160,6 +163,17 @@ be displayed when one of the given options has been previously selected.
 	<!-- Optional or required property? -->
 	<xs:attribute name="required" type="xs:boolean" default="false"/> 
 	
+	<!-- Has initial focus? -->
+	<xs:attribute name="focus" type="xs:boolean" default="false"/> 
+	
+	<!-- Field containsURL? User can click on it. -->
+	<xs:attribute name="isURL" type="xs:boolean" default="false"/> 
+	
+	<!-- Is editable? -->
+	<xs:attribute name="editable" type="xs:boolean" default="true"/> 
+    
+	<!-- Is visible in GUI? -->
+	<xs:attribute name="visible" type="xs:boolean" default="true"/> 
 </xs:complexType>
 
 <xs:simpleType name="inputtypes" >

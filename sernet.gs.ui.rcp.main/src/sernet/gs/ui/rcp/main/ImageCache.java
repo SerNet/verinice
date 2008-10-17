@@ -97,6 +97,8 @@ public class ImageCache {
 	public static final String CHART_BAR = "chart_bar.png";
 	public static final String CHART_CURVE = "chart_curve.png";
 
+	public static final String VIEW_DOCUMENT = "script.png";
+
 
 	
 	

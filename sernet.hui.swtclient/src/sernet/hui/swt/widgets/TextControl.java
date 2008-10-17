@@ -19,6 +19,9 @@
 package sernet.hui.swt.widgets;
 
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -107,11 +110,12 @@ public class TextControl implements IHuiControl {
 						validate();
 					}
 				});
-
+				
 				composite.layout();
 	}
 
 	public boolean validate() {
+		
 		if (this.fieldType.validate(text.getText(), null)) {
 			text.setForeground(fgColor);
 			text.setBackground(bgColor);
@@ -122,6 +126,7 @@ public class TextControl implements IHuiControl {
 		text.setBackground(Colors.YELLOW);
 		return false;
 	}
+
 
 	private Text createText() {
 		if (lines > 1) {

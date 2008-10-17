@@ -53,6 +53,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 
 	private boolean visible;
 
+	private boolean isURL;
+
 	public void addValidator(IValidationRule rule) {
 		if (!validators.contains(rule))
 			validators.add(rule);
@@ -282,5 +284,13 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	
 	public boolean isVisible() {
 		return visible;
+	}
+
+	public void setURL(boolean url) {
+		this.isURL = url;
+	}
+
+	public boolean isURL() {
+		return isURL;
 	}
 }

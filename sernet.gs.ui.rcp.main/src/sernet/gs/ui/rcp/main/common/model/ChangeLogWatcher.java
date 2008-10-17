@@ -43,14 +43,15 @@ public class ChangeLogWatcher {
 	 * @return
 	 */
 	public List<ChangeLogEntry> getNewChanges() {
-		if (lastUpdate == null) {
-			lastUpdate = CnAElementHome.getInstance().getCurrentTime();
-		}
-		
-		List<ChangeLogEntry> changes = CnAElementHome.getInstance().loadChangesSince(lastUpdate);
-		if (changes.size() > 0)
-			lastUpdate = changes.get(changes.size()-1).getChangetime();
-		return changes;
+//		if (lastUpdate == null) {
+//			lastUpdate = CnAElementHome.getInstance().getCurrentTime();
+//		}
+//		
+//		List<ChangeLogEntry> changes = CnAElementHome.getInstance().loadChangesSince(lastUpdate);
+//		if (changes.size() > 0)
+//			lastUpdate = changes.get(changes.size()-1).getChangetime();
+//		return changes;
+		return null;
 	}
 
 	/**

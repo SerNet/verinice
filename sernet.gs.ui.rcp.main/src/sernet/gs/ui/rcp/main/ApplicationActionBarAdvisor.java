@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.bsi.views.DSModelView;
+import sernet.gs.ui.rcp.main.bsi.views.DocumentView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewCloseDBAction;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction;
@@ -104,6 +105,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	private ImportGstoolAction importGstoolAction;
 
+	private OpenViewAction openDocumentViewAction;
+
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
 		removeExtraneousActions();
@@ -164,6 +167,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 				TodoView.ID, ImageCache.VIEW_TODO);
 		register(openTodoViewAction);
 		
+		openDocumentViewAction = new OpenViewAction(window, "Richtlinien",
+				DocumentView.ID, ImageCache.VIEW_DOCUMENT);
+		register(openDocumentViewAction);
 
 		openChartViewAction = new OpenMultipleViewAction(window, "Charts",
 				ChartView.ID, ImageCache.CHART_PIE);
@@ -276,6 +282,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		viewsMenu.add(openAuditViewAction);
 		viewsMenu.add(openDSViewAction);
 		viewsMenu.add(openChartViewAction);
+		viewsMenu.add(openDocumentViewAction);
 		// viewsMenu.add(viewList);
 
 //		MenuManager perspectivesMenu = new MenuManager("Öffne Perspektive...");
@@ -305,6 +312,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		myToolbar.add(openTodoViewAction);
 		myToolbar.add(openAuditViewAction);
 		myToolbar.add(openChartViewAction);
+		myToolbar.add(openDocumentViewAction);
+		
 		//myToolbar.add(openDSViewAction);
 	}
 	

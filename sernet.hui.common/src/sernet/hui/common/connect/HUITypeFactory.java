@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -126,6 +127,19 @@ public class HUITypeFactory {
 	public EntityType getEntityType(String id) {
 		return this.allEntities.get(id);
 	}
+	
+	public List<PropertyType> getURLPropertyTypes() {
+		List<PropertyType> result = new ArrayList<PropertyType>();
+		Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
+		for (Entry<String, EntityType> entry : entrySet) {
+			List<PropertyType> types = entry.getValue().getPropertyTypes();
+			for (PropertyType propertyType : types) {
+				if (propertyType.isURL())
+					result.add(propertyType);
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * Check if file has changed (or was never read). Timestamp for local files, for
@@ -226,6 +240,7 @@ public class HUITypeFactory {
 		propObj.setInitialFocus(prop.getAttribute("focus").equals("true"));
 		propObj.setEditable(prop.getAttribute("editable").equals("true"));
 		propObj.setVisible(prop.getAttribute("visible").equals("true"));
+		propObj.setURL(prop.getAttribute("isURL").equals("true"));
 		propObj.setPredefinedValues(this.getOptionsForPropertyType(id));
 		propObj.setDependencies(readDependencies(prop));
 

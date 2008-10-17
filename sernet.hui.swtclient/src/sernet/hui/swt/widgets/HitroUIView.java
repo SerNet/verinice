@@ -36,6 +36,7 @@ import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
+import sernet.hui.swt.widgets.URL.URLControl;
 import sernet.hui.swt.widgets.multiselectionlist.MultiSelectionControl;
 import sernet.snutils.AssertException;
 import sernet.snutils.DBException;
@@ -245,7 +246,9 @@ public class HitroUIView implements IEntityChangedListener   {
 		if (!type.isVisible())
 			return;
 		
-		if (type.isLine())
+		if (type.isURL())
+			createURLField(type, editableField, parent);
+		else if (type.isLine())
 			createTextField(type, editableField, parent, type.isFocus(), 1 /*one line high*/);
 		else if (type.isSingleSelect())
 			createSingleOptionField(type, editableField, parent, type.isFocus());
@@ -255,6 +258,14 @@ public class HitroUIView implements IEntityChangedListener   {
 			createDateField(type, editableField, parent, type.isFocus());
 		else if (type.isText())
 			createTextField(type, editableField, parent, type.isFocus(), 3 /*three lines high*/);
+	}
+
+	private void createURLField(PropertyType type, boolean editableField,
+			Composite parent) {
+		URLControl urlControl = new URLControl(entity, type, parent, editable);
+		urlControl.create();
+		fields.put(type.getId(), urlControl);
+		urlControl.validate();
 	}
 
 	public void resizeContainer() {

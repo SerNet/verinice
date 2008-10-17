@@ -61,6 +61,11 @@ Template:
             inputtype="text"
             id="raum_erlaeuterung" />
             
+        <huiproperty
+            name="Dokument"
+            id="raum_dokument"
+            isURL="true" />
+            
         <huipropertygroup
 			id="raum_group_schutzbedarf"
 			name="Schutzbedarf">
@@ -185,6 +190,12 @@ Template:
             name="Erläuterung"
             inputtype="text"
             id="server_erlaeuterung" />
+            
+        <huiproperty
+            name="Dokument"
+            id="server_dokument"
+            isURL="true" />
+            
         <huiproperty
             name="Plattform"
             id="server_plattform" />
@@ -354,6 +365,11 @@ Template:
             inputtype="text"
             id="tkkomponente_erlaeuterung" />
         <huiproperty
+            name="Dokument"
+            id="tkkomponente_dokument"
+            isURL="true" />
+            
+        <huiproperty
             name="Plattform"
             id="tkkomponente_plattform" />
         <huiproperty
@@ -510,6 +526,11 @@ Template:
             name="Tags"
             tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
         />
+        
+        <huiproperty
+            name="Dokument"
+            id="netzkomponente_dokument"
+            isURL="true" />
             
         <huiproperty
             name="Kabel / Komm.anbindung"
@@ -795,6 +816,10 @@ Template:
             inputtype="text"
             id="client_erlaeuterung" />
         <huiproperty
+            name="Dokument"
+            id="client_dokument"
+            isURL="true" />
+        <huiproperty
             name="Plattform"
             id="client_plattform" />
         <huiproperty
@@ -986,6 +1011,10 @@ Template:
             name="Erläuterung"
             inputtype="text"
             id="sonstit_erlaeuterung" />
+        <huiproperty
+            name="Dokument"
+            id="sonstit_dokument"
+            isURL="true" />
         <huiproperty
             name="Plattform"
             id="sonstit_plattform" />
@@ -1337,6 +1366,10 @@ Template:
 				id="person_41"
 				name="Vertretung" />
 		</huiproperty>
+		<huiproperty
+            name="Dokument"
+            id="person_dokument"
+            isURL="true" />
 	</huientity>
 
 	<huientity
@@ -1366,6 +1399,10 @@ Template:
 			id="gebaeude_erlaeuterung"
             inputtype="text"
 			name="Erläuterung" />
+		<huiproperty
+            name="Dokument"
+            id="gebaeude_dokument"
+            isURL="true" />
 		<huipropertygroup
 			id="gebaeude_group_schutzbedarf"
 			name="Schutzbedarf">
@@ -1498,6 +1535,10 @@ Template:
 			id="bstumsetzung_erlaeuterung"
             inputtype="text"
 			name="Erläuterung" />
+		<huiproperty
+            name="Dokument"
+            id="bstumsetzung_dokument"
+            isURL="true" />
 	</huientity>
 	
 	
@@ -1549,6 +1590,10 @@ Template:
 				id="gefaehrdungsumsetzung_erlaeuterung"
 				inputtype="text"
 				name="Erläuterung" />
+		<huiproperty
+            name="Dokument"
+            id="gefaehrdungsumsetzung_dokument"
+            isURL="true" />
 	</huientity>
 
 
@@ -1582,6 +1627,10 @@ Template:
 				name="Siegelstufe"
                 editable="false"
                 />
+        <huiproperty
+            name="Dokument"
+            id="mnums_dokument"
+            isURL="true" />
 		<huipropertygroup
 			id="mnums_group_umsetzung"
 			name="Umsetzung">
@@ -1772,7 +1821,10 @@ Template:
 			id="anwendung_erlaeuterung"
             inputtype="text"
 			name="Erläuterung" />
-
+		<huiproperty
+            name="Dokument"
+            id="anwendung_dokument"
+            isURL="true" />
         <huiproperty
 			id="anwendung_prozess"
 			name="Geschäftsprozess" />
