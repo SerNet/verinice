@@ -9,6 +9,9 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class DocumentLink {
 
+	public static final Object NO_LINK_MESSAGE = "";
+
+
 	public DocumentLink(String name, String href) {
 		super();
 		this.name = name;

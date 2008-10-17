@@ -34,6 +34,7 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.bsi.wizards.ExportWizard;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -44,94 +45,107 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 
 /**
- * Erlaubt das gemeinsame Editieren der Eigenschaften von gleichen,
- * ausgewähltne Objekten.
+ * Erlaubt das gemeinsame Editieren der Eigenschaften von gleichen, ausgewähltne
+ * Objekten.
  * 
  * @author koderman@sernet.de
- * @version $Rev: 39 $ $LastChangedDate: 2007-11-27 12:26:19 +0100 (Di, 27 Nov 2007) $ 
- * $LastChangedBy: koderman $
- *
+ * @version $Rev: 39 $ $LastChangedDate: 2007-11-27 12:26:19 +0100 (Di, 27 Nov
+ *          2007) $ $LastChangedBy: koderman $
+ * 
  */
 public class ShowBulkEditAction extends Action implements ISelectionListener {
-	
+
 	public static final String ID = "sernet.gs.ui.rcp.main.actions.showbulkeditaction";
 	private final IWorkbenchWindow window;
-	
+
 	public ShowBulkEditAction(IWorkbenchWindow window, String label) {
 		this.window = window;
-        setText(label);
+		setText(label);
 		setId(ID);
 		setActionDefinitionId(ID);
-		setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.CASCADE));
+		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(
+				ImageCache.CASCADE));
 		window.getSelectionService().addSelectionListener(this);
 		setToolTipText("Gleichartige Elemente gemeinsam editieren.");
 	}
-	
-	
+
 	public void run() {
-		IStructuredSelection selection = (IStructuredSelection) 
-			window.getSelectionService().getSelection();
+		IStructuredSelection selection = (IStructuredSelection) window
+				.getSelectionService().getSelection();
 		if (selection == null)
 			return;
 		final ArrayList<CnATreeElement> selectedElements = new ArrayList<CnATreeElement>();
-		EntityType entType=null;
+		EntityType entType = null;
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object o = iter.next();
-			if (! (o instanceof CnATreeElement))
+			CnATreeElement elmt = null;
+			if (o instanceof CnATreeElement)
+				elmt = (CnATreeElement) o;
+			else if (o instanceof DocumentReference) {
+				DocumentReference ref = (DocumentReference) o;
+				elmt = ref.getCnaTreeElement();
+			}
+			if (elmt == null)
 				continue;
-			CnATreeElement elmt = (CnATreeElement) o;
-			entType = HUITypeFactory.getInstance().getEntityType(elmt.getEntity()
-					.getEntityType());
-			selectedElements.add( elmt);
-			Logger.getLogger(this.getClass()).debug("Adding to bulk edit: "
-					+ elmt.getTitel());
+			
+			entType = HUITypeFactory.getInstance().getEntityType(
+					elmt.getEntity().getEntityType());
+			selectedElements.add(elmt);
+			Logger.getLogger(this.getClass()).debug(
+					"Adding to bulk edit: " + elmt.getTitel());
 		}
 
-		final BulkEditDialog dialog = new BulkEditDialog(window.getShell(), entType);
+		final BulkEditDialog dialog = new BulkEditDialog(window.getShell(),
+				entType);
 		if (dialog.open() != InputDialog.OK)
 			return;
-		
+
 		try {
 			// close editors first:
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().closeAllEditors(true /*ask save*/);
-			
-			PlatformUI.getWorkbench().getProgressService().
-				busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						monitor.setTaskName("Setze veränderte Werte...");
-						monitor.beginTask("Bulk Edit", selectedElements.size()+1);
-						// for every target:
-						for (CnATreeElement elmt : selectedElements) {
-							// set values:
-							Entity editEntity = elmt.getEntity();
-							editEntity.copyEntity(dialog.getEntity());
-							monitor.worked(1);
+					.getActivePage().closeAllEditors(true /* ask save */);
+
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
+					new IRunnableWithProgress() {
+						public void run(IProgressMonitor monitor)
+								throws InvocationTargetException,
+								InterruptedException {
+							monitor.setTaskName("Setze veränderte Werte...");
+							monitor.beginTask("Bulk Edit", selectedElements
+									.size() + 1);
+							// for every target:
+							for (CnATreeElement elmt : selectedElements) {
+								// set values:
+								Entity editEntity = elmt.getEntity();
+								editEntity.copyEntity(dialog.getEntity());
+								monitor.worked(1);
+							}
+							try {
+								monitor
+										.setTaskName("Speichere veränderte Werte...");
+								monitor.beginTask(
+										"Speichere veränderte Werte...",
+										IProgressMonitor.UNKNOWN);
+								CnAElementHome.getInstance().update(
+										selectedElements);
+							} catch (Exception e) {
+								ExceptionUtil
+										.log(e,
+												"Elemente konnten nicht gespeichert werden.");
+							}
+							monitor.done();
+							// update once when finished:
+							CnAElementFactory.getCurrentModel()
+									.refreshAllListeners();
+							updateSchutzbedarf(selectedElements);
 						}
-						try {
-							monitor.setTaskName("Speichere veränderte Werte...");
-							monitor.beginTask("Speichere veränderte Werte...", IProgressMonitor.UNKNOWN);
-							CnAElementHome.getInstance().update(selectedElements);
-						} 
-						catch (Exception e) {
-							ExceptionUtil.log(e, "Elemente konnten nicht gespeichert werden.");
-						}
-						monitor.done();
-						// update once when finished:
-						CnAElementFactory.getCurrentModel().refreshAllListeners();
-						updateSchutzbedarf(selectedElements);
-					}
-			});
+					});
 		} catch (InvocationTargetException e) {
 			ExceptionUtil.log(e, "Error executing bulk edit.");
 		} catch (InterruptedException e) {
 			ExceptionUtil.log(e, "Aborted.");
 		}
 	}
-
-	
-
 
 	protected void updateSchutzbedarf(ArrayList<CnATreeElement> selectedElements) {
 		// description may have been set to "Maximumprinzip"
@@ -140,7 +154,7 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 			element.getLinkChangeListener().verfuegbarkeitChanged();
 			element.getLinkChangeListener().vertraulichkeitChanged();
 		}
-		
+
 		// schutzbedarf may have been changed manually, update dependencies:
 		for (CnATreeElement element : selectedElements) {
 			if (element.isSchutzbedarfProvider())
@@ -148,32 +162,52 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 		}
 	}
 
-
 	/**
 	 * Action is enabled when only items of the same type are selected.
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection input) {
 		if (input instanceof IStructuredSelection) {
 			IStructuredSelection selection = (IStructuredSelection) input;
-			if (selection.size() > 0 
+
+			CnATreeElement elmt = null;
+			if (selection.size() > 0
+					&& selection.getFirstElement() instanceof DocumentReference) {
+				elmt = ((DocumentReference) selection.getFirstElement())
+						.getCnaTreeElement();
+			}
+
+			else if (selection.size() > 0
 					&& selection.getFirstElement() instanceof CnATreeElement
-					&& ((CnATreeElement) selection.getFirstElement()).getEntity() != null) {
-				CnATreeElement elmt = (CnATreeElement) selection.getFirstElement();
+					&& ((CnATreeElement) selection.getFirstElement())
+							.getEntity() != null) {
+				elmt = (CnATreeElement) selection.getFirstElement();
+			}
+
+			if (elmt != null) {
 				String type = elmt.getEntity().getEntityType();
-				EntityType entType = HUITypeFactory.getInstance().getEntityType(type);
-				
+				EntityType entType = HUITypeFactory.getInstance()
+						.getEntityType(type);
+
 				for (Iterator iter = selection.iterator(); iter.hasNext();) {
 					Object o = iter.next();
-					if (! (o instanceof CnATreeElement)) {
-						setEnabled(false);
-						return;
+					if (o instanceof CnATreeElement) {
+						elmt = (CnATreeElement) o;
+
+					} else if (o instanceof DocumentReference) {
+						DocumentReference ref = (DocumentReference) o;
+						elmt = ref.getCnaTreeElement();
 					}
-					elmt = (CnATreeElement) o;
-					if (elmt.getEntity() == null
-							|| !elmt.getEntity().getEntityType().equals(type)) {
-						setEnabled(false);
-						return;
-					}
+				}
+
+				if (elmt == null) {
+					setEnabled(false);
+					return;
+				}
+
+				if (elmt.getEntity() == null
+						|| !elmt.getEntity().getEntityType().equals(type)) {
+					setEnabled(false);
+					return;
 				}
 				setEnabled(true);
 				return;
@@ -181,7 +215,7 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 		}
 		setEnabled(false);
 	}
-	
+
 	private void dispose() {
 		window.getSelectionService().removeSelectionListener(this);
 	}

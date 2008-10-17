@@ -21,8 +21,11 @@ import sernet.hui.swt.widgets.URL.URLUtil;
 
 public class HibernateDocumentLinkDAO implements IDocumentLinkDAO {
 
+	// FIXME change this to hibernate query
 	public DocumentLinkRoot findEntries(Set<String> allIDs) {
 		DocumentLinkRoot root = new DocumentLinkRoot();
+		if (CnAElementFactory.getCurrentModel() == null)
+			return root;
 		List<CnATreeElement> elements = CnAElementFactory.getCurrentModel()
 				.getAllElements();
 		for (CnATreeElement element : elements) {
@@ -36,11 +39,17 @@ public class HibernateDocumentLinkDAO implements IDocumentLinkDAO {
 						&& properties.getProperties().size() > 0) {
 
 					String url = properties.getProperty(0).getPropertyValue();
-					DocumentLink documentLink = new DocumentLink(URLUtil
-							.getName(url), URLUtil.getHref(url));
+					if (URLUtil.getName(url).equals("") && URLUtil.getHref(url).equals(""))
+						continue;
+					
+					DocumentLink link = root.getDocumentLink(URLUtil.getName(url), URLUtil.getHref(url));
+					if (link == null) {
+						link = new DocumentLink(URLUtil
+								.getName(url), URLUtil.getHref(url));
+						root.addChild(link);
+					}
 					DocumentReference reference = new DocumentReference(element);
-					documentLink.addChild(reference);
-					root.addChild(documentLink);
+					link.addChild(reference);
 				}
 			}
 		}

@@ -16,6 +16,8 @@ import sernet.gs.ui.rcp.main.bsi.views.chart.MassnahmeCount;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 
+// FIXME change this to HQL queries
+
 public class MassnahmenHibernateDAO implements IMassnahmenDAO {
 	
 

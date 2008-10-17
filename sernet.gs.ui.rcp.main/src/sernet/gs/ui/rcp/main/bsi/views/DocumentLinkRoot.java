@@ -23,4 +23,13 @@ public class DocumentLinkRoot {
 	public Object[] getChildren() {
 		return (DocumentLink[]) children.toArray(new DocumentLink[children.size()]);
 	}
+
+	public DocumentLink getDocumentLink(String name, String href) {
+		for (DocumentLink link : children) {
+			if (link.getName().equals(name)
+					&& link.getHref().equals(href))
+				return link;
+		}
+		return null;
+	}
 }

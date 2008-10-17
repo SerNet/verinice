@@ -104,7 +104,7 @@ public class URLControl implements IHuiControl {
 		savedProp = propList != null ? propList.getProperty(0) : null;
 
 		if (savedProp == null) {
-			savedProp = entity.createNewProperty(type, "- kein Link - ");
+			savedProp = entity.createNewProperty(type, "");
 		}
 		link.setText(savedProp.getPropertyValue());
 		link.pack();
