@@ -30,22 +30,22 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 		store.setDefault(PreferenceConstants.BSIZIPFILE, CnAWorkspace.getInstance()
 				.getWorkdir()
-				+ File.separator + "it-grundschutz2006_html_de.zip");
+				+ File.separator + "it-grundschutz2006_html_de.zip"); //$NON-NLS-1$
 
 		store.setDefault(PreferenceConstants.OOTEMPLATE, CnAWorkspace
 				.getInstance().getWorkdir()
-				+ File.separator + "office" + File.separator + "report.ods");
+				+ File.separator + "office" + File.separator + "report.ods"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		store.setDefault(PreferenceConstants.OOTEMPLATE_TEXT, CnAWorkspace
 				.getInstance().getWorkdir()
-				+ File.separator + "office" + File.separator + "report.odt");
+				+ File.separator + "office" + File.separator + "report.odt"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		if (System.getProperty("os.name").toLowerCase().matches(".*windows.*")
-				|| System.getProperty("os.name").toLowerCase()
-						.matches(".*nt.*")) {
-			store.setDefault(PreferenceConstants.OODIR, "C:\\Programme");
+		if (System.getProperty("os.name").toLowerCase().matches(".*windows.*") //$NON-NLS-1$ //$NON-NLS-2$
+				|| System.getProperty("os.name").toLowerCase() //$NON-NLS-1$
+						.matches(".*nt.*")) { //$NON-NLS-1$
+			store.setDefault(PreferenceConstants.OODIR, "C:\\Programme"); //$NON-NLS-1$
 		} else {
-			store.setDefault(PreferenceConstants.OODIR, "/opt");
+			store.setDefault(PreferenceConstants.OODIR, "/opt"); //$NON-NLS-1$
 		}
 
 		store.setDefault(PreferenceConstants.ERRORPOPUPS, true);
@@ -57,17 +57,17 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.DB_DIALECT,
 				PreferenceConstants.DB_DIALECT_derby);
 		
-		String derbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s",CnAWorkspace
+		String derbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s",CnAWorkspace //$NON-NLS-1$
 				.getInstance().getWorkdir() );
 		store.setDefault(PreferenceConstants.DB_URL,
 				derbyUrl);
 		
-		store.setDefault(PreferenceConstants.DB_USER, "");
-		store.setDefault(PreferenceConstants.DB_PASS, "");
+		store.setDefault(PreferenceConstants.DB_USER, ""); //$NON-NLS-1$
+		store.setDefault(PreferenceConstants.DB_PASS, ""); //$NON-NLS-1$
 
-		store.setDefault(PreferenceConstants.GS_DB_URL, "jdbc:jtds:sqlserver://127.0.0.1/BSIDB_V45");
-		store.setDefault(PreferenceConstants.GS_DB_USER, "sa");
-		store.setDefault(PreferenceConstants.GS_DB_PASS, "");
+		store.setDefault(PreferenceConstants.GS_DB_URL, "jdbc:jtds:sqlserver://127.0.0.1/BSIDB_V45"); //$NON-NLS-1$
+		store.setDefault(PreferenceConstants.GS_DB_USER, "sa"); //$NON-NLS-1$
+		store.setDefault(PreferenceConstants.GS_DB_PASS, ""); //$NON-NLS-1$
 		
 		
 

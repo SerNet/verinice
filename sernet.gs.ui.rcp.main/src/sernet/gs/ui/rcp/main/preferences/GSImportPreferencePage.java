@@ -31,7 +31,7 @@ public class GSImportPreferencePage
 	public GSImportPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Hier konfigurieren Sie sie MS-SQL Datenbank des GSTool 4.5 für die Datenübernahme.");
+		setDescription(Messages.getString("GSImportPreferencePage.0")); //$NON-NLS-1$
 	}
 	
 	/**
@@ -43,18 +43,18 @@ public class GSImportPreferencePage
 	public void createFieldEditors() {
 		
 		url = new StringFieldEditor(PreferenceConstants.GS_DB_URL,
-				"GSTOOL JDBC URL",
+				"GSTOOL JDBC URL", //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(url);
 		
 		
 		user = new StringFieldEditor(PreferenceConstants.GS_DB_USER,
-				"GSTOOL DB User",
+				"GSTOOL DB User", //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(user);
 		
 		pass = new StringFieldEditor(PreferenceConstants.GS_DB_PASS,
-				"GSTOOL DB Passwort",
+				"GSTOOL DB Passwort", //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(pass);
 	}

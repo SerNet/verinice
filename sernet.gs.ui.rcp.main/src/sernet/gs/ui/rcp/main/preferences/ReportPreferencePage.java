@@ -25,8 +25,8 @@ public class ReportPreferencePage
 	public ReportPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Hier konfigurieren Sie die Schnittstelle zu OpenOffice," +
-				" um Reports und die vom BSI geforderten Referenzdokumnte zu erstellen. ");
+		setDescription(Messages.getString("ReportPreferencePage.0") + //$NON-NLS-1$
+				Messages.getString("ReportPreferencePage.1")); //$NON-NLS-1$
 	}
 	
 	/**
@@ -37,17 +37,17 @@ public class ReportPreferencePage
 	 */
 	public void createFieldEditors() {
 		ooDir = new DirectoryFieldEditor(PreferenceConstants.OODIR,
-				"Pfad zu OpenOffice)",
+				Messages.getString("ReportPreferencePage.2"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(ooDir);
 		
 		ooTemplate = new FileFieldEditor(PreferenceConstants.OOTEMPLATE, 
-				"OO Calc Vorlagendatei",
+				Messages.getString("ReportPreferencePage.3"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(ooTemplate);
 
 		ooDocumentTemplate = new FileFieldEditor(PreferenceConstants.OOTEMPLATE_TEXT, 
-				"OO Writer Vorlagendatei",
+				Messages.getString("ReportPreferencePage.4"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(ooDocumentTemplate);
 	}

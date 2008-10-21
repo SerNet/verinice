@@ -27,7 +27,7 @@ public class CnAPreferencePage
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 
-		setDescription("");
+		setDescription(""); //$NON-NLS-1$
 	}
 	
 	/**

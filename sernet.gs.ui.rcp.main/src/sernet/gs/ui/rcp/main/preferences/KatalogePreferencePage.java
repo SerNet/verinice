@@ -9,12 +9,23 @@ import java.util.zip.ZipFile;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.preference.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
 
 import sernet.gs.scraper.ZIPGSSource;
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ImageCache;
 
 /**
  * Main preference page for CnA Tool Settings.
@@ -30,16 +41,18 @@ public class KatalogePreferencePage
 	private StringFieldEditor datenschutzZipPath;
 	private RadioGroupFieldEditor gsAccessMethod;
 	private DirectoryFieldEditor bsiUrl;
+	
 
 	public KatalogePreferencePage() {
 		super(GRID);
 		
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Hier konfigurieren Sie die Datenquelle für die" +
-				"Grundschutz-Kataloge des BSI. Sie können diese kostenlos von der Webseite" +
-				" des BSI downloaden. " +
-				"Tragen Sie dann den Speicherort der ZIP-Datei ein, " +
-				"oder das Verzeichnis mit den entpackten HTML-Dateien.");
+		setDescription(Messages.getString("KatalogePreferencePage.0") + //$NON-NLS-1$
+				Messages.getString("KatalogePreferencePage.1") + //$NON-NLS-1$
+				Messages.getString("KatalogePreferencePage.2") + //$NON-NLS-1$
+				Messages.getString("KatalogePreferencePage.3") + //$NON-NLS-1$
+				Messages.getString("KatalogePreferencePage.4")); //$NON-NLS-1$
+		
 	}
 	
 	/**
@@ -50,29 +63,54 @@ public class KatalogePreferencePage
 	 */
 	public void createFieldEditors() {
 		gsAccessMethod = new RadioGroupFieldEditor(PreferenceConstants.GSACCESS,
-				"Datenquelle für GS-Kataloge",
+				Messages.getString("KatalogePreferencePage.5"), //$NON-NLS-1$
 				1,
 				new String[][] {
-					{"Ordner", PreferenceConstants.GSACCESS_DIR}, 
-					{"ZIP-File", PreferenceConstants.GSACCESS_ZIP}
+					{Messages.getString("KatalogePreferencePage.6"), PreferenceConstants.GSACCESS_DIR},  //$NON-NLS-1$
+					{Messages.getString("KatalogePreferencePage.7"), PreferenceConstants.GSACCESS_ZIP} //$NON-NLS-1$
 				},
 				getFieldEditorParent());
 		addField(gsAccessMethod);
 		
-		bsiUrl = new DirectoryFieldEditor(PreferenceConstants.BSIDIR,
-				"Verzeichnis mit GS-Katalogen (HTML-Format)",
-				getFieldEditorParent());
-		addField(bsiUrl);
-		
 		zipfilePath = new FileFieldEditor(PreferenceConstants.BSIZIPFILE, 
-				"ZIP-Datei mit GS-Katalogen",
+				Messages.getString("KatalogePreferencePage.8"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(zipfilePath);
 
+		bsiUrl = new DirectoryFieldEditor(PreferenceConstants.BSIDIR,
+				Messages.getString("KatalogePreferencePage.9"), //$NON-NLS-1$
+				getFieldEditorParent());
+		addField(bsiUrl);
+
 		datenschutzZipPath = new FileFieldEditor(PreferenceConstants.DSZIPFILE, 
-				"ZIP-Datei mit Datenschutzbaustein",
+				Messages.getString("KatalogePreferencePage.10"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(datenschutzZipPath);
+
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	 */
+	protected Control createContents(Composite parent) {
+		
+		final Link link = new Link(parent, SWT.NONE);
+		link.setText(Messages.getString("KatalogePreferencePage.11") + //$NON-NLS-1$
+				Messages.getString("KatalogePreferencePage.12") + //$NON-NLS-1$
+				Messages.getString("KatalogePreferencePage.13") + //$NON-NLS-1$
+				Messages.getString("KatalogePreferencePage.14") + //$NON-NLS-1$
+				Messages.getString("KatalogePreferencePage.15")); //$NON-NLS-1$
+		
+		link.addListener (SWT.Selection, new Listener () {
+			public void handleEvent(Event event) {
+				Program.launch(event.text);
+			}
+
+		});
+
+		return super.createContents(parent);
+		
 	}
 	
 	@Override

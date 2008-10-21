@@ -112,10 +112,10 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
       <plugin id="org.eclipse.ui.win32" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
+      <plugin id="sernet.gs.log4j"/>
+      <plugin id="sernet.gs.saxon9"/>
       <plugin id="sernet.gs.service"/>
       <plugin id="sernet.gs.ui.rcp.main"/>
-      <plugin id="sernet.hui.common"/>
-      <plugin id="sernet.hui.swtclient"/>
       <plugin id="verinice.nl1.org.eclipse.jface" fragment="true"/>
       <plugin id="verinice.nl1.org.eclipse.swt" fragment="true"/>
       <plugin id="verinice.nl1.org.eclipse.ui" fragment="true"/>

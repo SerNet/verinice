@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sun.misc.Regexp;
 
 /**
  * Prepare the workspace directory for the application. Created needed files

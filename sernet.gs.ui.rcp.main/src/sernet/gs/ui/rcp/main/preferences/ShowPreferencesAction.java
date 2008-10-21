@@ -17,7 +17,7 @@ import sernet.gs.ui.rcp.main.ImageCache;
 public class ShowPreferencesAction extends Action {
 	
 	
-	private static final String ID = "sernet.gs.ui.rcp.showprefsaction";
+	private static final String ID = "sernet.gs.ui.rcp.showprefsaction"; //$NON-NLS-1$
 
 	/**
 	 * Constructor
@@ -26,7 +26,7 @@ public class ShowPreferencesAction extends Action {
 		
 		super();
 		setId(ID);
-		setText("&Einstellungen...");
+		setText(Messages.getString("ShowPreferencesAction.1")); //$NON-NLS-1$
 		//setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.TOOL));
 	}
 
@@ -37,10 +37,10 @@ public class ShowPreferencesAction extends Action {
 		
 		IPreferenceNode[] nodes = manager.getRootSubNodes();
 		for (int i=0; i < nodes.length; ++i) {
-			if (nodes[i].getId().equals("org.eclipse.ui.preferencePages.Workbench")
-					|| nodes[i].getId().equals("org.eclipse.update.internal.ui.preferences.MainPreferencePage")
-					|| nodes[i].getId().equals("org.eclipse.help.ui.browsersPreferencePage")
-					|| nodes[i].getId().equals("org.eclipse.help.ui.appserverPreferencePage")
+			if (nodes[i].getId().equals("org.eclipse.ui.preferencePages.Workbench") //$NON-NLS-1$
+					|| nodes[i].getId().equals("org.eclipse.update.internal.ui.preferences.MainPreferencePage") //$NON-NLS-1$
+					|| nodes[i].getId().equals("org.eclipse.help.ui.browsersPreferencePage") //$NON-NLS-1$
+					|| nodes[i].getId().equals("org.eclipse.help.ui.appserverPreferencePage") //$NON-NLS-1$
 					) {
 				manager.remove(nodes[i]);
 			}

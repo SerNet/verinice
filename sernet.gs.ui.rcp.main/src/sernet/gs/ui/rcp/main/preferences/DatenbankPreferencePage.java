@@ -31,13 +31,13 @@ public class DatenbankPreferencePage
 	public DatenbankPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Hier konfigurieren Sie die Datenbank, in der " +
-				"SerNet verinice ihr GS-Modell speichert. Wenn Sie keine Datenbank " +
-				"zur Verfügung haben, benutzt verinice die integrierte " +
-				"Derby-DB und speichert das Modell in ihrem Arbeitsverzeichnis. " +
-				"Eine bessere Performance erzielen Sie aber in jedem Fall " +
-				"mit einer externen Datenbank, so dass Sie " +
-				"bei ernsthafter Nutzung auf Postgres oder MySQL umsteigen sollten.");
+		setDescription(Messages.getString("DatenbankPreferencePage.0") + //$NON-NLS-1$
+				Messages.getString("DatenbankPreferencePage.1") + //$NON-NLS-1$
+				Messages.getString("DatenbankPreferencePage.2") + //$NON-NLS-1$
+				Messages.getString("DatenbankPreferencePage.3") + //$NON-NLS-1$
+				Messages.getString("DatenbankPreferencePage.4") + //$NON-NLS-1$
+				Messages.getString("DatenbankPreferencePage.5") + //$NON-NLS-1$
+				Messages.getString("DatenbankPreferencePage.6")); //$NON-NLS-1$
 	}
 	
 	/**
@@ -49,35 +49,35 @@ public class DatenbankPreferencePage
 	public void createFieldEditors() {
 		createRadioGroup();
 		dialect = new StringFieldEditor(PreferenceConstants.DB_DIALECT,
-				"SQL Dialekt",
+				Messages.getString("DatenbankPreferencePage.7"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(dialect);
 		
 		url = new StringFieldEditor(PreferenceConstants.DB_URL,
-				"JDBC URL",
+				Messages.getString("DatenbankPreferencePage.8"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(url);
 		
 		
 		user = new StringFieldEditor(PreferenceConstants.DB_USER,
-				"DB User",
+				Messages.getString("DatenbankPreferencePage.9"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(user);
 		
 		pass = new StringFieldEditor(PreferenceConstants.DB_PASS,
-				"DB Passwort",
+				Messages.getString("DatenbankPreferencePage.10"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(pass);
 	}
 	
 	private void createRadioGroup() {
 		dbDriver = new RadioGroupFieldEditor(PreferenceConstants.DB_DRIVER,
-				"Verwendete Datenbank",
+				Messages.getString("DatenbankPreferencePage.11"), //$NON-NLS-1$
 				1,
 				new String[][] {
-					{"Derby (integriert)", PreferenceConstants.DB_DRIVER_DERBY}, 
-					{"Postgres", PreferenceConstants.DB_DRIVER_POSTGRES},
-					{"MySQL", PreferenceConstants.DB_DRIVER_MYSQL}
+					{Messages.getString("DatenbankPreferencePage.12"), PreferenceConstants.DB_DRIVER_DERBY},  //$NON-NLS-1$
+					{"Postgres", PreferenceConstants.DB_DRIVER_POSTGRES}, //$NON-NLS-1$
+					{"MySQL", PreferenceConstants.DB_DRIVER_MYSQL} //$NON-NLS-1$
 				},
 				getFieldEditorParent());
 		addField(dbDriver);
@@ -100,23 +100,23 @@ public class DatenbankPreferencePage
 	private void setDefaults(String newValue) {
 		if (newValue.equals(PreferenceConstants.DB_DRIVER_DERBY)) {
 			dialect.setStringValue(PreferenceConstants.DB_DIALECT_derby);
-			String derbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s",CnAWorkspace
+			String derbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s",CnAWorkspace //$NON-NLS-1$
 					.getInstance().getWorkdir() );
 			url.setStringValue(derbyUrl);
-			user.setStringValue("");
-			pass.setStringValue("");
+			user.setStringValue(""); //$NON-NLS-1$
+			pass.setStringValue(""); //$NON-NLS-1$
 		}
 		else if (newValue.equals(PreferenceConstants.DB_DRIVER_POSTGRES)) {
 			dialect.setStringValue(PreferenceConstants.DB_DIALECT_postgres);
 			url.setStringValue(PreferenceConstants.DB_URL_POSTGRES);
-			user.setStringValue("");
-			pass.setStringValue("");
+			user.setStringValue(""); //$NON-NLS-1$
+			pass.setStringValue(""); //$NON-NLS-1$
 		}
 		else if (newValue.equals(PreferenceConstants.DB_DRIVER_MYSQL)) {
 			dialect.setStringValue(PreferenceConstants.DB_DIALECT_mysql);
 			url.setStringValue(PreferenceConstants.DB_URL_MYSQL);
-			user.setStringValue("");
-			pass.setStringValue("");
+			user.setStringValue(""); //$NON-NLS-1$
+			pass.setStringValue(""); //$NON-NLS-1$
 		}
 		
 	}

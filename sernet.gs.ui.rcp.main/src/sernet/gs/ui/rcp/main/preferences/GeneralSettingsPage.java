@@ -24,7 +24,7 @@ public class GeneralSettingsPage
 	public GeneralSettingsPage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Allgemeine Einstellungen für das CnA Tool");
+		setDescription(Messages.getString("GeneralSettingsPage.0")); //$NON-NLS-1$
 	}
 	
 	/**
@@ -35,12 +35,12 @@ public class GeneralSettingsPage
 	 */
 	public void createFieldEditors() {
 		derbyWarning = new BooleanFieldEditor(PreferenceConstants.FIRSTSTART,
-				"Hinweise beim ersten Start erneut anzeigen.",
+				Messages.getString("GeneralSettingsPage.1"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(derbyWarning);
 		
 		errorPopups = new BooleanFieldEditor(PreferenceConstants.ERRORPOPUPS, 
-				"Auftretende Fehler als Popup anzeigen (sonst nur im Log-File)",
+				Messages.getString("GeneralSettingsPage.2"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(errorPopups);
 		

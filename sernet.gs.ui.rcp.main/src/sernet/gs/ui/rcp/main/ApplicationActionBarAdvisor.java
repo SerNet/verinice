@@ -28,6 +28,7 @@ import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
 import sernet.gs.ui.rcp.main.actions.ShowExportWizardAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
+import sernet.gs.ui.rcp.main.actions.UpdateAction;
 import sernet.gs.ui.rcp.main.bsi.views.AuditView;
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
@@ -106,6 +107,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private ImportGstoolAction importGstoolAction;
 
 	private OpenViewAction openDocumentViewAction;
+
+	private UpdateAction updateAction;
 
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
@@ -204,6 +207,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		
 		introAction = ActionFactory.INTRO.create(window);
 		register(introAction);
+		
+		updateAction = new UpdateAction(window);
+		
 	}
 
 	protected void fillMenuBar(IMenuManager menuBar) {
@@ -222,6 +228,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		helpMenu.add(introAction);
 		helpMenu.add(showCheatSheetAction);
 		helpMenu.add(showCheatSheetListAction);
+		helpMenu.add(updateAction);
 		helpMenu.add(aboutAction);
 		return helpMenu;
 	}

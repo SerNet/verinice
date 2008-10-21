@@ -8,7 +8,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 public class StatusLine {
 
