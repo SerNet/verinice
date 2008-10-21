@@ -1,0 +1,6 @@
+net.sf.saxon.xpath.XPathFactoryImpl
+http\://java.sun.com/jaxp/xpath/dom:    net.sf.saxon.xpath.XPathFactoryImpl
+http\://saxon.sf.net/jaxp/xpath/om:     net.sf.saxon.xpath.XPathFactoryImpl
+http\://www.xom.nu/jaxp/xpath/xom:      net.sf.saxon.xpath.XPathFactoryImpl
+http\://jdom.org/jaxp/xpath/jdom:       net.sf.saxon.xpath.XPathFactoryImpl
+http\://www.dom4j.org/jaxp/xpath/dom4j: net.sf.saxon.xpath.XPathFactoryImpl
