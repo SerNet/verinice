@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
-<product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="0.7.0" useFeatures="false">
+<product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="0.7.0" useFeatures="true">
 
    <aboutInfo>
       <image path="icons/product_lg.gif"/>
@@ -115,6 +115,7 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
       <plugin id="sernet.gs.log4j"/>
       <plugin id="sernet.gs.saxon9"/>
       <plugin id="sernet.gs.service"/>
+      <plugin id="sernet.gs.tagsoup_ak"/>
       <plugin id="sernet.gs.ui.rcp.main"/>
       <plugin id="verinice.nl1.org.eclipse.jface" fragment="true"/>
       <plugin id="verinice.nl1.org.eclipse.swt" fragment="true"/>
@@ -122,5 +123,9 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
       <plugin id="verinice.nl1.org.eclipse.ui.cheatsheets" fragment="true"/>
       <plugin id="verinice.nl1.org.eclipse.ui.workbench" fragment="true"/>
    </plugins>
+
+   <features>
+      <feature id="sernet.gs.ui.rcp.main.feature" version="0.7.0"/>
+   </features>
 
 </product>
