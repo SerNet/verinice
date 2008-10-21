@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tagsoup_ak Plug-in
+Bundle-SymbolicName: sernet.gs.tagsoup_ak
+Bundle-Version: 1.0.0
+Export-Package: org.ccil.cowan.tagsoup,
+ org.ccil.cowan.tagsoup.jaxp
