@@ -66,10 +66,6 @@ public class Activator extends AbstractUIPlugin {
 		// TODO add feature: link description between objects
 		// FIXME fix model report
 		// TODO add save / load to file
-		// FIXME derby warning ("sql error 10000") caused  by hibernate derby-dialect error
-		// TODO zusätzliche massnahmen als erg. des basis-sicherheitschecks listen
-		// TODO drop-down help für ansprechpartner, vervollständigung von texten
-		// TODO risikoanalye als neues treeitem / wizard / view
 	}
 
 

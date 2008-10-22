@@ -37,15 +37,23 @@ public class ShowPreferencesAction extends Action {
 		
 		IPreferenceNode[] nodes = manager.getRootSubNodes();
 		for (int i=0; i < nodes.length; ++i) {
-			if (nodes[i].getId().equals("org.eclipse.ui.preferencePages.Workbench") //$NON-NLS-1$
-					|| nodes[i].getId().equals("org.eclipse.update.internal.ui.preferences.MainPreferencePage") //$NON-NLS-1$
-					|| nodes[i].getId().equals("org.eclipse.help.ui.browsersPreferencePage") //$NON-NLS-1$
+			if (nodes[i].getId().equals("org.eclipse.ui.preferencePages.Workbench")) {
+				IPreferenceNode[] subNodes = nodes[i].getSubNodes();
+				for (IPreferenceNode subNode : subNodes) {
+					if (!subNode.getId().equals("org.eclipse.ui.net.NetPreferences"))
+						nodes[i].remove(subNode.getId());
+				}
+			}
+			
+			if (
+					 nodes[i].getId().equals("org.eclipse.help.ui.browsersPreferencePage") //$NON-NLS-1$
 					|| nodes[i].getId().equals("org.eclipse.help.ui.appserverPreferencePage") //$NON-NLS-1$
 					) {
 				manager.remove(nodes[i]);
 			}
 		}
 		
+		//|| nodes[i].getId().equals("org.eclipse.update.internal.ui.preferences.MainPreferencePage") //$NON-NLS-1$
 			
 
 		

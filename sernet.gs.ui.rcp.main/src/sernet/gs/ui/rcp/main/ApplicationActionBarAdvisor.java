@@ -22,6 +22,7 @@ import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
 import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
+import sernet.gs.ui.rcp.main.actions.ManageUpdatesAction;
 import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
@@ -109,6 +110,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private OpenViewAction openDocumentViewAction;
 
 	private UpdateAction updateAction;
+
+	private ManageUpdatesAction manageUpdatesAction;
 
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
@@ -209,6 +212,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(introAction);
 		
 		updateAction = new UpdateAction(window);
+		manageUpdatesAction = new ManageUpdatesAction(window);
 		
 	}
 
@@ -228,8 +232,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		helpMenu.add(introAction);
 		helpMenu.add(showCheatSheetAction);
 		helpMenu.add(showCheatSheetListAction);
-		helpMenu.add(updateAction);
 		helpMenu.add(aboutAction);
+		helpMenu.add(new Separator());
+		helpMenu.add(updateAction);
+		helpMenu.add(manageUpdatesAction);
 		return helpMenu;
 	}
 
@@ -350,8 +356,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		removeStandardAction(reg,
 			"org.eclipse.ui.actionSet.openFiles");
 
-		removeStandardAction(reg,
-				"org.eclipse.ui.preferencePages.Workbench");
+		//removeStandardAction(reg,
+			//	"org.eclipse.ui.preferencePages.Workbench");
 
 		removeStandardAction(reg,
 				"org.eclipse.ui.edit.text.actionSet.annotationNavigation");
