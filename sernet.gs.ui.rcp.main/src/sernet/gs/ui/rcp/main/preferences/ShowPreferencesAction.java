@@ -42,6 +42,9 @@ public class ShowPreferencesAction extends Action {
 				for (IPreferenceNode subNode : subNodes) {
 					if (!subNode.getId().equals("org.eclipse.ui.net.NetPreferences"))
 						nodes[i].remove(subNode.getId());
+					else
+						manager.addToRoot(subNode);
+					manager.remove(nodes[i]);
 				}
 			}
 			
@@ -52,8 +55,8 @@ public class ShowPreferencesAction extends Action {
 				manager.remove(nodes[i]);
 			}
 		}
-		
 		//|| nodes[i].getId().equals("org.eclipse.update.internal.ui.preferences.MainPreferencePage") //$NON-NLS-1$
+		
 			
 
 		
