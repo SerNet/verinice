@@ -3,13 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: GS Service
 Bundle-SymbolicName: sernet.gs.service
 Bundle-Version: 1.0.0
-Bundle-ClassPath: lib/xercesImpl.jar,
- lib/xml-apis.jar,
- .
+Bundle-ClassPath: .
 Bundle-Localization: plugin
 Export-Package: sernet.gs.model,
  sernet.gs.scraper,
  sernet.gs.service
-Require-Bundle: sernet.gs.saxon9;bundle-version="1.0.0",
- sernet.gs.log4j;bundle-version="1.0.0",
- sernet.gs.tagsoup_ak;bundle-version="1.0.0"
