@@ -15,16 +15,14 @@ import sernet.hui.common.connect.EntityType;
 public class BausteinUmsetzung extends CnATreeElement {
 
 	public static final String TYPE_ID = "bstumsetzung"; //$NON-NLS-1$
-	
 	public static final String P_NAME = "bstumsetzung_name"; //$NON-NLS-1$
-
 	public static final String P_NR = "bstumsetzung_nr"; //$NON-NLS-1$
-
 	public static final String P_URL = "bstumsetzung_url"; //$NON-NLS-1$
-	
 	public static final String P_ERFASSTDURCH = "bstumsetzung_erfasstdurch";
-
 	public static final String P_GESPRAECHSPARTNER= "bstumsetzung_gespraechspartner";
+	public static final String P_STAND = "bstumsetzung_stand";
+	public static final String P_ERLAEUTERUNG 	= "bstumsetzung_erlaeuterung";
+	public static final String P_ERFASSTAM 	= "bstumsetzung_erfasstam";
 
 	private EntityType entityType;
 
@@ -42,8 +40,6 @@ public class BausteinUmsetzung extends CnATreeElement {
 		Messages.BausteinUmsetzung_12,
 		Messages.BausteinUmsetzung_13
 	};
-
-	private static final String P_STAND = "bstumsetzung_stand";
 
 	
 	public BausteinUmsetzung(CnATreeElement parent) {
@@ -199,5 +195,5 @@ public class BausteinUmsetzung extends CnATreeElement {
 	public String getStand() {
 		return getEntity().getSimpleValue(P_STAND);
 	}
-	
+
 }

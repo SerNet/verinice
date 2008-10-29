@@ -16,7 +16,7 @@ import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 
-public abstract class ImportUtil {
+public abstract class ImportZielobjektTypUtil {
 
 	public static final Map<String, String> GS_TYPES = new HashMap<String, String>();
 	public static final Map<String, String> GS_ITSYSTEM_SUBTYPES = new HashMap<String, String>();

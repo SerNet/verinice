@@ -270,6 +270,14 @@ public class CnAWorkspace {
 				+ "skel_hibernate-vampire.cfg.xml", workDir, "conf"
 				+ File.separator + "hibernate-vampire.cfg.xml", settings);
 	}
+	
+	public void createGstoolImportDatabaseConfig() throws NullPointerException, IOException {
+		Preferences prefs = Activator.getDefault().getPluginPreferences();
+		createGstoolImportDatabaseConfig(prefs
+				.getString(PreferenceConstants.GS_DB_URL), prefs
+				.getString(PreferenceConstants.GS_DB_USER), prefs
+				.getString(PreferenceConstants.GS_DB_PASS));
+	}
 
 	private void createTextFile(String infile, String toDir)
 			throws NullPointerException, IOException {

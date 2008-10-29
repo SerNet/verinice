@@ -235,6 +235,11 @@ public abstract class CnATreeElement {
 	public void setDbId(Integer dbId) {
 		this.dbId = dbId;
 	}
+	
+	public void setSimpleProperty(String typeId, String value) {
+		EntityType entityType = typeFactory.getEntityType(getTypeId());
+		getEntity().setSimpleValue(entityType.getPropertyType(typeId), value);
+	}
 
 	public void setParent(CnATreeElement parent) {
 		this.parent = parent;

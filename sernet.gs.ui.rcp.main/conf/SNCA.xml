@@ -1687,6 +1687,9 @@ Template:
 				name="Zeitraum"
 				inputtype="singleoption">
 				<option
+					id="mnums_kosten_ptperiod_tag"
+					name="Tag" />
+				<option
 					id="mnums_kosten_ptperiod_woche"
 					name="Woche" />
 				<option
@@ -1709,6 +1712,9 @@ Template:
 				id="mnums_kosten_sachperiod"
 				name="Zeitraum"
 				inputtype="singleoption">
+				<option
+					id="mnums_kosten_sachperiod_tag"
+					name="Tag" />
 				<option
 					id="mnums_kosten_sachperiod_woche"
 					name="Woche" />

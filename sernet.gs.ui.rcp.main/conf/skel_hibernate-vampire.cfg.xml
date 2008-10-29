@@ -41,6 +41,7 @@
 		<mapping resource="sernet/gs/reveng/MUmsetzStatTxt.hbm.xml" />
 		<mapping resource="sernet/gs/reveng/MbMassn.hbm.xml" />
 		<mapping resource="sernet/gs/reveng/MbZielobjSubtypTxt.hbm.xml" />
+		<mapping resource="sernet/gs/reveng/MbZeiteinheitenTxt.hbm.xml" />
 
 	</session-factory>
 
