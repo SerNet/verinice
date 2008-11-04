@@ -15,19 +15,21 @@ public class Server extends CnATreeElement
 	public static final String TYPE_ID = "server"; //$NON-NLS-1$
 	public static final String PROP_NAME = "server_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "server_kuerzel"; //$NON-NLS-1$
-	public static final String P_ADMIN = "server_admin";
+	@Deprecated
+	public static final String P_ADMIN_OLD = "server_admin";
 	public static final String PROP_TAG			= "server_tag";
 	
-	private final ISchutzbedarfProvider schutzbedarfProvider 
-	= new SchutzbedarfAdapter(this);
-
-
-	private final ILinkChangeListener linkChangeListener
-	= new MaximumSchutzbedarfListener(this);
-
-	public static final String P_ANWENDER = "server_anwender";
+	@Deprecated
+	public static final String P_ANWENDER_OLD = "server_anwender";
 	public static final String PROP_ERLAEUTERUNG = "server_erlaeuterung";
-				private static EntityType entityType;
+
+	private static EntityType entityType;
+	
+	private final ISchutzbedarfProvider schutzbedarfProvider 
+				= new SchutzbedarfAdapter(this);
+				
+	private final ILinkChangeListener linkChangeListener
+				= new MaximumSchutzbedarfListener(this);
 
 	/**
 	 * Create new BSIElement.

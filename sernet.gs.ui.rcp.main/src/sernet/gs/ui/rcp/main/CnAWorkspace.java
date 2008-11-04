@@ -46,6 +46,8 @@ public class CnAWorkspace {
 
 	static final byte[] buffer = new byte[BUFF_SIZE];
 
+	public static final Object CONFIG_CURRENT_VERSION = "0.7.0";
+
 	private static CnAWorkspace instance;
 
 	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
@@ -97,7 +99,7 @@ public class CnAWorkspace {
 					fis = new FileInputStream(confFile);
 					props.load(fis);
 
-					if (props.get("version").equals("0.7.0")) {
+					if (props.get("version").equals(CONFIG_CURRENT_VERSION)) {
 						Logger.getLogger(CnAWorkspace.class).debug(
 								"Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: "
 										+ confDir.getAbsolutePath());

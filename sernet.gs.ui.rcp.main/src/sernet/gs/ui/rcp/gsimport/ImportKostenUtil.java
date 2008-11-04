@@ -42,21 +42,25 @@ public class ImportKostenUtil {
 				vorlage.obm.getKostPersFix().toString());
 		massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_KOSTEN_PTVAR, 
 				vorlage.obm.getKostPersVar().toString());
-		massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_KOSTEN_PTPERIOD, 
-				translatePeriod(zeiten, vorlage.obm.getKostPersZeiId(), VN_PERSONALKOSTEN_ZEITEN));
+		if (vorlage.obm.getKostPersVar() > 0) {
+			massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_KOSTEN_PTPERIOD, 
+					translatePeriod(zeiten, vorlage.obm.getKostPersZeiId(), VN_PERSONALKOSTEN_ZEITEN));
+		}
 
 		
 		massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_KOSTEN_SACHFIX, 
 				vorlage.obm.getKostSachFix().toString());
 		massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_KOSTEN_SACHVAR, 
 				vorlage.obm.getKostSachVar().toString());
-		massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_KOSTEN_SACHPERIOD, 
-				translatePeriod(zeiten, vorlage.obm.getKostPersZeiId(), VN_SACHKOSTEN_ZEITEN));
+		if (vorlage.obm.getKostSachVar() > 0) {
+			massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_KOSTEN_SACHPERIOD, 
+					translatePeriod(zeiten, vorlage.obm.getKostSachZeiId(), VN_SACHKOSTEN_ZEITEN));
+		}
 	}
 
 	private static String translatePeriod(List<MbZeiteinheitenTxt> zeiten, Integer zeiId, String[] vnZeiten) {
 		for (MbZeiteinheitenTxt zeit : zeiten) {
-			if (zeit.getId().getZeiId().equals(zeiId.toString())) {
+			if (zeit.getId().getZeiId().equals(zeiId)) {
 				String zeitname = zeit.getName();
 				for (int i = 0; i < GS_ZEITEN.length; i++) {
 					if (GS_ZEITEN[i].equals(zeitname))

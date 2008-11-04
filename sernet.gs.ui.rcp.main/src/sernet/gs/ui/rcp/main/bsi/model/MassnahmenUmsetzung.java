@@ -22,11 +22,11 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	public static final String P_SIEGEL = "mnums_siegel"; //$NON-NLS-1$
 	public static final String P_LEBENSZYKLUS = "mnums_lebenszyklus"; //$NON-NLS-1$
 	public static final String P_UMSETZUNGBIS = "mnums_umsetzungbis"; //$NON-NLS-1$
-	public static final String P_UMSETZUNGDURCH = "mnums_umsetzungdurch"; //$NON-NLS-1$
+	public static final String P_UMSETZUNGDURCH_LINK = "mnums_umsetzungdurch_link"; //$NON-NLS-1$
 
 	public static final String P_NAECHSTEREVISIONAM = "mnums_naechsterevisionam"; //$NON-NLS-1$
-	public static final String P_NAECHSTEREVISIONDURCH = "mnums_naechsterevisiondurch"; //$NON-NLS-1$
-	public static final String P_LETZTEREVISIONDURCH = "mnums_letzterevisiondurch";
+	public static final String P_NAECHSTEREVISIONDURCH_LINK = "mnums_naechsterevisiondurch_link"; //$NON-NLS-1$
+	public static final String P_LETZTEREVISIONDURCH_LINK = "mnums_letzterevisiondurch_link";
 
 	public static final String P_UMSETZUNG = "mnums_umsetzung"; //$NON-NLS-1$
 	public static final String P_UMSETZUNG_NEIN = "mnums_umsetzung_nein"; //$NON-NLS-1$
@@ -57,6 +57,15 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	public static final String P_KOSTEN_PTPERIOD_MONAT 		= "mnums_kosten_ptperiod_monat";
 	public static final String P_KOSTEN_PTPERIOD_QUARTAL 	= "mnums_kosten_ptperiod_quartal";
 	public static final String P_KOSTEN_PTPERIOD_JAHR 		= "mnums_kosten_ptperiod_jahr";
+
+	// deprecated fields for persons, are now replaced by linked person entities
+	// only used for migration of old values:
+	@Deprecated
+	public static final String P_UMSETZUNGDURCH_OLD = "mnums_umsetzungdurch"; //$NON-NLS-1$
+	@Deprecated
+	public static final String P_NAECHSTEREVISIONDURCH_OLD = "mnums_naechsterevisiondurch"; //$NON-NLS-1$
+	@Deprecated
+	public static final String P_LETZTEREVISIONDURCH_OLD = "mnums_letzterevisiondurch";
 
 	private EntityType entityType;
 
@@ -119,7 +128,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	}
 
 	public String getUmsetzungDurch() {
-		return getEntity().getSimpleValue(P_UMSETZUNGDURCH);
+		return getEntity().getSimpleValue(P_UMSETZUNGDURCH_LINK);
 	}
 
 	public void setLebenszyklus(String lz) {
@@ -207,7 +216,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	}
 
 	public String getRevisionDurch() {
-		return getEntity().getSimpleValue(P_NAECHSTEREVISIONDURCH);
+		return getEntity().getSimpleValue(P_NAECHSTEREVISIONDURCH_LINK);
 	}
 
 	public String getUrl() {

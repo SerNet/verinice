@@ -15,6 +15,10 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.DateTools;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -52,6 +56,7 @@ import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.TextAnchor;
 
 import sernet.gs.model.Massnahme;
+import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
@@ -111,7 +116,6 @@ public class ChartView extends ViewPart {
 
 	private Action chooseSchichtDiagramAction;
 
-
 	@Override
 	public void createPartControl(Composite parent) {
 		this.parent = parent;
@@ -158,7 +162,7 @@ public class ChartView extends ViewPart {
 		};
 		chooseProgressDiagramAction.setImageDescriptor(ImageCache.getInstance()
 				.getImageDescriptor(ImageCache.CHART_CURVE));
-		
+
 		chooseStufenDiagramAction = new Action("Siegelstufe", SWT.CHECK) {
 			@Override
 			public void run() {
@@ -166,7 +170,7 @@ public class ChartView extends ViewPart {
 				drawChart();
 			}
 		};
-		
+
 		chooseZyklusDiagramAction = new Action("Lebenszyklus", SWT.CHECK) {
 			@Override
 			public void run() {
@@ -187,10 +191,10 @@ public class ChartView extends ViewPart {
 		menuManager.add(chooseStufenDiagramAction);
 		menuManager.add(chooseZyklusDiagramAction);
 		menuManager.add(chooseSchichtDiagramAction);
-		
+
 		fillLocalToolBar();
 	}
-	
+
 	private void fillLocalToolBar() {
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager manager = bars.getToolBarManager();
@@ -199,23 +203,23 @@ public class ChartView extends ViewPart {
 	}
 
 	protected void drawChart() {
-
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+		WorkspaceJob job = new WorkspaceJob("Generating chart...") {
+			public IStatus runInWorkspace(IProgressMonitor monitor) {
 				if (parent != null && !parent.isDisposed()) {
-				//	long start = System.nanoTime();
-					JFreeChart chart;
+					final JFreeChart chart;
 					checkModel();
 					chart = chartType.createChart();
-					frame.setChart(chart);
-					frame.forceRedraw();
-					//long end = System.nanoTime();
-//					Logger.getLogger(this.getClass()).debug(
-//							"Generated new chart in: " + (end - start)
-//									/ 1000000000 + "s");
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							frame.setChart(chart);
+							frame.forceRedraw();
+						}
+					});
 				}
+				return Status.OK_STATUS;
 			}
-		});
+		};
+		job.schedule();
 
 	}
 
@@ -223,8 +227,6 @@ public class ChartView extends ViewPart {
 		if (CnAElementFactory.getCurrentModel() == null)
 			chartType = emptyChart;
 	}
-
-	
 
 	private void createSelectionListeners() {
 		loadListener = new IModelLoadListener() {
@@ -282,11 +284,10 @@ public class ChartView extends ViewPart {
 	@Override
 	public void dispose() {
 		CnAElementFactory.getInstance().removeLoadListener(loadListener);
-		CnAElementFactory.getCurrentModel().removeBSIModelListener(
+		if (CnAElementFactory.getCurrentModel() != null)
+			CnAElementFactory.getCurrentModel().removeBSIModelListener(
 				changeListener);
 	}
-
-
 
 	@Override
 	public void setFocus() {

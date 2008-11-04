@@ -15,8 +15,10 @@ public class SonstIT extends CnATreeElement
 	public static final String TYPE_ID = "sonstit"; //$NON-NLS-1$
 	public static final String PROP_NAME = "sonstit_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "sonstit_kuerzel"; //$NON-NLS-1$
-	public static final String P_ADMIN = "sonstit_admin";
-	public static final String P_ANWENDER = "sonstit_anwender";
+	@Deprecated
+	public static final String P_ADMIN_OLD = "sonstit_admin";
+	@Deprecated
+	public static final String P_ANWENDER_OLD = "sonstit_anwender";
 	public static final String PROP_TAG			= "sonstit_tag";
 	public static final String PROP_ERLAEUTERUNG = "sonstit_erlaeuterung";
 	

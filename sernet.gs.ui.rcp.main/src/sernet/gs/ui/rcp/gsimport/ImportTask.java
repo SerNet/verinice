@@ -218,8 +218,10 @@ public class ImportTask {
 				queryresult.zoBst.getBegruendung());
 		bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM,
 				parseDate(queryresult.zoBst.getDatum()));
-		bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTDURCH,
-				queryresult.zoBst.getErfasstDurch());
+		
+		// FIXME import persons
+		//bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTDURCH,
+			//	queryresult.zoBst.getErfasstDurch());
 		
 	}
 

@@ -237,9 +237,25 @@ Template:
         <huiproperty
             name="Anwender"
             id="server_anwender" />
+         <huiproperty
+			id="server_anwender_link"
+			name="Anwender"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
         <huiproperty
             name="Admin"
             id="server_admin" />
+         <huiproperty
+			id="server_admin_link"
+			name="Admin"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
         <huiproperty
             name="Netzadressen"
             id="server_netadr" />
@@ -408,8 +424,24 @@ Template:
                     id="tkkomponente_status_reserve" />
         </huiproperty>
         <huiproperty
-            name="Anwender / Admins"
+            name="Anwender"
             id="tkkomponente_anwender" />
+         <huiproperty
+			id="tkkomponente_anwender_link"
+			name="Anwender"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+		 <huiproperty
+			id="tkkomponente_admin_link"
+			name="Admin"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
         <huipropertygroup
 			id="tkkomponente_group_schutzbedarf"
 			name="Schutzbedarf">
@@ -861,8 +893,24 @@ Template:
             name="Anwender"
             id="client_anwender" />
         <huiproperty
+			id="client_anwender_link"
+			name="Anwender"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+        <huiproperty
             name="Admin"
             id="client_admin" />
+        <huiproperty
+			id="client_admin_link"
+			name="Admin"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
         <huiproperty
             name="Netzadressen"
             id="client_netadr" />
@@ -1056,9 +1104,25 @@ Template:
         <huiproperty
             name="Anwender"
             id="sonstit_anwender" />
+         <huiproperty
+			id="sonstit_anwender_link"
+			name="Anwender"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
         <huiproperty
             name="Admin"
             id="sonstit_admin" />
+         <huiproperty
+			id="sonstit_admin_link"
+			name="Admin"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
         <huiproperty
             name="Netzadressen"
             id="sonstit_netadr" />
@@ -1522,9 +1586,25 @@ Template:
 			name="Erfasst durch" 
 			required="true"/>
 		<huiproperty
+			id="bstumsetzung_erfasstdurch_link"
+			name="Erfasst durch"
+			inputtype="reference" 
+			required="true">
+			<references 
+				entitytype="person"/>
+		</huiproperty>
+		<huiproperty
 			id="bstumsetzung_gespraechspartner"
 			name="Gesprächspartner"
 			required="true" />
+		<huiproperty
+			id="bstumsetzung_gespraechspartner_link"
+			name="Gesprächspartner"
+			inputtype="reference" 
+			required="true">
+			<references 
+				entitytype="person"/>
+		</huiproperty>
 		<huiproperty
 			id="bstumsetzung_erfasstam"
 			name="Erfasst am"
@@ -1667,6 +1747,14 @@ Template:
 				name="Umsetzung durch"
 			/>
 			<huiproperty
+			id="mnums_umsetzungdurch_link"
+			name="Umsetzung durch"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
+			<huiproperty
 				id="mnums_erlaeuterung"
 				name="Erläuterung"
                 required="true"
@@ -1737,6 +1825,14 @@ Template:
 			<huiproperty
 				id="mnums_letzterevisiondurch"
 				name="Letzte Revision durch"/>
+			<huiproperty
+			id="mnums_letzterevisiondurch_link"
+			name="Letzte Revision durch"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
 			<huiproperty 
 				id="mnums_letzterevisionam"
 				name="Letzte Revision am"
@@ -1750,6 +1846,14 @@ Template:
 			<huiproperty
 				id="mnums_naechsterevisiondurch"
 				name="Nächste Revision durch" />
+			<huiproperty
+			id="mnums_naechsterevisiondurch_link"
+			name="Nächste Revision durch"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
 			<huiproperty
 				id="mnums_naechsterevisionam"
 				name="Nächste Revision am"
@@ -1805,6 +1909,14 @@ Template:
 		<huiproperty
 			id="anwendung_benutzer"
 			name="Benutzer" />
+		 <huiproperty
+			id="anwendung_benutzer_link"
+			name="Benutzer"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
         
         <huiproperty
             name="Status"
@@ -1838,6 +1950,14 @@ Template:
         <huiproperty
 			id="anwendung_eigentümer"
 			name="Prozess-Eigentümer" />
+	     <huiproperty
+			id="anwendung_eigentümer_link"
+			name="Prozess-Eigentümer"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
 
 		<huiproperty 
 			name="Bedeutung für Prozess" 
@@ -1968,14 +2088,38 @@ Template:
 			id="vs_abteilung"
 			name="Zuständige Abteilung"
         />
+         <huiproperty
+			id="vs_abteilung_link"
+			name="Zuständige Abteilung"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
 	    <huiproperty
 			id="vs_fachl"
 			name="Fachlich verantwortlich"
         />
+         <huiproperty
+			id="vs_fachl_link"
+			name="Fachlich verantwortlich"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
 	    <huiproperty
 			id="vs_it"
 			name="IT-Verantwortlicher"
         />
+         <huiproperty
+			id="vs_it_link"
+			name="IT-Verantwortlicher"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
     </huientity>
 
     <huientity

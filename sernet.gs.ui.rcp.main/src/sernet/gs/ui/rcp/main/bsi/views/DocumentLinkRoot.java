@@ -20,7 +20,7 @@ public class DocumentLinkRoot {
 		this.children.add(link);
 	}
 	
-	public Object[] getChildren() {
+	public DocumentLink[] getChildren() {
 		return (DocumentLink[]) children.toArray(new DocumentLink[children.size()]);
 	}
 

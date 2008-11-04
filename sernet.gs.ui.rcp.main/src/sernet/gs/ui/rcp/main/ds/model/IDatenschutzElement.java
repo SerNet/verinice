@@ -7,10 +7,15 @@ package sernet.gs.ui.rcp.main.ds.model;
  *
  */
 public interface IDatenschutzElement {
-
-	String P_ABTEILUNG = "vs_abteilung";
-	String P_FACHLICHVERANTWORTLICHER = "vs_fachl";
-	String P_ITVERANTWORTLICHER = "vs_it";
+	
+	
+	// use new "_link" types instead:
+	@Deprecated
+	String P_ABTEILUNG_OLD = "vs_abteilung";
+	@Deprecated
+	String P_FACHLICHVERANTWORTLICHER_OLD = "vs_fachl";
+	@Deprecated
+	String P_ITVERANTWORTLICHER_OLD = "vs_it";
 	
 	
 

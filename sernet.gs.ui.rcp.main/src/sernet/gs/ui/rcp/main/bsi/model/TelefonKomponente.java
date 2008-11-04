@@ -15,8 +15,10 @@ public class TelefonKomponente extends CnATreeElement
 	public static final String TYPE_ID 		= "tkkomponente"; //$NON-NLS-1$
 	public static final String PROP_NAME 		= "tkkomponente_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL	= "tkkomponente_kuerzel"; //$NON-NLS-1$
-	public static final String P_ADMIN 		= "tkkomponente_admin";
-	public static final String P_ANWENDER	 	= "tkkomponente_anwender";
+	@Deprecated
+	public static final String P_ADMIN_OLD 		= "tkkomponente_admin";
+	@Deprecated
+	public static final String P_ANWENDER_OLD	 	= "tkkomponente_anwender";
 	public static final String PROP_TAG			= "tkkomponente_tag";
 	public static final String PROP_ERLAEUTERUNG = "tkkomponente_erlaeuterung";
 	

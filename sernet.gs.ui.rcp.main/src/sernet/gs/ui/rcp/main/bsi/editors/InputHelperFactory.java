@@ -27,28 +27,28 @@ import sernet.hui.swt.widgets.IInputHelper;
 
 public class InputHelperFactory {
 
-	private static IInputHelper personHelper;
 	private static IInputHelper schutzbedarfHelper;
 	private static IInputHelper tagHelper;
 
 	public static void setInputHelpers(EntityType entityType,
 				HitroUIComposite huiComposite2) {
-		if (personHelper == null) {
-			personHelper = new IInputHelper() {
-				public String[] getSuggestions() {
-					ArrayList<Person> personen 
-						= CnAElementFactory.getCurrentModel().getPersonen();
-					String[] titles = new String[personen.size()];
-					int i=0;
-					for (Person person : personen) {
-						titles[i++] = person.getTitel();
-					}
-					return titles.length > 0 
-						? titles
-						: new String[] {Messages.InputHelperFactory_0};
-				}
-			};
-		}
+
+//		if (personHelper == null) {
+//			personHelper = new IInputHelper() {
+//				public String[] getSuggestions() {
+//					ArrayList<Person> personen 
+//						= CnAElementFactory.getCurrentModel().getPersonen();
+//					String[] titles = new String[personen.size()];
+//					int i=0;
+//					for (Person person : personen) {
+//						titles[i++] = person.getTitel();
+//					}
+//					return titles.length > 0 
+//						? titles
+//						: new String[] {Messages.InputHelperFactory_0};
+//				}
+//			};
+//		}
 		
 		if (tagHelper == null) {
 			tagHelper = new IInputHelper() {
@@ -77,26 +77,7 @@ public class InputHelperFactory {
 			};
 		}
 		
-		// Person Helpers:
-		huiComposite2.setInputHelper(BausteinUmsetzung.P_ERFASSTDURCH, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(BausteinUmsetzung.P_GESPRAECHSPARTNER, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(MassnahmenUmsetzung.P_NAECHSTEREVISIONDURCH, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(MassnahmenUmsetzung.P_LETZTEREVISIONDURCH, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(MassnahmenUmsetzung.P_UMSETZUNGDURCH, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(Client.P_ADMIN, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(Client.P_ANWENDER, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(SonstIT.P_ADMIN, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(SonstIT.P_ANWENDER, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(Server.P_ADMIN, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(Server.P_ANWENDER, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(TelefonKomponente.P_ADMIN, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(TelefonKomponente.P_ANWENDER, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(Anwendung.PROP_BENUTZER, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(Anwendung.PROP_EIGENTUEMER, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(IDatenschutzElement.P_ABTEILUNG, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(IDatenschutzElement.P_FACHLICHVERANTWORTLICHER, personHelper, IInputHelper.TYPE_REPLACE);
-		huiComposite2.setInputHelper(IDatenschutzElement.P_ITVERANTWORTLICHER, personHelper, IInputHelper.TYPE_REPLACE);
-
+		
 		// Tag Helpers:
 		huiComposite2.setInputHelper(Anwendung.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);
 		huiComposite2.setInputHelper(Client.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);

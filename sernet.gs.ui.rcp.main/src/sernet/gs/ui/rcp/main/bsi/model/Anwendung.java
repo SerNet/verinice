@@ -29,9 +29,10 @@ public class Anwendung extends CnATreeElement
 	public static final String PROP_KUERZEL = "anwendung_kuerzel"; //$NON-NLS-1$
 
 	public static final String PROP_PERSBEZ = "anwendung_persbez"; //$NON-NLS-1$
-
-	public static final String PROP_BENUTZER = "anwendung_benutzer"; //$NON-NLS-1$
-	public static final String PROP_EIGENTUEMER = "anwendung_eigentümer"; //$NON-NLS-1$
+	@Deprecated
+	public static final String PROP_BENUTZER_OLD = "anwendung_benutzer"; //$NON-NLS-1$
+	@Deprecated
+	public static final String PROP_EIGENTUEMER_OLD = "anwendung_eigentümer"; //$NON-NLS-1$
 
 	public static final String PROP_TAG			= "anwendung_tag";
 

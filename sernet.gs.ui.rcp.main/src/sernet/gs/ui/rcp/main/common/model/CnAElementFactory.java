@@ -28,6 +28,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
+import sernet.gs.ui.rcp.main.common.model.migration.MigrateDbTo0_92;
 import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
 import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
 import sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB;
@@ -353,7 +354,8 @@ public class CnAElementFactory {
 		loadedModel = dbHome.loadModel(monitor);
 		if (loadedModel != null) {
 			monitor.setTaskName("Überprüfe / Aktualisiere DB-Version.");
-			updateDBVersion();
+			DbVersion version = new DbVersion(loadedModel, dbHome);
+			version.updateDBVersion();
 			fireLoad();
 			return loadedModel;
 		}
@@ -378,29 +380,7 @@ public class CnAElementFactory {
 		return loadedModel;
 	}
 
-	private void updateDBVersion() {
-		try {
-			if (loadedModel.getDbVersion() < 0.91D) {
-				Logger.getLogger(this.getClass()).debug("Updating DB model to V 0.91.");
-				ITVerbund verbund = loadedModel.getItverbuende().iterator().next();
-				for (CnATreeElement child : verbund.getChildren()) {
-					if (child instanceof SonstigeITKategorie)
-						return;
-					
-				}
-				SonstigeITKategorie kategorie = new SonstigeITKategorie(verbund);
-				verbund.addChild(kategorie);
-				dbHome.save(kategorie);
-				loadedModel.setDbVersion(0.91D);
-				dbHome.update(loadedModel);
-			}
-			
-			
-		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(e);
-		}
 	
-	}
 
 	public void create(String typeId, CnATreeElement itverbund) {
 		

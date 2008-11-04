@@ -47,51 +47,90 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 		final IStructuredSelection selection = ((IStructuredSelection) targetPart
 				.getSite().getSelectionProvider().getSelection());
 
-		if (!MessageDialog.openQuestion((Shell) targetPart
-				.getAdapter(Shell.class), "Wirklich löschen?",
-				"Alle " + selection.size() + " markierten Elemente werden entfernt. Vorsicht: diese Operation "
-						+ "kann nicht rückgängig gemacht werden!\n\n"
-						+ "Wirklich löschen?")) {
+		if (!MessageDialog
+				.openQuestion(
+						(Shell) targetPart.getAdapter(Shell.class),
+						"Wirklich löschen?",
+						"Alle "
+								+ selection.size()
+								+ " markierten Elemente werden entfernt. Vorsicht: diese Operation "
+								+ "kann nicht rückgängig gemacht werden!\n\n"
+								+ "Wirklich löschen?")) {
 			return;
 		}
 
+		// ask twice if IT verbund
+		boolean goahead = true;
+		boolean skipQuestion = false;
+		Iterator iterator = selection.iterator();
+		while (iterator.hasNext()) {
+			if (iterator.next() instanceof ITVerbund) {
+				if (!goahead)
+					return;
+				
+				if (!MessageDialog
+						.openQuestion(
+								(Shell) targetPart.getAdapter(Shell.class),
+								"IT-Verbund wirklich löschen?",
+								"Sie haben einen IT-Verbund zum Löschen markiert. "
+										+ "Das wird alle darin enthaltenen Objekte entfernen "
+										+ "(Server, Clients, Personen...)\n\n"
+										+ "Wirklich wirklich wirklich löschen?")) {
+					skipQuestion = true;
+					goahead = false;
+					return;
+				}
+				else {
+					skipQuestion = true;
+				}
+			}
+		}
 
 		try {
-			PlatformUI.getWorkbench().getProgressService().
-			busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Lösche Objekte", selection.size());
-					for (Iterator iter = selection.iterator(); iter.hasNext();) {
-						Object sel = (Object) iter.next();
-						
-						if (sel instanceof IBSIStrukturElement
-								|| sel instanceof BausteinUmsetzung
-								|| sel instanceof FinishedRiskAnalysis
-								|| sel instanceof GefaehrdungsUmsetzung
-								|| sel instanceof ITVerbund) {
-							
-							// do not delete last ITVerbund:
-							if (sel instanceof ITVerbund
-								&& CnAElementFactory.getCurrentModel().getItverbuende().size() < 2) {
-								return;
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
+					new IRunnableWithProgress() {
+						public void run(IProgressMonitor monitor)
+								throws InvocationTargetException,
+								InterruptedException {
+							monitor.beginTask("Lösche Objekte", selection
+									.size());
+							for (Iterator iter = selection.iterator(); iter
+									.hasNext();) {
+								Object sel = (Object) iter.next();
+
+								if (sel instanceof IBSIStrukturElement
+										|| sel instanceof BausteinUmsetzung
+										|| sel instanceof FinishedRiskAnalysis
+										|| sel instanceof GefaehrdungsUmsetzung
+										|| sel instanceof ITVerbund) {
+
+									// do not delete last ITVerbund:
+									if (sel instanceof ITVerbund
+											&& CnAElementFactory
+													.getCurrentModel()
+													.getItverbuende().size() < 2) {
+										return;
+									}
+
+									CnATreeElement el = (CnATreeElement) sel;
+
+									try {
+										monitor.setTaskName("Lösche: "
+												+ el.getTitel());
+										monitor.worked(1);
+										el.remove();
+										CnAElementHome.getInstance().remove(el);
+
+									} catch (Exception e) {
+										ExceptionUtil
+												.log(e,
+														"Fehler beim Löschen von Element.");
+									}
+
+								}
 							}
-							
-							CnATreeElement el = (CnATreeElement) sel;
-							
-							try {
-								monitor.setTaskName("Lösche: " + el.getTitel());
-								monitor.worked(1);
-								el.remove();
-								CnAElementHome.getInstance().remove(el);
-								
-							} catch (Exception e) {
-								ExceptionUtil.log(e, "Fehler beim Löschen von Element.");
-							}
-							
 						}
-					}
-				}
-			});
+					});
 		} catch (InvocationTargetException e) {
 			ExceptionUtil.log(e, "Error while deleting object.");
 		} catch (InterruptedException e) {

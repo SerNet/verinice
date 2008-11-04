@@ -15,8 +15,10 @@ public class Client extends CnATreeElement
 	public static final String TYPE_ID = "client"; //$NON-NLS-1$
 	public static final String PROP_NAME = "client_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "client_kuerzel"; //$NON-NLS-1$
-	public static final String P_ADMIN = "client_admin"; //$NON-NLS-1$
-	public static final String P_ANWENDER = "client_anwender"; //$NON-NLS-1$
+	@Deprecated
+	public static final String P_ADMIN_OLD = "client_admin"; //$NON-NLS-1$
+	@Deprecated
+	public static final String P_ANWENDER_OLD = "client_anwender"; //$NON-NLS-1$
 	public static final String PROP_TAG			= "client_tag";
 	public static final String PROP_ERLAEUTERUNG = "client_erlaeuterung";
 	

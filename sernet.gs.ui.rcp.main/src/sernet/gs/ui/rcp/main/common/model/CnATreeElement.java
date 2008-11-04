@@ -14,6 +14,7 @@ import com.sun.star.document.LinkUpdateModes;
 
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.EntityResolverFactory;
 import sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Schutzbedarf;
@@ -175,21 +176,27 @@ public abstract class CnATreeElement {
 	protected CnATreeElement() {
 		children = new HashSet<CnATreeElement>();
 		if (typeFactory == null) {
-			try {
-				Logger.getLogger(this.getClass()).debug(
-						"Initializing Hitro-UI framework...");
-				huiConfig = String.format("%s%sconf%sSNCA.xml", CnAWorkspace
-						.getInstance().getWorkdir(), File.separator,
-						File.separator);
-				huiConfig = (new File(huiConfig)).toURI().toString();
-				Logger.getLogger(this.getClass()).debug("Getting type definition from: " + huiConfig);
-				HUITypeFactory.initialize(huiConfig);
-				typeFactory = HUITypeFactory.getInstance();
-				Logger.getLogger(this.getClass()).debug("HUI initialized.");
-			} catch (DBException e) {
-				throw new RuntimeException(e);
-			}
+			initHitroUI();
 		}
+	}
+
+	private void initHitroUI() {
+		try {
+			Logger.getLogger(this.getClass()).debug(
+					"Initializing Hitro-UI framework...");
+			huiConfig = String.format("%s%sconf%sSNCA.xml", CnAWorkspace
+					.getInstance().getWorkdir(), File.separator,
+					File.separator);
+			huiConfig = (new File(huiConfig)).toURI().toString();
+			Logger.getLogger(this.getClass()).debug("Getting type definition from: " + huiConfig);
+			HUITypeFactory.initialize(huiConfig);
+			typeFactory = HUITypeFactory.getInstance();
+			EntityResolverFactory.createResolvers(typeFactory);
+			Logger.getLogger(this.getClass()).debug("HUI initialized.");
+		} catch (DBException e) {
+			throw new RuntimeException(e);
+		}
+	
 	}
 
 	public void entityChanged() {

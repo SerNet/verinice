@@ -18,11 +18,14 @@ public class BausteinUmsetzung extends CnATreeElement {
 	public static final String P_NAME = "bstumsetzung_name"; //$NON-NLS-1$
 	public static final String P_NR = "bstumsetzung_nr"; //$NON-NLS-1$
 	public static final String P_URL = "bstumsetzung_url"; //$NON-NLS-1$
-	public static final String P_ERFASSTDURCH = "bstumsetzung_erfasstdurch";
-	public static final String P_GESPRAECHSPARTNER= "bstumsetzung_gespraechspartner";
+	@Deprecated
+	public static final String P_GESPRAECHSPARTNER_OLD= "bstumsetzung_gespraechspartner";
 	public static final String P_STAND = "bstumsetzung_stand";
 	public static final String P_ERLAEUTERUNG 	= "bstumsetzung_erlaeuterung";
 	public static final String P_ERFASSTAM 	= "bstumsetzung_erfasstam";
+	@Deprecated
+	public static final String P_ERFASSTDURCH_OLD = "bstumsetzung_erfasstdurch";
+	public static final String P_ERFASSTDURCH_LINK = "bstumsetzung_erfasstdurch_link";
 
 	private EntityType entityType;
 

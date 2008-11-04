@@ -31,7 +31,7 @@ public class TodoViewFilterAction extends Action {
 		this.umsetzungFilter = filter1;
 		this.siegelFilter = filter2;
 		this.umsetzungDurchFilter = new StringPropertyFilter(viewer,
-				MassnahmenUmsetzung.P_UMSETZUNGDURCH);
+				MassnahmenUmsetzung.P_UMSETZUNGDURCH_LINK);
 		this.zielobjektFilter = new ZielobjektPropertyFilter(viewer);
 		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
 		
