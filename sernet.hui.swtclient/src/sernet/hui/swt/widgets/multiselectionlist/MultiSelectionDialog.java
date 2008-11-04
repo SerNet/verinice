@@ -18,6 +18,7 @@ import org.eclipse.swt.SWT;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 
 
 public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
@@ -25,11 +26,13 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 	private Shell dialogShell;
 	private Entity entity;
 	private PropertyType propertyType;
+	private boolean referencesEntities;
 
-	public MultiSelectionDialog(Shell parent, int style, Entity ent, PropertyType type) {
+	public MultiSelectionDialog(Shell parent, int style, Entity ent, PropertyType type, boolean referencesEntities) {
 		super(parent, style);
 		this.entity = ent;
 		this.propertyType = type;
+		this.referencesEntities = referencesEntities;
 	}
 
 	public void open() {
@@ -39,12 +42,12 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 
 			dialogShell.setLayout(new GridLayout(1, false));
 			dialogShell.setSize(400, 300);
-			dialogShell.setText("Optionen für " + propertyType.getName());
+			dialogShell.setText("Optionen für Feld: " + propertyType.getName());
 			
 			//Composite content = new Composite(dialogShell, SWT.NULL);
 			//content.setLayout(new FillLayout(SWT.VERTICAL));
 			
-			MultiSelectionList mList = new MultiSelectionList(entity, propertyType, dialogShell);
+			MultiSelectionList mList = new MultiSelectionList(entity, propertyType, dialogShell, referencesEntities);
 			mList.create();
 			GridData scrolledComposite1LData = new GridData();
 			scrolledComposite1LData.grabExcessVerticalSpace = true;
@@ -56,15 +59,33 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 			
 			// set selected options:
 			List options = new ArrayList();
-			List properties = entity.getProperties(propertyType.getId()).getProperties();
-			if (properties != null) {
-				for (Iterator iter = properties.iterator(); iter.hasNext();) {
-					Property prop = (Property) iter.next();
-					String optionId = prop.getPropertyValue();
-					options.add(propertyType.getOption(optionId));
-				}
-				mList.setSelection(options, true);
+			
+			if (referencesEntities) {
+				List properties = entity.getProperties(propertyType.getId()).getProperties();
+				List<IMLPropertyOption> referencedEntities = propertyType.getReferencedEntities();
+				if (properties != null) {
+					for (Object object : properties) {
+						Property prop = (Property) object;
+						Object option = findOptionForId(referencedEntities, prop.getPropertyValue());
+						if (option != null)
+							options.add(option);
+					}
+					mList.setSelection(options, true);
+				}				
 			}
+			else {
+				// select options saved in properties:
+				List properties = entity.getProperties(propertyType.getId()).getProperties();
+				if (properties != null) {
+					for (Iterator iter = properties.iterator(); iter.hasNext();) {
+						Property prop = (Property) iter.next();
+						String optionId = prop.getPropertyValue();
+						options.add(propertyType.getOption(optionId));
+					}
+					mList.setSelection(options, true);
+				}
+			}
+
 			
 			Composite buttons = new Composite(dialogShell, SWT.NULL);
 			GridLayout contLayout = new GridLayout(2, false);
@@ -100,6 +121,15 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 		}
 	}
 	
+	private Object findOptionForId(List<IMLPropertyOption> referencedEntities,
+			String propertyValue) {
+		for (IMLPropertyOption option : referencedEntities) {
+			if (option.getId().equals(propertyValue))
+				return option;
+		}
+		return null;
+	}
+
 	void close() {
 		dialogShell.dispose();
 	}

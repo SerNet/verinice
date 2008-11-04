@@ -1,6 +1,7 @@
 
 package sernet.hui.swt.widgets;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -252,8 +253,10 @@ public class HitroUIView implements IEntityChangedListener   {
 			createTextField(type, editableField, parent, type.isFocus(), 1 /*one line high*/);
 		else if (type.isSingleSelect())
 			createSingleOptionField(type, editableField, parent, type.isFocus());
+		else if (type.isReference())
+			createMultiOptionField(type, editableField, parent, type.isFocus(), true);
 		else if (type.isMultiselect())
-			createMultiOptionField(type, editableField, parent, type.isFocus());
+			createMultiOptionField(type, editableField, parent, type.isFocus(), false);
 		else if (type.isDate())
 			createDateField(type, editableField, parent, type.isFocus());
 		else if (type.isText())
@@ -300,9 +303,9 @@ public class HitroUIView implements IEntityChangedListener   {
 	 * @throws AssertException
 	 */
 	private void createMultiOptionField(PropertyType type, boolean editable, Composite parent,
-			boolean focus) {
+			boolean focus, boolean reference) {
 		MultiSelectionControl mlControl = new MultiSelectionControl(entity, type,
-				parent, editable);
+				parent, editable, reference);
 		mlControl.create();
 		if (focus)
 			focusField = mlControl;
@@ -371,6 +374,7 @@ public class HitroUIView implements IEntityChangedListener   {
 		if (object instanceof MultiSelectionControl) {
 			control = (MultiSelectionControl) object;
 			control.writeToTextField();
+			control.validate();
 		}
 		// FIXME this really should be handeled by ML field itself
 	}

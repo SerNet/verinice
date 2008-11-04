@@ -19,6 +19,7 @@
 package sernet.hui.swt.widgets.multiselectionlist;
 
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -61,6 +62,7 @@ public class MultiSelectionControl implements IHuiControl {
 	private boolean editable = false;
 	private Color bgColor;
 	private Color fgColor;
+	private boolean referencesEntities;
 	
 	
 	public Control getControl() {
@@ -70,13 +72,15 @@ public class MultiSelectionControl implements IHuiControl {
 	/**
 	 * @param entity
 	 * @param type
+	 * @param reference 
 	 * @param composite
 	 */
-	public MultiSelectionControl(Entity entity, PropertyType type, Composite parent, boolean edit) {
+	public MultiSelectionControl(Entity entity, PropertyType type, Composite parent, boolean edit, boolean reference) {
 		this.entity = entity;
 		this.type = type;
 		this.parent = parent;
 		this.editable = edit;
+		this.referencesEntities = reference;
 	}
 	
 	/**
@@ -124,6 +128,43 @@ public class MultiSelectionControl implements IHuiControl {
 		writeToTextField();
 	}
 
+	public void writeToTextField() {
+		if (referencesEntities)
+			writeEntitiesToTextField();
+		else
+			writeOptionsToTextField();
+	}
+
+	private void writeEntitiesToTextField() {
+		StringBuffer names = new StringBuffer();
+		List properties = entity.getProperties(type.getId()).getProperties();
+		if (properties == null)
+			return;
+		
+		for (Iterator iter = properties.iterator(); iter.hasNext();) {
+			Property prop = (Property) iter.next();
+			String referencedId = prop.getPropertyValue();
+			IMLPropertyOption ref = getEntity(referencedId);
+			if (ref==null)
+				continue;
+			String optionName = ref.getName();
+			if (names.length()==0)
+				names.append(optionName);
+			else
+				names.append(" / " + optionName);
+				
+		}
+		text.setText(names.toString());
+	}
+
+	private IMLPropertyOption getEntity(String referencedId) {
+		for (IMLPropertyOption entity : type.getReferencedEntities()) {
+			if (entity.getId().equals(referencedId))
+				return entity;
+		}
+		return null;
+	}
+
 	/**
 	 * Writes the names of all selected options in the text field.
 	 * 
@@ -131,7 +172,7 @@ public class MultiSelectionControl implements IHuiControl {
 	 * @param b
 	 * @throws AssertException 
 	 */
-	public void writeToTextField() {
+	private void writeOptionsToTextField() {
 		StringBuffer names = new StringBuffer();
 		List properties = entity.getProperties(type.getId()).getProperties();
 		if (properties == null)
@@ -158,16 +199,16 @@ public class MultiSelectionControl implements IHuiControl {
 		Display display = Display.getDefault();
         Shell shell = new Shell(display);
 		MultiSelectionDialog dialog = new MultiSelectionDialog(shell, SWT.NULL, 
-				this.entity, this.type);
+				this.entity, this.type, this.referencesEntities);
 		dialog.open();
 	}
 
 	public void select(IMLPropertyType type, IMLPropertyOption option) throws AssertException {
-		writeToTextField();
+		writeOptionsToTextField();
 	}
 
 	public void unselect(IMLPropertyType type, IMLPropertyOption option) throws AssertException {
-		writeToTextField();
+		writeOptionsToTextField();
 	}
 
 	public void setFocus() {

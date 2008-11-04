@@ -19,6 +19,8 @@
 package sernet.hui.swt.widgets.multiselectionlist;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -37,6 +39,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 
+import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.common.multiselectionlist.ISelectOptionHandler;
@@ -51,7 +54,6 @@ public class MultiSelectionList {
 
 	private List<ISelectOptionHandler> eventHandler = new ArrayList<ISelectOptionHandler>();
 
-	IMLPropertyType type;
 
 	private Composite list;
 
@@ -62,11 +64,18 @@ public class MultiSelectionList {
 
 	private GridData customLayout;
 
-	public MultiSelectionList(ISelectOptionHandler entity, IMLPropertyType type,
-			Composite parent) {
+	private boolean referencesEntities;
+
+	private List<IMLPropertyOption> options;
+
+	private PropertyType type;
+
+	public MultiSelectionList(ISelectOptionHandler entity, PropertyType type,
+			Composite parent, boolean referencesEntities) {
 		this.parent = parent;
 		this.eventHandler.add(entity);
 		this.type = type;
+		this.referencesEntities = referencesEntities;
 	}
 
 	public void addListener(ISelectOptionHandler listener) {
@@ -84,6 +93,17 @@ public class MultiSelectionList {
 	}
 
 	public void create() {
+		if (referencesEntities) {
+			options = type.getReferencedEntities();
+			Collections.sort(options, new Comparator<IMLPropertyOption>() {
+				public int compare(IMLPropertyOption o1, IMLPropertyOption o2) {
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
+		}
+		else
+			options = type.getOptions();
+		
 		group = createGroup();
 		list = createScrolledList();
 		int height = createButtons();
@@ -113,7 +133,7 @@ public class MultiSelectionList {
 	}
 
 	private int createButtons() {
-		ArrayList options = type.getOptions();
+		
 		int btnsHeight = 0;
 		int i = 0;
 		for (Iterator iter = options.iterator(); iter.hasNext();) {

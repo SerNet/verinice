@@ -49,7 +49,7 @@ public class DemoDialog extends org.eclipse.swt.widgets.Composite {
 				HUITypeFactory.initialize("/home/akoderman/sncaWorkspace/conf/SNCA.xml");
 				
 //				Entity entity = new Entity("mnums");
-				Entity entity = new Entity("itverbund");
+				Entity entity = new Entity("mnums");
 				huiComposite.createView(entity, true, true);
 
 				PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType("mnums", "mnums_umsetzung");

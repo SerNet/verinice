@@ -120,7 +120,7 @@ public class URLControl implements IHuiControl {
 
 		}
 		URLControlDialog dialog = new URLControlDialog(Display.getCurrent()
-				.getActiveShell(), name, href);
+				.getActiveShell(), name, href, this.type);
 		if (dialog.open() == InputDialog.OK) {
 			savedProp.setPropertyValue("<a href=\"" + dialog.getHref() + "\">" 
 					+ dialog.getName()

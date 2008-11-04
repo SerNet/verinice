@@ -2,6 +2,8 @@ package sernet.hui.swt.widgets.URL;
 
 import java.awt.Container;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -29,6 +31,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.hui.common.connect.HuiUrl;
+import sernet.hui.common.connect.PropertyType;
+
 
 /**
  * 
@@ -46,12 +51,19 @@ public class URLControlDialog extends Dialog {
 
 	private String name;
 
+	private Combo combo;
+
+	private PropertyType type;
+
+	private List<HuiUrl> previousUrls;
+
 	public URLControlDialog(Shell shell,
-			String name, String href) {
+			String name, String href, PropertyType type) {
 		super(shell);
 		setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
 		this.name = name;
 		this.href = href;
+		this.type = type;
 	}
 
 	@Override
@@ -81,9 +93,47 @@ public class URLControlDialog extends Dialog {
 				true, false, 1, 1));
 		hrefText.setText(href);
 		
+		Label label3 = new Label(container, SWT.NONE);
+		label3.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER,
+				false, false, 1, 1));
+		label3.setText("Auswahl");
+		
+		combo = new Combo(container, SWT.READ_ONLY);
+		combo.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
+				true, false, 1, 1));
+		
+		previousUrls = type.getResolvedUrls();
+		Collections.sort(previousUrls, new Comparator<HuiUrl>() {
+			public int compare(HuiUrl o1, HuiUrl o2) {
+				return o1.name.compareTo(o2.name);
+			}
+			
+		});
+		
+		combo.setItems(getNames(previousUrls));
+		combo.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				HuiUrl url = previousUrls.get(combo.getSelectionIndex());
+				nameText.setText(url.name);
+				hrefText.setText(url.url);
+			}
+		});
+		
+		
 		return container;
 	}
 	
+	private String[] getNames(List<HuiUrl> previousUrls2) {
+		String[] result = new String[previousUrls2.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = previousUrls2.get(i).name;
+		}
+		return result;
+	}
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
