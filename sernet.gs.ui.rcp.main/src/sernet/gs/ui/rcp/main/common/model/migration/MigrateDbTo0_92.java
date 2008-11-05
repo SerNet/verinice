@@ -1,5 +1,7 @@
 package sernet.gs.ui.rcp.main.common.model.migration;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
@@ -11,6 +13,8 @@ import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.common.model.DbVersion;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.connect.Property;
 
 /**
  * Converts old text-only person fields to new ones: links to person entities.
@@ -51,10 +55,20 @@ public class MigrateDbTo0_92 extends DbMigration {
 		this.dbVersion = dbVersion;
 	}
 
-	public void run() {
+	public void run() throws Exception {
 		Logger.getLogger(this.getClass()).debug("Updating DB model to V 0.92.");
 		createNewFieldsArray();
+		ServiceFactory factory = new ServiceFactory();
 		
+		for (int i = 0; i < personFieldsOld.length; i++) {
+			List<Property> properties = factory.getHuiService().findAllPropertiesForTypeId(personFieldsOld[i]);
+			for (Property property : properties) {
+			}
+		}
+		
+		
+//		dbVersion.getLoadedModel().setDbVersion(0.92D);
+//		dbVersion.getDbHome().update(dbVersion.getLoadedModel());
 	}
 
 	/**

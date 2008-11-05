@@ -4,7 +4,9 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="sernet.hui.common.connect">
-	<class name="PropertyList" table="propertylist" batch-size="100">
+	<class name="PropertyList" 
+		table="propertylist" 
+		batch-size="100">
 	
 		<id name="dbId" 
 			column="dbId" 
@@ -17,14 +19,17 @@
 		<list 
 			name="properties" 
 			cascade="all,delete-orphan"
-			fetch="join">
+			fetch="join"
+			>
 			
 			<key column="properties_id" />
 			
 			<index 
 				column="properties_idx" />
 				
-			<composite-element class="Property">
+			<composite-element 
+			class="Property"
+			>
 			
 				<property name="propertyType"/>
         
@@ -36,7 +41,8 @@
 				<many-to-one 
 					name="parent"
 					class="Entity"
-					fetch="join" />
+					fetch="join"
+					 />
 			</composite-element>
 				
 		</list>
