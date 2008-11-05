@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -128,6 +129,11 @@ public class HUITypeFactory {
 		return this.allEntities.get(id);
 	}
 	
+	public Collection<EntityType> getAllEntityTypes() {
+		return this.allEntities.values();
+		
+	}
+	
 	public List<PropertyType> getURLPropertyTypes() {
 		List<PropertyType> result = new ArrayList<PropertyType>();
 		Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
@@ -241,6 +247,7 @@ public class HUITypeFactory {
 		propObj.setEditable(prop.getAttribute("editable").equals("true"));
 		propObj.setVisible(prop.getAttribute("visible").equals("true"));
 		propObj.setURL(prop.getAttribute("isURL").equals("true"));
+		propObj.setReferencedEntityType(readReferencedEntityId(prop));
 		propObj.setPredefinedValues(this.getOptionsForPropertyType(id));
 		propObj.setDependencies(readDependencies(prop));
 
@@ -254,6 +261,15 @@ public class HUITypeFactory {
 	}
 	
 	
+
+	private String readReferencedEntityId(Element prop) {
+		NodeList list = prop.getElementsByTagName("references");
+		for (int i=0; i < list.getLength(); ++i) {
+			Element referencesElmt = (Element) list.item(i);
+			return referencesElmt.getAttribute("entitytype"); 
+		}
+		return "";
+	}
 
 	public PropertyGroup readPropertyGroup(String id) {
 		Element group = doc.getElementById(id);

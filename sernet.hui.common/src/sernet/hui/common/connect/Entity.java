@@ -106,13 +106,27 @@ public class Entity implements ISelectOptionHandler {
 		PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, 
 				propertyType);
 		StringBuffer result = new StringBuffer();
+		
+		List<IMLPropertyOption> referencedEntities = new ArrayList<IMLPropertyOption>();
+		if (type.isReference()) {
+			referencedEntities = type.getReferencedEntities();
+			for (Iterator iter = list.getProperties().iterator(); iter.hasNext();) {
+				Property prop = (Property) iter.next();
+				for (IMLPropertyOption option : referencedEntities) {
+					if (option.getId().equals(prop.getPropertyValue()))
+						result.append(option.getName());
+				}
+			}
+			return result.toString();
+		}
+		
 		for (Iterator iter = list.getProperties().iterator(); iter.hasNext();) {
 			Property prop = (Property) iter.next();
 			
 			if (type.isSingleSelect()
 					|| type.isMultiselect()) {
-				PropertyOption option = type.getOption(prop.getPropertyValue());
-				result.append(option != null ? option.getName() : "");
+					PropertyOption option = type.getOption(prop.getPropertyValue());
+					result.append(option != null ? option.getName() : "");
 			}
 			
 			else if (type.isDate()) {
@@ -328,5 +342,4 @@ public class Entity implements ISelectOptionHandler {
 	public void setEntityType(String entityType) {
 		this.entityType = entityType;
 	}
-	
 }

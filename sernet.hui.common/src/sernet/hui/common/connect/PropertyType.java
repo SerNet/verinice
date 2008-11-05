@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.common.rules.IFillRule;
 import sernet.hui.common.rules.IValidationRule;
@@ -54,6 +55,12 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	private boolean visible;
 
 	private boolean isURL;
+
+	private String referencedEntityTypeId;
+
+	private IReferenceResolver referenceResolver;
+
+	private IUrlResolver urlResolver;
 
 	public void addValidator(IValidationRule rule) {
 		if (!validators.contains(rule))
@@ -111,7 +118,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	 * 
 	 * @return Returns the predefinedValues.
 	 */
-	public ArrayList getOptions() {
+	public ArrayList<IMLPropertyOption> getOptions() {
 		return options;
 	}
 
@@ -224,6 +231,10 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 		return inputtype == INPUT_LINE;
 	}
 	
+	public boolean isReference() {
+		return inputtype == INPUT_REFERENCE;
+	}
+	
 	public boolean isText( ) {
 		return inputtype == INPUT_TEXT;
 	}
@@ -292,5 +303,41 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 
 	public boolean isURL() {
 		return isURL;
+	}
+
+	public void setReferencedEntityType(String attribute) {
+		this.referencedEntityTypeId = attribute;
+	}
+
+	public String getReferencedEntityTypeId() {
+		return referencedEntityTypeId;
+	}
+	
+	public List<IMLPropertyOption> getReferencedEntities() {
+		if (referenceResolver != null)
+			return referenceResolver.getAllEntitesForType(referencedEntityTypeId);
+		return new ArrayList<IMLPropertyOption>();
+	}
+
+	public IReferenceResolver getReferenceResolver() {
+		return referenceResolver;
+	}
+
+	public void setReferenceResolver(IReferenceResolver referenceResolver) {
+		this.referenceResolver = referenceResolver;
+	}
+
+	public List<HuiUrl> getResolvedUrls() {
+		if (this.urlResolver != null)
+			return urlResolver.resolve();
+		return new ArrayList<HuiUrl>();
+	}
+
+	public IUrlResolver getUrlResolver() {
+		return urlResolver;
+	}
+
+	public void setUrlResolver(IUrlResolver urlResolver) {
+		this.urlResolver = urlResolver;
 	}
 }

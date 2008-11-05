@@ -168,7 +168,7 @@ be displayed when one of the given options has been previously selected.
 	
 	<!-- Field containsURL? User can click on it. -->
 	<xs:attribute name="isURL" type="xs:boolean" default="false"/> 
-	
+
 	<!-- Is editable? -->
 	<xs:attribute name="editable" type="xs:boolean" default="true"/> 
     
