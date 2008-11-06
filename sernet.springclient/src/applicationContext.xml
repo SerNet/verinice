@@ -34,6 +34,22 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
+	
+	<!-- Instance of generic hibernate DAO for class Entity -->  
+	<bean id="entityDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.hui.common.connect.Entity</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- Instance of generic hibernate DAO for class Person -->  
+	<bean id="personDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.gs.ui.rcp.main.bsi.model.Person</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
 
 	<!-- Use existing hibernate config for session -->  
 	<bean class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" id="sessionFactory">
@@ -52,6 +68,8 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	<!-- Proxied using hibernate interceptor -->
 	<bean id="huiServiceTarget" class="sernet.gs.ui.rcp.main.service.HibernateHuiService">
 	  	<property name="propertyDao" ref="propertyDao"/>
+	  	<property name="entityDao" ref="entityDao"/>
+	  	<property name="personDao" ref="personDao"/>
 	</bean>
 	
 	<!-- Interceptor to keep hibernate session open duroing business method -->
