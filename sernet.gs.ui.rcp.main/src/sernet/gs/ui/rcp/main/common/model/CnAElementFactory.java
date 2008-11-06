@@ -347,7 +347,7 @@ public class CnAElementFactory {
 		}
 	}
 
-	public BSIModel loadOrCreateModel(IProgressMonitor monitor) throws Exception {
+	public BSIModel loadOrCreateModel(IProgress monitor) throws Exception {
 		if (!dbHome.isOpen()) {
 			dbHome.open(monitor);
 		}
@@ -355,7 +355,7 @@ public class CnAElementFactory {
 		if (loadedModel != null) {
 			monitor.setTaskName("Überprüfe / Aktualisiere DB-Version.");
 			DbVersion version = new DbVersion(loadedModel, dbHome);
-			version.updateDBVersion();
+			version.updateDBVersion(monitor);
 			fireLoad();
 			return loadedModel;
 		}

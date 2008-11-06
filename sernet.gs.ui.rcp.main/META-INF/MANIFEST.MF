@@ -6,7 +6,7 @@ Bundle-Version: 0.7.0
 Bundle-Activator: sernet.gs.ui.rcp.main.Activator
 Bundle-Vendor: Alexander Koderman
 Bundle-Localization: plugin
-Eclipse-RegisterBuddy: SpringClient
+Eclipse-RegisterBuddy: sernet.springclient
 Require-Bundle: com.ibm.icu;bundle-version="3.8.1",
  org.eclipse.core.resources;bundle-version="3.4.0",
  org.eclipse.ui.ide;bundle-version="3.4.0",
@@ -23,7 +23,7 @@ Require-Bundle: com.ibm.icu;bundle-version="3.8.1",
  org.eclipse.core.net;bundle-version="1.1.0",
  org.eclipse.equinox.security;bundle-version="1.0.1",
  org.eclipse.ui.net;bundle-version="1.0.0",
- SpringClient;bundle-version="1.0.0"
+ sernet.springclient;bundle-version="1.0.0"
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5,
  JavaSE-1.6

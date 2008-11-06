@@ -74,7 +74,7 @@ public class CnAElementHome {
 		return sessionFactory != null;
 	}
 	
-	public void open(IProgressMonitor monitor) throws Exception {
+	public void open(IProgress monitor) throws Exception {
 		open(CnAWorkspace.getInstance().getConfDir(), monitor);
 	}
 	
@@ -94,7 +94,7 @@ public class CnAElementHome {
 		Logger.getLogger(this.getClass()).debug("Finished preloading hibernate");
 	}
 
-	public void open(String confDir, IProgressMonitor monitor) throws Exception {
+	public void open(String confDir, IProgress monitor) throws Exception {
 		try {
 			File conf = new File(confDir
 					+ File.separator + "hibernate.cfg.xml");
@@ -328,7 +328,7 @@ public class CnAElementHome {
 	 *         hierarchy.
 	 * @throws Exception
 	 */
-	public BSIModel loadModel(IProgressMonitor nullMonitor) throws Exception {
+	public BSIModel loadModel(IProgress nullMonitor) throws Exception {
 		Logger.getLogger(this.getClass()).debug("Loading model instance");
 
 		Transaction transaction = session.beginTransaction();
@@ -362,7 +362,7 @@ public class CnAElementHome {
 			session.close();
 			session = sessionFactory.openSession();
 			try {
-				CnAElementFactory.getInstance().loadOrCreateModel(new IProgressMonitor() {
+				CnAElementFactory.getInstance().loadOrCreateModel(new IProgress() {
 
 					public void beginTask(String name, int totalWork) {
 						
@@ -372,23 +372,7 @@ public class CnAElementHome {
 						
 					}
 
-					public void internalWorked(double work) {
-						
-					}
-
-					public boolean isCanceled() {
-						return false;
-					}
-
-					public void setCanceled(boolean value) {
-						
-					}
-
 					public void setTaskName(String name) {
-						
-					}
-
-					public void subTask(String name) {
 						
 					}
 

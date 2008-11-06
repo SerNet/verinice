@@ -29,26 +29,27 @@ public class InputHelperFactory {
 
 	private static IInputHelper schutzbedarfHelper;
 	private static IInputHelper tagHelper;
+	private static IInputHelper personHelper;
 
 	public static void setInputHelpers(EntityType entityType,
 				HitroUIComposite huiComposite2) {
-
-//		if (personHelper == null) {
-//			personHelper = new IInputHelper() {
-//				public String[] getSuggestions() {
-//					ArrayList<Person> personen 
-//						= CnAElementFactory.getCurrentModel().getPersonen();
-//					String[] titles = new String[personen.size()];
-//					int i=0;
-//					for (Person person : personen) {
-//						titles[i++] = person.getTitel();
-//					}
-//					return titles.length > 0 
-//						? titles
-//						: new String[] {Messages.InputHelperFactory_0};
-//				}
-//			};
-//		}
+//
+		if (personHelper == null) {
+			personHelper = new IInputHelper() {
+				public String[] getSuggestions() {
+					ArrayList<Person> personen 
+						= CnAElementFactory.getCurrentModel().getPersonen();
+					String[] titles = new String[personen.size()];
+					int i=0;
+					for (Person person : personen) {
+						titles[i++] = person.getTitel();
+					}
+					return titles.length > 0 
+						? titles
+						: new String[] {Messages.InputHelperFactory_0};
+				}
+			};
+		}
 		
 		if (tagHelper == null) {
 			tagHelper = new IInputHelper() {
@@ -90,6 +91,10 @@ public class InputHelperFactory {
 		huiComposite2.setInputHelper(TelefonKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);
 		
 		setSchutzbedarfHelpers(entityType, huiComposite2);
+		
+		// Person Helpers:
+		huiComposite2.setInputHelper(BausteinUmsetzung.P_ERFASSTDURCH_OLD, personHelper, IInputHelper.TYPE_REPLACE);
+
 	}
 
 	private static void setSchutzbedarfHelpers(EntityType entityType, HitroUIComposite huiComposite2) {

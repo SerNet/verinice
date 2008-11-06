@@ -30,6 +30,7 @@ import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**
@@ -91,12 +92,34 @@ public class BSIModelViewOpenDBAction extends Action {
 
 	private void createModel() {
 		WorkspaceJob job = new WorkspaceJob(Messages.BsiModelView_0) {
-			public IStatus runInWorkspace(IProgressMonitor monitor) {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				try {
 					monitor.beginTask("Starte OR-Mapper...", IProgressMonitor.UNKNOWN);
 					monitor.setTaskName("Starte OR-Mapper...");
 					BSIModel model = CnAElementFactory.getInstance()
-							.loadOrCreateModel(monitor);
+							.loadOrCreateModel(new IProgress() {
+
+								@Override
+								public void beginTask(String name, int totalWork) {
+									monitor.beginTask(name, totalWork);
+								}
+
+								@Override
+								public void done() {
+									monitor.done();
+								}
+
+								@Override
+								public void worked(int work) {
+									monitor.worked(work);
+								}
+
+								@Override
+								public void setTaskName(String string) {
+									monitor.setTaskName(string);
+								}
+								
+							});
 					bsiView.setModel(model);
 				} catch (RuntimeException re) {
 					ExceptionUtil

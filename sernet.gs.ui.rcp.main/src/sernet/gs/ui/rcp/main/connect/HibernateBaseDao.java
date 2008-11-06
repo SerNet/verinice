@@ -3,6 +3,8 @@ package sernet.gs.ui.rcp.main.connect;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.Hibernate;
+import org.hibernate.collection.PersistentCollection;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSupport 
@@ -32,6 +34,21 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 
 		public List findByQuery(String hqlQuery, Object[] values) {
 			return getHibernateTemplate().find(hqlQuery, values);
+		}
+
+		@Override
+		public void initialize(Object collection) {
+			getHibernateTemplate().initialize(collection);
+		}
+
+		@Override
+		public void persist(T entity) {
+			getHibernateTemplate().persist(entity);
+		}
+
+		@Override
+		public void flush() {
+			getHibernateTemplate().flush();
 		}
 
 }

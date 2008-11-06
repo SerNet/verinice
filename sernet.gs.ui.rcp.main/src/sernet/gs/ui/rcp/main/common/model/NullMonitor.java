@@ -1,8 +1,7 @@
 package sernet.gs.ui.rcp.main.common.model;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 
-public class NullMonitor implements IProgressMonitor {
+public class NullMonitor implements IProgress {
 
 	public void beginTask(String name, int totalWork) {
 		// TODO Auto-generated method stub

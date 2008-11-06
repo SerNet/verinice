@@ -1,7 +1,9 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
@@ -19,20 +21,20 @@ public class DbVersion {
 		this.dbHome = dbHome;
 	}
 
-	public void updateDBVersion() {
+	public void updateDBVersion(IProgress progress) {
 		try {
 			if (loadedModel.getDbVersion() < 0.91D) {
 				DbMigration migration = new MigrateDbTo0_91(this);
-				migration.run();
+				migration.run(progress);
 			}
 
 			 if (loadedModel.getDbVersion() < 0.92D) {
 				 DbMigration migration = new MigrateDbTo0_92(this);
-				 migration.run();
+				 migration.run(progress);
 			 }
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(e);
+			ExceptionUtil.log(e, "Fehler beim Migrieren der Datenbank!");
 		}
 
 	}

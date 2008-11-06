@@ -6,6 +6,7 @@ import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.DbVersion;
+import sernet.gs.ui.rcp.main.common.model.IProgress;
 
 public class MigrateDbTo0_91 extends DbMigration {
 	
@@ -16,7 +17,7 @@ public class MigrateDbTo0_91 extends DbMigration {
 	}
 
 	@Override
-	public void run() throws Exception {
+	public void run(IProgress progress) throws Exception {
 
 			Logger.getLogger(this.getClass()).debug("Updating DB model to V 0.91.");
 			ITVerbund verbund = dbVersion.getLoadedModel().getItverbuende().iterator().next();

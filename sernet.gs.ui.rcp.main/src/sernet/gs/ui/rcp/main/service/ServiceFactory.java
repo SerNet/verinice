@@ -1,6 +1,6 @@
 package sernet.gs.ui.rcp.main.service;
 
-import springClient.SpringClientPlugin;
+import sernet.springclient.SpringClientPlugin;
 
 public class ServiceFactory {
 	
