@@ -1767,8 +1767,16 @@ Template:
 			<huiproperty
 				id="mnums_erlaeuterung"
 				name="Erläuterung"
-                required="true"
+                required="false"
 				inputtype="text" />
+			<huiproperty
+			id="mnums_initdurch_link"
+			name="Initiierung durch"
+			inputtype="reference" 
+			required="false">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
 		</huipropertygroup>
 		
 		<huipropertygroup

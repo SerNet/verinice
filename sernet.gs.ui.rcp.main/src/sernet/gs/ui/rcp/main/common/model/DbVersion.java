@@ -15,6 +15,8 @@ public class DbVersion {
 
 	private BSIModel loadedModel;
 	private CnAElementHome dbHome;
+	
+	public static final double CURRENT_DB_VERSION = 0.92D;
 
 	public DbVersion(BSIModel loadedModel, CnAElementHome dbHome) {
 		this.loadedModel = loadedModel;

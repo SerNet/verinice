@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.Display;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -58,6 +60,11 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 		if (child instanceof MassnahmenUmsetzung) {
 			updateViewer(ADD, child);
 		}
+	}
+	
+	public void linkChanged(CnALink link) {
+		if (link.getDependency() instanceof Person)
+			updateViewer(this.REFRESH, null);
 	}
 
 	public void childChanged(CnATreeElement category, CnATreeElement child) {

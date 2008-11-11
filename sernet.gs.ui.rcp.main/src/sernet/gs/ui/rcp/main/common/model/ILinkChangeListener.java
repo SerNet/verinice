@@ -7,4 +7,5 @@ public interface ILinkChangeListener {
 	public void integritaetChanged();
 	public void verfuegbarkeitChanged();
 	
+	
 }

@@ -10,7 +10,9 @@ import java.util.Set;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.DbVersion;
 
 /**
  * Top level category for all BSI model elements.
@@ -22,7 +24,6 @@ public class BSIModel extends CnATreeElement
 	
 	private static final String TYPE_ID = "bsimodel"; //$NON-NLS-1$
 	
-	public static final double DB_VERSION = 0.91D; 
 	
 	private Double dbVersion = 0D;
 	
@@ -30,7 +31,7 @@ public class BSIModel extends CnATreeElement
 
 	public BSIModel() {
 		super(null);
-		dbVersion = DB_VERSION;
+		dbVersion = DbVersion.CURRENT_DB_VERSION;
 	}
 	
 	public String getKuerzel() {
@@ -71,6 +72,13 @@ public class BSIModel extends CnATreeElement
 	public void childChanged(CnATreeElement category, CnATreeElement child) {
 		for (IBSIModelListener listener : listeners) {
 			listener.childChanged(category, child);
+		}
+	}
+	
+	@Override
+	public void linkChanged(CnALink link) {
+		for (IBSIModelListener listener : listeners) {
+			listener.linkChanged(link);
 		}
 	}
 	

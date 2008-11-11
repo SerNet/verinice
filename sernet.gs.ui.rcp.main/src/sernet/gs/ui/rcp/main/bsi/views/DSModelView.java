@@ -28,6 +28,7 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
@@ -94,6 +95,10 @@ public class DSModelView extends ViewPart {
 
 		public void modelRefresh() {
 			updater.refresh();
+		}
+		
+		public void linkChanged(CnALink link) {
+			// do nothing
 		}
 	};
 	private DSModelViewUpdater viewUpdater;

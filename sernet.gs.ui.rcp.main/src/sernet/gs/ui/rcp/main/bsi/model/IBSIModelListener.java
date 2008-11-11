@@ -1,5 +1,6 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 
@@ -12,6 +13,8 @@ public interface IBSIModelListener {
 	void childChanged(CnATreeElement category, CnATreeElement child);
 	
 	void modelRefresh();
+
+	void linkChanged(CnALink link);
 	
 
 }

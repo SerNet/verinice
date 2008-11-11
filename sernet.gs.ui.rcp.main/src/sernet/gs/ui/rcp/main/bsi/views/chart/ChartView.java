@@ -67,6 +67,7 @@ import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.actions.TodoViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
@@ -264,6 +265,10 @@ public class ChartView extends ViewPart {
 
 			public void childRemoved(CnATreeElement category,
 					CnATreeElement child) {
+				// do nothing
+			}
+			
+			public void linkChanged(CnALink link) {
 				// do nothing
 			}
 

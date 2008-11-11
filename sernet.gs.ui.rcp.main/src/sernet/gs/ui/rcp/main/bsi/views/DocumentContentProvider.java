@@ -15,6 +15,7 @@ import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class DocumentContentProvider implements ITreeContentProvider, IBSIModelListener {
@@ -81,6 +82,10 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 
 	public void childChanged(CnATreeElement category, CnATreeElement child) {
 		modelRefresh();
+	}
+	
+	public void linkChanged(CnALink link) {
+		// do nothing
 	}
 
 	public void childRemoved(CnATreeElement category, CnATreeElement child) {

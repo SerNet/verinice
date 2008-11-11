@@ -230,6 +230,10 @@ public class BsiModelView extends ViewPart {
 		public void modelRefresh() {
 			updater.refresh();
 		}
+
+		public void linkChanged(CnALink link) {
+			// do nothing
+		}
 	};
 
 	private TreeViewer viewer;

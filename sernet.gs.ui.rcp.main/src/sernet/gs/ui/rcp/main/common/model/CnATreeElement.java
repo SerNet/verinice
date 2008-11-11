@@ -17,6 +17,7 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.EntityResolverFactory;
 import sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Schutzbedarf;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
@@ -134,7 +135,7 @@ public abstract class CnATreeElement {
 			getParent().childChanged(category, child);
 		}
 	}
-
+	
 	public boolean canContain(Object obj) {
 		return false;
 	}
@@ -286,11 +287,19 @@ public abstract class CnATreeElement {
 	public void addLinkDown(CnALink link) {
 		linksDown.add(link);
 		childChanged(parent, this);
+		linkChanged(link);
 	}
 	
+	public void linkChanged(CnALink link) {
+		if (getParent() != null) {
+			getParent().linkChanged(link);
+		}
+	}
+
 	public void removeLinkDown(CnALink link) {
 		linksDown.remove(link);
 		childChanged(parent, this);
+		linkChanged(link);
 	}
 
 	public void addLinkUp(CnALink link) {

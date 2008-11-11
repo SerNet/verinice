@@ -10,6 +10,7 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.TodoFilterDialog;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.StringPropertyFilter;
+import sernet.gs.ui.rcp.main.bsi.filter.UmsetzungDurchFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.ZielobjektPropertyFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
@@ -18,7 +19,7 @@ public class TodoViewFilterAction extends Action {
 	private Shell shell;
 	private MassnahmenUmsetzungFilter umsetzungFilter;
 	private MassnahmenSiegelFilter siegelFilter;
-	private StringPropertyFilter umsetzungDurchFilter;
+	private UmsetzungDurchFilter umsetzungDurchFilter;
 	private ZielobjektPropertyFilter zielobjektFilter;
 
 	public TodoViewFilterAction(StructuredViewer viewer,
@@ -30,8 +31,7 @@ public class TodoViewFilterAction extends Action {
 		
 		this.umsetzungFilter = filter1;
 		this.siegelFilter = filter2;
-		this.umsetzungDurchFilter = new StringPropertyFilter(viewer,
-				MassnahmenUmsetzung.P_UMSETZUNGDURCH_LINK);
+		this.umsetzungDurchFilter = new UmsetzungDurchFilter(viewer);
 		this.zielobjektFilter = new ZielobjektPropertyFilter(viewer);
 		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
 		

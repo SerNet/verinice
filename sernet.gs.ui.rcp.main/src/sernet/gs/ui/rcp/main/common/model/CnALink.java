@@ -80,12 +80,16 @@ public class CnALink {
 		dependency.getLinkChangeListener().verfuegbarkeitChanged();
 		dependency.getLinkChangeListener().vertraulichkeitChanged();
 		
-
 	}
 	
 	public void remove() {
 		dependant.removeLinkDown(this);
 		dependency.removeLinkUp(this);
+
+		// update target:
+		dependency.getLinkChangeListener().integritaetChanged();
+		dependency.getLinkChangeListener().verfuegbarkeitChanged();
+		dependency.getLinkChangeListener().vertraulichkeitChanged();
 	}
 
 	private int linkTypeFor(CnATreeElement target) {

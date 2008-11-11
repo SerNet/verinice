@@ -35,7 +35,7 @@ public class BSIKatalogInvisibleRoot {
 								PreferenceConstants.GSACCESS)
 						|| event.getProperty().equals(
 								PreferenceConstants.DSZIPFILE)
-								
+								todo: aendern der pfade muss cache loeschen
 					)
 
 					try {

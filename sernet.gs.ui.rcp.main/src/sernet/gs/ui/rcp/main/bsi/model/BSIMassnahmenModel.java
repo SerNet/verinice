@@ -28,6 +28,7 @@ import sernet.gs.scraper.URLGSSource;
 import sernet.gs.scraper.ZIPGSSource;
 import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 public class BSIMassnahmenModel {
@@ -89,6 +90,8 @@ public class BSIMassnahmenModel {
 			}
 
 			scrape = new GSScraper(gsSource, new PatternGSHB2005_2006());
+			scrape.setCacheDir(CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache");
+			Logger.getLogger(BSIMassnahmenModel.class).debug("Setting GS-Cache to " + scrape.getCacheDir());
 			mon.beginTask(Messages.BSIMassnahmenModel_3, 5);
 			List<Baustein> alleBst = new ArrayList<Baustein>();
 

@@ -75,6 +75,19 @@ implements IBSIStrukturElement {
 		return buff.toString();
 	}
 	
+	public String getFullName() {
+		if (getEntity() == null)
+			return "";
+		
+		StringBuffer buff = new StringBuffer();
+		buff.append(getEntity().getSimpleValue(P_VORNAME));
+		if (buff.length() > 0)
+			buff.append(" "); //$NON-NLS-1$
+		buff.append( getEntity().getSimpleValue(P_NAME));
+		
+		return buff.toString();
+	}
+	
 	private String getRollen() {
 		if (getEntity() == null)
 			return "";
@@ -113,6 +126,12 @@ implements IBSIStrukturElement {
 	
 	public void setKuerzel(String name) {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+	}
+
+	public boolean hasRole(Property role) {
+		if (getRollen().indexOf(role.getPropertyValue()) > -1)
+			return true;
+		return false;
 	}
 	
 	
