@@ -307,7 +307,7 @@ public class BsiModelView extends ViewPart {
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setSorter(new NameSorter());
+		viewer.setSorter(new CnAElementByTitelSorter());
 
 		getSite().setSelectionProvider(viewer);
 		makeActions();

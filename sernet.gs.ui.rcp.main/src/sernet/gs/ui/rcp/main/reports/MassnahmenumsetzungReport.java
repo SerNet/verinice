@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +29,7 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
 
 /**
  * This report prints all safeguards grouped by modules and assets.
+ * "Basis-SIcherheitscheck"
  * 
  *   
  * @author koderman@sernet.de
@@ -79,11 +81,13 @@ public class MassnahmenumsetzungReport extends Report
 			if (item.getParent().equals(category))
 				categoryItems.add(item);
 		}
+		Collections.sort(categoryItems, new CnAElementByTitleComparator());
 		return categoryItems;
 	}
 	
 	public ArrayList<IOOTableRow> getReport(PropertySelection shownColumns) {
 		ArrayList<IOOTableRow> rows = new ArrayList<IOOTableRow>();
+		Collections.sort(categories, new CnAElementByTitleComparator());
 		
 		AllCategories: for (CnATreeElement category : categories) {
 			ArrayList<IOOTableRow> categoryRows = new ArrayList<IOOTableRow>();
@@ -131,24 +135,27 @@ public class MassnahmenumsetzungReport extends Report
 	private void addMassnahmen(PropertySelection shownColumns, 
 			ArrayList<IOOTableRow> categoryRows,
 			BausteinUmsetzung baustein) {
-		 if (!baustein.getChildren().iterator().hasNext())
+		
+		if (baustein.getChildren().size() < 1)
 			 return;
-		 
-		MassnahmenUmsetzung massnahme 
-			= (MassnahmenUmsetzung) baustein.getChildren().iterator().next();
-		List<String> columns = shownColumns.get(massnahme.getEntity().getEntityType());
+		
+		List<CnATreeElement> massnahmen = new ArrayList<CnATreeElement>(baustein.getChildren().size());
+		massnahmen.addAll(baustein.getChildren());
+		Collections.sort(massnahmen, new CnAElementByTitleComparator());
+
+		// add one row with column headers:
+		CnATreeElement firstMassnahme = massnahmen.get(0);
+		List<String> columns = shownColumns.get(firstMassnahme.getEntity().getEntityType());
 		if (columns.size() == 0)
 			return;
 		
 		categoryRows.add(new PropertyHeadersRow(
-				massnahme, 
+				firstMassnahme, 
 				columns, 
 				IOOTableRow.ROW_STYLE_SUBHEADER));
-	
-
-		for (CnATreeElement child : baustein.getChildren()) {
-			massnahme = (MassnahmenUmsetzung) child;
-			
+		
+		// add rows with contents:
+		for (CnATreeElement massnahme : massnahmen) {
 			categoryRows.add(new PropertiesRow(
 					massnahme, 
 					columns, 
@@ -156,5 +163,4 @@ public class MassnahmenumsetzungReport extends Report
 			
 		}
 	}
-	
 }

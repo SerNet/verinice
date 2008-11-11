@@ -67,27 +67,30 @@ public class ImportTask {
 		List<ZielobjektTypeResult> zielobjekte = vampire.findZielobjektTypAll();
 		monitor.beginTask("Importiere Zielobjekte...", zielobjekte.size());
 
-		// create a new ITVerbund first
-		ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance()
-				.saveNew(CnAElementFactory.getCurrentModel(),
-						ITVerbund.TYPE_ID, null);
-
-		// gets only first ITVerbund:
+		// create all found ITVerbund first
+		List<ITVerbund> neueVerbuende = new ArrayList<ITVerbund>();
 		for (ZielobjektTypeResult result : zielobjekte) {
 			if (ImportZielobjektTypUtil.translateZielobjektType(result.type,
 					result.subtype).equals(ITVerbund.TYPE_ID)) {
+
+				ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance()
+				.saveNew(CnAElementFactory.getCurrentModel(),
+						ITVerbund.TYPE_ID, null);
+				neueVerbuende.add(itverbund);
+				monitor.worked(1);
+				
 				transferData.transfer((ITVerbund) itverbund, result);
 				createBausteine(itverbund, result.zielobjekt);
-				break;
 			}
 		}
 
-		// create all Zielobjekte
+		// create all Zielobjekte in first ITVerbund, 
+		// TODO: tag them with every ITVerbund the've been in
 		for (ZielobjektTypeResult result : zielobjekte) {
 			String typeId = ImportZielobjektTypUtil.translateZielobjektType(
 					result.type, result.subtype);
 			CnATreeElement element = CnAElementBuilder.getInstance()
-					.buildAndSave(itverbund, typeId);
+					.buildAndSave(neueVerbuende.get(0), typeId);
 			if (element != null) {
 				transferData.transfer(element, result);
 				createBausteine(element, result.zielobjekt);

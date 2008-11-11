@@ -1281,13 +1281,11 @@ Template:
 			tooltip="Zugewiesene Rollen des / der Mitarbeiter(s)"
 			required="false"
 			inputtype="multioption">
+			
+			<!-- Start: "offizielle" GS-Kataloge Rollen, verwendet fuer automatische Zuordnung von Massnahmen -->
 			<option
 				id="person_0"
 				name="Administrator" />
-			<option
-				id="person_1"
-				name="Planer" />
-
 			<option
 				id="person_2"
 				name="Anwendungsentwickler" />
@@ -1313,14 +1311,20 @@ Template:
 				id="person_9"
 				name="Datenschutzbeauftragter" />
 			<option
+				id="person_43"
+				name="Entwickler" />
+			<option
 				id="person_10"
 				name="Errichterfirma" />
 			<option
 				id="person_11"
 				name="Fachabteilung" />
 			<option
+				id="person_42"
+				name="Fachverantwortliche" />
+			<option
 				id="person_12"
-				name="Fax-/Poststelle" />
+				name="Fax-Poststelle" />
 			<option
 				id="person_13"
 				name="Fax-Verantwortlicher" />
@@ -1328,11 +1332,8 @@ Template:
 				id="person_14"
 				name="Haustechnik" />
 			<option
-				id="person_15"
-				name="Hausverwaltung" />
-			<option
 				id="person_16"
-				name="Innerer Dienst" />
+				name="Innerer Dienst" />	
 			<option
 				id="person_17"
 				name="IT-Benutzer" />
@@ -1344,28 +1345,52 @@ Template:
 				name="IT-Sicherheitsmanagement" />
 			<option
 				id="person_20"
-				name="IT-Verfahrensverantwortlicher" />
+				name="IT-Verfahrensverantwortlicher" />	
 			<option
-				id="person_21"
-				name="Leitung" />
+				id="person_46"
+				name="Leiter Beschaffung" />	
+			<option
+				id="person_44"
+				name="Leiter Entwicklung" />
+			<option
+				id="person_47"
+				name="Leiter Fachabteilung" />
+			<option
+				id="person_48"
+				name="Leiter Haustechnik" />	
+			<option
+				id="person_49"
+				name="Leiter Innerer Dienst" />	
+			<option
+				id="person_45"
+				name="Leiter IT" />	
+			<option
+				id="person_50"
+				name="Leiter Organisation" />
+			<option
+				id="person_51"
+				name="Leiter Personal" />	
 			<option
 				id="person_22"
 				name="Mitarbeiter" />
 			<option
-				id="person_23"
-				name="Netzplaner" />
-			<option
 				id="person_24"
-				name="Notfall-Verantwortlicher" />
+				name="Notfall-Verantwortliche" />
 			<option
 				id="person_25"
 				name="Personalabteilung" />
 			<option
 				id="person_26"
-				name="Personalrat / Betriebsrat" />
+				name="Personalrat/Betriebsrat" />
+			<option
+				id="person_1"
+				name="Planer" />
 			<option
 				id="person_27"
 				name="Poststelle" />
+			<option
+				id="person_40"
+				name="Pressestelle" />
 			<option
 				id="person_28"
 				name="Revisor" />
@@ -1373,23 +1398,28 @@ Template:
 				id="person_29"
 				name="Telearbeiter" />
 			<option
-				id="person_30"
-				name="TK-Anlagen-Verantwortlicher" />
+				id="person_35"
+				name="Tester" />
 			<option
-				id="person_31"
-				name="Unternehmensleitung" />
+				id="person_30"
+				name="TK-Anlagen-Verantwortlicher" />	
 			<option
 				id="person_32"
-				name="IT-Anwendungs-Verantowrtlicher" />
+				name="Verantwortliche der einzelnen IT-Anwendungen" />
 			<option
 				id="person_33"
-				name="Datensicherungs-Verantwortlicher" />
+				name="Verantwortliche für die Datensicherung" />	
 			<option
 				id="person_34"
 				name="Vorgesetze" />
+			<!-- ENDE: "offizielle" GS-Kataloge Rollen, verwendet fuer automatische Zuordnung von Massnahmen -->
+			
 			<option
-				id="person_35"
-				name="Testgruppe" />
+				id="person_39"
+				name="Fax-Absender" />
+			<option
+				id="person_38"
+				name="Fax-Empfänger" />
 			<option
 				id="person_36"
 				name="IT Helpdesk" />
@@ -1397,14 +1427,17 @@ Template:
 				id="person_37"
 				name="Hersteller" />
 			<option
-				id="person_38"
-				name="Fax-Empfänger" />
+				id="person_15"
+				name="Hausverwaltung" />
 			<option
-				id="person_39"
-				name="Fax-Absender" />
+				id="person_21"
+				name="Leitung" />
 			<option
-				id="person_40"
-				name="Pressestelle" />
+				id="person_23"
+				name="Netzplaner" />
+			<option
+				id="person_31"
+				name="Unternehmensleitung" />
 			<option
 				id="person_41"
 				name="Vertretung" />
@@ -1665,6 +1698,16 @@ Template:
             editable="false"
             visible="true"
 			name="Stand" />
+		<huiproperty
+			id="mnums_verantwortlichinit"
+            editable="false"
+            visible="false"
+			name="Verantw. Initiierung" />
+		<huiproperty
+			id="mnums_verantwortlichums"
+            editable="false"
+            visible="false"
+			name="Verantw. Umsetzung" />
 		<huiproperty
 				id="mnums_name"
                 editable="false"

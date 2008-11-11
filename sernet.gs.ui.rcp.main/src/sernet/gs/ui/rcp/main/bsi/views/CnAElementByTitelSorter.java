@@ -37,7 +37,7 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
 
-class NameSorter extends ViewerSorter {
+class CnAElementByTitelSorter extends ViewerSorter {
 		NumericStringComparator numComp = new NumericStringComparator();
 		
 		@Override

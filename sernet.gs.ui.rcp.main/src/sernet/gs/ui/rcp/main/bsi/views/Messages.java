@@ -52,6 +52,20 @@ public class Messages extends NLS {
 
 	public static String DSModelView_5;
 
+	public static String GSImportPreferencePage_0;
+
+	public static String GSImportPreferencePage_1;
+
+	public static String GSImportPreferencePage_2;
+
+	public static String GSImportPreferencePage_3;
+
+	public static String GSImportPreferencePage_5;
+
+	public static String GSImportPreferencePage_6;
+
+	public static String GSImportPreferencePage_7;
+
 	public static String TodoView_10;
 
 	public static String TodoView_11;

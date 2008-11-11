@@ -275,6 +275,8 @@ public class CnAElementFactory {
 						mu.setLebenszyklus(input.getInput().getLZAsString());
 						mu.setStufe(input.getInput().getSiegelstufe());
 						mu.setStand(input.getInput().getStand());
+						mu.setVerantwortlicheRollenInitiierung(input.getInput().getVerantwortlichInitiierung());
+						mu.setVerantwortlicheRollenUmsetzung(input.getInput().getVerantwortlichUmsetzung());
 						container.addChild(mu);
 						//dbHome.save(mu); // do not save on its own, instead bulk insert using parent
 						return mu;

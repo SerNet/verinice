@@ -8,6 +8,14 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
+/**
+ * Create new RirikomassnahmenUmsetzung from various sources, copying all relevant values to the new object.
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public class RisikoMassnahmenUmsetzungFactory {
 
 	public static RisikoMassnahmenUmsetzung buildFromRisikomassnahme(RisikoMassnahme draftMn,
@@ -22,7 +30,6 @@ public class RisikoMassnahmenUmsetzungFactory {
 		umsetzung.setStand(draftMn.getStand());
 		umsetzung.setStufe(draftMn.getSiegelstufe());
 		umsetzung.setLebenszyklus(draftMn.getLZAsString());
-		
 		
 		return umsetzung;
 	}

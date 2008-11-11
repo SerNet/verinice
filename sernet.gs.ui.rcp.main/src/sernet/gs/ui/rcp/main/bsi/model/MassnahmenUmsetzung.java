@@ -1,11 +1,16 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
@@ -57,6 +62,9 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	public static final String P_KOSTEN_PTPERIOD_MONAT 		= "mnums_kosten_ptperiod_monat";
 	public static final String P_KOSTEN_PTPERIOD_QUARTAL 	= "mnums_kosten_ptperiod_quartal";
 	public static final String P_KOSTEN_PTPERIOD_JAHR 		= "mnums_kosten_ptperiod_jahr";
+
+	public static final String P_VERANTWORTLICHE_ROLLEN_INITIIERUNG	= "mnums_verantwortlichinit";
+	public static final String P_VERANTWORTLICHE_ROLLEN_UMSETZUNG 	= "mnums_verantwortlichums";
 
 	// deprecated fields for persons, are now replaced by linked person entities
 	// only used for migration of old values:
@@ -127,8 +135,56 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 				.getSimpleValue(P_SIEGEL).charAt(0) : ' ';
 	}
 
+	/**
+	 * Find and return the person responsible for this control.
+	 * 
+	 * @return
+	 */
 	public String getUmsetzungDurch() {
-		return getEntity().getSimpleValue(P_UMSETZUNGDURCH_LINK);
+		String assignedPerson = getEntity().getSimpleValue(P_UMSETZUNGDURCH_LINK);
+		if (assignedPerson == null || assignedPerson.length() == 0) {
+			// none directly assigned, try to find someone by role:
+			return getLinkedPersonsByRole();
+		}
+		else 
+			return assignedPerson;
+	}
+
+	/**
+	 * Go through linked persons of this target object or parents.
+	 * If person's role equals this control's role, add to list of responsible persons.
+	 * 
+	 * @return
+	 */
+	private String getLinkedPersonsByRole() {
+		PropertyList roles = getEntity().getProperties(P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
+		// search tree upward for linked persons:
+		Set<Property> rolesToSearch = new HashSet<Property>();
+		rolesToSearch.addAll(roles.getProperties());
+		List<Person> result = new ArrayList<Person>();
+		findLinkedPersons(result, getParent().getParent(), rolesToSearch);
+	}
+
+	private void findLinkedPersons(List<Person> result, CnATreeElement parent, Set<Property> rolesToSearch ) {
+		allRoles: for (Property role : rolesToSearch) {
+			Set<CnALink> links = parent.getLinksDown();
+			for (CnALink link : links) {
+				if (link.getDependant() instanceof Person) {
+					Person person = (Person) link.getDependant();
+					if (person.hasRole(role)) {
+						// we found someone for this role, continue with next role:
+						result.add(person);
+						continue allRoles;
+					}
+				}
+			}
+			// no matching person here, try further up the tree for this role:
+			Set<Property> justOneRole = new HashSet<Property>(1);
+			justOneRole.add(role);
+			if (getParent() != null) {
+				findLinkedPersons(result, getParent(), justOneRole);
+			}
+		}
 	}
 
 	public void setLebenszyklus(String lz) {
@@ -254,6 +310,20 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 				|| getUmsetzung().equals(P_UMSETZUNG_ENTBEHRLICH))
 			return true;
 		return false;
+	}
+
+	public void setVerantwortlicheRollenInitiierung(
+			List<String> verantwortlichInitiierung) {
+		for (String role : verantwortlichInitiierung) {
+			getEntity().createNewProperty(entityType.getPropertyType(P_VERANTWORTLICHE_ROLLEN_INITIIERUNG), role);
+		}
+	}
+
+	public void setVerantwortlicheRollenUmsetzung(
+			List<String> verantwortlichUmsetzung) {
+		for (String role : verantwortlichUmsetzung) {
+			getEntity().createNewProperty(entityType.getPropertyType(P_VERANTWORTLICHE_ROLLEN_UMSETZUNG), role);
+		}
 	}
 
 }
