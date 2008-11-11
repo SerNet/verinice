@@ -1,6 +1,8 @@
 package sernet.gs.model;
 
-public interface IGSModel {
+import java.io.Serializable;
+
+public interface IGSModel extends Serializable {
 
 	public String getId();
 	public String getTitel();

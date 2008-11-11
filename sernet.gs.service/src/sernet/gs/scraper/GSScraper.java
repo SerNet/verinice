@@ -1,6 +1,14 @@
 package sernet.gs.scraper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,10 +44,9 @@ import sernet.gs.service.GSServiceException;
  * 
  */
 public class GSScraper {
-	
 
 	private final Map<String, String[]> BROKEN_ROLES = new HashMap<String, String[]>();
-	
+
 	private IGSPatterns patterns;
 
 	private String stand;
@@ -61,28 +68,17 @@ public class GSScraper {
 	private XQueryExpression massnahmenVerantwortlicheExp;
 
 	private DynamicQueryContext massnahmenVerantowrtlicheContext;
-	
+
 	private Pattern trailingwhitespace = Pattern.compile("\\s*$");
 	private Pattern leadingwhitespace = Pattern.compile("^\\s*");
+
+	private String cacheDir = "gscache";
 
 	public GSScraper(IGSSource source, IGSPatterns patterns)
 			throws GSServiceException {
 
 		try {
-			BROKEN_ROLES.put("Behörden-/Unter-nehmensleitung",
-					new String[] {"Behörden-/Unternehmensleitung"});
-			BROKEN_ROLES.put("IT-Sicherheits-management",
-					new String[] {"IT-Sicherheitsmanagement"});
-			BROKEN_ROLES.put("IT-Sicherheitsmanagement-Team", 
-					new String[] {"IT-Sicherheitsmanagement"});
-			BROKEN_ROLES.put("IT-Sicherheitsmanagement Administrator", 
-					new String[] {"IT-Sicherheitsmanagement", "Administrator"});
-			BROKEN_ROLES.put("Leiter IT Administrator", 
-					new String[] {"Leiter IT", "Administrator"});
-			BROKEN_ROLES.put("Leiter IT IT-Sicherheitsmanagement", 
-					new String[] {"Leiter IT", "IT-Sicherheitsmanagement"});
-			
-			
+			createBrokenRoleReplacements();
 			this.patterns = patterns;
 			this.source = source;
 			config = new Configuration();
@@ -116,11 +112,37 @@ public class GSScraper {
 
 	}
 
+	private void createBrokenRoleReplacements() {
+		BROKEN_ROLES.put("Behörden-/Unter-nehmensleitung",
+				new String[] { "Behörden-/Unternehmensleitung" });
+		BROKEN_ROLES.put("IT-Sicherheits-management",
+				new String[] { "IT-Sicherheitsmanagement" });
+		BROKEN_ROLES.put("IT-Sicherheitsmanagement-Team",
+				new String[] { "IT-Sicherheitsmanagement" });
+		BROKEN_ROLES.put("IT-Sicherheitsmanagement Administrator",
+				new String[] { "IT-Sicherheitsmanagement", "Administrator" });
+		BROKEN_ROLES.put("Leiter IT Administrator", new String[] { "Leiter IT",
+				"Administrator" });
+		BROKEN_ROLES.put("Leiter IT IT-Sicherheitsmanagement", new String[] {
+				"Leiter IT", "IT-Sicherheitsmanagement" });
+	}
+
 	public List<Baustein> getBausteine(String kapitel)
 			throws GSServiceException {
 		ArrayList<Baustein> result = new ArrayList<Baustein>();
 		try {
+			ArrayList fromCache = getFromCache("bausteine_", kapitel);
+			for (Object object : fromCache) {
+				result.add((Baustein) object);
+			}
+		} catch (Exception e) {
+			// do nothing
+		}
+		if (result != null && result.size() > 0)
+			return result;
 
+		// else parse from HTML:
+		try {
 			Node root = source.parseBausteinDocument(kapitel);
 			getStand(kapitel, root);
 
@@ -155,7 +177,6 @@ public class GSScraper {
 					if (schichtMatcher.find())
 						schicht = schichtMatcher.group(1);
 					b.setSchicht(Integer.parseInt(schicht));
-
 					result.add(b);
 
 				}
@@ -164,7 +185,90 @@ public class GSScraper {
 			Logger.getLogger(GSScraper.class).error(e);
 			throw new GSServiceException(e);
 		}
+		writeToFile("bausteine_" + kapitel, result);
 		return result;
+	}
+
+	private ArrayList getFromCache(String prefix, String fileName) {
+		// try to get from cache:
+		try {
+			ArrayList resultFromFile = readFromFile(prefix + fileName);
+			if (resultFromFile != null && resultFromFile.size() > 0) {
+				// Logger.getLogger(this.getClass()).debug("Cache hit: " +
+				// prefix + fileName);
+				return resultFromFile;
+			}
+		} catch (IOException e1) {
+			// do nothing
+		} catch (ClassNotFoundException e1) {
+			// do nothing
+		}
+		// Logger.getLogger(this.getClass()).debug("Cache miss: " + prefix +
+		// fileName);
+		return new ArrayList();
+	}
+
+	private ArrayList readFromFile(String fileName) throws IOException,
+			ClassNotFoundException {
+		File dir = new File(cacheDir);
+		if (!dir.exists()) {
+			return null;
+		}
+
+		fileName = fileName.replaceAll("\\.\\./", "");
+		fileName = fileName.replaceAll("/", "_");
+
+		FileInputStream fin = new FileInputStream(dir.getAbsolutePath()
+				+ File.separator + fileName);
+		ObjectInputStream ois = new ObjectInputStream(fin);
+		ArrayList result = (ArrayList) ois.readObject();
+		ois.close();
+		return result;
+	}
+
+	public boolean flushCache() {
+		File dir = new File(cacheDir);
+		Logger.getLogger(this.getClass()).debug("Deleting cache dir: " + dir.getAbsolutePath());
+		return delete(dir);
+	}
+
+	public static boolean delete(File dir) {
+		if (dir.isDirectory()) {
+			String[] subdirs = dir.list();
+			for (int i = 0; i < subdirs.length; i++) {
+				boolean success = delete(new File(dir, subdirs[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+		return dir.delete();
+	}
+
+	private void writeToFile(String fileName, ArrayList b) {
+		fileName = fileName.replaceAll("\\.\\./", "");
+		fileName = fileName.replaceAll("/", "_");
+		writeToFile(b, fileName);
+	}
+
+	private void writeToFile(Serializable object, String fileName) {
+		File dir = new File(cacheDir);
+		if (!dir.exists()) {
+			dir.mkdirs();
+			Logger.getLogger(this.getClass()).debug(
+					"Creating GS cache dir " + dir.getAbsolutePath());
+		}
+
+		try {
+			FileOutputStream fout = new FileOutputStream(dir.getAbsolutePath()
+					+ File.separator + fileName);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(object);
+			oos.close();
+		} catch (Exception e) {
+			Logger.getLogger(this.getClass()).error(
+					"Fehler beim Schreiben von Objekt in Festplatten-Cache", e);
+		}
 	}
 
 	private void getStand(String kapitel, Node root) throws XPathException {
@@ -185,7 +289,18 @@ public class GSScraper {
 
 	public List<Massnahme> getMassnahmen(String baustein)
 			throws GSServiceException {
-		List<Massnahme> result = new ArrayList<Massnahme>();
+		ArrayList<Massnahme> result = new ArrayList<Massnahme>();
+		try {
+			ArrayList fromCache = getFromCache("massnahmen_", baustein);
+			for (Object object : fromCache) {
+				result.add((Massnahme) object);
+			}
+		} catch (Exception e) {
+			// do nothing
+		}
+		if (result != null && result.size() > 0)
+			return result;
+
 		try {
 			Node root = source.parseBausteinDocument(baustein);
 			getStand(baustein, root);
@@ -235,6 +350,7 @@ public class GSScraper {
 						mn.setSiegelstufe('A');
 					}
 					addRoles(mn);
+
 					result.add(mn);
 				} else {
 					// sometimes, 3rd column is missing
@@ -269,6 +385,7 @@ public class GSScraper {
 			Logger.getLogger(GSScraper.class).error(e);
 			throw new GSServiceException(e);
 		}
+		writeToFile("massnahmen_" + baustein, result);
 		return result;
 
 	}
@@ -276,27 +393,26 @@ public class GSScraper {
 	private void addRoles(Massnahme mn) throws GSServiceException,
 			XPathException {
 		Node root = source.parseMassnahmenDocument(mn.getUrl());
-		
-//		XML2String out = new XML2String();
-//		String writeXML = out.writeXML((Document) root);
-//		System.out.println(writeXML);
-		
+
+		// XML2String out = new XML2String();
+		// String writeXML = out.writeXML((Document) root);
+		// System.out.println(writeXML);
+
 		massnahmenVerantowrtlicheContext.setContextItem(new DocumentWrapper(
 				root, mn.getUrl(), config));
 		SequenceIterator iterator = massnahmenVerantwortlicheExp
 				.iterator(massnahmenVerantowrtlicheContext);
-		
+
 		int foundItems = 0;
-		
+
 		while (true) {
 			NodeInfo roleNode = (NodeInfo) iterator.next();
-			if (roleNode == null) 
+			if (roleNode == null)
 				break;
-			
+
 			foundItems++;
 			String allRoles = roleNode.getStringValue();
 			allRoles = allRoles.replaceAll("\n", "");
-			
 
 			if (allRoles != null && allRoles.length() > 0) {
 				String[] rolesInit = allRoles.split(", *");
@@ -317,11 +433,12 @@ public class GSScraper {
 				}
 			}
 		}
-		
+
 	}
 
-	/** 
-	 * Repair some roles with dashes etc. Split roles missing commas in GS-Catalogues etc.
+	/**
+	 * Repair some roles with dashes etc. Split roles missing commas in
+	 * GS-Catalogues etc.
 	 * 
 	 * @param role
 	 * @return
@@ -331,8 +448,8 @@ public class GSScraper {
 		if (repairedRole != null)
 			return repairedRole;
 		else
-			return new String[] {role};
-		
+			return new String[] { role };
+
 	}
 
 	private void setLebenszyklus(Massnahme mn, String lzString) {
@@ -387,7 +504,18 @@ public class GSScraper {
 
 	public List<Gefaehrdung> getGefaehrdungen(String baustein)
 			throws GSServiceException {
-		List<Gefaehrdung> result = new ArrayList<Gefaehrdung>();
+		ArrayList<Gefaehrdung> result = new ArrayList<Gefaehrdung>();
+		try {
+			ArrayList fromCache = getFromCache("gefaehrdungen_", baustein);
+			for (Object object : fromCache) {
+				result.add((Gefaehrdung) object);
+			}
+		} catch (Exception e) {
+			// do nothing
+		}
+		if (result != null && result.size() > 0)
+			return result;
+
 		try {
 			Node root = source.parseBausteinDocument(baustein);
 			getStand(baustein, root);
@@ -418,6 +546,7 @@ public class GSScraper {
 					gef.setId(matcher.group(2));
 					gef.setTitel(matcher.group(3));
 					gef.setUrl(matcher.group(4));
+
 					result.add(gef);
 				}
 			}
@@ -425,8 +554,17 @@ public class GSScraper {
 			Logger.getLogger(GSScraper.class).error(e);
 			throw new GSServiceException(e);
 		}
+		writeToFile("gefaehrdungen_" + baustein, result);
 		return result;
 
+	}
+
+	public String getCacheDir() {
+		return cacheDir;
+	}
+
+	public void setCacheDir(String cacheDir) {
+		this.cacheDir = cacheDir;
 	}
 
 }
