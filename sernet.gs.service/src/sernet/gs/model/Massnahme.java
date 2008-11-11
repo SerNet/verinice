@@ -1,5 +1,7 @@
 package sernet.gs.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +14,8 @@ public class Massnahme implements IGSModel {
 	private char siegelstufe = ' ';
 	private String url;
 	private String stand;
+	private List<String> verantwortlichInitiierung = new ArrayList<String>(3);
+	private List<String> verantwortlichUmsetzung = new ArrayList<String>(3);
 	
 	
 	public static final int LZ_PLANUNG			= 1; 
@@ -137,6 +141,31 @@ public class Massnahme implements IGSModel {
 	public String getStand() {
 		return stand;
 	}
+
+	public List<String> getVerantwortlichInitiierung() {
+		return verantwortlichInitiierung;
+	}
+
+	public void setVerantwortlichInitiierung(List<String> verantwortlichInitiierung) {
+		this.verantwortlichInitiierung = verantwortlichInitiierung;
+	}
+
+	public List<String> getVerantwortlichUmsetzung() {
+		return verantwortlichUmsetzung;
+	}
+
+	public void setVerantwortlichUmsetzung(List<String> verantwortlichUmsetzung) {
+		this.verantwortlichUmsetzung = verantwortlichUmsetzung;
+	}
+	
+	public void addVerantwortlicheInitiierung(String role) {
+		this.verantwortlichInitiierung.add(role);
+	}
+	
+	public void addVerantwortlicheUmsetzung(String role) {
+		this.verantwortlichUmsetzung.add(role);
+	}
+
 	
 
 }

@@ -1,9 +1,12 @@
 package sernet.gs.scraper;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
@@ -11,6 +14,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXTransformerFactory;
@@ -20,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.ccil.cowan.tagsoup.Parser;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import sernet.gs.service.GSServiceException;
 
@@ -76,50 +81,49 @@ public class ZIPGSSource implements IGSSource {
 		}
 	}
 	
-	public Node parseDocument(String baustein) throws GSServiceException {
+	private Node parseDocument(InputStream inputstream) 
+		throws TransformerConfigurationException, IOException, SAXException {
+		
+		InputStreamReader reader = new InputStreamReader(inputstream, "ISO-8859-1");
+		BufferedReader buffRead = new BufferedReader(reader);
+		
+	    SAXTransformerFactory stf = 
+	      (SAXTransformerFactory) TransformerFactory.newInstance();
+	    TransformerHandler th = stf.newTransformerHandler();
+	    DOMResult dr = new DOMResult();
+	    th.setResult(dr);
+	    Parser parser = new Parser();
+	    parser.setContentHandler(th);
+	    parser.parse(new InputSource(buffRead));
+	    Node domRootNode = dr.getNode();
+	    domRootNode.normalize();
+		
+		buffRead.close();
+		reader.close();
+		inputstream.close();
+		
+		return domRootNode;
+		
+	}
+	
+	public Node parseBausteinDocument(String bausteinFileName) throws GSServiceException {
 		try {
 			
-			Matcher matcher = relPath.matcher(baustein);
-			baustein = matcher.replaceAll("");	
+			Matcher matcher = relPath.matcher(bausteinFileName);
+			bausteinFileName = matcher.replaceAll("");	
 			
-			ZipEntry entry = zf.getEntry(BAUSTEIN_PATH_2006 + baustein + SUFFIX); 
+			ZipEntry entry = zf.getEntry(BAUSTEIN_PATH_2006 + bausteinFileName + SUFFIX); 
 			if (entry == null)
-				entry = zf.getEntry(BAUSTEIN_PATH_2005 + baustein + SUFFIX);
+				entry = zf.getEntry(BAUSTEIN_PATH_2005 + bausteinFileName + SUFFIX);
 			if (entry == null)
-				entry = zf.getEntry(BAUSTEIN_PATH_DATENSCHUTZ + baustein + SUFFIX);
+				entry = zf.getEntry(BAUSTEIN_PATH_DATENSCHUTZ + bausteinFileName + SUFFIX);
 				
 			if (entry == null)
-				throw new GSServiceException("Feler beim Laden des Bausteins: " + baustein);
+				throw new GSServiceException("Feler beim Laden des Bausteins: " + bausteinFileName);
 			
+			return parseDocument(zf.getInputStream(entry));
 			
-			InputStream zipIS = zf.getInputStream(entry);
-			InputStreamReader reader = new InputStreamReader(zipIS, "ISO-8859-1");
-			BufferedReader buffRead = new BufferedReader(reader);
-			
-		    SAXTransformerFactory stf = 
-		      (SAXTransformerFactory) TransformerFactory.newInstance();
-		    TransformerHandler th = stf.newTransformerHandler();
-		    DOMResult dr = new DOMResult();
-		    th.setResult(dr);
-		    Parser parser = new Parser();
-		    parser.setContentHandler(th);
-		    parser.parse(new InputSource(buffRead));
-		    Node domRootNode = dr.getNode();
-		    domRootNode.normalize();
-			
-			buffRead.close();
-			reader.close();
-			zipIS.close();
-			
-			
-//			FileWriter fw = new FileWriter("test.xml");
-//			BufferedWriter write = new BufferedWriter(fw);
-//			write.write(xml);
-//			write.close();
-//			zipIS.close();
-			
-			
-			return domRootNode;
+		
 		} catch (Exception e) {
 			Logger.getLogger(ZIPGSSource.class).error("Fehler beim Parsen eines Bausteins.", e);
 			throw new GSServiceException("Fehler beim Parsen eines Bausteins (ZIP).", e);
@@ -168,6 +172,28 @@ public class ZIPGSSource implements IGSSource {
 					throw new GSServiceException("Gefaehrdung nicht gefunden: " + gefaehrdung, e3);
 				}
 			}
+		}
+	}
+
+	public Node parseMassnahmenDocument(String path) throws GSServiceException {
+		try {
+			InputStream stream = getMassnahmeAsStream(path);
+			
+//			InputStreamReader reader = new InputStreamReader(stream, "ISO-8859-1");
+//			BufferedReader buffRead2 = new BufferedReader(reader);
+//			String line;
+//			while ((line = buffRead2.readLine()) != null ) {
+//				System.out.println(line);
+//			}
+			
+			return parseDocument(stream);
+			
+		} catch (TransformerConfigurationException e) {
+			throw new GSServiceException("Fehler beim Parsen der Massnahme.", e);
+		} catch (IOException e) {
+			throw new GSServiceException("Fehler beim Parsen der Massnahme.", e);
+		} catch (SAXException e) {
+			throw new GSServiceException("Fehler beim Parsen der Massnahme.", e);
 		}
 	}
 	

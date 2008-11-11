@@ -19,7 +19,8 @@ import sernet.gs.service.GSServiceException;
  */
 public interface IGSSource {
 	
-	public Node parseDocument(String path) throws GSServiceException;
+	public Node parseBausteinDocument(String path) throws GSServiceException;
+	public Node parseMassnahmenDocument(String path) throws GSServiceException;
 	public InputStream getBausteinAsStream(String baustein) throws GSServiceException;
 	public InputStream getMassnahmeAsStream(String massnahme) throws GSServiceException;
 	public InputStream getGefaehrdungAsStream(String gefaehrdung) throws GSServiceException;

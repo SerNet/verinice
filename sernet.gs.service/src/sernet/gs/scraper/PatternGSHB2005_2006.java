@@ -52,11 +52,19 @@ public class PatternGSHB2005_2006 implements IGSPatterns {
 		" let $d := data($t)" +
 		" return <title>{$d}</title>";
 	
+	private static final String GET_VERANTWORTLICHE = "declare namespace html = \"http://www.w3.org/1999/xhtml\"; " +
+		"for $s in //html:span " +
+		"let $r := data($s) " +
+		"where contains($s/@class, \"gshbmassverantwortlichist\") " +
+		"return <role>{$r}</role>";
+
 	final Pattern standPat = Pattern.compile("(\\d{4})");
 	
-final Pattern baustPat = Pattern.compile("(B \\d+.\\d+)\\s+(\\w*.*)°(.*)");
+	final Pattern baustPat = Pattern.compile("(B \\d+.\\d+)\\s+(\\w*.*)°(.*)");
 	
 	final Pattern schichtPat = Pattern.compile("(\\d)\\.\\d+");
+
+
 
 	public String getGefName() {
 		return gefName;
@@ -89,5 +97,10 @@ final Pattern baustPat = Pattern.compile("(B \\d+.\\d+)\\s+(\\w*.*)°(.*)");
 	public Pattern getSchichtPat() {
 		return schichtPat;
 	}
+
+	public String getMassnahmeVerantwortlichePattern() {
+		return GET_VERANTWORTLICHE;
+	}
+
 	
 }
