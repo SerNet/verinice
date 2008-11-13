@@ -3,13 +3,15 @@
 <!-- 
 All of the Spring vodoo goes on in here. 
 
-Wiring for direct database access using hibernate from the RCP client.
+Variant:
+	Wiring for direct database access using hibernate from the RCP client.
 
 IST NICHT FÜR DER GEFINGERPOKEN UND MITTENGRABEN! ODERWISE IST EASY TO SCHNAPPEN DER SPRINGENWERK,
 BLOWENFUSEN UND POPPENCORKEN MIT SPITZENSPARKSEN.
 IST NICHT FÜR GEWERKEN BEI DUMMKOPFEN. DER RUBBERNECKEN SIGHTSEEREN KEEPEN DAS COTTONPICKEN 
 HÄNDER IN DAS POCKETS MUSS.
 ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
+
 -->
 
 <beans>
@@ -72,7 +74,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	  	<property name="personDao" ref="personDao"/>
 	</bean>
 	
-	<!-- Interceptor to keep hibernate session open duroing business method -->
+	<!-- Interceptor to keep hibernate session open during business method -->
 	<bean id="huiService" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="target"><ref bean="huiServiceTarget"/></property>
 		<property name="proxyInterfaces">
