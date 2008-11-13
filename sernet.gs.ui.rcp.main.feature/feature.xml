@@ -692,7 +692,7 @@ Public License instead of this License.  But first, please read
    </license>
 
    <url>
-      <update label="Verinice Updates und Features" url="http://www.verinice.org/Verinice-Update-Site"/>
+      <update label="Verinice Updates und Features" url="http://updates.verinice.org/pub/verinice/Verinice-Update-Site"/>
    </url>
 
    <plugin
