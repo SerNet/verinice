@@ -94,6 +94,9 @@ public class ImportGstoolAction extends Action {
 							public void beginTask(String name, int totalWork) {
 								monitor.beginTask(name, totalWork);
 							}
+							public void subTask(String name) {
+								monitor.subTask(name);
+							}
 						});
 					} catch (Exception e) {
 						ExceptionUtil.log(e, "Fehler beim Importieren.");

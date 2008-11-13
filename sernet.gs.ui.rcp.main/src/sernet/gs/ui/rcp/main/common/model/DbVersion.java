@@ -34,6 +34,7 @@ public class DbVersion {
 				 DbMigration migration = new MigrateDbTo0_92(this);
 				 migration.run(progress);
 			 }
+			 // TODO migration to 0.93 for roles into mnums
 
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Fehler beim Migrieren der Datenbank!");

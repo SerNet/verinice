@@ -186,7 +186,6 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 				&& (target instanceof IBSIStrukturElement
 						|| target instanceof LinkKategorie
 				)
-					&& !(target instanceof ITVerbund)
 					&& !target.equals(DNDItems.getItems().get(0))) { /*is same object*/
 			if (target instanceof LinkKategorie
 					&& ((LinkKategorie)target).getParent()

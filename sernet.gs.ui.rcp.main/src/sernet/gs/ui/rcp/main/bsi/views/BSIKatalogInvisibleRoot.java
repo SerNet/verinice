@@ -35,10 +35,11 @@ public class BSIKatalogInvisibleRoot {
 								PreferenceConstants.GSACCESS)
 						|| event.getProperty().equals(
 								PreferenceConstants.DSZIPFILE)
-								todo: aendern der pfade muss cache loeschen
+								// TODO chart "workload"
 					)
 
 					try {
+						BSIMassnahmenModel.flushCache();
 						WorkspaceJob job = new OpenCataloguesJob(Messages.BSIMassnahmenView_0);
 					    job.setUser(true);
 					    job.schedule();

@@ -63,8 +63,9 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 		boolean goahead = true;
 		boolean skipQuestion = false;
 		Iterator iterator = selection.iterator();
+		Object object;
 		while (iterator.hasNext()) {
-			if (iterator.next() instanceof ITVerbund) {
+			if ((object = iterator.next()) instanceof ITVerbund) {
 				if (!goahead)
 					return;
 				
@@ -72,10 +73,12 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 						.openQuestion(
 								(Shell) targetPart.getAdapter(Shell.class),
 								"IT-Verbund wirklich löschen?",
-								"Sie haben einen IT-Verbund zum Löschen markiert. "
+								"Sie haben den IT-Verbund " 
+								+ ((ITVerbund)object).getTitel() +
+								" zum Löschen markiert. "
 										+ "Das wird alle darin enthaltenen Objekte entfernen "
 										+ "(Server, Clients, Personen...)\n\n"
-										+ "Wirklich wirklich wirklich löschen?")) {
+										+ "Wirklich wirklich löschen, wirklich?")) {
 					skipQuestion = true;
 					goahead = false;
 					return;

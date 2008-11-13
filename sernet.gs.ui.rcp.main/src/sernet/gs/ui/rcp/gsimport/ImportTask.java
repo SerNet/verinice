@@ -10,10 +10,14 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.model.Baustein;
 import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.MbMassn;
 import sernet.gs.reveng.MbZeiteinheitenTxt;
+import sernet.gs.reveng.ModZobjBstMass;
+import sernet.gs.reveng.ModZobjBstMassId;
 import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.reveng.importData.GSVampire;
@@ -24,6 +28,7 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.CnAElementBuilder;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -36,7 +41,13 @@ public class ImportTask {
 	private IProgress monitor;
 	private GSVampire vampire;
 	private TransferData transferData;
-
+	
+	private List<MbZeiteinheitenTxt> zeiten;
+	private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
+	private List<CnATreeElement> alleZielobjekte = new ArrayList<CnATreeElement>();
+	private List<Person> allePersonen = new ArrayList<Person>();
+	
+	
 	// umsetzungs patterns in verinice
 	// leaving out "unbearbeitet" since this is the default:
 	private static final String[] UMSETZUNG_STATI_VN = new String[] {
@@ -65,7 +76,7 @@ public class ImportTask {
 
 	private void importZielobjekte() throws Exception {
 		List<ZielobjektTypeResult> zielobjekte = vampire.findZielobjektTypAll();
-		monitor.beginTask("Importiere Zielobjekte...", zielobjekte.size());
+		monitor.beginTask("Importiere Zielobjekte, Bausteine und Massnahmen...", zielobjekte.size());
 
 		// create all found ITVerbund first
 		List<ITVerbund> neueVerbuende = new ArrayList<ITVerbund>();
@@ -92,12 +103,58 @@ public class ImportTask {
 			CnATreeElement element = CnAElementBuilder.getInstance()
 					.buildAndSave(neueVerbuende.get(0), typeId);
 			if (element != null) {
+				// save element for later:
+				alleZielobjekte.add(element);
+				// aditionally save persons here:
+				if (element instanceof Person)
+					allePersonen.add((Person) element);
+				
 				transferData.transfer(element, result);
 				createBausteine(element, result.zielobjekt);
 			}
 			monitor.worked(1);
 		}
+		
+		importVerknuepfungen();
+		
 		monitor.done();
+	}
+
+	private void importVerknuepfungen() {
+		monitor.beginTask("Verknüpfe verantwortliche Ansprechpartner mit Massnahmen...", alleMassnahmen.size());
+		for (ModZobjBstMass obm : alleMassnahmen.keySet()) {
+			monitor.worked(1);
+			monitor.subTask(alleMassnahmen.get(obm).getTitel());
+			// transferiere individuell verknüpfte verantowrtliche in massnahmen (TAB "Verantwortlich" im GSTOOL):
+			Set<NZielobjekt> personenSrc = vampire.findVerantowrtlicheMitarbeiterForMassnahme(obm.getId());
+			if (personenSrc != null && personenSrc.size()>0) {
+				List<Person> dependencies = findPersonen(personenSrc);
+				if (dependencies.size() != personenSrc.size())
+					Logger.getLogger(this.getClass()).debug("ACHTUNG: Es wurde mindestens eine Person für die " +
+							"zu verknüpfenden Verantwortlichen nicht gefunden.");
+				MassnahmenUmsetzung dependantMassnahme = alleMassnahmen.get(obm);
+				for (Person personToLink : dependencies) {
+					Logger.getLogger(this.getClass()).debug("Verknüpfe Massnahme " + dependantMassnahme.getTitel() +
+							" mit Person " + personToLink.getTitel()
+							);
+					dependantMassnahme.addUmsetzungDurch(personToLink);
+				}
+			}
+		}
+	}
+
+	private List<Person> findPersonen(Set<NZielobjekt> personen) {
+		List<Person> result = new ArrayList<Person>();
+		alleZielobjekte: for (NZielobjekt nzielobjekt : personen) {
+			for (Person person : allePersonen) {
+				if (person.getKuerzel().equals(nzielobjekt.getKuerzel())
+						&& person.getErlaeuterung().equals(nzielobjekt.getBeschreibung())) {
+					result.add(person);
+					continue alleZielobjekte;
+				}
+			}
+		}
+		return result;
 	}
 
 	private void createBausteine(CnATreeElement element, NZielobjekt zielobjekt)
@@ -166,9 +223,16 @@ public class ImportTask {
 		massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_UMSETZUNGBIS, 
 				parseDate(vorlage.obm.getUmsDatBis()));
 		
-		
-		List<MbZeiteinheitenTxt> zeiten = vampire.findZeiteinheitenTxtAll();
+		// transfer kosten:
+		if (zeiten == null)
+			zeiten = vampire.findZeiteinheitenTxtAll();
 		ImportKostenUtil.importKosten(massnahmenUmsetzung, vorlage, zeiten);
+		
+		// remember massnahme for later:
+		if (alleMassnahmen == null)
+			alleMassnahmen = new HashMap<ModZobjBstMass, MassnahmenUmsetzung>();
+		alleMassnahmen.put(vorlage.obm, massnahmenUmsetzung);
+		
 	}
 
 	private void setUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung,
@@ -217,6 +281,7 @@ public class ImportTask {
 
 	private void transferBaustein(BausteinUmsetzung bausteinUmsetzung,
 			BausteineMassnahmenResult queryresult) {
+		monitor.subTask(bausteinUmsetzung.getTitel());
 		bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERLAEUTERUNG,
 				queryresult.zoBst.getBegruendung());
 		bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM,

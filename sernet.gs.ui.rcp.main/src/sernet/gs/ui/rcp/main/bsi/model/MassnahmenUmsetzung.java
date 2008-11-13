@@ -170,6 +170,11 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	public String  getUmsetzungDurch( ) {
 		return getVerantwortliche(P_UMSETZUNGDURCH_LINK, P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
 	}
+	
+	public void addUmsetzungDurch(Person person) {
+		PropertyType propertyType = entityType.getPropertyType(P_UMSETZUNGDURCH_LINK);
+		getEntity().createNewProperty(propertyType, person.getEntity().getDbId().toString());
+	}
 
 	/**
 	 * Go through linked persons of this target object or parents.

@@ -91,6 +91,7 @@ public class BSIMassnahmenModel {
 
 			scrape = new GSScraper(gsSource, new PatternGSHB2005_2006());
 			scrape.setCacheDir(CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache");
+			
 			Logger.getLogger(BSIMassnahmenModel.class).debug("Setting GS-Cache to " + scrape.getCacheDir());
 			mon.beginTask(Messages.BSIMassnahmenModel_3, 5);
 			List<Baustein> alleBst = new ArrayList<Baustein>();
@@ -120,6 +121,8 @@ public class BSIMassnahmenModel {
 				try {
 					ZIPGSSource dsSource = new ZIPGSSource(dsPath);
 					dsScrape = new GSScraper(dsSource, new PatternBfDI2008());
+					dsScrape.setCacheDir(CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache");
+					
 					Baustein dsBaustein = scrapeDatenschutzBaustein();
 					
 					searchDataPrivacyModule: for (Iterator iterator = alleBst.iterator(); iterator.hasNext();) {
@@ -207,6 +210,12 @@ public class BSIMassnahmenModel {
 			gefaehrdung = dsScrape.getGefaehrdung(url, stand);
 		}
 		return gefaehrdung;
+	}
+
+	public static void flushCache() {
+		scrape.flushCache();
+		if (dsScrape!= null)
+			dsScrape.flushCache();
 	}
 
 }

@@ -127,10 +127,6 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		
-		// TODO das ist vermutlich überflüssig..
-		// risikoMassnahmenUmsetzung.setNumber(textNumber.getText());
-		// risikoMassnahmenUmsetzung.setName(textName.getText());
-
 		risikoMassnahmenUmsetzung.getRisikoMassnahme()
 				.setNumber(textNumber.getText());
 		risikoMassnahmenUmsetzung.getRisikoMassnahme().setName(textName.getText());

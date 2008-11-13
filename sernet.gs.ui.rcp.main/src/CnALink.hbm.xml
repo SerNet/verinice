@@ -31,7 +31,8 @@
 			column="DEPENDENCY_ID"
 			not-null="true"
 			insert="false"
-			update="false"/>
+			update="false"
+			fetch="join"/>
 		
 	</class>
 </hibernate-mapping>

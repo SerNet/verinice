@@ -124,6 +124,10 @@ implements IBSIStrukturElement {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
 	}
 	
+	public String getErlaeuterung() {
+		return getEntity().getSimpleValue(PROP_ERLAEUTERUNG);
+	}
+	
 	public void setKuerzel(String name) {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
 	}

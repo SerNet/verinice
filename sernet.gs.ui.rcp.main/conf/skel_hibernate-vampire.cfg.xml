@@ -42,7 +42,8 @@
 		<mapping resource="sernet/gs/reveng/MbMassn.hbm.xml" />
 		<mapping resource="sernet/gs/reveng/MbZielobjSubtypTxt.hbm.xml" />
 		<mapping resource="sernet/gs/reveng/MbZeiteinheitenTxt.hbm.xml" />
-
+		<mapping
+			resource="sernet/gs/reveng/ModZobjBstMassMitarb.hbm.xml" />
 	</session-factory>
 
 </hibernate-configuration>
