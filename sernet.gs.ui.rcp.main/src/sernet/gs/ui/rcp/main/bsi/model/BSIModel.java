@@ -238,5 +238,12 @@ public class BSIModel extends CnATreeElement
 			}
 		}
 	}
-
+	
+	public List<CnALink> getAllLinks() {
+		List<CnALink> result = new ArrayList<CnALink>();
+		for (CnATreeElement element : getAllElements()) {
+			result.addAll(element.getLinksDown());
+		}
+		return result;
+	}
 }

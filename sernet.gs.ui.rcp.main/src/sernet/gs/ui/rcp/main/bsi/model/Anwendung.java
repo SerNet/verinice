@@ -10,6 +10,7 @@ import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.PropertyType;
 
 public class Anwendung extends CnATreeElement 
 	implements IBSIStrukturElement {
@@ -28,7 +29,9 @@ public class Anwendung extends CnATreeElement
 
 	public static final String PROP_KUERZEL = "anwendung_kuerzel"; //$NON-NLS-1$
 
-	public static final String PROP_PERSBEZ = "anwendung_persbez"; //$NON-NLS-1$
+	public static final String PROP_PERSBEZ 		= "anwendung_persbez"; //$NON-NLS-1$
+	public static final String PROP_PERSBEZ_JA 		= "anwendung_persbez_1"; //$NON-NLS-1$
+	public static final String PROP_PERSBEZ_NEIN 	= "anwendung_persbez_2"; //$NON-NLS-1$
 	@Deprecated
 	public static final String PROP_BENUTZER_OLD = "anwendung_benutzer"; //$NON-NLS-1$
 	@Deprecated
@@ -82,6 +85,11 @@ public class Anwendung extends CnATreeElement
 	
 	public void setKuerzel(String name) {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+	}
+	
+	public void setPersonenbezogen(boolean perso) {
+		PropertyType type = entityType.getPropertyType(PROP_PERSBEZ);
+		getEntity().setSimpleValue(type, perso ? PROP_PERSBEZ_JA : PROP_PERSBEZ_NEIN);
 	}
 	
 	

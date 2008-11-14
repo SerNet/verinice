@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
-<product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="0.7.0" useFeatures="true">
+<product name="verinice" id="sernet.gs.ui.rcp.main.product" version="0.7.0" useFeatures="true">
 
    <aboutInfo>
       <image path="icons/product_lg.gif"/>

@@ -6,8 +6,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MbRolleTxt;
 import sernet.gs.reveng.NZielobjekt;
+import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
@@ -16,6 +18,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
 import sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
@@ -23,6 +26,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Raum;
+import sernet.gs.ui.rcp.main.bsi.model.Schutzbedarf;
 import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.ServerKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
@@ -153,6 +157,45 @@ public class TransferData {
 		element.setTitel(result.zielobjekt.getName());
 		element.setKuerzel(result.zielobjekt.getKuerzel());
 		element.setErlaeuterung(result.zielobjekt.getBeschreibung());
+	}
+
+	public void transferSchutzbedarf(CnATreeElement ziel, NZobSb schubeda) {
+		if (ziel.getSchutzbedarfProvider() == null)
+			return;
+		ISchutzbedarfProvider zielElmt = ziel.getSchutzbedarfProvider();
+		
+		MSchutzbedarfkategTxt vertr = vampire.findSchutzbedarfNameForId(schubeda.getZsbVertrSbkId());
+		if (vertr != null) {
+			zielElmt.setVertraulichkeit(translateSchutzbedarf(vertr.getName()));
+			zielElmt.setVertraulichkeitDescription(schubeda.getZsbVertrBegr());
+		}
+		
+		MSchutzbedarfkategTxt verfu = vampire.findSchutzbedarfNameForId(schubeda.getZsbVerfuSbkId());
+		if (verfu != null) {
+			zielElmt.setVerfuegbarkeit(translateSchutzbedarf(verfu.getName()));
+			zielElmt.setVerfuegbarkeitDescription(schubeda.getZsbVerfuBegr());
+		}
+		
+		MSchutzbedarfkategTxt integ = vampire.findSchutzbedarfNameForId(schubeda.getZsbIntegSbkId());
+		if (integ!= null) {
+			zielElmt.setIntegritaet(translateSchutzbedarf(integ.getName()));
+			zielElmt.setIntegritaetDescription(schubeda.getZsbIntegBegr());
+		}
+		
+		if (schubeda.getZsbPersDaten() == 1 && ziel instanceof Anwendung) {
+			Anwendung anwendung = (Anwendung) ziel;
+			anwendung.setPersonenbezogen(true);
+		}
+	}
+
+	private int translateSchutzbedarf(String name) {
+		if (name.equals("normal"))
+			return Schutzbedarf.NORMAL;
+		if (name.equals("hoch"))
+			return Schutzbedarf.HOCH;
+		if (name.equals("sehr hoch"))
+			return Schutzbedarf.SEHRHOCH;
+		return Schutzbedarf.UNDEF;
 	}
 
 }

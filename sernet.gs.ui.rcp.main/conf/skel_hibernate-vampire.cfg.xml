@@ -47,6 +47,10 @@
 		<mapping resource="sernet/gs/reveng/MbRolleTxt.hbm.xml" />
 		<mapping resource="sernet/gs/reveng/NZielobjektRollen.hbm.xml" />
 		<mapping resource="sernet/gs/reveng/NZielobjZielobj.hbm.xml" />
+		<mapping resource="sernet/gs/reveng/NZobSb.hbm.xml" />
+		<mapping
+			resource="sernet/gs/reveng/MSchutzbedarfkategTxt.hbm.xml" />
+			
 	</session-factory>
 
 </hibernate-configuration>

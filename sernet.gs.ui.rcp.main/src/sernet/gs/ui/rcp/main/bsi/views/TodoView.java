@@ -46,7 +46,7 @@ public class TodoView extends ViewPart {
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.todoview"; //$NON-NLS-1$
 
-	private class TodoLabelProvider extends LabelProvider implements ITableLabelProvider {
+	private static class TodoLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 		private SimpleDateFormat dateFormat =  new SimpleDateFormat("dd.MM.yy, EE"); //$NON-NLS-1$
 		
@@ -81,7 +81,7 @@ public class TodoView extends ViewPart {
 		}
 	}
 	
-	private class TodoSorter extends ViewerSorter {
+	private static class TodoSorter extends ViewerSorter {
 		public boolean isSorterProperty(Object arg0, String arg1) {
 			return arg1.equals("_date"); //$NON-NLS-1$
 		}

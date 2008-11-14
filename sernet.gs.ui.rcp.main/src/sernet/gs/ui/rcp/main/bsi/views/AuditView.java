@@ -48,7 +48,7 @@ public class AuditView extends ViewPart {
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.auditview"; //$NON-NLS-1$
 
 
-	private class AuditLabelProvider extends LabelProvider implements ITableLabelProvider {
+	private static class AuditLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 		private SimpleDateFormat dateFormat =  new SimpleDateFormat("dd.MM.yy, EE"); //$NON-NLS-1$
 		
@@ -106,7 +106,7 @@ public class AuditView extends ViewPart {
 	};
 	
 	
-	private class AuditSorter extends ViewerSorter {
+	private static class AuditSorter extends ViewerSorter {
 		public boolean isSorterProperty(Object arg0, String arg1) {
 			return arg1.equals("_date"); //$NON-NLS-1$
 		}

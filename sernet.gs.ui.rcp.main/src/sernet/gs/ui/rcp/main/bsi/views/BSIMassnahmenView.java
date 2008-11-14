@@ -42,9 +42,17 @@ import sernet.gs.ui.rcp.main.bsi.filter.GefaehrdungenFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
 
+/**
+ * View for parsed BSI IT-Grundschutz catalogues.
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public class BSIMassnahmenView extends ViewPart {
 	
-	private class KapitelSorter extends ViewerSorter {
+	private static class KapitelSorter extends ViewerSorter {
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof Massnahme
@@ -52,13 +60,13 @@ public class BSIMassnahmenView extends ViewPart {
 				// sort chapters correctly by converting 2.45, 2.221, 3.42
 				// to 2045, 2221, 3024
 				
-				return (new Integer(((Massnahme) e1).getKapitelValue())
+				return (Integer.valueOf(((Massnahme) e1).getKapitelValue())
 					   .compareTo( ((Massnahme) e2).getKapitelValue()));
 			}
 			
 			if (e1 instanceof Gefaehrdung
 					&& e2 instanceof Gefaehrdung) {
-				return (new Integer(((Gefaehrdung) e1).getKapitelValue())
+				return (Integer.valueOf(((Gefaehrdung) e1).getKapitelValue())
 					.compareTo( ((Gefaehrdung) e2).getKapitelValue()));
 				
 			}
@@ -67,7 +75,7 @@ public class BSIMassnahmenView extends ViewPart {
 					&& e2 instanceof Baustein) {
 				// sort chapters correctly by converting 2.45, 2.221, 3.42
 				// to 2045, 2221, 3024
-				return (new Integer(((Baustein) e1).getKapitelValue())
+				return (Integer.valueOf(((Baustein) e1).getKapitelValue())
 					   .compareTo( ((Baustein) e2).getKapitelValue()));
 			}
 			
@@ -75,7 +83,7 @@ public class BSIMassnahmenView extends ViewPart {
 		}
 	}
 	
-	class ViewContentProvider implements IStructuredContentProvider,
+	static class ViewContentProvider implements IStructuredContentProvider,
 			ITreeContentProvider {
 
 		public void dispose() {
@@ -113,7 +121,7 @@ public class BSIMassnahmenView extends ViewPart {
 		}
 	}
 
-	class ViewLabelProvider extends LabelProvider {
+	static class ViewLabelProvider extends LabelProvider {
 
 		public Image getImage(Object obj) {
 			

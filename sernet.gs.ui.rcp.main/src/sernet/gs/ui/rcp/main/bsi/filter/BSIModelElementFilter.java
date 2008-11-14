@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 
 
@@ -52,8 +53,14 @@ public class BSIModelElementFilter extends ViewerFilter {
 				&& pattern[0] /*filter bausteinzuordnungen*/) {
 			return false;
 		}
+		
 		if (element instanceof MassnahmenUmsetzung
 				&& pattern[1] /*filter massnahmenumsetzungen*/) {
+			return false;
+		}
+		
+		if (element instanceof LinkKategorie
+				&& pattern[2] /*filter links*/) {
 			return false;
 		}
 		

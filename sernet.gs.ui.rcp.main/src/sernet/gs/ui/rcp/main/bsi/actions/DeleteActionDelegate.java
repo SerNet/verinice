@@ -69,6 +69,8 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 				if (!goahead)
 					return;
 				
+				
+				
 				if (!MessageDialog
 						.openQuestion(
 								(Shell) targetPart.getAdapter(Shell.class),
@@ -112,6 +114,11 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 											&& CnAElementFactory
 													.getCurrentModel()
 													.getItverbuende().size() < 2) {
+										ExceptionUtil.log(new Exception("Letzter IT-Verbund kann nicht gelöscht werden.") , 
+												"Sie haben versucht, den letzten IT-Verbund zu löschen. " +
+												"Es muss immer ein IT-Verbund in der Datenbank verbleiben. " +
+												"Wenn Sie diesen IT-Verbund löschen möchten, legen Sie zunächst einen neuen, leeren " +
+												"IT-Verbund an.");
 										return;
 									}
 

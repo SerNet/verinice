@@ -53,7 +53,7 @@ class CnAElementByTitelSorter extends ViewerSorter {
 				// to 2045, 2221, 3024
 				int[] kap1 = ((MassnahmenUmsetzung) e1).getKapitelValue();
 				int[] kap2 = ((MassnahmenUmsetzung) e2).getKapitelValue();
-				return (new Integer(kap1[0] * 1000 + kap1[1])
+				return (Integer.valueOf(kap1[0] * 1000 + kap1[1])
 						.compareTo((kap2[0] * 1000 + kap2[1])));
 			}
 
@@ -64,7 +64,7 @@ class CnAElementByTitelSorter extends ViewerSorter {
 				// to 2045, 2221, 3024
 				int[] kap1 = ((BausteinUmsetzung) e1).getKapitelValue();
 				int[] kap2 = ((BausteinUmsetzung) e2).getKapitelValue();
-				return (new Integer(kap1[0] * 1000 + kap1[1])
+				return (Integer.valueOf(kap1[0] * 1000 + kap1[1])
 						.compareTo((kap2[0] * 1000 + kap2[1])));
 			}
 			

@@ -92,7 +92,7 @@ public class BSIModelFilterDialog extends FilterDialog {
 		this.objektLebenszyklus = objektLebenszyklus;
 		this.filterAusblenden = filterAusblenden;
 		if (this.filterAusblenden == null)
-			this.filterAusblenden = new boolean[] {false, false};
+			this.filterAusblenden = new boolean[] {false, false, false};
 		this.tagPattern = tags;
 		
 	}
@@ -233,6 +233,19 @@ private void createAusblendenCheckboxes(Group parent) {
 					filterAusblenden[1] = true;
 				else
 					filterAusblenden[1] = false;
+			}
+		});
+		
+		final Button button3 = new Button(parent, SWT.CHECK);
+		button3.setText("Verknüpfungen");
+		button3.setSelection(filterAusblenden[2]);
+		button3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (button3.getSelection())
+					filterAusblenden[2] = true;
+				else
+					filterAusblenden[2] = false;
 			}
 		});
 		

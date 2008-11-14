@@ -143,10 +143,12 @@ public class BausteinUmsetzung extends CnATreeElement {
 				case 'B':
 					// reduzieren auf A:
 					erreichteStufe = 'A';
+					break;
 				case 'C':
 					// reduzieren auf B:
 					if (erreichteStufe != 'A')
 						erreichteStufe = 'B';
+					break;
 				default:
 					// change nothing (Z nicht umgesetzt, optional)	
 				}

@@ -8,18 +8,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.MbMassn;
 import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.ModZobjBstMassId;
 import sernet.gs.reveng.NZielobjekt;
+import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
@@ -91,7 +94,7 @@ public class ImportTask {
 		CnAElementHome.getInstance().startApplicationTransaction();
 		
 		List<ZielobjektTypeResult> zielobjekte = vampire.findZielobjektTypAll();
-		monitor.beginTask("Importiere Zielobjekte, Bausteine und Massnahmen...", zielobjekte.size());
+		monitor.beginTask("Lese Zielobjekte, Bausteine und Massnahmen...", zielobjekte.size());
 
 		// create all found ITVerbund first
 		List<ITVerbund> neueVerbuende = new ArrayList<ITVerbund>();
@@ -136,12 +139,38 @@ public class ImportTask {
 			monitor.worked(1);
 		}
 		
+		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
 		CnAElementHome.getInstance().endApplicationTransaction();
 		
+		
+		CnAElementHome.getInstance().startApplicationTransaction();
 		importMassnahmenVerknuepfungen();
+		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
+		CnAElementHome.getInstance().endApplicationTransaction();
+
+		CnAElementHome.getInstance().startApplicationTransaction();
 		importZielobjektVerknüpfungen();
+		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
+		CnAElementHome.getInstance().endApplicationTransaction();
+		
+		CnAElementHome.getInstance().startApplicationTransaction();
+		importSchutzbedarf();
+		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
+		CnAElementHome.getInstance().endApplicationTransaction();
 		
 		monitor.done();
+	}
+
+	private void importSchutzbedarf() {
+		monitor.beginTask("Importiere Schutzbedarf für alle Zielobjekte...", alleZielobjekte.size());
+		Set<Entry<NZielobjekt, CnATreeElement>> alleZielobjekteEntries = alleZielobjekte.entrySet();
+		for (Entry<NZielobjekt, CnATreeElement> entry : alleZielobjekteEntries) {
+			List<NZobSb> schutzbedarf = vampire.findSchutzbedarfByZielobjekt(entry.getKey());
+			for (NZobSb schubeda : schutzbedarf) {
+				transferData.transferSchutzbedarf(entry.getValue(), schubeda);
+			}
+		}
+			
 	}
 
 	private void importZielobjektVerknüpfungen() {
@@ -155,19 +184,21 @@ public class ImportTask {
 					monitor.subTask(dependant.getTitel());
 					CnATreeElement dependencyElement = findZielobjektFor(dependency);
 					if (dependencyElement == null) {
-						Logger.getLogger(this.getClass()).debug("Kein Ziel gefunden für Verknüpfung " + dependency.getName());
+						Logger.getLogger(this.getClass()).debug("Kein Ziel gefunden für Verknüpfung "
+								+ dependency.getName());
 						continue;
 					}
 					Logger.getLogger(this.getClass()).debug("Neue Verknüpfung von " + dependant.getTitel() +
 							" zu " + dependencyElement.getTitel());
 					
 					// verinice models dependencies DOWN, not UP as the gstool.
-					// therefore we need to turn things around, except for persons and networks 
+					// therefore we need to turn things around, except for persons, networks and itverbund 
 					// (look at it in the tree and it will make sense):
 					CnATreeElement from;
 					CnATreeElement to;
 					if (dependencyElement instanceof Person
-							|| dependencyElement instanceof NetzKomponente) {
+							|| dependencyElement instanceof NetzKomponente
+							|| dependant instanceof ITVerbund) {
 						from = dependant;
 						to = dependencyElement;
 					}

@@ -114,12 +114,15 @@ Template:
 
 			<huiproperty
 				name="Begründung Vertraulichkeit"
+				inputtype="text"
 				id="raum_vertraulichkeit_begruendung" />
 			<huiproperty
 				name="Begründung Verfügbarkeit"
+				inputtype="text"
 				id="raum_verfuegbarkeit_begruendung" />
 			<huiproperty
 				name="Begründung Integrität"
+				inputtype="text"
 				id="raum_integritaet_begruendung" />
 				
 			
@@ -301,12 +304,15 @@ Template:
 
 			<huiproperty
 				name="Begründung Vertraulichkeit"
+				inputtype="text"
 				id="server_vertraulichkeit_begruendung" />
 			<huiproperty
 				name="Begründung Verfügbarkeit"
+				inputtype="text"
 				id="server_verfuegbarkeit_begruendung" />
 			<huiproperty
 				name="Begründung Integrität"
+				inputtype="text"
 				id="server_integritaet_begruendung" />
 
 		</huipropertygroup>        
@@ -484,12 +490,15 @@ Template:
 
 			<huiproperty
 				name="Begründung Vertraulichkeit"
+				inputtype="text"
 				id="tkkomponente_vertraulichkeit_begruendung" />
 			<huiproperty
 				name="Begründung Verfügbarkeit"
+				inputtype="text"
 				id="tkkomponente_verfuegbarkeit_begruendung" />
 			<huiproperty
 				name="Begründung Integrität"
+				inputtype="text"
 				id="tkkomponente_integritaet_begruendung" />
 
 		</huipropertygroup>
@@ -970,12 +979,15 @@ Template:
 
 			<huiproperty
 				name="Begründung Vertraulichkeit"
+				inputtype="text"
 				id="client_vertraulichkeit_begruendung" />
 			<huiproperty
 				name="Begründung Verfügbarkeit"
+				inputtype="text"
 				id="client_verfuegbarkeit_begruendung" />
 			<huiproperty
 				name="Begründung Integrität"
+				inputtype="text"
 				id="client_integritaet_begruendung" />
 
 		</huipropertygroup>
@@ -1176,12 +1188,15 @@ Template:
 
 			<huiproperty
 				name="Begründung Vertraulichkeit"
+				inputtype="text"
 				id="sonstit_vertraulichkeit_begruendung" />
 			<huiproperty
 				name="Begründung Verfügbarkeit"
+				inputtype="text"
 				id="sonstit_verfuegbarkeit_begruendung" />
 			<huiproperty
 				name="Begründung Integrität"
+				inputtype="text"
 				id="sonstit_integritaet_begruendung" />
 
 		</huipropertygroup>
@@ -1490,7 +1505,7 @@ Template:
 					id="gebaeude_vertraulichkeit_normal"
 					name="Normal" />
 				<option
-					id="gebauede_vertraulichkeit_hoch"
+					id="gebaeude_vertraulichkeit_hoch"
 					name="Hoch" />
 				<option
 					id="gebaeude_vertraulichkeit_sehrhoch"
@@ -1527,12 +1542,15 @@ Template:
 
 			<huiproperty
 				name="Begründung Vertraulichkeit"
+				inputtype="text"
 				id="gebaeude_vertraulichkeit_begruendung" />
 			<huiproperty
 				name="Begründung Verfügbarkeit"
+				inputtype="text"
 				id="gebaeude_verfuegbarkeit_begruendung" />
 			<huiproperty
 				name="Begründung Integrität"
+				inputtype="text"
 				id="gebaeude_integritaet_begruendung" />
 
 		</huipropertygroup>
@@ -2031,12 +2049,15 @@ Template:
 
 			<huiproperty
 				name="Begründung Vertraulichkeit"
+				inputtype="text"
 				id="anwendung_vertraulichkeit_begruendung" />
 			<huiproperty
 				name="Begründung Verfügbarkeit"
+				inputtype="text"
 				id="anwendung_verfuegbarkeit_begruendung" />
 			<huiproperty
 				name="Begründung Integrität"
+				inputtype="text"
 				id="anwendung_integritaet_begruendung" />
 
 		</huipropertygroup>

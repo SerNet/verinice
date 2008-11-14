@@ -58,12 +58,12 @@ public class CnAElementHome {
 
 	private Session session;
 
-	private Transaction applicationTransaction;
+	private Transaction tx;
+	private boolean applicationTransactionPresent = false;
 
 	private CnAElementHome() {
 		// singleton
 	}
-	
 
 	public static CnAElementHome getInstance() {
 		if (instance == null) {
@@ -129,8 +129,7 @@ public class CnAElementHome {
 		synchronized (mutex) {
 			Logger.getLogger(this.getClass()).debug(
 					"Saving new element: " + element);
-			Transaction tx = null;
-			if (applicationTransaction != null) {
+			if (!applicationTransactionPresent) {
 				try {
 					tx = session.beginTransaction();
 					session.save(element);
@@ -138,20 +137,17 @@ public class CnAElementHome {
 					tx.commit();
 				} catch (Exception e) {
 					Logger.getLogger(this.getClass()).error(e);
-					if (tx != null)
-						tx.rollback();
+					
 					throw e;
 				}
-			}
-			else {
+			} else {
 				try {
 					session.save(element);
 					logChange(element, ChangeLogEntry.INSERT);
 				} catch (Exception e) {
 					Logger.getLogger(this.getClass()).error(e);
-					if (applicationTransaction != null)
-						applicationTransaction.rollback();
-					applicationTransaction = null;
+					rollbackApplicationTransaction();
+					tx = null;
 					throw e;
 				}
 			}
@@ -195,22 +191,35 @@ public class CnAElementHome {
 
 			Logger.getLogger(this.getClass()).debug(
 					"Deleting element: " + element);
-			Transaction tx = null;
 			try {
-				tx = session.beginTransaction();
+				if (!applicationTransactionPresent)
+					tx = session.beginTransaction();
 				session.delete(element);
 				if (analysisLists != null)
 					session.delete(analysisLists);
 				logChange(element, ChangeLogEntry.DELETE);
-				tx.commit();
+				if (!applicationTransactionPresent)
+					tx.commit();
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
-				if (tx != null)
-					tx.rollback();
+				rollbackApplicationTransaction();
 				throw e;
 			}
 
 		}
+	}
+
+	private void rollbackApplicationTransaction() {
+		if (tx != null) {
+			try {
+				tx.rollback();
+			} catch (Exception e) {
+				Logger.getLogger(this.getClass()).error(e);
+			}
+
+		}
+		tx = null;
+		applicationTransactionPresent = false;
 	}
 
 	public void remove(CnALink element) throws Exception {
@@ -218,16 +227,16 @@ public class CnAElementHome {
 
 			Logger.getLogger(this.getClass()).debug(
 					"Deleting element: " + element);
-			Transaction tx = null;
 			try {
-				tx = session.beginTransaction();
+				if (!applicationTransactionPresent)
+					tx = session.beginTransaction();
 				session.delete(element);
 				logChange(element.getDependant(), ChangeLogEntry.DELETE);
-				tx.commit();
+				if (!applicationTransactionPresent)
+					tx.commit();
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
-				if (tx != null)
-					tx.rollback();
+				rollbackApplicationTransaction();
 				throw e;
 			}
 
@@ -238,22 +247,21 @@ public class CnAElementHome {
 		synchronized (mutex) {
 			Logger.getLogger(this.getClass()).debug(
 					"Updating element " + element.getTitel());
-			Transaction tx = null;
 			try {
-				tx = session.beginTransaction();
+				if (!applicationTransactionPresent)
+					tx = session.beginTransaction();
 				session.persist(element);
 				logChange(element, ChangeLogEntry.UPDATE);
-				tx.commit();
+				if (!applicationTransactionPresent)
+					tx.commit();
 			} catch (StaleObjectStateException se) {
 				Logger.getLogger(this.getClass()).error(se);
-				if (tx != null)
-					tx.rollback();
+				rollbackApplicationTransaction();
 				refresh(element);
 				throw se;
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
-				if (tx != null)
-					tx.rollback();
+				rollbackApplicationTransaction();
 				throw e;
 			}
 		}
@@ -264,24 +272,23 @@ public class CnAElementHome {
 		synchronized (mutex) {
 			Logger.getLogger(this.getClass()).debug(
 					"Updating multiple elements");
-			Transaction tx = null;
 			try {
-				tx = session.beginTransaction();
+				if (!applicationTransactionPresent)
+					tx = session.beginTransaction();
 				for (CnATreeElement element : elements) {
 					session.persist(element);
 					logChange(element, ChangeLogEntry.UPDATE);
 				}
-				tx.commit();
+				if (!applicationTransactionPresent)
+					tx.commit();
 			} catch (StaleObjectStateException se) {
 				Logger.getLogger(this.getClass()).error(se);
-				if (tx != null)
-					tx.rollback();
+				rollbackApplicationTransaction();
 				refresh(elements);
 				throw se;
 			} catch (RuntimeException re) {
 				Logger.getLogger(this.getClass()).error(re);
-				if (tx != null)
-					tx.rollback();
+				rollbackApplicationTransaction();
 				throw re;
 			}
 
@@ -347,11 +354,13 @@ public class CnAElementHome {
 	public BSIModel loadModel(IProgress nullMonitor) throws Exception {
 		Logger.getLogger(this.getClass()).debug("Loading model instance");
 
-		Transaction transaction = session.beginTransaction();
+		if (!applicationTransactionPresent)
+			tx = session.beginTransaction();
 		nullMonitor.setTaskName("Lade Grundschutz Modell...");
 		Criteria criteria = session.createCriteria(BSIModel.class);
 		List models = criteria.list();
-		transaction.commit();
+		if (!applicationTransactionPresent)
+			tx.commit();
 
 		for (Iterator iter = models.iterator(); iter.hasNext();) {
 			Object o = iter.next();
@@ -415,16 +424,16 @@ public class CnAElementHome {
 
 		synchronized (mutex) {
 			Logger.getLogger(this.getClass()).debug("Saving new link: " + link);
-			Transaction tx = null;
 			try {
-				tx = session.beginTransaction();
+				if (!applicationTransactionPresent)
+					tx = session.beginTransaction();
 				session.save(link);
 				logChange(link.getDependant(), ChangeLogEntry.INSERT);
-				tx.commit();
+				if (!applicationTransactionPresent)
+					tx.commit();
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
-				if (tx != null)
-					tx.rollback();
+				rollbackApplicationTransaction();
 				throw e;
 			}
 		}
@@ -446,35 +455,31 @@ public class CnAElementHome {
 		return session.get(clazz, id);
 	}
 
-
-
-	public synchronized  void endApplicationTransaction() throws Exception {
+	public synchronized void endApplicationTransaction()  {
 		if (instance != null && instance.session != null) {
 			try {
-				applicationTransaction.commit();
-				applicationTransaction = null;
-				does this work?
+				tx.commit();
+				tx = null;
+				applicationTransactionPresent = false;
 			} catch (Exception e) {
 				Logger.getLogger(CnAElementHome.class).error(e);
-				if (applicationTransaction != null) 
-					applicationTransaction.rollback();
-				applicationTransaction = null;
-				throw e;
+				rollbackApplicationTransaction();
 			}
 		}
 	}
 
-	public synchronized  void startApplicationTransaction() throws Exception {
+	public synchronized void startApplicationTransaction() {
 		if (instance != null && instance.session != null) {
 			try {
-				applicationTransaction = session.beginTransaction();
+				tx = session.beginTransaction();
+				applicationTransactionPresent = true;
 			} catch (Exception e) {
 				Logger.getLogger(CnAElementHome.class).error(e);
-				applicationTransaction = null;
-				throw e;
+				applicationTransactionPresent = false;
+				tx = null;
 			}
 		}
-		
+
 	}
 
 	// public Timestamp getCurrentTime() {

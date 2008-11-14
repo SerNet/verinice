@@ -67,7 +67,7 @@ public class RisikoMassnahmenUmsetzungTransfer extends ByteArrayTransfer {
 	 * platform-specific one.
 	 */
 	public void javaToNative(Object data, TransferData transferData) {
-		if (!(data instanceof RisikoMassnahmenUmsetzung))
+		if (!(data instanceof RisikoMassnahmenUmsetzung[]))
 			return;
 		RisikoMassnahmenUmsetzung[] items = (RisikoMassnahmenUmsetzung[]) data;
 

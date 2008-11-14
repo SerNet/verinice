@@ -1,6 +1,8 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
@@ -32,6 +34,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
@@ -73,6 +76,15 @@ import sernet.gs.ui.rcp.main.common.model.ObjectDeletedException;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
+/**
+ * View for model of own "ITVerbund" with associated controls, risk analysis
+ * etc.
+ * 
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * 
+ */
 public class BsiModelView extends ViewPart {
 	/**
 	 * Content provider for BSI model elements.
@@ -90,6 +102,7 @@ public class BsiModelView extends ViewPart {
 				CnATreeElement el = (CnATreeElement) parent;
 				CnATreeElement[] children = el.getChildrenAsArray();
 				if (el.getLinksDown().size() > 0) {
+					// add linkkategorie object:
 					Object[] result = new Object[children.length + 1];
 					System.arraycopy(children, 0, result, 0, children.length);
 					result[children.length] = el.getLinks();
@@ -97,9 +110,8 @@ public class BsiModelView extends ViewPart {
 				} else {
 					return children;
 				}
-			}
-			else if (parent instanceof LinkKategorie) {
-				return ((LinkKategorie)parent).getChildren().toArray();
+			} else if (parent instanceof LinkKategorie) {
+				return ((LinkKategorie) parent).getChildren().toArray();
 			}
 			return null;
 		}
@@ -112,12 +124,10 @@ public class BsiModelView extends ViewPart {
 			if (child instanceof CnATreeElement) {
 				CnATreeElement el = (CnATreeElement) child;
 				return el.getParent();
-			}
-			else if (child instanceof LinkKategorie) {
+			} else if (child instanceof LinkKategorie) {
 				LinkKategorie kat = (LinkKategorie) child;
 				return kat.getParent();
-			}
-			else if (child instanceof CnALink) {
+			} else if (child instanceof CnALink) {
 				CnALink link = (CnALink) child;
 				return link.getParent();
 			}
@@ -128,7 +138,7 @@ public class BsiModelView extends ViewPart {
 			if (parent instanceof CnATreeElement) {
 				CnATreeElement el = (CnATreeElement) parent;
 				return el.getChildren().size() > 0
-					|| el.getLinksDown().size() > 0;
+						|| el.getLinksDown().size() > 0;
 			}
 			if (parent instanceof LinkKategorie) {
 				LinkKategorie kat = (LinkKategorie) parent;
@@ -167,12 +177,9 @@ public class BsiModelView extends ViewPart {
 				// else return default image
 				return ImageCache.getInstance().getImage(
 						ImageCache.BAUSTEIN_UMSETZUNG);
-			}
-			else if (obj instanceof LinkKategorie) {
-				return ImageCache.getInstance().getImage(
-						ImageCache.LINKS);
-			}
-			else if (obj instanceof CnALink) {
+			} else if (obj instanceof LinkKategorie) {
+				return ImageCache.getInstance().getImage(ImageCache.LINKS);
+			} else if (obj instanceof CnALink) {
 				CnALink link = (CnALink) obj;
 				return CnAImageProvider.getImage(link.getDependency());
 			}
@@ -183,17 +190,21 @@ public class BsiModelView extends ViewPart {
 		public String getText(Object obj) {
 			if (obj == null)
 				return "<null>";
+
 			if (obj instanceof IBSIStrukturElement) {
 				IBSIStrukturElement el = (IBSIStrukturElement) obj;
 				CnATreeElement el2 = (CnATreeElement) obj;
 				return el.getKuerzel() + " " + el2.getTitel();
 			}
+
 			else if (obj instanceof LinkKategorie)
-				return ((LinkKategorie)obj).getTitle();
+				return ((LinkKategorie) obj).getTitle();
+
 			else if (obj instanceof CnALink) {
 				CnALink link = (CnALink) obj;
-				return link.getTitle(); 
+				return link.getTitle();
 			}
+
 			CnATreeElement el = (CnATreeElement) obj;
 			return el.getTitel();
 		}
@@ -271,6 +282,8 @@ public class BsiModelView extends ViewPart {
 
 	private CopyBSIModelViewAction copyAction;
 
+	private Action selectLinksAction;
+
 	public void setNullModel() {
 		model = new NullModel();
 		Display.getDefault().asyncExec(new Runnable() {
@@ -299,7 +312,7 @@ public class BsiModelView extends ViewPart {
 
 		});
 	}
-	
+
 	@Override
 	public void dispose() {
 		CnAElementFactory.getInstance().closeModel();
@@ -344,6 +357,7 @@ public class BsiModelView extends ViewPart {
 		manager.add(pasteAction);
 		manager.add(bulkEditAction);
 		manager.add(selectEqualsAction);
+		manager.add(selectLinksAction);
 		selectEqualsAction.setEnabled(bausteinSelected());
 		manager.add(konsolidatorAction);
 
@@ -360,8 +374,7 @@ public class BsiModelView extends ViewPart {
 
 	private boolean bausteinSelected() {
 		IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-		if (!sel.isEmpty() 
-				&& sel.size() == 1 
+		if (!sel.isEmpty() && sel.size() == 1
 				&& sel.getFirstElement() instanceof BausteinUmsetzung)
 			return true;
 		return false;
@@ -373,7 +386,7 @@ public class BsiModelView extends ViewPart {
 		manager.add(this.openDBAction);
 		manager.add(this.closeDBAction);
 		manager.add(this.filterAction);
-		manager.add(expandAllAction);
+		// manager.add(expandAllAction);
 
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
@@ -398,7 +411,8 @@ public class BsiModelView extends ViewPart {
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		viewer.addDropSupport(operations, types, new BSIModelViewDropListener(
 				viewer));
-		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
+		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(
+				viewer));
 	}
 
 	private void hookDoubleClickAction() {
@@ -413,18 +427,19 @@ public class BsiModelView extends ViewPart {
 
 		selectEqualsAction = new Action() {
 			public void run() {
-				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-				Object o =sel.getFirstElement();
+				IStructuredSelection sel = (IStructuredSelection) viewer
+						.getSelection();
+				Object o = sel.getFirstElement();
 				if (o instanceof BausteinUmsetzung) {
 					BausteinUmsetzung sourceBst = (BausteinUmsetzung) o;
 					ArrayList newsel = new ArrayList(10);
 					newsel.add(sourceBst);
 					BSIModel model = CnAElementFactory.getCurrentModel();
-					ArrayList<BausteinUmsetzung> alleBausteine = model.getBausteine();
+					ArrayList<BausteinUmsetzung> alleBausteine = model
+							.getBausteine();
 					for (BausteinUmsetzung bst : alleBausteine) {
-							if (bst.getKapitel().equals(sourceBst.getKapitel())
-									)
-								newsel.add(bst);
+						if (bst.getKapitel().equals(sourceBst.getKapitel()))
+							newsel.add(bst);
 					}
 					viewer.setSelection(new StructuredSelection(newsel));
 				}
@@ -432,11 +447,29 @@ public class BsiModelView extends ViewPart {
 		};
 		selectEqualsAction.setText("Gleiche Bausteine selektieren");
 
+		selectLinksAction = new Action() {
+			public void run() {
+				IStructuredSelection sel = (IStructuredSelection) viewer
+						.getSelection();
+				Object o = sel.getFirstElement();
+				if (o instanceof IBSIStrukturElement
+						&& o instanceof CnATreeElement) {
+					CnATreeElement elmt = (CnATreeElement) o;
+					Set<CnALink> links = elmt.getLinksUp();
+					CnALink[] foundLinks = (CnALink[]) links
+							.toArray(new CnALink[links.size()]);
+					viewer.setSelection(new StructuredSelection(foundLinks));
+				}
+			}
+		};
+		selectLinksAction
+				.setText("Alle Verknüpfungen zu diesem Objekt markieren");
+
 		bulkEditAction = new ShowBulkEditAction(getViewSite()
 				.getWorkbenchWindow(), "Bulk Edit...");
-		
-		konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(),
-				"Konsolidator...");
+
+		konsolidatorAction = new ShowKonsolidatorAction(getViewSite()
+				.getWorkbenchWindow(), "Konsolidator...");
 
 		doubleClickAction = new Action() {
 			public void run() {
@@ -444,25 +477,27 @@ public class BsiModelView extends ViewPart {
 						.getFirstElement();
 				if (sel instanceof FinishedRiskAnalysis) {
 					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
-					RiskAnalysisWizard wizard =  new RiskAnalysisWizard(analysis.getParent(), analysis);
+					RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis
+							.getParent(), analysis);
 					wizard.init(PlatformUI.getWorkbench(), null);
-					WizardDialog wizDialog =  new org.eclipse.jface.wizard.WizardDialog(new Shell(), wizard);
+					WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(
+							new Shell(), wizard);
 					wizDialog.setPageSize(800, 600);
 					wizDialog.open();
-				}
-				else
+				} else if (sel instanceof CnALink) {
+					viewer.setSelection(new StructuredSelection(((CnALink) sel)
+							.getDependency()), true);
+				} else
 					EditorFactory.getInstance().updateAndOpenObject(sel);
 			}
 		};
 
-		
 		filterAction = new BSIModelViewFilterAction(viewer,
 				Messages.BsiModelView_3, new MassnahmenUmsetzungFilter(viewer),
 				new MassnahmenSiegelFilter(viewer),
 				new LebenszyklusPropertyFilter(viewer),
 				new ObjektLebenszyklusPropertyFilter(viewer),
-				new BSIModelElementFilter(viewer),
-				new TagFilter(viewer));
+				new BSIModelElementFilter(viewer), new TagFilter(viewer));
 
 		expandAllAction = new Action() {
 			@Override
