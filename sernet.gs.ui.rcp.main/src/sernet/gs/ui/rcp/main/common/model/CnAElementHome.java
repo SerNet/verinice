@@ -48,20 +48,22 @@ public class CnAElementHome {
 	private static final String QUERY_FIND_BY_ID = "from "
 			+ CnATreeElement.class.getName() + " as element "
 			+ "where element.dbId = ?";
-	
+
 	private static final String QUERY_FIND_CHANGES_SINCE = "from "
 			+ ChangeLogEntry.class.getName() + " as change "
-			+ "where change.changetime > ? "
-			+ "and not change.stationId = ? "
+			+ "where change.changetime > ? " + "and not change.stationId = ? "
 			+ "order by changetime";
-	
+
 	private SessionFactory sessionFactory = null;
 
 	private Session session;
 
+	private Transaction applicationTransaction;
+
 	private CnAElementHome() {
 		// singleton
 	}
+	
 
 	public static CnAElementHome getInstance() {
 		if (instance == null) {
@@ -73,31 +75,30 @@ public class CnAElementHome {
 	public boolean isOpen() {
 		return sessionFactory != null;
 	}
-	
+
 	public void open(IProgress monitor) throws Exception {
 		open(CnAWorkspace.getInstance().getConfDir(), monitor);
 	}
-	
+
 	public void preload(String confDir) {
 		Logger.getLogger(this.getClass()).debug("Preloading Hibernate...");
 		try {
-			File conf = new File(confDir
-					+ File.separator + "hibernate.cfg.xml");
+			File conf = new File(confDir + File.separator + "hibernate.cfg.xml");
 			SessionFactory tempFactory = new Configuration().configure(conf)
-				.buildSessionFactory();
+					.buildSessionFactory();
 			Session tempSession = tempFactory.openSession();
 			tempSession.close();
 			tempFactory.close();
 		} catch (Exception e) {
 			// do nothing
 		}
-		Logger.getLogger(this.getClass()).debug("Finished preloading hibernate");
+		Logger.getLogger(this.getClass())
+				.debug("Finished preloading hibernate");
 	}
 
 	public void open(String confDir, IProgress monitor) throws Exception {
 		try {
-			File conf = new File(confDir
-					+ File.separator + "hibernate.cfg.xml");
+			File conf = new File(confDir + File.separator + "hibernate.cfg.xml");
 			sessionFactory = new Configuration().configure(conf)
 					.buildSessionFactory();
 			monitor.setTaskName("Öffne DB-Session...");
@@ -129,53 +130,69 @@ public class CnAElementHome {
 			Logger.getLogger(this.getClass()).debug(
 					"Saving new element: " + element);
 			Transaction tx = null;
-			try {
-				tx = session.beginTransaction();
-				session.save(element);
-				logChange(element, ChangeLogEntry.INSERT);
-				tx.commit();
-			} catch (Exception e) {
-				Logger.getLogger(this.getClass()).error(e);
-				if (tx != null)
-					tx.rollback();
-				throw e;
+			if (applicationTransaction != null) {
+				try {
+					tx = session.beginTransaction();
+					session.save(element);
+					logChange(element, ChangeLogEntry.INSERT);
+					tx.commit();
+				} catch (Exception e) {
+					Logger.getLogger(this.getClass()).error(e);
+					if (tx != null)
+						tx.rollback();
+					throw e;
+				}
+			}
+			else {
+				try {
+					session.save(element);
+					logChange(element, ChangeLogEntry.INSERT);
+				} catch (Exception e) {
+					Logger.getLogger(this.getClass()).error(e);
+					if (applicationTransaction != null)
+						applicationTransaction.rollback();
+					applicationTransaction = null;
+					throw e;
+				}
 			}
 		}
 	}
-	
-	
+
 	private void logChange(CnATreeElement element, int changeType) {
 		ChangeLogEntry logEntry = new ChangeLogEntry(element, changeType);
 		logEntry.setChangetime(Calendar.getInstance().getTime());
 		session.save(logEntry);
-		
-//		Query query = session.createQuery("insert into ChangeLogEntry( " +
-//				"elementId, elementClass, change, stationId, changetime) " +
-//				"select el.dbId, :elementClass, :changeType, :stationId, current_timestamp() " +
-//				"from CnATreeElement el where el.dbId = :elementId");
-//		
-//		query.setInteger("elementId", element.getDbId());
-//		query.setString("elementClass", element.getClass().getName());
-//		query.setInteger("changeType", changeType);
-//		query.setString("stationId", ChangeLogEntry.STATION_ID);
-//		
-//		
-//		query.executeUpdate();
-		
+
+		// Query query = session.createQuery("insert into ChangeLogEntry( " +
+		// "elementId, elementClass, change, stationId, changetime) " +
+		// "select el.dbId, :elementClass, :changeType, :stationId, current_timestamp() "
+		// +
+		// "from CnATreeElement el where el.dbId = :elementId");
+		//		
+		// query.setInteger("elementId", element.getDbId());
+		// query.setString("elementClass", element.getClass().getName());
+		// query.setInteger("changeType", changeType);
+		// query.setString("stationId", ChangeLogEntry.STATION_ID);
+		//		
+		//		
+		// query.executeUpdate();
+
 	}
+
 	// FIXME parameters are not set check syntax
 
 	public void remove(CnATreeElement element) throws Exception {
-		
-		
+
 		synchronized (mutex) {
-			
-			// if this is a finishedRiskanalysis we need to delete the intermediate steps as well:
+
+			// if this is a finishedRiskanalysis we need to delete the
+			// intermediate steps as well:
 			FinishedRiskAnalysisLists analysisLists = null;
 			if (element instanceof FinishedRiskAnalysis) {
-				analysisLists = FinishedRiskAnalysisListsHome.getInstance().loadById(((FinishedRiskAnalysis)element).getDbId());
+				analysisLists = FinishedRiskAnalysisListsHome.getInstance()
+						.loadById(((FinishedRiskAnalysis) element).getDbId());
 			}
-			
+
 			Logger.getLogger(this.getClass()).debug(
 					"Deleting element: " + element);
 			Transaction tx = null;
@@ -195,7 +212,7 @@ public class CnAElementHome {
 
 		}
 	}
-	
+
 	public void remove(CnALink element) throws Exception {
 		synchronized (mutex) {
 
@@ -241,8 +258,9 @@ public class CnAElementHome {
 			}
 		}
 	}
-	
-	public void update(List<? extends CnATreeElement> elements) throws StaleObjectStateException {
+
+	public void update(List<? extends CnATreeElement> elements)
+			throws StaleObjectStateException {
 		synchronized (mutex) {
 			Logger.getLogger(this.getClass()).debug(
 					"Updating multiple elements");
@@ -296,11 +314,13 @@ public class CnAElementHome {
 	}
 
 	/**
-	 * Load object with given ID of given class name.
-	 * Object must exist in the database.
+	 * Load object with given ID of given class name. Object must exist in the
+	 * database.
 	 * 
-	 * @param className Simple name of the object's class.
-	 * @param id database ID of the object to load
+	 * @param className
+	 *            Simple name of the object's class.
+	 * @param id
+	 *            database ID of the object to load
 	 * @return object of the given class with given ID
 	 */
 	public CnATreeElement loadById(String className, int id) {
@@ -313,16 +333,12 @@ public class CnAElementHome {
 			return null;
 		return (CnATreeElement) list.get(0);
 	}
-	
-	
-
-
-	
 
 	/**
-	 * Load whole model from DB (lazy). Proxies will be instantiated by hibernate on first access.
+	 * Load whole model from DB (lazy). Proxies will be instantiated by
+	 * hibernate on first access.
 	 * 
-	 * @param nullMonitor 
+	 * @param nullMonitor
 	 * 
 	 * @return BSIModel object which is the top level object of the model
 	 *         hierarchy.
@@ -340,63 +356,65 @@ public class CnAElementHome {
 		for (Iterator iter = models.iterator(); iter.hasNext();) {
 			Object o = iter.next();
 			if (o instanceof BSIModel)
-				Logger.getLogger(this.getClass()).debug("Loaded model instance.");
-				return (BSIModel) o;
+				Logger.getLogger(this.getClass()).debug(
+						"Loaded model instance.");
+			return (BSIModel) o;
 		}
 		Logger.getLogger(this.getClass()).debug("No model instance found");
 		return null;
 	}
 
 	/**
-	 * Refresh given object from the database, looses all changes made
-	 * in memory, sets element and all properties to actual state in database.
+	 * Refresh given object from the database, looses all changes made in
+	 * memory, sets element and all properties to actual state in database.
 	 * 
 	 * @param cnAElement
 	 */
 	public void refresh(CnATreeElement cnAElement) {
-		Logger.getLogger(this.getClass()).debug("Refreshing object " + cnAElement.getTitel());
+		Logger.getLogger(this.getClass()).debug(
+				"Refreshing object " + cnAElement.getTitel());
 		try {
 			session.refresh(cnAElement);
-			
+
 		} catch (UnresolvableObjectException e) {
 			session.close();
 			session = sessionFactory.openSession();
 			try {
-				CnAElementFactory.getInstance().loadOrCreateModel(new IProgress() {
+				CnAElementFactory.getInstance().loadOrCreateModel(
+						new IProgress() {
 
-					public void beginTask(String name, int totalWork) {
-						
-					}
+							public void beginTask(String name, int totalWork) {
 
-					public void done() {
-						
-					}
+							}
 
-					public void setTaskName(String name) {
-						
-					}
+							public void done() {
 
-					public void worked(int work) {
-						
-					}
-					
-				});
+							}
+
+							public void setTaskName(String name) {
+
+							}
+
+							public void worked(int work) {
+
+							}
+
+						});
 			} catch (Exception e1) {
 				ExceptionUtil.log(e, "");
 			}
 		}
-		
+
 	}
 
 	public Session getSession() {
-			return session;
+		return session;
 	}
 
 	public void save(CnALink link) throws Exception {
 
 		synchronized (mutex) {
-			Logger.getLogger(this.getClass()).debug(
-					"Saving new link: " + link);
+			Logger.getLogger(this.getClass()).debug("Saving new link: " + link);
 			Transaction tx = null;
 			try {
 				tx = session.beginTransaction();
@@ -423,15 +441,46 @@ public class CnAElementHome {
 			list = new ArrayList<ChangeLogEntry>();
 		return list;
 	}
-	
+
 	public Object getElementInSession(String clazz, Integer id) {
 		return session.get(clazz, id);
 	}
 
-//	public Timestamp getCurrentTime() {
-//		Query query = session.createQuery("select current_timestamp() from ITVerbund itv");
-//		return (Timestamp) query.list().get(0);
-//	}
 
-	
+
+	public synchronized  void endApplicationTransaction() throws Exception {
+		if (instance != null && instance.session != null) {
+			try {
+				applicationTransaction.commit();
+				applicationTransaction = null;
+				does this work?
+			} catch (Exception e) {
+				Logger.getLogger(CnAElementHome.class).error(e);
+				if (applicationTransaction != null) 
+					applicationTransaction.rollback();
+				applicationTransaction = null;
+				throw e;
+			}
+		}
+	}
+
+	public synchronized  void startApplicationTransaction() throws Exception {
+		if (instance != null && instance.session != null) {
+			try {
+				applicationTransaction = session.beginTransaction();
+			} catch (Exception e) {
+				Logger.getLogger(CnAElementHome.class).error(e);
+				applicationTransaction = null;
+				throw e;
+			}
+		}
+		
+	}
+
+	// public Timestamp getCurrentTime() {
+	// Query query =
+	// session.createQuery("select current_timestamp() from ITVerbund itv");
+	// return (Timestamp) query.list().get(0);
+	// }
+
 }

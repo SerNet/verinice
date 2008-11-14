@@ -1,9 +1,14 @@
 package sernet.gs.ui.rcp.gsimport;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import sernet.gs.reveng.MbRolleTxt;
 import sernet.gs.reveng.NZielobjekt;
+import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
@@ -31,6 +36,12 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 public class TransferData {
 	
 	
+	private GSVampire vampire;
+
+	public TransferData(GSVampire vampire) {
+		this.vampire = vampire;
+	}
+
 	public void transfer(ITVerbund itverbund, ZielobjektTypeResult result) throws Exception {
 		NZielobjekt source = result.zielobjekt;
 		itverbund.setTitel(source.getName());
@@ -100,6 +111,16 @@ public class TransferData {
 		element.setTitel(result.zielobjekt.getName());
 		element.setKuerzel(result.zielobjekt.getKuerzel());
 		element.setErlaeuterung(result.zielobjekt.getBeschreibung());
+		
+		List<MbRolleTxt> rollen = vampire.findRollenByZielobjekt(result.zielobjekt);
+		for (MbRolleTxt rolle : rollen) {
+			boolean success = element.addRole(rolle.getName());
+			if (!success)
+				Logger.getLogger(this.getClass()).debug("Rolle konnte nicht übertragen werden: " + 
+						rolle.getName());
+			else
+				Logger.getLogger(this.getClass()).debug("Rolle übertragen: " + rolle.getName() + " für Benutzer " + element.getTitel());
+		}
 	}
 
 	private void typedTransfer(TelefonKomponente element,

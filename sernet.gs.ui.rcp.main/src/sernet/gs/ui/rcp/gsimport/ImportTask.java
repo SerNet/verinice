@@ -2,6 +2,7 @@ package sernet.gs.ui.rcp.gsimport;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,13 +29,25 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.CnAElementBuilder;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
+/**
+ * Import GSTOOL(tm) databases using the GSVampire.
+ * Maps GStool-database objects to Verinice-Objects and fields.
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public class ImportTask {
 
 	Pattern pattern = Pattern.compile("(\\d+)\\.0*(\\d+)");
@@ -44,7 +57,7 @@ public class ImportTask {
 	
 	private List<MbZeiteinheitenTxt> zeiten;
 	private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
-	private List<CnATreeElement> alleZielobjekte = new ArrayList<CnATreeElement>();
+	private Map<NZielobjekt, CnATreeElement> alleZielobjekte = new HashMap<NZielobjekt, CnATreeElement>();
 	private List<Person> allePersonen = new ArrayList<Person>();
 	
 	
@@ -69,12 +82,14 @@ public class ImportTask {
 		File conf = new File(CnAWorkspace.getInstance().getConfDir()
 				+ File.separator + "hibernate-vampire.cfg.xml");
 		vampire = new GSVampire(conf.getAbsolutePath());
-		transferData = new TransferData();
+		transferData = new TransferData(vampire);
 		importZielobjekte();
 
 	}
 
 	private void importZielobjekte() throws Exception {
+		CnAElementHome.getInstance().startApplicationTransaction();
+		
 		List<ZielobjektTypeResult> zielobjekte = vampire.findZielobjektTypAll();
 		monitor.beginTask("Importiere Zielobjekte, Bausteine und Massnahmen...", zielobjekte.size());
 
@@ -89,6 +104,9 @@ public class ImportTask {
 						ITVerbund.TYPE_ID, null);
 				neueVerbuende.add(itverbund);
 				monitor.worked(1);
+
+				// save element for later:
+				alleZielobjekte.put(result.zielobjekt, itverbund);
 				
 				transferData.transfer((ITVerbund) itverbund, result);
 				createBausteine(itverbund, result.zielobjekt);
@@ -104,23 +122,80 @@ public class ImportTask {
 					.buildAndSave(neueVerbuende.get(0), typeId);
 			if (element != null) {
 				// save element for later:
-				alleZielobjekte.add(element);
-				// aditionally save persons here:
-				if (element instanceof Person)
+				alleZielobjekte.put(result.zielobjekt, element);
+				
+				// aditionally save persons:
+				if (element instanceof Person) {
 					allePersonen.add((Person) element);
+				}
 				
 				transferData.transfer(element, result);
+				monitor.subTask(element.getTitel());
 				createBausteine(element, result.zielobjekt);
 			}
 			monitor.worked(1);
 		}
 		
-		importVerknuepfungen();
+		CnAElementHome.getInstance().endApplicationTransaction();
+		
+		importMassnahmenVerknuepfungen();
+		importZielobjektVerknüpfungen();
 		
 		monitor.done();
 	}
 
-	private void importVerknuepfungen() {
+	private void importZielobjektVerknüpfungen() {
+			monitor.beginTask("Importiere Verknüpfungen von Zielobjekten...", alleZielobjekte.size());
+			Set<NZielobjekt> allElements = alleZielobjekte.keySet();
+			for (NZielobjekt zielobjekt : allElements) {
+				monitor.worked(1);
+				CnATreeElement dependant = alleZielobjekte.get(zielobjekt);
+				List<NZielobjekt> dependencies = vampire.findLinksByZielobjekt(zielobjekt);
+				for (NZielobjekt dependency : dependencies) {
+					monitor.subTask(dependant.getTitel());
+					CnATreeElement dependencyElement = findZielobjektFor(dependency);
+					if (dependencyElement == null) {
+						Logger.getLogger(this.getClass()).debug("Kein Ziel gefunden für Verknüpfung " + dependency.getName());
+						continue;
+					}
+					Logger.getLogger(this.getClass()).debug("Neue Verknüpfung von " + dependant.getTitel() +
+							" zu " + dependencyElement.getTitel());
+					
+					// verinice models dependencies DOWN, not UP as the gstool.
+					// therefore we need to turn things around, except for persons and networks 
+					// (look at it in the tree and it will make sense):
+					CnATreeElement from;
+					CnATreeElement to;
+					if (dependencyElement instanceof Person
+							|| dependencyElement instanceof NetzKomponente) {
+						from = dependant;
+						to = dependencyElement;
+					}
+					else {
+						from = dependencyElement;
+						to = dependant;
+					}
+					
+					CnALink link = new CnALink(from, to);
+					try {
+						CnAElementHome.getInstance().save(link);
+					} catch (Exception e) {
+						Logger.getLogger(this.getClass()).debug("Saving link failed."); //$NON-NLS-1$
+						link.remove();
+					}
+				}
+			}
+	}
+
+	private CnATreeElement findZielobjektFor(NZielobjekt dependency) {
+		for (NZielobjekt zielobjekt: alleZielobjekte.keySet()) {
+			if (zielobjekt.getId().equals(dependency.getId()))
+				return alleZielobjekte.get(zielobjekt);
+		}
+		return null;
+	}
+
+	private void importMassnahmenVerknuepfungen() {
 		monitor.beginTask("Verknüpfe verantwortliche Ansprechpartner mit Massnahmen...", alleMassnahmen.size());
 		for (ModZobjBstMass obm : alleMassnahmen.keySet()) {
 			monitor.worked(1);

@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +14,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 
 public class Person extends CnATreeElement
 implements IBSIStrukturElement {
@@ -135,6 +137,18 @@ implements IBSIStrukturElement {
 	public boolean hasRole(Property role) {
 		if (getRollen().indexOf(role.getPropertyValue()) > -1)
 			return true;
+		return false;
+	}
+
+	public boolean addRole(String name) {
+		PropertyType propertyType = entityType.getPropertyType(P_ROLLEN);
+		ArrayList<IMLPropertyOption> options = propertyType.getOptions();
+		for (IMLPropertyOption option : options) {
+			if (option.getName().equals(name)) {
+				getEntity().createNewProperty(propertyType, option.getId());
+				return true;
+			}
+		}
 		return false;
 	}
 	
