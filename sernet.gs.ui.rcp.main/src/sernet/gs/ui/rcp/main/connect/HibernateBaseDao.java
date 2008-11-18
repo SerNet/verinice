@@ -36,17 +36,14 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			return getHibernateTemplate().find(hqlQuery, values);
 		}
 
-		@Override
 		public void initialize(Object collection) {
 			getHibernateTemplate().initialize(collection);
 		}
 
-		@Override
 		public void persist(T entity) {
 			getHibernateTemplate().persist(entity);
 		}
 
-		@Override
 		public void flush() {
 			getHibernateTemplate().flush();
 		}

@@ -56,7 +56,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	<!-- Use existing hibernate config for session -->  
 	<bean class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" id="sessionFactory">
 	  <property name="configLocation">
-	    <value>file:///home/akoderman/java/runtime-oc.product/conf/hibernate.cfg.xml</value>
+	    <value>{hibernatecfg}</value>
 	  </property>
 	</bean>
 

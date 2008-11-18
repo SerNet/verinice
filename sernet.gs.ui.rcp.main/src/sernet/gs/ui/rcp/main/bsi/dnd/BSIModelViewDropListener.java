@@ -31,58 +31,55 @@ import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.snutils.ExceptionHandlerFactory;
 
 public class BSIModelViewDropListener extends ViewerDropAdapter {
-	
+
 	public BSIModelViewDropListener(TreeViewer viewer) {
 		super(viewer);
 	}
 
-	
-	
 	@Override
 	public boolean performDrop(Object data) {
 		Object toDrop = DNDItems.getItems().get(0);
 		if (toDrop != null && toDrop instanceof Baustein) {
 			return dropBaustein();
-		}
-		else if (toDrop != null && toDrop instanceof BausteinUmsetzung) {
+		} else if (toDrop != null && toDrop instanceof BausteinUmsetzung) {
 			return dropBausteinUmsetzung();
-		}
-		else if (toDrop != null && toDrop instanceof IBSIStrukturElement) {
+		} else if (toDrop != null && toDrop instanceof IBSIStrukturElement) {
 			CnATreeElement target;
 			if (getCurrentTarget() instanceof LinkKategorie)
-				target = ((LinkKategorie)getCurrentTarget()).getParent();
+				target = ((LinkKategorie) getCurrentTarget()).getParent();
 			else
 				target = (CnATreeElement) getCurrentTarget();
 			LinkDropper dropper = new LinkDropper();
 			return dropper.dropLink(DNDItems.getItems(), target);
 		}
 		return false;
-		
+
 	}
 
-
-
-	
 	private boolean dropBausteinUmsetzung() {
 		final CnATreeElement target = (CnATreeElement) getCurrentTarget();
 		final List<Baustein> toDrop = DNDItems.getItems();
-		
-		
-		if (!KonsolidatorDialog.askConsolidate(getViewer().getControl().getShell()))
+
+		if (!KonsolidatorDialog.askConsolidate(getViewer().getControl()
+				.getShell()))
 			return false;
-		
+
 		try {
-			Job dropJob = new Job(Messages.getString("BSIModelViewDropListener.0")) { //$NON-NLS-1$
+			Job dropJob = new Job(Messages
+					.getString("BSIModelViewDropListener.0")) { //$NON-NLS-1$
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
-						Konsolidator.konsolidiereBaustein((BausteinUmsetzung)DNDItems.getItems().get(0),
-								(BausteinUmsetzung)target);
-						Konsolidator.konsolidiereMassnahmen((BausteinUmsetzung)DNDItems.getItems().get(0),
-								(BausteinUmsetzung)target);
+						Konsolidator.konsolidiereBaustein(
+								(BausteinUmsetzung) DNDItems.getItems().get(0),
+								(BausteinUmsetzung) target);
+						Konsolidator.konsolidiereMassnahmen(
+								(BausteinUmsetzung) DNDItems.getItems().get(0),
+								(BausteinUmsetzung) target);
 						CnAElementHome.getInstance().update(target);
 					} catch (Exception e) {
-						Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
+						Logger.getLogger(this.getClass()).error(
+								"Drop failed", e); //$NON-NLS-1$
 						return Status.CANCEL_STATUS;
 					}
 					DNDItems.clear();
@@ -91,18 +88,13 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 			};
 			dropJob.schedule();
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(Messages.getString("BSIModelViewDropListener.2"), e); //$NON-NLS-1$
+			Logger.getLogger(this.getClass()).error(
+					Messages.getString("BSIModelViewDropListener.2"), e); //$NON-NLS-1$
 			return false;
 		}
 		return true;
-		
+
 	}
-
-
-
-	
-
-
 
 	private boolean dropBaustein() {
 		final CnATreeElement target = (CnATreeElement) getCurrentTarget();
@@ -110,26 +102,30 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 		Check: for (Baustein baustein : toDrop) {
 			int targetSchicht = 0;
 			if (target instanceof IBSIStrukturElement)
-				targetSchicht = ((IBSIStrukturElement)target).getSchicht();
-			
-				if (baustein.getSchicht() != targetSchicht) {
-					if (!SanityCheckDialog.checkLayer(super.getViewer().getControl().getShell(), 
-							baustein.getSchicht(), targetSchicht))
-						return false;
-					else
-						break Check; //user say he knows what he's doing, stop checking.
-				}
-			
+				targetSchicht = ((IBSIStrukturElement) target).getSchicht();
+
+			if (baustein.getSchicht() != targetSchicht) {
+				if (!SanityCheckDialog.checkLayer(super.getViewer()
+						.getControl().getShell(), baustein.getSchicht(),
+						targetSchicht))
+					return false;
+				else
+					break Check; // user say he knows what he's doing, stop
+				// checking.
+			}
+
 		}
 
 		try {
-			Job dropJob = new Job(Messages.getString("BSIModelViewDropListener.3")) { //$NON-NLS-1$
+			Job dropJob = new Job(Messages
+					.getString("BSIModelViewDropListener.3")) { //$NON-NLS-1$
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						createBausteinUmsetzung(toDrop, target);
 					} catch (Exception e) {
-						Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
+						Logger.getLogger(this.getClass()).error(
+								"Drop failed", e); //$NON-NLS-1$
 						return Status.CANCEL_STATUS;
 					}
 					DNDItems.clear();
@@ -138,41 +134,42 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 			};
 			dropJob.schedule();
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(Messages.getString("BSIModelViewDropListener.5"), e); //$NON-NLS-1$
+			Logger.getLogger(this.getClass()).error(
+					Messages.getString("BSIModelViewDropListener.5"), e); //$NON-NLS-1$
 			return false;
 		}
 		return true;
 	}
 
-	private void createBausteinUmsetzung(List<Baustein> toDrop, CnATreeElement target) throws Exception {
+	private void createBausteinUmsetzung(List<Baustein> toDrop,
+			CnATreeElement target) throws Exception {
 		for (Baustein baustein : toDrop) {
-			CnAElementFactory.getInstance()
-				.saveNew(target,
-						BausteinUmsetzung.TYPE_ID, 
-						new BuildInput<Baustein>(baustein));
+			CnAElementFactory.getInstance().saveNew(target,
+					BausteinUmsetzung.TYPE_ID,
+					new BuildInput<Baustein>(baustein));
 		}
 	}
 
 	@Override
 	public boolean validateDrop(Object target, int operation,
 			TransferData transferType) {
-		//Logger.getLogger(this.getClass()).debug("Drop target: " + target);
-		
+		// Logger.getLogger(this.getClass()).debug("Drop target: " + target);
+
 		if (target == null)
 			return false;
-		
-		if (!(target instanceof CnATreeElement
-				|| target instanceof LinkKategorie))
+
+		if (!(target instanceof CnATreeElement || target instanceof LinkKategorie))
 			return false;
-		
+
 		if (target instanceof IBSIStrukturKategorie)
 			return false;
 
 		List items = DNDItems.getItems();
-		
+
 		// use bstUms as template for bstUmsTarget
 		if (DNDItems.getItems().get(0) instanceof BausteinUmsetzung) {
-			BausteinUmsetzung sourceBst = (BausteinUmsetzung) DNDItems.getItems().get(0);
+			BausteinUmsetzung sourceBst = (BausteinUmsetzung) DNDItems
+					.getItems().get(0);
 			if (target instanceof BausteinUmsetzung) {
 				BausteinUmsetzung targetBst = (BausteinUmsetzung) target;
 				if (targetBst.getKapitel().equals(sourceBst.getKapitel()))
@@ -180,31 +177,41 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 			}
 			return false;
 		}
-		
+
 		// link drop:
-		if (DNDItems.getItems().get(0) instanceof IBSIStrukturElement
-				&& (target instanceof IBSIStrukturElement
-						|| target instanceof LinkKategorie
-				)
-					&& !target.equals(DNDItems.getItems().get(0))) { /*is same object*/
-			if (target instanceof LinkKategorie
-					&& ((LinkKategorie)target).getParent()
-					.equals(DNDItems.getItems().get(0))) /*is same object*/
-				return false;
+		if (DNDItems.getItems().get(0) instanceof IBSIStrukturElement) {
+			List itemsToDrop = DNDItems.getItems();
+			for (Object item : itemsToDrop) {
+				if (target.equals(item))
+					return false;
+
+				if (!(item instanceof IBSIStrukturElement))
+					return false;
+
+				if (item instanceof IBSIStrukturElement
+						&& target instanceof LinkKategorie) {
+					if (((LinkKategorie) target).getParent().equals(item)) /*
+																			 * is
+																			 * same
+																			 * object
+																			 */
+						return false;
+				}
+			}
 			return true;
 		}
-		
+
 		// other drop type:
 		if (!(target instanceof CnATreeElement))
 			return false;
-		
+
 		for (Iterator iter = items.iterator(); iter.hasNext();) {
 			Object obj = iter.next();
-			//Logger.getLogger(this.getClass()).debug("Drop item: " + obj);
+			// Logger.getLogger(this.getClass()).debug("Drop item: " + obj);
 			CnATreeElement cont = (CnATreeElement) target;
-			if ( !cont.canContain(obj))
+			if (!cont.canContain(obj))
 				return false;
-			
+
 		}
 		return true;
 	}

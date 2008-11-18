@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-    <bean id="ctx"
-          class="org.springframework.context.support.ClassPathXmlApplicationContext">
+    <bean id="ctxHibernate"
+          class="org.springframework.context.support.FileSystemXmlApplicationContext">
         <constructor-arg>
             <list>
-                <value>applicationContext.xml</value>
+                <value>{applicationContextHibernate}</value>
             </list>
         </constructor-arg>
     </bean>

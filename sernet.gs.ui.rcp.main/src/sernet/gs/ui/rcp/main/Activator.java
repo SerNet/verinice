@@ -23,6 +23,8 @@ import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.IHuiService;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -62,9 +64,8 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		CnAWorkspace.getInstance().prepare();
-
+		
 		// TODO add feature: link description between objects
-		// FIXME fix model report
 		// TODO add save / load to file
 	}
 

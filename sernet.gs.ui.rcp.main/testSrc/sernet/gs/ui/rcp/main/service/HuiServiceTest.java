@@ -15,7 +15,7 @@ public class HuiServiceTest {
 	@Test
 	public void testFindAllPropertiesForTypeId() {
 		ServiceFactory factory = new ServiceFactory();
-		IHuiService huiService = factory.getHuiService();
+		IHuiService huiService = factory.getHuiServiceLocal();
 		List<Property> list = huiService.findAllPropertiesForTypeId(MassnahmenUmsetzung.P_UMSETZUNGDURCH_LINK);
 		assertTrue(list.size()>0);
 		

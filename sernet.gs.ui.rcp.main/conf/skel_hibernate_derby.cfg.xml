@@ -55,11 +55,11 @@
          <property name="hbm2ddl.auto">update</property>
         
 
-		<!-- Optimized mappings for DBMS, not for derby -->
-        <mapping resource="Entity.hbm.xml"/>
-        <mapping resource="CnALink.hbm.xml"/>
-        <mapping resource="PropertyList.hbm.xml"/>
-        <mapping resource="CnATreeElement.hbm.xml"/> 
+		<!-- Optimized mappings for derby DB -->
+        <mapping resource="Entity_derby.hbm.xml"/>
+        <mapping resource="CnALink_derby.hbm.xml"/>
+        <mapping resource="PropertyList_derby.hbm.xml"/>
+        <mapping resource="CnATreeElement_derby.hbm.xml"/> 
         <mapping resource="ChangeLogEntry.hbm.xml"/>
         <mapping resource="Gefaehrdung.hbm.xml"/>
         <mapping resource="Risikomassnahme.hbm.xml"/>

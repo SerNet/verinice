@@ -118,12 +118,35 @@ public class CnAWorkspace {
 			instance.createHtmlDir();
 			instance.createOfficeDir();
 			instance.createDatabaseConfig();
+			instance.createSpringConfig();
 		} catch (Exception e) {
 			ExceptionUtil.log(e,
 					"Fehler beim Anlegen des Arbeitsverzeichnisses: "
 							+ confDir.getAbsolutePath());
 		}
 
+	}
+
+	private void createSpringConfig() throws NullPointerException, IOException {
+		
+		// create application context xml for direct database access:
+		settings = new HashMap<String, String>(1);
+		settings.put("hibernatecfg", "file://" + getConfDir() + File.separator + "hibernate.cfg.xml");
+		createTextFile("conf" + File.separator + "skel_applicationContextHibernate.xml",
+				getConfDir(), 
+				"applicationContextHibernate.xml",
+				settings);
+		
+		// TODO create context file for httpinvoker access
+		
+		// create bean ref factory xml:
+		settings = new HashMap<String, String>(1);
+		settings.put("applicationContextHibernate", 
+				"file://" + getConfDir() + File.separator + "applicationContextHibernate.xml");
+		createTextFile("conf" + File.separator + "skel_beanRefFactory.xml", 
+				getConfDir(),		
+			"beanRefFactory.xml",
+			settings);
 	}
 
 	public String getWorkdir() {
@@ -257,7 +280,14 @@ public class CnAWorkspace {
 		settings.put("pass", pass);
 		settings.put("driver", driver);
 		settings.put("dialect", dialect);
-		createTextFile("conf" + File.separator + "skel_hibernate.cfg.xml",
+		
+		if (driver.indexOf("derby")>-1) 
+			// use optimzed derby config:
+			createTextFile("conf" + File.separator + "skel_hibernate_derby.cfg.xml",
+					workDir, "conf" + File.separator + "hibernate.cfg.xml",
+					settings);
+		else		
+			createTextFile("conf" + File.separator + "skel_hibernate.cfg.xml",
 				workDir, "conf" + File.separator + "hibernate.cfg.xml",
 				settings);
 	}

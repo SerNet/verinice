@@ -52,7 +52,6 @@ public class HibernateHuiService implements IHuiService {
 		return null;
 	}
 
-	@Override
 	public void migratePersonsForTypeId(String oldPropTypeID, String newPropTypeID) {
 		List<Property> properties = findAllPropertiesForTypeId(oldPropTypeID);
 		for (Property property : properties) {

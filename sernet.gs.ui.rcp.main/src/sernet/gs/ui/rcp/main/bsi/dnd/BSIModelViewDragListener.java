@@ -31,9 +31,16 @@ public class BSIModelViewDragListener implements DragSourceListener {
 
 	public void dragStart(DragSourceEvent event) {
 		IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
+
 		if (selection.size() != 1) {
-			event.doit = false;
-			return;
+			// check if only structure elements are selected:
+			Iterator iterator = selection.iterator();
+			while (iterator.hasNext()) {
+				if (! (iterator.next() instanceof IBSIStrukturElement)) {
+					event.doit = false;
+					return;
+				}
+			}
 		}
 			
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {

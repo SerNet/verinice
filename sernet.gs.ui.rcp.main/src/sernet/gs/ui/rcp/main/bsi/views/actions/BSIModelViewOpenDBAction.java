@@ -99,22 +99,18 @@ public class BSIModelViewOpenDBAction extends Action {
 					BSIModel model = CnAElementFactory.getInstance()
 							.loadOrCreateModel(new IProgress() {
 
-								@Override
 								public void beginTask(String name, int totalWork) {
 									monitor.beginTask(name, totalWork);
 								}
 
-								@Override
 								public void done() {
 									monitor.done();
 								}
 
-								@Override
 								public void worked(int work) {
 									monitor.worked(work);
 								}
 
-								@Override
 								public void setTaskName(String string) {
 									monitor.setTaskName(string);
 								}

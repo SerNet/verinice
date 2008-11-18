@@ -22,9 +22,6 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	 */
 	public SpringClientPlugin() {
 		plugin = this;
-        BeanFactoryLocator beanFactoryLocator = SingletonBeanFactoryLocator.getInstance();
-        BeanFactoryReference beanFactoryReference = beanFactoryLocator.useBeanFactory("ctx");
-        beanFactory = beanFactoryReference.getFactory();
 	}
 
 	/**
@@ -60,7 +57,12 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("SpringClient", path);
 	}
 
-	public BeanFactory getBeanFactory() {
+	public synchronized BeanFactory getBeanFactory(String beanFactoryUrl, String context) {
+		if (beanFactory == null) {
+			BeanFactoryLocator beanFactoryLocator = SingletonBeanFactoryLocator.getInstance(beanFactoryUrl);
+			BeanFactoryReference beanFactoryReference = beanFactoryLocator.useBeanFactory(context);
+			beanFactory = beanFactoryReference.getFactory();
+		}
 		return beanFactory;
 	}	
 }

@@ -12,7 +12,6 @@ public class CnAElementByTitleComparator implements
 
 	NumericStringComparator comparator = new NumericStringComparator();
 	
-	@Override
 	public int compare(CnATreeElement o1, CnATreeElement o2) {
 		if (o1 instanceof MassnahmenUmsetzung && o2 instanceof MassnahmenUmsetzung) {
 			int[] kap1 = ((MassnahmenUmsetzung) o1).getKapitelValue();
