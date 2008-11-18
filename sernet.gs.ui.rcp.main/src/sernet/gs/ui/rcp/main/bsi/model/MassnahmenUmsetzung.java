@@ -89,7 +89,8 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	}
 
 	protected MassnahmenUmsetzung() {
-
+		if (entityType == null)
+			entityType = typeFactory.getEntityType(TYPE_ID);
 	}
 
 	public static String[] getUmsetzungStati() {

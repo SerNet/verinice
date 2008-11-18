@@ -476,18 +476,21 @@ public class BsiModelView extends ViewPart {
 				Object sel = ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement();
 				if (sel instanceof FinishedRiskAnalysis) {
-					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
-					RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis
-							.getParent(), analysis);
-					wizard.init(PlatformUI.getWorkbench(), null);
-					WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(
-							new Shell(), wizard);
-					wizDialog.setPageSize(800, 600);
-					wizDialog.open();
+					// FIXME list editing still faulty
+//					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
+//					RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis
+//							.getParent(), analysis);
+//					wizard.init(PlatformUI.getWorkbench(), null);
+//					WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(
+//							new Shell(), wizard);
+//					wizDialog.setPageSize(800, 600);
+//					wizDialog.open();
 				} else if (sel instanceof CnALink) {
+					// jump to linked item:
 					viewer.setSelection(new StructuredSelection(((CnALink) sel)
 							.getDependency()), true);
 				} else
+					// open editor:
 					EditorFactory.getInstance().updateAndOpenObject(sel);
 			}
 		};

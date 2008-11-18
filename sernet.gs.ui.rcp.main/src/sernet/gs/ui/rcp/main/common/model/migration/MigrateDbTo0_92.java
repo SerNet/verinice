@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.resources.mapping.ChangeDescription;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
@@ -88,20 +89,45 @@ public class MigrateDbTo0_92 extends DbMigration {
 //		dbVersion.getLoadedModel().setDbVersion(0.92D);
 //		dbVersion.getDbHome().update(dbVersion.getLoadedModel());
 		
-		progress.beginTask("Aktualisiere DB auf V 0.92... bitte warten...", IProgress.UNKNOWN_WORK);
-		List<CnATreeElement> allElements = CnAElementFactory.getCurrentModel().getAllElements();
-
+		progress.beginTask("Aktualisiere DB auf V 0.92... Bitte warten...", IProgress.UNKNOWN_WORK);
+		final boolean[] done = new boolean[1];
+		done[0] = false;
+		Thread timeout = new Thread() {
+			@Override
+			public void run() {
+				long startTime = System.currentTimeMillis();
+				while (!done[0]) {
+					try {
+						sleep(1000);
+						long now = System.currentTimeMillis();
+						if (now - startTime > 10000) {
+							ExceptionUtil.log(new Exception("Das hier dauert und dauert..."), "Wenn diese Aktion länger als eine " +
+									"Minute dauert, sollten Sie ihre Datenbank von Derby nach Postgres migrieren. Falls das " +
+									"schon geschehen ist, sollten Sie ihre Postgres-DB tunen. Unter http://verinice.org/FAQ.46.0.html finden " +
+									"Sie weitere Hinweise. Sie können natürlich auch einfach weiter warten...");
+							return;
+						}
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+		};
+		timeout.start();
+		List<CnATreeElement> allElements = CnAElementFactory.getCurrentModel().getAllElements(true /* filter Massnahmen */);
+		done[0] = true;
+		
 		progress.beginTask("Migriere verknüpfte Personen...", allElements.size());
 		List<CnATreeElement> changedElements = migratePersonFields(allElements);
 		
-		progress.beginTask("Speichere alle veränderten Objekte...", IProgress.UNKNOWN_WORK);
+		progress.beginTask("Speichere alle veränderten Objekte. Bitte warten...", IProgress.UNKNOWN_WORK);
 		CnAElementHome.getInstance().update(changedElements);
-		dbVersion.getLoadedModel().setDbVersion(0.92D);
+		
+		dbVersion.getLoadedModel().setDbVersion(this.getVersion());
 		dbVersion.getDbHome().update(dbVersion.getLoadedModel());
 		progress.done();
-		
-		
 	}
+	
+	
 
 
 	private List<CnATreeElement> migratePersonFields(List<CnATreeElement> allElements) {
@@ -149,6 +175,11 @@ public class MigrateDbTo0_92 extends DbMigration {
 		for (int i = 0; i < personFieldsOld.length; i++) {
 			personFieldsNew[i] = personFieldsOld[i] + "_link";
 		}
+	}
+
+	@Override
+	public double getVersion() {
+		return 0.92D;
 	}
 
 }

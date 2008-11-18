@@ -166,22 +166,24 @@ public class BSIMassnahmenModel {
 
 	public static InputStream getBaustein(String url, String stand) 
 		throws GSServiceException {
-		InputStream bausteinText;
+		InputStream bausteinText = null;
 		try {
 			bausteinText = scrape.getBausteinText(url, stand);
 		} catch (Exception e) {
-			bausteinText = dsScrape.getBausteinText(url, stand);
+			if (dsScrape != null)
+				bausteinText = dsScrape.getBausteinText(url, stand);
 		}
 		return bausteinText;
 	}
 
 	public static InputStream getMassnahme(String url, String stand)
 			throws GSServiceException {
-		InputStream massnahme;
+		InputStream massnahme = null;
 		try {
 			massnahme = scrape.getMassnahme(url, stand);
 		} catch (Exception e) {
-			massnahme = dsScrape.getMassnahme(url, stand);
+			if (dsScrape != null)
+				massnahme = dsScrape.getMassnahme(url, stand);
 		}
 		return massnahme;
 	}
@@ -203,17 +205,19 @@ public class BSIMassnahmenModel {
 
 	public static InputStream getGefaehrdung(String url, String stand) 
 		throws GSServiceException {
-		InputStream gefaehrdung;
+		InputStream gefaehrdung = null;
 		try {
 			gefaehrdung = scrape.getGefaehrdung(url, stand);
 		} catch (Exception e) {
-			gefaehrdung = dsScrape.getGefaehrdung(url, stand);
+			if (dsScrape != null)
+				gefaehrdung = dsScrape.getGefaehrdung(url, stand);
 		}
 		return gefaehrdung;
 	}
 
 	public static void flushCache() {
-		scrape.flushCache();
+		if (scrape!= null)
+			scrape.flushCache();
 		if (dsScrape!= null)
 			dsScrape.flushCache();
 	}

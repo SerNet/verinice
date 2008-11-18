@@ -29,8 +29,13 @@ public class MigrateDbTo0_91 extends DbMigration {
 			SonstigeITKategorie kategorie = new SonstigeITKategorie(verbund);
 			verbund.addChild(kategorie);
 			dbVersion.getDbHome().save(kategorie);
-			dbVersion.getLoadedModel().setDbVersion(0.91D);
+			dbVersion.getLoadedModel().setDbVersion(getVersion());
 			dbVersion.getDbHome().update(dbVersion.getLoadedModel());
+	}
+
+	@Override
+	public double getVersion() {
+		return 0.91D;
 	}
 
 }

@@ -27,7 +27,7 @@ public class HibernateDocumentLinkDAO implements IDocumentLinkDAO {
 		if (CnAElementFactory.getCurrentModel() == null)
 			return root;
 		List<CnATreeElement> elements = CnAElementFactory.getCurrentModel()
-				.getAllElements();
+				.getAllElements(false /* do not leave out Massnahmen, they contain links too */);
 		for (CnATreeElement element : elements) {
 			Entity entity = element.getEntity();
 			if (entity == null)
