@@ -1,5 +1,7 @@
 package sernet.gs.ui.rcp.main.preferences;
 
+import java.io.File;
+
 /**
  * Constant definitions for plug-in preferences
  */
@@ -44,8 +46,24 @@ public class PreferenceConstants {
 	
 	//gstool db for import:
 	public static final String GS_DB_USER = "gs_cna_dbuser"; //$NON-NLS-1$
+	public static final String GS_DB_USER_DEFAULT = "sa"; //$NON-NLS-1$
+
 	public static final String GS_DB_PASS = "gs_cna_dbpass"; //$NON-NLS-1$
+
 	public static final String GS_DB_URL = "gs_cna_dburl"; //$NON-NLS-1$
+	
+	public static final String GS_DB_DRIVER_JTDS = "net.sourceforge.jtds.jdbc.Driver"; //$NON-NLS-1$
+	public static final String GS_DB_DRIVER_ODBC = "sun.jdbc.odbc.JdbcOdbcDriver"; //$NON-NLS-1$
+
+	public static final String GS_DB_DIALECT_JTDS = "org.hibernate.dialect.SQLServerDialect"; //$NON-NLS-1$
+	public static final String GS_DB_DIALECT_ODBC = "sernet.gs.ui.rcp.gsimport.AccessDialect"; //$NON-NLS-1$
+
+	// gstool uses port 1135, not 1433:
+	public static final String GS_DB_URL_LOCALHOST = "jdbc:jtds:sqlserver://localhost:1135/BSIDB_V45"; //$NON-NLS-1$
+	
+	public static final String GSTOOL_FILE = "gs_cna_attachfile";
+	public static final String GS_DB_ATTACHDB = "gs_cna_attachdb";
+	public static final String GS_MDBFILE = "gs_cna_mdbfile";
 	
 	
 }

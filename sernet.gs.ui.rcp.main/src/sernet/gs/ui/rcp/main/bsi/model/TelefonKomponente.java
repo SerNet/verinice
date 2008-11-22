@@ -21,6 +21,7 @@ public class TelefonKomponente extends CnATreeElement
 	public static final String P_ANWENDER_OLD	 	= "tkkomponente_anwender";
 	public static final String PROP_TAG			= "tkkomponente_tag";
 	public static final String PROP_ERLAEUTERUNG = "tkkomponente_erlaeuterung";
+	private static final String PROP_ANZAHL = "tkkomponente_anzahl";
 	
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 		= new SchutzbedarfAdapter(this);
@@ -93,6 +94,10 @@ public class TelefonKomponente extends CnATreeElement
 	
 	public void setKuerzel(String name) {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+	}
+	
+	public void setAnzahl(int anzahl) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
 
 }

@@ -22,6 +22,7 @@ public class Server extends CnATreeElement
 	@Deprecated
 	public static final String P_ANWENDER_OLD = "server_anwender";
 	public static final String PROP_ERLAEUTERUNG = "server_erlaeuterung";
+	private static final String PROP_ANZAHL = "server_anzahl";
 
 	private static EntityType entityType;
 	
@@ -94,6 +95,10 @@ public class Server extends CnATreeElement
 	
 	public void setKuerzel(String name) {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+	}
+
+	public void setAnzahl(int anzahl) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
 
 }

@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.PropertyType;
 
 public class BausteinUmsetzung extends CnATreeElement {
 
@@ -20,6 +21,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 	public static final String P_URL = "bstumsetzung_url"; //$NON-NLS-1$
 	@Deprecated
 	public static final String P_GESPRAECHSPARTNER_OLD= "bstumsetzung_gespraechspartner";
+	public static final String P_GESPRAECHSPARTNER_LINK= "bstumsetzung_gespraechspartner_link";
 	public static final String P_STAND = "bstumsetzung_stand";
 	public static final String P_ERLAEUTERUNG 	= "bstumsetzung_erlaeuterung";
 	public static final String P_ERFASSTAM 	= "bstumsetzung_erfasstam";
@@ -54,6 +56,8 @@ public class BausteinUmsetzung extends CnATreeElement {
 	
 	private BausteinUmsetzung() {
 		// hibernate constructor
+		if (entityType == null)
+			entityType = typeFactory.getEntityType(TYPE_ID);
 	}
 	
 	public void setKapitel(String kap) {
@@ -199,6 +203,16 @@ public class BausteinUmsetzung extends CnATreeElement {
 
 	public String getStand() {
 		return getEntity().getSimpleValue(P_STAND);
+	}
+
+	public void addBefragtePersonDurch(Person personToLink) {
+		PropertyType propertyType = entityType.getPropertyType(P_GESPRAECHSPARTNER_LINK);
+		getEntity().createNewProperty(propertyType, personToLink.getEntity().getDbId().toString());
+	}
+
+	public void addBefragungDurch(Person person) {
+		PropertyType propertyType = entityType.getPropertyType(P_ERFASSTDURCH_LINK);
+		getEntity().createNewProperty(propertyType, person.getEntity().getDbId().toString());
 	}
 
 }

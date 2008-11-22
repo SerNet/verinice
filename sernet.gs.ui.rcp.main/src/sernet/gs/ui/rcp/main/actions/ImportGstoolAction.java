@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -25,6 +26,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ICommandIds;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.dialogs.GSImportDialog;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
@@ -72,19 +74,31 @@ public class ImportGstoolAction extends Action {
 	
 	public void run() {
 		try {
-			if (!MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), "Import starten?",
-					"Der Import wird aus der GSTOOL-Datenbank durchgeführt, die Sie im Menü Bearbeiten -> " +
-					"Einstellungen angegeben haben. Es wird dafür ein neuer IT-Verbund angelegt. " +
-					"Es werden keine Daten überschrieben.")) {
+//			if (!MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), "Import starten?",
+//					"Der Import wird aus der GSTOOL-Datenbank durchgeführt, die Sie im Menü Bearbeiten -> " +
+//					"Einstellungen angegeben haben. Es wird dafür ein neuer IT-Verbund angelegt. " +
+//					"Es werden keine Daten überschrieben.")) {
+//				return;
+//			}
+			
+			final GSImportDialog dialog = new GSImportDialog(Display.getCurrent().getActiveShell());
+			if (dialog.open() != InputDialog.OK)
 				return;
-			}
 			
 			PlatformUI.getWorkbench().getProgressService().
 			busyCursorWhile(new IRunnableWithProgress() {
 				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					ImportTask importTask = new ImportTask();
+					ImportTask importTask = new ImportTask(
+							dialog.isBausteine(),
+							dialog.isMassnahmenPersonen(),
+							dialog.isZielObjekteZielobjekte(),
+							dialog.isSchutzbedarf(),
+							dialog.isRollen(),
+							dialog.isKosten(),
+							dialog.isUmsetzung(),
+							dialog.isBausteinPersonen());
 					try {
-						importTask.execute(new IProgress() {
+						importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
 							public void done() {
 								monitor.done();
 							}

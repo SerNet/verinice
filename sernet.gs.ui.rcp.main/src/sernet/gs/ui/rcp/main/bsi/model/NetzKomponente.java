@@ -77,6 +77,10 @@ public class NetzKomponente extends CnATreeElement
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
 	}
 
+	public void setAnzahl(int anzahl) {
+		// do nothing
+	}
+
 
 
 }

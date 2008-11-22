@@ -1,5 +1,6 @@
 package sernet.gs.ui.rcp.main.preferences;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
@@ -101,7 +102,8 @@ public class DatenbankPreferencePage
 		if (newValue.equals(PreferenceConstants.DB_DRIVER_DERBY)) {
 			dialect.setStringValue(PreferenceConstants.DB_DIALECT_derby);
 			String derbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s",CnAWorkspace //$NON-NLS-1$
-					.getInstance().getWorkdir() );
+					.getInstance().getWorkdir().replaceAll("\\", "/") );
+			Logger.getLogger(this.getClass()).debug("Derby url is " + derbyUrl);
 			url.setStringValue(derbyUrl);
 			user.setStringValue(""); //$NON-NLS-1$
 			pass.setStringValue(""); //$NON-NLS-1$

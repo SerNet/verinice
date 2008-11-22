@@ -12,11 +12,11 @@
 			{url}
 		</property>
 		<property name="dialect">
-			org.hibernate.dialect.SQLServerDialect
+			{dialect}
 		</property>
 		<property name="connection.password">{pass}</property>
 		<property name="connection.driver_class">
-			net.sourceforge.jtds.jdbc.Driver
+			{driver}
 		</property>
 
 		<mapping resource="sernet/gs/reveng/NmbNotiz.hbm.xml" />
@@ -50,6 +50,8 @@
 		<mapping resource="sernet/gs/reveng/NZobSb.hbm.xml" />
 		<mapping
 			resource="sernet/gs/reveng/MSchutzbedarfkategTxt.hbm.xml" />
+		<mapping resource="sernet/gs/reveng/ModZobjBstMitarb.hbm.xml" />
+		<mapping resource="sernet/gs/reveng/MbDringlichkeitTxt.hbm.xml" />
 			
 	</session-factory>
 

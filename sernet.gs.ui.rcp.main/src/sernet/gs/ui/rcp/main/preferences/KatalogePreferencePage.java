@@ -37,8 +37,8 @@ public class KatalogePreferencePage
 	extends FieldEditorPreferencePage
 	implements IWorkbenchPreferencePage {
 
-	private StringFieldEditor zipfilePath;
-	private StringFieldEditor datenschutzZipPath;
+	private FileFieldEditor zipfilePath;
+	private FileFieldEditor datenschutzZipPath;
 	private RadioGroupFieldEditor gsAccessMethod;
 	private DirectoryFieldEditor bsiUrl;
 	
@@ -75,6 +75,7 @@ public class KatalogePreferencePage
 		zipfilePath = new FileFieldEditor(PreferenceConstants.BSIZIPFILE, 
 				Messages.getString("KatalogePreferencePage.8"), //$NON-NLS-1$
 				getFieldEditorParent());
+		zipfilePath.setFileExtensions(new String[] {"*.zip;*.ZIP", "*.*"});
 		addField(zipfilePath);
 
 		bsiUrl = new DirectoryFieldEditor(PreferenceConstants.BSIDIR,
@@ -85,6 +86,7 @@ public class KatalogePreferencePage
 		datenschutzZipPath = new FileFieldEditor(PreferenceConstants.DSZIPFILE, 
 				Messages.getString("KatalogePreferencePage.10"), //$NON-NLS-1$
 				getFieldEditorParent());
+		datenschutzZipPath.setFileExtensions(new String[] {"*.zip;*.ZIP", "*.*"});
 		addField(datenschutzZipPath);
 
 		

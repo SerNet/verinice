@@ -17,13 +17,24 @@ import sernet.gs.ui.rcp.main.ImageCache;
 public class ShowPreferencesAction extends Action {
 	
 	
+	private String prefPage = null;
 	private static final String ID = "sernet.gs.ui.rcp.showprefsaction"; //$NON-NLS-1$
 
 	/**
 	 * Constructor
 	 */
+	public ShowPreferencesAction(String showPage) {
+		super();
+		setId(ID);
+		setText(Messages.getString("ShowPreferencesAction.1")); //$NON-NLS-1$
+		this.prefPage = showPage;
+		//setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.TOOL));
+	}
+	
+	/**
+	 * Constructor
+	 */
 	public ShowPreferencesAction() {
-		
 		super();
 		setId(ID);
 		setText(Messages.getString("ShowPreferencesAction.1")); //$NON-NLS-1$
@@ -62,6 +73,9 @@ public class ShowPreferencesAction extends Action {
 		
 		final PreferenceDialog dialog = new PreferenceDialog(
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), manager);
+		
+		if (prefPage != null)
+			dialog.setSelectedNode(prefPage);
 
 		BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
 			public void run() {

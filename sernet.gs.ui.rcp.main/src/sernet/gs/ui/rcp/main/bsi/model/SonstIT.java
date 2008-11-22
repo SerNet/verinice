@@ -21,6 +21,7 @@ public class SonstIT extends CnATreeElement
 	public static final String P_ANWENDER_OLD = "sonstit_anwender";
 	public static final String PROP_TAG			= "sonstit_tag";
 	public static final String PROP_ERLAEUTERUNG = "sonstit_erlaeuterung";
+	private static final String PROP_ANZAHL = "sonstit_anzahl";
 	
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 	= new SchutzbedarfAdapter(this);
@@ -94,5 +95,9 @@ public class SonstIT extends CnATreeElement
 	
 	public void setKuerzel(String name) {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+	}
+
+	public void setAnzahl(int anzahl) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
 }

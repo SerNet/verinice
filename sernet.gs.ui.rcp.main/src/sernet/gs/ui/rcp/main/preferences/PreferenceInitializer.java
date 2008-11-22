@@ -58,15 +58,15 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				PreferenceConstants.DB_DIALECT_derby);
 		
 		String derbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s",CnAWorkspace //$NON-NLS-1$
-				.getInstance().getWorkdir() );
+				.getInstance().getWorkdir().replaceAll("\\\\", "/") );
 		store.setDefault(PreferenceConstants.DB_URL,
 				derbyUrl);
 		
 		store.setDefault(PreferenceConstants.DB_USER, ""); //$NON-NLS-1$
 		store.setDefault(PreferenceConstants.DB_PASS, ""); //$NON-NLS-1$
 
-		store.setDefault(PreferenceConstants.GS_DB_URL, "jdbc:jtds:sqlserver://127.0.0.1/BSIDB_V45"); //$NON-NLS-1$
-		store.setDefault(PreferenceConstants.GS_DB_USER, "sa"); //$NON-NLS-1$
+		store.setDefault(PreferenceConstants.GS_DB_URL, PreferenceConstants.GS_DB_URL_LOCALHOST); //$NON-NLS-1$
+		store.setDefault(PreferenceConstants.GS_DB_USER, PreferenceConstants.GS_DB_USER_DEFAULT); //$NON-NLS-1$
 		store.setDefault(PreferenceConstants.GS_DB_PASS, ""); //$NON-NLS-1$
 		
 		

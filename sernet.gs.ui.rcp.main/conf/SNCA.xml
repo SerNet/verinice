@@ -1484,12 +1484,16 @@ Template:
             name="Tags"
             tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
         />
-		
+        
+		<huiproperty
+			id="gebaeude_anzahl"
+			name="Anzahl" />
 		
 		<huiproperty
 			id="gebaeude_erlaeuterung"
             inputtype="text"
 			name="Erläuterung" />
+		
 		<huiproperty
             name="Dokument"
             id="gebaeude_dokument"
@@ -1962,6 +1966,7 @@ Template:
                     name="Reserve"
                     id="anwendung_status_reserve" />
         </huiproperty>
+        
         <huiproperty
 			id="anwendung_erlaeuterung"
             inputtype="text"
@@ -1970,33 +1975,53 @@ Template:
             name="Dokument"
             id="anwendung_dokument"
             isURL="true" />
-        <huiproperty
-			id="anwendung_prozess"
-			name="Geschäftsprozess" />
-
-	     <huiproperty
-			id="anwendung_eigentümer_link"
-			name="Prozess-Eigentümer"
-			inputtype="reference" 
-			required="true">
-				<references 
-					entitytype="person"/>
-		</huiproperty>
-
-		<huiproperty 
-			name="Bedeutung für Prozess" 
-			id="anwendung_prozessbezug"
-			inputtype="singleoption">
-		<option 
-				id="anwendung_prozessbezug_1" 
-				name="normal"/>
-		<option 
-				id="anwendung_prozessbezug_2" 
-				name="hoch"/>
-		<option 
-				id="anwendung_prozessbezug_3" 
-				name="sehr hoch"/>								
-		</huiproperty>
+        
+        
+		
+		 <huipropertygroup
+			id="anwendung_group_fachaufgabe"
+			name="Fachaufgabe / Prozess">
+		
+			<huiproperty
+				id="anwendung_prozess"
+				name="Prozessbeschreibung" />
+				
+			<huiproperty
+				id="anwendung_prozess_informationen"
+				name="Verarbeitete Informationen" />
+	
+		     <huiproperty
+				id="anwendung_eigentümer_link"
+				name="Prozess-Eigentümer"
+				inputtype="reference" 
+				required="true">
+					<references 
+						entitytype="person"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Bedeutung für Prozess" 
+				id="anwendung_prozessbezug"
+				inputtype="singleoption">
+			<option 
+					id="anwendung_prozessbezug_1" 
+					name="unterstützend"/>
+			<option 
+					id="anwendung_prozessbezug_2" 
+					name="wichtig"/>
+			<option 
+					id="anwendung_prozessbezug_3" 
+					name="wesentlich"/>								
+			<option 
+					id="anwendung_prozessbezug_4" 
+					name="hochgradig notwendig"/>								
+			</huiproperty>
+			
+			<huiproperty
+				id="anwendung_prozessbezug_begruendung"
+				name="Begründung" />
+			
+		</huipropertygroup>
 		
         <huipropertygroup
 			id="anwendung_group_schutzbedarf"

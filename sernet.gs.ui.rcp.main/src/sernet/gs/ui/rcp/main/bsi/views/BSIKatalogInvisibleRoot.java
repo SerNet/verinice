@@ -35,7 +35,6 @@ public class BSIKatalogInvisibleRoot {
 								PreferenceConstants.GSACCESS)
 						|| event.getProperty().equals(
 								PreferenceConstants.DSZIPFILE)
-								// TODO chart "workload"
 					)
 
 					try {

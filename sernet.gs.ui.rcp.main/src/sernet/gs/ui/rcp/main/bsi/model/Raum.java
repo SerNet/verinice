@@ -18,6 +18,7 @@ public class Raum extends CnATreeElement
 	public static final String PROP_KUERZEL = "raum_kuerzel"; //$NON-NLS-1$
 	public static final String PROP_TAG			= "raum_tag";
 	public static final String PROP_ERLAEUTERUNG = "raum_erlaeuterung";
+	private static final String PROP_ANZAHL = "raum_anzahl";
 	
 	private static EntityType entityType;
 
@@ -92,5 +93,9 @@ public class Raum extends CnATreeElement
 	
 	public void setKuerzel(String name) {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+	}
+
+	public void setAnzahl(int anzahl) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
 }

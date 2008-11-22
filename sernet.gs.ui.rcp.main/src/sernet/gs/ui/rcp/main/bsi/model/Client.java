@@ -21,6 +21,7 @@ public class Client extends CnATreeElement
 	public static final String P_ANWENDER_OLD = "client_anwender"; //$NON-NLS-1$
 	public static final String PROP_TAG			= "client_tag";
 	public static final String PROP_ERLAEUTERUNG = "client_erlaeuterung";
+	private static final String PROP_ANZAHL = "client_anzahl";
 	
 	private static EntityType entityType;
 
@@ -92,6 +93,10 @@ private final ILinkChangeListener linkChangeListener
 	
 	public void setKuerzel(String name) {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+	}
+	
+	public void setAnzahl(int anzahl) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
 
 }

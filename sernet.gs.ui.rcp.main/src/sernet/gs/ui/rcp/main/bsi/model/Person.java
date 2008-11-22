@@ -29,6 +29,7 @@ implements IBSIStrukturElement {
 	// ID must correspond to entity definition in entitytype XML description:
 	public static final String TYPE_ID = "person"; //$NON-NLS-1$
 	public static final String PROP_ERLAEUTERUNG = "person_erlaeuterung";
+	private static final String PROP_ANZAHL = "person_anzahl";
 	
 	
 	public Person(CnATreeElement parent) {
@@ -150,6 +151,10 @@ implements IBSIStrukturElement {
 			}
 		}
 		return false;
+	}
+
+	public void setAnzahl(int anzahl) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
 	
 	

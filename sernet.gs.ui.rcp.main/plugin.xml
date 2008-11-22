@@ -404,6 +404,10 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
+            class="sernet.gs.ui.rcp.main.preferences.GeneralSettingsPage"
+            id="sernet.gs.ui.rcp.main.page4"
+            name="Allgemeine Einstellungen"/>
+      <page
             class="sernet.gs.ui.rcp.main.preferences.KatalogePreferencePage"
             id="sernet.gs.ui.rcp.main.preferences.CnAPreferencePage1"
             name="BSI IT-Grundschutz"/>
@@ -416,13 +420,15 @@
             id="sernet.gs.ui.rcp.main.page3"
             name="Reporting / Export"/>
       <page
-            class="sernet.gs.ui.rcp.main.preferences.GeneralSettingsPage"
-            id="sernet.gs.ui.rcp.main.page4"
-            name="Allgemeine Einstellungen"/>
-      <page
             class="sernet.gs.ui.rcp.main.preferences.GSImportPreferencePage"
             id="sernet.gs.ui.rcp.main.page5"
             name="GSTool Import">
+      </page>
+      <page
+            category="sernet.gs.ui.rcp.main.page5"
+            class="sernet.gs.ui.rcp.main.preferences.GSImportAttachPreferencePage"
+            id="sernet.gs.ui.rcp.main.page6"
+            name="GSTool Datenbank anhängen">
       </page>
    </extension>
    <extension

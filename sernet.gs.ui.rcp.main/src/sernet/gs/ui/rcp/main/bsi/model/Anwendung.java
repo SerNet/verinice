@@ -41,6 +41,21 @@ public class Anwendung extends CnATreeElement
 
 	public static final String PROP_ERLAEUTERUNG = "anwendung_erlaeuterung";
 
+	public static final String PROP_PROZESSBEZUG				= "anwendung_prozessbezug";
+	public static final String PROP_PROZESSBEZUG_UNTERSTUETZEND = "anwendung_prozessbezug_1";
+	public static final String PROP_PROZESSBEZUG_WICHTIG 		= "anwendung_prozessbezug_2";
+	public static final String PROP_PROZESSBEZUG_WESENTLICH 	= "anwendung_prozessbezug_3";
+	public static final String PROP_PROZESSBEZUG_HOCHGRADIG 	= "anwendung_prozessbezug_4";
+
+
+	private static final String PROP_VERARBEITETE_INFORMATIONEN = "anwendung_prozess_informationen";
+
+	private static final String PROP_PROZESSBESCHREIBUNG = "anwendung_prozess";
+
+	private static final String PROP_DRINGLICHKEIT_BEGRUENDUNG = "anwendung_prozessbezug_begruendung";
+
+
+
 	private static EntityType entityType;
 
 	public int getSchicht() {
@@ -118,6 +133,26 @@ public class Anwendung extends CnATreeElement
 
 	public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+	}
+
+	public void setAnzahl(int anzahl) {
+		// do nothing
+	}
+
+	public void setVerarbeiteteInformationen(String value) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_VERARBEITETE_INFORMATIONEN), value);
+	}
+
+	public void setProzessBeschreibung(String value) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_PROZESSBESCHREIBUNG), value);
+	}
+
+	public void setProzessWichtigkeitBegruendung(String value) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_DRINGLICHKEIT_BEGRUENDUNG), value);
+	}
+
+	public void setProzessWichtigkeit(String value) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_PROZESSBEZUG), value);
 	}
 
 }

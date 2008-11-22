@@ -18,6 +18,9 @@ implements IBSIStrukturElement {
 	public static final String PROP_TAG			= "gebaeude_tag";
 
 	public static final String PROP_ERLAEUTERUNG = "gebaeude_erlaeuterung";
+
+	private static final String PROP_ANZAHL = "gebaeude_anzahl";
+	
 	private static EntityType entityType;
 
 	
@@ -92,5 +95,9 @@ implements IBSIStrukturElement {
 	
 	public void setKuerzel(String name) {
 		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+	}
+
+	public void setAnzahl(int anzahl) {
+		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
 }

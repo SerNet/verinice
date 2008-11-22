@@ -68,6 +68,11 @@ public class CnAWorkspace {
 			}
 		}
 	};
+	
+	private CnAWorkspace() {
+		Activator.getDefault().getPluginPreferences()
+		.addPropertyChangeListener(this.prefChangeListener);
+	}
 
 	public static CnAWorkspace getInstance() {
 		if (instance == null)
@@ -295,9 +300,19 @@ public class CnAWorkspace {
 	public void createGstoolImportDatabaseConfig(String url, String user,
 			String pass) throws NullPointerException, IOException {
 		settings = new HashMap<String, String>(5);
-		settings.put("url", url);
+		settings.put("url", url.replace("\\", "\\\\"));
 		settings.put("user", user);
 		settings.put("pass", pass);
+		
+		if (url.indexOf("odbc")>-1) {
+			settings.put("driver", PreferenceConstants.GS_DB_DRIVER_ODBC);
+			settings.put("dialect", PreferenceConstants.GS_DB_DIALECT_ODBC);
+		}
+		else {
+			settings.put("driver", PreferenceConstants.GS_DB_DRIVER_JTDS);
+			settings.put("dialect", PreferenceConstants.GS_DB_DIALECT_JTDS);
+		}
+		
 		createTextFile("conf" + File.separator
 				+ "skel_hibernate-vampire.cfg.xml", workDir, "conf"
 				+ File.separator + "hibernate-vampire.cfg.xml", settings);
