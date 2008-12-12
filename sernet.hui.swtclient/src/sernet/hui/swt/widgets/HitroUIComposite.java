@@ -33,8 +33,8 @@ public class HitroUIComposite extends ScrolledComposite {
 		
 	}
 	
-	public void setInputHelper(String typeid, IInputHelper helper, int type) {
-		huiView.setInputHelper(typeid, helper, type);
+	public void setInputHelper(String typeid, IInputHelper helper, int type, boolean showHint) {
+		huiView.setInputHelper(typeid, helper, type, showHint);
 	}
 	
 	public void resetInitialFocus() {

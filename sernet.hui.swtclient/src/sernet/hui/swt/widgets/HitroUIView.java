@@ -101,7 +101,7 @@ public class HitroUIView implements IEntityChangedListener   {
 	 * @param typeID
 	 * @param helper
 	 */
-	public void setInputHelper(String typeID, final IInputHelper helper, int type) {
+	public void setInputHelper(String typeID, final IInputHelper helper, int type, final boolean showHint) {
 		IHuiControl field = this.fields.get(typeID);
 		if (field == null)
 			return;
@@ -130,6 +130,9 @@ public class HitroUIView implements IEntityChangedListener   {
 		final FocusAdapter focusAdapter = new FocusAdapter() {
 			Shell tip = null;
 			public void focusGained(FocusEvent arg0) {
+				if (!showHint)
+					return; // do not show activation hint
+				
 				if (helper.getSuggestions().length<1)
 					return; // no suggestions
 				
@@ -151,7 +154,7 @@ public class HitroUIView implements IEntityChangedListener   {
 			
 			@Override
 			public void focusLost(FocusEvent e) {
-				if (tip != null) {
+				if (showHint && tip != null) {
 					tip.dispose();
 					tip=null;
 				}
