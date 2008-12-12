@@ -501,9 +501,9 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		viewerMassnahme.setContentProvider(new ArrayContentProvider());
 		/* associate domain model with viewer */
 		viewerMassnahme.setInput(arrListMassnahmenUmsetzungen);
+		viewerMassnahme.setSorter(new MassnahmenSorter());
 		packAllMassnahmeColumns();
 
-		// TODO viewer.setSorter(new GefaehrdungenSorter());
 
 		((RiskAnalysisWizard) getWizard()).setCanFinish(true);
 	}

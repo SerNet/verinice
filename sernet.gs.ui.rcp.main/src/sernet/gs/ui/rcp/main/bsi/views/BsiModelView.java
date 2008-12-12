@@ -477,14 +477,14 @@ public class BsiModelView extends ViewPart {
 						.getFirstElement();
 				if (sel instanceof FinishedRiskAnalysis) {
 					// FIXME list editing still faulty
-//					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
-//					RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis
-//							.getParent(), analysis);
-//					wizard.init(PlatformUI.getWorkbench(), null);
-//					WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(
-//							new Shell(), wizard);
-//					wizDialog.setPageSize(800, 600);
-//					wizDialog.open();
+					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
+					RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis
+							.getParent(), analysis);
+					wizard.init(PlatformUI.getWorkbench(), null);
+					WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(
+							new Shell(), wizard);
+					wizDialog.setPageSize(800, 600);
+					wizDialog.open();
 				} else if (sel instanceof CnALink) {
 					// jump to linked item:
 					viewer.setSelection(new StructuredSelection(((CnALink) sel)

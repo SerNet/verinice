@@ -181,10 +181,12 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				if (button.getSelection()) {
 					viewer.addFilter(ownGefaehrdungFilter);
 					viewer.refresh();
+					checkAllSelectedGefaehrdungen();
 				} else {
 					viewer.removeFilter(ownGefaehrdungFilter);
 					viewer.refresh();
 					assignBausteinGefaehrdungen();
+					checkAllSelectedGefaehrdungen();
 				}
 			}
 		});
@@ -209,10 +211,12 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				if (button.getSelection()) {
 					viewer.addFilter(gefaehrdungFilter);
 					viewer.refresh();
+					checkAllSelectedGefaehrdungen();
 				} else {
 					viewer.removeFilter(gefaehrdungFilter);
 					viewer.refresh();
 					assignBausteinGefaehrdungen();
+					checkAllSelectedGefaehrdungen();
 				}
 			}
 		});
@@ -250,17 +254,20 @@ public class ChooseGefaehrdungPage extends WizardPage {
 						/* filter is already active - update filter */
 						thisFilter.setPattern(text.getText());
 						viewer.refresh();
+						checkAllSelectedGefaehrdungen();
 						
 					} else {
 						/* filter is not active - add */
 						searchFilter.setPattern(text.getText());
 						viewer.addFilter(searchFilter);
 						viewer.refresh();
+						checkAllSelectedGefaehrdungen();
 					}
 				} else {
 					viewer.removeFilter(searchFilter);
 					viewer.refresh();
 					assignBausteinGefaehrdungen();
+					checkAllSelectedGefaehrdungen();
 				}
 			}
 		});
@@ -362,20 +369,12 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
 	protected void associateGefaehrdung(Gefaehrdung currentGefaehrdung, boolean select) {
 			RiskAnalysisWizard wizard = ((RiskAnalysisWizard) getWizard());
-			List<GefaehrdungsUmsetzung> selectedArrayList = wizard
-					.getAssociatedGefaehrdungen();
 
-			if (select) {
-				if (!GefaehrdungsUtil.listContainsById(selectedArrayList, currentGefaehrdung)) {
-					/* Add to List of Associated Gefaehrdungen */
-					selectedArrayList.add(
-							GefaehrdungsUmsetzungFactory.build(wizard.getFinishedRiskAnalysis(), currentGefaehrdung)
-							);
-				}
-			} else {
-				/* remove from List of Associated Gefaehrdungen */
-				GefaehrdungsUtil.removeBySameId(selectedArrayList, currentGefaehrdung);
-			}
+			if (select) 
+				wizard.addAssociatedGefaehrdung(currentGefaehrdung);
+			else
+				wizard.removeAssociatedGefaehrdung(currentGefaehrdung);
+				
 			checkPageComplete();
 	
 	}

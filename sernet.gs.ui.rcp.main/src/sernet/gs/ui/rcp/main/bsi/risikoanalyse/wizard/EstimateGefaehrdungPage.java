@@ -247,12 +247,14 @@ public class EstimateGefaehrdungPage extends WizardPage {
 						/* filter is already active - update filter */
 						thisFilter.setPattern(text.getText());
 						viewer.refresh();
+						selectAssignedGefaehrdungen();
 						
 					} else {
 						/* filter is not active - add */
 						searchFilter.setPattern(text.getText());
 						viewer.addFilter(searchFilter);
 						viewer.refresh();
+						selectAssignedGefaehrdungen();
 					}
 				} else {
 					viewer.removeFilter(searchFilter);
@@ -440,10 +442,17 @@ public class EstimateGefaehrdungPage extends WizardPage {
 		 */
 		public boolean select(Viewer viewer, Object parentElement,
 				Object element) {
-			Gefaehrdung gefaehrdung = (Gefaehrdung) element;
-			String gefaehrdungTitle = gefaehrdung.getTitel();
+			String gefaehrdungTitle = "";
+			if (element instanceof Gefaehrdung) {
+				Gefaehrdung gefaehrdung = (Gefaehrdung) element;
+				gefaehrdungTitle = gefaehrdung.getTitel();
+			}
+			else if (element instanceof GefaehrdungsUmsetzung) {
+				GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) element;
+				gefaehrdungTitle = gefaehrdung.getTitel();
+			}
+			
 			Matcher matcher = pattern.matcher(gefaehrdungTitle);
-
 			if (matcher.find()) {
 				return true;
 			} else {

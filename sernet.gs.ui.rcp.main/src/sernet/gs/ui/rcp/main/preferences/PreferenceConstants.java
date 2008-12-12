@@ -23,6 +23,7 @@ public class PreferenceConstants {
 	
 	public static final String FIRSTSTART= "cna_derbywarning"; //$NON-NLS-1$
 	public static final String ERRORPOPUPS = "cna_errorpopups"; //$NON-NLS-1$
+	public static final String INPUTHINTS = "cna_inputhelperhints";
 
 	public static final String DB_DRIVER = "cna_driver"; //$NON-NLS-1$
 	public static final String DB_DRIVER_DERBY = "org.apache.derby.jdbc.EmbeddedDriver"; //$NON-NLS-1$
@@ -64,6 +65,7 @@ public class PreferenceConstants {
 	public static final String GSTOOL_FILE = "gs_cna_attachfile";
 	public static final String GS_DB_ATTACHDB = "gs_cna_attachdb";
 	public static final String GS_MDBFILE = "gs_cna_mdbfile";
+	
 	
 	
 }

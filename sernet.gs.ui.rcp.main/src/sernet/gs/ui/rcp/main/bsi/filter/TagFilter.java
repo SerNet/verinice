@@ -10,6 +10,8 @@ import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 
 public class TagFilter extends ViewerFilter {
+	
+	public static final String NO_TAG = "[keine Tags]";
 
 	String[] pattern;
 	private StructuredViewer viewer;
@@ -25,6 +27,11 @@ public class TagFilter extends ViewerFilter {
 		
 		IBSIStrukturElement zielobjekt = (IBSIStrukturElement) element;
 		for (String tag : pattern) {
+			if (tag.equals(NO_TAG)) {
+				if (zielobjekt.getTags().size()<1)
+					return true;
+			}
+			
 			for (String zielTag : zielobjekt.getTags()) {
 				if (zielTag.equals(tag))
 					return true;

@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.openoffice.java.accessibility.ComboBox;
 
+import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 
@@ -310,7 +311,9 @@ private void createAusblendenCheckboxes(Group parent) {
 	protected void initContent() {
 		super.initContent();
 		if (CnAElementFactory.getCurrentModel() != null) {
-			viewer.setInput(CnAElementFactory.getCurrentModel().getTags());
+			List<String> tags = CnAElementFactory.getCurrentModel().getTags();
+			tags.add(0, TagFilter.NO_TAG);
+			viewer.setInput(tags);
 			
 			//FIXME workaround to prevent tableviewer size from exceeding shell size:
 			viewer.getTable().setSize(200,200);

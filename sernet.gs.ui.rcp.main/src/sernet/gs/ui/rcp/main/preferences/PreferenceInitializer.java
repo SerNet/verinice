@@ -50,6 +50,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 		store.setDefault(PreferenceConstants.ERRORPOPUPS, true);
 		store.setDefault(PreferenceConstants.FIRSTSTART, true);
+		store.setDefault(PreferenceConstants.INPUTHINTS, true);
 
 		store.setDefault(PreferenceConstants.DB_DRIVER,
 				PreferenceConstants.DB_DRIVER_DERBY);

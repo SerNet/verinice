@@ -34,6 +34,7 @@ import org.openoffice.java.accessibility.ComboBox;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.preferences.GSImportAttachPreferencePage;
+import sernet.gs.ui.rcp.main.preferences.GSImportPreferencePage;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 
@@ -95,7 +96,7 @@ public class GSImportDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				setReturnCode(CANCEL);
 				close();
-				ShowPreferencesAction action = new ShowPreferencesAction(GSImportAttachPreferencePage.ID);
+				ShowPreferencesAction action = new ShowPreferencesAction(GSImportPreferencePage.ID);
 				action.run();
 			}
 		});

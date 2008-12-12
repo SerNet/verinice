@@ -202,7 +202,6 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		Set<CnATreeElement> verbuende = getChildren();
 
 		for (CnATreeElement verbund : verbuende) {
-
 			for (CnATreeElement kategorie : verbund.getChildren()) {
 
 				for (CnATreeElement zielobjekt : kategorie.getChildren()) {

@@ -3,6 +3,7 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 import java.util.ArrayList;
 import java.util.List;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
@@ -18,6 +19,7 @@ import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.PropertyGroup;
@@ -78,32 +80,31 @@ public class InputHelperFactory {
 			};
 		}
 		
+		boolean showHint = Activator.getDefault().getPluginPreferences().getBoolean(
+				PreferenceConstants.INPUTHINTS);
 		
 		// Tag Helpers:
-		huiComposite2.setInputHelper(Anwendung.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);
-		huiComposite2.setInputHelper(Client.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);
-		huiComposite2.setInputHelper(Gebaeude.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);
-		huiComposite2.setInputHelper(NetzKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);
-		huiComposite2.setInputHelper(Person.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);
-		huiComposite2.setInputHelper(Raum.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);
-		huiComposite2.setInputHelper(Server.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);
-		huiComposite2.setInputHelper(SonstIT.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);
-		huiComposite2.setInputHelper(TelefonKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD);
+		huiComposite2.setInputHelper(Anwendung.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+		huiComposite2.setInputHelper(Client.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+		huiComposite2.setInputHelper(Gebaeude.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+		huiComposite2.setInputHelper(NetzKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+		huiComposite2.setInputHelper(Person.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+		huiComposite2.setInputHelper(Raum.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+		huiComposite2.setInputHelper(Server.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+		huiComposite2.setInputHelper(SonstIT.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+		huiComposite2.setInputHelper(TelefonKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
 		
-		setSchutzbedarfHelpers(entityType, huiComposite2);
-		
-		// Person Helpers:
-		huiComposite2.setInputHelper(BausteinUmsetzung.P_ERFASSTDURCH_OLD, personHelper, IInputHelper.TYPE_REPLACE);
+		setSchutzbedarfHelpers(entityType, huiComposite2, showHint);
 
 	}
 
-	private static void setSchutzbedarfHelpers(EntityType entityType, HitroUIComposite huiComposite2) {
+	private static void setSchutzbedarfHelpers(EntityType entityType, HitroUIComposite huiComposite2, boolean showHint) {
 		for (PropertyGroup group : entityType.getPropertyGroups()) {
 			for (PropertyType type : group.getPropertyTypes()) {
 				if (Schutzbedarf.isIntegritaetBegruendung(type.getId())
 						|| Schutzbedarf.isVerfuegbarkeitBegruendung(type.getId())
 						|| Schutzbedarf.isVertraulichkeitBegruendung(type.getId())) {
-					huiComposite2.setInputHelper(type.getId(), schutzbedarfHelper, IInputHelper.TYPE_REPLACE);
+					huiComposite2.setInputHelper(type.getId(), schutzbedarfHelper, IInputHelper.TYPE_REPLACE, showHint);
 				}
 			}
 		}

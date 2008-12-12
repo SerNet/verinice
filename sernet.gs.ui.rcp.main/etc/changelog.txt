@@ -1,11 +1,9 @@
-2008-11-17
-- FIX NullPointerException when no DS-module defined in preferences
-- Message when migration takes too long
-- FIX performance increase by ignoring controls when iterating over all
-elements
-- Migration to DB version 0.93: adding roles to old controls
-- FIX exceptions on migration to 0.92
-- FIX editing risk analysis disabled for now, some fixes to be done first
+
+2008-12-10
+- NEW Filter for "no tag" in BSI model view
+- FIX InputHelper hints can be disabled, for platforms where theys sometimes
+get stuck
+
 
 2008-11-18
 - dedicated optimized mappings for derby and other DBs for better performance,
@@ -16,4 +14,13 @@ elements
 - FIX @Override annotations leading to compile time errors for methods that
 were not really present in a superclass
 - moved update site to updates.verinice.org
+
+2008-11-17
+- FIX NullPointerException when no DS-module defined in preferences
+- Message when migration takes too long
+- FIX performance increase by ignoring controls when iterating over all
+elements
+- Migration to DB version 0.93: adding roles to old controls
+- FIX exceptions on migration to 0.92
+- FIX editing risk analysis disabled for now, some fixes to be done first
 

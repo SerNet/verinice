@@ -153,7 +153,7 @@ public class ChooseExportMethodPage extends WizardPage {
 		Logger.getLogger(this.getClass())
 			.error("OO Pfad in Preferences stimmt nicht. Suche...");
 
-		String[] dirs = new String[] {textOoDir, "/usr/local", "/usr/lib" };
+		String[] dirs = new String[] {textOoDir, "/usr/lib", "/usr/local", "/usr/lib64" };
 		for (int i = 0; i < dirs.length; i++) {
 			dirsSearched = 0;
 			if (dirsSearched > MAX_SEARCH)

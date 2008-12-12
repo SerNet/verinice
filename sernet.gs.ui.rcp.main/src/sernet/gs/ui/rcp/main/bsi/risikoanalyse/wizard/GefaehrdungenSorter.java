@@ -3,6 +3,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
 
 /**
@@ -26,14 +27,28 @@ public class GefaehrdungenSorter extends ViewerSorter {
 	 */
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		if (!(e1 instanceof Gefaehrdung
-				&& e2 instanceof Gefaehrdung))
-			return 0;
+		if ((e1 instanceof Gefaehrdung
+				&& e2 instanceof Gefaehrdung)
+				) {
+			Gefaehrdung gef1 = (Gefaehrdung) e1;
+			Gefaehrdung gef2 = (Gefaehrdung) e2;
+			
+			NumericStringComparator numComp = new NumericStringComparator();
+			return numComp.compare(gef1.getId(), gef2.getId());
+		}
+
+		if ((e1 instanceof GefaehrdungsUmsetzung
+				&& e2 instanceof GefaehrdungsUmsetzung)
+		) {
+			GefaehrdungsUmsetzung gef1 = (GefaehrdungsUmsetzung) e1;
+			GefaehrdungsUmsetzung gef2 = (GefaehrdungsUmsetzung) e2;
+			
+			NumericStringComparator numComp = new NumericStringComparator();
+			return numComp.compare(gef1.getId(), gef2.getId());
+		}
 		
-		Gefaehrdung gef1 = (Gefaehrdung) e1;
-		Gefaehrdung gef2 = (Gefaehrdung) e2;
+		// else, consider elements as equal:
+		return 0;
 		
-		NumericStringComparator numComp = new NumericStringComparator();
-		return numComp.compare(gef1.getId(), gef2.getId());
 	}
 }

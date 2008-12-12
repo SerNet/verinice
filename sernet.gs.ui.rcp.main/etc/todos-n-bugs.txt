@@ -1,0 +1,22 @@
+
+- NEW Kopierfunktion
+- NEW andere / mehr Schutzbedarfsstufen?
+- FIX schutzbedarfszuordnung von verknüpftem objekt (parent) verschwindet?
+- NEW verknüpfte objekte in textfeld bei maximumprinzip
+- FIX OO3 Export
+- NEW kategorie "übergeordnete aspekte"
+- FIX unter windows aufklappen
+- NEW oracle unterstützung
+- FIX job für "neue risikoanalyse"
+- FIX gefährdung fehlt bei "umgang mit sich.vorfällen"
+- FIX proxy auth infos beim start aus preferences auslesen und setzen
+
+
+
+Risk Analysis:
+- FIX filter für gefährdungen
+- verknüpfung mit brwoser
+- dialog nicht modal
+
+
+

@@ -69,12 +69,13 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
 	/* list of all MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
 	private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
-	
+
 	// Are we editing a previous Risk Analysis?
 	private boolean previousAnalysis = false;
 	private FinishedRiskAnalysisLists finishedRiskLists;
-	
-	private Collection<GefaehrdungsUmsetzung> objectsToDelete = new HashSet<GefaehrdungsUmsetzung>(50); 
+
+	private Collection<GefaehrdungsUmsetzung> objectsToDelete = new HashSet<GefaehrdungsUmsetzung>(
+			50);
 
 	public RiskAnalysisWizard(CnATreeElement treeElement) {
 		cnaElement = treeElement;
@@ -89,25 +90,38 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	@Override
 	public boolean performFinish() {
 		cnaElement.addChild(finishedRiskAnalysis);
+
+		// set correct parent for display in tree:
+		for (GefaehrdungsUmsetzung gefaehrdung : finishedRiskLists.getNotOKGefaehrdungsUmsetzungen()) {
+			gefaehrdung.setParent(finishedRiskAnalysis);
+		}
+
 		if (!previousAnalysis) {
 			try {
+				
 				CnAElementHome.getInstance().save(finishedRiskAnalysis);
-				finishedRiskLists.setFinishedRiskAnalysisId(finishedRiskAnalysis.getDbId());
-				FinishedRiskAnalysisListsHome.getInstance().saveNew(finishedRiskLists);
+				finishedRiskLists
+						.setFinishedRiskAnalysisId(finishedRiskAnalysis
+								.getDbId());
+				FinishedRiskAnalysisListsHome.getInstance().saveNew(
+						finishedRiskLists);
 			} catch (Exception e) {
-				ExceptionUtil.log(e, "Konnte neue Risikoanalyse nicht speichern.");
+				ExceptionUtil.log(e,
+						"Konnte neue Risikoanalyse nicht speichern.");
 			}
-		}
-		else {
+		} else {
 			try {
 				for (GefaehrdungsUmsetzung umsetzung : objectsToDelete) {
 					umsetzung.remove();
 					CnAElementHome.getInstance().remove(umsetzung);
 				}
 				CnAElementHome.getInstance().update(finishedRiskAnalysis);
-				FinishedRiskAnalysisListsHome.getInstance().update(finishedRiskLists);
+				FinishedRiskAnalysisListsHome.getInstance().update(
+						finishedRiskLists);
 			} catch (Exception e) {
-				ExceptionUtil.log(e, "Konnte Änderungen an vorheriger Risikoanalyse nicht speichern.");
+				ExceptionUtil
+						.log(e,
+								"Konnte Änderungen an vorheriger Risikoanalyse nicht speichern.");
 			}
 		}
 		return true;
@@ -136,18 +150,18 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 		if (finishedRiskAnalysis == null) {
 			finishedRiskAnalysis = new FinishedRiskAnalysis(cnaElement);
 			finishedRiskLists = new FinishedRiskAnalysisLists();
-		}
-		else {
-			finishedRiskLists = FinishedRiskAnalysisListsHome.getInstance().loadById(finishedRiskAnalysis.getDbId());
+		} else {
+			finishedRiskLists = FinishedRiskAnalysisListsHome.getInstance()
+					.loadById(finishedRiskAnalysis.getDbId());
 			if (finishedRiskLists == null) {
-				ExceptionUtil.log(new Exception(), "Die Risikoanalyse wurde unvollständig gespeichert und " +
-						"kann nicht wiederaufgenommen werden.");
+				ExceptionUtil.log(new Exception(),
+						"Die Risikoanalyse wurde unvollständig gespeichert und "
+								+ "kann nicht wiederaufgenommen werden.");
 				finishedRiskLists = new FinishedRiskAnalysisLists();
-			}
-			else 
+			} else
 				previousAnalysis = true;
 		}
-		
+
 		loadAllGefaehrdungen();
 		loadAllMassnahmen();
 		loadAssociatedGefaehrdungen();
@@ -190,7 +204,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 */
 	public void setAssociatedGefaehrdungen(
 			ArrayList<GefaehrdungsUmsetzung> newAssociatedGefaehrdungen) {
-		finishedRiskLists.setAssociatedGefaehrdungen( newAssociatedGefaehrdungen);
+		finishedRiskLists
+				.setAssociatedGefaehrdungen(newAssociatedGefaehrdungen);
 	}
 
 	/**
@@ -287,9 +302,11 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 				continue;
 
 			for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
-				if (!GefaehrdungsUtil.listContainsById(finishedRiskLists.getAssociatedGefaehrdungen(), gefaehrdung)) {
+				if (!GefaehrdungsUtil.listContainsById(finishedRiskLists
+						.getAssociatedGefaehrdungen(), gefaehrdung)) {
 					finishedRiskLists.getAssociatedGefaehrdungen().add(
-							GefaehrdungsUmsetzungFactory.build(finishedRiskAnalysis, gefaehrdung));
+							GefaehrdungsUmsetzungFactory.build(
+									null, gefaehrdung));
 				}
 			}
 		}
@@ -353,7 +370,9 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
 	/**
 	 * Allows repeating the Wizard with result from a previous anaylsis.
-	 * @param oldAnalysis old analysis to repeat all steps.
+	 * 
+	 * @param oldAnalysis
+	 *            old analysis to repeat all steps.
 	 */
 	public void setOldAnalysis(FinishedRiskAnalysis oldAnalysis) {
 		this.finishedRiskAnalysis = oldAnalysis;
@@ -418,23 +437,6 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 		return finishedRiskLists.getNotOKGefaehrdungsUmsetzungen();
 	}
 
-// not needed: all are already added by PropertiesComboBoxCellModifier.
-//	/**
-//	 * Adds all GefaehrdungsUmsetzungen with Alternative "A" to the List of
-//	 * Gefaehrdungen which need additional security measures.
-//	 */
-//	public void addRisikoGefaehrdungsUmsetzungen() {
-//		for (GefaehrdungsUmsetzung element : riskLists.getAllGefaehrdungsUmsetzungen()) {
-//			/* add to List of "A" categorized risks if needed */
-//			if (element.getAlternative() == GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_A
-//					&& !(riskLists.getNotOKGefaehrdungsUmsetzungen().contains(element))) {
-//				riskLists.getNotOKGefaehrdungsUmsetzungen().add(element);
-//				Logger.getLogger(this.getClass()).debug(
-//						"Add Risiko: " + element.getTitel());
-//			}
-//		}
-//	}
-
 	/**
 	 * Returns the List of all Massnahmen of type MassnahmenUmsetzung.
 	 * 
@@ -491,9 +493,35 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
 	public void removeOldObjects() {
 		for (GefaehrdungsUmsetzung gefaehrdung : getObjectsToDelete()) {
-			Logger.getLogger(this.getClass()).debug("Removing object from wizard: " + gefaehrdung);
-			GefaehrdungsUtil.removeBySameId(getAllGefaehrdungsUmsetzungen(), gefaehrdung);
-			GefaehrdungsUtil.removeBySameId(getNotOKGefaehrdungsUmsetzungen(), gefaehrdung);
+			Logger.getLogger(this.getClass()).debug(
+					"Removing object from wizard: " + gefaehrdung);
+			GefaehrdungsUtil.removeBySameId(getAllGefaehrdungsUmsetzungen(),
+					gefaehrdung);
+			GefaehrdungsUtil.removeBySameId(getNotOKGefaehrdungsUmsetzungen(),
+					gefaehrdung);
 		}
+	}
+
+	public void addAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) {
+		List<GefaehrdungsUmsetzung> selectedArrayList = finishedRiskLists
+				.getAssociatedGefaehrdungen();
+		if (!GefaehrdungsUtil.listContainsById(selectedArrayList,
+				currentGefaehrdung)) {
+			/* Add to List of Associated Gefaehrdungen */
+			selectedArrayList.add(GefaehrdungsUmsetzungFactory.build(
+					getFinishedRiskAnalysis(), currentGefaehrdung));
+		}
+	}
+
+	public void removeAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) {
+		/* remove from List of Associated Gefaehrdungen */
+		GefaehrdungsUtil.removeBySameId(finishedRiskLists
+				.getAssociatedGefaehrdungen(), currentGefaehrdung);
+		
+		GefaehrdungsUtil.removeBySameId(finishedRiskLists
+				.getAllGefaehrdungsUmsetzungen(), currentGefaehrdung);
+		
+		GefaehrdungsUtil.removeBySameId(finishedRiskLists
+				.getNotOKGefaehrdungsUmsetzungen(), currentGefaehrdung);
 	}
 }

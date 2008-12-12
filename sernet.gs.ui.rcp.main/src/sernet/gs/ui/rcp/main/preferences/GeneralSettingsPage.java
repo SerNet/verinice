@@ -20,6 +20,7 @@ public class GeneralSettingsPage
 
 	private BooleanFieldEditor errorPopups;
 	private BooleanFieldEditor derbyWarning;
+	private BooleanFieldEditor inputHelperHints;
 
 	public GeneralSettingsPage() {
 		super(GRID);
@@ -43,6 +44,11 @@ public class GeneralSettingsPage
 				Messages.getString("GeneralSettingsPage.2"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(errorPopups);
+		
+		inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, 
+				"Zeige Tooltip für Eingabehilfe (\"Hilfe: Pfeil-Runter-Taste\") für neu geöffnete Editoren",
+				getFieldEditorParent());
+		addField(inputHelperHints);
 		
 	}
 	

@@ -1975,54 +1975,7 @@ Template:
             name="Dokument"
             id="anwendung_dokument"
             isURL="true" />
-        
-        
-		
-		 <huipropertygroup
-			id="anwendung_group_fachaufgabe"
-			name="Fachaufgabe / Prozess">
-		
-			<huiproperty
-				id="anwendung_prozess"
-				name="Prozessbeschreibung" />
-				
-			<huiproperty
-				id="anwendung_prozess_informationen"
-				name="Verarbeitete Informationen" />
-	
-		     <huiproperty
-				id="anwendung_eigentümer_link"
-				name="Prozess-Eigentümer"
-				inputtype="reference" 
-				required="true">
-					<references 
-						entitytype="person"/>
-			</huiproperty>
-			
-			<huiproperty 
-				name="Bedeutung für Prozess" 
-				id="anwendung_prozessbezug"
-				inputtype="singleoption">
-			<option 
-					id="anwendung_prozessbezug_1" 
-					name="unterstützend"/>
-			<option 
-					id="anwendung_prozessbezug_2" 
-					name="wichtig"/>
-			<option 
-					id="anwendung_prozessbezug_3" 
-					name="wesentlich"/>								
-			<option 
-					id="anwendung_prozessbezug_4" 
-					name="hochgradig notwendig"/>								
-			</huiproperty>
-			
-			<huiproperty
-				id="anwendung_prozessbezug_begruendung"
-				name="Begründung" />
-			
-		</huipropertygroup>
-		
+		 	
         <huipropertygroup
 			id="anwendung_group_schutzbedarf"
 			name="Schutzbedarf">
@@ -2086,6 +2039,54 @@ Template:
 				id="anwendung_integritaet_begruendung" />
 
 		</huipropertygroup>
+
+<huipropertygroup
+			id="anwendung_group_fachaufgabe"
+			name="Fachaufgabe / Prozess">
+		
+			<huiproperty
+				id="anwendung_prozess"
+				name="Prozessbeschreibung" />
+				
+			<huiproperty
+				id="anwendung_prozess_informationen"
+				name="Verarbeitete Informationen" />
+	
+		     <huiproperty
+				id="anwendung_eigentümer_link"
+				name="Prozess-Eigentümer"
+				inputtype="reference" 
+				required="true">
+					<references 
+						entitytype="person"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Bedeutung für Prozess" 
+				id="anwendung_prozessbezug"
+				inputtype="singleoption">
+			<option 
+					id="anwendung_prozessbezug_1" 
+					name="unterstützend"/>
+			<option 
+					id="anwendung_prozessbezug_2" 
+					name="wichtig"/>
+			<option 
+					id="anwendung_prozessbezug_3" 
+					name="wesentlich"/>								
+			<option 
+					id="anwendung_prozessbezug_4" 
+					name="hochgradig notwendig"/>								
+			</huiproperty>
+			
+			<huiproperty
+				id="anwendung_prozessbezug_begruendung"
+				name="Begründung" />
+			
+		</huipropertygroup>
+	
+
+
 		<huipropertygroup 
 			name="Managementbewertung" 
 			id="anwendung_mgmtreview">
