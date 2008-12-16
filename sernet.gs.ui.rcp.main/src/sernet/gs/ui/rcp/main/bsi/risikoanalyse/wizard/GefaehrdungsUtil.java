@@ -39,27 +39,32 @@ public abstract class GefaehrdungsUtil {
 			allGefaehrdungsUmsetzungen.remove(gefaehrdungInList);
 	}
 	
-	public static void removeBySameId(
+	public static GefaehrdungsUmsetzung removeBySameId(
 			List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen,
 			Gefaehrdung gefaehrdung) {
 		
 		if (gefaehrdung == null)
-			return;
+			return null;
 		
 		boolean remove = false;
 		GefaehrdungsUmsetzung gefaehrdungInList = null;
-		for (Iterator iterator = allGefaehrdungsUmsetzungen.iterator(); iterator
+		findGefaehrdung: for (Iterator iterator = allGefaehrdungsUmsetzungen.iterator(); iterator
 				.hasNext();) {
 			gefaehrdungInList = (GefaehrdungsUmsetzung) iterator
 					.next();
 			if (gefaehrdung.getId() == null || gefaehrdungInList.getId() == null)
 				continue;
-			if (gefaehrdungInList.getId().equals(gefaehrdung.getId()))
+			if (gefaehrdungInList.getId().equals(gefaehrdung.getId())) {
 				remove = true;
+				break findGefaehrdung;
+			}
 		}
 
-		if (remove)
+		if (remove) {
 			allGefaehrdungsUmsetzungen.remove(gefaehrdungInList);
+			return gefaehrdungInList;
+		}
+		return null; 
 	}
 
 	@SuppressWarnings("unchecked")

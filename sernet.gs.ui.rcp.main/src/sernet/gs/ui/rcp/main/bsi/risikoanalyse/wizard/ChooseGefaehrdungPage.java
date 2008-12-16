@@ -372,8 +372,13 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
 			if (select) 
 				wizard.addAssociatedGefaehrdung(currentGefaehrdung);
-			else
-				wizard.removeAssociatedGefaehrdung(currentGefaehrdung);
+			else {
+				try {
+					wizard.removeAssociatedGefaehrdung(currentGefaehrdung);
+				} catch (Exception e) {
+					ExceptionUtil.log(e, "Konnte Gefährdung nicht löschen: " + currentGefaehrdung.getTitel());
+				}
+			}
 				
 			checkPageComplete();
 	

@@ -54,7 +54,8 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 						"Alle "
 								+ selection.size()
 								+ " markierten Elemente werden entfernt. Vorsicht: diese Operation "
-								+ "kann nicht rückgängig gemacht werden!\n\n"
+								+ "kann nicht rückgängig gemacht werden! Stellen Sie sicher, dass Sie über " +
+										"Backups der Datenbank verfügen.\n\n"
 								+ "Wirklich löschen?")) {
 			return;
 		}
@@ -99,6 +100,10 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 								InterruptedException {
 							monitor.beginTask("Lösche Objekte", selection
 									.size());
+							
+							if (selection.size()>1)
+								CnAElementHome.getInstance().startApplicationTransaction();
+							
 							for (Iterator iter = selection.iterator(); iter
 									.hasNext();) {
 								Object sel = (Object) iter.next();
@@ -139,12 +144,16 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
 								}
 							}
+							if (selection.size()>1)
+								CnAElementHome.getInstance().endApplicationTransaction();
 						}
 					});
 		} catch (InvocationTargetException e) {
 			ExceptionUtil.log(e, "Error while deleting object.");
+			CnAElementHome.getInstance().endApplicationTransaction();
 		} catch (InterruptedException e) {
 			ExceptionUtil.log(e, "Interrupted: Delete objects.");
+			CnAElementHome.getInstance().endApplicationTransaction();
 		}
 
 	}

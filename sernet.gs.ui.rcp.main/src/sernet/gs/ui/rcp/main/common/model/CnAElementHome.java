@@ -190,7 +190,7 @@ public class CnAElementHome {
 			}
 
 			Logger.getLogger(this.getClass()).debug(
-					"Deleting element: " + element);
+					"Deleting element: " + element.getTitel());
 			try {
 				if (!applicationTransactionPresent)
 					tx = session.beginTransaction();

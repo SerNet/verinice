@@ -475,8 +475,8 @@ public class BsiModelView extends ViewPart {
 			public void run() {
 				Object sel = ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement();
+			
 				if (sel instanceof FinishedRiskAnalysis) {
-					// FIXME list editing still faulty
 					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
 					RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis
 							.getParent(), analysis);
@@ -485,11 +485,15 @@ public class BsiModelView extends ViewPart {
 							new Shell(), wizard);
 					wizDialog.setPageSize(800, 600);
 					wizDialog.open();
-				} else if (sel instanceof CnALink) {
+				}
+				
+				else if (sel instanceof CnALink) {
 					// jump to linked item:
 					viewer.setSelection(new StructuredSelection(((CnALink) sel)
 							.getDependency()), true);
-				} else
+				}
+				
+				else
 					// open editor:
 					EditorFactory.getInstance().updateAndOpenObject(sel);
 			}

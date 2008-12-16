@@ -124,7 +124,9 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					/* checkbox set */
 
 					try {
-						((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().addChild(gefaehrdungsUmsetzung);
+						((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis()
+							.addChild(gefaehrdungsUmsetzung);
+						gefaehrdungsUmsetzung.setParent(((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis());
 						gefaehrdungsUmsetzung.setOkay(false);
 						
 						/* add to arrListGefaehrdungsUmsetzungen */

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
-<product name="verinice" id="sernet.gs.ui.rcp.main.product" version="0.7.0" useFeatures="true">
+<product name="verinice" id="sernet.gs.ui.rcp.main.product" version="0.7.1" useFeatures="true">
 
    <aboutInfo>
       <image path="icons/product_lg.gif"/>
@@ -36,6 +36,7 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
 
    <windowImages i16="/sernet.gs.ui.rcp.main/icons/window16.gif" i32="/sernet.gs.ui.rcp.main/icons/window32.gif"/>
 
+
    <launcher name="verinice">
       <linux icon="/sernet.gs.ui.rcp.main/wxcas.xpm"/>
       <macosx icon="/sernet.gs.ui.rcp.main/icons/v_logo_mac.icns"/>
@@ -51,6 +52,7 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
             winLargeLow="/sernet.gs.ui.rcp.main/icons/ico8-48x48.bmp"/>
       </win>
    </launcher>
+
 
    <vm>
    </vm>
@@ -125,7 +127,7 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
    </plugins>
 
    <features>
-      <feature id="sernet.gs.ui.rcp.main.feature" version="0.7.0"/>
+      <feature id="sernet.gs.ui.rcp.main.feature" version="0.7.1"/>
    </features>
 
 </product>

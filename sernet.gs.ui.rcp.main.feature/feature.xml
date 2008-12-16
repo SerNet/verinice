@@ -2,7 +2,7 @@
 <feature
       id="sernet.gs.ui.rcp.main.feature"
       label="Verinice Anwendung"
-      version="0.7.0"
+      version="0.7.1"
       provider-name="sernet.de"
       plugin="sernet.gs.ui.rcp.main">
 
@@ -2051,7 +2051,7 @@ Public License instead of this License.  But first, please read
          id="sernet.gs.ui.rcp.main"
          download-size="35000"
          install-size="0"
-         version="0.7.0"
+         version="0.7.1"
          unpack="false"/>
 
    <plugin

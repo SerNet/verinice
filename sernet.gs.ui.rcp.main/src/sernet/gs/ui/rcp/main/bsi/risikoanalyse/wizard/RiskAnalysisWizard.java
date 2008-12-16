@@ -505,23 +505,30 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	public void addAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) {
 		List<GefaehrdungsUmsetzung> selectedArrayList = finishedRiskLists
 				.getAssociatedGefaehrdungen();
+		
 		if (!GefaehrdungsUtil.listContainsById(selectedArrayList,
 				currentGefaehrdung)) {
 			/* Add to List of Associated Gefaehrdungen */
-			selectedArrayList.add(GefaehrdungsUmsetzungFactory.build(
-					getFinishedRiskAnalysis(), currentGefaehrdung));
+			GefaehrdungsUmsetzung gefUms = GefaehrdungsUmsetzungFactory.build(
+					null, currentGefaehrdung);
+			selectedArrayList.add(gefUms);
 		}
 	}
 
-	public void removeAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) {
+	public void removeAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) throws Exception {
 		/* remove from List of Associated Gefaehrdungen */
-		GefaehrdungsUtil.removeBySameId(finishedRiskLists
+		GefaehrdungsUmsetzung removed = GefaehrdungsUtil.removeBySameId(finishedRiskLists
 				.getAssociatedGefaehrdungen(), currentGefaehrdung);
+		getFinishedRiskAnalysis().removeChild(removed);
 		
-		GefaehrdungsUtil.removeBySameId(finishedRiskLists
+		removed = GefaehrdungsUtil.removeBySameId(finishedRiskLists
 				.getAllGefaehrdungsUmsetzungen(), currentGefaehrdung);
+		getFinishedRiskAnalysis().removeChild(removed);
 		
-		GefaehrdungsUtil.removeBySameId(finishedRiskLists
+		removed = GefaehrdungsUtil.removeBySameId(finishedRiskLists
 				.getNotOKGefaehrdungsUmsetzungen(), currentGefaehrdung);
+		getFinishedRiskAnalysis().removeChild(removed);
+		
+		Logger.getLogger(this.getClass()).debug("Removed threat " + currentGefaehrdung.getTitel());
 	}
 }
