@@ -1,0 +1,18 @@
+
+download Microsoft SQL Server 2000 Desktop Engine (MSDE 2000) Version A
+from
+http://www.microsoft.com/downloads/details.aspx?displaylang=de&FamilyID=413744d1-a0bc-479f-bafa-e4b278eb9147
+
+archiv auspacken, default nach c:\MSDERe1A
+
+start, ausführen, cmd
+
+c:
+cd \MSDERe1A
+setup SAPWD="geheim" SECURITYMODE=SQL
+
+c:\Programme\Microsoft SQL Server\80\Tools\Binn\
+SVRNETCN.EXE, aktivieren: TCP/IP
+sqlmangr.exe, starten
+
+

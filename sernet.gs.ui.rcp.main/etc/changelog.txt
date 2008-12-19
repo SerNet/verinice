@@ -1,0 +1,33 @@
+
+2008-12-15
+- NEW Filter for "no tag" in BSI model view
+- FIX InputHelper hints can be disabled, for platforms where theys sometimes
+get stuck
+- FIX Bearbeiten der Risikoanalyse durch Doppelklick funktioniert nun
+- FIX Default-Path to Derby DB in Windows is now correct (due to wrong path
+separators it would create a long directory named "Documents and Settings
+verinice workspace" etc.
+- FIX Deletion of many objects causes error message sometimes due to links to
+deleted objects, operation now moved into one transaction
+
+
+
+2008-11-18
+- dedicated optimized mappings for derby and other DBs for better performance,
+  'real' DBs use subselects, Derby fetch joins
+- FIX Spring configuration now created in workspace with correct paths, Spring
+  config ready for switch between local / remote service provider
+- FIX drag'n'drop in BSI model view for multiple objects
+- FIX @Override annotations leading to compile time errors for methods that
+were not really present in a superclass
+- moved update site to updates.verinice.org
+
+2008-11-17
+- FIX NullPointerException when no DS-module defined in preferences
+- Message when migration takes too long
+- FIX performance increase by ignoring controls when iterating over all
+elements
+- Migration to DB version 0.93: adding roles to old controls
+- FIX exceptions on migration to 0.92
+- FIX editing risk analysis disabled for now, some fixes to be done first
+

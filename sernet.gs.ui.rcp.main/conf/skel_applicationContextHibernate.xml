@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 
+All of the Spring vodoo goes on in here. 
+
+Variant:
+	Wiring for direct database access using hibernate from the RCP client.
+
+IST NICHT FÜR DER GEFINGERPOKEN UND MITTENGRABEN! ODERWISE IST EASY TO SCHNAPPEN DER SPRINGENWERK,
+BLOWENFUSEN UND POPPENCORKEN MIT SPITZENSPARKSEN.
+IST NICHT FÜR GEWERKEN BEI DUMMKOPFEN. DER RUBBERNECKEN SIGHTSEEREN KEEPEN DAS COTTONPICKEN 
+HÄNDER IN DAS POCKETS MUSS.
+ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
+
+-->
+
+<beans>
+   <!-- 
+    <bean id="veriniceDAOServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>
+                http://localhost:8080/verinice/service/veriniceDAOServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.gs.server.VeriniceDAOService</value>
+        </property>
+    </bean>
+	-->
+
+	<!-- Instance of generic hibernate DAO for class Property -->  
+	<bean id="propertyDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.hui.common.connect.Property</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- Instance of generic hibernate DAO for class Entity -->  
+	<bean id="entityDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.hui.common.connect.Entity</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- Instance of generic hibernate DAO for class Person -->  
+	<bean id="personDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.gs.ui.rcp.main.bsi.model.Person</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+
+	<!-- Use existing hibernate config for session -->  
+	<bean class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" id="sessionFactory">
+	  <property name="configLocation">
+	    <value>{hibernatecfg}</value>
+	  </property>
+	</bean>
+
+	<!-- Intercepts calls opening and closing hibernate session during method execution. -->
+	<bean id="hibernateInterceptor" class="org.springframework.orm.hibernate3.HibernateInterceptor">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+		
+	<!-- Proxied using hibernate interceptor -->
+	<bean id="huiServiceTarget" class="sernet.gs.ui.rcp.main.service.HibernateHuiService">
+	  	<property name="propertyDao" ref="propertyDao"/>
+	  	<property name="entityDao" ref="entityDao"/>
+	  	<property name="personDao" ref="personDao"/>
+	</bean>
+	
+	<!-- Interceptor to keep hibernate session open during business method -->
+	<bean id="huiService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target"><ref bean="huiServiceTarget"/></property>
+		<property name="proxyInterfaces">
+			<value>sernet.gs.ui.rcp.main.service.IHuiService</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>hibernateInterceptor</value>
+			</list>
+		</property>
+	</bean> 
+    
+</beans>

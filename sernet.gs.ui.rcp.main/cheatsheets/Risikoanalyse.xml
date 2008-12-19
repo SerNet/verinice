@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Risikoanalyse">
+
+	<intro 
+		>
+		<description>
+		Risikoanalyse
+		</description>
+	</intro>
+	
+	<item title="Neue Risikoanalyse">
+	<description>
+	Für jedes Zielobjekt, das im Report "Ergänzende Sicherheitsanalyse" gekennzeichnet wurde, ist nun die Risikoanalyse durchzuführen.
+	Klicken Sie mit der rechten Maustaste auf das zuvor angelegte Buchhaltungssystem. Wählen Sie den Menüpunkt "Neue Risikoanalyse". 
+	</description>
+	</item>
+	
+
+	<item title="Gefährdungsübersicht">
+	<description>
+	Zunächst müssen Sie auswählen, welche Gefährdungen betrachtet werden müssen. Aus der Liste aller Gefährdungen der
+	 Grundschutzkataloge sind bereits alle ausgewählt, die über die Bausteinzuordnung bereits mit dem Zielobjekt verbunden sind.
+	 <br/><br/>
+	 Wählen Sie einige zusätzliche Gefährdungen für den Buchhaltungsserver aus. Dabei hilft Ihnen die Suchfunktion, um zu 
+	 Stichworten geeignete vorhandene Gefährdungen anzuzeigen.
+	</description>
+	</item>
+	
+	
+	<item title="Eigene Gefährdungen">
+	<description>
+		Ein wichtiger Aspekt bei der Risikoanalyse ist das Erarbeiten von individuelen, 
+		organisationsspezifischen Gefährdungen.
+		<br/><br/>
+		Wählen Sie zunächst die Checkbox "nur eigene Gefährdungen anzeigen".  
+		Legen Sie eine neue eigene Gefährdung an. Klicken Sie auf den Button "Eigene Gefährdungen", "neu".  
+	</description>
+	</item>
+	
+	<item title="Gefährdung anlegen">
+	<description>
+	Geben Sie der Gefährdung die Nummer "G-Z1" und den Namen "Gesetzeswidrige Veränderung von rechnungslegungsrelevanten Daten". 
+	<br/><br/>
+	Kopieren Sie den folgenden Text als Beschreibung: "Auf dem Buchhaltungsserver befinden sich rechnungslegungsrelevante Daten. 
+	Daher müssen die Anforderungen aus HGB §§ 238, 239 und 257 bezüglich der Vollständigkeit, Richtigkeit, Zeitgerechtheit, Ordnung, 
+	Nachvollziehbarkeit und Unveränderlichkeit sichergestellt sein. Ein nicht korrekt durchgeführtes Verändern von 
+	Daten kann einen Gesetzesverstoß zur Folge haben und zur Einschränkung oder zum Versagen des 
+	Bestätigungsvermerks durch den Wirtschaftsprüfer bei der Jahresabschlussprüfung führen (siehe IDW PS 330, 
+	IDW RS FAIT 1, IDW PH 9.330.1 und andere)." 
+	</description>
+	</item>
+
+	<item title="">
+	<description>
+	</description>
+	</item>
+
+	<item title="">
+	<description>
+	</description>
+	</item>
+
+	<item title="">
+	<description>
+	</description>
+	</item>
+
+	<item title="">
+	<description>
+	</description>
+	</item>
+
+	<item title="">
+	<description>
+	</description>
+	</item>
+
+	<item title="">
+	<description>
+	</description>
+	</item>
+
+	<item title="">
+	<description>
+	</description>
+	</item>
+
+	<item title="">
+	<description>
+	</description>
+	</item>
+
+	<item title="">
+	<description>
+	</description>
+	</item>
+
+	<item title="">
+	<description>
+	</description>
+	</item>
+	
+		
+	
+</cheatsheet>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+	Log entry to synchronize and record changes to database items.
+	@author koderman@sernet.de
+ -->
+<hibernate-mapping package="sernet.gs.ui.rcp.main.common.model">
+	<class name="ChangeLogEntry"
+		mutable="false">
+		
+		<id name="dbId" 
+			type="java.lang.Integer" 
+			column="dbId"
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+		<property name="elementId"/>
+
+		<property name="elementClass"/>
+
+		<property name="change"
+			column="elementChange"
+		/>
+
+		<property name="stationId"/>
+
+		<property name="changetime" 
+			type="timestamp"
+		/>
+		
+	<!--
+		<sql-insert>
+			insert into ChangeLogEntry (elementId, elementClass, change, stationId, changetime, dbId) values (?, ?, ?, ?, now(), ?)
+		</sql-insert>
+	 -->
+		
+	</class>
+</hibernate-mapping>
