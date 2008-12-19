@@ -65,18 +65,7 @@ public class GSImportDialog extends Dialog {
 		layout.numColumns = 1;
 		container.setLayout(layout);
 		
-		String mdbFileName = Activator.getDefault().getPluginPreferences()
-		.getString(PreferenceConstants.GS_MDBFILE);
 		
-		if (mdbFileName != null && mdbFileName.length() > 0) {
-			Label intro = new Label(container, SWT.NONE);
-			intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER,
-					false, false, 1, 1));
-			intro
-			.setText("Der Import wird aus folgender Datei durchgeführt: \n"
-					+ mdbFileName);
-		}
-		else {
 			String importDb = Activator.getDefault().getPluginPreferences()
 			.getString(PreferenceConstants.GS_DB_URL);
 			
@@ -87,8 +76,6 @@ public class GSImportDialog extends Dialog {
 			.setText("Der Import wird aus folgender GSTOOL-Datenbank durchgeführt: \n"
 					+ importDb);
 			
-		}
-		
 		Link prefLink = new Link(container, SWT.NONE);
 		prefLink.setText("<a>Ändern...</a>");
 		prefLink.addSelectionListener(new SelectionAdapter() {

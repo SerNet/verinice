@@ -8,8 +8,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Eclipse-BuddyPolicy: registered
-Bundle-RequiredExecutionEnvironment: J2SE-1.5,
- JavaSE-1.6
 Bundle-ClassPath: commons-logging.jar,
  log4j-1.2.15.jar,
  spring-aop.jar,

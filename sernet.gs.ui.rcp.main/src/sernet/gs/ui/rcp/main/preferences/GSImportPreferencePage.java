@@ -61,7 +61,6 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 	private boolean showWindowsWarning = true;
 	
 
-	private FileFieldEditor mdbFile;
 
 	private static final String TEST_QUERY = "select top 1 * from N_Zielobjekt";
 
@@ -70,7 +69,7 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription("\nHier können Sie eine bestehende GSTOOL\u2122-Datenbank importieren. " +
 				"Verinice unterstützt drei Möglichkeiten für den Import: direkt aus der GSTOOL-Datenbank," +
-				" aus einer exportierten .MDB Datei (in Arbeit) oder aus einer Datenbanksicherung (.MDF-Datei)."
+				" aus einer exportierten .MDB Datei oder aus einer Datenbanksicherung (.MDF-Datei)."
 				//+ " Eine genauere Anleitung finden Sie unter Hilfe -> Spickzettel -> GSTOOL-Import");
 				);
 	}
@@ -82,39 +81,7 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 	 */
 	public void createFieldEditors() {
 		
-		mdbFile = new FileFieldEditor(PreferenceConstants.GS_MDBFILE, 
-				"Import aus MDB Datei", 
-				getFieldEditorParent()) {
-			
-
-			@Override
-			public boolean isValid() {
-				if (mdbFile.getStringValue() != null && mdbFile.getStringValue().length()>0) {
-					if (showWindowsWarning && !System.getProperty( "os.name" ).startsWith( "Windows" )) {
-						showWindowsWarning = false;
-						Display.getDefault().syncExec(new Runnable() {
-							public void run() {
-								MessageDialog
-										.openInformation(
-												getShell(),
-												"Gutes Betriebssystem, böses Dateiformat",
-												"Bitte beachten: der Import direkt aus einer MDB " +
-												"(MS Access) Datei funktioniert leider nur unter Windows!");
-							}
-						});
-					}
-					
-					url.setStringValue("jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=" +
-							mdbFile.getStringValue().trim() +
-							";DriverID=22;READONLY=true");
-				}
-				return super.isValid();
-			}
-		}
-		;
-		mdbFile.setFileExtensions(new String[] {"*.mdb;*.MDB", "*.*"});
-		addField(mdbFile);
-		mdbFile.setEnabled(false, getFieldEditorParent());
+		
 
 		url = new StringFieldEditor(PreferenceConstants.GS_DB_URL,
 				"GSTOOL DB JDBC URL", //$NON-NLS-1$
@@ -176,9 +143,21 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 								}
 							});
 						} catch (Exception e1) {
-							ExceptionUtil.log(e1,
-									Messages.GSImportPreferencePage_7
-											+ urlString);
+							if (e1.getMessage().indexOf("N_Zielobj") > -1) {
+								Display.getDefault().syncExec(new Runnable() {
+									public void run() {
+										MessageDialog.openInformation(getShell(), "Soweit so gut", 
+												"Die Verbindung wurde erfolgreich mit der Datenbank hergestellt. In dieser Datenbank wurden keine GSTOOL-Daten gefunden. Sie können eine der beiden Importfunktionen" +
+												" nutzen, um Daten von externen Quellen zu importieren. Sie finden diese hier in den Einstellungen " +
+										"wenn Sie den Knoten 'GSTool Import' aufklappen.");
+									}
+								});
+							}
+							else {
+								ExceptionUtil.log(e1,
+										Messages.GSImportPreferencePage_7
+										+ urlString);
+							}
 							return Status.CANCEL_STATUS;
 						}
 						return Status.OK_STATUS;

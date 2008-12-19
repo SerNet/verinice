@@ -109,7 +109,6 @@ public class TransferData {
 		element.setProzessBeschreibung(result.zielobjekt.getAnwInf2Beschr());
 		element.setProzessWichtigkeit(translateDringlichkeit(result.zielobjekt.getMbDringlichkeit()));
 		element.setProzessWichtigkeitBegruendung(result.zielobjekt.getAnwInf1Beschr());
-		
 	}
 
 	private String translateDringlichkeit(MbDringlichkeit mbDringlichkeit) {

@@ -64,7 +64,10 @@ public class PreferenceConstants {
 	
 	public static final String GSTOOL_FILE = "gs_cna_attachfile";
 	public static final String GS_DB_ATTACHDB = "gs_cna_attachdb";
-	public static final String GS_MDBFILE = "gs_cna_mdbfile";
+	
+	public static final String GSTOOL_RESTOREDB_FILE = "gs_cna_restoredb_file";
+	public static final String GS_DB_RESTOREDB_NAME = "gs_cna_restoredb_name";
+	public static final String GS_DB_RESTOREDB_TODIR = "gs_cna_restoredb_todir";
 	
 	
 	

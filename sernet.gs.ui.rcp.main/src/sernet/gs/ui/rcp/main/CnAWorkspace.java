@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +49,12 @@ public class CnAWorkspace {
 
 	public static final Object CONFIG_CURRENT_VERSION = "0.7.0";
 
+	protected static final String VERINICEDB = "verinicedb";
+
+	protected static final String TEMPIMPORTDB = "tempGstoolImportDb";
+
 	private static CnAWorkspace instance;
+	
 
 	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
@@ -58,10 +64,14 @@ public class CnAWorkspace {
 				
 				Preferences prefs = Activator.getDefault().getPluginPreferences();
 				try {
-					createGstoolImportDatabaseConfig(prefs
-							.getString(PreferenceConstants.GS_DB_URL), prefs
-							.getString(PreferenceConstants.GS_DB_USER), prefs
-							.getString(PreferenceConstants.GS_DB_PASS));
+					String dbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
+					
+					
+					
+					createGstoolImportDatabaseConfig(dbUrl,
+							prefs.getString(PreferenceConstants.GS_DB_USER), 
+							prefs.getString(PreferenceConstants.GS_DB_PASS));
+					
 				} catch (Exception e) {
 					ExceptionUtil.log(e, "Fehler beim Schreiben der Konfiguration für GSTool-Import.");
 				}
@@ -72,6 +82,16 @@ public class CnAWorkspace {
 	private CnAWorkspace() {
 		Activator.getDefault().getPluginPreferences()
 		.addPropertyChangeListener(this.prefChangeListener);
+	}
+
+	public String createTempImportDbUrl() {
+		String tmpDerbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s",
+				CnAWorkspace.getInstance().getWorkdir().replaceAll("\\\\", "/") );
+		return tmpDerbyUrl.replace(VERINICEDB, TEMPIMPORTDB);
+	}
+	
+	public String getTempImportDbDirName() {
+		return CnAWorkspace.getInstance().getWorkdir() + File.separator + TEMPIMPORTDB;
 	}
 
 	public static CnAWorkspace getInstance() {
@@ -304,11 +324,16 @@ public class CnAWorkspace {
 		settings.put("user", user);
 		settings.put("pass", pass);
 		
+		// import from .mdb file over odbc bridge goes into temporary derby db first:
 		if (url.indexOf("odbc")>-1) {
-			settings.put("driver", PreferenceConstants.GS_DB_DRIVER_ODBC);
-			settings.put("dialect", PreferenceConstants.GS_DB_DIALECT_ODBC);
+			// change db url to temporary DB when importing from mdb file
+			String dbUrl = createTempImportDbUrl();
+			settings.put("url", dbUrl);
+			settings.put("driver", PreferenceConstants.DB_DRIVER_DERBY);
+			settings.put("dialect", PreferenceConstants.DB_DIALECT_derby);
 		}
 		else {
+			// direct import from ms sql server or desktop engine:
 			settings.put("driver", PreferenceConstants.GS_DB_DRIVER_JTDS);
 			settings.put("dialect", PreferenceConstants.GS_DB_DIALECT_JTDS);
 		}

@@ -74,12 +74,6 @@ public class ImportGstoolAction extends Action {
 	
 	public void run() {
 		try {
-//			if (!MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), "Import starten?",
-//					"Der Import wird aus der GSTOOL-Datenbank durchgeführt, die Sie im Menü Bearbeiten -> " +
-//					"Einstellungen angegeben haben. Es wird dafür ein neuer IT-Verbund angelegt. " +
-//					"Es werden keine Daten überschrieben.")) {
-//				return;
-//			}
 			
 			final GSImportDialog dialog = new GSImportDialog(Display.getCurrent().getActiveShell());
 			if (dialog.open() != InputDialog.OK)

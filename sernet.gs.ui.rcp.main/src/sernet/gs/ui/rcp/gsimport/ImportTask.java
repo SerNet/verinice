@@ -15,7 +15,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Preferences;
 import org.hibernate.exception.SQLGrammarException;
+
+import com.heatonresearch.datamover.DataMover;
+import com.heatonresearch.datamover.db.Database;
+import com.heatonresearch.datamover.db.DatabaseException;
+import com.heatonresearch.datamover.db.DerbyDatabase;
+import com.heatonresearch.datamover.db.MDBFileDatabase;
+import com.heatonresearch.datamover.db.MySQL;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.reveng.MSchutzbedarfkategTxt;
@@ -52,16 +60,15 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**
- * Import GSTOOL(tm) databases using the GSVampire.
- * Maps GStool-database objects to Verinice-Objects and fields.
+ * Import GSTOOL(tm) databases using the GSVampire. Maps GStool-database objects
+ * to Verinice-Objects and fields.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * 
  */
 public class ImportTask {
-	
+
 	public static final int TYPE_SQLSERVER = 1;
 	public static final int TYPE_MDB = 2;
 
@@ -69,7 +76,7 @@ public class ImportTask {
 	private IProgress monitor;
 	private GSVampire vampire;
 	private TransferData transferData;
-	
+
 	private List<MbZeiteinheitenTxt> zeiten;
 	private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
 	private Map<NZielobjekt, CnATreeElement> alleZielobjekte = new HashMap<NZielobjekt, CnATreeElement>();
@@ -82,11 +89,10 @@ public class ImportTask {
 	private boolean importRollen;
 	private boolean kosten;
 	private boolean importUmsetzung;
-	
+
 	private HashMap<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
 	private HashMap<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
-	
-	
+
 	// umsetzungs patterns in verinice
 	// leaving out "unbearbeitet" since this is the default:
 	private static final String[] UMSETZUNG_STATI_VN = new String[] {
@@ -102,11 +108,11 @@ public class ImportTask {
 	private static final short BST_BEARBEITET_JA = 1;
 	private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
 	private static final short BST_BEARBEITET_NEIN = 4;
-	
-	
+
 	public ImportTask(boolean bausteine, boolean massnahmenPersonen,
-			boolean zielObjekteZielobjekte, boolean schutzbedarf, boolean importRollen,
-			boolean kosten, boolean umsetzung, boolean bausteinPersonen) {
+			boolean zielObjekteZielobjekte, boolean schutzbedarf,
+			boolean importRollen, boolean kosten, boolean umsetzung,
+			boolean bausteinPersonen) {
 		this.importBausteine = bausteine;
 		this.massnahmenPersonen = massnahmenPersonen;
 		this.zielObjekteZielobjekte = zielObjekteZielobjekte;
@@ -118,6 +124,12 @@ public class ImportTask {
 	}
 
 	public void execute(int importType, IProgress monitor) throws Exception {
+		Preferences prefs = Activator.getDefault().getPluginPreferences();
+		String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
+		if (sourceDbUrl.indexOf("odbc") > -1) {
+			copyMDBToTempDB(sourceDbUrl);
+		}
+
 		this.monitor = monitor;
 		File conf = new File(CnAWorkspace.getInstance().getConfDir()
 				+ File.separator + "hibernate-vampire.cfg.xml");
@@ -127,9 +139,72 @@ public class ImportTask {
 
 	}
 
+	private void copyMDBToTempDB(String sourceDbUrl) {
+		Database source = new MDBFileDatabase();
+		Database target = new DerbyDatabase();
+		try {
+//			// delete temp dir if it exists:
+//			String dirName = CnAWorkspace.getInstance().getTempImportDbDirName();
+//			File file = new File(dirName);
+//			if (file.exists() && file.isDirectory()) {
+//				delete(file);
+//			}
+			
+			// copy contents of MDB file to temporary derby db:
+			String tempDbUrl = CnAWorkspace.getInstance()
+					.createTempImportDbUrl();
+			
+			DataMover mover = new DataMover();
+
+			source.connect(PreferenceConstants.GS_DB_DRIVER_ODBC, sourceDbUrl);
+			target.connect(PreferenceConstants.DB_DRIVER_DERBY, tempDbUrl);
+
+			mover.setSource(source);
+			mover.setTarget(target);
+			mover.exportDatabse();
+		} catch (Exception e) {
+			ExceptionUtil.log(e, "Fehler beim Import aus MDB Datei über temporäre Derby-DB.");
+		} finally {
+			try {
+				source.close();
+				target.close();
+				String dirName = CnAWorkspace.getInstance().getTempImportDbDirName();
+//				
+//				File file = new File(dirName);
+//				if (file.exists() && file.isDirectory()) {
+//					delete(file);
+//				}
+			} catch (Exception e) {
+				Logger.getLogger(this.getClass()).debug(
+						"Konnte temporäre Import DB nicht schließen.", e);
+				
+//				// try again to delete dir at least:
+//				String dirName = CnAWorkspace.getInstance().getTempImportDbDirName();
+//				File file = new File(dirName);
+//				if (file.exists() && file.isDirectory()) {
+//					delete(file);
+//				}
+			}
+		}
+
+	}
+	
+	public boolean delete(File dir) {
+		if (dir.isDirectory()) {
+			String[] subdirs = dir.list();
+			for (int i = 0; i < subdirs.length; i++) {
+				boolean success = delete(new File(dir, subdirs[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+		return dir.delete();
+	}
+
 	private void importZielobjekte() throws Exception {
 		CnAElementHome.getInstance().startApplicationTransaction();
-	
+
 		List<ZielobjektTypeResult> zielobjekte;
 		try {
 			zielobjekte = vampire.findZielobjektTypAll();
@@ -137,14 +212,19 @@ public class ImportTask {
 			if (e instanceof SQLGrammarException) {
 				SQLGrammarException sqlException = (SQLGrammarException) e;
 				// wrong db version has columns missing, i.e. "GEF_ID":
-				if (sqlException.getSQLException().getMessage().indexOf("GEF_OK") >-1)
-					ExceptionUtil.log(sqlException.getSQLException(), "Fehler beim Laden der Zielobjekte. Möglicherweise falsche Datenbankversion des GSTOOL? " +
-							"\nEs wird nur der Import der letzten Version (>4.5) des GSTOOL unterstützt.");
+				if (sqlException.getSQLException().getMessage().indexOf(
+						"GEF_OK") > -1)
+					ExceptionUtil
+							.log(
+									sqlException.getSQLException(),
+									"Fehler beim Laden der Zielobjekte. Möglicherweise falsche Datenbankversion des GSTOOL? "
+											+ "\nEs wird nur der Import der letzten Version (>4.5) des GSTOOL unterstützt.");
 			}
 			throw e;
 		}
 		if (this.importBausteine)
-			monitor.beginTask("Lese Zielobjekte, Bausteine und Massnahmen...", zielobjekte.size());
+			monitor.beginTask("Lese Zielobjekte, Bausteine und Massnahmen...",
+					zielobjekte.size());
 		else
 			monitor.beginTask("Lese Zielobjekte...", zielobjekte.size());
 
@@ -154,21 +234,22 @@ public class ImportTask {
 			if (ImportZielobjektTypUtil.translateZielobjektType(result.type,
 					result.subtype).equals(ITVerbund.TYPE_ID)) {
 
-				ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance()
-				.saveNew(CnAElementFactory.getCurrentModel(),
-						ITVerbund.TYPE_ID, null);
+				ITVerbund itverbund = (ITVerbund) CnAElementFactory
+						.getInstance().saveNew(
+								CnAElementFactory.getCurrentModel(),
+								ITVerbund.TYPE_ID, null);
 				neueVerbuende.add(itverbund);
 				monitor.worked(1);
 
 				// save element for later:
 				alleZielobjekte.put(result.zielobjekt, itverbund);
-				
+
 				transferData.transfer((ITVerbund) itverbund, result);
 				createBausteine(itverbund, result.zielobjekt);
 			}
 		}
 
-		// create all Zielobjekte in first ITVerbund, 
+		// create all Zielobjekte in first ITVerbund,
 		// TODO: tag them with every ITVerbund the've been in
 		for (ZielobjektTypeResult result : zielobjekte) {
 			String typeId = ImportZielobjektTypUtil.translateZielobjektType(
@@ -178,23 +259,22 @@ public class ImportTask {
 			if (element != null) {
 				// save element for later:
 				alleZielobjekte.put(result.zielobjekt, element);
-				
+
 				// aditionally save persons:
 				if (element instanceof Person) {
 					allePersonen.add((Person) element);
 				}
-				
+
 				transferData.transfer(element, result);
 				monitor.subTask(element.getTitel());
 				createBausteine(element, result.zielobjekt);
 			}
 			monitor.worked(1);
 		}
-		
+
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
 		CnAElementHome.getInstance().endApplicationTransaction();
-		
-		
+
 		CnAElementHome.getInstance().startApplicationTransaction();
 		importMassnahmenVerknuepfungen();
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
@@ -209,80 +289,88 @@ public class ImportTask {
 		importZielobjektVerknüpfungen();
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
 		CnAElementHome.getInstance().endApplicationTransaction();
-		
+
 		CnAElementHome.getInstance().startApplicationTransaction();
 		importSchutzbedarf();
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
 		CnAElementHome.getInstance().endApplicationTransaction();
-		
+
 		monitor.done();
 	}
 
 	private void importSchutzbedarf() {
 		if (!schutzbedarf)
 			return;
-		
-		monitor.beginTask("Importiere Schutzbedarf für alle Zielobjekte...", alleZielobjekte.size());
-		Set<Entry<NZielobjekt, CnATreeElement>> alleZielobjekteEntries = alleZielobjekte.entrySet();
+
+		monitor.beginTask("Importiere Schutzbedarf für alle Zielobjekte...",
+				alleZielobjekte.size());
+		Set<Entry<NZielobjekt, CnATreeElement>> alleZielobjekteEntries = alleZielobjekte
+				.entrySet();
 		for (Entry<NZielobjekt, CnATreeElement> entry : alleZielobjekteEntries) {
-			List<NZobSb> schutzbedarf = vampire.findSchutzbedarfByZielobjekt(entry.getKey());
+			List<NZobSb> schutzbedarf = vampire
+					.findSchutzbedarfByZielobjekt(entry.getKey());
 			for (NZobSb schubeda : schutzbedarf) {
 				transferData.transferSchutzbedarf(entry.getValue(), schubeda);
 			}
 		}
-			
+
 	}
 
 	private void importZielobjektVerknüpfungen() {
 		if (!this.zielObjekteZielobjekte)
 			return;
-		
-			monitor.beginTask("Importiere Verknüpfungen von Zielobjekten...", alleZielobjekte.size());
-			Set<NZielobjekt> allElements = alleZielobjekte.keySet();
-			for (NZielobjekt zielobjekt : allElements) {
-				monitor.worked(1);
-				CnATreeElement dependant = alleZielobjekte.get(zielobjekt);
-				List<NZielobjekt> dependencies = vampire.findLinksByZielobjekt(zielobjekt);
-				for (NZielobjekt dependency : dependencies) {
-					monitor.subTask(dependant.getTitel());
-					CnATreeElement dependencyElement = findZielobjektFor(dependency);
-					if (dependencyElement == null) {
-						Logger.getLogger(this.getClass()).debug("Kein Ziel gefunden für Verknüpfung "
-								+ dependency.getName());
-						continue;
-					}
-					Logger.getLogger(this.getClass()).debug("Neue Verknüpfung von " + dependant.getTitel() +
-							" zu " + dependencyElement.getTitel());
-					
-					// verinice models dependencies DOWN, not UP as the gstool.
-					// therefore we need to turn things around, except for persons, networks and itverbund 
-					// (look at it in the tree and it will make sense):
-					CnATreeElement from;
-					CnATreeElement to;
-					if (dependencyElement instanceof Person
-							|| dependencyElement instanceof NetzKomponente
-							|| dependant instanceof ITVerbund) {
-						from = dependant;
-						to = dependencyElement;
-					}
-					else {
-						from = dependencyElement;
-						to = dependant;
-					}
-					
-					CnALink link = new CnALink(from, to);
-					try {
-						CnAElementHome.getInstance().save(link);
-					} catch (Exception e) {
-						Logger.getLogger(this.getClass()).debug("Saving link failed."); //$NON-NLS-1$
-						link.remove();
-					}
+
+		monitor.beginTask("Importiere Verknüpfungen von Zielobjekten...",
+				alleZielobjekte.size());
+		Set<NZielobjekt> allElements = alleZielobjekte.keySet();
+		for (NZielobjekt zielobjekt : allElements) {
+			monitor.worked(1);
+			CnATreeElement dependant = alleZielobjekte.get(zielobjekt);
+			List<NZielobjekt> dependencies = vampire
+					.findLinksByZielobjekt(zielobjekt);
+			for (NZielobjekt dependency : dependencies) {
+				monitor.subTask(dependant.getTitel());
+				CnATreeElement dependencyElement = findZielobjektFor(dependency);
+				if (dependencyElement == null) {
+					Logger.getLogger(this.getClass()).debug(
+							"Kein Ziel gefunden für Verknüpfung "
+									+ dependency.getName());
+					continue;
+				}
+				Logger.getLogger(this.getClass()).debug(
+						"Neue Verknüpfung von " + dependant.getTitel() + " zu "
+								+ dependencyElement.getTitel());
+
+				// verinice models dependencies DOWN, not UP as the gstool.
+				// therefore we need to turn things around, except for persons,
+				// networks and itverbund
+				// (look at it in the tree and it will make sense):
+				CnATreeElement from;
+				CnATreeElement to;
+				if (dependencyElement instanceof Person
+						|| dependencyElement instanceof NetzKomponente
+						|| dependant instanceof ITVerbund) {
+					from = dependant;
+					to = dependencyElement;
+				} else {
+					from = dependencyElement;
+					to = dependant;
+				}
+
+				CnALink link = new CnALink(from, to);
+				try {
+					CnAElementHome.getInstance().save(link);
+				} catch (Exception e) {
+					Logger.getLogger(this.getClass()).debug(
+							"Saving link failed."); //$NON-NLS-1$
+					link.remove();
 				}
 			}
+		}
 	}
 
 	private CnATreeElement findZielobjektFor(NZielobjekt dependency) {
-		for (NZielobjekt zielobjekt: alleZielobjekte.keySet()) {
+		for (NZielobjekt zielobjekt : alleZielobjekte.keySet()) {
 			if (zielobjekt.getId().equals(dependency.getId()))
 				return alleZielobjekte.get(zielobjekt);
 		}
@@ -292,66 +380,86 @@ public class ImportTask {
 	private void importMassnahmenVerknuepfungen() {
 		if (!this.massnahmenPersonen || !this.importBausteine)
 			return;
-		
-		monitor.beginTask("Verknüpfe verantwortliche Ansprechpartner mit Massnahmen...", alleMassnahmen.size());
+
+		monitor.beginTask(
+				"Verknüpfe verantwortliche Ansprechpartner mit Massnahmen...",
+				alleMassnahmen.size());
 		for (ModZobjBstMass obm : alleMassnahmen.keySet()) {
 			monitor.worked(1);
 			monitor.subTask(alleMassnahmen.get(obm).getTitel());
 			// transferiere individuell verknüpfte verantowrtliche in massnahmen
 			// (TAB "Verantwortlich" im GSTOOL):
-			Set<NZielobjekt> personenSrc = vampire.findVerantowrtlicheMitarbeiterForMassnahme(obm.getId());
-			if (personenSrc != null && personenSrc.size()>0) {
+			Set<NZielobjekt> personenSrc = vampire
+					.findVerantowrtlicheMitarbeiterForMassnahme(obm.getId());
+			if (personenSrc != null && personenSrc.size() > 0) {
 				List<Person> dependencies = findPersonen(personenSrc);
 				if (dependencies.size() != personenSrc.size())
-					Logger.getLogger(this.getClass()).debug("ACHTUNG: Es wurde mindestens eine Person für die " +
-							"zu verknüpfenden Verantwortlichen nicht gefunden.");
-				MassnahmenUmsetzung dependantMassnahme = alleMassnahmen.get(obm);
+					Logger
+							.getLogger(this.getClass())
+							.debug(
+									"ACHTUNG: Es wurde mindestens eine Person für die "
+											+ "zu verknüpfenden Verantwortlichen nicht gefunden.");
+				MassnahmenUmsetzung dependantMassnahme = alleMassnahmen
+						.get(obm);
 				for (Person personToLink : dependencies) {
-					Logger.getLogger(this.getClass()).debug("Verknüpfe Massnahme " + dependantMassnahme.getTitel() +
-							" mit Person " + personToLink.getTitel()
-							);
+					Logger.getLogger(this.getClass()).debug(
+							"Verknüpfe Massnahme "
+									+ dependantMassnahme.getTitel()
+									+ " mit Person " + personToLink.getTitel());
 					dependantMassnahme.addUmsetzungDurch(personToLink);
 				}
 			}
 		}
 	}
-	
+
 	private void importBausteinPersonVerknuepfungen() {
 		if (!this.bausteinPersonen || !this.importBausteine)
 			return;
-		
-		monitor.beginTask("Verknüpfe befragte Personen mit Bausteinen...", alleBausteineToBausteinUmsetzungMap.size());
+
+		monitor.beginTask("Verknüpfe befragte Personen mit Bausteinen...",
+				alleBausteineToBausteinUmsetzungMap.size());
 		Set<MbBaust> keySet = alleBausteineToBausteinUmsetzungMap.keySet();
 		for (MbBaust mbBaust : keySet) {
 			monitor.worked(1);
-			BausteinUmsetzung bausteinUmsetzung = alleBausteineToBausteinUmsetzungMap.get(mbBaust);
+			BausteinUmsetzung bausteinUmsetzung = alleBausteineToBausteinUmsetzungMap
+					.get(mbBaust);
 			if (bausteinUmsetzung != null) {
 
-				NZielobjekt interviewer = alleBausteineToZoBstMap.get(mbBaust).getNZielobjektByFkZbZ2();
+				NZielobjekt interviewer = alleBausteineToZoBstMap.get(mbBaust)
+						.getNZielobjektByFkZbZ2();
 				if (interviewer != null) {
 					HashSet<NZielobjekt> set = new HashSet<NZielobjekt>();
 					set.add(interviewer);
 					List<Person> personen = findPersonen(set);
-					if (personen != null && personen.size()>0) {
-						Logger.getLogger(this.getClass()).debug("Befragung für Baustein " + bausteinUmsetzung.getTitel()
-								+ " durchgeführt von " + personen.get(0));
+					if (personen != null && personen.size() > 0) {
+						Logger.getLogger(this.getClass()).debug(
+								"Befragung für Baustein "
+										+ bausteinUmsetzung.getTitel()
+										+ " durchgeführt von "
+										+ personen.get(0));
 						bausteinUmsetzung.addBefragungDurch(personen.get(0));
 					}
 				}
-				
-				
-				Set<NZielobjekt> befragteMitarbeiter= vampire
-					.findBefragteMitarbeiterForBaustein(alleBausteineToZoBstMap.get(mbBaust).getId());
-				if (befragteMitarbeiter != null && befragteMitarbeiter.size()>0) {
+
+				Set<NZielobjekt> befragteMitarbeiter = vampire
+						.findBefragteMitarbeiterForBaustein(alleBausteineToZoBstMap
+								.get(mbBaust).getId());
+				if (befragteMitarbeiter != null
+						&& befragteMitarbeiter.size() > 0) {
 					List<Person> dependencies = findPersonen(befragteMitarbeiter);
 					if (dependencies.size() != befragteMitarbeiter.size())
-						Logger.getLogger(this.getClass()).debug("ACHTUNG: Es wurde mindestens eine Person für die " +
-								"zu verknüpfenden Interviewpartner nicht gefunden.");
+						Logger
+								.getLogger(this.getClass())
+								.debug(
+										"ACHTUNG: Es wurde mindestens eine Person für die "
+												+ "zu verknüpfenden Interviewpartner nicht gefunden.");
 					monitor.subTask(bausteinUmsetzung.getTitel());
 					for (Person personToLink : dependencies) {
-						Logger.getLogger(this.getClass()).debug("Verknüpfe Baustein " + bausteinUmsetzung.getTitel() +
-								" mit befragter Person " + personToLink.getTitel()
-								);
+						Logger.getLogger(this.getClass()).debug(
+								"Verknüpfe Baustein "
+										+ bausteinUmsetzung.getTitel()
+										+ " mit befragter Person "
+										+ personToLink.getTitel());
 						bausteinUmsetzung.addBefragtePersonDurch(personToLink);
 					}
 				}
@@ -364,7 +472,8 @@ public class ImportTask {
 		alleZielobjekte: for (NZielobjekt nzielobjekt : personen) {
 			for (Person person : allePersonen) {
 				if (person.getKuerzel().equals(nzielobjekt.getKuerzel())
-						&& person.getErlaeuterung().equals(nzielobjekt.getBeschreibung())) {
+						&& person.getErlaeuterung().equals(
+								nzielobjekt.getBeschreibung())) {
 					result.add(person);
 					continue alleZielobjekte;
 				}
@@ -377,7 +486,7 @@ public class ImportTask {
 			throws Exception {
 		if (!importBausteine)
 			return;
-		
+
 		List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = vampire
 				.findBausteinMassnahmenByZielobjekt(zielobjekt);
 
@@ -395,7 +504,8 @@ public class ImportTask {
 
 		Set<MbBaust> keySet = bausteineMassnahmenMap.keySet();
 		for (MbBaust mbBaust : keySet) {
-			createBaustein(element, mbBaust, bausteineMassnahmenMap.get(mbBaust));
+			createBaustein(element, mbBaust, bausteineMassnahmenMap
+					.get(mbBaust));
 		}
 
 	}
@@ -408,20 +518,21 @@ public class ImportTask {
 			BausteineMassnahmenResult vorlage = findVorlage(
 					massnahmenUmsetzung, list);
 			if (vorlage != null) {
-				
+
 				if (importUmsetzung) {
 					// copy umsetzung:
 					Short bearbeitet = vorlage.zoBst.getBearbeitetOrg();
 					if (bearbeitet == BST_BEARBEITET_ENTBEHRLICH)
 						massnahmenUmsetzung
-						.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
+								.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
 					else
-						setUmsetzung(massnahmenUmsetzung, vorlage.umstxt.getName());
+						setUmsetzung(massnahmenUmsetzung, vorlage.umstxt
+								.getName());
 				}
-				
+
 				// copy fields:
 				transferMassnahme(massnahmenUmsetzung, vorlage);
-				
+
 			} else {
 				// wenn diese massnahme unbearbeitet ist und keine vorlage
 				// existiert,
@@ -429,10 +540,11 @@ public class ImportTask {
 				// sein:
 				if (importUmsetzung) {
 					if (list.iterator().hasNext()) {
-						BausteineMassnahmenResult result = list.iterator().next();
+						BausteineMassnahmenResult result = list.iterator()
+								.next();
 						if (result.zoBst.getBearbeitetOrg() == BST_BEARBEITET_ENTBEHRLICH)
 							massnahmenUmsetzung
-							.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
+									.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
 					}
 				}
 			}
@@ -443,24 +555,26 @@ public class ImportTask {
 			BausteineMassnahmenResult vorlage) {
 		if (importUmsetzung) {
 			// erlaeuterung und termin:
-			massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_ERLAEUTERUNG, 
-					vorlage.obm.getUmsBeschr());
-			massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_UMSETZUNGBIS, 
-					parseDate(vorlage.obm.getUmsDatBis()));
+			massnahmenUmsetzung.setSimpleProperty(
+					MassnahmenUmsetzung.P_ERLAEUTERUNG, vorlage.obm
+							.getUmsBeschr());
+			massnahmenUmsetzung.setSimpleProperty(
+					MassnahmenUmsetzung.P_UMSETZUNGBIS, parseDate(vorlage.obm
+							.getUmsDatBis()));
 		}
-		
+
 		// transfer kosten:
 		if (kosten) {
 			if (zeiten == null)
 				zeiten = vampire.findZeiteinheitenTxtAll();
 			ImportKostenUtil.importKosten(massnahmenUmsetzung, vorlage, zeiten);
 		}
-		
+
 		// remember massnahme for later:
 		if (alleMassnahmen == null)
 			alleMassnahmen = new HashMap<ModZobjBstMass, MassnahmenUmsetzung>();
 		alleMassnahmen.put(vorlage.obm, massnahmenUmsetzung);
-		
+
 	}
 
 	private void setUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung,
@@ -514,18 +628,19 @@ public class ImportTask {
 				vorlage.zoBst.getBegruendung());
 		bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM,
 				parseDate(vorlage.zoBst.getDatum()));
-		
+
 		// remember baustein for later:
 		if (alleBausteineToBausteinUmsetzungMap == null)
 			alleBausteineToBausteinUmsetzungMap = new HashMap<MbBaust, BausteinUmsetzung>();
 		if (alleBausteineToZoBstMap == null)
 			alleBausteineToZoBstMap = new HashMap<MbBaust, ModZobjBst>();
-		alleBausteineToBausteinUmsetzungMap.put(vorlage.baustein, bausteinUmsetzung);
+		alleBausteineToBausteinUmsetzungMap.put(vorlage.baustein,
+				bausteinUmsetzung);
 		alleBausteineToZoBstMap.put(vorlage.baustein, vorlage.zoBst);
 	}
 
 	private String parseDate(Date date) {
-		if (date  != null)
+		if (date != null)
 			return Long.toString(date.getTime());
 		return "";
 	}

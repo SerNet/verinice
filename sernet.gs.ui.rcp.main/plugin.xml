@@ -426,9 +426,15 @@
       </page>
       <page
             category="sernet.gs.ui.rcp.main.page5"
+            class="sernet.gs.ui.rcp.main.preferences.GSImportRestorePreferencePage"
+            id="sernet.gs.ui.rcp.main.preferences.gsimportrestorepreferencepage"
+            name="Sicherungsdatei wiederherstellen">
+      </page>
+      <page
+            category="sernet.gs.ui.rcp.main.page5"
             class="sernet.gs.ui.rcp.main.preferences.GSImportAttachPreferencePage"
             id="sernet.gs.ui.rcp.main.page6"
-            name="GSTool Datenbank anhängen">
+            name="Datenbank anhängen">
       </page>
    </extension>
    <extension

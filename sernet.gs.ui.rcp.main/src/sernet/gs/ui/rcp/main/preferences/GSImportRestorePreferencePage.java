@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
@@ -25,6 +26,8 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -37,6 +40,7 @@ import org.springframework.web.servlet.mvc.UrlFilenameViewController;
 
 import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.ui.rcp.gsimport.AttachDbFileTask;
+import sernet.gs.ui.rcp.gsimport.RestoreDbTask;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -48,23 +52,27 @@ import sernet.gs.ui.rcp.main.bsi.views.Messages;
  * @author akoderman@sernet.de
  * 
  */
-public class GSImportAttachPreferencePage extends FieldEditorPreferencePage implements
+public class GSImportRestorePreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
 
-	public static final String ID = "sernet.gs.ui.rcp.main.page6";
+	public static final String ID = "sernet.gs.ui.rcp.main.preferences.gsimportrestorepreferencepage";
 
 	private FileFieldEditor gstoolDumpFile;
 
 	private boolean showWarning = true;
 	
+	private boolean showDirWarning = true;
+	
 	private StringFieldEditor attachDb;
 
+	private DirectoryFieldEditor toDirField;
 
 
-	public GSImportAttachPreferencePage() {
+
+	public GSImportRestorePreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Anhängen einer exportierten GSTOOL Datenbank im .MDF Format für den Import.");
+		setDescription("Wiederherstellen einer gesicherten GSTOOL Datenbank im .BAK Format für den Import.");
 	}
 
 	/**
@@ -75,26 +83,9 @@ public class GSImportAttachPreferencePage extends FieldEditorPreferencePage impl
 	public void createFieldEditors() {
 		
 
-		gstoolDumpFile = new FileFieldEditor(PreferenceConstants.GSTOOL_FILE,
-				"GSTOOL-Datei anhängen", getFieldEditorParent()) {
+		gstoolDumpFile = new FileFieldEditor(PreferenceConstants.GSTOOL_RESTOREDB_FILE,
+				"Datei mit Sicherung aus GSTOOL", getFieldEditorParent()) {
 			public boolean isValid() {
-				if (gstoolDumpFile.getStringValue() != null
-						&& gstoolDumpFile.getStringValue().length() > 0) {
-
-					String url = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.GS_DB_URL);
-					if (showWarning && !(url.indexOf("localhost") > -1 || url
-							.indexOf("127.0.0.1") > -1)) {
-						showWarning = false;
-						MessageDialog
-								.openWarning(
-										getShell(),
-										"Anzuhängende Datei",
-										"Sie haben eine Datei zum Anhängen angegeben. Der Datenbankserver läuft "
-												+ "auf einem entfernten Rechner. Bitte beachten Sie, dass sich die anzuhängende Datei auf dem "
-												+ "SERVER befinden muss! Das heißt, der hier eingestellte Pfad muss vom Datenbank-Server aus erreichbar sein!");
-					}
-				}
-
 				// always return true, file may be on different host and entered
 				// manually
 				return true;
@@ -105,7 +96,7 @@ public class GSImportAttachPreferencePage extends FieldEditorPreferencePage impl
 		gstoolDumpFile.getTextControl(getFieldEditorParent()).addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				Pattern pat = Pattern.compile("[/\\\\](\\w*?)(.MDF|.mdf)");
+				Pattern pat = Pattern.compile("[/\\\\](\\w*?)(.BAK|.bak)");
 				Matcher matcher = pat.matcher(gstoolDumpFile
 						.getStringValue());
 				if (matcher.find()) {
@@ -115,12 +106,22 @@ public class GSImportAttachPreferencePage extends FieldEditorPreferencePage impl
 			}
 		});
 		
-		gstoolDumpFile.setFileExtensions(new String[] { "*.MDF;*.mdf", "*.*" });
+		gstoolDumpFile.setFileExtensions(new String[] { "*.BAK;*.bak", "*.*" });
 		addField(gstoolDumpFile);
 
-		attachDb = new StringFieldEditor(PreferenceConstants.GS_DB_ATTACHDB,
-				"Datenbank anhängen als Name", getFieldEditorParent());
+		attachDb = new StringFieldEditor(PreferenceConstants.GS_DB_RESTOREDB_NAME,
+				"Datenbank wiederherstellen als Name", getFieldEditorParent());
 		addField(attachDb);
+		
+		toDirField = new DirectoryFieldEditor(PreferenceConstants.GS_DB_RESTOREDB_TODIR, 
+				"Datenbank wiederherstellen in Verzeichnis", getFieldEditorParent()) {
+			@Override
+			public boolean isValid() {
+				// may be a remote dir, so is always valid
+				return true;
+			}
+		};
+		addField(toDirField);
 
 		createAttachButton();
 
@@ -128,7 +129,7 @@ public class GSImportAttachPreferencePage extends FieldEditorPreferencePage impl
 
 	private void createAttachButton() {
 		Button button = new Button((Composite) getControl(), SWT.PUSH);
-		button.setText("Datenbank anhängen");
+		button.setText("Datenbank wiederherstellen");
 		button.setLayoutData(new GridData(GridData.END, GridData.BEGINNING,
 				true, true));
 		button.addSelectionListener(new SelectionListener() {
@@ -141,30 +142,37 @@ public class GSImportAttachPreferencePage extends FieldEditorPreferencePage impl
 				Matcher matcher = pat.matcher(url);
 				boolean found = matcher.find();
 				if (!found) {
-					Logger.getLogger(this.getClass()).debug(
-							"No database defined.");
+					ExceptionUtil.log(new Exception("Keine GSTool (MSDE / SQL Server) Datenbank definiert"), 
+							"Sie haben keine MSDE / SQL Server Datenbank auf der Seite 'GSTool Import' definiert!" +
+							"Bitte konfigurieren Sie die entsprechende Datenbank wie unter Hilfe -> Tutorials " +
+							"beschrieben!");
 					return;
 				}
 				String oldDbName = matcher.group(1);
 
 				final String urlString = url.replace(oldDbName, "master");
-				final String userString = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.GS_DB_USER);
-				final String passString = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.GS_DB_PASS);
+				final String userString = Activator.getDefault().getPluginPreferences()
+					.getString(PreferenceConstants.GS_DB_USER);
+				final String passString = Activator.getDefault().getPluginPreferences()
+					.getString(PreferenceConstants.GS_DB_PASS);
 				final String fileName = gstoolDumpFile.getStringValue();
 				final String newDbName = attachDb.getStringValue();
+				final String toDir = toDirField.getStringValue();
 
 				boolean doIt = MessageDialog
 						.openConfirm(
 								getShell(),
-								"Datenbank anhängen",
+								"Datenbank wiederherstellen",
 								"Verbindung wird hergestellt mit "
 										+ urlString
 										+ "\n\nDie Datei '"
 										+ fileName
-										+ "' wird angehängt als Datenbank '"
+										+ "' wird wiederhergestellt als Datenbank '"
 										+ newDbName
-										+ "'.\nDiese Datenbank sollte nicht existieren, alle evtl. existierenden Daten werden überschrieben."
-										+ "\n\nWollen Sie fortfahren?");
+										+ "' im Verzeichnis '"
+										+ toDir
+										+ "'. Einverstanden?"
+										);
 				if (!doIt)
 					return;
 
@@ -172,20 +180,20 @@ public class GSImportAttachPreferencePage extends FieldEditorPreferencePage impl
 						Messages.GSImportPreferencePage_2) {
 
 					public IStatus runInWorkspace(final IProgressMonitor monitor) {
-						monitor.beginTask("Hänge neue Datenbank ein...",
+						monitor.beginTask("Stelle Datenbanksicherung aus Datei wieder her...",
 								IProgressMonitor.UNKNOWN);
 
-						AttachDbFileTask task = new AttachDbFileTask();
+						RestoreDbTask task = new RestoreDbTask();
 						try {
-							task.attachDBFile(urlString, userString,
-									passString, fileName, newDbName);
+							task.restoreDBFile(urlString, userString,
+									passString, fileName, newDbName, toDir);
 							Display.getDefault().syncExec(new Runnable() {
 								public void run() {
 									MessageDialog
 											.openInformation(
 													getShell(),
 													"Hurra",
-													"Die Datenbank wurde angehängt. Probieren Sie nun die " +
+													"Die Datenbank wurde wiederhergestellt. Probieren Sie nun die " +
 													"Verbindung zur Datenbank '"
 															+ newDbName	+ "' zu testen.");
 								}
@@ -212,6 +220,50 @@ public class GSImportAttachPreferencePage extends FieldEditorPreferencePage impl
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		super.propertyChange(event);
+		if (event.getSource().equals(toDirField)) {
+			if (toDirField.getStringValue() != null
+					&& toDirField.getStringValue().length() > 0) {
+
+				String url = Activator.getDefault().getPluginPreferences()
+				.getString(PreferenceConstants.GS_DB_URL);
+				
+				if (showDirWarning && !(url.indexOf("localhost") > -1 || url
+						.indexOf("127.0.0.1") > -1)) {
+					showDirWarning = false;
+					MessageDialog
+							.openWarning(
+									getShell(),
+									"Zielordner",
+									"Sie haben einen Ordner zum Wiederherstellen angegeben. Der Datenbankserver läuft "
+											+ "auf einem entfernten Rechner. Bitte beachten Sie, dass sich der Ordner auf dem "
+											+ "SERVER befinden muss! Das heißt, der hier eingestellte Pfad muss vom Datenbank-Server aus erreichbar sein!");
+				}
+			}
+		
+		}
+		
+		if (event.getSource().equals(this.gstoolDumpFile)) {
+			if (gstoolDumpFile.getStringValue() != null
+					&& gstoolDumpFile.getStringValue().length() > 0) {
+
+				String url = Activator.getDefault().getPluginPreferences()
+				.getString(PreferenceConstants.GS_DB_URL);
+				
+				if (showWarning && !(url.indexOf("localhost") > -1 || url
+						.indexOf("127.0.0.1") > -1)) {
+					showWarning = false;
+					MessageDialog
+							.openWarning(
+									getShell(),
+									"Wiederherzustellende Datei",
+									"Sie haben eine Datei zum Wiederherstellen angegeben. Der Datenbankserver läuft "
+											+ "auf einem entfernten Rechner. Bitte beachten Sie, dass sich die anzuhängende Datei auf dem "
+											+ "SERVER befinden muss! Das heißt, der hier eingestellte Pfad muss vom Datenbank-Server aus erreichbar sein!");
+				}
+			}
+		}
+		
+		
 		if (event.getProperty().equals(FieldEditor.VALUE)) {
 			checkState();
 		}
