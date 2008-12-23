@@ -181,7 +181,7 @@ public class BSIElementEditor extends EditorPart {
 					.debug("Kann Element nicht aus DB wiederherstellen.", e);
 			}
 		}
-		CnAElementFactory.getCurrentModel().refreshAllListeners();
+		CnAElementFactory.getLoadedModel().refreshAllListeners();
 		huiComposite.closeView();
 		input.getEntity().removeListener(modelListener);
 		EditorRegistry.getInstance().closeEditor(input.getId());

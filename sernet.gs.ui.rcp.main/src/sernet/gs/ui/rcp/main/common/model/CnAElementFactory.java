@@ -328,7 +328,7 @@ public class CnAElementFactory {
 		return child;
 	}
 	
-	public static BSIModel getCurrentModel() {
+	public static BSIModel getLoadedModel() {
 		return loadedModel;
 	}
 	

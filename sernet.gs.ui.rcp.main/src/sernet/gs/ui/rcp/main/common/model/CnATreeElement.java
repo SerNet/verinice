@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -43,7 +44,7 @@ import sernet.snutils.DBException;
  * @author koderman@sernet.de
  * 
  */
-public abstract class CnATreeElement {
+public abstract class CnATreeElement implements Serializable {
 
 	private static String huiConfig = null;
 

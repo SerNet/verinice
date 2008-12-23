@@ -13,9 +13,8 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import sernet.gs.ui.rcp.main.bsi.model.IMassnahmenDAO;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenHibernateDAO;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 
@@ -44,7 +43,7 @@ public class StufenBarChart implements IChartGenerator {
 
 	protected Object createBarDataset() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		IMassnahmenDAO dao = new MassnahmenHibernateDAO();
+		MassnahmenSummaryHome dao = new MassnahmenSummaryHome();
 		
 		Map<String, Integer> items1 = dao.getNotCompletedStufenSummary();
 		Set<Entry<String, Integer>> entrySet = items1.entrySet();

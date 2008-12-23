@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <!-- 
+
 All of the Spring vodoo goes on in here. 
 
-Variant:
+This variant:
 	Wiring for direct database access using hibernate from the RCP client.
 
 IST NICHT FÜR DER GEFINGERPOKEN UND MITTENGRABEN! ODERWISE IST EASY TO SCHNAPPEN DER SPRINGENWERK,
@@ -46,9 +47,25 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	</bean>
 	
 	<!-- Instance of generic hibernate DAO for class Person -->  
+	<!-- 
 	<bean id="personDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
 		<constructor-arg>
 			<value>sernet.gs.ui.rcp.main.bsi.model.Person</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	-->
+	
+	<bean id="cnaTreeElementDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.gs.ui.rcp.main.common.model.CnATreeElement</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="cnaLinkDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.gs.ui.rcp.main.common.model.CnATreeElement</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
@@ -67,18 +84,23 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		</property>
 	</bean>
 		
-	<!-- Proxied using hibernate interceptor -->
-	<bean id="huiServiceTarget" class="sernet.gs.ui.rcp.main.service.HibernateHuiService">
-	  	<property name="propertyDao" ref="propertyDao"/>
+	<bean id="daoFactory" class="sernet.gs.ui.rcp.main.service.DAOFactory">
+		<property name="propertyDao" ref="propertyDao"/>
 	  	<property name="entityDao" ref="entityDao"/>
-	  	<property name="personDao" ref="personDao"/>
+	  	<property name="cnaTreeElementDao" ref="cnaTreeElementDao"/>
+	  	<property name="cnaLinkDao" ref="cnaLinkDao"/>
+  	</bean>
+  	
+  	<!-- Proxied using hibernate interceptor -->
+	<bean id="commandServiceTarget" class="sernet.gs.ui.rcp.main.service.HibernateCommandService">
+		<property name="daoFactory" ref="daoFactory"/>
 	</bean>
 	
 	<!-- Interceptor to keep hibernate session open during business method -->
-	<bean id="huiService" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="target"><ref bean="huiServiceTarget"/></property>
+	<bean id="commandService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target"><ref bean="commandServiceTarget"/></property>
 		<property name="proxyInterfaces">
-			<value>sernet.gs.ui.rcp.main.service.IHuiService</value>
+			<value>sernet.gs.ui.rcp.main.service.ICommandService</value>
 		</property>
 		<property name="interceptorNames">
 			<list>

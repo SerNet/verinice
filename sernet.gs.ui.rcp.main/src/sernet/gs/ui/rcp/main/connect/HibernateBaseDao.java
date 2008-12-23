@@ -15,9 +15,9 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		     this.type = type;
 		 }
 
-		 public T saveOrUpdate(T entity) {
+		 public void saveOrUpdate(T entity) {
 		     getHibernateTemplate().saveOrUpdate(entity);
-		     return entity;
+		     
 		 }
 
 		 public void delete(T entity) {
@@ -40,12 +40,16 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			getHibernateTemplate().initialize(collection);
 		}
 
-		public void persist(T entity) {
-			getHibernateTemplate().persist(entity);
-		}
-
 		public void flush() {
 			getHibernateTemplate().flush();
+		}
+
+		public T merge(T entity) {
+			return (T) getHibernateTemplate().merge(entity);
+		}
+		
+		public void refresh(T element) {
+			getHibernateTemplate().refresh(element);
 		}
 
 }

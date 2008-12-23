@@ -81,7 +81,7 @@ public class ErgaenzendeAnalyseReport extends Report
 			return items;
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
-		Set<ITVerbund> itverbuende = CnAElementFactory.getCurrentModel().getItverbuende();
+		List<ITVerbund> itverbuende = CnAElementHome.getInstance().getItverbuende();
 		for (ITVerbund verbund : itverbuende) {
 			getStrukturElements(verbund);
 		}

@@ -23,7 +23,7 @@ import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.service.IHuiService;
+import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 
 /**

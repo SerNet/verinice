@@ -9,7 +9,7 @@ start, ausführen, cmd
 
 c:
 cd \MSDERe1A
-setup SAPWD="geheim" SECURITYMODE=SQL
+setup SAPWD="gutespasswort" SECURITYMODE=SQL
 
 c:\Programme\Microsoft SQL Server\80\Tools\Binn\
 SVRNETCN.EXE, aktivieren: TCP/IP

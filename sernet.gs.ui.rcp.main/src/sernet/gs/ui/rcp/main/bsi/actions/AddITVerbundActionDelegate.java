@@ -28,7 +28,7 @@ public class AddITVerbundActionDelegate implements IObjectActionDelegate {
 			CnATreeElement newElement=null;
 			
 			newElement = CnAElementFactory.getInstance()
-					.saveNew(CnAElementFactory.getCurrentModel(), ITVerbund.TYPE_ID, null);
+					.saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null);
 
 			if (newElement != null)
 				EditorFactory.getInstance().openEditor(newElement);

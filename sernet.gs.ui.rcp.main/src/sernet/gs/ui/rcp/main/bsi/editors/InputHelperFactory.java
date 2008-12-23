@@ -18,6 +18,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.Entity;
@@ -39,8 +40,8 @@ public class InputHelperFactory {
 		if (personHelper == null) {
 			personHelper = new IInputHelper() {
 				public String[] getSuggestions() {
-					ArrayList<Person> personen 
-						= CnAElementFactory.getCurrentModel().getPersonen();
+					List<Person> personen 
+						= CnAElementHome.getInstance().getPersonen();
 					String[] titles = new String[personen.size()];
 					int i=0;
 					for (Person person : personen) {
@@ -56,7 +57,7 @@ public class InputHelperFactory {
 		if (tagHelper == null) {
 			tagHelper = new IInputHelper() {
 				public String[] getSuggestions() {
-					List<String> tags = CnAElementFactory.getCurrentModel().getTags();
+					List<String> tags = CnAElementHome.getInstance().getTags();
 					String[] tagArray = (String[]) tags.toArray(new String[tags.size()]);
 					for (int i = 0; i < tagArray.length; i++) {
 						tagArray[i] = tagArray[i] + " ";

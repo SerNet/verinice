@@ -60,8 +60,6 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
-import sernet.gs.ui.rcp.main.bsi.model.IMassnahmenDAO;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenHibernateDAO;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.actions.TodoViewFilterAction;
@@ -126,7 +124,7 @@ public class ChartView extends ViewPart {
 		hookSelectionListeners();
 		createMenus();
 
-		if (CnAElementFactory.getCurrentModel() != null) {
+		if (CnAElementFactory.getLoadedModel() != null) {
 			chartType = barChart;
 			drawChart();
 		}
@@ -225,7 +223,7 @@ public class ChartView extends ViewPart {
 	}
 
 	protected void checkModel() {
-		if (CnAElementFactory.getCurrentModel() == null)
+		if (CnAElementFactory.getLoadedModel() == null)
 			chartType = emptyChart;
 	}
 
@@ -243,7 +241,7 @@ public class ChartView extends ViewPart {
 			public void loaded(final BSIModel model) {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						CnAElementFactory.getCurrentModel()
+						CnAElementFactory.getLoadedModel()
 								.addBSIModelListener(changeListener);
 						chartType = barChart;
 						drawChart();
@@ -281,16 +279,16 @@ public class ChartView extends ViewPart {
 
 	private void hookSelectionListeners() {
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
-		if (CnAElementFactory.getCurrentModel() != null)
-			CnAElementFactory.getCurrentModel().addBSIModelListener(
+		if (CnAElementFactory.getLoadedModel() != null)
+			CnAElementFactory.getLoadedModel().addBSIModelListener(
 					changeListener);
 	}
 
 	@Override
 	public void dispose() {
 		CnAElementFactory.getInstance().removeLoadListener(loadListener);
-		if (CnAElementFactory.getCurrentModel() != null)
-			CnAElementFactory.getCurrentModel().removeBSIModelListener(
+		if (CnAElementFactory.getLoadedModel() != null)
+			CnAElementFactory.getLoadedModel().removeBSIModelListener(
 				changeListener);
 	}
 

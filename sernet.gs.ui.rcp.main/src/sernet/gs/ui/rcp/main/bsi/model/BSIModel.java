@@ -197,6 +197,44 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		return result;
 	}
 
+	public List<CnATreeElement> getAllElements(boolean filterMassnahmen) {
+		List<CnATreeElement> result = new ArrayList<CnATreeElement>();
+
+		for (CnATreeElement child : getChildren()) {
+				if (filterMassnahmen &&  child instanceof BausteinUmsetzung) {
+					// do not add massnahmen and bausteine
+				}
+				else {
+					result.add(child);
+//					Logger.getLogger(this.getClass()).debug("Adding " + child);
+					findChildren(result, child, filterMassnahmen);
+				}
+			}
+		return result;
+	}
+
+	private void findChildren(List<CnATreeElement> result, CnATreeElement parent, boolean filterMassnahmen) {
+		if (filterMassnahmen && parent instanceof BausteinUmsetzung)
+			return;
+		
+		Set<CnATreeElement> children = parent.getChildren();
+		if (children != null && children.size() > 0) {
+//			Logger.getLogger(this.getClass()).debug("Adding " + children.toString());
+			result.addAll(children);
+			for (CnATreeElement child : children) {
+				findChildren(result, child, filterMassnahmen);
+			}
+		}
+	}
+
+	public List<CnALink> getAllLinks() {
+		List<CnALink> result = new ArrayList<CnALink>();
+		for (CnATreeElement element : getAllElements(true /* do not load Massnahmen */)) {
+			result.addAll(element.getLinksDown());
+		}
+		return result;
+	}
+
 	public List<String> getTags() {
 		ArrayList<String> tags = new ArrayList<String>(50);
 		Set<CnATreeElement> verbuende = getChildren();
@@ -218,45 +256,5 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
 		Collections.sort(tags);
 		return tags;
-	}
-
-	public List<CnATreeElement> getAllElements(boolean filterMassnahmen) {
-		CnAElementHome.getInstance().startApplicationTransaction();
-		List<CnATreeElement> result = new ArrayList<CnATreeElement>();
-
-		for (CnATreeElement child : getChildren()) {
-				if (filterMassnahmen &&  child instanceof BausteinUmsetzung) {
-					// do not add massnahmen and bausteine
-				}
-				else {
-					result.add(child);
-//					Logger.getLogger(this.getClass()).debug("Adding " + child);
-					addChildren(result, child, filterMassnahmen);
-				}
-			}
-		CnAElementHome.getInstance().endApplicationTransaction();
-		return result;
-	}
-
-	private void addChildren(List<CnATreeElement> result, CnATreeElement parent, boolean filterMassnahmen) {
-		if (filterMassnahmen && parent instanceof BausteinUmsetzung)
-			return;
-		
-		Set<CnATreeElement> children = parent.getChildren();
-		if (children != null && children.size() > 0) {
-//			Logger.getLogger(this.getClass()).debug("Adding " + children.toString());
-			result.addAll(children);
-			for (CnATreeElement child : children) {
-				addChildren(result, child, filterMassnahmen);
-			}
-		}
-	}
-
-	public List<CnALink> getAllLinks() {
-		List<CnALink> result = new ArrayList<CnALink>();
-		for (CnATreeElement element : getAllElements(true /* do not load Massnahmen */)) {
-			result.addAll(element.getLinksDown());
-		}
-		return result;
 	}
 }

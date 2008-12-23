@@ -203,7 +203,6 @@ public class ImportTask {
 	}
 
 	private void importZielobjekte() throws Exception {
-		CnAElementHome.getInstance().startApplicationTransaction();
 
 		List<ZielobjektTypeResult> zielobjekte;
 		try {
@@ -236,7 +235,7 @@ public class ImportTask {
 
 				ITVerbund itverbund = (ITVerbund) CnAElementFactory
 						.getInstance().saveNew(
-								CnAElementFactory.getCurrentModel(),
+								CnAElementFactory.getLoadedModel(),
 								ITVerbund.TYPE_ID, null);
 				neueVerbuende.add(itverbund);
 				monitor.worked(1);
@@ -273,27 +272,18 @@ public class ImportTask {
 		}
 
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
-		CnAElementHome.getInstance().endApplicationTransaction();
 
-		CnAElementHome.getInstance().startApplicationTransaction();
 		importMassnahmenVerknuepfungen();
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
-		CnAElementHome.getInstance().endApplicationTransaction();
 
-		CnAElementHome.getInstance().startApplicationTransaction();
 		importBausteinPersonVerknuepfungen();
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
-		CnAElementHome.getInstance().endApplicationTransaction();
 
-		CnAElementHome.getInstance().startApplicationTransaction();
 		importZielobjektVerknüpfungen();
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
-		CnAElementHome.getInstance().endApplicationTransaction();
 
-		CnAElementHome.getInstance().startApplicationTransaction();
 		importSchutzbedarf();
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
-		CnAElementHome.getInstance().endApplicationTransaction();
 
 		monitor.done();
 	}

@@ -101,9 +101,6 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 							monitor.beginTask("Lösche Objekte", selection
 									.size());
 							
-							if (selection.size()>1)
-								CnAElementHome.getInstance().startApplicationTransaction();
-							
 							for (Iterator iter = selection.iterator(); iter
 									.hasNext();) {
 								Object sel = (Object) iter.next();
@@ -116,8 +113,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
 									// do not delete last ITVerbund:
 									if (sel instanceof ITVerbund
-											&& CnAElementFactory
-													.getCurrentModel()
+											&& CnAElementHome.getInstance()
 													.getItverbuende().size() < 2) {
 										ExceptionUtil.log(new Exception("Letzter IT-Verbund kann nicht gelöscht werden.") , 
 												"Sie haben versucht, den letzten IT-Verbund zu löschen. " +
@@ -144,16 +140,12 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
 								}
 							}
-							if (selection.size()>1)
-								CnAElementHome.getInstance().endApplicationTransaction();
 						}
 					});
 		} catch (InvocationTargetException e) {
 			ExceptionUtil.log(e, "Error while deleting object.");
-			CnAElementHome.getInstance().endApplicationTransaction();
 		} catch (InterruptedException e) {
 			ExceptionUtil.log(e, "Interrupted: Delete objects.");
-			CnAElementHome.getInstance().endApplicationTransaction();
 		}
 
 	}

@@ -20,9 +20,8 @@ import org.jfree.ui.RectangleEdge;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.IMassnahmenDAO;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenHibernateDAO;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 
@@ -67,7 +66,7 @@ public class SchichtenBarChart implements IChartGenerator {
 
 	protected Object createBarDataset() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		IMassnahmenDAO dao = new MassnahmenHibernateDAO();
+		MassnahmenSummaryHome dao = new MassnahmenSummaryHome();
 
 		Map<String, Integer> items1 = dao.getSchichtenSummary();
 		Set<Entry<String, Integer>> entrySet = items1.entrySet();

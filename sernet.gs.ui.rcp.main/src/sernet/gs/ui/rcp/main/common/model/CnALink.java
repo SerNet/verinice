@@ -15,7 +15,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Raum;
  * $LastChangedBy$
  *
  */
-public class CnALink {
+public class CnALink implements Serializable {
 
 	public static final int DEPENDANT_ON      	= 1;
 	public static final int ADMINISTRATED_BY 	= 2;
