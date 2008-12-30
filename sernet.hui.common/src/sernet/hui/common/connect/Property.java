@@ -1,13 +1,15 @@
 
 package sernet.hui.common.connect;
 
+import java.io.Serializable;
+
 
 
 /**
  * @author prack
  * @version $Id: Property.java,v 1.4 2006/06/15 15:47:07 aprack Exp $
  */
-public class Property {
+public class Property implements Serializable {
 
 	private Integer dbId;
 	private String propertyType;

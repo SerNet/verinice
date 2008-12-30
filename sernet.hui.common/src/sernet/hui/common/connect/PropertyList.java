@@ -1,5 +1,6 @@
 package sernet.hui.common.connect;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * @author koderman@sernet.de
  *
  */
-public class PropertyList {
+public class PropertyList implements Serializable  {
 	private List<Property> properties;
 	
 	private Integer dbId;
