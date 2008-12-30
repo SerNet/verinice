@@ -1,6 +1,7 @@
 
 package sernet.hui.common.connect;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,13 +32,13 @@ import sernet.snutils.Tester;
  * @author koderman@sernet.de
  *
  */
-public class Entity implements ISelectOptionHandler {
+public class Entity implements ISelectOptionHandler, Serializable  {
 	
 	// map of "propertyTypeId : List of Properties"
     private Map<String, PropertyList> typedPropertyLists 
     	= new HashMap<String, PropertyList>();
     
-    private ArrayList<IEntityChangedListener> changeListeners
+    private transient ArrayList<IEntityChangedListener> changeListeners
     	= new ArrayList<IEntityChangedListener>();
     
 	private String entityType;
