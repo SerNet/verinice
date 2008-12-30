@@ -13,12 +13,20 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.ICommandService;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveCommand;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindRisikomassnahmeByNumber;
 
 public class RisikoMassnahmeHome {
 	
 	private static RisikoMassnahmeHome instance;
+	private ICommandService commandService;
 
 	private RisikoMassnahmeHome() {
+		commandService = ServiceFactory.lookupCommandService();
 	}
 	
 	public synchronized static RisikoMassnahmeHome getInstance() {
@@ -27,80 +35,27 @@ public class RisikoMassnahmeHome {
 		return instance;
 	}
 	
-	public void saveNew(RisikoMassnahme mn) throws Exception {
-		Session session = CnAElementHome.getInstance().getSession();
-		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-			session.save(mn);
-			tx.commit();
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(e);
-			if (tx != null)
-				tx.rollback();
-			throw e;
-		}
-	}
 	
-	public void saveUpdate(RisikoMassnahme mn) throws Exception {
-		Session session = CnAElementHome.getInstance().getSession();
-		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-			session.update(mn);
-			tx.commit();
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(e);
-			if (tx != null)
-				tx.rollback();
-			throw e;
-		}
-	
+	public void save(RisikoMassnahme mn) throws Exception {
+		SaveCommand<RisikoMassnahme> command = new SaveCommand<RisikoMassnahme>(mn);
+		commandService.executeCommand(command);
 	}
 	
 	public void remove(RisikoMassnahme mn) throws Exception {
-		Session session = CnAElementHome.getInstance().getSession();
-		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-			session.delete(mn);
-			tx.commit();
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(e);
-			if (tx != null)
-				tx.rollback();
-			throw e;
-		}
-	
+		RemoveElement<RisikoMassnahme> command = new RemoveElement<RisikoMassnahme>(mn);
+		commandService.executeCommand(command);
 	}
 	
-	public ArrayList<RisikoMassnahme> loadAll() throws RuntimeException {
-		Session session = CnAElementHome.getInstance().getSession();
-		Transaction transaction = session.beginTransaction();
-		Criteria criteria = session.createCriteria(RisikoMassnahme.class);
-		List models = criteria.list();
-		transaction.commit();
-		
-		ArrayList<RisikoMassnahme> result = new ArrayList<RisikoMassnahme>();
-		result.addAll(models);
-		return result;
+	public List<RisikoMassnahme> loadAll() throws RuntimeException {
+		LoadElementByType<RisikoMassnahme> command = new LoadElementByType<RisikoMassnahme>(RisikoMassnahme.class);
+		commandService.executeCommand(command);
+		return command.getElements();
 	}
 	
-	private static final String QUERY_FIND_BY_ID = "from "
-		+ RisikoMassnahme.class.getName() + " as element "
-		+ "where element.number = ?";
-
 	public RisikoMassnahme loadByNumber(String number) {
-		Session session = CnAElementHome.getInstance().getSession();
-		Query query = session.createQuery(QUERY_FIND_BY_ID);
-		query.setString(0, number);
-		List list = query.list();
-		if (list == null || list.size() == 0)
-			return null;
-		return (RisikoMassnahme) list.get(0);
-	}
-
-	
-	
+		FindRisikomassnahmeByNumber command = new FindRisikomassnahmeByNumber(number);
+		commandService.executeCommand(command);
+		return command.getMassnahme();
+	}		
 	
 }

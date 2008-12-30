@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -145,7 +146,7 @@ public class EditGefaehrdungDialog extends Dialog {
 		allCategories.add(Gefaehrdung.KAT_STRING_TECHNIK);
 		allCategories.add(Gefaehrdung.KAT_STRING_VORSATZ);
 
-		ArrayList<OwnGefaehrdung> allOwnGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
+		List<OwnGefaehrdung> allOwnGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
 		Boolean contains = false;
 		
 		for (OwnGefaehrdung gefaehrdung : allOwnGefaehrdungen) {
@@ -177,7 +178,7 @@ public class EditGefaehrdungDialog extends Dialog {
 		ownGefaehrdung.setOwnkategorie(textCategory.getText());
 		
 		try {
-			OwnGefaehrdungHome.getInstance().saveUpdate(ownGefaehrdung);
+			OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Änderung konnte nicht gespeichert werden.");
 		}

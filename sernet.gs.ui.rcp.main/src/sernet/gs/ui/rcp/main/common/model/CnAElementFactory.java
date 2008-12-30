@@ -332,6 +332,10 @@ public class CnAElementFactory {
 		return loadedModel;
 	}
 	
+	public static boolean isModelLoaded() {
+		return (loadedModel != null);
+	}
+	
 	public void closeModel() {
 		dbHome.close();
 		fireClosed();

@@ -1,33 +1,43 @@
-package sernet.gs.ui.rcp.main.common.model;
+package sernet.gs.ui.rcp.main.service.taskcommands;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.hibernate.Query;
-import org.hibernate.classic.Session;
-
-import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLink;
+import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
-import sernet.gs.ui.rcp.main.bsi.views.DocumentLinkRoot;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.swt.widgets.URL.URLUtil;
 
-public class HibernateDocumentLinkDAO implements IDocumentLinkDAO {
+public class FindURLs extends GenericCommand {
 
-	// FIXME change this to hibernate query
+	private BSIModel model;
+	private Set<String> allIDs;
+	private DocumentLinkRoot urls;
+	
+	public FindURLs(Set<String> allIDs) {
+		this.allIDs = allIDs;
+	}
+
+	public void execute() {
+		LoadBSIModel command = new LoadBSIModel();
+		getCommandService().executeCommand(command);
+		model = command.getModel();
+		urls = findEntries(allIDs);
+	}
+
 	public DocumentLinkRoot findEntries(Set<String> allIDs) {
 		DocumentLinkRoot root = new DocumentLinkRoot();
-		if (CnAElementFactory.getCurrentModel() == null)
+		if (model == null)
 			return root;
-		List<CnATreeElement> elements = CnAElementFactory.getCurrentModel()
-				.getAllElements(false /* do not leave out Massnahmen, they contain links too */);
+		List<CnATreeElement> elements = model
+				.getAllElements(false /* do not filter Massnahmen, they contain links too */);
 		for (CnATreeElement element : elements) {
 			Entity entity = element.getEntity();
 			if (entity == null)
@@ -55,5 +65,14 @@ public class HibernateDocumentLinkDAO implements IDocumentLinkDAO {
 		}
 		return root;
 	}
+
+	public Set<String> getAllIDs() {
+		return allIDs;
+	}
+
+	public DocumentLinkRoot getUrls() {
+		return urls;
+	}
+	
 
 }

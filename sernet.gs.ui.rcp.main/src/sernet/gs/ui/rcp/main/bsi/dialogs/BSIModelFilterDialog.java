@@ -37,6 +37,7 @@ import org.openoffice.java.accessibility.ComboBox;
 import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 
 /**
  * 
@@ -310,8 +311,8 @@ private void createAusblendenCheckboxes(Group parent) {
 	
 	protected void initContent() {
 		super.initContent();
-		if (CnAElementFactory.getCurrentModel() != null) {
-			List<String> tags = CnAElementFactory.getCurrentModel().getTags();
+		if (CnAElementFactory.isModelLoaded()) {
+			List<String> tags = CnAElementHome.getInstance().getTags();
 			tags.add(0, TagFilter.NO_TAG);
 			viewer.setInput(tags);
 			

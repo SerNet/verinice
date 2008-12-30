@@ -11,13 +11,19 @@ import org.hibernate.classic.Session;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.service.ICommandService;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveCommand;
 
 public class OwnGefaehrdungHome {
 	
+	private ICommandService commandService;
 	private static OwnGefaehrdungHome instance;
 
 	private OwnGefaehrdungHome() {
-		
+		commandService = ServiceFactory.lookupCommandService();
 	}
 	
 	public synchronized static OwnGefaehrdungHome getInstance() {
@@ -26,63 +32,20 @@ public class OwnGefaehrdungHome {
 		return instance;
 	}
 	
-	public void saveNew(OwnGefaehrdung gefaehrdung) throws Exception {
-		Session session = CnAElementHome.getInstance().getSession();
-		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-			session.save(gefaehrdung);
-			tx.commit();
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(e);
-			if (tx != null)
-				tx.rollback();
-			throw e;
-		}
+	public void save(OwnGefaehrdung gef) throws Exception {
+		SaveCommand<OwnGefaehrdung> command = new SaveCommand<OwnGefaehrdung>(gef);
+		commandService.executeCommand(command);
 	}
 	
-	public void saveUpdate(OwnGefaehrdung gefaehrdung) throws Exception {
-		Session session = CnAElementHome.getInstance().getSession();
-		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-			session.update(gefaehrdung);
-			tx.commit();
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(e);
-			if (tx != null)
-				tx.rollback();
-			throw e;
-		}
-	
+	public void remove(OwnGefaehrdung gef) throws Exception {
+		RemoveElement<OwnGefaehrdung> command = new RemoveElement<OwnGefaehrdung>(gef);
+		commandService.executeCommand(command);
 	}
 	
-	public void remove(OwnGefaehrdung gefaehrdung) throws Exception {
-		Session session = CnAElementHome.getInstance().getSession();
-		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-			session.delete(gefaehrdung);
-			tx.commit();
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(e);
-			if (tx != null)
-				tx.rollback();
-			throw e;
-		}
-	
-	}
-	
-	public ArrayList<OwnGefaehrdung> loadAll() throws RuntimeException {
-		Session session = CnAElementHome.getInstance().getSession();
-		Transaction transaction = session.beginTransaction();
-		Criteria criteria = session.createCriteria(OwnGefaehrdung.class);
-		List models = criteria.list();
-		transaction.commit();
-		
-		ArrayList<OwnGefaehrdung> result = new ArrayList<OwnGefaehrdung>();
-		result.addAll(models);
-		return result;
+	public List<OwnGefaehrdung> loadAll() throws RuntimeException {
+		LoadElementByType<OwnGefaehrdung> command = new LoadElementByType<OwnGefaehrdung>(OwnGefaehrdung.class);
+		commandService.executeCommand(command);
+		return command.getElements();
 	}
 	
 	

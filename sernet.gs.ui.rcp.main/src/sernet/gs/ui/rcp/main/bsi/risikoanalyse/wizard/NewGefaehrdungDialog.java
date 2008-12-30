@@ -1,6 +1,8 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.layout.GridData;
@@ -28,7 +30,7 @@ public class NewGefaehrdungDialog extends Dialog {
 	private Text textName;
 	private Text textDescription;
 	private Combo textCategory;
-	private ArrayList<OwnGefaehrdung> ownGefaehrdungen;
+	private List<OwnGefaehrdung> ownGefaehrdungen;
 	private OwnGefaehrdung ownGefaehrdung = new OwnGefaehrdung();
 	
 	/**
@@ -38,7 +40,7 @@ public class NewGefaehrdungDialog extends Dialog {
 	 * @param newOwnGefaehrdungen List of all currently existing
 	 * 		  OwnGefaehrdungen
 	 */
-	public NewGefaehrdungDialog(Shell parentShell, ArrayList<OwnGefaehrdung> newOwnGefaehrdungen) {
+	public NewGefaehrdungDialog(Shell parentShell, List<OwnGefaehrdung> newOwnGefaehrdungen) {
 		/* note: you need to hand the ArrayList over differently, if you don't
 		 * use this this dialog modally!
 		 */
@@ -146,7 +148,7 @@ public class NewGefaehrdungDialog extends Dialog {
 		allCategories.add(Gefaehrdung.KAT_STRING_TECHNIK);
 		allCategories.add(Gefaehrdung.KAT_STRING_VORSATZ);
 
-		ArrayList<OwnGefaehrdung> allOwnGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
+		List<OwnGefaehrdung> allOwnGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
 		Boolean contains = false;
 		
 		for (OwnGefaehrdung gefaehrdung : allOwnGefaehrdungen) {
@@ -180,7 +182,7 @@ public class NewGefaehrdungDialog extends Dialog {
 		ownGefaehrdungen.add(ownGefaehrdung);
 		
 		try {
-			OwnGefaehrdungHome.getInstance().saveNew(ownGefaehrdung);
+			OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Eigene Gefährdung konnte nicht gespeichert werden.");
 		}

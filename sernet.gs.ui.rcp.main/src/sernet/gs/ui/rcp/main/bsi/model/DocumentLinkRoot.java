@@ -1,12 +1,9 @@
-package sernet.gs.ui.rcp.main.bsi.views;
+package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import sernet.gs.ui.rcp.main.bsi.model.DocumentLink;
-import sernet.gs.ui.rcp.main.common.model.HibernateDocumentLinkDAO;
-import sernet.gs.ui.rcp.main.common.model.IDocumentLinkDAO;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 

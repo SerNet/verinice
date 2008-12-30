@@ -26,7 +26,13 @@ public class SaveCommand<T> extends GenericCommand {
 	
 	public void execute() {
 		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
-		dao.merge(element);
+		element = dao.merge(element);
 	}
+
+	public T getElement() {
+		return element;
+	}
+	
+	
 
 }

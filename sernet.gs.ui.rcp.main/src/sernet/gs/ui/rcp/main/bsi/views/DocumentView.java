@@ -25,6 +25,7 @@ import org.eclipse.ui.part.ViewPart;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLink;
+import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -81,6 +82,8 @@ public class DocumentView extends ViewPart {
 		} catch (Exception e) {
 			return;
 		}
+		
+		
 		IDocumentLinkDAO dao = new HibernateDocumentLinkDAO();
 		DocumentLinkRoot root = dao.findEntries(allIDs);
 		viewer.setInput(root);

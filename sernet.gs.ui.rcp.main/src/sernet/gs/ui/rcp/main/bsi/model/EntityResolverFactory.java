@@ -8,12 +8,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import sernet.gs.ui.rcp.main.bsi.views.DocumentLinkRoot;
+import com.sun.star.ucb.CommandFailedException;
+
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.HibernateDocumentLinkDAO;
-import sernet.gs.ui.rcp.main.common.model.IDocumentLinkDAO;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindURLs;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -104,8 +106,10 @@ public class EntityResolverFactory {
 		urlresolver = new IUrlResolver() {
 			public List<HuiUrl> resolve() {
 				List<HuiUrl> result = new ArrayList<HuiUrl>();
-				IDocumentLinkDAO dao = new HibernateDocumentLinkDAO();
-				DocumentLinkRoot root = dao.findEntries(allIDs);
+				
+				FindURLs command = new FindURLs(allIDs);
+				ServiceFactory.lookupCommandService().executeCommand(command);
+				DocumentLinkRoot root = command.getUrls();
 				DocumentLink[] links = root.getChildren();
 				for (int i = 0; i < links.length; i++) {
 					HuiUrl url = new HuiUrl(links[i].getName(), links[i].getHref());
@@ -124,9 +128,13 @@ public class EntityResolverFactory {
 
 				public List<IMLPropertyOption> getAllEntitesForType(
 						String entityTypeID) {
+					
 					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
-					ArrayList<Person> personen = CnAElementFactory
-							.getCurrentModel().getPersonen();
+					LoadElementByType<Person> command = new LoadElementByType<Person>(Person.class);
+					
+					ServiceFactory.lookupCommandService().executeCommand(command);
+					List<Person> personen = command.getElements();
+
 					for (Person person : personen) {
 						result.add(new PersonEntityOptionWrapper(person));
 					}

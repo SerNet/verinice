@@ -65,7 +65,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * list of all own Gefaehrdungen of type OwnGefaehrdung -
 	 * ChooseGefaehrungPage_OK
 	 */
-	private ArrayList<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<OwnGefaehrdung>();
+	private List<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<OwnGefaehrdung>();
 
 	/* list of all MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
 	private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
@@ -173,7 +173,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
 	}
 
-	private ArrayList<RisikoMassnahme> loadRisikomassnahmen() {
+	private List<RisikoMassnahme> loadRisikomassnahmen() {
 		return RisikoMassnahmeHome.getInstance().loadAll();
 	}
 
@@ -355,7 +355,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * 
 	 * @return ArrayList of all own Gefaehrdungen
 	 */
-	public ArrayList<OwnGefaehrdung> getAllOwnGefaehrdungen() {
+	public List<OwnGefaehrdung> getAllOwnGefaehrdungen() {
 		return allOwnGefaehrdungen;
 	}
 

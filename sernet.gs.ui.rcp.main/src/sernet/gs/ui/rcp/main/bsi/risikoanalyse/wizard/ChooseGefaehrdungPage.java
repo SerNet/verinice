@@ -303,7 +303,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 		/* Listener opens Dialog for creation of new OwnGefaehrdung */
 		buttonNew.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				ArrayList<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard())
+				List<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 						.getAllOwnGefaehrdungen();
 				final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(
 						composite.getShell(), arrListOwnGefaehrdungen);
@@ -488,7 +488,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 				.getAllGefaehrdungen();
 		List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAssociatedGefaehrdungen();
-		ArrayList<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard())
+		List<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard())
 				.getAllOwnGefaehrdungen();
 
 		try {
