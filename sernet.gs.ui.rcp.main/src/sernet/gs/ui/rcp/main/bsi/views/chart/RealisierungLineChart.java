@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -29,6 +30,10 @@ import org.jfree.ui.TextAnchor;
 
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
+import sernet.gs.ui.rcp.main.service.statscommands.CountMassnahmen;
 
 public class RealisierungLineChart implements IChartGenerator {
 
@@ -52,7 +57,10 @@ public class RealisierungLineChart implements IChartGenerator {
 	        plot.add(subplot1, 1);
 	        plot.setOrientation(PlotOrientation.VERTICAL);
 	        
-	        int totalNum = CnAElementFactory.getCurrentModel().getMassnahmen().size();
+	        CountMassnahmen command = new CountMassnahmen();
+	        ServiceFactory.lookupCommandService().executeCommand(command);
+	        int totalNum = command.getTotalCount();
+	        
 	        NumberAxis axis = (NumberAxis) subplot1.getRangeAxis();
 			axis.setUpperBound(totalNum + 50);
 	        
@@ -75,7 +83,10 @@ public class RealisierungLineChart implements IChartGenerator {
 	private Object createProgressDataset() {
 		TimeSeries ts1 =new TimeSeries("umgesetzt", Day.class);
 		TimeSeries ts2 =new TimeSeries("alle", Day.class);
-		ArrayList<MassnahmenUmsetzung> massnahmen = CnAElementFactory.getCurrentModel().getMassnahmen();
+		
+		LoadElementByType<MassnahmenUmsetzung> command = new LoadElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
+		ServiceFactory.lookupCommandService().executeCommand(command);
+		List<MassnahmenUmsetzung> massnahmen = command.getElements();
 		
 		DateValues dateTotal1 = new DateValues();
 		DateValues dateTotal2 = new DateValues();

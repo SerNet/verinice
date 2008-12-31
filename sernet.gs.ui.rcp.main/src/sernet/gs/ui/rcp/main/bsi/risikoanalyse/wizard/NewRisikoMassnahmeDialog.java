@@ -121,7 +121,7 @@ public class NewRisikoMassnahmeDialog extends Dialog {
 		newRisikoMassnahme.setDescription(textDescription.getText());
 
 		try {
-			RisikoMassnahmeHome.getInstance().saveNew(newRisikoMassnahme);
+			RisikoMassnahmeHome.getInstance().save(newRisikoMassnahme);
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Neue Massnahme konnte nicht gespeichert werden!");
 		}

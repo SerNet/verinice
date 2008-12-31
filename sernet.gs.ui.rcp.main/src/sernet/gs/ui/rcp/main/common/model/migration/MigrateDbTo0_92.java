@@ -23,6 +23,7 @@ import sernet.gs.ui.rcp.main.common.model.DbVersion;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
@@ -64,7 +65,7 @@ public class MigrateDbTo0_92 extends DbMigration {
 
 	private DbVersion dbVersion;
 
-	private ArrayList<Person> personen;
+	private List<Person> personen;
 
 	private IProgress progress;
 	
@@ -76,7 +77,9 @@ public class MigrateDbTo0_92 extends DbMigration {
 		this.progress =progress;
 		Logger.getLogger(this.getClass()).debug("Updating DB model to V 0.92.");
 		createNewFieldsArray();
-		personen = CnAElementFactory.getCurrentModel().getPersonen();
+		LoadElementByType<Person> command = new LoadElementByType<Person>(Person.class);
+		ServiceFactory.lookupCommandService().executeCommand(command);
+		personen = command.getElements();
 		
 		// FIXME use DAO:
 		//ServiceFactory factory = new ServiceFactory();

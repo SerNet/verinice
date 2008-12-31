@@ -1,4 +1,4 @@
-package sernet.gs.ui.rcp.main.service.taskcommands;
+package sernet.gs.ui.rcp.main.service.statscommands;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,34 +21,30 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 
-public class CompletedLayerSummary extends MassnahmenSummary {
+public class LayerSummary extends MassnahmenSummary {
 
 
 	public void execute() {
-		setSummary(getCompletedSchichtenSummary());
+		setSummary(getSchichtenSummary());
 	}
 	
-	public Map<String, Integer> getCompletedSchichtenSummary() {
+	public Map<String, Integer> getSchichtenSummary() {
 		Map<String, Integer> result = new HashMap<String, Integer>();
-		ArrayList<BausteinUmsetzung> bausteine = getModel().getBausteine();
+		ArrayList<BausteinUmsetzung> bausteine =getModel().getBausteine();
 		for (BausteinUmsetzung baustein: bausteine) {
 			Baustein baustein2 = BSIKatalogInvisibleRoot.getInstance().getBaustein(baustein.getKapitel());
 			if (baustein2 == null) {
 				Logger.getLogger(this.getClass()).debug("Kein Baustein gefunden für ID" + baustein.getId());
 				continue;
 			}
-			String schicht = Integer.toString(baustein2.getSchicht());
-			int umgesetztSum = 0;
-			for (MassnahmenUmsetzung ums: baustein.getMassnahmenUmsetzungen()) {
-				if (ums.isCompleted())
-					umgesetztSum++;
-			}
 			
+			String schicht = Integer.toString(baustein2.getSchicht());
+
 			if (result.get(schicht) == null)
-				result.put(schicht, umgesetztSum);
+				result.put(schicht, baustein.getMassnahmenUmsetzungen().size());
 			else {
 				Integer count = result.get(schicht);
-				result.put(schicht, count + umgesetztSum);
+				result.put(schicht, count + baustein.getMassnahmenUmsetzungen().size());
 			}
 		}
 		return result;

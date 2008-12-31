@@ -134,7 +134,7 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 				textDescription.getText());
 
 		try {
-			RisikoMassnahmeHome.getInstance().saveUpdate(
+			RisikoMassnahmeHome.getInstance().save(
 					risikoMassnahmenUmsetzung.getRisikoMassnahme());
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Änderung konnte nicht gespeichert werden.");

@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -11,6 +12,7 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
@@ -33,22 +35,21 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 	
 	
 	private TableViewer viewer;
-	private BSIModel model;
 	
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = (TableViewer) viewer;
-		if (model != null)
-			model.removeBSIModelListener(this);
-		model = (BSIModel) newInput;
-		if (model != null)
-			model.addBSIModelListener(this);
+		attachModelListener();
 		modelRefresh();
 	}
 
+	private void attachModelListener() {
+		BSIModel model = CnAElementFactory.getLoadedModel();
+		model.removeBSIModelListener(this);
+		model.addBSIModelListener(this);
+	}
+
 	public Object[] getElements(Object inputElement) {
-		if (model == null)
-			return new Object[] {};
-		ArrayList<MassnahmenUmsetzung> mns = model.getMassnahmen();
+		List<MassnahmenUmsetzung> mns = (List<MassnahmenUmsetzung>) inputElement;
 		return mns.toArray(new Object[mns.size()]);
 		
 	}

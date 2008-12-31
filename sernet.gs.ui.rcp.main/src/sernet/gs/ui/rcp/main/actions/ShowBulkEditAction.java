@@ -135,7 +135,7 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 							}
 							monitor.done();
 							// update once when finished:
-							CnAElementFactory.getCurrentModel()
+							CnAElementFactory.getLoadedModel()
 									.refreshAllListeners();
 							updateSchutzbedarf(selectedElements);
 						}

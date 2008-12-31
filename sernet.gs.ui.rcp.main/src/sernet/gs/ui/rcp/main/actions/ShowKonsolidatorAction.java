@@ -123,7 +123,7 @@ public class ShowKonsolidatorAction extends Action implements
 							}
 							monitor.done();
 							// update once when finished:
-							CnAElementFactory.getCurrentModel()
+							CnAElementFactory.getLoadedModel()
 									.refreshAllListeners();
 						}
 					});

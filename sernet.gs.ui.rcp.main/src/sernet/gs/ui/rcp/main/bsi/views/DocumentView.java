@@ -29,10 +29,10 @@ import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.HibernateDocumentLinkDAO;
-import sernet.gs.ui.rcp.main.common.model.IDocumentLinkDAO;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindURLs;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 
@@ -83,10 +83,9 @@ public class DocumentView extends ViewPart {
 			return;
 		}
 		
-		
-		IDocumentLinkDAO dao = new HibernateDocumentLinkDAO();
-		DocumentLinkRoot root = dao.findEntries(allIDs);
-		viewer.setInput(root);
+		FindURLs command = new FindURLs(allIDs);
+		ServiceFactory.lookupCommandService().executeCommand(command);
+		viewer.setInput(command.getUrls());
 	}
 
 	@Override

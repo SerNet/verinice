@@ -1,4 +1,4 @@
-package sernet.gs.ui.rcp.main.service.taskcommands;
+package sernet.gs.ui.rcp.main.service.statscommands;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,21 +21,26 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 
-public class UmsetzungSummary extends MassnahmenSummary {
+public class CompletedZyklusSummary extends MassnahmenSummary {
 
 
 	public void execute() {
-		setSummary(getUmsetzungenSummary());
+		setSummary(getCompletedZyklusSummary());
 	}
 	
-	public Map<String, Integer> getUmsetzungenSummary() {
+	public Map<String, Integer> getCompletedZyklusSummary() {
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		for (Object object : getModel().getMassnahmen()) {
 			MassnahmenUmsetzung ums = (MassnahmenUmsetzung) object;
-			if (result.get(ums.getUmsetzung()) == null)
-				result.put(ums.getUmsetzung(), 0);
-			Integer count = result.get(ums.getUmsetzung());
-			result.put(ums.getUmsetzung(), ++count);
+			if (!ums.isCompleted())
+				continue;
+			String lz = ums.getLebenszyklus();
+			if (lz == null || lz.length() <5)
+				lz = "sonstige";
+			if (result.get(lz) == null)
+				result.put(lz, 0);
+			Integer count = result.get(lz);
+			result.put(lz, ++count);
 		}
 		return result;
 	}

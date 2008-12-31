@@ -15,7 +15,7 @@ import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveCommand;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 
 public class OwnGefaehrdungHome {
 	
@@ -33,7 +33,7 @@ public class OwnGefaehrdungHome {
 	}
 	
 	public void save(OwnGefaehrdung gef) throws Exception {
-		SaveCommand<OwnGefaehrdung> command = new SaveCommand<OwnGefaehrdung>(gef);
+		SaveElement<OwnGefaehrdung> command = new SaveElement<OwnGefaehrdung>(gef);
 		commandService.executeCommand(command);
 	}
 	

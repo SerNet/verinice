@@ -16,11 +16,11 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
  *
  * @param <T>
  */
-public class SaveCommand<T> extends GenericCommand {
+public class SaveElement<T> extends GenericCommand {
 
 	private T element;
 
-	public SaveCommand(T element) {
+	public SaveElement(T element) {
 		this.element = element;
 	}
 	

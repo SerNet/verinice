@@ -1,7 +1,9 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -24,6 +26,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
+import com.sun.star.ucb.CommandFailedException;
+
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
@@ -32,8 +36,11 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.actions.AuditViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForListView;
 
 /**
  * Shows implemented controls to be reviewed by the auditor.
@@ -91,7 +98,7 @@ public class AuditView extends ViewPart {
 		public void closed(BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					viewer.setInput(new NullModel());
+					viewer.setInput(new ArrayList());
 				}
 			});
 		}
@@ -99,7 +106,7 @@ public class AuditView extends ViewPart {
 		public void loaded(final BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					viewer.setInput(model);
+					setInput();
 				}
 			});
 		}
@@ -195,7 +202,8 @@ public class AuditView extends ViewPart {
 		
 		viewer.setContentProvider(new MassnahmenUmsetzungContentProvider());
 		viewer.setLabelProvider(new AuditLabelProvider());
-		viewer.setInput(CnAElementFactory.getCurrentModel());
+		setInput();
+		
 		
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 		createFilters();
@@ -207,6 +215,19 @@ public class AuditView extends ViewPart {
 		
 		getSite().setSelectionProvider(viewer);
 		packColumns();
+	}
+	
+	protected void setInput() {
+		if (CnAElementHome.getInstance().isOpen()) {
+			FindMassnahmenForListView command = new FindMassnahmenForListView();
+			ServiceFactory.lookupCommandService().executeCommand(command);
+			final List<MassnahmenUmsetzung> allMassnahmen = command.getAll();
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					viewer.setInput(allMassnahmen);
+				}
+			});
+		}
 	}
 	
 	@Override

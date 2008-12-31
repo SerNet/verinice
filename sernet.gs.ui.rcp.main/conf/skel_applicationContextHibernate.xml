@@ -294,15 +294,21 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 
 
 
-	
-
-	
 	<bean id="cnaLinkDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
 		<constructor-arg>
 			<value>sernet.gs.ui.rcp.main.common.model.CnALink</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
+
+
+<bean id="finishedRiskAnalysisListsDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
 
 	<!-- Use existing hibernate config for session -->  
 	<bean class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" id="sessionFactory">
@@ -322,6 +328,9 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		<property name="propertyDao" ref="propertyDao"/>
 	  	<property name="entityDao" ref="entityDao"/>
 	  	<property name="cnaLinkDao" ref="cnaLinkDao"/>
+	  	<property name="finishedRiskAnalysisListsDAO" ref="finishedRiskAnalysisListsDAO"/>
+
+		<!-- DAOs for subclasses of CnATreeElement: -->	  	
 	  	<property name="anwendungDAO" ref="anwendungDAO"/>
 		<property name="bausteinUmsetzungDAO" ref="bausteinUmsetzungDAO"/>
 		<property name="bSIModelDAO" ref="bSIModelDAO"/>

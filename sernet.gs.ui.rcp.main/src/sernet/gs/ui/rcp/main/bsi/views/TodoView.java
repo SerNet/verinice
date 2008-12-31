@@ -1,7 +1,9 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -28,10 +30,14 @@ import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.actions.TodoViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForListView;
 
 /**
  * Shows controls that still have to be implemented.
@@ -73,7 +79,11 @@ public class TodoView extends ViewPart {
 			case 3: // siegelstufe
 				return "" + mn.getStufe(); //$NON-NLS-1$
 			case 4: // zielobjekt
-				return (mn.getParent().getParent()).getTitel(); // mn -> baustein -> ziel
+				if (mn.getParent() instanceof GefaehrdungsUmsetzung)
+					return "RA: " + 
+						(mn.getParent().getParent().getParent()).getTitel(); // mn -> gefaehrdung -> risikoanalyse -> ziel
+				else
+					return (mn.getParent().getParent()).getTitel(); // mn -> baustein -> ziel
 			case 5: // title
 				return mn.getTitel();
 			}
@@ -115,8 +125,7 @@ public class TodoView extends ViewPart {
 		public void closed(BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					if (viewer.getContentProvider() != null)
-						viewer.setInput(new NullModel());
+					viewer.setInput(new ArrayList());
 				}
 			});
 		}
@@ -124,8 +133,7 @@ public class TodoView extends ViewPart {
 		public void loaded(final BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					if (viewer.getContentProvider() != null)
-						viewer.setInput(model);
+					setInput();
 				}
 			});
 		}
@@ -191,8 +199,7 @@ public class TodoView extends ViewPart {
 
 		viewer.setContentProvider(new MassnahmenUmsetzungContentProvider());
 		viewer.setLabelProvider(new TodoLabelProvider());
-		viewer.setInput(CnAElementFactory.getCurrentModel());
-		
+		setInput();
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 		
 		viewer.setSorter(new TodoSorter());
@@ -203,6 +210,19 @@ public class TodoView extends ViewPart {
 		getSite().setSelectionProvider(viewer);
 		
 		packColumns();
+	}
+	
+	protected void setInput() {
+		if (CnAElementHome.getInstance().isOpen()) {
+			FindMassnahmenForListView command = new FindMassnahmenForListView();
+			ServiceFactory.lookupCommandService().executeCommand(command);
+			final List<MassnahmenUmsetzung> allMassnahmen = command.getAll();
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					viewer.setInput(allMassnahmen);
+				}
+			});
+		}
 	}
 	
 	private void packColumns() {

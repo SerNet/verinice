@@ -9,12 +9,13 @@ import org.hibernate.classic.Session;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindRiskAnalysisListsByParentID;
 
 public class FinishedRiskAnalysisListsHome {
 	
-	private static final String QUERY_FIND_BY_PARENT_ID = "from "
-		+ FinishedRiskAnalysisLists.class.getName() + " as element "
-		+ "where element.finishedRiskAnalysisId = ?";
 	
 	private static FinishedRiskAnalysisListsHome instance;
 
@@ -28,59 +29,23 @@ public class FinishedRiskAnalysisListsHome {
 	}
 	
 	public void saveNew(FinishedRiskAnalysisLists list) throws Exception {
-		Transaction tx = null;
-		try {
-			tx = CnAElementHome.getInstance().getSession().beginTransaction();
-			CnAElementHome.getInstance().getSession().save(list);
-			tx.commit();
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(e);
-			if (tx != null)
-				tx.rollback();
-			throw e;
-		}
+		SaveElement<FinishedRiskAnalysisLists> command = new SaveElement<FinishedRiskAnalysisLists>(list);
+		ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 
 	public void update(FinishedRiskAnalysisLists list) throws Exception {
-		Session session = CnAElementHome.getInstance().getSession();
-		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-			session.update(list);
-			tx.commit();
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(e);
-			if (tx != null)
-				tx.rollback();
-			throw e;
-		}
+		SaveElement<FinishedRiskAnalysisLists> command = new SaveElement<FinishedRiskAnalysisLists>(list);
+		ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 	
 	public void remove(FinishedRiskAnalysisLists list) throws Exception {
-		Session session = CnAElementHome.getInstance().getSession();
-		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-			session.delete(list);
-			tx.commit();
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(e);
-			if (tx != null)
-				tx.rollback();
-			throw e;
-		}
-	
-	
+		RemoveElement<FinishedRiskAnalysisLists> command = new RemoveElement<FinishedRiskAnalysisLists>(list);
+		ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 	
 	public FinishedRiskAnalysisLists loadById(int id) {
-		Session session = CnAElementHome.getInstance().getSession();
-		Query query = session.createQuery(QUERY_FIND_BY_PARENT_ID);
-		query.setInteger(0, id);
-		List list = query.list();
-		if (list == null || list.size() == 0)
-			return null;
-		return (FinishedRiskAnalysisLists) list.get(0);
-	
+		FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(id);
+		ServiceFactory.lookupCommandService().executeCommand(command);
+		return command.getFoundLists();
 	}
 }

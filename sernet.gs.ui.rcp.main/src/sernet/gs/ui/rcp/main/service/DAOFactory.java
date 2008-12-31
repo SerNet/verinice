@@ -25,6 +25,7 @@ import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
@@ -253,6 +254,13 @@ public class DAOFactory {
      */
     public void setOwnGefaehrdungDAO(IBaseDao<OwnGefaehrdung, Integer> daoToSet) {
     	daos.put(OwnGefaehrdung.class, daoToSet);
+    }
+    
+    /** 
+     * Setter method used by spring to inject DAO.
+     */
+    public void setFinishedRiskAnalysisListsDAO(IBaseDao<FinishedRiskAnalysisLists, Integer> daoToSet) {
+    	daos.put(FinishedRiskAnalysisLists.class, daoToSet);
     }
 
     

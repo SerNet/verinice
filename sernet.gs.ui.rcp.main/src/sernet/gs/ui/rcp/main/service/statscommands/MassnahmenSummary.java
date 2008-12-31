@@ -1,4 +1,4 @@
-package sernet.gs.ui.rcp.main.service.taskcommands;
+package sernet.gs.ui.rcp.main.service.statscommands;
 
 import java.util.ArrayList;
 import java.util.Collections;

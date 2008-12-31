@@ -27,7 +27,7 @@ public class TestHibernate extends TestCase {
 		CnAElementHome.getInstance().open("/home/akoderman/java/runtime-oc.product/conf",
 				new NullMonitor());
 		BSIModel model = CnAElementFactory.getInstance().loadOrCreateModel(new NullMonitor());
-		Set<ITVerbund> itverbund = model.getItverbuende();
+		List<ITVerbund> itverbund = model.getItverbuende();
 		assertTrue("Kein Modell erstellt", itverbund.size() > 0);
 		
 		GebaeudeKategorie category = (GebaeudeKategorie) itverbund.iterator().next()
@@ -40,7 +40,7 @@ public class TestHibernate extends TestCase {
 
 		// load again:
 		BSIModel model2 = CnAElementHome.getInstance().loadModel(new NullMonitor());
-		Set<ITVerbund> itverbund2 = model.getItverbuende();
+		List<ITVerbund> itverbund2 = model.getItverbuende();
 		assertTrue("Kein Modell erstellt", itverbund.size() > 0);
 		
 		GebaeudeKategorie category2 = (GebaeudeKategorie) itverbund.iterator().next()
@@ -64,7 +64,7 @@ public class TestHibernate extends TestCase {
 		Logger.getLogger(this.getClass()).debug("Loading model FINISH");
 		assertTrue("Kein Modell erstellt", model != null);
 		
-		Set<ITVerbund> itverbund = model.getItverbuende();
+		List<ITVerbund> itverbund = model.getItverbuende();
 		assertTrue("Kein Modell erstellt", itverbund.size() > 0);
 		
 		GebaeudeKategorie gebKat = (GebaeudeKategorie) itverbund.iterator().next().getCategory(GebaeudeKategorie.TYPE_ID);

@@ -434,7 +434,7 @@ public class BsiModelView extends ViewPart {
 					BausteinUmsetzung sourceBst = (BausteinUmsetzung) o;
 					ArrayList newsel = new ArrayList(10);
 					newsel.add(sourceBst);
-					BSIModel model = CnAElementFactory.getCurrentModel();
+					// FIXME lazyliy load bausteine on access
 					ArrayList<BausteinUmsetzung> alleBausteine = model
 							.getBausteine();
 					for (BausteinUmsetzung bst : alleBausteine) {

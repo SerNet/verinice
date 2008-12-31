@@ -17,7 +17,7 @@ import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveCommand;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRisikomassnahmeByNumber;
 
 public class RisikoMassnahmeHome {
@@ -37,7 +37,7 @@ public class RisikoMassnahmeHome {
 	
 	
 	public void save(RisikoMassnahme mn) throws Exception {
-		SaveCommand<RisikoMassnahme> command = new SaveCommand<RisikoMassnahme>(mn);
+		SaveElement<RisikoMassnahme> command = new SaveElement<RisikoMassnahme>(mn);
 		commandService.executeCommand(command);
 	}
 	

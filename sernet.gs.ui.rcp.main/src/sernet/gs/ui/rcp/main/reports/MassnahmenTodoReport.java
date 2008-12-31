@@ -24,10 +24,13 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 
 /**
- * This report prints all safeguards that have to be completed
+ * This report prints all safeguards that still have to be completed
  * 
  *   
  * @author koderman@sernet.de
@@ -42,7 +45,9 @@ public class MassnahmenTodoReport extends Report
 			return items;
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
-		Set<ITVerbund> itverbuende = CnAElementFactory.getCurrentModel().getItverbuende();
+		
+		
+		List<ITVerbund> itverbuende = CnAElementHome.getInstance().getItverbuendeHydrated();
 		for (ITVerbund verbund : itverbuende) {
 			items.add(verbund);
 			if (! categories.contains(verbund.getParent()))

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,12 +35,13 @@ import sernet.gs.ui.rcp.main.service.HuiServiceTest;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshMultipleElements;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveCommand;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
@@ -106,14 +108,14 @@ public class CnAElementHome {
 	public void save(CnATreeElement element) throws Exception {
 			Logger.getLogger(this.getClass()).debug(
 					"Saving new element: " + element);
-			SaveCommand<CnATreeElement> saveCommand = new SaveCommand<CnATreeElement>(element);
+			SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(element);
 			commandService.executeCommand(saveCommand);
 	}
 	
 	public void save(CnALink link) throws Exception {
 		Logger.getLogger(this.getClass()).debug(
 				"Saving new link: " + link);
-		SaveCommand<CnALink> saveCommand = new SaveCommand<CnALink>(link);
+		SaveElement<CnALink> saveCommand = new SaveElement<CnALink>(link);
 		commandService.executeCommand(saveCommand);
 }
 	
@@ -202,11 +204,17 @@ public class CnAElementHome {
 		// TODO implement
 		return null;
 	}
-
+	
 	public List<ITVerbund> getItverbuende() {
 		LoadElementByType<ITVerbund> command = new LoadElementByType<ITVerbund>(ITVerbund.class);
 		commandService.executeCommand(command);
 		return command.getElements();
+	}
+
+	public List<ITVerbund> getItverbuendeHydrated() {
+		LoadBSIModelComplete command = new LoadBSIModelComplete();
+		ServiceFactory.lookupCommandService().executeCommand(command);
+		return command.getModel().getItverbuende();
 	}
 
 	public List<Person> getPersonen() {

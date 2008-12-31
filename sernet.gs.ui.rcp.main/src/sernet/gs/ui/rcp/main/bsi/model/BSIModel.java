@@ -103,8 +103,8 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 	}
 
 	@SuppressWarnings("unchecked")//$NON-NLS-1$
-	public Set<ITVerbund> getItverbuende() {
-		Set itvs = new HashSet<ITVerbund>();
+	public List<ITVerbund> getItverbuende() {
+		List itvs = new ArrayList<ITVerbund>();
 		itvs.addAll(getChildren());
 		return itvs;
 	}

@@ -9,6 +9,7 @@ import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
@@ -33,8 +34,7 @@ public class SchutzbedarfsDefinitionReport extends Report implements IBSIReport 
 			return items;
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
-		Set<ITVerbund> itverbuende = CnAElementFactory.getCurrentModel()
-				.getItverbuende();
+		List<ITVerbund> itverbuende = CnAElementHome.getInstance().getItverbuendeHydrated();
 		for (ITVerbund verbund : itverbuende) {
 			items.add(verbund);
 		}
