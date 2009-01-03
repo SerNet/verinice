@@ -119,7 +119,10 @@ public class BSIElementEditor extends EditorPart {
 	
 	private void initContent() {
 		try {
-			CnAElementHome.getInstance().refresh(((BSIElementEditorInput)getEditorInput()).getCnAElement());
+			opening editor fails: test reload / refresh of new element
+			CnAElementHome.getInstance().refresh(
+					((BSIElementEditorInput)getEditorInput()).getCnAElement()
+					);
 			Entity entity = ((BSIElementEditorInput)getEditorInput()).getEntity();
 			EntityType entityType = HUITypeFactory.getInstance()
 				.getEntityType(entity.getEntityType());
@@ -127,7 +130,7 @@ public class BSIElementEditor extends EditorPart {
 			huiComposite.createView(entity, true, true);
 			InputHelperFactory.setInputHelpers(entityType, huiComposite);
 			huiComposite.resetInitialFocus();
-		} catch (DBException e) {
+		} catch (Exception e) {
 			ExceptionUtil.log(e, "Konnte BSI Element Editor nicht öffnen");
 		}
 		

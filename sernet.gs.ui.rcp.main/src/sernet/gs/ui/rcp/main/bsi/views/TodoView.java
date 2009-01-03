@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
@@ -37,6 +38,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForListView;
 
 /**
@@ -133,7 +135,11 @@ public class TodoView extends ViewPart {
 		public void loaded(final BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					setInput();
+					try {
+						setInput();
+					} catch (CommandException e) {
+						ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+					}
 				}
 			});
 		}
@@ -199,7 +205,11 @@ public class TodoView extends ViewPart {
 
 		viewer.setContentProvider(new MassnahmenUmsetzungContentProvider());
 		viewer.setLabelProvider(new TodoLabelProvider());
-		setInput();
+		try {
+			setInput();
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+		}
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 		
 		viewer.setSorter(new TodoSorter());
@@ -212,7 +222,7 @@ public class TodoView extends ViewPart {
 		packColumns();
 	}
 	
-	protected void setInput() {
+	protected void setInput() throws CommandException {
 		if (CnAElementHome.getInstance().isOpen()) {
 			FindMassnahmenForListView command = new FindMassnahmenForListView();
 			ServiceFactory.lookupCommandService().executeCommand(command);

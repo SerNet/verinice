@@ -9,7 +9,9 @@ import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.PropertyList;
@@ -27,7 +29,11 @@ public class FindURLs extends GenericCommand {
 
 	public void execute() {
 		LoadBSIModel command = new LoadBSIModel();
-		getCommandService().executeCommand(command);
+		try {
+			getCommandService().executeCommand(command);
+		} catch (CommandException e) {
+			throw new RuntimeCommandException(e);
+		}
 		model = command.getModel();
 		urls = findEntries(allIDs);
 	}
@@ -37,7 +43,7 @@ public class FindURLs extends GenericCommand {
 		if (model == null)
 			return root;
 		List<CnATreeElement> elements = model
-				.getAllElements(false /* do not filter Massnahmen, they contain links too */);
+				.getAllElementsFlatList(true /* include Massnahmen, they contain links too */);
 		for (CnATreeElement element : elements) {
 			Entity entity = element.getEntity();
 			if (entity == null)

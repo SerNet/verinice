@@ -23,6 +23,7 @@ import sernet.gs.ui.rcp.main.common.model.DbVersion;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -81,17 +82,7 @@ public class MigrateDbTo0_92 extends DbMigration {
 		ServiceFactory.lookupCommandService().executeCommand(command);
 		personen = command.getElements();
 		
-		// FIXME use DAO:
-		//ServiceFactory factory = new ServiceFactory();
-//		// for all fields holding a persons name:
-//		for (int i = 0; i < personFieldsOld.length; i++) {
-//			// find all saved values for this field:
-//			Logger.getLogger(this.getClass()).debug("Converting " + personFieldsOld[i] + " to " + personFieldsNew[i]);
-//			//factory.getHuiService().migratePersonsForTypeId(personFieldsOld[i], personFieldsNew[i]);
-//		}
-//		dbVersion.getLoadedModel().setDbVersion(0.92D);
-//		dbVersion.getDbHome().update(dbVersion.getLoadedModel());
-		
+	
 		progress.beginTask("Aktualisiere DB auf V 0.92... Bitte warten...", IProgress.UNKNOWN_WORK);
 		final boolean[] done = new boolean[1];
 		done[0] = false;
@@ -106,7 +97,7 @@ public class MigrateDbTo0_92 extends DbMigration {
 						if (now - startTime > 10000) {
 							ExceptionUtil.log(new Exception("Das hier dauert und dauert..."), "Wenn diese Aktion länger als eine " +
 									"Minute dauert, sollten Sie ihre Datenbank von Derby nach Postgres migrieren. Falls das " +
-									"schon geschehen ist, sollten Sie ihre Postgres-DB tunen. Unter http://verinice.org/FAQ.46.0.html finden " +
+									"schon geschehen ist, sollten Sie ihre Postgres/MySQL-DB tunen. Unter http://verinice.org/FAQ.46.0.html finden " +
 									"Sie weitere Hinweise. Sie können natürlich auch einfach weiter warten...");
 							return;
 						}
@@ -116,7 +107,11 @@ public class MigrateDbTo0_92 extends DbMigration {
 			}
 		};
 		timeout.start();
-		List<CnATreeElement> allElements = CnAElementFactory.getCurrentModel().getAllElements(true /* filter Massnahmen */);
+		
+		LoadBSIModelComplete command2 = new LoadBSIModelComplete(false); /* skip massnahmen */
+		ServiceFactory.lookupCommandService().executeCommand(command2);
+		List<CnATreeElement> allElements = command2.getModel().getAllElementsFlatList(false);
+
 		done[0] = true;
 		
 		progress.beginTask("Migriere verknüpfte Personen...", allElements.size());

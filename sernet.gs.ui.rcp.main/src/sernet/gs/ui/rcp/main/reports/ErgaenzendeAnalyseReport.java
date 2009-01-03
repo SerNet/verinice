@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
@@ -81,9 +82,14 @@ public class ErgaenzendeAnalyseReport extends Report
 			return items;
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
-		List<ITVerbund> itverbuende = CnAElementHome.getInstance().getItverbuende();
-		for (ITVerbund verbund : itverbuende) {
-			getStrukturElements(verbund);
+		try {
+			List<ITVerbund> itverbuende = CnAElementHome.getInstance().getItverbuende();
+			for (ITVerbund verbund : itverbuende) {
+				getStrukturElements(verbund);
+			}
+			
+		} catch (Exception e) {
+			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
 		}
 		return items;
 	}

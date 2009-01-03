@@ -28,10 +28,12 @@ import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.TextAnchor;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
 import sernet.gs.ui.rcp.main.service.statscommands.CountMassnahmen;
 
@@ -40,7 +42,12 @@ public class RealisierungLineChart implements IChartGenerator {
 	
 	
 	public JFreeChart createChart() {
-		return createProgressChart(createProgressDataset());
+		try {
+			return createProgressChart(createProgressDataset());
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "Fehler beim Datenzugriff");
+		}
+		return null;
 	}
 
 	
@@ -58,7 +65,11 @@ public class RealisierungLineChart implements IChartGenerator {
 	        plot.setOrientation(PlotOrientation.VERTICAL);
 	        
 	        CountMassnahmen command = new CountMassnahmen();
-	        ServiceFactory.lookupCommandService().executeCommand(command);
+	        try {
+				ServiceFactory.lookupCommandService().executeCommand(command);
+			} catch (CommandException e) {
+				ExceptionUtil.log(e, "Fehler beim Datenzugriff");
+			}
 	        int totalNum = command.getTotalCount();
 	        
 	        NumberAxis axis = (NumberAxis) subplot1.getRangeAxis();
@@ -80,7 +91,7 @@ public class RealisierungLineChart implements IChartGenerator {
 	        return chart;
 	}
 
-	private Object createProgressDataset() {
+	private Object createProgressDataset() throws CommandException {
 		TimeSeries ts1 =new TimeSeries("umgesetzt", Day.class);
 		TimeSeries ts2 =new TimeSeries("alle", Day.class);
 		

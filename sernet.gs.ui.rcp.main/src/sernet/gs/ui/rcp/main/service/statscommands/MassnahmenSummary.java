@@ -10,7 +10,9 @@ import java.util.Set;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 
 public abstract class MassnahmenSummary extends GenericCommand {
@@ -22,7 +24,11 @@ public abstract class MassnahmenSummary extends GenericCommand {
 
 	public void execute() {
 		LoadBSIModel command = new LoadBSIModel();
-		getCommandService().executeCommand(command);
+		try {
+			getCommandService().executeCommand(command);
+		} catch (CommandException e) {
+			throw new RuntimeCommandException(e);
+		}
 		model = command.getModel();
 	}
 

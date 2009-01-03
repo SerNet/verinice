@@ -10,7 +10,7 @@ import sernet.springclient.SpringClientPlugin;
 public abstract class ServiceFactory {
 	
 	
-	private static final String HUISERVICE = "huiService";
+	private static final String HUISERVICE = "commandService";
 	private static final String BEAN_REF_FACTORY = "beanRefFactory.xml";
 	private static final String CONTEXT_LOCAL = "ctxHibernate";
 

@@ -51,5 +51,9 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		public void refresh(T element) {
 			getHibernateTemplate().refresh(element);
 		}
+		
+		public void reload(T element, Serializable id) {
+			getHibernateTemplate().load(element, id);
+		}
 
 }

@@ -30,6 +30,7 @@ import sernet.gs.ui.rcp.main.common.model.DbVersion;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
@@ -64,7 +65,9 @@ public class MigrateDbTo0_93 extends DbMigration {
 		this.progress =progress;
 		Logger.getLogger(this.getClass()).debug("Updating DB model to V 0.93.");
 		
-		List<CnATreeElement> allElements = CnAElementFactory.getCurrentModel().getAllElements(false);
+		LoadBSIModelComplete command2 = new LoadBSIModelComplete(true); /* include massnahmen */
+		ServiceFactory.lookupCommandService().executeCommand(command2);
+		List<CnATreeElement> allElements = command2.getModel().getAllElementsFlatList(true);
 
 		progress.beginTask("Migriere Datenbank auf Version 0.93", allElements.size());
 		for (CnATreeElement cnATreeElement : allElements) {

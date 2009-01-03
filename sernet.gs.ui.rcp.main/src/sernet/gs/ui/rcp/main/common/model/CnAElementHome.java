@@ -34,6 +34,8 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisListsHo
 import sernet.gs.ui.rcp.main.service.HuiServiceTest;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.commands.ICommand;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementById;
@@ -83,8 +85,7 @@ public class CnAElementHome {
 	}
 
 	public boolean isOpen() {
-		// TODO recreate hibernate config and recreate session factory bean (spring)
-		return true;
+		return commandService != null;
 	}
 
 	public void open(IProgress monitor) throws Exception {
@@ -105,11 +106,12 @@ public class CnAElementHome {
 		// do nothing
 	}
 
-	public void save(CnATreeElement element) throws Exception {
+	public <T extends CnATreeElement> T save(T element) throws Exception {
 			Logger.getLogger(this.getClass()).debug(
 					"Saving new element: " + element);
-			SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(element);
+			SaveElement<T> saveCommand = new SaveElement<T>(element);
 			commandService.executeCommand(saveCommand);
+			return saveCommand.getElement();
 	}
 	
 	public void save(CnALink link) throws Exception {
@@ -142,12 +144,12 @@ public class CnAElementHome {
 	}
 
 	public void update(List<? extends CnATreeElement> elements)
-			throws StaleObjectStateException {
+			throws StaleObjectStateException, CommandException {
 		UpdateMultipleElements command = new UpdateMultipleElements(elements);
 		commandService.executeCommand(command);
 	}
 
-	public void refresh(List<? extends CnATreeElement> elements) {
+	public void refresh(List<? extends CnATreeElement> elements) throws CommandException {
 		RefreshMultipleElements command = new RefreshMultipleElements(elements);
 		commandService.executeCommand(command);
 	}
@@ -158,9 +160,10 @@ public class CnAElementHome {
 	 * @param clazz
 	 * @param id
 	 * @return
+	 * @throws CommandException 
 	 */
 	@SuppressWarnings("unchecked")
-	public CnATreeElement loadById(Class<? extends CnATreeElement> clazz, int id) {
+	public CnATreeElement loadById(Class<? extends CnATreeElement> clazz, int id) throws CommandException {
 		LoadElementById command = new LoadElementById(clazz, id);
 		commandService.executeCommand(command);
 		return command.getFound();
@@ -183,7 +186,7 @@ public class CnAElementHome {
 
 		nullMonitor.setTaskName("Lade Grundschutz Modell...");
 		
-		LoadBSIModel command = new LoadBSIModel();
+		LoadBSIModelComplete command = new LoadBSIModelComplete(true);
 		commandService.executeCommand(command);
 		BSIModel model = command.getModel();
 		return model;
@@ -194,8 +197,9 @@ public class CnAElementHome {
 	 * memory, sets element and all properties to actual state in database.
 	 * 
 	 * @param cnAElement
+	 * @throws CommandException 
 	 */
-	public void refresh(CnATreeElement cnAElement) {
+	public void refresh(CnATreeElement cnAElement) throws CommandException {
 		RefreshElement command = new RefreshElement(cnAElement);
 		commandService.executeCommand(command);
 	}
@@ -205,26 +209,26 @@ public class CnAElementHome {
 		return null;
 	}
 	
-	public List<ITVerbund> getItverbuende() {
+	public List<ITVerbund> getItverbuende() throws CommandException {
 		LoadElementByType<ITVerbund> command = new LoadElementByType<ITVerbund>(ITVerbund.class);
 		commandService.executeCommand(command);
 		return command.getElements();
 	}
 
-	public List<ITVerbund> getItverbuendeHydrated() {
-		LoadBSIModelComplete command = new LoadBSIModelComplete();
+	public List<ITVerbund> getItverbuendeHydrated(boolean includingMassnahmen) throws CommandException {
+		LoadBSIModelComplete command = new LoadBSIModelComplete(includingMassnahmen);
 		ServiceFactory.lookupCommandService().executeCommand(command);
 		return command.getModel().getItverbuende();
 	}
 
-	public List<Person> getPersonen() {
+	public List<Person> getPersonen() throws CommandException {
 		LoadElementByType<Person> command = new LoadElementByType<Person>(Person.class);
 		commandService.executeCommand(command);
 		return command.getElements();
 		
 	}
 
-	public List<String> getTags() {
+	public List<String> getTags() throws CommandException {
 		FindAllTags command = new FindAllTags();
 		commandService.executeCommand(command);
 		return command.getTags();

@@ -43,6 +43,7 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
@@ -563,8 +564,12 @@ public class BsiModelView extends ViewPart {
 
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				viewer.setInput(model);
-				viewer.refresh();
+				try {
+					viewer.setInput(model);
+					viewer.refresh();
+				} catch (Exception e) {
+					ExceptionUtil.log(e, "Konnte Modell nicht laden.");
+				}
 			}
 		});
 	}

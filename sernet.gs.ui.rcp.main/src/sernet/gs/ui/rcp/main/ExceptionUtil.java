@@ -15,6 +15,7 @@ import org.hibernate.StaleObjectStateException;
 import org.hibernate.exception.GenericJDBCException;
 
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 
 /**
  * Helper class to handle exceptions.
@@ -56,6 +57,14 @@ public class ExceptionUtil {
 				text,
 				e);
 		
+		if (e instanceof CommandException) {
+			try {
+				e = (Exception) e.getCause();
+			} catch (Exception castException) {
+				// keep original exception
+			}
+		}
+		
 		Status status;
 		if (e instanceof GenericJDBCException) {
 			GenericJDBCException jdbcEx = (GenericJDBCException) e;
@@ -70,7 +79,7 @@ public class ExceptionUtil {
 			status = new Status(IStatus.ERROR,
 					Activator.getDefault().getBundle().getSymbolicName(),
 					IStatus.ERROR,
-					e.getStackTrace()[0].toString(),
+					stackTraceToString(e),
 					e);
 			
 		}
@@ -97,5 +106,14 @@ public class ExceptionUtil {
 				}
 			});
 		}
+	}
+
+	private static String stackTraceToString(Exception e) {
+		StringBuffer buf = new StringBuffer();
+		StackTraceElement[] stackTrace = e.getStackTrace();
+		for (StackTraceElement stackTraceElement : stackTrace) {
+			buf.append(stackTraceElement.toString() + "\n");
+		}
+		return buf.toString();
 	}
 }

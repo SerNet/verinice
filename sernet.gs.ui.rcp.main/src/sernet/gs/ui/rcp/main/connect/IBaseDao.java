@@ -19,6 +19,8 @@ public interface IBaseDao<T, ID extends Serializable> {
 		 public List findByQuery(String hqlQuery, Object[] params);
 		 
 		 public void refresh(T element);
+		 
+		 public void reload(T element, Serializable id);
 
 		 public void initialize(Object collection);
 		 

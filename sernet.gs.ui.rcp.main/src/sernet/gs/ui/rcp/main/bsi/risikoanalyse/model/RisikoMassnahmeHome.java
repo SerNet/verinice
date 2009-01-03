@@ -15,6 +15,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
@@ -46,13 +47,13 @@ public class RisikoMassnahmeHome {
 		commandService.executeCommand(command);
 	}
 	
-	public List<RisikoMassnahme> loadAll() throws RuntimeException {
+	public List<RisikoMassnahme> loadAll() throws Exception {
 		LoadElementByType<RisikoMassnahme> command = new LoadElementByType<RisikoMassnahme>(RisikoMassnahme.class);
 		commandService.executeCommand(command);
 		return command.getElements();
 	}
 	
-	public RisikoMassnahme loadByNumber(String number) {
+	public RisikoMassnahme loadByNumber(String number) throws CommandException {
 		FindRisikomassnahmeByNumber command = new FindRisikomassnahmeByNumber(number);
 		commandService.executeCommand(command);
 		return command.getMassnahme();

@@ -19,9 +19,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RectangleEdge;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 
@@ -29,7 +31,12 @@ public class SchichtenBarChart implements IChartGenerator {
 
 	public JFreeChart createChart() {
 		// return createBarChart(createBarDataset());
-		return createSpiderChart(createBarDataset());
+		try {
+			return createSpiderChart(createBarDataset());
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+			return null;
+		}
 	}
 
 	protected JFreeChart createBarChart(Object dataset) {
@@ -64,7 +71,7 @@ public class SchichtenBarChart implements IChartGenerator {
 		return chart;
 	}
 
-	protected Object createBarDataset() {
+	protected Object createBarDataset() throws CommandException {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		MassnahmenSummaryHome dao = new MassnahmenSummaryHome();
 

@@ -208,12 +208,14 @@ public class ChartView extends ViewPart {
 					final JFreeChart chart;
 					checkModel();
 					chart = chartType.createChart();
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							frame.setChart(chart);
-							frame.forceRedraw();
-						}
-					});
+					if (chart != null) {
+						Display.getDefault().asyncExec(new Runnable() {
+							public void run() {
+								frame.setChart(chart);
+								frame.forceRedraw();
+							}
+						});
+					}
 				}
 				return Status.OK_STATUS;
 			}

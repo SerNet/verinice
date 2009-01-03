@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
@@ -21,6 +22,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.PropertyGroup;
@@ -40,16 +42,21 @@ public class InputHelperFactory {
 		if (personHelper == null) {
 			personHelper = new IInputHelper() {
 				public String[] getSuggestions() {
-					List<Person> personen 
-						= CnAElementHome.getInstance().getPersonen();
-					String[] titles = new String[personen.size()];
-					int i=0;
-					for (Person person : personen) {
-						titles[i++] = person.getTitel();
-					}
-					return titles.length > 0 
+					List<Person> personen;
+					try {
+						personen = CnAElementHome.getInstance().getPersonen();
+						String[] titles = new String[personen.size()];
+						int i=0;
+						for (Person person : personen) {
+							titles[i++] = person.getTitel();
+						}
+						return titles.length > 0 
 						? titles
-						: new String[] {Messages.InputHelperFactory_0};
+								: new String[] {Messages.InputHelperFactory_0};
+					} catch (CommandException e) {
+						ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+						return new String[] {Messages.InputHelperFactory_0};
+					}
 				}
 			};
 		}
@@ -57,14 +64,20 @@ public class InputHelperFactory {
 		if (tagHelper == null) {
 			tagHelper = new IInputHelper() {
 				public String[] getSuggestions() {
-					List<String> tags = CnAElementHome.getInstance().getTags();
-					String[] tagArray = (String[]) tags.toArray(new String[tags.size()]);
-					for (int i = 0; i < tagArray.length; i++) {
-						tagArray[i] = tagArray[i] + " ";
-					}
-					return tagArray.length > 0 
+					List<String> tags;
+					try {
+						tags = CnAElementHome.getInstance().getTags();
+						String[] tagArray = (String[]) tags.toArray(new String[tags.size()]);
+						for (int i = 0; i < tagArray.length; i++) {
+							tagArray[i] = tagArray[i] + " ";
+						}
+						return tagArray.length > 0 
 						? tagArray
-						: new String[] {};
+								: new String[] {};
+					} catch (CommandException e) {
+						ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+						return new String[] {};
+					}
 				}
 			};
 		}

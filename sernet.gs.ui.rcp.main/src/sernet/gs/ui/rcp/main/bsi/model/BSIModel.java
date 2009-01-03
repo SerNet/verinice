@@ -197,17 +197,17 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		return result;
 	}
 
-	public List<CnATreeElement> getAllElements(boolean filterMassnahmen) {
+	public List<CnATreeElement> getAllElementsFlatList(boolean includeMassnahmen) {
 		List<CnATreeElement> result = new ArrayList<CnATreeElement>();
 
 		for (CnATreeElement child : getChildren()) {
-				if (filterMassnahmen &&  child instanceof BausteinUmsetzung) {
+				if (!includeMassnahmen &&  child instanceof BausteinUmsetzung) {
 					// do not add massnahmen and bausteine
 				}
 				else {
 					result.add(child);
 //					Logger.getLogger(this.getClass()).debug("Adding " + child);
-					findChildren(result, child, filterMassnahmen);
+					findChildren(result, child, includeMassnahmen);
 				}
 			}
 		return result;
@@ -229,7 +229,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
 	public List<CnALink> getAllLinks() {
 		List<CnALink> result = new ArrayList<CnALink>();
-		for (CnATreeElement element : getAllElements(true /* do not load Massnahmen */)) {
+		for (CnATreeElement element : getAllElementsFlatList(false /* do not load Massnahmen */)) {
 			result.addAll(element.getLinksDown());
 		}
 		return result;

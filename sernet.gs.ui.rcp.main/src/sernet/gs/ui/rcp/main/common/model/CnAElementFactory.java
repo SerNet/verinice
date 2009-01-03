@@ -182,7 +182,7 @@ public class CnAElementFactory {
 				saveNew(child, Datenverarbeitung.TYPE_ID, null);
 				saveNew(child, StellungnahmeDSB.TYPE_ID, null);
 				
-				dbHome.save(child);
+				child = dbHome.save(child);
 				return child;
 			}
 		});
@@ -370,17 +370,17 @@ public class CnAElementFactory {
 		Logger.getLogger(this.getClass()).debug("Creating new model in DB.");
 		monitor.setTaskName("Erzeuge neues Modell...");
 		loadedModel = new BSIModel();
-		dbHome.save(loadedModel);
 
 		ITVerbund verbund = new ITVerbund(loadedModel);
 		loadedModel.addChild(verbund);
-		dbHome.save(verbund);
 
 		verbund.createNewCategories();
 
-		for (CnATreeElement kategorie : verbund.getChildren()) {
-			dbHome.save(kategorie);
-		}
+		loadedModel = dbHome.save(loadedModel);
+//		dbHome.save(verbund);
+//		for (CnATreeElement kategorie : verbund.getChildren()) {
+//			dbHome.save(kategorie);
+//		}
 
 		fireLoad();
 		return loadedModel;
@@ -388,8 +388,5 @@ public class CnAElementFactory {
 
 	
 
-	public void create(String typeId, CnATreeElement itverbund) {
-		
-	}
 
 }

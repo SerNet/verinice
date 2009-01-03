@@ -47,7 +47,11 @@ public class CnAWorkspace {
 
 	static final byte[] buffer = new byte[BUFF_SIZE];
 
-	public static final Object CONFIG_CURRENT_VERSION = "0.7.0";
+	/**
+	 * Version number to check against version file.
+	 * When changing this, also change version number in skeleton file "conf/configuration.version"
+	 */
+	public static final Object CONFIG_CURRENT_VERSION = "0.7.2";
 
 	protected static final String VERINICEDB = "verinicedb";
 
@@ -447,6 +451,9 @@ public class CnAWorkspace {
 
 	public synchronized void createDatabaseConfig()
 			throws NullPointerException, IOException {
+		
+		// TODO server: recreate hibernate config and recreate session factory bean (spring)
+		
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		createDatabaseConfig(prefs.getString(PreferenceConstants.DB_URL), prefs
 				.getString(PreferenceConstants.DB_USER), prefs

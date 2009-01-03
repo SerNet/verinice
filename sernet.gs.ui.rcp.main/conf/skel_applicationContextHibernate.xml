@@ -62,7 +62,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 </bean>
 
 
-<bean id="bSIModelDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+<bean id="BSIModelDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
     <constructor-arg>
         <value>sernet.gs.ui.rcp.main.bsi.model.BSIModel</value>
     </constructor-arg>
@@ -126,7 +126,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 </bean>
 
 
-<bean id="iTVerbundDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+<bean id="ITVerbundDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
     <constructor-arg>
         <value>sernet.gs.ui.rcp.main.bsi.model.ITVerbund</value>
     </constructor-arg>
@@ -150,7 +150,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 </bean>
 
 
-<bean id="nKKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+<bean id="NKKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
     <constructor-arg>
         <value>sernet.gs.ui.rcp.main.bsi.model.NKKategorie</value>
     </constructor-arg>
@@ -246,7 +246,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 </bean>
 
 
-<bean id="tKKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+<bean id="TKKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
     <constructor-arg>
         <value>sernet.gs.ui.rcp.main.bsi.model.TKKategorie</value>
     </constructor-arg>
@@ -333,7 +333,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		<!-- DAOs for subclasses of CnATreeElement: -->	  	
 	  	<property name="anwendungDAO" ref="anwendungDAO"/>
 		<property name="bausteinUmsetzungDAO" ref="bausteinUmsetzungDAO"/>
-		<property name="bSIModelDAO" ref="bSIModelDAO"/>
+		<property name="BSIModelDAO" ref="BSIModelDAO"/>
 		<property name="clientDAO" ref="clientDAO"/>
 		<property name="clientsKategorieDAO" ref="clientsKategorieDAO"/>
 		<property name="datenverarbeitungDAO" ref="datenverarbeitungDAO"/>
@@ -341,10 +341,10 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		<property name="gebaeudeDAO" ref="gebaeudeDAO"/>
 		<property name="gebaeudeKategorieDAO" ref="gebaeudeKategorieDAO"/>
 		<property name="gefaehrdungsUmsetzungDAO" ref="gefaehrdungsUmsetzungDAO"/>
-		<property name="iTVerbundDAO" ref="iTVerbundDAO"/>
+		<property name="ITVerbundDAO" ref="ITVerbundDAO"/>
 		<property name="massnahmenUmsetzungDAO" ref="massnahmenUmsetzungDAO"/>
 		<property name="netzKomponenteDAO" ref="netzKomponenteDAO"/>
-		<property name="nKKategorieDAO" ref="nKKategorieDAO"/>
+		<property name="NKKategorieDAO" ref="NKKategorieDAO"/>
 		<property name="personDAO" ref="personDAO"/>
 		<property name="personengruppenDAO" ref="personengruppenDAO"/>
 		<property name="personenKategorieDAO" ref="personenKategorieDAO"/>
@@ -356,7 +356,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		<property name="sonstITDAO" ref="sonstITDAO"/>
 		<property name="stellungnahmeDSBDAO" ref="stellungnahmeDSBDAO"/>
 		<property name="telefonKomponenteDAO" ref="telefonKomponenteDAO"/>
-		<property name="tKKategorieDAO" ref="tKKategorieDAO"/>
+		<property name="TKKategorieDAO" ref="TKKategorieDAO"/>
 		<property name="verantwortlicheStelleDAO" ref="verantwortlicheStelleDAO"/>
 		<property name="verarbeitungsangabenDAO" ref="verarbeitungsangabenDAO"/>
 		<property name="zweckbestimmungDAO" ref="zweckbestimmungDAO"/>

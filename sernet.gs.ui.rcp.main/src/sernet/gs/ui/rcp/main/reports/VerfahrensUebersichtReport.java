@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
@@ -12,6 +13,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
@@ -34,9 +36,14 @@ public class VerfahrensUebersichtReport extends Report implements IBSIReport {
 			return items;
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
-		List<ITVerbund> itverbuende = CnAElementHome.getInstance().getItverbuendeHydrated();
-		for (ITVerbund verbund : itverbuende) {
-			getAnwendungen(verbund);
+		List<ITVerbund> itverbuende;
+		try {
+			itverbuende = CnAElementHome.getInstance().getItverbuendeHydrated(false);
+			for (ITVerbund verbund : itverbuende) {
+				getAnwendungen(verbund);
+			}
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
 		}
 		return items;
 	}

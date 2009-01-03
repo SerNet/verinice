@@ -37,6 +37,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 
 /**
  * Wizard to accomplish a 'BSI-Standard 100-3' risk-analysis. RiskAnalysisWizard
@@ -151,8 +152,12 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 			finishedRiskAnalysis = new FinishedRiskAnalysis(cnaElement);
 			finishedRiskLists = new FinishedRiskAnalysisLists();
 		} else {
-			finishedRiskLists = FinishedRiskAnalysisListsHome.getInstance()
-					.loadById(finishedRiskAnalysis.getDbId());
+			try {
+				finishedRiskLists = FinishedRiskAnalysisListsHome.getInstance()
+						.loadById(finishedRiskAnalysis.getDbId());
+			} catch (CommandException e) {
+				ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+			}
 			if (finishedRiskLists == null) {
 				ExceptionUtil.log(new Exception(),
 						"Die Risikoanalyse wurde unvollständig gespeichert und "
@@ -174,7 +179,12 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	}
 
 	private List<RisikoMassnahme> loadRisikomassnahmen() {
-		return RisikoMassnahmeHome.getInstance().loadAll();
+		try {
+			return RisikoMassnahmeHome.getInstance().loadAll();
+		} catch (Exception e) {
+			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+			return null;
+		}
 	}
 
 	/**
@@ -316,7 +326,11 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * Saves all own Gefaehrdungen in a List.
 	 */
 	private void loadOwnGefaehrdungen() {
-		allOwnGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
+		try {
+			allOwnGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
+		} catch (Exception e) {
+			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+		}
 	}
 
 	/**

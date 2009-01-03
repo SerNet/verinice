@@ -28,6 +28,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.sun.star.ucb.CommandFailedException;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
@@ -40,6 +41,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForListView;
 
 /**
@@ -220,13 +222,17 @@ public class AuditView extends ViewPart {
 	protected void setInput() {
 		if (CnAElementHome.getInstance().isOpen()) {
 			FindMassnahmenForListView command = new FindMassnahmenForListView();
-			ServiceFactory.lookupCommandService().executeCommand(command);
+			try {
+				ServiceFactory.lookupCommandService().executeCommand(command);
 			final List<MassnahmenUmsetzung> allMassnahmen = command.getAll();
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					viewer.setInput(allMassnahmen);
 				}
 			});
+			} catch (CommandException e) {
+				ExceptionUtil.log(e, "Konnte Massnahmen nicht laden.");
+			}
 		}
 	}
 	

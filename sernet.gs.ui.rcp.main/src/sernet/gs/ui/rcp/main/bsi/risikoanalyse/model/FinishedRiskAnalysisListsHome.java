@@ -10,6 +10,7 @@ import org.hibernate.classic.Session;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRiskAnalysisListsByParentID;
@@ -43,7 +44,7 @@ public class FinishedRiskAnalysisListsHome {
 		ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 	
-	public FinishedRiskAnalysisLists loadById(int id) {
+	public FinishedRiskAnalysisLists loadById(int id) throws CommandException {
 		FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(id);
 		ServiceFactory.lookupCommandService().executeCommand(command);
 		return command.getFoundLists();

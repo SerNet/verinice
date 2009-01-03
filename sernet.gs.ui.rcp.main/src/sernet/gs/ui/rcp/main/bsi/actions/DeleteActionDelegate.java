@@ -3,6 +3,7 @@ package sernet.gs.ui.rcp.main.bsi.actions;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -112,15 +113,20 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 										|| sel instanceof ITVerbund) {
 
 									// do not delete last ITVerbund:
-									if (sel instanceof ITVerbund
-											&& CnAElementHome.getInstance()
-													.getItverbuende().size() < 2) {
-										ExceptionUtil.log(new Exception("Letzter IT-Verbund kann nicht gelöscht werden.") , 
-												"Sie haben versucht, den letzten IT-Verbund zu löschen. " +
-												"Es muss immer ein IT-Verbund in der Datenbank verbleiben. " +
-												"Wenn Sie diesen IT-Verbund löschen möchten, legen Sie zunächst einen neuen, leeren " +
-												"IT-Verbund an.");
-										return;
+									try {
+										if (sel instanceof ITVerbund
+												&& CnAElementHome.getInstance()
+												.getItverbuende().size() < 2) {
+											ExceptionUtil.log(new Exception("Letzter IT-Verbund kann nicht gelöscht werden.") , 
+													"Sie haben versucht, den letzten IT-Verbund zu löschen. " +
+													"Es muss immer ein IT-Verbund in der Datenbank verbleiben. " +
+													"Wenn Sie diesen IT-Verbund löschen möchten, legen Sie zunächst einen neuen, leeren " +
+											"IT-Verbund an.");
+											return;
+										}
+									} catch (Exception e) {
+										Logger.getLogger(this.getClass())
+												.debug(e);
 									}
 
 									CnATreeElement el = (CnATreeElement) sel;

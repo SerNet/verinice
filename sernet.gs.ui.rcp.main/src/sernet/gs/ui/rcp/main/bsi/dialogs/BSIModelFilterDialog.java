@@ -34,10 +34,12 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.openoffice.java.accessibility.ComboBox;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 
 /**
  * 
@@ -312,11 +314,16 @@ private void createAusblendenCheckboxes(Group parent) {
 	protected void initContent() {
 		super.initContent();
 		if (CnAElementFactory.isModelLoaded()) {
-			List<String> tags = CnAElementHome.getInstance().getTags();
-			tags.add(0, TagFilter.NO_TAG);
-			viewer.setInput(tags);
+			List<String> tags;
+			try {
+				tags = CnAElementHome.getInstance().getTags();
+				tags.add(0, TagFilter.NO_TAG);
+				viewer.setInput(tags);
+			} catch (CommandException e) {
+				ExceptionUtil.log(e, "Konnte Tags für Filter nicht laden.");
+			}
 			
-			//FIXME workaround to prevent tableviewer size from exceeding shell size:
+			// workaround to prevent tableviewer size from exceeding shell size:
 			viewer.getTable().setSize(200,200);
 			
 			if (tagPattern != null)

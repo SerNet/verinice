@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
@@ -25,6 +26,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 
 /**
@@ -63,12 +65,18 @@ public class MassnahmenumsetzungReport extends Report
 			return items;
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
-		List<ITVerbund> itverbuende = CnAElementHome.getInstance().getItverbuendeHydrated();
-		for (ITVerbund verbund : itverbuende) {
-			items.add(verbund);
-			if (! categories.contains(verbund.getParent()))
-				categories.add(verbund.getParent());
-			getStrukturElements(verbund);
+		List<ITVerbund> itverbuende;
+		try {
+			itverbuende = CnAElementHome.getInstance()
+				.getItverbuendeHydrated(true);
+			for (ITVerbund verbund : itverbuende) {
+				items.add(verbund);
+				if (! categories.contains(verbund.getParent()))
+					categories.add(verbund.getParent());
+				getStrukturElements(verbund);
+			}
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "Fehler beim Datenzugriff");
 		}
 		return items;
 	}

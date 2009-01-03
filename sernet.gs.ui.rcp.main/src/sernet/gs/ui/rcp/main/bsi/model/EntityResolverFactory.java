@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.sun.star.ucb.CommandFailedException;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
@@ -107,13 +108,17 @@ public class EntityResolverFactory {
 			public List<HuiUrl> resolve() {
 				List<HuiUrl> result = new ArrayList<HuiUrl>();
 				
-				FindURLs command = new FindURLs(allIDs);
-				ServiceFactory.lookupCommandService().executeCommand(command);
-				DocumentLinkRoot root = command.getUrls();
-				DocumentLink[] links = root.getChildren();
-				for (int i = 0; i < links.length; i++) {
-					HuiUrl url = new HuiUrl(links[i].getName(), links[i].getHref());
-					result.add(url);
+				try {
+					FindURLs command = new FindURLs(allIDs);
+					ServiceFactory.lookupCommandService().executeCommand(command);
+					DocumentLinkRoot root = command.getUrls();
+					DocumentLink[] links = root.getChildren();
+					for (int i = 0; i < links.length; i++) {
+						HuiUrl url = new HuiUrl(links[i].getName(), links[i].getHref());
+						result.add(url);
+					}
+				} catch (Exception e) {
+					ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
 				}
 				
 				return result;
@@ -132,11 +137,16 @@ public class EntityResolverFactory {
 					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
 					LoadElementByType<Person> command = new LoadElementByType<Person>(Person.class);
 					
-					ServiceFactory.lookupCommandService().executeCommand(command);
-					List<Person> personen = command.getElements();
-
-					for (Person person : personen) {
-						result.add(new PersonEntityOptionWrapper(person));
+					try {
+						ServiceFactory.lookupCommandService().executeCommand(command);
+						List<Person> personen = command.getElements();
+						
+						for (Person person : personen) {
+							result.add(new PersonEntityOptionWrapper(person));
+						}
+						
+					} catch (Exception e) {
+						ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
 					}
 					return result;
 				}

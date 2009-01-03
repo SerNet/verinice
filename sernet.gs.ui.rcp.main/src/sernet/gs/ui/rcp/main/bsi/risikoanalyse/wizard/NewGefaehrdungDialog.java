@@ -148,7 +148,12 @@ public class NewGefaehrdungDialog extends Dialog {
 		allCategories.add(Gefaehrdung.KAT_STRING_TECHNIK);
 		allCategories.add(Gefaehrdung.KAT_STRING_VORSATZ);
 
-		List<OwnGefaehrdung> allOwnGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
+		List<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<OwnGefaehrdung>(0);
+		try {
+			allOwnGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
+		} catch (Exception e) {
+			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+		}
 		Boolean contains = false;
 		
 		for (OwnGefaehrdung gefaehrdung : allOwnGefaehrdungen) {

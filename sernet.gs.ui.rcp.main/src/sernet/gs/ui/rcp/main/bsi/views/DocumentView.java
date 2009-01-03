@@ -79,13 +79,14 @@ public class DocumentView extends ViewPart {
 			for (PropertyType type : types) {
 				allIDs.add(type.getId());
 			}
+
+			FindURLs command = new FindURLs(allIDs);
+			ServiceFactory.lookupCommandService().executeCommand(command);
+			viewer.setInput(command.getUrls());
 		} catch (Exception e) {
 			return;
 		}
 		
-		FindURLs command = new FindURLs(allIDs);
-		ServiceFactory.lookupCommandService().executeCommand(command);
-		viewer.setInput(command.getUrls());
 	}
 
 	@Override

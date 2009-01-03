@@ -31,6 +31,7 @@ import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.PropertiesRow;
 import sernet.gs.ui.rcp.main.reports.PropertySelection;
 import sernet.gs.ui.rcp.main.reports.TextReport;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.gs.ui.rcp.office.OOWrapper;
 import sernet.hui.common.connect.EntityType;
@@ -180,7 +181,12 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 */
 	public RisikoMassnahme getRisikoMassnahme() {
 		if (massnahme == null) {
-			massnahme = RisikoMassnahmeHome.getInstance().loadByNumber(getNumber());
+			try {
+				massnahme = RisikoMassnahmeHome.getInstance().loadByNumber(getNumber());
+			} catch (CommandException e) {
+				ExceptionUtil.log(e, "Fehler beim Datenzugriff");
+				return null;
+			}
 		}
 
 		return massnahme;

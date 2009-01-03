@@ -14,7 +14,7 @@
     	Please configure your databse in the preferences dialog of
     	the application.
     	
-    	Or edit skel_hibernate.cfg.xml in the application .jar file, 
+    	Or edit skel_hibernate_derby.cfg.xml in the application .jar file, 
     	but if you break it, you fix it.
 ###########################################################################
 

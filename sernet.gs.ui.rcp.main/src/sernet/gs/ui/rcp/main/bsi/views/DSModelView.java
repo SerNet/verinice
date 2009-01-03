@@ -22,6 +22,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
@@ -38,6 +39,7 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForListView;
 
@@ -69,7 +71,11 @@ public class DSModelView extends ViewPart {
 		public void loaded(final BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					setInput();
+					try {
+						setInput();
+					} catch (CommandException e) {
+						ExceptionUtil.log(e, "Kann Datenschutzmodell nicht anzeigen.");
+					}
 				}
 			});
 		}
@@ -211,7 +217,11 @@ public class DSModelView extends ViewPart {
 		hookDoubleClickAction();
 		contributeToActionBars();
 		addDSFilter();
-		setInput();
+		try {
+			setInput();
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "Kann Datenschutzmodell nicht anzeigen.");
+		}
 
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 
@@ -223,7 +233,7 @@ public class DSModelView extends ViewPart {
 		model.removeBSIModelListener(viewUpdater);
 	}
 
-	private void setInput() {
+	private void setInput() throws CommandException {
 		LoadBSIModel command = new LoadBSIModel();
 		ServiceFactory.lookupCommandService().executeCommand(command);
 		BSIModel model2 = command.getModel();

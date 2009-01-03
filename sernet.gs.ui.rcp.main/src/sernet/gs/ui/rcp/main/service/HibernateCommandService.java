@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
@@ -16,6 +19,14 @@ import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 
+/**
+ * Command service that uses hibernate DAOs to access the database. 
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public class HibernateCommandService implements ICommandService {
 	
 	// injected by spring
@@ -27,9 +38,14 @@ public class HibernateCommandService implements ICommandService {
 		if (!dbOpen)
 			throw new CommandException("DB connection closed.");
 		
-		command.setDaoFactory(daoFactory);
-		command.setCommandService(this);
-		command.execute();
+		Logger.getLogger(this.getClass()).debug("Executing command: " + command.getClass().getSimpleName());
+		try {
+			command.setDaoFactory(daoFactory);
+			command.setCommandService(this);
+			command.execute();
+		} catch (Exception e) {
+			throw new CommandException("Lokaler Ausführungsfehler.", e);
+		}
 		return command;
 	}
 

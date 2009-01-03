@@ -42,7 +42,7 @@ public class OwnGefaehrdungHome {
 		commandService.executeCommand(command);
 	}
 	
-	public List<OwnGefaehrdung> loadAll() throws RuntimeException {
+	public List<OwnGefaehrdung> loadAll() throws Exception {
 		LoadElementByType<OwnGefaehrdung> command = new LoadElementByType<OwnGefaehrdung>(OwnGefaehrdung.class);
 		commandService.executeCommand(command);
 		return command.getElements();
