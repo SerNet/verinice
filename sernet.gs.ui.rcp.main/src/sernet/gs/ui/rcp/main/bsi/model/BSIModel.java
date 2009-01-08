@@ -91,6 +91,11 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 			listener.modelRefresh();
 		}
 	}
+	
+	@Override
+	public void modelRefresh() {
+		refreshAllListeners();
+	}
 
 	public void addBSIModelListener(IBSIModelListener listener) {
 		if (!listeners.contains(listener))

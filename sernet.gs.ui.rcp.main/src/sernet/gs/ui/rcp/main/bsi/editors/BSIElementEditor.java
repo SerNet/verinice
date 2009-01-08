@@ -119,11 +119,10 @@ public class BSIElementEditor extends EditorPart {
 	
 	private void initContent() {
 		try {
-			opening editor fails: test reload / refresh of new element
-			CnAElementHome.getInstance().refresh(
-					((BSIElementEditorInput)getEditorInput()).getCnAElement()
-					);
-			Entity entity = ((BSIElementEditorInput)getEditorInput()).getEntity();
+			CnATreeElement cnAElement = ((BSIElementEditorInput)getEditorInput()).getCnAElement();
+			CnAElementHome.getInstance().refresh(cnAElement);
+			
+			Entity entity = cnAElement.getEntity();
 			EntityType entityType = HUITypeFactory.getInstance()
 				.getEntityType(entity.getEntityType());
 			entity.addChangeListener(this.modelListener);

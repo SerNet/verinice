@@ -18,7 +18,6 @@ public class Anwendung extends CnATreeElement
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 		= new SchutzbedarfAdapter(this);
 	
-	
 	private final ILinkChangeListener linkChangeListener
 		= new MaximumSchutzbedarfListener(this);
 

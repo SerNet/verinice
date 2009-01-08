@@ -17,6 +17,10 @@
 			<generator class="native" />
 		</id>
 		
+		<property
+			name="uuid"
+		/>
+		
 		<property name="id"/>
 
 		<property name="titel"/>

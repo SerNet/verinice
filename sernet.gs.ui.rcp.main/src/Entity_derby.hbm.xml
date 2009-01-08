@@ -16,6 +16,10 @@
 		</id>
 		
 		<property name="entityType" />
+		
+		<property
+			name="uuid"
+		/>
 
 
 		<map

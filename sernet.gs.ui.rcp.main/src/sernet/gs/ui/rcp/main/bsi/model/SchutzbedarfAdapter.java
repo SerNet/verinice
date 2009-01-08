@@ -1,5 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.io.Serializable;
+
 import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import org.apache.log4j.Logger;
@@ -14,6 +16,9 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.TransactionAbortedException;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.taskcommands.ProtectionLevelChanged;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.IEntityChangedListener;
@@ -30,9 +35,10 @@ import sernet.hui.common.multiselectionlist.IMLPropertyType;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
+public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable {
+
 	private CnATreeElement parent;
-	
+
 	private static boolean loopWarning = true;
 
 	private IEntityChangedListener changeListener = new IEntityChangedListener() {
@@ -41,8 +47,14 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 		}
 
 		public void propertyChanged(PropertyChangedEvent evt) {
-			checkSchutzbedarfChanged(evt);
-			checkSchutzbedarfBegruendungChanged(evt);
+			if (checkSchutzbedarfChanged(evt)) {
+				ProtectionLevelChanged command = new ProtectionLevelChanged(SchutzbedarfAdapter.this, evt.getProperty(), evt.getSource()!=null);
+				try {
+					ServiceFactory.lookupCommandService().executeCommand(command);
+				} catch (CommandException e) {
+					ExceptionUtil.log(e, "Konnte Schutzbedarf nicht vererben");
+				}
+			}
 		}
 
 		public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
@@ -52,6 +64,26 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 
 	public SchutzbedarfAdapter(CnATreeElement parent) {
 		this.parent = parent;
+	}
+
+	protected boolean checkSchutzbedarfChanged(PropertyChangedEvent evt) {
+		if (Schutzbedarf.isVerfuegbarkeit(evt
+				.getProperty())
+		 || Schutzbedarf.isVertraulichkeit(evt
+				.getProperty())
+		 || Schutzbedarf.isIntegritaet(evt.getProperty())
+
+		 || Schutzbedarf.isIntegritaetBegruendung(evt
+				.getProperty())
+		 || Schutzbedarf
+				.isVertraulichkeitBegruendung(evt.getProperty())
+		 || Schutzbedarf
+				.isVerfuegbarkeitBegruendung(evt.getProperty())
+				) {
+			return true;
+		}
+		return false;
+
 	}
 
 	public int getIntegritaet() {
@@ -158,16 +190,15 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 		return changeListener;
 	}
 
-	protected void checkSchutzbedarfBegruendungChanged(PropertyChangedEvent evt) {
-		if (evt.getSource()==null)
-			return; //not changed by user
-		
-		boolean integritaetChanged = Schutzbedarf
-				.isIntegritaetBegruendung(evt.getProperty());
+	public void fireSchutzbedarfBegruendungChanged(Property prop, boolean setByUser) {
+		if (setByUser)
+			return; // not changed by user
+
+		boolean integritaetChanged = Schutzbedarf.isIntegritaetBegruendung(prop);
 		boolean vertraulichkeitChanged = Schutzbedarf
-				.isVertraulichkeitBegruendung(evt.getProperty());
+				.isVertraulichkeitBegruendung(prop);
 		boolean verfuegbarkeitChanged = Schutzbedarf
-				.isVerfuegbarkeitBegruendung(evt.getProperty());
+				.isVerfuegbarkeitBegruendung(prop);
 
 		// if set to "maximumprinzip", cause update to all listeners:
 		if (integritaetChanged) {
@@ -181,66 +212,70 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 		}
 	}
 
-	protected void checkSchutzbedarfChanged(PropertyChangedEvent evt) {
-		boolean verfuegbarkeit = Schutzbedarf.isVerfuegbarkeit(evt.getProperty());
-		boolean vertraulichkeit = Schutzbedarf.isVertraulichkeit(evt.getProperty());
-		boolean integritaet = Schutzbedarf.isIntegritaet(evt.getProperty());
-		
-		// if user sets protection level manually, disable "maximumprinzip" setting:
-		boolean setByUser =  (evt.getSource() != null);
+	public void fireSchutzbedarfChanged(Property prop, boolean setByUser) {
+		boolean verfuegbarkeit = Schutzbedarf.isVerfuegbarkeit(prop);
+		boolean vertraulichkeit = Schutzbedarf.isVertraulichkeit(prop);
+		boolean integritaet = Schutzbedarf.isIntegritaet(prop);
 
 		if (verfuegbarkeit) {
 			fireVerfuegbarkeitChanged();
-			if (setByUser && Schutzbedarf.isMaximumPrinzip(getVerfuegbarkeitDescription()))
+			if (setByUser
+					&& Schutzbedarf
+							.isMaximumPrinzip(getVerfuegbarkeitDescription()))
 				setVerfuegbarkeitDescription(""); //$NON-NLS-1$
-				
+
 		}
-		
+
 		if (vertraulichkeit) {
 			fireVertraulichkeitChanged();
-			if (setByUser && Schutzbedarf.isMaximumPrinzip(getVertraulichkeitDescription()))
+			if (setByUser
+					&& Schutzbedarf
+							.isMaximumPrinzip(getVertraulichkeitDescription()))
 				setVertraulichkeitDescription(""); //$NON-NLS-1$
 		}
-		
+
 		if (integritaet) {
 			fireIntegritaetChanged();
-			if (setByUser && Schutzbedarf.isMaximumPrinzip(getIntegritaetDescription()))
+			if (setByUser
+					&& Schutzbedarf
+							.isMaximumPrinzip(getIntegritaetDescription()))
 				setIntegritaetDescription(""); //$NON-NLS-1$
 		}
 
 	}
-	
+
 	public void updateAll() {
 		fireVerfuegbarkeitChanged();
 		fireVertraulichkeitChanged();
 		fireIntegritaetChanged();
 	}
-	
+
 	private void fireVerfuegbarkeitChanged() {
 		CascadingTransaction ta = CascadingTransaction.getInstance();
 		if (ta.hasBeenVisited(parent)) {
 			StatusLine.setErrorMessage(Messages.SchutzbedarfAdapter_3
 					+ parent.getTitel());
-			Logger.getLogger(this.getClass()).debug("(Verfügbarkeit) Loop on object " + parent.getTitel()); //$NON-NLS-1$
+			Logger.getLogger(this.getClass()).debug(
+					"(Verfügbarkeit) Loop on object " + parent.getTitel()); //$NON-NLS-1$
 
 			showLoopWarning(parent.getTitel());
-			
-			
+
 			return; // we have already been down this path
 		}
-		
+
 		try {
 			ta.enter(parent);
 			for (CnALink link : parent.getLinksDown()) {
 				link.getDependency().getLinkChangeListener()
-				.verfuegbarkeitChanged();
+						.verfuegbarkeitChanged();
 			}
 			if (ta.isInitiator(parent)) {
 				ta.saveUpdatedItems();
 				ta.end(parent);
 			}
 		} catch (TransactionAbortedException tae) {
-			Logger.getLogger(this.getClass()).debug(Messages.SchutzbedarfAdapter_5);
+			Logger.getLogger(this.getClass()).debug(
+					Messages.SchutzbedarfAdapter_5);
 			// try to end properly:
 			ta.end(parent);
 		} catch (Exception e) {
@@ -252,13 +287,15 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 		if (loopWarning) {
 			MessageDialogWithToggle dialog = MessageDialogWithToggle.openError(
 					Display.getCurrent().getActiveShell(),
-					Messages.SchutzbedarfAdapter_6, 
-					Messages.SchutzbedarfAdapter_7+ name + Messages.SchutzbedarfAdapter_8 +
-					Messages.SchutzbedarfAdapter_9 +
-					Messages.SchutzbedarfAdapter_10 +
-					Messages.SchutzbedarfAdapter_11 + name + Messages.SchutzbedarfAdapter_12,
-					Messages.SchutzbedarfAdapter_13,
-					false/*toggle default*/, null/*preferences container*/, null/*preference key*/);
+					Messages.SchutzbedarfAdapter_6,
+					Messages.SchutzbedarfAdapter_7 + name
+							+ Messages.SchutzbedarfAdapter_8
+							+ Messages.SchutzbedarfAdapter_9
+							+ Messages.SchutzbedarfAdapter_10
+							+ Messages.SchutzbedarfAdapter_11 + name
+							+ Messages.SchutzbedarfAdapter_12,
+					Messages.SchutzbedarfAdapter_13, false/* toggle default */,
+					null/* preferences container */, null/* preference key */);
 			loopWarning = !dialog.getToggleState();
 		}
 	}
@@ -268,7 +305,8 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 		if (ta.hasBeenVisited(parent)) {
 			StatusLine.setErrorMessage(Messages.SchutzbedarfAdapter_14
 					+ parent.getTitel());
-			Logger.getLogger(this.getClass()).debug("(Vertraulichkeit) Loop on object " + parent.getTitel());			 //$NON-NLS-1$
+			Logger.getLogger(this.getClass()).debug(
+					"(Vertraulichkeit) Loop on object " + parent.getTitel()); //$NON-NLS-1$
 			showLoopWarning(parent.getTitel());
 			return; // we have already been down this path
 		}
@@ -276,14 +314,15 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 			ta.enter(parent);
 			for (CnALink link : parent.getLinksDown()) {
 				link.getDependency().getLinkChangeListener()
-				.vertraulichkeitChanged();
+						.vertraulichkeitChanged();
 			}
 			if (ta.isInitiator(parent)) {
 				ta.saveUpdatedItems();
 				ta.end(parent);
 			}
 		} catch (TransactionAbortedException tae) {
-			Logger.getLogger(this.getClass()).debug(Messages.SchutzbedarfAdapter_16);
+			Logger.getLogger(this.getClass()).debug(
+					Messages.SchutzbedarfAdapter_16);
 			// try to end properly:
 			ta.end(parent);
 		} catch (Exception e) {
@@ -296,7 +335,8 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 		if (ta.hasBeenVisited(parent)) {
 			StatusLine.setErrorMessage(Messages.SchutzbedarfAdapter_17
 					+ parent.getTitel());
-			Logger.getLogger(this.getClass()).debug("(Integrität) Loop on object " + parent.getTitel());			 //$NON-NLS-1$
+			Logger.getLogger(this.getClass()).debug(
+					"(Integrität) Loop on object " + parent.getTitel()); //$NON-NLS-1$
 			showLoopWarning(parent.getTitel());
 			return; // we have already been down this path
 		}
@@ -304,19 +344,28 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider {
 			ta.enter(parent);
 			for (CnALink link : parent.getLinksDown()) {
 				link.getDependency().getLinkChangeListener()
-				.integritaetChanged();
+						.integritaetChanged();
 			}
 			if (ta.isInitiator(parent)) {
 				ta.saveUpdatedItems();
 				ta.end(parent);
 			}
 		} catch (TransactionAbortedException tae) {
-			Logger.getLogger(this.getClass()).debug(Messages.SchutzbedarfAdapter_19);
+			Logger.getLogger(this.getClass()).debug(
+					Messages.SchutzbedarfAdapter_19);
 			// try to end properly:
 			ta.end(parent);
 		} catch (Exception e) {
 			ta.abort();
 		}
+	}
+
+	public CnATreeElement getParent() {
+		return parent;
+	}
+
+	public void setParent(CnATreeElement parent) {
+		this.parent = parent;
 	}
 
 }

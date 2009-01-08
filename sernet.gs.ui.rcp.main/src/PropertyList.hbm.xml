@@ -15,6 +15,10 @@
 			<generator class="native" />
 		</id>
 		
+		<property
+			name="uuid"
+		/>
+		
 		
 		<list 
 			name="properties" 
@@ -26,6 +30,8 @@
 			
 			<index 
 				column="properties_idx" />
+				
+				
 				
 			<composite-element 
 			class="Property"

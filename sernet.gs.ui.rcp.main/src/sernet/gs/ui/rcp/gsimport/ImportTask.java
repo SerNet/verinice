@@ -249,7 +249,7 @@ public class ImportTask {
 		}
 
 		// create all Zielobjekte in first ITVerbund,
-		// TODO: tag them with every ITVerbund the've been in
+		// TODO tag them with every ITVerbund the've been in
 		for (ZielobjektTypeResult result : zielobjekte) {
 			String typeId = ImportZielobjektTypUtil.translateZielobjektType(
 					result.type, result.subtype);
