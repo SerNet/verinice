@@ -20,31 +20,46 @@ import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 
 /**
- * Command service that uses hibernate DAOs to access the database. 
+ * Command service that executes commands using hibernate DAOs to access the
+ * database.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * 
  */
 public class HibernateCommandService implements ICommandService {
-	
+
 	// injected by spring
 	private DAOFactory daoFactory;
-	
+
 	private boolean dbOpen = false;
-	
+
+	/**
+	 * This method is encapsulated in a transaction by the Spring container.
+	 * Hibernate session will be opened before this method executes the given
+	 * command and closed afterwards.
+	 * 
+	 * Database access in a single transaction is thereby enabled for the
+	 * command, the necessary data access objects can be requested from the
+	 * given DAO factory.
+	 * 
+	 * A command can execute to other commands during its execution using the
+	 * reference to the command service.
+	 */
 	public ICommand executeCommand(ICommand command) throws CommandException {
 		if (!dbOpen)
 			throw new CommandException("DB connection closed.");
-		
-		Logger.getLogger(this.getClass()).debug("Executing command: " + command.getClass().getSimpleName());
+
+		Logger.getLogger(this.getClass()).debug(
+				"Hibernate service executing command: "
+						+ command.getClass().getSimpleName());
 		try {
 			command.setDaoFactory(daoFactory);
 			command.setCommandService(this);
 			command.execute();
 		} catch (Exception e) {
-			throw new CommandException("Lokaler Ausführungsfehler.", e);
+			throw new CommandException(
+					"Ausführungsfehler in DB-Service-Layer", e);
 		}
 		return command;
 	}
@@ -55,7 +70,6 @@ public class HibernateCommandService implements ICommandService {
 	 * @param daoFactory
 	 */
 	public void setDaoFactory(DAOFactory daoFactory) {
-		// FIXME allow application to set db open or closed after it has reinitialized spring config
 		dbOpen = true;
 		this.daoFactory = daoFactory;
 	}

@@ -12,14 +12,15 @@ public class UpdateElement<T> extends GenericCommand {
 	public UpdateElement(T element) {
 		this.element = element;
 	}
-	
+
 	public void execute() {
-		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
+		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory()
+				.getDAO(element.getClass());
 		element = dao.merge(element);
 	}
 
 	public T getElement() {
 		return element;
 	}
-	
+
 }

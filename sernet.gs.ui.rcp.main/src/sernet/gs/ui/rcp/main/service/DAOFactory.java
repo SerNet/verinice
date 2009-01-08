@@ -2,8 +2,12 @@ package sernet.gs.ui.rcp.main.service;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.Map.Entry;
 
+import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
+import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
@@ -39,7 +43,16 @@ import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
 import sernet.gs.ui.rcp.main.ds.model.Zweckbestimmung;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 
+/**
+ * Registry for DAOs for different types of objects. DAOs are managed by and injected by the Spring framework. 
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public class DAOFactory {
 	
 	// injected by spring
@@ -55,8 +68,22 @@ public class DAOFactory {
 	/**
 	 * Setter method used by spring to inject DAO.
 	 */
-	public void setPropertyDao(IBaseDao<Property, Integer> propertyDao) {
-		daos.put(Property.class, propertyDao);
+	public void setGefaehrdungDao(IBaseDao<Gefaehrdung, Integer> dao) {
+		daos.put(Gefaehrdung.class, dao);
+	}
+	
+	/**
+	 * Setter method used by spring to inject DAO.
+	 */
+	public void setOwnGefaehrdungDao(IBaseDao<OwnGefaehrdung, Integer> dao) {
+		daos.put(OwnGefaehrdung.class, dao);
+	}
+	
+	/**
+	 * Setter method used by spring to inject DAO.
+	 */
+	public void setPropertyListDao(IBaseDao<PropertyList, Integer> propertyListDao) {
+		daos.put(PropertyList.class, propertyListDao);
 	}
 
 	/**
@@ -71,6 +98,12 @@ public class DAOFactory {
      */
     public void setAnwendungDAO(IBaseDao<Anwendung, Integer> daoToSet) {
         daos.put(Anwendung.class, daoToSet);
+    }
+    /** 
+     * Setter method used by spring to inject DAO.
+     */
+    public void setAnwendungenKategorieDAO(IBaseDao<AnwendungenKategorie, Integer> daoToSet) {
+    	daos.put(AnwendungenKategorie.class, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
@@ -267,5 +300,15 @@ public class DAOFactory {
     
 	public <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype) {
 		return  daos.get(daotype);
+	}
+	
+	public <T> IBaseDao<T, Serializable> getDAOForObject(Object o) {
+		Set<Entry<Class, IBaseDao>> entrySet = daos.entrySet();
+		for (Entry<Class, IBaseDao> entry : entrySet) {
+			if (entry.getKey().isInstance(o)) {
+				return  entry.getValue();
+			}
+		}
+		return null;
 	}
 }
