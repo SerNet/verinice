@@ -23,7 +23,6 @@ public class CnALink implements Serializable {
 	public static final int LOCATED_IN 		= 4;
 	
 	
-	
 	public static class Id implements Serializable {
 		private Integer dependantId;
 		private Integer dependencyId;
@@ -80,6 +79,25 @@ public class CnALink implements Serializable {
 		dependency.getLinkChangeListener().verfuegbarkeitChanged();
 		dependency.getLinkChangeListener().vertraulichkeitChanged();
 		
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		
+		if (obj != null && obj instanceof CnALink) {
+			CnALink that = (CnALink) obj;
+			return this.getId().equals(that.getId());
+		}
+		else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.getId().hashCode();
 	}
 	
 	public void remove() {
@@ -153,5 +171,7 @@ public class CnALink implements Serializable {
 	public Object getParent() {
 		return dependant.getLinks();
 	}
+
+	
 	
 }

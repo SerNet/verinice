@@ -2,6 +2,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import sernet.gs.model.Gefaehrdung;
 
@@ -9,6 +10,8 @@ public class FinishedRiskAnalysisLists {
 	
 	private int dbId;
 	private int finishedRiskAnalysisId;
+	
+	private String uuid;
 	
 	/*
 	 * list of all Gefaehrdungen of type GefaehrdungsUmsetzung 
@@ -31,6 +34,7 @@ public class FinishedRiskAnalysisLists {
 			ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen,
 			ArrayList<GefaehrdungsUmsetzung> associatedGefaehrdungen,
 			ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen) {
+		this();
 		this.finishedRiskAnalysisId = analysisId;
 		this.allGefaehrdungsUmsetzungen = allGefaehrdungsUmsetzungen;
 		this.notOKGefaehrdungsUmsetzungen = notOKGefaehrdungsUmsetzungen;
@@ -38,7 +42,21 @@ public class FinishedRiskAnalysisLists {
 	}
 	
 	public FinishedRiskAnalysisLists() {
-		
+		uuid = UUID.randomUUID().toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return (this == obj
+				|| (obj instanceof FinishedRiskAnalysisLists
+					&& this.uuid.equals(((FinishedRiskAnalysisLists)obj).getUuid())
+					)
+				);
+	}
+	
+	@Override
+	public int hashCode() {
+		return uuid.hashCode();
 	}
 
 	public List<GefaehrdungsUmsetzung> getAllGefaehrdungsUmsetzungen() {
@@ -83,5 +101,13 @@ public class FinishedRiskAnalysisLists {
 	public void setNotOKGefaehrdungsUmsetzungen(
 			List<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen) {
 		this.notOKGefaehrdungsUmsetzungen = notOKGefaehrdungsUmsetzungen;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 }

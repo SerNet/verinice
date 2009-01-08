@@ -5,6 +5,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.eclipse.swt.graphics.Image;
 
@@ -47,11 +48,28 @@ public class RisikoMassnahme extends Massnahme {
 	private String number;
 	private String name;
 	private String description;
+	
+	private String uuid;
+	
 	public static final String SIEGEL = "Z";
 	
 	
 	public RisikoMassnahme() {
-		// default constructor
+		uuid = UUID.randomUUID().toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return (this == obj
+				|| (obj instanceof RisikoMassnahme
+					&& this.uuid.equals(((RisikoMassnahme)obj).getUuid())
+					)
+				);
+	}
+	
+	@Override
+	public int hashCode() {
+		return uuid.hashCode();
 	}
 	
 
@@ -116,5 +134,15 @@ public class RisikoMassnahme extends Massnahme {
 
 	public void setDbId(int dbId) {
 		this.dbId = dbId;
+	}
+
+
+	public String getUuid() {
+		return uuid;
+	}
+
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 }

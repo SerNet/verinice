@@ -19,5 +19,11 @@ public class HydratorUtil {
 			list.getProperties().size();
 		}
 	}
+	
+	public static void hydrateElement(CnATreeElement element) {
+		element.getChildren().size();
+		element.getLinksDown().size();
+		element.getLinksUp().size();
+	}
 
 }

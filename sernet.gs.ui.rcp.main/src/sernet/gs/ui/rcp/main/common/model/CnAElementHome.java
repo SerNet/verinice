@@ -97,13 +97,16 @@ public class CnAElementHome {
 	}
 
 	public void open(String confDir, IProgress monitor) throws Exception {
-		// TODO use preference to decide local or remote service usage
+		monitor.beginTask("Initialisiere Service-Layer...", IProgress.UNKNOWN_WORK);
+		// TODO server: use preference to decide local or remote service usage
 		ServiceFactory.setService(ServiceFactory.LOCAL);
+		ServiceFactory.openCommandService();
 		commandService = ServiceFactory.lookupCommandService();
 	}
 
 	public void close() {
-		// do nothing
+		ServiceFactory.closeCommandService();
+		commandService = null;
 	}
 
 	public <T extends CnATreeElement> T save(T element) throws Exception {
@@ -200,6 +203,7 @@ public class CnAElementHome {
 	 * @throws CommandException 
 	 */
 	public void refresh(CnATreeElement cnAElement) throws CommandException {
+		// FIXME server: refresh changes
 		RefreshElement command = new RefreshElement(cnAElement);
 		commandService.executeCommand(command);
 	}

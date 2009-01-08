@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+		  "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 <!-- 
 
 All of the Spring vodoo goes on in here. 
@@ -31,9 +32,9 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	-->
 
 	<!-- Instance of generic hibernate DAO for class Property -->  
-	<bean id="propertyDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="propertyListDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
 		<constructor-arg>
-			<value>sernet.hui.common.connect.Property</value>
+			<value>sernet.hui.common.connect.PropertyList</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
@@ -46,9 +47,32 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	
+	<bean id="gefaehrdungDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.gs.model.Gefaehrdung</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="ownGefaehrdungDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	
+	
 <bean id="anwendungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
     <constructor-arg>
         <value>sernet.gs.ui.rcp.main.bsi.model.Anwendung</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+<bean id="anwendungenKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie</value>
     </constructor-arg>
     <property name="sessionFactory" ref="sessionFactory"/>
 </bean>
@@ -310,28 +334,21 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 </bean>
 
 
-	<!-- Use existing hibernate config for session -->  
-	<bean class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" id="sessionFactory">
-	  <property name="configLocation">
-	    <value>{hibernatecfg}</value>
-	  </property>
-	</bean>
 
-	<!-- Intercepts calls opening and closing hibernate session during method execution. -->
-	<bean id="hibernateInterceptor" class="org.springframework.orm.hibernate3.HibernateInterceptor">
-		<property name="sessionFactory">
-			<ref bean="sessionFactory"/>
-		</property>
-	</bean>
-		
+
+
 	<bean id="daoFactory" class="sernet.gs.ui.rcp.main.service.DAOFactory">
-		<property name="propertyDao" ref="propertyDao"/>
+		<property name="propertyListDao" ref="propertyListDao"/>
 	  	<property name="entityDao" ref="entityDao"/>
 	  	<property name="cnaLinkDao" ref="cnaLinkDao"/>
 	  	<property name="finishedRiskAnalysisListsDAO" ref="finishedRiskAnalysisListsDAO"/>
+	  	<property name="gefaehrdungDao" ref="gefaehrdungDao"/>
+	  	<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao"/>
+	  	
 
 		<!-- DAOs for subclasses of CnATreeElement: -->	  	
 	  	<property name="anwendungDAO" ref="anwendungDAO"/>
+	  	<property name="anwendungenKategorieDAO" ref="anwendungenKategorieDAO"/>
 		<property name="bausteinUmsetzungDAO" ref="bausteinUmsetzungDAO"/>
 		<property name="BSIModelDAO" ref="BSIModelDAO"/>
 		<property name="clientDAO" ref="clientDAO"/>
@@ -365,12 +382,29 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	  
   	</bean>
   	
-  	<!-- Proxied using hibernate interceptor -->
+  	<!-- Use existing hibernate config for session -->  
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" >
+	  <property name="configLocation">
+	    <value>{hibernatecfg}</value>
+	  </property>
+	</bean>
+
+	<!-- Intercepts calls opening and closing hibernate session during method execution. 
+	<bean id="hibernateInterceptor" class="org.springframework.orm.hibernate3.HibernateInterceptor">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+	-->
+  	
+  	
+  	<!-- Proxied using hibernate interceptor 
 	<bean id="commandServiceTarget" class="sernet.gs.ui.rcp.main.service.HibernateCommandService">
 		<property name="daoFactory" ref="daoFactory"/>
 	</bean>
+  	-->
 	
-	<!-- Interceptor to keep hibernate session open during business method -->
+	<!-- Interceptor to keep hibernate session open during business method 
 	<bean id="commandService" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="target"><ref bean="commandServiceTarget"/></property>
 		<property name="proxyInterfaces">
@@ -382,5 +416,36 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 			</list>
 		</property>
 	</bean> 
+	-->
+	
+	<bean id="txManager"
+class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <property name="sessionFactory">
+        <ref bean="sessionFactory" />
+    </property>
+</bean>
+
+<bean id="baseTxProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" abstract="true">
+  <property name="transactionManager" ref="txManager"/>
+  <property name="transactionAttributes">
+    <props>
+    	<prop key="get*">PROPAGATION_SUPPORTS,readOnly</prop>
+    	<prop key="*">PROPAGATION_REQUIRED</prop>
+    </props>
+  </property>
+</bean>
+
+<bean id="commandService" parent="baseTxProxy">
+  <property name="target">
+    <bean class="sernet.gs.ui.rcp.main.service.HibernateCommandService">
+        <property name="daoFactory" ref="daoFactory"/>
+    </bean>
+  </property>
+  <property name="transactionAttributes">
+      <props merge="true">
+          <prop key="executeCommand">PROPAGATION_REQUIRED</prop> 
+      </props>
+  </property>
+</bean>
     
 </beans>

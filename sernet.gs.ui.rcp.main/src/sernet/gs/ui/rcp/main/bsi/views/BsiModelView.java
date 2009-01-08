@@ -136,6 +136,7 @@ public class BsiModelView extends ViewPart {
 		}
 
 		public boolean hasChildren(Object parent) {
+			// FIXME server: take care of lazyinitialization, esp after reload!
 			if (parent instanceof CnATreeElement) {
 				CnATreeElement el = (CnATreeElement) parent;
 				return el.getChildren().size() > 0

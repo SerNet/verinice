@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
@@ -14,8 +15,10 @@ import org.apache.log4j.Logger;
 import com.sun.star.document.LinkUpdateModes;
 
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.EntityResolverFactory;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
@@ -44,7 +47,7 @@ import sernet.snutils.DBException;
  * @author koderman@sernet.de
  * 
  */
-public abstract class CnATreeElement implements Serializable {
+public abstract class CnATreeElement implements Serializable, IBSIModelListener {
 
 	private static String huiConfig = null;
 
@@ -57,6 +60,8 @@ public abstract class CnATreeElement implements Serializable {
 	private Entity entity;
 
 	public static HUITypeFactory typeFactory;
+	
+	private IBSIModelListener modelChangeListener;
 
 	// bi-directional qualified link list between items:
 	private Set<CnALink> linksDown = new HashSet<CnALink>(5);
@@ -64,6 +69,23 @@ public abstract class CnATreeElement implements Serializable {
 	private LinkKategorie links = new LinkKategorie(this);
 
 	private Set<CnATreeElement> children;
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof CnATreeElement))
+			return false;
+		CnATreeElement that = (CnATreeElement) obj;
+		return (this.uuid.equals(that.getUuid()));
+	}
+	
+	@Override
+	public int hashCode() {
+		if (uuid != null)
+			return uuid.hashCode();
+		return super.hashCode(); // basicaly only used during migration of old objects (without hashcode)
+	}
 
 	public void addChild(CnATreeElement child) {
 		if (!children.contains(child) && canContain(child)) {
@@ -115,10 +137,9 @@ public abstract class CnATreeElement implements Serializable {
 	}
 
 	public void childAdded(CnATreeElement category, CnATreeElement child) {
-		if (getParent() != null)
-			getParent().childAdded(category, child);
+			getModelChangeListener().childAdded(category, child);
 	}
-
+	
 	/**
 	 * Propagate event upstairs.
 	 * 
@@ -126,15 +147,12 @@ public abstract class CnATreeElement implements Serializable {
 	 * @param child
 	 */
 	public void childRemoved(CnATreeElement category, CnATreeElement child) {
-		if (getParent() != null)
-			getParent().childRemoved(category, child);
+			getModelChangeListener().childRemoved(category, child);
 	}
 
 	public void childChanged(CnATreeElement category, CnATreeElement child) {
-		if (getParent() != null) {
 			// child changed:
-			getParent().childChanged(category, child);
-		}
+			getModelChangeListener().childChanged(category, child);
 	}
 	
 	public boolean canContain(Object obj) {
@@ -166,6 +184,8 @@ public abstract class CnATreeElement implements Serializable {
 		}
 	};
 
+	private String uuid;
+
 	public CnATreeElement(CnATreeElement parent) {
 		this();
 		this.parent = parent;
@@ -176,6 +196,11 @@ public abstract class CnATreeElement implements Serializable {
 	
 
 	protected CnATreeElement() {
+		if (this.uuid == null) {
+			UUID randomUUID = java.util.UUID.randomUUID();
+			uuid = randomUUID.toString();
+		}
+		
 		children = new HashSet<CnATreeElement>();
 		if (typeFactory == null) {
 			initHitroUI();
@@ -202,8 +227,7 @@ public abstract class CnATreeElement implements Serializable {
 	}
 
 	public void entityChanged() {
-		if (getParent() != null)
-			getParent().childChanged(parent, this);
+			getModelChangeListener().childChanged(parent, this);
 	}
 
 	public CnATreeElement getParent() {
@@ -292,9 +316,7 @@ public abstract class CnATreeElement implements Serializable {
 	}
 	
 	public void linkChanged(CnALink link) {
-		if (getParent() != null) {
-			getParent().linkChanged(link);
-		}
+			getModelChangeListener().linkChanged(link);
 	}
 
 	public void removeLinkDown(CnALink link) {
@@ -305,6 +327,10 @@ public abstract class CnATreeElement implements Serializable {
 
 	public void addLinkUp(CnALink link) {
 		linksUp.add(link);
+	}
+	
+	public void modelRefresh() {
+		getModelChangeListener().modelRefresh();
 	}
 
 	public void removeLinkUp(CnALink link) {
@@ -349,5 +375,35 @@ public abstract class CnATreeElement implements Serializable {
 			return false;
 	
 	}
+
+	/**
+	 * Set change listener to model root if one is present.
+	 * 
+	 * @return
+	 */
+	public synchronized IBSIModelListener getModelChangeListener() {
+		if (modelChangeListener != null)
+			return modelChangeListener;
+		
+		BSIModel model = CnAElementFactory.getLoadedModel();
+		if (model != null && ! (model instanceof NullModel)) {
+			modelChangeListener = model;
+		}
+		else {
+			modelChangeListener = new NullListener();
+		}
+		return modelChangeListener;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	
+
 
 }

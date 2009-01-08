@@ -11,6 +11,7 @@ import org.hibernate.Transaction;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Massnahme;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
@@ -28,12 +29,14 @@ import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
-import sernet.gs.ui.rcp.main.common.model.migration.MigrateDbTo0_92;
 import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
 import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
 import sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB;
 import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
 import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.migrationcommands.MigrateDbTo0_92;
 import sernet.hui.common.connect.Entity;
 
 /**
@@ -357,11 +360,14 @@ public class CnAElementFactory {
 		if (!dbHome.isOpen()) {
 			dbHome.open(monitor);
 		}
+		
+		monitor.setTaskName("Überprüfe / Aktualisiere DB-Version.");
+		checkDbVersion();
+		
 		loadedModel = dbHome.loadModel(monitor);
 		if (loadedModel != null) {
-			monitor.setTaskName("Überprüfe / Aktualisiere DB-Version.");
-			DbVersion version = new DbVersion(loadedModel, dbHome);
-			version.updateDBVersion(monitor);
+			
+			
 			fireLoad();
 			return loadedModel;
 		}
@@ -384,6 +390,44 @@ public class CnAElementFactory {
 
 		fireLoad();
 		return loadedModel;
+	}
+
+	private void checkDbVersion() throws CommandException {
+		final boolean[] done = new boolean[1];
+		done[0] = false;
+		Thread timeout = new Thread() {
+			@Override
+			public void run() {
+				long startTime = System.currentTimeMillis();
+				while (!done[0]) {
+					try {
+						sleep(1000);
+						long now = System.currentTimeMillis();
+						if (now - startTime > 30000) {
+							ExceptionUtil.log(new Exception("Das hier dauert und dauert..."), "Wenn diese Aktion länger als eine " +
+									"Minute dauert, sollten Sie ihre Datenbank von Derby nach Postgres migrieren. Falls das " +
+									"schon geschehen ist, sollten Sie ihre Postgres/MySQL-DB tunen. In der FAQ auf http://verinice.org/ finden " +
+									"Sie weitere Hinweise. Sie können natürlich auch einfach weiter warten...");
+							return;
+						}
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+		};
+		timeout.start();
+		try {
+			DbVersion versionUpdate = new DbVersion();
+			ServiceFactory.lookupCommandService().executeCommand(versionUpdate);
+			done[0] = true;
+		} catch (CommandException e){
+			done[0] = true;
+			throw e;
+		}
+		catch (RuntimeException re) {
+			done[0] = true;
+			throw re;
+		}
 	}
 
 	
