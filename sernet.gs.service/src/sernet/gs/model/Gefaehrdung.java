@@ -1,9 +1,11 @@
 package sernet.gs.model;
 
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+
 
 public class Gefaehrdung implements IGSModel {
 	private Integer dbId;
@@ -13,6 +15,8 @@ public class Gefaehrdung implements IGSModel {
 	private String url;
 	private int kategorie = 0;
 	private String stand;
+	
+	private String uuid;
 	
 	
 	public static final int KAT_UNDEF 			= 0;
@@ -37,6 +41,11 @@ public class Gefaehrdung implements IGSModel {
 	
 	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)");
 
+	
+	public Gefaehrdung() {
+		uuid = UUID.randomUUID().toString();
+	}
+	
 	@Override
 	public String toString() {
 		return id + " "+ titel + " ["  + getKategorieAsString() + "]"; 
@@ -44,14 +53,16 @@ public class Gefaehrdung implements IGSModel {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Gefaehrdung))
-			return false;
-		Gefaehrdung gef2 = (Gefaehrdung) obj;
-
-		if (gef2.getDbId() == null || this.getDbId() == null)
-			return super.equals(obj);
-		
-		return gef2.getDbId().equals(this.getDbId());
+		return (this == obj
+				|| (obj instanceof Gefaehrdung
+					&& this.uuid.equals(((Gefaehrdung)obj).getUuid())
+					)
+				);
+	}
+	
+	@Override
+	public int hashCode() {
+		return uuid.hashCode();
 	}
 	
 	public String getId() {
@@ -153,6 +164,14 @@ public class Gefaehrdung implements IGSModel {
 
 	public void setDbId(Integer dbId) {
 		this.dbId = dbId;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	
