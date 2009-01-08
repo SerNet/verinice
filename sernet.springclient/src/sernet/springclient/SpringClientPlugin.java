@@ -13,6 +13,8 @@ import org.springframework.beans.factory.access.SingletonBeanFactoryLocator;
  */
 public class SpringClientPlugin extends AbstractUIPlugin {
 	private BeanFactory beanFactory;
+
+	private BeanFactoryReference beanFactoryReference;
 	
 	//The shared instance.
 	private static SpringClientPlugin plugin;
@@ -56,13 +58,24 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("SpringClient", path);
 	}
+	
+	public synchronized void closeBeanFactory() {
+		if (beanFactoryReference != null) {
+			beanFactoryReference.release();
+			beanFactory = null;
+		}
+	}
+	
+	public synchronized BeanFactory getBeanFactory() {
+		return beanFactory;
+	}
+	
 
-	public synchronized BeanFactory getBeanFactory(String beanFactoryUrl, String context) {
+	public synchronized void openBeanFactory(String beanFactoryUrl, String context) {
 		if (beanFactory == null) {
 			BeanFactoryLocator beanFactoryLocator = SingletonBeanFactoryLocator.getInstance(beanFactoryUrl);
-			BeanFactoryReference beanFactoryReference = beanFactoryLocator.useBeanFactory(context);
+			beanFactoryReference = beanFactoryLocator.useBeanFactory(context);
 			beanFactory = beanFactoryReference.getFactory();
 		}
-		return beanFactory;
 	}	
 }
