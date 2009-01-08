@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
@@ -45,6 +46,8 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 
 	private Integer dbId;
 	
+	private String uuid;
+	
 	public Integer getDbId() {
 		return dbId;
 	}
@@ -66,12 +69,27 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 	}
 	
 	private Entity() {
-		// default constructor for hibernate
+		uuid = UUID.randomUUID().toString();
 	}
 	
     public Entity(String entType) {
+    	this();
         this.entityType = entType;
     }
+    
+    @Override
+    public int hashCode() {
+    	return uuid.hashCode();
+    }
+    
+	@Override
+	public boolean equals(Object obj) {
+		return (this == obj
+				|| (obj instanceof Entity
+					&& this.uuid.equals(((Entity)obj).getUuid())
+					)
+				);
+	}
     
     
     public Map<String, PropertyList> getTypedPropertyLists() {
@@ -342,5 +360,13 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 
 	public void setEntityType(String entityType) {
 		this.entityType = entityType;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 }
