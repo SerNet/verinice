@@ -3,7 +3,6 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.eclipse.swt.graphics.Image;
 import sernet.gs.ui.rcp.main.ImageCache;
 
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
@@ -16,8 +15,6 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
  */
 public class GefaehrdungsBaumRoot implements IGefaehrdungsBaumElement {
 
-	private Image image = ImageCache.getInstance()
-			.getImage(ImageCache.BAUSTEIN);
 	private List<IGefaehrdungsBaumElement> children =
 			new ArrayList<IGefaehrdungsBaumElement>();
 	
@@ -67,15 +64,7 @@ public class GefaehrdungsBaumRoot implements IGefaehrdungsBaumElement {
 		return null;
 	}
 
-	/**
-	 * Returns the image of the root element.
-	 * 
-	 * @return the image of the root element
-	 */
-	public Image getImage() {
-		return image;
-	}
-
+	
 	/**
 	 * Returns the title of the root element.
 	 * 

@@ -5,6 +5,8 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
+import sernet.gs.ui.rcp.main.ImageCache;
+
 /**
  * Provides an image and text for each item in the TreeViewer.
  * 
@@ -22,7 +24,7 @@ public class GefaehrdungTreeViewerLabelProvider implements ILabelProvider {
 		try {
 			IGefaehrdungsBaumElement iGefaehrdungsBaumElement =
 				(IGefaehrdungsBaumElement) element;
-			return iGefaehrdungsBaumElement.getImage();
+			return GefaehrdungsElementImageProvider.getImage(element);
 		} catch (Exception e) {
 			return null;
 		}

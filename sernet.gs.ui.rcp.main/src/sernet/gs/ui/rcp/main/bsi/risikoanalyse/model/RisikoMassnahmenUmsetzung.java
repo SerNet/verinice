@@ -6,8 +6,6 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.swt.graphics.Image;
-
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
@@ -45,7 +43,6 @@ import sernet.snutils.ExceptionHandlerFactory;
 public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IGefaehrdungsBaumElement {
 	
 	private GefaehrdungsUmsetzung parent;
-	private Image image = ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
 	private RisikoMassnahme massnahme;
 	
 	protected RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
@@ -102,15 +99,6 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 		if (parent == null ) { 
 			parent = newParent;
 		}
-	}
-	
-	/**
-	 * Must be implemented due to Interface IGefaehrdungsBaumElement.
-	 * 
-	 * @return - Image "image" to display in the viewer
-	 */
-	public Image getImage() {
-		return image;
 	}
 	
 	/**

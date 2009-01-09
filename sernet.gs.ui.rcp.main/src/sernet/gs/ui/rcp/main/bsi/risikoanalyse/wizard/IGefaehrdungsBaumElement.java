@@ -33,14 +33,6 @@ public interface IGefaehrdungsBaumElement {
 	public IGefaehrdungsBaumElement getGefaehrdungsBaumParent();
 
 	/**
-	 * Returns the image of the element.
-	 * 
-	 * @return the image of the element
-	 */
-	public Image getImage();
-	// FIXME needs to be moved to GUI layer - akoderman
-
-	/**
 	 * Returns the title of the element.
 	 * 
 	 * @return the title of the element

@@ -25,7 +25,7 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 		
 		if (columnIndex == 0) {
 			if (element instanceof RisikoMassnahmenUmsetzung) {
-				return ((RisikoMassnahmenUmsetzung) element).getImage();
+				return GefaehrdungsElementImageProvider.getImage(element);
 			} else {
 				return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
 			}

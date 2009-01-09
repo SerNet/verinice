@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.swt.graphics.Image;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
@@ -184,10 +183,6 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 
 	public String getText() {
 		return getEntity().getSimpleValue(PROP_TITEL);
-	}
-
-	public Image getImage() {
-		return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
 	}
 
 	public String getId() {

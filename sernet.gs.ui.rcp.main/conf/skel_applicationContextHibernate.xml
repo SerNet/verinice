@@ -17,19 +17,6 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 -->
 
 <beans>
-   <!-- 
-    <bean id="veriniceDAOServiceHttpInvoker"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-        <property name="serviceUrl">
-            <value>
-                http://localhost:8080/verinice/service/veriniceDAOServiceHttpInvoker
-            </value>
-        </property>
-        <property name="serviceInterface">
-            <value>sernet.gs.server.VeriniceDAOService</value>
-        </property>
-    </bean>
-	-->
 
 	<!-- Instance of generic hibernate DAO for class Property -->  
 	<bean id="propertyListDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
@@ -389,35 +376,6 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	  </property>
 	</bean>
 
-	<!-- Intercepts calls opening and closing hibernate session during method execution. 
-	<bean id="hibernateInterceptor" class="org.springframework.orm.hibernate3.HibernateInterceptor">
-		<property name="sessionFactory">
-			<ref bean="sessionFactory"/>
-		</property>
-	</bean>
-	-->
-  	
-  	
-  	<!-- Proxied using hibernate interceptor 
-	<bean id="commandServiceTarget" class="sernet.gs.ui.rcp.main.service.HibernateCommandService">
-		<property name="daoFactory" ref="daoFactory"/>
-	</bean>
-  	-->
-	
-	<!-- Interceptor to keep hibernate session open during business method 
-	<bean id="commandService" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="target"><ref bean="commandServiceTarget"/></property>
-		<property name="proxyInterfaces">
-			<value>sernet.gs.ui.rcp.main.service.ICommandService</value>
-		</property>
-		<property name="interceptorNames">
-			<list>
-				<value>hibernateInterceptor</value>
-			</list>
-		</property>
-	</bean> 
-	-->
-	
 	<bean id="txManager"
 class="org.springframework.orm.hibernate3.HibernateTransactionManager">
     <property name="sessionFactory">
