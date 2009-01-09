@@ -26,5 +26,6 @@
 	<classpathentry kind="lib" path="lib/hibernate3.2minimal/asm.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate3.2minimal/asm-attrs.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate3.2minimal/cglib-2.1.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
