@@ -3,9 +3,410 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-<bean id="commandService" class="">
-       
+    <!-- 
+
+All of the Spring vodoo goes on in here. 
+
+This variant:
+	Wiring command service for direct database access using hibernate on Server.
+
+IST NICHT FÜR DER GEFINGERPOKEN UND MITTENGRABEN! ODERWISE IST EASY TO SCHNAPPEN DER SPRINGENWERK,
+BLOWENFUSEN UND POPPENCORKEN MIT SPITZENSPARKSEN.
+IST NICHT FÜR GEWERKEN BEI DUMMKOPFEN. DER RUBBERNECKEN SIGHTSEEREN KEEPEN DAS COTTONPICKEN 
+HÄNDER IN DAS POCKETS MUSS.
+ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
+
+-->
+
+<!-- BEGIN dao definitions ===================================================================================== -->
+
+	<!-- Instance of generic hibernate DAO for class Property -->  
+	<bean id="propertyListDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.hui.common.connect.PropertyList</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- Instance of generic hibernate DAO for class Entity -->  
+	<bean id="entityDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.hui.common.connect.Entity</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="gefaehrdungDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.gs.model.Gefaehrdung</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="ownGefaehrdungDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	
+	
+<bean id="anwendungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.Anwendung</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+<bean id="anwendungenKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="bausteinUmsetzungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="BSIModelDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.BSIModel</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="clientDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.Client</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="clientsKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="datenverarbeitungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="finishedRiskAnalysisDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="gebaeudeDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.Gebaeude</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="gebaeudeKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="gefaehrdungsUmsetzungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="ITVerbundDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.ITVerbund</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="massnahmenUmsetzungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="netzKomponenteDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.NetzKomponente</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="NKKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.NKKategorie</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="personDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.Person</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="personengruppenDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.ds.model.Personengruppen</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="personenKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="raeumeKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="raumDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.Raum</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="serverDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.Server</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="serverKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.ServerKategorie</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="sonstigeITKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="sonstITDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.SonstIT</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="stellungnahmeDSBDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="telefonKomponenteDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="TKKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.TKKategorie</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="verantwortlicheStelleDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="verarbeitungsangabenDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="zweckbestimmungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.ds.model.Zweckbestimmung</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="risikoMassnahmeDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+<bean id="ownGefaehrdungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+
+	<bean id="cnaLinkDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.gs.ui.rcp.main.common.model.CnALink</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+
+
+<bean id="finishedRiskAnalysisListsDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<!-- END dao definitions ======================================================================================= -->
+
+
+	<bean id="daoFactory" class="sernet.gs.ui.rcp.main.service.DAOFactory">
+		<property name="propertyListDao" ref="propertyListDao"/>
+	  	<property name="entityDao" ref="entityDao"/>
+	  	<property name="cnaLinkDao" ref="cnaLinkDao"/>
+	  	<property name="finishedRiskAnalysisListsDAO" ref="finishedRiskAnalysisListsDAO"/>
+	  	<property name="gefaehrdungDao" ref="gefaehrdungDao"/>
+	  	<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao"/>
+	  	
+
+		<!-- DAOs for subclasses of CnATreeElement: -->	  	
+	  	<property name="anwendungDAO" ref="anwendungDAO"/>
+	  	<property name="anwendungenKategorieDAO" ref="anwendungenKategorieDAO"/>
+		<property name="bausteinUmsetzungDAO" ref="bausteinUmsetzungDAO"/>
+		<property name="BSIModelDAO" ref="BSIModelDAO"/>
+		<property name="clientDAO" ref="clientDAO"/>
+		<property name="clientsKategorieDAO" ref="clientsKategorieDAO"/>
+		<property name="datenverarbeitungDAO" ref="datenverarbeitungDAO"/>
+		<property name="finishedRiskAnalysisDAO" ref="finishedRiskAnalysisDAO"/>
+		<property name="gebaeudeDAO" ref="gebaeudeDAO"/>
+		<property name="gebaeudeKategorieDAO" ref="gebaeudeKategorieDAO"/>
+		<property name="gefaehrdungsUmsetzungDAO" ref="gefaehrdungsUmsetzungDAO"/>
+		<property name="ITVerbundDAO" ref="ITVerbundDAO"/>
+		<property name="massnahmenUmsetzungDAO" ref="massnahmenUmsetzungDAO"/>
+		<property name="netzKomponenteDAO" ref="netzKomponenteDAO"/>
+		<property name="NKKategorieDAO" ref="NKKategorieDAO"/>
+		<property name="personDAO" ref="personDAO"/>
+		<property name="personengruppenDAO" ref="personengruppenDAO"/>
+		<property name="personenKategorieDAO" ref="personenKategorieDAO"/>
+		<property name="raeumeKategorieDAO" ref="raeumeKategorieDAO"/>
+		<property name="raumDAO" ref="raumDAO"/>
+		<property name="serverDAO" ref="serverDAO"/>
+		<property name="serverKategorieDAO" ref="serverKategorieDAO"/>
+		<property name="sonstigeITKategorieDAO" ref="sonstigeITKategorieDAO"/>
+		<property name="sonstITDAO" ref="sonstITDAO"/>
+		<property name="stellungnahmeDSBDAO" ref="stellungnahmeDSBDAO"/>
+		<property name="telefonKomponenteDAO" ref="telefonKomponenteDAO"/>
+		<property name="TKKategorieDAO" ref="TKKategorieDAO"/>
+		<property name="verantwortlicheStelleDAO" ref="verantwortlicheStelleDAO"/>
+		<property name="verarbeitungsangabenDAO" ref="verarbeitungsangabenDAO"/>
+		<property name="zweckbestimmungDAO" ref="zweckbestimmungDAO"/>
+		<property name="risikoMassnahmeDAO" ref="risikoMassnahmeDAO"/>
+		<property name="ownGefaehrdungDAO" ref="ownGefaehrdungDAO"/>
+	  
+  	</bean>
+  	
+  	<!-- Use existing hibernate config for session -->  
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" >
+	  <property name="configLocation">
+	    <value>classpath:/server_hibernate.cfg.xml</value>
+	  </property>
+	</bean>
+
+	<bean id="txManager"
+class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <property name="sessionFactory">
+        <ref bean="sessionFactory" />
+    </property>
+</bean>
+
+<bean id="baseTxProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" abstract="true">
+  <property name="transactionManager" ref="txManager"/>
+  <property name="transactionAttributes">
+    <props>
+    	<prop key="get*">PROPAGATION_SUPPORTS,readOnly</prop>
+    	<prop key="*">PROPAGATION_REQUIRED</prop>
+    </props>
+  </property>
+</bean>
+
+<bean id="commandService" parent="baseTxProxy">
+  <property name="target">
+    <bean class="sernet.gs.ui.rcp.main.service.HibernateCommandService">
+        <property name="daoFactory" ref="daoFactory"/>
     </bean>
+  </property>
+  <property name="transactionAttributes">
+      <props merge="true">
+          <prop key="executeCommand">PROPAGATION_REQUIRED</prop> 
+      </props>
+  </property>
+</bean>
     
    
 </beans>

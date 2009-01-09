@@ -4,7 +4,10 @@
         <wb-resource deploy-path="/" source-path="/WebContent"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/test/src"/>
-        <property name="context-root" value="sernet.gs.server"/>
+        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/sernet.gs.ui.rcp.main/sernet.gs.ui.rcp.main">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="java-output-path"/>
+        <property name="context-root" value="veriniceserver"/>
     </wb-module>
 </project-modules>
