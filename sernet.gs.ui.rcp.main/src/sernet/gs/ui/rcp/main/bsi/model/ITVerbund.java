@@ -15,7 +15,7 @@ public class ITVerbund extends CnATreeElement
 	public static final String TYPE_ID = "itverbund"; //$NON-NLS-1$
 	public static final String PROP_NAME = "itverbund_name"; //$NON-NLS-1$
 	
-	private String kuerzel = " ";
+	private String kuerzel = " "; //$NON-NLS-1$
 	
 	private static EntityType entityType;
 	
@@ -27,10 +27,10 @@ public class ITVerbund extends CnATreeElement
 	public ITVerbund(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null )
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME),
-				Messages.ITVerbund_2);
+				"Neuer IT-Verbund");
 	}
 	
 	public int getSchicht() {

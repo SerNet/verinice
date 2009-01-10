@@ -16,12 +16,12 @@ public class TelefonKomponente extends CnATreeElement
 	public static final String PROP_NAME 		= "tkkomponente_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL	= "tkkomponente_kuerzel"; //$NON-NLS-1$
 	@Deprecated
-	public static final String P_ADMIN_OLD 		= "tkkomponente_admin";
+	public static final String P_ADMIN_OLD 		= "tkkomponente_admin"; //$NON-NLS-1$
 	@Deprecated
-	public static final String P_ANWENDER_OLD	 	= "tkkomponente_anwender";
-	public static final String PROP_TAG			= "tkkomponente_tag";
-	public static final String PROP_ERLAEUTERUNG = "tkkomponente_erlaeuterung";
-	private static final String PROP_ANZAHL = "tkkomponente_anzahl";
+	public static final String P_ANWENDER_OLD	 	= "tkkomponente_anwender"; //$NON-NLS-1$
+	public static final String PROP_TAG			= "tkkomponente_tag"; //$NON-NLS-1$
+	public static final String PROP_ERLAEUTERUNG = "tkkomponente_erlaeuterung"; //$NON-NLS-1$
+	private static final String PROP_ANZAHL = "tkkomponente_anzahl"; //$NON-NLS-1$
 	
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 		= new SchutzbedarfAdapter(this);
@@ -39,10 +39,10 @@ public class TelefonKomponente extends CnATreeElement
 	public TelefonKomponente(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null )
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME), 
-				Messages.TelefonKomponente_2);
+				"Neue TK-Komponente");
 	}
 	public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));

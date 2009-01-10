@@ -4,7 +4,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 
 public class RaeumeKategorie extends CnATreeElement implements IBSIStrukturKategorie {
-	public static final String TYPE_ID = "raeumekategorie";
+	public static final String TYPE_ID = "raeumekategorie"; //$NON-NLS-1$
 	
 	public RaeumeKategorie(CnATreeElement model) {
 		super(model);
@@ -15,7 +15,7 @@ public class RaeumeKategorie extends CnATreeElement implements IBSIStrukturKateg
 	
 	@Override
 	public String getTitel() {
-		return Messages.RaeumeKategorie_0;
+		return "Räume";
 	}
 	
 	@Override

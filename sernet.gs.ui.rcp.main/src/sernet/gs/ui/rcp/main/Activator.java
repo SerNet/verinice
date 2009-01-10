@@ -25,6 +25,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -63,6 +64,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		WhereAmIUtil.setLocation(WhereAmIUtil.LOCATION_CLIENT);
 		CnAWorkspace.getInstance().prepare();
 		
 		// TODO add feature: link description between objects

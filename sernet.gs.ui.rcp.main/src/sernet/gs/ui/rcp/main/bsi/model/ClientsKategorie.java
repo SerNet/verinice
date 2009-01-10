@@ -17,7 +17,7 @@ public class ClientsKategorie extends CnATreeElement
 
 	@Override
 	public String getTitel() {
-		return Messages.ClientsKategorie_1;
+		return "IT-Systeme: Clients";
 	}
 	
 	@Override

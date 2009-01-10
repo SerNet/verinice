@@ -1,5 +1,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.io.Serializable;
+
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
@@ -13,7 +15,7 @@ import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
  * $LastChangedBy$
  *
  */
-public class MaximumSchutzbedarfListener implements ILinkChangeListener {
+public class MaximumSchutzbedarfListener implements ILinkChangeListener, Serializable {
 
 	private CnATreeElement sbTarget;
 	

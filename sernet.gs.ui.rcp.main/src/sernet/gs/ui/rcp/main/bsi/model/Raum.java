@@ -16,9 +16,9 @@ public class Raum extends CnATreeElement
 	public static final String TYPE_ID = "raum"; //$NON-NLS-1$
 	public static final String PROP_NAME = "raum_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "raum_kuerzel"; //$NON-NLS-1$
-	public static final String PROP_TAG			= "raum_tag";
-	public static final String PROP_ERLAEUTERUNG = "raum_erlaeuterung";
-	private static final String PROP_ANZAHL = "raum_anzahl";
+	public static final String PROP_TAG			= "raum_tag"; //$NON-NLS-1$
+	public static final String PROP_ERLAEUTERUNG = "raum_erlaeuterung"; //$NON-NLS-1$
+	private static final String PROP_ANZAHL = "raum_anzahl"; //$NON-NLS-1$
 	
 	private static EntityType entityType;
 
@@ -36,10 +36,10 @@ public class Raum extends CnATreeElement
 	public Raum(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null )
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME), 
-				Messages.Raum_2);
+				"Neuer Raum");
 	}
 	
 	public String getKuerzel() {

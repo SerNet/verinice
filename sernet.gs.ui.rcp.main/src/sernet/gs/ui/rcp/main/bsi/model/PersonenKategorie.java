@@ -16,7 +16,7 @@ public class PersonenKategorie extends CnATreeElement implements IBSIStrukturKat
 	}
 	@Override
 	public String getTitel() {
-		return Messages.PersonenKategorie_1;
+		return "Mitarbeiter";
 	}
 	
 	

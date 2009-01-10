@@ -19,9 +19,9 @@ public class Client extends CnATreeElement
 	public static final String P_ADMIN_OLD = "client_admin"; //$NON-NLS-1$
 	@Deprecated
 	public static final String P_ANWENDER_OLD = "client_anwender"; //$NON-NLS-1$
-	public static final String PROP_TAG			= "client_tag";
-	public static final String PROP_ERLAEUTERUNG = "client_erlaeuterung";
-	private static final String PROP_ANZAHL = "client_anzahl";
+	public static final String PROP_TAG			= "client_tag"; //$NON-NLS-1$
+	public static final String PROP_ERLAEUTERUNG = "client_erlaeuterung"; //$NON-NLS-1$
+	private static final String PROP_ANZAHL = "client_anzahl"; //$NON-NLS-1$
 	
 	private static EntityType entityType;
 
@@ -38,9 +38,9 @@ private final ILinkChangeListener linkChangeListener
 	public Client(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null )
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME), Messages.Client_2);
+		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME), "Neuer Client");
 	}
 	public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));

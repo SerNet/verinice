@@ -17,7 +17,7 @@ public class SonstigeITKategorie extends CnATreeElement
 
 	@Override
 	public String getTitel() {
-		return "IT-Systeme: sonstige";
+		return "IT-Systeme: sonstige"; //$NON-NLS-1$
 	}
 	
 	@Override

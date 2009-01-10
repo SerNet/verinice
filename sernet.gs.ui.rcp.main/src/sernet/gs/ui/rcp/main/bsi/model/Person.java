@@ -19,26 +19,26 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 public class Person extends CnATreeElement
 implements IBSIStrukturElement {
 	
-	public static final String PROP_TAG			= "person_tag";
+	public static final String PROP_TAG			= "person_tag"; //$NON-NLS-1$
 	private static final String P_NAME = "nachname"; //$NON-NLS-1$
 	private static final String P_VORNAME = "vorname"; //$NON-NLS-1$
 	private static final String PROP_KUERZEL = "person_kuerzel"; //$NON-NLS-1$
-	private static final String P_ROLLEN = "person_rollen";
+	private static final String P_ROLLEN = "person_rollen"; //$NON-NLS-1$
 	private static EntityType entityType;
 
 	// ID must correspond to entity definition in entitytype XML description:
 	public static final String TYPE_ID = "person"; //$NON-NLS-1$
-	public static final String PROP_ERLAEUTERUNG = "person_erlaeuterung";
-	private static final String PROP_ANZAHL = "person_anzahl";
+	public static final String PROP_ERLAEUTERUNG = "person_erlaeuterung"; //$NON-NLS-1$
+	private static final String PROP_ANZAHL = "person_anzahl"; //$NON-NLS-1$
 	
 	
 	public Person(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null)
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 		getEntity().createNewProperty(entityType.getPropertyType(P_NAME),
-				Messages.Person_3);
+				"Neuer Mitarbeiter");
 	}
 	
 	public String getKuerzel() {
@@ -63,7 +63,7 @@ implements IBSIStrukturElement {
 	@Override
 	public String getTitel() {
 		if (getEntity() == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		
 		StringBuffer buff = new StringBuffer();
 		buff.append(getEntity().getSimpleValue(P_VORNAME));
@@ -73,14 +73,14 @@ implements IBSIStrukturElement {
 		
 		String rollen = getRollen();
 		if (rollen.length() > 0)
-			buff.append(" [" + rollen + "]");
+			buff.append(" [" + rollen + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		return buff.toString();
 	}
 	
 	public String getFullName() {
 		if (getEntity() == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		
 		StringBuffer buff = new StringBuffer();
 		buff.append(getEntity().getSimpleValue(P_VORNAME));
@@ -93,7 +93,7 @@ implements IBSIStrukturElement {
 	
 	private String getRollen() {
 		if (getEntity() == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		
 		StringBuffer buf = new StringBuffer();
 		PropertyList propertyList = getEntity().getProperties(P_ROLLEN);
@@ -101,14 +101,14 @@ implements IBSIStrukturElement {
 		List<Property> properties = propertyList.getProperties();
 		
 		if (properties == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		
 		for (Iterator iter = properties.iterator(); iter.hasNext();) {
 			Property prop = (Property) iter.next();
 			String rolle = type.getOption(prop.getPropertyValue()).getName();
 			buf.append(rolle);
 			if (iter.hasNext())
-				buf.append(", ");
+				buf.append(", "); //$NON-NLS-1$
 		}
 		return buf.toString();
 	}

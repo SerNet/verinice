@@ -16,13 +16,13 @@ public class Server extends CnATreeElement
 	public static final String PROP_NAME = "server_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "server_kuerzel"; //$NON-NLS-1$
 	@Deprecated
-	public static final String P_ADMIN_OLD = "server_admin";
-	public static final String PROP_TAG			= "server_tag";
+	public static final String P_ADMIN_OLD = "server_admin"; //$NON-NLS-1$
+	public static final String PROP_TAG			= "server_tag"; //$NON-NLS-1$
 	
 	@Deprecated
-	public static final String P_ANWENDER_OLD = "server_anwender";
-	public static final String PROP_ERLAEUTERUNG = "server_erlaeuterung";
-	private static final String PROP_ANZAHL = "server_anzahl";
+	public static final String P_ANWENDER_OLD = "server_anwender"; //$NON-NLS-1$
+	public static final String PROP_ERLAEUTERUNG = "server_erlaeuterung"; //$NON-NLS-1$
+	private static final String PROP_ANZAHL = "server_anzahl"; //$NON-NLS-1$
 
 	private static EntityType entityType;
 	
@@ -39,10 +39,10 @@ public class Server extends CnATreeElement
 	public Server(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null )
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME), 
-				Messages.Server_2);
+				"Neuer Server");
 	}
 	
 	public String getKuerzel() {

@@ -36,22 +36,22 @@ public class Anwendung extends CnATreeElement
 	@Deprecated
 	public static final String PROP_EIGENTUEMER_OLD = "anwendung_eigentümer"; //$NON-NLS-1$
 
-	public static final String PROP_TAG			= "anwendung_tag";
+	public static final String PROP_TAG			= "anwendung_tag"; //$NON-NLS-1$
 
-	public static final String PROP_ERLAEUTERUNG = "anwendung_erlaeuterung";
+	public static final String PROP_ERLAEUTERUNG = "anwendung_erlaeuterung"; //$NON-NLS-1$
 
-	public static final String PROP_PROZESSBEZUG				= "anwendung_prozessbezug";
-	public static final String PROP_PROZESSBEZUG_UNTERSTUETZEND = "anwendung_prozessbezug_1";
-	public static final String PROP_PROZESSBEZUG_WICHTIG 		= "anwendung_prozessbezug_2";
-	public static final String PROP_PROZESSBEZUG_WESENTLICH 	= "anwendung_prozessbezug_3";
-	public static final String PROP_PROZESSBEZUG_HOCHGRADIG 	= "anwendung_prozessbezug_4";
+	public static final String PROP_PROZESSBEZUG				= "anwendung_prozessbezug"; //$NON-NLS-1$
+	public static final String PROP_PROZESSBEZUG_UNTERSTUETZEND = "anwendung_prozessbezug_1"; //$NON-NLS-1$
+	public static final String PROP_PROZESSBEZUG_WICHTIG 		= "anwendung_prozessbezug_2"; //$NON-NLS-1$
+	public static final String PROP_PROZESSBEZUG_WESENTLICH 	= "anwendung_prozessbezug_3"; //$NON-NLS-1$
+	public static final String PROP_PROZESSBEZUG_HOCHGRADIG 	= "anwendung_prozessbezug_4"; //$NON-NLS-1$
 
 
-	private static final String PROP_VERARBEITETE_INFORMATIONEN = "anwendung_prozess_informationen";
+	private static final String PROP_VERARBEITETE_INFORMATIONEN = "anwendung_prozess_informationen"; //$NON-NLS-1$
 
-	private static final String PROP_PROZESSBESCHREIBUNG = "anwendung_prozess";
+	private static final String PROP_PROZESSBESCHREIBUNG = "anwendung_prozess"; //$NON-NLS-1$
 
-	private static final String PROP_DRINGLICHKEIT_BEGRUENDUNG = "anwendung_prozessbezug_begruendung";
+	private static final String PROP_DRINGLICHKEIT_BEGRUENDUNG = "anwendung_prozessbezug_begruendung"; //$NON-NLS-1$
 
 
 
@@ -73,10 +73,10 @@ public class Anwendung extends CnATreeElement
 	public Anwendung(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null)
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME),
-				Messages.Anwendung_4);
+				"Neue Anwendung");
 	}
 
 	private Anwendung() {

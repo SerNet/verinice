@@ -16,12 +16,12 @@ public class SonstIT extends CnATreeElement
 	public static final String PROP_NAME = "sonstit_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "sonstit_kuerzel"; //$NON-NLS-1$
 	@Deprecated
-	public static final String P_ADMIN_OLD = "sonstit_admin";
+	public static final String P_ADMIN_OLD = "sonstit_admin"; //$NON-NLS-1$
 	@Deprecated
-	public static final String P_ANWENDER_OLD = "sonstit_anwender";
-	public static final String PROP_TAG			= "sonstit_tag";
-	public static final String PROP_ERLAEUTERUNG = "sonstit_erlaeuterung";
-	private static final String PROP_ANZAHL = "sonstit_anzahl";
+	public static final String P_ANWENDER_OLD = "sonstit_anwender"; //$NON-NLS-1$
+	public static final String PROP_TAG			= "sonstit_tag"; //$NON-NLS-1$
+	public static final String PROP_ERLAEUTERUNG = "sonstit_erlaeuterung"; //$NON-NLS-1$
+	private static final String PROP_ANZAHL = "sonstit_anzahl"; //$NON-NLS-1$
 	
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 	= new SchutzbedarfAdapter(this);
@@ -29,6 +29,7 @@ public class SonstIT extends CnATreeElement
 
 	private final ILinkChangeListener linkChangeListener
 	= new MaximumSchutzbedarfListener(this);
+	
 	private static EntityType entityType;
 
 	/**
@@ -38,10 +39,10 @@ public class SonstIT extends CnATreeElement
 	public SonstIT(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null )
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME),
-				"Neues IT-System");
+				"Neues IT-System"); //$NON-NLS-1$
 	}
 	
 	public String getKuerzel() {

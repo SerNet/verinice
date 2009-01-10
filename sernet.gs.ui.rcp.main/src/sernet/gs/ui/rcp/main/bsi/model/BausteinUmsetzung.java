@@ -20,14 +20,14 @@ public class BausteinUmsetzung extends CnATreeElement {
 	public static final String P_NR = "bstumsetzung_nr"; //$NON-NLS-1$
 	public static final String P_URL = "bstumsetzung_url"; //$NON-NLS-1$
 	@Deprecated
-	public static final String P_GESPRAECHSPARTNER_OLD= "bstumsetzung_gespraechspartner";
-	public static final String P_GESPRAECHSPARTNER_LINK= "bstumsetzung_gespraechspartner_link";
-	public static final String P_STAND = "bstumsetzung_stand";
-	public static final String P_ERLAEUTERUNG 	= "bstumsetzung_erlaeuterung";
-	public static final String P_ERFASSTAM 	= "bstumsetzung_erfasstam";
+	public static final String P_GESPRAECHSPARTNER_OLD= "bstumsetzung_gespraechspartner"; //$NON-NLS-1$
+	public static final String P_GESPRAECHSPARTNER_LINK= "bstumsetzung_gespraechspartner_link"; //$NON-NLS-1$
+	public static final String P_STAND = "bstumsetzung_stand"; //$NON-NLS-1$
+	public static final String P_ERLAEUTERUNG 	= "bstumsetzung_erlaeuterung"; //$NON-NLS-1$
+	public static final String P_ERFASSTAM 	= "bstumsetzung_erfasstam"; //$NON-NLS-1$
 	@Deprecated
-	public static final String P_ERFASSTDURCH_OLD = "bstumsetzung_erfasstdurch";
-	public static final String P_ERFASSTDURCH_LINK = "bstumsetzung_erfasstdurch_link";
+	public static final String P_ERFASSTDURCH_OLD = "bstumsetzung_erfasstdurch"; //$NON-NLS-1$
+	public static final String P_ERFASSTDURCH_LINK = "bstumsetzung_erfasstdurch_link"; //$NON-NLS-1$
 
 	private EntityType entityType;
 
@@ -39,25 +39,25 @@ public class BausteinUmsetzung extends CnATreeElement {
 	};
 	
 	private final static String[] schichtenBezeichnung = new String[] {
-		Messages.BausteinUmsetzung_9,
-		Messages.BausteinUmsetzung_10,
-		Messages.BausteinUmsetzung_11,
-		Messages.BausteinUmsetzung_12,
-		Messages.BausteinUmsetzung_13
+		"Übergeordnete Aspekte",
+		"Infrastruktur",
+		"IT-Systeme",
+		"Netze",
+		"Anwendungen"
 	};
 
 	
 	public BausteinUmsetzung(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null)
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 	}
 	
 	private BausteinUmsetzung() {
 		// hibernate constructor
 		if (entityType == null)
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 	}
 	
 	public void setKapitel(String kap) {
@@ -92,7 +92,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 				kapitel[1] = Integer.parseInt(m.group(2));
 			} catch (NumberFormatException e) {
 				Logger.getLogger(this.getClass())
-					.error(Messages.BausteinUmsetzung_15, e);
+					.error("Kapitelnummer des Bausteins ungültig.", e);
 			}
 		}
 		return kapitel;
@@ -181,7 +181,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 			if (schichten[i].equals(schichtNummer))
 				return schichtenBezeichnung[i];
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public String getUrl() {

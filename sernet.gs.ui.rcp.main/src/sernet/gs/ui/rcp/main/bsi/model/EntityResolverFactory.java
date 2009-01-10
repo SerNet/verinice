@@ -118,7 +118,7 @@ public class EntityResolverFactory {
 						result.add(url);
 					}
 				} catch (Exception e) {
-					ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+					ExceptionUtil.log(e, "Fehler beim Datenzugriff."); //$NON-NLS-1$
 				}
 				
 				return result;
@@ -146,7 +146,7 @@ public class EntityResolverFactory {
 						}
 						
 					} catch (Exception e) {
-						ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+						ExceptionUtil.log(e, "Fehler beim Datenzugriff."); //$NON-NLS-1$
 					}
 					return result;
 				}

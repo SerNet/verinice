@@ -14,13 +14,13 @@ public class Verarbeitungsangaben extends CnATreeElement
 	public Verarbeitungsangaben(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null )
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 	}
 	
 	private Verarbeitungsangaben() {
 		if (entityType == null )
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 	}
 	
 	@Override

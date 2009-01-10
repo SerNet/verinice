@@ -6,22 +6,22 @@ import sernet.hui.common.connect.Property;
 
 public abstract class Schutzbedarf {
 
-	public static final String VERTRAULICHKEIT 	= "_vertraulichkeit";
-	public static final String VERFUEGBARKEIT 		= "_verfuegbarkeit";
-	public static final String INTEGRITAET 		= "_integritaet";
+	public static final String VERTRAULICHKEIT 	= "_vertraulichkeit"; //$NON-NLS-1$
+	public static final String VERFUEGBARKEIT 		= "_verfuegbarkeit"; //$NON-NLS-1$
+	public static final String INTEGRITAET 		= "_integritaet"; //$NON-NLS-1$
 	
-	private static Pattern pat_vertraulichkeit = Pattern.compile(".*" + VERTRAULICHKEIT + "$");
-	private static Pattern pat_verfuegbarkeit = Pattern.compile(".*" + VERFUEGBARKEIT + "$");
-	private static Pattern pat_integritaet = Pattern.compile(".*" + INTEGRITAET + "$");
+	private static Pattern pat_vertraulichkeit = Pattern.compile(".*" + VERTRAULICHKEIT + "$"); //$NON-NLS-1$ //$NON-NLS-2$
+	private static Pattern pat_verfuegbarkeit = Pattern.compile(".*" + VERFUEGBARKEIT + "$"); //$NON-NLS-1$ //$NON-NLS-2$
+	private static Pattern pat_integritaet = Pattern.compile(".*" + INTEGRITAET + "$"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final String VERTRAULICHKEIT_BEGRUENDUNG	= "_vertraulichkeit_begruendung";
-	public static final String VERFUEGBARKEIT_BEGRUENDUNG	= "_verfuegbarkeit_begruendung";
-	public static final String INTEGRITAET_BEGRUENDUNG		= "_integritaet_begruendung";
+	public static final String VERTRAULICHKEIT_BEGRUENDUNG	= "_vertraulichkeit_begruendung"; //$NON-NLS-1$
+	public static final String VERFUEGBARKEIT_BEGRUENDUNG	= "_verfuegbarkeit_begruendung"; //$NON-NLS-1$
+	public static final String INTEGRITAET_BEGRUENDUNG		= "_integritaet_begruendung"; //$NON-NLS-1$
 
-	public static final String SUFFIX_NONE 		= "";
-	public static final String SUFFIX_NORMAL 		= "_normal";
-	public static final String SUFFIX_HOCH 		= "_hoch";
-	public static final String SUFFIX_SEHRHOCH 	= "_sehrhoch";
+	public static final String SUFFIX_NONE 		= ""; //$NON-NLS-1$
+	public static final String SUFFIX_NORMAL 		= "_normal"; //$NON-NLS-1$
+	public static final String SUFFIX_HOCH 		= "_hoch"; //$NON-NLS-1$
+	public static final String SUFFIX_SEHRHOCH 	= "_sehrhoch"; //$NON-NLS-1$
 	
 	
 	public static final int UNDEF 		= 0;
@@ -29,10 +29,10 @@ public abstract class Schutzbedarf {
 	public static final int HOCH 		= 2; 
 	public static final int SEHRHOCH	= 3;
 	
-	public static final String MAXIMUM = "Maximumprinzip";
+	public static final String MAXIMUM = "Maximumprinzip"; //$NON-NLS-1$
 
-	public static final String ERGAENZENDEANALYSE = "_ergaenzendeanalyse";
-	private static final String ERGAENZENDEANALYSE_NOETIG = "_modell";
+	public static final String ERGAENZENDEANALYSE = "_ergaenzendeanalyse"; //$NON-NLS-1$
+	private static final String ERGAENZENDEANALYSE_NOETIG = "_modell"; //$NON-NLS-1$
 	
 	
 	public static int toInt(String option) {

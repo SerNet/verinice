@@ -16,7 +16,7 @@ public class NKKategorie extends CnATreeElement implements IBSIStrukturKategorie
 	}
 	@Override
 	public String getTitel() {
-		return Messages.NKKategorie_1;
+		return "Netzverbindungen";
 	}
 	
 	@Override

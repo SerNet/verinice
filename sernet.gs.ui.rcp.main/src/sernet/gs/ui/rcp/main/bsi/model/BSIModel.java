@@ -39,7 +39,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 	}
 
 	public String getKuerzel() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public int getSchicht() {
@@ -53,7 +53,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
 	@Override
 	public String getTitel() {
-		return Messages.BSIModel_1;
+		return "GS-Modellierung";
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.Messages;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.GefaehrdungsBaumRoot;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -74,7 +73,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 		super(parent);
 		
 		if (entityType == null)
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 		
 	}

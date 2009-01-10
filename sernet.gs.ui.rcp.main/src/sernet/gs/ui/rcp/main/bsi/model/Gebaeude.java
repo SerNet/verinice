@@ -15,11 +15,11 @@ implements IBSIStrukturElement {
 	
 	public static final String PROP_NAME = "gebaeude_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "gebaeude_kuerzel"; //$NON-NLS-1$
-	public static final String PROP_TAG			= "gebaeude_tag";
+	public static final String PROP_TAG			= "gebaeude_tag"; //$NON-NLS-1$
 
-	public static final String PROP_ERLAEUTERUNG = "gebaeude_erlaeuterung";
+	public static final String PROP_ERLAEUTERUNG = "gebaeude_erlaeuterung"; //$NON-NLS-1$
 
-	private static final String PROP_ANZAHL = "gebaeude_anzahl";
+	private static final String PROP_ANZAHL = "gebaeude_anzahl"; //$NON-NLS-1$
 	
 	private static EntityType entityType;
 
@@ -38,10 +38,10 @@ implements IBSIStrukturElement {
 	public Gebaeude(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null )
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME),
-				Messages.Gebaeude_2);
+				"Neues Gebäude");
 	}
 	
 	public String getKuerzel() {

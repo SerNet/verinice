@@ -1,12 +1,13 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import sernet.gs.model.Gefaehrdung;
 
-public class FinishedRiskAnalysisLists {
+public class FinishedRiskAnalysisLists implements Serializable {
 	
 	private int dbId;
 	private int finishedRiskAnalysisId;

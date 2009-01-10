@@ -11,14 +11,14 @@ import java.util.regex.Pattern;
 public class TagHelper {
 
 	public static Collection<String> getTags(String simpleValue) {
-		String[] split = simpleValue.split("[, ]+");
+		String[] split = simpleValue.split("[, ]+"); //$NON-NLS-1$
 		return removeEmptyTags(Arrays.asList(split));
 	}
 
 	private static Collection<String> removeEmptyTags(List<String> tags) {
 		ArrayList<String> result = new ArrayList<String>(tags.size());
 		for (String tag : tags) {
-			if ( ! (tag.length() < 1 || tag.equals(" ")) )
+			if ( ! (tag.length() < 1 || tag.equals(" ")) ) //$NON-NLS-1$
 				result.add(tag);
 		}
 		return result;

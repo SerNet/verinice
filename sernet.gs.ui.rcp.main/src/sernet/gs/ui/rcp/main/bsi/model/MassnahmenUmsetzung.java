@@ -33,7 +33,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 
 	public static final String P_NAECHSTEREVISIONAM = "mnums_naechsterevisionam"; //$NON-NLS-1$
 	public static final String P_NAECHSTEREVISIONDURCH_LINK = "mnums_naechsterevisiondurch_link"; //$NON-NLS-1$
-	public static final String P_LETZTEREVISIONDURCH_LINK = "mnums_letzterevisiondurch_link";
+	public static final String P_LETZTEREVISIONDURCH_LINK = "mnums_letzterevisiondurch_link"; //$NON-NLS-1$
 
 	public static final String P_UMSETZUNG = "mnums_umsetzung"; //$NON-NLS-1$
 	public static final String P_UMSETZUNG_NEIN = "mnums_umsetzung_nein"; //$NON-NLS-1$
@@ -42,31 +42,31 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	public static final String P_UMSETZUNG_ENTBEHRLICH = "mnums_umsetzung_entbehrlich"; //$NON-NLS-1$
 	public static final String P_UMSETZUNG_UNBEARBEITET = "mnums_umsetzung_unbearbeitet"; //$NON-NLS-1$
 	public static final String P_URL = "mnums_url"; //$NON-NLS-1$
-	public static final String P_STAND = "mnums_stand";
-	public static final String P_ERLAEUTERUNG = "mnums_erlaeuterung";
+	public static final String P_STAND = "mnums_stand"; //$NON-NLS-1$
+	public static final String P_ERLAEUTERUNG = "mnums_erlaeuterung"; //$NON-NLS-1$
 
-	public static final String P_KOSTEN_PTFIX = "mnums_kosten_ptfix";
-	public static final String P_KOSTEN_PTVAR = "mnums_kosten_ptvar";
-	public static final String P_KOSTEN_PTPERIOD = "mnums_kosten_ptperiod";
+	public static final String P_KOSTEN_PTFIX = "mnums_kosten_ptfix"; //$NON-NLS-1$
+	public static final String P_KOSTEN_PTVAR = "mnums_kosten_ptvar"; //$NON-NLS-1$
+	public static final String P_KOSTEN_PTPERIOD = "mnums_kosten_ptperiod"; //$NON-NLS-1$
 
-	public static final String P_KOSTEN_SACHFIX = "mnums_kosten_sachfix";
-	public static final String P_KOSTEN_SACHVAR = "mnums_kosten_sachvar";
-	public static final String P_KOSTEN_SACHPERIOD = "mnums_kosten_sachperiod";
+	public static final String P_KOSTEN_SACHFIX = "mnums_kosten_sachfix"; //$NON-NLS-1$
+	public static final String P_KOSTEN_SACHVAR = "mnums_kosten_sachvar"; //$NON-NLS-1$
+	public static final String P_KOSTEN_SACHPERIOD = "mnums_kosten_sachperiod"; //$NON-NLS-1$
 
-	public static final String P_KOSTEN_SACHPERIOD_TAG 	= "mnums_kosten_sachperiod_tag";
-	public static final String P_KOSTEN_SACHPERIOD_WOCHE 	= "mnums_kosten_sachperiod_woche";
-	public static final String P_KOSTEN_SACHPERIOD_MONAT 	= "mnums_kosten_sachperiod_monat";
-	public static final String P_KOSTEN_SACHPERIOD_QUARTAL 	= "mnums_kosten_sachperiod_quartal";
-	public static final String P_KOSTEN_SACHPERIOD_JAHR 	= "mnums_kosten_sachperiod_jahr";
+	public static final String P_KOSTEN_SACHPERIOD_TAG 	= "mnums_kosten_sachperiod_tag"; //$NON-NLS-1$
+	public static final String P_KOSTEN_SACHPERIOD_WOCHE 	= "mnums_kosten_sachperiod_woche"; //$NON-NLS-1$
+	public static final String P_KOSTEN_SACHPERIOD_MONAT 	= "mnums_kosten_sachperiod_monat"; //$NON-NLS-1$
+	public static final String P_KOSTEN_SACHPERIOD_QUARTAL 	= "mnums_kosten_sachperiod_quartal"; //$NON-NLS-1$
+	public static final String P_KOSTEN_SACHPERIOD_JAHR 	= "mnums_kosten_sachperiod_jahr"; //$NON-NLS-1$
 
-	public static final String P_KOSTEN_PTPERIOD_TAG 		= "mnums_kosten_ptperiod_tag";
-	public static final String P_KOSTEN_PTPERIOD_WOCHE 		= "mnums_kosten_ptperiod_woche";
-	public static final String P_KOSTEN_PTPERIOD_MONAT 		= "mnums_kosten_ptperiod_monat";
-	public static final String P_KOSTEN_PTPERIOD_QUARTAL 	= "mnums_kosten_ptperiod_quartal";
-	public static final String P_KOSTEN_PTPERIOD_JAHR 		= "mnums_kosten_ptperiod_jahr";
+	public static final String P_KOSTEN_PTPERIOD_TAG 		= "mnums_kosten_ptperiod_tag"; //$NON-NLS-1$
+	public static final String P_KOSTEN_PTPERIOD_WOCHE 		= "mnums_kosten_ptperiod_woche"; //$NON-NLS-1$
+	public static final String P_KOSTEN_PTPERIOD_MONAT 		= "mnums_kosten_ptperiod_monat"; //$NON-NLS-1$
+	public static final String P_KOSTEN_PTPERIOD_QUARTAL 	= "mnums_kosten_ptperiod_quartal"; //$NON-NLS-1$
+	public static final String P_KOSTEN_PTPERIOD_JAHR 		= "mnums_kosten_ptperiod_jahr"; //$NON-NLS-1$
 
-	public static final String P_VERANTWORTLICHE_ROLLEN_INITIIERUNG	= "mnums_verantwortlichinit";
-	public static final String P_VERANTWORTLICHE_ROLLEN_UMSETZUNG 	= "mnums_verantwortlichums";
+	public static final String P_VERANTWORTLICHE_ROLLEN_INITIIERUNG	= "mnums_verantwortlichinit"; //$NON-NLS-1$
+	public static final String P_VERANTWORTLICHE_ROLLEN_UMSETZUNG 	= "mnums_verantwortlichums"; //$NON-NLS-1$
 
 	// deprecated text-only fields for person's names, are now replaced by linked person entities
 	// only used for migration of old values:
@@ -75,7 +75,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	@Deprecated
 	public static final String P_NAECHSTEREVISIONDURCH_OLD = "mnums_naechsterevisiondurch"; //$NON-NLS-1$
 	@Deprecated
-	public static final String P_LETZTEREVISIONDURCH_OLD = "mnums_letzterevisiondurch";
+	public static final String P_LETZTEREVISIONDURCH_OLD = "mnums_letzterevisiondurch"; //$NON-NLS-1$
 
 	private EntityType entityType;
 
@@ -84,13 +84,13 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	public MassnahmenUmsetzung(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null)
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 	}
 
 	protected MassnahmenUmsetzung() {
 		if (entityType == null)
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 	}
 
 	public static String[] getUmsetzungStati() {
@@ -156,7 +156,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 				Person person = (Person) iterator.next();
 				names.append(person.getFullName());
 				if (iterator.hasNext())
-					names.append(", ");
+					names.append(", "); //$NON-NLS-1$
 			}
 			return names.toString();
 		}
@@ -239,8 +239,8 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	@Override
 	public String getTitel() {
 		return getEntity().getSimpleValue(P_KAPITEL) //$NON-NLS-1$
-				+ " [" + getEntity().getSimpleValue(P_SIEGEL)
-				+ "] "
+				+ " [" + getEntity().getSimpleValue(P_SIEGEL) //$NON-NLS-1$
+				+ "] " //$NON-NLS-1$
 				+ getEntity().getSimpleValue(P_NAME);
 	}
 
@@ -258,7 +258,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 				kapitel[1] = Integer.parseInt(m.group(2));
 			} catch (NumberFormatException e) {
 				Logger.getLogger(this.getClass()).error(
-						Messages.MassnahmenUmsetzung_12, e);
+						"Konnte Massnahmen-Nummer nicht lesen.", e);
 			}
 		}
 		return kapitel;
@@ -276,7 +276,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 			return P_UMSETZUNG_UNBEARBEITET;
 
 		Property property = properties.getProperty(0);
-		if (property != null && !property.getPropertyValue().equals(""))
+		if (property != null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
 			return property.getPropertyValue();
 		return P_UMSETZUNG_UNBEARBEITET;
 	}

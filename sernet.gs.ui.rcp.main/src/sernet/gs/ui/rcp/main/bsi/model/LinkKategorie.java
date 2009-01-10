@@ -1,5 +1,6 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -7,7 +8,7 @@ import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 
-public class LinkKategorie   {
+public class LinkKategorie implements Serializable  {
 	
 	private CnATreeElement parent;
 
@@ -20,7 +21,7 @@ public class LinkKategorie   {
 	}
 	
 	public String getTitle() {
-		return "Abhängigkeiten";
+		return "Abhängigkeiten"; //$NON-NLS-1$
 	}
 
 

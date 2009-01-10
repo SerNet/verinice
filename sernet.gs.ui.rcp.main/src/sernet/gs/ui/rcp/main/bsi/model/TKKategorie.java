@@ -17,7 +17,7 @@ public class TKKategorie extends CnATreeElement implements IBSIStrukturKategorie
 	
 	@Override
 	public String getTitel() {
-		return Messages.TKKategorie_1;
+		return "IT-Systeme: TK-Komponenten";
 	}
 	
 	@Override

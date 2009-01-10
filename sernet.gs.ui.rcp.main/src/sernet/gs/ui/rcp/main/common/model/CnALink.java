@@ -157,13 +157,13 @@ public class CnALink implements Serializable {
 	private String typeTitle() {
 		switch (linkType) {
 		case DEPENDANT_ON:
-			return Messages.CnALink_dependant;
+			return "abhängig von: ";
 		case ADMINISTRATED_BY:
-			return Messages.CnALink_admin;
+			return "zuständig: ";
 //		case USED_BY:
 //			return Messages.CnALink_used;
 		case LOCATED_IN:
-			return "Standort: ";
+			return "Standort: "; //$NON-NLS-1$
 		}
 		return ""; //$NON-NLS-1$
 	}

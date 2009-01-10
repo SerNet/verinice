@@ -47,9 +47,7 @@ import sernet.snutils.DBException;
  * @author koderman@sernet.de
  * 
  */
-public abstract class CnATreeElement implements Serializable, IBSIModelListener {
-
-	private static String huiConfig = null;
+public abstract class CnATreeElement implements Serializable, IBSIModelListener, IEntityChangedListener {
 
 	private Integer dbId;
 	
@@ -59,8 +57,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 
 	private Entity entity;
 
-	public static HUITypeFactory typeFactory;
-	
 	private IBSIModelListener modelChangeListener;
 
 	// bi-directional qualified link list between items:
@@ -167,31 +163,29 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		return children;
 	}
 
-	private final IEntityChangedListener entityChangeListener = new IEntityChangedListener() {
 
-		public void dependencyChanged(IMLPropertyType type,
-				IMLPropertyOption opt) {
-			entityChanged();
-		}
-
-		public void propertyChanged(PropertyChangedEvent evt) {
-			// TODO move this to schutzbedarfprovider as new entitychangelistener
-			entityChanged();
-		}
-
-		public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
-			entityChanged();
-		}
-	};
 
 	private String uuid;
+
 
 	public CnATreeElement(CnATreeElement parent) {
 		this();
 		this.parent = parent;
 	}
 
-	
+	public void dependencyChanged(IMLPropertyType type,
+			IMLPropertyOption opt) {
+		entityChanged();
+	}
+
+	public void propertyChanged(PropertyChangedEvent evt) {
+		// TODO move this to schutzbedarfprovider as new entitychangelistener
+		entityChanged();
+	}
+
+	public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
+		entityChanged();
+	}
 		
 	
 
@@ -202,28 +196,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		}
 		
 		children = new HashSet<CnATreeElement>();
-		if (typeFactory == null) {
-			initHitroUI();
-		}
-	}
-
-	private void initHitroUI() {
-		try {
-			Logger.getLogger(this.getClass()).debug(
-					"Initializing Hitro-UI framework...");
-			huiConfig = String.format("%s%sconf%sSNCA.xml", CnAWorkspace
-					.getInstance().getWorkdir(), File.separator,
-					File.separator);
-			huiConfig = (new File(huiConfig)).toURI().toString();
-			Logger.getLogger(this.getClass()).debug("Getting type definition from: " + huiConfig);
-			HUITypeFactory.initialize(huiConfig);
-			typeFactory = HUITypeFactory.getInstance();
-			EntityResolverFactory.createResolvers(typeFactory);
-			Logger.getLogger(this.getClass()).debug("HUI initialized.");
-		} catch (DBException e) {
-			throw new RuntimeException(e);
-		}
-	
 	}
 
 	public void entityChanged() {
@@ -248,14 +220,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 
 	public void setEntity(Entity newEntity) {
 		if (entity != null) {
-			entity.removeListener(entityChangeListener);
+			entity.removeListener(this);
 			if(isSchutzbedarfProvider())
 				entity.removeListener(getSchutzbedarfProvider().getChangeListener());
 		}
 		entity = newEntity;
 
 		if (entity != null) {
-			entity.addChangeListener(entityChangeListener);
+			entity.addChangeListener(this);
 			if (isSchutzbedarfProvider())
 				entity.addChangeListener(getSchutzbedarfProvider().getChangeListener());
 		}
@@ -270,7 +242,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	}
 	
 	public void setSimpleProperty(String typeId, String value) {
-		EntityType entityType = typeFactory.getEntityType(getTypeId());
+		EntityType entityType = getTypeFactory().getEntityType(getTypeId());
 		getEntity().setSimpleValue(entityType.getPropertyType(typeId), value);
 	}
 
@@ -401,6 +373,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	protected HUITypeFactory getTypeFactory() {
+		return HitroUtil.getInstance().getTypeFactory();
 	}
 
 	

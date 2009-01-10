@@ -35,32 +35,31 @@ import sernet.hui.common.multiselectionlist.IMLPropertyType;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable {
+public class SchutzbedarfAdapter implements ISchutzbedarfProvider, IEntityChangedListener, Serializable {
 
 	private CnATreeElement parent;
 
 	private static boolean loopWarning = true;
 
-	private IEntityChangedListener changeListener = new IEntityChangedListener() {
-		public void dependencyChanged(IMLPropertyType type,
-				IMLPropertyOption opt) {
-		}
+	
+	public void dependencyChanged(IMLPropertyType type,
+			IMLPropertyOption opt) {
+	}
 
-		public void propertyChanged(PropertyChangedEvent evt) {
-			if (checkSchutzbedarfChanged(evt)) {
-				ProtectionLevelChanged command = new ProtectionLevelChanged(SchutzbedarfAdapter.this, evt.getProperty(), evt.getSource()!=null);
-				try {
-					ServiceFactory.lookupCommandService().executeCommand(command);
-				} catch (CommandException e) {
-					ExceptionUtil.log(e, "Konnte Schutzbedarf nicht vererben");
-				}
+	public void propertyChanged(PropertyChangedEvent evt) {
+		if (checkSchutzbedarfChanged(evt)) {
+			ProtectionLevelChanged command = 
+				new ProtectionLevelChanged(SchutzbedarfAdapter.this, evt.getProperty(), evt.getSource()!=null);
+			try {
+				ServiceFactory.lookupCommandService().executeCommand(command);
+			} catch (CommandException e) {
+				ExceptionUtil.log(e, "Konnte Schutzbedarf nicht vererben"); //$NON-NLS-1$
 			}
 		}
+	}
 
-		public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
-		}
-
-	};
+	public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
+	}
 
 	public SchutzbedarfAdapter(CnATreeElement parent) {
 		this.parent = parent;
@@ -187,7 +186,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 	}
 
 	public IEntityChangedListener getChangeListener() {
-		return changeListener;
+		return this;
 	}
 
 	public void fireSchutzbedarfBegruendungChanged(Property prop, boolean setByUser) {
@@ -253,7 +252,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 	private void fireVerfuegbarkeitChanged() {
 		CascadingTransaction ta = CascadingTransaction.getInstance();
 		if (ta.hasBeenVisited(parent)) {
-			StatusLine.setErrorMessage(Messages.SchutzbedarfAdapter_3
+			StatusLine.setErrorMessage("Schutzbedarf: Schleife bei Objekt "
 					+ parent.getTitel());
 			Logger.getLogger(this.getClass()).debug(
 					"(Verfügbarkeit) Loop on object " + parent.getTitel()); //$NON-NLS-1$
@@ -275,7 +274,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 			}
 		} catch (TransactionAbortedException tae) {
 			Logger.getLogger(this.getClass()).debug(
-					Messages.SchutzbedarfAdapter_5);
+					"Verfuegbarkeit-Änderung abgebrochen.");
 			// try to end properly:
 			ta.end(parent);
 		} catch (Exception e) {
@@ -287,14 +286,14 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 		if (loopWarning) {
 			MessageDialogWithToggle dialog = MessageDialogWithToggle.openError(
 					Display.getCurrent().getActiveShell(),
-					Messages.SchutzbedarfAdapter_6,
-					Messages.SchutzbedarfAdapter_7 + name
-							+ Messages.SchutzbedarfAdapter_8
-							+ Messages.SchutzbedarfAdapter_9
-							+ Messages.SchutzbedarfAdapter_10
-							+ Messages.SchutzbedarfAdapter_11 + name
-							+ Messages.SchutzbedarfAdapter_12,
-					Messages.SchutzbedarfAdapter_13, false/* toggle default */,
+					"Nicht so toll",
+					"Eine Schleife in den Abhängigkeiten des Objekts " + name
+							+ " wurde festgestellt. "
+							+ "Der Schutzbedarf nach dem Maximumprinzip kann bei einer Schleife nicht korrekt bestimmt werden.\n\n"
+							+ "Überprüfen Sie die Zuordnung des automatisch bestimmten Schutzbedarfs "
+							+ "und beheben Sie die Schleife durch Entfernen einer Abhängigkeit von " + name
+							+ ".",
+					"Nicht mehr warnen", false/* toggle default */,
 					null/* preferences container */, null/* preference key */);
 			loopWarning = !dialog.getToggleState();
 		}
@@ -303,7 +302,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 	private void fireVertraulichkeitChanged() {
 		CascadingTransaction ta = CascadingTransaction.getInstance();
 		if (ta.hasBeenVisited(parent)) {
-			StatusLine.setErrorMessage(Messages.SchutzbedarfAdapter_14
+			StatusLine.setErrorMessage("Schutzbedarf: Schleife bei Objekt "
 					+ parent.getTitel());
 			Logger.getLogger(this.getClass()).debug(
 					"(Vertraulichkeit) Loop on object " + parent.getTitel()); //$NON-NLS-1$
@@ -322,7 +321,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 			}
 		} catch (TransactionAbortedException tae) {
 			Logger.getLogger(this.getClass()).debug(
-					Messages.SchutzbedarfAdapter_16);
+					"Vertraulichkeitsänderung abgebrochen..");
 			// try to end properly:
 			ta.end(parent);
 		} catch (Exception e) {
@@ -333,7 +332,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 	private void fireIntegritaetChanged() {
 		CascadingTransaction ta = CascadingTransaction.getInstance();
 		if (ta.hasBeenVisited(parent)) {
-			StatusLine.setErrorMessage(Messages.SchutzbedarfAdapter_17
+			StatusLine.setErrorMessage("Schutzbedarf: Schleife bei Objekt "
 					+ parent.getTitel());
 			Logger.getLogger(this.getClass()).debug(
 					"(Integrität) Loop on object " + parent.getTitel()); //$NON-NLS-1$
@@ -352,7 +351,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 			}
 		} catch (TransactionAbortedException tae) {
 			Logger.getLogger(this.getClass()).debug(
-					Messages.SchutzbedarfAdapter_19);
+					"Integritätsänderung abgebrochen.");
 			// try to end properly:
 			ta.end(parent);
 		} catch (Exception e) {

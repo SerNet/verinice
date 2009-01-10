@@ -25,6 +25,10 @@ public abstract class ServiceFactory {
 		ServiceFactory.locality = locality;
 	}
 	
+	public static boolean  isUsingRemoteService() {
+		return locality == REMOTE;
+	}
+	
 	public static void openCommandService() {
 		switch (locality) {
 		case LOCAL:

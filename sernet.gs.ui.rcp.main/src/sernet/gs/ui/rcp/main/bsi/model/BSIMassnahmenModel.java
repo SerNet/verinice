@@ -33,28 +33,28 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 public class BSIMassnahmenModel {
 
-	private static final String DS_B01005_BFDI = "b01005_bfdi";
+	private static final String DS_B01005_BFDI = "b01005_bfdi"; //$NON-NLS-1$
 
-	private static final String DS_B_1_5 = "B 1.5";
+	private static final String DS_B_1_5 = "B 1.5"; //$NON-NLS-1$
 
-	private static final String DS_2008 = "2008";
+	private static final String DS_2008 = "2008"; //$NON-NLS-1$
 
-	private static final String B01005 = "b01005";
+	private static final String B01005 = "b01005"; //$NON-NLS-1$
 
 	private static List<Baustein> cache;
 
 	private static GSScraper scrape;
 
-	private static String previouslyReadFile = "";
+	private static String previouslyReadFile = ""; //$NON-NLS-1$
 
 	private static GSScraper dsScrape;
 
-	private static String previouslyReadFileDS = "";
+	private static String previouslyReadFileDS = ""; //$NON-NLS-1$
 
 	public static synchronized List<Baustein> loadBausteine(IProgressMonitor mon)
 			throws GSServiceException, IOException {
 		Logger.getLogger(BSIMassnahmenModel.class).debug(
-				Messages.BSIMassnahmenModel_0);
+				"Laden und Zwischenspeichern der GS-Kataloge...");
 
 		IGSSource gsSource = null;
 		String gsPath = null;
@@ -85,15 +85,15 @@ public class BSIMassnahmenModel {
 					gsSource = new URLGSSource(gsPath);
 			} catch (IOException e) {
 				Logger.getLogger(BSIMassnahmenModel.class).error(
-						"GS-Kataloge nicht gefunden.", e);
+						"GS-Kataloge nicht gefunden.", e); //$NON-NLS-1$
 				return null;
 			}
 
 			scrape = new GSScraper(gsSource, new PatternGSHB2005_2006());
-			scrape.setCacheDir(CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache");
+			scrape.setCacheDir(CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache"); //$NON-NLS-1$
 			
-			Logger.getLogger(BSIMassnahmenModel.class).debug("Setting GS-Cache to " + scrape.getCacheDir());
-			mon.beginTask(Messages.BSIMassnahmenModel_3, 5);
+			Logger.getLogger(BSIMassnahmenModel.class).debug("Setting GS-Cache to " + scrape.getCacheDir()); //$NON-NLS-1$
+			mon.beginTask("Laden und Zwischenspeichern der GS-Kataloge...", 5);
 			List<Baustein> alleBst = new ArrayList<Baustein>();
 
 			mon.subTask(BausteinUmsetzung.getSchichtenBezeichnung()[0]);
@@ -121,7 +121,7 @@ public class BSIMassnahmenModel {
 				try {
 					ZIPGSSource dsSource = new ZIPGSSource(dsPath);
 					dsScrape = new GSScraper(dsSource, new PatternBfDI2008());
-					dsScrape.setCacheDir(CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache");
+					dsScrape.setCacheDir(CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache"); //$NON-NLS-1$
 					
 					Baustein dsBaustein = scrapeDatenschutzBaustein();
 					
@@ -134,14 +134,14 @@ public class BSIMassnahmenModel {
 					}
 					alleBst.add(dsBaustein);
 				} catch (Exception e) {
-					Logger.getLogger(BSIMassnahmenModel.class).debug("Datenschutz-Baustein nicht gefunden.");
+					Logger.getLogger(BSIMassnahmenModel.class).debug("Datenschutz-Baustein nicht gefunden."); //$NON-NLS-1$
 				}
 			}
 			
 			cache = alleBst;
 			mon.done();
 			Logger.getLogger(BSIMassnahmenModel.class).debug(
-					Messages.BSIMassnahmenModel_9);
+					"GS-Kataloge loaded.");
 
 		}
 		return cache;
@@ -151,7 +151,7 @@ public class BSIMassnahmenModel {
     	Baustein b = new Baustein();
     	b.setStand(DS_2008);
     	b.setId(DS_B_1_5);
-    	b.setTitel("Datenschutz BfDI");
+    	b.setTitel("Datenschutz BfDI"); //$NON-NLS-1$
     	b.setUrl(DS_B01005_BFDI);
     	b.setSchicht(1);
     	

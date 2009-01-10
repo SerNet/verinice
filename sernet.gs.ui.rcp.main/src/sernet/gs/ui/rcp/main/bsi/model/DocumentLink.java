@@ -9,7 +9,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class DocumentLink {
 
-	public static final Object NO_LINK_MESSAGE = "";
+	public static final Object NO_LINK_MESSAGE = ""; //$NON-NLS-1$
 
 
 	public DocumentLink(String name, String href) {

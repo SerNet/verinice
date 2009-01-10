@@ -16,7 +16,7 @@ public class ServerKategorie extends CnATreeElement implements IBSIStrukturKateg
 	
 	@Override
 	public String getTitel() {
-		return Messages.ServerKategorie_1;
+		return "IT-Systeme: Server";
 	}
 	
 	@Override

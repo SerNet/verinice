@@ -22,13 +22,13 @@ public class Datenverarbeitung extends CnATreeElement
 	public Datenverarbeitung(CnATreeElement parent) {
 		super(parent);
 		if (entityType == null )
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 	}
 	
 	private Datenverarbeitung() {
 		if (entityType == null )
-			entityType = typeFactory.getEntityType(TYPE_ID);
+			entityType = getTypeFactory().getEntityType(TYPE_ID);
 	}
 	
 	@Override
