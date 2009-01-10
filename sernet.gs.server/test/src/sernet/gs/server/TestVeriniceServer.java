@@ -14,6 +14,8 @@ import org.springframework.beans.factory.access.SingletonBeanFactoryLocator;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.connect.HibernateBaseDao;
 import sernet.gs.ui.rcp.main.service.ICommandService;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
 
@@ -22,6 +24,8 @@ public class TestVeriniceServer extends TestCase {
 	
 	public void setUp() throws Exception {
 		super.setUp();
+		ServiceFactory.setService(ServiceFactory.REMOTE);
+		WhereAmIUtil.setLocation(WhereAmIUtil.LOCATION_CLIENT);
 	}
 
 	public void tearDown() throws Exception {

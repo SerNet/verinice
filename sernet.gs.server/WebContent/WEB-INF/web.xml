@@ -23,9 +23,27 @@
         <servlet-name>springDispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     </servlet>
+   
+    <servlet>
+    	<description>
+    		Output HuiConfig from classpath.
+    	</description>
+    	<display-name>
+    	GetHitroConfig</display-name>
+    	<servlet-name>GetHitroConfig</servlet-name>
+    	<servlet-class>
+    	sernet.gs.server.GetHitroConfig</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>springDispatcher</servlet-name>
         <url-pattern>/service/*</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+    	<servlet-name>GetHitroConfig</servlet-name>
+    	<url-pattern>/GetHitroConfig</url-pattern>
+    </servlet-mapping>
+
+    
 </web-app>
