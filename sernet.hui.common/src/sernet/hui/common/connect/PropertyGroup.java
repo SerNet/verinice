@@ -1,11 +1,12 @@
 package sernet.hui.common.connect;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-public class PropertyGroup implements IEntityElement{
+public class PropertyGroup implements IEntityElement {
 	private String id;
 	private String name;
 	private List<PropertyType> propertyTypes = new ArrayList<PropertyType>();
