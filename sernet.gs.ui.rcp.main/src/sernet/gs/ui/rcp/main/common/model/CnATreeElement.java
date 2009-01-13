@@ -167,6 +167,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	private String uuid;
 
+	private transient EntityType subEntityType;
+
 
 	public CnATreeElement(CnATreeElement parent) {
 		this();
@@ -216,6 +218,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	public Entity getEntity() {
 		return entity;
+	}
+	
+	public EntityType getEntityType() {
+		if (subEntityType == null)
+			subEntityType = getTypeFactory().getEntityType(getTypeId());
+		return subEntityType;
 	}
 
 	public void setEntity(Entity newEntity) {

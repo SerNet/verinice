@@ -9,4 +9,13 @@
             </list>
         </constructor-arg>
     </bean>
+    
+     <bean id="ctxRemote"
+          class="org.springframework.context.support.FileSystemXmlApplicationContext">
+        <constructor-arg>
+            <list>
+                <value>{applicationContextRemote}</value>
+            </list>
+        </constructor-arg>
+    </bean>
 </beans>

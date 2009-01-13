@@ -16,7 +16,8 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRisikomassnahmeByNumber;
@@ -39,23 +40,24 @@ public class RisikoMassnahmeHome {
 	
 	public void save(RisikoMassnahme mn) throws Exception {
 		SaveElement<RisikoMassnahme> command = new SaveElement<RisikoMassnahme>(mn);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 	}
 	
 	public void remove(RisikoMassnahme mn) throws Exception {
 		RemoveElement<RisikoMassnahme> command = new RemoveElement<RisikoMassnahme>(mn);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 	}
 	
 	public List<RisikoMassnahme> loadAll() throws Exception {
-		LoadElementByType<RisikoMassnahme> command = new LoadElementByType<RisikoMassnahme>(RisikoMassnahme.class);
-		commandService.executeCommand(command);
+		LoadGenericElementByType<RisikoMassnahme> command 
+			= new LoadGenericElementByType<RisikoMassnahme>(RisikoMassnahme.class);
+		command = commandService.executeCommand(command);
 		return command.getElements();
 	}
 	
 	public RisikoMassnahme loadByNumber(String number) throws CommandException {
 		FindRisikomassnahmeByNumber command = new FindRisikomassnahmeByNumber(number);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 		return command.getMassnahme();
 	}		
 	

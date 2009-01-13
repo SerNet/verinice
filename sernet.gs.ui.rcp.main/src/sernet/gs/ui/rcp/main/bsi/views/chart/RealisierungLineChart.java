@@ -34,7 +34,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.statscommands.CountMassnahmen;
 
 public class RealisierungLineChart implements IChartGenerator {
@@ -66,7 +66,7 @@ public class RealisierungLineChart implements IChartGenerator {
 	        
 	        CountMassnahmen command = new CountMassnahmen();
 	        try {
-				ServiceFactory.lookupCommandService().executeCommand(command);
+				command = ServiceFactory.lookupCommandService().executeCommand(command);
 			} catch (CommandException e) {
 				ExceptionUtil.log(e, "Fehler beim Datenzugriff");
 			}
@@ -95,8 +95,8 @@ public class RealisierungLineChart implements IChartGenerator {
 		TimeSeries ts1 =new TimeSeries("umgesetzt", Day.class);
 		TimeSeries ts2 =new TimeSeries("alle", Day.class);
 		
-		LoadElementByType<MassnahmenUmsetzung> command = new LoadElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
-		ServiceFactory.lookupCommandService().executeCommand(command);
+		LoadCnAElementByType<MassnahmenUmsetzung> command = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		List<MassnahmenUmsetzung> massnahmen = command.getElements();
 		
 		DateValues dateTotal1 = new DateValues();

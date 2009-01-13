@@ -21,7 +21,7 @@ public class MigrateDbTo0_91 extends DbMigration {
 	public void run() throws Exception {
 			Logger.getLogger(this.getClass()).debug("Updating DB model to V 0.91.");
 			LoadBSIModel command = new LoadBSIModel();
-			getCommandService().executeCommand(command);
+			command = getCommandService().executeCommand(command);
 			BSIModel model = command.getModel();
 			
 			ITVerbund verbund = model.getItverbuende().iterator().next();
@@ -35,11 +35,11 @@ public class MigrateDbTo0_91 extends DbMigration {
 			
 			
 			SaveElement<SonstigeITKategorie> command2 = new SaveElement<SonstigeITKategorie>(kategorie);
-			getCommandService().executeCommand(command2);
+			command2 = getCommandService().executeCommand(command2);
 			
 			model.setDbVersion(getVersion());
 			SaveElement<BSIModel> command3 = new SaveElement<BSIModel>(model);
-			getCommandService().executeCommand(command3);
+			command3 = getCommandService().executeCommand(command3);
 			
 	}
 

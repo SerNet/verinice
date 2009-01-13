@@ -69,6 +69,14 @@ public class PreferenceConstants {
 	public static final String GS_DB_RESTOREDB_NAME = "gs_cna_restoredb_name";
 	public static final String GS_DB_RESTOREDB_TODIR = "gs_cna_restoredb_todir";
 	
+	public static final String OPERATION_MODE = "gs_cna_operationmode";
+	public static final String OPERATION_MODE_STANDALONE = "gs_cna_operationmode_standalone";
+	public static final String OPERATION_MODE_WITHSERVER = "gs_cna_operationmode_withserver";
+	
+	public static final String VNSERVER_URI = "gs_cna_vnserver_uri";
+	public static final String VNSERVER_URI_DEFAULT = "http://veriniceserver.private:2010/veriniceserver/";
+	
+	
 	
 	
 }

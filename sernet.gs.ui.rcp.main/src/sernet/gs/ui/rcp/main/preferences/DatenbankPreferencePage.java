@@ -48,6 +48,7 @@ public class DatenbankPreferencePage
 	 * restore itself.
 	 */
 	public void createFieldEditors() {
+		
 		createRadioGroup();
 		dialect = new StringFieldEditor(PreferenceConstants.DB_DIALECT,
 				Messages.getString("DatenbankPreferencePage.7"), //$NON-NLS-1$
@@ -69,8 +70,30 @@ public class DatenbankPreferencePage
 				Messages.getString("DatenbankPreferencePage.10"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(pass);
+		
+
 	}
 	
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		// only editable when server is not used, client has direct access to database.
+		// otherwise, DB is configured on the server
+		if (visible) {
+			String opmode = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE);
+			setEnabledFields(opmode.equals(PreferenceConstants.OPERATION_MODE_STANDALONE));
+		}
+	}
+	
+	private void setEnabledFields(boolean enable) {
+		dbDriver.setEnabled(enable, getFieldEditorParent());
+		dialect.setEnabled(enable, getFieldEditorParent());
+		url.setEnabled(enable, getFieldEditorParent());
+		user.setEnabled(enable, getFieldEditorParent());
+		pass.setEnabled(enable, getFieldEditorParent());
+		
+	}
+
 	private void createRadioGroup() {
 		dbDriver = new RadioGroupFieldEditor(PreferenceConstants.DB_DRIVER,
 				Messages.getString("DatenbankPreferencePage.11"), //$NON-NLS-1$
@@ -129,6 +152,7 @@ public class DatenbankPreferencePage
 	@Override
 	protected void checkState() {
 		super.checkState();
+		
 		if (!isValid())
 			return;
 	}
@@ -137,6 +161,8 @@ public class DatenbankPreferencePage
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
+		
 	}
+	
 	
 }

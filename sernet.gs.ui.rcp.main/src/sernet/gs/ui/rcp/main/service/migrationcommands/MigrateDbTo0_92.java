@@ -27,7 +27,7 @@ import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
 import sernet.hui.common.connect.Entity;
@@ -76,8 +76,8 @@ public class MigrateDbTo0_92 extends DbMigration {
 	public void run() throws Exception {
 		Logger.getLogger(this.getClass()).debug("Updating DB model to V 0.92.");
 		createNewFieldsArray();
-		LoadElementByType<Person> command = new LoadElementByType<Person>(Person.class);
-		ServiceFactory.lookupCommandService().executeCommand(command);
+		LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		personen = command.getElements();
 		
 	
@@ -86,7 +86,7 @@ public class MigrateDbTo0_92 extends DbMigration {
 		
 		
 		LoadBSIModelComplete command2 = new LoadBSIModelComplete(false); /* skip massnahmen */
-		ServiceFactory.lookupCommandService().executeCommand(command2);
+		command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
 		List<CnATreeElement> allElements = command2.getModel().getAllElementsFlatList(false);
 
 		//progress.beginTask("Migriere verknüpfte Personen...", allElements.size());
@@ -97,12 +97,12 @@ public class MigrateDbTo0_92 extends DbMigration {
 		Logger.getLogger(this.getClass()).debug("Speichere alle veränderten Objekte. Bitte warten...");
 
 		UpdateMultipleElements command3 = new UpdateMultipleElements(changedElements);
-		getCommandService().executeCommand(command3);
+		command3 = getCommandService().executeCommand(command3);
 		
 		BSIModel model = command2.getModel();
 		model.setDbVersion(getVersion());
 		SaveElement<BSIModel> command4 = new SaveElement<BSIModel>(model);
-		getCommandService().executeCommand(command4);
+		command4 = getCommandService().executeCommand(command4);
 		//progress.done();
 	}
 	

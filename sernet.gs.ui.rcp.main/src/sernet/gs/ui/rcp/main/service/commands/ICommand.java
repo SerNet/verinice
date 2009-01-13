@@ -14,6 +14,9 @@ import sernet.gs.ui.rcp.main.service.ICommandService;
  * It is possible for a service to hand over execution and setting of DAO factory to another service,
  * i.e. refer the command to be executed on a remote location.
  * 
+ * 
+ * @see ICommandService
+ * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$

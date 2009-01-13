@@ -23,7 +23,6 @@ public class Client extends CnATreeElement
 	public static final String PROP_ERLAEUTERUNG = "client_erlaeuterung"; //$NON-NLS-1$
 	private static final String PROP_ANZAHL = "client_anzahl"; //$NON-NLS-1$
 	
-	private static EntityType entityType;
 
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 	= new SchutzbedarfAdapter(this);
@@ -37,10 +36,8 @@ private final ILinkChangeListener linkChangeListener
 	 */
 	public Client(CnATreeElement parent) {
 		super(parent);
-		if (entityType == null )
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME), "Neuer Client");
+		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME), "Neuer Client");
 	}
 	public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
@@ -64,7 +61,7 @@ private final ILinkChangeListener linkChangeListener
 	}
 	
 	public void setTitel(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 
 	@Override
@@ -88,15 +85,15 @@ private final ILinkChangeListener linkChangeListener
 		return schutzbedarfProvider;
 	}
 	public void setErlaeuterung(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ERLAEUTERUNG), name);
 	}
 	
 	public void setKuerzel(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KUERZEL), name);
 	}
 	
 	public void setAnzahl(int anzahl) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
 
 }

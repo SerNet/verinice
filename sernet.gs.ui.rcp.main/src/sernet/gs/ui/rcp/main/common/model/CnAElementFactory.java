@@ -417,8 +417,8 @@ public class CnAElementFactory {
 		};
 		timeout.start();
 		try {
-			DbVersion versionUpdate = new DbVersion();
-			ServiceFactory.lookupCommandService().executeCommand(versionUpdate);
+			DbVersion command = new DbVersion();
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			done[0] = true;
 		} catch (CommandException e){
 			done[0] = true;

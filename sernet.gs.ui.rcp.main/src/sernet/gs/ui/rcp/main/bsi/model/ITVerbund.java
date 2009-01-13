@@ -17,8 +17,6 @@ public class ITVerbund extends CnATreeElement
 	
 	private String kuerzel = " "; //$NON-NLS-1$
 	
-	private static EntityType entityType;
-	
 	public String getKuerzel() {
 		return kuerzel;
 	}
@@ -26,10 +24,8 @@ public class ITVerbund extends CnATreeElement
 	
 	public ITVerbund(CnATreeElement parent) {
 		super(parent);
-		if (entityType == null )
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME),
+		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME),
 				"Neuer IT-Verbund");
 	}
 	
@@ -97,7 +93,7 @@ public class ITVerbund extends CnATreeElement
 
 
 	public void setTitel(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 
 

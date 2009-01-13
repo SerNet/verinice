@@ -13,7 +13,6 @@ public class StellungnahmeDSB extends CnATreeElement
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "stellungnahmedsb";
 	
-	private static EntityType entityType;
 
 	/**
 	 * Create new BSIElement.
@@ -21,19 +20,15 @@ public class StellungnahmeDSB extends CnATreeElement
 	 */
 	public StellungnahmeDSB(CnATreeElement parent) {
 		super(parent);
-		if (entityType == null )
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 	}
 	
 	private StellungnahmeDSB() {
-		if (entityType == null )
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 	}
 	
 	@Override
 	public String getTitel() {
-		return entityType.getName();
+		return getEntityType().getName();
 	}
 
 	@Override

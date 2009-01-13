@@ -46,7 +46,7 @@ public class HibernateCommandService implements ICommandService {
 	 * A command can execute to other commands during its execution using the
 	 * reference to the command service.
 	 */
-	public ICommand executeCommand(ICommand command) throws CommandException {
+	public <T extends ICommand> T executeCommand(T command) throws CommandException {
 		if (!dbOpen)
 			throw new CommandException("DB connection closed.");
 

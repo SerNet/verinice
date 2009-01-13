@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -23,6 +24,7 @@ import org.hibernate.UnresolvableObjectException;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
@@ -31,6 +33,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisListsHome;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.HuiServiceTest;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -38,8 +41,8 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.ICommand;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementById;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshMultipleElements;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
@@ -98,8 +101,13 @@ public class CnAElementHome {
 
 	public void open(String confDir, IProgress monitor) throws Exception {
 		monitor.beginTask("Initialisiere Service-Layer...", IProgress.UNKNOWN_WORK);
-		// TODO server: use preference to decide local or remote service usage
-		ServiceFactory.setService(ServiceFactory.LOCAL);
+		
+		Preferences prefs = Activator.getDefault().getPluginPreferences();
+		boolean standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_STANDALONE);
+		if (standalone)
+			ServiceFactory.setService(ServiceFactory.LOCAL);
+		else
+			ServiceFactory.setService(ServiceFactory.REMOTE);
 		ServiceFactory.openCommandService();
 		commandService = ServiceFactory.lookupCommandService();
 	}
@@ -113,7 +121,7 @@ public class CnAElementHome {
 			Logger.getLogger(this.getClass()).debug(
 					"Saving new element: " + element);
 			SaveElement<T> saveCommand = new SaveElement<T>(element);
-			commandService.executeCommand(saveCommand);
+			saveCommand = commandService.executeCommand(saveCommand);
 			return saveCommand.getElement();
 	}
 	
@@ -121,7 +129,7 @@ public class CnAElementHome {
 		Logger.getLogger(this.getClass()).debug(
 				"Saving new link: " + link);
 		SaveElement<CnALink> saveCommand = new SaveElement<CnALink>(link);
-		commandService.executeCommand(saveCommand);
+		saveCommand = commandService.executeCommand(saveCommand);
 }
 	
 	
@@ -133,28 +141,28 @@ public class CnAElementHome {
 
 	public void remove(CnATreeElement element) throws Exception {
 		RemoveElement command = new RemoveElement(element);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 	}
 
 	public void remove(CnALink element) throws Exception {
 		RemoveElement command = new RemoveElement(element);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 	}
 
 	public void update(CnATreeElement element) throws Exception {	
 		UpdateElement command = new UpdateElement(element);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 	}
 
 	public void update(List<? extends CnATreeElement> elements)
 			throws StaleObjectStateException, CommandException {
 		UpdateMultipleElements command = new UpdateMultipleElements(elements);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 	}
 
 	public void refresh(List<? extends CnATreeElement> elements) throws CommandException {
 		RefreshMultipleElements command = new RefreshMultipleElements(elements);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 	}
 
 	/**
@@ -167,8 +175,8 @@ public class CnAElementHome {
 	 */
 	@SuppressWarnings("unchecked")
 	public CnATreeElement loadById(Class<? extends CnATreeElement> clazz, int id) throws CommandException {
-		LoadElementById command = new LoadElementById(clazz, id);
-		commandService.executeCommand(command);
+		LoadCnAElementById command = new LoadCnAElementById(clazz, id);
+		command = commandService.executeCommand(command);
 		return command.getFound();
 	}
 
@@ -190,7 +198,7 @@ public class CnAElementHome {
 		nullMonitor.setTaskName("Lade Grundschutz Modell...");
 		
 		LoadBSIModelComplete command = new LoadBSIModelComplete(true);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 		BSIModel model = command.getModel();
 		return model;
 	}
@@ -205,7 +213,7 @@ public class CnAElementHome {
 	public void refresh(CnATreeElement cnAElement) throws CommandException {
 		// FIXME server: refresh changes
 		RefreshElement command = new RefreshElement(cnAElement);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 	}
 
 	public List<ChangeLogEntry> loadChangesSince(Date lastUpdate) {
@@ -214,27 +222,27 @@ public class CnAElementHome {
 	}
 	
 	public List<ITVerbund> getItverbuende() throws CommandException {
-		LoadElementByType<ITVerbund> command = new LoadElementByType<ITVerbund>(ITVerbund.class);
-		commandService.executeCommand(command);
+		LoadCnAElementByType<ITVerbund> command = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
+		command = commandService.executeCommand(command);
 		return command.getElements();
 	}
 
 	public List<ITVerbund> getItverbuendeHydrated(boolean includingMassnahmen) throws CommandException {
 		LoadBSIModelComplete command = new LoadBSIModelComplete(includingMassnahmen);
-		ServiceFactory.lookupCommandService().executeCommand(command);
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		return command.getModel().getItverbuende();
 	}
 
 	public List<Person> getPersonen() throws CommandException {
-		LoadElementByType<Person> command = new LoadElementByType<Person>(Person.class);
-		commandService.executeCommand(command);
+		LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
+		command = commandService.executeCommand(command);
 		return command.getElements();
 		
 	}
 
 	public List<String> getTags() throws CommandException {
 		FindAllTags command = new FindAllTags();
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 		return command.getTags();
 	}
 }

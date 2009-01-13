@@ -17,7 +17,6 @@ public class NetzKomponente extends CnATreeElement
 	public static final String PROP_TAG			= "netzkomponente_tag"; //$NON-NLS-1$
 	public static final String PROP_ERLAEUTERUNG = "netzkomponente_erlaeuterung"; //$NON-NLS-1$
 	
-	private static EntityType entityType;
 	
 	public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);
@@ -29,10 +28,8 @@ public class NetzKomponente extends CnATreeElement
 	 */
 	public NetzKomponente(CnATreeElement parent) {
 		super(parent);
-		if (entityType == null )
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME), 
+		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME), 
 				"Neue Verbindung");
 	}
 	
@@ -66,15 +63,15 @@ public class NetzKomponente extends CnATreeElement
 	}
 	
 	public void setTitel(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 
 	public void setErlaeuterung(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ERLAEUTERUNG), name);
 	}
 	
 	public void setKuerzel(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KUERZEL), name);
 	}
 
 	public void setAnzahl(int anzahl) {

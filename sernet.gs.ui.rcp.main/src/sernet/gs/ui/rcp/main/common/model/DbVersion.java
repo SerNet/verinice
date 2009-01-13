@@ -51,7 +51,7 @@ public class DbVersion extends GenericCommand  {
 	public void execute() {
 		LoadBSIModel command = new LoadBSIModel();
 		try {
-			getCommandService().executeCommand(command);
+			command = getCommandService().executeCommand(command);
 			if (command.getModel() == null)
 				return;
 			

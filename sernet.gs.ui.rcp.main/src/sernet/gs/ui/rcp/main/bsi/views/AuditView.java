@@ -223,7 +223,7 @@ public class AuditView extends ViewPart {
 		if (CnAElementHome.getInstance().isOpen()) {
 			FindMassnahmenForListView command = new FindMassnahmenForListView();
 			try {
-				ServiceFactory.lookupCommandService().executeCommand(command);
+				command = ServiceFactory.lookupCommandService().executeCommand(command);
 			final List<MassnahmenUmsetzung> allMassnahmen = command.getAll();
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {

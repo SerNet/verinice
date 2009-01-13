@@ -15,7 +15,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindURLs;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
@@ -110,7 +110,7 @@ public class EntityResolverFactory {
 				
 				try {
 					FindURLs command = new FindURLs(allIDs);
-					ServiceFactory.lookupCommandService().executeCommand(command);
+					command =  ServiceFactory.lookupCommandService().executeCommand(command);
 					DocumentLinkRoot root = command.getUrls();
 					DocumentLink[] links = root.getChildren();
 					for (int i = 0; i < links.length; i++) {
@@ -135,10 +135,10 @@ public class EntityResolverFactory {
 						String entityTypeID) {
 					
 					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
-					LoadElementByType<Person> command = new LoadElementByType<Person>(Person.class);
+					LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
 					
 					try {
-						ServiceFactory.lookupCommandService().executeCommand(command);
+						command = ServiceFactory.lookupCommandService().executeCommand(command);
 						List<Person> personen = command.getElements();
 						
 						for (Person person : personen) {

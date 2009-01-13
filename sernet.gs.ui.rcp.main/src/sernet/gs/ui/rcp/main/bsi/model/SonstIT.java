@@ -30,7 +30,6 @@ public class SonstIT extends CnATreeElement
 	private final ILinkChangeListener linkChangeListener
 	= new MaximumSchutzbedarfListener(this);
 	
-	private static EntityType entityType;
 
 	/**
 	 * Create new BSIElement.
@@ -38,10 +37,8 @@ public class SonstIT extends CnATreeElement
 	 */
 	public SonstIT(CnATreeElement parent) {
 		super(parent);
-		if (entityType == null )
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME),
+		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME),
 				"Neues IT-System"); //$NON-NLS-1$
 	}
 	
@@ -61,7 +58,7 @@ public class SonstIT extends CnATreeElement
 	}
 	
 	public void setTitel(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	
 	@Override
@@ -91,14 +88,14 @@ public class SonstIT extends CnATreeElement
 	}
 
 	public void setErlaeuterung(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ERLAEUTERUNG), name);
 	}
 	
 	public void setKuerzel(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KUERZEL), name);
 	}
 
 	public void setAnzahl(int anzahl) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
 }

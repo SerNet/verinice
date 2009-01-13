@@ -70,8 +70,6 @@ public class CnAWorkspace {
 				try {
 					String dbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
 					
-					
-					
 					createGstoolImportDatabaseConfig(dbUrl,
 							prefs.getString(PreferenceConstants.GS_DB_USER), 
 							prefs.getString(PreferenceConstants.GS_DB_PASS));
@@ -80,6 +78,17 @@ public class CnAWorkspace {
 					ExceptionUtil.log(e, "Fehler beim Schreiben der Konfiguration für GSTool-Import.");
 				}
 			}
+			
+			if (event.getProperty().equals(PreferenceConstants.OPERATION_MODE)
+					|| event.getProperty().equals(PreferenceConstants.VNSERVER_URI)) {
+				try {
+					createSpringConfig();
+				} catch (Exception e) {
+					ExceptionUtil.log(e, "Fehler beim Schreiben der Konfiguration für " +
+							"Datenbankzugriff (Spring).");
+				}
+			}
+			
 		}
 	};
 	
@@ -166,12 +175,20 @@ public class CnAWorkspace {
 				"applicationContextHibernate.xml",
 				settings);
 		
-		// TODO create context file for httpinvoker access
+		Preferences prefs = Activator.getDefault().getPluginPreferences();
+		settings = new HashMap<String, String>(1);
+		settings.put("veriniceserver", prefs.getString(PreferenceConstants.VNSERVER_URI));
+		createTextFile("conf" + File.separator + "skel_applicationContextRemoteService.xml",
+				getConfDir(), 
+				"applicationContextRemoteService.xml",
+				settings);
 		
 		// create bean ref factory xml:
-		settings = new HashMap<String, String>(1);
+		settings = new HashMap<String, String>(2);
 		settings.put("applicationContextHibernate", 
 				"file://" + getConfDir() + File.separator + "applicationContextHibernate.xml");
+		settings.put("applicationContextRemote", 
+				"file://" + getConfDir() + File.separator + "applicationContextRemoteService.xml");
 		createTextFile("conf" + File.separator + "skel_beanRefFactory.xml", 
 				getConfDir(),		
 			"beanRefFactory.xml",

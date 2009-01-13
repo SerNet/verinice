@@ -29,7 +29,6 @@ public class BausteinUmsetzung extends CnATreeElement {
 	public static final String P_ERFASSTDURCH_OLD = "bstumsetzung_erfasstdurch"; //$NON-NLS-1$
 	public static final String P_ERFASSTDURCH_LINK = "bstumsetzung_erfasstdurch_link"; //$NON-NLS-1$
 
-	private EntityType entityType;
 
 	private final static Pattern kapitelPattern 
 		= Pattern.compile("(\\d+)\\.(\\d+)"); //$NON-NLS-1$
@@ -49,27 +48,23 @@ public class BausteinUmsetzung extends CnATreeElement {
 	
 	public BausteinUmsetzung(CnATreeElement parent) {
 		super(parent);
-		if (entityType == null)
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 	}
 	
 	private BausteinUmsetzung() {
 		// hibernate constructor
-		if (entityType == null)
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 	}
 	
 	public void setKapitel(String kap) {
-		getEntity().setSimpleValue(entityType.getPropertyType(P_NR), kap);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(P_NR), kap);
 	}
 
 	public void setStand(String stand) {
-		getEntity().setSimpleValue(entityType.getPropertyType(P_STAND), stand);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(P_STAND), stand);
 	}
 	
 	public void setName(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(P_NAME), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(P_NAME), name);
 	}
 	
 	
@@ -189,7 +184,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 	}
 
 	public void setUrl(String url2) {
-		getEntity().setSimpleValue(entityType.getPropertyType(P_URL), url2);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(P_URL), url2);
 	}
 
 	public MassnahmenUmsetzung getMassnahmenUmsetzung(String url) {
@@ -206,12 +201,12 @@ public class BausteinUmsetzung extends CnATreeElement {
 	}
 
 	public void addBefragtePersonDurch(Person personToLink) {
-		PropertyType propertyType = entityType.getPropertyType(P_GESPRAECHSPARTNER_LINK);
+		PropertyType propertyType = getEntityType().getPropertyType(P_GESPRAECHSPARTNER_LINK);
 		getEntity().createNewProperty(propertyType, personToLink.getEntity().getDbId().toString());
 	}
 
 	public void addBefragungDurch(Person person) {
-		PropertyType propertyType = entityType.getPropertyType(P_ERFASSTDURCH_LINK);
+		PropertyType propertyType = getEntityType().getPropertyType(P_ERFASSTDURCH_LINK);
 		getEntity().createNewProperty(propertyType, person.getEntity().getDbId().toString());
 	}
 

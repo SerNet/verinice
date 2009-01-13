@@ -9,23 +9,18 @@ public class Verarbeitungsangaben extends CnATreeElement
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "verarbeitungsangaben";
 	
-	private static EntityType entityType;
 
 	public Verarbeitungsangaben(CnATreeElement parent) {
 		super(parent);
-		if (entityType == null )
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 	}
 	
 	private Verarbeitungsangaben() {
-		if (entityType == null )
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 	}
 	
 	@Override
 	public String getTitel() {
-		return entityType.getName();
+		return getEntityType().getName();
 	}
 
 	@Override

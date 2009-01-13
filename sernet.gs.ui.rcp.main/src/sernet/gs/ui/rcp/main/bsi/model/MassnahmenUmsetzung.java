@@ -77,20 +77,16 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	@Deprecated
 	public static final String P_LETZTEREVISIONDURCH_OLD = "mnums_letzterevisiondurch"; //$NON-NLS-1$
 
-	private EntityType entityType;
 
 	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)"); //$NON-NLS-1$
 
 	public MassnahmenUmsetzung(CnATreeElement parent) {
 		super(parent);
-		if (entityType == null)
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 	}
 
 	protected MassnahmenUmsetzung() {
-		if (entityType == null)
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
+		// hibernate constructor
 	}
 
 	public static String[] getUmsetzungStati() {
@@ -124,12 +120,12 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	}
 
 	public void setStufe(char stufe) {
-		PropertyType type = entityType.getPropertyType(P_SIEGEL);
+		PropertyType type = getEntityType().getPropertyType(P_SIEGEL);
 		getEntity().setSimpleValue(type, Character.toString(stufe));
 	}
 
 	public void setUmsetzung(String status) {
-		PropertyType type = entityType.getPropertyType(P_UMSETZUNG);
+		PropertyType type = getEntityType().getPropertyType(P_UMSETZUNG);
 		getEntity().setSimpleValue(type, status);
 	}
 
@@ -173,7 +169,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	}
 	
 	public void addUmsetzungDurch(Person person) {
-		PropertyType propertyType = entityType.getPropertyType(P_UMSETZUNGDURCH_LINK);
+		PropertyType propertyType = getEntityType().getPropertyType(P_UMSETZUNGDURCH_LINK);
 		getEntity().createNewProperty(propertyType, person.getEntity().getDbId().toString());
 	}
 
@@ -223,17 +219,17 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	}
 
 	public void setLebenszyklus(String lz) {
-		PropertyType type = entityType.getPropertyType(P_LEBENSZYKLUS);
+		PropertyType type = getEntityType().getPropertyType(P_LEBENSZYKLUS);
 		getEntity().setSimpleValue(type, lz);
 
 	}
 
 	public void setKapitel(String kap) {
-		getEntity().setSimpleValue(entityType.getPropertyType(P_KAPITEL), kap);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(P_KAPITEL), kap);
 	}
 
 	public void setName(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(P_NAME), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(P_NAME), name);
 	}
 
 	@Override
@@ -315,7 +311,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	}
 
 	public void setUrl(String url2) {
-		getEntity().setSimpleValue(entityType.getPropertyType(P_URL), url2);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(P_URL), url2);
 	}
 
 	public String getStand() {
@@ -323,7 +319,7 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	}
 
 	public void setStand(String stand) {
-		getEntity().setSimpleValue(entityType.getPropertyType(P_STAND), stand);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(P_STAND), stand);
 	}
 
 	/**
@@ -350,14 +346,14 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	public void setVerantwortlicheRollenInitiierung(
 			List<String> verantwortlichInitiierung) {
 		for (String role : verantwortlichInitiierung) {
-			getEntity().createNewProperty(entityType.getPropertyType(P_VERANTWORTLICHE_ROLLEN_INITIIERUNG), role);
+			getEntity().createNewProperty(getEntityType().getPropertyType(P_VERANTWORTLICHE_ROLLEN_INITIIERUNG), role);
 		}
 	}
 
 	public void setVerantwortlicheRollenUmsetzung(
 			List<String> verantwortlichUmsetzung) {
 		for (String role : verantwortlichUmsetzung) {
-			getEntity().createNewProperty(entityType.getPropertyType(P_VERANTWORTLICHE_ROLLEN_UMSETZUNG), role);
+			getEntity().createNewProperty(getEntityType().getPropertyType(P_VERANTWORTLICHE_ROLLEN_UMSETZUNG), role);
 		}
 	}
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+<!-- 
+
+All of the Spring vodoo goes on in here. 
+
+This variant:
+	Wiring for remote service access using spring http invoker proxy from the RCP client.
+
+IST NICHT FÜR DER GEFINGERPOKEN UND MITTENGRABEN! ODERWISE IST EASY TO SCHNAPPEN DER SPRINGENWERK,
+BLOWENFUSEN UND POPPENCORKEN MIT SPITZENSPARKSEN.
+IST NICHT FÜR GEWERKEN BEI DUMMKOPFEN. DER RUBBERNECKEN SIGHTSEEREN KEEPEN DAS COTTONPICKEN 
+HÄNDER IN DAS POCKETS MUSS.
+ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
+
+-->
+
+    <bean id="commandService"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>
+                {veriniceserver}/service/commandServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.gs.ui.rcp.main.service.ICommandService</value>
+        </property>
+    </bean>
+</beans>

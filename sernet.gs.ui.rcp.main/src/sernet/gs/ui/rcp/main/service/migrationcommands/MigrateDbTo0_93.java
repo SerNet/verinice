@@ -62,7 +62,7 @@ public class MigrateDbTo0_93 extends DbMigration {
 		Logger.getLogger(this.getClass()).debug("Updating DB model to V 0.93.");
 		
 		LoadBSIModelComplete command2 = new LoadBSIModelComplete(true); /* include massnahmen */
-		ServiceFactory.lookupCommandService().executeCommand(command2);
+		command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
 		List<CnATreeElement> allElements = command2.getModel().getAllElementsFlatList(true);
 
 //		progress.beginTask("Migriere Datenbank auf Version 0.93", allElements.size());
@@ -88,12 +88,12 @@ public class MigrateDbTo0_93 extends DbMigration {
 		Logger.getLogger(this.getClass()).debug("Speichere alle veränderten Objekte. Bitte warten...");
 
 		UpdateMultipleElements command3 = new UpdateMultipleElements(changedElements);
-		getCommandService().executeCommand(command3);
+		command3 = getCommandService().executeCommand(command3);
 		
 		BSIModel model = command2.getModel();
 		model.setDbVersion(getVersion());
 		SaveElement<BSIModel> command4 = new SaveElement<BSIModel>(model);
-		getCommandService().executeCommand(command4);
+		command4 = getCommandService().executeCommand(command4);
 		
 //		progress.done();
 		

@@ -22,7 +22,7 @@ public class LoadBSIModelComplete extends GenericCommand {
 	public void execute() {
 		LoadBSIModel command = new LoadBSIModel();
 		try {
-			getCommandService().executeCommand(command);
+			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
 		}
@@ -35,21 +35,11 @@ public class LoadBSIModelComplete extends GenericCommand {
 			return;
 		List<CnATreeElement> flatList = model2.getAllElementsFlatList(includingMassnahmen);
 		if (flatList != null) {
-			flatList.size();
-			hydrateElement(model2);
+			HydratorUtil.hydrateElement(getDaoFactory().getDAO(BSIModel.class), model2, true);
 		}
-	}
-
-	private void hydrateElement(CnATreeElement elmt) {
-		elmt.getLinks().getChildren().size();
-		elmt.getLinksDown().size();
-		elmt.getLinksUp().size();
 		
-		HydratorUtil.hydrateEntity(elmt.getEntity());
-		
-		Set<CnATreeElement> children = elmt.getChildren();
-		for (CnATreeElement child : children) {
-			hydrateElement(child);
+		for (CnATreeElement cnATreeElement : flatList) {
+			HydratorUtil.hydrateElement(getDaoFactory().getDAO(BSIModel.class), cnATreeElement, true);
 		}
 	}
 

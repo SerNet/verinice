@@ -137,11 +137,11 @@ public class MigrateDbTo0_94 extends DbMigration {
 		
 		try {
 			LoadBSIModel command2 = new LoadBSIModel();
-			getCommandService().executeCommand(command2);
+			command2 = getCommandService().executeCommand(command2);
 			BSIModel model = command2.getModel();
 			model.setDbVersion(getVersion());
 			SaveElement<BSIModel> command4 = new SaveElement<BSIModel>(model);
-			getCommandService().executeCommand(command4);
+			command4 = getCommandService().executeCommand(command4);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
 		}

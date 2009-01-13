@@ -22,7 +22,7 @@ public class FindAllTags extends GenericCommand {
 	public void execute() {
 		LoadBSIModel command = new LoadBSIModel();
 		try {
-			getCommandService().executeCommand(command);
+			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
 		}

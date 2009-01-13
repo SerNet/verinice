@@ -9,7 +9,6 @@ public class VerantwortlicheStelle extends CnATreeElement
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "verantwortlichestelle";
 	
-	private static EntityType entityType;
 
 	/**
 	 * Create new BSIElement.
@@ -17,19 +16,15 @@ public class VerantwortlicheStelle extends CnATreeElement
 	 */
 	public VerantwortlicheStelle(CnATreeElement parent) {
 		super(parent);
-		if (entityType == null )
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 	}
 	
 	private VerantwortlicheStelle() {
-		if (entityType == null )
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 	}
 	
 	@Override
 	public String getTitel() {
-		return entityType.getName();
+		return getEntityType().getName();
 	}
 
 	@Override

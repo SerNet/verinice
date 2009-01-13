@@ -18,8 +18,6 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 
 	private IGefaehrdungsBaumElement gefaehrdungsParent;
 	
-	private static EntityType entityType;
-	
 	public static final String GEFAEHRDUNG_ALTERNATIVE_A = "A";
 	public static final String GEFAEHRDUNG_ALTERNATIVE_B = "B";
 	public static final String GEFAEHRDUNG_ALTERNATIVE_C = "C";
@@ -72,8 +70,6 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	protected GefaehrdungsUmsetzung(CnATreeElement parent) {
 		super(parent);
 		
-		if (entityType == null)
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
 		
 	}
@@ -95,12 +91,12 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	}
 	
 	public void setKategorieAsString(String newKategorie) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KATEGORIE),
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KATEGORIE),
 				newKategorie);
 	}
 	
 	public void setAlternative(String newAlternative) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ALTERNATIVE),
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ALTERNATIVE),
 				newAlternative);
 	}
 	
@@ -123,10 +119,10 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	 */
 	public void setOkay(Boolean newOkay) {
 		if (newOkay)
-			getEntity().setSimpleValue(entityType.getPropertyType(PROP_OKAY),
+			getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OKAY),
 					PROP_OKAY_YES);
 		else
-			getEntity().setSimpleValue(entityType.getPropertyType(PROP_OKAY),
+			getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OKAY),
 					PROP_OKAY_NO);
 	}
 
@@ -189,7 +185,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	}
 
 	public void setId(String id) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ID),
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID),
 				id);
 	}
 
@@ -198,7 +194,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	}
 
 	public void setKategorie(String kategorie) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KATEGORIE),
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KATEGORIE),
 				kategorie);
 	}
 
@@ -209,7 +205,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 
 	
 	public void setTitel(String titel) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_TITEL),
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TITEL),
 				titel);
 	}
 
@@ -231,7 +227,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	}
 	
 	public void setUrl(String url) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_URL),
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_URL),
 				url);
 	}
 	
@@ -240,12 +236,12 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	}
 	
 	public void setStand(String stand) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_STAND),
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_STAND),
 				stand);
 	}
 
 	public void setDescription(String beschreibung) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_DESCRIPTION),
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESCRIPTION),
 				beschreibung);
 	}
 	

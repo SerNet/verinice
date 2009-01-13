@@ -31,22 +31,22 @@ public class FinishedRiskAnalysisListsHome {
 	
 	public void saveNew(FinishedRiskAnalysisLists list) throws Exception {
 		SaveElement<FinishedRiskAnalysisLists> command = new SaveElement<FinishedRiskAnalysisLists>(list);
-		ServiceFactory.lookupCommandService().executeCommand(command);
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 
 	public void update(FinishedRiskAnalysisLists list) throws Exception {
 		SaveElement<FinishedRiskAnalysisLists> command = new SaveElement<FinishedRiskAnalysisLists>(list);
-		ServiceFactory.lookupCommandService().executeCommand(command);
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 	
 	public void remove(FinishedRiskAnalysisLists list) throws Exception {
 		RemoveElement<FinishedRiskAnalysisLists> command = new RemoveElement<FinishedRiskAnalysisLists>(list);
-		ServiceFactory.lookupCommandService().executeCommand(command);
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 	
 	public FinishedRiskAnalysisLists loadById(int id) throws CommandException {
 		FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(id);
-		ServiceFactory.lookupCommandService().executeCommand(command);
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		return command.getFoundLists();
 	}
 }

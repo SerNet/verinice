@@ -36,8 +36,8 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			return getHibernateTemplate().find(hqlQuery, values);
 		}
 
-		public void initialize(Object collection) {
-			getHibernateTemplate().initialize(collection);
+		public void initialize(Object proxy) {
+			getHibernateTemplate().initialize(proxy);
 		}
 
 		public void flush() {
@@ -55,5 +55,6 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		public void reload(T element, Serializable id) {
 			getHibernateTemplate().load(element, id);
 		}
+		
 
 }

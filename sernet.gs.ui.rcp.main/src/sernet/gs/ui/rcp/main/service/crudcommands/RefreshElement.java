@@ -24,8 +24,7 @@ public class RefreshElement<T extends CnATreeElement> extends GenericCommand {
 		Integer id = getId(element);
 //		dao.reload(element, id);
 		dao.refresh(element);
-		HydratorUtil.hydrateElement(element);
-		HydratorUtil.hydrateEntity(element.getEntity());
+		HydratorUtil.hydrateElement(dao, element, true);
 	}
 
 	private Integer getId(T element2) {

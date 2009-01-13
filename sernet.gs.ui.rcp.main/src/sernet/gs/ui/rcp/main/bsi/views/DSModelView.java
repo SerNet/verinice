@@ -235,7 +235,7 @@ public class DSModelView extends ViewPart {
 
 	private void setInput() throws CommandException {
 		LoadBSIModel command = new LoadBSIModel();
-		ServiceFactory.lookupCommandService().executeCommand(command);
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		BSIModel model2 = command.getModel();
 
 		model.removeBSIModelListener(viewUpdater);

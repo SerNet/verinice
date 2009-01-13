@@ -55,8 +55,6 @@ public class Anwendung extends CnATreeElement
 
 
 
-	private static EntityType entityType;
-
 	public int getSchicht() {
 		return 5;
 	}
@@ -72,16 +70,16 @@ public class Anwendung extends CnATreeElement
 	 */
 	public Anwendung(CnATreeElement parent) {
 		super(parent);
-		if (entityType == null)
-			entityType = getTypeFactory().getEntityType(TYPE_ID);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(entityType.getPropertyType(PROP_NAME),
+		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME),
 				"Neue Anwendung");
 	}
 
 	private Anwendung() {
 
 	}
+	
+	
 
 	@Override
 	public String getTitel() {
@@ -90,19 +88,21 @@ public class Anwendung extends CnATreeElement
 	}
 	
 	public void setTitel(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_NAME), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 
+	
+
 	public void setErlaeuterung(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_ERLAEUTERUNG), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ERLAEUTERUNG), name);
 	}
 	
 	public void setKuerzel(String name) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_KUERZEL), name);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_KUERZEL), name);
 	}
 	
 	public void setPersonenbezogen(boolean perso) {
-		PropertyType type = entityType.getPropertyType(PROP_PERSBEZ);
+		PropertyType type = getEntityType().getPropertyType(PROP_PERSBEZ);
 		getEntity().setSimpleValue(type, perso ? PROP_PERSBEZ_JA : PROP_PERSBEZ_NEIN);
 	}
 	
@@ -139,19 +139,19 @@ public class Anwendung extends CnATreeElement
 	}
 
 	public void setVerarbeiteteInformationen(String value) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_VERARBEITETE_INFORMATIONEN), value);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_VERARBEITETE_INFORMATIONEN), value);
 	}
 
 	public void setProzessBeschreibung(String value) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_PROZESSBESCHREIBUNG), value);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_PROZESSBESCHREIBUNG), value);
 	}
 
 	public void setProzessWichtigkeitBegruendung(String value) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_DRINGLICHKEIT_BEGRUENDUNG), value);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DRINGLICHKEIT_BEGRUENDUNG), value);
 	}
 
 	public void setProzessWichtigkeit(String value) {
-		getEntity().setSimpleValue(entityType.getPropertyType(PROP_PROZESSBEZUG), value);
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_PROZESSBEZUG), value);
 	}
 
 }

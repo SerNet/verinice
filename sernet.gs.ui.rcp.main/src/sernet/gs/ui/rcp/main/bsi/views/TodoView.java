@@ -225,7 +225,7 @@ public class TodoView extends ViewPart {
 	protected void setInput() throws CommandException {
 		if (CnAElementHome.getInstance().isOpen()) {
 			FindMassnahmenForListView command = new FindMassnahmenForListView();
-			ServiceFactory.lookupCommandService().executeCommand(command);
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			final List<MassnahmenUmsetzung> allMassnahmen = command.getAll();
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {

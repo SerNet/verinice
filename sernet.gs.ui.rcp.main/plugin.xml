@@ -408,10 +408,17 @@
             id="sernet.gs.ui.rcp.main.page4"
             name="Allgemeine Einstellungen"/>
       <page
+            category="sernet.gs.ui.rcp.main.page6"
             class="sernet.gs.ui.rcp.main.preferences.KatalogePreferencePage"
             id="sernet.gs.ui.rcp.main.preferences.CnAPreferencePage1"
             name="BSI IT-Grundschutz"/>
       <page
+            class="sernet.gs.ui.rcp.main.preferences.ClientServerPreferencePage"
+            id="sernet.gs.ui.rcp.main.page6"
+            name="Datenbanken / Server">
+      </page>
+      <page
+            category="sernet.gs.ui.rcp.main.page6"
             class="sernet.gs.ui.rcp.main.preferences.DatenbankPreferencePage"
             id="sernet.gs.ui.rcp.main.page2"
             name="Datenbank"/>

@@ -17,6 +17,12 @@ import sernet.snutils.DBException;
  * Returns HitroUI type factory using configuration available in RCP client's
  * workspace or server.
  * 
+ * The user editable HitroUI (or "HUI") configuration determines the fields ("properties") of all business objects
+ * available in the application.
+ * 
+ * It is important that all clients work with the same HUI representation, otherwise some fields may be missing
+ * on one client.
+ * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
@@ -68,7 +74,7 @@ public class HitroUtil {
 
 		if (WhereAmIUtil.runningOnClient())
 			if (ServiceFactory.isUsingRemoteService())
-				initHitroUIFromServer(); // init from HTTP url
+				initHitroUIFromServer(); // init from server using HTTP uri
 			else
 				initHitroUIFromWorkspace(); // init from workspace folder:
 											// workspace/conf/SNCA.xml

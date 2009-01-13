@@ -5,16 +5,16 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 
 public class CountMassnahmen extends GenericCommand {
 
 	private int totalCount;
 
 	public void execute() {
-		LoadElementByType<MassnahmenUmsetzung> command = new LoadElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
+		LoadCnAElementByType<MassnahmenUmsetzung> command = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
 		try {
-			getCommandService().executeCommand(command);
+			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
 		}

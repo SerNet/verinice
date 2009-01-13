@@ -51,7 +51,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, IEntityChange
 			ProtectionLevelChanged command = 
 				new ProtectionLevelChanged(SchutzbedarfAdapter.this, evt.getProperty(), evt.getSource()!=null);
 			try {
-				ServiceFactory.lookupCommandService().executeCommand(command);
+				command = ServiceFactory.lookupCommandService().executeCommand(command);
 			} catch (CommandException e) {
 				ExceptionUtil.log(e, "Konnte Schutzbedarf nicht vererben"); //$NON-NLS-1$
 			}

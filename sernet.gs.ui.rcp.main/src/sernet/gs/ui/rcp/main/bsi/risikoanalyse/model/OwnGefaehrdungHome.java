@@ -13,7 +13,8 @@ import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 
@@ -34,17 +35,18 @@ public class OwnGefaehrdungHome {
 	
 	public void save(OwnGefaehrdung gef) throws Exception {
 		SaveElement<OwnGefaehrdung> command = new SaveElement<OwnGefaehrdung>(gef);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 	}
 	
 	public void remove(OwnGefaehrdung gef) throws Exception {
 		RemoveElement<OwnGefaehrdung> command = new RemoveElement<OwnGefaehrdung>(gef);
-		commandService.executeCommand(command);
+		command = commandService.executeCommand(command);
 	}
 	
 	public List<OwnGefaehrdung> loadAll() throws Exception {
-		LoadElementByType<OwnGefaehrdung> command = new LoadElementByType<OwnGefaehrdung>(OwnGefaehrdung.class);
-		commandService.executeCommand(command);
+		LoadGenericElementByType<OwnGefaehrdung> command
+			= new LoadGenericElementByType<OwnGefaehrdung>(OwnGefaehrdung.class);
+		command = commandService.executeCommand(command);
 		return command.getElements();
 	}
 	
