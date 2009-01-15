@@ -3,7 +3,7 @@
 <beans>
    
 
-    <bean id="commandServiceHttpInvoker"
+    <bean id="commandService"
           class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
             <value>

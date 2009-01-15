@@ -29,7 +29,8 @@
     		Output HuiConfig from classpath.
     	</description>
     	<display-name>
-    	GetHitroConfig</display-name>
+    	GetHitroConfig
+    	</display-name>
     	<servlet-name>GetHitroConfig</servlet-name>
     	<servlet-class>
     	sernet.gs.server.GetHitroConfig</servlet-class>
