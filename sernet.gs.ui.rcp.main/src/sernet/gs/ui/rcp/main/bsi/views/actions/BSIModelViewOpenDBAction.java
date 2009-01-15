@@ -31,6 +31,7 @@ import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
+import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**
@@ -56,12 +57,12 @@ public class BSIModelViewOpenDBAction extends Action {
 	@Override
 	public void run() {
 		showDerbyWarning();
-		CnAElementFactory.getInstance().closeModel();
+		//CnAElementFactory.getInstance().closeModel();
 		try {
 			CnAWorkspace.getInstance().createDatabaseConfig();
 		} catch (Exception e) {
 			ExceptionUtil.log(e,
-					"Fehler beim AKtualisieren der DB-Konfiguration.");
+					"Fehler beim Aktualisieren der DB-Konfiguration.");
 		}
 		createModel();
 	}
@@ -97,25 +98,7 @@ public class BSIModelViewOpenDBAction extends Action {
 					monitor.beginTask("Starte OR-Mapper...", IProgressMonitor.UNKNOWN);
 					monitor.setTaskName("Starte OR-Mapper...");
 					BSIModel model = CnAElementFactory.getInstance()
-							.loadOrCreateModel(new IProgress() {
-
-								public void beginTask(String name, int totalWork) {
-									monitor.beginTask(name, totalWork);
-								}
-
-								public void done() {
-									monitor.done();
-								}
-
-								public void worked(int work) {
-									monitor.worked(work);
-								}
-
-								public void setTaskName(String string) {
-									monitor.setTaskName(string);
-								}
-								
-							});
+							.loadOrCreateModel(new ProgressAdapter(monitor));
 					bsiView.setModel(model);
 				} catch (RuntimeException re) {
 					ExceptionUtil

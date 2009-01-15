@@ -17,6 +17,9 @@ import sernet.gs.model.Baustein;
 import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
+import sernet.gs.ui.rcp.main.common.model.IProgress;
+import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 public class BSIKatalogInvisibleRoot {
@@ -124,8 +127,10 @@ public class BSIKatalogInvisibleRoot {
 	}
 
 	public void loadModel(IProgressMonitor monitor) throws GSServiceException, IOException {
+		GSScraperUtil.getInstance().init();
 		setBausteine(
-				BSIMassnahmenModel.loadBausteine(monitor));
+				BSIMassnahmenModel.loadBausteine(new ProgressAdapter(monitor))
+				);
 	}
 
 	public Baustein getBaustein(String id) {

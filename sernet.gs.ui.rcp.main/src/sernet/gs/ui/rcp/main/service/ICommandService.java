@@ -32,5 +32,4 @@ import sernet.hui.common.connect.Property;
  */
 public interface ICommandService {
 	public  <T extends ICommand> T executeCommand(T command) throws CommandException;
-	
 }

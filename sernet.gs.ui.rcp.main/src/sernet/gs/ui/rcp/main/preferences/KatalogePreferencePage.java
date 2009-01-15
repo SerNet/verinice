@@ -137,4 +137,23 @@ public class KatalogePreferencePage
 	public void init(IWorkbench workbench) {
 	}
 	
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		// only editable when server is not used, client has direct access to GS catalogues
+		// otherwise server is used to access gs catalogue data to aasure that all clients are
+		// working on the same data
+		if (visible) {
+			String opmode = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE);
+			setEnabledFields(opmode.equals(PreferenceConstants.OPERATION_MODE_STANDALONE));
+		}
+	}
+	
+	private void setEnabledFields(boolean enable) {
+		bsiUrl.setEnabled(enable, getFieldEditorParent());
+		datenschutzZipPath.setEnabled(enable, getFieldEditorParent());
+		gsAccessMethod.setEnabled(enable, getFieldEditorParent());
+		zipfilePath.setEnabled(enable, getFieldEditorParent());
+	}
+	
 }

@@ -74,7 +74,7 @@ public class PreferenceConstants {
 	public static final String OPERATION_MODE_WITHSERVER = "gs_cna_operationmode_withserver";
 	
 	public static final String VNSERVER_URI = "gs_cna_vnserver_uri";
-	public static final String VNSERVER_URI_DEFAULT = "http://veriniceserver.private:2010/veriniceserver/";
+	public static final String VNSERVER_URI_DEFAULT = "http://veriniceserver.private:2010/veriniceserver";
 	
 	
 	

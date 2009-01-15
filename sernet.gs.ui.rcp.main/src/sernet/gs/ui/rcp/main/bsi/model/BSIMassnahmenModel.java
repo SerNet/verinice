@@ -1,21 +1,17 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import org.apache.derby.impl.drda.DssTrace;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
@@ -28,8 +24,15 @@ import sernet.gs.scraper.URLGSSource;
 import sernet.gs.scraper.ZIPGSSource;
 import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.service.grundschutzparser.GetBausteinText;
+import sernet.gs.ui.rcp.main.service.grundschutzparser.GetGefaehrdungText;
+import sernet.gs.ui.rcp.main.service.grundschutzparser.GetMassnahmeText;
+import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 
 public class BSIMassnahmenModel {
 
@@ -50,27 +53,23 @@ public class BSIMassnahmenModel {
 	private static GSScraper dsScrape;
 
 	private static String previouslyReadFileDS = ""; //$NON-NLS-1$
+	
+	private static IBSIConfig config;
 
-	public static synchronized List<Baustein> loadBausteine(IProgressMonitor mon)
+	public static synchronized List<Baustein> loadBausteine(IProgress mon)
 			throws GSServiceException, IOException {
 		Logger.getLogger(BSIMassnahmenModel.class).debug(
 				"Laden und Zwischenspeichern der GS-Kataloge...");
-
-		IGSSource gsSource = null;
-		String gsPath = null;
-		Preferences preferences = Activator.getDefault().getPluginPreferences();
-		boolean fromZipFile = preferences.getString(
-				PreferenceConstants.GSACCESS).equals(
-				PreferenceConstants.GSACCESS_ZIP);
-
-		if (fromZipFile) {
-			gsPath = preferences.getString(PreferenceConstants.BSIZIPFILE);
-		} else {
-			gsPath = preferences.getString(PreferenceConstants.BSIDIR);
-			gsPath = (new File(gsPath)).toURI().toURL().toString();
-		}
 		
-		String dsPath = preferences.getString(PreferenceConstants.DSZIPFILE);
+		if (config instanceof BSIConfigurationRemoteSource) {
+			return loadBausteineRemote();
+		}
+
+		String gsPath = config.getGsPath();
+		String dsPath = config.getDsPath();
+		boolean fromZipFile = config.isFromZipFile();
+		IGSSource gsSource = null;
+		String cacheDir = config.getCacheDir();
 
 		// did user really change the path to file?
 		if (! (previouslyReadFile.equals(gsPath) && previouslyReadFileDS.equals(dsPath))
@@ -90,7 +89,7 @@ public class BSIMassnahmenModel {
 			}
 
 			scrape = new GSScraper(gsSource, new PatternGSHB2005_2006());
-			scrape.setCacheDir(CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache"); //$NON-NLS-1$
+			scrape.setCacheDir(cacheDir); //$NON-NLS-1$
 			
 			Logger.getLogger(BSIMassnahmenModel.class).debug("Setting GS-Cache to " + scrape.getCacheDir()); //$NON-NLS-1$
 			mon.beginTask("Laden und Zwischenspeichern der GS-Kataloge...", 5);
@@ -121,7 +120,7 @@ public class BSIMassnahmenModel {
 				try {
 					ZIPGSSource dsSource = new ZIPGSSource(dsPath);
 					dsScrape = new GSScraper(dsSource, new PatternBfDI2008());
-					dsScrape.setCacheDir(CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache"); //$NON-NLS-1$
+					dsScrape.setCacheDir(cacheDir); //$NON-NLS-1$
 					
 					Baustein dsBaustein = scrapeDatenschutzBaustein();
 					
@@ -147,6 +146,17 @@ public class BSIMassnahmenModel {
 		return cache;
 	}
 
+	private static List<Baustein> loadBausteineRemote() throws GSServiceException {
+		// use remote source
+		try {
+			LoadBausteine command = new LoadBausteine();
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
+			return command.getBausteine();
+		} catch (CommandException e) {
+			throw new GSServiceException(e.getCause());
+		}
+	}
+
 	private static Baustein scrapeDatenschutzBaustein() throws GSServiceException {
     	Baustein b = new Baustein();
     	b.setStand(DS_2008);
@@ -166,6 +176,11 @@ public class BSIMassnahmenModel {
 
 	public static InputStream getBaustein(String url, String stand) 
 		throws GSServiceException {
+		
+		if (config instanceof BSIConfigurationRemoteSource) {
+			return getBausteinFromServer(url, stand);
+		}	
+		
 		InputStream bausteinText = null;
 		try {
 			bausteinText = scrape.getBausteinText(url, stand);
@@ -176,8 +191,31 @@ public class BSIMassnahmenModel {
 		return bausteinText;
 	}
 
+	private static InputStream getBausteinFromServer(String url, String stand) throws GSServiceException {
+		GetBausteinText command = new GetBausteinText(url, stand);
+		try {
+			command = ServiceFactory.lookupCommandService().executeCommand(
+					command);
+			String bausteinText = command.getBausteinText();
+			return stringToStream(bausteinText);
+		} catch (CommandException e) {
+			throw new GSServiceException(e.getCause());
+		} catch (UnsupportedEncodingException e) {
+			throw new GSServiceException(e.getCause());
+		}
+	}
+
+	private static InputStream stringToStream(String text) throws UnsupportedEncodingException {
+		return new ByteArrayInputStream(text.getBytes("iso-8859-1"));
+	}
+
 	public static InputStream getMassnahme(String url, String stand)
 			throws GSServiceException {
+		
+		if (config instanceof BSIConfigurationRemoteSource) {
+			return getMassnahmeFromServer(url, stand);
+		}	
+		
 		InputStream massnahme = null;
 		try {
 			massnahme = scrape.getMassnahme(url, stand);
@@ -186,6 +224,20 @@ public class BSIMassnahmenModel {
 				massnahme = dsScrape.getMassnahme(url, stand);
 		}
 		return massnahme;
+	}
+
+	private static InputStream getMassnahmeFromServer(String url, String stand) throws GSServiceException {
+		try {
+			GetMassnahmeText command = new GetMassnahmeText(url, stand);
+			command = ServiceFactory.lookupCommandService().executeCommand(
+					command);
+			String text = command.getText();
+			return stringToStream(text);
+		} catch (CommandException e) {
+			throw new GSServiceException(e.getCause());
+		} catch (UnsupportedEncodingException e) {
+			throw new GSServiceException(e.getCause());
+		}
 	}
 
 	private static List<Baustein> scrapeBausteine(String schicht)
@@ -205,6 +257,11 @@ public class BSIMassnahmenModel {
 
 	public static InputStream getGefaehrdung(String url, String stand) 
 		throws GSServiceException {
+		
+		if (config instanceof BSIConfigurationRemoteSource) {
+			return getGefaehrdungFromServer(url, stand);
+		}	
+		
 		InputStream gefaehrdung = null;
 		try {
 			gefaehrdung = scrape.getGefaehrdung(url, stand);
@@ -215,11 +272,35 @@ public class BSIMassnahmenModel {
 		return gefaehrdung;
 	}
 
+	private static InputStream getGefaehrdungFromServer(String url, String stand) throws GSServiceException {
+		try {
+			GetGefaehrdungText command = new GetGefaehrdungText(url, stand);
+			command = ServiceFactory.lookupCommandService().executeCommand(
+					command);
+			String text = command.getText();
+			return stringToStream(text);
+		} catch (CommandException e) {
+			throw new GSServiceException(e.getCause());
+		} catch (UnsupportedEncodingException e) {
+			throw new GSServiceException(e.getCause());
+		}
+	}
+
 	public static void flushCache() {
 		if (scrape!= null)
 			scrape.flushCache();
 		if (dsScrape!= null)
 			dsScrape.flushCache();
 	}
+
+	public static IBSIConfig getConfig() {
+		return config;
+	}
+
+	public static void setConfig(IBSIConfig config) {
+		BSIMassnahmenModel.config = config;
+	}
+
+	
 
 }

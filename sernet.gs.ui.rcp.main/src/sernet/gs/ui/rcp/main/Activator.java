@@ -3,6 +3,7 @@ package sernet.gs.ui.rcp.main;
 import javax.security.auth.callback.ConfirmationCallback;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -64,8 +65,22 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		// running as client:
 		WhereAmIUtil.setLocation(WhereAmIUtil.LOCATION_CLIENT);
+		
+		// prepare client's workspace:
 		CnAWorkspace.getInstance().prepare();
+		
+		// set service factory location to local / remote according to preferences:
+		Preferences prefs = Activator.getDefault().getPluginPreferences();
+		boolean standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_STANDALONE);
+		if (standalone)
+			ServiceFactory.setService(ServiceFactory.LOCAL);
+		else
+			ServiceFactory.setService(ServiceFactory.REMOTE);
+		
+		ServiceFactory.openCommandService();
 		
 		// TODO add feature: link description between objects
 		// TODO add save / load to file

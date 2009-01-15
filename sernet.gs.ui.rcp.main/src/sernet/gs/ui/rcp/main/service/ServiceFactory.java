@@ -31,11 +31,10 @@ public abstract class ServiceFactory {
 	}
 	
 	public static void openCommandService() {
-		switch (locality) {
-		case LOCAL:
+		if (locality == LOCAL)
 			 openLocalCommandService();
-		}
-		openRemoteCommandService();
+		else
+			openRemoteCommandService();
 	}
 	
 	public static void closeCommandService() {

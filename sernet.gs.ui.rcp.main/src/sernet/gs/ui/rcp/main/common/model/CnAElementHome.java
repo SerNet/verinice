@@ -101,14 +101,7 @@ public class CnAElementHome {
 
 	public void open(String confDir, IProgress monitor) throws Exception {
 		monitor.beginTask("Initialisiere Service-Layer...", IProgress.UNKNOWN_WORK);
-		
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		boolean standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_STANDALONE);
-		if (standalone)
-			ServiceFactory.setService(ServiceFactory.LOCAL);
-		else
-			ServiceFactory.setService(ServiceFactory.REMOTE);
-		ServiceFactory.openCommandService();
+		HitroUtil.getInstance().init();
 		commandService = ServiceFactory.lookupCommandService();
 	}
 

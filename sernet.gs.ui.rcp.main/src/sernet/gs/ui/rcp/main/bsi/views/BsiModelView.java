@@ -317,7 +317,6 @@ public class BsiModelView extends ViewPart {
 
 	@Override
 	public void dispose() {
-		CnAElementFactory.getInstance().closeModel();
 		super.dispose();
 	}
 

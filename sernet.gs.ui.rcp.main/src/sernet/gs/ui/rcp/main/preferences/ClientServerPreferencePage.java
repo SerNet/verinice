@@ -29,9 +29,9 @@ public class ClientServerPreferencePage
 	public ClientServerPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Umstellen zwischen Betrieb als Arbeitsplatzrechner (Standalone) mit direkter" +
-				"Verbindung zu einer Datenbank oder Mehrbenutzerbetrieb unter Verwendung des Verinice-Servers." +
-				"HINWEIS: Die Umstellung auf Serverbetrieb erfordert einen Neustart des Clients!");
+		setDescription("Umstellen zwischen Betrieb als Arbeitsplatzrechner (Standalone) mit direkter " +
+				"Verbindung zu einer Datenbank oder Mehrbenutzerbetrieb unter Verwendung des Verinice-Servers. " +
+				"Die Umstellung auf Mehrbenutzerbetrieb erfordert einen Neustart des Clients.");
 	}
 	
 	/**
@@ -53,8 +53,10 @@ public class ClientServerPreferencePage
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible) {
-			boolean standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_STANDALONE);
-			serverURI.setEnabled(standalone, getFieldEditorParent());
+			boolean standalone 
+				= getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE)
+				.equals(PreferenceConstants.OPERATION_MODE_STANDALONE);
+			serverURI.setEnabled(!standalone, getFieldEditorParent());
 		}
 	}
 	
@@ -63,11 +65,10 @@ public class ClientServerPreferencePage
 		super.propertyChange(event);
 		if (event.getProperty().equals(FieldEditor.VALUE)) {
 			if (event.getSource() == operationMode) {
-				change on property change
-				boolean standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_STANDALONE);
-				serverURI.setEnabled(standalone, getFieldEditorParent());
+				Object newValue = event.getNewValue();
+				boolean servermode = newValue.equals(PreferenceConstants.OPERATION_MODE_WITHSERVER);
+				serverURI.setEnabled(servermode, getFieldEditorParent());
 			}
-			checkState();
 		}
 	}
 	
@@ -76,9 +77,9 @@ public class ClientServerPreferencePage
 				"Betriebsmodus",
 				1,
 				new String[][] {
-				{"Standalone", PreferenceConstants.OPERATION_MODE_STANDALONE},
-				{"Mehrbenutzer", PreferenceConstants.OPERATION_MODE_WITHSERVER}
-		}, getFieldEditorParent());
+					{"Standalone", PreferenceConstants.OPERATION_MODE_STANDALONE},
+					{"Mehrbenutzer", PreferenceConstants.OPERATION_MODE_WITHSERVER}
+				}, getFieldEditorParent());
 		addField(operationMode);
 	}
 

@@ -26,6 +26,7 @@ import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.CnAPlaceholder;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 
@@ -68,7 +69,7 @@ public class CnAImageProvider {
 		if (elmt instanceof Raum || elmt instanceof RaeumeKategorie)
 			return ImageCache.getInstance().getImage(ImageCache.RAUM);
 
-		if (elmt instanceof ITVerbund)
+		if (elmt instanceof ITVerbund || elmt instanceof CnAPlaceholder)
 			return ImageCache.getInstance().getImage(ImageCache.EXPLORER);
 		
 		if (elmt instanceof IDatenschutzElement)

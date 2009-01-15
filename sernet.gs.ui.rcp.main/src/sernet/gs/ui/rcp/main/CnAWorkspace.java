@@ -175,6 +175,7 @@ public class CnAWorkspace {
 				"applicationContextHibernate.xml",
 				settings);
 		
+		// create context for remote service:
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		settings = new HashMap<String, String>(1);
 		settings.put("veriniceserver", prefs.getString(PreferenceConstants.VNSERVER_URI));

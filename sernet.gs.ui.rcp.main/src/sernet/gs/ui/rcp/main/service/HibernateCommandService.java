@@ -31,7 +31,7 @@ public class HibernateCommandService implements ICommandService {
 
 	// injected by spring
 	private DAOFactory daoFactory;
-
+	
 	private boolean dbOpen = false;
 
 	/**
@@ -73,4 +73,6 @@ public class HibernateCommandService implements ICommandService {
 		dbOpen = true;
 		this.daoFactory = daoFactory;
 	}
+
+	
 }

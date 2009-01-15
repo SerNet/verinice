@@ -7,4 +7,5 @@ public interface IProgress {
 		public void worked(int work);
 		public void done();
 		public void setTaskName(String string);
+		public void subTask(String string);
 }
