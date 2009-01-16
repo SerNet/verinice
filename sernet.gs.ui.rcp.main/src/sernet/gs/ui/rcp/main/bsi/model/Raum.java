@@ -50,7 +50,7 @@ public class Raum extends CnATreeElement
 		return 2;
 	}
 	
-	private Raum() {
+	 Raum() {
 		
 	}
 	

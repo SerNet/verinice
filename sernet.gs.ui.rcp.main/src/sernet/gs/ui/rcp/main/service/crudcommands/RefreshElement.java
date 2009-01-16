@@ -22,9 +22,8 @@ public class RefreshElement<T extends CnATreeElement> extends GenericCommand {
 	public void execute() {
 		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
 		Integer id = getId(element);
-//		dao.reload(element, id);
-		dao.refresh(element);
-		HydratorUtil.hydrateElement(dao, element, true);
+		element = dao.findById(id);
+		HydratorUtil.hydrateElement(dao, element, false);
 	}
 
 	private Integer getId(T element2) {

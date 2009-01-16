@@ -43,7 +43,7 @@ public class NetzKomponente extends CnATreeElement
 	
 	
 	
-	private NetzKomponente() {
+	 NetzKomponente() {
 		
 	}
 	

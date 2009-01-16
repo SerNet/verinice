@@ -59,7 +59,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 		this.parent = myParent;
 	}
 	
-	private RisikoMassnahmenUmsetzung() {
+	 RisikoMassnahmenUmsetzung() {
 		// hibernate constructor
 	}
 

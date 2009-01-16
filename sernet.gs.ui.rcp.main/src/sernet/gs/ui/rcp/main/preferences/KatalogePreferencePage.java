@@ -156,4 +156,10 @@ public class KatalogePreferencePage
 		zipfilePath.setEnabled(enable, getFieldEditorParent());
 	}
 	
+	@Override
+	public boolean isValid() {
+		// always allow user to navigate away from page:
+		return true;
+	}
+	
 }

@@ -2,6 +2,9 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
@@ -34,6 +37,8 @@ import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
 import sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB;
 import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
 import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 
 /**
  * This class maps editors for different ressources and either
@@ -62,7 +67,12 @@ public class EditorFactory {
 
 			public void openEditorFor(Object o) throws Exception {
 				IEditorPart editor;
-				BSIElementEditorInput input = new BSIElementEditorInput((CnATreeElement) o);
+				
+				// replace element with new instance from DB:
+				CnATreeElement cnaElement = (CnATreeElement) o;
+				CnATreeElement newElement 
+					= CnAElementHome.getInstance().loadById(cnaElement.getClass(), cnaElement.getDbId());
+				BSIElementEditorInput input = new BSIElementEditorInput(newElement);
 				
 				
 				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {

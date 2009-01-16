@@ -15,7 +15,7 @@ public class Verarbeitungsangaben extends CnATreeElement
 		setEntity(new Entity(TYPE_ID));
 	}
 	
-	private Verarbeitungsangaben() {
+	 Verarbeitungsangaben() {
 	}
 	
 	@Override

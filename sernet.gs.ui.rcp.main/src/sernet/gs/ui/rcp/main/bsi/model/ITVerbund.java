@@ -37,7 +37,7 @@ public class ITVerbund extends CnATreeElement
 		return new HashSet<String>(0);
 	}
 	
-	private ITVerbund() {
+	 ITVerbund() {
 		// hibernate
 	}
 	

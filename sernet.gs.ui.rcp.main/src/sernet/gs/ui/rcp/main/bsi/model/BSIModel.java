@@ -31,7 +31,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
 	private Double dbVersion = 0D;
 
-	private List<IBSIModelListener> listeners = new ArrayList<IBSIModelListener>();
+	private transient List<IBSIModelListener> listeners;
 
 	public BSIModel() {
 		super(null);
@@ -58,36 +58,42 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
 	@Override
 	public void childAdded(CnATreeElement category, CnATreeElement child) {
-		for (IBSIModelListener listener : listeners) {
+		for (IBSIModelListener listener : getListeners()) {
 			listener.childAdded(category, child);
 			if (child instanceof ITVerbund)
 				listener.modelRefresh();
 		}
 	}
 
+	private synchronized List<IBSIModelListener> getListeners() {
+		if (listeners == null)
+			listeners = new ArrayList<IBSIModelListener>();
+		return listeners;
+	}
+
 	@Override
 	public void childRemoved(CnATreeElement category, CnATreeElement child) {
-		for (IBSIModelListener listener : listeners) {
+		for (IBSIModelListener listener : getListeners()) {
 			listener.childRemoved(category, child);
 		}
 	}
 
 	@Override
 	public void childChanged(CnATreeElement category, CnATreeElement child) {
-		for (IBSIModelListener listener : listeners) {
+		for (IBSIModelListener listener : getListeners()) {
 			listener.childChanged(category, child);
 		}
 	}
 
 	@Override
 	public void linkChanged(CnALink link) {
-		for (IBSIModelListener listener : listeners) {
+		for (IBSIModelListener listener : getListeners()) {
 			listener.linkChanged(link);
 		}
 	}
 
 	public void refreshAllListeners() {
-		for (IBSIModelListener listener : listeners) {
+		for (IBSIModelListener listener : getListeners()) {
 			listener.modelRefresh();
 		}
 	}
@@ -98,13 +104,13 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 	}
 
 	public void addBSIModelListener(IBSIModelListener listener) {
-		if (!listeners.contains(listener))
-			listeners.add(listener);
+		if (!getListeners().contains(listener))
+			getListeners().add(listener);
 	}
 
 	public void removeBSIModelListener(IBSIModelListener listener) {
-		if (listeners.contains(listener))
-			listeners.remove(listener);
+		if (getListeners().contains(listener))
+			getListeners().remove(listener);
 	}
 
 	@SuppressWarnings("unchecked")//$NON-NLS-1$

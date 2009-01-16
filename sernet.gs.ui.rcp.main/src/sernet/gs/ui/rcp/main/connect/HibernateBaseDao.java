@@ -7,6 +7,8 @@ import org.hibernate.Hibernate;
 import org.hibernate.collection.PersistentCollection;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+
 public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSupport 
 	implements IBaseDao<T, ID> {
 		 private Class<T> type;
@@ -29,7 +31,7 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		 }
 
 		 public T findById(ID id) {
-		     return (T)getHibernateTemplate().load(type.getClass(), id);
+			 return (T) getHibernateTemplate().load(type, id);
 		 }
 
 		public List findByQuery(String hqlQuery, Object[] values) {

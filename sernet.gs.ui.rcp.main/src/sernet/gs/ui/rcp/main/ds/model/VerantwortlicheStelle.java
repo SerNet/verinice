@@ -19,7 +19,7 @@ public class VerantwortlicheStelle extends CnATreeElement
 		setEntity(new Entity(TYPE_ID));
 	}
 	
-	private VerantwortlicheStelle() {
+	 VerantwortlicheStelle() {
 	}
 	
 	@Override

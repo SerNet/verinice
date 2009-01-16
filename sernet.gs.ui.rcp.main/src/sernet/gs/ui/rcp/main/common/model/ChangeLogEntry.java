@@ -39,7 +39,7 @@ public class ChangeLogEntry {
 	}
 
 
-	private ChangeLogEntry() {
+	 ChangeLogEntry() {
 		// default constructor for hibernate
 	}
 

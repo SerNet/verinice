@@ -85,6 +85,9 @@ public class BSIElementEditor extends EditorPart {
 			CnAElementHome.getInstance().update(element);
 			isModelModified = false;
 			firePropertyChange(IEditorPart.PROP_DIRTY);
+			
+			// notify all views of change:
+			CnAElementFactory.getLoadedModel().childChanged(element.getParent(), element);
 		} catch (StaleObjectStateException se) {
 			// close editor, loosing changes:
 			ExceptionUtil.log(se, "Fehler beim Speichern.");
@@ -120,11 +123,10 @@ public class BSIElementEditor extends EditorPart {
 	private void initContent() {
 		try {
 			CnATreeElement cnAElement = ((BSIElementEditorInput)getEditorInput()).getCnAElement();
-			CnAElementHome.getInstance().refresh(cnAElement);
-			
 			Entity entity = cnAElement.getEntity();
 			EntityType entityType = HUITypeFactory.getInstance()
 				.getEntityType(entity.getEntityType());
+			// add listener to mark editor as dirty on changes:
 			entity.addChangeListener(this.modelListener);
 			huiComposite.createView(entity, true, true);
 			InputHelperFactory.setInputHelpers(entityType, huiComposite);
@@ -172,17 +174,6 @@ public class BSIElementEditor extends EditorPart {
 	@Override
 	public void dispose() {
 		BSIElementEditorInput input = ((BSIElementEditorInput)getEditorInput());
-		if (isModelModified) {
-			// if still modified (not saved) revert changes:
-			try {
-				CnATreeElement element = input.getCnAElement();
-				CnAElementHome.getInstance().refresh(element);
-				element.getParent().childChanged(element.getParent(), element);
-			} catch (Exception e) {
-				Logger.getLogger(this.getClass())
-					.debug("Kann Element nicht aus DB wiederherstellen.", e);
-			}
-		}
 		CnAElementFactory.getLoadedModel().refreshAllListeners();
 		huiComposite.closeView();
 		input.getEntity().removeListener(modelListener);

@@ -52,7 +52,7 @@ implements IBSIStrukturElement {
 		return 2;
 	}
 	
-	private Gebaeude() {
+	 Gebaeude() {
 		
 	}
 	

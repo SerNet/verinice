@@ -53,7 +53,7 @@ public class SonstIT extends CnATreeElement
 		return 3;
 	}
 	
-	private SonstIT() {
+	 SonstIT() {
 		
 	}
 	

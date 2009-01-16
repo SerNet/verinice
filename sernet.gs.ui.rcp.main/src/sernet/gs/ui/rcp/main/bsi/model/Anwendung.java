@@ -75,7 +75,7 @@ public class Anwendung extends CnATreeElement
 				"Neue Anwendung");
 	}
 
-	private Anwendung() {
+	Anwendung() {
 
 	}
 	

@@ -101,6 +101,7 @@ public class CnAElementHome {
 
 	public void open(String confDir, IProgress monitor) throws Exception {
 		monitor.beginTask("Initialisiere Service-Layer...", IProgress.UNKNOWN_WORK);
+		ServiceFactory.openCommandService();
 		HitroUtil.getInstance().init();
 		commandService = ServiceFactory.lookupCommandService();
 	}
@@ -207,6 +208,8 @@ public class CnAElementHome {
 		// FIXME server: refresh changes
 		RefreshElement command = new RefreshElement(cnAElement);
 		command = commandService.executeCommand(command);
+		CnATreeElement refreshedElement = command.getElement();
+		cnAElement.setEntity(refreshedElement.getEntity());
 	}
 
 	public List<ChangeLogEntry> loadChangesSince(Date lastUpdate) {

@@ -51,7 +51,7 @@ private final ILinkChangeListener linkChangeListener
 		return 3;
 	}
 	
-	private Client() {
+	 Client() {
 		
 	}
 	

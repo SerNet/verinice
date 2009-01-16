@@ -53,7 +53,7 @@ public class Server extends CnATreeElement
 		return 3;
 	}
 	
-	private Server() {
+	 Server() {
 		
 	}
 	

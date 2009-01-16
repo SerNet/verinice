@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -30,16 +31,21 @@ public class LoadBSIModelComplete extends GenericCommand {
 		hydrate(model);
 	}
 
-	private void hydrate(BSIModel model2) {
-		if (model2 == null)
+	private void hydrate(CnATreeElement element) {
+		if (element == null)
 			return;
-		List<CnATreeElement> flatList = model2.getAllElementsFlatList(includingMassnahmen);
-		if (flatList != null) {
-			HydratorUtil.hydrateElement(getDaoFactory().getDAO(BSIModel.class), model2, true);
-		}
 		
-		for (CnATreeElement cnATreeElement : flatList) {
-			HydratorUtil.hydrateElement(getDaoFactory().getDAO(BSIModel.class), cnATreeElement, true);
+		HydratorUtil.hydrateElement(getDaoFactory().getDAOForObject(element), 
+				element, true);
+		
+		Set<CnATreeElement> children = element.getChildren();
+		for (CnATreeElement child : children) {
+			if ((!includingMassnahmen) && child instanceof BausteinUmsetzung) {
+				// next element:
+				continue;
+			}
+			
+			hydrate(child);
 		}
 	}
 

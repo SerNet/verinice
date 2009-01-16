@@ -58,13 +58,14 @@ public class BSIMassnahmenModel {
 
 	public static synchronized List<Baustein> loadBausteine(IProgress mon)
 			throws GSServiceException, IOException {
-		Logger.getLogger(BSIMassnahmenModel.class).debug(
-				"Laden und Zwischenspeichern der GS-Kataloge...");
 		
 		if (config instanceof BSIConfigurationRemoteSource) {
+			Logger.getLogger(BSIMassnahmenModel.class).debug("Lade Kataloge von Verinice-Server...");
 			return loadBausteineRemote();
 		}
 
+		Logger.getLogger(BSIMassnahmenModel.class).debug(
+		"Parsen und Zwischenspeichern der GS-Kataloge...");
 		String gsPath = config.getGsPath();
 		String dsPath = config.getDsPath();
 		boolean fromZipFile = config.isFromZipFile();

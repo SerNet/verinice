@@ -87,130 +87,9 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
  * 
  */
 public class BsiModelView extends ViewPart {
-	/**
-	 * Content provider for BSI model elements.
-	 * 
-	 * @author koderman@sernet.de
-	 * 
-	 */
-	class ViewContentProvider implements ITreeContentProvider {
+	
 
-		public void dispose() {
-		}
-
-		public Object[] getChildren(Object parent) {
-			if (parent instanceof CnATreeElement) {
-				CnATreeElement el = (CnATreeElement) parent;
-				CnATreeElement[] children = el.getChildrenAsArray();
-				if (el.getLinksDown().size() > 0) {
-					// add linkkategorie object:
-					Object[] result = new Object[children.length + 1];
-					System.arraycopy(children, 0, result, 0, children.length);
-					result[children.length] = el.getLinks();
-					return result;
-				} else {
-					return children;
-				}
-			} else if (parent instanceof LinkKategorie) {
-				return ((LinkKategorie) parent).getChildren().toArray();
-			}
-			return null;
-		}
-
-		public Object[] getElements(Object parent) {
-			return getChildren(parent);
-		}
-
-		public Object getParent(Object child) {
-			if (child instanceof CnATreeElement) {
-				CnATreeElement el = (CnATreeElement) child;
-				return el.getParent();
-			} else if (child instanceof LinkKategorie) {
-				LinkKategorie kat = (LinkKategorie) child;
-				return kat.getParent();
-			} else if (child instanceof CnALink) {
-				CnALink link = (CnALink) child;
-				return link.getParent();
-			}
-			return null;
-		}
-
-		public boolean hasChildren(Object parent) {
-			// FIXME server: take care of lazyinitialization, esp after reload!
-			if (parent instanceof CnATreeElement) {
-				CnATreeElement el = (CnATreeElement) parent;
-				return el.getChildren().size() > 0
-						|| el.getLinksDown().size() > 0;
-			}
-			if (parent instanceof LinkKategorie) {
-				LinkKategorie kat = (LinkKategorie) parent;
-				return kat.getChildren().size() > 0;
-			}
-			return false;
-		}
-
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		}
-
-	}
-
-	/**
-	 * Label provider fpr BSI model elements.
-	 * 
-	 * @author koderman@sernet.de
-	 * 
-	 */
-	class ViewLabelProvider extends LabelProvider {
-
-		public Image getImage(Object obj) {
-			if (obj instanceof BausteinUmsetzung) {
-				BausteinUmsetzung bu = (BausteinUmsetzung) obj;
-				switch (bu.getErreichteSiegelStufe()) {
-				case 'A':
-					return ImageCache.getInstance().getImage(
-							ImageCache.BAUSTEIN_UMSETZUNG_A);
-				case 'B':
-					return ImageCache.getInstance().getImage(
-							ImageCache.BAUSTEIN_UMSETZUNG_B);
-				case 'C':
-					return ImageCache.getInstance().getImage(
-							ImageCache.BAUSTEIN_UMSETZUNG_C);
-				}
-				// else return default image
-				return ImageCache.getInstance().getImage(
-						ImageCache.BAUSTEIN_UMSETZUNG);
-			} else if (obj instanceof LinkKategorie) {
-				return ImageCache.getInstance().getImage(ImageCache.LINKS);
-			} else if (obj instanceof CnALink) {
-				CnALink link = (CnALink) obj;
-				return CnAImageProvider.getImage(link.getDependency());
-			}
-			CnATreeElement el = (CnATreeElement) obj;
-			return CnAImageProvider.getImage(el);
-		}
-
-		public String getText(Object obj) {
-			if (obj == null)
-				return "<null>";
-
-			if (obj instanceof IBSIStrukturElement) {
-				IBSIStrukturElement el = (IBSIStrukturElement) obj;
-				CnATreeElement el2 = (CnATreeElement) obj;
-				return el.getKuerzel() + " " + el2.getTitel();
-			}
-
-			else if (obj instanceof LinkKategorie)
-				return ((LinkKategorie) obj).getTitle();
-
-			else if (obj instanceof CnALink) {
-				CnALink link = (CnALink) obj;
-				return link.getTitle();
-			}
-
-			CnATreeElement el = (CnATreeElement) obj;
-			return el.getTitel();
-		}
-	}
+	
 
 	public static final String ID = "sernet.gs.ui.rcp.main.views.bsimodelview"; //$NON-NLS-1$
 
@@ -219,35 +98,6 @@ public class BsiModelView extends ViewPart {
 	private DrillDownAdapter drillDownAdapter;
 
 	private BSIModel model;
-
-	/**
-	 * Check for model changes and update our display.
-	 */
-	private class BSIModelViewUpdater implements IBSIModelListener {
-
-		private ThreadSafeViewerUpdate updater = new ThreadSafeViewerUpdate(
-				viewer);
-
-		public void childAdded(CnATreeElement category, CnATreeElement child) {
-			updater.add(category, child);
-		}
-
-		public void childChanged(CnATreeElement category, CnATreeElement child) {
-			updater.refresh(child);
-		}
-
-		public void childRemoved(CnATreeElement category, CnATreeElement child) {
-			updater.refresh();
-		}
-
-		public void modelRefresh() {
-			updater.refresh();
-		}
-
-		public void linkChanged(CnALink link) {
-			// do nothing
-		}
-	};
 
 	private TreeViewer viewer;
 
@@ -286,6 +136,8 @@ public class BsiModelView extends ViewPart {
 
 	private Action selectLinksAction;
 
+	private TreeViewerCache cache;
+
 	public void setNullModel() {
 		model = new NullModel();
 		Display.getDefault().asyncExec(new Runnable() {
@@ -300,6 +152,7 @@ public class BsiModelView extends ViewPart {
 	 * The constructor.
 	 */
 	public BsiModelView() {
+		this.cache = new TreeViewerCache();
 	}
 
 	private void addBSIFilter() {
@@ -323,8 +176,8 @@ public class BsiModelView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewer.setContentProvider(new ViewContentProvider());
-		viewer.setLabelProvider(new ViewLabelProvider());
+		viewer.setContentProvider(new BSIModelViewContentProvider(cache));
+		viewer.setLabelProvider(new BSIModelViewLabelProvider(cache));
 		viewer.setSorter(new CnAElementByTitelSorter());
 
 		getSite().setSelectionProvider(viewer);
@@ -560,7 +413,7 @@ public class BsiModelView extends ViewPart {
 
 	public void setModel(BSIModel model2) {
 		this.model = model2;
-		model.addBSIModelListener(new BSIModelViewUpdater());
+		model.addBSIModelListener(new BSIModelViewUpdater(viewer, cache));
 
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {

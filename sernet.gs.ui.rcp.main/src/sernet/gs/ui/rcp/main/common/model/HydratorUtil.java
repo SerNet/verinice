@@ -36,11 +36,12 @@ public class HydratorUtil {
 	
 	public static void hydrateElement(IBaseDao dao, CnATreeElement element, boolean includingCollections) {
 		hydrateEntity(dao, element.getEntity());
+		dao.initialize(element.getLinks());
+		dao.initialize(element.getLinksDown());
+		dao.initialize(element.getLinksUp());
+
 		if (includingCollections ) {
 			dao.initialize(element.getChildren());
-			dao.initialize(element.getLinks());
-			dao.initialize(element.getLinksDown());
-			dao.initialize(element.getLinksUp());
 		}
 	}
 	

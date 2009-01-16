@@ -53,7 +53,7 @@ public class TelefonKomponente extends CnATreeElement
 		return 3;
 	}
 	
-	private TelefonKomponente() {
+	 TelefonKomponente() {
 		
 	}
 	
