@@ -61,14 +61,20 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 	}
 	
 	public void addChangeListener(IEntityChangedListener changeListener) {
-		changeListeners.add(changeListener);
+		getChangelisteners().add(changeListener);
 	}
 	
+	private synchronized ArrayList<IEntityChangedListener> getChangelisteners() {
+		if (this.changeListeners == null)
+			changeListeners = new ArrayList<IEntityChangedListener>();
+		return changeListeners;
+	}
+
 	public void removeListener(IEntityChangedListener listener) {
-		changeListeners.remove(listener);
+		getChangelisteners().remove(listener);
 	}
 	
-	private Entity() {
+	Entity() {
 		uuid = UUID.randomUUID().toString();
 	}
 	
