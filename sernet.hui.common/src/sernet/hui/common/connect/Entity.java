@@ -39,8 +39,8 @@ public class Entity implements ISelectOptionHandler, Serializable  {
     private Map<String, PropertyList> typedPropertyLists 
     	= new HashMap<String, PropertyList>();
     
-    private transient ArrayList<IEntityChangedListener> changeListeners
-    	= new ArrayList<IEntityChangedListener>();
+    private transient ArrayList<IEntityChangedListener> changeListeners;
+    	
     
 	private String entityType;
 
@@ -322,7 +322,7 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 	 * @param opt
 	 */
 	private void fireDependencyChanged(IMLPropertyType type, IMLPropertyOption opt) {
-		for (IEntityChangedListener listener : changeListeners) {
+		for (IEntityChangedListener listener : getChangelisteners()) {
 			listener.dependencyChanged(type, opt);
 		}
 	}
@@ -332,13 +332,13 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 	 * @param opt
 	 */
 	private void fireSelectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
-		for (IEntityChangedListener listener : changeListeners) {
+		for (IEntityChangedListener listener : getChangelisteners()) {
 			listener.selectionChanged(type, opt);
 		}
 	}
 	
 	void firePropertyChanged(Property prop, Object source) {
-		for (IEntityChangedListener listener : changeListeners) {
+		for (IEntityChangedListener listener : getChangelisteners()) {
 			listener.propertyChanged(new PropertyChangedEvent(this, prop, source));
 		}
 	}
