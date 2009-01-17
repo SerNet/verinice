@@ -12,6 +12,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRiskAnalysisListsByParentID;
 
@@ -40,7 +41,7 @@ public class FinishedRiskAnalysisListsHome {
 	}
 	
 	public void remove(FinishedRiskAnalysisLists list) throws Exception {
-		RemoveElement<FinishedRiskAnalysisLists> command = new RemoveElement<FinishedRiskAnalysisLists>(list);
+		RemoveGenericElement<FinishedRiskAnalysisLists> command = new RemoveGenericElement<FinishedRiskAnalysisLists>(list);
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 	

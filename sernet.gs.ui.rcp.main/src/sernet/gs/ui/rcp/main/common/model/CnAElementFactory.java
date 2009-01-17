@@ -36,6 +36,9 @@ import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
 import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.crudcommands.CreateAnwendung;
+import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.CreateITVerbund;
 import sernet.gs.ui.rcp.main.service.migrationcommands.MigrateDbTo0_92;
 import sernet.hui.common.connect.Entity;
 
@@ -94,9 +97,9 @@ public class CnAElementFactory {
 		bsiElementbuilders.put(Gebaeude.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
-				Gebaeude child = new Gebaeude(container);
+				Gebaeude child = dbHome.save(container, Gebaeude.class);
 				container.addChild(child);
-				dbHome.save(child);
+				child.setParent(container);
 				return child;
 			}
 		});
@@ -104,9 +107,9 @@ public class CnAElementFactory {
 		bsiElementbuilders.put(Client.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
-				Client child = new Client(container);
+				Client child = dbHome.save(container, Client.class);
 				container.addChild(child);
-				dbHome.save(child);
+				child.setParent(container);
 				return child;
 			}
 		});
@@ -114,9 +117,9 @@ public class CnAElementFactory {
 		bsiElementbuilders.put(SonstIT.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
-				SonstIT child = new SonstIT(container);
-				container.addChild(child);
-				dbHome.save(child);
+				SonstIT child = dbHome.save(container, SonstIT.class);
+					container.addChild(child);
+					child.setParent(container);
 				return child;
 			}
 		});
@@ -124,9 +127,9 @@ public class CnAElementFactory {
 		bsiElementbuilders.put(Server.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
-				Server child = new Server(container);
-				container.addChild(child);
-				dbHome.save(child);
+				Server child = dbHome.save(container, Server.class);
+					container.addChild(child);
+					child.setParent(container);
 				return child;
 			}
 		});
@@ -134,9 +137,9 @@ public class CnAElementFactory {
 		bsiElementbuilders.put(TelefonKomponente.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
-				TelefonKomponente child = new TelefonKomponente(container);
-				container.addChild(child);
-				dbHome.save(child);
+				TelefonKomponente child = dbHome.save(container, TelefonKomponente.class);
+					container.addChild(child);
+					child.setParent(container);
 				return child;
 			}
 		});
@@ -144,9 +147,9 @@ public class CnAElementFactory {
 		bsiElementbuilders.put(Raum.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
-				Raum child = new Raum(container);
-				container.addChild(child);
-				dbHome.save(child);
+				Raum child = dbHome.save(container, Raum.class);
+					container.addChild(child);
+					child.setParent(container);
 				return child;
 			}
 		});
@@ -154,9 +157,9 @@ public class CnAElementFactory {
 		bsiElementbuilders.put(NetzKomponente.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
-				NetzKomponente child = new NetzKomponente(container);
-				container.addChild(child);
-				dbHome.save(child);
+				NetzKomponente child = dbHome.save(container, NetzKomponente.class);
+					container.addChild(child);
+					child.setParent(container);
 				return child;
 			}
 		});
@@ -164,9 +167,9 @@ public class CnAElementFactory {
 		bsiElementbuilders.put(Person.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
-				Person child = new Person(container);
-				container.addChild(child);
-				dbHome.save(child);
+				Person child = dbHome.save(container, Person.class);
+					container.addChild(child);
+					child.setParent(container);
 				return child;
 			}
 		});
@@ -174,71 +177,21 @@ public class CnAElementFactory {
 		bsiElementbuilders.put(Anwendung.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
-				Anwendung child = new Anwendung(container);
+
+				Logger.getLogger(this.getClass()).debug(
+						"Creating new Anwendung in " + container);
+				CreateAnwendung saveCommand = new CreateAnwendung(container, Anwendung.class);
+				saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
+				Anwendung child = saveCommand.getNewElement();
+				
 				container.addChild(child);
+				child.setParent(container);
 				
-				
-				// add datenschutz elements:
-				saveNew(child, Verarbeitungsangaben.TYPE_ID, null);
-				saveNew(child, VerantwortlicheStelle.TYPE_ID, null);
-				saveNew(child, Personengruppen.TYPE_ID, null);
-				saveNew(child, Datenverarbeitung.TYPE_ID, null);
-				saveNew(child, StellungnahmeDSB.TYPE_ID, null);
-				
-				child = dbHome.save(child);
 				return child;
 			}
 		});
 
-		bsiElementbuilders.put(StellungnahmeDSB.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
-				StellungnahmeDSB child = new StellungnahmeDSB(container);
-				container.addChild(child);
-				//dbHome.save(child);
-				return child;
-			}
-		});
 		
-		bsiElementbuilders.put(Datenverarbeitung.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
-				Datenverarbeitung child = new Datenverarbeitung(container);
-				container.addChild(child);
-				//dbHome.save(child);
-				return child;
-			}
-		});
-		
-		bsiElementbuilders.put(Personengruppen.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
-				Personengruppen child = new Personengruppen(container);
-				container.addChild(child);
-				//dbHome.save(child);
-				return child;
-			}
-		});
-		
-		bsiElementbuilders.put(Verarbeitungsangaben.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
-				Verarbeitungsangaben child = new Verarbeitungsangaben(container);
-				container.addChild(child);
-				//dbHome.save(child);
-				return child;
-			}
-		});
-		
-		bsiElementbuilders.put(VerantwortlicheStelle.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
-				VerantwortlicheStelle child = new VerantwortlicheStelle(container);
-				container.addChild(child);
-				//dbHome.save(child);
-				return child;
-			}
-		});
 
 		bsiElementbuilders.put(BausteinUmsetzung.TYPE_ID,
 				new IElementBuilder<BausteinUmsetzung, Baustein>() {
@@ -248,58 +201,26 @@ public class CnAElementFactory {
 						if (container.containsBausteinUmsetzung(input.getInput().getId()))
 							return null;
 						
-						BausteinUmsetzung bu = new BausteinUmsetzung(container);
-						bu.setKapitel(input.getInput().getId());
-						bu.setName(input.getInput().getTitel());
-						bu.setUrl(input.getInput().getUrl());
-						bu.setStand(input.getInput().getStand());
+						BausteinUmsetzung bu = dbHome.save(container, BausteinUmsetzung.class, input.getInput());
 						container.addChild(bu);
-
-						List<Massnahme> massnahmen = input.getInput()
-								.getMassnahmen();
-						for (Massnahme mn : massnahmen) {
-							saveNew(bu, MassnahmenUmsetzung.TYPE_ID,
-									new BuildInput<Massnahme>(mn));
-						}
-						dbHome.save(bu);
+						bu.setParent(container);
 						return bu;
 					}
 				});
 
-		bsiElementbuilders.put(MassnahmenUmsetzung.TYPE_ID,
-				new IElementBuilder<MassnahmenUmsetzung, Massnahme>() {
-					public MassnahmenUmsetzung build(CnATreeElement container,
-							BuildInput<Massnahme> input) throws Exception {
-						
-						MassnahmenUmsetzung mu = new MassnahmenUmsetzung(container);
-						mu.setKapitel(input.getInput().getId());
-						mu.setUrl(input.getInput().getUrl());
-						mu.setName(input.getInput().getTitel());
-						mu.setLebenszyklus(input.getInput().getLZAsString());
-						mu.setStufe(input.getInput().getSiegelstufe());
-						mu.setStand(input.getInput().getStand());
-						mu.setVerantwortlicheRollenInitiierung(input.getInput().getVerantwortlichInitiierung());
-						mu.setVerantwortlicheRollenUmsetzung(input.getInput().getVerantwortlichUmsetzung());
-						container.addChild(mu);
-						//dbHome.save(mu); // do not save on its own, instead bulk insert using parent
-						return mu;
-					}
-				});
-		
 		bsiElementbuilders.put(ITVerbund.TYPE_ID,
 				new IElementBuilder() {
 					public ITVerbund build(CnATreeElement container,
 							BuildInput input) throws Exception {
 						
-						ITVerbund verbund = new ITVerbund(loadedModel);
+						Logger.getLogger(this.getClass()).debug(
+								"Creating new ITVerbund in " + container);
+						CreateITVerbund saveCommand = new CreateITVerbund(container, ITVerbund.class);
+						saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
+						ITVerbund verbund = saveCommand.getNewElement();
+						
 						loadedModel.addChild(verbund);
-						dbHome.save(verbund);
-						
-						verbund.createNewCategories();
-						
-						for (CnATreeElement kategorie : verbund.getChildren()) {
-							dbHome.save(kategorie);
-						}
+						verbund.setParent(loadedModel);
 						return verbund;
 					}
 				});

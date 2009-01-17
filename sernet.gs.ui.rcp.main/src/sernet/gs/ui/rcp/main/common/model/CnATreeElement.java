@@ -57,7 +57,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	private Entity entity;
 
-	private IBSIModelListener modelChangeListener;
+	private transient IBSIModelListener modelChangeListener;
 
 	// bi-directional qualified link list between items:
 	private Set<CnALink> linksDown = new HashSet<CnALink>(5);
@@ -385,6 +385,16 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	protected HUITypeFactory getTypeFactory() {
 		return HitroUtil.getInstance().getTypeFactory();
+	}
+
+	public void setLinks(LinkKategorie links) {
+		this.links = links;
+	}
+
+	public void replaceChild(CnATreeElement newElement) {
+		// this operation requires correct implementation of "equals()" in newElement:
+		this.children.remove(newElement);
+		this.children.add(newElement);
 	}
 
 	

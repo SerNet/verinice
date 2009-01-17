@@ -25,7 +25,8 @@ public class SaveElement<T> extends GenericCommand {
 	}
 	
 	public void execute() {
-		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
+		IBaseDao<T, Serializable> dao 
+			= (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
 		//dao.saveOrUpdate(element);
 		element = dao.merge(element);
 	}

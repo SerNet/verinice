@@ -27,7 +27,7 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
  */
 public class ExceptionUtil {
 	
-	public static void log(Exception e, final String msg) {
+	public static void log(Throwable e, final String msg) {
 		if (e instanceof StaleObjectStateException) {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
@@ -108,7 +108,7 @@ public class ExceptionUtil {
 		}
 	}
 
-	private static String stackTraceToString(Exception e) {
+	private static String stackTraceToString(Throwable e) {
 		StringBuffer buf = new StringBuffer();
 		StackTraceElement[] stackTrace = e.getStackTrace();
 		for (StackTraceElement stackTraceElement : stackTrace) {

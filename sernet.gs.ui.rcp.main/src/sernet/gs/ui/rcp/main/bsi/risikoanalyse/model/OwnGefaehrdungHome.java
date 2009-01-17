@@ -16,6 +16,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 
 public class OwnGefaehrdungHome {
@@ -39,7 +40,7 @@ public class OwnGefaehrdungHome {
 	}
 	
 	public void remove(OwnGefaehrdung gef) throws Exception {
-		RemoveElement<OwnGefaehrdung> command = new RemoveElement<OwnGefaehrdung>(gef);
+		RemoveGenericElement<OwnGefaehrdung> command = new RemoveGenericElement<OwnGefaehrdung>(gef);
 		command = commandService.executeCommand(command);
 	}
 	

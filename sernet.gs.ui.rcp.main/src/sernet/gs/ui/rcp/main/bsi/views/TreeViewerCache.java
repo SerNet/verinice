@@ -31,6 +31,10 @@ public class TreeViewerCache {
 		}
 		return null;
 	}
+
+	public void clear(CnATreeElement oldElement) {
+		this.cache.remove(oldElement);
+	}
 	
 	
 }

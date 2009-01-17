@@ -6,6 +6,7 @@ import sernet.gs.ui.rcp.main.service.IResourceCollection;
 
 public abstract class GenericCommand implements ICommand {
 	
+	
 	private transient DAOFactory daoFactory;
 	private transient ICommandService commandService;
 

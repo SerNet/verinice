@@ -24,10 +24,12 @@ import org.hibernate.UnresolvableObjectException;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
 
+import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
@@ -39,6 +41,9 @@ import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.ICommand;
+import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
+import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.CreateLink;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
@@ -46,6 +51,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshMultipleElements;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.RemoveLink;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
@@ -119,11 +125,28 @@ public class CnAElementHome {
 			return saveCommand.getElement();
 	}
 	
-	public void save(CnALink link) throws Exception {
+	public <T extends CnATreeElement> T save(CnATreeElement container, Class<T> type) throws Exception {
 		Logger.getLogger(this.getClass()).debug(
-				"Saving new link: " + link);
-		SaveElement<CnALink> saveCommand = new SaveElement<CnALink>(link);
+				"Creating new element in " + container);
+		CreateElement<T> saveCommand = new CreateElement<T>(container, type);
 		saveCommand = commandService.executeCommand(saveCommand);
+		return saveCommand.getNewElement();
+	}
+	
+	public BausteinUmsetzung save(CnATreeElement container, Class<BausteinUmsetzung> type, Baustein baustein) throws Exception {
+		Logger.getLogger(this.getClass()).debug(
+				"Creating new element in " + container);
+		CreateBaustein saveCommand = new CreateBaustein(container, type, baustein);
+		saveCommand = commandService.executeCommand(saveCommand);
+		return saveCommand.getNewElement();
+	}
+	
+	public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged) throws CommandException { 
+		Logger.getLogger(this.getClass()).debug(
+				"Saving new link from " + dropTarget + " to " + dragged);
+		CreateLink command = new CreateLink(dropTarget, dragged);
+		command = commandService.executeCommand(command);
+		return command.getLink();
 }
 	
 	
@@ -139,7 +162,7 @@ public class CnAElementHome {
 	}
 
 	public void remove(CnALink element) throws Exception {
-		RemoveElement command = new RemoveElement(element);
+		RemoveLink command = new RemoveLink(element);
 		command = commandService.executeCommand(command);
 	}
 
@@ -241,4 +264,5 @@ public class CnAElementHome {
 		command = commandService.executeCommand(command);
 		return command.getTags();
 	}
+
 }

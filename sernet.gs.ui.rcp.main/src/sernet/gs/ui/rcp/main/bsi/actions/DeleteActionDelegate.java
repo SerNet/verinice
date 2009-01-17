@@ -135,7 +135,8 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 										monitor.setTaskName("Lösche: "
 												+ el.getTitel());
 										monitor.worked(1);
-										el.remove();
+										//el.remove();
+										el.getParent().removeChild(el);
 										CnAElementHome.getInstance().remove(el);
 
 									} catch (Exception e) {

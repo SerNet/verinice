@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -46,12 +47,11 @@ public class LinkDropper {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					for (CnATreeElement dragged : toDrop) {
-						CnALink link = new CnALink(dropTarget, dragged);
 						try {
-							CnAElementHome.getInstance().save(link);
+							CnALink link = CnAElementHome.getInstance().createLink(dropTarget, dragged);
+							CnAElementFactory.getLoadedModel().linkChanged(link);
 						} catch (Exception e) {
-							Logger.getLogger(this.getClass()).debug("Saving link failed."); //$NON-NLS-1$
-							link.remove();
+							Logger.getLogger(this.getClass()).debug("Saving link failed.", e); //$NON-NLS-1$
 						}
 					}
 				}

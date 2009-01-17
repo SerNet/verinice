@@ -14,16 +14,22 @@ import sernet.hui.common.connect.PropertyList;
 public class RefreshElement<T extends CnATreeElement> extends GenericCommand {
 
 	private T element;
+	private boolean includeCollections;
 
-	public RefreshElement(T element) {
+	public RefreshElement(T element, boolean includeCollections) {
 		this.element = element;
+		this.includeCollections = includeCollections;
+	}
+	
+	public RefreshElement(T element) {
+		this(element, false);
 	}
 	
 	public void execute() {
 		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
 		Integer id = getId(element);
 		element = dao.findById(id);
-		HydratorUtil.hydrateElement(dao, element, false);
+		HydratorUtil.hydrateElement(dao, element, includeCollections);
 	}
 
 	private Integer getId(T element2) {
@@ -31,21 +37,6 @@ public class RefreshElement<T extends CnATreeElement> extends GenericCommand {
 			CnATreeElement elmt = (CnATreeElement) element2;
 			return elmt.getDbId();
 		}
-		
-//		if (element2 instanceof Entity) {
-//			Entity elmt = (Entity) element2;
-//			return elmt.getDbId();
-//		}
-//		
-//		if (element2 instanceof Property) {
-//			Property prop = (Property) element2;
-//			return prop.getDbId();
-//		}
-//		
-//		if (element2 instanceof PropertyList) {
-//			PropertyList list = (PropertyList) element2;
-//			return list.getDbId();
-//		}
 		
 		return null;
 		

@@ -6,7 +6,12 @@ import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
+import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
+import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
+import sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB;
+import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
+import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -152,6 +157,14 @@ public class Anwendung extends CnATreeElement
 
 	public void setProzessWichtigkeit(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_PROZESSBEZUG), value);
+	}
+
+	public void createCategories() {
+		addChild(new Verarbeitungsangaben(this));
+		addChild(new VerantwortlicheStelle(this));
+		addChild(new Personengruppen(this));
+		addChild(new Datenverarbeitung(this));
+		addChild(new StellungnahmeDSB(this));
 	}
 
 }

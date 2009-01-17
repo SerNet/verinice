@@ -19,6 +19,7 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRisikomassnahmeByNumber;
 
@@ -44,7 +45,7 @@ public class RisikoMassnahmeHome {
 	}
 	
 	public void remove(RisikoMassnahme mn) throws Exception {
-		RemoveElement<RisikoMassnahme> command = new RemoveElement<RisikoMassnahme>(mn);
+		RemoveGenericElement<RisikoMassnahme> command = new RemoveGenericElement<RisikoMassnahme>(mn);
 		command = commandService.executeCommand(command);
 	}
 	

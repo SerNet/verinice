@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
+import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Raum;
 
@@ -51,14 +52,14 @@ public class CnALink implements Serializable {
 		
 	}
 
-	private Id id = new Id();
+	private Id id;
 	
 	private int linkType =0;
 	
 	private CnATreeElement dependant;
 	private CnATreeElement dependency;
 	
-	public CnALink() {}
+	protected CnALink() {}
 	
 	public CnALink(CnATreeElement dependant, CnATreeElement dependency) {
 		// set linked items:
@@ -66,8 +67,8 @@ public class CnALink implements Serializable {
 		this.dependency = dependency;
 		
 		// set IDs:
-		this.id.dependantId = dependant.getDbId();
-		this.id.dependencyId = dependency.getDbId();
+		getId().dependantId = dependant.getDbId();
+		getId().dependencyId = dependency.getDbId();
 	
 		// maintain bi-directional association:
 		dependency.addLinkUp(this);
@@ -134,7 +135,9 @@ public class CnALink implements Serializable {
 		this.dependency = dependency;
 	}
 
-	public Id getId() {
+	public synchronized Id getId() {
+		 if (this.id == null)
+			 this.id = new Id();
 		return id;
 	}
 
@@ -168,7 +171,7 @@ public class CnALink implements Serializable {
 		return ""; //$NON-NLS-1$
 	}
 
-	public Object getParent() {
+	public LinkKategorie getParent() {
 		return dependant.getLinks();
 	}
 

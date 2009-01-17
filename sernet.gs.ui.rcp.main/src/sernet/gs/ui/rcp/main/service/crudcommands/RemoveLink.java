@@ -2,15 +2,16 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
-public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
+public class RemoveLink<T extends CnALink> extends GenericCommand {
 
 	private T element;
 
-	public RemoveElement(T element) {
+	public RemoveLink(T element) {
 		this.element = element;
 	}
 	

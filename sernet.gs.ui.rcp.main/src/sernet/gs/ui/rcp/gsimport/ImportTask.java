@@ -347,13 +347,11 @@ public class ImportTask {
 					to = dependant;
 				}
 
-				CnALink link = new CnALink(from, to);
 				try {
-					CnAElementHome.getInstance().save(link);
+					CnAElementHome.getInstance().createLink(from, to);
 				} catch (Exception e) {
 					Logger.getLogger(this.getClass()).debug(
 							"Saving link failed."); //$NON-NLS-1$
-					link.remove();
 				}
 			}
 		}
