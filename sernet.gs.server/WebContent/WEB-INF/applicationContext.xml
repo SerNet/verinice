@@ -89,6 +89,13 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	
+	<bean id="configurationDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.gs.ui.rcp.main.common.model.configuration.Configuration</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
 	
 	
 <bean id="anwendungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
@@ -372,6 +379,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	  	<property name="finishedRiskAnalysisListsDAO" ref="finishedRiskAnalysisListsDAO"/>
 	  	<property name="gefaehrdungDao" ref="gefaehrdungDao"/>
 	  	<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao"/>
+	  	<property name="configurationDao" ref="configurationDao"/>
 	  	
 
 		<!-- DAOs for subclasses of CnATreeElement: -->	  	

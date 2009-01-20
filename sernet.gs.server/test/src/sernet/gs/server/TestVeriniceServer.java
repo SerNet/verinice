@@ -7,6 +7,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.apache.log4j.Logger;
 import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.access.BeanFactoryLocator;
 import org.springframework.beans.factory.access.BeanFactoryReference;
@@ -23,9 +24,11 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.ICommand;
+import sernet.gs.ui.rcp.main.service.crudcommands.CreateConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadMassnahmenTitles;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
@@ -100,6 +103,26 @@ public class TestVeriniceServer extends TestCase {
 		command = service.executeCommand(command);
 		List<Baustein> bausteine = command.getBausteine();
 		assertTrue(bausteine.size()>0);
+	}
+	
+	public void testConfiguration() throws CommandException {
+		LoadConfiguration command = new LoadConfiguration(null);
+		command = service.executeCommand(
+				command);
+		sernet.gs.ui.rcp.main.common.model.configuration.Configuration configuration = command.getConfiguration();
+
+		if (configuration == null) {
+			// create new configuration
+			Logger
+					.getLogger(this.getClass())
+					.debug(
+							"No config found, creating new configuration object.");
+			CreateConfiguration command2 = new CreateConfiguration(null);
+			command2 =service
+					.executeCommand(command2);
+			configuration = command2.getConfiguration();
+			assertNotNull(configuration);
+		}
 	}
 	
 	
