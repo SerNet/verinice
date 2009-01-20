@@ -34,6 +34,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
+import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
 import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
@@ -71,6 +72,15 @@ public class DAOFactory {
 	public void setGefaehrdungDao(IBaseDao<Gefaehrdung, Integer> dao) {
 		daos.put(Gefaehrdung.class, dao);
 	}
+	
+	/**
+	 * Setter method used by spring to inject DAO.
+	 */
+	public void setConfigurationDao(IBaseDao<Gefaehrdung, Integer> dao) {
+		daos.put(Configuration.class, dao);
+	}
+	
+	
 	
 	/**
 	 * Setter method used by spring to inject DAO.

@@ -27,7 +27,9 @@ import sernet.snutils.ExceptionHandlerFactory;
 public class BulkEditDialog extends Dialog {
 
 	private EntityType entType;
-	private Entity entity;
+	private Entity entity = null;
+	private boolean useRules = false;
+	private String title = "Bulk Edit";
 	
 	public BulkEditDialog(Shell parent,
 			EntityType entType) {
@@ -36,10 +38,17 @@ public class BulkEditDialog extends Dialog {
 		this.entType = entType;
 	}
 	
+	public BulkEditDialog(Shell shell, EntityType entType2, boolean b, String title, Entity entity) {
+		this(shell, entType2);
+		useRules = true;
+		this.title = title;
+		this.entity = entity;
+	}
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Bulk Edit");
+		newShell.setText(title);
 		newShell.setSize(400, 800);
 	}
 	
@@ -53,8 +62,9 @@ public class BulkEditDialog extends Dialog {
 				= new HitroUIComposite(container, SWT.NULL, false);
 			
 			try {
-				entity = new Entity(entType.getId());
-				huiComposite.createView(entity, true, false);
+				if (this.entity == null)
+					entity = new Entity(entType.getId());
+				huiComposite.createView(entity, true, useRules);
 				InputHelperFactory.setInputHelpers(entType, huiComposite);
 				return huiComposite;
 			} catch (DBException e) {

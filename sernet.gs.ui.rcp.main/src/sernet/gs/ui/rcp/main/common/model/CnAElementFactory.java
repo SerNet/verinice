@@ -39,6 +39,8 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateAnwendung;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateITVerbund;
+import sernet.gs.ui.rcp.main.service.migrationcommands.DbMigration;
+import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.gs.ui.rcp.main.service.migrationcommands.MigrateDbTo0_92;
 import sernet.hui.common.connect.Entity;
 
@@ -338,7 +340,7 @@ public class CnAElementFactory {
 		};
 		timeout.start();
 		try {
-			DbVersion command = new DbVersion();
+			DbVersion command = new DbVersion(DbVersion.COMPATIBLE_CLIENT_VERSION);
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			done[0] = true;
 		} catch (CommandException e){

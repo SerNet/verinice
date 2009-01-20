@@ -18,7 +18,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 
 /**
- * Helper class to handle exceptions.
+ * Helper class to handle and display exceptions.
  * 
  * @author koderman@sernet.de
  * @version $Rev: 39 $ $LastChangedDate: 2007-11-27 12:26:19 +0100 (Di, 27 Nov 2007) $ 
@@ -42,11 +42,19 @@ public class ExceptionUtil {
 			return;
 		}
 		
+		if (e instanceof CommandException) {
+			try {
+				e = (Exception) e.getCause();
+			} catch (Exception castException) {
+				// keep original exception
+			}
+		}
+		
 		
 		String text = e.getLocalizedMessage() != null ? e.getLocalizedMessage() : "siehe Details";
 		
 		if (Activator.getDefault() == null) {
-			// RCP not initialized, just print:
+			// RCP not initialized, skip dialog and just print to stdout:
 			System.err.println(msg);
 			e.printStackTrace();
 			return;
@@ -57,13 +65,7 @@ public class ExceptionUtil {
 				text,
 				e);
 		
-		if (e instanceof CommandException) {
-			try {
-				e = (Exception) e.getCause();
-			} catch (Exception castException) {
-				// keep original exception
-			}
-		}
+		
 		
 		Status status;
 		if (e instanceof GenericJDBCException) {

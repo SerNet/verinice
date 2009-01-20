@@ -148,6 +148,7 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 	}
 
 	protected void updateSchutzbedarf(ArrayList<CnATreeElement> selectedElements) {
+		// FIXME server: update schutzbedarf in command on server:
 		// description may have been set to "Maximumprinzip"
 		for (CnATreeElement element : selectedElements) {
 			element.getLinkChangeListener().integritaetChanged();

@@ -1,10 +1,12 @@
 package sernet.gs.ui.rcp.main.common.model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.PropertyList;
@@ -49,6 +51,13 @@ public class HydratorUtil {
 		for (CnATreeElement element : elements) {
 			hydrateElement(dao, element, includingCollections);
 		}
+	}
+
+
+	public static void hydrateElement(
+			IBaseDao<Configuration, Serializable> dao,
+			Configuration configuration, boolean includingCollections) {
+		hydrateEntity(dao, configuration.getEntity());
 	}
 	
 

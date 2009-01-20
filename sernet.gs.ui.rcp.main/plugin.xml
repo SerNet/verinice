@@ -391,6 +391,21 @@
                    tooltip="Neuen IT Verbund hinzufügen">
              </action>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.personContribution1"
+            objectClass="sernet.gs.ui.rcp.main.bsi.model.Person">
+         <action
+               class="sernet.gs.ui.rcp.main.actions.ConfigurationAction"
+               enablesFor="+"
+               icon="icons/user_edit.png"
+               id="sernet.gs.ui.rcp.main.personconfiguration"
+               label="Benutzereinstellungen"
+               menubarPath="additions"
+               style="push"
+               tooltip="Username, Passwort, Mailadresse u.a. benutzerspezifische Einstellungen">
+         </action>
+      </objectContribution>
    </extension>
    <extension
          point="org.eclipse.ui.editors">

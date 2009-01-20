@@ -17,7 +17,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.DbVersion;
+import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 
 /**
  * Top level category for all BSI model elements.
@@ -35,7 +35,8 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
 	public BSIModel() {
 		super(null);
-		dbVersion = DbVersion.CURRENT_DB_VERSION;
+		// current version number for new models, wil be saved in database:
+		dbVersion = DbVersion.COMPATIBLE_DB_VERSION;
 	}
 
 	public String getKuerzel() {
