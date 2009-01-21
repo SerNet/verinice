@@ -13,5 +13,31 @@
         <property name="serviceInterface">
             <value>sernet.gs.ui.rcp.main.service.ICommandService</value>
         </property>
+        <property name="httpInvokerRequestExecutor" ref="httpInvokerRequestExecutor"/>
     </bean>
+    
+     <bean id="authService"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>
+                http://localhost:2010/veriniceserver/service/authServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.gs.server.IAuthService</value>
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="httpInvokerRequestExecutor"/>
+    </bean>
+    
+     <bean id="httpInvokerRequestExecutor"
+		class="org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor">
+		<constructor-arg ref="httpClient"/>
+	</bean>
+
+	<bean id="httpState" class="org.apache.commons.httpclient.HttpState"/>
+
+	<bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
+		<property name="state" ref="httpState" />
+	</bean>
+
 </beans>

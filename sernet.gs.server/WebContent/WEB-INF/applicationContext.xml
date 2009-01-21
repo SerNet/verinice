@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+ 	xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
 
 <!-- 
 
@@ -9,6 +11,7 @@ All of the Spring vodoo goes on in here.
 
 This variant:
 	Wiring command service for direct database access using hibernate on Verinice-Server.
+	Includes authentication service.
 
 IST NICHT FÜR DER GEFINGERPOKEN UND MITTENGRABEN! ODERWISE IST EASY TO SCHNAPPEN DER SPRINGENWERK,
 BLOWENFUSEN UND POPPENCORKEN MIT SPITZENSPARKSEN.
@@ -42,7 +45,6 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	id="serverInitializer" 
 	class="sernet.gs.server.ServerInitializer"
 	init-method="initialize">
-	
 	<property name="configuration" ref="configuration"/>
 </bean>
 
@@ -94,9 +96,14 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 			<value>sernet.gs.ui.rcp.main.common.model.configuration.Configuration</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory"/>
+		
+		<security:intercept-methods>
+		<security:protect
+			method="sernet.gs.ui.rcp.main.connect.HibernateBaseDao.*" access="ROLE_USER" />
+		</security:intercept-methods>
 	</bean>
 	
-	
+<!-- business object Dao definitions follow ================================================================== -->	
 	
 <bean id="anwendungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
     <constructor-arg>
@@ -419,7 +426,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
   	</bean>
   	
 	<bean id="txManager"
-class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
     <property name="sessionFactory">
         <ref bean="sessionFactory" />
     </property>
@@ -435,12 +442,15 @@ class="org.springframework.orm.hibernate3.HibernateTransactionManager">
   </property>
 </bean>
 
+<bean id="serverExceptionHandler" class="sernet.gs.server.ServerExceptionHandler"/>
+
 <bean id="commandService" parent="baseTxProxy">
   <property name="target">
     <bean 
     	class="sernet.gs.ui.rcp.main.service.HibernateCommandService"
     >
         <property name="daoFactory" ref="daoFactory"/>
+        <property name="exceptionHandler" ref="serverExceptionHandler" />
     </bean>
   </property>
   <property name="transactionAttributes">
@@ -450,4 +460,78 @@ class="org.springframework.orm.hibernate3.HibernateTransactionManager">
   </property>
 </bean>
 
+<!-- BEGIN Security configuration ============================================================================ -->
+
+<bean id="authService" class="sernet.gs.server.AuthenticationService">
+	<security:intercept-methods>
+	<security:protect
+		method="sernet.gs.server.AuthenticationService.getRoles" access="ROLE_USER" />
+	</security:intercept-methods>
+</bean>
+
+ <security:authentication-manager alias="authenticationManager" />
+
+<bean id="digestProcessingFilter"
+	class="org.springframework.security.ui.digestauth.DigestProcessingFilter">
+	<property name="userDetailsService" ref="uds" />
+	<property name="authenticationEntryPoint"
+	ref="digestProcessingFilterEntryPoint" />
+</bean>
+
+<bean id="digestProcessingFilterEntryPoint"
+	class="org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint">
+	<property name="realmName" value="VeriniceServer" />
+	<property name="key" value="acegi" />
+	<property name="nonceValiditySeconds" value="10" />
+</bean>
+
+<bean id="springSecurityFilterChain"
+	class="org.springframework.security.util.FilterChainProxy">
+	<security:filter-chain-map path-type="ant">
+		<security:filter-chain pattern="/service/**"
+			filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
+	</security:filter-chain-map>
+</bean>
+
+<bean id="httpSessionContextIntegrationFilter"
+	class="org.springframework.security.context.HttpSessionContextIntegrationFilter" />
+
+<bean id="filterSecurityInterceptor"
+	class="org.springframework.security.intercept.web.FilterSecurityInterceptor">
+	<property name="authenticationManager"
+		ref="authenticationManager" />
+	<property name="accessDecisionManager"
+		ref="accessDecisionManager" />
+	<property name="objectDefinitionSource">
+		<security:filter-invocation-definition-source>
+			<security:intercept-url pattern="/service/**"
+				access="ROLE_USER" />
+		</security:filter-invocation-definition-source>
+	</property>
+</bean>
+
+<bean id="accessDecisionManager"
+	class="org.springframework.security.vote.AffirmativeBased">
+	<property name="allowIfAllAbstainDecisions" value="false" />
+	<property name="decisionVoters">
+		<list>
+			<bean class="org.springframework.security.vote.RoleVoter" />
+		</list>
+	</property>
+</bean>
+
+<bean id="exceptionTranslationFilter"
+	class="org.springframework.security.ui.ExceptionTranslationFilter">
+	<property name="authenticationEntryPoint"
+	ref="digestProcessingFilterEntryPoint" />
+</bean>
+
+<security:authentication-provider>
+	<security:user-service id="uds">
+		<security:user name="admin" password="passwort"
+			authorities="ROLE_USER, ROLE_ADMIN" />
+	</security:user-service>
+</security:authentication-provider>
+
+<!-- END Security configuration ============================================================================ -->
 </beans>

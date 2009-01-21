@@ -13,5 +13,17 @@
             <value>sernet.gs.ui.rcp.main.service.ICommandService</value>
         </property>
     </bean>
+    
+    <bean name="/authServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+        	<ref bean="authService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.gs.server.IAuthService</value>
+        </property>
+    </bean>
+    
 </beans>
 

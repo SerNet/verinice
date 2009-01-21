@@ -7,6 +7,10 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpState;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.log4j.Logger;
 import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.access.BeanFactoryLocator;
@@ -36,7 +40,8 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
 
 public class TestVeriniceServer extends TestCase {
 	
-	private ICommandService service;
+	private ICommandService commandService;
+	private BeanFactoryReference beanFactoryReference;
 
 	public void setUp() throws Exception {
 		super.setUp();
@@ -54,11 +59,18 @@ public class TestVeriniceServer extends TestCase {
 		// get a command service implementation: (remote proxy in this case)
 		BeanFactoryLocator beanFactoryLocator = SingletonBeanFactoryLocator
 		.getInstance();
-		BeanFactoryReference beanFactoryReference = beanFactoryLocator
+		beanFactoryReference = beanFactoryLocator
 		.useBeanFactory("ctx");
-		service = (ICommandService) beanFactoryReference
-			.getFactory().getBean("commandService");
+		
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin", "passwort");
+
+		HttpState httpState = (HttpState) beanFactoryReference
+		.getFactory().getBean("httpState");
+		 httpState.setCredentials(AuthScope.ANY, creds);
 		 
+		commandService = (ICommandService) beanFactoryReference
+			.getFactory().getBean("commandService");
+		
 	}
 
 	public void tearDown() throws Exception {
@@ -67,7 +79,7 @@ public class TestVeriniceServer extends TestCase {
 	
 	public void testConnect() throws CommandException {
 		LoadBSIModel command = new LoadBSIModel();
-		 command = service.executeCommand(command);
+		 command = commandService.executeCommand(command);
 		 BSIModel model = command.getModel();
 		 
 		 assertNotNull(model);
@@ -78,7 +90,7 @@ public class TestVeriniceServer extends TestCase {
 	
 	public void testGetMassnahmen() throws CommandException {
 		LoadCnAElementByType<MassnahmenUmsetzung> command = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
-		command = service.executeCommand(command);
+		command = commandService.executeCommand(command);
 		List<MassnahmenUmsetzung> elements = command.getElements();
 		assertNotNull(elements);
 		for (MassnahmenUmsetzung elmt : elements) {
@@ -89,7 +101,7 @@ public class TestVeriniceServer extends TestCase {
 	
 	public void testGetMassnahmenTitles() throws CommandException {
 		LoadMassnahmenTitles<MassnahmenUmsetzung> command = new LoadMassnahmenTitles<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
-		command = service.executeCommand(command);
+		command = commandService.executeCommand(command);
 		List<MassnahmenUmsetzung> elements = command.getElements();
 		assertNotNull(elements);
 		for (MassnahmenUmsetzung elmt : elements) {
@@ -100,14 +112,25 @@ public class TestVeriniceServer extends TestCase {
 	
 	public void testLoadBausteine() throws CommandException {
 		LoadBausteine command = new LoadBausteine();
-		command = service.executeCommand(command);
+		command = commandService.executeCommand(command);
 		List<Baustein> bausteine = command.getBausteine();
 		assertTrue(bausteine.size()>0);
 	}
 	
-	public void testConfiguration() throws CommandException {
+	public void testAuthentication() {
+		 IAuthService authService = (IAuthService) beanFactoryReference
+		 .getFactory().getBean("authService");
+
+		 //print the available roles
+		 String[] roles = authService.getRoles();
+		 for (int i = 0; i < roles.length; i++) {
+			 System.out.println("Role:" + roles[i]);
+		 }
+	}
+	
+	public void testReadWriteConfiguration() throws CommandException {
 		LoadConfiguration command = new LoadConfiguration(null);
-		command = service.executeCommand(
+		command = commandService.executeCommand(
 				command);
 		sernet.gs.ui.rcp.main.common.model.configuration.Configuration configuration = command.getConfiguration();
 
@@ -118,7 +141,7 @@ public class TestVeriniceServer extends TestCase {
 					.debug(
 							"No config found, creating new configuration object.");
 			CreateConfiguration command2 = new CreateConfiguration(null);
-			command2 =service
+			command2 =commandService
 					.executeCommand(command2);
 			configuration = command2.getConfiguration();
 			assertNotNull(configuration);
