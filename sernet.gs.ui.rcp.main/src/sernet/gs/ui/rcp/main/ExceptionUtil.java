@@ -42,7 +42,8 @@ public class ExceptionUtil {
 			return;
 		}
 		
-		if (e instanceof CommandException) {
+		if (e instanceof CommandException
+				&& e.getCause() != null) {
 			try {
 				e = (Exception) e.getCause();
 			} catch (Exception castException) {

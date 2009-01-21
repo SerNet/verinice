@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.springframework.orm.hibernate3.SpringSessionContext;
 
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -31,6 +32,8 @@ public class HibernateCommandService implements ICommandService {
 
 	// injected by spring
 	private DAOFactory daoFactory;
+	
+	private ICommandExceptionHandler exceptionHandler;
 	
 	private boolean dbOpen = false;
 
@@ -57,9 +60,10 @@ public class HibernateCommandService implements ICommandService {
 			command.setDaoFactory(daoFactory);
 			command.setCommandService(this);
 			command.execute();
-		} catch (Exception e) {
-			throw new CommandException(
-					"Ausführungsfehler in DB-Service-Layer", e);
+		} 
+		catch (Exception e) {
+			if (exceptionHandler != null)
+				exceptionHandler.handle(e);
 		}
 		return command;
 	}
@@ -72,6 +76,14 @@ public class HibernateCommandService implements ICommandService {
 	public void setDaoFactory(DAOFactory daoFactory) {
 		dbOpen = true;
 		this.daoFactory = daoFactory;
+	}
+
+	public ICommandExceptionHandler getExceptionHandler() {
+		return exceptionHandler;
+	}
+
+	public void setExceptionHandler(ICommandExceptionHandler exceptionHandler) {
+		this.exceptionHandler = exceptionHandler;
 	}
 
 	

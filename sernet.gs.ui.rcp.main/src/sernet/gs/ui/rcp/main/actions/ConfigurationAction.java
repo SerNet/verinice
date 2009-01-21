@@ -88,6 +88,8 @@ public class ConfigurationAction implements IObjectActionDelegate {
 						configuration.getEntity().getEntityType());
 			} catch (CommandException e) {
 				ExceptionUtil.log(e, "Fehler beim Laden der Konfiguration");
+			} catch (RuntimeException e) {
+				ExceptionUtil.log(e, "Fehler beim Laden der Konfiguration");
 			}
 		}
 
