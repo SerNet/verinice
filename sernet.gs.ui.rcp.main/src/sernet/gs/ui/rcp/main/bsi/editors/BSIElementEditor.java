@@ -25,6 +25,10 @@ import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadEntityByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -66,6 +70,7 @@ public class BSIElementEditor extends EditorPart {
 		}
 
 	};
+	private CnATreeElement cnAElement;
 	
 	
 	public void doSave(IProgressMonitor monitor) {
@@ -79,15 +84,14 @@ public class BSIElementEditor extends EditorPart {
 	
 
 	private void save() {
-		BSIElementEditorInput input = (BSIElementEditorInput) getEditorInput();
-		CnATreeElement element = input.getCnAElement();
+		BSIElementEditorInput editorinput = (BSIElementEditorInput) getEditorInput();
 		try {
-			CnAElementHome.getInstance().update(element);
+			CnAElementHome.getInstance().update(cnAElement);
 			isModelModified = false;
 			firePropertyChange(IEditorPart.PROP_DIRTY);
 			
 			// notify all views of change:
-			CnAElementFactory.getLoadedModel().childChanged(element.getParent(), element);
+			CnAElementFactory.getLoadedModel().childChanged(cnAElement.getParent(), cnAElement);
 		} catch (StaleObjectStateException se) {
 			// close editor, loosing changes:
 			ExceptionUtil.log(se, "Fehler beim Speichern.");
@@ -122,7 +126,12 @@ public class BSIElementEditor extends EditorPart {
 	
 	private void initContent() {
 		try {
-			CnATreeElement cnAElement = ((BSIElementEditorInput)getEditorInput()).getCnAElement();
+			cnAElement = ((BSIElementEditorInput)getEditorInput()).getCnAElement();
+			RefreshElement<CnATreeElement> command = new RefreshElement<CnATreeElement>(cnAElement);
+			command = ServiceFactory.lookupCommandService().executeCommand(
+					command);
+			cnAElement = command.getElement();
+			
 			Entity entity = cnAElement.getEntity();
 			EntityType entityType = HUITypeFactory.getInstance()
 				.getEntityType(entity.getEntityType());
@@ -173,11 +182,12 @@ public class BSIElementEditor extends EditorPart {
 	
 	@Override
 	public void dispose() {
-		BSIElementEditorInput input = ((BSIElementEditorInput)getEditorInput());
 		CnAElementFactory.getLoadedModel().refreshAllListeners();
 		huiComposite.closeView();
-		input.getEntity().removeListener(modelListener);
-		EditorRegistry.getInstance().closeEditor(input.getId());
+		cnAElement.getEntity().removeListener(modelListener);
+		EditorRegistry.getInstance().closeEditor(
+				( (BSIElementEditorInput)getEditorInput() ).getId()
+				);
 		super.dispose();
 	}
 

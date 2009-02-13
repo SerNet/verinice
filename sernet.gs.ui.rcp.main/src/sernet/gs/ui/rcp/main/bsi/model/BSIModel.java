@@ -29,9 +29,16 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
 	private static final String TYPE_ID = "bsimodel"; //$NON-NLS-1$
 
+	/**
+	 * DB version of this BSI model.
+	 * 
+	 * Will initially be set to DbVersion.COMPATIBLE_DB_VERSION and updated by migration
+	 * commands when needed.
+	 */
 	private Double dbVersion = 0D;
 
 	private transient List<IBSIModelListener> listeners;
+
 
 	public BSIModel() {
 		super(null);
@@ -269,4 +276,6 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		Collections.sort(tags);
 		return tags;
 	}
+
+	
 }

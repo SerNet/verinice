@@ -99,6 +99,8 @@ public class ImageCache {
 
 	public static final String VIEW_DOCUMENT = "script.png";
 
+	public static final String AUTOBAUSTEIN = "autobaustein.png";
+
 
 	
 	

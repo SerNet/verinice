@@ -5,9 +5,6 @@ import java.io.Serializable;
 import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.StatusLine;
@@ -17,8 +14,8 @@ import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.TransactionAbortedException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.taskcommands.ProtectionLevelChanged;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.IEntityChangedListener;
@@ -35,55 +32,33 @@ import sernet.hui.common.multiselectionlist.IMLPropertyType;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class SchutzbedarfAdapter implements ISchutzbedarfProvider, IEntityChangedListener, Serializable {
+public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable {
 
 	private CnATreeElement parent;
-
-	private static boolean loopWarning = true;
-
-	
-	public void dependencyChanged(IMLPropertyType type,
-			IMLPropertyOption opt) {
-	}
-
-	public void propertyChanged(PropertyChangedEvent evt) {
-		if (checkSchutzbedarfChanged(evt)) {
-			ProtectionLevelChanged command = 
-				new ProtectionLevelChanged(SchutzbedarfAdapter.this, evt.getProperty(), evt.getSource()!=null);
-			try {
-				command = ServiceFactory.lookupCommandService().executeCommand(command);
-			} catch (CommandException e) {
-				ExceptionUtil.log(e, "Konnte Schutzbedarf nicht vererben"); //$NON-NLS-1$
-			}
-		}
-	}
-
-	public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
-	}
 
 	public SchutzbedarfAdapter(CnATreeElement parent) {
 		this.parent = parent;
 	}
 
-	protected boolean checkSchutzbedarfChanged(PropertyChangedEvent evt) {
-		if (Schutzbedarf.isVerfuegbarkeit(evt
-				.getProperty())
-		 || Schutzbedarf.isVertraulichkeit(evt
-				.getProperty())
-		 || Schutzbedarf.isIntegritaet(evt.getProperty())
-
-		 || Schutzbedarf.isIntegritaetBegruendung(evt
-				.getProperty())
-		 || Schutzbedarf
-				.isVertraulichkeitBegruendung(evt.getProperty())
-		 || Schutzbedarf
-				.isVerfuegbarkeitBegruendung(evt.getProperty())
-				) {
-			return true;
-		}
-		return false;
-
-	}
+//	protected boolean checkSchutzbedarfChanged(PropertyChangedEvent evt) {
+//		if (Schutzbedarf.isVerfuegbarkeit(evt
+//				.getProperty())
+//		 || Schutzbedarf.isVertraulichkeit(evt
+//				.getProperty())
+//		 || Schutzbedarf.isIntegritaet(evt.getProperty())
+//
+//		 || Schutzbedarf.isIntegritaetBegruendung(evt
+//				.getProperty())
+//		 || Schutzbedarf
+//				.isVertraulichkeitBegruendung(evt.getProperty())
+//		 || Schutzbedarf
+//				.isVerfuegbarkeitBegruendung(evt.getProperty())
+//				) {
+//			return true;
+//		}
+//		return false;
+//
+//	}
 
 	public int getIntegritaet() {
 		PropertyList properties = parent.getEntity().getProperties(
@@ -115,7 +90,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, IEntityChange
 			return Schutzbedarf.UNDEF;
 	}
 
-	public void setIntegritaet(int i) {
+	public void setIntegritaet(int i, CascadingTransaction ta) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
 				parent.getEntity().getEntityType());
 		String option = Schutzbedarf.toOption(parent.getTypeId(),
@@ -124,9 +99,10 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, IEntityChange
 		parent.getEntity().setSimpleValue(
 				entityType.getPropertyType(parent.getTypeId()
 						+ Schutzbedarf.INTEGRITAET), option);
+		parent.fireSchutzbedarfChanged(ta);
 	}
 
-	public void setVerfuegbarkeit(int i) {
+	public void setVerfuegbarkeit(int i, CascadingTransaction ta) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
 				parent.getEntity().getEntityType());
 		String option = Schutzbedarf.toOption(parent.getTypeId(),
@@ -134,9 +110,10 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, IEntityChange
 		parent.getEntity().setSimpleValue(
 				entityType.getPropertyType(parent.getTypeId()
 						+ Schutzbedarf.VERFUEGBARKEIT), option);
+		parent.fireSchutzbedarfChanged(ta);
 	}
 
-	public void setVertraulichkeit(int i) {
+	public void setVertraulichkeit(int i, CascadingTransaction ta) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
 				parent.getEntity().getEntityType());
 		String option = Schutzbedarf.toOption(parent.getTypeId(),
@@ -144,6 +121,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, IEntityChange
 		parent.getEntity().setSimpleValue(
 				entityType.getPropertyType(parent.getTypeId()
 						+ Schutzbedarf.VERTRAULICHKEIT), option);
+		parent.fireSchutzbedarfChanged(ta);
 	}
 
 	public String getIntegritaetDescription() {
@@ -161,103 +139,46 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, IEntityChange
 				parent.getTypeId() + Schutzbedarf.VERTRAULICHKEIT_BEGRUENDUNG);
 	}
 
-	public void setIntegritaetDescription(String text) {
+	public void setIntegritaetDescription(String text, CascadingTransaction ta) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
 				parent.getEntity().getEntityType());
 		parent.getEntity().setSimpleValue(
 				entityType.getPropertyType(parent.getTypeId()
 						+ Schutzbedarf.INTEGRITAET_BEGRUENDUNG), text);
+		parent.fireSchutzbedarfChanged(ta);
 	}
 
-	public void setVerfuegbarkeitDescription(String text) {
+	public void setVerfuegbarkeitDescription(String text, CascadingTransaction ta) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
 				parent.getEntity().getEntityType());
 		parent.getEntity().setSimpleValue(
 				entityType.getPropertyType(parent.getTypeId()
 						+ Schutzbedarf.VERFUEGBARKEIT_BEGRUENDUNG), text);
+		parent.fireSchutzbedarfChanged(ta);
 	}
 
-	public void setVertraulichkeitDescription(String text) {
+	public void setVertraulichkeitDescription(String text, CascadingTransaction ta) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
 				parent.getEntity().getEntityType());
 		parent.getEntity().setSimpleValue(
 				entityType.getPropertyType(parent.getTypeId()
 						+ Schutzbedarf.VERTRAULICHKEIT_BEGRUENDUNG), text);
+		parent.fireSchutzbedarfChanged(ta);
 	}
 
-	public IEntityChangedListener getChangeListener() {
-		return this;
+
+	public void updateAll(CascadingTransaction ta) {
+		fireVerfuegbarkeitChanged(ta);
+		fireVertraulichkeitChanged(ta);
+		fireIntegritaetChanged(ta);
 	}
 
-	public void fireSchutzbedarfBegruendungChanged(Property prop, boolean setByUser) {
-		if (setByUser)
-			return; // not changed by user
-
-		boolean integritaetChanged = Schutzbedarf.isIntegritaetBegruendung(prop);
-		boolean vertraulichkeitChanged = Schutzbedarf
-				.isVertraulichkeitBegruendung(prop);
-		boolean verfuegbarkeitChanged = Schutzbedarf
-				.isVerfuegbarkeitBegruendung(prop);
-
-		// if set to "maximumprinzip", cause update to all listeners:
-		if (integritaetChanged) {
-			parent.getLinkChangeListener().integritaetChanged();
-		}
-		if (vertraulichkeitChanged) {
-			parent.getLinkChangeListener().vertraulichkeitChanged();
-		}
-		if (verfuegbarkeitChanged) {
-			parent.getLinkChangeListener().verfuegbarkeitChanged();
-		}
-	}
-
-	public void fireSchutzbedarfChanged(Property prop, boolean setByUser) {
-		boolean verfuegbarkeit = Schutzbedarf.isVerfuegbarkeit(prop);
-		boolean vertraulichkeit = Schutzbedarf.isVertraulichkeit(prop);
-		boolean integritaet = Schutzbedarf.isIntegritaet(prop);
-
-		if (verfuegbarkeit) {
-			fireVerfuegbarkeitChanged();
-			if (setByUser
-					&& Schutzbedarf
-							.isMaximumPrinzip(getVerfuegbarkeitDescription()))
-				setVerfuegbarkeitDescription(""); //$NON-NLS-1$
-
-		}
-
-		if (vertraulichkeit) {
-			fireVertraulichkeitChanged();
-			if (setByUser
-					&& Schutzbedarf
-							.isMaximumPrinzip(getVertraulichkeitDescription()))
-				setVertraulichkeitDescription(""); //$NON-NLS-1$
-		}
-
-		if (integritaet) {
-			fireIntegritaetChanged();
-			if (setByUser
-					&& Schutzbedarf
-							.isMaximumPrinzip(getIntegritaetDescription()))
-				setIntegritaetDescription(""); //$NON-NLS-1$
-		}
-
-	}
-
-	public void updateAll() {
-		fireVerfuegbarkeitChanged();
-		fireVertraulichkeitChanged();
-		fireIntegritaetChanged();
-	}
-
-	private void fireVerfuegbarkeitChanged() {
-		CascadingTransaction ta = CascadingTransaction.getInstance();
+	private void fireVerfuegbarkeitChanged(CascadingTransaction ta) {
 		if (ta.hasBeenVisited(parent)) {
 			StatusLine.setErrorMessage("Schutzbedarf: Schleife bei Objekt "
 					+ parent.getTitel());
 			Logger.getLogger(this.getClass()).debug(
 					"(Verfügbarkeit) Loop on object " + parent.getTitel()); //$NON-NLS-1$
-
-			showLoopWarning(parent.getTitel());
 
 			return; // we have already been down this path
 		}
@@ -266,7 +187,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, IEntityChange
 			ta.enter(parent);
 			for (CnALink link : parent.getLinksDown()) {
 				link.getDependency().getLinkChangeListener()
-						.verfuegbarkeitChanged();
+						.verfuegbarkeitChanged(ta);
 			}
 			if (ta.isInitiator(parent)) {
 				ta.saveUpdatedItems();
@@ -282,38 +203,19 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, IEntityChange
 		}
 	}
 
-	private void showLoopWarning(String name) {
-		if (loopWarning) {
-			MessageDialogWithToggle dialog = MessageDialogWithToggle.openError(
-					Display.getCurrent().getActiveShell(),
-					"Nicht so toll",
-					"Eine Schleife in den Abhängigkeiten des Objekts " + name
-							+ " wurde festgestellt. "
-							+ "Der Schutzbedarf nach dem Maximumprinzip kann bei einer Schleife nicht korrekt bestimmt werden.\n\n"
-							+ "Überprüfen Sie die Zuordnung des automatisch bestimmten Schutzbedarfs "
-							+ "und beheben Sie die Schleife durch Entfernen einer Abhängigkeit von " + name
-							+ ".",
-					"Nicht mehr warnen", false/* toggle default */,
-					null/* preferences container */, null/* preference key */);
-			loopWarning = !dialog.getToggleState();
-		}
-	}
-
-	private void fireVertraulichkeitChanged() {
-		CascadingTransaction ta = CascadingTransaction.getInstance();
+	private void fireVertraulichkeitChanged(CascadingTransaction ta) {
 		if (ta.hasBeenVisited(parent)) {
 			StatusLine.setErrorMessage("Schutzbedarf: Schleife bei Objekt "
 					+ parent.getTitel());
 			Logger.getLogger(this.getClass()).debug(
 					"(Vertraulichkeit) Loop on object " + parent.getTitel()); //$NON-NLS-1$
-			showLoopWarning(parent.getTitel());
 			return; // we have already been down this path
 		}
 		try {
 			ta.enter(parent);
 			for (CnALink link : parent.getLinksDown()) {
 				link.getDependency().getLinkChangeListener()
-						.vertraulichkeitChanged();
+						.vertraulichkeitChanged(ta);
 			}
 			if (ta.isInitiator(parent)) {
 				ta.saveUpdatedItems();
@@ -329,21 +231,19 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, IEntityChange
 		}
 	}
 
-	private void fireIntegritaetChanged() {
-		CascadingTransaction ta = CascadingTransaction.getInstance();
+	private void fireIntegritaetChanged(CascadingTransaction ta) {
 		if (ta.hasBeenVisited(parent)) {
 			StatusLine.setErrorMessage("Schutzbedarf: Schleife bei Objekt "
 					+ parent.getTitel());
 			Logger.getLogger(this.getClass()).debug(
 					"(Integrität) Loop on object " + parent.getTitel()); //$NON-NLS-1$
-			showLoopWarning(parent.getTitel());
 			return; // we have already been down this path
 		}
 		try {
 			ta.enter(parent);
 			for (CnALink link : parent.getLinksDown()) {
 				link.getDependency().getLinkChangeListener()
-						.integritaetChanged();
+						.integritaetChanged(ta);
 			}
 			if (ta.isInitiator(parent)) {
 				ta.saveUpdatedItems();

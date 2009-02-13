@@ -2,9 +2,11 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.io.Serializable;
 
+import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
+import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 
 /**
  * On a change event, iterates through all linked items, searching
@@ -25,7 +27,9 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener, Seriali
 		this.sbTarget = item;
 	}
 
-	public void integritaetChanged() {
+	public void integritaetChanged(CascadingTransaction ta) {
+		
+		
 		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
 				.getIntegritaetDescription()))
 			return;
@@ -41,12 +45,13 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener, Seriali
 					break allLinks;
 			}
 		}
-		sbTarget.getSchutzbedarfProvider().setIntegritaet(highestValue);
+		sbTarget.getSchutzbedarfProvider().setIntegritaet(highestValue, ta);
 	}
 
 	
 
-	public void verfuegbarkeitChanged() {
+	public void verfuegbarkeitChanged(CascadingTransaction ta) {
+		
 		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
 				.getVerfuegbarkeitDescription()))
 			return;
@@ -62,10 +67,11 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener, Seriali
 					break allLinks;
 			}
 		}
-		sbTarget.getSchutzbedarfProvider().setVerfuegbarkeit(highestValue);
+		sbTarget.getSchutzbedarfProvider().setVerfuegbarkeit(highestValue, ta);
 	}
 
-	public void vertraulichkeitChanged() {
+	public void vertraulichkeitChanged(CascadingTransaction ta) {
+		
 		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
 				.getVertraulichkeitDescription()))
 			return;
@@ -81,7 +87,7 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener, Seriali
 					break allLinks;
 			}
 		}
-		sbTarget.getSchutzbedarfProvider().setVertraulichkeit(highestValue);
+		sbTarget.getSchutzbedarfProvider().setVertraulichkeit(highestValue, ta);
 	}
 	
 }

@@ -29,10 +29,12 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.Property;
 
 public class ConfigurationAction implements IObjectActionDelegate {
 
@@ -42,6 +44,11 @@ public class ConfigurationAction implements IObjectActionDelegate {
 	private Configuration configuration;
 
 	private IWorkbenchPart targetPart;
+
+
+
+
+	private String oldPassword;
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		this.targetPart = targetPart;
@@ -92,11 +99,15 @@ public class ConfigurationAction implements IObjectActionDelegate {
 				ExceptionUtil.log(e, "Fehler beim Laden der Konfiguration");
 			}
 		}
+		
+		emptyPasswordField(configuration.getEntity());
 
 		final BulkEditDialog dialog = new BulkEditDialog(window.getShell(),
 				entType, true, "Benutzereinstellungen", configuration.getEntity());
 		if (dialog.open() != InputDialog.OK)
 			return;
+		
+		final boolean updatePassword = updatePassword(configuration.getEntity());
 
 		try {
 			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
@@ -105,7 +116,8 @@ public class ConfigurationAction implements IObjectActionDelegate {
 								throws InvocationTargetException,
 								InterruptedException {
 							// save configuration:
-							SaveElement<Configuration> command = new SaveElement<Configuration>(configuration);
+							SaveConfiguration<Configuration> command 
+								= new SaveConfiguration<Configuration>(configuration, updatePassword);
 							try {
 								command = ServiceFactory.lookupCommandService()
 										.executeCommand(command);
@@ -114,6 +126,8 @@ public class ConfigurationAction implements IObjectActionDelegate {
 							}
 						}
 
+						
+
 					});
 		} catch (InvocationTargetException e) {
 			ExceptionUtil.log(e, "Fehler beim Speichern der Konfiguration.");
@@ -121,6 +135,29 @@ public class ConfigurationAction implements IObjectActionDelegate {
 			ExceptionUtil.log(e, "Abgebrochen.");
 		}
 
+	}
+
+	private void emptyPasswordField(Entity entity) {
+		Property passwordProperty = entity.getProperties(Configuration.PROP_PASSWORD).getProperty(0);
+		if (passwordProperty != null) {
+			oldPassword = passwordProperty.getPropertyValue();
+			passwordProperty.setPropertyValue("", false);
+		}
+	}
+	
+	private boolean updatePassword(Entity entity) {
+		Property passwordProperty = entity.getProperties(Configuration.PROP_PASSWORD).getProperty(0);
+		if (passwordProperty != null) {
+			if (passwordProperty.getPropertyValue().length()>0) {
+				// new password:
+				return true;
+			}
+			else {
+				// no new password set, insert old one again:
+				passwordProperty.setPropertyValue(oldPassword, false);
+			}
+		}
+		return false;
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {}

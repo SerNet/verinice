@@ -80,7 +80,14 @@ public class Activator extends AbstractUIPlugin {
 		else
 			ServiceFactory.setService(ServiceFactory.REMOTE);
 		
-		ServiceFactory.openCommandService();
+		try {
+			ServiceFactory.openCommandService();
+		} catch (Exception e) {
+			// if this fails, try rewriting config:
+			Logger.getLogger(this.getClass()).error("Exception while connection to command service, forcing recreation of " +
+					"service factory configuration from preferences.", e);
+			CnAWorkspace.getInstance().prepare(true);
+		}
 		
 		// TODO add feature: link description between objects
 		// TODO add save / load to file

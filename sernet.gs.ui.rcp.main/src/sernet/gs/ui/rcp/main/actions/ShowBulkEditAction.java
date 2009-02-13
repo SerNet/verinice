@@ -137,7 +137,6 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 							// update once when finished:
 							CnAElementFactory.getLoadedModel()
 									.refreshAllListeners();
-							updateSchutzbedarf(selectedElements);
 						}
 					});
 		} catch (InvocationTargetException e) {
@@ -147,21 +146,6 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 		}
 	}
 
-	protected void updateSchutzbedarf(ArrayList<CnATreeElement> selectedElements) {
-		// FIXME server: update schutzbedarf in command on server:
-		// description may have been set to "Maximumprinzip"
-		for (CnATreeElement element : selectedElements) {
-			element.getLinkChangeListener().integritaetChanged();
-			element.getLinkChangeListener().verfuegbarkeitChanged();
-			element.getLinkChangeListener().vertraulichkeitChanged();
-		}
-
-		// schutzbedarf may have been changed manually, update dependencies:
-		for (CnATreeElement element : selectedElements) {
-			if (element.isSchutzbedarfProvider())
-				element.getSchutzbedarfProvider().updateAll();
-		}
-	}
 
 	/**
 	 * Action is enabled when only items of the same type are selected.

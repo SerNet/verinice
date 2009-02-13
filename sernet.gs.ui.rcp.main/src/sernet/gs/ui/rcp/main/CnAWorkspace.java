@@ -51,7 +51,7 @@ public class CnAWorkspace {
 	 * Version number to check against version file.
 	 * When changing this, also change version number in skeleton file "conf/configuration.version"
 	 */
-	public static final Object CONFIG_CURRENT_VERSION = "0.7.2";
+	public static final Object CONFIG_CURRENT_VERSION = "0.8.1";
 
 	protected static final String VERINICEDB = "verinicedb";
 
@@ -121,14 +121,14 @@ public class CnAWorkspace {
 	 * 
 	 * 
 	 */
-	public void prepare() {
+	public void prepare(boolean force) {
 		URL url = Platform.getInstanceLocation().getURL();
 		String path = url.getPath().replaceAll("/", "\\" + File.separator);
 		workDir = (new File(path)).getAbsolutePath();
 
 		File confDir = new File(url.getPath() + File.separator + "conf");
 
-		if (confDir.exists() && confDir.isDirectory()) {
+		if (!force && confDir.exists() && confDir.isDirectory()) {
 			File confFile = new File(confDir, "configuration.version");
 			if (confFile.exists()) {
 				Properties props = new Properties();
@@ -483,6 +483,10 @@ public class CnAWorkspace {
 				.getString(PreferenceConstants.GS_DB_URL), prefs
 				.getString(PreferenceConstants.GS_DB_USER), prefs
 				.getString(PreferenceConstants.GS_DB_PASS));
+	}
+
+	public void prepare() {
+		prepare(false);
 	}
 
 }

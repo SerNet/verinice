@@ -30,6 +30,7 @@ import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
 import sernet.gs.ui.rcp.main.actions.ShowExportWizardAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.actions.UpdateAction;
+import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.views.AuditView;
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
@@ -112,6 +113,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private UpdateAction updateAction;
 
 	private ManageUpdatesAction manageUpdatesAction;
+
+	private BausteinZuordnungAction bausteinZuordnungAction;
 
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
@@ -202,6 +205,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		
 		konsolidatorAction = new ShowKonsolidatorAction(window, "Konsolidator");
 		register(konsolidatorAction);
+		
+		bausteinZuordnungAction = new BausteinZuordnungAction(window);
+		register(bausteinZuordnungAction);
 		
 		showCheatSheetAction = new ShowCheatSheetAction(true, "Erste Schritte");
 		

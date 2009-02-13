@@ -36,6 +36,7 @@ import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
+import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -215,22 +216,24 @@ public class TransferData {
 			return;
 		ISchutzbedarfProvider zielElmt = ziel.getSchutzbedarfProvider();
 		
+		CascadingTransaction ta = new CascadingTransaction();
+		
 		MSchutzbedarfkategTxt vertr = vampire.findSchutzbedarfNameForId(schubeda.getZsbVertrSbkId());
 		if (vertr != null) {
-			zielElmt.setVertraulichkeit(translateSchutzbedarf(vertr.getName()));
-			zielElmt.setVertraulichkeitDescription(schubeda.getZsbVertrBegr());
+			zielElmt.setVertraulichkeit(translateSchutzbedarf(vertr.getName()), ta);
+			zielElmt.setVertraulichkeitDescription(schubeda.getZsbVertrBegr(), ta);
 		}
 		
 		MSchutzbedarfkategTxt verfu = vampire.findSchutzbedarfNameForId(schubeda.getZsbVerfuSbkId());
 		if (verfu != null) {
-			zielElmt.setVerfuegbarkeit(translateSchutzbedarf(verfu.getName()));
-			zielElmt.setVerfuegbarkeitDescription(schubeda.getZsbVerfuBegr());
+			zielElmt.setVerfuegbarkeit(translateSchutzbedarf(verfu.getName()), ta);
+			zielElmt.setVerfuegbarkeitDescription(schubeda.getZsbVerfuBegr(), ta);
 		}
 		
 		MSchutzbedarfkategTxt integ = vampire.findSchutzbedarfNameForId(schubeda.getZsbIntegSbkId());
 		if (integ!= null) {
-			zielElmt.setIntegritaet(translateSchutzbedarf(integ.getName()));
-			zielElmt.setIntegritaetDescription(schubeda.getZsbIntegBegr());
+			zielElmt.setIntegritaet(translateSchutzbedarf(integ.getName()), ta);
+			zielElmt.setIntegritaetDescription(schubeda.getZsbIntegBegr(), ta);
 		}
 		
 		if (schubeda.getZsbPersDaten() == 1 && ziel instanceof Anwendung) {

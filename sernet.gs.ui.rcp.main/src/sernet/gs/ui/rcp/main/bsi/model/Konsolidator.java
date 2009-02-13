@@ -34,7 +34,6 @@ public class Konsolidator {
 			MassnahmenUmsetzung sourceMn = source.getMassnahmenUmsetzung(mn.getUrl());
 			if (sourceMn != null) {
 				mn.getEntity().copyEntity(sourceMn.getEntity());
-				mn.entityChanged();
 			}
 		}
 	}
@@ -49,7 +48,6 @@ public class Konsolidator {
 		if (source.equals(target))
 			return;
 		target.getEntity().copyEntity(source.getEntity());
-		target.entityChanged();
 	}
 
 }
