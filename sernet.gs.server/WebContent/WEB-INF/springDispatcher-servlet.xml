@@ -21,7 +21,7 @@
         	<ref bean="authService"/>
         </property>
         <property name="serviceInterface">
-            <value>sernet.gs.server.IAuthService</value>
+            <value>sernet.gs.ui.rcp.main.service.IAuthService</value>
         </property>
     </bean>
     

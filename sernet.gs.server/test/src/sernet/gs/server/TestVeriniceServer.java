@@ -12,7 +12,6 @@ import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.log4j.Logger;
-import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.access.BeanFactoryLocator;
 import org.springframework.beans.factory.access.BeanFactoryReference;
 import org.springframework.beans.factory.access.SingletonBeanFactoryLocator;
@@ -22,7 +21,9 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
+import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.HibernateBaseDao;
+import sernet.gs.ui.rcp.main.service.IAuthService;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
@@ -30,7 +31,7 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.ICommand;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadMassnahmenTitles;
@@ -62,7 +63,7 @@ public class TestVeriniceServer extends TestCase {
 		beanFactoryReference = beanFactoryLocator
 		.useBeanFactory("ctx");
 		
-		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin", "passwort");
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("Administrator", "");
 
 		HttpState httpState = (HttpState) beanFactoryReference
 		.getFactory().getBean("httpState");
@@ -128,25 +129,9 @@ public class TestVeriniceServer extends TestCase {
 		 }
 	}
 	
-	public void testReadWriteConfiguration() throws CommandException {
-		LoadConfiguration command = new LoadConfiguration(null);
-		command = commandService.executeCommand(
-				command);
-		sernet.gs.ui.rcp.main.common.model.configuration.Configuration configuration = command.getConfiguration();
-
-		if (configuration == null) {
-			// create new configuration
-			Logger
-					.getLogger(this.getClass())
-					.debug(
-							"No config found, creating new configuration object.");
-			CreateConfiguration command2 = new CreateConfiguration(null);
-			command2 =commandService
-					.executeCommand(command2);
-			configuration = command2.getConfiguration();
-			assertNotNull(configuration);
-		}
-	}
+	
+	
+	
 	
 	
 }

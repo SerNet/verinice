@@ -103,6 +103,14 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		</security:intercept-methods>
 	</bean>
 	
+	
+<bean id="bausteinVorschlagDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+	
 <!-- business object Dao definitions follow ================================================================== -->	
 	
 <bean id="anwendungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
@@ -123,6 +131,14 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 <bean id="bausteinUmsetzungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
     <constructor-arg>
         <value>sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<bean id="bausteinVorschlagDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag</value>
     </constructor-arg>
     <property name="sessionFactory" ref="sessionFactory"/>
 </bean>
@@ -387,6 +403,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	  	<property name="gefaehrdungDao" ref="gefaehrdungDao"/>
 	  	<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao"/>
 	  	<property name="configurationDao" ref="configurationDao"/>
+	  	<property name="bausteinVorschlagDao" ref="bausteinVorschlagDao"/>
 	  	
 
 		<!-- DAOs for subclasses of CnATreeElement: -->	  	
@@ -432,7 +449,8 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     </property>
 </bean>
 
-<bean id="baseTxProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" abstract="true">
+<bean id="baseTxProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" 
+	abstract="true">
   <property name="transactionManager" ref="txManager"/>
   <property name="transactionAttributes">
     <props>
@@ -462,12 +480,18 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 
 <!-- BEGIN Security configuration ============================================================================ -->
 
-<bean id="authService" class="sernet.gs.server.AuthenticationService">
+<!-- service to allow application access to currently active roles, i.e. to disable
+	certain items in the view -->
+<bean id="authService" class="sernet.gs.server.security.AuthenticationService">
+	<property name="commandService" ref="commandService"/>
+
 	<security:intercept-methods>
 	<security:protect
-		method="sernet.gs.server.AuthenticationService.getRoles" access="ROLE_USER" />
+		method="sernet.gs.server.security.AuthenticationService.getRoles" access="ROLE_USER" />
 	</security:intercept-methods>
 </bean>
+
+<!-- following beans enable http digest authentication and role based access -->
 
  <security:authentication-manager alias="authenticationManager" />
 
@@ -478,10 +502,11 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	ref="digestProcessingFilterEntryPoint" />
 </bean>
 
+
 <bean id="digestProcessingFilterEntryPoint"
 	class="org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint">
 	<property name="realmName" value="VeriniceServer" />
-	<property name="key" value="acegi" />
+	<property name="key" value="www.verinice.private" />
 	<property name="nonceValiditySeconds" value="10" />
 </bean>
 
@@ -498,10 +523,13 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 
 <bean id="filterSecurityInterceptor"
 	class="org.springframework.security.intercept.web.FilterSecurityInterceptor">
+	
 	<property name="authenticationManager"
 		ref="authenticationManager" />
+	
 	<property name="accessDecisionManager"
 		ref="accessDecisionManager" />
+	
 	<property name="objectDefinitionSource">
 		<security:filter-invocation-definition-source>
 			<security:intercept-url pattern="/service/**"
@@ -526,12 +554,28 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	ref="digestProcessingFilterEntryPoint" />
 </bean>
 
-<security:authentication-provider>
-	<security:user-service id="uds">
-		<security:user name="admin" password="passwort"
-			authorities="ROLE_USER, ROLE_ADMIN" />
-	</security:user-service>
+<security:authentication-provider  
+	user-service-ref="uds">
 </security:authentication-provider>
 
+<!-- 
+<bean id="shaEncoder" class="org.springframework.security.providers.encoding.ShaPasswordEncoder">
+	<constructor-arg value="256" />
+</bean>
+-->
+
+<bean id="uds" class="sernet.gs.server.security.DbUserDetailsService">
+	<property name="commandService" ref="commandService"/>
+
+	<property name="adminuser">
+		<value>admin</value>
+	</property>
+
+	<property name="adminpass">
+		<value>aendermich</value>
+	</property>
+</bean>
+
 <!-- END Security configuration ============================================================================ -->
+
 </beans>
