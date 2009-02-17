@@ -10,6 +10,8 @@
 	<class name="CnALink"
 		mutable="false">
 		
+		<cache usage="read-write" />
+		
 		<composite-id name="id" class="CnALink$Id">
 			<key-property name="dependantId"
 				access="field"
