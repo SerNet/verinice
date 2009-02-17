@@ -73,6 +73,13 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 </bean>
 
 
+<bean id="bausteinVorschlagDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
 <bean id="BSIModelDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
     <constructor-arg>
         <value>sernet.gs.ui.rcp.main.bsi.model.BSIModel</value>
@@ -331,8 +338,8 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	  	<property name="finishedRiskAnalysisListsDAO" ref="finishedRiskAnalysisListsDAO"/>
 	  	<property name="gefaehrdungDao" ref="gefaehrdungDao"/>
 	  	<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao"/>
+	  	<property name="bausteinVorschlagDao" ref="bausteinVorschlagDao"/>
 	  	
-
 		<!-- DAOs for subclasses of CnATreeElement: -->	  	
 	  	<property name="anwendungDAO" ref="anwendungDAO"/>
 	  	<property name="anwendungenKategorieDAO" ref="anwendungenKategorieDAO"/>
@@ -393,10 +400,13 @@ class="org.springframework.orm.hibernate3.HibernateTransactionManager">
   </property>
 </bean>
 
+<bean id="clientExceptionHandler" class="sernet.gs.ui.rcp.main.service.BaseExceptionHandler"/>
+
 <bean id="commandService" parent="baseTxProxy">
   <property name="target">
     <bean class="sernet.gs.ui.rcp.main.service.HibernateCommandService">
         <property name="daoFactory" ref="daoFactory"/>
+        <property name="exceptionHandler" ref="clientExceptionHandler" />
     </bean>
   </property>
   <property name="transactionAttributes">

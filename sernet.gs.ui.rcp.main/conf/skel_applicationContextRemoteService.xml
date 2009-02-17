@@ -27,4 +27,17 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             <value>sernet.gs.ui.rcp.main.service.ICommandService</value>
         </property>
     </bean>
+    
+     <bean id="authService"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>
+                {veriniceserver}/service/authServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.gs.ui.rcp.main.service.IAuthService</value>
+        </property>
+    </bean>
+    
 </beans>
