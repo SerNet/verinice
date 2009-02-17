@@ -107,9 +107,15 @@
             name="verinice"/>
       <command
             categoryId="sernet.gs.ui.rcp.commands"
-            description="Edit multiple elements all at once"
+            description="Mehrere Elemente editieren"
             id="sernet.gs.ui.rcp.main.actions.showbulkeditaction"
-            name="Show Bulk Edit Dialog"/>
+            name="Zeige Bulk Edit Dialog"/>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="Zeige Vorschläge für Bausteine"
+            id="sernet.gs.ui.rcp.main.bausteinzuordnungaction"
+            name="Zeige Vorschläge für Bausteine">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -122,12 +128,16 @@
             commandId="sernet.gs.ui.rcp.main.actions.showbulkeditaction"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="CTRL+SHIFT+B"/>
+      <key
+            commandId="sernet.gs.ui.rcp.main.bausteinzuordnungaction"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+O">
+      </key>
    </extension>
    <extension
          id="product"
          point="org.eclipse.core.runtime.products">
-      <product
-            application="sernet.gs.ui.rcp.main.application"
+      <product  application="sernet.gs.ui.rcp.main.application"
             name="verinice">
          <property
                name="aboutText"
@@ -400,7 +410,7 @@
                enablesFor="+"
                icon="icons/user_edit.png"
                id="sernet.gs.ui.rcp.main.personconfiguration"
-               label="Benutzereinstellungen"
+               label="Benutzereinstellungen..."
                menubarPath="additions"
                style="push"
                tooltip="Username, Passwort, Mailadresse u.a. benutzerspezifische Einstellungen">

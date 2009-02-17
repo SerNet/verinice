@@ -9,7 +9,7 @@
          SerNet verinice
 
 (c) SerNet Service Network GmbH and others
-1996-2008
+1996-2009
 
 
 Contact the author:
@@ -22,8 +22,8 @@ http://www.verinice.org
 
 This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it under certain conditions.
-Verinice is licensed to you under the conditions of the GPLv3.
-See the LICENSE.txt contained in the program folder or the verinice Plugin-Details for details.
+Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.
+See the LICENSE.txt contained in the program folder or the verinice Plugin-Details in the help menu for details.
       </text>
    </aboutInfo>
 
