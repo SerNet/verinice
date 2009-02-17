@@ -11,11 +11,11 @@
 ###########################################################################
     	DO NOT EDIT. ANY CHANGES YOU MAKE WILL BE OVERWRITTEN
     	
-    	Please configure your databse in the preferences dialog of
+    	Please configure your database in the preferences dialog of
     	the application.
     	
     	Or edit skel_hibernate.cfg.xml in the application .jar file, 
-    	but if you break it, you fix it.
+    	but: if you break it, you fix it.
 ###########################################################################
 
 
