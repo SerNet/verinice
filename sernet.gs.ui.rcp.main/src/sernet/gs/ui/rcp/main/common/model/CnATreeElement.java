@@ -23,6 +23,7 @@ import sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Schutzbedarf;
+import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -47,7 +48,7 @@ import sernet.snutils.DBException;
  * @author koderman@sernet.de
  * 
  */
-public abstract class CnATreeElement implements Serializable, IBSIModelListener, IEntityChangedListener {
+public abstract class CnATreeElement implements Serializable, IBSIModelListener {
 
 	private Integer dbId;
 	
@@ -65,6 +66,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	private LinkKategorie links = new LinkKategorie(this);
 
 	private Set<CnATreeElement> children;
+	
+	private boolean childrenLoaded = false;
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -137,7 +140,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 	
 	/**
-	 * Propagate event upstairs.
+	 * Propagate event upwards.
 	 * 
 	 * @param category
 	 * @param child
@@ -175,22 +178,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		this.parent = parent;
 	}
 
-	public void dependencyChanged(IMLPropertyType type,
-			IMLPropertyOption opt) {
-		entityChanged();
-	}
-
-	public void propertyChanged(PropertyChangedEvent evt) {
-		// TODO move this to schutzbedarfprovider as new entitychangelistener
-		entityChanged();
-	}
-
-	public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
-		entityChanged();
-	}
-		
-	
-
 	protected CnATreeElement() {
 		if (this.uuid == null) {
 			UUID randomUUID = java.util.UUID.randomUUID();
@@ -198,10 +185,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		}
 		
 		children = new HashSet<CnATreeElement>();
-	}
-
-	public void entityChanged() {
-			getModelChangeListener().childChanged(parent, this);
 	}
 
 	public CnATreeElement getParent() {
@@ -227,18 +210,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 
 	public void setEntity(Entity newEntity) {
-		if (entity != null) {
-			entity.removeListener(this);
-			if(isSchutzbedarfProvider())
-				entity.removeListener(getSchutzbedarfProvider().getChangeListener());
-		}
 		entity = newEntity;
-
-		if (entity != null) {
-			entity.addChangeListener(this);
-			if (isSchutzbedarfProvider())
-				entity.addChangeListener(getSchutzbedarfProvider().getChangeListener());
-		}
 	}
 
 	public Integer getDbId() {
@@ -291,18 +263,22 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	public void addLinkDown(CnALink link) {
 		linksDown.add(link);
-		childChanged(parent, this);
-		linkChanged(link);
 	}
 	
 	public void linkChanged(CnALink link) {
-			getModelChangeListener().linkChanged(link);
+		getModelChangeListener().linkChanged(link);
+	}
+	
+	public void linkRemoved(CnALink link) {
+		getModelChangeListener().linkRemoved(link);
+	}
+	
+	public void linkAdded(CnALink link) {
+		getModelChangeListener().linkAdded(link);
 	}
 
 	public void removeLinkDown(CnALink link) {
 		linksDown.remove(link);
-		childChanged(parent, this);
-		linkChanged(link);
 	}
 
 	public void addLinkUp(CnALink link) {
@@ -319,16 +295,16 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	public ILinkChangeListener getLinkChangeListener() {
 		return new ILinkChangeListener() {
-			public void integritaetChanged() {
-				// default: do nothing
+			public void integritaetChanged(CascadingTransaction ta) {
+				// do nothing
 			}
 
-			public void verfuegbarkeitChanged() {
-				// default: do nothing
+			public void verfuegbarkeitChanged(CascadingTransaction ta) {
+				// do nothing
 			}
 
-			public void vertraulichkeitChanged() {
-				// default: do nothing
+			public void vertraulichkeitChanged(CascadingTransaction ta) {
+				// do nothing
 			}
 		};
 	}
@@ -365,13 +341,15 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		if (modelChangeListener != null)
 			return modelChangeListener;
 		
-		BSIModel model = CnAElementFactory.getLoadedModel();
-		if (model != null && ! (model instanceof NullModel)) {
-			modelChangeListener = model;
-		}
-		else {
-			modelChangeListener = new NullListener();
-		}
+//		BSIModel model = CnAElementFactory.getLoadedModel();
+//		if (model != null && ! (model instanceof NullModel)) {
+//			modelChangeListener = model;
+//		}
+//		else {
+//			modelChangeListener = new NullListener();
+//		}
+		
+		modelChangeListener = new NullListener();
 		return modelChangeListener;
 	}
 
@@ -395,6 +373,44 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		// this operation requires correct implementation of "equals()" in newElement:
 		this.children.remove(newElement);
 		this.children.add(newElement);
+	}
+
+	public void fireSchutzbedarfChanged(CascadingTransaction ta) {
+		if (isSchutzbedarfProvider()) {
+			getSchutzbedarfProvider().updateAll(ta);
+		}
+	}
+
+	public void replace(CnATreeElement newElement) {
+		if (this == newElement)
+			return;
+		
+		if (getParent() == null) {
+			// replace children of root element:
+			
+			this.children = newElement.getChildren();
+			this.setChildrenLoaded(true);
+			
+			return;
+		}
+		
+		else {
+			getParent().removeChild(this);
+			CnAElementFactory.getLoadedModel().childRemoved(parent, this);
+			
+			getParent().addChild(newElement);
+			newElement.setParent(getParent());
+			CnAElementFactory.getLoadedModel().childAdded(parent, newElement);
+		}
+		
+	}
+
+	public boolean isChildrenLoaded() {
+		return childrenLoaded;
+	}
+
+	public void setChildrenLoaded(boolean childrenLoaded) {
+		this.childrenLoaded = childrenLoaded;
 	}
 
 	

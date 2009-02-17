@@ -5,11 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
 
@@ -30,15 +25,14 @@ public class CascadingTransaction {
 	private Object initiator;
 	private Set<CnATreeElement> visited = new HashSet<CnATreeElement>();
 	private boolean aborted;
-	private static CascadingTransaction instance;
 	
-	private CascadingTransaction() {}
+	private Object loopObject = "";
+	private boolean loopDetected = false;
+
 	
-	public synchronized static CascadingTransaction getInstance() {
-		if (instance == null)
-			instance = new CascadingTransaction();
-		return instance;
-	}
+	public CascadingTransaction() {}
+	
+	
 	
 	/**
 	 * The given objects enters the transaction.
@@ -67,7 +61,12 @@ public class CascadingTransaction {
 	}
 	
 	public synchronized boolean hasBeenVisited(Object o) {
-		return visited.contains(o) || aborted;
+		boolean loop = visited.contains(o) || aborted;
+		if (loop) {
+			loopDetected = true;
+			loopObject = o;
+		}
+		return loop;
 	}
 	
 	public void abort() {
@@ -101,18 +100,17 @@ public class CascadingTransaction {
 		if (tosave.size() == 0)
 			return;
 		
-		Job job = new Job("Übertrage Schutzbedarf...") {
-			protected IStatus run(IProgressMonitor monitor) {
-				try {
-					CnAElementHome.getInstance().update(tosave);
-				} catch (Exception e) {
-					ExceptionUtil.log(e, "Fehler beim Speichern.");
-					return Status.CANCEL_STATUS;
-				}
-				return Status.OK_STATUS;
-			}
-		};
-		job.schedule();
+		CnAElementHome.getInstance().update(tosave);
+	}
+
+
+
+	public boolean hasLooped() {
+		return this.loopDetected;
+	}
+	
+	public Object getLoopedObject() {
+		return this.loopObject;
 	}
 	
 

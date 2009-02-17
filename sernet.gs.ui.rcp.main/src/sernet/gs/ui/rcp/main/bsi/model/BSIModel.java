@@ -99,6 +99,19 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 			listener.linkChanged(link);
 		}
 	}
+	
+	@Override
+	public void linkRemoved(CnALink link) {
+		for (IBSIModelListener listener : getListeners()) {
+			listener.linkRemoved(link);
+		}
+	}
+	
+	public void linkAdded(CnALink link) {
+		for (IBSIModelListener listener : getListeners()) {
+			listener.linkAdded(link);
+		}
+	}
 
 	public void refreshAllListeners() {
 		for (IBSIModelListener listener : getListeners()) {

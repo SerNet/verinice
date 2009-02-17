@@ -47,6 +47,8 @@ public class CnALink implements Serializable {
 		}
 		
 		public int hashCode() {
+			if (dependantId == null || dependencyId == null)	
+					return super.hashCode();
 			return dependantId.hashCode() + dependencyId.hashCode();
 		}
 		
@@ -76,9 +78,10 @@ public class CnALink implements Serializable {
 		this.linkType = linkTypeFor(dependency);
 		
 		// update target:
-		dependency.getLinkChangeListener().integritaetChanged();
-		dependency.getLinkChangeListener().verfuegbarkeitChanged();
-		dependency.getLinkChangeListener().vertraulichkeitChanged();
+		CascadingTransaction ta = new CascadingTransaction();
+		dependency.getLinkChangeListener().integritaetChanged(ta);
+		dependency.getLinkChangeListener().verfuegbarkeitChanged(ta);
+		dependency.getLinkChangeListener().vertraulichkeitChanged(ta);
 		
 	}
 	
@@ -106,9 +109,10 @@ public class CnALink implements Serializable {
 		dependency.removeLinkUp(this);
 
 		// update target:
-		dependency.getLinkChangeListener().integritaetChanged();
-		dependency.getLinkChangeListener().verfuegbarkeitChanged();
-		dependency.getLinkChangeListener().vertraulichkeitChanged();
+		CascadingTransaction ta = new CascadingTransaction();
+		dependency.getLinkChangeListener().integritaetChanged(ta);
+		dependency.getLinkChangeListener().verfuegbarkeitChanged(ta);
+		dependency.getLinkChangeListener().vertraulichkeitChanged(ta);
 	}
 
 	private int linkTypeFor(CnATreeElement target) {
@@ -175,6 +179,5 @@ public class CnALink implements Serializable {
 		return dependant.getLinks();
 	}
 
-	
 	
 }

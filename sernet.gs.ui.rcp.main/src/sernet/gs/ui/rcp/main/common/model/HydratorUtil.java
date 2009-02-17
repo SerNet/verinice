@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.hui.common.connect.Entity;
@@ -24,7 +25,7 @@ import sernet.hui.common.connect.PropertyList;
  */
 public class HydratorUtil {
 
-	private static void hydrateEntity(IBaseDao dao, Entity entity) {
+	public static void hydrateEntity(IBaseDao dao, Entity entity) {
 		if (entity == null)
 			return;
 		Map<String, PropertyList> lists = entity.getTypedPropertyLists();
@@ -47,6 +48,10 @@ public class HydratorUtil {
 		}
 	}
 	
+	public static void hydrateEntity(IBaseDao dao, CnATreeElement element) {
+		hydrateEntity(dao, element.getEntity());
+	}
+	
 	public static <T extends CnATreeElement> void hydrateElements(IBaseDao dao, List<T> elements, boolean includingCollections) {
 		for (CnATreeElement element : elements) {
 			hydrateElement(dao, element, includingCollections);
@@ -59,6 +64,7 @@ public class HydratorUtil {
 			Configuration configuration, boolean includingCollections) {
 		hydrateEntity(dao, configuration.getEntity());
 	}
-	
+
+
 
 }

@@ -16,5 +16,9 @@ public interface IBSIModelListener {
 
 	void linkChanged(CnALink link);
 	
+	void linkRemoved(CnALink link);
+	
+	void linkAdded(CnALink link);
+	
 
 }

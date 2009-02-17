@@ -15,6 +15,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
@@ -28,6 +29,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Raum;
 import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.SubtypenZielobjekte;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
 import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
@@ -36,9 +38,11 @@ import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
 import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateAnwendung;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateITVerbund;
+import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbMigration;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.gs.ui.rcp.main.service.migrationcommands.MigrateDbTo0_92;
@@ -200,10 +204,10 @@ public class CnAElementFactory {
 					public BausteinUmsetzung build(CnATreeElement container,
 							BuildInput<Baustein> input) throws Exception {
 						
-						if (container.containsBausteinUmsetzung(input.getInput().getId()))
+						BausteinUmsetzung bu = dbHome.save(container, input.getInput());
+						if (bu == null)
 							return null;
 						
-						BausteinUmsetzung bu = dbHome.save(container, BausteinUmsetzung.class, input.getInput());
 						container.addChild(bu);
 						bu.setParent(container);
 						return bu;
@@ -251,6 +255,9 @@ public class CnAElementFactory {
 		if (builder == null)
 			throw new Exception("Konnte Element nicht erzeugen.");
 		CnATreeElement child = builder.build(container, input);
+		
+		// notify all listeners:
+		getLoadedModel().childAdded(container, child);
 		return child;
 	}
 	
@@ -304,15 +311,24 @@ public class CnAElementFactory {
 		loadedModel.addChild(verbund);
 
 		verbund.createNewCategories();
+		
+		createBausteinVorschlaege(loadedModel);
 
 		loadedModel = dbHome.save(loadedModel);
-//		dbHome.save(verbund);
-//		for (CnATreeElement kategorie : verbund.getChildren()) {
-//			dbHome.save(kategorie);
-//		}
 
 		fireLoad();
 		return loadedModel;
+	}
+
+	private void createBausteinVorschlaege(BSIModel newModel) {
+		SubtypenZielobjekte mapping = new SubtypenZielobjekte();
+		List<BausteinVorschlag> list = mapping.getMapping();
+		UpdateMultipleElements<BausteinVorschlag> command = new UpdateMultipleElements<BausteinVorschlag>(list);
+		try {
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
+		} catch (CommandException e) {
+			throw new RuntimeCommandException(e);
+		}
 	}
 
 	private void checkDbVersion() throws CommandException {

@@ -46,6 +46,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateLink;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
@@ -133,10 +134,10 @@ public class CnAElementHome {
 		return saveCommand.getNewElement();
 	}
 	
-	public BausteinUmsetzung save(CnATreeElement container, Class<BausteinUmsetzung> type, Baustein baustein) throws Exception {
+	public BausteinUmsetzung save(CnATreeElement container, Baustein baustein) throws Exception {
 		Logger.getLogger(this.getClass()).debug(
 				"Creating new element in " + container);
-		CreateBaustein saveCommand = new CreateBaustein(container, type, baustein);
+		CreateBaustein saveCommand = new CreateBaustein(container, baustein);
 		saveCommand = commandService.executeCommand(saveCommand);
 		return saveCommand.getNewElement();
 	}
@@ -146,28 +147,34 @@ public class CnAElementHome {
 				"Saving new link from " + dropTarget + " to " + dragged);
 		CreateLink command = new CreateLink(dropTarget, dragged);
 		command = commandService.executeCommand(command);
+		
+		// notify listeners about new object:
+		CnAElementFactory.getLoadedModel().linkAdded(command.getLink());
 		return command.getLink();
-}
+	}
 	
-	
-
 	private void logChange(CnATreeElement element, int changeType) {
 		// TODO implement
 	}
 
-
 	public void remove(CnATreeElement element) throws Exception {
 		RemoveElement command = new RemoveElement(element);
 		command = commandService.executeCommand(command);
+		
+		// notify all listeners:
+		CnAElementFactory.getLoadedModel().childRemoved(element.getParent(), element);
 	}
 
 	public void remove(CnALink element) throws Exception {
 		RemoveLink command = new RemoveLink(element);
 		command = commandService.executeCommand(command);
+		
+		// notify listeners:
+		CnAElementFactory.getLoadedModel().linkRemoved(element);
 	}
 
 	public void update(CnATreeElement element) throws Exception {	
-		UpdateElement command = new UpdateElement(element);
+		UpdateElement command = new UpdateElement(element, true);
 		command = commandService.executeCommand(command);
 	}
 
@@ -214,7 +221,7 @@ public class CnAElementHome {
 
 		nullMonitor.setTaskName("Lade Grundschutz Modell...");
 		
-		LoadBSIModelComplete command = new LoadBSIModelComplete(true);
+		LoadBSIModelForTreeView command = new LoadBSIModelForTreeView();
 		command = commandService.executeCommand(command);
 		BSIModel model = command.getModel();
 		return model;
@@ -228,7 +235,6 @@ public class CnAElementHome {
 	 * @throws CommandException 
 	 */
 	public void refresh(CnATreeElement cnAElement) throws CommandException {
-		// FIXME server: refresh changes
 		RefreshElement command = new RefreshElement(cnAElement);
 		command = commandService.executeCommand(command);
 		CnATreeElement refreshedElement = command.getElement();
@@ -236,7 +242,7 @@ public class CnAElementHome {
 	}
 
 	public List<ChangeLogEntry> loadChangesSince(Date lastUpdate) {
-		// TODO implement
+		// FIXME server: implement change log
 		return null;
 	}
 	

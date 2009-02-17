@@ -470,8 +470,6 @@ public class CnAWorkspace {
 	public synchronized void createDatabaseConfig()
 			throws NullPointerException, IOException {
 		
-		// FIXME server: recreate hibernate config and recreate session factory bean (spring)
-		
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		createDatabaseConfig(prefs.getString(PreferenceConstants.DB_URL), prefs
 				.getString(PreferenceConstants.DB_USER), prefs
