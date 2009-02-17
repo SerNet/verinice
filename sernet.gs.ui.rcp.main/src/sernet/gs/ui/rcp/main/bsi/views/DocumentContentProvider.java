@@ -88,6 +88,15 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 	public void linkChanged(CnALink link) {
 		// do nothing
 	}
+	
+	public void linkRemoved(CnALink link) {
+		// do nothing
+		
+	}
+	
+	public void linkAdded(CnALink link) {
+		// do nothing
+	}
 
 	public void childRemoved(CnATreeElement category, CnATreeElement child) {
 		modelRefresh();

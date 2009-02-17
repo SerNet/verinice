@@ -33,6 +33,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
@@ -47,6 +48,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
+import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.CopyBSIModelViewAction;
@@ -63,6 +65,7 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.SubtypenZielobjekte;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewCloseDBAction;
@@ -137,6 +140,8 @@ public class BsiModelView extends ViewPart {
 	private Action selectLinksAction;
 
 	private TreeViewerCache cache;
+
+	private BausteinZuordnungAction bausteinZuordnungAction;
 
 	public void setNullModel() {
 		model = new NullModel();
@@ -214,6 +219,7 @@ public class BsiModelView extends ViewPart {
 		manager.add(selectLinksAction);
 		selectEqualsAction.setEnabled(bausteinSelected());
 		manager.add(konsolidatorAction);
+		manager.add(bausteinZuordnungAction);
 
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
@@ -225,6 +231,8 @@ public class BsiModelView extends ViewPart {
 		manager.add(closeDBAction);
 
 	}
+
+	
 
 	private boolean bausteinSelected() {
 		IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
@@ -255,6 +263,7 @@ public class BsiModelView extends ViewPart {
 			}
 		});
 		Menu menu = menuMgr.createContextMenu(viewer.getControl());
+		
 		viewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(menuMgr, viewer);
 	}
@@ -325,6 +334,8 @@ public class BsiModelView extends ViewPart {
 		konsolidatorAction = new ShowKonsolidatorAction(getViewSite()
 				.getWorkbenchWindow(), "Konsolidator...");
 
+		bausteinZuordnungAction = new BausteinZuordnungAction(getViewSite().getWorkbenchWindow());
+
 		doubleClickAction = new Action() {
 			public void run() {
 				Object sel = ((IStructuredSelection) viewer.getSelection())
@@ -341,11 +352,12 @@ public class BsiModelView extends ViewPart {
 					wizDialog.open();
 				}
 				
-				else if (sel instanceof CnALink) {
-					// jump to linked item:
-					viewer.setSelection(new StructuredSelection(((CnALink) sel)
-							.getDependency()), true);
-				}
+				// FIXME server: double click on link loads and jumps to linked object
+//				else if (sel instanceof CnALink) {
+//					// jump to linked item:
+//					viewer.setSelection(new StructuredSelection(((CnALink) sel)
+//							.getDependency()), true);
+//				}
 				
 				else
 					// open editor:

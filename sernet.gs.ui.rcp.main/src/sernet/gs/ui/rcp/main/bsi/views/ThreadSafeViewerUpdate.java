@@ -4,6 +4,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -79,7 +80,7 @@ public class ThreadSafeViewerUpdate {
 		}
 	}
 	
-	private void reveal(final CnATreeElement child) {
+	public void reveal(final Object child) {
 		if (Display.getCurrent() != null) {
 			if (!(child instanceof MassnahmenUmsetzung))
 				viewer.reveal(child);

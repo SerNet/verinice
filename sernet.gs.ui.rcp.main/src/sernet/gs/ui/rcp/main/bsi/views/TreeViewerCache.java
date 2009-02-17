@@ -6,18 +6,19 @@ import java.util.WeakHashMap;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
+
 public class TreeViewerCache {
 
 	private Map<Object, Object> cache;
 	
-	private Object present = new Object();
+	private static final Object PRESENT = new Object();
 	
 	public TreeViewerCache() {
 		this.cache = new WeakHashMap<Object, Object>();
 	}
 	
 	public void addObject(Object o) {
-		this.cache.put(o, present);
+		this.cache.put(o, PRESENT);
 	}
 	
 	public void clear() {
@@ -32,9 +33,9 @@ public class TreeViewerCache {
 		return null;
 	}
 
-	public void clear(CnATreeElement oldElement) {
+	public void clear(Object oldElement) {
 		this.cache.remove(oldElement);
 	}
-	
+
 	
 }

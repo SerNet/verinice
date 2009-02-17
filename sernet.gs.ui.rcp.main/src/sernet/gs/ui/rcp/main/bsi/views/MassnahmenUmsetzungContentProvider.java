@@ -67,6 +67,16 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 		if (link.getDependency() instanceof Person)
 			updateViewer(this.REFRESH, null);
 	}
+	
+	public void linkAdded(CnALink link) {
+		if (link.getDependency() instanceof Person)
+			updateViewer(this.REFRESH, null);
+	}
+	
+	public void linkRemoved(CnALink link) {
+		if (link.getDependency() instanceof Person)
+			updateViewer(this.REFRESH, null);
+	}
 
 	public void childChanged(CnATreeElement category, CnATreeElement child) {
 		if (child instanceof MassnahmenUmsetzung)

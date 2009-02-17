@@ -17,67 +17,96 @@ import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
  * Check for model changes and update our display.
  */
 public class BSIModelViewUpdater implements IBSIModelListener {
-	
+
 	private TreeViewer viewer;
-	private TreeViewerCache cache;
 	private ThreadSafeViewerUpdate updater;
+	
+	// cache to figure out if an element is currently displayed in the tree or not
+	private TreeViewerCache cache;
 
 	BSIModelViewUpdater(TreeViewer viewer, TreeViewerCache cache) {
 		this.viewer = viewer;
 		this.cache = cache;
-		 this.updater = new ThreadSafeViewerUpdate(viewer);
+		this.updater = new ThreadSafeViewerUpdate(viewer);
+	}
+
+	public void childAdded(CnATreeElement category, CnATreeElement child) {
+		updater.add(category, child);
+	}
+
+	public void childChanged(CnATreeElement category, CnATreeElement child) {
+		CnATreeElement cachedObject = cache.getCachedObject(child);
+		if (cachedObject == null || cachedObject == child)
+			return; // not currently displayed or already changed object itself so nothing to update
+
+		// update entity of cached object:
+		try {
+			CnAElementHome.getInstance().refresh(cachedObject);
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "Fehler beim Aktualisieren der Baumansicht.");
+		}
+		updater.refresh(cachedObject);
+	}
+
+	public void childRemoved(CnATreeElement category, CnATreeElement child) {
+		updater.refresh();
+	}
+
+	public void modelRefresh() {
+		updater.refresh();
+	}
+
+	public void linkChanged(CnALink link) {
+		// is top element visible?
+		CnATreeElement oldElement = cache.getCachedObject(link.getParent()
+				.getParent());
+		
+		if (oldElement != null) {
+			// load and add linkkategory:
+			oldElement.setLinks(link.getParent());
+			
+			// replace old instance of link with new one:
+			oldElement.removeLinkDown(link);
+			oldElement.addLinkDown(link);
+			
+			updater.refresh(oldElement.getParent());
+			updater.reveal(link);
+		}
 	}
 	
-
-		public void childAdded(CnATreeElement category, CnATreeElement child) {
-			updater.add(category, child);
+	public void linkAdded(CnALink link) {
+		// is top element visible?
+		CnATreeElement oldElement = cache.getCachedObject(link.getParent()
+				.getParent());
+		
+		if (oldElement != null) {
+			// load and add linkkategory:
+			oldElement.setLinks(link.getParent());
+			oldElement.addLinkDown(link);
+			updater.add(link.getParent(), link);
+			updater.reveal(link);
 		}
-
-		public void childChanged(CnATreeElement category, CnATreeElement child) {
-			CnATreeElement cachedObject = cache.getCachedObject(child);
-			if (cachedObject == null) 
-				return; // not currently displayed, so nothing to update
-				
-			try {
-				CnAElementHome.getInstance().refresh(cachedObject);
-			} catch (CommandException e) {
-				ExceptionUtil.log(e, "Fehler beim Aktualisieren der Baumansicht.");
-			}
-			updater.refresh(cachedObject);
+		
+	}
+	
+	
+	public void linkRemoved(CnALink link) {
+		// is top element visible?
+		CnATreeElement oldElement = cache.getCachedObject(link.getParent()
+				.getParent());
+		
+		if (oldElement != null) {
+			// load and add linkkategory:
+			oldElement.removeLinkDown(link);
+			updater.remove(link);
 		}
+	}
 
-		public void childRemoved(CnATreeElement category, CnATreeElement child) {
-			updater.refresh();
-		}
-
-		public void modelRefresh() {
-			updater.refresh();
-		}
-
-		public void linkChanged(CnALink link) {
-			// is top element visible?
-			CnATreeElement oldElement = cache.getCachedObject(link.getParent().getParent());
-			if (oldElement != null) {
-				// load and add linkkategory:
-				oldElement.setLinks(link.getParent());
-				try {
-					replaceElement(oldElement);
-					updater.refresh(oldElement.getParent());
-				} catch (CommandException e) {
-					ExceptionUtil.log(e.getCause(), "Fehler beim Aktualisiewren der Verknüpfung.");
-				}
-			}
-		}
-
-
-		private void replaceElement(CnATreeElement oldElement) throws CommandException {
-			RefreshElement command = new RefreshElement(oldElement, true);
-			command = ServiceFactory.lookupCommandService().executeCommand(
-					command);
-			CnATreeElement newElement = command.getElement();
-			
-			cache.clear(oldElement);
-			newElement.setParent(oldElement.getParent());
-			oldElement.getParent().replaceChild(newElement);
-		}
+	private void replaceElement(CnATreeElement oldElement)
+			throws CommandException {
+		RefreshElement command = new RefreshElement(oldElement, true);
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
+		CnATreeElement newElement = command.getElement();
+		oldElement.replace(newElement);
+	}
 }

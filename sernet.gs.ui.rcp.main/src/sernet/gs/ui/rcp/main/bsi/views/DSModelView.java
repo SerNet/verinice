@@ -108,6 +108,15 @@ public class DSModelView extends ViewPart {
 		public void linkChanged(CnALink link) {
 			// do nothing
 		}
+		
+		public void linkRemoved(CnALink link) {
+			// do nothing
+			
+		}
+		
+		public void linkAdded(CnALink link) {
+			// do nothing
+		}
 	};
 
 	private DSModelViewUpdater viewUpdater;
