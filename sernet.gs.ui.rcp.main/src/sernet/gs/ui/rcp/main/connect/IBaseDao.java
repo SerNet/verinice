@@ -10,6 +10,8 @@ public interface IBaseDao<T, ID extends Serializable> {
 		 
 		 public T merge(T entity);
 
+		 public T merge(T entity, boolean fireUpdates);
+
 		 public void delete(T entity);
 
 		 public T findById(ID id);

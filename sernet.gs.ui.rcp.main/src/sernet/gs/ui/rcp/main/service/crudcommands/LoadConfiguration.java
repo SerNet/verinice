@@ -9,6 +9,7 @@ import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.DAOFactory;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.hui.common.connect.Property;
 
 /**
  * Load configuration items for person, or global configuration if person is null.

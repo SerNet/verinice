@@ -7,7 +7,9 @@ import org.hibernate.Hibernate;
 import org.hibernate.collection.PersistentCollection;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.LoopException;
 
 public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSupport 
 	implements IBaseDao<T, ID> {
@@ -19,7 +21,7 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 
 		 public void saveOrUpdate(T entity) {
 		     getHibernateTemplate().saveOrUpdate(entity);
-		     
+		     fireChange(entity);
 		 }
 
 		 public void delete(T entity) {
@@ -46,8 +48,15 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			getHibernateTemplate().flush();
 		}
 
+		public T merge(T entity, boolean fireChange) {
+			T mergedElement = (T) getHibernateTemplate().merge(entity);
+			if (fireChange)
+				fireChange(mergedElement);
+			return mergedElement;
+		}
+		
 		public T merge(T entity) {
-			return (T) getHibernateTemplate().merge(entity);
+			return merge(entity, false);
 		}
 		
 		public void refresh(T element) {
@@ -58,5 +67,14 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			getHibernateTemplate().load(element, id);
 		}
 		
-
+		private void fireChange(T element) {
+			if (element instanceof CnATreeElement) {
+				CnATreeElement elmt = (CnATreeElement) element;
+				CascadingTransaction ta = new CascadingTransaction();
+				elmt.fireSchutzbedarfChanged(ta);
+				if (ta.hasLooped()) {
+					throw new LoopException(ta.getLoopedObject());
+				}
+			}
+		}
 }

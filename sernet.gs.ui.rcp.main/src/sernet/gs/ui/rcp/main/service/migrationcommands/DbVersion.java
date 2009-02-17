@@ -36,16 +36,18 @@ public class DbVersion extends GenericCommand  {
 	/**
 	 * Version number of DB that can be used:
 	 */
-	public static final double COMPATIBLE_DB_VERSION = 0.94D;
+	public static final double COMPATIBLE_DB_VERSION = 0.95D;
 	
 	/**
 	 * Version number of client that can be used.
+	 * (Must be the same in client / server code of this class.)
+	 * 
 	 * This valkue is submitted by the client on every first connect in the
 	 * instance variable <code>clientVersion</code>. If this value differs from
 	 * the static field, the server throws an exception to prevent incompatible clients
 	 * from connecting.
 	 */
-	public static final double COMPATIBLE_CLIENT_VERSION = 0.94D;
+	public static final double COMPATIBLE_CLIENT_VERSION = 0.95D;
 
 	/**
 	 * Update DB version to compatible DB version.
@@ -70,6 +72,11 @@ public class DbVersion extends GenericCommand  {
 			 
 			 if (dbVersion < 0.94D) {
 				 DbMigration migration = new MigrateDbTo0_94();
+				 getCommandService().executeCommand(migration);
+			 }
+			 
+			 if (dbVersion < 0.95D) {
+				 DbMigration migration = new MigrateDbTo0_95();
 				 getCommandService().executeCommand(migration);
 			 }
 	}

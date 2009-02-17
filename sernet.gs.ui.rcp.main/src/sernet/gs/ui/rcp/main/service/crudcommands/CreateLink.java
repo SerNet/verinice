@@ -31,21 +31,24 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
 	}
 	
 	public void execute() {
-		IBaseDao<T, Serializable> dao 
-			= (IBaseDao<T, Serializable>) getDaoFactory().getDAO(CnALink.class);
+		IBaseDao<CnALink, Serializable> linkDao 
+			= (IBaseDao<CnALink, Serializable>) getDaoFactory().getDAO(CnALink.class);
 		
-		IBaseDao<U, Serializable> dao2 
+		IBaseDao<U, Serializable> draggedDao 
 		= (IBaseDao<U, Serializable>) getDaoFactory().getDAO(dragged.getClass());
 
-		IBaseDao<V, Serializable> dao3 
+		IBaseDao<V, Serializable> targetDao 
 		= (IBaseDao<V, Serializable>) getDaoFactory().getDAO(target.getClass());
 		
-		dragged = dao2.merge(dragged);
-		target = dao3.merge(target);
+		draggedDao.reload(dragged, dragged.getDbId());
+		targetDao.reload(target, target.getDbId());
 		
 		link = new CnALink(target, dragged);
+		linkDao.merge(link);
+		
 		// make sure parent object is loaded for tree display:
 		link.getParent().getParent();
+		link.getTitle();
 	}
 
 	public CnALink getLink() {

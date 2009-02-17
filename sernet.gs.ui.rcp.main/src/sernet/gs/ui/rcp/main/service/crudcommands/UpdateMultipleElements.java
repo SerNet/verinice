@@ -21,7 +21,7 @@ public class UpdateMultipleElements<T> extends GenericCommand {
 			IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory()
 				.getDAO(elements.get(0).getClass());
 			for (T element : elements) {
-				T mergedElement = dao.merge(element);
+				T mergedElement = dao.merge(element, true);
 				mergedElements.add(mergedElement);
 			}
 			elements = mergedElements;

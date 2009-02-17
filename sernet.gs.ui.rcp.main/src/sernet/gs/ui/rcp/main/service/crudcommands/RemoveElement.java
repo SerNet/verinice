@@ -16,7 +16,7 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
 	
 	public void execute() {
 		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
-		element = dao.merge(element);
+		dao.reload(element, element.getDbId());
 		element.remove();
 		dao.delete(element);
 	}

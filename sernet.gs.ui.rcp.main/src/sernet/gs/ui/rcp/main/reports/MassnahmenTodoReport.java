@@ -28,7 +28,7 @@ import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 
 /**

@@ -24,8 +24,6 @@ public class ClientServerPreferencePage
 
 	private RadioGroupFieldEditor operationMode;
 	private StringFieldEditor serverURI;
-	private StringFieldEditor serverUser;
-	private StringFieldEditor serverPass;
 	
 
 	public ClientServerPreferencePage() {
@@ -45,20 +43,13 @@ public class ClientServerPreferencePage
 	public void createFieldEditors() {
 		createRadioGroup();
 		
+		// FIXME server: encrypt saved passworts, needs manual implementation of http digest dialog in RCP to hash passwords
 		serverURI = new StringFieldEditor(PreferenceConstants.VNSERVER_URI, 
 				"Verinice-Server", 
 				getFieldEditorParent());
 		addField(serverURI);
 		
-		serverUser = new StringFieldEditor(PreferenceConstants.VNSERVER_USER, 
-				"User", 
-				getFieldEditorParent());
-		addField(serverUser);
-
-		serverPass = new StringFieldEditor(PreferenceConstants.VNSERVER_PASS, 
-				"Passwort", 
-				getFieldEditorParent());
-		addField(serverPass);
+		
 	}
 	
 	@Override
@@ -70,8 +61,6 @@ public class ClientServerPreferencePage
 				.equals(PreferenceConstants.OPERATION_MODE_STANDALONE);
 			
 			serverURI.setEnabled(!standalone, getFieldEditorParent());
-			serverUser.setEnabled(!standalone, getFieldEditorParent());
-			serverPass.setEnabled(!standalone, getFieldEditorParent());
 		}
 	}
 	
@@ -83,8 +72,6 @@ public class ClientServerPreferencePage
 				Object newValue = event.getNewValue();
 				boolean servermode = newValue.equals(PreferenceConstants.OPERATION_MODE_WITHSERVER);
 				serverURI.setEnabled(servermode, getFieldEditorParent());
-				serverUser.setEnabled(servermode, getFieldEditorParent());
-				serverPass.setEnabled(servermode, getFieldEditorParent());
 			}
 		}
 	}

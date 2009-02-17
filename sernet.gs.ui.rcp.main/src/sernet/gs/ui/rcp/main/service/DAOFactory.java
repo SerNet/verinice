@@ -10,6 +10,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
@@ -71,6 +72,13 @@ public class DAOFactory {
 	 */
 	public void setGefaehrdungDao(IBaseDao<Gefaehrdung, Integer> dao) {
 		daos.put(Gefaehrdung.class, dao);
+	}
+	
+	/**
+	 * Setter method used by spring to inject DAO.
+	 */
+	public void setBausteinVorschlagDao(IBaseDao<BausteinVorschlag, Integer> dao) {
+		daos.put(BausteinVorschlag.class, dao);
 	}
 	
 	/**

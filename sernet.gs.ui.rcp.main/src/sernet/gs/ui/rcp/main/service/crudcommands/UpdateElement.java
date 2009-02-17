@@ -8,15 +8,16 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 public class UpdateElement<T> extends GenericCommand {
 
 	private T element;
+	private boolean fireupdates;
 
-	public UpdateElement(T element) {
+	public UpdateElement(T element, boolean fireUpdates) {
 		this.element = element;
+		this.fireupdates = fireUpdates;
 	}
 
 	public void execute() {
-		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory()
-				.getDAO(element.getClass());
-		element = dao.merge(element);
+		IBaseDao dao =  getDaoFactory()	.getDAOForObject(element);
+		element = (T) dao.merge(element, fireupdates);
 	}
 
 	public T getElement() {

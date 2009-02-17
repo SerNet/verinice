@@ -26,20 +26,24 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 public class CreateBaustein extends GenericCommand {
 
 	private CnATreeElement container;
-	private Class type;
 	private BausteinUmsetzung child;
 	private Baustein baustein;
 
-	public CreateBaustein(CnATreeElement container, Class<BausteinUmsetzung> type, Baustein baustein) {
+	public CreateBaustein(CnATreeElement container, Baustein baustein) {
 		this.container = container;
-		this.type = type;
 		this.baustein = baustein;
 	}
 	
 	public void execute() {
 		IBaseDao<BausteinUmsetzung, Serializable> dao 
-			= getDaoFactory().getDAO(type);
+			= getDaoFactory().getDAO(BausteinUmsetzung.class);
+		IBaseDao<Object, Serializable> containerDAO = getDaoFactory().getDAOForObject(container);
+		
 		try {
+			containerDAO.reload(container, container.getDbId());
+			if (container.containsBausteinUmsetzung(baustein.getId()))
+				return;
+
 			BausteinUmsetzung bu = new BausteinUmsetzung(container);
 			container.addChild(bu);
 			
@@ -53,7 +57,7 @@ public class CreateBaustein extends GenericCommand {
 			for (Massnahme mn : massnahmen) {
 				createMassnahme(bu, mn);
 			}
-			// save massnahmen and changes:
+			// update child instance with saved object (including generated ID):
 			this.child = dao.merge(bu);
 			
 			

@@ -32,7 +32,11 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand {
 	public void execute() {
 		IBaseDao<T, Serializable> dao 
 			= (IBaseDao<T, Serializable>) getDaoFactory().getDAO(type);
+		IBaseDao<Object, Serializable> containerDAO = getDaoFactory().getDAOForObject(container);
+		
 		try {
+			containerDAO.reload(container, container.getDbId());
+			
 			// get constructor with parent-parameter and create new object:
 			T child = type.getConstructor(CnATreeElement.class).newInstance(container);
 			container.addChild(child);
