@@ -2,7 +2,7 @@
 <feature
       id="sernet.gs.ui.rcp.main.feature"
       label="Verinice Anwendung"
-      version="0.7.1"
+      version="0.8.0"
       provider-name="sernet.de"
       plugin="sernet.gs.ui.rcp.main">
 
@@ -2081,7 +2081,7 @@ Public License instead of this License.  But first, please read
          id="sernet.springclient"
          download-size="0"
          install-size="0"
-         version="1.0.0"
+         version="1.1.0"
          unpack="false"/>
 
 </feature>
