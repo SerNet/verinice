@@ -29,11 +29,17 @@ public class LinkKategorie implements Serializable  {
 	public Set<CnALink> getChildren() {
 		return parent.getLinksDown();
 	}
+	
+	
 
 
 
 	public CnATreeElement getParent() {
 		return parent;
+	}
+
+	public void setParent(CnATreeElement parent) {
+		this.parent = parent;
 	}
 
 }

@@ -16,7 +16,6 @@ public class RemoveLink<T extends CnALink> extends GenericCommand {
 	}
 	
 	public void execute() {
-		removing last link let's previous links appear again in display
 		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
 		element = dao.merge(element);
 		element.remove();

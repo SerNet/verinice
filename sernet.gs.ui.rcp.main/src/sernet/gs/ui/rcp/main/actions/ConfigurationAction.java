@@ -8,14 +8,17 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
@@ -25,6 +28,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
+import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateConfiguration;
@@ -41,6 +45,9 @@ public class ConfigurationAction implements IObjectActionDelegate {
 	public static final String ID = "sernet.gs.ui.rcp.main.personconfiguration";
 
 
+	private static final String[] ALLOWED_ROLES = new String[] {ApplicationRoles.ROLE_ADMIN};
+
+
 	private Configuration configuration;
 
 	private IWorkbenchPart targetPart;
@@ -55,6 +62,14 @@ public class ConfigurationAction implements IObjectActionDelegate {
 	}
 
 	public void run(IAction action) {
+		// ignore selection if role doesn't allow editing:
+		boolean hasRole = AuthenticationHelper.getInstance().currentUserHasRole(ALLOWED_ROLES);
+		if (!hasRole) {
+			// FIXME server: disable actions for unavailable roles, i.e. using system property and enablement in plugin.xml
+			MessageDialog.openWarning((Shell) targetPart.getAdapter(Shell.class), 
+					"Authorisierung", "Ihr Account ist nicht berechtigt, die gewählte Funktion auszuführen.");
+			return;
+		}
 		
 		IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
 		IStructuredSelection selection = (IStructuredSelection) window
@@ -160,6 +175,7 @@ public class ConfigurationAction implements IObjectActionDelegate {
 		return false;
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {}
+	public void selectionChanged(IAction action, ISelection selection) {
+	}
 
 }

@@ -64,12 +64,14 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 		if (oldElement != null) {
 			// load and add linkkategory:
 			oldElement.setLinks(link.getParent());
+			link.getParent().setParent(oldElement);
 			
 			// replace old instance of link with new one:
 			oldElement.removeLinkDown(link);
 			oldElement.addLinkDown(link);
-			
-			updater.refresh(oldElement.getParent());
+			updater.refresh(link);
+			updater.refresh(link.getParent());
+			updater.refresh(link.getParent().getParent());
 			updater.reveal(link);
 		}
 	}
@@ -82,11 +84,12 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 		if (oldElement != null) {
 			// load and add linkkategory:
 			oldElement.setLinks(link.getParent());
+			link.getParent().setParent(oldElement);
+			
 			oldElement.addLinkDown(link);
 			updater.add(link.getParent(), link);
 			updater.reveal(link);
 		}
-		
 	}
 	
 	
@@ -97,6 +100,9 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 		
 		if (oldElement != null) {
 			// load and add linkkategory:
+			oldElement.setLinks(link.getParent());
+			link.getParent().setParent(oldElement);
+			
 			oldElement.removeLinkDown(link);
 			updater.remove(link);
 		}

@@ -19,8 +19,14 @@ import org.springframework.beans.factory.access.SingletonBeanFactoryLocator;
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
+import sernet.gs.ui.rcp.main.common.model.BuildInput;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
+import sernet.gs.ui.rcp.main.common.model.NullMonitor;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.HibernateBaseDao;
 import sernet.gs.ui.rcp.main.service.IAuthService;
@@ -35,6 +41,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadMassnahmenTitles;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
 
@@ -63,7 +70,7 @@ public class TestVeriniceServer extends TestCase {
 		beanFactoryReference = beanFactoryLocator
 		.useBeanFactory("ctx");
 		
-		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("Administrator", "");
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin", "aendermich");
 
 		HttpState httpState = (HttpState) beanFactoryReference
 		.getFactory().getBean("httpState");
@@ -127,6 +134,24 @@ public class TestVeriniceServer extends TestCase {
 		 for (int i = 0; i < roles.length; i++) {
 			 System.out.println("Role:" + roles[i]);
 		 }
+	}
+	
+	public void testCreate1000Elements() throws Exception {
+		LoadCnAElementByType<NKKategorie> command = new LoadCnAElementByType<NKKategorie>(NKKategorie.class);
+		command = commandService.executeCommand(command);
+		List<NKKategorie> categories = command.getElements();
+		CnATreeElement kategorie = null;
+		for (CnATreeElement category : categories) {
+			if (category instanceof NKKategorie)
+				kategorie = category;
+		}
+		for (int i=0; i < 1000; i++) {
+			NetzKomponente netzKomponente = new NetzKomponente(kategorie);
+			netzKomponente.setSimpleProperty(NetzKomponente.PROP_NAME, "Test Element " + i);
+			SaveElement<NetzKomponente> command2 = new SaveElement<NetzKomponente>(netzKomponente);
+			command2 = commandService.executeCommand(command2);
+		}
+		
 	}
 	
 	

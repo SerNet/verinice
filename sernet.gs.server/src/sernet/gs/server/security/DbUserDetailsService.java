@@ -12,6 +12,7 @@ import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 
 
+import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
@@ -29,18 +30,15 @@ public class DbUserDetailsService implements UserDetailsService {
 	private String adminuser = "";
 	private String adminpass = "";
 	
-	private static final String ROLE_USER = "ROLE_USER";
-	private static final String ROLE_ADMIN = "ROLE_ADMIN";
-
 	private final static Map<String, String[]> roleMap = new HashMap<String, String[]>();
 	
 	{
-		roleMap.put("configuration_rolle_ciso", new String[] {ROLE_USER});
-		roleMap.put("configuration_rolle_isbeauftragter", new String[] {ROLE_USER});
-		roleMap.put("configuration_rolle_user", new String[] {ROLE_USER});
-		roleMap.put("configuration_rolle_admin", new String[] {ROLE_USER, ROLE_ADMIN});
-		roleMap.put("configuration_rolle_umsverantw", new String[] {ROLE_USER});
-		roleMap.put("configuration_rolle_auditor", new String[] {ROLE_USER});
+		roleMap.put("configuration_rolle_ciso", 			new String[] {ApplicationRoles.ROLE_USER});
+		roleMap.put("configuration_rolle_isbeauftragter", 	new String[] {ApplicationRoles.ROLE_USER});
+		roleMap.put("configuration_rolle_user", 			new String[] {ApplicationRoles.ROLE_USER});
+		roleMap.put("configuration_rolle_admin", 			new String[] {ApplicationRoles.ROLE_USER, ApplicationRoles.ROLE_ADMIN});
+		roleMap.put("configuration_rolle_umsverantw", 		new String[] {ApplicationRoles.ROLE_USER});
+		roleMap.put("configuration_rolle_auditor", 			new String[] {ApplicationRoles.ROLE_USER});
 	}
 	
 	@Override
@@ -68,8 +66,8 @@ public class DbUserDetailsService implements UserDetailsService {
 
 	private UserDetails defaultUser() {
 		VeriniceUserDetails user = new VeriniceUserDetails(adminuser, adminpass);
-		user.addRole(ROLE_ADMIN);
-		user.addRole(ROLE_USER);
+		user.addRole(ApplicationRoles.ROLE_ADMIN);
+		user.addRole(ApplicationRoles.ROLE_USER);
 		return user;
 	}
 
@@ -78,8 +76,8 @@ public class DbUserDetailsService implements UserDetailsService {
 				entity.getSimpleValue(Configuration.PROP_USERNAME),
 				entity.getSimpleValue(Configuration.PROP_PASSWORD));
 		List<Property> properties = entity.getProperties(Configuration.PROP_ROLES).getProperties();
-		for (Property property : properties) {
-			String[] appRoles = translateToApplicationRole(property.getPropertyValue());
+		for (Property displayedRoles : properties) {
+			String[] appRoles = translateToApplicationRole(displayedRoles.getPropertyValue());
 			if (appRoles != null) {
 				for (String appRole : appRoles) {
 					userDetails.addRole(appRole);

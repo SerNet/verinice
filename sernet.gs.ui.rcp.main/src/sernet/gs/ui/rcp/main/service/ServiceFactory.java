@@ -10,7 +10,9 @@ import sernet.springclient.SpringClientPlugin;
 
 public abstract class ServiceFactory {
 
-	private static final String COMMANDSERVICE = "commandService";
+	private static final String AUTH_SERVICE = "authService";
+	private static final String COMMAND_SERVICE = "commandService";
+	
 	private static final String BEAN_REF_FACTORY = "beanRefFactory.xml";
 	private static final String CONTEXT_LOCAL = "ctxHibernate";
 	private static final String CONTEXT_REMOTE = "ctxRemote";
@@ -30,9 +32,9 @@ public abstract class ServiceFactory {
 
 	public static void openCommandService() {
 		if (locality == LOCAL)
-			openLocalCommandService();
+			openLocalServiceFactory();
 		else
-			openRemoteCommandService();
+			openRemoteServiceFactory();
 	}
 
 	public static void closeCommandService() {
@@ -42,10 +44,16 @@ public abstract class ServiceFactory {
 
 	public static ICommandService lookupCommandService() {
 		return (ICommandService) SpringClientPlugin.getDefault()
-				.getBeanFactory().getBean(COMMANDSERVICE);
+				.getBeanFactory().getBean(COMMAND_SERVICE);
+	}
+	
+	public static IAuthService lookupAuthService() {
+		IAuthService authService = (IAuthService) SpringClientPlugin.getDefault()
+			.getBeanFactory().getBean(AUTH_SERVICE);
+		return authService;
 	}
 
-	private static void openRemoteCommandService() {
+	private static void openRemoteServiceFactory() {
 		String path = "file://" + CnAWorkspace.getInstance().getConfDir()
 				+ File.separator + BEAN_REF_FACTORY;
 		Logger.getLogger(ServiceFactory.class).debug(
@@ -53,7 +61,7 @@ public abstract class ServiceFactory {
 		SpringClientPlugin.getDefault().openBeanFactory(path, CONTEXT_REMOTE);
 	}
 
-	private static void openLocalCommandService() {
+	private static void openLocalServiceFactory() {
 		String path = "file://" + CnAWorkspace.getInstance().getConfDir()
 				+ File.separator + BEAN_REF_FACTORY;
 		Logger.getLogger(ServiceFactory.class).debug(
