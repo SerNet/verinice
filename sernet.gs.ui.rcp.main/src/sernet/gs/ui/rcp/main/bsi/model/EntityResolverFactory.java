@@ -12,9 +12,11 @@ import com.sun.star.ucb.CommandFailedException;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindURLs;
 import sernet.hui.common.connect.Entity;
@@ -134,7 +136,11 @@ public class EntityResolverFactory {
 				public List<IMLPropertyOption> getAllEntitesForType(
 						String entityTypeID) {
 					
+					
 					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
+					if (WhereAmIUtil.runningOnServer())
+						return result; // FIXME server: only works from client
+
 					LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
 					
 					try {

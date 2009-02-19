@@ -3,8 +3,10 @@ package sernet.gs.ui.rcp.main.connect;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.collection.PersistentCollection;
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
@@ -29,7 +31,10 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		 }
 
 		 public List findAll() {
-		     return getHibernateTemplate().loadAll(type);
+//			 DetachedCriteria criteria = DetachedCriteria.forClass(type);
+//			 List results = getHibernateTemplate().findByCriteria(criteria, 0, 1000);
+//			 return results;
+			 return getHibernateTemplate().loadAll(type);
 		 }
 
 		 public T findById(ID id) {

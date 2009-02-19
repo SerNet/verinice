@@ -66,7 +66,10 @@ public class HitroUtil {
 				"Getting type definition from: " + huiConfig);
 		HUITypeFactory.initialize(huiConfig);
 		typeFactory = HUITypeFactory.getInstance();
+		
+		resolvers not working on server
 		EntityResolverFactory.createResolvers(typeFactory);
+		
 		Logger.getLogger(HitroUtil.class).debug("HUI initialized.");
 	}
 

@@ -205,8 +205,6 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 
 	private void fireVertraulichkeitChanged(CascadingTransaction ta) {
 		if (ta.hasBeenVisited(parent)) {
-			StatusLine.setErrorMessage("Schutzbedarf: Schleife bei Objekt "
-					+ parent.getTitel());
 			Logger.getLogger(this.getClass()).debug(
 					"(Vertraulichkeit) Loop on object " + parent.getTitel()); //$NON-NLS-1$
 			return; // we have already been down this path

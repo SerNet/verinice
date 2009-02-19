@@ -46,7 +46,7 @@ public class HibernateCommandService implements ICommandService {
 	 * command, the necessary data access objects can be requested from the
 	 * given DAO factory.
 	 * 
-	 * A command can execute to other commands during its execution using the
+	 * A command can execute other commands to fulfill its purpose using the
 	 * reference to the command service.
 	 */
 	public <T extends ICommand> T executeCommand(T command) throws CommandException {

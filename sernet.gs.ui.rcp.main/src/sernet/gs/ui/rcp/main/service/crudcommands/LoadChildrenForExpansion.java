@@ -48,6 +48,8 @@ public class LoadChildrenForExpansion extends GenericCommand {
 			mn.getKapitelValue();
 			mn.getTitel();
 			mn.getUmsetzung();
+			mn.getUrl();
+			mn.getStand();
 			return;
 		}
 		

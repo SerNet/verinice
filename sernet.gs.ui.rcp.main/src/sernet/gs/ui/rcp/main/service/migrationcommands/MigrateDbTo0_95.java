@@ -70,11 +70,12 @@ public class MigrateDbTo0_95 extends DbMigration {
 	public void execute() throws RuntimeCommandException {
 		Logger.getLogger(this.getClass()).debug("Updating DB to V 0.95. ");
 		Logger.getLogger(this.getClass()).debug("Inserting: Bausteinvorschläge");
+		
 		SubtypenZielobjekte mapping = new SubtypenZielobjekte();
 		List<BausteinVorschlag> list = mapping.getMapping();
 		UpdateMultipleElements<BausteinVorschlag> command = new UpdateMultipleElements<BausteinVorschlag>(list);
 		try {
-			command = ServiceFactory.lookupCommandService().executeCommand(command);
+			command = getCommandService().executeCommand(command);
 			super.updateVersion();
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);

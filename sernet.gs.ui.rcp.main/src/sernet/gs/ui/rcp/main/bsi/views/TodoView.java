@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -37,6 +41,8 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
+import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForListView;
@@ -59,6 +65,10 @@ public class TodoView extends ViewPart {
 		private SimpleDateFormat dateFormat =  new SimpleDateFormat("dd.MM.yy, EE"); //$NON-NLS-1$
 		
 		public Image getColumnImage(Object element, int columnIndex) {
+			if (element instanceof PlaceHolder) {
+				return null;
+			}
+			
 			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
 			if (columnIndex == 0) {
 				return CnAImageProvider.getImage(mn);
@@ -67,6 +77,14 @@ public class TodoView extends ViewPart {
 		}
 
 		public String getColumnText(Object element, int columnIndex) {
+			if (element instanceof PlaceHolder) {
+				if (columnIndex == 1) {
+					PlaceHolder ph = (PlaceHolder) element;
+					return ph.getTitle();
+				}
+				return "";
+			}
+			
 			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
 			switch(columnIndex) {
 			case 0: // icon
@@ -223,16 +241,31 @@ public class TodoView extends ViewPart {
 	}
 	
 	protected void setInput() throws CommandException {
-		if (CnAElementHome.getInstance().isOpen()) {
-			FindMassnahmenForListView command = new FindMassnahmenForListView();
-			command = ServiceFactory.lookupCommandService().executeCommand(command);
-			final List<MassnahmenUmsetzung> allMassnahmen = command.getAll();
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					viewer.setInput(allMassnahmen);
+		if (!CnAElementHome.getInstance().isOpen())
+			return;
+		
+		viewer.setInput(new PlaceHolder("Lade Maßnahmen..."));
+		
+		WorkspaceJob job = new WorkspaceJob("Lade alle Massnahmen für Realisierungsplan...") {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				try {
+					FindMassnahmenForListView command = new FindMassnahmenForListView();
+					command = ServiceFactory.lookupCommandService().executeCommand(command);
+					final List<MassnahmenUmsetzung> allMassnahmen = command.getAll();
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							viewer.setInput(allMassnahmen);
+						}
+					});
+				} catch (Exception e) {
+					ExceptionUtil.log(e, "Fehler beim Erstellen des Realisierungsplans.");
 				}
-			});
-		}
+				return Status.OK_STATUS; 
+			}
+		};
+		job.setUser(false);
+		job.schedule();
+		
 	}
 	
 	private void packColumns() {

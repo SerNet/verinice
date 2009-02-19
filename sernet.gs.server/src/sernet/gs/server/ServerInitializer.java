@@ -50,7 +50,6 @@ public class ServerInitializer {
 	public void initialize() {
 		Logger.getLogger(this.getClass()).debug("Initializing server context...");
 		// basic Verinice client setup:
-		// use remote service to execute commands:
 		ServiceFactory.setService(ServiceFactory.LOCAL);
 		
 		// tell me where to find HitroUI configuration and other stuff:
