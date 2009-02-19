@@ -15,6 +15,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 
 /**
  * Gets Massnahmen from current BSIModel and reacts to model changes.
@@ -49,6 +50,9 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 	}
 
 	public Object[] getElements(Object inputElement) {
+		if (inputElement instanceof PlaceHolder)
+			return new Object[] {inputElement};
+		
 		List<MassnahmenUmsetzung> mns = (List<MassnahmenUmsetzung>) inputElement;
 		return mns.toArray(new Object[mns.size()]);
 		
