@@ -39,6 +39,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		</prop>
 	
 	</props></property>
+	
 </bean>
 
 <bean 
@@ -46,6 +47,12 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	class="sernet.gs.server.ServerInitializer"
 	init-method="initialize">
 	<property name="configuration" ref="configuration"/>
+</bean>
+
+<bean
+	id="serverCommandService"
+	class="sernet.gs.ui.rcp.main.service.ServerCommandService">
+	<property name="commandService" ref="commandService" />
 </bean>
 
 

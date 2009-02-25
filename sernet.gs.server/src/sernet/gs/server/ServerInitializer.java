@@ -29,6 +29,7 @@ import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 public class ServerInitializer {
 	
 	public IConfiguration configuration;
+	
 	private IProgress nullMonitor = new IProgress() {
 		public void beginTask(String name, int totalWork) {
 		}
@@ -76,6 +77,8 @@ public class ServerInitializer {
 	public void setConfiguration(IConfiguration configuration) {
 		this.configuration = configuration;
 	}
+
+	
 
 	
 }

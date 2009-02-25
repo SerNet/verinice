@@ -27,7 +27,7 @@
          -->
         <property name="connection.driver_class">org.postgresql.Driver</property>
         <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-        <property name="connection.url">jdbc:postgresql://127.0.0.1:5433/verinicedb</property>
+        <property name="connection.url">jdbc:postgresql://127.0.0.1:5433/verinicedb3</property>
         <property name="connection.username">postgres</property>
         <property name="connection.password"></property>
 
@@ -48,8 +48,13 @@
 		<property name="hibernate.jdbc.batch_size">100</property>
   
 
-        <!-- JDBC connection pool (use the built-in) -->
-        <property name="connection.pool_size">10</property>
+        <!-- JDBC connection pool -->
+	    <property name="connection.provider_class">
+	    	org.hibernate.connection.C3P0ConnectionProvider
+	    </property>
+	
+	    <property name="c3p0.max_size">20</property>
+	    <property name="c3p0.idleConnectionTestPeriod">300</property>
 
 
        	<!-- Enable session context management -->
@@ -57,10 +62,9 @@
         org.springframework.orm.hibernate3.SpringSessionContext
         </property>
 		
-         <!-- Disable the second-level cache 
-        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
-		-->
 		
+		<!-- Enable memory read write cache 
+		-->
         <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
 
         <!-- Echo all executed SQL to stdout -->
@@ -73,7 +77,7 @@
 		-->
          <property name="hbm2ddl.auto">update</property>
 
-		<!-- Optimized mappings for DBMS, not for derby -->
+		<!-- Optimized mappings for real DBMS, not for derby -->
         <mapping resource="Entity.hbm.xml"/>
         <mapping resource="CnALink.hbm.xml"/>
         <mapping resource="PropertyList.hbm.xml"/>
