@@ -3,6 +3,7 @@ package sernet.gs.ui.rcp.main.connect;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.collection.PersistentCollection;
@@ -27,6 +28,7 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		 }
 
 		 public void delete(T entity) {
+			 Logger.getLogger(this.getClass()).debug("Deleting element " + entity);
 		     getHibernateTemplate().delete(entity);
 		 }
 
@@ -43,6 +45,10 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 
 		public List findByQuery(String hqlQuery, Object[] values) {
 			return getHibernateTemplate().find(hqlQuery, values);
+		}
+
+		public int updateByQuery(String hqlQuery, Object[] values) {
+			return getHibernateTemplate().bulkUpdate(hqlQuery, values);
 		}
 
 		public void initialize(Object proxy) {
@@ -81,5 +87,9 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 					throw new LoopException(ta.getLoopedObject());
 				}
 			}
+		}
+
+		public Class<T> getType() {
+			return this.type;
 		}
 }

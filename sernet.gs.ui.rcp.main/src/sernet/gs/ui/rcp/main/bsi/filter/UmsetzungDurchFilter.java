@@ -9,7 +9,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.IMassnahmeUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
 
@@ -64,10 +64,10 @@ public class UmsetzungDurchFilter extends ViewerFilter {
 	
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (!(element instanceof MassnahmenUmsetzung))
+		if (!(element instanceof IMassnahmeUmsetzung))
 			return true;
 		
-		MassnahmenUmsetzung mnums = (MassnahmenUmsetzung)element;
+		IMassnahmeUmsetzung mnums = (IMassnahmeUmsetzung)element;
 		Matcher matcher = regex.matcher(mnums.getUmsetzungDurch());
 		if (matcher.find())
 			return true;

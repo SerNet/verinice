@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.hibernate.collection.PersistentCollection;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
@@ -69,7 +71,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		for (IBSIModelListener listener : getListeners()) {
 			listener.childAdded(category, child);
 			if (child instanceof ITVerbund)
-				listener.modelRefresh();
+				listener.modelRefresh(null);
 		}
 	}
 
@@ -113,15 +115,24 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		}
 	}
 
-	public void refreshAllListeners() {
+	public void refreshAllListeners(Object source) {
+		Logger.getLogger(this.getClass()).debug("Model refresh to all listeners.");
 		for (IBSIModelListener listener : getListeners()) {
-			listener.modelRefresh();
+			listener.modelRefresh(source);
 		}
 	}
 	
+	/**
+	 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
+	 */
 	@Override
 	public void modelRefresh() {
-		refreshAllListeners();
+		modelRefresh(null);
+	}
+
+	@Override
+	public void modelRefresh(Object source) {
+		refreshAllListeners(source);
 	}
 
 	public void addBSIModelListener(IBSIModelListener listener) {
@@ -177,12 +188,24 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 	private void getBausteine(CnATreeElement elmnt,
 			ArrayList<BausteinUmsetzung> result) {
 
-		for (CnATreeElement elmt : elmnt.getChildren()) {
-			if (elmt instanceof BausteinUmsetzung) {
-				result.add((BausteinUmsetzung) elmt);
-			} else {
-				getBausteine(elmt, result);
+		try {
+//			if (elmnt.getChildren() instanceof PersistentCollection) {
+//				PersistentCollection collection = (PersistentCollection) elmnt.getChildren();
+//				if (!collection.wasInitialized())
+//					return;
+//			}
+			
+			for (CnATreeElement elmt : elmnt.getChildren()) {
+				if (elmt instanceof BausteinUmsetzung) {
+					BausteinUmsetzung bst = (BausteinUmsetzung) elmt;
+					result.add(bst);
+				} else {
+					getBausteine(elmt, result);
+				}
 			}
+		}
+		catch (Exception e) {
+			// FIXME server: implement dialog for consolidator that loads and displays necessary bausteine 
 		}
 	}
 
@@ -290,5 +313,25 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		return tags;
 	}
 
+	@Override
+	public void databaseChildAdded(CnATreeElement child) {
+		for (IBSIModelListener listener : getListeners()) {
+			listener.databaseChildAdded(child);
+		}
+	}
+	
+	@Override
+	public void databaseChildChanged(CnATreeElement child) {
+		for (IBSIModelListener listener : getListeners()) {
+			listener.databaseChildChanged(child);
+		}
+	}
+	
+	@Override
+	public void databaseChildRemoved(CnATreeElement child) {
+		for (IBSIModelListener listener : getListeners()) {
+			listener.databaseChildRemoved(child);
+		}
+	}
 	
 }

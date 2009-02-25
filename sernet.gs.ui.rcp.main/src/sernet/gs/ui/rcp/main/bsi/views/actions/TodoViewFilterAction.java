@@ -13,7 +13,6 @@ import sernet.gs.ui.rcp.main.bsi.filter.StringPropertyFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.UmsetzungDurchFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.ZielobjektPropertyFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 
 public class TodoViewFilterAction extends Action {
 	private Shell shell;

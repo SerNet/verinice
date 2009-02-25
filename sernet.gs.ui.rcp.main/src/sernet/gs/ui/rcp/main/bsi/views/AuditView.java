@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -34,15 +38,17 @@ import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.actions.AuditViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
+import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForListView;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForTodoView;
 
 /**
  * Shows implemented controls to be reviewed by the auditor.
@@ -53,7 +59,7 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForListView;
  * $LastChangedBy: koderman $
  *
  */
-public class AuditView extends ViewPart {
+public class AuditView extends ViewPart implements IMassnahmenListView {
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.auditview"; //$NON-NLS-1$
 
 
@@ -62,7 +68,11 @@ public class AuditView extends ViewPart {
 		private SimpleDateFormat dateFormat =  new SimpleDateFormat("dd.MM.yy, EE"); //$NON-NLS-1$
 		
 		public Image getColumnImage(Object element, int columnIndex) {
-			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
+			if (element instanceof PlaceHolder) {
+				return null;
+			}
+			
+			TodoViewItem mn = (TodoViewItem) element;
 			if (columnIndex == 0) {
 				return CnAImageProvider.getImage(mn);
 			}
@@ -70,25 +80,30 @@ public class AuditView extends ViewPart {
 		}
 
 		public String getColumnText(Object element, int columnIndex) {
-			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
+
+			if (element instanceof PlaceHolder) {
+				if (columnIndex == 1) {
+					PlaceHolder ph = (PlaceHolder) element;
+					return ph.getTitle();
+				}
+				return "";
+			}
+			
+			TodoViewItem mn = (TodoViewItem) element;
 			switch(columnIndex) {
 			case 0: // icon
 				return ""; //$NON-NLS-1$
 			case 1: // date
 				Date date = mn.getNaechsteRevision();
 				if (date == null)
-					return Messages.AuditView_3;
+					return Messages.TodoView_3;
 				return dateFormat.format(date);
 			case 2: // bearbeiter
 				return mn.getRevisionDurch();
 			case 3: // siegelstufe
 				return "" + mn.getStufe(); //$NON-NLS-1$
 			case 4: // zielobjekt
-				if (mn.getParent() instanceof GefaehrdungsUmsetzung)
-					return "RA: " + 
-						(mn.getParent().getParent().getParent()).getTitel(); // mn -> gefaehrdung -> risikoanalyse -> ziel
-				else
-					return (mn.getParent().getParent()).getTitel(); // mn -> baustein -> ziel
+				return mn.getParentTitle();
 			case 5: // title
 				return mn.getTitel();
 			}
@@ -108,7 +123,7 @@ public class AuditView extends ViewPart {
 		public void loaded(final BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					setInput();
+					setInput(true);
 				}
 			});
 		}
@@ -123,8 +138,8 @@ public class AuditView extends ViewPart {
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			if (o1 == null || o2 == null)
 				return 0;
-			MassnahmenUmsetzung mn1 = (MassnahmenUmsetzung) o1;
-			MassnahmenUmsetzung mn2 = (MassnahmenUmsetzung) o2;
+			TodoViewItem mn1 = (TodoViewItem) o1;
+			TodoViewItem mn2 = (TodoViewItem) o2;
 			return sortByDate(mn1.getNaechsteRevision(), mn2.getNaechsteRevision());
 		}
 
@@ -137,7 +152,7 @@ public class AuditView extends ViewPart {
 	        
 			int comp = date1.compareTo(date2);
 			// reverse order:
-			comp = (comp < 0) ? 1 : (comp > 0) ? -1 : 0;
+			//comp = (comp < 0) ? 1 : (comp > 0) ? -1 : 0;
 			return comp;
 	        
 		}
@@ -199,15 +214,16 @@ public class AuditView extends ViewPart {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
-		// FIXME add filter
-		
-		
-		viewer.setContentProvider(new MassnahmenUmsetzungContentProvider());
+		viewer.setContentProvider(new MassnahmenUmsetzungContentProvider(this));
 		viewer.setLabelProvider(new AuditLabelProvider());
-		setInput();
-		
+		try {
+			setInput(true);
+		} catch (RuntimeException e) {
+			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+		}
 		
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
+		
 		createFilters();
 		viewer.setSorter(new AuditSorter());
 		makeActions();
@@ -219,21 +235,32 @@ public class AuditView extends ViewPart {
 		packColumns();
 	}
 	
-	protected void setInput() {
-		if (CnAElementHome.getInstance().isOpen()) {
-			FindMassnahmenForListView command = new FindMassnahmenForListView();
-			try {
-				command = ServiceFactory.lookupCommandService().executeCommand(command);
-			final List<MassnahmenUmsetzung> allMassnahmen = command.getAll();
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					viewer.setInput(allMassnahmen);
+	public void setInput(boolean showLoadingMessage) {
+		if (!CnAElementHome.getInstance().isOpen())
+			return;
+		
+		if (showLoadingMessage)
+			viewer.setInput(new PlaceHolder("Lade Maßnahmen..."));
+		
+		WorkspaceJob job = new WorkspaceJob("Lade alle Massnahmen für Realisierungsplan...") {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				try {
+					FindMassnahmenForTodoView command = new FindMassnahmenForTodoView();
+					command = ServiceFactory.lookupCommandService().executeCommand(command);
+					final List<TodoViewItem> allMassnahmen = command.getAll();
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							viewer.setInput(allMassnahmen);
+						}
+					});
+				} catch (Exception e) {
+					ExceptionUtil.log(e, "Fehler beim Erstellen des Realisierungsplans.");
 				}
-			});
-			} catch (CommandException e) {
-				ExceptionUtil.log(e, "Konnte Massnahmen nicht laden.");
+				return Status.OK_STATUS; 
 			}
-		}
+		};
+		job.setUser(false);
+		job.schedule();
 	}
 	
 	@Override

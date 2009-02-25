@@ -68,10 +68,10 @@ public class Activator extends AbstractUIPlugin {
 		
 		// running as client:
 		WhereAmIUtil.setLocation(WhereAmIUtil.LOCATION_CLIENT);
-		
-		// prepare client's workspace:
-		CnAWorkspace.getInstance().prepare();
-		
+
+		// set workdir preference:
+		CnAWorkspace.getInstance().prepareWorkDir();
+
 		// set service factory location to local / remote according to preferences:
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		boolean standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_STANDALONE);
@@ -79,6 +79,9 @@ public class Activator extends AbstractUIPlugin {
 			ServiceFactory.setService(ServiceFactory.LOCAL);
 		else
 			ServiceFactory.setService(ServiceFactory.REMOTE);
+
+		// prepare client's workspace:
+		CnAWorkspace.getInstance().prepare();
 		
 		try {
 			ServiceFactory.openCommandService();

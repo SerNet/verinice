@@ -53,9 +53,9 @@ public class HibernateCommandService implements ICommandService {
 		if (!dbOpen)
 			throw new CommandException("DB connection closed.");
 
-		Logger.getLogger(this.getClass()).debug(
-				"Hibernate service executing command: "
-						+ command.getClass().getSimpleName());
+//		Logger.getLogger(this.getClass()).debug(
+//				"Hibernate service executing command: "
+//						+ command.getClass().getSimpleName());
 		try {
 			command.setDaoFactory(daoFactory);
 			command.setCommandService(this);

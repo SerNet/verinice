@@ -19,7 +19,7 @@ public class Zweckbestimmung extends CnATreeElement
 		setEntity(new Entity(TYPE_ID));
 	}
 	
-	private Zweckbestimmung() {
+	Zweckbestimmung() {
 	}
 	
 	@Override

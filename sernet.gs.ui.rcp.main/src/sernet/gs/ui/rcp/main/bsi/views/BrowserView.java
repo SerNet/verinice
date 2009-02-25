@@ -27,6 +27,7 @@ import sernet.gs.ui.rcp.main.StatusLine;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 
@@ -124,6 +125,12 @@ public class BrowserView extends ViewPart {
 				MassnahmenUmsetzung mnu = (MassnahmenUmsetzung) element;
 				setUrl(BSIMassnahmenModel.getMassnahme(mnu.getUrl(), mnu
 						.getStand()));
+			}
+			
+			if (element instanceof TodoViewItem) {
+				TodoViewItem item = (TodoViewItem) element;
+				setUrl(BSIMassnahmenModel.getMassnahme(item.getUrl(), item.getStand())
+						);
 			}
 
 			if (element instanceof BausteinUmsetzung) {

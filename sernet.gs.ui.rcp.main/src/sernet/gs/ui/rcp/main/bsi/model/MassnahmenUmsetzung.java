@@ -13,13 +13,14 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindResponsiblePerson;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 
-public class MassnahmenUmsetzung extends CnATreeElement {
+public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUmsetzung {
 
 	public static final String TYPE_ID = "mnums"; //$NON-NLS-1$
 
@@ -137,85 +138,25 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 	/**
 	 * Find and return the person responsible for this control.
 	 * 
-	 * @param manualField the property id where the user enters single links to responsible persons directly 
-	 * @param calculatedField the field with roles. Responsible persons will be found by their role 
-	 * 	if they are linked to this object or one of its parents.
-	 * @return all names of found persons concatted together
 	 */
-	private String getVerantwortliche(String manualField, String calculatedField ) {
-		String assignedPerson = getEntity().getSimpleValue(manualField);
-		if (assignedPerson == null || assignedPerson.length() == 0) {
-			// none directly assigned, try to find someone by role:
-			List<Person> persons = getLinkedPersonsByRoles(calculatedField);
-			StringBuilder names = new StringBuilder();
-			for (Iterator iterator = persons.iterator(); iterator.hasNext();) {
-				Person person = (Person) iterator.next();
-				names.append(person.getFullName());
-				if (iterator.hasNext())
-					names.append(", "); //$NON-NLS-1$
-			}
-			return names.toString();
-		}
-		else 
+	private String getVerantwortliche(String field) {
+		String assignedPerson = getEntity().getSimpleValue(field);
+		if (assignedPerson != null && assignedPerson.length() > 0)
 			return assignedPerson;
+		return "";
 	}
 	
 	public String getInitiierungDurch() {
-		return getVerantwortliche(P_INITIIERUNGDURCH_LINK, P_VERANTWORTLICHE_ROLLEN_INITIIERUNG);
+		return getVerantwortliche(P_INITIIERUNGDURCH_LINK);
 	}
 	
 	public String  getUmsetzungDurch( ) {
-		return getVerantwortliche(P_UMSETZUNGDURCH_LINK, P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
+		return getVerantwortliche(P_UMSETZUNGDURCH_LINK);
 	}
 	
 	public void addUmsetzungDurch(Person person) {
 		PropertyType propertyType = getEntityType().getPropertyType(P_UMSETZUNGDURCH_LINK);
 		getEntity().createNewProperty(propertyType, person.getEntity().getDbId().toString());
-	}
-
-	/**
-	 * Go through linked persons of this target object or parents.
-	 * If person's role equals this control's role, add to list of responsible persons.
-	 * 
-	 * @param the propertyId for the field containing all roles for which persons who have this role must be found. 
-	 * 
-	 * @return
-	 */
-	public List<Person>  getLinkedPersonsByRoles(String propertyTypeId) {
-		PropertyList roles = getEntity().getProperties(propertyTypeId);
-		List<Person> result = new ArrayList<Person>();
-		if (roles.getProperties() == null || roles.getProperties().size() == 0 )
-			return result;
-		
-		// search tree upward for linked persons:
-		Set<Property> rolesToSearch = new HashSet<Property>();
-		rolesToSearch.addAll(roles.getProperties());
-		findLinkedPersons(result, getParent().getParent(), rolesToSearch);
-		return result;
-	}
-
-	private void findLinkedPersons(List<Person> result, CnATreeElement currentElement, Set<Property> rolesToSearch ) {
-		allRoles: for (Property role : rolesToSearch) {
-			Set<CnALink> links = currentElement.getLinksDown();
-			if (links != null) {
-				for (CnALink link : links) {
-					if (link.getDependency() instanceof Person) {
-						Person person = (Person) link.getDependency();
-						if (person.hasRole(role)) {
-							// we found someone for this role, continue with next role:
-							result.add(person);
-							continue allRoles;
-						}
-					}
-				}
-			}
-			// no matching person here, try further up the tree for this role:
-			Set<Property> justOneRole = new HashSet<Property>(1);
-			justOneRole.add(role);
-			if (currentElement.getParent() != null) {
-				findLinkedPersons(result, currentElement.getParent(), justOneRole);
-			}
-		}
 	}
 
 	public void setLebenszyklus(String lz) {
@@ -355,6 +296,10 @@ public class MassnahmenUmsetzung extends CnATreeElement {
 		for (String role : verantwortlichUmsetzung) {
 			getEntity().createNewProperty(getEntityType().getPropertyType(P_VERANTWORTLICHE_ROLLEN_UMSETZUNG), role);
 		}
+	}
+
+	public String getParentTitle() {
+		return getParent().getParent().getTitel();
 	}
 
 

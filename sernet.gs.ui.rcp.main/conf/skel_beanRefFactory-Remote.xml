@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-    <bean id="ctxHibernate"
-          class="org.springframework.context.support.FileSystemXmlApplicationContext">
-        <constructor-arg>
-            <list>
-                <value>{applicationContextHibernate}</value>
-            </list>
-        </constructor-arg>
-    </bean>
+   
     
      <bean id="ctxRemote"
           class="org.springframework.context.support.FileSystemXmlApplicationContext">

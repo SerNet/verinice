@@ -83,12 +83,13 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	public int hashCode() {
 		if (uuid != null)
 			return uuid.hashCode();
-		return super.hashCode(); // basicaly only used during migration of old objects (without hashcode)
+		return super.hashCode(); // basically only used during migration of old objects (without hashcode)
 	}
 
 	public void addChild(CnATreeElement child) {
 		if (!children.contains(child) && canContain(child)) {
 			children.add(child);
+//			Logger.getLogger(this.getClass()).debug("Added child to " + this);
 			if (getParent() != null)
 				getParent().childAdded(this, child);
 			else
@@ -285,8 +286,15 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		linksUp.add(link);
 	}
 	
+	/**
+	 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
+	 */
 	public void modelRefresh() {
-		getModelChangeListener().modelRefresh();
+		modelRefresh(null);
+	}
+
+	public void modelRefresh(Object source) {
+		getModelChangeListener().modelRefresh(null);
 	}
 
 	public void removeLinkUp(CnALink link) {
@@ -369,25 +377,28 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		this.links = links;
 	}
 
-	public void replaceChild(CnATreeElement newElement) {
-		// this operation requires correct implementation of "equals()" in newElement:
-		this.children.remove(newElement);
-		this.children.add(newElement);
-	}
-
 	public void fireSchutzbedarfChanged(CascadingTransaction ta) {
 		if (isSchutzbedarfProvider()) {
 			getSchutzbedarfProvider().updateAll(ta);
 		}
 	}
 
+	/**
+	 * Replace a displayed item in tree with another one. Used to replace 
+	 * displaed objects with reloaded ones from thje database.
+	 * 
+	 * @param newElement
+	 */
 	public void replace(CnATreeElement newElement) {
-		if (this == newElement)
+		if (this == newElement) {
+//			Logger.getLogger(this.getClass()).debug("NOT replacing, same instance: " + newElement);
 			return;
+		}
 		
 		if (getParent() == null) {
 			// replace children of root element:
-			
+
+//			Logger.getLogger(this.getClass()).debug("Replacing children of element " + this);
 			this.children = newElement.getChildren();
 			this.setChildrenLoaded(true);
 			
@@ -395,12 +406,13 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		}
 		
 		else {
+//			Logger.getLogger(this.getClass()).debug("Replacing child " + this + "in parent " + getParent());
 			getParent().removeChild(this);
-			CnAElementFactory.getLoadedModel().childRemoved(parent, this);
+//			CnAElementFactory.getLoadedModel().childRemoved(parent, this);
 			
 			getParent().addChild(newElement);
 			newElement.setParent(getParent());
-			CnAElementFactory.getLoadedModel().childAdded(parent, newElement);
+//			CnAElementFactory.getLoadedModel().childAdded(parent, newElement);
 		}
 		
 	}
@@ -409,8 +421,20 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		return childrenLoaded;
 	}
 
-	public void setChildrenLoaded(boolean childrenLoaded) {
+	public void  setChildrenLoaded(boolean childrenLoaded) {
 		this.childrenLoaded = childrenLoaded;
+	}
+	
+	public void databaseChildAdded(CnATreeElement child) {
+		getModelChangeListener().databaseChildAdded(child);
+	}
+	
+	public void databaseChildChanged(CnATreeElement child) {
+		getModelChangeListener().databaseChildChanged(child);
+	}
+	
+	public void databaseChildRemoved(CnATreeElement child) {
+		getModelChangeListener().databaseChildRemoved(child);
 	}
 
 	

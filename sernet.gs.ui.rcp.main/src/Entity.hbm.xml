@@ -8,6 +8,8 @@
 		table="entity"
 		batch-size="10">
 		
+		<cache usage="read-write" />
+		
 		<id name="dbId" 
 			column="dbId" 
 			type="java.lang.Integer" 
@@ -19,6 +21,7 @@
 		
 		<property
 			name="uuid"
+			unique="true"
 		/>
 
 
@@ -27,6 +30,7 @@
 			cascade="all,delete-orphan"
 			batch-size="10"
 			fetch="subselect">
+			<cache usage="read-write" />
 			<key column="typedlist_id" />
 			<index
 				column="list_idx"

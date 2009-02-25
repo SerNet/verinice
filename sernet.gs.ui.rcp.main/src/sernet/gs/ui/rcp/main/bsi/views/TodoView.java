@@ -35,6 +35,7 @@ import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.actions.TodoViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -45,7 +46,7 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForListView;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForTodoView;
 
 /**
  * Shows controls that still have to be implemented.
@@ -56,7 +57,7 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForListView;
  * $LastChangedBy: koderman $
  *
  */
-public class TodoView extends ViewPart {
+public class TodoView extends ViewPart implements IMassnahmenListView {
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.todoview"; //$NON-NLS-1$
 
@@ -69,7 +70,7 @@ public class TodoView extends ViewPart {
 				return null;
 			}
 			
-			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
+			TodoViewItem mn = (TodoViewItem) element;
 			if (columnIndex == 0) {
 				return CnAImageProvider.getImage(mn);
 			}
@@ -85,7 +86,7 @@ public class TodoView extends ViewPart {
 				return "";
 			}
 			
-			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
+			TodoViewItem mn = (TodoViewItem) element;
 			switch(columnIndex) {
 			case 0: // icon
 				return ""; //$NON-NLS-1$
@@ -99,11 +100,7 @@ public class TodoView extends ViewPart {
 			case 3: // siegelstufe
 				return "" + mn.getStufe(); //$NON-NLS-1$
 			case 4: // zielobjekt
-				if (mn.getParent() instanceof GefaehrdungsUmsetzung)
-					return "RA: " + 
-						(mn.getParent().getParent().getParent()).getTitel(); // mn -> gefaehrdung -> risikoanalyse -> ziel
-				else
-					return (mn.getParent().getParent()).getTitel(); // mn -> baustein -> ziel
+				return mn.getParentTitle();
 			case 5: // title
 				return mn.getTitel();
 			}
@@ -119,8 +116,8 @@ public class TodoView extends ViewPart {
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			if (o1 == null || o2 == null)
 				return 0;
-			MassnahmenUmsetzung mn1 = (MassnahmenUmsetzung) o1;
-			MassnahmenUmsetzung mn2 = (MassnahmenUmsetzung) o2;
+			TodoViewItem mn1 = (TodoViewItem) o1;
+			TodoViewItem mn2 = (TodoViewItem) o2;
 			return sortByDate(mn1.getUmsetzungBis(), mn2.getUmsetzungBis());
 		}
 
@@ -132,8 +129,6 @@ public class TodoView extends ViewPart {
 	            return -1;
 	        
 			int comp = date1.compareTo(date2);
-			// reverse order:
-			comp = (comp < 0) ? 1 : (comp > 0) ? -1 : 0;
 			return comp;
 	        
 		}
@@ -154,8 +149,8 @@ public class TodoView extends ViewPart {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					try {
-						setInput();
-					} catch (CommandException e) {
+						setInput(true);
+					} catch (RuntimeException e) {
 						ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
 					}
 				}
@@ -221,11 +216,11 @@ public class TodoView extends ViewPart {
 		createFilters();
 		createPullDownMenu();
 
-		viewer.setContentProvider(new MassnahmenUmsetzungContentProvider());
+		viewer.setContentProvider(new MassnahmenUmsetzungContentProvider(this));
 		viewer.setLabelProvider(new TodoLabelProvider());
 		try {
-			setInput();
-		} catch (CommandException e) {
+			setInput(true);
+		} catch (RuntimeException e) {
 			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
 		}
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
@@ -240,18 +235,20 @@ public class TodoView extends ViewPart {
 		packColumns();
 	}
 	
-	protected void setInput() throws CommandException {
+	
+	public void setInput(boolean showLoadingMessage)  {
 		if (!CnAElementHome.getInstance().isOpen())
 			return;
 		
-		viewer.setInput(new PlaceHolder("Lade Maßnahmen..."));
+		if (showLoadingMessage)
+			viewer.setInput(new PlaceHolder("Lade Maßnahmen..."));
 		
 		WorkspaceJob job = new WorkspaceJob("Lade alle Massnahmen für Realisierungsplan...") {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				try {
-					FindMassnahmenForListView command = new FindMassnahmenForListView();
+					FindMassnahmenForTodoView command = new FindMassnahmenForTodoView();
 					command = ServiceFactory.lookupCommandService().executeCommand(command);
-					final List<MassnahmenUmsetzung> allMassnahmen = command.getAll();
+					final List<TodoViewItem> allMassnahmen = command.getAll();
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
 							viewer.setInput(allMassnahmen);

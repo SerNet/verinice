@@ -19,6 +19,7 @@
 		
 		<property
 			name="uuid"
+			unique="true"
 		/>
 		
 		<property name="id"/>
@@ -39,7 +40,9 @@
 			
 			<property name="ownkategorie"/>
 			
-			<property name="beschreibung"/>
+			<property 
+				name="beschreibung"
+				length="30000"/>
 			
 		</joined-subclass>
 

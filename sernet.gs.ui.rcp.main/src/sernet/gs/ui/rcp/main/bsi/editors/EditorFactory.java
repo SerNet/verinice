@@ -26,6 +26,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Raum;
 import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
+import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogWatcher;
@@ -109,6 +110,35 @@ public class EditorFactory {
 		typedFactories.put(Personengruppen.class, bsiEditorFactory);
 		typedFactories.put(Datenverarbeitung.class, bsiEditorFactory);
 		typedFactories.put(StellungnahmeDSB.class, bsiEditorFactory);
+		
+		IEditorTypeFactory todoItemEditorFactory = new IEditorTypeFactory() {
+
+			public void openEditorFor(Object o) throws Exception {
+				IEditorPart editor;
+				
+				// replace element with new instance from DB:
+				TodoViewItem selection = (TodoViewItem) o;
+				CnATreeElement newElement 
+					= CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.class, selection.getdbId());
+				BSIElementEditorInput input = new BSIElementEditorInput(newElement);
+				
+				
+				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {
+					// open new editor:
+					editor = Activator.getActivePage().openEditor(input,
+							BSIElementEditor.EDITOR_ID);
+					EditorRegistry.getInstance().registerOpenEditor(input.getId(), editor);
+				}
+				else {
+					// show existing editor:
+					Activator.getActivePage().openEditor(editor.getEditorInput(),
+							BSIElementEditor.EDITOR_ID);
+				}
+			}
+			
+		};
+		
+		typedFactories.put(TodoViewItem.class, todoItemEditorFactory);
 		
 		
 		// TODO register more editor-factories here

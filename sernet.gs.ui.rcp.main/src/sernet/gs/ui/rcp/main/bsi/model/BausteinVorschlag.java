@@ -1,8 +1,9 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class BausteinVorschlag {
+public class BausteinVorschlag implements Serializable {
 
 	private Integer dbId;
 	

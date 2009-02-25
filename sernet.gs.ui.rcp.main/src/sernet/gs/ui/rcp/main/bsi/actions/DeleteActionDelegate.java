@@ -2,6 +2,7 @@ package sernet.gs.ui.rcp.main.bsi.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,6 +29,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.connect.IBaseDao;
 
 /**
  * Delete items on user request.
@@ -134,10 +136,10 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 									try {
 										monitor.setTaskName("Lösche: "
 												+ el.getTitel());
-										monitor.worked(1);
-										//el.remove();
 										el.getParent().removeChild(el);
 										CnAElementHome.getInstance().remove(el);
+										monitor.worked(1);
+										
 
 									} catch (Exception e) {
 										ExceptionUtil
@@ -147,6 +149,10 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
 								}
 							}
+							
+							// notify all listeners:
+							CnATreeElement child = (CnATreeElement) selection.iterator().next();
+							CnAElementFactory.getLoadedModel().databaseChildRemoved(child);
 						}
 					});
 		} catch (InvocationTargetException e) {

@@ -157,11 +157,9 @@ public class CnAElementHome {
 	}
 
 	public void remove(CnATreeElement element) throws Exception {
+		Logger.getLogger(this.getClass()).debug("Deleting " + element.getTitel());
 		RemoveElement command = new RemoveElement(element);
 		command = commandService.executeCommand(command);
-		
-		// notify all listeners:
-		CnAElementFactory.getLoadedModel().childRemoved(element.getParent(), element);
 	}
 
 	public void remove(CnALink element) throws Exception {

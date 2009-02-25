@@ -12,7 +12,7 @@ public class AnwendungenKategorie extends CnATreeElement
 		
 	}
 	
-	private AnwendungenKategorie() {
+	protected AnwendungenKategorie() {
 		
 	}
 	

@@ -31,7 +31,14 @@ public class NullListener implements IBSIModelListener {
 
 	}
 
+	/**
+	 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
+	 */
 	public void modelRefresh() {
+		modelRefresh(null);
+	}
+
+	public void modelRefresh(Object source) {
 		// do nothing
 	}
 
@@ -42,6 +49,21 @@ public class NullListener implements IBSIModelListener {
 	
 	public void linkAdded(CnALink link) {
 		// do nothing
+	}
+
+	public void databaseChildAdded(CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void databaseChildChanged(CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void databaseChildRemoved(CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

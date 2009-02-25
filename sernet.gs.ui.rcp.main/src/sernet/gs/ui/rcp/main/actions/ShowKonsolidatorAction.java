@@ -35,12 +35,16 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.KonsolidatorDialog;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.Konsolidator;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.bsi.wizards.ExportWizard;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.taskcommands.KonsolidatorCommand;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -101,30 +105,24 @@ public class ShowKonsolidatorAction extends Action implements
 							
 							BausteinUmsetzung source = dialog.getSource();
 							
-							// for every target:
-							for (BausteinUmsetzung target: selectedElements) {
-								// set values:
-								Konsolidator.konsolidiereBaustein(source, target);
-								Konsolidator.konsolidiereMassnahmen(source, target);
-								monitor.worked(1);
-							}
 							try {
-								monitor
-										.setTaskName("Speichere veränderte Werte...");
-								monitor.beginTask(
-										"Speichere veränderte Werte...",
-										IProgressMonitor.UNKNOWN);
-								CnAElementHome.getInstance().update(
-										selectedElements);
-							} catch (Exception e) {
-								ExceptionUtil
-										.log(e,
-												"Elemente konnten nicht gespeichert werden.");
+								// change targets on server:
+								KonsolidatorCommand command = new KonsolidatorCommand(selectedElements, source);
+								command = ServiceFactory.lookupCommandService()
+										.executeCommand(command);
+								
+								// reload state from server:
+								for (BausteinUmsetzung bausteinUmsetzung : selectedElements) {
+									CnAElementFactory.getLoadedModel().databaseChildChanged(bausteinUmsetzung);
+								}
+								
+							} catch (CommandException e) {
+								ExceptionUtil.log(e, "Fehler beim konsolidieren.");
 							}
+							
+							
+							
 							monitor.done();
-							// update once when finished:
-							CnAElementFactory.getLoadedModel()
-									.refreshAllListeners();
 						}
 					});
 		} catch (InvocationTargetException e) {

@@ -15,8 +15,10 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
+import sernet.gs.ui.rcp.main.service.ServerCommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
+import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindURLs;
 import sernet.hui.common.connect.Entity;
@@ -138,13 +140,17 @@ public class EntityResolverFactory {
 					
 					
 					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
-					if (WhereAmIUtil.runningOnServer())
-						return result; // FIXME server: only works from client
+					
 
 					LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
 					
 					try {
-						command = ServiceFactory.lookupCommandService().executeCommand(command);
+						if (WhereAmIUtil.runningOnServer()) {
+							command = ServerCommandService.getCommandService().executeCommand(command);
+						}
+						else {
+							command = ServiceFactory.lookupCommandService().executeCommand(command);
+						}
 						List<Person> personen = command.getElements();
 						
 						for (Person person : personen) {
@@ -152,7 +158,7 @@ public class EntityResolverFactory {
 						}
 						
 					} catch (Exception e) {
-						ExceptionUtil.log(e, "Fehler beim Datenzugriff."); //$NON-NLS-1$
+						throw new RuntimeCommandException("Fehler beim Datenzugriff.", e);
 					}
 					return result;
 				}

@@ -42,6 +42,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
+import org.hibernate.persister.entity.Loadable;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -79,6 +80,10 @@ import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.common.model.ObjectDeletedException;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 
 /**
  * View for model of own "ITVerbund" with associated controls, risk analysis
@@ -297,13 +302,21 @@ public class BsiModelView extends ViewPart {
 					BausteinUmsetzung sourceBst = (BausteinUmsetzung) o;
 					ArrayList newsel = new ArrayList(10);
 					newsel.add(sourceBst);
-					// FIXME lazyliy load bausteine on access
-					ArrayList<BausteinUmsetzung> alleBausteine = model
-							.getBausteine();
-					for (BausteinUmsetzung bst : alleBausteine) {
-						if (bst.getKapitel().equals(sourceBst.getKapitel()))
-							newsel.add(bst);
+					
+					try {
+						LoadCnAElementByType<BausteinUmsetzung> command = new LoadCnAElementByType<BausteinUmsetzung>(BausteinUmsetzung.class);
+						command = ServiceFactory.lookupCommandService()
+								.executeCommand(command);
+						List<BausteinUmsetzung> bausteine = command.getElements();
+
+						for (BausteinUmsetzung bst : bausteine) {
+							if (bst.getKapitel().equals(sourceBst.getKapitel()))
+								newsel.add(bst);
+						}
+					} catch (CommandException e) {
+						ExceptionUtil.log(e, "");
 					}
+					
 					viewer.setSelection(new StructuredSelection(newsel));
 				}
 			}

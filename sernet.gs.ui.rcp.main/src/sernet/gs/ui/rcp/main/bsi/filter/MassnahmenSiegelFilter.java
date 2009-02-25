@@ -8,7 +8,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 import sernet.gs.model.Massnahme;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.IMassnahmeUmsetzung;
 
 
 public class MassnahmenSiegelFilter extends ViewerFilter {
@@ -50,12 +50,12 @@ public class MassnahmenSiegelFilter extends ViewerFilter {
 	
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (!(element instanceof MassnahmenUmsetzung
+		if (!(element instanceof IMassnahmeUmsetzung
 				|| element instanceof Massnahme))
 			return true;
 		
-		if (element instanceof MassnahmenUmsetzung) {
-			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
+		if (element instanceof IMassnahmeUmsetzung) {
+			IMassnahmeUmsetzung mn = (IMassnahmeUmsetzung) element;
 			return siegelPattern.contains(Character.toString(mn.getStufe()));
 		}
 		

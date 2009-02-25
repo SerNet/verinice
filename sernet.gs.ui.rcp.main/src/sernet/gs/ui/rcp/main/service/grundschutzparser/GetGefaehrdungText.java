@@ -25,7 +25,7 @@ public class GetGefaehrdungText extends GenericCommand {
 	public void execute() {
 		try {
 			InputStream in = BSIMassnahmenModel.getGefaehrdung(url, stand);
-			text = InputUtil.streamToString(in);
+			text = InputUtil.streamToString(in,  "iso-8859-1");
 		} catch (GSServiceException e) {
 			throw new RuntimeCommandException(e);
 		} catch (IOException e) {

@@ -11,7 +11,7 @@ public class ClientsKategorie extends CnATreeElement
 		super(parent);
 	}
 	
-	private ClientsKategorie() {
+	protected ClientsKategorie() {
 		
 	}
 

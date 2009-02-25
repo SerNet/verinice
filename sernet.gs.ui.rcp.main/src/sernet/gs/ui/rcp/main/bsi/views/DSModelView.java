@@ -41,7 +41,7 @@ import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForListView;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForTodoView;
 
 /**
  * View that allows editing of applications' privacy ("Datenschutz") properties.
@@ -101,7 +101,14 @@ public class DSModelView extends ViewPart {
 			updater.refresh();
 		}
 
+		/**
+		 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
+		 */
 		public void modelRefresh() {
+			modelRefresh(null);
+		}
+
+		public void modelRefresh(Object source) {
 			updater.refresh();
 		}
 
@@ -116,6 +123,21 @@ public class DSModelView extends ViewPart {
 		
 		public void linkAdded(CnALink link) {
 			// do nothing
+		}
+
+		public void databaseChildAdded(CnATreeElement child) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void databaseChildChanged(CnATreeElement child) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void databaseChildRemoved(CnATreeElement child) {
+			// TODO Auto-generated method stub
+			
 		}
 	};
 

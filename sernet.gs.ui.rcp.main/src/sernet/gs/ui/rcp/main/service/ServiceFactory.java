@@ -43,6 +43,7 @@ public abstract class ServiceFactory {
 	}
 
 	public static ICommandService lookupCommandService() {
+		
 		return (ICommandService) SpringClientPlugin.getDefault()
 				.getBeanFactory().getBean(COMMAND_SERVICE);
 	}

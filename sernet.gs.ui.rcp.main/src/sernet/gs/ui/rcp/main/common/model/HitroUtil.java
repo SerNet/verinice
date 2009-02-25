@@ -67,7 +67,6 @@ public class HitroUtil {
 		HUITypeFactory.initialize(huiConfig);
 		typeFactory = HUITypeFactory.getInstance();
 		
-		resolvers not working on server
 		EntityResolverFactory.createResolvers(typeFactory);
 		
 		Logger.getLogger(HitroUtil.class).debug("HUI initialized.");

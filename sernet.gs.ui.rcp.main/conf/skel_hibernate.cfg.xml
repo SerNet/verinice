@@ -42,11 +42,10 @@
         org.springframework.orm.hibernate3.SpringSessionContext
         </property>
 		
-        <!-- Disable the second-level cache 
-        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+		<!-- Enable memory read write cache 
 		-->
-		
         <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+		
 		
 
         <!-- Echo all executed SQL to stdout -->

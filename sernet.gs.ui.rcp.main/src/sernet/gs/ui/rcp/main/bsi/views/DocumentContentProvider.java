@@ -70,7 +70,7 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 			CnAElementFactory.getLoadedModel().removeBSIModelListener(this);
 			CnAElementFactory.getLoadedModel().addBSIModelListener(this);
 		}
-		modelRefresh();
+		modelRefresh(null);
 	}
 
 	public Object[] getElements(Object inputElement) {
@@ -78,11 +78,11 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 	}
 
 	public void childAdded(CnATreeElement category, CnATreeElement child) {
-		modelRefresh();
+		modelRefresh(null);
 	}
 
 	public void childChanged(CnATreeElement category, CnATreeElement child) {
-		modelRefresh();
+		modelRefresh(null);
 	}
 	
 	public void linkChanged(CnALink link) {
@@ -99,10 +99,17 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 	}
 
 	public void childRemoved(CnATreeElement category, CnATreeElement child) {
-		modelRefresh();
+		modelRefresh(null);
 	}
 
+	/**
+	 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
+	 */
 	public void modelRefresh() {
+		modelRefresh(null);
+	}
+
+	public void modelRefresh(Object source) {
 		if (Display.getCurrent() != null) {
 			viewer.refresh();
 		}
@@ -113,6 +120,21 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 				}
 			});
 		}
+	}
+
+	public void databaseChildAdded(CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void databaseChildChanged(CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void databaseChildRemoved(CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

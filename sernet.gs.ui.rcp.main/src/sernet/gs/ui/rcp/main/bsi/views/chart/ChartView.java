@@ -277,12 +277,32 @@ public class ChartView extends ViewPart {
 				
 			}
 
-			public void modelRefresh() {
+			public void modelRefresh(Object source) {
 				drawChart();
 			}
 			
 			public void linkAdded(CnALink link) {
 				// do nothing
+			}
+
+			public void databaseChildAdded(CnATreeElement child) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void databaseChildChanged(CnATreeElement child) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void databaseChildRemoved(CnATreeElement child) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void modelRefresh() {
+				// TODO Auto-generated method stub
+				
 			}
 
 		};

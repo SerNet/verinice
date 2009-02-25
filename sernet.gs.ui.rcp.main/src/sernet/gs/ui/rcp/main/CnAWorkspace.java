@@ -24,9 +24,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 
 /**
  * Prepare the workspace directory for the application. Created needed files
@@ -61,6 +65,8 @@ public class CnAWorkspace {
 	
 
 	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
+		private boolean modechangeWarning = true;
+
 		public void propertyChange(PropertyChangeEvent event) {
 			if ((event.getProperty().equals(PreferenceConstants.GS_DB_URL)
 					|| event.getProperty().equals(PreferenceConstants.GS_DB_USER) 
@@ -83,14 +89,22 @@ public class CnAWorkspace {
 					|| event.getProperty().equals(PreferenceConstants.VNSERVER_URI)) {
 				try {
 					createSpringConfig();
+					if (!modechangeWarning ) {
+						modechangeWarning = false;
+						MessageDialog.openWarning(Display.getCurrent().getActiveShell(), "Neustart erforderlich", 
+								"Wechsel des Betriebsmodus oder Änderungen an der Serververbindung erfordern " +
+								"einen Neustart. Sie müssen Verinice " +
+						"jetzt beenden und neu starten.");
+					}
 				} catch (Exception e) {
 					ExceptionUtil.log(e, "Fehler beim Schreiben der Konfiguration für " +
 							"Datenbankzugriff (Spring).");
 				}
 			}
-			
 		}
 	};
+
+	private File confDir;
 	
 	private CnAWorkspace() {
 		Activator.getDefault().getPluginPreferences()
@@ -122,11 +136,7 @@ public class CnAWorkspace {
 	 * 
 	 */
 	public void prepare(boolean force) {
-		URL url = Platform.getInstanceLocation().getURL();
-		String path = url.getPath().replaceAll("/", "\\" + File.separator);
-		workDir = (new File(path)).getAbsolutePath();
-
-		File confDir = new File(url.getPath() + File.separator + "conf");
+		prepareWorkDir();
 
 		if (!force && confDir.exists() && confDir.isDirectory()) {
 			File confFile = new File(confDir, "configuration.version");
@@ -165,6 +175,13 @@ public class CnAWorkspace {
 
 	}
 
+	public void prepareWorkDir() {
+		URL url = Platform.getInstanceLocation().getURL();
+		String path = url.getPath().replaceAll("/", "\\" + File.separator);
+		workDir = (new File(path)).getAbsolutePath();		
+		confDir = new File(url.getPath() + File.separator + "conf");
+	}
+
 	private void createSpringConfig() throws NullPointerException, IOException {
 		
 		// create application context xml for direct database access:
@@ -190,10 +207,21 @@ public class CnAWorkspace {
 				"file://" + getConfDir() + File.separator + "applicationContextHibernate.xml");
 		settings.put("applicationContextRemote", 
 				"file://" + getConfDir() + File.separator + "applicationContextRemoteService.xml");
-		createTextFile("conf" + File.separator + "skel_beanRefFactory.xml", 
-				getConfDir(),		
-			"beanRefFactory.xml",
-			settings);
+		
+		if (ServiceFactory.isUsingRemoteService()) {
+		Logger.getLogger(this.getClass()).debug("Creating bean ref for remote service.");
+			createTextFile("conf" + File.separator + "skel_beanRefFactory-Remote.xml", 
+					getConfDir(),		
+					"beanRefFactory.xml",
+					settings);
+		}
+		else {
+			Logger.getLogger(this.getClass()).debug("Creating bean ref for local hibernate access.");
+			createTextFile("conf" + File.separator + "skel_beanRefFactory-Hibernate.xml", 
+					getConfDir(),		
+					"beanRefFactory.xml",
+					settings);
+		}
 	}
 
 	public String getWorkdir() {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -140,6 +141,8 @@ public class BSIMassnahmenView extends ViewPart {
 					return ImageCache.getInstance().getImage(ImageCache.STUFE_C);
 				case 'Z':
 					return ImageCache.getInstance().getImage(ImageCache.STUFE_Z);
+				case 'W':
+					return ImageCache.getInstance().getImage(ImageCache.STUFE_W);
 				}
 			}
 			
@@ -194,6 +197,12 @@ public class BSIMassnahmenView extends ViewPart {
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setSorter(new KapitelSorter());
+		
+		WorkspaceJob job = new OpenCataloguesJob(
+				Messages.BSIMassnahmenView_0);
+		job.setUser(false);
+		job.schedule();
+		
 		viewer.setInput(BSIKatalogInvisibleRoot.getInstance());
 		BSIKatalogInvisibleRoot.getInstance().addListener(new BSIKatalogInvisibleRoot.ISelectionListener() {
 			public void cataloguesChanged() {

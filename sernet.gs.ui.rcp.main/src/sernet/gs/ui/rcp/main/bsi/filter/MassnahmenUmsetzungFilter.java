@@ -7,7 +7,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.IMassnahmeUmsetzung;
 
 
 public class MassnahmenUmsetzungFilter extends ViewerFilter {
@@ -49,10 +49,10 @@ public class MassnahmenUmsetzungFilter extends ViewerFilter {
 	
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (!(element instanceof MassnahmenUmsetzung))
+		if (!(element instanceof IMassnahmeUmsetzung))
 			return true;
 		
-		MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
+		IMassnahmeUmsetzung mn = (IMassnahmeUmsetzung) element;
 		return umsetzungPattern.contains(mn.getUmsetzung());
 	}
 	

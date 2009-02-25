@@ -7,16 +7,10 @@ import org.eclipse.jface.viewers.Viewer;
 
 import sernet.gs.ui.rcp.main.bsi.model.IMassnahmeUmsetzung;
 
-/**
- * Filter to select items based on search string comparison with Zielobjekt.
- * 
- * @author koderman@sernet.de
- *
- */
-public class ZielobjektPropertyFilter extends StringPropertyFilter {
+public class AuditDurchFilter extends UmsetzungDurchFilter {
 
-	public ZielobjektPropertyFilter(StructuredViewer viewer) {
-		super(viewer, "");
+	public AuditDurchFilter(StructuredViewer viewer) {
+		super(viewer);
 	}
 	
 	@Override
@@ -24,13 +18,10 @@ public class ZielobjektPropertyFilter extends StringPropertyFilter {
 		if (!(element instanceof IMassnahmeUmsetzung))
 			return true;
 		
-		
-		
-		String value = ((IMassnahmeUmsetzung)element).getParentTitle();
-		Matcher matcher = super.regex.matcher(value);
+		IMassnahmeUmsetzung mnums = (IMassnahmeUmsetzung)element;
+		Matcher matcher = regex.matcher(mnums.getRevisionDurch());
 		if (matcher.find())
 			return true;
 		return false;
 	}
-
 }

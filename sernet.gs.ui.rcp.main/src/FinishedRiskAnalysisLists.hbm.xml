@@ -19,6 +19,7 @@
 		
 		<property
 			name="uuid"
+			unique="true"
 		/>
 		
 		<property name="finishedRiskAnalysisId" />

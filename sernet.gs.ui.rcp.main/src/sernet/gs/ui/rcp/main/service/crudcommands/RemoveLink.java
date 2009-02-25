@@ -17,7 +17,8 @@ public class RemoveLink<T extends CnALink> extends GenericCommand {
 	
 	public void execute() {
 		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
-		element = dao.merge(element);
+		element = dao.findById(element.getId());
+		// FIXME server: delete links find by ID
 		element.remove();
 		dao.delete(element);
 	}

@@ -25,12 +25,8 @@ public class Konsolidator {
 			BausteinUmsetzung target) {
 		if (!source.getKapitel().equals(target.getKapitel()))
 			return;
-		if (source.equals(target))
-			return;
 		
 		for (MassnahmenUmsetzung mn: target.getMassnahmenUmsetzungen()) {
-//			if (!userSelection.contains(mn))
-//				continue;
 			MassnahmenUmsetzung sourceMn = source.getMassnahmenUmsetzung(mn.getUrl());
 			if (sourceMn != null) {
 				mn.getEntity().copyEntity(sourceMn.getEntity());
@@ -45,8 +41,6 @@ public class Konsolidator {
 	 */
 	public static void konsolidiereBaustein(BausteinUmsetzung source, 
 			BausteinUmsetzung target) {
-		if (source.equals(target))
-			return;
 		target.getEntity().copyEntity(source.getEntity());
 	}
 

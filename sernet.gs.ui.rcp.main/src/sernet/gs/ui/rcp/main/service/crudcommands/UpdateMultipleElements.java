@@ -24,12 +24,10 @@ public class UpdateMultipleElements<T> extends GenericCommand {
 				T mergedElement = dao.merge(element, true);
 				mergedElements.add(mergedElement);
 			}
-			elements = mergedElements;
 		}
+		elements = null;
 	}
 
-	public List<T> getElements() {
-		return elements;
-	}
+	
 
 }

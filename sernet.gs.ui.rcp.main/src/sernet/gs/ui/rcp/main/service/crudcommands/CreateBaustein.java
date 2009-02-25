@@ -44,22 +44,19 @@ public class CreateBaustein extends GenericCommand {
 			if (container.containsBausteinUmsetzung(baustein.getId()))
 				return;
 
-			BausteinUmsetzung bu = new BausteinUmsetzung(container);
-			container.addChild(bu);
+			child = new BausteinUmsetzung(container);
+			container.addChild(child);
 			
-			bu.setKapitel(baustein.getId());
-			bu.setName(baustein.getTitel());
-			bu.setUrl(baustein.getUrl());
-			bu.setStand(baustein.getStand());
+			child.setKapitel(baustein.getId());
+			child.setName(baustein.getTitel());
+			child.setUrl(baustein.getUrl());
+			child.setStand(baustein.getStand());
 
 			List<Massnahme> massnahmen = baustein
 					.getMassnahmen();
 			for (Massnahme mn : massnahmen) {
-				createMassnahme(bu, mn);
+				createMassnahme(child, mn);
 			}
-			// update child instance with saved object (including generated ID):
-			this.child = dao.merge(bu);
-			
 			
 		} catch (Exception e) {
 			throw new RuntimeCommandException(e);

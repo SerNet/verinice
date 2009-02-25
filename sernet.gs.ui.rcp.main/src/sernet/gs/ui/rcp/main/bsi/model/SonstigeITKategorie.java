@@ -11,7 +11,7 @@ public class SonstigeITKategorie extends CnATreeElement
 		super(parent);
 	}
 	
-	private SonstigeITKategorie() {
+	SonstigeITKategorie() {
 		
 	}
 

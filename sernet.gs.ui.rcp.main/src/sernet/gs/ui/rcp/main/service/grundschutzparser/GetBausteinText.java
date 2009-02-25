@@ -25,7 +25,7 @@ public class GetBausteinText extends GenericCommand {
 	public void execute() {
 		try {
 			InputStream in = BSIMassnahmenModel.getBaustein(url, stand);
-			bausteinText = InputUtil.streamToString(in);
+			bausteinText = InputUtil.streamToString(in,  "iso-8859-1");
 		} catch (GSServiceException e) {
 			throw new RuntimeCommandException(e);
 		} catch (IOException e) {

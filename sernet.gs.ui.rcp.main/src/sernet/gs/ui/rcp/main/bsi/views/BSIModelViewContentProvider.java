@@ -37,10 +37,11 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 		}
 
 		public Object[] getChildren(Object parent) {
-			Logger.getLogger(this.getClass()).debug("getChildren " +parent);
+//			Logger.getLogger(this.getClass()).debug("getChildren " +parent);
 			
 			// replace object in event with the one actually displayed in the tree:
 			Object cachedObject = cache.getCachedObject(parent);
+//			Logger.getLogger(this.getClass()).debug("Retrieved from view cache: " + cachedObject);
 			if (cachedObject != null)
 				parent = cachedObject;
 			
@@ -79,9 +80,12 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 		}
 
 		private CnATreeElement loadChildren(CnATreeElement el) throws CommandException {
-			if (el.isChildrenLoaded())
+			if (el.isChildrenLoaded()) {
+				Logger.getLogger(this.getClass()).debug("NOT loading children because of positive flag on parent " + el);
 				return el;
+			}
 			
+			Logger.getLogger(this.getClass()).debug("Loading children from DB for " + el);
 			LoadChildrenForExpansion command = new LoadChildrenForExpansion(el);
 			command = ServiceFactory.lookupCommandService().executeCommand(
 					command);
@@ -89,6 +93,7 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 			newElement.setChildrenLoaded(true);
 			
 			// replace with loaded object in cache:
+			Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
 			cache.clear(el);
 			cache.addObject(newElement);
 			

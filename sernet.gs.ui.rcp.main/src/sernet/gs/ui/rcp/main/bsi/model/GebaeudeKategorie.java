@@ -11,7 +11,7 @@ public class GebaeudeKategorie extends CnATreeElement implements IBSIStrukturKat
 		
 	}
 	
-	private GebaeudeKategorie() {
+	protected GebaeudeKategorie() {
 		
 	}
 	

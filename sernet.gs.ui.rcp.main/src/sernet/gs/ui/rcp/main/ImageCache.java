@@ -58,6 +58,7 @@ public class ImageCache {
 	public static final String STUFE_B = "stufe_b.png";
 	public static final String STUFE_C = "stufe_c.png";
 	public static final String STUFE_Z = "stufe_z.png";
+	public static final String STUFE_W = "stufe_w.png";
 
 	public static final String ANWENDUNG = "application_osx.png";
 	
@@ -100,6 +101,8 @@ public class ImageCache {
 	public static final String VIEW_DOCUMENT = "script.png";
 
 	public static final String AUTOBAUSTEIN = "autobaustein.png";
+
+	
 
 
 	

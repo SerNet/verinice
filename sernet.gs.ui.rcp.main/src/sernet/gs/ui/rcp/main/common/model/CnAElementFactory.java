@@ -52,51 +52,43 @@ import sernet.hui.common.connect.Entity;
  * Factory for all model elements. Contains typed factories for sub-elements.
  * 
  * 
- * To add new model types:
- * - add new class with new type-id (String)
- * - add type-id to Hitro-UI XML Config (SNCA.xml)
- * - add a factory for the type-id here
- * - add the type to hibernate's cnatreeelement.hbm.xml
- * - don't forget to change the method canContain() in the parent
- *   to include the new type
- * - add Actions (add, delete) to plugin.xml
- * - create ActionDelegates which use this factory to create new instances
- * - register editor for type in EditorFactory
+ * To add new model types: - add new class with new type-id (String) - add
+ * type-id to Hitro-UI XML Config (SNCA.xml) - add a factory for the type-id
+ * here - add the type to hibernate's cnatreeelement.hbm.xml - don't forget to
+ * change the method canContain() in the parent to include the new type - add
+ * Actions (add, delete) to plugin.xml - create ActionDelegates which use this
+ * factory to create new instances - register editor for type in EditorFactory
  * 
  * @author koderman@sernet.de
- *
+ * 
  */
 public class CnAElementFactory {
-	
 
 	private static List<IModelLoadListener> listeners = new ArrayList<IModelLoadListener>();
 
 	private static CnAElementFactory instance;
 
-	private HashMap<String, IElementBuilder> bsiElementbuilders = 
-		new HashMap<String, IElementBuilder>();
+	private HashMap<String, IElementBuilder> bsiElementbuilders = new HashMap<String, IElementBuilder>();
 
 	private CnAElementHome dbHome;
 
 	private static BSIModel loadedModel;
-	
 
 	private interface IElementBuilder<T extends CnATreeElement, U> {
 		public T build(CnATreeElement container, BuildInput<U> input)
 				throws Exception;
 	}
-	
+
 	public void addLoadListener(IModelLoadListener listener) {
-		if (! listeners.contains(listener))
+		if (!listeners.contains(listener))
 			listeners.add(listener);
 	}
-	
+
 	public void removeLoadListener(IModelLoadListener listener) {
 		if (listeners.contains(listener))
 			listeners.remove(listener);
 	}
 
-	
 	private CnAElementFactory() {
 		dbHome = CnAElementHome.getInstance();
 
@@ -109,7 +101,7 @@ public class CnAElementFactory {
 				return child;
 			}
 		});
-		
+
 		bsiElementbuilders.put(Client.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
@@ -119,53 +111,56 @@ public class CnAElementFactory {
 				return child;
 			}
 		});
-		
+
 		bsiElementbuilders.put(SonstIT.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
 				SonstIT child = dbHome.save(container, SonstIT.class);
-					container.addChild(child);
-					child.setParent(container);
+				container.addChild(child);
+				child.setParent(container);
 				return child;
 			}
 		});
-		
+
 		bsiElementbuilders.put(Server.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
 				Server child = dbHome.save(container, Server.class);
-					container.addChild(child);
-					child.setParent(container);
+				container.addChild(child);
+				child.setParent(container);
 				return child;
 			}
 		});
-		
-		bsiElementbuilders.put(TelefonKomponente.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
-				TelefonKomponente child = dbHome.save(container, TelefonKomponente.class);
-					container.addChild(child);
-					child.setParent(container);
-				return child;
-			}
-		});
-		
+
+		bsiElementbuilders.put(TelefonKomponente.TYPE_ID,
+				new IElementBuilder() {
+					public CnATreeElement build(CnATreeElement container,
+							BuildInput input) throws Exception {
+						TelefonKomponente child = dbHome.save(container,
+								TelefonKomponente.class);
+						container.addChild(child);
+						child.setParent(container);
+						return child;
+					}
+				});
+
 		bsiElementbuilders.put(Raum.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
 				Raum child = dbHome.save(container, Raum.class);
-					container.addChild(child);
-					child.setParent(container);
+				container.addChild(child);
+				child.setParent(container);
 				return child;
 			}
 		});
-		
+
 		bsiElementbuilders.put(NetzKomponente.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
-				NetzKomponente child = dbHome.save(container, NetzKomponente.class);
-					container.addChild(child);
-					child.setParent(container);
+				NetzKomponente child = dbHome.save(container,
+						NetzKomponente.class);
+				container.addChild(child);
+				child.setParent(container);
 				return child;
 			}
 		});
@@ -174,64 +169,65 @@ public class CnAElementFactory {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
 				Person child = dbHome.save(container, Person.class);
-					container.addChild(child);
-					child.setParent(container);
+				container.addChild(child);
+				child.setParent(container);
 				return child;
 			}
 		});
-		
+
 		bsiElementbuilders.put(Anwendung.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws Exception {
 
 				Logger.getLogger(this.getClass()).debug(
 						"Creating new Anwendung in " + container);
-				CreateAnwendung saveCommand = new CreateAnwendung(container, Anwendung.class);
-				saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
+				CreateAnwendung saveCommand = new CreateAnwendung(container,
+						Anwendung.class);
+				saveCommand = ServiceFactory.lookupCommandService()
+						.executeCommand(saveCommand);
 				Anwendung child = saveCommand.getNewElement();
-				
+
 				container.addChild(child);
 				child.setParent(container);
-				
+
 				return child;
 			}
 		});
-
-		
 
 		bsiElementbuilders.put(BausteinUmsetzung.TYPE_ID,
 				new IElementBuilder<BausteinUmsetzung, Baustein>() {
 					public BausteinUmsetzung build(CnATreeElement container,
 							BuildInput<Baustein> input) throws Exception {
-						
-						BausteinUmsetzung bu = dbHome.save(container, input.getInput());
+
+						BausteinUmsetzung bu = dbHome.save(container, input
+								.getInput());
 						if (bu == null)
 							return null;
-						
+
 						container.addChild(bu);
 						bu.setParent(container);
 						return bu;
 					}
 				});
 
-		bsiElementbuilders.put(ITVerbund.TYPE_ID,
-				new IElementBuilder() {
-					public ITVerbund build(CnATreeElement container,
-							BuildInput input) throws Exception {
-						
-						Logger.getLogger(this.getClass()).debug(
-								"Creating new ITVerbund in " + container);
-						CreateITVerbund saveCommand = new CreateITVerbund(container, ITVerbund.class);
-						saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
-						ITVerbund verbund = saveCommand.getNewElement();
-						
-						loadedModel.addChild(verbund);
-						verbund.setParent(loadedModel);
-						return verbund;
-					}
-				});
-		
-		
+		bsiElementbuilders.put(ITVerbund.TYPE_ID, new IElementBuilder() {
+			public ITVerbund build(CnATreeElement container, BuildInput input)
+					throws Exception {
+
+				Logger.getLogger(this.getClass()).debug(
+						"Creating new ITVerbund in " + container);
+				CreateITVerbund saveCommand = new CreateITVerbund(container,
+						ITVerbund.class);
+				saveCommand = ServiceFactory.lookupCommandService()
+						.executeCommand(saveCommand);
+				ITVerbund verbund = saveCommand.getNewElement();
+
+				loadedModel.addChild(verbund);
+				verbund.setParent(loadedModel);
+				return verbund;
+			}
+		});
+
 	}
 
 	public static CnAElementFactory getInstance() {
@@ -241,7 +237,7 @@ public class CnAElementFactory {
 	}
 
 	/**
-	 * Create new BSI element with new HUI Entity. The HUI Entity will be added 
+	 * Create new BSI element with new HUI Entity. The HUI Entity will be added
 	 * to the given container.
 	 * 
 	 * @param container
@@ -255,20 +251,21 @@ public class CnAElementFactory {
 		if (builder == null)
 			throw new Exception("Konnte Element nicht erzeugen.");
 		CnATreeElement child = builder.build(container, input);
-		
+
 		// notify all listeners:
 		getLoadedModel().childAdded(container, child);
+		CnAElementFactory.getLoadedModel().databaseChildAdded(child);
 		return child;
 	}
-	
+
 	public static BSIModel getLoadedModel() {
 		return loadedModel;
 	}
-	
+
 	public static boolean isModelLoaded() {
 		return (loadedModel != null);
 	}
-	
+
 	public void closeModel() {
 		dbHome.close();
 		fireClosed();
@@ -280,6 +277,7 @@ public class CnAElementFactory {
 			listener.closed(loadedModel);
 		}
 	}
+
 	private void fireLoad() {
 		for (IModelLoadListener listener : listeners) {
 			listener.loaded(loadedModel);
@@ -290,14 +288,13 @@ public class CnAElementFactory {
 		if (!dbHome.isOpen()) {
 			dbHome.open(monitor);
 		}
-		
+
 		monitor.setTaskName("Überprüfe / Aktualisiere DB-Version.");
 		checkDbVersion();
-		
+
 		loadedModel = dbHome.loadModel(monitor);
 		if (loadedModel != null) {
-			
-			
+
 			fireLoad();
 			return loadedModel;
 		}
@@ -311,7 +308,7 @@ public class CnAElementFactory {
 		loadedModel.addChild(verbund);
 
 		verbund.createNewCategories();
-		
+
 		createBausteinVorschlaege(loadedModel);
 
 		loadedModel = dbHome.save(loadedModel);
@@ -323,9 +320,11 @@ public class CnAElementFactory {
 	private void createBausteinVorschlaege(BSIModel newModel) {
 		SubtypenZielobjekte mapping = new SubtypenZielobjekte();
 		List<BausteinVorschlag> list = mapping.getMapping();
-		UpdateMultipleElements<BausteinVorschlag> command = new UpdateMultipleElements<BausteinVorschlag>(list);
+		UpdateMultipleElements<BausteinVorschlag> command = new UpdateMultipleElements<BausteinVorschlag>(
+				list);
 		try {
-			command = ServiceFactory.lookupCommandService().executeCommand(command);
+			command = ServiceFactory.lookupCommandService().executeCommand(
+					command);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
 		}
@@ -343,10 +342,14 @@ public class CnAElementFactory {
 						sleep(1000);
 						long now = System.currentTimeMillis();
 						if (now - startTime > 30000) {
-							ExceptionUtil.log(new Exception("Das hier dauert und dauert..."), "Wenn diese Aktion länger als eine " +
-									"Minute dauert, sollten Sie ihre Datenbank von Derby nach Postgres migrieren. Falls das " +
-									"schon geschehen ist, sollten Sie ihre Postgres/MySQL-DB tunen. In der FAQ auf http://verinice.org/ finden " +
-									"Sie weitere Hinweise. Sie können natürlich auch einfach weiter warten...");
+							ExceptionUtil
+									.log(
+											new Exception(
+													"Das hier dauert und dauert..."),
+											"Wenn diese Aktion länger als eine "
+													+ "Minute dauert, sollten Sie ihre Datenbank von Derby nach Postgres migrieren. Falls das "
+													+ "schon geschehen ist, sollten Sie ihre Postgres/MySQL-DB tunen. In der FAQ auf http://verinice.org/ finden "
+													+ "Sie weitere Hinweise. Sie können natürlich auch einfach weiter warten...");
 							return;
 						}
 					} catch (InterruptedException e) {
@@ -356,20 +359,18 @@ public class CnAElementFactory {
 		};
 		timeout.start();
 		try {
-			DbVersion command = new DbVersion(DbVersion.COMPATIBLE_CLIENT_VERSION);
-			command = ServiceFactory.lookupCommandService().executeCommand(command);
+			DbVersion command = new DbVersion(
+					DbVersion.COMPATIBLE_CLIENT_VERSION);
+			command = ServiceFactory.lookupCommandService().executeCommand(
+					command);
 			done[0] = true;
-		} catch (CommandException e){
+		} catch (CommandException e) {
 			done[0] = true;
 			throw e;
-		}
-		catch (RuntimeException re) {
+		} catch (RuntimeException re) {
 			done[0] = true;
 			throw re;
 		}
 	}
-
-	
-
 
 }

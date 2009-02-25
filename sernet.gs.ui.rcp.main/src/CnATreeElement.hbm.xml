@@ -7,6 +7,9 @@
 	<class name="CnATreeElement" 
 		batch-size="10"
 		abstract="true">
+		
+		<cache usage="read-write" />
+		
 		<id name="dbId" 
 			type="java.lang.Integer" 
 			column="dbId"
@@ -16,6 +19,8 @@
 		
 		<property
 			name="uuid"
+			not-null="true"
+			unique="true"
 		/>
 		
 		
@@ -39,6 +44,9 @@
 			batch-size="10"
 			fetch="subselect"
 			>
+			
+			<cache usage="read-write" />
+			
 			<key column="parent" />
 			<one-to-many class="CnATreeElement"/>
 		</set>
@@ -46,6 +54,9 @@
 		<set name="linksDown"
 			inverse="true"
 			cascade="delete,delete-orphan">
+			
+			<cache usage="read-write" />
+			
 			<key column="DEPENDANT_ID"/>
 			<one-to-many class="CnALink"/>
 		</set>
@@ -53,6 +64,9 @@
 		<set name="linksUp"
 			inverse="true"
 			cascade="delete,delete-orphan">
+			
+			<cache usage="read-write" />
+			
 			<key column="DEPENDENCY_ID"/>
 			<one-to-many class="CnALink"/>
 		</set>

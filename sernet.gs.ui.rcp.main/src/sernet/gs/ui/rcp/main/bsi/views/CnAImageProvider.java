@@ -24,6 +24,7 @@ import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
+import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnAPlaceholder;
@@ -32,9 +33,16 @@ import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 
 public class CnAImageProvider {
 
+	public static Image getImage(TodoViewItem elmt) {
+		return getImage(elmt.getUmsetzung());
+	}
+	
 	public static Image getImage(CnATreeElement elmt) {
-		if (elmt instanceof MassnahmenUmsetzung)
-			return getImage((MassnahmenUmsetzung)elmt);
+		if (elmt instanceof MassnahmenUmsetzung) {
+			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) elmt;
+			String state = mn.getUmsetzung();			
+			return getImage(state);
+		}
 		
 		if (elmt instanceof GefaehrdungsUmsetzung)
 			return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
@@ -83,8 +91,7 @@ public class CnAImageProvider {
 		
 	}
 	
-	private static Image getImage(MassnahmenUmsetzung mn) {
-		String state = mn.getUmsetzung();
+	private static Image getImage(String state) {
 			
 			if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_NEIN))
 				return ImageCache.getInstance().getImage(

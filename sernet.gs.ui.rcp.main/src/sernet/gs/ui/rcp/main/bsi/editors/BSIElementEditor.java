@@ -17,6 +17,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
@@ -76,14 +77,14 @@ public class BSIElementEditor extends EditorPart {
 	public void doSave(IProgressMonitor monitor) {
 		if (isModelModified) {
 			monitor.beginTask("Speichern", IProgressMonitor.UNKNOWN);
-			save();
+			save(true);
 			monitor.done();
 		}
 	}
 	
 	
 
-	private void save() {
+	private void save(boolean completeRefresh) {
 		BSIElementEditorInput editorinput = (BSIElementEditorInput) getEditorInput();
 		try {
 			CnAElementHome.getInstance().update(cnAElement);
@@ -92,6 +93,11 @@ public class BSIElementEditor extends EditorPart {
 			
 			// notify all views of change:
 			CnAElementFactory.getLoadedModel().childChanged(cnAElement.getParent(), cnAElement);
+			
+			// cause complete refresh, necessary for viewers to call getchildren etc.
+			if (completeRefresh)
+				CnAElementFactory.getLoadedModel().refreshAllListeners(IBSIModelListener.SOURCE_EDITOR);
+			
 		} catch (StaleObjectStateException se) {
 			// close editor, loosing changes:
 			ExceptionUtil.log(se, "Fehler beim Speichern.");
@@ -166,7 +172,7 @@ public class BSIElementEditor extends EditorPart {
 		initContent();
 		// if opened the first time, save initialized entity:
 		if (isDirty())
-			save();
+			save(false);
 			
 	}
 	
@@ -182,7 +188,6 @@ public class BSIElementEditor extends EditorPart {
 	
 	@Override
 	public void dispose() {
-		CnAElementFactory.getLoadedModel().refreshAllListeners();
 		huiComposite.closeView();
 		cnAElement.getEntity().removeListener(modelListener);
 		EditorRegistry.getInstance().closeEditor(

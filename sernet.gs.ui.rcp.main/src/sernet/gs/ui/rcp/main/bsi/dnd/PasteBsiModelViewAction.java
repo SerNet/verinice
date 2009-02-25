@@ -22,6 +22,7 @@ import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -107,6 +108,13 @@ public class PasteBsiModelViewAction extends Action {
 						}
 						monitor.worked(1);
 					}
+					
+					// notify listeners:
+					for (Iterator iter = targets.iterator(); iter.hasNext();) {
+						CnAElementFactory.getLoadedModel().databaseChildAdded((CnATreeElement) iter.next());
+					}
+					
+					
 				} catch (Exception e) {
 					Logger.getLogger(this.getClass()).error("Drop failed", //$NON-NLS-1$
 							e);

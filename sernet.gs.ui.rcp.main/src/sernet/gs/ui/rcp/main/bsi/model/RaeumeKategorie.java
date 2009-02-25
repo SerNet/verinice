@@ -9,7 +9,8 @@ public class RaeumeKategorie extends CnATreeElement implements IBSIStrukturKateg
 	public RaeumeKategorie(CnATreeElement model) {
 		super(model);
 	}
-	private RaeumeKategorie() {
+	
+	RaeumeKategorie() {
 		
 	}
 	

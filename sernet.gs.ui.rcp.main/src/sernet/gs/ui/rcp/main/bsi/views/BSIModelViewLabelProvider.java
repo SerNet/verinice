@@ -30,7 +30,7 @@ public class BSIModelViewLabelProvider extends LabelProvider {
 	
 	
 		public Image getImage(Object obj) {
-			Logger.getLogger(this.getClass()).debug("getImage " + obj);
+//			Logger.getLogger(this.getClass()).debug("getImage " + obj);
 			
 			Object cachedObject = cache.getCachedObject(obj);
 			if (cachedObject == null) {
@@ -71,7 +71,7 @@ public class BSIModelViewLabelProvider extends LabelProvider {
 		}
 
 		public String getText(Object obj) {
-			Logger.getLogger(this.getClass()).debug("getLabel "+obj);
+//			Logger.getLogger(this.getClass()).debug("getLabel "+obj);
 			
 			if (obj == null)
 				return "<null>";

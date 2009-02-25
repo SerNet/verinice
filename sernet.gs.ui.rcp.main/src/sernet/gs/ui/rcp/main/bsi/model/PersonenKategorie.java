@@ -11,7 +11,7 @@ public class PersonenKategorie extends CnATreeElement implements IBSIStrukturKat
 		super(model);
 	}
 	
-	private PersonenKategorie() {
+	protected PersonenKategorie() {
 		
 	}
 	@Override

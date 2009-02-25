@@ -38,9 +38,12 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand {
 			containerDAO.reload(container, container.getDbId());
 			
 			// get constructor with parent-parameter and create new object:
-			T child = type.getConstructor(CnATreeElement.class).newInstance(container);
+			child = type.getConstructor(CnATreeElement.class).newInstance(container);
 			container.addChild(child);
-			this.child = dao.merge(child);
+			child.setParent(container);
+			
+			// initialize UUID, used to find container in display in views:
+			container.getUuid();
 		} catch (Exception e) {
 			throw new RuntimeCommandException(e);
 		}

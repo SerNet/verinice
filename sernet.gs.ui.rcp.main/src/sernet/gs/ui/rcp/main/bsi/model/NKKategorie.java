@@ -11,7 +11,7 @@ public class NKKategorie extends CnATreeElement implements IBSIStrukturKategorie
 		super(model);
 	}
 	
-	private NKKategorie() {
+	protected NKKategorie() {
 		
 	}
 	@Override
