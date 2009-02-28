@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
@@ -32,6 +33,11 @@ public class SchutzbedarfszuordnungReport
 	implements IBSIReport {
 
 	
+	public SchutzbedarfszuordnungReport(Properties reportProperties) {
+		super(reportProperties);
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getTitle() {
 		return "[BSI] Schutzbedarfszuordnung";
 	}

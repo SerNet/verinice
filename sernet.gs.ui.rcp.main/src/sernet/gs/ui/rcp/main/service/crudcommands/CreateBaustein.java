@@ -10,6 +10,7 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 
@@ -28,10 +29,16 @@ public class CreateBaustein extends GenericCommand {
 	private CnATreeElement container;
 	private BausteinUmsetzung child;
 	private Baustein baustein;
+	private boolean reloadObject;
 
 	public CreateBaustein(CnATreeElement container, Baustein baustein) {
 		this.container = container;
 		this.baustein = baustein;
+		
+		// cause reload on execution if command was created on client:
+		// on server: not necessary because element is already attached to session
+		if (WhereAmIUtil.runningOnClient())
+			reloadObject = true;
 	}
 	
 	public void execute() {
@@ -40,7 +47,9 @@ public class CreateBaustein extends GenericCommand {
 		IBaseDao<Object, Serializable> containerDAO = getDaoFactory().getDAOForObject(container);
 		
 		try {
-			containerDAO.reload(container, container.getDbId());
+			if (reloadObject)
+				containerDAO.reload(container, container.getDbId());
+			
 			if (container.containsBausteinUmsetzung(baustein.getId()))
 				return;
 

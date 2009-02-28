@@ -1,6 +1,8 @@
 package sernet.gs.ui.rcp.office;
 
-public interface IOOTableRow {
+import java.io.Serializable;
+
+public interface IOOTableRow extends Serializable {
 	public static final int CELL_TYPE_STRING = 0;
 	public static final int CELL_TYPE_DOUBLE = 1;
 	

@@ -1,5 +1,11 @@
 package sernet.gs.ui.rcp.main.bsi.wizards;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -16,6 +22,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISelectionListener;
 
+import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.reports.ErgaenzendeAnalyseReport;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.MassnahmenTodoReport;
@@ -90,43 +97,45 @@ public class ChooseReportPage extends WizardPage {
 		if (initDone )
 			return;
 		initDone = true;
+
+		Properties reportProperties = loadReportProperties();
 		
-		IBSIReport report = new SchutzbedarfsDefinitionReport();
+		IBSIReport report = new SchutzbedarfsDefinitionReport(reportProperties);
 		TableItem item = new TableItem(reportsTable, SWT.NULL);
 		item.setText(0, report.getTitle());
 		item.setData(report);
 		
-		report = new StrukturanalyseReport();
+		report = new StrukturanalyseReport(reportProperties);
 		item = new TableItem(reportsTable, SWT.NULL);
 		item.setText(0, report.getTitle());
 		item.setData(report);
 		
-		report = new SchutzbedarfszuordnungReport();
+		report = new SchutzbedarfszuordnungReport(reportProperties);
 		item = new TableItem(reportsTable, SWT.NULL);
 		item.setText(0, report.getTitle());
 		item.setData(report);
 		
-		report = new ModellierungReport();
+		report = new ModellierungReport(reportProperties);
 		item = new TableItem(reportsTable, SWT.NULL);
 		item.setText(0, report.getTitle());
 		item.setData(report);
 		
-		report = new MassnahmenumsetzungReport();
+		report = new MassnahmenumsetzungReport(reportProperties);
 		item = new TableItem(reportsTable, SWT.NULL);
 		item.setText(0, report.getTitle());
 		item.setData(report);
 
-		report = new ErgaenzendeAnalyseReport();
+		report = new ErgaenzendeAnalyseReport(reportProperties);
 		item = new TableItem(reportsTable, SWT.NULL);
 		item.setText(0, report.getTitle());
 		item.setData(report);
 		
-		report = new MassnahmenTodoReport();
+		report = new MassnahmenTodoReport(reportProperties);
 		item = new TableItem(reportsTable, SWT.NULL);
 		item.setText(0, report.getTitle());
 		item.setData(report);
 		
-		report = new VerfahrensUebersichtReport();
+		report = new VerfahrensUebersichtReport(reportProperties);
 		item = new TableItem(reportsTable, SWT.NULL);
 		item.setText(0, report.getTitle());
 		item.setData(report);
@@ -136,6 +145,27 @@ public class ChooseReportPage extends WizardPage {
 		
 	}
 	
+	private Properties loadReportProperties() {
+    		try {
+    			Properties reportProperties = new Properties();
+    			File config = new File(CnAWorkspace.getInstance().getConfDir() + File.separator
+    					+ IBSIReport.PROPERTY_FILE);
+    			FileInputStream is = new FileInputStream(config);
+	    		if (is != null) {
+	    			reportProperties.load(is);
+	    			is.close();
+	    			return reportProperties;
+	    		} else {
+	    			Logger.getLogger(this.getClass())
+	    				.error("Konnte Report Default-Felder nicht laden.");
+	    		}
+			} catch (IOException e) {
+				Logger.getLogger(
+						this.getClass()).error("Konnte Report Default-Felder nicht laden.", e);
+			}
+			return null;
+	}
+
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible) {

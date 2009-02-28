@@ -3,6 +3,7 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -90,6 +91,18 @@ public class ThreadSafeViewerUpdate {
 			public void run() {
 				if (!(child instanceof MassnahmenUmsetzung))
 					viewer.reveal(child);
+			}
+		});
+	}
+
+	public void setInput(final Object newModel) {
+		if (Display.getCurrent() != null) {
+			viewer.setInput(newModel);
+			return;
+		}
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				viewer.setInput(newModel);
 			}
 		});
 	}

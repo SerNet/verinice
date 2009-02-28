@@ -18,21 +18,31 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
+import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 
 public class CompletedLayerSummary extends MassnahmenSummary {
 
 
+	private List<Baustein> bausteine;
+
 	public void execute() {
-		setSummary(getCompletedSchichtenSummary());
+		try {
+			setSummary(getCompletedSchichtenSummary());
+		} catch (CommandException e) {
+			throw new RuntimeCommandException(e);
+		}
 	}
 	
-	public Map<String, Integer> getCompletedSchichtenSummary() {
+	public Map<String, Integer> getCompletedSchichtenSummary() throws CommandException {
 		Map<String, Integer> result = new HashMap<String, Integer>();
+		
 		ArrayList<BausteinUmsetzung> bausteine = getModel().getBausteine();
 		for (BausteinUmsetzung baustein: bausteine) {
-			Baustein baustein2 = BSIKatalogInvisibleRoot.getInstance().getBaustein(baustein.getKapitel());
+			Baustein baustein2 = getBaustein(baustein.getKapitel());
 			if (baustein2 == null) {
 				Logger.getLogger(this.getClass()).debug("Kein Baustein gefunden für ID" + baustein.getId());
 				continue;
@@ -52,6 +62,20 @@ public class CompletedLayerSummary extends MassnahmenSummary {
 			}
 		}
 		return result;
+	}
+
+	protected Baustein getBaustein(String kapitel) throws CommandException {
+		if (bausteine == null) {
+			LoadBausteine command = new LoadBausteine();
+			command = getCommandService().executeCommand(command);
+			this.bausteine = command.getBausteine();
+		}
+		for (Baustein baustein : bausteine) {
+			if (baustein.getId().equals(kapitel))
+				return baustein;
+		}
+		return null;
+		
 	}
 
 	

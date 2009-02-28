@@ -41,8 +41,6 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 		Object toDrop = DNDItems.getItems().get(0);
 		if (toDrop != null && toDrop instanceof Baustein) {
 			return dropBaustein();
-		} else if (toDrop != null && toDrop instanceof BausteinUmsetzung) {
-			return dropBausteinUmsetzung();
 		} else if (toDrop != null && toDrop instanceof IBSIStrukturElement) {
 			CnATreeElement target;
 			if (getCurrentTarget() instanceof LinkKategorie)
@@ -53,46 +51,6 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 			return dropper.dropLink(DNDItems.getItems(), target);
 		}
 		return false;
-
-	}
-
-	private boolean dropBausteinUmsetzung() {
-		final CnATreeElement target = (CnATreeElement) getCurrentTarget();
-		final List<Baustein> toDrop = DNDItems.getItems();
-
-		if (!KonsolidatorDialog.askConsolidate(getViewer().getControl()
-				.getShell()))
-			return false;
-
-		try {
-			Job dropJob = new Job(Messages
-					.getString("BSIModelViewDropListener.0")) { //$NON-NLS-1$
-				@Override
-				protected IStatus run(IProgressMonitor monitor) {
-					try {
-						Konsolidator.konsolidiereBaustein(
-								(BausteinUmsetzung) DNDItems.getItems().get(0),
-								(BausteinUmsetzung) target);
-						Konsolidator.konsolidiereMassnahmen(
-								(BausteinUmsetzung) DNDItems.getItems().get(0),
-								(BausteinUmsetzung) target);
-						CnAElementHome.getInstance().update(target);
-					} catch (Exception e) {
-						Logger.getLogger(this.getClass()).error(
-								"Drop failed", e); //$NON-NLS-1$
-						return Status.CANCEL_STATUS;
-					}
-					DNDItems.clear();
-					return Status.OK_STATUS;
-				}
-			};
-			dropJob.schedule();
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(
-					Messages.getString("BSIModelViewDropListener.2"), e); //$NON-NLS-1$
-			return false;
-		}
-		return true;
 
 	}
 

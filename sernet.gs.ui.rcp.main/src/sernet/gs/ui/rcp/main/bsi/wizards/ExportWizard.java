@@ -22,6 +22,8 @@ import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.PropertiesRow;
 import sernet.gs.ui.rcp.main.reports.PropertySelection;
 import sernet.gs.ui.rcp.main.reports.TextReport;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.taskcommands.ReportGetRowsCommand;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.gs.ui.rcp.office.OOWrapper;
 import sernet.hui.common.connect.EntityType;
@@ -120,7 +122,12 @@ public class ExportWizard extends Wizard implements IExportWizard {
 	
 	protected void doExport(IProgressMonitor mon, String ooPath, String odtPath) {
 		try {
-			ArrayList<IOOTableRow> rows = report.getReport(shownPropertyTypes);
+			
+			ReportGetRowsCommand command = new ReportGetRowsCommand(report, shownPropertyTypes);
+			command = ServiceFactory.lookupCommandService().executeCommand(
+					command);
+			ArrayList<IOOTableRow> rows = command.getRows();
+
 			//shownPropertyTypes.printall();
 			OOWrapper ooWrap = new OOWrapper(ooPath);
 			mon.beginTask("Exportiere nach OpenOffice...", rows.size());

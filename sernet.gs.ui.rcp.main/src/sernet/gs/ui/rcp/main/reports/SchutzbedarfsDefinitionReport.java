@@ -2,20 +2,19 @@ package sernet.gs.ui.rcp.main.reports;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.office.IOOTableRow;
-import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 
 /**
@@ -27,6 +26,11 @@ import sernet.hui.common.connect.PropertyType;
  */
 public class SchutzbedarfsDefinitionReport extends Report implements IBSIReport {
 
+	public SchutzbedarfsDefinitionReport(Properties reportProperties) {
+		super(reportProperties);
+		// TODO Auto-generated constructor stub
+	}
+
 	private ArrayList<CnATreeElement> items;
 
 	private ArrayList<CnATreeElement> categories;
@@ -37,14 +41,12 @@ public class SchutzbedarfsDefinitionReport extends Report implements IBSIReport 
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
 		List<ITVerbund> itverbuende;
-		try {
-			itverbuende = CnAElementHome.getInstance().getItverbuendeHydrated(false);
+			BSIModel model = super.getModel();
+			itverbuende = model.getItverbuende();
+			
 			for (ITVerbund verbund : itverbuende) {
 				items.add(verbund);
 			}
-		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
-		}
 		return items;
 	}
 
@@ -72,7 +74,8 @@ public class SchutzbedarfsDefinitionReport extends Report implements IBSIReport 
 	private void addProperties(ArrayList<IOOTableRow> categoryRows,
 			CnATreeElement dsElement, List<String> columns, String stufenId) {
 		for (String column : columns) {
-			PropertyType type = HUITypeFactory.getInstance().getPropertyType(
+			
+			PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(
 					dsElement.getEntity().getEntityType(), column);
 
 			if (type.getId().indexOf(stufenId)!=-1) {

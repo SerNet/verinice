@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -19,6 +20,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 
 /**
@@ -77,7 +79,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
 	private synchronized List<IBSIModelListener> getListeners() {
 		if (listeners == null)
-			listeners = new ArrayList<IBSIModelListener>();
+			listeners = new CopyOnWriteArrayList<IBSIModelListener>();
 		return listeners;
 	}
 
@@ -133,6 +135,13 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 	@Override
 	public void modelRefresh(Object source) {
 		refreshAllListeners(source);
+	}
+	
+	@Override
+	public void modelReload(BSIModel newModel) {
+		for (IBSIModelListener listener : getListeners()) {
+			listener.modelReload(newModel);
+		}
 	}
 
 	public void addBSIModelListener(IBSIModelListener listener) {
@@ -268,8 +277,8 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		return result;
 	}
 
-	private void findChildren(List<CnATreeElement> result, CnATreeElement parent, boolean filterMassnahmen) {
-		if (filterMassnahmen && parent instanceof BausteinUmsetzung)
+	private void findChildren(List<CnATreeElement> result, CnATreeElement parent, boolean includeMassnahmen) {
+		if (!includeMassnahmen && parent instanceof BausteinUmsetzung)
 			return;
 		
 		Set<CnATreeElement> children = parent.getChildren();
@@ -277,7 +286,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 //			Logger.getLogger(this.getClass()).debug("Adding " + children.toString());
 			result.addAll(children);
 			for (CnATreeElement child : children) {
-				findChildren(result, child, filterMassnahmen);
+				findChildren(result, child, includeMassnahmen);
 			}
 		}
 	}

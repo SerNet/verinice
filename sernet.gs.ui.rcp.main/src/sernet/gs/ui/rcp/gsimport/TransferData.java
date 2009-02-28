@@ -211,38 +211,7 @@ public class TransferData {
 		element.setAnzahl(result.zielobjekt.getAnzahl());
 	}
 
-	public void transferSchutzbedarf(CnATreeElement ziel, NZobSb schubeda) {
-		if (ziel.getSchutzbedarfProvider() == null)
-			return;
-		ISchutzbedarfProvider zielElmt = ziel.getSchutzbedarfProvider();
-		
-		CascadingTransaction ta = new CascadingTransaction();
-		
-		MSchutzbedarfkategTxt vertr = vampire.findSchutzbedarfNameForId(schubeda.getZsbVertrSbkId());
-		if (vertr != null) {
-			zielElmt.setVertraulichkeit(translateSchutzbedarf(vertr.getName()), ta);
-			zielElmt.setVertraulichkeitDescription(schubeda.getZsbVertrBegr(), ta);
-		}
-		
-		MSchutzbedarfkategTxt verfu = vampire.findSchutzbedarfNameForId(schubeda.getZsbVerfuSbkId());
-		if (verfu != null) {
-			zielElmt.setVerfuegbarkeit(translateSchutzbedarf(verfu.getName()), ta);
-			zielElmt.setVerfuegbarkeitDescription(schubeda.getZsbVerfuBegr(), ta);
-		}
-		
-		MSchutzbedarfkategTxt integ = vampire.findSchutzbedarfNameForId(schubeda.getZsbIntegSbkId());
-		if (integ!= null) {
-			zielElmt.setIntegritaet(translateSchutzbedarf(integ.getName()), ta);
-			zielElmt.setIntegritaetDescription(schubeda.getZsbIntegBegr(), ta);
-		}
-		
-		if (schubeda.getZsbPersDaten() == 1 && ziel instanceof Anwendung) {
-			Anwendung anwendung = (Anwendung) ziel;
-			anwendung.setPersonenbezogen(true);
-		}
-	}
-
-	private int translateSchutzbedarf(String name) {
+	public int translateSchutzbedarf(String name) {
 		if (name.equals("normal"))
 			return Schutzbedarf.NORMAL;
 		if (name.equals("hoch"))

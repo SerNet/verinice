@@ -13,7 +13,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
@@ -21,9 +20,6 @@ import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -41,6 +37,11 @@ public class MassnahmenumsetzungReport extends Report
 	implements IBSIReport {
 
 	
+	public MassnahmenumsetzungReport(Properties reportProperties) {
+		super(reportProperties);
+		// TODO Auto-generated constructor stub
+	}
+
 	private ArrayList<CnATreeElement> items;
 	private ArrayList<CnATreeElement> categories;
 	
@@ -66,18 +67,14 @@ public class MassnahmenumsetzungReport extends Report
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
 		List<ITVerbund> itverbuende;
-		try {
-			itverbuende = CnAElementHome.getInstance()
-				.getItverbuendeHydrated(true);
+			BSIModel model = super.getModel();
+			itverbuende = model.getItverbuende();
 			for (ITVerbund verbund : itverbuende) {
 				items.add(verbund);
 				if (! categories.contains(verbund.getParent()))
 					categories.add(verbund.getParent());
 				getStrukturElements(verbund);
 			}
-		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff");
-		}
 		return items;
 	}
 

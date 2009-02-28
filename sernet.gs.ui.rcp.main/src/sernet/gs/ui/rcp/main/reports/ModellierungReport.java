@@ -5,17 +5,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.office.IOOTableRow;
@@ -29,6 +26,12 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
  */
 public class ModellierungReport extends Report
 	implements IBSIReport{
+
+	public ModellierungReport(Properties reportProperties) {
+		super(reportProperties);
+		// TODO Auto-generated constructor stub
+	}
+
 
 	private Modellierung modell = null;
 	
@@ -95,15 +98,11 @@ public class ModellierungReport extends Report
 		modell = new Modellierung();
 
 		List<ITVerbund> itverbuende;
-		try {
-			itverbuende = CnAElementHome.getInstance().getItverbuendeHydrated(false);
+			BSIModel model = super.getModel();
+			itverbuende = model.getItverbuende();
 			for (ITVerbund verbund : itverbuende) {
 				getModellierung(verbund);
 			}
-		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff");
-			return null;
-		}
 		return modell.getFlatList();
 	}
 

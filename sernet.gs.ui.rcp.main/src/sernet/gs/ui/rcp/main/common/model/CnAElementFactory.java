@@ -373,4 +373,16 @@ public class CnAElementFactory {
 		}
 	}
 
+	public void reloadModelFromDatabase() {
+		try {
+			fireClosed();
+			BSIModel newModel = dbHome.loadModel(new NullMonitor());
+			loadedModel.modelReload(newModel);
+			loadedModel = newModel;
+			fireLoad();
+		} catch (Exception e) {
+			ExceptionUtil.log(e, "Konnte Modell nicht aus der Datenbank erneuern..");
+		}
+	}
+
 }

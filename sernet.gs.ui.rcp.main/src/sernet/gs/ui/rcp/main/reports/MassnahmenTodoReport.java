@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
@@ -42,6 +41,10 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
 public class MassnahmenTodoReport extends Report
 	implements IBSIReport {
 
+	public MassnahmenTodoReport(Properties reportProperties) {
+		super(reportProperties);
+	}
+
 	public ArrayList<CnATreeElement> getItems() {
 		if (items != null)
 			return items;
@@ -50,18 +53,14 @@ public class MassnahmenTodoReport extends Report
 		
 		
 		List<ITVerbund> itverbuende;
-		try {
-			itverbuende = CnAElementHome.getInstance()
-				.getItverbuendeHydrated(true);  /* do include safeguards*/
+			BSIModel model = super.getModel();
+			itverbuende = model.getItverbuende();
 			for (ITVerbund verbund : itverbuende) {
 				items.add(verbund);
 				if (! categories.contains(verbund.getParent()))
 					categories.add(verbund.getParent());
 				getStrukturElements(verbund);
 			}
-		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
-		}
 		return items;
 	}
 	

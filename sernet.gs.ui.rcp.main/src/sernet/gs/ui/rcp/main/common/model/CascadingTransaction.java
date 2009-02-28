@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
 
 /**
  * A transaction that can only be stopped by the object that started it.
@@ -77,6 +76,12 @@ public class CascadingTransaction {
 		return aborted;
 	}
 	
+	/**
+	 * Reset this transaction, only the initiator can do this.
+	 * 
+	 * @param o the object ending the transaction. If not equal to the initiator this method does nothing.
+	 * @return
+	 */
 	public synchronized boolean end(CnATreeElement o) {
 		if (!o.equals(initiator))
 			return false;
@@ -85,22 +90,6 @@ public class CascadingTransaction {
 		initiator = null;
 		aborted = false;
 		return true;
-	}
-
-	public void saveUpdatedItems() throws Exception {
-		final List tosave = new ArrayList(visited.size());
-		for(CnATreeElement item: visited) {
-			if (EditorRegistry.getInstance().getOpenEditor(item.getId()) == null)
-				// no editor open, save item silently:
-				// only save items that were changed as result of the cascade:
-				if (!item.equals(initiator))
-					tosave.add(item);
-		}
-		
-		if (tosave.size() == 0)
-			return;
-		
-		CnAElementHome.getInstance().update(tosave);
 	}
 
 

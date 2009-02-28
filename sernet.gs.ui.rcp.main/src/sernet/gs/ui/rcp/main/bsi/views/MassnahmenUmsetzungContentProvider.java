@@ -198,4 +198,9 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 	public void databaseChildRemoved(CnATreeElement child) {
 		childRemoved(child.getParent(), child);
 	}
+
+	public void modelReload(BSIModel newModel) {
+		// TODO Auto-generated method stub
+		
+	}
 }

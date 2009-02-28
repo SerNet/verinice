@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -29,6 +28,10 @@ public class StrukturanalyseReport extends Report
 	implements IBSIReport {
 
 	
+	public StrukturanalyseReport(Properties reportProperties) {
+		super(reportProperties);
+	}
+
 	private ArrayList<CnATreeElement> items;
 	private ArrayList<CnATreeElement> categories;
 	
@@ -53,14 +56,13 @@ public class StrukturanalyseReport extends Report
 			return items;
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
+		
 		List<ITVerbund> itverbuende;
-		try {
-			itverbuende = CnAElementHome.getInstance().getItverbuendeHydrated(false);
-			for (ITVerbund verbund : itverbuende) {
-				getStrukturElements(verbund);
-			}
-		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+		BSIModel model = super.getModel();
+		itverbuende = model.getItverbuende();
+		
+		for (ITVerbund verbund : itverbuende) {
+			getStrukturElements(verbund);
 		}
 		return items;
 	}

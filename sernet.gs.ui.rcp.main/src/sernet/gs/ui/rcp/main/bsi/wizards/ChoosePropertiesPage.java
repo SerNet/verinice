@@ -31,9 +31,13 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISelectionListener;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.StrukturanalyseReport;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.taskcommands.ReportGetItemsCommand;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -147,24 +151,31 @@ public class ChoosePropertiesPage extends WizardPage {
 		getExportWizard().resetShownPropertyTypes();
 		
 		// iterate over shown items and add each found type of item to the list:
-		ArrayList<CnATreeElement> items = getExportWizard().getReport()
-			.getItems();
-		
-		for (CnATreeElement item : items) {
-			if (item.getEntity() == null)
-				continue;
+		IBSIReport report = getExportWizard().getReport();
+		ReportGetItemsCommand command = new ReportGetItemsCommand(report);
+		try {
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
+			ArrayList<CnATreeElement> items = command.getItems(); 
+			
+			
+			for (CnATreeElement item : items) {
+				if (item.getEntity() == null)
+					continue;
 				
-			EntityType entityType = HUITypeFactory
-			.getInstance()
+				EntityType entityType = HUITypeFactory
+				.getInstance()
 				.getEntityType(item.getEntity()
 						.getEntityType());
-			
-			if (! shownEntityTypes.contains(entityType))
-				shownEntityTypes.add(entityType);
+				
+				if (! shownEntityTypes.contains(entityType))
+					shownEntityTypes.add(entityType);
+			}
+			viewer.setInput(shownEntityTypes);
+			viewer.refresh();
+			checkDefaults();
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "Fehler beim Vorbereiten des Reports.");
 		}
-		viewer.setInput(shownEntityTypes);
-		viewer.refresh();
-		checkDefaults();
 	}
 	
 	private void checkDefaults() {
@@ -214,6 +225,7 @@ public class ChoosePropertiesPage extends WizardPage {
 	}
 
 	private void updatePageComplete() {
-		setPageComplete(viewer.getCheckedElements().length > 0);		
+		boolean checked = (viewer.getCheckedElements().length > 0);
+		setPageComplete(checked);		
 	}
 }

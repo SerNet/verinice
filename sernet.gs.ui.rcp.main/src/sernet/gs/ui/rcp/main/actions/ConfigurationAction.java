@@ -67,7 +67,7 @@ public class ConfigurationAction implements IObjectActionDelegate {
 		if (!hasRole) {
 			// FIXME server: disable actions for unavailable roles, i.e. using system property and enablement in plugin.xml
 			MessageDialog.openWarning((Shell) targetPart.getAdapter(Shell.class), 
-					"Authorisierung", "Ihr Account ist nicht berechtigt, die gewählte Funktion auszuführen.");
+					"Autorisierung", "Ihr Account ist nicht berechtigt, die gewählte Funktion auszuführen.");
 			return;
 		}
 		

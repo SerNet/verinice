@@ -1,8 +1,10 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.io.Serializable;
+
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
-public class DocumentReference {
+public class DocumentReference implements Serializable {
 
 	private CnATreeElement cnatreeelement;
 	private DocumentLink parent;

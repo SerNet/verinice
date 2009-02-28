@@ -77,14 +77,30 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		public void reload(T element, Serializable id) {
 			getHibernateTemplate().load(element, id);
 		}
-		
+
 		private void fireChange(T element) {
 			if (element instanceof CnATreeElement) {
 				CnATreeElement elmt = (CnATreeElement) element;
-				CascadingTransaction ta = new CascadingTransaction();
-				elmt.fireSchutzbedarfChanged(ta);
-				if (ta.hasLooped()) {
-					throw new LoopException(ta.getLoopedObject());
+				CascadingTransaction ta;
+				Object loopedObject = null;
+				
+				ta = new CascadingTransaction();
+				elmt.fireIntegritaetChanged(ta);
+				if (ta.hasLooped())
+					loopedObject = ta.getLoopedObject();
+				
+				ta = new CascadingTransaction();
+				elmt.fireVerfuegbarkeitChanged(ta);
+				if (ta.hasLooped())
+					loopedObject = ta.getLoopedObject();
+				
+				ta = new CascadingTransaction();
+				elmt.fireVertraulichkeitChanged(ta);
+				if (ta.hasLooped())
+					loopedObject = ta.getLoopedObject();
+				
+				if (loopedObject != null) {
+					throw new LoopException(loopedObject);
 				}
 			}
 		}

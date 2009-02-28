@@ -20,5 +20,7 @@ public interface ISchutzbedarfProvider {
 	public void setIntegritaetDescription(String text, CascadingTransaction ta);
 	public void setVerfuegbarkeitDescription(String text, CascadingTransaction ta);
 	
-	public void updateAll(CascadingTransaction ta);
+	public void updateVertraulichkeit(CascadingTransaction ta);
+	public void updateIntegritaet(CascadingTransaction ta);
+	public void updateVerfuegbarkeit(CascadingTransaction ta);
 }

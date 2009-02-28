@@ -477,7 +477,7 @@
          point="org.eclipse.ui.cheatsheets.cheatSheetContent">
       <category
             id="sernet.gs.ui.rcp.main.cheatSheets"
-            name="verinice Tutorials"/>
+            name="1_verinice Tutorials"/>
       <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
@@ -569,6 +569,40 @@
             
             </description>
         </cheatsheet>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets2"
+              composite="false"
+              contentFile="cheatsheets/gstool_import_ms.xml"
+              id="sernet.gs.ui.rcp.main.gstool1"
+              name="1_GSTOOL-Daten importieren">
+           <description>
+              Daten direkt aus dem GSTOOL(tm) des BSI importieren.
+           </description>
+        </cheatsheet>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets2"
+              composite="false"
+              contentFile="cheatsheets/GSTOOL-BAK-Datei-Import.xml"
+              id="sernet.gs.ui.rcp.main.gstool2"
+              name="2_GSTOOL-Exportdatei (.BAK) importieren">
+           <description>
+              Daten importieren, die über den Menüpunkt &quot;Daten sichern&quot; aus dem GSTOOL exportiert wurden. Dies kann z.B. eine .BAK Datei sein, die Ihnen von einem Anwender des GSTOOL übermittelt wurde.
+           </description>
+        </cheatsheet>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets2"
+              composite="false"
+              contentFile="cheatsheets/MDF-Datei-Import.xml"
+              id="sernet.gs.ui.rcp.main.gstool3"
+              name="3_GSTOOL-Daten aus Datei (.MDF) importieren">
+           <description>
+              Eine getrennte Datenbankdatei importieren. Dies kann eine Datei sein, die ein Anwender des GSTOOL über das mit dem GSTOOL ausgelieferte Datenbank-Werkzeug zunächst getrennt und dann kopiert hat. (Menüpunkt:&quot;Datenbank trennen&quot;)
+           </description>
+        </cheatsheet>
+        <category
+              id="sernet.gs.ui.rcp.main.cheatSheets2"
+              name="2_GSTOOL(tm) Import Tutorials">
+        </category>
    </extension>
    <extension
          point="org.eclipse.ui.intro">

@@ -19,7 +19,6 @@ import sernet.hui.swt.widgets.URL.URLUtil;
 
 public class FindURLs extends GenericCommand {
 
-	private BSIModel model;
 	private Set<String> allIDs;
 	private DocumentLinkRoot urls;
 	
@@ -28,22 +27,21 @@ public class FindURLs extends GenericCommand {
 	}
 
 	public void execute() {
+		
+		urls = findEntries(allIDs);
+	}
+
+	public DocumentLinkRoot findEntries(Set<String> allIDs) {
+		DocumentLinkRoot root = new DocumentLinkRoot();
 		LoadBSIModel command = new LoadBSIModel();
 		try {
 			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
 		}
-		model = command.getModel();
-		urls = findEntries(allIDs);
-	}
-
-	public DocumentLinkRoot findEntries(Set<String> allIDs) {
-		DocumentLinkRoot root = new DocumentLinkRoot();
-		if (model == null)
-			return root;
-		List<CnATreeElement> elements = model
-				.getAllElementsFlatList(true /* include Massnahmen, they contain links too */);
+		BSIModel model = command.getModel();
+		List<CnATreeElement> elements = model.getAllElementsFlatList(true);
+		
 		for (CnATreeElement element : elements) {
 			Entity entity = element.getEntity();
 			if (entity == null)
@@ -65,11 +63,16 @@ public class FindURLs extends GenericCommand {
 						root.addChild(link);
 					}
 					DocumentReference reference = new DocumentReference(element);
+					hydrate(element);
 					link.addChild(reference);
 				}
 			}
 		}
 		return root;
+	}
+
+	private void hydrate(CnATreeElement element) {
+		element.getTitel();
 	}
 
 	public Set<String> getAllIDs() {

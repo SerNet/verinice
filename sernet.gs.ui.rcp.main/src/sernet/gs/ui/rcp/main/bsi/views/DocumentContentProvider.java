@@ -19,6 +19,14 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
+/**
+ * Content Provider for document view.
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public class DocumentContentProvider implements ITreeContentProvider, IBSIModelListener {
 
 
@@ -133,6 +141,11 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 	}
 
 	public void databaseChildRemoved(CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void modelReload(BSIModel newModel) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -16,6 +16,7 @@ import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -57,6 +58,7 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate {
 				//link.remove();
 				try {
 					CnAElementHome.getInstance().remove(link);
+					CnAElementFactory.getLoadedModel().linkRemoved(link);
 				} catch (Exception e) {
 					ExceptionUtil.log(e, "Fehler beim Löschen von Verknüpfung.");
 				}

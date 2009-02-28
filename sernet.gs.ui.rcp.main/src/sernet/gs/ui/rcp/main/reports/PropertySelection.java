@@ -1,5 +1,6 @@
 package sernet.gs.ui.rcp.main.reports;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  * @author koderman@sernet.de
  *
  */
-public class PropertySelection {
+public class PropertySelection implements Serializable {
 	HashMap<String, List<String>> shownPropertyTypes;
 	
 	public PropertySelection() {

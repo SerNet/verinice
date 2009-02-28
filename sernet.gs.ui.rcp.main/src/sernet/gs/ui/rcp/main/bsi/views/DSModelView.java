@@ -139,6 +139,11 @@ public class DSModelView extends ViewPart {
 			// TODO Auto-generated method stub
 			
 		}
+
+		public void modelReload(BSIModel newModel) {
+			// TODO Auto-generated method stub
+			
+		}
 	};
 
 	private DSModelViewUpdater viewUpdater;

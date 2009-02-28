@@ -1,5 +1,6 @@
 package sernet.gs.ui.rcp.main.common.model;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 
 /**
@@ -62,6 +63,11 @@ public class NullListener implements IBSIModelListener {
 	}
 
 	public void databaseChildRemoved(CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void modelReload(BSIModel newModel) {
 		// TODO Auto-generated method stub
 		
 	}

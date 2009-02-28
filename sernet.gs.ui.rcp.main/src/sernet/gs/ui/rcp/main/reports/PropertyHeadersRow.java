@@ -16,7 +16,7 @@ import sernet.snutils.AssertException;
  * @author koderman@sernet.de
  *
  */
-public class PropertyHeadersRow implements IOOTableRow {
+public class PropertyHeadersRow implements IOOTableRow, ICnaItemRow {
 
 	private CnATreeElement item;
 	private List<String> properties;
@@ -52,6 +52,10 @@ public class PropertyHeadersRow implements IOOTableRow {
 	
 	public String getRowStyle() {
 		return style;
+	}
+
+	public CnATreeElement getItem() {
+		return item;
 	}
 	
 }

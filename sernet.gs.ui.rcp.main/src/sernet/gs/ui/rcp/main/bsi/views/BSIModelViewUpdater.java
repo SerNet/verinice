@@ -1,14 +1,17 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
@@ -75,6 +78,13 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 	public void modelRefresh(Object source) {
 		updater.refresh();
 	}
+	
+	public void modelReload(BSIModel newModel) {
+		((BSIModel)viewer.getInput()).removeBSIModelListener(this);
+		newModel.addBSIModelListener(this);
+		updater.setInput(newModel);
+		updater.refresh();
+	}
 
 	public void linkChanged(CnALink link) {
 		// is top element visible?
@@ -90,35 +100,24 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 			oldElement.removeLinkDown(link);
 			oldElement.addLinkDown(link);
 			updater.refresh(link);
-			updater.refresh(link.getParent());
+//			updater.refresh(link.getParent());
+			updater.refresh(oldElement);
 			updater.reveal(link);
 		}
 	}
 	
 	public void linkAdded(CnALink link) {
-		CnATreeElement cachedParent = cache.getCachedObject(link.getDependant());
-		if (cachedParent != null) {
-			cachedParent.setChildrenLoaded(false);
-			cachedParent.setLinks(link.getParent());
-			updater.reveal(link.getParent());
-			does link add replace personenkategorie with proxy?
-		}
-		updater.refresh();
+		
 	}
 	
 	
 	public void linkRemoved(CnALink link) {
-		// is top element visible?
-		CnATreeElement oldElement = cache.getCachedObject(link.getParent()
-				.getParent());
+		// is link visible?
+		CnALink oldElement = cache.getCachedObject(link);
 		
 		if (oldElement != null) {
-			// load and add linkkategory:
-			oldElement.setLinks(link.getParent());
-			link.getParent().setParent(oldElement);
-			
-			oldElement.removeLinkDown(link);
-			updater.remove(link);
+			oldElement.getParent().getParent().removeLinkDown(oldElement);
+			updater.remove(oldElement);
 		}
 	}
 

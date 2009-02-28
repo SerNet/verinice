@@ -1,5 +1,6 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.Set;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
-public class DocumentLink {
+public class DocumentLink implements Serializable {
 
 	public static final Object NO_LINK_MESSAGE = ""; //$NON-NLS-1$
 

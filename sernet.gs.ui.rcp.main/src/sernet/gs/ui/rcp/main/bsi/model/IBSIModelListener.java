@@ -62,5 +62,7 @@ public interface IBSIModelListener {
 	 */
 	void databaseChildChanged(CnATreeElement child);
 	
+	public void modelReload(BSIModel newModel);
+	
 
 }

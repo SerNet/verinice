@@ -23,16 +23,18 @@ public abstract class MassnahmenSummary extends GenericCommand {
 	private Map<String, Integer> summary;
 
 	public void execute() {
-		LoadBSIModel command = new LoadBSIModel();
-		try {
-			command = getCommandService().executeCommand(command);
-		} catch (CommandException e) {
-			throw new RuntimeCommandException(e);
-		}
-		model = command.getModel();
 	}
 
 	public BSIModel getModel() {
+		if (model == null) {
+			LoadBSIModel command = new LoadBSIModel();
+			try {
+				command = getCommandService().executeCommand(command);
+			} catch (CommandException e) {
+				throw new RuntimeCommandException(e);
+			}
+			model = command.getModel();
+		}
 		return model;
 	}
 

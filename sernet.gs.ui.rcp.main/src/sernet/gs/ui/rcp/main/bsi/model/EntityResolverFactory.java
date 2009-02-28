@@ -114,13 +114,20 @@ public class EntityResolverFactory {
 				
 				try {
 					FindURLs command = new FindURLs(allIDs);
-					command =  ServiceFactory.lookupCommandService().executeCommand(command);
-					DocumentLinkRoot root = command.getUrls();
-					DocumentLink[] links = root.getChildren();
-					for (int i = 0; i < links.length; i++) {
-						HuiUrl url = new HuiUrl(links[i].getName(), links[i].getHref());
-						result.add(url);
-					}
+					
+						if (WhereAmIUtil.runningOnServer()) {
+							command = ServerCommandService.getCommandService().executeCommand(command);
+						}
+						else {
+							command = ServiceFactory.lookupCommandService().executeCommand(command);
+						}
+						DocumentLinkRoot root = command.getUrls();
+						
+						DocumentLink[] links = root.getChildren();
+						for (int i = 0; i < links.length; i++) {
+							HuiUrl url = new HuiUrl(links[i].getName(), links[i].getHref());
+							result.add(url);
+						}
 				} catch (Exception e) {
 					ExceptionUtil.log(e, "Fehler beim Datenzugriff."); //$NON-NLS-1$
 				}

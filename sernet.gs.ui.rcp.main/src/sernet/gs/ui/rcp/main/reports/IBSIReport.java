@@ -1,5 +1,6 @@
 package sernet.gs.ui.rcp.main.reports;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,7 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
  * @author koderman@sernet.de
  *
  */
-public interface IBSIReport {
+public interface IBSIReport extends Serializable {
 	
 	public static String PROPERTY_FILE = "reports.properties";
 	

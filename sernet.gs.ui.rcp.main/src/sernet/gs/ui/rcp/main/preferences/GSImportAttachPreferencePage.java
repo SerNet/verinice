@@ -2,6 +2,7 @@ package sernet.gs.ui.rcp.main.preferences;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
@@ -33,6 +35,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 import org.springframework.web.servlet.mvc.UrlFilenameViewController;
 
 import sernet.gs.reveng.importData.GSVampire;
@@ -168,47 +171,49 @@ public class GSImportAttachPreferencePage extends FieldEditorPreferencePage impl
 				if (!doIt)
 					return;
 
-				WorkspaceJob job = new WorkspaceJob(
-						Messages.GSImportPreferencePage_2) {
-
-					public IStatus runInWorkspace(final IProgressMonitor monitor) {
-						monitor.beginTask("Hänge neue Datenbank ein...",
-								IProgressMonitor.UNKNOWN);
-
-						AttachDbFileTask task = new AttachDbFileTask();
-						try {
-							task.attachDBFile(urlString, userString,
-									passString, fileName, newDbName);
-							Display.getDefault().syncExec(new Runnable() {
-								public void run() {
-									MessageDialog
-											.openInformation(
-													getShell(),
-													"Hurra",
-													"Die Datenbank wurde angehängt. Probieren Sie nun die " +
-													"Verbindung zur Datenbank '"
-															+ newDbName	+ "' zu testen.");
+				try {
+					PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
+							new IRunnableWithProgress() {
+								public void run(IProgressMonitor monitor)
+										throws InvocationTargetException,
+										InterruptedException {
+									
+									AttachDbFileTask task = new AttachDbFileTask();
+									try {
+										task.attachDBFile(urlString, userString,
+												passString, fileName, newDbName);
+										
+										Display.getDefault().syncExec(new Runnable() {
+											public void run() {
+												MessageDialog
+												.openInformation(
+														getShell(),
+														"Hurra",
+														"Die Datenbank wurde angehängt. Probieren Sie nun die " +
+														"Verbindung zur Datenbank '"
+														+ newDbName	+ "' zu testen.");
+											}
+										});
+									} catch (SQLException e) {
+										ExceptionUtil.log(e,
+												"Konnte Datenbankdatei nicht anhängen "
+												+ fileName);
+									} catch (ClassNotFoundException e) {
+										ExceptionUtil.log(e,
+												"Konnte Datenbankdatei nicht anhängen "
+												+ fileName);
+									}
 								}
 							});
-							return Status.OK_STATUS;
-						} catch (SQLException e) {
-							ExceptionUtil.log(e,
-									"Konnte Datenbankdatei nicht anhängen "
-											+ fileName);
-						} catch (ClassNotFoundException e) {
-							ExceptionUtil.log(e,
-									"Konnte Datenbankdatei nicht anhängen "
-											+ fileName);
-						}
-						return Status.CANCEL_STATUS;
-					}
-				};
-				job.setUser(true);
-				job.schedule();
-			}
+				} catch (InvocationTargetException e1) {
+					ExceptionUtil.log(e1, "Fehler beim Anhängen der DB");
+				} catch (InterruptedException e1) {
+					ExceptionUtil.log(e1, "Fehler beim Anhängen der DB");
+				}
+	}
 		});
 	}
-
+		
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		super.propertyChange(event);

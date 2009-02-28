@@ -65,7 +65,7 @@ public class BSIMassnahmenModel {
 		}
 
 		Logger.getLogger(BSIMassnahmenModel.class).debug(
-		"Parsen und Zwischenspeichern der GS-Kataloge...");
+		"Lesen der GS-Kataloge...");
 		String gsPath = config.getGsPath();
 		String dsPath = config.getDsPath();
 		boolean fromZipFile = config.isFromZipFile();

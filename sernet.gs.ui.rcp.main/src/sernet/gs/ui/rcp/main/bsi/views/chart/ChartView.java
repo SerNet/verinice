@@ -305,6 +305,11 @@ public class ChartView extends ViewPart {
 				
 			}
 
+			public void modelReload(BSIModel newModel) {
+				// TODO Auto-generated method stub
+				
+			}
+
 		};
 	}
 

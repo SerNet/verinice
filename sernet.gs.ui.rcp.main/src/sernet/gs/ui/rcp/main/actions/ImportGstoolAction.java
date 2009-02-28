@@ -112,9 +112,9 @@ public class ImportGstoolAction extends Action {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			ExceptionUtil.log(e, "Öffnen von OO Export fehlgeschlagen.");
+			ExceptionUtil.log(e, "Import aus dem Gstool fehlgeschlagen.");
 		} catch (InterruptedException e) {
-			ExceptionUtil.log(e, "Öffnen von OO Export fehlgeschlagen.");
+			ExceptionUtil.log(e, "Import aus dem Gstool fehlgeschlagen.");
 		}
 	}
 	

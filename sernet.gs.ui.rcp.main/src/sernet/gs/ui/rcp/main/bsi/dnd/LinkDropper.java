@@ -1,5 +1,6 @@
 package sernet.gs.ui.rcp.main.bsi.dnd;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -9,6 +10,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
@@ -46,13 +48,22 @@ public class LinkDropper {
 				final List<CnATreeElement> toDrop) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
+					List<CnALink> newLinks = new ArrayList<CnALink>();
 					for (CnATreeElement dragged : toDrop) {
 						try {
 							CnALink link = CnAElementHome.getInstance().createLink(dropTarget, dragged);
-							CnAElementFactory.getLoadedModel().linkChanged(link);
+							newLinks.add(link);
 						} catch (Exception e) {
 							Logger.getLogger(this.getClass()).debug("Saving link failed.", e); //$NON-NLS-1$
 						}
+					}
+					for (CnALink link : newLinks) {
+						if (link.getDependant() instanceof ITVerbund) {
+							CnAElementFactory.getInstance().reloadModelFromDatabase();
+							return;
+						}
+						else
+							CnAElementFactory.getLoadedModel().linkChanged(link);
 					}
 				}
 			});

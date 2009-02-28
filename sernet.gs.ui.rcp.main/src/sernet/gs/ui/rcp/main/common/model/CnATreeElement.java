@@ -377,9 +377,19 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		this.links = links;
 	}
 
-	public void fireSchutzbedarfChanged(CascadingTransaction ta) {
+	public void fireVertraulichkeitChanged(CascadingTransaction ta) {
 		if (isSchutzbedarfProvider()) {
-			getSchutzbedarfProvider().updateAll(ta);
+			getSchutzbedarfProvider().updateVertraulichkeit(ta);
+		}
+	}
+	public void fireVerfuegbarkeitChanged(CascadingTransaction ta) {
+		if (isSchutzbedarfProvider()) {
+			getSchutzbedarfProvider().updateVerfuegbarkeit(ta);
+		}
+	}
+	public void fireIntegritaetChanged(CascadingTransaction ta) {
+		if (isSchutzbedarfProvider()) {
+			getSchutzbedarfProvider().updateIntegritaet(ta);
 		}
 	}
 
@@ -435,6 +445,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	
 	public void databaseChildRemoved(CnATreeElement child) {
 		getModelChangeListener().databaseChildRemoved(child);
+	}
+	
+	public void modelReload(BSIModel newModel) {
+		getModelChangeListener().modelReload(newModel);
 	}
 
 	

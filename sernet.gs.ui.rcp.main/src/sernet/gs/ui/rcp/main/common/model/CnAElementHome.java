@@ -148,7 +148,7 @@ public class CnAElementHome {
 		command = commandService.executeCommand(command);
 		
 		// notify listeners about new object:
-		CnAElementFactory.getLoadedModel().linkAdded(command.getLink());
+//		CnAElementFactory.getLoadedModel().linkAdded(command.getLink());
 		return command.getLink();
 	}
 	
@@ -165,9 +165,6 @@ public class CnAElementHome {
 	public void remove(CnALink element) throws Exception {
 		RemoveLink command = new RemoveLink(element);
 		command = commandService.executeCommand(command);
-		
-		// notify listeners:
-		CnAElementFactory.getLoadedModel().linkRemoved(element);
 	}
 
 	public void update(CnATreeElement element) throws Exception {	
@@ -247,12 +244,6 @@ public class CnAElementHome {
 		LoadCnAElementByType<ITVerbund> command = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
 		command = commandService.executeCommand(command);
 		return command.getElements();
-	}
-
-	public List<ITVerbund> getItverbuendeHydrated(boolean includingMassnahmen) throws CommandException {
-		LoadBSIModelComplete command = new LoadBSIModelComplete(includingMassnahmen);
-		command = ServiceFactory.lookupCommandService().executeCommand(command);
-		return command.getModel().getItverbuende();
 	}
 
 	public List<Person> getPersonen() throws CommandException {

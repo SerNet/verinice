@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
@@ -16,8 +16,6 @@ import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Schutzbedarf;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 
@@ -32,6 +30,10 @@ public class ErgaenzendeAnalyseReport extends Report
 	implements IBSIReport {
 
 	
+	public ErgaenzendeAnalyseReport(Properties reportProperties) {
+		super(reportProperties);
+	}
+
 	private ArrayList<CnATreeElement> items;
 	private ArrayList<CnATreeElement> categories;
 	
@@ -82,15 +84,12 @@ public class ErgaenzendeAnalyseReport extends Report
 			return items;
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
-		try {
-			List<ITVerbund> itverbuende = CnAElementHome.getInstance().getItverbuende();
+			BSIModel model = super.getModel();
+			List<ITVerbund> itverbuende = model.getItverbuende();
+			
 			for (ITVerbund verbund : itverbuende) {
 				getStrukturElements(verbund);
 			}
-			
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
-		}
 		return items;
 	}
 

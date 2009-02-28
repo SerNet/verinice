@@ -4,36 +4,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 
-public abstract class Report {
+public abstract class Report implements Serializable {
 
-	protected static Properties reportProperties;
+	private BSIModel model;
+	protected Properties reportProperties;
 
-	public Report() {
-		if (reportProperties == null) {
-    		try {
-    			reportProperties = new Properties();
-    			File config = new File(CnAWorkspace.getInstance().getConfDir() + File.separator
-    					+ IBSIReport.PROPERTY_FILE);
-    			FileInputStream is = new FileInputStream(config);
-	    		if (is != null) {
-	    			reportProperties.load(is);
-	    			is.close();
-	    		} else {
-	    			Logger.getLogger(this.getClass())
-	    				.error("Konnte Report Default-Felder nicht laden.");
-	    		}
-			} catch (IOException e) {
-				Logger.getLogger(
-						this.getClass()).error("Konnte Report Default-Felder nicht laden.", e);
-			} finally {
-			}
-    	}
+	public Report(Properties reportProperties) {
+		this.reportProperties = reportProperties;
 	}
 
 	/**
@@ -45,6 +30,14 @@ public abstract class Report {
 		if (prop == null)
 			return false;
 		return (prop.indexOf(property_id) > -1 );
+	}
+
+	public BSIModel getModel() {
+		return this.model;
+	}
+	
+	public void setModel(BSIModel model) {
+		this.model = model;
 	}
 
 }
