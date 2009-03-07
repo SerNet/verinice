@@ -70,7 +70,7 @@ public class TestVeriniceServer extends TestCase {
 		beanFactoryReference = beanFactoryLocator
 		.useBeanFactory("ctx");
 		
-		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin", "aendermich");
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin", "geheim");
 
 		HttpState httpState = (HttpState) beanFactoryReference
 		.getFactory().getBean("httpState");

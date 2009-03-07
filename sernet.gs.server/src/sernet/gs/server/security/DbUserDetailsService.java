@@ -7,10 +7,12 @@ import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.GrantedAuthority;
+import org.springframework.security.providers.encoding.ShaPasswordEncoder;
+import org.springframework.security.ui.digestauth.DigestProcessingFilter;
+import org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
-
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
@@ -29,39 +31,50 @@ public class DbUserDetailsService implements UserDetailsService {
 	private ICommandService commandService;
 	private String adminuser = "";
 	private String adminpass = "";
+
 	
+
 	private final static Map<String, String[]> roleMap = new HashMap<String, String[]>();
-	
+
 	{
-		roleMap.put("configuration_rolle_ciso", 			new String[] {ApplicationRoles.ROLE_USER});
-		roleMap.put("configuration_rolle_isbeauftragter", 	new String[] {ApplicationRoles.ROLE_USER});
-		roleMap.put("configuration_rolle_user", 			new String[] {ApplicationRoles.ROLE_USER});
-		roleMap.put("configuration_rolle_admin", 			new String[] {ApplicationRoles.ROLE_USER, ApplicationRoles.ROLE_ADMIN});
-		roleMap.put("configuration_rolle_umsverantw", 		new String[] {ApplicationRoles.ROLE_USER});
-		roleMap.put("configuration_rolle_auditor", 			new String[] {ApplicationRoles.ROLE_USER});
+		roleMap.put("configuration_rolle_ciso",
+				new String[] { ApplicationRoles.ROLE_USER });
+		roleMap.put("configuration_rolle_isbeauftragter",
+				new String[] { ApplicationRoles.ROLE_USER });
+		roleMap.put("configuration_rolle_user",
+				new String[] { ApplicationRoles.ROLE_USER });
+		roleMap.put("configuration_rolle_admin", new String[] {
+				ApplicationRoles.ROLE_USER, ApplicationRoles.ROLE_ADMIN });
+		roleMap.put("configuration_rolle_umsverantw",
+				new String[] { ApplicationRoles.ROLE_USER });
+		roleMap.put("configuration_rolle_auditor",
+				new String[] { ApplicationRoles.ROLE_USER });
 	}
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException, DataAccessException {
-		
-		if (adminuser.length()>0 && adminpass.length()>0 && username.equals(adminuser))
+
+		if (adminuser.length() > 0 && adminpass.length() > 0
+				&& username.equals(adminuser))
 			return defaultUser();
-		
+
 		try {
 			LoadEntityByType command = new LoadEntityByType("configuration");
 			command = commandService.executeCommand(command);
 			List<Entity> entities = command.getEntities();
-			
-			for (Entity entity :entities) {
+
+			for (Entity entity : entities) {
 				if (isUser(username, entity)) {
 					return newUserDetails(entity);
 				}
 			}
 		} catch (CommandException e) {
-			throw new UsernameNotFoundException("Fehler beim Zugriff auf Benutzer in DB.", e); 
+			throw new UsernameNotFoundException(
+					"Fehler beim Zugriff auf Benutzer in DB.", e);
 		}
-		throw new UsernameNotFoundException(Messages.getString("DbUserDetailsService.4")); //$NON-NLS-1$
+		throw new UsernameNotFoundException(Messages
+				.getString("DbUserDetailsService.4")); //$NON-NLS-1$
 	}
 
 	private UserDetails defaultUser() {
@@ -71,13 +84,21 @@ public class DbUserDetailsService implements UserDetailsService {
 		return user;
 	}
 
+//	private String encrypt(String adminpass2, String username) {
+//		return adminpass2;
+////		return DigestProcessingFilter.encodePasswordInA1Format(username,
+////				getEntryPoint().getRealmName(), adminpass2);
+//	}
+
 	private UserDetails newUserDetails(Entity entity) {
-		VeriniceUserDetails userDetails = new VeriniceUserDetails(
-				entity.getSimpleValue(Configuration.PROP_USERNAME),
-				entity.getSimpleValue(Configuration.PROP_PASSWORD));
-		List<Property> properties = entity.getProperties(Configuration.PROP_ROLES).getProperties();
+		VeriniceUserDetails userDetails = new VeriniceUserDetails(entity
+				.getSimpleValue(Configuration.PROP_USERNAME), entity
+				.getSimpleValue(Configuration.PROP_PASSWORD));
+		List<Property> properties = entity.getProperties(
+				Configuration.PROP_ROLES).getProperties();
 		for (Property displayedRoles : properties) {
-			String[] appRoles = translateToApplicationRole(displayedRoles.getPropertyValue());
+			String[] appRoles = translateToApplicationRole(displayedRoles
+					.getPropertyValue());
 			if (appRoles != null) {
 				for (String appRole : appRoles) {
 					userDetails.addRole(appRole);
@@ -87,14 +108,14 @@ public class DbUserDetailsService implements UserDetailsService {
 		return userDetails;
 	}
 
-
 	private String[] translateToApplicationRole(String displayRole) {
 		return roleMap.get(displayRole);
 	}
 
 	private boolean isUser(String username, Entity entity) {
-		return entity.getSimpleValue(Configuration.PROP_USERNAME).equals(username);
-			
+		return entity.getSimpleValue(Configuration.PROP_USERNAME).equals(
+				username);
+
 	}
 
 	public ICommandService getCommandService() {
@@ -112,5 +133,7 @@ public class DbUserDetailsService implements UserDetailsService {
 	public void setAdminpass(String adminpass) {
 		this.adminpass = adminpass;
 	}
+
+
 
 }

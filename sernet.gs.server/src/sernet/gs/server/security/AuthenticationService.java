@@ -2,6 +2,8 @@ package sernet.gs.server.security;
 
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.context.SecurityContextHolder;
+import org.springframework.security.ui.digestauth.DigestProcessingFilter;
+import org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint;
 
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.IAuthService;
@@ -16,7 +18,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.SaveConfiguration;
 
 public class AuthenticationService implements IAuthService {
 
-	private ICommandService commandService;
+	private DigestProcessingFilterEntryPoint entryPoint;
 	
 	public String[] getRoles() {
 		 GrantedAuthority[] authority = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
@@ -27,25 +29,17 @@ public class AuthenticationService implements IAuthService {
 		 return roles;
 	}
 
-	@Override
-	public void setInitialPassword(String user, String pass) {
-		System.out.println("alles paletti");
-//		try {
-//			// create new config:
-//			CreateDefaultConfiguration command2 = new CreateDefaultConfiguration(user, pass);
-//			command2 = commandService.executeCommand(
-//					command2);
-//		} catch (CommandException e) {
-//			throw new RuntimeCommandException(e);
-//		}
+	public String hashPassword(String username, String pass) {
+		return DigestProcessingFilter.encodePasswordInA1Format(username,
+			getEntryPoint().getRealmName(), pass);
+	}
+	
+	public DigestProcessingFilterEntryPoint getEntryPoint() {
+		return entryPoint;
 	}
 
-	public ICommandService getCommandService() {
-		return commandService;
-	}
-
-	public void setCommandService(ICommandService commandService) {
-		this.commandService = commandService;
+	public void setEntryPoint(DigestProcessingFilterEntryPoint entryPoint) {
+		this.entryPoint = entryPoint;
 	}
 
 }

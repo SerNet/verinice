@@ -31,7 +31,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	<property name="properties"><props>
 		
 		<prop key="grundschutzKataloge">
-		it-grundschutz2008_html_de.zip
+			it-grundschutz2008_html_de.zip
 		</prop>
 		
 		<prop key="datenschutzBaustein">
@@ -476,6 +476,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     >
         <property name="daoFactory" ref="daoFactory"/>
         <property name="exceptionHandler" ref="serverExceptionHandler" />
+        <property name="authService" ref="authService"/>
     </bean>
   </property>
   <property name="transactionAttributes">
@@ -487,26 +488,37 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 
 <!-- BEGIN Security configuration ============================================================================ -->
 
-<!-- service to allow application access to currently active roles, i.e. to disable
-	certain items in the view -->
+<!-- service to allow application access to currently active roles, server realm etc.-->
 <bean id="authService" class="sernet.gs.server.security.AuthenticationService">
-	<property name="commandService" ref="commandService"/>
+	<property name="entryPoint" ref="digestProcessingFilterEntryPoint"/>
 
 	<security:intercept-methods>
+	<!-- must be logged in to access roles: -->
 	<security:protect
 		method="sernet.gs.server.security.AuthenticationService.getRoles" access="ROLE_USER" />
+	<!-- must be logged in as admin to change passwords: -->
+	<security:protect
+		method="sernet.gs.server.security.AuthenticationService.hashPassword" access="ROLE_ADMIN" />
 	</security:intercept-methods>
 </bean>
 
 <!-- following beans enable http digest authentication and role based access -->
 
- <security:authentication-manager alias="authenticationManager" />
+<security:authentication-manager alias="authenticationManager" />
 
+<!-- 
+	 Instead of digest auth, the authentication method can be switched, i.e. to basic auth over SSL with SHA hashes.
+	 LDAP binding or LDAP password comparison are also possible, you'll have to change the authentication providers
+	 and the hashing algorithm.
+	 Please refer to the Spring framework security documentation for instructions on how to do this 
+	 (http://static.springsource.org/spring-security/site/suggested.html).
+ -->
 <bean id="digestProcessingFilter"
 	class="org.springframework.security.ui.digestauth.DigestProcessingFilter">
 	<property name="userDetailsService" ref="uds" />
 	<property name="authenticationEntryPoint"
-	ref="digestProcessingFilterEntryPoint" />
+			ref="digestProcessingFilterEntryPoint" />
+	<property name="passwordAlreadyEncoded" value="true"/>
 </bean>
 
 
@@ -563,6 +575,11 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 
 <security:authentication-provider  
 	user-service-ref="uds">
+	<!-- 
+	<security:password-encoder ref="shaEncoder">
+		<security:salt-source user-property="username"/>
+	</security:password-encoder>
+	 -->
 </security:authentication-provider>
 
 <!-- 
@@ -579,7 +596,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	</property>
 
 	<property name="adminpass">
-		<value>aendermich</value>
+		<value>67c37ffc1142482374f5af97defac40b</value>
 	</property>
 </bean>
 
