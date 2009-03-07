@@ -42,10 +42,13 @@ public class DbVersion extends GenericCommand  {
 	 * Version number of client that can be used.
 	 * (Must be the same in client / server code of this class.)
 	 * 
-	 * This valkue is submitted by the client on every first connect in the
+	 * This value is submitted by the client on every first connect in the
 	 * instance variable <code>clientVersion</code>. If this value differs from
 	 * the static field, the server throws an exception to prevent incompatible clients
 	 * from connecting.
+	 * 
+	 * If verinice runs standalone (just on a client without server), the version 
+	 * number will always be the same.
 	 */
 	public static final double COMPATIBLE_CLIENT_VERSION = 0.95D;
 

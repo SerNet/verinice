@@ -152,6 +152,11 @@ public class ConfigurationAction implements IObjectActionDelegate {
 
 	}
 
+	/**
+	 * Remove (hashed) password from field, save hash in case user does NOT enter a new one.
+	 * 
+	 * @param entity
+	 */
 	private void emptyPasswordField(Entity entity) {
 		Property passwordProperty = entity.getProperties(Configuration.PROP_PASSWORD).getProperty(0);
 		if (passwordProperty != null) {
@@ -160,6 +165,14 @@ public class ConfigurationAction implements IObjectActionDelegate {
 		}
 	}
 	
+	/**
+	 * Checks if the user has entered a new password.
+	 * If not, the previously saved hashed password is restored.
+	 * If so, the cleartext password is saved.
+	 * 
+	 * @param entity the entity containing the users input
+	 * @return true if a new cleartext password was saved, that needs to be hashed.
+	 */
 	private boolean updatePassword(Entity entity) {
 		Property passwordProperty = entity.getProperties(Configuration.PROP_PASSWORD).getProperty(0);
 		if (passwordProperty != null) {
@@ -168,7 +181,7 @@ public class ConfigurationAction implements IObjectActionDelegate {
 				return true;
 			}
 			else {
-				// no new password set, insert old one again:
+				// no new password set, insert old one (hash) again:
 				passwordProperty.setPropertyValue(oldPassword, false);
 			}
 		}

@@ -34,6 +34,7 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
+import sernet.gs.ui.rcp.main.common.model.CnAPlaceholder;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
@@ -41,6 +42,7 @@ import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForTodoView;
 
 /**
@@ -150,74 +152,7 @@ public class DSModelView extends ViewPart {
 
 	private BSIModel model;
 
-	/**
-	 * Content provider for BSI model elements.
-	 * 
-	 * @author koderman@sernet.de
-	 * 
-	 */
-	class ViewContentProvider implements ITreeContentProvider {
-
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		}
-
-		public void dispose() {
-		}
-
-		public Object[] getElements(Object parent) {
-			return getChildren(parent);
-		}
-
-		public Object getParent(Object child) {
-			if (child instanceof CnATreeElement) {
-				CnATreeElement el = (CnATreeElement) child;
-				return el.getParent();
-			}
-			return null;
-		}
-
-		public Object[] getChildren(Object parent) {
-			if (parent instanceof CnATreeElement) {
-				CnATreeElement el = (CnATreeElement) parent;
-				return el.getChildrenAsArray();
-			}
-			return null;
-		}
-
-		public boolean hasChildren(Object parent) {
-			if (parent instanceof CnATreeElement) {
-				CnATreeElement el = (CnATreeElement) parent;
-				return el.getChildren().size() > 0;
-			}
-			return false;
-		}
-
-	}
-
-	/**
-	 * Label provider für BSI model elements.
-	 * 
-	 * @author koderman@sernet.de
-	 * 
-	 */
-	class ViewLabelProvider extends LabelProvider {
-
-		public String getText(Object obj) {
-			if (obj instanceof ITVerbund)
-				return Messages.DSModelView_1;
-
-			if (obj instanceof AnwendungenKategorie)
-				return Messages.DSModelView_2;
-
-			CnATreeElement el = (CnATreeElement) obj;
-			return el.getTitel();
-		}
-
-		public Image getImage(Object obj) {
-			CnATreeElement el = (CnATreeElement) obj;
-			return CnAImageProvider.getImage(el);
-		}
-	}
+	private TreeViewerCache cache;
 
 	class NameSorter extends ViewerSorter {
 		@Override
@@ -238,14 +173,15 @@ public class DSModelView extends ViewPart {
 	 * The constructor.
 	 */
 	public DSModelView() {
+		this.cache = new TreeViewerCache();
 	}
 
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		viewUpdater = new DSModelViewUpdater();
 		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewer.setContentProvider(new ViewContentProvider());
-		viewer.setLabelProvider(new ViewLabelProvider());
+		viewer.setContentProvider(new BSIModelViewContentProvider(cache));
+		viewer.setLabelProvider(new DSViewLabelProvider(cache));
 		viewer.setSorter(new NameSorter());
 
 		getSite().setSelectionProvider(viewer);
@@ -270,12 +206,19 @@ public class DSModelView extends ViewPart {
 	}
 
 	private void setInput() throws CommandException {
-		LoadBSIModel command = new LoadBSIModel();
+		if (!CnAElementFactory.isModelLoaded() ) {
+			setNullModel();
+			return;
+		}
+		
+		LoadBSIModelForTreeView command = new LoadBSIModelForTreeView();
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
-		BSIModel model2 = command.getModel();
+		BSIModel newModel = command.getModel();
 
-		model.removeBSIModelListener(viewUpdater);
-		this.model = model2;
+		if (model != null)
+			model.removeBSIModelListener(viewUpdater);
+		
+		this.model = newModel;
 		model.addBSIModelListener(this.viewUpdater);
 
 		Display.getDefault().asyncExec(new Runnable() {
@@ -304,7 +247,8 @@ public class DSModelView extends ViewPart {
 				if (element instanceof ITVerbund
 						|| element instanceof AnwendungenKategorie
 						|| element instanceof Anwendung
-						|| element instanceof IDatenschutzElement)
+						|| element instanceof IDatenschutzElement
+						|| element instanceof CnAPlaceholder)
 					return true;
 				return false;
 			}

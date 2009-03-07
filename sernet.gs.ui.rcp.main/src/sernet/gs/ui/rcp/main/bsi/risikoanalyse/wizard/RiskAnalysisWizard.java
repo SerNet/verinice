@@ -18,6 +18,7 @@ import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.MassnahmenFactory;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
@@ -265,6 +266,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 			}
 		};
 
+		MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
 		alleBausteine: for (Baustein baustein : bausteine) {
 			alleMassnahmen: for (Massnahme massnahme : baustein.getMassnahmen()) {
 				Boolean duplicate = false;
@@ -278,10 +280,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 				if (!duplicate) {
 					MassnahmenUmsetzung massnahmeUmsetzung;
 					try {
-						massnahmeUmsetzung = (MassnahmenUmsetzung) CnAElementFactory
-								.getInstance().saveNew(nullModel,
-										MassnahmenUmsetzung.TYPE_ID,
-										new BuildInput<Massnahme>(massnahme));
+						massnahmeUmsetzung = massnahmenFactory.createMassnahmenUmsetzung(massnahme);
 						allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
 					} catch (Exception e) {
 						Logger

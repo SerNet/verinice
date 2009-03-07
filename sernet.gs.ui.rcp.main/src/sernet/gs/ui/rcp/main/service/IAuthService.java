@@ -7,12 +7,7 @@ public interface IAuthService {
 	 * @return
 	 */
 	public String[] getRoles();
+	
+	public String hashPassword(String username, String clearText);
 
-	/**
-	 * Set initial admin passwort.
-	 * Will only work when no admin password has been set.
-	 * @param pass 
-	 * @param user 
-	 */
-	public void setInitialPassword(String user, String pass);
 }

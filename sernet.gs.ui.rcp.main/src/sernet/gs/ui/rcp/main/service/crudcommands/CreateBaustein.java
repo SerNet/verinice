@@ -6,6 +6,7 @@ import java.util.List;
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.MassnahmenFactory;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -52,6 +53,8 @@ public class CreateBaustein extends GenericCommand {
 			
 			if (container.containsBausteinUmsetzung(baustein.getId()))
 				return;
+			
+			MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
 
 			child = new BausteinUmsetzung(container);
 			container.addChild(child);
@@ -64,25 +67,12 @@ public class CreateBaustein extends GenericCommand {
 			List<Massnahme> massnahmen = baustein
 					.getMassnahmen();
 			for (Massnahme mn : massnahmen) {
-				createMassnahme(child, mn);
+				massnahmenFactory.createMassnahmenUmsetzung(child, mn);
 			}
 			
 		} catch (Exception e) {
 			throw new RuntimeCommandException(e);
 		}
-	}
-
-	private void createMassnahme(BausteinUmsetzung bu, Massnahme mn) {
-		MassnahmenUmsetzung mu = new MassnahmenUmsetzung(bu);
-		mu.setKapitel(mn.getId());
-		mu.setUrl(mn.getUrl());
-		mu.setName(mn.getTitel());
-		mu.setLebenszyklus(mn.getLZAsString());
-		mu.setStufe(mn.getSiegelstufe());
-		mu.setStand(mn.getStand());
-		mu.setVerantwortlicheRollenInitiierung(mn.getVerantwortlichInitiierung());
-		mu.setVerantwortlicheRollenUmsetzung(mn.getVerantwortlichUmsetzung());
-		bu.addChild(mu);
 	}
 
 	public BausteinUmsetzung getNewElement() {

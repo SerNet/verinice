@@ -330,6 +330,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		myToolbar.add(openBSIBrowserAction);
 		myToolbar.add(openTodoViewAction);
 		myToolbar.add(openAuditViewAction);
+		myToolbar.add(openDSViewAction);
 		myToolbar.add(openChartViewAction);
 		myToolbar.add(openDocumentViewAction);
 		

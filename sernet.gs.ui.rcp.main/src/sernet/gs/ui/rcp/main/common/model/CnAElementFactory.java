@@ -349,7 +349,8 @@ public class CnAElementFactory {
 											"Wenn diese Aktion länger als eine "
 													+ "Minute dauert, sollten Sie ihre Datenbank von Derby nach Postgres migrieren. Falls das "
 													+ "schon geschehen ist, sollten Sie ihre Postgres/MySQL-DB tunen. In der FAQ auf http://verinice.org/ finden "
-													+ "Sie weitere Hinweise. Sie können natürlich auch einfach weiter warten...");
+													+ "Sie weitere Hinweise. Ab einer gewissen Größe des IT-Verbundes wird der Einsatz des Verinice-Servers " +
+															"unverzichtbar. Auch hierzu finden Sie weitere Informationen auf unserer Webseite.");
 							return;
 						}
 					} catch (InterruptedException e) {

@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.service.commands;
 
 import sernet.gs.ui.rcp.main.service.DAOFactory;
+import sernet.gs.ui.rcp.main.service.IAuthService;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.IResourceCollection;
 
@@ -25,7 +26,6 @@ public abstract class GenericCommand implements ICommand {
 	public ICommandService getCommandService() {
 		return commandService;
 	}
-	
-	
+
 
 }

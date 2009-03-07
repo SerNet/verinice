@@ -109,6 +109,7 @@ public class ImportCreateBausteine extends GenericCommand {
 		
 		if (baustein != null) {
 			CreateBaustein command = new CreateBaustein(element, baustein);
+			// FIXME server: this will not work in standalone:
 			command = ServerCommandService.getCommandService().executeCommand(command);
 			BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
 			

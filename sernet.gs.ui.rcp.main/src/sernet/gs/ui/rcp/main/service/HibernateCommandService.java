@@ -13,6 +13,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.gs.ui.rcp.main.service.commands.ICommand;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -34,6 +35,8 @@ public class HibernateCommandService implements ICommandService {
 	private DAOFactory daoFactory;
 	
 	private ICommandExceptionHandler exceptionHandler;
+	
+	private IAuthService authService;
 	
 	private boolean dbOpen = false;
 
@@ -59,6 +62,12 @@ public class HibernateCommandService implements ICommandService {
 		try {
 			command.setDaoFactory(daoFactory);
 			command.setCommandService(this);
+
+			if (command instanceof IAuthAwareCommand) {
+				IAuthAwareCommand authCommand = (IAuthAwareCommand) command;
+				authCommand.setAuthService(authService);
+			}
+			
 			command.execute();
 		} 
 		catch (Exception e) {
@@ -84,6 +93,14 @@ public class HibernateCommandService implements ICommandService {
 
 	public void setExceptionHandler(ICommandExceptionHandler exceptionHandler) {
 		this.exceptionHandler = exceptionHandler;
+	}
+
+	public IAuthService getAuthService() {
+		return authService;
+	}
+
+	public void setAuthService(IAuthService authService) {
+		this.authService = authService;
 	}
 
 	
