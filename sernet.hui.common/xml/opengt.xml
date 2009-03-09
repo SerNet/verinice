@@ -1,18 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
-
-  Definition of properties and predefined options for Hitro-UI.
+  Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+  This program is free software: you can redistribute it and/or 
+  modify it under the terms of the GNU General Public License 
+  as published by the Free Software Foundation, either version 3 
+  of the License, or (at your option) any later version.
+      This program is distributed in the hope that it will be useful,    
+  but WITHOUT ANY WARRANTY; without even the implied warranty 
+  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+  See the GNU General Public License for more details.
+      You should have received a copy of the GNU General Public 
+  License along with this program. 
+  If not, see <http://www.gnu.org/licenses/>.
   
-  A dynamic object model is generated based on the definitions 
-  in this file and the necessary GUI forms created to allow 
-  selection of or entering data.
-  
-  Concrete selections or values entered by the user will be saved in the 
-  database.
-
+  Contributors:
+      Alexander Koderman <ak@sernet.de> - initial API and implementation
 -->
-
-
 <huientities xmlns="http://www.sernet.de/hitro"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://www.sernet.de/hitro
