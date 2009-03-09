@@ -66,21 +66,21 @@
 		/>
 		
 		 <cache name="sernet.hui.common.connect.Entity.typedPropertyLists"
-			maxElementsInMemory="50000"
+			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.hui.common.connect.PropertyList"
-			maxElementsInMemory="50000"
+			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.hui.common.connect.PropertyList.properties"
-			maxElementsInMemory="50000"
+			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
@@ -88,7 +88,7 @@
 		/>
 
 		 <cache name="sernet.gs.ui.rcp.main.common.model.CnALink"
-			maxElementsInMemory="50000"
+			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
@@ -96,28 +96,28 @@
 		/>
 
 		 <cache name="sernet.gs.ui.rcp.main.common.model.CnATreeElement"
-			maxElementsInMemory="50000"
+			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.gs.ui.rcp.main.common.model.CnATreeElement.children"
-			maxElementsInMemory="50000"
+			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.gs.ui.rcp.main.common.model.CnATreeElement.linksDown"
-			maxElementsInMemory="50000"
+			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.gs.ui.rcp.main.common.model.CnATreeElement.linksUp"
-			maxElementsInMemory="50000"
+			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
