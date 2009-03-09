@@ -7,17 +7,11 @@
 
 <!-- 
 
-All of the Spring vodoo goes on in here. 
+Spring configuration of application components.
 
 This variant:
 	Wiring command service for direct database access using hibernate on Verinice-Server.
 	Includes authentication service.
-
-IST NICHT FÜR DER GEFINGERPOKEN UND MITTENGRABEN! ODERWISE IST EASY TO SCHNAPPEN DER SPRINGENWERK,
-BLOWENFUSEN UND POPPENCORKEN MIT SPITZENSPARKSEN.
-IST NICHT FÜR GEWERKEN BEI DUMMKOPFEN. DER RUBBERNECKEN SIGHTSEEREN KEEPEN DAS COTTONPICKEN 
-HÄNDER IN DAS POCKETS MUSS.
-ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 
 -->
 
@@ -502,7 +496,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	</security:intercept-methods>
 </bean>
 
-<!-- following beans enable http digest authentication and role based access -->
+<!-- the following beans enable http digest authentication and role based access -->
 
 <security:authentication-manager alias="authenticationManager" />
 
@@ -521,11 +515,22 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	<property name="passwordAlreadyEncoded" value="true"/>
 </bean>
 
-
+<!-- 
+	Configure your HTTP digest realm and nonce key here.
+	If you don't know what this is: the realm is used to salt user passwords and for authentication
+	and should be a value unique to your server. It will be visible to clients, so they know 
+	for what service they are authenticating. It makes sense to include your company name
+	or similar in the realm.
+	The nonce key is used to create temporary session keys between server and client. It should
+	be a value unique to your server and preferably be kept secret. It will not be visible
+	to any client.
+	If you are really paranoid, decrease the validity of the nonce key (i.e. to 5 seconds).
+	If you are concerned about performance, increase the value of the nonce key (i.e. to 60 seconds).
+ -->
 <bean id="digestProcessingFilterEntryPoint"
 	class="org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint">
-	<property name="realmName" value="VeriniceServer" />
-	<property name="key" value="www.verinice.private" />
+	<property name="realmName" value="Verinice Server Default - CHANGETHIS" />
+	<property name="key" value="mysecretkey-CHANGETHIS" />
 	<property name="nonceValiditySeconds" value="10" />
 </bean>
 
@@ -575,18 +580,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 
 <security:authentication-provider  
 	user-service-ref="uds">
-	<!-- 
-	<security:password-encoder ref="shaEncoder">
-		<security:salt-source user-property="username"/>
-	</security:password-encoder>
-	 -->
 </security:authentication-provider>
-
-<!-- 
-<bean id="shaEncoder" class="org.springframework.security.providers.encoding.ShaPasswordEncoder">
-	<constructor-arg value="256" />
-</bean>
--->
 
 <bean id="uds" class="sernet.gs.server.security.DbUserDetailsService">
 	<property name="commandService" ref="commandService"/>
@@ -595,6 +589,14 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		<value>admin</value>
 	</property>
 
+	<!--
+		The password entered here must be in the form of a HTTP digest "A1" hash.
+		To create one using htdigest, type: "htdigest -c hash.txt <realm> <user>"
+		Options:
+		<realm>: the same realm configured as entry point (see above), i.e. "VeriniceServer"
+		<user>: the adminuser name given above, i.e. "admin" 
+		Copy the hash you find in hash.txt as value below.
+	 -->
 	<property name="adminpass">
 		<value>67c37ffc1142482374f5af97defac40b</value>
 	</property>

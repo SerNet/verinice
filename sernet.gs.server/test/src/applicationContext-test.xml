@@ -1,47 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-<beans>
-   
-
-    <bean id="commandService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-        
-        <property name="serviceUrl">
-            <value>
-                http://localhost:2010/veriniceserver/service/commandServiceHttpInvoker
-            </value>
-        </property>
-        
-        <property name="serviceInterface">
-            <value>sernet.gs.ui.rcp.main.service.ICommandService</value>
-        </property>
-        
-        <property name="httpInvokerRequestExecutor" ref="httpInvokerRequestExecutor"/>
-
-    </bean>
-    
-     <bean id="authService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-        <property name="serviceUrl">
-            <value>
-                http://localhost:2010/veriniceserver/service/authServiceHttpInvoker
-            </value>
-        </property>
-        <property name="serviceInterface">
-            <value>sernet.gs.ui.rcp.main.service.IAuthService</value>
-        </property>
-        <property name="httpInvokerRequestExecutor" ref="httpInvokerRequestExecutor"/>
-    </bean>
-    
-     <bean id="httpInvokerRequestExecutor"
-		class="org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor">
-		<constructor-arg ref="httpClient"/>
-	</bean>
-
-	<bean id="httpState" class="org.apache.commons.httpclient.HttpState"/>
-
-	<bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
-		<property name="state" ref="httpState" />
-	</bean>
-
-</beans>
+<!--
+  Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+  This program is free software: you can redistribute it and/or 
+  modify it under the terms of the GNU General Public License 
+  as published by the Free Software Foundation, either version 3 
+  of the License, or (at your option) any later version.
+      This program is distributed in the hope that it will be useful,    
+  but WITHOUT ANY WARRANTY; without even the implied warranty 
+  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+  See the GNU General Public License for more details.
+      You should have received a copy of the GNU General Public 
+  License along with this program. 
+  If not, see <http://www.gnu.org/licenses/>.
+  
+  Contributors:
+      Alexander Koderman <ak@sernet.de> - initial API and implementation
+-->
