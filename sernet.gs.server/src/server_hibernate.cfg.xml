@@ -10,7 +10,8 @@
 
 ###########################################################################
     	Database configuration for Verinice Command Server.
-    	Here you have to configure your database connection.
+    	Configuration of database type (MySQL, Postgres...),
+    	host, port, database as well as username and password.
     	
     	@author 2009-01-08 ak@sernet.de
 ###########################################################################

@@ -529,7 +529,7 @@ This variant:
  -->
 <bean id="digestProcessingFilterEntryPoint"
 	class="org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint">
-	<property name="realmName" value="Verinice Server Default - CHANGETHIS" />
+	<property name="realmName" value="Verinice Server NO-COMPANY - CHANGETHIS" />
 	<property name="key" value="mysecretkey-CHANGETHIS" />
 	<property name="nonceValiditySeconds" value="10" />
 </bean>
@@ -591,14 +591,17 @@ This variant:
 
 	<!--
 		The password entered here must be in the form of a HTTP digest "A1" hash.
+		
 		To create one using htdigest, type: "htdigest -c hash.txt <realm> <user>"
 		Options:
 		<realm>: the same realm configured as entry point (see above), i.e. "VeriniceServer"
 		<user>: the adminuser name given above, i.e. "admin" 
+		
 		Copy the hash you find in hash.txt as value below.
 	 -->
 	<property name="adminpass">
-		<value>67c37ffc1142482374f5af97defac40b</value>
+		<value>578c27deb7d7607cc77f76a64b1086c0</value>
+		<!-- default value for development only: "geheim" for default NOCOMPANY realm -->
 	</property>
 </bean>
 
