@@ -52,9 +52,10 @@ public class FinishedRiskAnalysisListsHome {
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 
-	public void update(FinishedRiskAnalysisLists list) throws Exception {
+	public FinishedRiskAnalysisLists update(FinishedRiskAnalysisLists list) throws Exception {
 		SaveElement<FinishedRiskAnalysisLists> command = new SaveElement<FinishedRiskAnalysisLists>(list);
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
+		return command.getElement();
 	}
 	
 	public void remove(FinishedRiskAnalysisLists list) throws Exception {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+ * Copyright (c) 2009 Anne Hanekop <ah@sernet.de>
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -13,7 +13,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Anne Hanekop <ah@sernet.de> 	- initial API and implementation
+ *     ak@sernet.de					- various fixes, adapted to command layer
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
@@ -141,9 +142,13 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					/* checkbox set */
 
 					try {
+						new NegativeEstimateGefaehrdung();
+						
 						((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis()
 							.addChild(gefaehrdungsUmsetzung);
-						gefaehrdungsUmsetzung.setParent(((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis());
+						gefaehrdungsUmsetzung.setParent(
+								((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis()
+								);
 						gefaehrdungsUmsetzung.setOkay(false);
 						
 						/* add to arrListGefaehrdungsUmsetzungen */
@@ -155,6 +160,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					
 				} else {
 					/* checkbox unset */
+					new PositiveEstimateGefaehrdung();
 
 					/* remove from arrListGefaehrdungsUmsetzungen */
 					GefaehrdungsUtil.removeBySameId(arrListGefaehrdungsUmsetzungen, gefaehrdungsUmsetzung);

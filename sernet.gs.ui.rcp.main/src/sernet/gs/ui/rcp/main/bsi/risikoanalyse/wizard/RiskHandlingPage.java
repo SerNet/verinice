@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+ * Copyright (c) 2009 Anne Hanekop <ah@sernet.de>
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -13,7 +13,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Anne Hanekop <ah@sernet.de> 	- initial API and implementation
+ *     ak@sernet.de					- various fixes, adapted to command layer
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
@@ -128,7 +129,7 @@ public class RiskHandlingPage extends WizardPage {
 				SWT.READ_ONLY);
 		choiceEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
 		
-		
+		// allow modification of risk treatment:
 	    viewer.setCellEditors(new CellEditor[] {null,null,null,choiceEditor});
 	    viewer.setCellModifier(new PropertiesComboBoxCellModifier(viewer, (RiskAnalysisWizard)getWizard(), this));
 	    

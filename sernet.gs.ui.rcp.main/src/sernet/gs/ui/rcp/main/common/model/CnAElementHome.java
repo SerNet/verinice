@@ -184,9 +184,10 @@ public class CnAElementHome {
 		command = commandService.executeCommand(command);
 	}
 
-	public void update(CnATreeElement element) throws Exception {	
+	public CnATreeElement update(CnATreeElement element) throws Exception {	
 		UpdateElement command = new UpdateElement(element, true);
 		command = commandService.executeCommand(command);
+		return (CnATreeElement) command.getElement();
 	}
 
 	public void update(List<? extends CnATreeElement> elements)

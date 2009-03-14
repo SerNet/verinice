@@ -1,20 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation, either version 3 
- * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
- * See the GNU General Public License for more details.
- *     You should have received a copy of the GNU General Public 
- * License along with this program. 
- * If not, see <http://www.gnu.org/licenses/>.
- * 
- * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
- ******************************************************************************/
 /*
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,24 +12,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
+ * Contributors:
+ *  Jeff Heaton (http://www.heatonresearch.com) - initial API and implementation
+ *  akoderman@sernet.de 						- adapted for usage in verinice project
+ * 
  */
 package com.heatonresearch.datamover;
 
-import com.heatonresearch.datamover.db.*;
 
-import java.util.*;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import com.heatonresearch.datamover.db.Database;
+import com.heatonresearch.datamover.db.DatabaseException;
 
 /**
  * Generic data mover class. This class is designed to move
  * data from one database to another. To do this, first the
  * tables are created in the target database, then all
  * data from the source database is copied.
- * 
- * @author Jeff Heaton (http://www.heatonresearch.com)
- * @author akoderman@sernet.de (Changes)
  * 
  * Used by permission.
  *

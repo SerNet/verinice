@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+ * Copyright (c) 2009 Anne Hanekop <ah@sernet.de>
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -13,7 +13,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Anne Hanekop <ah@sernet.de> 	- initial API and implementation
+ *     ak@sernet.de					- various fixes, adapted to command layer
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
@@ -57,7 +58,11 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.taskcommands.AssociateGefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.service.taskcommands.DisassociateGefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.service.taskcommands.FinishRiskanalysisWizard;
 import sernet.gs.ui.rcp.main.service.taskcommands.LoadAssociatedGefaehrdungen;
+import sernet.gs.ui.rcp.main.service.taskcommands.StartNewRiskAnalysis;
 
 /**
  * Wizard to accomplish a 'BSI-Standard 100-3' risk-analysis. RiskAnalysisWizard
@@ -95,9 +100,6 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	private boolean previousAnalysis = false;
 	private FinishedRiskAnalysisLists finishedRiskLists;
 
-	private Collection<GefaehrdungsUmsetzung> objectsToDelete = new HashSet<GefaehrdungsUmsetzung>(
-			50);
-
 	public RiskAnalysisWizard(CnATreeElement treeElement) {
 		cnaElement = treeElement;
 	}
@@ -108,53 +110,25 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 		finishedRiskAnalysis = analysis;
 	}
 
+	/**
+	 * Cause update to risk analysis object in loaded model.
+	 * 
+	 * @return always true
+	 */
 	@Override
 	public boolean performFinish() {
-		cnaElement.addChild(finishedRiskAnalysis);
-
-		// set correct parent for display in tree:
-		for (GefaehrdungsUmsetzung gefaehrdung : finishedRiskLists.getNotOKGefaehrdungsUmsetzungen()) {
-			gefaehrdung.setParent(finishedRiskAnalysis);
-		}
-
-		if (!previousAnalysis) {
-			try {
-				
-				CnAElementHome.getInstance().save(finishedRiskAnalysis);
-				finishedRiskLists
-						.setFinishedRiskAnalysisId(finishedRiskAnalysis
-								.getDbId());
-				FinishedRiskAnalysisListsHome.getInstance().saveNew(
-						finishedRiskLists);
-			} catch (Exception e) {
-				ExceptionUtil.log(e,
-						"Konnte neue Risikoanalyse nicht speichern.");
-			}
-		} else {
-			try {
-				for (GefaehrdungsUmsetzung umsetzung : objectsToDelete) {
-					umsetzung.remove();
-					CnAElementHome.getInstance().remove(umsetzung);
-				}
-				CnAElementHome.getInstance().update(finishedRiskAnalysis);
-				FinishedRiskAnalysisListsHome.getInstance().update(
-						finishedRiskLists);
-			} catch (Exception e) {
-				ExceptionUtil
-						.log(e,
-								"Konnte Änderungen an vorheriger Risikoanalyse nicht speichern.");
-			}
-		}
+		CnAElementFactory.getLoadedModel().childChanged(finishedRiskAnalysis.getParent(), finishedRiskAnalysis);
 		return true;
 	}
 
 	/**
-	 * No special cancel processing necessary.
+	 * Cause update to risk analysis object in loaded model.
 	 * 
 	 * @return always true
 	 */
 	@Override
 	public boolean performCancel() {
+		CnAElementFactory.getLoadedModel().childChanged(finishedRiskAnalysis.getParent(), finishedRiskAnalysis);
 		return true;
 	}
 
@@ -168,23 +142,20 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 *            the current object selection
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		if (finishedRiskAnalysis == null) {
-			finishedRiskAnalysis = new FinishedRiskAnalysis(cnaElement);
-			finishedRiskLists = new FinishedRiskAnalysisLists();
-		} else {
-			try {
-				finishedRiskLists = FinishedRiskAnalysisListsHome.getInstance()
-						.loadById(finishedRiskAnalysis.getDbId());
-			} catch (CommandException e) {
-				ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+		try {
+			if (finishedRiskAnalysis == null) {
+				StartNewRiskAnalysis command = new StartNewRiskAnalysis(cnaElement);
+				command = ServiceFactory.lookupCommandService().executeCommand(
+						command);
+				finishedRiskAnalysis = command.getFinishedRiskAnalysis();
+				finishedRiskLists = command.getFinishedRiskLists();
+			} else {
+					finishedRiskLists = FinishedRiskAnalysisListsHome.getInstance()
+							.loadById(finishedRiskAnalysis.getDbId());
+					previousAnalysis = true;
 			}
-			if (finishedRiskLists == null) {
-				ExceptionUtil.log(new Exception(),
-						"Die Risikoanalyse wurde unvollständig gespeichert und "
-								+ "kann nicht wiederaufgenommen werden.");
-				finishedRiskLists = new FinishedRiskAnalysisLists();
-			} else
-				previousAnalysis = true;
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "Datenzugriffsfehler beim Erzeugen / Laden der Risikoanalyse.");
 		}
 
 		loadAllGefaehrdungen();
@@ -318,10 +289,14 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 * Saves all Gefaehrdungen associated to the chosen IT-system in a List.
 	 * @throws CommandException 
 	 */
-	private void loadAssociatedGefaehrdungen() throws CommandException {
-		LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(cnaElement);
-		command = ServiceFactory.lookupCommandService().executeCommand(command);
-		this.finishedRiskLists.getAssociatedGefaehrdungen().addAll(command.getAssociatedGefaehrdungen());
+	private void loadAssociatedGefaehrdungen() {
+		try {
+			LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(cnaElement);
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
+			this.finishedRiskLists.getAssociatedGefaehrdungen().addAll(command.getAssociatedGefaehrdungen());
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "Fehler beim Laden der zugeordneten Gefährdungen.");
+		}
 		
 	}
 
@@ -504,48 +479,31 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 		return this.finishedRiskAnalysis;
 	}
 
-	public Collection<GefaehrdungsUmsetzung> getObjectsToDelete() {
-		return this.objectsToDelete;
-	}
-
-	public void removeOldObjects() {
-		for (GefaehrdungsUmsetzung gefaehrdung : getObjectsToDelete()) {
-			Logger.getLogger(this.getClass()).debug(
-					"Removing object from wizard: " + gefaehrdung);
-			GefaehrdungsUtil.removeBySameId(getAllGefaehrdungsUmsetzungen(),
-					gefaehrdung);
-			GefaehrdungsUtil.removeBySameId(getNotOKGefaehrdungsUmsetzungen(),
-					gefaehrdung);
-		}
-	}
-
 	public void addAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) {
-		List<GefaehrdungsUmsetzung> selectedArrayList = finishedRiskLists
-				.getAssociatedGefaehrdungen();
 		
-		if (!GefaehrdungsUtil.listContainsById(selectedArrayList,
-				currentGefaehrdung)) {
-			/* Add to List of Associated Gefaehrdungen */
-			GefaehrdungsUmsetzung gefUms = GefaehrdungsUmsetzungFactory.build(
-					null, currentGefaehrdung);
-			selectedArrayList.add(gefUms);
+		try {
+			if (!GefaehrdungsUtil.listContainsById(finishedRiskLists.getAssociatedGefaehrdungen(),
+					currentGefaehrdung)) {
+				/* Add to List of Associated Gefaehrdungen */
+				AssociateGefaehrdungsUmsetzung command = 
+						new AssociateGefaehrdungsUmsetzung(finishedRiskLists.getDbId(), currentGefaehrdung);
+				command = ServiceFactory.lookupCommandService().executeCommand(
+							command);
+				
+				GefaehrdungsUmsetzung gefUms = command.getGefaehrdungsUmsetzung();
+				finishedRiskLists = command.getFinishedRiskLists();
+			}
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "");
 		}
 	}
 
 	public void removeAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) throws Exception {
 		/* remove from List of Associated Gefaehrdungen */
-		GefaehrdungsUmsetzung removed = GefaehrdungsUtil.removeBySameId(finishedRiskLists
-				.getAssociatedGefaehrdungen(), currentGefaehrdung);
-		getFinishedRiskAnalysis().removeChild(removed);
-		
-		removed = GefaehrdungsUtil.removeBySameId(finishedRiskLists
-				.getAllGefaehrdungsUmsetzungen(), currentGefaehrdung);
-		getFinishedRiskAnalysis().removeChild(removed);
-		
-		removed = GefaehrdungsUtil.removeBySameId(finishedRiskLists
-				.getNotOKGefaehrdungsUmsetzungen(), currentGefaehrdung);
-		getFinishedRiskAnalysis().removeChild(removed);
-		
+		DisassociateGefaehrdungsUmsetzung command = new DisassociateGefaehrdungsUmsetzung(finishedRiskAnalysis, finishedRiskLists.getDbId(), currentGefaehrdung);
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
+		finishedRiskLists = command.getFinishedRiskLists();
+		finishedRiskAnalysis = command.getFinishedRiskAnalysis();
 		Logger.getLogger(this.getClass()).debug("Removed threat " + currentGefaehrdung.getTitel());
 	}
 }

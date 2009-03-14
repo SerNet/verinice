@@ -1,17 +1,42 @@
-<!--
-  Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
-  This program is free software: you can redistribute it and/or 
-  modify it under the terms of the GNU General Public License 
-  as published by the Free Software Foundation, either version 3 
-  of the License, or (at your option) any later version.
-      This program is distributed in the hope that it will be useful,    
-  but WITHOUT ANY WARRANTY; without even the implied warranty 
-  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
-  See the GNU General Public License for more details.
-      You should have received a copy of the GNU General Public 
-  License along with this program. 
-  If not, see <http://www.gnu.org/licenses/>.
-  
-  Contributors:
-      Alexander Koderman <ak@sernet.de> - initial API and implementation
--->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="sernet.hui.common.connect">
+	<class name="Entity" 
+		table="entity"
+		batch-size="10">
+		
+		<cache usage="read-write" />
+		
+		<id name="dbId" 
+			column="dbId" 
+			type="java.lang.Integer" 
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+		<property name="entityType" />
+		
+		<property
+			name="uuid"
+			unique="true"
+		/>
+
+
+		<map
+			name="typedPropertyLists"
+			cascade="all,delete-orphan"
+			batch-size="10"
+			fetch="subselect">
+			<cache usage="read-write" />
+			<key column="typedlist_id" />
+			<index
+				column="list_idx"
+				type="string" />
+			<one-to-many class="PropertyList" />
+		</map>
+
+	</class>
+</hibernate-mapping>

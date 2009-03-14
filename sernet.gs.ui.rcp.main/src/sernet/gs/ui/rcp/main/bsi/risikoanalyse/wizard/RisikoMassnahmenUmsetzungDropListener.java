@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+ * Copyright (c) 2009 Anne Hanekop <ah@sernet.de>
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -13,7 +13,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Anne Hanekop <ah@sernet.de> 	- initial API and implementation
+ *     ak@sernet.de					- various fixes, adapted to command layer
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
@@ -64,6 +65,7 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 		/* get dropped elements*/
 		for (Object toDrop : DNDItems.getItems()) {
 			try {
+				// class has already been validated at this point:
 				parent = (GefaehrdungsUmsetzung) receiver;
 				child = (RisikoMassnahmenUmsetzung) toDrop;
 
@@ -77,6 +79,7 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 					
 					parent.addGefaehrdungsBaumChild(child);
 					child.setGefaehrdungsBaumParent(parent);
+					
 					child.setParent(parent);
 
 					viewer.refresh();

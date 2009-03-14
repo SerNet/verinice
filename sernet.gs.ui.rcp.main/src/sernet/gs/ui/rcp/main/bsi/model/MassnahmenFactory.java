@@ -22,6 +22,7 @@ import org.eclipse.core.internal.localstore.CopyVisitor;
 import com.sun.star.text.SetVariableType;
 
 import sernet.gs.model.Massnahme;
+import sernet.hui.common.connect.Entity;
 
 public class MassnahmenFactory {
 
@@ -44,6 +45,7 @@ public class MassnahmenFactory {
 	 */
 	public MassnahmenUmsetzung createMassnahmenUmsetzung(Massnahme mn) {
 		MassnahmenUmsetzung mu = new MassnahmenUmsetzung();
+		mu.setEntity(new Entity(MassnahmenUmsetzung.TYPE_ID));
 		copyValues(mn, mu);
 		return mu;
 	}
