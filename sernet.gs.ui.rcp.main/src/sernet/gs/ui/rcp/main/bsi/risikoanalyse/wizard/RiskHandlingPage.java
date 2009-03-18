@@ -71,7 +71,8 @@ public class RiskHandlingPage extends WizardPage {
 	protected RiskHandlingPage() {
 		super("Risikobehandlung");
 		setTitle("Risikobehandlung");
-		setDescription("Entscheiden Sie, wie mit den Gefährdungen umgegangen werden soll.");
+		setDescription("Entscheiden Sie, wie mit den Gefährdungen umgegangen werden soll. Wählen Sie in der " +
+				"Spalte 'Risikoalternative' eine Methode für jede Gefährdung aus!");
 	}
 	
 	/**
@@ -212,7 +213,6 @@ public class RiskHandlingPage extends WizardPage {
 	 * Is processed each time the WizardPage is set visible.
 	 */
 	private void initContents() {
-		cleanUpNotOKGefaehrdungsUmsetzungen();
 		List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = 
 			((RiskAnalysisWizard)getWizard()).getAllGefaehrdungsUmsetzungen();
 
@@ -230,35 +230,6 @@ public class RiskHandlingPage extends WizardPage {
 		((RiskAnalysisWizard)getWizard()).setCanFinish(true);
 		
 		checkPageComplete();
-	}
-
-	/**
-	 * For repeated execution of the wizard:
-	 * 
-	 * Remove objects that were previously selected in this list, during the last execution of the wizard 
-	 * but have been removed this time by the user on the previous page.
-	 * 
-	 * @author akoderman@sernet.de
-	 */
-	private void cleanUpNotOKGefaehrdungsUmsetzungen() {
-		List<GefaehrdungsUmsetzung> currentUmsetzungen =
-			((RiskAnalysisWizard)getWizard()).getAllGefaehrdungsUmsetzungen();
-
-		oldUmsetzungen: for (GefaehrdungsUmsetzung oldUmsetzung:
-			((RiskAnalysisWizard)getWizard()).getNotOKGefaehrdungsUmsetzungen()) {
-			boolean umsetzungFound = false;
-			for (GefaehrdungsUmsetzung currentUmsetzung : currentUmsetzungen) {
-				if (currentUmsetzung.getId().equals(oldUmsetzung.getId())) {
-					umsetzungFound = true;
-					continue oldUmsetzungen; 
-				}
-			}
-			if (!umsetzungFound) {
-				((RiskAnalysisWizard)getWizard()).getObjectsToDelete().add(oldUmsetzung);
-			}
-			
-			((RiskAnalysisWizard)getWizard()).removeOldObjects();
-		}
 	}
 
 	/**

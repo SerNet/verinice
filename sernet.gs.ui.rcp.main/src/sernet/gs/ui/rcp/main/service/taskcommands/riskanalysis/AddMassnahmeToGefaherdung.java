@@ -15,52 +15,53 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.taskcommands;
+package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 /**
+ * Assign a control instance to a threat instance.
+ * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$
  *
  */
-public class StartNewRiskAnalysis extends GenericCommand {
+public class AddMassnahmeToGefaherdung extends GenericCommand {
 
-	private CnATreeElement cnaElement;
-	private FinishedRiskAnalysis finishedRiskAnalysis;
-	private FinishedRiskAnalysisLists finishedRiskLists;
+	private RisikoMassnahmenUmsetzung child;
+	private GefaehrdungsUmsetzung parent;
 
 	/**
-	 * @param cnaElement
+	 * @param parent
+	 * @param child
 	 */
-	public StartNewRiskAnalysis(CnATreeElement cnaElement) {
-		this.cnaElement = cnaElement;
-		
+	public AddMassnahmeToGefaherdung(GefaehrdungsUmsetzung parent,
+			RisikoMassnahmenUmsetzung child) {
+		this.child = child;
+		this.parent = parent;
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
 	 */
 	public void execute() {
-		getDaoFactory().getDAOForObject(cnaElement).reload(cnaElement, cnaElement.getDbId());
-		finishedRiskAnalysis = new FinishedRiskAnalysis(cnaElement);
-		finishedRiskLists = new FinishedRiskAnalysisLists();
-		finishedRiskLists.setFinishedRiskAnalysisId(finishedRiskAnalysis.getDbId());
+		child = (RisikoMassnahmenUmsetzung) getDaoFactory().getDAOForObject(child).merge(child);
+		getDaoFactory().getDAOForObject(parent).reload(parent, parent.getDbId());
 		
-		getDaoFactory().getDAO(FinishedRiskAnalysis.class).saveOrUpdate(finishedRiskAnalysis);
-		getDaoFactory().getDAO(FinishedRiskAnalysisLists.class).saveOrUpdate(finishedRiskLists);
+		parent.addGefaehrdungsBaumChild(child);
+		child.setParent(parent);
 	}
 
-	public FinishedRiskAnalysis getFinishedRiskAnalysis() {
-		return finishedRiskAnalysis;
+	public RisikoMassnahmenUmsetzung getChild() {
+		return child;
 	}
 
-	public FinishedRiskAnalysisLists getFinishedRiskLists() {
-		return finishedRiskLists;
+	public GefaehrdungsUmsetzung getParent() {
+		return parent;
 	}
-
+	
 }

@@ -23,9 +23,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
+
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.AddMassnahmeToGefaherdung;
 
 /**
  * Defines what to do when an item is dropped into the TreeViewer.
@@ -77,10 +81,11 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 						&& parent instanceof GefaehrdungsUmsetzung
 						&& !(children.contains(child))) {
 					
-					parent.addGefaehrdungsBaumChild(child);
-					child.setGefaehrdungsBaumParent(parent);
-					
-					child.setParent(parent);
+					AddMassnahmeToGefaherdung command = new AddMassnahmeToGefaherdung(parent, child);
+					command = ServiceFactory.lookupCommandService()
+							.executeCommand(command);
+					parent = command.getParent();
+					child = command.getChild();
 
 					viewer.refresh();
 					return true;
@@ -89,6 +94,7 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 					return false;
 				}
 			} catch (Exception e) {
+				ExceptionUtil.log(e, "Konnte Maßnahme nicht zuordnen, Fehler beim Speichern.");
 				return false;
 			}
 		}

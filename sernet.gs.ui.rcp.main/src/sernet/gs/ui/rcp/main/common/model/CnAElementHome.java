@@ -243,6 +243,8 @@ public class CnAElementHome {
 	 * Refresh given object from the database, looses all changes made in
 	 * memory, sets element and all properties to actual state in database.
 	 * 
+	 * Does not reload children or other collections of this object.
+	 * 
 	 * @param cnAElement
 	 * @throws CommandException 
 	 */

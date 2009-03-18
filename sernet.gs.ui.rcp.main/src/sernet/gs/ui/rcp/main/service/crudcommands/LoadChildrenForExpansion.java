@@ -27,6 +27,8 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
@@ -39,15 +41,23 @@ public class LoadChildrenForExpansion extends GenericCommand {
 
 
 	private CnATreeElement parent;
+	private Integer dbId;
+	private Class<? extends CnATreeElement> clazz;
 
 	public LoadChildrenForExpansion(CnATreeElement parent) {
 		this.parent = parent;
+
+		// slim down for transfer:
+		dbId = parent.getDbId();
+		clazz = parent.getClass();
+		this.parent = null;
 	}
 	
 	public void execute() {
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
+		parent = dao.findById(dbId);
+		
 		Logger.getLogger(this.getClass()).debug("Loading children for " + parent.getTitel());
-		IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOForObject(parent);
-		dao.reload(parent, parent.getDbId());
 		hydrate(parent);
 		
 		Set<CnATreeElement> children = parent.getChildren();
@@ -62,6 +72,7 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		
 		if (element instanceof MassnahmenUmsetzung) {
 			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
+			Logger.getLogger(this.getClass()).debug("Hydrating " + mn.getTitel());
 			mn.getKapitelValue();
 			mn.getTitel();
 			mn.getUmsetzung();
@@ -70,13 +81,22 @@ public class LoadChildrenForExpansion extends GenericCommand {
 			return;
 		}
 		
-		
 		HydratorUtil.hydrateElement(getDaoFactory().getDAOForObject(element), 
 				element, true);
-
+		
+		// initialize all children:
+		if (element instanceof FinishedRiskAnalysis
+				|| element instanceof GefaehrdungsUmsetzung) {
+			Set<CnATreeElement> children = element.getChildren();
+			for (CnATreeElement child : children) {
+				hydrate(child);
+			}
+		}
+		
 		if (element instanceof BausteinUmsetzung) {
 			BausteinUmsetzung bst = (BausteinUmsetzung) element;
 			bst.getKapitel();
+			Logger.getLogger(this.getClass()).debug("Hydrating Baustein " + bst.getKapitel());
 			
 			Set<CnATreeElement> massnahmen = bst.getChildren();
 			for (CnATreeElement massnahme : massnahmen) {
@@ -93,11 +113,7 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		}
 	}
 	
-
 	public CnATreeElement getElementWithChildren() {
 		return parent;
 	}
-
-	
-
 }

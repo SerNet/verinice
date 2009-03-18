@@ -25,7 +25,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.TableItem;
+
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.SelectRiskTreatment;
 
 /**
  * Sets a Gefaehrdung's alternative to the chosen value.
@@ -94,54 +99,49 @@ public class PropertiesComboBoxCellModifier implements ICellModifier {
 			return;
 		
 		Object item = ((TableItem) element).getData();
-		List<GefaehrdungsUmsetzung> arrListNotOKGefaehrdungsUmsetzungen =
-				wizard.getNotOKGefaehrdungsUmsetzungen();
 		
-		new SelectReduceRisk();
-		new UnselectReduceRisk();
 
 		if (item instanceof GefaehrdungsUmsetzung) {
 			GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) item;
-
+			
 			if (RiskHandlingPage.CHOICE_COLUMN_ID.equals(property)) {
 				int index = (Integer) value;
+				String alternative = null;
 				switch (index) {
 				case 0:
-					gefaehrdung.setAlternative(GefaehrdungsUmsetzung.
-							GEFAEHRDUNG_ALTERNATIVE_A);
-					if (!arrListNotOKGefaehrdungsUmsetzungen
-							.contains(gefaehrdung)) {
-						arrListNotOKGefaehrdungsUmsetzungen.add(gefaehrdung);
-					}
+					alternative = GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_A;
 					break;
 				case 1:
-					gefaehrdung.setAlternative(GefaehrdungsUmsetzung.
-							GEFAEHRDUNG_ALTERNATIVE_B);
-					if (arrListNotOKGefaehrdungsUmsetzungen
-							.contains(gefaehrdung)) {
-						arrListNotOKGefaehrdungsUmsetzungen.remove(gefaehrdung);
-					}
+					alternative = GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_B;
 					break;
 				case 2:
-					gefaehrdung.setAlternative(GefaehrdungsUmsetzung.
-							GEFAEHRDUNG_ALTERNATIVE_C);
-					if (arrListNotOKGefaehrdungsUmsetzungen
-							.contains(gefaehrdung)) {
-						arrListNotOKGefaehrdungsUmsetzungen.remove(gefaehrdung);
-					}
+					alternative = GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_C;
 					break;
 				case 3:
-					gefaehrdung.setAlternative(GefaehrdungsUmsetzung.
-							GEFAEHRDUNG_ALTERNATIVE_D);
-					if (arrListNotOKGefaehrdungsUmsetzungen
-							.contains(gefaehrdung)) {
-						arrListNotOKGefaehrdungsUmsetzungen.remove(gefaehrdung);
-					}
+					alternative = GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_D;
 					break;
 				default:
 					break;
 				}
+				
+				if (alternative == null)
+					return;
 
+				try {
+					SelectRiskTreatment command = new SelectRiskTreatment(wizard.getFinishedRiskAnalysisLists().getDbId(), 
+							wizard.getFinishedRiskAnalysis(), gefaehrdung, 
+							alternative);
+					command = ServiceFactory.lookupCommandService()
+							.executeCommand(command);
+					wizard.setFinishedRiskLists(command.getFinishedRiskLists());
+					
+					// set to update local display:
+					gefaehrdung.setAlternative(alternative);
+					
+				} catch (CommandException e) {
+					ExceptionUtil.log(e, "Konnte Behandlungsmethode nicht speichern.");
+				}
+				
 				viewer.refresh();
 
 				if (wizard.getNotOKGefaehrdungsUmsetzungen().isEmpty()) {

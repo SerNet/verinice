@@ -303,6 +303,13 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     <property name="sessionFactory" ref="sessionFactory"/>
 </bean>
 
+<bean id="risikoMassnahmeUmsetzungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
 <bean id="ownGefaehrdungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
     <constructor-arg>
         <value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung</value>
@@ -372,6 +379,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		<property name="verarbeitungsangabenDAO" ref="verarbeitungsangabenDAO"/>
 		<property name="zweckbestimmungDAO" ref="zweckbestimmungDAO"/>
 		<property name="risikoMassnahmeDAO" ref="risikoMassnahmeDAO"/>
+		<property name="risikoMassnahmeUmsetzungDAO" ref="risikoMassnahmeUmsetzungDAO"/>
 		<property name="ownGefaehrdungDAO" ref="ownGefaehrdungDAO"/>
 	  
   	</bean>

@@ -59,6 +59,8 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.SearchFilter;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.RemoveMassnahmeFromGefaherdung;
 
 /**
  * Add security measures (Massnahmen) to the risks (Gefaehrdungen). New security
@@ -88,7 +90,9 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		setTitle("Zusätzliche IT-Sicherheitsmaßnahmen");
 		setDescription("Fügen Sie den Gefährdungen weitere"
 				+ " IT-Sicherheitsmaßnahmen hinzu. Legen Sie ggf."
-				+ " zusätzlich eigene Maßnahmen an.");
+				+ " zusätzlich eigene Maßnahmen an. Per Drag'n'Drop können Sie die gewünschten " +
+						"Maßnahmen von rechts nach links " +
+						"ziehen und den Gefährdungen zuordnen!");
 	}
 
 	/**
@@ -172,8 +176,10 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		Transfer[] types = new Transfer[] { RisikoMassnahmenUmsetzungTransfer
 				.getInstance() };
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
+	
 		viewerGefaehrdung.addDropSupport(operations, types,
 				new RisikoMassnahmenUmsetzungDropListener(viewerGefaehrdung));
+		
 		viewerMassnahme.addDragSupport(operations, types,
 				new RisikoMassnahmenUmsetzungDragListener(viewerMassnahme,
 						cnaElement));
@@ -548,15 +554,16 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		try {
 			GefaehrdungsUmsetzung parent = (GefaehrdungsUmsetzung) massnahme
 					.getGefaehrdungsBaumParent();
-			// FIXME massnahme wird nicht aus liste entfernt -> Umsetzung taucht später im hauptbaum mit auf obwohl sie hier gelöscht wurde.
 
 			if (massnahme != null
 					&& massnahme instanceof RisikoMassnahmenUmsetzung
 					&& parent != null
 					&& parent instanceof GefaehrdungsUmsetzung) {
-
-				/* delete child from List of Children in parent */
-				parent.removeGefaehrdungsBaumChild(massnahme);
+				
+				RemoveMassnahmeFromGefaherdung command = new RemoveMassnahmeFromGefaherdung(parent, massnahme);
+				command = ServiceFactory.lookupCommandService().executeCommand(
+						command);
+				parent = command.getParent();
 
 				/* refresh viewer */
 				viewerGefaehrdung.refresh();

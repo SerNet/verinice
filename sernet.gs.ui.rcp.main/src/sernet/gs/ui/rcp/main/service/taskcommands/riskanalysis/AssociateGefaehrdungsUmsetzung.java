@@ -15,15 +15,18 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.taskcommands;
+package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
+import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 /**
+ * Assign a threat to a risk analysis: create a new threat instance.
+ * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$
@@ -58,6 +61,15 @@ public class AssociateGefaehrdungsUmsetzung extends GenericCommand {
 
 	public GefaehrdungsUmsetzung getGefaehrdungsUmsetzung() {
 		return gefaehrdungsUmsetzung;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
+	 */
+	@Override
+	public void clear() {
+		// initialize lists properly before returning to client:
+		HydratorUtil.hydrateElement(getDaoFactory().getDAO(FinishedRiskAnalysisLists.class), finishedRiskLists);
 	}
 
 	public FinishedRiskAnalysisLists getFinishedRiskLists() {

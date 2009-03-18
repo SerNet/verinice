@@ -23,24 +23,25 @@ import java.util.List;
 import java.util.UUID;
 
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.GefaehrdungsUtil;
 
 public class FinishedRiskAnalysisLists implements Serializable {
 	
-	private int dbId;
+	private Integer dbId;
 	private int finishedRiskAnalysisId;
 	
 	private String uuid;
 	
-	/*
-	 * list of all Gefaehrdungen of type GefaehrdungsUmsetzung 
-	 */
-	private List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 
 	/*
 	 * list of Gefaehrdungen associated to the chosen IT-system 
 	 */
 	private List<GefaehrdungsUmsetzung> associatedGefaehrdungen = new ArrayList<GefaehrdungsUmsetzung>();
 
+	/*
+	 * list of all Gefaehrdungen of type GefaehrdungsUmsetzung 
+	 */
+	private List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 
 	/*
 	 * list of Gefaehrdungen, which need additional security measures 
@@ -48,19 +49,11 @@ public class FinishedRiskAnalysisLists implements Serializable {
 	 */
 	private List<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
 
-	public FinishedRiskAnalysisLists(int analysisId,
-			ArrayList<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen,
-			ArrayList<GefaehrdungsUmsetzung> associatedGefaehrdungen,
-			ArrayList<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen) {
-		this();
-		this.finishedRiskAnalysisId = analysisId;
-		this.allGefaehrdungsUmsetzungen = allGefaehrdungsUmsetzungen;
-		this.notOKGefaehrdungsUmsetzungen = notOKGefaehrdungsUmsetzungen;
-		this.associatedGefaehrdungen = associatedGefaehrdungen;
-	}
-	
 	public FinishedRiskAnalysisLists() {
-		uuid = UUID.randomUUID().toString();
+		if (this.uuid == null) {
+			UUID randomUUID = java.util.UUID.randomUUID();
+			uuid = randomUUID.toString();
+		}
 	}
 	
 	@Override
@@ -90,11 +83,11 @@ public class FinishedRiskAnalysisLists implements Serializable {
 		return notOKGefaehrdungsUmsetzungen;
 	}
 
-	public int getDbId() {
+	public Integer getDbId() {
 		return dbId;
 	}
 
-	public void setDbId(int dbId) {
+	public void setDbId(Integer dbId) {
 		this.dbId = dbId;
 	}
 
@@ -127,5 +120,14 @@ public class FinishedRiskAnalysisLists implements Serializable {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	/**
+	 * @param gef
+	 */
+	public void removeGefaehrdungCompletely(GefaehrdungsUmsetzung gef) {
+		GefaehrdungsUtil.removeBySameId(getAssociatedGefaehrdungen(), gef);
+		GefaehrdungsUtil.removeBySameId(getAllGefaehrdungsUmsetzungen(), gef);
+		GefaehrdungsUtil.removeBySameId(getNotOKGefaehrdungsUmsetzungen(), gef);
 	}
 }

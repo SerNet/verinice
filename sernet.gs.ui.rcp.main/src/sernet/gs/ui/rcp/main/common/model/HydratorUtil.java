@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.hui.common.connect.Entity;
@@ -86,6 +88,30 @@ public class HydratorUtil {
 		hydrateEntity(dao, configuration.getEntity());
 	}
 
+	/**
+	 * @param dao
+	 * @param finishedRiskLists
+	 */
+	public static void hydrateElement(
+			IBaseDao<FinishedRiskAnalysisLists, Serializable> dao,
+			FinishedRiskAnalysisLists finishedRiskLists) {
 
-
+		List<GefaehrdungsUmsetzung> list = finishedRiskLists.getAllGefaehrdungsUmsetzungen();
+		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : list) {
+			hydrateEntity(dao, gefaehrdungsUmsetzung.getEntity());
+		}
+		
+		List<GefaehrdungsUmsetzung> list2 = finishedRiskLists.getAssociatedGefaehrdungen();
+		dao.initialize(list2);
+		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : list2) {
+			hydrateEntity(dao, gefaehrdungsUmsetzung.getEntity());
+		}
+		
+		List<GefaehrdungsUmsetzung> list3 = finishedRiskLists.getNotOKGefaehrdungsUmsetzungen();
+		dao.initialize(list3);
+		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : list3) {
+			hydrateEntity(dao, gefaehrdungsUmsetzung.getEntity());
+			hydrateElement(dao, gefaehrdungsUmsetzung, true);
+		}
+	}
 }

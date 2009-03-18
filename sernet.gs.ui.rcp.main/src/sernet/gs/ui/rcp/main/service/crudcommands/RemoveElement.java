@@ -25,6 +25,9 @@ import org.apache.log4j.Logger;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
@@ -32,6 +35,7 @@ import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.FindRiskAnalysisListsByParentID;
 
 public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
 
@@ -58,6 +62,11 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
 						removeConfiguration((Person)elmt);
 					}
 				}
+				
+				if (element instanceof FinishedRiskAnalysis) {
+					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) element;
+					remove(analysis);
+				}
 
 				element.remove();
 				dao.delete(element);
@@ -74,6 +83,37 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
 //				query, 
 //				new Object[] { dbId } );
 //		Logger.getLogger(this.getClass()).debug("Deleted rows: " + rows);
+	}
+
+	/**
+	 * @param analysis
+	 * @throws CommandException 
+	 */
+	private void remove(FinishedRiskAnalysis analysis) throws CommandException {
+		Set<CnATreeElement> children = analysis.getChildren();
+		for (CnATreeElement child : children) {
+			if (child instanceof GefaehrdungsUmsetzung) {
+				GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) child;
+				removeFromLists(gef);
+			}
+		}
+	}
+
+	/**
+	 * Remove from all referenced lists.
+	 * 
+	 * @param element2
+	 * @throws CommandException 
+	 */
+	private void removeFromLists(GefaehrdungsUmsetzung gef) throws CommandException {
+		CnATreeElement parent = gef.getParent();
+		if (parent != null && parent instanceof FinishedRiskAnalysis) {
+			FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) parent;
+			FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(analysis.getDbId());
+			getCommandService().executeCommand(command);
+			FinishedRiskAnalysisLists lists = command.getFoundLists();
+			lists.removeGefaehrdungCompletely(gef);
+		}
 	}
 
 	private void removeConfiguration(Person person) throws CommandException {

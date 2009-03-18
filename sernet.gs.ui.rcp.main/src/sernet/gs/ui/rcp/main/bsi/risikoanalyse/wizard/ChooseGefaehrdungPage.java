@@ -55,6 +55,9 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.LoadAssociatedGefaehrdungen;
 
 /**
  * WizardPage which lists all Gefaehrdungen from BSI IT-Grundschutz-Kataloge and
@@ -458,16 +461,20 @@ public class ChooseGefaehrdungPage extends WizardPage {
 	 * Marks all checkboxes of Gefaehrdungen associated to the selected Baustein.
 	 */
 	private void assignBausteinGefaehrdungen() {
-		List<GefaehrdungsUmsetzung> list = ((RiskAnalysisWizard) getWizard())
-				.getAssociatedGefaehrdungen();
-		
-		ArrayList<Gefaehrdung> toCheck = new ArrayList<Gefaehrdung>(50);
-		for (GefaehrdungsUmsetzung selectedGefaehrdung : list) {
-			for (Gefaehrdung gefaehrdung : wizard.getAllGefaehrdungen()) {
-				if (gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
-					associateGefaehrdung(gefaehrdung, true);
+		try {
+			LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(wizard.getCnaElement());
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
+			List<GefaehrdungsUmsetzung> list = command.getAssociatedGefaehrdungen();
+			
+			for (GefaehrdungsUmsetzung selectedGefaehrdung : list) {
+				for (Gefaehrdung gefaehrdung : wizard.getAllGefaehrdungen()) {
+					if (gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
+						associateGefaehrdung(gefaehrdung, true);
+					}
 				}
 			}
+		} catch (CommandException e) {
+			ExceptionUtil.log(e, "");
 		}
 	}
 

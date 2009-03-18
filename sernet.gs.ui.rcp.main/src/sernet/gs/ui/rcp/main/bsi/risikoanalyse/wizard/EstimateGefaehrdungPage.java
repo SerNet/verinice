@@ -44,14 +44,19 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.SearchFilter;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.NegativeEstimateGefaehrdung;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.PositiveEstimateGefaehrdung;
 
 /**
- * WizardPage lists all previously selected Gefaehrdungen for the
- * user to decide which Gefaehrdungen further processing need.
+ * WizardPage lists all previously selected Gefaehrdungen for the user to decide
+ * which Gefaehrdungen further processing need.
  * 
  * @author ahanekop@sernet.de
  */
@@ -75,15 +80,15 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	protected EstimateGefaehrdungPage() {
 		super("Gefährdungsbewertung");
 		setTitle("Gefährdungsbewertung");
-		setDescription("Wählen Sie die Gefährdungen aus, denen NICHT" +
-				" ausreichend Rechnung getragen wurde.");
+		setDescription("Wählen Sie die Gefährdungen aus, denen NICHT"
+				+ " ausreichend Rechnung getragen wurde.");
 	}
 
 	/**
-	 * Adds widgets to the wizardPage.
-	 * Called once at startup of Wizard.
+	 * Adds widgets to the wizardPage. Called once at startup of Wizard.
 	 * 
-	 *  @param parent the parent Composite
+	 * @param parent
+	 *            the parent Composite
 	 */
 	public void createControl(Composite parent) {
 		composite = new Composite(parent, SWT.NULL);
@@ -133,46 +138,49 @@ public class EstimateGefaehrdungPage extends WizardPage {
 			 * Notifies of a change to the checked state of an element.
 			 */
 			public void checkStateChanged(CheckStateChangedEvent event) {
+				RiskAnalysisWizard wizard = ((RiskAnalysisWizard) getWizard());
 				GefaehrdungsUmsetzung gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) event
 						.getElement();
-				List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen =
-					((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen();
+				List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = wizard
+						.getAllGefaehrdungsUmsetzungen();
 
 				if (event.getChecked()) {
 					/* checkbox set */
 
 					try {
-						new NegativeEstimateGefaehrdung();
-						
-						((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis()
-							.addChild(gefaehrdungsUmsetzung);
-						gefaehrdungsUmsetzung.setParent(
-								((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis()
-								);
-						gefaehrdungsUmsetzung.setOkay(false);
-						
-						/* add to arrListGefaehrdungsUmsetzungen */
-						arrListGefaehrdungsUmsetzungen.add(gefaehrdungsUmsetzung);
-						
+						NegativeEstimateGefaehrdung command = new NegativeEstimateGefaehrdung(
+								wizard.getFinishedRiskAnalysisLists().getDbId(),
+								gefaehrdungsUmsetzung, wizard
+										.getFinishedRiskAnalysis());
+						command = ServiceFactory.lookupCommandService()
+								.executeCommand(command);
+						wizard.setFinishedRiskLists(command.getLists());
 					} catch (Exception e) {
-						Logger.getLogger(this.getClass()).debug(e.toString());
+						ExceptionUtil.log(e,
+								"Fehler beim Hinzufügen der Gefährdung");
 					}
-					
+
 				} else {
-					/* checkbox unset */
-					new PositiveEstimateGefaehrdung();
+					try {
+						/* checkbox unset */
+						PositiveEstimateGefaehrdung command = new PositiveEstimateGefaehrdung(
+								wizard.getFinishedRiskAnalysisLists().getDbId(),
+								gefaehrdungsUmsetzung, wizard
+										.getFinishedRiskAnalysis());
+						command = ServiceFactory.lookupCommandService()
+								.executeCommand(command);
+						wizard.setFinishedRiskLists(command.getLists());
+					} catch (CommandException e) {
+						ExceptionUtil.log(e,
+								"Fehler beim Entfernen der Gefährdung.");
+					}
 
-					/* remove from arrListGefaehrdungsUmsetzungen */
-					GefaehrdungsUtil.removeBySameId(arrListGefaehrdungsUmsetzungen, gefaehrdungsUmsetzung);
-					((RiskAnalysisWizard)getWizard()).getFinishedRiskAnalysis().removeChild(gefaehrdungsUmsetzung);
-					gefaehrdungsUmsetzung.setOkay(true);
 				}
-
 				((RiskAnalysisWizard) getWizard()).setCanFinish(false);
 				checkPageComplete();
 			}
 		});
-		
+
 		/* group the Filter checkboxes with composite */
 		Composite compositeFilter = new Composite(composite, SWT.NULL);
 		GridLayout gridLayoutFilters = new GridLayout();
@@ -196,7 +204,8 @@ public class EstimateGefaehrdungPage extends WizardPage {
 			/**
 			 * Adds/removes Filter depending on event.
 			 * 
-			 * @param event event containing information about the selection
+			 * @param event
+			 *            event containing information about the selection
 			 */
 			public void widgetSelected(SelectionEvent event) {
 				Button button = (Button) event.widget;
@@ -218,13 +227,14 @@ public class EstimateGefaehrdungPage extends WizardPage {
 		gridGefaehrdungen.horizontalSpan = 2;
 		buttonGefaehrdungen.setLayoutData(gridGefaehrdungen);
 
-		/* Listener adds/removes Filter gefaehrdungFilter*/
+		/* Listener adds/removes Filter gefaehrdungFilter */
 		buttonGefaehrdungen.addSelectionListener(new SelectionAdapter() {
 
 			/**
 			 * Adds/removes Filter depending on event.
 			 * 
-			 * @param event event containing information about the selection
+			 * @param event
+			 *            event containing information about the selection
 			 */
 			public void widgetSelected(SelectionEvent event) {
 				Button button = (Button) event.widget;
@@ -252,16 +262,17 @@ public class EstimateGefaehrdungPage extends WizardPage {
 			/**
 			 * Adds/removes Filter when Text is modified depending on event.
 			 * 
-			 * @param event event containing information about the selection
+			 * @param event
+			 *            event containing information about the selection
 			 */
 			public void modifyText(ModifyEvent event) {
 				Text text = (Text) event.widget;
 				if (text.getText().length() > 0) {
-					
+
 					ViewerFilter[] filters = viewer.getFilters();
 					SearchFilter thisFilter = null;
 					boolean contains = false;
-					
+
 					for (ViewerFilter item : filters) {
 						if (item instanceof SearchFilter) {
 							contains = true;
@@ -273,7 +284,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 						thisFilter.setPattern(text.getText());
 						viewer.refresh();
 						selectAssignedGefaehrdungen();
-						
+
 					} else {
 						/* filter is not active - add */
 						searchFilter.setPattern(text.getText());
@@ -287,27 +298,28 @@ public class EstimateGefaehrdungPage extends WizardPage {
 					selectAssignedGefaehrdungen();
 				}
 			}
-			
+
 		});
 	}
-	
+
 	/**
 	 * Marks all checkboxes of Gefaehrdungen that are selected as not okay.
 	 */
 	private void selectAssignedGefaehrdungen() {
-		List<GefaehrdungsUmsetzung> associatedGefaehrdungen =
-			((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen();
+		List<GefaehrdungsUmsetzung> associatedGefaehrdungen = ((RiskAnalysisWizard) getWizard())
+				.getAssociatedGefaehrdungen();
 
 		for (GefaehrdungsUmsetzung gefaehrdung : associatedGefaehrdungen) {
 			if (!gefaehrdung.getOkay())
 				viewer.setChecked(gefaehrdung, true);
-		}		
+		}
 	}
 
 	/**
 	 * Sets the control to the given visibility state.
 	 * 
-	 * @param visible boolean indicating if content should be visible
+	 * @param visible
+	 *            boolean indicating if content should be visible
 	 */
 	@Override
 	public void setVisible(boolean visible) {
@@ -318,16 +330,13 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	}
 
 	/**
-	 * Fills the CheckboxTableViewer with all previously selected
-	 * Gefaehrdungen.
+	 * Fills the CheckboxTableViewer with all previously selected Gefaehrdungen.
 	 * Is processed each time the WizardPage is set visible.
 	 */
 	private void initContents() {
 		wizard = ((RiskAnalysisWizard) getWizard());
-		cleanUpAllGefaehrdungsUmsetzungen();
-		List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen =
-			wizard.getAssociatedGefaehrdungen();
-		
+		List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = wizard
+				.getAssociatedGefaehrdungen();
 
 		/* map a domain model object into multiple images and text labels */
 		viewer.setLabelProvider(new CheckboxTableViewerLabelProvider());
@@ -338,35 +347,8 @@ public class EstimateGefaehrdungPage extends WizardPage {
 		viewer.setSorter(new GefaehrdungenSorter());
 		selectAssignedGefaehrdungen();
 		packAllColumns();
-		
+
 		checkPageComplete();
-	}
-
-	/**
-	 * For repeated execution of the wizard:
-	 * 
-	 * Remove objects that were previously selected in this list, during the last execution of the wizard 
-	 * but have been removed this time by the user on the previous page.
-	 */
-	private void cleanUpAllGefaehrdungsUmsetzungen() {
-
-	List<GefaehrdungsUmsetzung> currentGefaehrdungen = wizard.getAssociatedGefaehrdungen();
-
-		oldGefaehrdungen: for (GefaehrdungsUmsetzung oldGefaehrdung: wizard.getAllGefaehrdungsUmsetzungen()) {
-			boolean umsetzungFound = false;
-			for (GefaehrdungsUmsetzung currentGefaehrdung: currentGefaehrdungen) {
-				if (oldGefaehrdung.getId().equals(currentGefaehrdung.getId())) {
-					umsetzungFound = true;
-					continue oldGefaehrdungen;
-				}
-			}
-			if (!umsetzungFound) {
-				wizard.getObjectsToDelete().add(oldGefaehrdung);
-			}
-		}
-		
-		wizard.removeOldObjects();
-	
 	}
 
 	/**
@@ -381,10 +363,12 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	}
 
 	/**
-	 * Activates the next button, if the List of selected Gefaehrdungen is not empty.
+	 * Activates the next button, if the List of selected Gefaehrdungen is not
+	 * empty.
 	 */
 	private void checkPageComplete() {
-		if (((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen().isEmpty()) {
+		if (((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen()
+				.isEmpty()) {
 			setPageComplete(false);
 		} else {
 			setPageComplete(true);
@@ -401,9 +385,12 @@ public class EstimateGefaehrdungPage extends WizardPage {
 		/**
 		 * Returns true, if the given element is an OwnGefaehrdung.
 		 * 
-		 * @param viewer the Viewer to operate on
-		 * @param parentElement not used
-		 * @param element given element
+		 * @param viewer
+		 *            the Viewer to operate on
+		 * @param parentElement
+		 *            not used
+		 * @param element
+		 *            given element
 		 * @return true if element passes test, false else
 		 */
 		public boolean select(Viewer viewer, Object parentElement,
@@ -424,9 +411,12 @@ public class EstimateGefaehrdungPage extends WizardPage {
 		/**
 		 * Returns true, if the given element is a Gefaehrdung.
 		 * 
-		 * @param viewer the Viewer to operate on
-		 * @param parentElement not used
-		 * @param element given element
+		 * @param viewer
+		 *            the Viewer to operate on
+		 * @param parentElement
+		 *            not used
+		 * @param element
+		 *            given element
 		 * @return true if element passes test, false else
 		 */
 		public boolean select(Viewer viewer, Object parentElement,
@@ -440,8 +430,8 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	}
 
 	/**
-	 * Filter to extract all (Own)Gefaehrdungen matching a given String. 
-	 *
+	 * Filter to extract all (Own)Gefaehrdungen matching a given String.
+	 * 
 	 * @author ahanekop@sernet.de
 	 */
 	class SearchFilter extends ViewerFilter {
@@ -451,7 +441,8 @@ public class EstimateGefaehrdungPage extends WizardPage {
 		/**
 		 * Updates the Pattern.
 		 * 
-		 * @param searchString the String to search for
+		 * @param searchString
+		 *            the String to search for
 		 */
 		void setPattern(String searchString) {
 			pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
@@ -460,9 +451,12 @@ public class EstimateGefaehrdungPage extends WizardPage {
 		/**
 		 * Selects all (Own)Gefaehrdungen matching the Pattern.
 		 * 
-		 * @param viewer the Viewer to operate on
-		 * @param parentElement not used
-		 * @param element given element
+		 * @param viewer
+		 *            the Viewer to operate on
+		 * @param parentElement
+		 *            not used
+		 * @param element
+		 *            given element
 		 * @return true if element passes test, false else
 		 */
 		public boolean select(Viewer viewer, Object parentElement,
@@ -471,12 +465,11 @@ public class EstimateGefaehrdungPage extends WizardPage {
 			if (element instanceof Gefaehrdung) {
 				Gefaehrdung gefaehrdung = (Gefaehrdung) element;
 				gefaehrdungTitle = gefaehrdung.getTitel();
-			}
-			else if (element instanceof GefaehrdungsUmsetzung) {
+			} else if (element instanceof GefaehrdungsUmsetzung) {
 				GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) element;
 				gefaehrdungTitle = gefaehrdung.getTitel();
 			}
-			
+
 			Matcher matcher = pattern.matcher(gefaehrdungTitle);
 			if (matcher.find()) {
 				return true;

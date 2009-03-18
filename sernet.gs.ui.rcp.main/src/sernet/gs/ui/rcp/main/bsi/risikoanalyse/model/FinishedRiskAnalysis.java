@@ -33,11 +33,10 @@ public class FinishedRiskAnalysis extends CnATreeElement  {
 	
 	
 	public FinishedRiskAnalysis(CnATreeElement cnaElement) {
-		this();
-		setParent(cnaElement);
+		super(cnaElement);
 	}
 	
-	private FinishedRiskAnalysis() {
+	FinishedRiskAnalysis() {
 	}
 	
 

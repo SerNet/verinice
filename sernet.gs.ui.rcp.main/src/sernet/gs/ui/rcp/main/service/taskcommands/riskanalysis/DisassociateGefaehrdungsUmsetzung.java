@@ -15,13 +15,17 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.taskcommands;
+package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.GefaehrdungsUtil;
+import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 /**
@@ -57,28 +61,43 @@ public class DisassociateGefaehrdungsUmsetzung extends GenericCommand {
 	public void execute() {
 		finishedRiskLists = getDaoFactory().getDAO(FinishedRiskAnalysisLists.class).findById(listDbId);
 		
-		getDaoFactory().getDAO(FinishedRiskAnalysis.class).reload(finishedRiskAnalysis, finishedRiskAnalysis.getDbId());
+		getDaoFactory().getDAO(FinishedRiskAnalysis.class)
+			.reload(finishedRiskAnalysis, finishedRiskAnalysis.getDbId());
 		
-		GefaehrdungsUmsetzung removed = GefaehrdungsUtil.removeBySameId(finishedRiskLists
+		List<GefaehrdungsUmsetzung> found = new ArrayList<GefaehrdungsUmsetzung>();
+		List<GefaehrdungsUmsetzung> toRemove = GefaehrdungsUtil.removeBySameId(finishedRiskLists
 				.getAssociatedGefaehrdungen(), currentGefaehrdung);
-		finishedRiskAnalysis.removeChild(removed);
+		found.addAll(toRemove);
 		
-		removed = GefaehrdungsUtil.removeBySameId(finishedRiskLists
+		toRemove = GefaehrdungsUtil.removeBySameId(finishedRiskLists
 				.getAllGefaehrdungsUmsetzungen(), currentGefaehrdung);
-		finishedRiskAnalysis.removeChild(removed);
+		found.addAll(toRemove);
 		
-		removed = GefaehrdungsUtil.removeBySameId(finishedRiskLists
+		toRemove = GefaehrdungsUtil.removeBySameId(finishedRiskLists
 				.getNotOKGefaehrdungsUmsetzungen(), currentGefaehrdung);
-		finishedRiskAnalysis.removeChild(removed);
-		
+		found.addAll(toRemove);
+
+		for (GefaehrdungsUmsetzung removeMe : toRemove) {
+			finishedRiskAnalysis.removeChild(removeMe);
+			removeMe.remove();
+		}
 	}
 
-	public FinishedRiskAnalysisLists getFinishedRiskLists() {
-		return finishedRiskLists;
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
+	 */
+	@Override
+	public void clear() {
+		// initialize lists properly before returning to client:
+		HydratorUtil.hydrateElement(getDaoFactory().getDAO(FinishedRiskAnalysisLists.class), finishedRiskLists);
 	}
 
 	public FinishedRiskAnalysis getFinishedRiskAnalysis() {
 		return finishedRiskAnalysis;
+	}
+
+	public FinishedRiskAnalysisLists getFinishedRiskLists() {
+		return finishedRiskLists;
 	}
 
 }

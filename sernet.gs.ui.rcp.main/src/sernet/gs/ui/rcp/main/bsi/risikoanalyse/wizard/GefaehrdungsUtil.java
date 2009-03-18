@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,7 +25,8 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 
 /**
- * Helper methods to work with threats.
+ * Helper methods to work with threat lists in situations where equals (UUID) comparison
+ * is inappropriate.
  * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
@@ -33,38 +35,42 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
  */
 public abstract class GefaehrdungsUtil {
 
-	public static void removeBySameId(
+	public static List<GefaehrdungsUmsetzung> removeBySameId(
 			List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen,
 			GefaehrdungsUmsetzung gefaehrdung) {
 		
 		if (gefaehrdung == null)
-			return;
+			return null;
 		
-		boolean remove = false;
 		GefaehrdungsUmsetzung gefaehrdungInList = null;
+		List<GefaehrdungsUmsetzung> found = new ArrayList<GefaehrdungsUmsetzung>();
 		for (Iterator iterator = allGefaehrdungsUmsetzungen.iterator(); iterator
 				.hasNext();) {
 			gefaehrdungInList = (GefaehrdungsUmsetzung) iterator
 					.next();
 			if (gefaehrdung.getId() == null || gefaehrdungInList.getId() == null)
 				continue;
-			if (gefaehrdungInList.getId().equals(gefaehrdung.getId()))
-				remove = true;
+			if (gefaehrdungInList.getId().equals(gefaehrdung.getId())) {
+				found.add(gefaehrdungInList);
+			}
+		}
+		
+		for (GefaehrdungsUmsetzung toDelete : found) {
+			allGefaehrdungsUmsetzungen.remove(toDelete);
 		}
 
-		if (remove)
-			allGefaehrdungsUmsetzungen.remove(gefaehrdungInList);
+		return found;
 	}
 	
-	public static GefaehrdungsUmsetzung removeBySameId(
+	public static List<GefaehrdungsUmsetzung> removeBySameId(
 			List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen,
 			Gefaehrdung gefaehrdung) {
 		
 		if (gefaehrdung == null)
 			return null;
 		
-		boolean remove = false;
 		GefaehrdungsUmsetzung gefaehrdungInList = null;
+		List<GefaehrdungsUmsetzung> found = new ArrayList<GefaehrdungsUmsetzung>();
 		findGefaehrdung: for (Iterator iterator = allGefaehrdungsUmsetzungen.iterator(); iterator
 				.hasNext();) {
 			gefaehrdungInList = (GefaehrdungsUmsetzung) iterator
@@ -72,16 +78,15 @@ public abstract class GefaehrdungsUtil {
 			if (gefaehrdung.getId() == null || gefaehrdungInList.getId() == null)
 				continue;
 			if (gefaehrdungInList.getId().equals(gefaehrdung.getId())) {
-				remove = true;
-				break findGefaehrdung;
+				found.add(gefaehrdungInList);
 			}
 		}
-
-		if (remove) {
-			allGefaehrdungsUmsetzungen.remove(gefaehrdungInList);
-			return gefaehrdungInList;
+		
+		for (GefaehrdungsUmsetzung toDelete : found) {
+			allGefaehrdungsUmsetzungen.remove(toDelete);
 		}
-		return null; 
+
+		return found;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -4,7 +4,7 @@ Bundle-Name: Verinice Anwendung
 Bundle-SymbolicName: sernet.gs.ui.rcp.main; singleton:=true
 Bundle-Version: 0.8.0
 Bundle-Activator: sernet.gs.ui.rcp.main.Activator
-Bundle-Vendor: Alexander Koderman
+Bundle-Vendor: SerNet
 Bundle-Localization: plugin
 Eclipse-RegisterBuddy: sernet.springclient
 Require-Bundle: com.ibm.icu;bundle-version="3.8.1",

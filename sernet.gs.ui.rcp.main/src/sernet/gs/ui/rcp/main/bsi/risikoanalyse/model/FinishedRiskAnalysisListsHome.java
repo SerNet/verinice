@@ -31,7 +31,7 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindRiskAnalysisListsByParentID;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.FindRiskAnalysisListsByParentID;
 
 public class FinishedRiskAnalysisListsHome {
 	

@@ -15,12 +15,13 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.taskcommands;
+package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import java.util.List;
 
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
+import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 public class FindRiskAnalysisListsByParentID extends GenericCommand {
@@ -45,6 +46,14 @@ public class FindRiskAnalysisListsByParentID extends GenericCommand {
 		for (Object object : list) {
 			this.foundLists = (FinishedRiskAnalysisLists) object;
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
+	 */
+	@Override
+	public void clear() {
+		HydratorUtil.hydrateElement(getDaoFactory().getDAO(FinishedRiskAnalysisLists.class), foundLists);
 	}
 
 	public FinishedRiskAnalysisLists getFoundLists() {
