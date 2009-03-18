@@ -368,6 +368,14 @@ This variant:
     <property name="sessionFactory" ref="sessionFactory"/>
 </bean>
 
+
+<bean id="risikoMassnahmeUmsetzungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
 <bean id="ownGefaehrdungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
     <constructor-arg>
         <value>sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung</value>
@@ -439,6 +447,7 @@ This variant:
 		<property name="verarbeitungsangabenDAO" ref="verarbeitungsangabenDAO"/>
 		<property name="zweckbestimmungDAO" ref="zweckbestimmungDAO"/>
 		<property name="risikoMassnahmeDAO" ref="risikoMassnahmeDAO"/>
+		<property name="risikoMassnahmeUmsetzungDAO" ref="risikoMassnahmeUmsetzungDAO"/>
 		<property name="ownGefaehrdungDAO" ref="ownGefaehrdungDAO"/>
 	  
   	</bean>
@@ -525,13 +534,13 @@ This variant:
 	be a value unique to your server and preferably be kept secret. It will not be visible
 	to any client.
 	If you are really paranoid, decrease the validity of the nonce key (i.e. to 5 seconds).
-	If you are concerned about performance, increase the value of the nonce key (i.e. to 60 seconds).
+	If you are concerned about performance, increase the value of the nonce key (i.e. to 600 seconds).
  -->
 <bean id="digestProcessingFilterEntryPoint"
 	class="org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint">
 	<property name="realmName" value="Verinice Server NO-COMPANY - CHANGETHIS" />
 	<property name="key" value="mysecretkey-CHANGETHIS" />
-	<property name="nonceValiditySeconds" value="10" />
+	<property name="nonceValiditySeconds" value="300" />
 </bean>
 
 <bean id="springSecurityFilterChain"
