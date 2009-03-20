@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
@@ -57,6 +58,9 @@ public class HydratorUtil {
 	
 	
 	public static void hydrateElement(IBaseDao dao, CnATreeElement element, boolean includingCollections) {
+		if (element == null)
+			return;
+		
 		hydrateEntity(dao, element.getEntity());
 		dao.initialize(element.getLinks());
 		dao.initialize(element.getLinksDown());
@@ -112,6 +116,14 @@ public class HydratorUtil {
 		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : list3) {
 			hydrateEntity(dao, gefaehrdungsUmsetzung.getEntity());
 			hydrateElement(dao, gefaehrdungsUmsetzung, true);
+			
+			Set<CnATreeElement> children = gefaehrdungsUmsetzung.getChildren();
+			for (CnATreeElement child : children) {
+				if (child instanceof MassnahmenUmsetzung) {
+					MassnahmenUmsetzung mn = (MassnahmenUmsetzung) child;
+					hydrateElement(dao, mn, false);
+				}
+			}
 		}
 	}
 }

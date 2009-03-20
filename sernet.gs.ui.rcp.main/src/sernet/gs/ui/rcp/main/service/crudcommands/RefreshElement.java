@@ -32,9 +32,13 @@ public class RefreshElement<T extends CnATreeElement> extends GenericCommand {
 
 	private T element;
 	private boolean includeCollections;
+	private Integer dbId;
+	private Class clazz;
 
 	public RefreshElement(T element, boolean includeCollections) {
-		this.element = element;
+		// slim down for transfer:
+		dbId = element.getDbId();
+		clazz = element.getClass();
 		this.includeCollections = includeCollections;
 	}
 	
@@ -43,9 +47,8 @@ public class RefreshElement<T extends CnATreeElement> extends GenericCommand {
 	}
 	
 	public void execute() {
-		IBaseDao dao =  getDaoFactory().getDAOForObject(element);
-		Integer id = getId(element);
-		element = (T) dao.findById(id);
+		IBaseDao dao =  getDaoFactory().getDAO(this.clazz);
+		element = (T) dao.findById(this.dbId);
 		HydratorUtil.hydrateElement(dao, element, includeCollections);
 	}
 

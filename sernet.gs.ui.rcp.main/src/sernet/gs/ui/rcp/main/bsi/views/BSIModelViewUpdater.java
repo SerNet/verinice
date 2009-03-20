@@ -151,8 +151,13 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 	public void databaseChildChanged(CnATreeElement child) {
 		// cause reload of children list of parent if currently displayed:
 		CnATreeElement cachedParent = cache.getCachedObject(child.getParent());
+		CnATreeElement cachedChild = cache.getCachedObject(child);
+		
 		if (cachedParent != null) {
 			cachedParent.setChildrenLoaded(false);
+		}
+		if (cachedChild != null) {
+			cachedChild.setEntity(child.getEntity());
 		}
 		updater.refresh();
 	}

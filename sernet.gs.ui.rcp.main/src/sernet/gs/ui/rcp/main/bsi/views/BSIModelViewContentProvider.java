@@ -98,7 +98,7 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 
 		private CnATreeElement loadChildren(CnATreeElement el) throws CommandException {
 			if (el.isChildrenLoaded()) {
-				Logger.getLogger(this.getClass()).debug("NOT loading children because of positive flag on parent " + el);
+//				Logger.getLogger(this.getClass()).debug("NOT loading children because of positive flag on parent " + el);
 				return el;
 			}
 			

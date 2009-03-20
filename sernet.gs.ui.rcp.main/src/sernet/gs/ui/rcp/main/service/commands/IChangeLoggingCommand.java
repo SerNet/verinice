@@ -17,37 +17,34 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.commands;
 
-import sernet.gs.ui.rcp.main.service.DAOFactory;
+import java.util.List;
+
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.IAuthService;
-import sernet.gs.ui.rcp.main.service.ICommandService;
-import sernet.gs.ui.rcp.main.service.IResourceCollection;
 
-public abstract class GenericCommand implements ICommand {
-	
-	
-	private transient DAOFactory daoFactory;
-	private transient ICommandService commandService;
-	
+/**
+ * Command that wants to notify other clients of changes.
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
+public interface IChangeLoggingCommand {
 
-	public void setCommandService(ICommandService service) {
-		this.commandService = service;
-	}
+	/**
+	 * The session id of the client making the changes.
+	 * @return
+	 */
+	public String getStationId();
 	
-	public void setDaoFactory(DAOFactory daoFactory) {
-		this.daoFactory = daoFactory;
-	}
-
-	public DAOFactory getDaoFactory() {
-		return daoFactory;
-	}
+	/**
+	 * @return the modifiec element
+	 */
+	public List<CnATreeElement> getChangedElements();
 	
-	public ICommandService getCommandService() {
-		return commandService;
-	}
-	
-	public void clear() {
-		// default implementation does nothing
-	}
-
-
+	/**
+	 * @return
+	 */
+	public int getChangeType();
 }

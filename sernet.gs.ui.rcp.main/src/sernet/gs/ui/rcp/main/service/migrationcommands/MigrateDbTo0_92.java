@@ -35,6 +35,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -113,7 +114,7 @@ public class MigrateDbTo0_92 extends DbMigration {
 		//progress.beginTask("Speichere alle veränderten Objekte. Bitte warten...", IProgress.UNKNOWN_WORK);
 		Logger.getLogger(this.getClass()).debug("Speichere alle veränderten Objekte. Bitte warten...");
 
-		UpdateMultipleElements command3 = new UpdateMultipleElements(changedElements);
+		UpdateMultipleElements command3 = new UpdateMultipleElements(changedElements, ChangeLogEntry.STATION_ID);
 		command3 = getCommandService().executeCommand(command3);
 		
 		BSIModel model = command2.getModel();

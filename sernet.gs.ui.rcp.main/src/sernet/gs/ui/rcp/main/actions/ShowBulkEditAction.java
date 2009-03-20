@@ -157,10 +157,12 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 								throws InvocationTargetException,
 								InterruptedException {
 							
-							
+							// the selected items are of type CnaTreeelement and can be edited right here:
 							if (selectedElements.size() >0)
 								editLocally(selectedElements, dialog.getEntity(), monitor);
 							else {
+								// the selected elements are of type TodoView or other light weight items,
+								// editing has to be deferred to server (lookup of real items needed)
 								try {
 									editOnServer(clazz, dbIDs, dialog.getEntity(), monitor);
 								} catch (CommandException e) {

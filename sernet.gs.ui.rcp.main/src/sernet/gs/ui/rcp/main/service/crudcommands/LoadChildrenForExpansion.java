@@ -72,7 +72,6 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		
 		if (element instanceof MassnahmenUmsetzung) {
 			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
-			Logger.getLogger(this.getClass()).debug("Hydrating " + mn.getTitel());
 			mn.getKapitelValue();
 			mn.getTitel();
 			mn.getUmsetzung();

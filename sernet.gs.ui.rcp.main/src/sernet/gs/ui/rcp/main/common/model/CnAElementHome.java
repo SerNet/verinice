@@ -185,14 +185,14 @@ public class CnAElementHome {
 	}
 
 	public CnATreeElement update(CnATreeElement element) throws Exception {	
-		UpdateElement command = new UpdateElement(element, true);
+		UpdateElement command = new UpdateElement(element, true, ChangeLogEntry.STATION_ID);
 		command = commandService.executeCommand(command);
 		return (CnATreeElement) command.getElement();
 	}
 
 	public void update(List<? extends CnATreeElement> elements)
 			throws StaleObjectStateException, CommandException {
-		UpdateMultipleElements command = new UpdateMultipleElements(elements);
+		UpdateMultipleElements command = new UpdateMultipleElements(elements, ChangeLogEntry.STATION_ID);
 		command = commandService.executeCommand(command);
 	}
 

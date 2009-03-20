@@ -21,60 +21,37 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 
-public class UpdateElement<T> extends GenericCommand implements IChangeLoggingCommand {
+public class LoadCnAElementByEntityId extends GenericCommand {
 
-	private T element;
-	private boolean fireupdates;
+	private Integer id;
+
+	private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
 	
-	private String stationId;
+	private static final String QUERY = "from CnATreeElement elmt " +
+		"where elmt.entity.dbId = ?"; 
 
-	public UpdateElement(T element, boolean fireUpdates, String stationId) {
-		this.element = element;
-		this.fireupdates = fireUpdates;
-		this.stationId = stationId;
+	public LoadCnAElementByEntityId( int id) {
+		this.id = id;
 	}
 
 	public void execute() {
-		IBaseDao dao =  getDaoFactory().getDAOForObject(element);
-		element = (T) dao.merge(element, fireupdates);
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
+		list = dao.findByQuery(QUERY, new Object[] {id});
+//		
+//		for (CnATreeElement elmt : list) {
+//			HydratorUtil.hydrateElement(dao, elmt, false);
+//		}
 	}
 
-	public T getElement() {
-		return element;
+	public List<CnATreeElement> getElements() {
+		return list;
 	}
 
-	public String getStationId() {
-		return stationId;
-	}
-
-	public void setStationId(String stationId) {
-		this.stationId = stationId;
-	}
-
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangeType()
-	 */
-	public int getChangeType() {
-		return ChangeLogEntry.TYPE_UPDATE;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangedElements()
-	 */
-	public List<CnATreeElement> getChangedElements() {
-		if (element instanceof CnATreeElement) {
-			ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>(1);
-			list.add((CnATreeElement) element);
-			return list;
-		}
-		return null;
-	}
 
 }

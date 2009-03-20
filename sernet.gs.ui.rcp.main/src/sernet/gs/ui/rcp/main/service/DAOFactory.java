@@ -52,6 +52,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
@@ -104,6 +105,10 @@ public class DAOFactory {
 	 */
 	public void setConfigurationDao(IBaseDao<Gefaehrdung, Integer> dao) {
 		daos.put(Configuration.class, dao);
+	}
+
+	public void setchangeLogEntryDAO(IBaseDao<ChangeLogEntry, Integer> dao) {
+		daos.put(ChangeLogEntry.class, dao);
 	}
 	
 	

@@ -338,7 +338,7 @@ public class CnAElementFactory {
 		SubtypenZielobjekte mapping = new SubtypenZielobjekte();
 		List<BausteinVorschlag> list = mapping.getMapping();
 		UpdateMultipleElements<BausteinVorschlag> command = new UpdateMultipleElements<BausteinVorschlag>(
-				list);
+				list, ChangeLogEntry.STATION_ID, ChangeLogEntry.TYPE_INSERT);
 		try {
 			command = ServiceFactory.lookupCommandService().executeCommand(
 					command);

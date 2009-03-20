@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
+import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.hui.common.connect.Property;
 
@@ -46,7 +47,8 @@ import sernet.hui.common.connect.Property;
  *
  * @param <T>
  */
-public class SaveConfiguration<T extends Configuration> extends GenericCommand implements IAuthAwareCommand {
+public class SaveConfiguration<T extends Configuration> extends GenericCommand 
+	implements IAuthAwareCommand {
 
 	private T element;
 	private boolean updatePassword;

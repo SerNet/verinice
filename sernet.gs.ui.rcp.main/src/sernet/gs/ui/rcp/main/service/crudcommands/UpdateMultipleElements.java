@@ -21,15 +21,26 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 
-public class UpdateMultipleElements<T> extends GenericCommand {
+public class UpdateMultipleElements<T> extends GenericCommand implements IChangeLoggingCommand {
 
 	private List<T> elements;
+	private String stationId;
+	private int changeType;
 
-	public UpdateMultipleElements(List<T> elements) {
+	public UpdateMultipleElements(List<T> elements, String stationId) {
+		this(elements, stationId, ChangeLogEntry.TYPE_UPDATE);
+	}
+
+	public UpdateMultipleElements(List<T> elements, String stationId, int changeType) {
 		this.elements = elements;
+		this.stationId = stationId;
+		this.changeType = changeType;
 	}
 	
 	public void execute() {
@@ -42,7 +53,42 @@ public class UpdateMultipleElements<T> extends GenericCommand {
 				mergedElements.add(mergedElement);
 			}
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
+	 */
+	@Override
+	public void clear() {
 		elements = null;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangeType()
+	 */
+	public int getChangeType() {
+		return this.changeType;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getStationId()
+	 */
+	public String getStationId() {
+		return stationId;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangedElements()
+	 */
+	public List<CnATreeElement> getChangedElements() {
+		ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(elements.size());
+		for (Object object : elements) {
+			if (object instanceof CnATreeElement) {
+				CnATreeElement cnaElement = (CnATreeElement) object;
+				result.add(cnaElement);
+			}
+		}
+		return result;
 	}
 
 	

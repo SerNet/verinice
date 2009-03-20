@@ -73,8 +73,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 
 	private CnATreeElement parent;
 	
-	private Set<LoggedElement> logEntries = new HashSet<LoggedElement>();
-
 	private Entity entity;
 
 	private transient IBSIModelListener modelChangeListener;
@@ -469,16 +467,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	public void modelReload(BSIModel newModel) {
 		getModelChangeListener().modelReload(newModel);
 	}
-
-	public Set<LoggedElement> getLogEntries() {
-		return logEntries;
-	}
-
-	public void setLogEntries(Set<LoggedElement> logEntries) {
-		this.logEntries = logEntries;
-	}
-
-	
 
 
 }

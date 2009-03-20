@@ -19,12 +19,25 @@ package sernet.gs.ui.rcp.main.service;
 
 public interface IAuthService {
 	/**
-	 * Get user roles of currently active user.
+	 * Get granted roles of currently active user.
 	 * 
 	 * @return
 	 */
 	public String[] getRoles();
 	
+	/**
+	 * Get the name of the currently logged in user in the active context.
+	 * @return
+	 */
+	public String getUsername();
+	
+	/**
+	 * Encrypt the given cleartext password.
+	 * 
+	 * @param username
+	 * @param clearText
+	 * @return
+	 */
 	public String hashPassword(String username, String clearText);
 
 }

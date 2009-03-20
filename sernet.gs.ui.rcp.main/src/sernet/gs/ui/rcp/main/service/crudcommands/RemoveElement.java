@@ -18,6 +18,8 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -28,21 +30,26 @@ import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.FindRiskAnalysisListsByParentID;
 
-public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
+public class RemoveElement<T extends CnATreeElement> extends GenericCommand
+	implements IChangeLoggingCommand {
 
 	private T element;
+	private String stationId;
 
 	public RemoveElement(T element) {
 		this.element = element;
+		this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
 	public void execute() {
@@ -52,6 +59,11 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
 				
 				if (element instanceof Person)
 					removeConfiguration((Person) element);
+				
+				int listsDbId = 0;
+				if (element instanceof GefaehrdungsUmsetzung) {
+					listsDbId = element.getParent().getDbId();
+				}
 				
 				IBaseDao dao =  getDaoFactory().getDAOForObject(element);
 				element = (T) dao.findById(element.getDbId());
@@ -67,10 +79,14 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
 					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) element;
 					remove(analysis);
 				}
+				
+				if (element instanceof GefaehrdungsUmsetzung) {
+					GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
+					removeFromLists(listsDbId, gef);
+				}
 
 				element.remove();
 				dao.delete(element);
-				element = null;
 			} catch (CommandException e) {
 				throw new RuntimeCommandException(e);
 			}
@@ -84,6 +100,14 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
 //				new Object[] { dbId } );
 //		Logger.getLogger(this.getClass()).debug("Deleted rows: " + rows);
 	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
+	 */
+	@Override
+	public void clear() {
+		element = null;
+	}
 
 	/**
 	 * @param analysis
@@ -94,7 +118,7 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
 		for (CnATreeElement child : children) {
 			if (child instanceof GefaehrdungsUmsetzung) {
 				GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) child;
-				removeFromLists(gef);
+				removeFromLists(gef.getParent().getDbId(), gef);
 			}
 		}
 	}
@@ -105,15 +129,11 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
 	 * @param element2
 	 * @throws CommandException 
 	 */
-	private void removeFromLists(GefaehrdungsUmsetzung gef) throws CommandException {
-		CnATreeElement parent = gef.getParent();
-		if (parent != null && parent instanceof FinishedRiskAnalysis) {
-			FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) parent;
-			FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(analysis.getDbId());
-			getCommandService().executeCommand(command);
-			FinishedRiskAnalysisLists lists = command.getFoundLists();
-			lists.removeGefaehrdungCompletely(gef);
-		}
+	private void removeFromLists(int analysisId, GefaehrdungsUmsetzung gef) throws CommandException {
+		FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(analysisId);
+		getCommandService().executeCommand(command);
+		FinishedRiskAnalysisLists lists = command.getFoundLists();
+		lists.removeGefaehrdungCompletely(gef);
 	}
 
 	private void removeConfiguration(Person person) throws CommandException {
@@ -124,6 +144,29 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand {
 			IBaseDao<Configuration, Serializable> confDAO = getDaoFactory().getDAO(Configuration.class);
 			confDAO.delete(conf);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
+	 */
+	public int getChangeType() {
+		return ChangeLogEntry.TYPE_DELETE;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangedElements()
+	 */
+	public List<CnATreeElement> getChangedElements() {
+		ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
+		result.add(element);
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId()
+	 */
+	public String getStationId() {
+		return stationId;
 	}
 
 }

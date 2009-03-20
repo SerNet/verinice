@@ -15,53 +15,41 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
+package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
+import java.util.List;
 
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.service.DAOFactory;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.hui.common.connect.Entity;
 
-/**
- * Remove a control instance from a threat instance.
- * 
- * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
- */
-public class RemoveMassnahmeFromGefaherdung extends GenericCommand {
+public class LoadUserConfiguration extends GenericCommand {
+	
+	private static final String QUERY = "from Entity entity " +
+	"join fetch entity.typedPropertyLists " +
+	"where entity.entityType = ?"; //$NON-NLS-1$
+	
 
-	private RisikoMassnahmenUmsetzung child;
-	private GefaehrdungsUmsetzung parent;
+	private List<Entity> entities;
 
-	/**
-	 * @param parent
-	 * @param child
-	 */
-	public RemoveMassnahmeFromGefaherdung(GefaehrdungsUmsetzung parent,
-			RisikoMassnahmenUmsetzung child) {
-		this.child = child;
-		this.parent = parent;
+	public LoadUserConfiguration() {
 	}
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
-	 */
 	public void execute() {
-		IBaseDao<Object, Serializable> childDao = getDaoFactory().getDAOForObject(child);
-		childDao.reload(child, child.getDbId());
-		getDaoFactory().getDAOForObject(parent).reload(parent, parent.getDbId());
-		
-		child.remove();
-		childDao.delete(child);
-		child=null;
+		IBaseDao<Entity, Serializable> dao = getDaoFactory().getDAO(Entity.class);
+		entities = dao.findByQuery(QUERY, new String[] {"configuration"});
+		for (Entity entity : entities) {
+			HydratorUtil.hydrateEntity(dao, entity);
+		}
 	}
 
-	public GefaehrdungsUmsetzung getParent() {
-		return parent;
+	public List<Entity> getEntities() {
+		return entities;
 	}
+	
+	
 
 }

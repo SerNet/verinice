@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main;
 import java.io.PrintStream;
 import java.io.StringWriter;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;

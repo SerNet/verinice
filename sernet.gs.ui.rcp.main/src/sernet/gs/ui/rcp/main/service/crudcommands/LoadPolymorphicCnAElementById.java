@@ -18,40 +18,50 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.DAOFactory;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.hui.common.connect.Entity;
 
-public class LoadEntityByType extends GenericCommand {
-	
-	private static final String QUERY = "from Entity entity " +
-	"join fetch entity.typedPropertyLists " +
-	"where entity.entityType = ?"; //$NON-NLS-1$
-	
-	private String type;
+public class LoadPolymorphicCnAElementById extends GenericCommand {
 
-	private List<Entity> entities;
 
-	public LoadEntityByType(String type) {
-		this.type = type;
+	public LoadPolymorphicCnAElementById(Integer[] ds) {
+		IDs = ds;
 	}
+
+	private Integer[] IDs;
+
+	private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
+	
+	private static final String QUERY = "from CnATreeElement elmt " +
+		"where elmt.dbId  = ? "; 
+
+	
 
 	public void execute() {
-		IBaseDao<Entity, Serializable> dao = getDaoFactory().getDAO(Entity.class);
-		entities = dao.findByQuery(QUERY, new String[] {"configuration"});
-		for (Entity entity : entities) {
-			HydratorUtil.hydrateEntity(dao, entity);
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
+		
+		List<CnATreeElement> loaded = new ArrayList<CnATreeElement>(IDs.length);
+		for (Integer id : IDs) {
+			list = dao.findByQuery(QUERY, new Integer[] {id});
+			if (list != null)  {
+				loaded.addAll(list);
+			}
+				
 		}
+		list = loaded;
+		HydratorUtil.hydrateElements(dao, loaded, false);
 	}
 
-	public List<Entity> getEntities() {
-		return entities;
+	public List<CnATreeElement> getElements() {
+		return list;
 	}
-	
-	
+
 
 }

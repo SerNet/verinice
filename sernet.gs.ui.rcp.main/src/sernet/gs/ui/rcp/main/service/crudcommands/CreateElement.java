@@ -18,11 +18,15 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 
 /**
@@ -35,15 +39,18 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
  *
  * @param <T>
  */
-public class CreateElement<T extends CnATreeElement> extends GenericCommand {
+public class CreateElement<T extends CnATreeElement> extends GenericCommand 
+	implements IChangeLoggingCommand {
 
 	private CnATreeElement container;
 	private Class<T> type;
 	protected T child;
+	private String stationId;
 
 	public CreateElement(CnATreeElement container, Class<T> type) {
 		this.container = container;
 		this.type = type;
+		this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
 	public void execute() {
@@ -56,8 +63,10 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand {
 			
 			// get constructor with parent-parameter and create new object:
 			child = type.getConstructor(CnATreeElement.class).newInstance(container);
+			child = dao.merge(child, false);
 			container.addChild(child);
 			child.setParent(container);
+			
 			
 			// initialize UUID, used to find container in display in views:
 			container.getUuid();
@@ -68,6 +77,29 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand {
 
 	public T getNewElement() {
 		return child;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
+	 */
+	public int getChangeType() {
+		return ChangeLogEntry.TYPE_INSERT;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId()
+	 */
+	public String getStationId() {
+		return stationId;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangedElements()
+	 */
+	public List<CnATreeElement> getChangedElements() {
+		ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
+		result.add(child);
+		return result;
 	}
 	
 	

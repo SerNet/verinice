@@ -40,4 +40,39 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         </property>
     </bean>
     
+    <!-- DEVELOPMENT USE: timer bean to check for changes every 5 seconds: -->
+    
+    <bean id="transactionLogWatcher"
+    	class="sernet.gs.ui.rcp.main.service.TransactionLogWatcher" >
+    </bean>
+    
+    <bean id="checkTransactionLogJob" 
+    	class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="transactionLogWatcher"/>
+    	<property name="targetMethod" value="checkLog"/>
+    </bean>
+    
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    	<property name="triggers">
+    		<list>
+    			<ref bean="simpleTrigger" />
+    		</list>
+    	</property>
+    </bean>
+    
+    <bean id="simpleTrigger"
+    	class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+    	 <property name="jobDetail" ref="checkTransactionLogJob" />
+    	<property name="startDelay" value="5000" />
+    	<property name="repeatInterval" value="5000" />
+    </bean>
+    
+    <!-- 
+    <bean id="cronTrigger"
+    	 class="org.springframework.scheduling.quartz.CronTriggerBean">
+    	 <property name="jobDetail" ref="checkTransactionLogJob" />
+    	 <property name="cronExpression" value="" />
+    </bean>
+     -->
+    
 </beans>

@@ -183,6 +183,7 @@
                    	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement"/>
                    	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung"/>
                    	<objectClass name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis"/>
+                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung"/>
                    </or>
                 </enablement>
              </action>

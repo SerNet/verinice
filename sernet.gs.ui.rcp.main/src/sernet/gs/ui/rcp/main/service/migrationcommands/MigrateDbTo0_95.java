@@ -52,6 +52,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
@@ -90,7 +91,8 @@ public class MigrateDbTo0_95 extends DbMigration {
 		
 		SubtypenZielobjekte mapping = new SubtypenZielobjekte();
 		List<BausteinVorschlag> list = mapping.getMapping();
-		UpdateMultipleElements<BausteinVorschlag> command = new UpdateMultipleElements<BausteinVorschlag>(list);
+		UpdateMultipleElements<BausteinVorschlag> command 
+			= new UpdateMultipleElements<BausteinVorschlag>(list, ChangeLogEntry.STATION_ID);
 		try {
 			command = getCommandService().executeCommand(command);
 			super.updateVersion();

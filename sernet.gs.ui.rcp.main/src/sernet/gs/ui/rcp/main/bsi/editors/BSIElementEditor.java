@@ -45,7 +45,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadEntityByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadUserConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;

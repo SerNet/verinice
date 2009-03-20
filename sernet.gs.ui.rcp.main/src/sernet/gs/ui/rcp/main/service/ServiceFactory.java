@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
 
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.springclient.SpringClientPlugin;
 
 public abstract class ServiceFactory {
@@ -60,7 +61,6 @@ public abstract class ServiceFactory {
 	}
 
 	public static ICommandService lookupCommandService() {
-		
 		return (ICommandService) SpringClientPlugin.getDefault()
 				.getBeanFactory().getBean(COMMAND_SERVICE);
 	}

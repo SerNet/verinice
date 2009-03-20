@@ -22,49 +22,73 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.hibernate.id.GUIDGenerator;
 
 /**
  * Transaction log to log modifications to database items.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * 
  */
-public class ChangeLogEntry {
+public class ChangeLogEntry implements Serializable {
 
-	public  static final int UPDATE = 0;
-	public  static final int INSERT = 1;
-	public  static final int DELETE = 2;;
-	
+	public static final int TYPE_UPDATE = 0;
+	public static final int TYPE_INSERT = 1;
+	public static final int TYPE_DELETE = 2;
+
 	private Integer dbId;
-	
+
 	private Integer elementId;
 	private String elementClass;
 	private Date changetime;
 	private int change;
 	private String stationId;
-	
+	private String username;
+
 	/**
-	 * Session ID to identify changes made by this particular client during its lifetime.
+	 * Session ID to identify changes made by a particular client during its
+	 * lifetime. Static value is initialized on client and used in commands that
+	 * are transferred to the server.
 	 */
-	public final static String  STATION_ID = UUID.randomUUID().toString();
-	
+	public final static String STATION_ID = UUID.randomUUID().toString();
+
 	public String getStationId() {
 		return stationId;
 	}
 
-
-	 ChangeLogEntry() {
+	ChangeLogEntry() {
 		// default constructor for hibernate
 	}
 
-	public ChangeLogEntry(CnATreeElement element, int change) {
-		elementId = element.getDbId();
-		elementClass = element.getClass().getName();
+	/**
+	 * Change log entry.
+	 * 
+	 * @param element
+	 *            the element that was changes
+	 * @param change
+	 *            type of change
+	 * @param username
+	 *            executing user
+	 * @param stationId
+	 *            session id of client, used to filter events from self when
+	 *            notifying changes.
+	 */
+	public ChangeLogEntry(CnATreeElement element, int change, String username,
+			String stationId, Date now) {
+		if (element == null) {
+			Logger.getLogger(this.getClass()).debug(
+					"Logging attempt for 'null' element failed.");
+			return;
+		}
+
+		this.elementId = element.getDbId();
+		this.elementClass = element.getClass().getName();
 		this.change = change;
-		stationId = STATION_ID;
+		this.username = username;
+		this.stationId = stationId;
+		this.changetime = now;
 	}
 
 	public String getElementClass() {
@@ -111,5 +135,31 @@ public class ChangeLogEntry {
 		this.stationId = stationId;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getChangeDescription() {
+		switch (this.change) {
+		case TYPE_UPDATE:
+			return "update";
+
+		case TYPE_DELETE:
+			return "delete";
+
+		case TYPE_INSERT:
+			return "insert";
+		default:
+			break;
+		}
+		return "";
+	}
 
 }

@@ -200,7 +200,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		/* delete button for viewerGefaehrdung */
 		Button buttonDeleteGefaehrdung = new Button(groupButtonsGefaehrdung,
 				SWT.PUSH);
-		buttonDeleteGefaehrdung.setText("löschen");
+		buttonDeleteGefaehrdung.setText("Löschen");
 		GridData gridDeleteGefaehrdung = new GridData();
 		buttonDeleteGefaehrdung.setLayoutData(gridDeleteGefaehrdung);
 
@@ -553,7 +553,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 		try {
 			GefaehrdungsUmsetzung parent = (GefaehrdungsUmsetzung) massnahme
-					.getGefaehrdungsBaumParent();
+					.getParent();
 
 			if (massnahme != null
 					&& massnahme instanceof RisikoMassnahmenUmsetzung
@@ -563,7 +563,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 				RemoveMassnahmeFromGefaherdung command = new RemoveMassnahmeFromGefaherdung(parent, massnahme);
 				command = ServiceFactory.lookupCommandService().executeCommand(
 						command);
-				parent = command.getParent();
+				parent.setChildren(command.getParent().getChildren());
 
 				/* refresh viewer */
 				viewerGefaehrdung.refresh();

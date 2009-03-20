@@ -71,25 +71,6 @@
 			<one-to-many class="CnALink"/>
 		</set>
 		
-		<!-- mapping to allow transient delete of associations with log entries
-			when an element is deleted. The log entry will remain, the
-			link to the element is deleted.
-		<set name="logEntries" table="LOGENTRY_ELEMENT"
-			lazy="true"  >
-			
-			<key column="ELMT_ID"/>
-			<composite-element class="LoggedElement">
-				<parent name="elmt"/>
-				
-				<many-to-one name="logEntry"
-					column="LOG_ID"
-					not-null="true"
-					class="ChangeLogEntry"/>
-				
-			</composite-element>
-		</set>
-		 -->
-		
 		
 <!-- Grundschutz-Elemente: ################################################################# -->
 

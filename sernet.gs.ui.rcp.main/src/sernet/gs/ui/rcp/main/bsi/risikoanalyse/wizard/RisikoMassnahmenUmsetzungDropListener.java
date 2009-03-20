@@ -84,10 +84,12 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 					AddMassnahmeToGefaherdung command = new AddMassnahmeToGefaherdung(parent, child);
 					command = ServiceFactory.lookupCommandService()
 							.executeCommand(command);
-					parent = command.getParent();
 					child = command.getChild();
 
+					// add for viewer:
+					parent.addChild(child);
 					viewer.refresh();
+					viewer.setExpandedState(parent, true);
 					return true;
 					
 				} else {

@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,10 +28,12 @@ import org.hibernate.HibernateException;
 import org.springframework.orm.hibernate3.SpringSessionContext;
 
 import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
+import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.ICommand;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -73,9 +76,15 @@ public class HibernateCommandService implements ICommandService {
 		if (!dbOpen)
 			throw new CommandException("DB connection closed.");
 
+//		Logger.getLogger(this.getClass()).debug(
+//				"Service executing command: "
+//						+ command.getClass().getSimpleName() 
+//				+ " / user: " + getAuthService().getUsername());
+		
 		Logger.getLogger(this.getClass()).debug(
-				"Hibernate service executing command: "
-						+ command.getClass().getSimpleName());
+				"Service executing command: "
+				+ command.getClass().getSimpleName()); 
+		
 		try {
 			// inject service and database access:
 			command.setDaoFactory(daoFactory);
@@ -90,6 +99,11 @@ public class HibernateCommandService implements ICommandService {
 			// execute actions, compute results:
 			command.execute();
 			
+			// log changes:
+			if (command instanceof IChangeLoggingCommand) {
+				log((IChangeLoggingCommand) command);
+			}			
+			
 			// clean up:
 			command.clear();
 		} 
@@ -98,6 +112,33 @@ public class HibernateCommandService implements ICommandService {
 				exceptionHandler.handle(e);
 		}
 		return command;
+	}
+
+	private void log(IChangeLoggingCommand notifyCommand) {
+		List<CnATreeElement> changedElements = notifyCommand.getChangedElements();
+		for (CnATreeElement changedElement : changedElements) {
+			
+			// save reference to element, if it has not been deleted:
+			CnATreeElement referencedElement = null;
+			if (notifyCommand.getChangeType() != ChangeLogEntry.TYPE_DELETE)
+				referencedElement = changedElement;
+				
+			ChangeLogEntry logEntry = new ChangeLogEntry(changedElement,
+					notifyCommand.getChangeType(),
+					getAuthService().getUsername(),
+					notifyCommand.getStationId(),
+					GregorianCalendar.getInstance().getTime());
+			log(logEntry, referencedElement);
+		}
+	}
+
+	/**
+	 * @param logEntry
+	 */
+	private void log(ChangeLogEntry logEntry, CnATreeElement referencedElement) {
+		Logger.getLogger(this.getClass()).debug("Logging change type '" + logEntry.getChangeDescription() 
+				+ "' for element of type " + logEntry.getElementClass() + " with ID " + logEntry.getElementId());
+		daoFactory.getDAO(ChangeLogEntry.class).saveOrUpdate(logEntry);
 	}
 
 	/**
