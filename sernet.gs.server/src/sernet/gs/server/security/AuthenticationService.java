@@ -17,7 +17,9 @@
  ******************************************************************************/
 package sernet.gs.server.security;
 
+import org.springframework.security.Authentication;
 import org.springframework.security.GrantedAuthority;
+import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.ui.digestauth.DigestProcessingFilter;
 import org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint;
@@ -32,7 +34,15 @@ import sernet.gs.ui.rcp.main.service.crudcommands.CreateDefaultConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveConfiguration;
 
-
+/**
+ * HTTP digest method authentication service.
+ * Allows access to roles and name of user that is currently logged on.
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public class AuthenticationService implements IAuthService {
 
 	private DigestProcessingFilterEntryPoint entryPoint;
@@ -57,6 +67,26 @@ public class AuthenticationService implements IAuthService {
 
 	public void setEntryPoint(DigestProcessingFilterEntryPoint entryPoint) {
 		this.entryPoint = entryPoint;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.IAuthService#getUsername()
+	 */
+	@Override
+	public String getUsername() {
+		try {
+			SecurityContext context = SecurityContextHolder.getContext();
+			Authentication authentication = context.getAuthentication();
+			Object principal = authentication.getPrincipal();
+			if (principal instanceof VeriniceUserDetails) {
+				VeriniceUserDetails details = (VeriniceUserDetails) principal;
+				return details.getUsername();
+			}
+		} catch (Exception e) {
+			// do nothing, just return no user name
+		}
+		// no user authenticated:
+		return "";
 	}
 
 }

@@ -42,14 +42,14 @@
 	</logger>
 
 	<!-- 
-	 -->
 	<logger name="org.springframework.remoting.httpinvoker" additivity="false">
   		<level value="DEBUG"/>
   		<appender-ref ref="STDOUT"/>
 	</logger>
+	 -->
 	
 	
-	<!-- Logger for everything else, including hibernate -->
+	<!-- Logger for everything else -->
   <root>
     <priority value="WARN"/>
     <appender-ref ref="STDOUT" />

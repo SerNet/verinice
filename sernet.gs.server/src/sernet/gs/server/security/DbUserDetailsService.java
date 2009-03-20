@@ -37,16 +37,32 @@ import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadEntityByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadUserConfiguration;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 
+/**
+ * Provides access to user details in the verinice database.
+ * These can be created by any admin-user in the verinice frontend itself.
+ * 
+ * Additionally, one initial user can be configured in applicationContext.xml itself,
+ * as a backup administrative account and for initial setting up of the database.
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public class DbUserDetailsService implements UserDetailsService {
 
 	// injected by spring
 	private ICommandService commandService;
+	
+	// injected by spring
 	private String adminuser = "";
+
+	// injected by spring
 	private String adminpass = "";
 
 	
@@ -77,7 +93,7 @@ public class DbUserDetailsService implements UserDetailsService {
 			return defaultUser();
 
 		try {
-			LoadEntityByType command = new LoadEntityByType("configuration");
+			LoadUserConfiguration command = new LoadUserConfiguration();
 			command = commandService.executeCommand(command);
 			List<Entity> entities = command.getEntities();
 
@@ -100,12 +116,6 @@ public class DbUserDetailsService implements UserDetailsService {
 		user.addRole(ApplicationRoles.ROLE_USER);
 		return user;
 	}
-
-//	private String encrypt(String adminpass2, String username) {
-//		return adminpass2;
-////		return DigestProcessingFilter.encodePasswordInA1Format(username,
-////				getEntryPoint().getRealmName(), adminpass2);
-//	}
 
 	private UserDetails newUserDetails(Entity entity) {
 		VeriniceUserDetails userDetails = new VeriniceUserDetails(entity

@@ -111,6 +111,14 @@ This variant:
     </constructor-arg>
     <property name="sessionFactory" ref="sessionFactory"/>
 </bean>
+
+
+<bean id="changeLogEntryDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.common.model.ChangeLogEntry</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
 	
 <!-- business object Dao definitions follow ================================================================== -->	
 	
@@ -413,7 +421,7 @@ This variant:
 	  	<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao"/>
 	  	<property name="configurationDao" ref="configurationDao"/>
 	  	<property name="bausteinVorschlagDao" ref="bausteinVorschlagDao"/>
-	  	
+	  	<property name="changeLogEntryDAO" ref="changeLogEntryDAO"/>
 
 		<!-- DAOs for subclasses of CnATreeElement: -->	  	
 	  	<property name="anwendungDAO" ref="anwendungDAO"/>
@@ -601,7 +609,8 @@ This variant:
 	<!--
 		The password entered here must be in the form of a HTTP digest "A1" hash.
 		
-		To create one using htdigest, type: "htdigest -c hash.txt <realm> <user>"
+		To create one using for instance Apache's 'htdigest' tool, type:
+		 "htdigest -c hash.txt <realm> <user>"
 		Options:
 		<realm>: the same realm configured as entry point (see above), i.e. "VeriniceServer"
 		<user>: the adminuser name given above, i.e. "admin" 
