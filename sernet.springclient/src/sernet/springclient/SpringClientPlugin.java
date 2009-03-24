@@ -17,13 +17,18 @@
  ******************************************************************************/
 package sernet.springclient;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.access.BeanFactoryLocator;
 import org.springframework.beans.factory.access.BeanFactoryReference;
 import org.springframework.beans.factory.access.SingletonBeanFactoryLocator;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -78,6 +83,14 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	
 	public synchronized void closeBeanFactory() {
 		if (beanFactoryReference != null) {
+//			try {
+//			Scheduler scheduler = (Scheduler) beanFactory.getBean("quartzSchedulerFactory");
+//				scheduler.shutdown(false);
+//			} catch (Exception e) {
+//				Logger.getLogger(this.getClass()).error(e);
+//			}
+			AbstractApplicationContext ctx = (AbstractApplicationContext) beanFactory;
+			ctx.close();
 			beanFactoryReference.release();
 			beanFactory = null;
 		}
@@ -86,13 +99,14 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	public synchronized BeanFactory getBeanFactory() {
 		return beanFactory;
 	}
-	
 
 	public synchronized void openBeanFactory(String beanFactoryUrl, String context) {
 		if (beanFactory == null) {
+			
 			BeanFactoryLocator beanFactoryLocator = SingletonBeanFactoryLocator.getInstance(beanFactoryUrl);
 			beanFactoryReference = beanFactoryLocator.useBeanFactory(context);
 			beanFactory = beanFactoryReference.getFactory();
+
 		}
 	}	
 }
