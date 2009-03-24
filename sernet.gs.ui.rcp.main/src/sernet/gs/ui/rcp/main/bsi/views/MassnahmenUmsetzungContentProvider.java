@@ -34,6 +34,7 @@ import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -101,7 +102,6 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 	
 	public void linkAdded(CnALink link) {
 		if (link.getDependency() instanceof Person) {
-//			updateViewer(this.REFRESH, null);
 			reloadModel();
 		}
 	}
@@ -132,6 +132,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 	}
 
 	public void childRemoved(CnATreeElement category, CnATreeElement child) {
+		// TODO server: optimize this to change only affected items:
 		if (child instanceof BausteinUmsetzung
 				|| child instanceof IBSIStrukturElement)
 			reloadModel();
@@ -205,11 +206,12 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 	}
 
 	public void databaseChildAdded(CnATreeElement child) {
+		if (child instanceof BausteinUmsetzung)
+			reloadModel();
 	}
 
 	public void databaseChildChanged(CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
+		childChanged(child.getParent(), child);
 	}
 
 	public void databaseChildRemoved(CnATreeElement child) {
@@ -219,5 +221,12 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 	public void modelReload(BSIModel newModel) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(java.lang.Integer)
+	 */
+	public void databaseChildRemoved(ChangeLogEntry entry) {
+		// TODO server: remove element
 	}
 }

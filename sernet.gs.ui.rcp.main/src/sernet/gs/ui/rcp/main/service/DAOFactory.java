@@ -345,7 +345,17 @@ public class DAOFactory {
     
     
 	public <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype) {
-		return  daos.get(daotype);
+		IBaseDao dao = daos.get(daotype);
+		if (dao != null)
+			return dao;
+		
+		// we might have been passed a proxy (class enhanced by cglib), so try to find
+		// a DAO that works:
+		for (Class clazz : daos.keySet()) {
+			if (clazz.isAssignableFrom(daotype))
+				return daos.get(clazz);
+		}
+		return null;
 	}
 	
 	public <T> IBaseDao<T, Serializable> getDAOForObject(Object o) {

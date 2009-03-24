@@ -341,7 +341,13 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     <property name="sessionFactory" ref="sessionFactory"/>
 </bean>
 
-
+<bean id="configurationDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.gs.ui.rcp.main.common.model.configuration.Configuration</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+		
+</bean>
 
 
 
@@ -354,6 +360,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	  	<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao"/>
 	  	<property name="bausteinVorschlagDao" ref="bausteinVorschlagDao"/>
 	  	<property name="changeLogEntryDAO" ref="changeLogEntryDAO"/>
+  		<property name="configurationDao" ref="configurationDao"/>
 	  	
 		<!-- DAOs for subclasses of CnATreeElement: -->	  	
 	  	<property name="anwendungDAO" ref="anwendungDAO"/>
@@ -423,6 +430,7 @@ class="org.springframework.orm.hibernate3.HibernateTransactionManager">
     <bean class="sernet.gs.ui.rcp.main.service.HibernateCommandService">
         <property name="daoFactory" ref="daoFactory"/>
         <property name="exceptionHandler" ref="clientExceptionHandler" />
+         <property name="authService" ref="authService"/>
     </bean>
   </property>
   <property name="transactionAttributes">
@@ -431,5 +439,7 @@ class="org.springframework.orm.hibernate3.HibernateTransactionManager">
       </props>
   </property>
 </bean>
+
+<bean id="authService" class="sernet.gs.ui.rcp.main.service.NoAuthenticationService"/>
     
 </beans>

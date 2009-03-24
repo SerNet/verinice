@@ -80,6 +80,7 @@ import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.actions.TodoViewFilterAction;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
@@ -323,6 +324,11 @@ public class ChartView extends ViewPart {
 			}
 
 			public void modelReload(BSIModel newModel) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void databaseChildRemoved(ChangeLogEntry entry) {
 				// TODO Auto-generated method stub
 				
 			}

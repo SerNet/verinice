@@ -47,7 +47,7 @@
 			
 			<cache usage="read-write" />
 			
-			<key column="parent" />
+			<key column="parent"  />
 			<one-to-many class="CnATreeElement"/>
 		</set>
 		
@@ -57,7 +57,7 @@
 			
 			<cache usage="read-write" />
 			
-			<key column="DEPENDANT_ID"/>
+			<key column="DEPENDANT_ID" />
 			<one-to-many class="CnALink"/>
 		</set>
 		
@@ -67,7 +67,7 @@
 			
 			<cache usage="read-write" />
 			
-			<key column="DEPENDENCY_ID"/>
+			<key column="DEPENDENCY_ID"  />
 			<one-to-many class="CnALink"/>
 		</set>
 		

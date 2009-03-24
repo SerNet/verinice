@@ -34,6 +34,7 @@ import org.hibernate.collection.PersistentCollection;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -357,6 +358,13 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 	public void databaseChildRemoved(CnATreeElement child) {
 		for (IBSIModelListener listener : getListeners()) {
 			listener.databaseChildRemoved(child);
+		}
+	}
+
+	@Override
+	public void databaseChildRemoved(ChangeLogEntry entry) {
+		for (IBSIModelListener listener : getListeners()) {
+			listener.databaseChildRemoved(entry);
 		}
 	}
 	

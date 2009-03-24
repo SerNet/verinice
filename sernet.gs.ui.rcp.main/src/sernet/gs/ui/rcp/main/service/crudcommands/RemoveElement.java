@@ -46,16 +46,21 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 
 	private T element;
 	private String stationId;
+	private Class<? extends CnATreeElement> elementClass;
+	private Integer elementId;
 
 	public RemoveElement(T element) {
-		this.element = element;
+		// only transfer id of element to keep footprint small:
+		elementClass = element.getClass();
+		elementId = element.getDbId();
+		
 		this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
 	public void execute() {
-		
-		
 			try {
+				// load element from DB:
+				this.element = (T) getDaoFactory().getDAO(elementClass).findById(elementId);
 				
 				if (element instanceof Person)
 					removeConfiguration((Person) element);
@@ -92,7 +97,7 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 			}
 			
 		
-// FIXME server: create bulk delete to speed up deletion of objects
+// FIXME server: create bulk delete to speed up deletion of objects, also have another look into hibernate option on-delete="cascade"
 //		String query = "delete from CnATreeElement as elmt where elmt.dbId = ?";
 //		Integer dbId = element.getDbId();
 //		int rows = dao.updateByQuery(

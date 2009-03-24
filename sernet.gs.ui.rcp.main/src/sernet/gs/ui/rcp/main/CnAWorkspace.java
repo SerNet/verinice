@@ -23,11 +23,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +43,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.update.internal.core.UpdateCore;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -78,6 +84,8 @@ public class CnAWorkspace {
 
 	protected static final String TEMPIMPORTDB = "tempGstoolImportDb";
 
+	private static final String POLICY_FILE = "updatePolicyURL";
+
 	private static CnAWorkspace instance;
 	
 
@@ -105,6 +113,11 @@ public class CnAWorkspace {
 			if (event.getProperty().equals(PreferenceConstants.OPERATION_MODE)
 					|| event.getProperty().equals(PreferenceConstants.VNSERVER_URI)) {
 				try {
+					if (event.getNewValue().equals(PreferenceConstants.OPERATION_MODE_STANDALONE))
+						ServiceFactory.setService(ServiceFactory.LOCAL);
+					else if (event.getNewValue().equals(PreferenceConstants.OPERATION_MODE_WITHSERVER))
+						ServiceFactory.setService(ServiceFactory.REMOTE);
+					
 					createSpringConfig();
 					if (!modechangeWarning ) {
 						modechangeWarning = false;
@@ -155,7 +168,9 @@ public class CnAWorkspace {
 	public void prepare(boolean force) {
 		prepareWorkDir();
 
-		if (!force && confDir.exists() && confDir.isDirectory()) {
+		if (!force
+				&& confDir.exists() 
+				&& confDir.isDirectory()) {
 			File confFile = new File(confDir, "configuration.version");
 			if (confFile.exists()) {
 				Properties props = new Properties();
@@ -176,7 +191,7 @@ public class CnAWorkspace {
 			}
 
 		}
-
+		
 		CnAWorkspace instance = new CnAWorkspace();
 		try {
 			instance.createConfDir();
@@ -187,8 +202,9 @@ public class CnAWorkspace {
 		} catch (Exception e) {
 			ExceptionUtil.log(e,
 					"Fehler beim Anlegen des Arbeitsverzeichnisses: "
-							+ confDir.getAbsolutePath());
+					+ confDir.getAbsolutePath());
 		}
+
 
 	}
 
@@ -197,6 +213,20 @@ public class CnAWorkspace {
 		String path = url.getPath().replaceAll("/", "\\" + File.separator);
 		workDir = (new File(path)).getAbsolutePath();		
 		confDir = new File(url.getPath() + File.separator + "conf");
+		
+		if (ServiceFactory.isUsingRemoteService()) {
+			try {
+				createPolicyFile(Activator.getDefault().getPluginPreferences());
+			} catch (MalformedURLException e) {
+				Logger.getLogger(this.getClass()).error("Konnte Update-Policy File nicht erzeugen.", e);
+			} catch (IOException e) {
+				Logger.getLogger(this.getClass()).error("Konnte Update-Policy File nicht erzeugen.", e);
+			}
+		}
+		else {
+			removePolicyFile();
+		}
+		
 	}
 
 	private void createSpringConfig() throws NullPointerException, IOException {
@@ -218,6 +248,7 @@ public class CnAWorkspace {
 				"applicationContextRemoteService.xml",
 				settings);
 		
+
 		// create bean ref factory xml:
 		settings = new HashMap<String, String>(2);
 		settings.put("applicationContextHibernate", 
@@ -226,19 +257,69 @@ public class CnAWorkspace {
 				"file://" + getConfDir() + File.separator + "applicationContextRemoteService.xml");
 		
 		if (ServiceFactory.isUsingRemoteService()) {
-		Logger.getLogger(this.getClass()).debug("Creating bean ref for remote service.");
+			Logger.getLogger(this.getClass()).debug("Creating bean ref for remote service.");
+			
 			createTextFile("conf" + File.separator + "skel_beanRefFactory-Remote.xml", 
 					getConfDir(),		
 					"beanRefFactory.xml",
 					settings);
+			
+			createPolicyFile(prefs);
+			
 		}
 		else {
 			Logger.getLogger(this.getClass()).debug("Creating bean ref for local hibernate access.");
+
 			createTextFile("conf" + File.separator + "skel_beanRefFactory-Hibernate.xml", 
 					getConfDir(),		
 					"beanRefFactory.xml",
 					settings);
+			
+			removePolicyFile();
 		}
+	}
+
+	private void removePolicyFile() {
+		// remove policy file / path to policy file. thereby setting update site to default:
+		removeFile(getConfDir(), "policy.xml");
+		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", "" );
+	}
+
+	private void createPolicyFile(Preferences prefs) throws IOException,
+			MalformedURLException {
+		// create update policy file to set update site to local verinice server:
+		settings = new HashMap<String, String>(1);
+		settings.put("updatesiteurl", createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
+		createTextFile("conf" + File.separator + "skel_policy.xml",
+				getConfDir(), 
+				"policy.xml",
+				settings);
+		
+		// set path to policy.xml with changed update site (on local server):
+		File policyFile = new File(getConfDir() + File.separator + "policy.xml");
+		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", 
+				policyFile.toURI().toURL().toString() );
+	}
+
+	/**
+	 * @param dir
+	 * @param string
+	 */
+	private void removeFile(String dir, String name) {
+		File fileToDelete = new File(dir + File.separator + name);
+		boolean success = fileToDelete.delete();
+		if (success)
+			Logger.getLogger(this.getClass()).debug(name + " was successfully deleted.");
+		else
+			Logger.getLogger(this.getClass()).debug(name + " was NOT deleted.");
+	}
+
+	/**
+	 * @param string
+	 * @return
+	 */
+	private String createUpdateSiteUrl(String serverUrl) {
+		return serverUrl + "/UpdateSite";
 	}
 
 	public String getWorkdir() {

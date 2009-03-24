@@ -116,6 +116,12 @@
             id="sernet.gs.ui.rcp.main.bausteinzuordnungaction"
             name="Zeige Vorschläge für Bausteine">
       </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="Aktualisiert die Ansicht aus der Datenbank"
+            id="sernet.gs.ui.rcp.main.reloadaction"
+            name="Aktualisieren">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -132,6 +138,11 @@
             commandId="sernet.gs.ui.rcp.main.bausteinzuordnungaction"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="CTRL+O">
+      </key>
+      <key
+            commandId="sernet.gs.ui.rcp.main.reloadaction"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="STRG+F5">
       </key>
    </extension>
    <extension

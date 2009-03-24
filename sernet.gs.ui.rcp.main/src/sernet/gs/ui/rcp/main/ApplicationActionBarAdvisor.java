@@ -42,6 +42,7 @@ import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
 import sernet.gs.ui.rcp.main.actions.ManageUpdatesAction;
 import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
+import sernet.gs.ui.rcp.main.actions.ReloadAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
 import sernet.gs.ui.rcp.main.actions.ShowExportWizardAction;
@@ -98,6 +99,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private OpenViewAction openAuditViewAction;
 
 	private ShowExportWizardAction showWizardAction;
+	
+	private ReloadAction reloadAction;
 
 	private ShowPreferencesAction showPreferencesAction;
 
@@ -208,6 +211,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		showWizardAction = new ShowExportWizardAction(window,
 				"Report erstellen...");
 		register(showWizardAction);
+		
+		reloadAction = new ReloadAction(window, "Ansicht Aktualisieren");
+		register(reloadAction);
 		
 		importGstoolAction = new ImportGstoolAction(window,
 		"GSTool-Daten importieren");
@@ -327,6 +333,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //		perspectivesMenu.add(perspectiveList);
 
 		windowMenu.add(newWindowAction);
+		windowMenu.add(reloadAction);
 		windowMenu.add(new Separator());
 //		windowMenu.add(perspectivesMenu);
 		windowMenu.add(viewsMenu);
@@ -340,6 +347,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		myToolbar.add(showWizardAction);
 		myToolbar.add(bulkEditAction);
 		myToolbar.add(konsolidatorAction);
+
+		myToolbar.add(new Separator());
+		myToolbar.add(reloadAction);
 		
 		myToolbar.add(new Separator());
 		myToolbar.add(openBSIViewAction);

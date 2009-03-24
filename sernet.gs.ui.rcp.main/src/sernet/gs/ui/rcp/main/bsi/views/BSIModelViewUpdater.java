@@ -25,6 +25,7 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -117,7 +118,6 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 			oldElement.removeLinkDown(link);
 			oldElement.addLinkDown(link);
 			updater.refresh(link);
-//			updater.refresh(link.getParent());
 			updater.refresh(oldElement);
 			updater.reveal(link);
 		}
@@ -165,9 +165,24 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 	public void databaseChildRemoved(CnATreeElement child) {
 		// cause reload of children list of parent if currently displayed:
 		CnATreeElement cachedParent = cache.getCachedObject(child.getParent());
+		CnATreeElement cachedChild = cache.getCachedObject(child);
+
 		if (cachedParent != null) {
 			cachedParent.setChildrenLoaded(false);
+			cachedParent.removeChild(cachedChild);
 		}
 		updater.refresh();
 	}
+	
+	public void databaseChildRemoved(ChangeLogEntry entry) {
+		CnATreeElement cachedChild = cache.getCachedObjectById(entry.getElementId());
+		if (cachedChild != null) {
+			CnATreeElement cachedParent = cachedChild.getParent();
+			if (cachedParent != null) {
+				cachedParent.setChildrenLoaded(false);
+			}
+			updater.refresh();
+		}
+	}
+	
 }

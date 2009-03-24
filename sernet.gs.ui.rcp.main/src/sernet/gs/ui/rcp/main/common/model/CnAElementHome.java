@@ -164,15 +164,9 @@ public class CnAElementHome {
 		CreateLink command = new CreateLink(dropTarget, dragged);
 		command = commandService.executeCommand(command);
 		
-		// notify listeners about new object:
-//		CnAElementFactory.getLoadedModel().linkAdded(command.getLink());
 		return command.getLink();
 	}
 	
-	private void logChange(CnATreeElement element, int changeType) {
-		// TODO implement
-	}
-
 	public void remove(CnATreeElement element) throws Exception {
 		Logger.getLogger(this.getClass()).debug("Deleting " + element.getTitel());
 		RemoveElement command = new RemoveElement(element);

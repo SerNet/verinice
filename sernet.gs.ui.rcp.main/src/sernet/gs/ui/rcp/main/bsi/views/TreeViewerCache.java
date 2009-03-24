@@ -68,5 +68,22 @@ public class TreeViewerCache {
 		this.cache.remove(oldElement);
 	}
 
+	/**
+	 * @param id
+	 * @return
+	 */
+	public CnATreeElement getCachedObjectById(Integer id) {
+		synchronized(cache) {
+			for (Object elmt : cache.keySet()) {
+				if (elmt instanceof CnATreeElement) {
+					CnATreeElement cnaElmt = (CnATreeElement) elmt;
+					if (cnaElmt.getDbId().equals(id))
+						return cnaElmt;
+				}
+			}
+			return null;
+		}
+	}
+
 	
 }

@@ -89,4 +89,12 @@ public class NullListener implements IBSIModelListener {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
+	 */
+	public void databaseChildRemoved(ChangeLogEntry entry) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

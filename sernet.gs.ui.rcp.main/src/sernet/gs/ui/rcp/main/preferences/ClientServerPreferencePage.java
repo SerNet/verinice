@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.preferences;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
@@ -41,6 +42,7 @@ public class ClientServerPreferencePage
 
 	private RadioGroupFieldEditor operationMode;
 	private StringFieldEditor serverURI;
+	private boolean warningShown;
 	
 
 	public ClientServerPreferencePage() {
@@ -49,6 +51,7 @@ public class ClientServerPreferencePage
 		setDescription("Umstellen zwischen Betrieb als Arbeitsplatzrechner (Standalone) mit direkter " +
 				"Verbindung zu einer Datenbank oder Mehrbenutzerbetrieb unter Verwendung des Verinice-Servers. " +
 				"Die Umstellung auf Mehrbenutzerbetrieb erfordert einen Neustart des Clients.");
+		warningShown = false;
 	}
 	
 	/**
@@ -89,6 +92,14 @@ public class ClientServerPreferencePage
 				Object newValue = event.getNewValue();
 				boolean servermode = newValue.equals(PreferenceConstants.OPERATION_MODE_WITHSERVER);
 				serverURI.setEnabled(servermode, getFieldEditorParent());
+
+				if (!warningShown) {
+					warningShown = true;
+					MessageDialog.openInformation(getShell(), "Neustart erforderlich", 
+							"Umschalten zwischen Standalone- und Server-Modus erfordert einen Neustart!\n" +
+					"Bitte starten Sie Verinice nach dem Speichern Ihrer Einstellungen neu! Danke.");
+				}
+				
 			}
 		}
 	}

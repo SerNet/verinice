@@ -119,6 +119,8 @@ public class ImageCache {
 
 	public static final String AUTOBAUSTEIN = "autobaustein.png";
 
+	public static final String RELOAD = "arrow_refresh.png";
+
 	
 
 

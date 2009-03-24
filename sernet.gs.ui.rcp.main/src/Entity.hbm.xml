@@ -29,7 +29,7 @@
 			name="typedPropertyLists"
 			cascade="all,delete-orphan"
 			batch-size="10"
-			fetch="subselect">
+			fetch="subselect" >
 			<cache usage="read-write" />
 			<key column="typedlist_id" />
 			<index

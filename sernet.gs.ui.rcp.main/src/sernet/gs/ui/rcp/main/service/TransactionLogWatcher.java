@@ -89,8 +89,16 @@ public class TransactionLogWatcher {
 
 			break;
 		case ChangeLogEntry.TYPE_DELETE:
-			CnAElementFactory.getLoadedModel().databaseChildRemoved(
-					changedElement);
+			if (changedElement == null) {
+				// element no longer retrievable, notify by ID:
+				CnAElementFactory.getLoadedModel().databaseChildRemoved(
+						changeLogEntry);
+			}
+			else {
+				// element was retrieved before deletion took place, notify using element itself:
+				CnAElementFactory.getLoadedModel().databaseChildRemoved(
+						changedElement);
+			}
 
 			break;
 
@@ -99,4 +107,5 @@ public class TransactionLogWatcher {
 			break;
 		}
 	}
+
 }

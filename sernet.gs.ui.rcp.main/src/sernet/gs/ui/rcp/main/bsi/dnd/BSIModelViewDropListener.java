@@ -47,6 +47,15 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.snutils.ExceptionHandlerFactory;
 
+/**
+ * Handles drop events of objects to create links between them.
+ * Also creates module (baustein) instances when a module is applied to a target object.
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public class BSIModelViewDropListener extends ViewerDropAdapter {
 
 	public BSIModelViewDropListener(TreeViewer viewer) {

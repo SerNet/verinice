@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -39,6 +40,10 @@ public class LinkDropper {
 			
 			
 			try {
+				// close all editors first:
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getActivePage().closeAllEditors(true /* ask save */);
+				
 				Job dropJob = new Job(Messages.getString("LinkDropper.0")) { //$NON-NLS-1$
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {

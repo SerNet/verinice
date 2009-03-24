@@ -22,7 +22,10 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewPart;
@@ -72,6 +75,21 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 	@Override
 	public void postWindowOpen() {
+		if (Activator.getDefault().getPluginPreferences()
+				.getBoolean(PreferenceConstants.FIRSTSTART)) {
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Hinweis zum Datenschutz", 
+			"Verinice sucht bei jedem Start automatisch nach Updates und baut dafür eine einfache " +
+			"HTTP-Verbindung zum " +
+			"Webserver 'updates.verinice.org' auf. Falls dort Updates vorhanden sind, " +
+			"werden Sie gefragt, ob Sie diese installieren möchten.\n" +
+			"Die automatischen Updates können Sie in den Einstellungen deaktivieren, wir empfehlen jedoch, " +
+			"diese aktiviert zu lassen, damit Sie von Funktions- und Sicherheitsupdates " +
+			"profitieren.\n" +
+			"Verinice übermittelt keinerlei Daten über Ihren Rechner oder Ihre Konfiguration an den Update-Server " +
+			"und installiert nichts ohne Ihre ausdrückliche Zustimmung!\n\n" +
+			"Kurz: Verinice telefoniert nicht nach Hause und installiert keinen Bundestrojaner.");
+		}
+		
 		loadBsiCatalogues();
 		showFirstSteps();
 		preloadDBMapper();

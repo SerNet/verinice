@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -86,7 +87,7 @@ public class GetChangesSince extends GenericCommand {
 		entries = dao.findByQuery(QUERY, new Object[] {lastChecked, stationId});
 		lastChecked = now;
 	
-		try { if entries' elementid are null, IDs will be null (check insert bausteinumsetzung, see screenshots)
+		try { 
 			hydrateChangedItems(entries);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
@@ -101,16 +102,18 @@ public class GetChangesSince extends GenericCommand {
 		if (entries2.size()<1)
 			return;
 		
-		Integer[] IDs = new Integer[entries2.size()];
+		List<Integer> IDs = new ArrayList<Integer>(entries2.size());
 		changedElements = new HashMap<Integer, CnATreeElement>(entries2.size());
 		
 		int i=0;
 		for (ChangeLogEntry logEntry : entries2) {
-			IDs[i] = logEntry.getElementId();
+			if (logEntry.getElementId() != null)
+				IDs.add(logEntry.getElementId());
 			++i;
 		}
+		Integer[] IDArray = (Integer[]) IDs.toArray(new Integer[IDs.size()]);
 		
-		LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(IDs);
+		LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(IDArray);
 		command = getCommandService().executeCommand(command);
 		
 		List<CnATreeElement> elements = command.getElements();

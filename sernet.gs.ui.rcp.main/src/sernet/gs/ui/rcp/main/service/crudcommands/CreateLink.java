@@ -36,7 +36,8 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
  *
  * @param <T>
  */
-public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends CnATreeElement> extends GenericCommand {
+public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends CnATreeElement> 
+extends GenericCommand {
 
 	private U dragged;
 	private V target;

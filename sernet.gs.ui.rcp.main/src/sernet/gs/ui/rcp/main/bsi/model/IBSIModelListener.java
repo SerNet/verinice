@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
@@ -56,7 +57,8 @@ public interface IBSIModelListener {
 	
 	
 	/**
-	 * New element was added to the database (by another client), hint to view that it should reload from database.
+	 * New element was added to the database (by another client), 
+	 * hint to view that it should reload from database.
 	 * @param child
 	 */
 	void databaseChildAdded(CnATreeElement child);
@@ -68,6 +70,14 @@ public interface IBSIModelListener {
 	 * @param child
 	 */
 	void databaseChildRemoved(CnATreeElement child);
+
+	/**
+	 * Element was removed.
+	 * Hint to view that it should reload from database.
+	 * 
+	 * @param entry entry from transaction log with details about deleted object
+	 */
+	void databaseChildRemoved(ChangeLogEntry entry);
 	
 	/**
 	 * Element was changed in the database either by another client or by a cascading action performed

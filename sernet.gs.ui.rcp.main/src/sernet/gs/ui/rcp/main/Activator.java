@@ -108,9 +108,6 @@ public class Activator extends AbstractUIPlugin {
 					"service factory configuration from preferences.", e);
 			CnAWorkspace.getInstance().prepare(true);
 		}
-		
-		// TODO add feature: link description between objects
-		// TODO add save / load to file
 	}
 
 

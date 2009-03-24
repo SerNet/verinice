@@ -30,7 +30,7 @@
 			
 			<cache usage="read-write" />
 			
-			<key column="properties_id" />
+			<key column="properties_id"  />
 			
 			<index 
 				column="properties_idx" />

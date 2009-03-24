@@ -50,6 +50,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 
 /**
  * 
@@ -92,6 +93,13 @@ public class BSIModelViewOpenDBAction extends Action {
 				PreferenceConstants.DB_DRIVER_DERBY)
 				) {
 
+			Activator.getDefault().getPluginPreferences().setValue(PreferenceConstants.FIRSTSTART,
+					false);
+
+			// do not show dialog if server is configured instead of local DB:
+			if (ServiceFactory.isUsingRemoteService())
+				return;
+			
 			MessageDialog
 					.openInformation(
 							new Shell(shell),
@@ -102,8 +110,6 @@ public class BSIModelViewOpenDBAction extends Action {
 									+ "Einstellungen eine externe Datenbank angeben (Postgres / MySQL).\n\n"
 									+ "Dieser Hinweis wird nicht erneut angezeigt.");
 			
-			Activator.getDefault().getPluginPreferences().setValue(PreferenceConstants.FIRSTSTART,
-					false);
 		}
 	}
 	

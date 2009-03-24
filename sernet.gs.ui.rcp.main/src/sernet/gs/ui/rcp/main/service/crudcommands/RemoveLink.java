@@ -18,26 +18,63 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 
-public class RemoveLink<T extends CnALink> extends GenericCommand {
+public class RemoveLink<T extends CnALink> extends GenericCommand implements IChangeLoggingCommand {
 
 	private T element;
+	private String stationId;
 
 	public RemoveLink(T element) {
 		this.element = element;
+		this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
 	public void execute() {
 		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
 		element = dao.findById(element.getId());
-		// FIXME server: delete links find by ID
 		element.remove();
 		dao.delete(element);
+	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
+	 */
+	@Override
+	public void clear() {
+		element = null;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
+	 */
+	public int getChangeType() {
+		return ChangeLogEntry.TYPE_DELETE;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangedElements()
+	 */
+	public List<CnATreeElement> getChangedElements() {
+		// return link category item:
+		List<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
+		result.add(element.getParent().getParent());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId()
+	 */
+	public String getStationId() {
+		return stationId;
 	}
 
 }

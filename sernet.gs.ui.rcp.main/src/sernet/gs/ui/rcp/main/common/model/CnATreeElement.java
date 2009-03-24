@@ -463,6 +463,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	public void databaseChildRemoved(CnATreeElement child) {
 		getModelChangeListener().databaseChildRemoved(child);
 	}
+
+	public void databaseChildRemoved(ChangeLogEntry entry) {
+		getModelChangeListener().databaseChildRemoved(entry);
+	}
 	
 	public void modelReload(BSIModel newModel) {
 		getModelChangeListener().modelReload(newModel);

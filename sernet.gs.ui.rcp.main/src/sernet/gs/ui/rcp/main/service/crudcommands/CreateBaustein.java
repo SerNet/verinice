@@ -47,31 +47,29 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
  */
 public class CreateBaustein extends GenericCommand implements IChangeLoggingCommand {
 
-	private CnATreeElement container;
 	private BausteinUmsetzung child;
 	private Baustein baustein;
-	private boolean reloadObject;
 	private String stationId;
+	private Integer dbId;
+	private Class<? extends CnATreeElement> clazz;
 
 	public CreateBaustein(CnATreeElement container, Baustein baustein) {
-		this.container = container;
+		
+		dbId = container.getDbId();
+		clazz = container.getClass();
+		
 		this.baustein = baustein;
 		stationId = ChangeLogEntry.STATION_ID;
 		
-		// cause reload on execution if command was created on client:
-		// on server: not necessary because element is already attached to session
-		if (WhereAmIUtil.runningOnClient())
-			reloadObject = true;
 	}
 	
 	public void execute() {
 		IBaseDao<BausteinUmsetzung, Serializable> dao 
 			= getDaoFactory().getDAO(BausteinUmsetzung.class);
-		IBaseDao<Object, Serializable> containerDAO = getDaoFactory().getDAOForObject(container);
 		
 		try {
-			if (reloadObject)
-				containerDAO.reload(container, container.getDbId());
+			IBaseDao<? extends CnATreeElement, Serializable> containerDao = getDaoFactory().getDAO(clazz);
+			CnATreeElement container = containerDao.findById(dbId);
 			
 			if (container.containsBausteinUmsetzung(baustein.getId()))
 				return;

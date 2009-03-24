@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
@@ -63,6 +64,10 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate {
 		"Wirklich entfernen?")) {
 			return;
 		}
+		
+		// close editors first:
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+		.getActivePage().closeAllEditors(true /* ask save */);
 
 		IStructuredSelection selection = ((IStructuredSelection)targetPart.getSite()
 				.getSelectionProvider().getSelection());
