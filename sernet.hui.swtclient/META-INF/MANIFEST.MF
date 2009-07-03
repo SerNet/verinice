@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Export-Package: sernet.hui.swt.dialogs,
  sernet.hui.swt.widgets,
+ sernet.hui.swt.widgets.URL,
  sernet.hui.swt.widgets.multiselectionlist
 Bundle-ClassPath: .,
  lib/swtcalendar.jar
@@ -13,5 +14,9 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.jface,
  org.eclipse.ui.forms,
  org.eclipse.ui,
- com.ibm.icu
+ com.ibm.icu,
+ sernet.hui.common;bundle-version="1.0.0";visibility:=reexport,
+ org.eclipse.osgi;bundle-version="3.4.2"
 Import-Package: org.apache.log4j
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: SerNet
