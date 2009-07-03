@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="quartz-1.6.5.jar" sourcepath="/work/home/akoderman/down/java/quartz/src/java"/>
-	<classpathentry exported="true" kind="lib" path="commons-collections.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="commons-logging.jar" sourcepath="SpringClientsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="log4j-1.2.15.jar" sourcepath="SpringClientsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="spring-aop.jar" sourcepath="SpringClientsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="spring-beans.jar" sourcepath="SpringClientsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="spring-context.jar" sourcepath="SpringClientsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="spring-core.jar" sourcepath="SpringClientsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="spring-web.jar" sourcepath="SpringClientsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="spring-webmvc.jar" sourcepath="SpringClientsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="spring.jar" sourcepath="/work/home/akoderman/down/java/spring/spring-framework-2.5.5/src"/>
-	<classpathentry exported="true" kind="lib" path="commons-codec.jar"/>
+	<classpathentry exported="true" kind="lib" path="commons-logging.jar" sourcepath="sernet.springclientsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="log4j-1.2.15.jar" sourcepath="sernet.springclientsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="spring-aop.jar" sourcepath="sernet.springclientsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="spring-beans.jar" sourcepath="sernet.springclientsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="spring-context.jar" sourcepath="sernet.springclientsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="spring-core.jar" sourcepath="sernet.springclientsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="spring-web.jar" sourcepath="sernet.springclientsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="spring-webmvc.jar" sourcepath="sernet.springclientsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="spring.jar" sourcepath="sernet.springclientsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="commons-codec.jar" sourcepath="sernet.springclientsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="commons-collections.jar" sourcepath="sernet.springclientsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="quartz-1.6.5.jar" sourcepath="sernet.springclientsrc.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
