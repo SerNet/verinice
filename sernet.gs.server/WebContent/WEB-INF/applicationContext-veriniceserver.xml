@@ -17,6 +17,58 @@ This variant:
 
 <!-- BEGIN Server settings ========================================================================= -->
 
+<!-- BEGIN User configurable settings=============================================================== -->
+
+<!-- 
+	Configure your HTTP digest realm and nonce key here.
+	If you don't know what this is: the realm is used to salt user passwords and for authentication
+	and should be a value unique to your server. It will be visible to clients, so they know 
+	for what service they are authenticating. It makes sense to include your company name
+	or similar in the realm.
+	The nonce key is used to create temporary session keys between server and client. It should
+	be a value unique to your server and preferably be kept secret. It will not be visible
+	to any client.
+	If you are really paranoid, decrease the validity of the nonce key (i.e. to 5 seconds).
+	If you are concerned about performance, increase the value of the nonce key (i.e. to 600 seconds).
+ -->
+<bean id="digestProcessingFilterEntryPoint"
+	class="org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint">
+	<property name="realmName" value="Verinice Server NO-COMPANY - CHANGETHIS" />
+	<property name="key" value="mysecretkey-CHANGETHIS" />
+	<property name="nonceValiditySeconds" value="300" />
+</bean>
+
+<bean id="uds" class="sernet.gs.server.security.DbUserDetailsService">
+	<property name="commandService" ref="commandService"/>
+
+	<property name="adminuser">
+		<value>admin</value>
+	</property>
+
+	<!--
+		The password entered here must be in the form of a HTTP digest "A1" hash.
+		
+		To create one using for instance Apache's 'htdigest' tool, type:
+		 "htdigest -c hash.txt <realm> <user>"
+		Options:
+		<realm>: the same realm configured as entry point (see above), i.e. "VeriniceServer"
+		<user>: the adminuser name given above, i.e. "admin" 
+		
+		Copy the hash you find in hash.txt as value below.
+	 -->
+	<property name="adminpass">
+		<value>578c27deb7d7607cc77f76a64b1086c0</value>
+		<!-- default value for development only: "geheim" for default NOCOMPANY realm -->
+	</property>
+</bean>
+
+<!-- END User configurable settings=============================================================== -->
+
+
+
+
+
+
 <!-- Server configuration properties and initialization -->
 <bean 
 	id="configuration" 
@@ -532,25 +584,6 @@ This variant:
 	<property name="passwordAlreadyEncoded" value="true"/>
 </bean>
 
-<!-- 
-	Configure your HTTP digest realm and nonce key here.
-	If you don't know what this is: the realm is used to salt user passwords and for authentication
-	and should be a value unique to your server. It will be visible to clients, so they know 
-	for what service they are authenticating. It makes sense to include your company name
-	or similar in the realm.
-	The nonce key is used to create temporary session keys between server and client. It should
-	be a value unique to your server and preferably be kept secret. It will not be visible
-	to any client.
-	If you are really paranoid, decrease the validity of the nonce key (i.e. to 5 seconds).
-	If you are concerned about performance, increase the value of the nonce key (i.e. to 600 seconds).
- -->
-<bean id="digestProcessingFilterEntryPoint"
-	class="org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint">
-	<property name="realmName" value="Verinice Server NO-COMPANY - CHANGETHIS" />
-	<property name="key" value="mysecretkey-CHANGETHIS" />
-	<property name="nonceValiditySeconds" value="300" />
-</bean>
-
 <bean id="springSecurityFilterChain"
 	class="org.springframework.security.util.FilterChainProxy">
 	<security:filter-chain-map path-type="ant">
@@ -598,30 +631,6 @@ This variant:
 <security:authentication-provider  
 	user-service-ref="uds">
 </security:authentication-provider>
-
-<bean id="uds" class="sernet.gs.server.security.DbUserDetailsService">
-	<property name="commandService" ref="commandService"/>
-
-	<property name="adminuser">
-		<value>admin</value>
-	</property>
-
-	<!--
-		The password entered here must be in the form of a HTTP digest "A1" hash.
-		
-		To create one using for instance Apache's 'htdigest' tool, type:
-		 "htdigest -c hash.txt <realm> <user>"
-		Options:
-		<realm>: the same realm configured as entry point (see above), i.e. "VeriniceServer"
-		<user>: the adminuser name given above, i.e. "admin" 
-		
-		Copy the hash you find in hash.txt as value below.
-	 -->
-	<property name="adminpass">
-		<value>578c27deb7d7607cc77f76a64b1086c0</value>
-		<!-- default value for development only: "geheim" for default NOCOMPANY realm -->
-	</property>
-</bean>
 
 <!-- END Security configuration ============================================================================ -->
 
