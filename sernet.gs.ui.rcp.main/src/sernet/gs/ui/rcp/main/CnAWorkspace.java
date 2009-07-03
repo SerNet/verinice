@@ -86,6 +86,8 @@ public class CnAWorkspace {
 
 	private static final String POLICY_FILE = "updatePolicyURL";
 
+	private static final Object LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site";
+
 	private static CnAWorkspace instance;
 	
 
@@ -233,7 +235,8 @@ public class CnAWorkspace {
 		
 		// create application context xml for direct database access:
 		settings = new HashMap<String, String>(1);
-		settings.put("hibernatecfg", "file://" + getConfDir() + File.separator + "hibernate.cfg.xml");
+		String cfgFileURL = (new File(getConfDir() + File.separator + "hibernate.cfg.xml")).toURI().toURL().toString();
+		settings.put("hibernatecfg", cfgFileURL);
 		createTextFile("conf" + File.separator + "skel_applicationContextHibernate.xml",
 				getConfDir(), 
 				"applicationContextHibernate.xml",
@@ -251,10 +254,15 @@ public class CnAWorkspace {
 
 		// create bean ref factory xml:
 		settings = new HashMap<String, String>(2);
-		settings.put("applicationContextHibernate", 
-				"file://" + getConfDir() + File.separator + "applicationContextHibernate.xml");
-		settings.put("applicationContextRemote", 
-				"file://" + getConfDir() + File.separator + "applicationContextRemoteService.xml");
+		
+		String appCtxHibernate = (new File(getConfDir() + File.separator + "applicationContextHibernate.xml"))
+			.toURI().toURL().toString();
+		settings.put("applicationContextHibernate", appCtxHibernate );
+		
+		
+		String appCtxRemote = (new File(getConfDir() + File.separator + "applicationContextRemoteService.xml"))
+		.toURI().toURL().toString();
+		settings.put("applicationContextRemote", appCtxRemote);
 		
 		if (ServiceFactory.isUsingRemoteService()) {
 			Logger.getLogger(this.getClass()).debug("Creating bean ref for remote service.");
@@ -319,7 +327,10 @@ public class CnAWorkspace {
 	 * @return
 	 */
 	private String createUpdateSiteUrl(String serverUrl) {
-		return serverUrl + "/UpdateSite";
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(serverUrl);
+		stringBuilder.append(LOCAL_UPDATE_SITE_URL);
+		return stringBuilder.toString();
 	}
 
 	public String getWorkdir() {

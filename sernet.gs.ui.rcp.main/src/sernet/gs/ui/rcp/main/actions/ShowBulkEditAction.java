@@ -73,7 +73,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 
 /**
- * Erlaubt das gemeinsame Editieren der Eigenschaften von gleichen, ausgewähltne
+ * Erlaubt das gemeinsame Editieren der Eigenschaften von gleichen, ausgewählten
  * Objekten.
  * 
  * @author koderman@sernet.de
@@ -83,6 +83,8 @@ import sernet.hui.common.connect.HUITypeFactory;
  */
 public class ShowBulkEditAction extends Action implements ISelectionListener {
 
+	// FIXME server: bulk edit does not notify changes on self
+	
 	public static final String ID = "sernet.gs.ui.rcp.main.actions.showbulkeditaction";
 	private final IWorkbenchWindow window;
 

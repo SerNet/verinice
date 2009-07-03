@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.service;
 
 import java.io.File;
+import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
@@ -48,7 +49,7 @@ public abstract class ServiceFactory {
 		return locality == REMOTE;
 	}
 
-	public static void openCommandService() {
+	public static void openCommandService() throws MalformedURLException {
 		if (locality == LOCAL)
 			openLocalServiceFactory();
 		else
@@ -71,17 +72,18 @@ public abstract class ServiceFactory {
 		return authService;
 	}
 
-	private static void openRemoteServiceFactory() {
-		String path = "file://" + CnAWorkspace.getInstance().getConfDir()
-				+ File.separator + BEAN_REF_FACTORY;
+	private static void openRemoteServiceFactory() throws MalformedURLException {
+		String path = (new File(CnAWorkspace.getInstance().getConfDir()+ File.separator + BEAN_REF_FACTORY))
+			.toURI().toURL().toString();
 		Logger.getLogger(ServiceFactory.class).debug(
 				"Creating remote bean factory from " + path);
 		SpringClientPlugin.getDefault().openBeanFactory(path, CONTEXT_REMOTE);
 	}
 
-	private static void openLocalServiceFactory() {
-		String path = "file://" + CnAWorkspace.getInstance().getConfDir()
-				+ File.separator + BEAN_REF_FACTORY;
+	private static void openLocalServiceFactory() throws MalformedURLException {
+		String path = (new File(CnAWorkspace.getInstance().getConfDir()
+				+ File.separator + BEAN_REF_FACTORY))
+		.toURI().toURL().toString();
 		Logger.getLogger(ServiceFactory.class).debug(
 				"Creating local bean factory from " + path);
 		SpringClientPlugin.getDefault().openBeanFactory(path, CONTEXT_LOCAL);

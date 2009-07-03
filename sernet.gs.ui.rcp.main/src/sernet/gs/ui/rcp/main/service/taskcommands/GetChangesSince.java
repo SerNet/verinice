@@ -105,6 +105,7 @@ public class GetChangesSince extends GenericCommand {
 		List<Integer> IDs = new ArrayList<Integer>(entries2.size());
 		changedElements = new HashMap<Integer, CnATreeElement>(entries2.size());
 		
+		// get IDs of changed items:
 		int i=0;
 		for (ChangeLogEntry logEntry : entries2) {
 			if (logEntry.getElementId() != null)
@@ -113,6 +114,7 @@ public class GetChangesSince extends GenericCommand {
 		}
 		Integer[] IDArray = (Integer[]) IDs.toArray(new Integer[IDs.size()]);
 		
+		// 
 		LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(IDArray);
 		command = getCommandService().executeCommand(command);
 		

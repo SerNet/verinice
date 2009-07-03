@@ -78,7 +78,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		if (Activator.getDefault().getPluginPreferences()
 				.getBoolean(PreferenceConstants.FIRSTSTART)) {
 			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Hinweis zum Datenschutz", 
-			"Verinice sucht bei jedem Start automatisch nach Updates und baut dafür eine einfache " +
+			"Langfassung:\nVerinice sucht bei jedem Start automatisch nach Updates und baut dafür eine einfache " +
 			"HTTP-Verbindung zum " +
 			"Webserver 'updates.verinice.org' auf. Falls dort Updates vorhanden sind, " +
 			"werden Sie gefragt, ob Sie diese installieren möchten.\n" +
@@ -87,7 +87,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 			"profitieren.\n" +
 			"Verinice übermittelt keinerlei Daten über Ihren Rechner oder Ihre Konfiguration an den Update-Server " +
 			"und installiert nichts ohne Ihre ausdrückliche Zustimmung!\n\n" +
-			"Kurz: Verinice telefoniert nicht nach Hause und installiert keinen Bundestrojaner.");
+			"Kurzfassung: \nVerinice telefoniert nicht nach Hause und installiert keinen Bundestrojaner. ;-)");
 		}
 		
 		loadBsiCatalogues();

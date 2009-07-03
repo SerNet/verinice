@@ -41,7 +41,12 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 
 		 public void saveOrUpdate(T entity) {
 		     getHibernateTemplate().saveOrUpdate(entity);
-		     fireChange(entity);
+		     if (entity instanceof CnATreeElement) {
+		    	 CnATreeElement elmt = (CnATreeElement) entity;
+		    	 fireChange(elmt);
+		    	 fireChange(elmt.getParent());
+		    	 
+		     }
 		 }
 
 		 public void delete(T entity) {
@@ -78,8 +83,12 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 
 		public T merge(T entity, boolean fireChange) {
 			T mergedElement = (T) getHibernateTemplate().merge(entity);
-			if (fireChange)
-				fireChange(mergedElement);
+			if (fireChange
+					&& mergedElement instanceof CnATreeElement) {
+				CnATreeElement elmt = (CnATreeElement) mergedElement;
+				fireChange(elmt);
+				fireChange(elmt.getParent());
+			}
 			return mergedElement;
 		}
 		
@@ -95,11 +104,9 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			getHibernateTemplate().load(element, id);
 		}
 
-		private void fireChange(T element) {
-			if (element instanceof CnATreeElement) {
-				CnATreeElement elmt = (CnATreeElement) element;
-				CascadingTransaction ta;
+		private void fireChange(CnATreeElement elmt) {
 				Object loopedObject = null;
+				CascadingTransaction ta;
 				
 				ta = new CascadingTransaction();
 				elmt.fireIntegritaetChanged(ta);
@@ -119,7 +126,6 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 				if (loopedObject != null) {
 					throw new LoopException(loopedObject);
 				}
-			}
 		}
 
 		public Class<T> getType() {

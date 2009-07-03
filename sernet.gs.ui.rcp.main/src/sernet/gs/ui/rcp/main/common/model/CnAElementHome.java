@@ -249,11 +249,6 @@ public class CnAElementHome {
 		cnAElement.setEntity(refreshedElement.getEntity());
 	}
 
-	public List<ChangeLogEntry> loadChangesSince(Date lastUpdate) {
-		// FIXME server: implement change log
-		return null;
-	}
-	
 	public List<ITVerbund> getItverbuende() throws CommandException {
 		LoadCnAElementByType<ITVerbund> command = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
 		command = commandService.executeCommand(command);

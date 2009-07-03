@@ -176,7 +176,8 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 				link.getDependency().getLinkChangeListener()
 						.verfuegbarkeitChanged(ta);
 			}
-			if (ta.isInitiator(parent)) {
+			// FIXME server: vererbung not working try this: fire for both item and dependency
+			if (ta.isInitiator(parent)) { 
 				ta.end(parent);
 			}
 		} catch (TransactionAbortedException tae) {
@@ -213,7 +214,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 			ta.abort();
 		}
 	}
-
+	
 	private void fireIntegritaetChanged(CascadingTransaction ta) {
 		if (ta.hasBeenVisited(parent)) {
 			Logger.getLogger(this.getClass()).debug(

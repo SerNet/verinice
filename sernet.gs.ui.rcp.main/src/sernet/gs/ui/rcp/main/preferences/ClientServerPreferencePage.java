@@ -63,7 +63,6 @@ public class ClientServerPreferencePage
 	public void createFieldEditors() {
 		createRadioGroup();
 		
-		// FIXME server: encrypt saved passworts, needs manual implementation of http digest dialog in RCP to hash passwords
 		serverURI = new StringFieldEditor(PreferenceConstants.VNSERVER_URI, 
 				"Verinice-Server", 
 				getFieldEditorParent());

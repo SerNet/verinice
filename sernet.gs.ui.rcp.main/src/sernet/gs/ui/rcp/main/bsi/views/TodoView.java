@@ -75,8 +75,8 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForTodoView;
  *
  */
 public class TodoView extends ViewPart implements IMassnahmenListView {
-	
-	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.todoview"; //$NON-NLS-1$
+	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." +
+			"todoview"; //$NON-NLS-1$
 
 	private static class TodoLabelProvider extends LabelProvider implements ITableLabelProvider {
 

@@ -98,10 +98,31 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 	}
 	
 	public void modelReload(BSIModel newModel) {
-		((BSIModel)viewer.getInput()).removeBSIModelListener(this);
+		// remove listener from currently displayed model:
+		getModel(viewer.getInput()).removeBSIModelListener(this);
 		newModel.addBSIModelListener(this);
 		updater.setInput(newModel);
 		updater.refresh();
+	}
+
+	/**
+	 * Get model, may be current viewer input or the root of the currently displayed
+	 * element.
+	 * 
+	 * @param input
+	 * @return
+	 */
+	private BSIModel getModel(Object input) {
+		if (input instanceof BSIModel)
+			return (BSIModel) input;
+		
+		if (input instanceof CnATreeElement) {
+			CnATreeElement elmt = (CnATreeElement) input;
+			return getModel(elmt.getParent());
+		}
+		
+		// input is not part of a proper tree / no BSIModel object could be found as parent:
+		return null;
 	}
 
 	public void linkChanged(CnALink link) {
