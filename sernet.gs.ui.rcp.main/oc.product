@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
-<product name="verinice" id="sernet.gs.ui.rcp.main.product" version="0.7.1" useFeatures="true">
+<product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="0.7.1" useFeatures="true">
 
    <aboutInfo>
       <image path="icons/product_lg.gif"/>
@@ -36,7 +36,6 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
 
    <windowImages i16="/sernet.gs.ui.rcp.main/icons/window16.gif" i32="/sernet.gs.ui.rcp.main/icons/window32.gif"/>
 
-
    <launcher name="verinice">
       <linux icon="/sernet.gs.ui.rcp.main/wxcas.xpm"/>
       <macosx icon="/sernet.gs.ui.rcp.main/icons/v_logo_mac.icns"/>
@@ -52,7 +51,6 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
             winLargeLow="/sernet.gs.ui.rcp.main/icons/ico8-48x48.bmp"/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
@@ -119,15 +117,15 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
       <plugin id="sernet.gs.service"/>
       <plugin id="sernet.gs.tagsoup_ak"/>
       <plugin id="sernet.gs.ui.rcp.main"/>
-      <plugin id="verinice.nl1.org.eclipse.jface" fragment="true"/>
-      <plugin id="verinice.nl1.org.eclipse.swt" fragment="true"/>
-      <plugin id="verinice.nl1.org.eclipse.ui" fragment="true"/>
-      <plugin id="verinice.nl1.org.eclipse.ui.cheatsheets" fragment="true"/>
-      <plugin id="verinice.nl1.org.eclipse.ui.workbench" fragment="true"/>
+      <plugin id="verinice.nl1.org.eclipse.jface"/>
+      <plugin id="verinice.nl1.org.eclipse.swt"/>
+      <plugin id="verinice.nl1.org.eclipse.ui"/>
+      <plugin id="verinice.nl1.org.eclipse.ui.cheatsheets"/>
+      <plugin id="verinice.nl1.org.eclipse.ui.workbench"/>
    </plugins>
 
    <features>
-      <feature id="sernet.gs.ui.rcp.main.feature" version="0.7.1"/>
+      <feature id="sernet.gs.ui.rcp.main.feature" version="0.8.0"/>
    </features>
 
 </product>
