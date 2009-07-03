@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping package="sernet.hui.common.connect">
+<hibernate-mapping package="sernet.hui.common.connect" default-lazy="false">
 	<class name="PropertyList" 
 		table="propertylist" 
 		batch-size="100">

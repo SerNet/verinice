@@ -7,7 +7,7 @@
 	@author ahanekop@sernet.de
  -->
  
-<hibernate-mapping package="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model">
+<hibernate-mapping package="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model" default-lazy="false">
 	<class name="FinishedRiskAnalysisLists">
 		
 		<id name="dbId" 

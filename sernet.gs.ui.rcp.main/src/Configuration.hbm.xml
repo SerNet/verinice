@@ -6,7 +6,7 @@
 	Configuration items.
 	@author koderman@sernet.de
  -->
-<hibernate-mapping package="sernet.gs.ui.rcp.main.common.model.configuration">
+<hibernate-mapping package="sernet.gs.ui.rcp.main.common.model.configuration" default-lazy="false">
 	<class name="Configuration">
 		
 		<id name="dbId" 
