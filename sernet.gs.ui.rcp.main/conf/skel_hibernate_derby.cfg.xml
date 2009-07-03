@@ -11,7 +11,7 @@
 ###########################################################################
     	DO NOT EDIT. ANY CHANGES YOU MAKE WILL BE OVERWRITTEN
     	
-    	Please configure your databse in the preferences dialog of
+    	Please configure your database in the preferences dialog of
     	the application.
     	
     	Or edit skel_hibernate_derby.cfg.xml in the application .jar file, 

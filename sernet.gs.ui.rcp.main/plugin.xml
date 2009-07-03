@@ -142,7 +142,7 @@
       <key
             commandId="sernet.gs.ui.rcp.main.reloadaction"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="STRG+F5">
+            sequence="CTRL+F5">
       </key>
    </extension>
    <extension

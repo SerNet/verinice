@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
+<<<<<<< .mine
+<product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.0.1" useFeatures="true">
+=======
 <product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="0.7.1" useFeatures="true">
+>>>>>>> .r281
 
    <aboutInfo>
       <image path="icons/product_lg.gif"/>
@@ -12,7 +16,7 @@
 1996-2009
 
 
-Contact the author:
+Contact the authors:
 verinice@sernet.de
 
 or
@@ -125,7 +129,11 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
    </plugins>
 
    <features>
+<<<<<<< .mine
+      <feature id="sernet.gs.ui.rcp.main.feature" version="1.0.0"/>
+=======
       <feature id="sernet.gs.ui.rcp.main.feature" version="0.8.0"/>
+>>>>>>> .r281
    </features>
 
 </product>
