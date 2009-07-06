@@ -405,7 +405,7 @@
             objectClass="sernet.gs.ui.rcp.main.bsi.model.ITVerbund">
              <action
                    class="sernet.gs.ui.rcp.main.bsi.actions.AddITVerbundActionDelegate"
-                   enablesFor="+"
+                   enablesFor="*"
                    icon="icons/tree_explorer.gif"
                    id="sernet.gs.ui.rcp.main.additverbund"
                    label="Neuer IT-Verbund"
