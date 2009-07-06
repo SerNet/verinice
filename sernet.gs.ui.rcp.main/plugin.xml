@@ -217,7 +217,7 @@
              </action>
              <action
                    class="sernet.gs.ui.rcp.main.bsi.risikoanalyse.actions.NeueRisikoanalyseAction"
-                   enablesFor="+"
+                   enablesFor="1"
                    icon="icons/16-message-warn.png"
                    id="sernet.gs.ui.rcp.main.neueRisikoanalyse"
                    label="Neue Risikoanalyse"
