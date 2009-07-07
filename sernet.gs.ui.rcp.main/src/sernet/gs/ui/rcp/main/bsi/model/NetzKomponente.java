@@ -60,7 +60,7 @@ public class NetzKomponente extends CnATreeElement
 	
 	
 	
-	 NetzKomponente() {
+	protected NetzKomponente() {
 		
 	}
 	

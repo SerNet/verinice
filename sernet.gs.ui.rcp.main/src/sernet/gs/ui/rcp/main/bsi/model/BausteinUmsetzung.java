@@ -68,7 +68,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 		setEntity(new Entity(TYPE_ID));
 	}
 	
-	 BausteinUmsetzung() {
+	protected BausteinUmsetzung() {
 		// hibernate constructor
 	}
 	

@@ -67,7 +67,7 @@ public class Raum extends CnATreeElement
 		return 2;
 	}
 	
-	 Raum() {
+	protected Raum() {
 		
 	}
 	

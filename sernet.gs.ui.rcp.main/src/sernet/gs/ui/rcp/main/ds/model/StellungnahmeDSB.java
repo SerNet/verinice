@@ -40,7 +40,7 @@ public class StellungnahmeDSB extends CnATreeElement
 		setEntity(new Entity(TYPE_ID));
 	}
 	
-	 StellungnahmeDSB() {
+	protected StellungnahmeDSB() {
 	}
 	
 	@Override

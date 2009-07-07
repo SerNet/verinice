@@ -70,7 +70,7 @@ public class Server extends CnATreeElement
 		return 3;
 	}
 	
-	 Server() {
+	protected Server() {
 		
 	}
 	

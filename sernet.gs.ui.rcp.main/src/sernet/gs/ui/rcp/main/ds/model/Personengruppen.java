@@ -40,7 +40,7 @@ public class Personengruppen extends CnATreeElement
 		setEntity(new Entity(TYPE_ID));
 	}
 	
-	 Personengruppen() {
+	protected Personengruppen() {
 	}
 	
 	@Override

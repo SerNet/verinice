@@ -68,7 +68,7 @@ private final ILinkChangeListener linkChangeListener
 		return 3;
 	}
 	
-	 Client() {
+	protected Client() {
 		
 	}
 	

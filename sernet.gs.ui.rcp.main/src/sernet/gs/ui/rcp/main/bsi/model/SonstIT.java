@@ -70,7 +70,7 @@ public class SonstIT extends CnATreeElement
 		return 3;
 	}
 	
-	 SonstIT() {
+	protected SonstIT() {
 		
 	}
 	

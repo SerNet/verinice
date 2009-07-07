@@ -70,7 +70,7 @@ public class TelefonKomponente extends CnATreeElement
 		return 3;
 	}
 	
-	 TelefonKomponente() {
+	protected TelefonKomponente() {
 		
 	}
 	

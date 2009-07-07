@@ -27,7 +27,7 @@ public class BausteinVorschlag implements Serializable {
 	private String bausteine;
 	private String name;
 	
-	BausteinVorschlag() {
+	protected BausteinVorschlag() {
 		// hibernate constructor
 	}
 

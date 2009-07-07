@@ -32,7 +32,7 @@ public class Verarbeitungsangaben extends CnATreeElement
 		setEntity(new Entity(TYPE_ID));
 	}
 	
-	 Verarbeitungsangaben() {
+	protected Verarbeitungsangaben() {
 	}
 	
 	@Override

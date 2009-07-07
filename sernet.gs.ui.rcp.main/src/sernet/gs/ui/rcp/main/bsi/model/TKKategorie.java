@@ -28,7 +28,7 @@ public class TKKategorie extends CnATreeElement implements IBSIStrukturKategorie
 	}
 	
 	
-	TKKategorie() {
+	protected TKKategorie() {
 		
 	}
 	

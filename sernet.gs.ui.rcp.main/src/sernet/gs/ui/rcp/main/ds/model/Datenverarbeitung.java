@@ -39,7 +39,7 @@ public class Datenverarbeitung extends CnATreeElement
 		setEntity(new Entity(TYPE_ID));
 	}
 	
-	 Datenverarbeitung() {
+	protected Datenverarbeitung() {
 	}
 	
 	@Override

@@ -62,7 +62,7 @@ implements IBSIStrukturElement {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
-	 Person() {
+	protected Person() {
 		
 	}
 	

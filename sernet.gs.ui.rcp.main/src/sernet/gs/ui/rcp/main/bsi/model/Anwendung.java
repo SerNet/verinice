@@ -97,7 +97,7 @@ public class Anwendung extends CnATreeElement
 				"Neue Anwendung");
 	}
 
-	Anwendung() {
+	protected Anwendung() {
 
 	}
 	

@@ -69,7 +69,7 @@ implements IBSIStrukturElement {
 		return 2;
 	}
 	
-	 Gebaeude() {
+	protected Gebaeude() {
 		
 	}
 	
