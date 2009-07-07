@@ -90,7 +90,7 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 		getChangelisteners().remove(listener);
 	}
 	
-	Entity() {
+	protected Entity() {
 		uuid = UUID.randomUUID().toString();
 	}
 	
