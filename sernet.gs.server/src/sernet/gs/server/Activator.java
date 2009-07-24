@@ -28,11 +28,7 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		
-		ServerInitializer si = new ServerInitializer();
-		si.setConfiguration(new ServerConfiguration());
-		si.initialize();
-		
+				
 		ServiceReference sr = context.getServiceReference(WebContainer.class.getName());
 		
 		if (sr == null)
@@ -43,7 +39,7 @@ public class Activator extends Plugin {
 		HttpContext ctx = wc.createDefaultHttpContext();
 		
 		Dictionary<String, String> dict = new Hashtable<String, String>();
-		dict.put("contextConfigLocation", "WEB-INF/applicationContext-veriniceserver.xml");
+		dict.put("contextConfigLocation", "/WEB-INF/applicationContext-veriniceserver.xml");
 		wc.setContextParam(dict, ctx);
 		
 		dict = new Hashtable<String, String>();
@@ -53,11 +49,7 @@ public class Activator extends Plugin {
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "context");
 		wc.registerServlet(new ContextLoaderServlet(), new String[] { "/context" }, dict, ctx); 
-
-		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "serverTest");
-		wc.registerServlet(new ServerTestServlet(), new String[] { "/servertest" }, dict, ctx); 
-
+		
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "GetHitroConfig");
 		wc.registerServlet(new GetHitroConfig(), new String[] { "/GetHitroConfig" }, dict, ctx);

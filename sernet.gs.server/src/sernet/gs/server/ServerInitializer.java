@@ -17,20 +17,17 @@
  ******************************************************************************/
 package sernet.gs.server;
 
-import java.io.IOException;
-import java.util.Properties;
+import java.io.File;
+
+import javax.servlet.ServletConfig;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.access.BeanFactoryLocator;
-import org.springframework.beans.factory.access.BeanFactoryReference;
-import org.springframework.beans.factory.access.SingletonBeanFactoryLocator;
+import org.springframework.web.context.ServletConfigAware;
 
-import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
-import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.IConfiguration;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
@@ -43,7 +40,9 @@ import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
  * $LastChangedBy$
  *
  */
-public class ServerInitializer {
+public class ServerInitializer implements ServletConfigAware {
+	
+	ServletConfig servletConfig;
 	
 	public IConfiguration configuration;
 	
@@ -75,7 +74,7 @@ public class ServerInitializer {
 		
 		// initialize HitroUI type factory:
 		Logger.getLogger(this.getClass()).debug("Initializing server HitroUI types...");
-		HitroUtil.getInstance().init();
+		HitroUtil.getInstance().init(new File(servletConfig.getServletContext().getContextPath(), "WEB-INF" + File.separator + "SNCA.xml"));
 		
 		// initialize grundschutz scraper:
 		Logger.getLogger(this.getClass()).debug("Initializing server Grundschutz scraper...");
@@ -93,6 +92,11 @@ public class ServerInitializer {
 
 	public void setConfiguration(IConfiguration configuration) {
 		this.configuration = configuration;
+	}
+
+	@Override
+	public void setServletConfig(ServletConfig servletConfig) {
+		this.servletConfig = servletConfig;
 	}
 
 	
