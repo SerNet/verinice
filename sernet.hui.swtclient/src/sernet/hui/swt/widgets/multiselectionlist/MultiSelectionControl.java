@@ -36,7 +36,6 @@
 package sernet.hui.swt.widgets.multiselectionlist;
 
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,15 +55,12 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.Colors;
 import sernet.hui.swt.widgets.IHuiControl;
 import sernet.snutils.AssertException;
-import sernet.snutils.Tester;
-import sun.reflect.generics.tree.FieldTypeSignature;
 
 /**
  * @author prack

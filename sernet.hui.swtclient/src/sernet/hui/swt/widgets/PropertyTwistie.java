@@ -27,7 +27,6 @@ import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 import sernet.hui.common.connect.PropertyGroup;
-import sun.print.PSPrinterJob.EPSPrinter;
 
 /**
  * Groups items in the GUI. Groups can be expanded and collapsed.

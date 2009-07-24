@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.hui.swt.widgets;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -47,7 +46,6 @@ import org.eclipse.swt.widgets.Text;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.IEntityChangedListener;
-import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;

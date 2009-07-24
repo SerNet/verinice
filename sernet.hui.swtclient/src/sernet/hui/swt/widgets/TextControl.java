@@ -36,10 +36,6 @@
 package sernet.hui.swt.widgets;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;

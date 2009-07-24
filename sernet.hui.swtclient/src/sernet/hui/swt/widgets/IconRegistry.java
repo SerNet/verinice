@@ -22,7 +22,6 @@ import java.util.HashMap;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 
 /**
