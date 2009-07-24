@@ -78,6 +78,8 @@ public class Activator extends AbstractUIPlugin {
 		// set service factory location to local / remote according to preferences:
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		boolean standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_STANDALONE);
+		
+		// TODO ak is now always "remote" (change preferences dialog to allow editing localhost / remote host)
 		if (standalone)
 			ServiceFactory.setService(ServiceFactory.LOCAL);
 		else

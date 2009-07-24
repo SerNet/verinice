@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
@@ -66,16 +67,14 @@ public class HitroUtil {
 		}
 	}
 
-	private void initHitroUIFromClasspath() {
+	public void init(File sncaFile) {
 		try {
-/*			URL resource = this.getClass().getClassLoader().getResource(
-			"sernet/gs/server/SNCA.xml");*/
-			URL resource = Thread.currentThread().getContextClassLoader().getResource(
-			"SNCA.xml");
-			String huiConfig = resource != null ? resource.toString() : "";
-			initHitroUI(huiConfig);
+			initHitroUI(sncaFile.toURI().toURL().toString());
 		} catch (DBException e) {
 			throw new RuntimeException(e);
+		} catch (MalformedURLException mu)
+		{
+			throw new RuntimeException(mu);
 		}
 	}
 
@@ -126,11 +125,9 @@ public class HitroUtil {
 				initHitroUIFromWorkspace(); // init from workspace folder:
 		// workspace/conf/SNCA.xml
 		else
-			initHitroUIFromClasspath(); // init from classpath, i.e. on tomcat:
-		// WEB-INF/classes/SNCA.xml
-
+			throw new IllegalStateException("Must not be called in server mode.");
 	}
-	
+
 	public void init(String server) {
 		String huiConfig = server + "/GetHitroConfig";
 		initHitroUIFromServer(huiConfig);

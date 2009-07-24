@@ -207,6 +207,7 @@ public class CnAWorkspace {
 		workDir = (new File(path)).getAbsolutePath();		
 		confDir = new File(url.getPath() + File.separator + "conf");
 		
+		// FIXME ak update site only on multiuser-server (not in standalone)
 		if (ServiceFactory.isUsingRemoteService()) {
 			try {
 				createPolicyFile(Activator.getDefault().getPluginPreferences());

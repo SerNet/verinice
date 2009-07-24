@@ -85,7 +85,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.GS_DB_USER, PreferenceConstants.GS_DB_USER_DEFAULT); //$NON-NLS-1$
 		store.setDefault(PreferenceConstants.GS_DB_PASS, ""); //$NON-NLS-1$
 		
-		store.setDefault(PreferenceConstants.OPERATION_MODE, PreferenceConstants.OPERATION_MODE_STANDALONE);
+		store.setDefault(PreferenceConstants.OPERATION_MODE, PreferenceConstants.OPERATION_MODE_WITHSERVER);
 		
 		store.setDefault(PreferenceConstants.VNSERVER_URI, PreferenceConstants.VNSERVER_URI_DEFAULT);
 		
