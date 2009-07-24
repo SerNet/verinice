@@ -23,7 +23,6 @@
  */
 package sernet.snutils;
 
-import java.sql.SQLException;
 
 /**
  * @author prack
