@@ -24,15 +24,7 @@ import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.ui.digestauth.DigestProcessingFilter;
 import org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint;
 
-import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.IAuthService;
-import sernet.gs.ui.rcp.main.service.ICommandService;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.CreateConfiguration;
-import sernet.gs.ui.rcp.main.service.crudcommands.CreateDefaultConfiguration;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveConfiguration;
 
 /**
  * HTTP digest method authentication service.
@@ -72,7 +64,6 @@ public class AuthenticationService implements IAuthService {
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.IAuthService#getUsername()
 	 */
-	@Override
 	public String getUsername() {
 		try {
 			SecurityContext context = SecurityContextHolder.getContext();

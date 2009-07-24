@@ -17,30 +17,22 @@
  ******************************************************************************/
 package sernet.gs.server.security;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.providers.encoding.ShaPasswordEncoder;
-import org.springframework.security.ui.digestauth.DigestProcessingFilter;
-import org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 
 import sernet.gs.common.ApplicationRoles;
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadUserConfiguration;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
 
 /**
  * Provides access to user details in the verinice database.
@@ -84,7 +76,6 @@ public class DbUserDetailsService implements UserDetailsService {
 				new String[] { ApplicationRoles.ROLE_USER });
 	}
 
-	@Override
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException, DataAccessException {
 
