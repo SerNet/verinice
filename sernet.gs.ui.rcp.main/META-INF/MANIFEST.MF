@@ -52,7 +52,7 @@ Bundle-Activator: sernet.gs.ui.rcp.main.Activator
 Bundle-Vendor: SerNet
 Bundle-Localization: plugin
 Require-Bundle: com.ibm.icu;bundle-version="3.8.1",
- org.eclipse.core.resources;bundle-version="3.4.0",
+ org.eclipse.core.resources;bundle-version="3.4.0";visibility:=reexport,
  org.eclipse.ui.ide;bundle-version="3.4.0",
  org.eclipse.rcp;bundle-version="3.2.0",
  org.eclipse.help;bundle-version="3.3.100",
@@ -66,10 +66,7 @@ Require-Bundle: com.ibm.icu;bundle-version="3.8.1",
  org.eclipse.update.ui;bundle-version="3.2.100",
  org.eclipse.core.net;bundle-version="1.1.0",
  org.eclipse.equinox.security;bundle-version="1.0.1",
- org.eclipse.ui.net;bundle-version="1.0.0",
- sernet.springclient;bundle-version="1.1.0",
- sernet.hui.swtclient;bundle-version="1.0.0",
- sernet.gs.service;bundle-version="1.7.1"
+ org.eclipse.ui.net;bundle-version="1.0.0"
 Eclipse-LazyStart: true
 Eclipse-RegisterBuddy: sernet.springclient
 Export-Package: com.heatonresearch.datamover,
@@ -106,3 +103,19 @@ Export-Package: com.heatonresearch.datamover,
  sernet.gs.ui.rcp.main.service.taskcommands,
  sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis,
  sernet.gs.ui.rcp.office
+Import-Package: org.apache.commons.codec.binary,
+ org.apache.log4j,
+ org.springframework.beans.factory,
+ org.springframework.beans.factory.access,
+ org.springframework.beans.factory.xml,
+ org.springframework.orm.hibernate3,
+ org.springframework.orm.hibernate3.support,
+ sernet.gs.model,
+ sernet.gs.scraper,
+ sernet.gs.service,
+ sernet.hui.common.connect,
+ sernet.hui.common.multiselectionlist,
+ sernet.hui.swt.widgets,
+ sernet.hui.swt.widgets.URL,
+ sernet.snutils,
+ sernet.springclient
