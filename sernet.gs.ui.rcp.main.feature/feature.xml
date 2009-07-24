@@ -2051,7 +2051,7 @@ Public License instead of this License.  But first, please read
          id="sernet.gs.ui.rcp.main"
          download-size="35000"
          install-size="0"
-         version="0.7.1"
+         version="0.8.0"
          unpack="false"/>
 
    <plugin
@@ -2082,6 +2082,27 @@ Public License instead of this License.  But first, please read
          download-size="0"
          install-size="0"
          version="1.1.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.hui.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.hui.swtclient"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.service"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
