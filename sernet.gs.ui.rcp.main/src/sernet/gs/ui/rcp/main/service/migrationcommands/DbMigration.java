@@ -30,7 +30,7 @@ public abstract class DbMigration extends GenericCommand {
 	public abstract double getVersion();
 	
 	protected void updateVersion() {
-		Logger.getLogger(this.getClass()).debug("Settings DB version to " + getVersion());
+		Logger.getLogger(this.getClass()).debug("Setting DB version to " + getVersion());
 		try {
 			LoadBSIModel command2 = new LoadBSIModel();
 			command2 = getCommandService().executeCommand(command2);

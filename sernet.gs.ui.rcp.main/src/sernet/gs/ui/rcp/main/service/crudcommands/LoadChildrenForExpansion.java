@@ -40,8 +40,6 @@ public class LoadChildrenForExpansion extends GenericCommand {
 	private Class<? extends CnATreeElement> clazz;
 
 	public LoadChildrenForExpansion(CnATreeElement parent) {
-		this.parent = parent;
-
 		// slim down for transfer:
 		dbId = parent.getDbId();
 		clazz = parent.getClass();

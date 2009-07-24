@@ -96,6 +96,7 @@ public class HibernateCommandService implements ICommandService {
 			command.clear();
 		} 
 		catch (Exception e) {
+			// TODO ak kein exception handler -> ganz böse
 			if (exceptionHandler != null)
 				exceptionHandler.handle(e);
 		}

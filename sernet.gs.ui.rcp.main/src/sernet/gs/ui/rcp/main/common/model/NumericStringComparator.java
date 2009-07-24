@@ -73,6 +73,8 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import java.util.Comparator;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
+
 /**
  * A Comparator which deals with alphabet characters 'naturally', but 
  * deals with numerics numerically. Leading 0's are ignored numerically,
@@ -144,10 +146,16 @@ public class NumericStringComparator implements Comparator {
 			} else if (zero1 < zero2) {
 				ret = -1;
 			}
+			
 			if (edx1 != -1) {
-				int comp = compare(s1.substring(edx1), s2.substring(edx2));
-				if (comp != 0) {
-					ret = comp;
+				// FIXME ak the next line sometimes produces an ArrayOutOfBounds exception
+				try {
+					int comp = compare(s1.substring(edx1), s2.substring(edx2));
+					if (comp != 0) {
+						ret = comp;
+					}
+				} catch (Exception e) {
+					ExceptionUtil.log(e, "Fehler bei Stringvergleich: " + s1 + " : " + s2);
 				}
 			}
 			return ret;
