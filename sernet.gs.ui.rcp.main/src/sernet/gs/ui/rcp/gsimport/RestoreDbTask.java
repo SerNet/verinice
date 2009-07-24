@@ -19,17 +19,10 @@ package sernet.gs.ui.rcp.gsimport;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.log4j.Logger;
 
 import sernet.gs.reveng.importData.BackupFileLocation;
 import sernet.gs.reveng.importData.GSVampire;
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 public class RestoreDbTask {
 	private GSVampire vampire;

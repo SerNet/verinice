@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views.chart;
 
-import org.jfree.chart.labels.CategoryItemLabelGenerator;
 import org.jfree.chart.labels.CategorySeriesLabelGenerator;
 import org.jfree.data.category.CategoryDataset;
 

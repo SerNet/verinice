@@ -19,9 +19,6 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import java.util.Map;
 
-import javax.management.NotCompliantMBeanException;
-
-import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.statscommands.CompletedLayerSummary;

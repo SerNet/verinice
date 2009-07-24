@@ -17,12 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 
 /**
  * A transaction that can only be stopped by the object that started it.

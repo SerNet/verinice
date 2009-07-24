@@ -19,8 +19,6 @@ package sernet.gs.ui.rcp.main.reports;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;

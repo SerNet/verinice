@@ -18,40 +18,23 @@
 package sernet.gs.ui.rcp.gsimport;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
 import org.hibernate.exception.SQLGrammarException;
 
-import com.heatonresearch.datamover.DataMover;
-import com.heatonresearch.datamover.db.Database;
-import com.heatonresearch.datamover.db.DatabaseException;
-import com.heatonresearch.datamover.db.DerbyDatabase;
-import com.heatonresearch.datamover.db.MDBFileDatabase;
-import com.heatonresearch.datamover.db.MySQL;
-
-import sernet.gs.model.Baustein;
 import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MbBaust;
-import sernet.gs.reveng.MbBaustId;
-import sernet.gs.reveng.MbMassn;
 import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.ModZobjBst;
-import sernet.gs.reveng.ModZobjBstId;
 import sernet.gs.reveng.ModZobjBstMass;
-import sernet.gs.reveng.ModZobjBstMassId;
 import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
@@ -60,25 +43,25 @@ import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.actions.AddITVerbundActionDelegate;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.CnAElementBuilder;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Schutzbedarf;
-import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
-import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportCreateBausteine;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportTransferSchutzbedarf;
+
+import com.heatonresearch.datamover.DataMover;
+import com.heatonresearch.datamover.db.Database;
+import com.heatonresearch.datamover.db.DerbyDatabase;
+import com.heatonresearch.datamover.db.MDBFileDatabase;
 
 /**
  * Import GSTOOL(tm) databases using the GSVampire. Maps GStool-database objects

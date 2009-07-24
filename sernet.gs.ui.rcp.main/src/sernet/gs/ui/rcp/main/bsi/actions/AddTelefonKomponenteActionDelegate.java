@@ -25,14 +25,6 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
-import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
-import sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.Raum;
-import sernet.gs.ui.rcp.main.bsi.model.Server;
-import sernet.gs.ui.rcp.main.bsi.model.ServerKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;

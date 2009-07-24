@@ -20,9 +20,6 @@ package sernet.gs.ui.rcp.main.bsi.wizards;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,16 +31,12 @@ import org.eclipse.ui.IWorkbench;
 
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
-import sernet.gs.ui.rcp.main.reports.PropertiesRow;
 import sernet.gs.ui.rcp.main.reports.PropertySelection;
-import sernet.gs.ui.rcp.main.reports.TextReport;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.ReportGetRowsCommand;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.gs.ui.rcp.office.OOWrapper;
-import sernet.hui.common.connect.EntityType;
 import sernet.snutils.ExceptionHandlerFactory;
 
 /**

@@ -17,29 +17,17 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
-import org.springframework.orm.hibernate3.SpringSessionContext;
 
-import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.ICommand;
-import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
-import sernet.hui.common.connect.PropertyType;
 
 /**
  * Command service that executes commands using hibernate DAOs to access the

@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;

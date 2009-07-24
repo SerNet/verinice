@@ -17,11 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.util.List;
-import java.util.Set;
-
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;

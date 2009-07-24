@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
 
-import sernet.gs.ui.rcp.gsimport.TransferData;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider;
 import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;

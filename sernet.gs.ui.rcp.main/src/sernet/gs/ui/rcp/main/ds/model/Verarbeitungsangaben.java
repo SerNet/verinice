@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.ds.model;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 
 public class Verarbeitungsangaben extends CnATreeElement 
 	implements IDatenschutzElement {

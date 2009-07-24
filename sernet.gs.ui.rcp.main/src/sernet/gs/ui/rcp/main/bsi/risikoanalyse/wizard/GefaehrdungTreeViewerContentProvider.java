@@ -18,7 +18,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 

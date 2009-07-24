@@ -24,8 +24,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.update.ui.UpdateJob;
 import org.eclipse.update.ui.UpdateManagerUI;
 
-import sernet.gs.ui.rcp.main.ImageCache;
-
 public class UpdateAction extends Action implements IAction {
 	private IWorkbenchWindow window;
 	

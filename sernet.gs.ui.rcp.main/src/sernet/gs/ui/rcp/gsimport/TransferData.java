@@ -19,42 +19,27 @@ package sernet.gs.ui.rcp.gsimport;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MbDringlichkeit;
 import sernet.gs.reveng.MbDringlichkeitId;
 import sernet.gs.reveng.MbDringlichkeitTxt;
 import sernet.gs.reveng.MbRolleTxt;
 import sernet.gs.reveng.NZielobjekt;
-import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
-import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
-import sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
-import sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Raum;
 import sernet.gs.ui.rcp.main.bsi.model.Schutzbedarf;
 import sernet.gs.ui.rcp.main.bsi.model.Server;
-import sernet.gs.ui.rcp.main.bsi.model.ServerKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
-import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
-import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 

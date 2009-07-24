@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.common.model.configuration;
 import java.io.Serializable;
 
 import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;

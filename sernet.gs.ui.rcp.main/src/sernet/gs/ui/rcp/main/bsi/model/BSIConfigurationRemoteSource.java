@@ -17,9 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
-import java.util.Properties;
-
-import sernet.gs.ui.rcp.main.service.IConfiguration;
 
 /**
  * No configuration, use remote scraper instead. 

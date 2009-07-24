@@ -17,51 +17,23 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
-import java.io.File;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.Query;
-import org.hibernate.SessionFactory;
 import org.hibernate.StaleObjectStateException;
-import org.hibernate.Transaction;
-import org.hibernate.UnresolvableObjectException;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.classic.Session;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisListsHome;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.ICommand;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateLink;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
@@ -73,9 +45,6 @@ import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
-import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
 
 /**
  * DAO class for model objects. Uses Hibernate as persistence framework.

@@ -17,22 +17,15 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindResponsiblePerson;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;

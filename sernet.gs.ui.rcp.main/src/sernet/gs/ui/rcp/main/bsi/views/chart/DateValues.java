@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.views.chart;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;

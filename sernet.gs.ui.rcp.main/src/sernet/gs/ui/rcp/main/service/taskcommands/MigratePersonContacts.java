@@ -23,7 +23,6 @@ import java.util.List;
 
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.DAOFactory;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;

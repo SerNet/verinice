@@ -18,14 +18,9 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.hibernate.HibernateException;
 
@@ -48,14 +43,11 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.ObjectDeletedException;
 import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
 import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
 import sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB;
 import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
 import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 
 /**
  * This class maps editors for different ressources and either opens a new

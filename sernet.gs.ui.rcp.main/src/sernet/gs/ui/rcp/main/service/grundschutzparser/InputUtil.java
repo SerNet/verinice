@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.service.grundschutzparser;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public abstract class InputUtil {
 

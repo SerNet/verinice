@@ -23,11 +23,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -36,8 +34,6 @@ import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AutoBausteinDialog;
-import sernet.gs.ui.rcp.main.bsi.dialogs.KonsolidatorDialog;
-import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
@@ -45,7 +41,6 @@ import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.hui.common.connect.EntityType;
 
 public class BausteinZuordnungAction extends Action implements
 		ISelectionListener {

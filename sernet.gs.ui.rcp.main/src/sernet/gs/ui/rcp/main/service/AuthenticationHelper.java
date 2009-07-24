@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service;
 
-import org.apache.derby.impl.sql.compile.CurrentRowLocationNode;
 
 public class AuthenticationHelper {
 

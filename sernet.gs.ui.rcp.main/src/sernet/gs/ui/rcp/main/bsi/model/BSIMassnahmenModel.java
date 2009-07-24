@@ -18,15 +18,12 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
 
 import org.apache.log4j.Logger;
 
@@ -40,12 +37,9 @@ import sernet.gs.scraper.PatternGSHB2005_2006;
 import sernet.gs.scraper.URLGSSource;
 import sernet.gs.scraper.ZIPGSSource;
 import sernet.gs.service.GSServiceException;
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.GetBausteinText;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.GetGefaehrdungText;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.GetMassnahmeText;

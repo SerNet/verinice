@@ -27,11 +27,7 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.TodoFilterDialog;
 import sernet.gs.ui.rcp.main.bsi.filter.AuditDurchFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.StringPropertyFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.UmsetzungDurchFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.ZielobjektPropertyFilter;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 
 public class AuditViewFilterAction extends Action {
 	private Shell shell;

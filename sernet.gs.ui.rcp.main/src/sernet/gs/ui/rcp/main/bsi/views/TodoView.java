@@ -53,16 +53,12 @@ import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.actions.TodoViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForTodoView;
 
 /**

@@ -17,11 +17,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
-import org.eclipse.jface.preference.*;
+import org.eclipse.jface.preference.DirectoryFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
+
 import sernet.gs.ui.rcp.main.Activator;
 
 /**

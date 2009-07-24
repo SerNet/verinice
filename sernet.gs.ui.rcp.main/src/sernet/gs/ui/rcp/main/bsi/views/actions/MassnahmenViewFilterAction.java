@@ -28,8 +28,6 @@ import sernet.gs.ui.rcp.main.bsi.filter.BSISchichtFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.BSISearchFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.GefaehrdungenFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 
 /**
  * Action that opens a dialog to let the user change filter settings

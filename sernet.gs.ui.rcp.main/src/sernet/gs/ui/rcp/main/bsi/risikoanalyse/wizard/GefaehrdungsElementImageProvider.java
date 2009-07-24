@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import org.eclipse.swt.graphics.Image;
 
-import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;

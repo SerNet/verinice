@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.actions;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
@@ -37,13 +36,8 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
-import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -51,7 +45,6 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveConfiguration;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;

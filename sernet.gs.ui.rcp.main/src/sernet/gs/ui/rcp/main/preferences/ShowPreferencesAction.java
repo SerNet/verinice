@@ -17,19 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.dialogs.PreferencesPageContainer;
-
-import sernet.gs.ui.rcp.main.Application;
-import sernet.gs.ui.rcp.main.ImageCache;
 
 public class ShowPreferencesAction extends Action {
 	

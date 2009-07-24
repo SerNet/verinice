@@ -17,12 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
-import java.sql.Timestamp;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-
-import org.apache.log4j.Logger;
 
 /**
  * Class to check for model changes made by other clients.

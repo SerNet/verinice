@@ -21,7 +21,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.connect.BSIConfigurationServer;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;

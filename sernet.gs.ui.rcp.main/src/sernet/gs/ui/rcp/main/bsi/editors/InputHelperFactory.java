@@ -17,17 +17,13 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Raum;
@@ -35,12 +31,9 @@ import sernet.gs.ui.rcp.main.bsi.model.Schutzbedarf;
 import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;

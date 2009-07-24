@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.GefaehrdungsUtil;
 
 public class FinishedRiskAnalysisLists implements Serializable {

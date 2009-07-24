@@ -17,9 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 

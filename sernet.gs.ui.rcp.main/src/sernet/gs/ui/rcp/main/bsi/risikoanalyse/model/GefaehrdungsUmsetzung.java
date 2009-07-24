@@ -21,14 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.ImageCache;
+
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.GefaehrdungsBaumRoot;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 
 public class GefaehrdungsUmsetzung extends CnATreeElement
 	implements IGefaehrdungsBaumElement {

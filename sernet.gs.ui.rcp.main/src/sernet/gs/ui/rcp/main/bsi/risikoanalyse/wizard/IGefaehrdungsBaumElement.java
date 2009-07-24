@@ -19,7 +19,6 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.List;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * Interface must be implemented by elements, which can be added to

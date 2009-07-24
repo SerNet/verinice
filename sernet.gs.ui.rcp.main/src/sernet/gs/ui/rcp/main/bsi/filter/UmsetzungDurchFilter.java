@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.filter;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,8 +25,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 import sernet.gs.ui.rcp.main.bsi.model.IMassnahmeUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.hui.common.connect.Entity;
 
 
 /**

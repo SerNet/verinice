@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
-import java.io.File;
 
 /**
  * Constant definitions for plug-in preferences

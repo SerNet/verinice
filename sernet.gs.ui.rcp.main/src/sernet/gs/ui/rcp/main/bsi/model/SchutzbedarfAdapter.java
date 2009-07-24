@@ -19,27 +19,15 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.io.Serializable;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
-
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.TransactionAbortedException;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.IEntityChangedListener;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.connect.PropertyList;
-import sernet.hui.common.multiselectionlist.IMLPropertyOption;
-import sernet.hui.common.multiselectionlist.IMLPropertyType;
 
 /**
  * Adapter for elements that provide or receive protection levels.

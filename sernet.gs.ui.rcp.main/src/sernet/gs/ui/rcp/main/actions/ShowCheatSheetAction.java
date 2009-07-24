@@ -17,22 +17,13 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.internal.cheatsheets.views.CheatSheetView;
-
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.Application;
-import sernet.gs.ui.rcp.main.ICommandIds;
-import sernet.gs.ui.rcp.main.ImageCache;
 
 
 public class ShowCheatSheetAction extends Action {

@@ -19,26 +19,18 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.sun.star.ucb.CommandFailedException;
-
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
-import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServerCommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindURLs;
-import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiUrl;
@@ -46,9 +38,7 @@ import sernet.hui.common.connect.IReferenceResolver;
 import sernet.hui.common.connect.IUrlResolver;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
-import sernet.hui.common.multiselectionlist.IContextMenuListener;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
-import sernet.hui.swt.widgets.IInputHelper;
 
 /**
  * The HUI framework has no knowledge aout the database, so this factory

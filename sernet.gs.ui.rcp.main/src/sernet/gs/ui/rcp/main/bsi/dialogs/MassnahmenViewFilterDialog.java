@@ -18,14 +18,9 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -37,10 +32,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.PropertyType;
 
 public class MassnahmenViewFilterDialog extends FilterDialog {
 

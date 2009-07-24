@@ -22,10 +22,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.WorkbenchPart;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ICommandIds;
 import sernet.gs.ui.rcp.main.ImageCache;
 
 

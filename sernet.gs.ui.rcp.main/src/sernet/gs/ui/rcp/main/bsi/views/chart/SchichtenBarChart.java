@@ -35,14 +35,10 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RectangleEdge;
 
-import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.PropertyType;
 
 public class SchichtenBarChart implements IChartGenerator {
 

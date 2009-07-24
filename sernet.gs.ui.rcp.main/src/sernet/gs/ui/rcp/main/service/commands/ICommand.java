@@ -21,7 +21,6 @@ import java.io.Serializable;
 
 import sernet.gs.ui.rcp.main.service.DAOFactory;
 import sernet.gs.ui.rcp.main.service.ICommandService;
-import sernet.gs.ui.rcp.main.service.IResourceCollection;
 
 /**
  * Interface for data access commands that can be executed by a local or remote CommandService. 

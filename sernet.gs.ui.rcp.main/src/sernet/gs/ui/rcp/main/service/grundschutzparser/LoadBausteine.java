@@ -17,11 +17,9 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.grundschutzparser;
 
-import java.io.IOException;
 import java.util.List;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;

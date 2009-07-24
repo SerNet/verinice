@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.wizards;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 

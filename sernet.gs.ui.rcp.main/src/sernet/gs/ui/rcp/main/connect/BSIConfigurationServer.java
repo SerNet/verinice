@@ -20,18 +20,10 @@ package sernet.gs.ui.rcp.main.connect;
 import java.io.File;
 import java.net.URL;
 import java.util.Properties;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.access.BeanFactoryLocator;
-import org.springframework.beans.factory.access.BeanFactoryReference;
-import org.springframework.beans.factory.access.SingletonBeanFactoryLocator;
 
 import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
-import sernet.gs.ui.rcp.main.service.ICommandService;
-import sernet.gs.ui.rcp.main.service.IConfiguration;
-import sernet.springclient.SpringClientPlugin;
 
 public class BSIConfigurationServer implements IBSIConfig {
 

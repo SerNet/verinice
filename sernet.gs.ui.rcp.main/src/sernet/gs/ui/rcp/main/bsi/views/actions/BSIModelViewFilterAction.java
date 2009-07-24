@@ -19,24 +19,16 @@ package sernet.gs.ui.rcp.main.bsi.views.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BSIModelFilterDialog;
-import sernet.gs.ui.rcp.main.bsi.dialogs.FilterDialog;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.BSISchichtFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.StringPropertyFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 
 /**
  * Sets filters for the BSI model view.

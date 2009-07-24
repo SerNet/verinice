@@ -63,7 +63,6 @@ import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
 import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
 import sernet.gs.ui.rcp.main.ds.model.Zweckbestimmung;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 
 /**

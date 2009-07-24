@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 /**

@@ -25,27 +25,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
-import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.bsi.dialogs.KonsolidatorDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.model.Konsolidator;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
-import sernet.snutils.ExceptionHandlerFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
  * Handles drop events of objects to create links between them.

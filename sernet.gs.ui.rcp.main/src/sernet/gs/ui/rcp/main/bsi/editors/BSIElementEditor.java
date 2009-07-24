@@ -17,9 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
-import java.util.ArrayList;
-
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -31,33 +28,20 @@ import org.eclipse.ui.part.EditorPart;
 import org.hibernate.StaleObjectStateException;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
-import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.bsi.model.Server;
-import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
-import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadUserConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.IEntityChangedListener;
-import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
-import sernet.hui.swt.widgets.IInputHelper;
-import sernet.snutils.DBException;
 
 /**
  * Editor for all BSI elements with attached HUI entities.

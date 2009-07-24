@@ -17,16 +17,10 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;

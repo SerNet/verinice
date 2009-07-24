@@ -17,18 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
-import java.io.PrintStream;
-import java.io.StringWriter;
-
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.exception.GenericJDBCException;
 

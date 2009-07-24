@@ -35,7 +35,6 @@ import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.ui.rcp.gsimport.ImportKostenUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.ServerCommandService;

@@ -21,49 +21,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.Category;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.hibernate.Transaction;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
-import sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Raum;
 import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
-import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.SubtypenZielobjekte;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
-import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
-import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
-import sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB;
-import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
-import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateAnwendung;
-import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateITVerbund;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
-import sernet.gs.ui.rcp.main.service.migrationcommands.DbMigration;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
-import sernet.gs.ui.rcp.main.service.migrationcommands.MigrateDbTo0_92;
-import sernet.hui.common.connect.Entity;
 
 /**
  * Factory for all model elements. Contains typed factories for sub-elements.

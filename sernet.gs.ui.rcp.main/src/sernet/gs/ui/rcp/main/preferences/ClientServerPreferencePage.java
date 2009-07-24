@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -28,7 +27,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CnAWorkspace;
 
 /**
  * Preference page to switch between client / server settings.

@@ -17,15 +17,10 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.filter;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import sernet.gs.model.Gefaehrdung;
-import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;

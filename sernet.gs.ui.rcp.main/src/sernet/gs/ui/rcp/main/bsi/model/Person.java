@@ -24,9 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;

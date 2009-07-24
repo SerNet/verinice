@@ -20,12 +20,10 @@ package sernet.gs.ui.rcp.main;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.cheatsheets.views.CheatSheetView;
 
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
-import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
+import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 
 public class Perspective implements IPerspectiveFactory {
 	public static final String ID = "sernet.gs.ui.rcp.main.perspective";

@@ -17,13 +17,11 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 
 public class StatusLine {

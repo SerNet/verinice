@@ -23,7 +23,6 @@ import java.net.MalformedURLException;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
 
-import sernet.gs.scraper.IGSSource;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;

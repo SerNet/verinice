@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;

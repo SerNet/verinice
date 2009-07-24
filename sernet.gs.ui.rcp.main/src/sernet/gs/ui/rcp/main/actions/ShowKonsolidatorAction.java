@@ -22,49 +22,27 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.Application;
-import sernet.gs.ui.rcp.main.ApplicationActionBarAdvisor;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.ICommandIds;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.KonsolidatorDialog;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
-import sernet.gs.ui.rcp.main.bsi.model.Konsolidator;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
-import sernet.gs.ui.rcp.main.bsi.wizards.ExportWizard;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.KonsolidatorCommand;
-import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
-import sernet.hui.common.connect.HUITypeFactory;
 
 public class ShowKonsolidatorAction extends Action implements
 		ISelectionListener {

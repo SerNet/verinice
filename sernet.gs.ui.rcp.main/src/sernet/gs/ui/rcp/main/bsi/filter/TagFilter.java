@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.filter;
 
-import javax.swing.text.html.ListView;
-
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;

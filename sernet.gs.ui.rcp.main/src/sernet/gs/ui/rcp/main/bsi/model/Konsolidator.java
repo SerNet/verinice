@@ -17,9 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
-import java.util.List;
-
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
  * The Konsolidator copys values from one object to another,

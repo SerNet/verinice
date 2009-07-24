@@ -27,13 +27,11 @@ import java.util.Map;
 
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPolymorphicCnAElementById;
-import sernet.hui.common.connect.Entity;
 
 /**
  * Get list of changes from transaction log.

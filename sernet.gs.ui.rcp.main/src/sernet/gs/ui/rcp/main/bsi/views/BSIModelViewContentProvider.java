@@ -17,12 +17,9 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import org.apache.derby.iapi.services.property.PersistentSet;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.hibernate.collection.AbstractPersistentCollection;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;

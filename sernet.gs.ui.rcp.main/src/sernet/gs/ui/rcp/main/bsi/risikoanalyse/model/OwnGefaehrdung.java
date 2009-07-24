@@ -18,8 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
 import sernet.gs.model.Gefaehrdung;
-import sernet.gs.model.IGSModel;
-import sernet.hui.common.connect.Entity;
 
 public class OwnGefaehrdung extends Gefaehrdung {
 	

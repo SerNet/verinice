@@ -17,10 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
-import org.eclipse.core.internal.localstore.CopyVisitor;
-
-import com.sun.star.text.SetVariableType;
-
 import sernet.gs.model.Massnahme;
 import sernet.hui.common.connect.Entity;
 

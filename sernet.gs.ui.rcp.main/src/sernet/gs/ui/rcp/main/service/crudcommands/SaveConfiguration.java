@@ -18,23 +18,12 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
-import org.apache.commons.codec.binary.Hex;
-import org.springframework.orm.hibernate3.SpringSessionContext;
-
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.IAuthService;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
-import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.hui.common.connect.Property;
 
 /**

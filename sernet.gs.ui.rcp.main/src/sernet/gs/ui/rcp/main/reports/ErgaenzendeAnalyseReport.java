@@ -18,21 +18,15 @@
 package sernet.gs.ui.rcp.main.reports;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Schutzbedarf;
-import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 

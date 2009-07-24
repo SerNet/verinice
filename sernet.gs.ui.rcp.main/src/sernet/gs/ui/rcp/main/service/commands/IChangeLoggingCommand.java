@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.service.commands;
 import java.util.List;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.IAuthService;
 
 /**
  * Command that wants to notify other clients of changes.

@@ -19,10 +19,8 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.util.Collection;
 
-import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 
 public class NetzKomponente extends CnATreeElement 
 	implements IBSIStrukturElement {

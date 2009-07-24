@@ -35,11 +35,8 @@ import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
-import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
-import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**

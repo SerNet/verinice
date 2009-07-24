@@ -17,12 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
-import java.io.InputStream;
-
-import sernet.gs.model.Massnahme;
-import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**

@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;

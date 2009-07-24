@@ -17,13 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.ds.model;
 
-import org.eclipse.swt.graphics.Image;
-
-import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 
 public class Datenverarbeitung extends CnATreeElement 
 	implements IDatenschutzElement {

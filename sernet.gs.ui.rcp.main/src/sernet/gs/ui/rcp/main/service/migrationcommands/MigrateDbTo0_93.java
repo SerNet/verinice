@@ -21,43 +21,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.internal.resources.mapping.ChangeDescription;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.GSServiceException;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
-import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.bsi.model.Server;
-import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
-import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.IProgress;
-import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelComplete;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
-import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
-import sernet.hui.common.connect.PropertyType;
 
 /**
  * Converts old massnahmenumsetzungen to new ones: add roles definitions.

@@ -19,8 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
-import sernet.gs.ui.rcp.main.ImageCache;
 
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 

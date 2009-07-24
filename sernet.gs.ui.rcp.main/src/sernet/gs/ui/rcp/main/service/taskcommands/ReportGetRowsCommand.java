@@ -17,16 +17,13 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.ICnaItemRow;
-import sernet.gs.ui.rcp.main.reports.PropertiesRow;
 import sernet.gs.ui.rcp.main.reports.PropertySelection;
 import sernet.gs.ui.rcp.main.reports.Report;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;

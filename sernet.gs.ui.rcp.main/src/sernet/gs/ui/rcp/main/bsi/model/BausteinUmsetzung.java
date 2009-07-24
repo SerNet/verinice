@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.PropertyType;
 
 public class BausteinUmsetzung extends CnATreeElement {

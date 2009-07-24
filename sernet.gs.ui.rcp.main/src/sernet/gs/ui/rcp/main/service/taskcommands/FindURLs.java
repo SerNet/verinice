@@ -24,7 +24,6 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLink;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;

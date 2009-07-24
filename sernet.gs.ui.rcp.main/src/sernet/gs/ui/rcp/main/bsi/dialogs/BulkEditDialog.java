@@ -17,29 +17,19 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
-import java.util.Map;
-
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.hibernate.property.Setter;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.InputHelperFactory;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.snutils.DBException;
-import sernet.snutils.ExceptionHandlerFactory;
 
 public class BulkEditDialog extends Dialog {
 

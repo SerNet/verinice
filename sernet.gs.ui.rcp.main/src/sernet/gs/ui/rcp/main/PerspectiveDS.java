@@ -17,12 +17,9 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
-import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
-import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
-import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.DSModelView;
 
 public class PerspectiveDS implements IPerspectiveFactory {

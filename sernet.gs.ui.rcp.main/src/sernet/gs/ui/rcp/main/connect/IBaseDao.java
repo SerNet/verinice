@@ -20,8 +20,6 @@ package sernet.gs.ui.rcp.main.connect;
 import java.io.Serializable;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
-
 
 public interface IBaseDao<T, ID extends Serializable> {
 

@@ -18,13 +18,10 @@
 package sernet.gs.ui.rcp.main.bsi.wizards;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.wizard.WizardPage;
@@ -45,9 +42,6 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.StatusLine;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.office.IOOTableRow;
-import sernet.gs.ui.rcp.office.OOWrapper;
-import sernet.snutils.ExceptionHandlerFactory;
 
 /**
  * Wizard page to allow the user to choose the OpenOffice installation

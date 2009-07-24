@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 

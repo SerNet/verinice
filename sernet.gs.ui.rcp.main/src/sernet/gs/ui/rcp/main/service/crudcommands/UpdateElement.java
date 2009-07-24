@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

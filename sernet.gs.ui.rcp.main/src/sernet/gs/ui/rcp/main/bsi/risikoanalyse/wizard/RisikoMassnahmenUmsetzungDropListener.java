@@ -19,7 +19,7 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.List;
-import org.apache.log4j.Logger;
+
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;

@@ -21,10 +21,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.update.ui.UpdateJob;
 import org.eclipse.update.ui.UpdateManagerUI;
-
-import sernet.gs.ui.rcp.main.ImageCache;
 
 public class ManageUpdatesAction extends Action implements IAction {
 	private IWorkbenchWindow window;

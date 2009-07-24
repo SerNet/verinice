@@ -17,40 +17,24 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 
-import com.sun.star.document.LinkUpdateModes;
-
-import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.EntityResolverFactory;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Schutzbedarf;
-import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.IEntityChangedListener;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.connect.PropertyList;
-import sernet.hui.common.multiselectionlist.IMLPropertyOption;
-import sernet.hui.common.multiselectionlist.IMLPropertyType;
-import sernet.snutils.DBException;
 
 /**
  * This is the base class for all model classes of this application.

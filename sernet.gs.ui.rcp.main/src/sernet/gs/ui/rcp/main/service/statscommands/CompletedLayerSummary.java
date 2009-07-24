@@ -18,27 +18,17 @@
 package sernet.gs.ui.rcp.main.service.statscommands;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 
 public class CompletedLayerSummary extends MassnahmenSummary {

@@ -17,12 +17,9 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
-
-import sernet.gs.ui.rcp.main.ImageCache;
 
 /**
  * Provides an image and text for each item in the TreeViewer.

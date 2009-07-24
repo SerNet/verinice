@@ -17,10 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
-import java.util.AbstractCollection;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,16 +26,11 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.hibernate.collection.PersistentCollection;
 
-import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 
 /**

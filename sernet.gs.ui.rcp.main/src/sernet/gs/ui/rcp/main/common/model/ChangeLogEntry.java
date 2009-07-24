@@ -19,11 +19,9 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
-import org.hibernate.id.GUIDGenerator;
 
 /**
  * Transaction log to log modifications to database items.

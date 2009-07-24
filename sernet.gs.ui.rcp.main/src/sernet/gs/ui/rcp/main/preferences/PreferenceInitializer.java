@@ -18,9 +18,7 @@
 package sernet.gs.ui.rcp.main.preferences;
 
 import java.io.File;
-import java.net.URL;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 

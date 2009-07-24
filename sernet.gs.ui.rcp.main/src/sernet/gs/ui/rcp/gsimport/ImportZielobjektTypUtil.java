@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.gsimport;
 import java.util.HashMap;
 import java.util.Map;
 
-import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
@@ -30,7 +29,6 @@ import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Raum;
 import sernet.gs.ui.rcp.main.bsi.model.Server;
 import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 
 public abstract class ImportZielobjektTypUtil {

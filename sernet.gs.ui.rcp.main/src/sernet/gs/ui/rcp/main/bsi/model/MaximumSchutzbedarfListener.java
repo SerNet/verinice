@@ -23,7 +23,6 @@ import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
-import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 
 /**
  * On a change event, iterates through all linked items, searching

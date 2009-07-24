@@ -20,8 +20,6 @@ package sernet.gs.ui.rcp.main.bsi.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import sernet.hui.common.connect.Entity;
-
 public class TodoViewItem implements Serializable, IMassnahmeUmsetzung {
 	
 	private String titel;

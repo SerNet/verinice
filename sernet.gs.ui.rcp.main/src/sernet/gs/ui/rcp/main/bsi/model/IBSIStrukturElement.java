@@ -19,8 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.util.Collection;
 
-import sernet.hui.common.connect.PropertyList;
-
 /**
  * Marker interface for BSI Grundschutz Elements created
  * as part of the initial inventory ("Strukturanalyse").

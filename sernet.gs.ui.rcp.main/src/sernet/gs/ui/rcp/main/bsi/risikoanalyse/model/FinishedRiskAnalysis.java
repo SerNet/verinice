@@ -17,14 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import sernet.gs.ui.rcp.main.bsi.model.CnaStructureHelper;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class FinishedRiskAnalysis extends CnATreeElement  {

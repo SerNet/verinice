@@ -25,8 +25,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.model.Massnahme;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 
 /**
  * 

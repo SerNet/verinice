@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import java.io.Serializable;
 
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Person;

@@ -21,10 +21,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.BeanFactory;
 
 import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.springclient.SpringClientPlugin;
 
 public abstract class ServiceFactory {

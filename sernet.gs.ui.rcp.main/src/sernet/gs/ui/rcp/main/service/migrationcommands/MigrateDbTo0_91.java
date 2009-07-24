@@ -19,14 +19,10 @@ package sernet.gs.ui.rcp.main.service.migrationcommands;
 
 import org.apache.log4j.Logger;
 
-import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
-
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.IProgress;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;

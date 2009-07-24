@@ -19,11 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.PropertyType;
 
 public class DocumentLinkRoot implements Serializable {
 

@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
-import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 
 /**
  * Helper class to verify basic business logic rules for main tree,

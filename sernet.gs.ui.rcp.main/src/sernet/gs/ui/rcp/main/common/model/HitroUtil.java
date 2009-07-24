@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
@@ -69,8 +68,10 @@ public class HitroUtil {
 
 	private void initHitroUIFromClasspath() {
 		try {
-			URL resource = this.getClass().getClassLoader().getResource(
-					"sernet/gs/server/SNCA.xml");
+/*			URL resource = this.getClass().getClassLoader().getResource(
+			"sernet/gs/server/SNCA.xml");*/
+			URL resource = Thread.currentThread().getContextClassLoader().getResource(
+			"SNCA.xml");
 			String huiConfig = resource != null ? resource.toString() : "";
 			initHitroUI(huiConfig);
 		} catch (DBException e) {

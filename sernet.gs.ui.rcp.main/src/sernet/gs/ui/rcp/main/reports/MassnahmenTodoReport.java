@@ -17,34 +17,16 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.reports;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
-import org.apache.log4j.Logger;
-
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 
 /**

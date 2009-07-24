@@ -1,6 +1,5 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.util.List;
 import java.util.Set;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;

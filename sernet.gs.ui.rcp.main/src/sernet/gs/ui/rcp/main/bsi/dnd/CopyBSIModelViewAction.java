@@ -17,19 +17,10 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd;
 
-import java.util.List;
-
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.ResourceTransfer;
 
-import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 
 /**
