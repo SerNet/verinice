@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="sernet.gs.server.feature"
+      label="verinice server Feature"
+      version="1.0.0">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="javax.servlet" version="2.5.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.httpclient" version="3.1.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.osgi.services" version="3.1.200" match="greaterOrEqual"/>
+      <import plugin="sernet.gs.ui.rcp.main" version="0.8.0" match="greaterOrEqual"/>
+      <import plugin="sernet.hui.common" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="sernet.gs.service" version="1.7.1" match="greaterOrEqual"/>
+      <import plugin="sernet.springclient" version="1.1.0" match="greaterOrEqual"/>
+      <import plugin="org.ops4j.pax.web.pax-web-service" version="0.6.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="sernet.gs.server"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+</feature>
