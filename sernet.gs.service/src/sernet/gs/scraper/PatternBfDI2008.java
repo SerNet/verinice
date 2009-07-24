@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.scraper;
 
-import java.util.regex.Pattern;
 
 /**
  * Patterns to extract Threats and Safeguards from BfDI data protection module.

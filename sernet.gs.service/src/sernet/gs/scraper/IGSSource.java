@@ -18,13 +18,9 @@
 package sernet.gs.scraper;
 
 import java.io.InputStream;
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Node;
 
-import sernet.gs.model.Massnahme;
 import sernet.gs.service.GSServiceException;
 
 /**

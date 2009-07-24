@@ -18,14 +18,9 @@
 package sernet.gs.scraper;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -44,8 +39,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import sernet.gs.service.GSServiceException;
-
-import com.sun.org.apache.xalan.internal.xsltc.trax.SAX2DOM;
 
 /**
  * Source that reads BSI GS catalogues from within
