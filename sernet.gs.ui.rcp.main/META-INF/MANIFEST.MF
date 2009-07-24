@@ -67,7 +67,7 @@ Require-Bundle: com.ibm.icu;bundle-version="3.8.1",
  org.eclipse.core.net;bundle-version="1.1.0",
  org.eclipse.equinox.security;bundle-version="1.0.1",
  org.eclipse.ui.net;bundle-version="1.0.0"
-Eclipse-LazyStart: true
+Eclipse-LazyStart: false
 Eclipse-RegisterBuddy: sernet.springclient
 Export-Package: com.heatonresearch.datamover,
  com.heatonresearch.datamover.db,
