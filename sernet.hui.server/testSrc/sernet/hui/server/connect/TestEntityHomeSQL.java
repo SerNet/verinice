@@ -22,9 +22,9 @@ import java.util.List;
 import junit.framework.TestCase;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
-import sernet.hui.common.connect.HUITypeFactory;
 
 
 public class TestEntityHomeSQL extends TestCase {
