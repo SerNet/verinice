@@ -102,7 +102,8 @@ Export-Package: com.heatonresearch.datamover,
  sernet.gs.ui.rcp.main.service.statscommands,
  sernet.gs.ui.rcp.main.service.taskcommands,
  sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis,
- sernet.gs.ui.rcp.office
+ sernet.gs.ui.rcp.office,
+ junit.framework
 Import-Package: org.apache.commons.codec.binary,
  org.apache.log4j,
  org.springframework.beans.factory,
