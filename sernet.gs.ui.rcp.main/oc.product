@@ -124,11 +124,7 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
    </plugins>
 
    <features>
-<<<<<<< .mine
       <feature id="sernet.gs.ui.rcp.main.feature" version="1.0.0"/>
-=======
-      <feature id="sernet.gs.ui.rcp.main.feature" version="0.8.0"/>
->>>>>>> .r281
    </features>
 
 </product>
