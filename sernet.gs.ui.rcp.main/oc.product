@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
-<<<<<<< .mine
 <product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.0.1" useFeatures="true">
-=======
-<product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="0.7.1" useFeatures="true">
->>>>>>> .r281
-
    <aboutInfo>
       <image path="icons/product_lg.gif"/>
       <text>
