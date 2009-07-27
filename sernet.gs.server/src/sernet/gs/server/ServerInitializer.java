@@ -94,7 +94,6 @@ public class ServerInitializer implements ServletConfigAware {
 		this.configuration = configuration;
 	}
 
-	@Override
 	public void setServletConfig(ServletConfig servletConfig) {
 		this.servletConfig = servletConfig;
 	}
