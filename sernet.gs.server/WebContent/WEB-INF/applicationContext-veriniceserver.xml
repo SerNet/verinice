@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
-
+        
 <!-- 
 
 Spring configuration of application components.
@@ -64,10 +64,12 @@ This variant:
 
 <!-- END User configurable settings=============================================================== -->
 
-
-
-
-
+<bean 
+	id="serverInitializer" 
+	class="sernet.gs.server.ServerInitializer"
+	init-method="initialize">
+	<property name="configuration" ref="configuration"/>
+</bean>
 
 <!-- Server configuration properties and initialization -->
 <bean 
@@ -86,13 +88,6 @@ This variant:
 	
 	</props></property>
 	
-</bean>
-
-<bean 
-	id="serverInitializer" 
-	class="sernet.gs.server.ServerInitializer"
-	init-method="initialize">
-	<property name="configuration" ref="configuration"/>
 </bean>
 
 <bean
