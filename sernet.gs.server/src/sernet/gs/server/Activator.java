@@ -8,7 +8,10 @@ import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.http.HttpContext;
+import org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext;
+import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.ContextLoaderServlet;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
 public class Activator extends Plugin {
@@ -27,39 +30,48 @@ public class Activator extends Plugin {
 
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
 		plugin = this;
 				
 		ServiceReference sr = context.getServiceReference(WebContainer.class.getName());
 		
 		if (sr == null)
-			return;
+		{
+			throw new IllegalStateException("Http Service is not available.");
+		}
 		
 		WebContainer wc = (WebContainer) context.getService(sr);
 		
 		HttpContext ctx = wc.createDefaultHttpContext();
 		
 		Dictionary<String, String> dict = new Hashtable<String, String>();
-		dict.put("contextConfigLocation", "/WEB-INF/applicationContext-veriniceserver.xml");
+		dict.put("contextConfigLocation", "WebContent/WEB-INF/applicationContext-veriniceserver.xml");
+		dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
 		wc.setContextParam(dict, ctx);
-		
-		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "springDispatcher");
-		wc.registerServlet(new DispatcherServlet(), new String[] { "/service/*" }, dict, ctx); 
-
-		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "context");
-		wc.registerServlet(new ContextLoaderServlet(), new String[] { "/context" }, dict, ctx); 
 		
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "GetHitroConfig");
 		wc.registerServlet(new GetHitroConfig(), new String[] { "/GetHitroConfig" }, dict, ctx);
+
+		dict = new Hashtable<String, String>();
+		dict.put("servlet-name", "context");
+		wc.registerServlet("/context", new ContextLoaderServlet(), dict, ctx);
+
+		dict = new Hashtable<String, String>();
+		dict.put("servlet-name", "springDispatcher");
+		dict.put("contextConfigLocation", "WebContent/WEB-INF/springDispatcher-servlet.xml");
+		dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
+		wc.registerServlet(new DispatcherServlet(), new String[] { "/service/*" }, dict, ctx); 
+
+		dict = new Hashtable<String, String>();
+		dict.put("servlet-name", "serverTest");
+		wc.registerServlet(new ServerTestServlet(), new String[] { "/servertest" }, dict, ctx); 
 		
-/*		
 		dict = new Hashtable<String, String>();
 		dict.put("filter-name", "springSecurityFilterChain");
 		
-		wc.registerFilter(new DelegatingFilterProxy(), new String[] { "/service/*" }, null, dict, ctx); 
-*/		
+		wc.registerFilter(new DelegatingFilterProxy(), new String[] { "/service/*" }, null, dict, ctx);
+		
 	}
 
 	public void stop(BundleContext context) throws Exception {

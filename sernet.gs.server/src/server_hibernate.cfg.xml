@@ -26,9 +26,9 @@
          -->
         <property name="connection.driver_class">org.postgresql.Driver</property>
         <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-        <property name="connection.url">jdbc:postgresql://127.0.0.1:5433/verinicedb3</property>
-        <property name="connection.username">postgres</property>
-        <property name="connection.password"></property>
+        <property name="connection.url">jdbc:postgresql://127.0.0.1:5432/verinicedb</property>
+        <property name="connection.username">verinice</property>
+        <property name="connection.password">verinice</property>
 
 		<!-- Alternative: connection settings for MySQL  -->
 		<!-- 
@@ -52,8 +52,8 @@
 	    	org.hibernate.connection.C3P0ConnectionProvider
 	    </property>
 	
-	    <property name="c3p0.max_size">20</property>
-	    <property name="c3p0.idleConnectionTestPeriod">300</property>
+	    <property name="hibernate.c3p0.max_size">20</property>
+	    <property name="hibernate.c3p0.idleConnectionTestPeriod">300</property>
 
 
        	<!-- Enable session context management -->
@@ -77,16 +77,16 @@
          <property name="hbm2ddl.auto">update</property>
 
 		<!-- Optimized mappings for real DBMS, not for derby -->
-        <mapping resource="Entity.hbm.xml"/>
-        <mapping resource="CnALink.hbm.xml"/>
-        <mapping resource="PropertyList.hbm.xml"/>
-        <mapping resource="CnATreeElement.hbm.xml"/> 
-        <mapping resource="ChangeLogEntry.hbm.xml"/>
-        <mapping resource="Gefaehrdung.hbm.xml"/>
-        <mapping resource="Risikomassnahme.hbm.xml"/>
-        <mapping resource="FinishedRiskAnalysisLists.hbm.xml"/>
-        <mapping resource="Configuration.hbm.xml"/>
-        <mapping resource="BausteinVorschlag.hbm.xml"/>
+        <mapping resource="/sernet/gs/ui/rcp/hibernate/Entity.hbm.xml"/>
+        <mapping resource="/sernet/gs/ui/rcp/hibernate/CnALink.hbm.xml"/>
+        <mapping resource="/sernet/gs/ui/rcp/hibernate/PropertyList.hbm.xml"/>
+        <mapping resource="/sernet/gs/ui/rcp/hibernate/CnATreeElement.hbm.xml"/> 
+        <mapping resource="/sernet/gs/ui/rcp/hibernate/ChangeLogEntry.hbm.xml"/>
+        <mapping resource="/sernet/gs/ui/rcp/hibernate/Gefaehrdung.hbm.xml"/>
+        <mapping resource="/sernet/gs/ui/rcp/hibernate/Risikomassnahme.hbm.xml"/>
+        <mapping resource="/sernet/gs/ui/rcp/hibernate/FinishedRiskAnalysisLists.hbm.xml"/>
+        <mapping resource="/sernet/gs/ui/rcp/hibernate/Configuration.hbm.xml"/>
+        <mapping resource="/sernet/gs/ui/rcp/hibernate/BausteinVorschlag.hbm.xml"/>
         
         <!-- Workaround for Hibernate bug HHH-2146
         Will be fixed in hibernate release 3.3.2, until then we use this: -->

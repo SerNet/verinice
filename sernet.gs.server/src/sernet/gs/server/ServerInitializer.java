@@ -17,12 +17,7 @@
  ******************************************************************************/
 package sernet.gs.server;
 
-import java.io.File;
-
-import javax.servlet.ServletConfig;
-
 import org.apache.log4j.Logger;
-import org.springframework.web.context.ServletConfigAware;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
@@ -40,9 +35,7 @@ import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
  * $LastChangedBy$
  *
  */
-public class ServerInitializer implements ServletConfigAware {
-	
-	ServletConfig servletConfig;
+public class ServerInitializer {
 	
 	public IConfiguration configuration;
 	
@@ -74,7 +67,8 @@ public class ServerInitializer implements ServletConfigAware {
 		
 		// initialize HitroUI type factory:
 		Logger.getLogger(this.getClass()).debug("Initializing server HitroUI types...");
-		HitroUtil.getInstance().init(new File(servletConfig.getServletContext().getContextPath(), "WEB-INF" + File.separator + "SNCA.xml"));
+		//HitroUtil.getInstance().init(new File(servletConfig.getServletContext().getContextPath(), "WebContent/WEB-INF" + File.separator + "SNCA.xml"));
+		HitroUtil.getInstance().init(getClass().getResource("/WebContent/WEB-INF/SNCA.xml"));
 		
 		// initialize grundschutz scraper:
 		Logger.getLogger(this.getClass()).debug("Initializing server Grundschutz scraper...");
@@ -94,11 +88,4 @@ public class ServerInitializer implements ServletConfigAware {
 		this.configuration = configuration;
 	}
 
-	public void setServletConfig(ServletConfig servletConfig) {
-		this.servletConfig = servletConfig;
-	}
-
-	
-
-	
 }
