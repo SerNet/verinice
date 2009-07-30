@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
@@ -67,14 +66,11 @@ public class HitroUtil {
 		}
 	}
 
-	public void init(File sncaFile) {
+	public void init(URL sncaResource) {
 		try {
-			initHitroUI(sncaFile.toURI().toURL().toString());
+			initHitroUI(sncaResource.toString());
 		} catch (DBException e) {
 			throw new RuntimeException(e);
-		} catch (MalformedURLException mu)
-		{
-			throw new RuntimeException(mu);
 		}
 	}
 

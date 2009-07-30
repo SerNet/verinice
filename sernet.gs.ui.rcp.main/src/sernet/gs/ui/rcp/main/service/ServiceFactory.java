@@ -48,10 +48,13 @@ public abstract class ServiceFactory {
 	}
 
 	public static void openCommandService() throws MalformedURLException {
+		openLocalServiceFactory();
+		/*
 		if (locality == LOCAL)
 			openLocalServiceFactory();
 		else
 			openRemoteServiceFactory();
+			*/
 	}
 
 	public static void closeCommandService() {
@@ -84,7 +87,7 @@ public abstract class ServiceFactory {
 		.toURI().toURL().toString();
 		Logger.getLogger(ServiceFactory.class).debug(
 				"Creating local bean factory from " + path);
-		SpringClientPlugin.getDefault().openBeanFactory(path, CONTEXT_LOCAL);
+		SpringClientPlugin.getDefault().openBeanFactory(path, CONTEXT_REMOTE);
 	}
 
 }
