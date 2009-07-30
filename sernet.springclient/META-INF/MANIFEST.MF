@@ -86,4 +86,7 @@ Import-Package: javax.servlet;version="2.5.0",
  org.springframework.beans.factory,
  org.springframework.beans.factory.access,
  org.springframework.context.support,
+ org.springframework.core.io,
+ org.springframework.osgi.context.support,
  sernet.gs.service
+Require-Bundle: org.springframework.osgi.extender
