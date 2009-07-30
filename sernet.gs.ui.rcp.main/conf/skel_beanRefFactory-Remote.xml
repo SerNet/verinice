@@ -4,7 +4,7 @@
    
     
      <bean id="ctxRemote"
-          class="org.springframework.context.support.FileSystemXmlApplicationContext">
+          class="org.springframework.osgi.context.support.OsgiBundleXmlApplicationContext">
         <constructor-arg>
             <list>
                 <value>{applicationContextRemote}</value>
