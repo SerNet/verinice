@@ -14,17 +14,17 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - usage of OsgiBundleApplicationContext
  ******************************************************************************/
 package sernet.springclient;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.access.BeanFactoryLocator;
-import org.springframework.beans.factory.access.BeanFactoryReference;
-import org.springframework.beans.factory.access.SingletonBeanFactoryLocator;
 import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.osgi.context.support.OsgiBundleXmlApplicationContext;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -32,10 +32,10 @@ import org.springframework.context.support.AbstractApplicationContext;
 public class SpringClientPlugin extends AbstractUIPlugin {
 	private BeanFactory beanFactory;
 
-	private BeanFactoryReference beanFactoryReference;
-	
 	//The shared instance.
 	private static SpringClientPlugin plugin;
+	
+	BundleContext ctx;
 	
 	/**
 	 * The constructor.
@@ -49,6 +49,7 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		ctx = context;
 	}
 
 	/**
@@ -78,16 +79,9 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	}
 	
 	public synchronized void closeBeanFactory() {
-		if (beanFactoryReference != null) {
-//			try {
-//			Scheduler scheduler = (Scheduler) beanFactory.getBean("quartzSchedulerFactory");
-//				scheduler.shutdown(false);
-//			} catch (Exception e) {
-//				Logger.getLogger(this.getClass()).error(e);
-//			}
+		if (beanFactory != null) {
 			AbstractApplicationContext ctx = (AbstractApplicationContext) beanFactory;
 			ctx.close();
-			beanFactoryReference.release();
 			beanFactory = null;
 		}
 	}
@@ -96,13 +90,15 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 		return beanFactory;
 	}
 
-	public synchronized void openBeanFactory(String beanFactoryUrl, String context) {
+	public synchronized void openBeanFactory(String applicationContextLocation) {
 		if (beanFactory == null) {
 			
-			BeanFactoryLocator beanFactoryLocator = SingletonBeanFactoryLocator.getInstance(beanFactoryUrl);
-			beanFactoryReference = beanFactoryLocator.useBeanFactory(context);
-			beanFactory = beanFactoryReference.getFactory();
-
+			OsgiBundleXmlApplicationContext appCtx = new OsgiBundleXmlApplicationContext(new String[] { applicationContextLocation });
+			Assert.isNotNull(ctx);
+			appCtx.setBundleContext(ctx);
+			appCtx.refresh();
+			
+			beanFactory = appCtx;
 		}
 	}	
 }
