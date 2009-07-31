@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+ <!-- httpInvoker exporter for the verinice command service -->
+    <bean name="/commandServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+        	<ref bean="commandService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.gs.ui.rcp.main.service.ICommandService</value>
+        </property>
+    </bean>
+    
+    <bean name="/authServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+        	<ref bean="authService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.gs.ui.rcp.main.service.IAuthService</value>
+        </property>
+    </bean>
+    
+</beans>
+

@@ -1,0 +1,22 @@
+/* ######################################################################################################
+** # "Yet Another Multicolum Layout" (c) by Dirk Jesse (http://www.yaml.de) #############################
+** # "YAML for TYPO3" (c) by Dieter Bunkerd (http://yaml.t3net.de) ######################################
+** ######################################################################################################
+**
+**  YAML Version: 2.5.2
+**  Dateiversion: 6.11.06
+**  Datei       : basemod_2col_left_vlines.css
+**  Funktion    : Variation des Basislayouts (2-Spalten-Layout mit grafikfreien Spaltentrennern)
+**  Checked with http://jigsaw.w3.org/css-validator/ 19.1.07 - DB
+*/
+
+@media screen
+{
+/* Rechte Spalte abschalten */
+#col2 {display:none;}
+#col2_content {display:none;}
+/* rechten Randabstand anpassen */
+#col3 {margin-right:0; border-right:0;}
+/* Spaltentrenner */
+#col3 {border-left:2px #ddd dotted;}
+}
