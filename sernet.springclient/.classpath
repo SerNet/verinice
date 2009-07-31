@@ -3,6 +3,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="quartz-1.6.5.jar" sourcepath="sernet.springclientsrc.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

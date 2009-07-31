@@ -6,72 +6,8 @@ Bundle-Version: 1.1.0
 Bundle-Activator: sernet.springclient.SpringClientPlugin
 Bundle-ActivationPolicy: lazy
 Eclipse-BuddyPolicy: registered
-Bundle-ClassPath: .,
- quartz-1.6.5.jar
-Export-Package: org.quartz;uses:="org.quartz.utils,org.quartz.spi",
- org.quartz.core;
-  uses:="org.quartz.spi,
-   org.quartz.listeners,
-   org.apache.commons.logging,
-   org.quartz",
- org.quartz.ee.jta;uses:="org.quartz.core,javax.transaction,org.quartz",
- org.quartz.ee.servlet;uses:="javax.servlet.http,javax.servlet",
- org.quartz.helpers;uses:="org.quartz",
- org.quartz.impl;
-  uses:="org.quartz.core,
-   javax.management,
-   org.quartz.spi,
-   org.quartz.listeners,
-   org.apache.commons.logging,
-   org.quartz",
- org.quartz.impl.calendar;uses:="org.quartz",
- org.quartz.impl.jdbcjobstore;
-  uses:="org.quartz.core,
-   org.quartz.utils,
-   org.quartz.spi,
-   org.apache.commons.logging,
-   javax.transaction,
-   org.quartz",
- org.quartz.jobs;uses:="org.apache.commons.logging,org.quartz",
- org.quartz.jobs.ee.ejb;uses:="org.quartz",
- org.quartz.jobs.ee.jms;uses:="javax.naming,org.quartz,javax.jms",
- org.quartz.jobs.ee.jmx;uses:="org.apache.commons.logging,org.quartz",
- org.quartz.jobs.ee.mail;
-  uses:="javax.mail.internet,
-   javax.mail,
-   org.apache.commons.logging,
-   org.quartz",
- org.quartz.listeners;uses:="org.quartz.utils,org.apache.commons.logging,org.quartz",
- org.quartz.plugins;
-  uses:="org.quartz.spi,
-   org.apache.commons.logging,
-   javax.transaction,
-   org.quartz",
- org.quartz.plugins.history;uses:="org.quartz.spi,org.apache.commons.logging,org.quartz",
- org.quartz.plugins.management;uses:="org.quartz.spi,org.apache.commons.logging,org.quartz",
- org.quartz.plugins.xml;
-  uses:="org.quartz.plugins,
-   org.quartz.spi,
-   org.quartz.jobs,
-   org.apache.commons.logging,
-   javax.transaction,
-   org.quartz",
- org.quartz.simpl;
-  uses:="org.quartz.core,
-   org.quartz.spi,
-   org.apache.commons.logging,
-   org.quartz",
- org.quartz.spi;uses:="org.quartz.core,org.quartz",
- org.quartz.utils;uses:="org.apache.commons.logging,org.apache.commons.dbcp",
- org.quartz.xml;
-  uses:="org.apache.commons.beanutils,
-   org.xml.sax,
-   org.apache.commons.digester,
-   org.quartz.spi,
-   org.xml.sax.helpers,
-   org.apache.commons.logging,
-   org.quartz",
- sernet.springclient;
+Bundle-ClassPath: .
+Export-Package: sernet.springclient;
   uses:="org.osgi.framework,
    org.eclipse.ui.plugin,
    org.eclipse.jface.resource,
@@ -79,14 +15,20 @@ Export-Package: org.quartz;uses:="org.quartz.utils,org.quartz.spi",
 Bundle-Vendor: SerNet
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0",
+ org.aopalliance.aop;version="1.0.0",
  org.eclipse.core.runtime;version="3.4.0",
  org.eclipse.jface.resource,
  org.eclipse.ui.plugin,
  org.osgi.framework,
+ org.quartz.simpl;version="1.6.2",
+ org.springframework.aop;version="2.5.6.SEC01",
+ org.springframework.aop.framework;version="2.5.6.SEC01",
  org.springframework.beans.factory,
  org.springframework.beans.factory.access,
  org.springframework.context.support,
  org.springframework.core.io,
  org.springframework.osgi.context.support,
+ org.springframework.remoting.httpinvoker;version="2.5.6.SEC01",
+ org.springframework.remoting.support;version="2.5.6.SEC01",
+ org.springframework.scheduling.quartz;version="2.5.6.SEC01",
  sernet.gs.service
-Require-Bundle: org.springframework.osgi.extender
