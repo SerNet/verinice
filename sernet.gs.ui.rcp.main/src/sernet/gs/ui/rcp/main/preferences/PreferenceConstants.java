@@ -90,7 +90,7 @@ public class PreferenceConstants {
 	public static final String OPERATION_MODE_WITHSERVER = "gs_cna_operationmode_withserver";
 	
 	public static final String VNSERVER_URI = "gs_cna_vnserver_uri";
-	public static final String VNSERVER_URI_DEFAULT = "http://localhost:8800/";
+	public static final String VNSERVER_URI_DEFAULT = "http://localhost:8800";
 	public static final String VNSERVER_USER = "gs_cna_serveruser";
 	public static final String VNSERVER_PASS = "gs_cna_serverpass";
 	

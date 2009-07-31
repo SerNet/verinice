@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service;
 
-import java.io.File;
 import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
@@ -29,10 +28,6 @@ public abstract class ServiceFactory {
 
 	private static final String AUTH_SERVICE = "authService";
 	private static final String COMMAND_SERVICE = "commandService";
-	
-	private static final String BEAN_REF_FACTORY = "beanRefFactory.xml";
-	private static final String CONTEXT_LOCAL = "ctxHibernate";
-	private static final String CONTEXT_REMOTE = "ctxRemote";
 
 	public static final int LOCAL = 0;
 	public static final int REMOTE = 1;
@@ -48,13 +43,7 @@ public abstract class ServiceFactory {
 	}
 
 	public static void openCommandService() throws MalformedURLException {
-		openLocalServiceFactory();
-		/*
-		if (locality == LOCAL)
-			openLocalServiceFactory();
-		else
-			openRemoteServiceFactory();
-			*/
+		SpringClientPlugin.getDefault().openBeanFactory(CnAWorkspace.getInstance().getApplicationContextLocation());
 	}
 
 	public static void closeCommandService() {
@@ -72,22 +61,4 @@ public abstract class ServiceFactory {
 			.getBeanFactory().getBean(AUTH_SERVICE);
 		return authService;
 	}
-
-	private static void openRemoteServiceFactory() throws MalformedURLException {
-		String path = (new File(CnAWorkspace.getInstance().getConfDir()+ File.separator + BEAN_REF_FACTORY))
-			.toURI().toURL().toString();
-		Logger.getLogger(ServiceFactory.class).debug(
-				"Creating remote bean factory from " + path);
-		SpringClientPlugin.getDefault().openBeanFactory(path, CONTEXT_REMOTE);
-	}
-
-	private static void openLocalServiceFactory() throws MalformedURLException {
-		String path = (new File(CnAWorkspace.getInstance().getConfDir()
-				+ File.separator + BEAN_REF_FACTORY))
-		.toURI().toURL().toString();
-		Logger.getLogger(ServiceFactory.class).debug(
-				"Creating local bean factory from " + path);
-		SpringClientPlugin.getDefault().openBeanFactory(path, CONTEXT_REMOTE);
-	}
-
 }

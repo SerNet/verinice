@@ -43,13 +43,13 @@ public class BSIConfigurationServer implements IBSIConfig {
 	public String getDsPath() {
 		String property = properties.getProperty("datenschutzBaustein");
 		URL resource = getClass().getClassLoader().getResource(property);
-		return resource.getPath();
+		return resource.toString();
 	}
 
 	public String getGsPath() {
 		String property = properties.getProperty("grundschutzKataloge");
 		URL resource = getClass().getClassLoader().getResource(property);
-		return resource.getPath();
+		return resource.toString();
 	}
 
 	public boolean isFromZipFile() {

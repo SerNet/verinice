@@ -46,6 +46,8 @@ import sernet.gs.ui.rcp.main.service.grundschutzparser.GetMassnahmeText;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 
 public class BSIMassnahmenModel {
+	
+	private static final Logger log = Logger.getLogger(BSIMassnahmenModel.class);
 
 	private static final String DS_B01005_BFDI = "b01005_bfdi"; //$NON-NLS-1$
 
@@ -71,17 +73,17 @@ public class BSIMassnahmenModel {
 			throws GSServiceException, IOException {
 		
 		if (config instanceof BSIConfigurationRemoteSource) {
-			Logger.getLogger(BSIMassnahmenModel.class).debug("Lade Kataloge von Verinice-Server...");
+			log.debug("Lade Kataloge von Verinice-Server...");
 			return loadBausteineRemote();
 		}
 
-		Logger.getLogger(BSIMassnahmenModel.class).debug(
-		"Lesen der GS-Kataloge...");
 		String gsPath = config.getGsPath();
 		String dsPath = config.getDsPath();
 		boolean fromZipFile = config.isFromZipFile();
 		IGSSource gsSource = null;
 		String cacheDir = config.getCacheDir();
+
+		log.debug("Lesen der GS-Kataloge: " + gsPath);
 
 		// did user really change the path to file?
 		if (! (previouslyReadFile.equals(gsPath) && previouslyReadFileDS.equals(dsPath))

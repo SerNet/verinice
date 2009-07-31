@@ -222,6 +222,18 @@ public class CnAWorkspace {
 		}
 		
 	}
+	
+	public String getApplicationContextLocation()
+	{
+		try
+		{
+			return new File(getConfDir() + File.separator + "applicationContextRemoteService.xml").toURI().toURL().toString();
+		}
+		catch (MalformedURLException mue)
+		{
+			throw new RuntimeException(mue);
+		}
+	}
 
 	private void createSpringConfig() throws NullPointerException, IOException {
 		
