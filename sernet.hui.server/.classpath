@@ -7,18 +7,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/xstream-1.2.1.jar" sourcepath="sernet.hui.serversrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jug.jar" sourcepath="sernet.hui.serversrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/xpp3_min-1.1.3.4.O.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/antlr-2.7.6.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/asm-attrs.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/asm.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/cglib-2.1.3.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/commons-collections-2.1.1.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/commons-logging-1.0.4.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/dom4j-1.6.1.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/hibernate3.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/jdbc2_0-stdext.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/jta.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/versioncheck.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate3.2minimal/xml-apis.jar" sourcepath="sernet.hui.serversrc.zip"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
