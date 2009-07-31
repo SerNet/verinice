@@ -14,13 +14,16 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - load file from URL 
  ******************************************************************************/
 package sernet.gs.scraper;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -32,6 +35,7 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.ccil.cowan.tagsoup.Parser;
 import org.w3c.dom.Node;
@@ -48,6 +52,8 @@ import sernet.gs.service.GSServiceException;
  *
  */
 public class ZIPGSSource implements IGSSource {
+	
+	Logger log = Logger.getLogger(ZIPGSSource.class);
 	
 	private ZipFile zf;
 	private static final String BAUSTEIN_PATH_2005 = "gshb/deutsch/baust/";
@@ -67,7 +73,18 @@ public class ZIPGSSource implements IGSSource {
 	private static final String GEFAEHRDUNG_PATH_DATENSCHUTZ = "B1.5-Datenschutz/www.bsi.de/gshb/baustein-datenschutz/html/";
 	
 	public ZIPGSSource(String fileName) throws IOException {
-		zf = new ZipFile(fileName);
+		// fileName may be an URL actually. In that case we transparently
+		// retrieve it from the URL and place the contents in a 
+		// temp file from which it is accessed normally.
+		File file = new File(fileName);
+		if (!file.exists())
+		{
+			log.debug("Catalogue file is not in local filesystem. Retrieving it from URL and placing into temp file.");
+			file = File.createTempFile("verinice", "zip");
+			FileUtils.copyURLToFile(new URL(fileName), file);
+		}
+		
+		zf = new ZipFile(file);
 	}
 	
 	public InputStream getBausteinAsStream(String baustein) throws GSServiceException {

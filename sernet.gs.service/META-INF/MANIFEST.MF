@@ -20,4 +20,6 @@ Export-Package: org.ccil.cowan.tagsoup,
  sernet.gs.model,
  sernet.gs.scraper,
  sernet.gs.service
-Import-Package: org.apache.log4j
+Import-Package: org.apache.commons.io,
+ org.apache.log4j
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
