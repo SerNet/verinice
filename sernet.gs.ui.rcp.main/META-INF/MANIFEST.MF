@@ -50,9 +50,7 @@ Require-Bundle: com.ibm.icu;bundle-version="3.8.1",
  org.eclipse.update.ui;bundle-version="3.2.100",
  org.eclipse.core.net;bundle-version="1.1.0",
  org.eclipse.equinox.security;bundle-version="1.0.1",
- org.eclipse.ui.net;bundle-version="1.0.0",
- com.springsource.org.hibernate;bundle-version="3.2.6",
- com.springsource.javassist;bundle-version="3.3.0"
+ org.eclipse.ui.net;bundle-version="1.0.0"
 Eclipse-LazyStart: true
 Eclipse-RegisterBuddy: sernet.springclient
 Export-Package: com.heatonresearch.datamover,
@@ -91,7 +89,8 @@ Export-Package: com.heatonresearch.datamover,
  sernet.gs.ui.rcp.main.service.taskcommands,
  sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis,
  sernet.gs.ui.rcp.office
-Import-Package: javassist.util.proxy,
+Import-Package: antlr,
+ javassist.util.proxy,
  javax.transaction,
  org.apache.commons.codec.binary,
  org.apache.log4j,
@@ -99,6 +98,7 @@ Import-Package: javassist.util.proxy,
  org.hibernate.event,
  org.hibernate.event.def,
  org.hibernate.exception,
+ org.hibernate.hql.ast,
  org.hibernate.persister.entity,
  org.hibernate.proxy,
  org.springframework.beans.factory,
