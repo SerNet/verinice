@@ -41,6 +41,7 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.internal.intro.impl.util.Log;
 import org.eclipse.update.internal.core.UpdateCore;
 
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -54,6 +55,9 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
  * 
  */
 public class CnAWorkspace {
+	
+	private static final Logger log = Logger.getLogger(CnAWorkspace.class);
+	
 	private static final String OFFICEDIR = "office";
 
 	public static final String LINE_SEP = System.getProperty("line.separator");
@@ -234,6 +238,23 @@ public class CnAWorkspace {
 			throw new RuntimeException(mue);
 		}
 	}
+	
+	/**
+	 * Takes a server URI and removes unwanted characters like trailing slashes
+	 * from it.
+	 * 
+	 * @param uri
+	 * @return
+	 */
+	private static String correctServerURI(String uri)
+	{
+		// Trailing slashes are a problem for the server. As such strip them away.
+		int i = uri.length() - 1;
+		while (i > 0 && uri.codePointAt(i) == '/')
+			i--;
+		
+		return uri.substring(0, i); 
+	}
 
 	private void createSpringConfig() throws NullPointerException, IOException {
 		
@@ -249,7 +270,7 @@ public class CnAWorkspace {
 		// create context for remote service:
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		settings = new HashMap<String, String>(1);
-		settings.put("veriniceserver", prefs.getString(PreferenceConstants.VNSERVER_URI));
+		settings.put("veriniceserver", correctServerURI(prefs.getString(PreferenceConstants.VNSERVER_URI)));
 		createTextFile("conf" + File.separator + "skel_applicationContextRemoteService.xml",
 				getConfDir(), 
 				"applicationContextRemoteService.xml",
