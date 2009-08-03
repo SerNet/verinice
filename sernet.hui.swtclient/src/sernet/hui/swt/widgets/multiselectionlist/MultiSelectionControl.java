@@ -125,7 +125,7 @@ public class MultiSelectionControl implements IHuiControl {
 		fgColor = text.getForeground();
 		
 		Button editBtn = new Button(container, SWT.PUSH);
-		editBtn.setText("�ndern...");
+		editBtn.setText("Ändern...");
 		editBtn.setToolTipText(this.type.getTooltiptext());
 		editBtn.setEnabled(editable);
 		editBtn.addSelectionListener(new SelectionListener() {
