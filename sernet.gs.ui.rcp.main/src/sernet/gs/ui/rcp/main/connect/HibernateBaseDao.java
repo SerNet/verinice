@@ -40,8 +40,6 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		     if (entity instanceof CnATreeElement) {
 		    	 CnATreeElement elmt = (CnATreeElement) entity;
 		    	 fireChange(elmt);
-		    	 fireChange(elmt.getParent());
-		    	 
 		     }
 		 }
 
