@@ -58,6 +58,8 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
  * 
  */
 public class HUITypeFactory {
+	private static final Logger log = Logger.getLogger(HUITypeFactory.class);
+	
 	private static Document doc;
 
 	private static HUITypeFactory inst;
@@ -72,6 +74,7 @@ public class HUITypeFactory {
 	
 
 	public static void initialize(String xmlFile) throws DBException {
+		log.debug("initializing with XML file: " + xmlFile);
 		if (fileChanged(xmlFile)) {
 			inst = new HUITypeFactory(xmlFile);
 		}
@@ -97,26 +100,30 @@ public class HUITypeFactory {
 		if (xmlFile.matches("^(http|ftp).*"))
 			xmlFile = xmlFile + "?nocache=" + Math.random();
 		DOMParser parser = new DOMParser();
+		
 		// uncomment this to enable validating of the schema:
 		try {
 			parser.setFeature("http://xml.org/sax/features/validation", true);
 			parser.setFeature(
 					"http://apache.org/xml/features/validation/schema", true);
+			
+			parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaSource",
+					getClass().getResource("/hitro.xsd").toString());
+					
 		} catch (SAXNotRecognizedException e) {
-			org.apache.log4j.Logger.getLogger(HUITypeFactory.class).error("Unrecognized parser feature.",e);
+			log.error("Unrecognized parser feature.",e);
 		} catch (SAXNotSupportedException e) {
-			Logger.getLogger(HUITypeFactory.class).error(e);
+			log.error(e);
 		}
-
+		
 		try {
-			Logger.getLogger(HUITypeFactory.class)
-				.debug("Getting XML property definition from " + xmlFile);
+			log.debug("Getting XML property definition from " + xmlFile);
 			parser.parse(xmlFile);
 			doc = parser.getDocument();
 			readAllEntities();
 			
 		} catch (IOException ie) {
-			Logger.getLogger(HUITypeFactory.class).error(ie);
+			log.error(ie);
 			throw new DBException("Die XML Datei mit der Definition der Formularfelder konnte nicht " +
 							"geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile" +
 							" überprüfen.", ie);
@@ -130,6 +137,7 @@ public class HUITypeFactory {
 		this.allEntities = new HashMap<String, EntityType>();
 		NodeList entities = doc.getElementsByTagName("huientity");
 		for(int i=0; i < entities.getLength(); ++i) {
+			
 			Element entityEl = (Element) entities.item(i);
 			EntityType entityObj = new EntityType();
 			entityObj.setId(entityEl.getAttribute("id"));
@@ -181,33 +189,33 @@ public class HUITypeFactory {
 				
 				if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
 					  connection.disconnect();
-					  Logger.getLogger(HUITypeFactory.class).debug("Remote PropertyType file not modified.");
+					  log.debug("Remote PropertyType file not modified.");
 					  return false;
 				}
 				lastModified = connection.getHeaderField("Last-Modified");
 				connection.disconnect();
-				Logger.getLogger(HUITypeFactory.class).debug("CHANGED: Remote PropertyType file modified.");
+				log.debug("CHANGED: Remote PropertyType file modified.");
 				return true;
 			} catch (MalformedURLException e) {
-				Logger.getLogger(HUITypeFactory.class).error(e);
-				Logger.getLogger(HUITypeFactory.class).error(e);
+				log.error(e);
+				log.error(e);
 			} catch (ProtocolException e) {
-				Logger.getLogger(HUITypeFactory.class).error(e);
+				log.error(e);
 			} catch (UnsupportedEncodingException e) {
-				Logger.getLogger(HUITypeFactory.class).error(e);
+				log.error(e);
 			} catch (IOException e) {
-				Logger.getLogger(HUITypeFactory.class).error(e);
+				log.error(e);
 			}
 		} else {
 			// check local :
 			File xml = new File(xmlFile);
 			Date fileNow = new Date(xml.lastModified());
 			if (fileDate == null || fileNow.after(fileDate)) {
-				Logger.getLogger(HUITypeFactory.class).debug("CHANGED: Local PropertyType file was modified.");
+				log.debug("CHANGED: Local PropertyType file was modified.");
 				fileDate = fileNow;
 				return true;
 			}  
-			Logger.getLogger(HUITypeFactory.class).debug("Local PropertyType file was not modified.");
+			log.debug("Local PropertyType file was not modified.");
 			return false;
 		}
 		return true;
