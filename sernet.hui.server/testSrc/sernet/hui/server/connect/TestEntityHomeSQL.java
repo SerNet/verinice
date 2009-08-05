@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.hui.server.connect;
 
+import java.net.URL;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -31,9 +32,9 @@ public class TestEntityHomeSQL extends TestCase {
 
 	public void testSaveNew() throws Exception {
 		try {
-			HUITypeFactory
-					.initialize("/home/aprack/java/workspace/sernet.hui.common/"
-							+ "xml/opengt.xml");
+			HUITypeFactory htf = HUITypeFactory
+					.createInstance(new URL("/home/aprack/java/workspace/sernet.hui.common/"
+							+ "xml/opengt.xml"));
 			EntityType system = HUITypeFactory.getInstance()
 					.getEntityType("system");
 
