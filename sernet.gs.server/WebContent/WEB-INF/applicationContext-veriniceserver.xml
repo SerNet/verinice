@@ -69,6 +69,7 @@ This variant:
 	class="sernet.gs.server.ServerInitializer"
 	init-method="initialize">
 	<property name="configuration" ref="configuration"/>
+	<property name="workObjects" ref="workObjects"/>
 </bean>
 
 <!-- Server configuration properties and initialization -->
@@ -87,9 +88,46 @@ This variant:
 		</prop>
 	
 	</props></property>
-	
 </bean>
 
+<!--
+	The following section initializes beans which are needed by the
+ 	commands (e.g. LoadBausteine et al) as well as various other classes.
+ 	
+ 	The beans are configured for use in the verinice server (the client
+ 	uses the same classes but in a different configuration) and are made
+ 	available via the VeriniceContext class (look it up for further details).
+ -->
+ 
+<bean
+	id="gsScraperUtil"
+	class="sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil"
+	init-method="initForServer">
+	<property name="configuration" ref="configuration"/>
+</bean>
+
+<bean id="huiTypeFactory"
+	class="sernet.hui.common.connect.HUITypeFactory">
+		<constructor-arg value="osgibundle:/WebContent/WEB-INF/SNCA.xml"/>
+</bean>
+
+<bean
+	id="hitroUtil"
+	class="sernet.gs.ui.rcp.main.common.model.HitroUtil"
+	init-method="initForServer">
+	<property name="typeFactory" ref="huiTypeFactory"/>
+</bean> 
+
+<bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
+	<property name="map">
+		<map>
+			<entry key="gsScraperUtil" value-ref="gsScraperUtil"/>
+			<entry key="hitroUtil" value-ref="hitroUtil"/>
+			<entry key="huiTypeFactory" value-ref="huiTypeFactory"/>
+		</map>
+	</property>
+</bean>
+    
 <bean
 	id="serverCommandService"
 	class="sernet.gs.ui.rcp.main.service.ServerCommandService">
@@ -535,6 +573,7 @@ This variant:
         <property name="daoFactory" ref="daoFactory"/>
         <property name="exceptionHandler" ref="serverExceptionHandler" />
         <property name="authService" ref="authService"/>
+		<property name="workObjects" ref="workObjects"/>
     </bean>
   </property>
   <property name="transactionAttributes">
@@ -542,6 +581,7 @@ This variant:
           <prop key="executeCommand">PROPAGATION_REQUIRED</prop> 
       </props>
   </property>
+  
 </bean>
 
 <!-- BEGIN Security configuration ============================================================================ -->

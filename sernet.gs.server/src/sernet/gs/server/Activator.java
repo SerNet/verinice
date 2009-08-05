@@ -21,6 +21,8 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.framework.Bundle;
@@ -59,16 +61,17 @@ public class Activator extends Plugin {
 		plugin = this;
 
 		// Starts the Spring OSGi Extender which provides registering the Spring
-		// namespace handlers. If you get exception saying there is no schema 
+		// namespace handlers. If you get exception saying there is no schema
 		// for Spring security, then the OSGi extender is not running.
-		for (Bundle bundle : context.getBundles()) {
-			if (bundle.getSymbolicName().equals(OSGI_EXTENDER_SYMBOLIC_NAME)) {
-				if (bundle.getState() == Bundle.INSTALLED
-						|| bundle.getState() == Bundle.RESOLVED) {
-					log.debug("Manually starting Spring's OSGi Extender");
-					bundle.start();
-				}
-			}
+		Bundle bundle = Platform.getBundle(OSGI_EXTENDER_SYMBOLIC_NAME);
+		if (bundle == null) {
+			log
+					.error("Spring OSGi Extender bundle is not available. Giving up!");
+			throw new RuntimeException();
+		} else if (bundle.getState() == Bundle.INSTALLED
+				|| bundle.getState() == Bundle.RESOLVED) {
+			log.debug("Manually starting Spring's OSGi Extender");
+			bundle.start();
 		}
 
 		ServiceReference sr = context.getServiceReference(WebContainer.class
@@ -76,24 +79,26 @@ public class Activator extends Plugin {
 
 		// Starts the Pax Web Bundle. This makes the HTTP service available.
 		if (sr == null) {
-			for (Bundle bundle : context.getBundles()) {
-				if (bundle.getSymbolicName().equals(PAX_WEB_SYMBOLIC_NAME)) {
-					if (bundle.getState() == Bundle.INSTALLED
-							|| bundle.getState() == Bundle.RESOLVED) {
-						log.debug("Manually starting Pax Web Http Service.");
-						bundle.start();
-					} else
-						throw new IllegalStateException(
-								"pax-web bundle is not in a proper state to get started.");
+			bundle = Platform.getBundle(PAX_WEB_SYMBOLIC_NAME);
+			if (bundle == null) {
+				log.error("Pax Web bundle is not available. Giving up!");
+				throw new RuntimeException();
+			} else {
+				if (bundle.getState() == Bundle.INSTALLED
+						|| bundle.getState() == Bundle.RESOLVED) {
+					log.debug("Manually starting Pax Web Http Service.");
+					bundle.start();
+				} else
+					throw new IllegalStateException(
+							"pax-web bundle is not in a proper state to get started.");
 
-					sr = context.getServiceReference(WebContainer.class
-							.getName());
-					if (sr == null)
-						throw new IllegalStateException(
-								"pax-web bundle was started but there is still no http service available. Giving up.");
-				}
+				sr = context.getServiceReference(WebContainer.class.getName());
+				if (sr == null)
+					throw new IllegalStateException(
+							"pax-web bundle was started but there is still no http service available. Giving up.");
 			}
 		}
+
 		if (sr == null)
 			throw new IllegalStateException("No http service. Giving up.");
 

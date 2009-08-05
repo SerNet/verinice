@@ -75,5 +75,7 @@ Import-Package: javax.servlet,
  sernet.gs.ui.rcp.main.service.migrationcommands,
  sernet.gs.ui.rcp.main.service.taskcommands,
  sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis,
+ sernet.hui.common,
  sernet.hui.common.connect,
  sernet.hui.common.multiselectionlist
+Export-Package: sernet.gs.server

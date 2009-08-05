@@ -19,13 +19,12 @@ package sernet.gs.server;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
-import sernet.gs.ui.rcp.main.service.IConfiguration;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
+import sernet.hui.common.VeriniceContext;
 
 /**
  * Initialize environemnt on Verinice server on startup.
@@ -37,7 +36,9 @@ import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
  */
 public class ServerInitializer {
 	
-	public IConfiguration configuration;
+	private ServerConfiguration configuration;
+	
+	private VeriniceContext.State workObjects;
 	
 	private IProgress nullMonitor = new IProgress() {
 		public void beginTask(String name, int totalWork) {
@@ -65,27 +66,33 @@ public class ServerInitializer {
 		// tell me where to find HitroUI configuration and other stuff:
 		WhereAmIUtil.setLocation(WhereAmIUtil.LOCATION_SERVER);
 		
-		// initialize HitroUI type factory:
-		Logger.getLogger(this.getClass()).debug("Initializing server HitroUI types...");
-		//HitroUtil.getInstance().init(new File(servletConfig.getServletContext().getContextPath(), "WebContent/WEB-INF" + File.separator + "SNCA.xml"));
-		HitroUtil.getInstance().init(getClass().getResource("/WebContent/WEB-INF/SNCA.xml"));
+		// After this we can use the getInstance() methods from HitroUtil and
+		// GSScraperUtil
+		VeriniceContext.setState(workObjects);
 		
+		GSScraperUtil gsScraperUtil = GSScraperUtil.getInstance();
 		// initialize grundschutz scraper:
-		Logger.getLogger(this.getClass()).debug("Initializing server Grundschutz scraper...");
-		GSScraperUtil.getInstance().init(configuration.getProperties());
 		try {
-			BSIMassnahmenModel.loadBausteine(nullMonitor);
+			gsScraperUtil.getModel().loadBausteine(nullMonitor);
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass()).error("Error while loading Grundschutzkataloge", e);
 		}
 	}
 
-	public  IConfiguration getConfiguration() {
+	public ServerConfiguration getConfiguration() {
 		return configuration;
 	}
 
-	public void setConfiguration(IConfiguration configuration) {
+	public void setConfiguration(ServerConfiguration configuration) {
 		this.configuration = configuration;
+	}
+
+	public void setWorkObjects(VeriniceContext.State workObjects) {
+		this.workObjects = workObjects;
+	}
+
+	public VeriniceContext.State getWorkObjects() {
+		return workObjects;
 	}
 
 }
