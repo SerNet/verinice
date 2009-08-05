@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.model;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +41,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 public class TestHibernate extends TestCase {
 	
 	public void testCreate() throws Exception {
-		HUITypeFactory.initialize("/home/akoderman/java/runtime-oc.product/conf/SNCA.xml");
+		HUITypeFactory htf = HUITypeFactory.createInstance(new URL("/home/akoderman/java/runtime-oc.product/conf/SNCA.xml"));
 		CnAElementHome.getInstance().open("/home/akoderman/java/runtime-oc.product/conf",
 				new NullMonitor());
 		BSIModel model = CnAElementFactory.getInstance().loadOrCreateModel(new NullMonitor());
@@ -72,7 +73,7 @@ public class TestHibernate extends TestCase {
 	}
 	
 	public void testLoad() throws Exception {
-		HUITypeFactory.initialize("/home/akoderman/java/runtime-oc.product/conf/SNCA.xml");
+		HUITypeFactory htf = HUITypeFactory.createInstance(new URL("/home/akoderman/java/runtime-oc.product/conf/SNCA.xml"));
 		CnAElementHome.getInstance().open("/home/akoderman/java/runtime-oc.product/conf",
 				new NullMonitor());
 		

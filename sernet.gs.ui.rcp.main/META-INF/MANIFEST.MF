@@ -91,6 +91,7 @@ Export-Package: com.heatonresearch.datamover,
  sernet.gs.ui.rcp.office
 Import-Package: javassist.util.proxy,
  javax.transaction,
+ junit.framework,
  org.apache.commons.codec.binary,
  org.apache.log4j,
  org.hibernate,
