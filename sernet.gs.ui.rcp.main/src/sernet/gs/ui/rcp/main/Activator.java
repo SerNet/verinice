@@ -17,30 +17,41 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.util.HashMap;
+
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
+import sernet.hui.common.VeriniceContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
 public class Activator extends AbstractUIPlugin {
+	
+	Logger log = Logger.getLogger(Activator.class);
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main";
 
 	// The shared instance
 	private static Activator plugin;
+	
+	private HitroUtil hitroUtil;
 	
 	/**
 	 * The constructor
@@ -69,6 +80,15 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		
+		Bundle bundle = Platform.getBundle("sernet.gs.server");
+		if (bundle == null)
+			log.warn("verinice server bundle is not available. Assuming it is started separately.");
+		else if (bundle.getState() == Bundle.INSTALLED
+						|| bundle.getState() == Bundle.RESOLVED) {
+					log.debug("Manually starting GS Server");
+					bundle.start();
+				}
+		
 		// running as client:
 		WhereAmIUtil.setLocation(WhereAmIUtil.LOCATION_CLIENT);
 
@@ -96,6 +116,22 @@ public class Activator extends AbstractUIPlugin {
 					"service factory configuration from preferences.", e);
 			CnAWorkspace.getInstance().prepare(true);
 		}
+		
+		// When the service factory is initialized there should be a HitroUtil and GSScraperUtil instance
+		// which should then be used throughout the verinice client.
+		// TODO rschuster: Ideally the following should be done by the client's Spring configuration. 
+		HitroUtil hu = (HitroUtil) ServiceFactory.getBean(ServiceFactory.BEAN_ID_HITRO_UTIL);
+		HashMap<String, Object> m = new HashMap<String, Object>();
+		m.put(VeriniceContext.HITRO_UTIL, hu);
+		m.put(VeriniceContext.HUI_TYPE_FACTORY, hu.getTypeFactory());
+		
+		GSScraperUtil gsScraperUtil = (GSScraperUtil) ServiceFactory.getBean(ServiceFactory.BEAN_ID_GS_SCRAPER_UTIL);
+		m.put(VeriniceContext.GS_SCRAPER_UTIL, gsScraperUtil);
+		
+		VeriniceContext.State s = new VeriniceContext.State();
+		s.setMap(m);
+		
+		VeriniceContext.setState(s);
 	}
 
 

@@ -67,10 +67,16 @@ public class BSIMassnahmenModel {
 
 	private static String previouslyReadFileDS = ""; //$NON-NLS-1$
 	
-	private static IBSIConfig config;
+	private IBSIConfig config;
+	
+	public BSIMassnahmenModel(IBSIConfig config)
+	{
+		this.config = config;
+	}
 
-	public static synchronized List<Baustein> loadBausteine(IProgress mon)
+	public synchronized List<Baustein> loadBausteine(IProgress mon)
 			throws GSServiceException, IOException {
+		
 		
 		if (config instanceof BSIConfigurationRemoteSource) {
 			log.debug("Lade Kataloge von Verinice-Server...");
@@ -160,7 +166,7 @@ public class BSIMassnahmenModel {
 		return cache;
 	}
 
-	private static List<Baustein> loadBausteineRemote() throws GSServiceException {
+	private List<Baustein> loadBausteineRemote() throws GSServiceException {
 		// use remote source
 		try {
 			LoadBausteine command = new LoadBausteine();
@@ -171,7 +177,7 @@ public class BSIMassnahmenModel {
 		}
 	}
 
-	private static Baustein scrapeDatenschutzBaustein() throws GSServiceException {
+	private Baustein scrapeDatenschutzBaustein() throws GSServiceException {
     	Baustein b = new Baustein();
     	b.setStand(DS_2008);
     	b.setId(DS_B_1_5);
@@ -188,7 +194,7 @@ public class BSIMassnahmenModel {
     	return b;
 	}
 
-	public static InputStream getBaustein(String url, String stand) 
+	public InputStream getBaustein(String url, String stand) 
 		throws GSServiceException {
 		
 		if (config instanceof BSIConfigurationRemoteSource) {
@@ -205,7 +211,7 @@ public class BSIMassnahmenModel {
 		return bausteinText;
 	}
 
-	private static InputStream getBausteinFromServer(String url, String stand) throws GSServiceException {
+	private InputStream getBausteinFromServer(String url, String stand) throws GSServiceException {
 		GetBausteinText command = new GetBausteinText(url, stand);
 		try {
 			command = ServiceFactory.lookupCommandService().executeCommand(
@@ -219,11 +225,11 @@ public class BSIMassnahmenModel {
 		}
 	}
 
-	private static InputStream stringToStream(String text) throws UnsupportedEncodingException {
+	private InputStream stringToStream(String text) throws UnsupportedEncodingException {
 		return new ByteArrayInputStream(text.getBytes("iso-8859-1"));
 	}
 
-	public static InputStream getMassnahme(String url, String stand)
+	public InputStream getMassnahme(String url, String stand)
 			throws GSServiceException {
 		
 		if (config instanceof BSIConfigurationRemoteSource) {
@@ -240,7 +246,7 @@ public class BSIMassnahmenModel {
 		return massnahme;
 	}
 
-	private static InputStream getMassnahmeFromServer(String url, String stand) throws GSServiceException {
+	private InputStream getMassnahmeFromServer(String url, String stand) throws GSServiceException {
 		try {
 			GetMassnahmeText command = new GetMassnahmeText(url, stand);
 			command = ServiceFactory.lookupCommandService().executeCommand(
@@ -254,7 +260,7 @@ public class BSIMassnahmenModel {
 		}
 	}
 
-	private static List<Baustein> scrapeBausteine(String schicht)
+	private List<Baustein> scrapeBausteine(String schicht)
 			throws GSServiceException {
 		List<Baustein> bausteine = scrape.getBausteine(schicht);
 		for (Baustein baustein : bausteine) {
@@ -269,7 +275,7 @@ public class BSIMassnahmenModel {
 		return bausteine;
 	}
 
-	public static InputStream getGefaehrdung(String url, String stand) 
+	public InputStream getGefaehrdung(String url, String stand) 
 		throws GSServiceException {
 		
 		if (config instanceof BSIConfigurationRemoteSource) {
@@ -286,7 +292,7 @@ public class BSIMassnahmenModel {
 		return gefaehrdung;
 	}
 
-	private static InputStream getGefaehrdungFromServer(String url, String stand) throws GSServiceException {
+	private InputStream getGefaehrdungFromServer(String url, String stand) throws GSServiceException {
 		try {
 			GetGefaehrdungText command = new GetGefaehrdungText(url, stand);
 			command = ServiceFactory.lookupCommandService().executeCommand(
@@ -300,21 +306,11 @@ public class BSIMassnahmenModel {
 		}
 	}
 
-	public static void flushCache() {
+	public void flushCache() {
 		if (scrape!= null)
 			scrape.flushCache();
 		if (dsScrape!= null)
 			dsScrape.flushCache();
 	}
-
-	public static IBSIConfig getConfig() {
-		return config;
-	}
-
-	public static void setConfig(IBSIConfig config) {
-		BSIMassnahmenModel.config = config;
-	}
-
-	
 
 }

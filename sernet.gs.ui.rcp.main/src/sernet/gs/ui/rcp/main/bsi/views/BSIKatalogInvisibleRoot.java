@@ -56,7 +56,7 @@ public class BSIKatalogInvisibleRoot {
 							.equals(PreferenceConstants.DSZIPFILE))
 
 				try {
-					BSIMassnahmenModel.flushCache();
+					GSScraperUtil.getInstance().getModel().flushCache();
 					WorkspaceJob job = new OpenCataloguesJob(
 							Messages.BSIMassnahmenView_0);
 					job.setUser(true);
@@ -141,9 +141,8 @@ public class BSIKatalogInvisibleRoot {
 
 	public void loadModel(IProgressMonitor monitor) throws GSServiceException,
 			IOException {
-		GSScraperUtil.getInstance().init();
-		setBausteine(BSIMassnahmenModel.loadBausteine(new ProgressAdapter(
-				monitor)));
+		setBausteine(GSScraperUtil.getInstance().getModel()
+				.loadBausteine(new ProgressAdapter(monitor)));
 	}
 
 	public Baustein getBaustein(String id) {

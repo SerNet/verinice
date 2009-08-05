@@ -24,6 +24,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
+import sernet.hui.common.VeriniceContext;
+
 /**
  * 
  * @author koderman@sernet.de
@@ -32,12 +34,19 @@ import org.eclipse.core.runtime.Status;
  *
  */
 public class OpenCataloguesJob extends WorkspaceJob {
+	
+	VeriniceContext.State state;
+	
 	public OpenCataloguesJob(String name) {
 		super(name);
+		
+		state = VeriniceContext.getState();
 	}
 
 	public IStatus runInWorkspace(IProgressMonitor monitor)
 			throws CoreException {
+		VeriniceContext.setState(state);
+		
 		try {
 			BSIKatalogInvisibleRoot.getInstance().loadModel(monitor);
 		} catch (Exception e) {

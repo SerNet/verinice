@@ -38,6 +38,7 @@ import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -116,7 +117,7 @@ public class ConfigurationAction implements IObjectActionDelegate {
 					configuration = command2.getConfiguration();
 				}
 
-				entType = HUITypeFactory.getInstance().getEntityType(
+				entType = HitroUtil.getInstance().getTypeFactory().getEntityType(
 						configuration.getEntity().getEntityType());
 			} catch (CommandException e) {
 				ExceptionUtil.log(e, "Fehler beim Laden der Konfiguration");

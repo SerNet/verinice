@@ -70,5 +70,20 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     	<property name="startDelay" value="15000" />
     	<property name="repeatInterval" value="15000" />
     </bean>
+
+	<!-- Prepares a hitroUtil instance that can be used from within
+         the client and which reads its information from a verinice
+         server.
+	-->
+    <bean id="hitroUtil"
+    	class="sernet.gs.ui.rcp.main.common.model.HitroUtil"
+		init-method="initForClient">
+    </bean>
     
+	<bean
+		id="gsScraperUtil"
+		class="sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil"
+		init-method="initForClient">
+	</bean>
+
 </beans>

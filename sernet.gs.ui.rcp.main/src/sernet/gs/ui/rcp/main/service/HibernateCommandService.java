@@ -28,6 +28,7 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.ICommand;
+import sernet.hui.common.VeriniceContext;
 
 /**
  * Command service that executes commands using hibernate DAOs to access the
@@ -47,6 +48,8 @@ public class HibernateCommandService implements ICommandService {
 	private IAuthService authService;
 	
 	private boolean dbOpen = false;
+	
+	private VeriniceContext.State workObjects;
 
 	/**
 	 * This method is encapsulated in a transaction by the Spring container.
@@ -61,6 +64,8 @@ public class HibernateCommandService implements ICommandService {
 	 * reference to the command service.
 	 */
 	public <T extends ICommand> T executeCommand(T command) throws CommandException {
+		VeriniceContext.setState(workObjects);
+		
 		if (!dbOpen)
 			throw new CommandException("DB connection closed.");
 
@@ -156,5 +161,12 @@ public class HibernateCommandService implements ICommandService {
 		this.authService = authService;
 	}
 
+	public void setWorkObjects(VeriniceContext.State workObjects) {
+		this.workObjects = workObjects;
+	}
+
+	public VeriniceContext.State getWorkObjects() {
+		return workObjects;
+	}
 	
 }

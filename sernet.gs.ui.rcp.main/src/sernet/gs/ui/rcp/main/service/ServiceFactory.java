@@ -25,6 +25,9 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.springclient.SpringClientPlugin;
 
 public abstract class ServiceFactory {
+	
+	public static final String BEAN_ID_HITRO_UTIL = "hitroUtil";
+	public static final String BEAN_ID_GS_SCRAPER_UTIL = "gsScraperUtil";
 
 	private static final String AUTH_SERVICE = "authService";
 	private static final String COMMAND_SERVICE = "commandService";
@@ -61,4 +64,26 @@ public abstract class ServiceFactory {
 			.getBeanFactory().getBean(AUTH_SERVICE);
 		return authService;
 	}
+	
+	/**
+	 * Wraps the functionality of the {@link BeanFactory#getBean} method
+	 * and retrieves a bean from the application's context.
+	 * 
+	 * <p>You are supposed to only request bean ids which have a corresponding
+	 * String constant in this class beginning with the name <code>BEAN_ID_</code>.
+	 * If you need another bean from the application context add such a constant
+	 * first.</p>
+	 * 
+	 * <p>Messing around with the bean factory is discouraged by Spring (one should
+	 * use proper inversion of control instead). As such keep the number of calls
+	 * to this method low.</p>
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static Object getBean(String id)
+	{
+		return SpringClientPlugin.getDefault().getBeanFactory().getBean(id);
+	}
+	
 }

@@ -21,4 +21,5 @@ import java.util.Properties;
 
 public interface IConfiguration {
 	public Properties getProperties();
+	
 }

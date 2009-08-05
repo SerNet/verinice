@@ -94,7 +94,6 @@ public class CnAElementHome {
 	public void open(String confDir, IProgress monitor) throws Exception {
 		monitor.beginTask("Initialisiere Service-Layer...", IProgress.UNKNOWN_WORK);
 		ServiceFactory.openCommandService();
-		HitroUtil.getInstance().init();
 		commandService = ServiceFactory.lookupCommandService();
 	}
 

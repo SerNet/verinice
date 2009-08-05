@@ -41,7 +41,6 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.internal.intro.impl.util.Log;
 import org.eclipse.update.internal.core.UpdateCore;
 
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -252,8 +251,12 @@ public class CnAWorkspace {
 		int i = uri.length() - 1;
 		while (i > 0 && uri.codePointAt(i) == '/')
 			i--;
+
+		uri = uri.substring(0, i + 1); 
 		
-		return uri.substring(0, i); 
+		log.debug("corrected server URI to: " + uri);
+		
+		return uri;
 	}
 
 	private void createSpringConfig() throws NullPointerException, IOException {
@@ -371,7 +374,6 @@ public class CnAWorkspace {
 		File confDir = new File(url.getPath() + File.separator + "conf");
 		confDir.mkdirs();
 
-		createTextFile("conf" + File.separator + "hitro.xsd", workDir);
 		createTextFile("conf" + File.separator + "SNCA.xml", workDir);
 		createTextFile("conf" + File.separator + "reports.properties_skeleton",
 				workDir, "conf" + File.separator + "reports.properties");

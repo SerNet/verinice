@@ -32,6 +32,7 @@ import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.hui.common.connect.Entity;
@@ -140,7 +141,7 @@ public class BSIElementEditor extends EditorPart {
 			cnAElement = command.getElement();
 			
 			Entity entity = cnAElement.getEntity();
-			EntityType entityType = HUITypeFactory.getInstance()
+			EntityType entityType = HitroUtil.getInstance().getTypeFactory()
 				.getEntityType(entity.getEntityType());
 			// add listener to mark editor as dirty on changes:
 			entity.addChangeListener(this.modelListener);

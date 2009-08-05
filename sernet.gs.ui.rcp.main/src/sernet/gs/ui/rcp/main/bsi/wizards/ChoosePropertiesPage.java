@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -159,8 +160,7 @@ public class ChoosePropertiesPage extends WizardPage {
 				if (item.getEntity() == null)
 					continue;
 				
-				EntityType entityType = HUITypeFactory
-				.getInstance()
+				EntityType entityType = HitroUtil.getInstance().getTypeFactory()
 				.getEntityType(item.getEntity()
 						.getEntityType());
 				

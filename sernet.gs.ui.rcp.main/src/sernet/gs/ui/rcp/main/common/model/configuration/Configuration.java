@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.common.model.configuration;
 import java.io.Serializable;
 
 import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
@@ -78,17 +79,17 @@ public class Configuration implements Serializable {
 	}
 
 	public void setUser(String user) {
-		PropertyType type = HUITypeFactory.getInstance().getPropertyType(Configuration.TYPE_ID, PROP_USERNAME);
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_USERNAME);
 		entity.setSimpleValue(type, user);
 	}
 
 	public void setPass(String pass) {
-		PropertyType type = HUITypeFactory.getInstance().getPropertyType(Configuration.TYPE_ID, PROP_USERNAME);
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_USERNAME);
 		entity.setSimpleValue(type, pass);
 	}
 
 	public void addRole(String string) {
-		PropertyType type = HUITypeFactory.getInstance().getPropertyType(Configuration.TYPE_ID, PROP_ROLES);
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_ROLES);
 		entity.createNewProperty(type, string);
 	}
 	

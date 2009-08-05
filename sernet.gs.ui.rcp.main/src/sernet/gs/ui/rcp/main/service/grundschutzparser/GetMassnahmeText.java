@@ -22,6 +22,7 @@ import java.io.InputStream;
 
 import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 
@@ -38,7 +39,7 @@ public class GetMassnahmeText extends GenericCommand {
 
 	public void execute() {
 		try {
-			InputStream in = BSIMassnahmenModel.getMassnahme(url, stand);
+			InputStream in = GSScraperUtil.getInstance().getModel().getMassnahme(url, stand);
 			text = InputUtil.streamToString(in,  "iso-8859-1");
 		} catch (GSServiceException e) {
 			throw new RuntimeCommandException(e);

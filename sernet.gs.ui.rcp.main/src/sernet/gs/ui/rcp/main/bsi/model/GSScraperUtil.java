@@ -17,63 +17,54 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
-import java.util.Properties;
-
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.connect.BSIConfigurationServer;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
+import sernet.gs.ui.rcp.main.service.IConfiguration;
+import sernet.hui.common.VeriniceContext;
 
 public class GSScraperUtil {
+	
+	/** Resource injected by Spring (so far, only on the server).
+	 */
+	IConfiguration configuration;
+	
+	BSIMassnahmenModel model;
 
-	private static GSScraperUtil instance = new GSScraperUtil();
+	public IConfiguration getConfiguration() {
+		return configuration;
+	}
+
+	public void setConfiguration(IConfiguration configuration) {
+		this.configuration = configuration;
+	}
 
 	private GSScraperUtil() {
-		// singleton
+		Logger.getLogger(GSScraperUtil.class).debug(
+		"Initializing GS catalogues service...");
 	}
 
 	public static GSScraperUtil getInstance() {
-		return instance;
+		return (GSScraperUtil) VeriniceContext.get(VeriniceContext.GS_SCRAPER_UTIL);
 	}
 
-	public void init() {
-		Logger.getLogger(HitroUtil.class).debug(
-				"Initializing GS catalogues service...");
-
-		if (WhereAmIUtil.runningOnClient()) {
-			if (ServiceFactory.isUsingRemoteService())
-				initFromRemoteServer();
-			else
-				initFromWorkspace();
-		}
-	}
-
-	private void initFromRemoteServer() {
+	/** Initialization method for the client. */
+	public void initForClient() {
+		Logger.getLogger(this.getClass()).debug("Initializing client Grundschutz scraper...");
 		BSIConfigurationRemoteSource config = new BSIConfigurationRemoteSource();
-		BSIMassnahmenModel.setConfig(config);
+		model = new BSIMassnahmenModel(config);
 	}
 
-	/**
-	 * Get configuration for Grundschutz parsing from server configuration file. 
-	 * @param properties 
-	 */
-	private void initFromServerConfiguration(Properties properties) {
-		BSIConfigurationServer config = new BSIConfigurationServer(properties);
-		BSIMassnahmenModel.setConfig(config);
+	/** Initialization method for the server. */
+	public void initForServer() {
+		Logger.getLogger(this.getClass()).debug("Initializing server Grundschutz scraper...");
+		BSIConfigurationServer config = new BSIConfigurationServer(configuration.getProperties());
+		model = new BSIMassnahmenModel(config);
 	}
-
-	/**
-	 * Get config for parsing from RCP preference store.
-	 */
-	private void initFromWorkspace() {
-		BSIConfigurationRCPLocal config = new BSIConfigurationRCPLocal();
-		BSIMassnahmenModel.setConfig(config);
-	}
-
-	public void init(Properties properties) {
-		initFromServerConfiguration(properties);
+	
+	public BSIMassnahmenModel getModel()
+	{
+		return model;
 	}
 
 }

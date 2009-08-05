@@ -29,7 +29,7 @@ public class FinishedRiskAnalysis extends CnATreeElement  {
 		super(cnaElement);
 	}
 	
-	FinishedRiskAnalysis() {
+	protected FinishedRiskAnalysis() {
 	}
 	
 

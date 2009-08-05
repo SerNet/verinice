@@ -76,7 +76,7 @@ public class EntityResolverFactory {
 			}
 		}
 		
-		createUrlResolver();
+		createUrlResolver(typeFactory);
 		
 		// set url resolver for all URL fields:
 		List<PropertyType> types = typeFactory.getURLPropertyTypes();
@@ -101,12 +101,12 @@ public class EntityResolverFactory {
 	}
 
 	
-	private static void createUrlResolver() {
+	private static void createUrlResolver(HUITypeFactory typeFactory) {
 		// create list of all fields containing urls:
 		final Set<String> allIDs = new HashSet<String>();
 		try {
 			List<PropertyType> types;
-			types = HUITypeFactory.getInstance().getURLPropertyTypes();
+			types = typeFactory.getURLPropertyTypes();
 			for (PropertyType type : types) {
 				allIDs.add(type.getId());
 			}

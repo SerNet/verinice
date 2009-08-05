@@ -43,6 +43,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.StatusLine;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
@@ -100,19 +101,19 @@ public class BrowserView extends ViewPart {
 			StatusLine.setErrorMessage("");
 			if (element instanceof Massnahme) {
 				Massnahme mn = (Massnahme) element;
-				setUrl(BSIMassnahmenModel.getMassnahme(mn.getUrl(), mn
+				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(mn.getUrl(), mn
 						.getStand()));
 			}
 
 			if (element instanceof Baustein) {
 				Baustein bst = (Baustein) element;
-				setUrl(BSIMassnahmenModel.getBaustein(bst.getUrl(), bst
+				setUrl(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst
 						.getStand()));
 			}
 
 			if (element instanceof Gefaehrdung) {
 				Gefaehrdung gef = (Gefaehrdung) element;
-				setUrl(BSIMassnahmenModel.getGefaehrdung(gef.getUrl(), gef
+				setUrl(GSScraperUtil.getInstance().getModel().getGefaehrdung(gef.getUrl(), gef
 						.getStand()));
 			}
 
@@ -125,7 +126,7 @@ public class BrowserView extends ViewPart {
 					return;
 				}
 				
-				setUrl(BSIMassnahmenModel.getGefaehrdung(gefUms.getUrl(),
+				setUrl(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),
 						gefUms.getStand()));
 			}
 
@@ -140,19 +141,19 @@ public class BrowserView extends ViewPart {
 
 			if (element instanceof MassnahmenUmsetzung) {
 				MassnahmenUmsetzung mnu = (MassnahmenUmsetzung) element;
-				setUrl(BSIMassnahmenModel.getMassnahme(mnu.getUrl(), mnu
+				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(mnu.getUrl(), mnu
 						.getStand()));
 			}
 			
 			if (element instanceof TodoViewItem) {
 				TodoViewItem item = (TodoViewItem) element;
-				setUrl(BSIMassnahmenModel.getMassnahme(item.getUrl(), item.getStand())
+				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(item.getUrl(), item.getStand())
 						);
 			}
 
 			if (element instanceof BausteinUmsetzung) {
 				BausteinUmsetzung bst = (BausteinUmsetzung) element;
-				setUrl(BSIMassnahmenModel.getBaustein(bst.getUrl(), bst
+				setUrl(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst
 						.getStand()));
 			}
 
