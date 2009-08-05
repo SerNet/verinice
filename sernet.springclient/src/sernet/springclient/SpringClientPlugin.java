@@ -18,6 +18,7 @@
  ******************************************************************************/
 package sernet.springclient;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -30,6 +31,9 @@ import org.springframework.osgi.context.support.OsgiBundleXmlApplicationContext;
  * The main plugin class to be used in the desktop.
  */
 public class SpringClientPlugin extends AbstractUIPlugin {
+	
+	private static final Logger log = Logger.getLogger(SpringClientPlugin.class);
+	
 	private BeanFactory beanFactory;
 
 	//The shared instance.
@@ -92,6 +96,7 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 
 	public synchronized void openBeanFactory(String applicationContextLocation) {
 		if (beanFactory == null) {
+			log.debug("initializing bean factory from: " + applicationContextLocation);
 			
 			OsgiBundleXmlApplicationContext appCtx = new OsgiBundleXmlApplicationContext(new String[] { applicationContextLocation });
 			Assert.isNotNull(ctx);
