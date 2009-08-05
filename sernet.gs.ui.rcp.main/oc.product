@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
-<product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.0.1" useFeatures="true">
+<product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.0.0" useFeatures="true">
+
    <aboutInfo>
       <image path="icons/product_lg.gif"/>
       <text>
@@ -30,7 +31,7 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Xms64m -Xmx512m</vmArgs>
+      <vmArgs>-Xms64m -Xmx512m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost</vmArgs>
    </launcherArgs>
 
    <windowImages i16="/sernet.gs.ui.rcp.main/icons/window16.gif" i32="/sernet.gs.ui.rcp.main/icons/window32.gif"/>
@@ -50,6 +51,7 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
             winLargeLow="/sernet.gs.ui.rcp.main/icons/ico8-48x48.bmp"/>
       </win>
    </launcher>
+
 
    <vm>
    </vm>
