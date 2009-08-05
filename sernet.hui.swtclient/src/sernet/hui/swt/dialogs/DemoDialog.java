@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.hui.swt.dialogs;
 
+import java.net.URL;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
@@ -62,13 +64,13 @@ public class DemoDialog extends org.eclipse.swt.widgets.Composite {
 			HitroUIComposite huiComposite = new HitroUIComposite(this, SWT.NULL, false);
 			
 			try {
-				HUITypeFactory.initialize("/home/akoderman/sncaWorkspace/conf/SNCA.xml");
+				HUITypeFactory htf = HUITypeFactory.createInstance(new URL("/home/akoderman/sncaWorkspace/conf/SNCA.xml"));
 				
 //				Entity entity = new Entity("mnums");
 				Entity entity = new Entity("mnums");
 				huiComposite.createView(entity, true, true);
 
-				PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType("mnums", "mnums_umsetzung");
+				PropertyType propertyType = htf.getPropertyType("mnums", "mnums_umsetzung");
 				entity.setSimpleValue(propertyType, "mnums_umsetzung_teilweise");
 				
 				huiComposite.setInputHelper("itverbund_mitarbeiter", new IInputHelper() {
