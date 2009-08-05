@@ -34,21 +34,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
 
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.rules.IFillRule;
 import sernet.hui.common.rules.NotEmpty;
 import sernet.hui.common.rules.RuleFactory;
 import sernet.snutils.DBException;
-
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 /**
  * Parses XML file with defined systemproperties and creates appropriate
@@ -62,8 +64,6 @@ public class HUITypeFactory {
 	
 	private static Document doc;
 
-	private static HUITypeFactory inst;
-
 	private Map<String, EntityType> allEntities = null;
 
 	private Set<String> allDependecies = new HashSet<String>();
@@ -71,20 +71,19 @@ public class HUITypeFactory {
 	// last-modified fields for local file or HTTP:
 	private static Date fileDate;
 	private static String lastModified;
-	
 
-	public static void initialize(String xmlFile) throws DBException {
-		log.debug("initializing with XML file: " + xmlFile);
-		if (fileChanged(xmlFile)) {
-			inst = new HUITypeFactory(xmlFile);
-		}
+	public static HUITypeFactory createInstance(URL xmlUrl) throws DBException {
+		return new HUITypeFactory(xmlUrl);
 	}
 	
-	public static synchronized HUITypeFactory getInstance() {
-		if (inst == null) {
-			throw new RuntimeException("PropertyType Factory is not initialized.");
-		}
-		return inst;
+	public static HUITypeFactory getInstance()
+	{
+		return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+	}
+	 
+	public HUITypeFactory(Resource resource) throws DBException, IOException
+	{
+		this(resource.getURL());
 	}
 
 	/**
@@ -92,34 +91,45 @@ public class HUITypeFactory {
 	 * 
 	 * @throws DBException
 	 */
-	private HUITypeFactory(String xmlFile) throws DBException {
+	private HUITypeFactory(URL xmlFile) throws DBException {
 		if (xmlFile == null)
 			throw new DBException(
 					"Pfad für XML Systemdefinition nicht initialisiert. "
 							+ "Config File korrekt?");
-		if (xmlFile.matches("^(http|ftp).*"))
-			xmlFile = xmlFile + "?nocache=" + Math.random();
-		DOMParser parser = new DOMParser();
+		if (xmlFile.getProtocol().equals("http")
+				|| xmlFile.getProtocol().equals("ftp"))
+			try {
+				xmlFile = new URL(xmlFile.toString() + "?nocache=" + Math.random());
+			} catch (MalformedURLException e) {
+				throw new RuntimeException(e);
+			}
+		
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
+		factory.setValidating(true);
+		DocumentBuilder parser = null;
 		
 		// uncomment this to enable validating of the schema:
 		try {
-			parser.setFeature("http://xml.org/sax/features/validation", true);
-			parser.setFeature(
+			factory.setFeature("http://xml.org/sax/features/validation", true);
+			factory.setFeature(
 					"http://apache.org/xml/features/validation/schema", true);
 			
-			parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaSource",
+			factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+					"http://www.w3.org/2001/XMLSchema");
+			factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource",
 					getClass().getResource("/hitro.xsd").toString());
+			
+			parser = factory.newDocumentBuilder();
 					
-		} catch (SAXNotRecognizedException e) {
-			log.error("Unrecognized parser feature.",e);
-		} catch (SAXNotSupportedException e) {
-			log.error(e);
+		} catch (ParserConfigurationException e) {
+			log.error("Unrecognized parser feature.", e);
+			throw new RuntimeException(e);
 		}
 		
 		try {
 			log.debug("Getting XML property definition from " + xmlFile);
-			parser.parse(xmlFile);
-			doc = parser.getDocument();
+			doc = parser.parse(xmlFile.openStream());
 			readAllEntities();
 			
 		} catch (IOException ie) {
