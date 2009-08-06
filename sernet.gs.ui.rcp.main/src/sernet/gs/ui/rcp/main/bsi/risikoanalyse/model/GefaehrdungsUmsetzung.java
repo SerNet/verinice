@@ -101,7 +101,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 		return gef2.getDbId().equals(this.getDbId());
 	}
 	
-	 GefaehrdungsUmsetzung() {
+	protected GefaehrdungsUmsetzung() {
 		// hibernate constructor
 	}
 	
