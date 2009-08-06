@@ -103,6 +103,8 @@ public class BSIModelViewOpenDBAction extends Action {
 	private void createModel() {
 		WorkspaceJob job = new WorkspaceJob(Messages.BsiModelView_0) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				Activator.inheritVeriniceContextState();
+				
 				try {
 					monitor.beginTask("Starte OR-Mapper...", IProgressMonitor.UNKNOWN);
 					monitor.setTaskName("Starte OR-Mapper...");

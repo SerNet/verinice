@@ -55,6 +55,9 @@ Eclipse-LazyStart: false
 Eclipse-RegisterBuddy: sernet.springclient
 Export-Package: com.heatonresearch.datamover,
  com.heatonresearch.datamover.db,
+ com.mysql.jdbc,
+ org.apache.derby.jdbc,
+ org.gjt.mm.mysql,
  org.postgresql,
  sernet.gs.common,
  sernet.gs.ui.rcp.gsimport,
