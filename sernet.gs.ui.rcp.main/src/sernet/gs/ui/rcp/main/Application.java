@@ -37,6 +37,8 @@ public class Application implements IApplication {
 			Logger.getLogger(Application.class).debug("Starting application bundle manually.");
 			bundle.start();
 		}
+		else
+			Activator.getDefault().inheritVeriniceContextState();
 		
 		Display display = PlatformUI.createDisplay();
 		try {

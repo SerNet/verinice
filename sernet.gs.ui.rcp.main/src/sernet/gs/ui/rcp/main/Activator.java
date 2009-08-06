@@ -53,6 +53,8 @@ public class Activator extends AbstractUIPlugin {
 	
 	private HitroUtil hitroUtil;
 	
+	private VeriniceContext.State state;
+	
 	/**
 	 * The constructor
 	 */
@@ -128,10 +130,10 @@ public class Activator extends AbstractUIPlugin {
 		GSScraperUtil gsScraperUtil = (GSScraperUtil) ServiceFactory.getBean(ServiceFactory.BEAN_ID_GS_SCRAPER_UTIL);
 		m.put(VeriniceContext.GS_SCRAPER_UTIL, gsScraperUtil);
 		
-		VeriniceContext.State s = new VeriniceContext.State();
-		s.setMap(m);
+		state = new VeriniceContext.State();
+		state.setMap(m);
 		
-		VeriniceContext.setState(s);
+		VeriniceContext.setState(state);
 	}
 
 
@@ -164,5 +166,17 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	}
+	
+	/**
+	 * Initializes the current thread with the VeriniceContext.State
+	 * of the client application.
+	 * 
+	 * <p>Calling this method is needed when the Activator was run on a
+	 * different thread then the Application class.</p>
+	 */
+	void inheritVeriniceContextState()
+	{
+		VeriniceContext.setState(state);
 	}
 }
