@@ -32,6 +32,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
@@ -57,6 +58,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 	}
 
 	public void run(IAction action) {
+		Activator.inheritVeriniceContextState();
 
 		final IStructuredSelection selection = ((IStructuredSelection) targetPart
 				.getSite().getSelectionProvider().getSelection());

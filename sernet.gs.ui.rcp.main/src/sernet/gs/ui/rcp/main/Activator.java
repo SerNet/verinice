@@ -51,9 +51,7 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 	
-	private HitroUtil hitroUtil;
-	
-	private VeriniceContext.State state;
+	private static VeriniceContext.State state;
 	
 	/**
 	 * The constructor
@@ -175,7 +173,7 @@ public class Activator extends AbstractUIPlugin {
 	 * <p>Calling this method is needed when the Activator was run on a
 	 * different thread then the Application class.</p>
 	 */
-	void inheritVeriniceContextState()
+	public static void inheritVeriniceContextState()
 	{
 		VeriniceContext.setState(state);
 	}

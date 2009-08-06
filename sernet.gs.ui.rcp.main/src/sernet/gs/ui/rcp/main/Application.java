@@ -38,7 +38,7 @@ public class Application implements IApplication {
 			bundle.start();
 		}
 		else
-			Activator.getDefault().inheritVeriniceContextState();
+			Activator.inheritVeriniceContextState();
 		
 		Display display = PlatformUI.createDisplay();
 		try {

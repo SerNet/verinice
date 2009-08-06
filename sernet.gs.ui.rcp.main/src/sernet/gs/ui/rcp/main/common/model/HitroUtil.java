@@ -22,8 +22,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Assert;
-import org.jfree.util.Log;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.EntityResolverFactory;
@@ -42,10 +40,11 @@ import sernet.snutils.DBException;
  * It is important that all clients work with the same HUI representation,
  * otherwise some fields may be missing on one client.
  * 
- * <p>Instances of this class are managed by the Spring configuration.
- * In the verinice server the HUITypeFactory instance is managed by Spring
- * as well and gets injected into this class. The verinice client does this
- * step manually. That way both parts of the application behave properly.
+ * <p>
+ * Instances of this class are managed by the Spring configuration. In the
+ * verinice server the HUITypeFactory instance is managed by Spring as well and
+ * gets injected into this class. The verinice client does this step manually.
+ * That way both parts of the application behave properly.
  * </p>
  * 
  * @author koderman@sernet.de
@@ -53,33 +52,39 @@ import sernet.snutils.DBException;
  * 
  */
 public class HitroUtil {
-	
+
 	private static final Logger log = Logger.getLogger(HitroUtil.class);
-	
+
 	private HUITypeFactory typeFactory;
-	
+
 	public static HitroUtil getInstance() {
 		return (HitroUtil) VeriniceContext.get(VeriniceContext.HITRO_UTIL);
 	}
 
 	/** Used from within the server only. */
 	public void initForServer() {
-		Assert.isNotNull(getTypeFactory());
-		
+		if (typeFactory == null)
+			throw new IllegalStateException(
+					"type factory instance does not exist yet. This is not expected for the server!");
+
 		Logger.getLogger(HitroUtil.class).debug(
-		"Initializing HitroUI framework for server");
-		EntityResolverFactory.createResolvers(getTypeFactory());
+				"Initializing HitroUI framework for server");
+		EntityResolverFactory.createResolvers(typeFactory);
 	}
 
 	/** Used from within the client only. */
 	public void initForClient() {
-		// For the client no HUITypeFactory instance should be available at this point.
+		// For the client no HUITypeFactory instance should be available at this
+		// point.
 		// If it is, something went wrong (called this method twice?).
-		Assert.isTrue(getTypeFactory() == null);
-		
+		if (typeFactory != null)
+			throw new IllegalStateException(
+					"Type factory instance already exists. This is not expected for the client!");
+
 		Logger.getLogger(HitroUtil.class).debug(
-		"Initializing HitroUI framework for client");
-		String server = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.VNSERVER_URI);
+				"Initializing HitroUI framework for client");
+		String server = Activator.getDefault().getPluginPreferences()
+				.getString(PreferenceConstants.VNSERVER_URI);
 		URL huiConfig;
 		try {
 			huiConfig = new URL(server + "/GetHitroConfig");
@@ -103,7 +108,7 @@ public class HitroUtil {
 	private void initForClientImpl(URL url) {
 		try {
 			typeFactory = HUITypeFactory.createInstance(url);
-			
+
 			EntityResolverFactory.createResolvers(typeFactory);
 		} catch (DBException e) {
 			// The reason for the reason may be that the server is not available
@@ -116,14 +121,14 @@ public class HitroUtil {
 
 	public void setTypeFactory(HUITypeFactory typeFactory) {
 		// This method must be called only once (by the Spring IoC container).
-		Assert.isTrue(this.typeFactory == null);
-		
+		if (this.typeFactory != null)
+			throw new IllegalStateException("Type factory instance already exists. This method must not be called twice.");
+
 		this.typeFactory = typeFactory;
 	}
 
 	public HUITypeFactory getTypeFactory() {
 		return typeFactory;
 	}
-
 
 }
