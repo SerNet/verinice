@@ -36,4 +36,5 @@ Import-Package: javax.servlet;version="2.5.0",
  org.springframework.remoting.httpinvoker,
  org.springframework.remoting.support,
  org.springframework.scheduling.quartz,
+ org.springframework.transaction,
  sernet.gs.service
