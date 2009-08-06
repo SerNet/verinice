@@ -58,7 +58,7 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 
 			dialogShell.setLayout(new GridLayout(1, false));
 			dialogShell.setSize(400, 300);
-			dialogShell.setText("Optionen f�r Feld: " + propertyType.getName());
+			dialogShell.setText("Optionen für Feld: " + propertyType.getName());
 			
 			//Composite content = new Composite(dialogShell, SWT.NULL);
 			//content.setLayout(new FillLayout(SWT.VERTICAL));
