@@ -23,6 +23,7 @@ import java.net.URL;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Assert;
+import org.jfree.util.Log;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.EntityResolverFactory;
@@ -52,6 +53,9 @@ import sernet.snutils.DBException;
  * 
  */
 public class HitroUtil {
+	
+	private static final Logger log = Logger.getLogger(HitroUtil.class);
+	
 	private HUITypeFactory typeFactory;
 	
 	public static HitroUtil getInstance() {
@@ -102,7 +106,11 @@ public class HitroUtil {
 			
 			EntityResolverFactory.createResolvers(typeFactory);
 		} catch (DBException e) {
-			throw new RuntimeException(e);
+			// The reason for the reason may be that the server is not available
+			// (or the URL is wrong). We do not want to prevent the application
+			// start because of this (otherwise there would be no possibility
+			// for the user to fix the issue).
+			log.warn(e.getLocalizedMessage());
 		}
 	}
 
