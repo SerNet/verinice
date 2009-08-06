@@ -108,7 +108,7 @@ This variant:
 
 <bean id="huiTypeFactory"
 	class="sernet.hui.common.connect.HUITypeFactory">
-		<constructor-arg value="osgibundle:/WebContent/WEB-INF/SNCA.xml"/>
+		<constructor-arg value="classpath:/WebContent/WEB-INF/SNCA.xml"/>
 </bean>
 
 <bean
