@@ -25,17 +25,27 @@
 	</appender>
 
      <!-- Logger for verinice -->
-    <logger name="sernet.gs" additivity="false">
+    <logger name="sernet" additivity="false">
   		<level value="DEBUG"/>
   		<appender-ref ref="STDOUT"/>
   		<appender-ref ref="FILE"/>
 	</logger>
-	
+
+    <logger name="org.springframework.osgi.extender" additivity="false">
+  		<level value="INFO"/>
+  		<appender-ref ref="STDOUT"/>
+	</logger>
+
+    <logger name="org.ops4j.pax.web" additivity="false">
+  		<level value="INFO"/>
+  		<appender-ref ref="STDOUT"/>
+	</logger>
+
 	<logger name="org.hibernate.cache" additivity="false">
   		<level value="INFO"/>
   		<appender-ref ref="STDOUT"/>
 	</logger>
-	
+
 	<logger name="org.hibernate" additivity="false">
   		<level value="INFO"/>
   		<appender-ref ref="STDOUT"/>
