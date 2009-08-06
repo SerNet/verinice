@@ -19,27 +19,6 @@
 
  -->
     <session-factory>
-        
-        <!-- 
-        	Connection settings for PostgreSQL
-         	Please adjust host, port, database name, user and pass according to your database. 
-         -->
-        <property name="connection.driver_class">org.postgresql.Driver</property>
-        <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-        <property name="connection.url">jdbc:postgresql://127.0.0.1:5432/verinicedb</property>
-        <property name="connection.username">verinice</property>
-        <property name="connection.password">verinice</property>
-
-		<!-- Alternative: connection settings for MySQL  -->
-		<!-- 
- 		<property name="connection.driver_class">org.gjt.mm.mysql.Driver</property>
-        <property name="dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
-        <property name="connection.url">jdbc:mysql://127.0.0.1:3306/verinicedb</property>
-        <property name="connection.username">user</property>
-        <property name="connection.password">pass</property>
- 		-->
- 		
- 		
  		<!-- CAUTION: No user configuration is usually needed beyond this point: . -->
  		
  		

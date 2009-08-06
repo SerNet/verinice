@@ -5,7 +5,8 @@ Bundle-SymbolicName: sernet.gs.server;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: WebContent/WEB-INF/classes,.
 Bundle-Activator: sernet.gs.server.Activator
-Import-Package: javax.servlet,
+Import-Package: com.mchange.v2.c3p0,
+ javax.servlet,
  javax.servlet.http,
  javax.transaction,
  junit.framework,
@@ -65,6 +66,7 @@ Import-Package: javax.servlet,
  sernet.gs.ui.rcp.hibernate,
  sernet.gs.ui.rcp.main.bsi.model,
  sernet.gs.ui.rcp.main.bsi.risikoanalyse.model,
+ sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard,
  sernet.gs.ui.rcp.main.common.model,
  sernet.gs.ui.rcp.main.common.model.configuration,
  sernet.gs.ui.rcp.main.connect,

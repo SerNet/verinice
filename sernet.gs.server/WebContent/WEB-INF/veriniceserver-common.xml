@@ -135,12 +135,26 @@ This variant:
 	<property name="commandService" ref="commandService" />
 </bean>
 
+<bean id="dataSource"
+   class="com.mchange.v2.c3p0.ComboPooledDataSource">
+   <property name="driverClass" value="${jdbc.driverClass}" />
+   <property name="jdbcUrl" value="${jdbc.url}" />
+   <property name="user" value="${jdbc.username}" />
+   <property name="password" value="${jdbc.password}" />
+</bean>
 
-<!-- Use existing hibernate config for session -->  
 <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" >
-  <property name="configLocation">
-    <value>classpath:/server_hibernate.cfg.xml</value>
-  </property>
+
+	<property name="hibernateProperties">
+      <value>hibernate.dialect=${jdbc.hibernate.dialect}</value>
+    </property>
+
+   <property name="dataSource" ref="dataSource"/>
+
+   <property name="configLocation">
+     <value>${hibernate.config.resource}</value>
+   </property>
+  
 </bean>
 
 <!-- END Server settings =========================================================================== -->
