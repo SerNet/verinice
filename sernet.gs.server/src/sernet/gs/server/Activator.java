@@ -108,7 +108,8 @@ public class Activator extends Plugin {
 
 		Dictionary<String, String> dict = new Hashtable<String, String>();
 		dict.put("contextConfigLocation",
-				"WebContent/WEB-INF/applicationContext-veriniceserver.xml");
+				"WebContent/WEB-INF/veriniceserver-osgi.xml " +
+				"WebContent/WEB-INF/veriniceserver-common.xml");
 		dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
 				OsgiBundleXmlWebApplicationContext.class.getName());
 		wc.setContextParam(dict, ctx);

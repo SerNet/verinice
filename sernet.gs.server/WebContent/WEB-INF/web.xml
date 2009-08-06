@@ -13,7 +13,10 @@
 	
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/applicationContext-veriniceserver.xml</param-value>
+        <param-value>
+        	/WEB-INF/veriniceserver-plain.xml
+        	/WEB-INF/veriniceserver-common.xml
+        </param-value>
     </context-param>
     
 	<filter>

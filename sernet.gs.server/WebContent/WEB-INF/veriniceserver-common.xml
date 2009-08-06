@@ -90,6 +90,7 @@ This variant:
 	</props></property>
 </bean>
 
+
 <!--
 	The following section initializes beans which are needed by the
  	commands (e.g. LoadBausteine et al) as well as various other classes.
@@ -108,7 +109,7 @@ This variant:
 
 <bean id="huiTypeFactory"
 	class="sernet.hui.common.connect.HUITypeFactory">
-		<constructor-arg value="classpath:/WebContent/WEB-INF/SNCA.xml"/>
+ 		<constructor-arg value="${snca.resource}"/> 
 </bean>
 
 <bean
