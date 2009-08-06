@@ -101,7 +101,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 		return gef2.getDbId().equals(this.getDbId());
 	}
 	
-	protected GefaehrdungsUmsetzung() {
+	 GefaehrdungsUmsetzung() {
 		// hibernate constructor
 	}
 	
@@ -171,8 +171,8 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	}
 	
 	/**
-	 * returns the list of children (RisikoMassnahmenUmsetzungen)
-	 *  in the tree.
+	 * removes one child (RisikoMassnahmenUmsetzungen)
+	 * from the tree
 	 */
 	public void removeGefaehrdungsBaumChild(IGefaehrdungsBaumElement child) {
 		if (child instanceof CnATreeElement)
