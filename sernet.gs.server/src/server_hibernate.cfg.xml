@@ -9,9 +9,10 @@
 <!-- 
 
 ###########################################################################
-    	Database configuration for Verinice Command Server.
-    	Configuration of database type (MySQL, Postgres...),
-    	host, port, database as well as username and password.
+    	Database configuration template for verinice server.
+    	
+    	Database access credentials are to be found in the
+    	'veriniceserver-plain.properties' property file.
     	
     	@author 2009-01-08 ak@sernet.de
 ###########################################################################

@@ -9,19 +9,17 @@
 <!-- 
 
 ###########################################################################
-    	DO NOT EDIT. ANY CHANGES YOU MAKE WILL BE OVERWRITTEN
+    	Database configuration template for verinice server when
+    	using derby DB.
     	
-    	Please configure your database in the preferences dialog of
-    	the application.
+    	Database access credentials are to be found in the
+    	'veriniceserver-plain.properties' property file.
     	
-    	Or edit skel_hibernate_derby.cfg.xml in the application .jar file, 
-    	but if you break it, you fix it.
+    	@author 2009-01-08 ak@sernet.de
 ###########################################################################
 
-
  -->
-
-
+ 
     <session-factory>
  		<!-- Improve performance for collection inserts -->
 		<property name="hibernate.jdbc.batch_size">100</property>
