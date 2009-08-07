@@ -20,6 +20,9 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -27,7 +30,12 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.EntityResolverFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.PropertyGroup;
+import sernet.hui.common.connect.PropertyOption;
+import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.snutils.DBException;
 
 /**
@@ -56,6 +64,8 @@ public class HitroUtil {
 	private static final Logger log = Logger.getLogger(HitroUtil.class);
 
 	private HUITypeFactory typeFactory;
+	
+	private URL url;
 
 	public static HitroUtil getInstance() {
 		return (HitroUtil) VeriniceContext.get(VeriniceContext.HITRO_UTIL);
@@ -67,8 +77,7 @@ public class HitroUtil {
 			throw new IllegalStateException(
 					"type factory instance does not exist yet. This is not expected for the server!");
 
-		Logger.getLogger(HitroUtil.class).debug(
-				"Initializing HitroUI framework for server");
+		log.debug("Initializing server's HitroUI framework");
 		EntityResolverFactory.createResolvers(typeFactory);
 	}
 
@@ -81,17 +90,12 @@ public class HitroUtil {
 			throw new IllegalStateException(
 					"Type factory instance already exists. This is not expected for the client!");
 
-		Logger.getLogger(HitroUtil.class).debug(
-				"Initializing HitroUI framework for client");
-		String server = Activator.getDefault().getPluginPreferences()
-				.getString(PreferenceConstants.VNSERVER_URI);
-		URL huiConfig;
-		try {
-			huiConfig = new URL(server + "/GetHitroConfig");
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		}
-		initForClientImpl(huiConfig);
+		if (url == null)
+			throw new IllegalStateException(
+					"Property 'url' is not set. This is not expected for the client!");
+
+		log.debug("Initializing client's HitroUI framework");
+		initForClientImpl(url);
 	}
 
 	/** Used for tests only. */
@@ -115,7 +119,12 @@ public class HitroUtil {
 			// (or the URL is wrong). We do not want to prevent the application
 			// start because of this (otherwise there would be no possibility
 			// for the user to fix the issue).
-			log.warn(e.getLocalizedMessage());
+			log.warn("creating type factory for client failed: " + e.getLocalizedMessage());
+			
+			// Spring does not accept that a bean is null. Since
+			// the getTypeFactory() method is used as a factory
+			// method we need to provide a valid instance.
+			typeFactory = new FunctionlessHUITypeFactory();
 		}
 	}
 
@@ -129,6 +138,61 @@ public class HitroUtil {
 
 	public HUITypeFactory getTypeFactory() {
 		return typeFactory;
+	}
+
+	public void setUrl(URL url) {
+		this.url = url;
+	}
+
+	public URL getUrl() {
+		return url;
+	}
+
+	static class FunctionlessHUITypeFactory extends HUITypeFactory {
+		
+		FunctionlessHUITypeFactory() {
+			super();
+		}
+		
+		public EntityType getEntityType(String id) {
+			throw new IllegalStateException();
+		}
+		
+		public Collection<EntityType> getAllEntityTypes() {
+			throw new IllegalStateException();
+		}
+		
+		public List<PropertyType> getURLPropertyTypes() {
+			throw new IllegalStateException();
+		}
+		
+		public PropertyType readPropertyType(String id) {
+			throw new IllegalStateException();
+		}
+			
+		public PropertyGroup readPropertyGroup(String id) {
+			throw new IllegalStateException();
+		}
+
+		public ArrayList getOptionsForPropertyType(String id) {
+			throw new IllegalStateException();
+		}
+		
+		public PropertyOption getOptionById(String valueId) {
+			throw new IllegalStateException();
+		}
+
+		public List<PropertyType> getAllPropertyTypes(String entityTypeID) {
+			throw new IllegalStateException();
+		}
+
+		public PropertyType getPropertyType(String entityTypeID, String id) {
+			throw new IllegalStateException();
+		}
+
+		public boolean isDependency(IMLPropertyOption opt) {
+			throw new IllegalStateException();
+		}
 	}
 
 }
