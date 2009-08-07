@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
-<product name="verinice server" id="sernet.gs.server.product" application="sernet.gs.server.application" useFeatures="true">
+<product name="verinice server" id="sernet.gs.server.product" application="org.eclipse.equinox.app.error" useFeatures="true">
 
    <configIni use="default">
    </configIni>
