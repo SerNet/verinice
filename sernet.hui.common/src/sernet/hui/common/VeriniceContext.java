@@ -81,6 +81,8 @@ public class VeriniceContext {
 	public static String HITRO_UTIL = "hitroUtil";
 
 	public static String GS_SCRAPER_UTIL = "gsScraperUtil";
+	
+	public static String COMMAND_SERVICE = "commandService";
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();
 
@@ -132,6 +134,8 @@ public class VeriniceContext {
 		{
 			// The object must exist. Since it does not this means the thread
 			// local variable was not properly initialized.
+			// If this happens in the verinice client code you need to call
+			// Activator.inheritVeriniceContext() on the thread first.
 			String msg = "Requested object '" + id + "' was not available. The context was not properly configured for this thread yet.";
 			log.error(msg);
 			throw new IllegalStateException(msg);

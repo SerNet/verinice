@@ -71,6 +71,11 @@ public class HUITypeFactory {
 	// last-modified fields for local file or HTTP:
 	private static Date fileDate;
 	private static String lastModified;
+	
+	protected HUITypeFactory()
+	{
+		// Intentionally do nothing (is for the Functionless subclass).
+	}
 
 	public static HUITypeFactory createInstance(URL xmlUrl) throws DBException {
 		return new HUITypeFactory(xmlUrl);
@@ -396,4 +401,5 @@ public class HUITypeFactory {
 	public boolean isDependency(IMLPropertyOption opt) {
 		return allDependecies.contains(opt.getId());
 	}
+	
 }
