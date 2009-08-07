@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+<!-- 
+
+All of the Spring vodoo goes on in here. 
+
+This variant:
+	Wiring for remote service access using spring http invoker proxy from the RCP client.
+
+IST NICHT FÜR DER GEFINGERPOKEN UND MITTENGRABEN! ODERWISE IST EASY TO SCHNAPPEN DER SPRINGENWERK,
+BLOWENFUSEN UND POPPENCORKEN MIT SPITZENSPARKSEN.
+IST NICHT FÜR GEWERKEN BEI DUMMKOPFEN. DER RUBBERNECKEN SIGHTSEEREN KEEPEN DAS COTTONPICKEN 
+HÄNDER IN DAS POCKETS MUSS.
+ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
+
+-->
+
+	<!--
+		This bean causes a programmatically controlled keyword replacement being active
+		for this configuration.
+	-->
+	<bean class="sernet.gs.ui.rcp.main.ClientPropertyPlaceholderConfigurer"/>
+
+    <bean id="commandService"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>
+                ${verinice.serverURL}/service/commandServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.gs.ui.rcp.main.service.ICommandService</value>
+        </property>
+    </bean>
+    
+     <bean id="authService"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>
+                ${verinice.serverURL}/service/authServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.gs.ui.rcp.main.service.IAuthService</value>
+        </property>
+    </bean>
+    
+    <!-- timer bean to check for changes every x seconds: -->
+    
+    <bean id="transactionLogWatcher"
+    	class="sernet.gs.ui.rcp.main.service.TransactionLogWatcher" >
+    	
+    	<property name="commandService" ref="commandService"/>
+    </bean>
+    
+    <bean id="checkTransactionLogJob" 
+    	class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="transactionLogWatcher"/>
+    	<property name="targetMethod" value="checkLog"/>
+    </bean>
+    
+    <bean id="quartzSchedulerFactory"
+    	class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
+    	destroy-method="destroy" >
+    	<property name="triggers">
+    		<list>
+    			<ref bean="simpleTrigger" />
+    		</list>
+    	</property>
+    </bean>
+    
+    <bean id="simpleTrigger"
+    	class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+    	 <property name="jobDetail" ref="checkTransactionLogJob" />
+    	<property name="startDelay" value="15000" />
+    	<property name="repeatInterval" value="15000" />
+    </bean>
+
+	<!-- Prepares a hitroUtil instance that can be used from within
+         the client and which reads its information from a verinice
+         server.
+	-->
+    <bean id="hitroUtil"
+    	class="sernet.gs.ui.rcp.main.common.model.HitroUtil"
+		init-method="initForClient">
+		<property name="url" value="${verinice.serverURL}/GetHitroConfig" />
+    </bean>
+
+	<bean id="huiTypeFactory"
+		class="sernet.hui.common.connect.HUITypeFactory"
+	      factory-bean="hitroUtil"
+    	  factory-method="getTypeFactory">
+    </bean>
+    
+	<bean
+		id="gsScraperUtil"
+		class="sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil"
+		init-method="initForClient">
+	</bean>
+	
+	<bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
+	<property name="map">
+		<map>
+			<entry key="gsScraperUtil" value-ref="gsScraperUtil"/>
+			<entry key="hitroUtil" value-ref="hitroUtil"/>
+			<entry key="huiTypeFactory" value-ref="huiTypeFactory"/>
+			<entry key="commandService" value-ref="commandService"/>
+		</map>
+	</property>
+	</bean>
+
+</beans>

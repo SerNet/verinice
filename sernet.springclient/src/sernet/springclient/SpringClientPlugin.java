@@ -18,6 +18,8 @@
  ******************************************************************************/
 package sernet.springclient;
 
+import java.net.URL;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -94,11 +96,11 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 		return beanFactory;
 	}
 
-	public synchronized void openBeanFactory(String applicationContextLocation) {
+	public synchronized void openBeanFactory() {
 		if (beanFactory == null) {
-			log.debug("initializing bean factory from: " + applicationContextLocation);
-			
-			OsgiBundleXmlApplicationContext appCtx = new OsgiBundleXmlApplicationContext(new String[] { applicationContextLocation });
+			URL url = getClass().getResource("veriniceclient.xml");
+			OsgiBundleXmlApplicationContext appCtx =
+				new OsgiBundleXmlApplicationContext(new String[] { url.toString() });
 			Assert.isNotNull(ctx);
 			appCtx.setBundleContext(ctx);
 			appCtx.refresh();
