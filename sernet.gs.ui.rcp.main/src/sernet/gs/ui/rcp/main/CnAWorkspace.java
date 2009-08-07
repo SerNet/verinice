@@ -34,6 +34,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
@@ -109,12 +110,8 @@ public class CnAWorkspace {
 			if (event.getProperty().equals(PreferenceConstants.OPERATION_MODE)
 					|| event.getProperty().equals(PreferenceConstants.VNSERVER_URI)) {
 				try {
-					if (event.getNewValue().equals(PreferenceConstants.OPERATION_MODE_STANDALONE))
-						ServiceFactory.setService(ServiceFactory.LOCAL);
-					else if (event.getNewValue().equals(PreferenceConstants.OPERATION_MODE_WITHSERVER))
-						ServiceFactory.setService(ServiceFactory.REMOTE);
+					updatePolicyFile();
 					
-					createSpringConfig();
 					if (!modechangeWarning ) {
 						modechangeWarning = false;
 						MessageDialog.openWarning(Display.getCurrent().getActiveShell(), "Neustart erforderlich", 
@@ -152,8 +149,6 @@ public class CnAWorkspace {
 			instance = new CnAWorkspace();
 		return instance;
 	}
-
-	private static HashMap<String, String> settings;
 
 	/**
 	 * Initialize new workspace folder with config and other files that are
@@ -194,7 +189,7 @@ public class CnAWorkspace {
 			instance.createHtmlDir();
 			instance.createOfficeDir();
 			instance.createDatabaseConfig();
-			instance.createSpringConfig();
+			instance.updatePolicyFile();
 		} catch (Exception e) {
 			ExceptionUtil.log(e,
 					"Fehler beim Anlegen des Arbeitsverzeichnisses: "
@@ -210,108 +205,26 @@ public class CnAWorkspace {
 		workDir = (new File(path)).getAbsolutePath();		
 		confDir = new File(url.getPath() + File.separator + "conf");
 		
-		// FIXME ak update site only on multiuser-server (not in standalone)
-		if (ServiceFactory.isUsingRemoteService()) {
+		// FIXME ak update site only on multiuser-server (not with internal one)
+		updatePolicyFile();
+	}
+
+	private void updatePolicyFile() {
+		Preferences prefs = Activator.getDefault().getPluginPreferences();
+		
+		if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER))
+		{
+			removePolicyFile();
+		}
+		else
+		{
 			try {
-				createPolicyFile(Activator.getDefault().getPluginPreferences());
+				createPolicyFile(prefs);
 			} catch (MalformedURLException e) {
 				Logger.getLogger(this.getClass()).error("Konnte Update-Policy File nicht erzeugen.", e);
 			} catch (IOException e) {
 				Logger.getLogger(this.getClass()).error("Konnte Update-Policy File nicht erzeugen.", e);
 			}
-		}
-		else {
-			removePolicyFile();
-		}
-		
-	}
-	
-	public String getApplicationContextLocation()
-	{
-		try
-		{
-			return new File(getConfDir() + File.separator + "applicationContextRemoteService.xml").toURI().toURL().toString();
-		}
-		catch (MalformedURLException mue)
-		{
-			throw new RuntimeException(mue);
-		}
-	}
-	
-	/**
-	 * Takes a server URI and removes unwanted characters like trailing slashes
-	 * from it.
-	 * 
-	 * @param uri
-	 * @return
-	 */
-	private static String correctServerURI(String uri)
-	{
-		// Trailing slashes are a problem for the server. As such strip them away.
-		int i = uri.length() - 1;
-		while (i > 0 && uri.codePointAt(i) == '/')
-			i--;
-
-		uri = uri.substring(0, i + 1); 
-		
-		log.debug("corrected server URI to: " + uri);
-		
-		return uri;
-	}
-
-	private void createSpringConfig() throws NullPointerException, IOException {
-		
-		// create application context xml for direct database access:
-		settings = new HashMap<String, String>(1);
-		String cfgFileURL = (new File(getConfDir() + File.separator + "hibernate.cfg.xml")).toURI().toURL().toString();
-		settings.put("hibernatecfg", cfgFileURL);
-		createTextFile("conf" + File.separator + "skel_applicationContextHibernate.xml",
-				getConfDir(), 
-				"applicationContextHibernate.xml",
-				settings);
-		
-		// create context for remote service:
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		settings = new HashMap<String, String>(1);
-		settings.put("veriniceserver", correctServerURI(prefs.getString(PreferenceConstants.VNSERVER_URI)));
-		createTextFile("conf" + File.separator + "skel_applicationContextRemoteService.xml",
-				getConfDir(), 
-				"applicationContextRemoteService.xml",
-				settings);
-		
-
-		// create bean ref factory xml:
-		settings = new HashMap<String, String>(2);
-		
-		String appCtxHibernate = (new File(getConfDir() + File.separator + "applicationContextHibernate.xml"))
-			.toURI().toURL().toString();
-		settings.put("applicationContextHibernate", appCtxHibernate );
-		
-		
-		String appCtxRemote = (new File(getConfDir() + File.separator + "applicationContextRemoteService.xml"))
-		.toURI().toURL().toString();
-		settings.put("applicationContextRemote", appCtxRemote);
-		
-		if (ServiceFactory.isUsingRemoteService()) {
-			Logger.getLogger(this.getClass()).debug("Creating bean ref for remote service.");
-			
-			createTextFile("conf" + File.separator + "skel_beanRefFactory-Remote.xml", 
-					getConfDir(),		
-					"beanRefFactory.xml",
-					settings);
-			
-			createPolicyFile(prefs);
-			
-		}
-		else {
-			Logger.getLogger(this.getClass()).debug("Creating bean ref for local hibernate access.");
-
-			createTextFile("conf" + File.separator + "skel_beanRefFactory-Hibernate.xml", 
-					getConfDir(),		
-					"beanRefFactory.xml",
-					settings);
-			
-			removePolicyFile();
 		}
 	}
 
@@ -324,7 +237,7 @@ public class CnAWorkspace {
 	private void createPolicyFile(Preferences prefs) throws IOException,
 			MalformedURLException {
 		// create update policy file to set update site to local verinice server:
-		settings = new HashMap<String, String>(1);
+		HashMap<String, String> settings = new HashMap<String, String>(1);
 		settings.put("updatesiteurl", createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
 		createTextFile("conf" + File.separator + "skel_policy.xml",
 				getConfDir(), 
@@ -385,6 +298,7 @@ public class CnAWorkspace {
 		URL url = Platform.getInstanceLocation().getURL();
 		File officeDir = new File(url.getPath() + File.separator + OFFICEDIR);
 
+		// TODO rschus: This method effectively does nothing and is not called by anything. Remove?
 	}
 
 	private void createOfficeDir() throws NullPointerException, IOException {
@@ -445,67 +359,9 @@ public class CnAWorkspace {
 		}
 	}
 
-	public void copyFile(String infileName, File outfile) throws IOException {
-		FileInputStream in = new FileInputStream((new File(infileName)));
-		OutputStream out = null;
-		try {
-			out = new FileOutputStream(outfile);
-			while (true) {
-				synchronized (buffer) {
-					int amountRead = in.read(buffer);
-					if (amountRead == -1) {
-						break;
-					}
-					out.write(buffer, 0, amountRead);
-				}
-			}
-		} finally {
-			if (in != null) {
-				in.close();
-			}
-			if (out != null) {
-				out.close();
-			}
-		}
-
-	}
-
-	/**
-	 * Create a hibernate dataase config from a skeleton file, filling in the
-	 * given values for user, password etc.
-	 * 
-	 * @param url
-	 * @param user
-	 * @param pass
-	 * @param driver
-	 * @param dialect
-	 * @throws NullPointerException
-	 * @throws IOException
-	 */
-	public void createDatabaseConfig(String url, String user, String pass,
-			String driver, String dialect) throws NullPointerException,
-			IOException {
-		settings = new HashMap<String, String>(5);
-		settings.put("url", url);
-		settings.put("user", user);
-		settings.put("pass", pass);
-		settings.put("driver", driver);
-		settings.put("dialect", dialect);
-		
-		if (driver.indexOf("derby")>-1) 
-			// use optimzed derby config:
-			createTextFile("conf" + File.separator + "skel_hibernate_derby.cfg.xml",
-					workDir, "conf" + File.separator + "hibernate.cfg.xml",
-					settings);
-		else		
-			createTextFile("conf" + File.separator + "skel_hibernate.cfg.xml",
-				workDir, "conf" + File.separator + "hibernate.cfg.xml",
-				settings);
-	}
-
 	public void createGstoolImportDatabaseConfig(String url, String user,
 			String pass) throws NullPointerException, IOException {
-		settings = new HashMap<String, String>(5);
+		HashMap<String, String> settings = new HashMap<String, String>(5);
 		settings.put("url", url.replace("\\", "\\\\"));
 		settings.put("user", user);
 		settings.put("pass", pass);
@@ -603,39 +459,17 @@ public class CnAWorkspace {
 		File file = new File(dir + File.separator + filepath);
 		if (file.exists()) {
 			File outfile = new File(dir + File.separator + filepath + ".bak");
-			copyFile(file.getAbsolutePath(), outfile);
+			FileUtils.copyFile(file, outfile);
 		}
-	}
-
-	public synchronized boolean isDatabaseConfigUpToDate() {
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		boolean result = false;
-		if (settings != null) {
-			result = settings.get("url").equals(
-					prefs.getString(PreferenceConstants.DB_URL))
-					&& settings.get("user").equals(
-							prefs.getString(PreferenceConstants.DB_USER))
-					&& settings.get("pass").equals(
-							prefs.getString(PreferenceConstants.DB_PASS))
-					&& settings.get("driver").equals(
-							prefs.getString(PreferenceConstants.DB_DRIVER))
-					&& settings.get("dialect").equals(
-							prefs.getString(PreferenceConstants.DB_DIALECT));
-
-			String s1 = prefs.getString(PreferenceConstants.DB_URL);
-			String s2 = prefs.getString(PreferenceConstants.DB_PASS);
-			String s3 = prefs.getString(PreferenceConstants.DB_DRIVER);
-			String s4 = prefs.getString(PreferenceConstants.DB_DIALECT);
-			String s5 = prefs.getString(PreferenceConstants.DB_USER);
-		}
-		return result;
 	}
 
 	public synchronized void createDatabaseConfig()
 			throws NullPointerException, IOException {
 		
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		createDatabaseConfig(prefs.getString(PreferenceConstants.DB_URL), prefs
+		
+		ServerPropertyPlaceholderConfigurer.pushDatabaseConfigToInternalServer(prefs
+				.getString(PreferenceConstants.DB_URL), prefs
 				.getString(PreferenceConstants.DB_USER), prefs
 				.getString(PreferenceConstants.DB_PASS), prefs
 				.getString(PreferenceConstants.DB_DRIVER), prefs

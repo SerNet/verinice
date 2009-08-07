@@ -25,9 +25,7 @@ import java.util.Set;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
-import sernet.gs.ui.rcp.main.service.ServerCommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindURLs;
@@ -122,12 +120,8 @@ public class EntityResolverFactory {
 				try {
 					FindURLs command = new FindURLs(allIDs);
 					
-						if (WhereAmIUtil.runningOnServer()) {
-							command = ServerCommandService.getCommandService().executeCommand(command);
-						}
-						else {
-							command = ServiceFactory.lookupCommandService().executeCommand(command);
-						}
+						command = ServiceFactory.lookupCommandService().executeCommand(command);
+						
 						DocumentLinkRoot root = command.getUrls();
 						
 						DocumentLink[] links = root.getChildren();
@@ -159,12 +153,9 @@ public class EntityResolverFactory {
 					LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
 					
 					try {
-						if (WhereAmIUtil.runningOnServer()) {
-							command = ServerCommandService.getCommandService().executeCommand(command);
-						}
-						else {
-							command = ServiceFactory.lookupCommandService().executeCommand(command);
-						}
+						command = ServiceFactory.lookupCommandService()
+							.executeCommand(command);
+						
 						List<Person> personen = command.getElements();
 						
 						for (Person person : personen) {

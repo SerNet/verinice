@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.bsi.views.actions;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -79,11 +80,12 @@ public class BSIModelViewOpenDBAction extends Action {
 				PreferenceConstants.DB_DRIVER_DERBY)
 				) {
 
-			Activator.getDefault().getPluginPreferences().setValue(PreferenceConstants.FIRSTSTART,
+			Preferences prefs = Activator.getDefault().getPluginPreferences();
+			prefs.setValue(PreferenceConstants.FIRSTSTART,
 					false);
 
-			// do not show dialog if server is configured instead of local DB:
-			if (ServiceFactory.isUsingRemoteService())
+			// Do not show dialog if remote server is configured instead of internal server.
+			if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER))
 				return;
 			
 			MessageDialog

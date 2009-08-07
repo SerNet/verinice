@@ -75,7 +75,7 @@ public class ClientServerPreferencePage
 		if (visible) {
 			boolean standalone 
 				= getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE)
-				.equals(PreferenceConstants.OPERATION_MODE_STANDALONE);
+				.equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
 			
 			serverURI.setEnabled(!standalone, getFieldEditorParent());
 		}
@@ -87,7 +87,7 @@ public class ClientServerPreferencePage
 		if (event.getProperty().equals(FieldEditor.VALUE)) {
 			if (event.getSource() == operationMode) {
 				Object newValue = event.getNewValue();
-				boolean servermode = newValue.equals(PreferenceConstants.OPERATION_MODE_WITHSERVER);
+				boolean servermode = newValue.equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER);
 				serverURI.setEnabled(servermode, getFieldEditorParent());
 
 				if (!warningShown) {
@@ -106,8 +106,8 @@ public class ClientServerPreferencePage
 				"Betriebsmodus",
 				1,
 				new String[][] {
-					{"Standalone", PreferenceConstants.OPERATION_MODE_STANDALONE},
-					{"Mehrbenutzer", PreferenceConstants.OPERATION_MODE_WITHSERVER}
+					{"Standalone", PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER},
+					{"Mehrbenutzer", PreferenceConstants.OPERATION_MODE_REMOTE_SERVER}
 				}, getFieldEditorParent());
 		addField(operationMode);
 	}

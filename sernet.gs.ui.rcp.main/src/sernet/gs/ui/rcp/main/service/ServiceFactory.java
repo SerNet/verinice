@@ -21,32 +21,16 @@ import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.hui.common.VeriniceContext;
 import sernet.springclient.SpringClientPlugin;
 
 public abstract class ServiceFactory {
 	
-	public static final String BEAN_ID_HITRO_UTIL = "hitroUtil";
-	public static final String BEAN_ID_GS_SCRAPER_UTIL = "gsScraperUtil";
-
 	private static final String AUTH_SERVICE = "authService";
-	private static final String COMMAND_SERVICE = "commandService";
-
-	public static final int LOCAL = 0;
-	public static final int REMOTE = 1;
-
-	private static int locality = LOCAL;
-
-	public static void setService(int locality) {
-		ServiceFactory.locality = locality;
-	}
-
-	public static boolean isUsingRemoteService() {
-		return locality == REMOTE;
-	}
+	private static final String WORK_OBJECTS = "workObjects";
 
 	public static void openCommandService() throws MalformedURLException {
-		SpringClientPlugin.getDefault().openBeanFactory(CnAWorkspace.getInstance().getApplicationContextLocation());
+		SpringClientPlugin.getDefault().openBeanFactory();
 	}
 
 	public static void closeCommandService() {
@@ -54,11 +38,30 @@ public abstract class ServiceFactory {
 		SpringClientPlugin.getDefault().closeBeanFactory();
 	}
 
+	/** Retrieves the application's ICommandService instance.
+	 * 
+	 * <p>The method works on the server as well as the client.</p>
+	 * 
+	 * <p>Note: Usage of this method is discouraged. If the class that needs
+	 * the command service is managed by Spring declare a property and
+	 * let the instance being injected by the IoC container.</p> 
+	 * 
+	 * @return
+	 */
 	public static ICommandService lookupCommandService() {
-		return (ICommandService) SpringClientPlugin.getDefault()
-				.getBeanFactory().getBean(COMMAND_SERVICE);
+		return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 	}
 	
+	/** Retrieves the client's IAuthService instance.
+	 * 
+	 * <p>The method works only on the client.</p>
+	 * 
+	 * <p>Note: Usage of this method is discouraged. If the class that needs
+	 * the auth service is managed by Spring declare a property and
+	 * let the instance being injected by the IoC container.</p> 
+	 * 
+	 * @return
+	 */
 	public static IAuthService lookupAuthService() {
 		IAuthService authService = (IAuthService) SpringClientPlugin.getDefault()
 			.getBeanFactory().getBean(AUTH_SERVICE);
@@ -66,24 +69,16 @@ public abstract class ServiceFactory {
 	}
 	
 	/**
-	 * Wraps the functionality of the {@link BeanFactory#getBean} method
-	 * and retrieves a bean from the application's context.
+	 * Retrieves the work objects that have been configured for the client.
 	 * 
-	 * <p>You are supposed to only request bean ids which have a corresponding
-	 * String constant in this class beginning with the name <code>BEAN_ID_</code>.
-	 * If you need another bean from the application context add such a constant
-	 * first.</p>
-	 * 
-	 * <p>Messing around with the bean factory is discouraged by Spring (one should
-	 * use proper inversion of control instead). As such keep the number of calls
-	 * to this method low.</p>
-	 * 
-	 * @param id
-	 * @return
+	 * <p>This method must only be used from the applications' <code>Activator</code>
+	 * in order to retrieve the initial values for the {@link VeriniceContext} class.</p>
 	 */
-	public static Object getBean(String id)
+	public static VeriniceContext.State getClientWorkObjects()
 	{
-		return SpringClientPlugin.getDefault().getBeanFactory().getBean(id);
+		return (VeriniceContext.State) SpringClientPlugin.getDefault()
+				.getBeanFactory()
+				.getBean(WORK_OBJECTS);
 	}
 	
 }

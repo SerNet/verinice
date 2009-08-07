@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -149,7 +150,8 @@ public class ExportWizard extends Wizard implements IExportWizard {
 //				ooWrap.createTextReport(getReport().getTitle(), rows, 2, mon);
 //			} else {
 				File tmp = File.createTempFile("report_tmp",".ods");
-				CnAWorkspace.getInstance().copyFile(templatePath,tmp);
+				FileUtils.copyFile(new File(templatePath), tmp);
+				
 				ooWrap.openSpreadhseet(tmp.getAbsolutePath());
 				ooWrap.fillSpreadsheet(getReport().getTitle(), rows, mon);
 //			}

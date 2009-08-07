@@ -203,7 +203,6 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
 	private void getBausteine(CnATreeElement elmnt,
 			ArrayList<BausteinUmsetzung> result) {
 
@@ -228,7 +227,6 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		}
 	}
 
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
 	private void getMassnahmen(CnATreeElement elmnt,
 			ArrayList<MassnahmenUmsetzung> result) {
 

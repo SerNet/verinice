@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
-import java.util.HashMap;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
@@ -30,12 +28,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
 import sernet.hui.common.VeriniceContext;
 
 /**
@@ -79,31 +74,33 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
-		Bundle bundle = Platform.getBundle("sernet.gs.server");
-		if (bundle == null)
-			log.warn("verinice server bundle is not available. Assuming it is started separately.");
-		else if (bundle.getState() == Bundle.INSTALLED
-						|| bundle.getState() == Bundle.RESOLVED) {
-					log.debug("Manually starting GS Server");
-					bundle.start();
-				}
-		
-		// running as client:
-		WhereAmIUtil.setLocation(WhereAmIUtil.LOCATION_CLIENT);
 
 		// set workdir preference:
 		CnAWorkspace.getInstance().prepareWorkDir();
-
-		// set service factory location to local / remote according to preferences:
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		boolean standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_STANDALONE);
 		
-		// TODO ak is now always "remote" (change preferences dialog to allow editing localhost / remote host)
+		Preferences prefs = getPluginPreferences();
+		ServerPropertyPlaceholderConfigurer.pushDatabaseConfigToInternalServer(prefs
+				.getString(PreferenceConstants.DB_URL), prefs
+				.getString(PreferenceConstants.DB_USER), prefs
+				.getString(PreferenceConstants.DB_PASS), prefs
+				.getString(PreferenceConstants.DB_DRIVER), prefs
+				.getString(PreferenceConstants.DB_DIALECT));
+		
+		// set service factory location to local / remote according to preferences:
+		boolean standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+
+		// Start server only when it is needed.
 		if (standalone)
-			ServiceFactory.setService(ServiceFactory.LOCAL);
-		else
-			ServiceFactory.setService(ServiceFactory.REMOTE);
+		{
+			Bundle bundle = Platform.getBundle("sernet.gs.server");
+			if (bundle == null)
+				log.warn("verinice server bundle is not available. Assuming it is started separately.");
+			else if (bundle.getState() == Bundle.INSTALLED
+							|| bundle.getState() == Bundle.RESOLVED) {
+						log.debug("Manually starting GS Server");
+						bundle.start();
+					}
+		}
 
 		// prepare client's workspace:
 		CnAWorkspace.getInstance().prepare();
@@ -112,26 +109,14 @@ public class Activator extends AbstractUIPlugin {
 			ServiceFactory.openCommandService();
 		} catch (Exception e) {
 			// if this fails, try rewriting config:
-			Logger.getLogger(this.getClass()).error("Exception while connection to command service, forcing recreation of " +
+			log.error("Exception while connection to command service, forcing recreation of " +
 					"service factory configuration from preferences.", e);
 			CnAWorkspace.getInstance().prepare(true);
 		}
 		
-		// When the service factory is initialized there should be a HitroUtil and GSScraperUtil instance
-		// which should then be used throughout the verinice client.
-		// TODO rschuster: Ideally the following should be done by the client's Spring configuration. 
-		HitroUtil hu = (HitroUtil) ServiceFactory.getBean(ServiceFactory.BEAN_ID_HITRO_UTIL);
-		HashMap<String, Object> m = new HashMap<String, Object>();
-		m.put(VeriniceContext.HITRO_UTIL, hu);
-		m.put(VeriniceContext.HUI_TYPE_FACTORY, hu.getTypeFactory());
-		
-		GSScraperUtil gsScraperUtil = (GSScraperUtil) ServiceFactory.getBean(ServiceFactory.BEAN_ID_GS_SCRAPER_UTIL);
-		m.put(VeriniceContext.GS_SCRAPER_UTIL, gsScraperUtil);
-		
-		state = new VeriniceContext.State();
-		state.setMap(m);
-		
-		VeriniceContext.setState(state);
+		// When the service factory is initialized the client's work objects can be accessed.
+		// The line below initializes the VeriniceContext initially.
+		VeriniceContext.setState(state = ServiceFactory.getClientWorkObjects());
 	}
 
 

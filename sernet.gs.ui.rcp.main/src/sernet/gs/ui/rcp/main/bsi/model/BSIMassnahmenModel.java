@@ -21,11 +21,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.remoting.RemoteConnectFailureException;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
@@ -173,7 +175,17 @@ public class BSIMassnahmenModel {
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			return command.getBausteine();
 		} catch (CommandException e) {
+			log.warn("execution of command failed: " + e.getLocalizedMessage());;
 			throw new GSServiceException(e.getCause());
+		} catch(RemoteConnectFailureException re)
+		{
+			log.error("error connecting to server: " + re.getLocalizedMessage());
+			
+			// TODO rschuster: Display a nice error dialog and asking the user to
+			// check whether the server URL is valid (or the server is down?)
+			// If this happens in internal server mode than something is very bad.
+			
+			throw new GSServiceException(re.getCause());
 		}
 	}
 

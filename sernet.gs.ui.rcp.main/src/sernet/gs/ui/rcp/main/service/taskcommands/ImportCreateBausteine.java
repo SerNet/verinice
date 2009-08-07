@@ -37,7 +37,7 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.ServerCommandService;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
@@ -99,7 +99,7 @@ public class ImportCreateBausteine extends GenericCommand {
 			dao.reload(element, element.getDbId());
 			
 			LoadBausteine command = new LoadBausteine();
-			command = ServerCommandService.getCommandService().executeCommand(command);
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			this.bausteine = command.getBausteine();
 			
 			Set<MbBaust> keySet = bausteineMassnahmenMap.keySet();
@@ -121,8 +121,7 @@ public class ImportCreateBausteine extends GenericCommand {
 		
 		if (baustein != null) {
 			CreateBaustein command = new CreateBaustein(element, baustein);
-			// FIXME server: this will not work in standalone:
-			command = ServerCommandService.getCommandService().executeCommand(command);
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
 			
 			if (list.iterator().hasNext()) {

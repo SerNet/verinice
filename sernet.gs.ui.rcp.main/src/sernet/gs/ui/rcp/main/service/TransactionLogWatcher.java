@@ -39,6 +39,9 @@ import sernet.gs.ui.rcp.main.service.taskcommands.GetChangesSince;
 // TODO server: implement server-side push of events (beacon service)
 public class TransactionLogWatcher {
 	private Date lastChecked = null;
+	
+	/** ICommandService instance is injected by Spring. */
+	private ICommandService commandService;
 
 	public void checkLog() {
 		if (!CnAElementFactory.isModelLoaded())
@@ -49,7 +52,7 @@ public class TransactionLogWatcher {
 		try {
 			GetChangesSince command = new GetChangesSince(lastChecked,
 					ChangeLogEntry.STATION_ID);
-			command = ServiceFactory.lookupCommandService().executeCommand(
+			command = commandService.executeCommand(
 					command);
 
 			lastChecked = command.getLastChecked();
@@ -105,6 +108,14 @@ public class TransactionLogWatcher {
 			Logger.getLogger(this.getClass()).debug("Unrecognized change type received from server.");
 			break;
 		}
+	}
+
+	public void setCommandService(ICommandService commandService) {
+		this.commandService = commandService;
+	}
+
+	public ICommandService getCommandService() {
+		return commandService;
 	}
 
 }

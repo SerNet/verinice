@@ -98,7 +98,7 @@ public class DatenbankPreferencePage
 		// otherwise, DB is configured on the server
 		if (visible) {
 			String opmode = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE);
-			setEnabledFields(opmode.equals(PreferenceConstants.OPERATION_MODE_STANDALONE));
+			setEnabledFields(opmode.equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER));
 		}
 	}
 	
