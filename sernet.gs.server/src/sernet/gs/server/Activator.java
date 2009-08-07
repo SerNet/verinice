@@ -21,7 +21,6 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.ops4j.pax.web.service.WebContainer;

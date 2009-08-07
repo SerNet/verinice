@@ -10,7 +10,7 @@
 	This file is referenced in the Activator class. 
  -->
 
-<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+<bean class="sernet.gs.ui.rcp.main.ServerPropertyPlaceholderConfigurer">
     <property name="locations">
         <value>classpath:sernet/gs/server/veriniceserver-osgi.properties</value>
     </property>

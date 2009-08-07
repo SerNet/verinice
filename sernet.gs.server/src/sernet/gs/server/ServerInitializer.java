@@ -20,10 +20,8 @@ package sernet.gs.server;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.WhereAmIUtil;
+import sernet.gs.ui.rcp.main.service.HibernateCommandService;
 import sernet.hui.common.VeriniceContext;
 
 /**
@@ -39,6 +37,8 @@ public class ServerInitializer {
 	private ServerConfiguration configuration;
 	
 	private VeriniceContext.State workObjects;
+	
+	private HibernateCommandService hibernateCommandService;
 	
 	private IProgress nullMonitor = new IProgress() {
 		public void beginTask(String name, int totalWork) {
@@ -60,15 +60,15 @@ public class ServerInitializer {
 
 	public void initialize() {
 		Logger.getLogger(this.getClass()).debug("Initializing server context...");
-		// basic Verinice client setup:
-		ServiceFactory.setService(ServiceFactory.LOCAL);
-		
-		// tell me where to find HitroUI configuration and other stuff:
-		WhereAmIUtil.setLocation(WhereAmIUtil.LOCATION_SERVER);
-		
 		// After this we can use the getInstance() methods from HitroUtil and
 		// GSScraperUtil
 		VeriniceContext.setState(workObjects);
+		
+		// The work objects in the HibernateCommandService can only be set
+		// at this point because otherwise we would have a circular dependency
+		// in the Spring configuration (= commandService needs workObjects
+		// and vice versa)
+		hibernateCommandService.setWorkObjects(workObjects);
 		
 		GSScraperUtil gsScraperUtil = GSScraperUtil.getInstance();
 		// initialize grundschutz scraper:
@@ -93,6 +93,14 @@ public class ServerInitializer {
 
 	public VeriniceContext.State getWorkObjects() {
 		return workObjects;
+	}
+
+	public void setHibernateCommandService(HibernateCommandService hibernateCommandService) {
+		this.hibernateCommandService = hibernateCommandService;
+	}
+
+	public HibernateCommandService getHibernateCommandService() {
+		return hibernateCommandService;
 	}
 
 }
