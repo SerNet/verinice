@@ -14,8 +14,11 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-        	/WEB-INF/veriniceserver-plain.xml
         	/WEB-INF/veriniceserver-common.xml
+        	/WEB-INF/veriniceserver-plain.xml
+        	/WEB-INF/veriniceserver-daos-common.xml
+        	/WEB-INF/veriniceserver-daos-plain.xml
+        	/WEB-INF/veriniceserver-security-plain.xml
         </param-value>
     </context-param>
     
