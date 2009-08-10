@@ -49,7 +49,8 @@ public class GetHitroConfig extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		InputStream in = this.getClass().getResourceAsStream("SNCA.xml");
+		InputStream in = getServletContext().getResourceAsStream(getInitParameter("snca.xml.path"));
+		
 		OutputStream out = response.getOutputStream();
 		try {
 			while (true) {

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
  
 <web-app id="veriniceserver_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+<!--
+	This file configures the plain veriniceserver. It is not used for the internal verinice server.
+	
+	To find its equivalent have a look at the sernet.gs.server.InternalServer class.
+ -->
+
 	<display-name>veriniceserver</display-name>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
@@ -14,11 +21,11 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-        	/WEB-INF/veriniceserver-common.xml
-        	/WEB-INF/veriniceserver-plain.xml
-        	/WEB-INF/veriniceserver-daos-common.xml
-        	/WEB-INF/veriniceserver-daos-plain.xml
-        	/WEB-INF/veriniceserver-security-plain.xml
+        	classpath:sernet/gs/server/spring/veriniceserver-common.xml
+        	classpath:sernet/gs/server/spring/veriniceserver-plain.xml
+        	classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
+        	classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml
+        	classpath:sernet/gs/server/spring/veriniceserver-security-plain.xml
         </param-value>
     </context-param>
     
@@ -43,14 +50,21 @@
     <servlet>
         <servlet-name>springDispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+        	<param-name>contextConfigLocation</param-name>
+        	<param-value>classpath:sernet/gs/server/spring/springDispatcher-servlet.xml</param-value>
+        </init-param>
 		<load-on-startup>2</load-on-startup>
     </servlet>
-   
     <servlet>
     	<description>Output HuiConfig from classpath.</description>
     	<display-name>GetHitroConfig</display-name>
     	<servlet-name>GetHitroConfig</servlet-name>
     	<servlet-class>sernet.gs.server.GetHitroConfig</servlet-class>
+        <init-param>
+        	<param-name>snca.xml.path</param-name>
+        	<param-value>/WEB-INF/SNCA.xml</param-value>
+        </init-param>
 		<load-on-startup>3</load-on-startup>
     </servlet>
 

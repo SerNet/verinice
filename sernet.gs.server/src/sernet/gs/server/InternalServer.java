@@ -134,17 +134,18 @@ public class InternalServer implements IInternalServer {
 
 		Dictionary<String, String> dict = new Hashtable<String, String>();
 		dict.put("contextConfigLocation", "\n"
-				+ "WebContent/WEB-INF/veriniceserver-common.xml \n"
-				+ "WebContent/WEB-INF/veriniceserver-osgi.xml \n"
-				+ "WebContent/WEB-INF/veriniceserver-daos-common.xml \n"
-				+ "WebContent/WEB-INF/veriniceserver-daos-osgi.xml \n"
-				+ "WebContent/WEB-INF/veriniceserver-security-osgi.xml \n");
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-common.xml \n"
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-osgi.xml \n"
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-common.xml \n"
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-osgi.xml \n"
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml \n");
 		dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
 				OsgiBundleXmlWebApplicationContext.class.getName());
 		wc.setContextParam(dict, ctx);
 
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "GetHitroConfig");
+		dict.put("snca.xml.path", "/WebContent/WEB-INF/SNCA.xml");
 		wc.registerServlet(new GetHitroConfig(),
 				new String[] { "/GetHitroConfig" }, dict, ctx);
 
@@ -172,7 +173,7 @@ public class InternalServer implements IInternalServer {
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "springDispatcher");
 		dict.put("contextConfigLocation",
-				"WebContent/WEB-INF/springDispatcher-servlet.xml");
+				"classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml");
 		dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
 				OsgiBundleXmlWebApplicationContext.class.getName());
 		dispatcherServlet = new DispatcherServlet();
