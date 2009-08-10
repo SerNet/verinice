@@ -23,6 +23,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRemoteSource;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**
@@ -58,6 +60,27 @@ public class ClientPropertyPlaceholderConfigurer extends
 				server = correctServerURI(prefs.getString(PreferenceConstants.VNSERVER_URI));
 			
 			return server;
+		}
+		else if (placeholder.equals("verinice.model.configuration.class"))
+		{
+			String configurationClass;
+			
+			if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER))
+			{
+				// When the internal server is in use, the catalogues should be
+				// read from the local filesystem.
+				configurationClass = BSIConfigurationRCPLocal.class.getName();
+			}
+			else
+			{
+				// When a remote server is in use, the catalogues will be retrieved
+				// from it.
+				configurationClass = BSIConfigurationRemoteSource.class.getName();
+			}
+			
+			log.debug("using configuration class: " + configurationClass);
+			
+			return configurationClass;
 		}
 		
 		return props.getProperty(placeholder);

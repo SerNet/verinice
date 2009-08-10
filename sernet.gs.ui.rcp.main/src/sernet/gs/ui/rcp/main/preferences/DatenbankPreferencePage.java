@@ -23,11 +23,13 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 
 /**
  * Main preference page for CnA Tool Settings.
@@ -39,12 +41,15 @@ public class DatenbankPreferencePage
 	extends FieldEditorPreferencePage
 	implements IWorkbenchPreferencePage {
 
+	private static final Logger log = Logger.getLogger(DatenbankPreferencePage.class);
 
 	private RadioGroupFieldEditor dbDriver;
 	private StringFieldEditor dialect;
 	private StringFieldEditor url;
 	private StringFieldEditor user;
 	private StringFieldEditor pass;
+	
+	private boolean modified = false;
 
 	public DatenbankPreferencePage() {
 		super(GRID);
@@ -94,20 +99,26 @@ public class DatenbankPreferencePage
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		// only editable when server is not used, client has direct access to database.
-		// otherwise, DB is configured on the server
+		
 		if (visible) {
-			String opmode = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE);
-			setEnabledFields(opmode.equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER));
+			boolean standalone = getPreferenceStore()
+				.getString(PreferenceConstants.OPERATION_MODE)
+				.equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+			boolean dbOpen = CnAElementFactory.getInstance().isDbOpen();
+
+			// Do not show the fields when the remote server is in use
+			// or DB connection is open.
+			setEnabledFields(!dbOpen && standalone);
 		}
 	}
 	
 	private void setEnabledFields(boolean enable) {
-		dbDriver.setEnabled(enable, getFieldEditorParent());
-		dialect.setEnabled(enable, getFieldEditorParent());
-		url.setEnabled(enable, getFieldEditorParent());
-		user.setEnabled(enable, getFieldEditorParent());
-		pass.setEnabled(enable, getFieldEditorParent());
+		Composite parent = getFieldEditorParent();
+		dbDriver.setEnabled(enable, parent);
+		dialect.setEnabled(enable, parent);
+		url.setEnabled(enable, parent);
+		user.setEnabled(enable, parent);
+		pass.setEnabled(enable, parent);
 		
 	}
 
@@ -136,6 +147,8 @@ public class DatenbankPreferencePage
 			}
 			checkState();
 		}
+		
+		modified = true;
 	}
 
 	private void setDefaults(String newValue) {
@@ -181,5 +194,14 @@ public class DatenbankPreferencePage
 		
 	}
 	
-	
+	public boolean performOk()
+	{
+		if (modified)
+		{
+			log.debug("stopping internal server after change of db values");
+			Activator.getDefault().getInternalServer().stop();
+		}
+		
+		return super.performOk();
+	}
 }

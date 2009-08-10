@@ -59,6 +59,8 @@ public class Messages extends NLS {
 
 	public static String BsiModelView_3;
 
+	public static String BsiModelView_4;
+
 	public static String DSModelView_1;
 
 	public static String DSModelView_2;

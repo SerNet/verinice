@@ -14,23 +14,45 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - configurablity through Spring
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.connect;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
 
 import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
 
 public class BSIConfigurationServer implements IBSIConfig {
 
-	private Properties properties;
+	private static final Logger log = Logger.getLogger(BSIConfigurationServer.class);
 
-	public BSIConfigurationServer(Properties properties2) {
-		properties = properties2;
+	private Resource grundschutzKataloge;
+	
+	private Resource datenschutzBaustein;
+	
+	private URL getGrundschutzKatalogeURL()
+	{
+		try {
+			return grundschutzKataloge.getURL();
+		} catch (IOException e) {
+			log.error("accessing the URL for the Grundschutz catalogue failed.");
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private URL getDatenschutzBausteinURL()
+	{
+		try {
+			return datenschutzBaustein.getURL();
+		} catch (IOException e) {
+			log.error("accessing the URL for the Datenschutzbaustein catalogue failed.");
+			throw new RuntimeException(e);
+		}
 	}
 
 	public String getCacheDir() {
@@ -41,19 +63,31 @@ public class BSIConfigurationServer implements IBSIConfig {
 	}
 
 	public String getDsPath() {
-		String property = properties.getProperty("datenschutzBaustein");
-		URL resource = getClass().getClassLoader().getResource(property);
-		return resource.toString();
+		return getDatenschutzBausteinURL().toString();
 	}
 
 	public String getGsPath() {
-		String property = properties.getProperty("grundschutzKataloge");
-		URL resource = getClass().getClassLoader().getResource(property);
-		return resource.toString();
+		return getGrundschutzKatalogeURL().toString();
 	}
 
 	public boolean isFromZipFile() {
 		return true;
+	}
+
+	public void setGrundschutzKataloge(Resource grundschutzKataloge) {
+		this.grundschutzKataloge = grundschutzKataloge;
+	}
+
+	public Resource getGrundschutzKataloge() {
+		return grundschutzKataloge;
+	}
+
+	public void setDatenschutzBaustein(Resource datenschutzBaustein) {
+		this.datenschutzBaustein = datenschutzBaustein;
+	}
+
+	public Resource getDatenschutzBaustein() {
+		return datenschutzBaustein;
 	}
 
 }

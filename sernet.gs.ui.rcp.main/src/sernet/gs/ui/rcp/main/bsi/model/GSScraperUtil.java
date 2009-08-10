@@ -14,57 +14,36 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - simplified for usage in Spring
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.connect.BSIConfigurationServer;
-import sernet.gs.ui.rcp.main.service.IConfiguration;
 import sernet.hui.common.VeriniceContext;
 
 public class GSScraperUtil {
 	
-	/** Resource injected by Spring (so far, only on the server).
-	 */
-	IConfiguration configuration;
+	private static final Logger log = Logger.getLogger(GSScraperUtil.class);
 	
-	BSIMassnahmenModel model;
-
-	public IConfiguration getConfiguration() {
-		return configuration;
-	}
-
-	public void setConfiguration(IConfiguration configuration) {
-		this.configuration = configuration;
-	}
+	private BSIMassnahmenModel model;
 
 	private GSScraperUtil() {
-		Logger.getLogger(GSScraperUtil.class).debug(
-		"Initializing GS catalogues service...");
+		log.debug(
+		"Initializing GS catalogues service ...");
 	}
 
 	public static GSScraperUtil getInstance() {
 		return (GSScraperUtil) VeriniceContext.get(VeriniceContext.GS_SCRAPER_UTIL);
 	}
-
-	/** Initialization method for the client. */
-	public void initForClient() {
-		Logger.getLogger(this.getClass()).debug("Initializing client Grundschutz scraper...");
-		BSIConfigurationRemoteSource config = new BSIConfigurationRemoteSource();
-		model = new BSIMassnahmenModel(config);
-	}
-
-	/** Initialization method for the server. */
-	public void initForServer() {
-		Logger.getLogger(this.getClass()).debug("Initializing server Grundschutz scraper...");
-		BSIConfigurationServer config = new BSIConfigurationServer(configuration.getProperties());
-		model = new BSIMassnahmenModel(config);
-	}
 	
 	public BSIMassnahmenModel getModel()
 	{
 		return model;
+	}
+
+	public void setModel(BSIMassnahmenModel model) {
+		this.model = model;
 	}
 
 }

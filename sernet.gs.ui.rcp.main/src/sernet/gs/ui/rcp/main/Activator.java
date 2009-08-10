@@ -27,9 +27,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.IInternalServer;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 
@@ -47,6 +49,8 @@ public class Activator extends AbstractUIPlugin {
 	private static Activator plugin;
 	
 	private static VeriniceContext.State state;
+	
+	private IInternalServer internalServer;
 	
 	/**
 	 * The constructor
@@ -79,12 +83,6 @@ public class Activator extends AbstractUIPlugin {
 		CnAWorkspace.getInstance().prepareWorkDir();
 		
 		Preferences prefs = getPluginPreferences();
-		ServerPropertyPlaceholderConfigurer.pushDatabaseConfigToInternalServer(prefs
-				.getString(PreferenceConstants.DB_URL), prefs
-				.getString(PreferenceConstants.DB_USER), prefs
-				.getString(PreferenceConstants.DB_PASS), prefs
-				.getString(PreferenceConstants.DB_DRIVER), prefs
-				.getString(PreferenceConstants.DB_DIALECT));
 		
 		// set service factory location to local / remote according to preferences:
 		boolean standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
@@ -100,8 +98,24 @@ public class Activator extends AbstractUIPlugin {
 						log.debug("Manually starting GS Server");
 						bundle.start();
 					}
+			
+			ServiceReference sr = context.getServiceReference(IInternalServer.class.getName());
+			if (sr == null)
+				throw new IllegalStateException("Cannot retrieve internal server service.");
+			
+			internalServer = (IInternalServer) context.getService(sr);
 		}
-
+		else
+			internalServer = new ServerDummy();
+		
+		// Provide initial DB connection details to server.
+		internalServer.configure(prefs
+				.getString(PreferenceConstants.DB_URL), prefs
+				.getString(PreferenceConstants.DB_USER), prefs
+				.getString(PreferenceConstants.DB_PASS), prefs
+				.getString(PreferenceConstants.DB_DRIVER), prefs
+				.getString(PreferenceConstants.DB_DIALECT));
+		
 		// prepare client's workspace:
 		CnAWorkspace.getInstance().prepare();
 		
@@ -139,6 +153,11 @@ public class Activator extends AbstractUIPlugin {
 	public static Activator getDefault() {
 		return plugin;
 	}
+	
+	public IInternalServer getInternalServer()
+	{
+		return internalServer;
+	}
 
 	/**
 	 * Returns an image descriptor for the image file at the given
@@ -161,5 +180,36 @@ public class Activator extends AbstractUIPlugin {
 	public static void inheritVeriniceContextState()
 	{
 		VeriniceContext.setState(state);
+	}
+	
+	/**
+	 * Implementation of {@link IInternalServer} which does nothing.
+	 * 
+	 * <p>An instance of this class exists when the client does not
+	 * use the internal server. There are however codepaths where
+	 * methods from an <code>IInternalServer</code> instance are
+	 * invoked unconditionally.</p>
+	 *
+	 */
+	private static class ServerDummy implements IInternalServer
+	{
+
+		public void configure(String url, String user, String pass,
+				String driver, String dialect) {
+			// Intentionally do nothing.
+		}
+
+		public void start() {
+			// Intentionally do nothing.
+		}
+
+		public void stop() {
+			// Intentionally do nothing.
+		}
+		
+		public boolean isRunning() {
+			return true;
+		}
+		
 	}
 }

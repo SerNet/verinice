@@ -282,6 +282,16 @@ public class CnAElementFactory {
 			listener.loaded(loadedModel);
 		}
 	}
+	
+	/**
+	 * Returns whether there is an active database connection.
+	 * 
+	 * @return
+	 */
+	public boolean isDbOpen() {
+		return dbHome != null
+			&& dbHome.isOpen();
+	}
 
 	public BSIModel loadOrCreateModel(IProgress monitor) throws Exception {
 		if (!dbHome.isOpen()) {

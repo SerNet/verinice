@@ -26,9 +26,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.EntityResolverFactory;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -121,10 +119,13 @@ public class HitroUtil {
 			// for the user to fix the issue).
 			log.warn("creating type factory for client failed: " + e.getLocalizedMessage());
 			
-			// Spring does not accept that a bean is null. Since
-			// the getTypeFactory() method is used as a factory
-			// method we need to provide a valid instance.
-			typeFactory = new FunctionlessHUITypeFactory();
+			// When the internal server is used, then it may not be started yet (it is
+			// intentionally delayed) and therefore the creation of the type factory
+			// fails (which is provided by the server).
+			//
+			// In such a case we create a HUITypeFactory instance which
+			// can initialize itself lazily.
+			typeFactory = new DelegatingHUITypeFactory(url);
 		}
 	}
 
@@ -148,50 +149,105 @@ public class HitroUtil {
 		return url;
 	}
 
-	static class FunctionlessHUITypeFactory extends HUITypeFactory {
+	/**
+	 * An implementation of {@link HUITypeFactory} which tries to initialize an
+	 * instance of that class when its methods are called.
+	 * 
+	 * <p>The idea is that the initialization will be successful when the
+	 * <code>HUITypeFactory</code> instance is really needed.</p>
+	 * 
+	 */
+	static class DelegatingHUITypeFactory extends HUITypeFactory {
 		
-		FunctionlessHUITypeFactory() {
+		private static final Logger log = Logger.getLogger(DelegatingHUITypeFactory.class);
+		
+		private HUITypeFactory typeFactory;
+		
+		private URL url;
+		
+		DelegatingHUITypeFactory(URL url) {
 			super();
+			
+			this.url = url;
+		}
+		
+		private void initDelegate()
+		{
+			synchronized (url) {
+				if (typeFactory != null)
+					return;
+				
+				try {
+					typeFactory = HUITypeFactory.createInstance(url);
+					
+					EntityResolverFactory.createResolvers(typeFactory);
+				} catch (DBException e) {
+					log.warn("Unable to reach document: " + url);
+					
+					// TODO rschuster: Provide a message which is informative
+					// to the user.
+				}
+			}
 		}
 		
 		public EntityType getEntityType(String id) {
-			throw new IllegalStateException();
+			initDelegate();
+			
+			return typeFactory.getEntityType(id);
 		}
 		
 		public Collection<EntityType> getAllEntityTypes() {
-			throw new IllegalStateException();
+			initDelegate();
+			
+			return typeFactory.getAllEntityTypes();
 		}
 		
 		public List<PropertyType> getURLPropertyTypes() {
-			throw new IllegalStateException();
+			initDelegate();
+			
+			return typeFactory.getURLPropertyTypes();
 		}
 		
 		public PropertyType readPropertyType(String id) {
-			throw new IllegalStateException();
+			initDelegate();
+			
+			return typeFactory.readPropertyType(id);
 		}
 			
 		public PropertyGroup readPropertyGroup(String id) {
-			throw new IllegalStateException();
+			initDelegate();
+			
+			return typeFactory.readPropertyGroup(id);
 		}
 
 		public ArrayList getOptionsForPropertyType(String id) {
-			throw new IllegalStateException();
+			initDelegate();
+			
+			return typeFactory.getOptionsForPropertyType(id);
 		}
 		
 		public PropertyOption getOptionById(String valueId) {
-			throw new IllegalStateException();
+			initDelegate();
+			
+			return typeFactory.getOptionById(valueId);
 		}
 
 		public List<PropertyType> getAllPropertyTypes(String entityTypeID) {
-			throw new IllegalStateException();
+			initDelegate();
+			
+			return typeFactory.getAllPropertyTypes(entityTypeID);
 		}
 
 		public PropertyType getPropertyType(String entityTypeID, String id) {
-			throw new IllegalStateException();
+			initDelegate();
+			
+			return typeFactory.getPropertyType(entityTypeID, id);
 		}
 
 		public boolean isDependency(IMLPropertyOption opt) {
-			throw new IllegalStateException();
+			initDelegate();
+			
+			return typeFactory.isDependency(opt);
 		}
 	}
 

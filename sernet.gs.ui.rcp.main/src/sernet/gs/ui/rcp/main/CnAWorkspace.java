@@ -468,7 +468,7 @@ public class CnAWorkspace {
 		
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		
-		ServerPropertyPlaceholderConfigurer.pushDatabaseConfigToInternalServer(prefs
+		Activator.getDefault().getInternalServer().configure(prefs
 				.getString(PreferenceConstants.DB_URL), prefs
 				.getString(PreferenceConstants.DB_USER), prefs
 				.getString(PreferenceConstants.DB_PASS), prefs

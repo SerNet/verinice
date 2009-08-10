@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
@@ -37,7 +38,7 @@ import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.IInternalServer;
 
 /**
  * 
@@ -49,6 +50,8 @@ public class BSIModelViewOpenDBAction extends Action {
 	private Shell shell;
 
 	private BsiModelView bsiView;
+	
+	private ISchedulingRule mutex = new Mutex(); 
 
 	public BSIModelViewOpenDBAction(BsiModelView bsiView, Viewer viewer) {
 		super("Öffne Datenbankverbindung");
@@ -69,6 +72,10 @@ public class BSIModelViewOpenDBAction extends Action {
 			ExceptionUtil.log(e,
 					"Fehler beim Aktualisieren der DB-Konfiguration.");
 		}
+		
+		// The methods below are using WorkspaceJobs. The order in which they
+		// are run is guaranteed by the 'mutex' instance.
+		startServer();
 		createModel();
 	}
 
@@ -125,8 +132,60 @@ public class BSIModelViewOpenDBAction extends Action {
 				return Status.OK_STATUS;
 			}
 		};
+		job.setRule(mutex);
 		job.setUser(true);
 		job.schedule();
 	}
 
+	private void startServer()
+	{
+		final IInternalServer internalServer = Activator.getDefault().getInternalServer();
+		if (!internalServer.isRunning())
+		{
+			WorkspaceJob job = new WorkspaceJob(Messages.BsiModelView_4) {
+				public IStatus runInWorkspace(final IProgressMonitor monitor) {
+					Activator.inheritVeriniceContextState();
+					
+					try {
+						monitor.beginTask("Starte internen Server ...", IProgressMonitor.UNKNOWN);
+						internalServer.start();
+					} catch (RuntimeException re) {
+						ExceptionUtil
+								.log(re,
+										"Konnte internen Server nicht starten.");
+					} catch (Exception e) {
+						ExceptionUtil
+							.log(e,
+								"Konnte internen Server nicht starten.");
+					}
+					return Status.OK_STATUS;
+				}
+			};
+			job.setRule(mutex);
+			job.setUser(true);
+			job.schedule();
+		}
+	}
+	
+	/**
+	 * Implementation of {@link ISchedulingRule} which enforces
+	 * that two jobs containing an instance of this rule cannot be
+	 * run at the same time.
+	 * 
+	 * <p>In short this enforces that the scheduler runs the jobs
+	 * in the order they are scheduled.</p>
+	 * 
+	 */
+	static class Mutex implements ISchedulingRule
+	{
+
+		public boolean contains(ISchedulingRule rule) {
+			return rule == this;
+		}
+
+		public boolean isConflicting(ISchedulingRule rule) {
+			return rule == this;
+		}
+		
+	}
 }
