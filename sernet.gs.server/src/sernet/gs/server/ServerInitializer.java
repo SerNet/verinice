@@ -34,8 +34,6 @@ import sernet.hui.common.VeriniceContext;
  */
 public class ServerInitializer {
 	
-	private ServerConfiguration configuration;
-	
 	private VeriniceContext.State workObjects;
 	
 	private HibernateCommandService hibernateCommandService;
@@ -77,14 +75,6 @@ public class ServerInitializer {
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass()).error("Error while loading Grundschutzkataloge", e);
 		}
-	}
-
-	public ServerConfiguration getConfiguration() {
-		return configuration;
-	}
-
-	public void setConfiguration(ServerConfiguration configuration) {
-		this.configuration = configuration;
 	}
 
 	public void setWorkObjects(VeriniceContext.State workObjects) {

@@ -17,22 +17,16 @@
  ******************************************************************************/
 package sernet.gs.server;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.http.HttpContext;
-import org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.ContextLoaderServlet;
-import org.springframework.web.filter.DelegatingFilterProxy;
-import org.springframework.web.servlet.DispatcherServlet;
+
+import sernet.gs.ui.rcp.main.service.IInternalServer;
 
 public class Activator extends Plugin {
 
@@ -47,6 +41,10 @@ public class Activator extends Plugin {
 	private static final String OSGI_EXTENDER_SYMBOLIC_NAME = "org.springframework.osgi.extender";
 
 	private static final String PAX_WEB_SYMBOLIC_NAME = "org.ops4j.pax.web.pax-web-bundle";
+	
+	private WebContainer webContainer;
+	
+	private Object lock = new Object();
 
 	/**
 	 * The constructor
@@ -64,84 +62,23 @@ public class Activator extends Plugin {
 		// for Spring security, then the OSGi extender is not running.
 		Bundle bundle = Platform.getBundle(OSGI_EXTENDER_SYMBOLIC_NAME);
 		if (bundle == null) {
-			log
-					.error("Spring OSGi Extender bundle is not available. Giving up!");
+			log.error("Spring OSGi Extender bundle is not available. Giving up!");
 			throw new RuntimeException();
 		} else if (bundle.getState() == Bundle.INSTALLED
 				|| bundle.getState() == Bundle.RESOLVED) {
 			log.debug("Manually starting Spring's OSGi Extender");
 			bundle.start();
 		}
-
-		ServiceReference sr = context.getServiceReference(WebContainer.class
-				.getName());
-
-		// Starts the Pax Web Bundle. This makes the HTTP service available.
-		if (sr == null) {
-			bundle = Platform.getBundle(PAX_WEB_SYMBOLIC_NAME);
-			if (bundle == null) {
-				log.error("Pax Web bundle is not available. Giving up!");
-				throw new RuntimeException();
-			} else {
-				if (bundle.getState() == Bundle.INSTALLED
-						|| bundle.getState() == Bundle.RESOLVED) {
-					log.debug("Manually starting Pax Web Http Service.");
-					bundle.start();
-				} else
-					throw new IllegalStateException(
-							"pax-web bundle is not in a proper state to get started.");
-
-				sr = context.getServiceReference(WebContainer.class.getName());
-				if (sr == null)
-					throw new IllegalStateException(
-							"pax-web bundle was started but there is still no http service available. Giving up.");
-			}
+		
+		// Only make sure that PAX WEB is available.
+		bundle = Platform.getBundle(PAX_WEB_SYMBOLIC_NAME);
+		if (bundle == null) {
+			log.error("Pax Web bundle is not available. Giving up!");
+			throw new RuntimeException();
 		}
-
-		if (sr == null)
-			throw new IllegalStateException("No http service. Giving up.");
-
-		WebContainer wc = (WebContainer) context.getService(sr);
-
-		HttpContext ctx = wc.createDefaultHttpContext();
-
-		Dictionary<String, String> dict = new Hashtable<String, String>();
-		dict.put("contextConfigLocation",
-				"WebContent/WEB-INF/veriniceserver-osgi.xml " +
-				"WebContent/WEB-INF/veriniceserver-common.xml");
-		dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
-				OsgiBundleXmlWebApplicationContext.class.getName());
-		wc.setContextParam(dict, ctx);
-
-		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "GetHitroConfig");
-		wc.registerServlet(new GetHitroConfig(),
-				new String[] { "/GetHitroConfig" }, dict, ctx);
-
-		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "context");
-		wc.registerServlet("/context", new ContextLoaderServlet(), dict, ctx);
-
-		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "springDispatcher");
-		dict.put("contextConfigLocation",
-				"WebContent/WEB-INF/springDispatcher-servlet.xml");
-		dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
-				OsgiBundleXmlWebApplicationContext.class.getName());
-		wc.registerServlet(new DispatcherServlet(),
-				new String[] { "/service/*" }, dict, ctx);
-
-		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "serverTest");
-		wc.registerServlet(new ServerTestServlet(),
-				new String[] { "/servertest" }, dict, ctx);
-
-		dict = new Hashtable<String, String>();
-		dict.put("filter-name", "springSecurityFilterChain");
-
-		wc.registerFilter(new DelegatingFilterProxy(),
-				new String[] { "/service/*" }, null, dict, ctx);
-
+		
+		// Allow access to internal server control.
+		context.registerService(IInternalServer.class.getName(), new InternalServer(), null);
 	}
 
 	public void stop(BundleContext context) throws Exception {
@@ -157,6 +94,55 @@ public class Activator extends Plugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+
+	WebContainer getWebContainer() {
+		if (webContainer != null)
+			return webContainer;
+		
+		synchronized (lock) {
+			if (webContainer != null)
+				return webContainer;
+			
+			BundleContext context = getBundle().getBundleContext();
+			
+			ServiceReference sr = context.getServiceReference(WebContainer.class
+					.getName());
+
+			// Starts the Pax Web Bundle. This makes the HTTP service available.
+			if (sr == null) {
+				Bundle bundle = Platform.getBundle(PAX_WEB_SYMBOLIC_NAME);
+				if (bundle == null) {
+					log.error("Pax Web bundle is not available. Giving up!");
+					throw new RuntimeException();
+				} else {
+					if (bundle.getState() == Bundle.INSTALLED
+							|| bundle.getState() == Bundle.RESOLVED) {
+						log.debug("Manually starting Pax Web Http Service.");
+						try {
+							bundle.start();
+						} catch (BundleException e) {
+							throw new IllegalStateException(
+							"starting pax-web bundle failed.");
+						}
+					} else
+						throw new IllegalStateException(
+								"pax-web bundle is not in a proper state to get started.");
+
+					sr = context.getServiceReference(WebContainer.class.getName());
+					if (sr == null)
+						throw new IllegalStateException(
+								"pax-web bundle was started but there is still no http service available. Giving up.");
+				}
+			}
+
+			if (sr == null)
+				throw new IllegalStateException("No http service. Giving up.");
+
+			webContainer = (WebContainer) context.getService(sr);
+		}
+		
+		return webContainer;
 	}
 
 }
