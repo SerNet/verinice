@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
@@ -61,6 +62,10 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 
 		public List findByQuery(String hqlQuery, Object[] values) {
 			return getHibernateTemplate().find(hqlQuery, values);
+		}
+		
+		public List findByCallback(HibernateCallback hcb) {
+			return getHibernateTemplate().executeFind(hcb);
 		}
 
 		public int updateByQuery(String hqlQuery, Object[] values) {

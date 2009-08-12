@@ -20,6 +20,8 @@ package sernet.gs.ui.rcp.main.connect;
 import java.io.Serializable;
 import java.util.List;
 
+import org.springframework.orm.hibernate3.HibernateCallback;
+
 
 public interface IBaseDao<T, ID extends Serializable> {
 
@@ -37,6 +39,8 @@ public interface IBaseDao<T, ID extends Serializable> {
 		 
 		 public List findByQuery(String hqlQuery, Object[] params);
 		 
+		 public List findByCallback(HibernateCallback hcb);
+				
 		 public int updateByQuery(String hqlQuery, Object[] values);
 		 
 		 public void refresh(T element);

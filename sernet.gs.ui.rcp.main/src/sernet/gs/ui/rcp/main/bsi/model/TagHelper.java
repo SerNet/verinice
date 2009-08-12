@@ -20,9 +20,14 @@ package sernet.gs.ui.rcp.main.bsi.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class TagHelper {
+	
+	private static final Pattern pattern = Pattern.compile("[, ]+");
 
 	public static Collection<String> getTags(String simpleValue) {
 		String[] split = simpleValue.split("[, ]+"); //$NON-NLS-1$
@@ -38,4 +43,24 @@ public class TagHelper {
 		return result;
 	}
 
+	/**
+	 * Takes a comma separated string of tag value (e.g. "foo, bar")
+	 * and puts each tag into the given set.
+	 * 
+	 * <p>It is expected that the set is a {@link HashSet} since you
+	 * usually want distinct values.</p>
+	 * 
+	 * @param set
+	 * @param simpleValue
+	 */
+	public static void putInTags(Set<String> set, String simpleValue)
+	{
+		// TODO rschuster: The regex could be refined to not return
+		// empty value.
+		String[] split = pattern.split(simpleValue); //$NON-NLS-1$
+		for (String tag : split) {
+			if ( ! (tag.length() < 1 || tag.equals(" ")) ) //$NON-NLS-1$
+				set.add(tag);
+		}
+	}
 }

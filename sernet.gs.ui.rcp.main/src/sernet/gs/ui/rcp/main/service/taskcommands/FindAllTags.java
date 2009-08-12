@@ -14,38 +14,78 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - rewritten to use custom SQL query
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.TagHelper;
+import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+
+/** Retrieves all the tags used in the model.
+ * 
+ * <p>The resulting list contains unique, non-empty value.</p> 
+ * 
+ */
 public class FindAllTags extends GenericCommand {
 
-	private BSIModel model;
+	private static final long serialVersionUID = -3004640768713481223L;
+	
 	private List<String> tags;
+	
+	private static HibernateCallback hcb = new FindTagsCallback();
 
+	@SuppressWarnings("unchecked")
 	public void execute() {
-		LoadBSIModel command = new LoadBSIModel();
-		try {
-			command = getCommandService().executeCommand(command);
-		} catch (CommandException e) {
-			throw new RuntimeCommandException(e);
+		// TODO rschuster: Sorting and creating distinct value is something the database could do on its
+		// own if the data model would allow this. Unfortunately it is not done this way.
+		
+		List<String> tempTags = (List<String>) getDaoFactory().getDAO(BSIModel.class).findByCallback(hcb);
+		
+		HashSet<String> uniqueTags = new HashSet<String>();
+		for (String elem : tempTags)
+		{
+			TagHelper.putInTags(uniqueTags, elem);
 		}
-		model = command.getModel();
-		tags = model.getTags();
+		
+		tags = new ArrayList<String>(uniqueTags);
+		Collections.sort(tags);
 	}
 
 	public List<String> getTags() {
 		return tags;
 	}
 	
-	
+	private static class FindTagsCallback implements HibernateCallback
+	{
+
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+			/* Retrieves all tags. The resulting entries are non-empty and distinct.
+			 * Unfortunately they are still in the CSV format, e.g. "foo, baz, bar"
+			 */
+			return session
+			.createSQLQuery(
+					"select distinct propertyValue " +
+					"from properties " +
+					"where propertytype like '%_tag' " +
+					"and propertyvalue != ''")
+			.addScalar("propertyvalue", Hibernate.STRING)
+			.list();
+		}
+		
+	}
 
 	
 	
