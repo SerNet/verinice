@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
@@ -97,7 +98,7 @@ public class AuditView extends ViewPart implements IMassnahmenListView {
 					PlaceHolder ph = (PlaceHolder) element;
 					return ph.getTitle();
 				}
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 			
 			TodoViewItem mn = (TodoViewItem) element;
@@ -230,7 +231,7 @@ public class AuditView extends ViewPart implements IMassnahmenListView {
 		try {
 			setInput(true);
 		} catch (RuntimeException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+			ExceptionUtil.log(e, Messages.AuditView_1);
 		}
 		
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
@@ -251,10 +252,12 @@ public class AuditView extends ViewPart implements IMassnahmenListView {
 			return;
 		
 		if (showLoadingMessage)
-			viewer.setInput(new PlaceHolder("Lade Maßnahmen..."));
+			viewer.setInput(new PlaceHolder(Messages.AuditView_2));
 		
-		WorkspaceJob job = new WorkspaceJob("Lade alle Massnahmen für Realisierungsplan...") {
+		WorkspaceJob job = new WorkspaceJob(Messages.AuditView_4) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				Activator.inheritVeriniceContextState();
+				
 				try {
 					FindMassnahmenForTodoView command = new FindMassnahmenForTodoView();
 					command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -265,7 +268,7 @@ public class AuditView extends ViewPart implements IMassnahmenListView {
 						}
 					});
 				} catch (Exception e) {
-					ExceptionUtil.log(e, "Fehler beim Erstellen des Realisierungsplans.");
+					ExceptionUtil.log(e, Messages.AuditView_5);
 				}
 				return Status.OK_STATUS; 
 			}

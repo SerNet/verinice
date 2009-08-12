@@ -127,6 +127,8 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 						Messages.GSImportPreferencePage_2) {
 
 					public IStatus runInWorkspace(final IProgressMonitor monitor) {
+						Activator.inheritVeriniceContextState();
+						
 						monitor.beginTask(Messages.GSImportPreferencePage_1,
 								IProgressMonitor.UNKNOWN);
 						monitor.setTaskName(Messages.GSImportPreferencePage_1);

@@ -22,6 +22,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.views.messages"; //$NON-NLS-1$
 
+	public static String AuditView_1;
+
 	public static String AuditView_10;
 
 	public static String AuditView_11;
@@ -30,7 +32,13 @@ public class Messages extends NLS {
 
 	public static String AuditView_19;
 
+	public static String AuditView_2;
+
 	public static String AuditView_3;
+
+	public static String AuditView_4;
+
+	public static String AuditView_5;
 
 	public static String AuditView_8;
 

@@ -32,6 +32,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
@@ -173,6 +174,8 @@ public class ChartView extends ViewPart {
 	protected void drawChart() {
 		WorkspaceJob job = new WorkspaceJob("Generating chart...") {
 			public IStatus runInWorkspace(IProgressMonitor monitor) {
+				Activator.inheritVeriniceContextState();
+				
 				if (parent != null && !parent.isDisposed()) {
 					final JFreeChart chart;
 					checkModel();

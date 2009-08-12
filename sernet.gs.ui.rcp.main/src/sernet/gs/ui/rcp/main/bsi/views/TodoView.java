@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
@@ -258,6 +259,8 @@ public class TodoView extends ViewPart implements IMassnahmenListView {
 		
 		WorkspaceJob job = new WorkspaceJob("Lade alle Massnahmen für Realisierungsplan...") {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				Activator.inheritVeriniceContextState();
+				
 				try {
 					FindMassnahmenForTodoView command = new FindMassnahmenForTodoView();
 					command = ServiceFactory.lookupCommandService().executeCommand(command);

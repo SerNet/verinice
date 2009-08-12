@@ -93,6 +93,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	private void preloadDBMapper() {
 		WorkspaceJob job = new WorkspaceJob("Preloading Hibernate OR-Mapper...") {
 			public IStatus runInWorkspace(IProgressMonitor monitor) {
+				Activator.inheritVeriniceContextState();
 				CnAElementHome.getInstance().preload(CnAWorkspace.getInstance().getConfDir());
 				return Status.OK_STATUS;
 			}
