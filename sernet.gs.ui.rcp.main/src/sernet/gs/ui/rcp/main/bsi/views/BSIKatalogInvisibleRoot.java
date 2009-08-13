@@ -52,9 +52,8 @@ public class BSIKatalogInvisibleRoot {
 					|| event.getProperty().equals(PreferenceConstants.GSACCESS)
 					|| event.getProperty()
 							.equals(PreferenceConstants.DSZIPFILE))
-				
-				log.debug("One of the catalogue properties changed. Reloading model.");
-
+			{
+				log.debug("Reloading catalogues since catalogue properties changed: " + event.getProperty());
 				try {
 					// Load the catalogues using a configuration object which points
 					// to local files.
@@ -67,7 +66,7 @@ public class BSIKatalogInvisibleRoot {
 					Logger.getLogger(this.getClass()).error(
 							Messages.BSIMassnahmenView_2, e);
 				}
-
+			}
 		}
 	};
 
