@@ -464,7 +464,7 @@ public class CnAWorkspace {
 	}
 
 	public synchronized void createDatabaseConfig()
-			throws NullPointerException, IOException {
+			throws NullPointerException, IOException, IllegalStateException {
 		
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		

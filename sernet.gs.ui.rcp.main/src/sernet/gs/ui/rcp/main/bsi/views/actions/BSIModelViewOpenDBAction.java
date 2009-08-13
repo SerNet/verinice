@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views.actions;
 
+import java.io.IOException;
+
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -68,15 +70,29 @@ public class BSIModelViewOpenDBAction extends Action {
 		//CnAElementFactory.getInstance().closeModel();
 		try {
 			CnAWorkspace.getInstance().createDatabaseConfig();
-		} catch (Exception e) {
+		} catch (IllegalStateException e) {
 			ExceptionUtil.log(e,
 					"Fehler beim Aktualisieren der DB-Konfiguration.");
+			
+			return;
+		} catch (IOException ioe)
+		{
+			ExceptionUtil.log(ioe,
+				"Fehler beim Aktualisieren der DB-Konfiguration.");
+			
+			return;
 		}
 		
 		// The methods below are using WorkspaceJobs. The order in which they
 		// are run is guaranteed by the 'mutex' instance.
-		startServer();
-		createModel();
+		
+		StatusResult result = startServer();
+		
+		// Since the loading of the model depends on having a running server
+		// a result object is returned which can be used by the worker that load
+		// the model. By the time the worker is active the result object has
+		// been set up.
+		createModel(result);
 	}
 
 	private void showDerbyWarning() {
@@ -109,9 +125,14 @@ public class BSIModelViewOpenDBAction extends Action {
 	}
 	
 
-	private void createModel() {
+	private void createModel(final StatusResult serverStartResult) {
 		WorkspaceJob job = new WorkspaceJob(Messages.BsiModelView_0) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				// If server could not be started for whatever reason do not try to
+				// load the model either.
+				if (serverStartResult.status == Status.CANCEL_STATUS)
+					return Status.CANCEL_STATUS;
+				
 				Activator.inheritVeriniceContextState();
 				
 				try {
@@ -137,8 +158,15 @@ public class BSIModelViewOpenDBAction extends Action {
 		job.schedule();
 	}
 
-	private void startServer()
+	/**
+	 * Tries to start the internal server via a workspace thread
+	 * and returns a result object for that operation.
+	 * 
+	 * @return
+	 */
+	private StatusResult startServer()
 	{
+		final StatusResult result = new StatusResult();
 		final IInternalServer internalServer = Activator.getDefault().getInternalServer();
 		if (!internalServer.isRunning())
 		{
@@ -149,22 +177,30 @@ public class BSIModelViewOpenDBAction extends Action {
 					try {
 						monitor.beginTask("Starte internen Server ...", IProgressMonitor.UNKNOWN);
 						internalServer.start();
+						result.status = Status.OK_STATUS;
 					} catch (RuntimeException re) {
 						ExceptionUtil
 								.log(re,
 										"Konnte internen Server nicht starten.");
+						result.status = Status.CANCEL_STATUS;
 					} catch (Exception e) {
 						ExceptionUtil
 							.log(e,
 								"Konnte internen Server nicht starten.");
+						result.status = Status.CANCEL_STATUS;
 					}
-					return Status.OK_STATUS;
+					
+					return result.status;
 				}
 			};
 			job.setRule(mutex);
 			job.setUser(true);
 			job.schedule();
 		}
+		else
+			result.status = Status.OK_STATUS;
+		
+		return result;
 	}
 	
 	/**
@@ -187,5 +223,9 @@ public class BSIModelViewOpenDBAction extends Action {
 			return rule == this;
 		}
 		
+	}
+	
+	static class StatusResult {
+		IStatus status;
 	}
 }

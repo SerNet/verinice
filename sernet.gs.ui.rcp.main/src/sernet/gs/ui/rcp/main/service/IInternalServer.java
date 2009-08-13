@@ -5,7 +5,7 @@ public interface IInternalServer {
 	void configure(String url, String user, String pass,
 			String driver, String dialect);
 
-	void start();
+	void start() throws IllegalStateException;
 	
 	void stop();
 	
