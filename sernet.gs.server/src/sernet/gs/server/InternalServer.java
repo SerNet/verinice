@@ -102,10 +102,12 @@ public class InternalServer implements IInternalServer {
 	 * Stops the verinice server.
 	 * 
 	 * <p>By purpose this does (yet) shutdown the servlet container.</p>
+	 * 
+	 * <p>When the server is already stopped this method has no effect.</p>
 	 */
 	public void stop() {
 		if (!running)
-			throw new IllegalStateException("Server is not running.");
+			return;
 
 		teardownSpringServlets();
 
