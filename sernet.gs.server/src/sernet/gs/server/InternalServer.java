@@ -19,6 +19,9 @@ package sernet.gs.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -59,13 +62,35 @@ public class InternalServer implements IInternalServer {
 	private HttpContext ctx;
 
 	/**
-	 * Applies the given database credentials to the verinice server.
+	 * Applies the given database credentials to the verinice server
+	 * and checks their validity.
+	 * 
+	 * <p>If the credentials are invalid an {@link IllegalStateException}
+	 * is thrown.</p>
 	 * 
 	 * <p>The credentials will be used when the server is started next
 	 * time.</p>
 	 */
 	public void configure(String url, String user, String pass, String driver,
 			String dialect) {
+		
+		try
+		{
+			Class.forName(driver);
+			
+			Connection c = DriverManager.getConnection(url, user, pass);
+			
+			c.close();
+		}
+		catch (ClassNotFoundException cnfe)
+		{
+			throw new IllegalStateException("Database class not found.");
+		}
+		catch (SQLException sqle)
+		{
+			throw new IllegalStateException("Invalid database credentials.");
+		}
+		
 		ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user,
 				pass, driver, dialect);
 	}
@@ -77,8 +102,11 @@ public class InternalServer implements IInternalServer {
 	 * 
 	 * <p>The first start will also initialize the underlying servlet
 	 * container and as such will take longer.</p>
+	 * 
+	 * <p>In case the server could not be started an @{link IllegalStateException}
+	 * is thrown.</p>
 	 */
-	public void start() {
+	public void start() throws IllegalStateException {
 		if (running)
 			throw new IllegalStateException("Server is still running.");
 
@@ -93,6 +121,10 @@ public class InternalServer implements IInternalServer {
 		} catch (NamespaceException nse) {
 			throw new IllegalStateException("Could not start internal server.",
 					nse);
+		} catch (Exception e)
+		{
+			throw new IllegalStateException("Could not start internal server.",
+					e);
 		}
 
 		running = true;
@@ -169,6 +201,8 @@ public class InternalServer implements IInternalServer {
 		Dictionary<String, String> dict = new Hashtable<String, String>();
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "context");
+		dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
+				OsgiBundleXmlWebApplicationContext.class.getName());
 		contextLoaderServlet = new ContextLoaderServlet();
 		wc.registerServlet("/context", contextLoaderServlet, dict, ctx);
 
@@ -176,8 +210,6 @@ public class InternalServer implements IInternalServer {
 		dict.put("servlet-name", "springDispatcher");
 		dict.put("contextConfigLocation",
 				"classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml");
-		dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
-				OsgiBundleXmlWebApplicationContext.class.getName());
 		dispatcherServlet = new DispatcherServlet();
 		wc.registerServlet(dispatcherServlet, new String[] { "/service/*" },
 				dict, ctx);
