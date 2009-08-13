@@ -20,6 +20,8 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLink;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
@@ -34,6 +36,10 @@ import sernet.hui.common.connect.PropertyList;
 import sernet.hui.swt.widgets.URL.URLUtil;
 
 public class FindURLs extends GenericCommand {
+	
+	private static final long serialVersionUID = 9207422070204886804L;
+
+	private static final Logger log = Logger.getLogger(FindURLs.class);
 
 	private Set<String> allIDs;
 	private DocumentLinkRoot urls;
@@ -45,6 +51,8 @@ public class FindURLs extends GenericCommand {
 	public void execute() {
 		
 		urls = findEntries(allIDs);
+		
+		log.debug("result of findEntries(): " + urls);
 	}
 
 	public DocumentLinkRoot findEntries(Set<String> allIDs) {
