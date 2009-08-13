@@ -186,6 +186,7 @@ public class GSImportRestorePreferencePage extends FieldEditorPreferencePage
 								public void run(IProgressMonitor monitor)
 										throws InvocationTargetException,
 										InterruptedException {
+									Activator.inheritVeriniceContextState();
 
 									RestoreDbTask task = new RestoreDbTask();
 									try {

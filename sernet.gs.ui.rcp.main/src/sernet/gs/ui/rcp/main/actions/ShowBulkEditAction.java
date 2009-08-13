@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
@@ -79,6 +80,8 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 	}
 
 	public void run() {
+		Activator.inheritVeriniceContextState();
+
 		IStructuredSelection selection = (IStructuredSelection) window
 				.getSelectionService().getSelection();
 		if (selection == null)

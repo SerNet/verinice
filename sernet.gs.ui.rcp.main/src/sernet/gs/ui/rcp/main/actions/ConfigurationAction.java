@@ -35,6 +35,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.common.ApplicationRoles;
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
@@ -73,6 +74,7 @@ public class ConfigurationAction implements IObjectActionDelegate {
 	}
 
 	public void run(IAction action) {
+		Activator.inheritVeriniceContextState();
 		// ignore selection if role doesn't allow editing:
 		boolean hasRole = AuthenticationHelper.getInstance().currentUserHasRole(ALLOWED_ROLES);
 		if (!hasRole) {

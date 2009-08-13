@@ -30,6 +30,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
@@ -74,6 +75,8 @@ public class ExportWizard extends Wizard implements IExportWizard {
 			
 			getContainer().run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor mon) throws InvocationTargetException, InterruptedException {
+					Activator.inheritVeriniceContextState();
+
 					doExport(mon, ooPath, templatePath);
 				}
 			});

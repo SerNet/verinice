@@ -180,6 +180,7 @@ public class GSImportAttachPreferencePage extends FieldEditorPreferencePage impl
 								public void run(IProgressMonitor monitor)
 										throws InvocationTargetException,
 										InterruptedException {
+									Activator.inheritVeriniceContextState();
 									
 									AttachDbFileTask task = new AttachDbFileTask();
 									try {

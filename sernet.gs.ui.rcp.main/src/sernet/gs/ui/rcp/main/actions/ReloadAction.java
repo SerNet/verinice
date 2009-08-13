@@ -25,6 +25,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
@@ -61,6 +62,8 @@ public class ReloadAction extends Action {
 	
 	
 	public void run() {
+		Activator.inheritVeriniceContextState();
+
 		try {
 			// close editors:
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow()

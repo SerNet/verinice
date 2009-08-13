@@ -31,6 +31,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
@@ -63,7 +64,8 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate {
      * triggered. It opens the risk analysis wizard.
 	 */
 	public void run(IAction action) {
-		
+		Activator.inheritVeriniceContextState();
+
 		final Object selection = ((IStructuredSelection) targetPart.getSite()
 				.getSelectionProvider().getSelection()).getFirstElement();
 		
@@ -77,10 +79,14 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate {
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException,
 								InterruptedException {
+							Activator.inheritVeriniceContextState();
+
 							monitor.beginTask("Öffne wizard...", 1);
 							
 							Display.getDefault().syncExec(new Runnable() {
 								public void run() {
+									Activator.inheritVeriniceContextState();
+
 									CnATreeElement element = (CnATreeElement) selection;
 									Shell shell = new Shell();
 									RiskAnalysisWizard wizard = new RiskAnalysisWizard(element);

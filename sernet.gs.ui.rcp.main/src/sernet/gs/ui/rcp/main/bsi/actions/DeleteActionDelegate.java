@@ -114,6 +114,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException,
 								InterruptedException {
+							Activator.inheritVeriniceContextState();
 							monitor.beginTask("Lösche Objekte", selection
 									.size());
 							
