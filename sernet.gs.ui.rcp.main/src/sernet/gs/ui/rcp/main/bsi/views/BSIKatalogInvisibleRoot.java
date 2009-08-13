@@ -14,13 +14,13 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - streamline catalog (re)-loading
  ******************************************************************************/
 /**
  * 
  */
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,18 +28,17 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 public class BSIKatalogInvisibleRoot {
+	
+	private static final Logger log = Logger.getLogger(BSIKatalogInvisibleRoot.class); 
 
 	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)");
 
@@ -53,11 +52,15 @@ public class BSIKatalogInvisibleRoot {
 					|| event.getProperty().equals(PreferenceConstants.GSACCESS)
 					|| event.getProperty()
 							.equals(PreferenceConstants.DSZIPFILE))
+				
+				log.debug("One of the catalogue properties changed. Reloading model.");
 
 				try {
-					GSScraperUtil.getInstance().getModel().flushCache();
+					// Load the catalogues using a configuration object which points
+					// to local files.
 					WorkspaceJob job = new OpenCataloguesJob(
-							Messages.BSIMassnahmenView_0);
+							Messages.BSIMassnahmenView_0,
+							new BSIConfigurationRCPLocal());
 					job.setUser(true);
 					job.schedule();
 				} catch (Exception e) {
@@ -73,6 +76,8 @@ public class BSIKatalogInvisibleRoot {
 	}
 
 	private class NullBaustein extends Baustein {
+		private static final long serialVersionUID = -399972333143198070L;
+
 		@Override
 		public String toString() {
 			return "GS-Kataloge nicht geladen.";
@@ -112,7 +117,7 @@ public class BSIKatalogInvisibleRoot {
 		return bausteine;
 	}
 
-	public void setBausteine(List<Baustein> bst) {
+	void setBausteine(List<Baustein> bst) {
 		if (bst == null) {
 			bausteine = new ArrayList<Baustein>();
 		} else {
@@ -136,12 +141,6 @@ public class BSIKatalogInvisibleRoot {
 		if (instance == null)
 			instance = new BSIKatalogInvisibleRoot();
 		return instance;
-	}
-
-	public void loadModel(IProgressMonitor monitor) throws GSServiceException,
-			IOException {
-		setBausteine(GSScraperUtil.getInstance().getModel()
-				.loadBausteine(new ProgressAdapter(monitor)));
 	}
 
 	public Baustein getBaustein(String id) {

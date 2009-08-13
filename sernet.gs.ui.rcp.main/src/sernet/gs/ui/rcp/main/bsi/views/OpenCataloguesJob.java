@@ -14,8 +14,11 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - add possibility to override config
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
+
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -24,8 +27,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
+import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.hui.common.VeriniceContext;
+import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
+import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 
 /**
  * 
@@ -36,16 +43,51 @@ import sernet.hui.common.VeriniceContext;
  */
 public class OpenCataloguesJob extends WorkspaceJob {
 	
+	private BSIMassnahmenModel model;
+	
+	/**
+	 * Creates a workspace job which loads the catalues with
+	 * its current configuration.
+	 * 
+	 * @param name
+	 */
 	public OpenCataloguesJob(String name) {
+		this(name, null);
+	}
+
+	/**
+	 * Creates a workspace job which loads the catalues with
+	 * the given configuration.
+	 * 
+	 * <p>If the {@link IBSIConfig} instance is <code>null</code>
+	 * the model's current configuration is used instead.</p>
+	 * 
+	 * <p>Using a non-<code>null</code> configuration object
+	 * makes the catalogue model discard already loaded data.</p>
+	 * 
+	 * @param name
+	 * @see {@link BSIMassnahmenModel#setBSIConfig(IBSIConfig)}
+	 */
+	public OpenCataloguesJob(String name, IBSIConfig newConfig) {
 		super(name);
+		
+		model = GSScraperUtil.getInstance().getModel();
+		
+		// Using a new configuration object makes it throw
+		// already loaded data.
+		if (newConfig != null)
+			model.setBSIConfig(newConfig);
 	}
 
 	public IStatus runInWorkspace(IProgressMonitor monitor)
 			throws CoreException {
+		// Needed for access to 'commandService' when using a remote 
 		Activator.inheritVeriniceContextState();
 		
 		try {
-			BSIKatalogInvisibleRoot.getInstance().loadModel(monitor);
+			List<Baustein> bausteine = model.loadBausteine(new ProgressAdapter(monitor));
+
+			BSIKatalogInvisibleRoot.getInstance().setBausteine(bausteine);
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass()).error(
 					Messages.BSIMassnahmenView_1, e);

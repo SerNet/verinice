@@ -76,10 +76,15 @@ public class BSIMassnahmenModel {
 		this.config = config;
 	}
 
+	/**
+	 * Loads the 
+	 * @param mon
+	 * @return
+	 * @throws GSServiceException
+	 * @throws IOException
+	 */
 	public synchronized List<Baustein> loadBausteine(IProgress mon)
 			throws GSServiceException, IOException {
-		
-		
 		if (config instanceof BSIConfigurationRemoteSource) {
 			log.debug("Lade Kataloge von Verinice-Server...");
 			return loadBausteineRemote();
@@ -318,11 +323,34 @@ public class BSIMassnahmenModel {
 		}
 	}
 
-	public void flushCache() {
+	/**
+	 * Discards already loaded data.
+	 */
+	private void flushCache() {
 		if (scrape!= null)
 			scrape.flushCache();
 		if (dsScrape!= null)
 			dsScrape.flushCache();
+	}
+
+	/**
+	 * Changes the {@link IBSIConfig} instance that is used for this
+	 * model.
+	 * 
+	 * <p>Note: Changing the configuration object may make loading the 
+	 * catalogues from a different location. For this reason the method
+	 * has the side effect of flushing already loaded data.</p> 
+	 * 
+	 * @param config
+	 */
+	public void setBSIConfig(IBSIConfig config) {
+		flushCache();
+		
+		this.config = config;
+	}
+
+	public IBSIConfig getBSIConfig() {
+		return config;
 	}
 
 }

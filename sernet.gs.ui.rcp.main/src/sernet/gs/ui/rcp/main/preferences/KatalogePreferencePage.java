@@ -149,7 +149,7 @@ public class KatalogePreferencePage
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		// only editable when server is not used, client has direct access to GS catalogues
-		// otherwise server is used to access gs catalogue data to aasure that all clients are
+		// otherwise server is used to access gs catalogue data to ensure that all clients are
 		// working on the same data
 		if (visible) {
 			String opmode = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE);
