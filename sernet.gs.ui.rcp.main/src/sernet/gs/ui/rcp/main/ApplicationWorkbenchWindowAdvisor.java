@@ -85,7 +85,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 			"Kurzfassung: \nVerinice telefoniert nicht nach Hause und installiert keinen Bundestrojaner. ;-)");
 		}
 		
-		loadBsiCatalogues();
 		showFirstSteps();
 		preloadDBMapper();
 	}
