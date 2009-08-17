@@ -14,6 +14,7 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - do not execute when internal server is used
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service;
 
@@ -21,10 +22,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Preferences;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.GetChangesSince;
 
@@ -45,6 +49,13 @@ public class TransactionLogWatcher {
 
 	public void checkLog() {
 		if (!CnAElementFactory.isModelLoaded())
+			return;
+		
+		// No need to do anything when the internal server is used as this
+		// means that there is only one user.
+		Preferences prefs = Activator.getDefault().getPluginPreferences();
+		if (prefs.getString(PreferenceConstants.OPERATION_MODE)
+				.equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER))
 			return;
 
 //		Logger.getLogger(this.getClass()).debug("Checking transaction log...");
