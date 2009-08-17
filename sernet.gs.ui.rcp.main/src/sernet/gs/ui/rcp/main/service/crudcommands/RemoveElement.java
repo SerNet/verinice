@@ -14,6 +14,8 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Henning Heinold <h.heinold@tarent.de> - cascade when deleting CnATreeElement with
+ *     FinishedRiskAnalysis
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
@@ -85,6 +87,19 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 				if (element instanceof GefaehrdungsUmsetzung) {
 					GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
 					removeFromLists(listsDbId, gef);
+				}
+				
+				/* cascade the deleting of CnATreeElements with FinishedRiskAnalysis,
+				 * use the java traditional way, to avoid
+				 * concurrent modification exceptions
+				 */
+				CnATreeElement[] children = element.getChildrenAsArray();
+				
+				for (int i = 0; i < children.length; i++) {
+					if (children[i] instanceof FinishedRiskAnalysis) {
+						RemoveElement<CnATreeElement> command = new RemoveElement<CnATreeElement>(children[i]);
+						getCommandService().executeCommand(command);
+					}
 				}
 
 				element.remove();
