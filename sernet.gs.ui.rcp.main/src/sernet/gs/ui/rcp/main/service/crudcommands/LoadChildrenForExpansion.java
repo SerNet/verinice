@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -33,29 +34,43 @@ import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 public class LoadChildrenForExpansion extends GenericCommand {
+	
+	private static final Logger log = Logger.getLogger(LoadChildrenForExpansion.class);
 
-
+	private static final long serialVersionUID = 6961271339569071215L;
+	
 	private CnATreeElement parent;
 	private Integer dbId;
 	private Class<? extends CnATreeElement> clazz;
+	
+	private Set<Class<?>> filteredClasses;
 
 	public LoadChildrenForExpansion(CnATreeElement parent) {
+		this(parent, new HashSet<Class<?>>());
+	}
+
+	public LoadChildrenForExpansion(CnATreeElement parent, Set<Class<?>> filteredClasses) {
 		// slim down for transfer:
 		dbId = parent.getDbId();
 		clazz = parent.getClass();
 		this.parent = null;
+		this.filteredClasses = filteredClasses;
 	}
 	
 	public void execute() {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
 		parent = dao.findById(dbId);
 		
-		Logger.getLogger(this.getClass()).debug("Loading children for " + parent.getTitel());
+		log.debug("Loading children for " + parent.getTitel());
 		hydrate(parent);
+		
+		if (log.isDebugEnabled() && !filteredClasses.isEmpty())
+			log.debug("Skipping the following model classes: " + filteredClasses);
 		
 		Set<CnATreeElement> children = parent.getChildren();
 		for (CnATreeElement child : children) {
-			hydrate(child);
+			if (!filteredClasses.contains(child.getClass()))
+				hydrate(child);
 		}
 	}
 
@@ -88,7 +103,7 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		if (element instanceof BausteinUmsetzung) {
 			BausteinUmsetzung bst = (BausteinUmsetzung) element;
 			bst.getKapitel();
-			Logger.getLogger(this.getClass()).debug("Hydrating Baustein " + bst.getKapitel());
+			log.debug("Hydrating Baustein " + bst.getKapitel());
 			
 			Set<CnATreeElement> massnahmen = bst.getChildren();
 			for (CnATreeElement massnahme : massnahmen) {

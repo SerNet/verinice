@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.action.Action;
@@ -114,6 +115,8 @@ public class BsiModelView extends ViewPart {
 	private TreeViewer viewer;
 
 	private BSIModelViewFilterAction filterAction;
+	
+	private BSIModelViewContentProvider contentProvider;
 
 	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
@@ -190,7 +193,7 @@ public class BsiModelView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewer.setContentProvider(new BSIModelViewContentProvider(cache));
+		viewer.setContentProvider(contentProvider = new BSIModelViewContentProvider(cache));
 		viewer.setLabelProvider(new BSIModelViewLabelProvider(cache));
 		viewer.setSorter(new CnAElementByTitelSorter());
 
@@ -382,12 +385,17 @@ public class BsiModelView extends ViewPart {
 			}
 		};
 
+		BSIModelElementFilter modelElementFilter = new BSIModelElementFilter(viewer);
+		// The model filter is normally used for the view. By giving the filter
+		// also to the content provider this can be used to minimize database access.
+		contentProvider.setModelElementFilter(modelElementFilter);
 		filterAction = new BSIModelViewFilterAction(viewer,
 				Messages.BsiModelView_3, new MassnahmenUmsetzungFilter(viewer),
 				new MassnahmenSiegelFilter(viewer),
 				new LebenszyklusPropertyFilter(viewer),
 				new ObjektLebenszyklusPropertyFilter(viewer),
-				new BSIModelElementFilter(viewer), new TagFilter(viewer));
+				modelElementFilter,
+				new TagFilter(viewer));
 
 		expandAllAction = new Action() {
 			@Override

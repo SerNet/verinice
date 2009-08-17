@@ -75,7 +75,7 @@ public class BSIModelViewFilterAction extends Action {
 				siegelFilter.getPattern(),
 				lebenszyklusFilter.getPattern(),
 				objektLebenszyklusFilter.getPattern(),
-				elementFilter.getPattern(),
+				elementFilter.getFilteredClasses(),
 				tagFilter.getPattern()
 				);
 
@@ -89,7 +89,7 @@ public class BSIModelViewFilterAction extends Action {
 		lebenszyklusFilter.setPattern(dialog.getLebenszyklus());
 		objektLebenszyklusFilter.setPattern(dialog.getObjektLebenszyklus());
 		
-		elementFilter.setPattern(dialog.getAusblendenSelection());
+		elementFilter.setFilteredClasses(dialog.getFilteredClasses());
 		tagFilter.setPattern(dialog.getCheckedElements());
 	}
 }

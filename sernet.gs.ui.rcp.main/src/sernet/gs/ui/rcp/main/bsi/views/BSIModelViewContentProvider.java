@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
@@ -39,11 +40,13 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
  */
 public class BSIModelViewContentProvider implements ITreeContentProvider {
 	
+	private BSIModelElementFilter modelFilter;
+	
 	public BSIModelViewContentProvider(TreeViewerCache cache) {
 		super();
 		this.cache = cache;
 	}
-
+	
 	private TreeViewerCache cache;
 	
 
@@ -101,12 +104,30 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 			
 			Logger.getLogger(this.getClass()).debug("Loading children from DB for " + el);
 			
-			LoadChildrenForExpansion command = new LoadChildrenForExpansion(el);
+			LoadChildrenForExpansion command;
+			if (modelFilter != null)
+			{
+				command = new LoadChildrenForExpansion(el,
+						modelFilter.getFilteredClasses());
+			}
+			else
+			{
+				command = new LoadChildrenForExpansion(el);
+			}
+			
 			command = ServiceFactory.lookupCommandService().executeCommand(
 					command);
 			CnATreeElement newElement = command.getElementWithChildren();
-			newElement.setChildrenLoaded(true);
 			
+			// If a filter was active the tree element for which we loaded the children
+			// is *not* marked as if its children have been really loaded. This is only
+			// done when no classes have been filtered.
+			// By doing this the element gets automatically reloaded (and now its children
+			// as well) as soon as the user disables the filter.
+			if (modelFilter == null || modelFilter.isEmpty())
+			{
+				newElement.setChildrenLoaded(true);
+			}
 			
 			// replace with loaded object in cache:
 			Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
@@ -163,5 +184,8 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 			cache.clear();
 		}
 
+		void setModelElementFilter(BSIModelElementFilter modelFilter) {
+			this.modelFilter = modelFilter;
+		}
 
 }

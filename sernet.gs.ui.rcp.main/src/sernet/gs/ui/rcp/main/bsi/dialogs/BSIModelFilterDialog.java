@@ -14,12 +14,17 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - rewritten to use set of classes
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -44,6 +49,9 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
+import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -55,15 +63,30 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
  */
 public class BSIModelFilterDialog extends FilterDialog {
 
+	private static final Logger log = Logger.getLogger(BSIModelFilterDialog.class);
+
 	private String lebenszyklus = "";
 	private Combo combo;
-	private boolean[] filterAusblenden;
+	private Set<Class<?>> filteredClasses;
 	private Combo comboObjektLZ;
 	private String objektLebenszyklus = "";
 	private CheckboxTableViewer viewer;
 	private String[] tagPattern;
 	private Composite container;
 	private Group tagGroup;
+	
+	private static HashMap<String, Class<?>> possibleFilters = new HashMap<String, Class<?>>();
+	
+	static
+	{
+		// Initializes the set of classes which can be filtered. The key to the classes
+		// is the label of the button that allows switching the filter.
+		// Note: If the labels change. This part must be adjusted as well. The best idea
+		// is to use the i18n and use the same string for the button and this code.
+		possibleFilters.put("Bausteinzuordnungen", BausteinUmsetzung.class);
+		possibleFilters.put("Maßnahmenumsetzungen", MassnahmenUmsetzung.class);
+		possibleFilters.put("Verknüpfungen", LinkKategorie.class); 
+	}
 	
 	private static final String[] LZ_ITEMS = new String[] {
 		"<alle>",
@@ -95,15 +118,15 @@ public class BSIModelFilterDialog extends FilterDialog {
 			String[] siegel,
 			String lebenszyklus,
 			String objektLebenszyklus,
-			boolean[] filterAusblenden, 
+			Set<Class<?>> filteredClasses, 
 			String[] tags) {
 		super(parent, umsetzung, siegel, null);
 		setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
 		this.lebenszyklus = lebenszyklus;
 		this.objektLebenszyklus = objektLebenszyklus;
-		this.filterAusblenden = filterAusblenden;
-		if (this.filterAusblenden == null)
-			this.filterAusblenden = new boolean[] {false, false, false};
+		this.filteredClasses = filteredClasses;
+		if (this.filteredClasses == null)
+			this.filteredClasses = new HashSet<Class<?>>();
 		this.tagPattern = tags;
 		
 	}
@@ -219,47 +242,45 @@ public class BSIModelFilterDialog extends FilterDialog {
 	
 	}
 	
+	private boolean getFilterSelectionForButton(Button b)
+	{
+		return filteredClasses.contains(possibleFilters.get(b.getText()));
+	}
+	
+	private class SelectionHelper extends SelectionAdapter
+	{
+		private Button b;
+		
+		SelectionHelper(Button b)
+		{
+			this.b = b;
+		}
+		
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			if (b.getSelection())
+				filteredClasses.add(possibleFilters.get(b.getText()));
+			else
+				filteredClasses.remove(possibleFilters.get(b.getText()));
+		}
+	}
+	
 private void createAusblendenCheckboxes(Group parent) {
 		
 		final Button button1 = new Button(parent, SWT.CHECK);
 		button1.setText("Bausteinzuordnungen");
-		button1.setSelection(filterAusblenden[0]);
-		button1.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (button1.getSelection())
-					filterAusblenden[0] = true;
-				else
-					filterAusblenden[0] = false;
-			}
-		});
+		button1.setSelection(getFilterSelectionForButton(button1));
+		button1.addSelectionListener(new SelectionHelper(button1));
 		
 		final Button button2 = new Button(parent, SWT.CHECK);
 		button2.setText("Maßnahmenumsetzungen");
-		button2.setSelection(filterAusblenden[1]);
-		button2.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (button2.getSelection())
-					filterAusblenden[1] = true;
-				else
-					filterAusblenden[1] = false;
-			}
-		});
+		button2.setSelection(getFilterSelectionForButton(button2));
+		button2.addSelectionListener(new SelectionHelper(button2));
 		
 		final Button button3 = new Button(parent, SWT.CHECK);
 		button3.setText("Verknüpfungen");
-		button3.setSelection(filterAusblenden[2]);
-		button3.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (button3.getSelection())
-					filterAusblenden[2] = true;
-				else
-					filterAusblenden[2] = false;
-			}
-		});
-		
+		button3.setSelection(getFilterSelectionForButton(button3));
+		button3.addSelectionListener(new SelectionHelper(button3));
 			
 	}
 
@@ -358,8 +379,8 @@ private void createAusblendenCheckboxes(Group parent) {
 	}
 
 
-	public boolean[] getAusblendenSelection() {
-		return this.filterAusblenden;
+	public Set<Class<?>> getFilteredClasses() {
+		return this.filteredClasses;
 	}
 
 

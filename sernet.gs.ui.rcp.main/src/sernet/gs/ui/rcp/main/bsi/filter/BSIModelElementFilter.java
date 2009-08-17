@@ -14,72 +14,66 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - rewritten to work on set of classes
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.filter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-
 
 public class BSIModelElementFilter extends ViewerFilter {
 
 	private StructuredViewer viewer;
-	private boolean[] pattern = null;
+	private Set<Class<?>> filteredClasses;
 
 	public BSIModelElementFilter(StructuredViewer viewer) {
 		this.viewer = viewer;
 	}
 
-	public boolean[] getPattern() {
-		return pattern;
+	public Set<Class<?>> getFilteredClasses() {
+		if (filteredClasses == null)
+			return new HashSet<Class<?>>();
+		else
+			return new HashSet<Class<?>>(filteredClasses);
 	}
 
-	public void setPattern(boolean[] newPattern) {
-		boolean active = pattern != null;
-		if (newPattern != null && newPattern.length > 0) {
-			pattern = newPattern;
+	public void setFilteredClasses(Set<Class<?>> newFilteredClasses) {
+		boolean active = filteredClasses != null;
+		if (newFilteredClasses != null && !newFilteredClasses.isEmpty()) {
+			filteredClasses = newFilteredClasses;
+			
 			if (active)
 				viewer.refresh();
 			else {
 				viewer.addFilter(this);
 				active = true;
 			}
-			return;
 		}
-		
-		// else deactivate:
-		pattern = null;
-		if (active)
-			viewer.removeFilter(this);
+		else
+		{
+			filteredClasses = null;
+			if (active)
+				viewer.removeFilter(this);
+		}
 	}
-	
 	
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (element instanceof BausteinUmsetzung
-				&& pattern[0] /*filter bausteinzuordnungen*/) {
-			return false;
-		}
-		
-		if (element instanceof MassnahmenUmsetzung
-				&& pattern[1] /*filter massnahmenumsetzungen*/) {
-			return false;
-		}
-		
-		if (element instanceof LinkKategorie
-				&& pattern[2] /*filter links*/) {
-			return false;
-		}
-		
-		return true;
+		return !filteredClasses.contains(element.getClass());
 	}
 	
-//	public boolean isFilterProperty(Object element, String property) {
-//		return true;
-//	}
+	/**
+	 * Returns whether no classes are filtered.
+	 * 
+	 * @return
+	 */
+	public boolean isEmpty()
+	{
+		return filteredClasses == null || filteredClasses.isEmpty();
+	}
 }
