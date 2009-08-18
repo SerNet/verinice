@@ -140,6 +140,7 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException,
 								InterruptedException {
+							Activator.inheritVeriniceContextState();
 							
 							// the selected items are of type CnaTreeelement and can be edited right here:
 							if (selectedElements.size() >0)
