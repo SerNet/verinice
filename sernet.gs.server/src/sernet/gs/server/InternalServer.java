@@ -84,7 +84,7 @@ public class InternalServer implements IInternalServer {
 		}
 		catch (ClassNotFoundException cnfe)
 		{
-			throw new IllegalStateException("Database class not found.");
+			throw new IllegalStateException("Database class not found: " + driver);
 		}
 		catch (SQLException sqle)
 		{
