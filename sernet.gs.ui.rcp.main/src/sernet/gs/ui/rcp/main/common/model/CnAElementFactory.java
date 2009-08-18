@@ -221,7 +221,6 @@ public class CnAElementFactory {
 						.executeCommand(saveCommand);
 				ITVerbund verbund = saveCommand.getNewElement();
 
-				loadedModel.addChild(verbund);
 				verbund.setParent(loadedModel);
 				return verbund;
 			}
