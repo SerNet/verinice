@@ -170,7 +170,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 						}
 					});
 		} catch (InvocationTargetException e) {
-			ExceptionUtil.log(e, "Error while deleting object.");
+			ExceptionUtil.log(e.getCause(), "Error while deleting object.");
 		} catch (InterruptedException e) {
 			ExceptionUtil.log(e, "Interrupted: Delete objects.");
 		}
