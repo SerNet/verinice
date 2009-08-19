@@ -73,9 +73,16 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 				element = (T) dao.findById(element.getDbId());
 
 				if (element instanceof ITVerbund) {
-					Set<CnATreeElement> personen = ((ITVerbund) element).getCategory(PersonenKategorie.TYPE_ID).getChildren();
-					for (CnATreeElement elmt : personen) {
-						removeConfiguration((Person)elmt);
+					CnATreeElement cat = ((ITVerbund) element).getCategory(PersonenKategorie.TYPE_ID);
+					
+					// A defect in the application allowed that ITVerbund instances without a category are
+					// created. With this tiny check we can ensure that they can be deleted.
+					if (cat != null)
+					{
+						Set<CnATreeElement> personen = cat.getChildren();
+						for (CnATreeElement elmt : personen) {
+							removeConfiguration((Person)elmt);
+						}
 					}
 				}
 				
