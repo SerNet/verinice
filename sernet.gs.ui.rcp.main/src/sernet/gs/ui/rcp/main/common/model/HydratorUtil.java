@@ -65,9 +65,9 @@ public class HydratorUtil {
 		dao.initialize(element.getLinksDown());
 		dao.initialize(element.getLinksUp());
 		
-		// at least uuid of parent is needed in most situations:
-		if (element.getParent() != null)
-			element.getParent().getUuid();
+		// Initialize the complete child->parent chain, since that is needed for checks
+		// whether an element belongs to a specific IT-Verbund.
+		for (CnATreeElement e = element.getParent(); e != null; e = e.getParent());
 
 		if (includingCollections ) {
 			dao.initialize(element.getChildren());
