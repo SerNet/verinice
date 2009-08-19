@@ -17,8 +17,15 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+
 public interface IMassnahmenListView {
 
-	void setInput(boolean showLoadingMessage) throws RuntimeException;
-
+	void reloadMeasures();
+	
+	void compoundAdded(ITVerbund verbund);
+	
+	void compoundRemoved(ITVerbund verbund);
+	
+	ITVerbund getCurrentCompound();
 }

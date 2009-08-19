@@ -14,24 +14,15 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - reworked to use common base class
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -40,41 +31,27 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.part.ViewPart;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.views.actions.TodoViewFilterAction;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForTodoView;
 
 /**
  * Shows controls that still have to be implemented.
  * 
- * 
  * @author koderman@sernet.de
- * @version $Rev: 39 $ $LastChangedDate: 2007-11-27 12:26:19 +0100 (Di, 27 Nov 2007) $ 
- * $LastChangedBy: koderman $
  *
  */
-public class TodoView extends ViewPart implements IMassnahmenListView {
+public class TodoView extends GenericMassnahmenView {
+	
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." +
 			"todoview"; //$NON-NLS-1$
-
+	
 	private static class TodoLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 		private SimpleDateFormat dateFormat =  new SimpleDateFormat("dd.MM.yy, EE"); //$NON-NLS-1$
@@ -150,43 +127,8 @@ public class TodoView extends ViewPart implements IMassnahmenListView {
 
 	}
 
-	private IModelLoadListener loadListener = new IModelLoadListener() {
-		public void closed(BSIModel model) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					viewer.setInput(new ArrayList());
-				}
-			});
-		}
-		
-		public void loaded(final BSIModel model) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					try {
-						setInput(true);
-					} catch (RuntimeException e) {
-						ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
-					}
-				}
-			});
-		}
-	};
-	
-	
-	private TableViewer viewer;
-	private TableColumn iconColumn;
-	private TableColumn titleColumn;
-	private TableColumn siegelColumn;
-	private TableColumn dateColumn;
-	private TableColumn zielColumn;
-	private Action doubleClickAction;
-	private TableColumn bearbeiterColumn;
-	private TodoViewFilterAction filterAction;
-	private MassnahmenUmsetzungFilter umsetzungFilter;
-	private MassnahmenSiegelFilter siegelFilter;
-
 	@Override
-	public void createPartControl(Composite parent) {
+	protected void createPartControlImpl(Composite parent) {
 		viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | 
 				SWT.MULTI | SWT.FULL_SELECTION);
 		Table table = viewer.getTable();
@@ -226,116 +168,52 @@ public class TodoView extends ViewPart implements IMassnahmenListView {
 		
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-
-		createFilters();
-		createPullDownMenu();
-
-		viewer.setContentProvider(new MassnahmenUmsetzungContentProvider(this));
-		viewer.setLabelProvider(new TodoLabelProvider());
-		try {
-			setInput(true);
-		} catch (RuntimeException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
-		}
-		CnAElementFactory.getInstance().addLoadListener(loadListener);
-		
-		viewer.setSorter(new TodoSorter());
-		makeActions();
-		hookActions();
-		fillLocalToolBar();
-		
-		getSite().setSelectionProvider(viewer);
-		
-		packColumns();
 	}
 	
-	
-	public void setInput(boolean showLoadingMessage)  {
-		if (!CnAElementHome.getInstance().isOpen())
-			return;
-		
-		if (showLoadingMessage)
-			viewer.setInput(new PlaceHolder("Lade Maßnahmen..."));
-		
-		WorkspaceJob job = new WorkspaceJob("Lade alle Massnahmen für Realisierungsplan...") {
-			public IStatus runInWorkspace(final IProgressMonitor monitor) {
-				Activator.inheritVeriniceContextState();
-				
-				try {
-					FindMassnahmenForTodoView command = new FindMassnahmenForTodoView();
-					command = ServiceFactory.lookupCommandService().executeCommand(command);
-					final List<TodoViewItem> allMassnahmen = command.getAll();
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							viewer.setInput(allMassnahmen);
-						}
-					});
-				} catch (Exception e) {
-					ExceptionUtil.log(e, "Fehler beim Erstellen des Realisierungsplans.");
-				}
-				return Status.OK_STATUS; 
-			}
-		};
-		job.setUser(false);
-		job.schedule();
+	protected Action createFilterAction(
+			MassnahmenUmsetzungFilter umsetzungFilter,
+			MassnahmenSiegelFilter siegelFilter)
+	{
+		return new TodoViewFilterAction(viewer, Messages.TodoView_2, umsetzungFilter, siegelFilter);
 		
 	}
 	
-	private void packColumns() {
-		dateColumn.pack();
-	}
-
-	private void createPullDownMenu() {
-		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
-		filterAction = new TodoViewFilterAction(viewer, 
-				Messages.TodoView_2,
-				this.umsetzungFilter,
-				this.siegelFilter);
-		menuManager.add(filterAction);
-	}
-	
-	private void fillLocalToolBar() {
-		IActionBars bars = getViewSite().getActionBars();
-		IToolBarManager manager = bars.getToolBarManager();
-		manager.add(this.filterAction);
-	}
-	
-	private void createFilters() {
-		umsetzungFilter = new MassnahmenUmsetzungFilter(viewer);
-		siegelFilter = new MassnahmenSiegelFilter(viewer);
-		umsetzungFilter.setUmsetzungPattern(new String[] {
+	protected String[] getUmsetzungPattern() {
+		return new String[] {
 				MassnahmenUmsetzung.P_UMSETZUNG_NEIN,
 				MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE,
 				MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET
-		});
-	}
-
-	private void makeActions() {
-		doubleClickAction = new Action() {
-			public void run() {
-				Object sel = ((IStructuredSelection)viewer.getSelection())
-					.getFirstElement();
-				EditorFactory.getInstance().openEditor(sel);
-			}
 		};
 	}
-	
-	@Override
-	public void dispose() {
-		CnAElementFactory.getInstance().removeLoadListener(loadListener);
-	}
 
-	private void hookActions() {
-			viewer.addDoubleClickListener(new IDoubleClickListener() {
-				public void doubleClick(DoubleClickEvent event) {
-					doubleClickAction.run();
-				}
-			});
+	@Override
+	protected String getMeasureLoadJobLabel() {
+		return "Lade alle Massnahmen für Realisierungsplan";
 	}
 
 	@Override
-	public void setFocus() {
-	 viewer.getTable().setFocus();
+	protected ILabelProvider createLabelProvider() {
+		return new TodoLabelProvider();
+	}
+
+	@Override
+	protected String getMeasureLoadPlaceholderLabel() {
+		return "Lade Maßnahmen";
+	}
+
+	@Override
+	protected ViewerSorter createSorter() {
+		return new TodoSorter();
+	}
+
+	@Override
+	protected String getTaskErrorLabel() {
+		return "Fehler beim Erstellen des Realisierungsplans.";
+	}
+
+	@Override
+	protected String getMeasureLoadTaskLabel() {
+		return "Lade Massnahmen";
 	}
 
 }

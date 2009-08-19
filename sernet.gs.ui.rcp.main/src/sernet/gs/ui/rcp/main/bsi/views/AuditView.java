@@ -14,24 +14,15 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - reworked to use common base class
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -40,40 +31,25 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.part.ViewPart;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.views.actions.AuditViewFilterAction;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForTodoView;
 
 /**
  * Shows implemented controls to be reviewed by the auditor.
  * 
  * 
  * @author koderman@sernet.de
- * @version $Rev: 39 $ $LastChangedDate: 2007-11-27 12:26:19 +0100 (Di, 27 Nov 2007) $ 
- * $LastChangedBy: koderman $
  *
  */
-public class AuditView extends ViewPart implements IMassnahmenListView {
+public class AuditView extends GenericMassnahmenView {
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.auditview"; //$NON-NLS-1$
-
 
 	private static class AuditLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -123,25 +99,6 @@ public class AuditView extends ViewPart implements IMassnahmenListView {
 		}
 	}
 	
-	private IModelLoadListener loadListener = new IModelLoadListener() {
-		public void closed(BSIModel model) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					viewer.setInput(new ArrayList());
-				}
-			});
-		}
-		
-		public void loaded(final BSIModel model) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					setInput(true);
-				}
-			});
-		}
-	};
-	
-	
 	private static class AuditSorter extends ViewerSorter {
 		public boolean isSorterProperty(Object arg0, String arg1) {
 			return arg1.equals("_date"); //$NON-NLS-1$
@@ -172,20 +129,8 @@ public class AuditView extends ViewPart implements IMassnahmenListView {
 
 	}
 	
-	private TableViewer viewer;
-	private TableColumn iconColumn;
-	private TableColumn titleColumn;
-	private TableColumn siegelColumn;
-	private TableColumn dateColumn;
-	private TableColumn zielColumn;
-	private Action doubleClickAction;
-	private TableColumn bearbeiterColumn;
-	private AuditViewFilterAction filterAction;
-	private MassnahmenUmsetzungFilter umsetzungFilter;
-	private MassnahmenSiegelFilter siegelFilter;
-
 	@Override
-	public void createPartControl(Composite parent) {
+	protected void createPartControlImpl(Composite parent) {
 		viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | 
 				SWT.MULTI | SWT.FULL_SELECTION);
 		Table table = viewer.getTable();
@@ -225,114 +170,51 @@ public class AuditView extends ViewPart implements IMassnahmenListView {
 		
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		
-		viewer.setContentProvider(new MassnahmenUmsetzungContentProvider(this));
-		viewer.setLabelProvider(new AuditLabelProvider());
-		try {
-			setInput(true);
-		} catch (RuntimeException e) {
-			ExceptionUtil.log(e, Messages.AuditView_1);
-		}
-		
-		CnAElementFactory.getInstance().addLoadListener(loadListener);
-		
-		createFilters();
-		viewer.setSorter(new AuditSorter());
-		makeActions();
-		createPullDownMenu();
-		hookActions();
-		fillLocalToolBar();
-		
-		getSite().setSelectionProvider(viewer);
-		packColumns();
 	}
 	
-	public void setInput(boolean showLoadingMessage) {
-		if (!CnAElementHome.getInstance().isOpen())
-			return;
-		
-		if (showLoadingMessage)
-			viewer.setInput(new PlaceHolder(Messages.AuditView_2));
-		
-		WorkspaceJob job = new WorkspaceJob(Messages.AuditView_4) {
-			public IStatus runInWorkspace(final IProgressMonitor monitor) {
-				Activator.inheritVeriniceContextState();
-				
-				try {
-					FindMassnahmenForTodoView command = new FindMassnahmenForTodoView();
-					command = ServiceFactory.lookupCommandService().executeCommand(command);
-					final List<TodoViewItem> allMassnahmen = command.getAll();
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							viewer.setInput(allMassnahmen);
-						}
-					});
-				} catch (Exception e) {
-					ExceptionUtil.log(e, Messages.AuditView_5);
-				}
-				return Status.OK_STATUS; 
-			}
-		};
-		job.setUser(false);
-		job.schedule();
-	}
-	
-	@Override
-	public void dispose() {
-		CnAElementFactory.getInstance().removeLoadListener(loadListener);
-	}
-	
-	private void makeActions() {
-		doubleClickAction = new Action() {
-			public void run() {
-				Object sel = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-				EditorFactory.getInstance().openEditor(sel);
-			}
-		};
-		
-		filterAction = new AuditViewFilterAction(viewer, 
-				Messages.AuditView_19,
-				this.umsetzungFilter,
-				this.siegelFilter);
-	}
-
-	private void hookActions() {
-			viewer.addDoubleClickListener(new IDoubleClickListener() {
-				public void doubleClick(DoubleClickEvent event) {
-					doubleClickAction.run();
-				}
-			});
-	}
-
-	@Override
-	public void setFocus() {
-	 viewer.getTable().setFocus();
-	}
-	
-	private void packColumns() {
-		dateColumn.pack();
-	}
-	
-	
-	private void fillLocalToolBar() {
-		IActionBars bars = getViewSite().getActionBars();
-		IToolBarManager manager = bars.getToolBarManager();
-		manager.add(this.filterAction);
-	}
-	
-	
-	private void createPullDownMenu() {
-		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
-		menuManager.add(filterAction);
-	}
-	
-	private void createFilters() {
-		umsetzungFilter = new MassnahmenUmsetzungFilter(viewer);
-		siegelFilter = new MassnahmenSiegelFilter(viewer);
-		umsetzungFilter.setUmsetzungPattern(new String[] {
+	protected String[] getUmsetzungPattern() {
+		return new String[] {
 				MassnahmenUmsetzung.P_UMSETZUNG_JA,
 				MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH
-		});
+		};
+	}
+
+	@Override
+	protected Action createFilterAction(
+			MassnahmenUmsetzungFilter umsetzungFilter,
+			MassnahmenSiegelFilter siegelFilter) {
+		return new AuditViewFilterAction(viewer, Messages.AuditView_19,
+				umsetzungFilter, siegelFilter);
+	}
+
+	@Override
+	protected ILabelProvider createLabelProvider() {
+		return new AuditLabelProvider();
+	}
+
+	@Override
+	protected ViewerSorter createSorter() {
+		return new AuditSorter();
+	}
+
+	@Override
+	protected String getMeasureLoadJobLabel() {
+		return Messages.AuditView_4;
+	}
+
+	@Override
+	protected String getMeasureLoadPlaceholderLabel() {
+		return Messages.AuditView_2;
+	}
+
+	@Override
+	protected String getTaskErrorLabel() {
+		return Messages.AuditView_5;
+	}
+
+	@Override
+	protected String getMeasureLoadTaskLabel() {
+		return "Lade Massnahmen";
 	}
 
 }

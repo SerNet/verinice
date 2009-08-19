@@ -14,6 +14,7 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - added compound specific support
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
@@ -29,7 +30,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
@@ -51,17 +52,129 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForTodoView;
  * @author koderman@sernet.de
  *
  */
-class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider, 
-				IBSIModelListener {
-
-	final int ADD     = 0;
-	final int UPDATE  = 1;
-	final int REMOVE  = 2;
-	final int REFRESH = 3;
+class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 	
+	private static final Logger log = Logger.getLogger(MassnahmenUmsetzungContentProvider.class);
+
+	private static final int ADD     = 0;
+	private static final int UPDATE  = 1;
+	private static final int REMOVE  = 2;
+	private static final int REFRESH = 3;
 	
 	private TableViewer viewer;
 	private IMassnahmenListView todoView;
+	
+	IBSIModelListener modelListener = new IBSIModelListener()
+	{
+
+		public void childAdded(CnATreeElement category, CnATreeElement child) {
+			if (child instanceof BausteinUmsetzung && isOfInterest(child))
+				reloadMeasures();
+			else if (child instanceof ITVerbund)
+				todoView.compoundAdded((ITVerbund) child);
+		}
+		
+		public void linkChanged(CnALink link) {
+			if (link.getDependency() instanceof Person)
+				updateViewer(REFRESH, null);
+		}
+		
+		public void linkAdded(CnALink link) {
+			if (link.getDependency() instanceof Person) {
+				reloadMeasures();
+			}
+		}
+		
+		public void linkRemoved(CnALink link) {
+			if (link.getDependency() instanceof Person) {
+				reloadMeasures();
+			}
+		}
+
+		public void childChanged(CnATreeElement category, CnATreeElement child) {
+			if (child instanceof MassnahmenUmsetzung) {
+				try {
+					log.debug("MassnahmenUmsetzung changed.");
+					// TODO rschuster: parent may not be available at this point. Need to retrieve it manually.
+					if (!isOfInterest(child))
+					{
+						log.debug("MassnahmenUmsetzung is not of interest for view: "
+								+ child);
+						return;
+					}
+					
+					FindMassnahmenForTodoView command = new FindMassnahmenForTodoView(child.getDbId());
+					command = ServiceFactory.lookupCommandService().executeCommand(
+							command);
+					List<TodoViewItem> items = command.getAll();
+					if (items.size()>0) {
+						TodoViewItem item = items.get(0);
+						updateViewer(UPDATE, item);
+					}
+				} catch (CommandException e) {
+					Logger.getLogger(this.getClass()).debug("Fehler beim Aktualisieren von TodoView", e);
+				}
+//				updateViewer(UPDATE, child);
+			}
+		}
+
+		public void childRemoved(CnATreeElement category, CnATreeElement child) {
+			if (child instanceof ITVerbund)
+			{
+				todoView.compoundRemoved((ITVerbund) child);
+			}
+			else if (child instanceof BausteinUmsetzung && isOfInterest(child))
+			{
+				reloadMeasures();
+			}
+		}
+		
+		/**
+		 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
+		 */
+		public void modelRefresh() {
+			modelRefresh(null);
+		}
+
+		public void modelRefresh(Object source) {
+			if (source != null
+					&& (source.equals(IBSIModelListener.SOURCE_BULK_EDIT)
+					|| source.equals(IBSIModelListener.SOURCE_KONSOLIDATOR)
+					)
+				)
+				reloadMeasures();
+		}
+		
+		public void databaseChildAdded(CnATreeElement child) {
+			if (child instanceof BausteinUmsetzung && isOfInterest(child))
+				reloadMeasures();
+		}
+
+		public void databaseChildChanged(CnATreeElement child) {
+			childChanged(child.getParent(), child);
+		}
+
+		public void databaseChildRemoved(CnATreeElement child) {
+			childRemoved(child.getParent(), child);
+		}
+
+		public void modelReload(BSIModel newModel) {
+			/*
+			 * Intentionally do nothing since the view already has means to get
+			 * notified of model reloads.
+			 * 
+			 * @see IModelLoadListener
+			 */
+		}
+
+		/* (non-Javadoc)
+		 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(java.lang.Integer)
+		 */
+		public void databaseChildRemoved(ChangeLogEntry entry) {
+			// TODO server: remove element
+		}
+
+	};
 	
 	public MassnahmenUmsetzungContentProvider(IMassnahmenListView todoView) {
 		this.todoView = todoView;
@@ -70,11 +183,17 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = (TableViewer) viewer;
 		BSIModel model = CnAElementFactory.getLoadedModel();
-		model.removeBSIModelListener(this);
-		model.addBSIModelListener(this);
+		// When the DB is closed the clearing of the massnahmen table causes this method to be called.
+		// However at that time no model exists anymore. So we can safely skip this part.
+		if (model != null)
+		{
+			model.removeBSIModelListener(modelListener);
+			model.addBSIModelListener(modelListener);
+		}
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof PlaceHolder)
 			return new Object[] {inputElement};
@@ -86,78 +205,14 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 
 	public void dispose() {
 		BSIModel model = CnAElementFactory.getLoadedModel();
-		model.removeBSIModelListener(this);
+		model.removeBSIModelListener(modelListener);
 	}
 	
-	public void childAdded(CnATreeElement category, CnATreeElement child) {
-		if (child instanceof BausteinUmsetzung)
-			reloadModel();		
-	}
-	
-	public void linkChanged(CnALink link) {
-		if (link.getDependency() instanceof Person)
-			updateViewer(this.REFRESH, null);
-	}
-	
-	public void linkAdded(CnALink link) {
-		if (link.getDependency() instanceof Person) {
-			reloadModel();
-		}
-	}
-	
-	public void linkRemoved(CnALink link) {
-		if (link.getDependency() instanceof Person) {
-			reloadModel();
-		}
-	}
-
-	public void childChanged(CnATreeElement category, CnATreeElement child) {
-		if (child instanceof MassnahmenUmsetzung) {
-			try {
-				FindMassnahmenForTodoView command = new FindMassnahmenForTodoView(child.getDbId());
-				command = ServiceFactory.lookupCommandService().executeCommand(
-						command);
-				List<TodoViewItem> items = command.getAll();
-				if (items.size()>0) {
-					TodoViewItem item = items.get(0);
-					updateViewer(REMOVE, item);
-					updateViewer(ADD, item);
-				}
-			} catch (CommandException e) {
-				Logger.getLogger(this.getClass()).debug("Fehler beim Aktualisieren von TodoView", e);
-			}
-//			updateViewer(UPDATE, child);
-		}
-	}
-
-	public void childRemoved(CnATreeElement category, CnATreeElement child) {
-		// TODO server: optimize this to change only affected items:
-		if (child instanceof BausteinUmsetzung
-				|| child instanceof IBSIStrukturElement)
-			reloadModel();
-	}
-	
-	/**
-	 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
-	 */
-	public void modelRefresh() {
-		modelRefresh(null);
-	}
-
-	public void modelRefresh(Object source) {
-		if (source != null
-				&& (source.equals(IBSIModelListener.SOURCE_BULK_EDIT)
-				|| source.equals(IBSIModelListener.SOURCE_KONSOLIDATOR)
-				)
-			)
-			reloadModel();
-	}
-	
-	private void reloadModel() {
+	void reloadMeasures() {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					try {
-					todoView.setInput(true);
+					todoView.reloadMeasures();
 					} catch (RuntimeException e) {
 						ExceptionUtil.log(e, "Konnte Realisierungsplan nicht neu laden.");
 					}
@@ -166,7 +221,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 	}
 	
 	
-	private void updateViewer(final int type, final Object child) {
+	void updateViewer(final int type, final Object child) {
 		if (Display.getCurrent() != null) {
 			switch (type) {
 			case ADD:
@@ -204,28 +259,38 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider,
 		});
 	}
 
-	public void databaseChildAdded(CnATreeElement child) {
-		if (child instanceof BausteinUmsetzung)
-			reloadModel();
-	}
-
-	public void databaseChildChanged(CnATreeElement child) {
-		childChanged(child.getParent(), child);
-	}
-
-	public void databaseChildRemoved(CnATreeElement child) {
-		childRemoved(child.getParent(), child);
-	}
-
-	public void modelReload(BSIModel newModel) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(java.lang.Integer)
+	
+	/**
+	 * Returns whether the given {@link CnATreeElement} instance
+	 * is of interest for the view.
+	 * 
+	 * <p>Such an instance is of interest when it belongs to the currently
+	 * selected IT-Verbund of the view.</p>
+	 * 
+	 * <p>This method is needed to decide whether the view's model will
+	 * be updated when the given {@link MassnahmenUmsetzung} instance
+	 * changed or a {@link BausteinUmsetzung} instance got removed etc.</p>
 	 */
-	public void databaseChildRemoved(ChangeLogEntry entry) {
-		// TODO server: remove element
+	private boolean isOfInterest(CnATreeElement child)
+	{
+		ITVerbund expectedCompound = todoView.getCurrentCompound();
+		
+		// No compound selected -> nothing is of interest.
+		if (expectedCompound == null)
+			return false;
+		
+		// Otherwise climb the tree.
+		CnATreeElement parent = child.getParent();
+		while (! (parent instanceof ITVerbund))
+		{
+			if (parent == null)
+			{
+				log.warn("Element with no IT-Verbund ancestor. Skipping ...");
+				return false;
+			}
+			parent = parent.getParent();
+		}
+		
+		return parent.equals(expectedCompound);
 	}
 }
