@@ -99,6 +99,9 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	 * is deleted. The class provides all means to handle these situations on
 	 * a practical level.</p> 
 	 * 
+	 * <p><em>NOTE:</em> All accesses to methods of this class must be done
+	 * on the SWT event thread in order to succeed.</p>
+	 * 
 	 * @author Robert Schuster <r.schuster@tarent.de>
 	 *
 	 */
@@ -107,8 +110,6 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		private Combo combo;
 		
 		private List<ITVerbund> elements;
-		
-		private int lastSelected = 0;
 		
 		/**
 		 * Called by the RCP framework then the component is initialized.
@@ -123,7 +124,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 			combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
 			combo.setEnabled(false);
 			combo.add("-- kein Verbund --");
-			combo.select(lastSelected = 0);
+			combo.select(0);
 			
 			combo.addSelectionListener(new SelectionListener()
 			{
@@ -133,7 +134,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 				}
 
 				public void widgetSelected(SelectionEvent e) {
-					int s = lastSelected = combo.getSelectionIndex();
+					int s = combo.getSelectionIndex();
 					// First entry means 'show nothing'
 					if (s == 0)
 					{
@@ -164,7 +165,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		 */
 		ITVerbund getSelectedCompound()
 		{
-			int s = lastSelected;
+			int s = combo.getSelectionIndex();
 			if (s == 0)
 				return null;
 			else
@@ -185,14 +186,14 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		void setSelectedCompound(ITVerbund compound)
 		{
 			if (compound == null)
-				combo.select(lastSelected = 0);
+				combo.select(0);
 			
 			int count = 0;
 			for (ITVerbund c : elements)
 			{
 				if (c.equals(compound))
 				{
-					combo.select(lastSelected = count + 1);
+					combo.select(count + 1);
 					
 					return;
 				}
@@ -200,7 +201,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 				count++;
 			}
 			
-			combo.select(lastSelected = 0);
+			combo.select(0);
 		}
 		
 		/**
@@ -216,7 +217,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		 */
 		boolean isSelectedCompound(ITVerbund compound)
 		{
-			int s = lastSelected;
+			int s = combo.getSelectionIndex();
 			if (s == 0)
 				return false;
 			
@@ -249,7 +250,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		{
 			combo.removeAll();
 			combo.add("-- kein Verbund --");
-			combo.select(lastSelected = 0);
+			combo.select(0);
 
 			this.elements = elements;
 			
@@ -294,7 +295,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 				// The deleted compound is the one whose Massnahmen are
 				// currently being shown. Before removing it we select
 				// the first (dummy) entry and clear the table.
-				combo.select(lastSelected = 0);
+				combo.select(0);
 				GenericMassnahmenView.this.resetTable(true);
 			}
 			
@@ -667,6 +668,15 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 
 	public final ITVerbund getCurrentCompound()
 	{
-		return compoundChoser.getSelectedCompound();
+		final ITVerbund[] retval = new ITVerbund[1];
+		Display.getDefault().syncExec(new Runnable()
+		{
+			public void run()
+			{
+				retval[0] = compoundChoser.getSelectedCompound();
+			}
+		});
+		
+		return retval[0]; 
 	}
 }
