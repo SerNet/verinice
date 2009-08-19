@@ -99,7 +99,7 @@ public class FindMassnahmenForTodoView extends GenericCommand {
 				item.setUmsetzungDurch(mn.getUmsetzungDurch());
 			else {
 				FindResponsiblePerson command = new FindResponsiblePerson(mn.getDbId(), MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
-				command = getCommandService().executeCommand(command);
+				command = FindMassnahmenForTodoView.this.getCommandService().executeCommand(command);
 				List<Person> foundPersons = command.getFoundPersons();
 				if (foundPersons.size()==0)
 					item.setUmsetzungDurch("");
