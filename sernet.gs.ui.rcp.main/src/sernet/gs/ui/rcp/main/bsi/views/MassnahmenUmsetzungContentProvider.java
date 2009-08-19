@@ -94,8 +94,6 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 		public void childChanged(CnATreeElement category, CnATreeElement child) {
 			if (child instanceof MassnahmenUmsetzung) {
 				try {
-					log.debug("MassnahmenUmsetzung changed.");
-					// TODO rschuster: parent may not be available at this point. Need to retrieve it manually.
 					if (!isOfInterest(child))
 					{
 						log.debug("MassnahmenUmsetzung is not of interest for view: "
@@ -114,7 +112,6 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 				} catch (CommandException e) {
 					Logger.getLogger(this.getClass()).debug("Fehler beim Aktualisieren von TodoView", e);
 				}
-//				updateViewer(UPDATE, child);
 			}
 		}
 
