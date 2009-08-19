@@ -69,7 +69,7 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 					listsDbId = element.getParent().getDbId();
 				}
 				
-				IBaseDao dao =  getDaoFactory().getDAOForObject(element);
+				IBaseDao dao = getDaoFactory().getDAOForObject(element);
 				element = (T) dao.findById(element.getDbId());
 
 				if (element instanceof ITVerbund) {
@@ -96,9 +96,13 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 					removeFromLists(listsDbId, gef);
 				}
 				
-				/* cascade the deleting of CnATreeElements with FinishedRiskAnalysis,
-				 * use the java traditional way, to avoid
-				 * concurrent modification exceptions
+				/*
+				 * Special case the deletion of FinishedRiskAnalysis instances: Before the instance
+				 * is deleted itself their children must be removed manually (otherwise referential
+				 * integrity is violated and Hibernate reports an error).
+				 * 
+				 * Using the children as an array ensure that there won't be a
+				 * ConcurrentModificationException while deleting the elements.
 				 */
 				CnATreeElement[] children = element.getChildrenAsArray();
 				
