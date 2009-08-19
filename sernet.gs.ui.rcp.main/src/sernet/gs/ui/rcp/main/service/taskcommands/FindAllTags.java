@@ -75,6 +75,9 @@ public class FindAllTags extends GenericCommand {
 			/* Retrieves all tags. The resulting entries are non-empty and distinct.
 			 * Unfortunately they are still in the CSV format, e.g. "foo, baz, bar"
 			 */
+			
+			// TODO: Implicitly we assume that all propertytypes that denote a tag
+			// have the common suffix '_tag'.
 			return session
 			.createSQLQuery(
 					"select distinct propertyValue " +

@@ -91,7 +91,7 @@ public class DocumentView extends ViewPart {
 				allIDs.add(type.getId());
 			}
 
-			FindURLs command = new FindURLs(allIDs);
+			FindURLs command = new FindURLs(allIDs, true);
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			viewer.setInput(command.getUrls());
 		} catch (Exception e) {

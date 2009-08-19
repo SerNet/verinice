@@ -118,7 +118,7 @@ public class EntityResolverFactory {
 				List<HuiUrl> result = new ArrayList<HuiUrl>();
 				
 				try {
-					FindURLs command = new FindURLs(allIDs);
+					FindURLs command = new FindURLs(allIDs, false);
 					
 						command = ServiceFactory.lookupCommandService().executeCommand(command);
 						

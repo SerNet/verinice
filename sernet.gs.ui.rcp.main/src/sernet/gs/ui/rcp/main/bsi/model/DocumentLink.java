@@ -54,5 +54,9 @@ public class DocumentLink implements Serializable {
 		return children;
 	}
 
+	public String toString()
+	{
+		return "name=" + name + ";href=" + href;
+	}
 
 }
