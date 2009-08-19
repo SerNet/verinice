@@ -34,7 +34,7 @@ import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 
 public class FindResponsiblePerson extends GenericCommand {
-
+	
 	private Integer massnahmenUmsetzungDbId;
 	private String field;
 	private List<Person> foundPersons;
@@ -55,9 +55,8 @@ public class FindResponsiblePerson extends GenericCommand {
 		// try to find someone responsible directly by role:
 		List<Person> persons = getLinkedPersonsByRoles(field);
 		StringBuilder names = new StringBuilder();
-		for (Iterator iterator = persons.iterator(); iterator.hasNext();) {
-			Person person = (Person) iterator.next();
-			foundPersons.add(person);
+		for (Iterator<Person> iterator = persons.iterator(); iterator.hasNext();) {
+			foundPersons.add(iterator.next());
 		}
 	}
 	
