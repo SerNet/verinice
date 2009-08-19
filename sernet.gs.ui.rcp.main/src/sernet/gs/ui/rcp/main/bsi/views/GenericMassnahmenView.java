@@ -66,68 +66,80 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadMassnahmenTitles;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
 
 /**
- * Base class for a view that shows instances of {@link MassnahmenUmsetzung}
- * as {@link TodoViewItem}s.
+ * Base class for a view that shows instances of {@link MassnahmenUmsetzung} as
+ * {@link TodoViewItem}s.
  * 
- * <p>The class provides all the necessary infrastructure to allow viewing those
- * elements and chosing the IT-Verbund to which they belong.</p>
+ * <p>
+ * The class provides all the necessary infrastructure to allow viewing those
+ * elements and chosing the IT-Verbund to which they belong.
+ * </p>
  * 
  * @author koderman@sernet.de
  * @author r.schuster@tarent.de
- *
+ * 
  */
-public abstract class GenericMassnahmenView extends ViewPart implements IMassnahmenListView {
-	
-	private static final Logger log = Logger.getLogger(GenericMassnahmenView.class);
-	
-	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." +
-			"todoview"; //$NON-NLS-1$
-	
+public abstract class GenericMassnahmenView extends ViewPart implements
+		IMassnahmenListView {
+
+	private static final Logger log = Logger
+			.getLogger(GenericMassnahmenView.class);
+
+	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views."
+			+ "todoview"; //$NON-NLS-1$
+
 	/**
-	 * Implementation of {@link ContributionItem} which allows choosing one
-	 * of the potentially many {@link ITVerbund} instances.
+	 * Implementation of {@link ContributionItem} which allows choosing one of
+	 * the potentially many {@link ITVerbund} instances.
 	 * 
-	 * <p>Besides chosing a specific compound the choser also knows a state
-	 * where no compound is selected.</p>
+	 * <p>
+	 * Besides chosing a specific compound the choser also knows a state where
+	 * no compound is selected.
+	 * </p>
 	 * 
-	 * <p>The compound choser triggers actions (ie. loading of measures)
-	 * when the user interacted with the combo box that displays the
-	 * compounds.</p>
+	 * <p>
+	 * The compound choser triggers actions (ie. loading of measures) when the
+	 * user interacted with the combo box that displays the compounds.
+	 * </p>
 	 * 
-	 * <p>On the other hand the choser needs to be kept updated about changes
-	 * to the data model. E.g. if a new compound is added or an existing one
-	 * is deleted. The class provides all means to handle these situations on
-	 * a practical level.</p> 
+	 * <p>
+	 * On the other hand the choser needs to be kept updated about changes to
+	 * the data model. E.g. if a new compound is added or an existing one is
+	 * deleted. The class provides all means to handle these situations on a
+	 * practical level.
+	 * </p>
 	 * 
-	 * <p><em>NOTE:</em> All accesses to methods of this class must be done
-	 * on the SWT event thread in order to succeed.</p>
+	 * <p>
+	 * <em>NOTE:</em> All accesses to methods of this class must be done on the
+	 * SWT event thread in order to succeed.
+	 * </p>
 	 * 
 	 * @author Robert Schuster <r.schuster@tarent.de>
-	 *
+	 * 
 	 */
 	private class MassnahmenCompoundChoser extends ContributionItem {
-		
+
 		private Combo combo;
-		
+
 		private List<ITVerbund> elements;
-		
+
 		/**
 		 * Called by the RCP framework then the component is initialized.
 		 * 
-		 * <p>Creates the combo box and registers neccessary listeners.</p>
+		 * <p>
+		 * Creates the combo box and registers neccessary listeners.
+		 * </p>
 		 * 
 		 */
 		@Override
 		public void fill(ToolBar parent, int index) {
 			ToolItem ti = new ToolItem(parent, SWT.SEPARATOR, index);
-			
+
 			combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
 			combo.setEnabled(false);
 			combo.add("-- kein Verbund --");
 			combo.select(0);
-			
-			combo.addSelectionListener(new SelectionListener()
-			{
+
+			combo.addSelectionListener(new SelectionListener() {
 
 				public void widgetDefaultSelected(SelectionEvent e) {
 					widgetSelected(e);
@@ -136,207 +148,226 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 				public void widgetSelected(SelectionEvent e) {
 					int s = combo.getSelectionIndex();
 					// First entry means 'show nothing'
-					if (s == 0)
-					{
+					if (s == 0) {
 						GenericMassnahmenView.this.resetTable(true);
-					}
-					else
-					{
+					} else {
 						// As long as the loading is in progress, no other
 						// IT-Verbund may be selected.
 						combo.setEnabled(false);
-						GenericMassnahmenView.this.loadMeasures(elements.get(s - 1));
+						GenericMassnahmenView.this.loadMeasures(elements
+								.get(s - 1));
 					}
 				}
-				
+
 			});
-			
+
 			ti.setControl(combo);
 			ti.setWidth(200);
 		}
-		
+
 		/**
 		 * Returns the currently selected IT-Verbund.
 		 * 
-		 * <p>If this method is called while no IT-Verbund is selected,
-		 * <code>null</code> is returned.</p>
+		 * <p>
+		 * If this method is called while no IT-Verbund is selected,
+		 * <code>null</code> is returned.
+		 * </p>
 		 * 
 		 * @return
 		 */
-		ITVerbund getSelectedCompound()
-		{
+		ITVerbund getSelectedCompound() {
 			int s = combo.getSelectionIndex();
 			if (s == 0)
 				return null;
 			else
 				return elements.get(s - 1);
 		}
-		
+
 		/**
 		 * Selects the given {@link ITVerbund} instance.
 		 * 
-		 * <p>The success of this method depends on the {@link ITVerbund}
-		 * instances currently known to the <code>MassnahmenCompoundChoser</code>.</p>
+		 * <p>
+		 * The success of this method depends on the {@link ITVerbund} instances
+		 * currently known to the <code>MassnahmenCompoundChoser</code>.
+		 * </p>
 		 * 
-		 * <p>In case the instance is not known (or the <code>compound</code> argument 
-		 * is <code>null</code>) an element is chosen which means 'no compound chosen'.</p>
+		 * <p>
+		 * In case the instance is not known (or the <code>compound</code>
+		 * argument is <code>null</code>) an element is chosen which means 'no
+		 * compound chosen'.
+		 * </p>
 		 * 
 		 * @param compound
 		 */
-		void setSelectedCompound(ITVerbund compound)
-		{
+		void setSelectedCompound(ITVerbund compound) {
 			if (compound == null)
 				combo.select(0);
-			
+
 			int count = 0;
-			for (ITVerbund c : elements)
-			{
-				if (c.equals(compound))
-				{
+			for (ITVerbund c : elements) {
+				if (c.equals(compound)) {
 					combo.select(count + 1);
-					
+
 					return;
 				}
-				
+
 				count++;
 			}
-			
+
 			combo.select(0);
 		}
-		
+
 		/**
-		 * Returns whether the currently selected IT-Verbund is identical
-		 * to the given one.
+		 * Returns whether the currently selected IT-Verbund is identical to the
+		 * given one.
 		 * 
-		 * <p>In a bigger context this method is needed to decide whether
-		 * a specific {@link MassnahmenUmsetzung} belongs to the currently
-		 * selected IT-Verbund.</p>
+		 * <p>
+		 * In a bigger context this method is needed to decide whether a
+		 * specific {@link MassnahmenUmsetzung} belongs to the currently
+		 * selected IT-Verbund.
+		 * </p>
 		 * 
 		 * @param compound
 		 * @return
 		 */
-		boolean isSelectedCompound(ITVerbund compound)
-		{
+		boolean isSelectedCompound(ITVerbund compound) {
 			int s = combo.getSelectionIndex();
 			if (s == 0)
 				return false;
-			
+
 			return elements.get(s - 1).equals(compound);
 		}
-		
+
 		/**
-		 * Disables the choser, ie. making it impossible for the user
-		 * to select a different compound.
+		 * Disables the choser, ie. making it impossible for the user to select
+		 * a different compound.
 		 * 
-		 * <p>This is used to prevent the user changing the compounds as
-		 * long as the application is loading measures.</p>
+		 * <p>
+		 * This is used to prevent the user changing the compounds as long as
+		 * the application is loading measures.
+		 * </p>
 		 * 
 		 * @param b
 		 */
-		void setEnabled(boolean b)
-		{
+		void setEnabled(boolean b) {
 			if (combo != null)
 				combo.setEnabled(b);
 		}
-		
+
 		/**
 		 * Sets the available compounds.
 		 * 
-		 * <p>This method implicitly clears the combo box.</p>
+		 * <p>
+		 * This method implicitly clears the combo box.
+		 * </p>
 		 * 
 		 * @param elements
 		 */
-		void setElements(List<ITVerbund> elements)
-		{
+		void setElements(List<ITVerbund> elements) {
 			combo.removeAll();
 			combo.add("-- kein Verbund --");
 			combo.select(0);
 
 			this.elements = elements;
-			
+
 			for (ITVerbund c : elements)
 				combo.add(c.getTitel());
 		}
-		
+
 		/**
-		 * Adds a compound to the choser (making it available for
-		 * the user to select it).
+		 * Adds a compound to the choser (making it available for the user to
+		 * select it).
 		 * 
-		 * <p>This method is to be called when a new compound
-		 * was created in the DB.</p>
+		 * <p>
+		 * This method is to be called when a new compound was created in the
+		 * DB.
+		 * </p>
 		 * 
 		 * @param compound
 		 */
-		void compoundAdded(ITVerbund compound)
-		{
+		void compoundAdded(ITVerbund compound) {
 			elements.add(compound);
 			combo.add(compound.getTitel());
 		}
-		
+
 		/**
-		 * Removes a compound from the choser (preventing the
-		 * user from selecting it).
+		 * Removes a compound from the choser (preventing the user from
+		 * selecting it).
 		 * 
-		 * <p>This method is to be called when a new compound
-		 * was created in the DB.</p>
+		 * <p>
+		 * This method is to be called when a new compound was created in the
+		 * DB.
+		 * </p>
 		 * 
-		 * <p>When the removed compound is the one that was currently
-		 * selected, this causes a reset of the table in the view.</p>
+		 * <p>
+		 * When the removed compound is the one that was currently selected,
+		 * this causes a reset of the table in the view.
+		 * </p>
 		 * 
 		 * @param compound
 		 */
-		void compoundRemoved(ITVerbund compound)
-		{
+		void compoundRemoved(ITVerbund compound) {
 			int i = combo.getSelectionIndex();
-			// Either 
-			if (i > 0
-					&& elements.get(i-1).equals(compound))
-			{
+			// Either
+			if (i > 0 && elements.get(i - 1).equals(compound)) {
 				// The deleted compound is the one whose Massnahmen are
 				// currently being shown. Before removing it we select
 				// the first (dummy) entry and clear the table.
 				combo.select(0);
 				GenericMassnahmenView.this.resetTable(true);
 			}
-			
-			combo.remove(compound.getTitel());
-			elements.remove(i - 1);
+
+			i = 0;
+			for (ITVerbund c : elements)
+			{
+				if (c.equals(compound))
+				{
+					combo.remove(i + 1);
+					elements.remove(i);
+					
+					return;
+				}
+				
+				i++;
+			}
 		}
 
 	}
 
 	/**
-	 * TODO rschuster: This class shares much functionality with MassnahmenUmsetzungContentProvider. It
-	 * would be better to move it there. 
+	 * TODO rschuster: This class shares much functionality with
+	 * MassnahmenUmsetzungContentProvider. It would be better to move it there.
 	 */
 	private IModelLoadListener loadListener = new IModelLoadListener() {
-		
+
 		private ITVerbund lastSelectedCompound;
-		
+
 		/**
 		 * Called when the model is closed.
 		 * 
-		 * <p>This happens on an explicit reload and when the DB
-		 * connection is closed.</p>
+		 * <p>
+		 * This happens on an explicit reload and when the DB connection is
+		 * closed.
+		 * </p>
 		 * 
-		 * <p>On a reload the currently selected compound is saved
-		 * for a later reuse.</p>
+		 * <p>
+		 * On a reload the currently selected compound is saved for a later
+		 * reuse.
+		 * </p>
 		 * 
 		 */
 		public void closed(BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					if (CnAElementHome.getInstance().isOpen())
-					{
+					if (CnAElementHome.getInstance().isOpen()) {
 						// Connection still open -> explicit reload
-						lastSelectedCompound = compoundChoser.getSelectedCompound();
-					}
-					else
-					{
+						lastSelectedCompound = compoundChoser
+								.getSelectedCompound();
+					} else {
 						// Connection closed -> throw away compound information
 						lastSelectedCompound = null;
 					}
-					
+
 					compoundChoser.setSelectedCompound(null);
 					compoundChoser.setEnabled(false);
 
@@ -344,14 +375,15 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 				}
 			});
 		}
-		
+
 		/**
-		 * This is called when the {@link BSIModel} instance
-		 * is fully loaded.
+		 * This is called when the {@link BSIModel} instance is fully loaded.
 		 * 
-		 * <p>In case this happened through an explicit reload
-		 * the view is initialized with the same compound that
-		 * was selected before the reload occured.</p> 
+		 * <p>
+		 * In case this happened through an explicit reload the view is
+		 * initialized with the same compound that was selected before the
+		 * reload occured.
+		 * </p>
 		 */
 		public void loaded(final BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
@@ -365,7 +397,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 			});
 		}
 	};
-	
+
 	protected TableViewer viewer;
 	protected TableColumn iconColumn;
 	protected TableColumn titleColumn;
@@ -374,26 +406,27 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	protected TableColumn zielColumn;
 	private Action doubleClickAction;
 	protected TableColumn bearbeiterColumn;
-	
+
 	private Action filterAction;
-	
+
 	private MassnahmenUmsetzungFilter umsetzungFilter;
 	private MassnahmenSiegelFilter siegelFilter;
 
 	private MassnahmenCompoundChoser compoundChoser = new MassnahmenCompoundChoser();
-	
-	private MassnahmenUmsetzungContentProvider contentProvider = new MassnahmenUmsetzungContentProvider(this);
-	
+
+	private MassnahmenUmsetzungContentProvider contentProvider = new MassnahmenUmsetzungContentProvider(
+			this);
+
 	protected abstract ILabelProvider createLabelProvider();
-	
+
 	protected abstract ViewerSorter createSorter();
-	
+
 	protected abstract void createPartControlImpl(Composite parent);
-	
+
 	@Override
 	public final void createPartControl(Composite parent) {
 		createPartControlImpl(parent);
-		
+
 		createFilters();
 		createPullDownMenu();
 
@@ -405,27 +438,30 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
 		}
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
-		
+
 		viewer.setSorter(createSorter());
 		makeActions();
 		hookActions();
 		fillLocalToolBar();
-		
+
 		getSite().setSelectionProvider(viewer);
-		
+
 		dateColumn.pack();
 	}
-	
+
 	/**
 	 * Removes whatever is in the table.
 	 * 
-	 * <p>If <code>choseMessage</code> is <code>true</code> then a placeholder
-	 * is added which tells the user to chose an IT-Verbund.</p>
+	 * <p>
+	 * If <code>choseMessage</code> is <code>true</code> then a placeholder is
+	 * added which tells the user to chose an IT-Verbund.
+	 * </p>
 	 * 
-	 * <p>If the value is <code>false</code> the list will really be empty.</p>
+	 * <p>
+	 * If the value is <code>false</code> the list will really be empty.
+	 * </p>
 	 */
-	void resetTable(boolean choseMessage)
-	{
+	void resetTable(boolean choseMessage) {
 		if (choseMessage)
 			viewer.setInput(new PlaceHolder("IT-Verbund wählen."));
 		else
@@ -435,134 +471,151 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	/**
 	 * Loads the ITVerbund instances and fills the combo box with them.
 	 * 
-	 * <p>In case the <code>compound</code> argument is <code>null</code>
-	 * the combo box will be set to an element which means 'no compound
-	 * chosen'. A message in the table will inform the user that she has
-	 * to chose one first.</p>
+	 * <p>
+	 * In case the <code>compound</code> argument is <code>null</code> the combo
+	 * box will be set to an element which means 'no compound chosen'. A message
+	 * in the table will inform the user that she has to chose one first.
+	 * </p>
 	 * 
-	 * <p>The above behavior is what is expected when the measure view
-	 * is <em>first</em> opened (or filled with data).</p>
+	 * <p>
+	 * The above behavior is what is expected when the measure view is
+	 * <em>first</em> opened (or filled with data).
+	 * </p>
 	 * 
-	 * <p>When an {@link ITVerbund} instance is given then the combo box
-	 * tries to select this one after loading them. In case the given
-	 * instance does not exist anymore the first behavior is followed.</p>
+	 * <p>
+	 * When an {@link ITVerbund} instance is given then the combo box tries to
+	 * select this one after loading them. In case the given instance does not
+	 * exist anymore the first behavior is followed.
+	 * </p>
 	 * 
-	 * <p>The second behavior is appropriate when the view is already in use
-	 * and then a complete model reload occurs.</p>
-	 *  
+	 * <p>
+	 * The second behavior is appropriate when the view is already in use and
+	 * then a complete model reload occurs.
+	 * </p>
+	 * 
 	 * @param compound
 	 */
-	private final void loadCompounds(final ITVerbund compound)  {
-		if (!CnAElementHome.getInstance().isOpen())
-		{
+	private final void loadCompounds(final ITVerbund compound) {
+		if (!CnAElementHome.getInstance().isOpen()) {
 			compoundChoser.setEnabled(false);
 			return;
 		}
 
 		viewer.setInput(new PlaceHolder("Lade IT-Verbunde..."));
-		
+
 		WorkspaceJob job = new WorkspaceJob("Lade IT-Verbunde...") {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
-				
+
 				try {
 					monitor.setTaskName("");
-					LoadMassnahmenTitles<ITVerbund> compoundLoader =
-						new LoadMassnahmenTitles<ITVerbund>(ITVerbund.class);
-					compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
-					final List<ITVerbund> elements = compoundLoader.getElements();
+					LoadMassnahmenTitles<ITVerbund> compoundLoader = new LoadMassnahmenTitles<ITVerbund>(
+							ITVerbund.class);
+					compoundLoader = ServiceFactory.lookupCommandService()
+							.executeCommand(compoundLoader);
+					final List<ITVerbund> elements = compoundLoader
+							.getElements();
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
 							compoundChoser.setElements(elements);
 							compoundChoser.setEnabled(true);
-							
-							// Only try to preselect when a ITVerbund instance was
+
+							// Only try to preselect when a ITVerbund instance
+							// was
 							// given.
-							if (compound != null)
-							{
+							if (compound != null) {
 								compoundChoser.setSelectedCompound(compound);
 
-								// If the compoundChoser returns false here, then
-								// the compound does not exist anymore. 
-								if (compoundChoser.isSelectedCompound(compound))
-								{
+								// If the compoundChoser returns false here,
+								// then
+								// the compound does not exist anymore.
+								if (compoundChoser.isSelectedCompound(compound)) {
 									// Reload the measures belonging to the
 									// preselected compound.
 									loadMeasures(compound);
-									
+
 									return;
 								}
-								
+
 								// Compound not available anymore: Fall through.
 							}
-							
-							// Place a message that asks the user to chose a compound.
-							viewer.setInput(new PlaceHolder("IT-Verbund wählen."));
+
+							// Place a message that asks the user to chose a
+							// compound.
+							viewer.setInput(new PlaceHolder(
+									"IT-Verbund wählen."));
 						}
-						
+
 					});
-					
+
 				} catch (Exception e) {
 					ExceptionUtil.log(e, "Fehler beim Laden der IT-Verbunde");
 				}
-				return Status.OK_STATUS; 
+				return Status.OK_STATUS;
 			}
 		};
 		job.setUser(false);
 		job.schedule();
-		
+
 	}
-	
+
 	/**
-	 * Provokes that the Massnahmen for the currently selected IT-Verbund are reloaded.
+	 * Provokes that the Massnahmen for the currently selected IT-Verbund are
+	 * reloaded.
 	 * 
-	 * <p>In case that no IT-Verbund is selected the method has no effect.</p>
+	 * <p>
+	 * In case that no IT-Verbund is selected the method has no effect.
+	 * </p>
 	 */
-	public final void reloadMeasures()
-	{
+	public final void reloadMeasures() {
 		ITVerbund compound = compoundChoser.getSelectedCompound();
 		if (compound == null)
 			log.warn("No IT-Verbund was selected during reload.");
 		else
 			loadMeasures(compound);
 	}
-	
+
 	protected abstract String getMeasureLoadPlaceholderLabel();
-	
+
 	protected abstract String getMeasureLoadJobLabel();
-	
+
 	protected abstract String getMeasureLoadTaskLabel();
 
 	protected abstract String getTaskErrorLabel();
-	
+
 	/**
 	 * Loads the MassnahmenUmsetzung instances for the given IT-Verbund.
 	 * 
-	 * <p>This method is called when the user choses an IT-Verbund
-	 * and when the content provider decides that all data has to be reloaded.</p>
+	 * <p>
+	 * This method is called when the user choses an IT-Verbund and when the
+	 * content provider decides that all data has to be reloaded.
+	 * </p>
 	 * 
-	 * <p>It is expected that the given ITVerbund instance denotes the one currently
-	 * selected.</p>
+	 * <p>
+	 * It is expected that the given ITVerbund instance denotes the one
+	 * currently selected.
+	 * </p>
 	 * 
 	 * @param itVerbund
 	 */
-	private void loadMeasures(final ITVerbund itVerbund)  {
-		if (!CnAElementHome.getInstance().isOpen())
-		{
+	private void loadMeasures(final ITVerbund itVerbund) {
+		if (!CnAElementHome.getInstance().isOpen()) {
 			compoundChoser.setEnabled(false);
 			return;
 		}
-		
+
 		viewer.setInput(new PlaceHolder(getMeasureLoadPlaceholderLabel()));
-		
+
 		WorkspaceJob job = new WorkspaceJob(getMeasureLoadJobLabel()) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
-				
+
 				try {
 					monitor.setTaskName(getMeasureLoadTaskLabel());
-					FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(itVerbund.getDbId());
-					command = ServiceFactory.lookupCommandService().executeCommand(command);
+					FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(
+							itVerbund.getDbId());
+					command = ServiceFactory.lookupCommandService()
+							.executeCommand(command);
 					final List<TodoViewItem> allMassnahmen = command.getAll();
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
@@ -576,107 +629,99 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 							compoundChoser.setEnabled(true);
 						}
 					});
-					
+
 					ExceptionUtil.log(e, getTaskErrorLabel());
 				}
-				return Status.OK_STATUS; 
+				return Status.OK_STATUS;
 			}
 		};
 		job.setUser(false);
 		job.schedule();
-		
+
 	}
-	
+
 	protected abstract Action createFilterAction(
 			MassnahmenUmsetzungFilter umsetzungFilter,
 			MassnahmenSiegelFilter siegelFilter);
 
 	private void createPullDownMenu() {
-		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
+		IMenuManager menuManager = getViewSite().getActionBars()
+				.getMenuManager();
 		filterAction = createFilterAction(umsetzungFilter, siegelFilter);
 		menuManager.add(filterAction);
 	}
-	
+
 	private void fillLocalToolBar() {
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager manager = bars.getToolBarManager();
 		manager.add(this.filterAction);
-		
+
 		manager.add(compoundChoser);
 	}
-	
+
 	private void createFilters() {
 		umsetzungFilter = new MassnahmenUmsetzungFilter(viewer);
 		siegelFilter = new MassnahmenSiegelFilter(viewer);
 		umsetzungFilter.setUmsetzungPattern(getUmsetzungPattern());
 	}
-	
+
 	protected abstract String[] getUmsetzungPattern();
-	
+
 	private void makeActions() {
 		doubleClickAction = new Action() {
 			public void run() {
-				Object sel = ((IStructuredSelection)viewer.getSelection())
-					.getFirstElement();
+				Object sel = ((IStructuredSelection) viewer.getSelection())
+						.getFirstElement();
 				EditorFactory.getInstance().openEditor(sel);
 			}
 		};
 	}
-	
+
 	@Override
 	public final void dispose() {
 		CnAElementFactory.getInstance().removeLoadListener(loadListener);
 	}
 
 	private void hookActions() {
-			viewer.addDoubleClickListener(new IDoubleClickListener() {
-				public void doubleClick(DoubleClickEvent event) {
-					doubleClickAction.run();
-				}
-			});
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				doubleClickAction.run();
+			}
+		});
 	}
 
 	@Override
 	public final void setFocus() {
-	 viewer.getTable().setFocus();
+		viewer.getTable().setFocus();
 	}
 
-	public final void compoundAdded(final ITVerbund compound)
-	{
+	public final void compoundAdded(final ITVerbund compound) {
 		log.debug("handling added compound: " + compound.getTitel());
-		Display.getDefault().asyncExec(new Runnable()
-		{
-			public void run()
-			{
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
 				compoundChoser.compoundAdded(compound);
 			}
 		});
 	}
-	
-	public final void compoundRemoved(final ITVerbund compound)
-	{
+
+	public final void compoundRemoved(final ITVerbund compound) {
 		log.debug("handling removed compound: " + compound.getTitel());
-		
-		Display.getDefault().asyncExec(new Runnable()
-		{
-			public void run()
-			{
+
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
 				compoundChoser.compoundRemoved(compound);
 			}
 		});
 	}
 
-	public final ITVerbund getCurrentCompound()
-	{
+	public final ITVerbund getCurrentCompound() {
 		final ITVerbund[] retval = new ITVerbund[1];
-		Display.getDefault().syncExec(new Runnable()
-		{
-			public void run()
-			{
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
 				retval[0] = compoundChoser.getSelectedCompound();
 			}
 		});
-		
-		return retval[0]; 
+
+		return retval[0];
 	}
 }
