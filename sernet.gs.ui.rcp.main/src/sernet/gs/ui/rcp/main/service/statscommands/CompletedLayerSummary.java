@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +28,10 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 
+@SuppressWarnings("serial")
 public class CompletedLayerSummary extends MassnahmenSummary {
 
 
@@ -47,8 +48,26 @@ public class CompletedLayerSummary extends MassnahmenSummary {
 	public Map<String, Integer> getCompletedSchichtenSummary() throws CommandException {
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		
-		ArrayList<BausteinUmsetzung> bausteine = getModel().getBausteine();
-		for (BausteinUmsetzung baustein: bausteine) {
+		LoadCnAElementByType<BausteinUmsetzung> command =
+			new LoadCnAElementByType<BausteinUmsetzung>(BausteinUmsetzung.class,
+					new LoadCnAElementByType.HydrateCallback<BausteinUmsetzung>()
+			{
+				public void hydrate(List<BausteinUmsetzung> elements)
+				{
+					for(BausteinUmsetzung b : elements)
+					{
+						b.getKapitel();
+					}
+				}
+			});
+		
+		try {
+			command = getCommandService().executeCommand(command);
+		} catch (CommandException e) {
+			throw new RuntimeCommandException(e);
+		}
+		
+		for (BausteinUmsetzung baustein: command.getElements()) {
 			Baustein baustein2 = getBaustein(baustein.getKapitel());
 			if (baustein2 == null) {
 				Logger.getLogger(this.getClass()).debug("Kein Baustein gefunden für ID" + baustein.getId());

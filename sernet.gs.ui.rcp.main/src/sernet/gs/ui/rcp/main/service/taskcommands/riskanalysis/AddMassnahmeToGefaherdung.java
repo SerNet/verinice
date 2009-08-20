@@ -29,6 +29,7 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
  * $LastChangedBy$
  *
  */
+@SuppressWarnings("serial")
 public class AddMassnahmeToGefaherdung extends GenericCommand {
 
 	private RisikoMassnahmenUmsetzung child;

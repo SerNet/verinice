@@ -30,6 +30,7 @@ import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.PropertyType;
 
+@SuppressWarnings("serial")
 public class Anwendung extends CnATreeElement 
 	implements IBSIStrukturElement {
 	

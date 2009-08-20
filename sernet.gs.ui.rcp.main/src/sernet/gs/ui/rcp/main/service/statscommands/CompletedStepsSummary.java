@@ -17,33 +17,82 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
+import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
+
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.connect.IBaseDao;
 
+@SuppressWarnings("serial")
 public class CompletedStepsSummary extends MassnahmenSummary {
+	
+	private static Logger log = Logger.getLogger(CompletedStepsSummary.class);
 
+	private static HibernateCallback hcb = new CompletedUmsetzungenSummaryCallback();
 
 	public void execute() {
 		setSummary(getCompletedStufenSummary());
 	}
 	
-	public Map<String, Integer> getCompletedStufenSummary() {
+	@SuppressWarnings("unchecked")
+	private Map<String, Integer> getCompletedStufenSummary() {
 		Map<String, Integer> result = new HashMap<String, Integer>();
-		for (Object object : getModel().getMassnahmen()) {
-			MassnahmenUmsetzung ums = (MassnahmenUmsetzung) object;
-			if (!ums.isCompleted())
-				continue;
-			String stufe = Character.toString(ums.getStufe());
-			if (result.get(stufe) == null)
-				result.put(stufe, 0);
-			Integer count = result.get(stufe);
-			result.put(stufe, ++count);
+		
+		IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
+
+		// List of Object[] array:
+		// index 0: property value
+		// index 1: count of occurence of the above value in the db
+		List<Object[]> list = (List<Object[]>) dao.findByCallback(hcb);
+
+		// Puts SQL result in a object structure the user of this class expects.  
+		for (Object[] element : list)
+		{
+			result.put(
+					(String) element[0],
+					(Integer) element[1]);
 		}
+		
 		return result;
 	}
-
 	
+	private static class CompletedUmsetzungenSummaryCallback implements HibernateCallback, Serializable
+	{
+
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+
+			Query query = session.createSQLQuery(
+					"select p1.propertyvalue as pv, count(p1.propertyvalue) as amount "
+					+ "from properties p1, properties p2 "
+					+ "where p1.parent = p2.parent "
+					+ "and p1.propertytype = :p1type "
+					+ "and p2.propertytype = :p2type "
+					+ "and p2.propertyvalue in (:p2values) "
+					+ "group by p1.propertyvalue ")
+					.addScalar("pv", Hibernate.STRING)
+					.addScalar("amount", Hibernate.INTEGER)
+					.setString("p1type", MassnahmenUmsetzung.P_SIEGEL)
+					.setString("p2type", MassnahmenUmsetzung.P_UMSETZUNG)
+					.setParameterList("p2values", new Object[] { MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH }, Hibernate.STRING);
+			
+			if (log.isDebugEnabled())
+				log.debug("generated query:" + query.getQueryString());
+					
+			return query.list();
+		}
+		
+	}
 	
 }

@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.bsi.model;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 
+@SuppressWarnings("serial")
 public class AnwendungenKategorie extends CnATreeElement
 	implements IBSIStrukturKategorie {
 	public static final String TYPE_ID = "anwendungenkategorie"; //$NON-NLS-1$

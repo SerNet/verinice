@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.views.chart;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,8 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.statscommands.CountMassnahmen;
 
-public class RealisierungLineChart implements IChartGenerator {
+@SuppressWarnings("serial")
+public class RealisierungLineChart implements IChartGenerator, Serializable {
 
 	
 	
@@ -109,7 +111,20 @@ public class RealisierungLineChart implements IChartGenerator {
 		TimeSeries ts1 =new TimeSeries("umgesetzt", Day.class);
 		TimeSeries ts2 =new TimeSeries("alle", Day.class);
 		
-		LoadCnAElementByType<MassnahmenUmsetzung> command = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
+		LoadCnAElementByType.HydrateCallback<MassnahmenUmsetzung> cb =
+			new LoadCnAElementByType.HydrateCallback<MassnahmenUmsetzung>()
+			{
+				public void hydrate(List<MassnahmenUmsetzung> elements)
+				{
+					for (MassnahmenUmsetzung mu : elements)
+					{
+						mu.getUmsetzungBis();
+						mu.isCompleted();
+					}
+				}
+			};
+		
+		LoadCnAElementByType<MassnahmenUmsetzung> command = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class, cb);
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		List<MassnahmenUmsetzung> massnahmen = command.getElements();
 		

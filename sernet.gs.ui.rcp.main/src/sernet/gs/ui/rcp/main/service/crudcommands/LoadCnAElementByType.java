@@ -25,26 +25,39 @@ import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
+@SuppressWarnings("serial")
 public class LoadCnAElementByType<T extends CnATreeElement> extends GenericCommand {
-
 
 	private List<T> elements;
 	private Class<T> clazz;
-
+	
+	private HydrateCallback<T> hydrateCallback;
+	
 	public LoadCnAElementByType(Class<T> type) {
+		this(type, null);
+	}
+	
+	public LoadCnAElementByType(Class<T> type, HydrateCallback<T> hc) {
 		this.clazz = type;
+		this.hydrateCallback = hc;
 	}
 	
 	public void execute() {
 		IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(clazz);
 		elements = dao.findAll();
-		HydratorUtil.hydrateElements(dao, elements, false);
+		if (hydrateCallback == null)
+			HydratorUtil.hydrateElements(dao, elements, false);
+		else
+			hydrateCallback.hydrate(elements);
 	}
 
 	public List<T> getElements() {
 		return elements;
 	}
 	
-	
+	public interface HydrateCallback<T> extends Serializable
+	{
+		void hydrate(List<T> elements);
+	}
 
 }

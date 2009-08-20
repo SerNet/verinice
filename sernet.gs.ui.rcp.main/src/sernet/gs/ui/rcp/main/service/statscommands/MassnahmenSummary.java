@@ -17,36 +17,16 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
-import java.util.List;
 import java.util.Map;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 
-public abstract class MassnahmenSummary extends GenericCommand {
+@SuppressWarnings("serial")
+public abstract class MassnahmenSummary<T> extends GenericCommand {
 
-	private BSIModel model;
-	private List<String> tags;
-	
 	private Map<String, Integer> summary;
 
 	public void execute() {
-	}
-
-	public BSIModel getModel() {
-		if (model == null) {
-			LoadBSIModel command = new LoadBSIModel();
-			try {
-				command = getCommandService().executeCommand(command);
-			} catch (CommandException e) {
-				throw new RuntimeCommandException(e);
-			}
-			model = command.getModel();
-		}
-		return model;
 	}
 
 	public Map<String, Integer> getSummary() {

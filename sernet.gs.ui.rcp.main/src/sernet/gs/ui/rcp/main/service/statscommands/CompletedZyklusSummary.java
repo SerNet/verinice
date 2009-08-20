@@ -18,10 +18,15 @@
 package sernet.gs.ui.rcp.main.service.statscommands;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 
+@SuppressWarnings("unchecked")
 public class CompletedZyklusSummary extends MassnahmenSummary {
 
 
@@ -31,8 +36,28 @@ public class CompletedZyklusSummary extends MassnahmenSummary {
 	
 	public Map<String, Integer> getCompletedZyklusSummary() {
 		Map<String, Integer> result = new HashMap<String, Integer>();
-		for (Object object : getModel().getMassnahmen()) {
-			MassnahmenUmsetzung ums = (MassnahmenUmsetzung) object;
+		
+		LoadCnAElementByType<MassnahmenUmsetzung> command =
+			new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class,
+					new LoadCnAElementByType.HydrateCallback<MassnahmenUmsetzung>()
+			{
+				public void hydrate(List<MassnahmenUmsetzung> elements)
+				{
+					for (MassnahmenUmsetzung mu : elements)
+					{
+						mu.isCompleted();
+						mu.getStufe();
+					}
+				}
+			});
+		
+		try {
+			command = getCommandService().executeCommand(command);
+		} catch (CommandException e) {
+			throw new RuntimeCommandException(e);
+		}
+		
+		for (MassnahmenUmsetzung ums : command.getElements()) {
 			if (!ums.isCompleted())
 				continue;
 			String lz = ums.getLebenszyklus();
