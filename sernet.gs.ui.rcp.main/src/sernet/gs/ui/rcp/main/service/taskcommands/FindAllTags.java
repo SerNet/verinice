@@ -18,6 +18,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,9 +39,8 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
  * <p>The resulting list contains unique, non-empty value.</p> 
  * 
  */
+@SuppressWarnings("serial")
 public class FindAllTags extends GenericCommand {
-
-	private static final long serialVersionUID = -3004640768713481223L;
 	
 	private List<String> tags;
 	
@@ -67,7 +67,7 @@ public class FindAllTags extends GenericCommand {
 		return tags;
 	}
 	
-	private static class FindTagsCallback implements HibernateCallback
+	private static class FindTagsCallback implements HibernateCallback, Serializable
 	{
 
 		public Object doInHibernate(Session session) throws HibernateException,
