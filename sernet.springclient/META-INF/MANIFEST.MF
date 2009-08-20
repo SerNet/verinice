@@ -13,7 +13,7 @@ Export-Package: sernet.springclient;
    org.eclipse.jface.resource,
    org.springframework.beans.factory"
 Bundle-Vendor: SerNet
-Import-Package: com.mchange.v2.resourcepool, 
+Import-Package: com.mchange.v2.resourcepool,
  javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0",
  org.aopalliance.aop;version="1.0.0",
@@ -23,6 +23,7 @@ Import-Package: com.mchange.v2.resourcepool,
  org.eclipse.ui.plugin,
  org.hibernate,
  org.hibernate.collection,
+ org.hibernate.hql.ast,
  org.hibernate.proxy,
  org.hibernate.proxy.pojo.cglib,
  org.osgi.framework,
