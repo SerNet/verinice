@@ -17,7 +17,10 @@
  ******************************************************************************/
 package sernet.hui.common.connect;
 
-public class HuiUrl {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class HuiUrl implements Serializable {
 	
 	public HuiUrl(String name, String url) {
 		super();
