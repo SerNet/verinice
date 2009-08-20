@@ -14,42 +14,83 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - use custom SQL query
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
+import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.connect.IBaseDao;
+
+@SuppressWarnings("serial")
 public class UmsetzungSummary extends MassnahmenSummary {
 
+	private static final HibernateCallback hcb = new UmsetzungenSummaryCallback();
 
 	public void execute() {
 		super.execute();
 		setSummary(getUmsetzungenSummary());
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getUmsetzungenSummary() {
 		Map<String, Integer> result = new HashMap<String, Integer>();
-		LoadCnAElementByType<MassnahmenUmsetzung> command = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
-		try {
-			command = getCommandService().executeCommand(command);
-			for (MassnahmenUmsetzung ums : command.getElements()) {
-				if (result.get(ums.getUmsetzung()) == null)
-					result.put(ums.getUmsetzung(), 0);
-				Integer count = result.get(ums.getUmsetzung());
-				result.put(ums.getUmsetzung(), ++count);
-			}
-		} catch (CommandException e) {
-			throw new RuntimeCommandException(e);
+		
+		IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
+		
+		// List of Object[] array:
+		// index 0: property value
+		// index 1: count of occurence of the above value in the db
+		List<Object[]> list = (List<Object[]>) dao.findByCallback(hcb);
+
+		// Puts SQL result in a object structure the user of this class expects.  
+		for (Object[] element : list)
+		{
+			result.put(
+					(String) element[0],
+					(Integer) element[1]);
 		}
 		
 		return result;
 	}
 	
-	
+
+	private static class UmsetzungenSummaryCallback implements HibernateCallback, Serializable
+	{
+
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+
+			/**
+			 * Queries all properties whose name is MassnahmenUmsetzung.P_UMSETZUNG
+			 * and groups the results by the value and determines the amount of
+			 * entries per group.
+			 * 
+			 * Et voila, this is our statistic.
+			 */
+			Query query = session.createSQLQuery(
+					"select propertyvalue, count(propertyvalue) as amount "
+					+ "from properties "
+					+ "where propertytype = :type "
+					+ "group by propertyvalue ")
+					.addScalar("propertyvalue", Hibernate.STRING)
+					.addScalar("amount", Hibernate.INTEGER)
+					.setString("type", MassnahmenUmsetzung.P_UMSETZUNG);
+					
+			return query.list();
+		}
+		
+	}
 }
