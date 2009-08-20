@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,7 @@ import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindHuiUrls;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindURLs;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -115,20 +117,15 @@ public class EntityResolverFactory {
 		// get urls out of these fields:
 		urlresolver = new IUrlResolver() {
 			public List<HuiUrl> resolve() {
-				List<HuiUrl> result = new ArrayList<HuiUrl>();
+				List<HuiUrl> result = Collections.emptyList();
 				
 				try {
-					FindURLs command = new FindURLs(allIDs, false);
+					FindHuiUrls command = new FindHuiUrls(allIDs);
 					
-						command = ServiceFactory.lookupCommandService().executeCommand(command);
+					command = ServiceFactory.lookupCommandService().executeCommand(command);
+					
+					result = command.getList();
 						
-						DocumentLinkRoot root = command.getUrls();
-						
-						DocumentLink[] links = root.getChildren();
-						for (int i = 0; i < links.length; i++) {
-							HuiUrl url = new HuiUrl(links[i].getName(), links[i].getHref());
-							result.add(url);
-						}
 				} catch (Exception e) {
 					ExceptionUtil.log(e, "Fehler beim Datenzugriff."); //$NON-NLS-1$
 				}
@@ -137,7 +134,6 @@ public class EntityResolverFactory {
 			}
 		};
 	}
-
 
 	private static void createPersonResolver() {
 		if (personResolver == null) {

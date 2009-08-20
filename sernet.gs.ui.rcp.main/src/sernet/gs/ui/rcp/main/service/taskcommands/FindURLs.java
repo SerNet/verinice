@@ -14,7 +14,7 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
- *     Robert Schuster <r.schuster@tarent.de> - use custom SQL for query
+ *     Robert Schuster <r.schuster@tarent.de> - use custom SQL/HQL for query
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
@@ -31,27 +31,18 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLink;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.ICommandService;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityId;
 import sernet.hui.swt.widgets.URL.URLUtil;
 
 /**
  * Retrieves the properties which are URLs as a {@link DocumentLinkRoot}
  * structure.
- * 
- * <p>The command works much faster when it is not neccessary to retrieve
- * the {@link CnATreeElement} instances which use a particular link. This
- * behavior is of interest when one only needs a list of used links and
- * is not interested in who uses them.</p>
  */
 public class FindURLs extends GenericCommand {
 
@@ -59,130 +50,80 @@ public class FindURLs extends GenericCommand {
 
 	private static final Logger log = Logger.getLogger(FindURLs.class);
 
-	private HibernateCallback hcb = new FindURLsCallback();
-
-	private HibernateCallback hcb2 = new FindURLsCallbackWithCnATreeElement();
-
-	private Set<String> allIDs;
 	private DocumentLinkRoot root = new DocumentLinkRoot();
 
-	private boolean prepareElementRefs;
+	private HibernateCallback hcb;
 
-	public FindURLs(Set<String> allIDs, boolean prepareElementRefs) {
-		this.allIDs = allIDs;
-		this.prepareElementRefs = prepareElementRefs;
+	public FindURLs(Set<String> allIDs) {
+		hcb = new FindURLsCallbackWithCnATreeElement(allIDs);
 	}
 
 	@SuppressWarnings("unchecked")
 	public void execute() {
 		IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 		
-		if (prepareElementRefs)
+		/* Requests the links and resolves the CnATreeElement instances which use
+		 * them. (This is needed for the {@link DocumentView}).
+		 * 
+		 * The result is a list of Object arrays where: The URL is at index 0 and
+		 * the dbid of an CnATreeElement is at index 1.
+		 */
+		List<Object[]> resultList = (List<Object[]>) dao.findByCallback(hcb);
+		
+		// Creates a list of Integers from the second argument. This is needed in the
+		// FindCnATreeElementsCallback.
+		List<Integer> treeElementIds = new ArrayList<Integer>();
+		for (Object[] result : resultList)
 		{
-			/* Requests the links and resolves the CnATreeElement instances which use
-			 * them. (This is needed for the {@link DocumentView}).
-			 */
-			List<Object[]> resultList = (List<Object[]>) dao.findByCallback(hcb2);
-			
-			ICommandService cs = getCommandService();
-			
-			for (Object[] result : resultList)
-			{
-				String rawURL = (String) result[0];
-				Integer id = (Integer) result[1];
-				
-				String name = URLUtil.getName(rawURL);
-				String url = URLUtil.getHref(rawURL);
-				
-				DocumentLink link = root.getDocumentLink(name, url);
-				if (link == null) {
-					link = new DocumentLink(name, url);
-					root.addChild(link);
-				}
-
-				LoadCnAElementByEntityId command = new LoadCnAElementByEntityId(id);
-				try {
-					command = cs.executeCommand(command);
-				} catch (CommandException e) {
-					ExceptionUtil.log(e, "Fehler beim Laden der URLs.");
-				}
-				
-				CnATreeElement element = (CnATreeElement) command.getElements().get(0);
-				
-				DocumentReference reference = new DocumentReference(element);
-				element.getTitel();
-	
-				link.addChild(reference);
-			}
+			treeElementIds.add((Integer) result[1]);
 		}
-		else
+		
+		// Retrieves all the CnATreeElement instances which have a document link
+		// according to the query contained in FindURLsCallbackWithCnATreeElement.
+		List<CnATreeElement> treeElements = (List<CnATreeElement>)
+			dao.findByCallback(new FindCnATreeElementsCallback(treeElementIds));
+		
+		// Fills the DocumentRoot structure by iterating the URLs and preparing the
+		// individual DocumentReference instances.
+		final int size = resultList.size();
+		for (int i = 0; i < size; i++)
 		{
-			/* Requests only the links and skip resolving the CnATreeElement instances
-			 * which use them. (This is needed for the combo box in the editor for the
-			 * links.
-			 */
-			List<String> rawURLs = (List<String>) dao.findByCallback(hcb);
-
-			for (String rawURL : rawURLs)
-			{
-				String name = URLUtil.getName(rawURL);
-				String url = URLUtil.getHref(rawURL);
-				
-				DocumentLink link = root.getDocumentLink(name, url);
-				if (link == null) {
-					link = new DocumentLink(name, url);
-					root.addChild(link);
-				}
+			String rawURL = (String) resultList.get(i)[0];
+			
+			String name = URLUtil.getName(rawURL);
+			String url = URLUtil.getHref(rawURL);
+			
+			DocumentLink link = root.getDocumentLink(name, url);
+			if (link == null) {
+				link = new DocumentLink(name, url);
+				root.addChild(link);
 			}
 			
-		}
-	}
+			CnATreeElement element = treeElements.get(i);
+			
+			DocumentReference reference = new DocumentReference(element);
+			element.getTitel();
 
-	public Set<String> getAllIDs() {
-		return allIDs;
+			link.addChild(reference);
+		}
 	}
 
 	public DocumentLinkRoot getUrls() {
 		return root;
 	}
 
-	private class FindURLsCallback implements HibernateCallback, Serializable {
-		private static final long serialVersionUID = 4738281794545102652L;
-
-		@SuppressWarnings("unchecked")
-		public Object doInHibernate(Session session) throws HibernateException,
-				SQLException {
-			List<String> list = new ArrayList<String>();
-
-			/**
-			 * Retrieves only the property elements which are URLs.
-			 */
-			for (String type : allIDs) {
-				List<String> result = (List<String>) session.createSQLQuery(
-						"select distinct propertyValue "
-							+ "from properties "
-							+ "where propertytype = :type "
-							+ "and propertyvalue != ''")
-						.addScalar("propertyvalue", Hibernate.STRING)
-						.setString("type", type).list();
-
-				list.addAll(result);
-			}
-
-			return list;
-		}
-
-	}
-
+	@SuppressWarnings("serial")
 	private class FindURLsCallbackWithCnATreeElement implements
 			HibernateCallback, Serializable {
-		private static final long serialVersionUID = 4738281794545102652L;
+		
+		private Set<String> types;
+		
+		FindURLsCallbackWithCnATreeElement(Set<String> types) {
+			this.types = types;
+		}
 
-		@SuppressWarnings("unchecked")
 		public Object doInHibernate(Session session) throws HibernateException,
 				SQLException {
-			List<Object[]> list = new ArrayList<Object[]>();
-
 			/**
 			 * Retrieves the property elements which are URLs along with
 			 * the CnATreeElement id that uses it.
@@ -195,13 +136,43 @@ public class FindURLs extends GenericCommand {
 							+ "and p.parent = e.dbid ")
 					.addScalar("propertyvalue", Hibernate.STRING)
 					.addScalar("dbid", Hibernate.INTEGER)
-					.setParameterList("types", allIDs, Hibernate.STRING);
+					.setParameterList("types", types, Hibernate.STRING);
 							
-			 log.debug("created statement: " + query.getQueryString());
+			 if (log.isDebugEnabled())
+				 log.debug("created statement: " + query.getQueryString());
 
-			return (List<Object[]>) query.list();
+			return query.list();
 		}
 
+	}
+	
+	@SuppressWarnings("serial")
+	private class FindCnATreeElementsCallback implements HibernateCallback, Serializable
+	{
+		private List<Integer> treeElementIds;
+		
+		public FindCnATreeElementsCallback(List<Integer> treeElementIds) {
+			this.treeElementIds = treeElementIds;
+		}
+
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+			
+			/*
+			 * Retrieves all the CnATreeElements whose ids are mentioned in the
+			 * treeElementIds list.
+			 */
+			Query query = session.createQuery(
+					"from CnATreeElement elmt "
+					+ "where elmt.entity.dbId in (:treeElementIds)")
+					.setParameterList("treeElementIds", treeElementIds);
+
+			if (log.isDebugEnabled())
+				log.debug("created statement: " + query.getQueryString());
+			
+			return query.list();
+		}
+		
 	}
 
 }
