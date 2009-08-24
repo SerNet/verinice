@@ -51,6 +51,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.statscommands.CountMassnahmen;
+import sernet.gs.ui.rcp.main.service.statscommands.RealisierungSummary;
 
 @SuppressWarnings("serial")
 public class RealisierungLineChart implements IChartGenerator, Serializable {
@@ -111,41 +112,11 @@ public class RealisierungLineChart implements IChartGenerator, Serializable {
 		TimeSeries ts1 =new TimeSeries("umgesetzt", Day.class);
 		TimeSeries ts2 =new TimeSeries("alle", Day.class);
 		
-		LoadCnAElementByType.HydrateCallback<MassnahmenUmsetzung> cb =
-			new LoadCnAElementByType.HydrateCallback<MassnahmenUmsetzung>()
-			{
-				public void hydrate(List<MassnahmenUmsetzung> elements)
-				{
-					for (MassnahmenUmsetzung mu : elements)
-					{
-						mu.getUmsetzungBis();
-						mu.isCompleted();
-					}
-				}
-			};
-		
-		LoadCnAElementByType<MassnahmenUmsetzung> command = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class, cb);
+		RealisierungSummary command = new RealisierungSummary();
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
-		List<MassnahmenUmsetzung> massnahmen = command.getElements();
 		
-		DateValues dateTotal1 = new DateValues();
-		DateValues dateTotal2 = new DateValues();
-		
-		for (MassnahmenUmsetzung massnahme : massnahmen) {
-			
-			Date date = massnahme.getUmsetzungBis();
-			//fixme umgesetzte sollten datum der umsetzung gesetzt haben! fix in bulk edit
-			if (date == null)
-				date = Calendar.getInstance().getTime();
-
-			if (massnahme.isCompleted()) {
-				dateTotal1.add(date);
-				dateTotal2.add(date);
-			}
-			else  {
-				dateTotal2.add(date);
-			}
-		}
+		DateValues dateTotal1 = command.getTotal1();
+		DateValues dateTotal2 = command.getTotal2();
 		
 		Map<Day, Integer> totals1 = dateTotal1.getDateTotals();
 		Set<Entry<Day, Integer>> entrySet1 = totals1.entrySet();

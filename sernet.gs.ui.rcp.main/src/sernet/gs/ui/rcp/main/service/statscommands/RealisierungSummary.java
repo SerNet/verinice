@@ -13,13 +13,14 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
- *     Robert Schuster <r.schuster@tarent.de> - use custom SQL statement
+ *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,34 +34,62 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.views.chart.DateValues;
+import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 @SuppressWarnings("serial")
-public class IncompleteZyklusSummary extends MassnahmenSummary {
-
-	private static final Logger log = Logger.getLogger(IncompleteZyklusSummary.class);
+public class RealisierungSummary extends GenericCommand {
 	
-	private HibernateCallback hcb = new Callback();
+	private static Logger log = Logger.getLogger(RealisierungSummary.class);
 
+	private DateValues total1;
+
+	private DateValues total2;
+	
+	private static HibernateCallback hcb = new Callback();
+
+	@SuppressWarnings("unchecked")
 	public void execute() {
-		setSummary(getNotCompletedZyklusSummary());
-	}
-	
-	public Map<String, Integer> getNotCompletedZyklusSummary() {
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		
-		List<Object[]> list = (List<Object[]>) getDaoFactory().getDAO(BSIModel.class).findByCallback(hcb);
-		
-		for (Object[] l : list) {
-			String lc = (String) l[0];
-			Integer count = (Integer) l[1];
+		IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 
-			if (lc == null || lc.length() <5)
-				lc = "sonstige";
-			
-			result.put(lc, count);
-		}
+		// List of Object[] array:
+		// index 0: property value (date)
+		// index 1: isCompleted flag
+		List<Object[]> list = (List<Object[]>) dao.findByCallback(hcb);
 		
-		return result;
+		total1 = new DateValues();
+		total2 = new DateValues();
+		
+		for (Object[] r : list) {
+			String rawDate = (String) r[0];
+			boolean isCompleted = ((Boolean) r[1]);
+			
+			//fixme umgesetzte sollten datum der umsetzung gesetzt haben! fix in bulk edit
+			Date date = (rawDate == null || rawDate.length() == 0)
+				? Calendar.getInstance().getTime() : new Date(Long.parseLong(rawDate)); 
+
+			if (isCompleted) {
+				total1.add(date);
+				total2.add(date);
+			}
+			else  {
+				total2.add(date);
+			}
+		}
+
+	}
+
+	public DateValues getTotal1()
+	{
+		return total1;
+	}
+	
+	public DateValues getTotal2()
+	{
+		return total2;
 	}
 	
 	private static class Callback implements HibernateCallback, Serializable
@@ -69,20 +98,15 @@ public class IncompleteZyklusSummary extends MassnahmenSummary {
 		public Object doInHibernate(Session session) throws HibernateException,
 				SQLException {
 			
-			// Returns all the lifecycle values and the amount of entries for a specific
-			// seal level for all MassnahmenUmsetzung instances which have not been
-			// fullfilled (see {@link MassnahmenUmsetzung#isCompleted).			
 			Query query = session.createSQLQuery(
-					"select p1.propertyvalue as pv, count(p1.propertyvalue) as amount "
+					"select p1.propertyvalue as pv, (p2.propertyvalue in (:p2values)) as iscompleted "
 					+ "from properties p1, properties p2 "
 					+ "where p1.parent = p2.parent "
 					+ "and p1.propertytype = :p1type "
-					+ "and p2.propertytype = :p2type "
-					+ "and p2.propertyvalue not in (:p2values) "
-					+ "group by p1.propertyvalue ")
+					+ "and p2.propertytype = :p2type ")
 					.addScalar("pv", Hibernate.STRING)
-					.addScalar("amount", Hibernate.INTEGER)
-					.setString("p1type", MassnahmenUmsetzung.P_LEBENSZYKLUS)
+					.addScalar("iscompleted", Hibernate.BOOLEAN)
+					.setString("p1type", MassnahmenUmsetzung.P_UMSETZUNGBIS)
 					.setString("p2type", MassnahmenUmsetzung.P_UMSETZUNG)
 					.setParameterList("p2values", new Object[] { MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH }, Hibernate.STRING);
 			
@@ -93,4 +117,5 @@ public class IncompleteZyklusSummary extends MassnahmenSummary {
 		}
 		
 	}
+
 }

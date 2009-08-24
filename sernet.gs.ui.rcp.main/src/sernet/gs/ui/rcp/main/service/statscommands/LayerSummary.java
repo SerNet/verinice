@@ -17,21 +17,31 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
+import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 
 @SuppressWarnings("serial")
 public class LayerSummary extends CompletedLayerSummary {
 
+	private static final Logger log = Logger.getLogger(LayerSummary.class);
+	
+	private HibernateCallback hcb = new Callback();
 
 	public void execute() {
 		try {
@@ -41,47 +51,66 @@ public class LayerSummary extends CompletedLayerSummary {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getSchichtenSummary() throws CommandException {
 		Map<String, Integer> result = new HashMap<String, Integer>();
+
+		List<Object[]> list = (List<Object[]>) getDaoFactory().getDAO(BSIModel.class).findByCallback(hcb);
 		
-		LoadCnAElementByType<BausteinUmsetzung> command =
-			new LoadCnAElementByType<BausteinUmsetzung>(BausteinUmsetzung.class,
-					new LoadCnAElementByType.HydrateCallback<BausteinUmsetzung>()
-			{
-				public void hydrate(List<BausteinUmsetzung> elements)
-				{
-					for(BausteinUmsetzung b : elements)
-					{
-						b.getKapitel();
-					}
-				}
-			});
-		
-		try {
-			command = getCommandService().executeCommand(command);
-		} catch (CommandException e) {
-			throw new RuntimeCommandException(e);
-		}
-		
-		for (BausteinUmsetzung baustein: command.getElements()) {
-			Baustein baustein2 = getBaustein(baustein.getKapitel());
-			if (baustein2 == null) {
+		for (Object[] l : list) {
+			String chapter = (String) l[0];
+			Integer count = (Integer) l[1];
+			
+			Baustein baustein = getBaustein(chapter);
+			if (baustein == null) {
 				Logger.getLogger(this.getClass()).debug("Kein Baustein gefunden für ID" + baustein.getId());
 				continue;
 			}
 			
-			String schicht = Integer.toString(baustein2.getSchicht());
+			String schicht = Integer.toString(baustein.getSchicht());
 
-			if (result.get(schicht) == null)
-				result.put(schicht, baustein.getMassnahmenUmsetzungen().size());
+			Integer saved = result.get(schicht);
+			if (saved == null)
+				result.put(schicht, count);
 			else {
-				Integer count = result.get(schicht);
-				result.put(schicht, count + baustein.getMassnahmenUmsetzungen().size());
+				result.put(schicht, saved + count);
 			}
 		}
 		return result;
 	}
 
-	
+	private static class Callback implements HibernateCallback, Serializable
+	{
+
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+			
+			/*
+			 * Selects the chapter property (from a BausteinUmsetzung) and counts
+			 * how many MassnahmenUmsetzung instances belong to the BausteinUmsetzung.
+			 * 
+			 * The selection goes from the property to its CnATreeElement (BausteinUmsetzung).
+			 * From there all CnATreeElements which have that parent are selected.
+			 */
+			Query query = session.createSQLQuery(
+					"select p.propertyvalue as pv, count(p.propertyvalue) as amount "
+					+ "from properties p, entity bu, cnatreeelement buc, cnatreeelement muc "
+					+ "where p.propertytype = :type "
+					+ "and p.parent = bu.dbid "
+					+ "and bu.dbid = buc.entity_id "
+					+ "and buc.dbid = muc.parent "
+					+ "group by p.propertyvalue")
+					.addScalar("pv", Hibernate.STRING)
+					.addScalar("amount", Hibernate.INTEGER)
+					.setString("type", BausteinUmsetzung.P_NR);
+			
+			if (log.isDebugEnabled())
+				log.debug("generated query:" + query.getQueryString());
+					
+			return query.list();
+		}
+		
+	}
+
 	
 }

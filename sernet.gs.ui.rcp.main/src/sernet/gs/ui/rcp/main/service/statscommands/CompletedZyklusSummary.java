@@ -14,62 +14,85 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - use custom SQL statement
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
+import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
-@SuppressWarnings("unchecked")
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+
+@SuppressWarnings("serial")
 public class CompletedZyklusSummary extends MassnahmenSummary {
 
+	private static final Logger log = Logger.getLogger(CompletedZyklusSummary.class);
+	
+	private HibernateCallback hcb = new Callback();
 
 	public void execute() {
 		setSummary(getCompletedZyklusSummary());
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getCompletedZyklusSummary() {
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		
-		LoadCnAElementByType<MassnahmenUmsetzung> command =
-			new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class,
-					new LoadCnAElementByType.HydrateCallback<MassnahmenUmsetzung>()
-			{
-				public void hydrate(List<MassnahmenUmsetzung> elements)
-				{
-					for (MassnahmenUmsetzung mu : elements)
-					{
-						mu.isCompleted();
-						mu.getStufe();
-					}
-				}
-			});
+		List<Object[]> list = (List<Object[]>) getDaoFactory().getDAO(BSIModel.class).findByCallback(hcb);
 		
-		try {
-			command = getCommandService().executeCommand(command);
-		} catch (CommandException e) {
-			throw new RuntimeCommandException(e);
+		for (Object[] l : list) {
+			String lc = (String) l[0];
+			Integer count = (Integer) l[1];
+
+			if (lc == null || lc.length() <5)
+				lc = "sonstige";
+			
+			result.put(lc, count);
 		}
 		
-		for (MassnahmenUmsetzung ums : command.getElements()) {
-			if (!ums.isCompleted())
-				continue;
-			String lz = ums.getLebenszyklus();
-			if (lz == null || lz.length() <5)
-				lz = "sonstige";
-			if (result.get(lz) == null)
-				result.put(lz, 0);
-			Integer count = result.get(lz);
-			result.put(lz, ++count);
-		}
 		return result;
 	}
 	
-	
+	private static class Callback implements HibernateCallback, Serializable
+	{
+
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+			
+			// Returns all the lifecycle values and the amount of entries for a specific
+			// seal level for all MassnahmenUmsetzung instances which have been
+			// fullfilled (see {@link MassnahmenUmsetzung#isCompleted).			
+			Query query = session.createSQLQuery(
+					"select p1.propertyvalue as pv, count(p1.propertyvalue) as amount "
+					+ "from properties p1, properties p2 "
+					+ "where p1.parent = p2.parent "
+					+ "and p1.propertytype = :p1type "
+					+ "and p2.propertytype = :p2type "
+					+ "and p2.propertyvalue in (:p2values) "
+					+ "group by p1.propertyvalue ")
+					.addScalar("pv", Hibernate.STRING)
+					.addScalar("amount", Hibernate.INTEGER)
+					.setString("p1type", MassnahmenUmsetzung.P_LEBENSZYKLUS)
+					.setString("p2type", MassnahmenUmsetzung.P_UMSETZUNG)
+					.setParameterList("p2values", new Object[] { MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH }, Hibernate.STRING);
+			
+			if (log.isDebugEnabled())
+				log.debug("generated query:" + query.getQueryString());
+					
+			return query.list();
+		}
+		
+	}
+
 }

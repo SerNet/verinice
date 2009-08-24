@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views.chart;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -26,7 +27,8 @@ import java.util.Map;
 
 import org.jfree.data.time.Day;
 
-public class DateValues {
+@SuppressWarnings("serial")
+public class DateValues implements Serializable {
 	
 	Map<Day, Integer>  ts;
 	

@@ -14,32 +14,59 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - use custom HQL query
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
+
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+
+@SuppressWarnings("serial")
 public class CountMassnahmen extends GenericCommand {
+	
+	private static final Logger log = Logger.getLogger(CountMassnahmen.class);
 
 	private int totalCount;
+	
+	private static final HibernateCallback hcb = new Callback();
 
+	@SuppressWarnings("unchecked")
 	public void execute() {
-		LoadCnAElementByType<MassnahmenUmsetzung> command = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
-		try {
-			command = getCommandService().executeCommand(command);
-		} catch (CommandException e) {
-			throw new RuntimeCommandException(e);
-		}
-		totalCount = command.getElements().size();
+		
+		List<Long> result = (List<Long>) getDaoFactory().getDAO(BSIModel.class).findByCallback(hcb);
+		
+		totalCount = result.get(0).intValue();
 	}
 
 	public int getTotalCount() {
 		return totalCount;
 	}
-	
 
+	private static class Callback implements HibernateCallback, Serializable
+	{
+
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+			
+			Query query = session.createQuery(
+					"select count(m)"
+					+ "from MassnahmenUmsetzung m ");
+			
+			if (log.isDebugEnabled())
+				log.debug("hql query: " + query.getQueryString());
+			
+			return query.list();
+		}
+		
+	}
 }

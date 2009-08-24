@@ -17,77 +17,119 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
+import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 
 @SuppressWarnings("serial")
 public class CompletedLayerSummary extends MassnahmenSummary {
 
-
+	private static final Logger log = Logger.getLogger(CompletedLayerSummary.class);
+	
+	private HibernateCallback hcb = new Callback();
+	
 	private List<Baustein> bausteine;
 
 	public void execute() {
 		try {
-			setSummary(getCompletedSchichtenSummary());
+			setSummary(getSchichtenSummary());
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
 		}
 	}
 	
-	public Map<String, Integer> getCompletedSchichtenSummary() throws CommandException {
+	@SuppressWarnings("unchecked")
+	public Map<String, Integer> getSchichtenSummary() throws CommandException {
 		Map<String, Integer> result = new HashMap<String, Integer>();
+
+		List<Object[]> list = (List<Object[]>) getDaoFactory().getDAO(BSIModel.class).findByCallback(hcb);
 		
-		LoadCnAElementByType<BausteinUmsetzung> command =
-			new LoadCnAElementByType<BausteinUmsetzung>(BausteinUmsetzung.class,
-					new LoadCnAElementByType.HydrateCallback<BausteinUmsetzung>()
-			{
-				public void hydrate(List<BausteinUmsetzung> elements)
-				{
-					for(BausteinUmsetzung b : elements)
-					{
-						b.getKapitel();
-					}
-				}
-			});
-		
-		try {
-			command = getCommandService().executeCommand(command);
-		} catch (CommandException e) {
-			throw new RuntimeCommandException(e);
-		}
-		
-		for (BausteinUmsetzung baustein: command.getElements()) {
-			Baustein baustein2 = getBaustein(baustein.getKapitel());
-			if (baustein2 == null) {
+		for (Object[] l : list) {
+			String chapter = (String) l[0];
+			Integer count = (Integer) l[1];
+			
+			Baustein baustein = getBaustein(chapter);
+			if (baustein == null) {
 				Logger.getLogger(this.getClass()).debug("Kein Baustein gefunden für ID" + baustein.getId());
 				continue;
 			}
-			String schicht = Integer.toString(baustein2.getSchicht());
-			int umgesetztSum = 0;
-			for (MassnahmenUmsetzung ums: baustein.getMassnahmenUmsetzungen()) {
-				if (ums.isCompleted())
-					umgesetztSum++;
-			}
 			
-			if (result.get(schicht) == null)
-				result.put(schicht, umgesetztSum);
+			String schicht = Integer.toString(baustein.getSchicht());
+
+			Integer saved = result.get(schicht);
+			if (saved == null)
+				result.put(schicht, count);
 			else {
-				Integer count = result.get(schicht);
-				result.put(schicht, count + umgesetztSum);
+				result.put(schicht, saved + count);
 			}
 		}
 		return result;
+	}
+
+	private static class Callback implements HibernateCallback, Serializable
+	{
+
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+			
+			/*
+			 * Selects the chapter property (from a BausteinUmsetzung) and counts
+			 * how many MassnahmenUmsetzung instances which are considered completed
+			 * belong to the BausteinUmsetzung.
+			 * 
+			 * The selection goes from the property to its CnATreeElement (BausteinUmsetzung).
+			 * From there all CnATreeElements which have that parent are selected.
+			 * 
+			 * Since we need to find out whether the MassnahmenUmsetzung instance
+			 * is considered completed, we need to join over 'entity' and 'properties'
+			 * and restrict the results to those where the propertytype is
+			 * MassnahmenUmsetzung.P_UMSETZUNG
+			 * and the propertyvalue is in MassnahmenUmsetzung.P_UMSETZUNG_JA or
+			 * MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH.
+			 * 
+			 * @see MassnahmenUmsetzung#isCompleted()
+			 */
+			Query query = session.createSQLQuery(
+					"select bup.propertyvalue as pv, count(bup.propertyvalue) as amount "
+					+ "from properties bup, entity bu, cnatreeelement buc, cnatreeelement muc, entity mu, properties mup "
+					+ "where bup.propertytype = :buptype "
+					+ "and bup.parent = bu.dbid "
+					+ "and bu.dbid = buc.entity_id "
+					+ "and buc.dbid = muc.parent "
+					+ "and muc.entity_id = mu.dbid "
+					+ "and mu.dbid = mup.parent "
+					+ "and mup.propertytype = :muptype "
+					+ "and mup.propertyvalue in (:mupvalues) "
+					+ "group by bup.propertyvalue")
+					.addScalar("pv", Hibernate.STRING)
+					.addScalar("amount", Hibernate.INTEGER)
+					.setString("buptype", BausteinUmsetzung.P_NR)
+					.setString("muptype", MassnahmenUmsetzung.P_UMSETZUNG)
+					.setParameterList("mupvalues", new Object[] { MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH }, Hibernate.STRING);
+			
+			if (log.isDebugEnabled())
+				log.debug("generated query:" + query.getQueryString());
+					
+			return query.list();
+		}
+		
 	}
 
 	protected Baustein getBaustein(String kapitel) throws CommandException {
@@ -103,7 +145,5 @@ public class CompletedLayerSummary extends MassnahmenSummary {
 		return null;
 		
 	}
-
-	
 	
 }

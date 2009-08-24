@@ -31,33 +31,26 @@ public class LoadCnAElementByType<T extends CnATreeElement> extends GenericComma
 	private List<T> elements;
 	private Class<T> clazz;
 	
-	private HydrateCallback<T> hydrateCallback;
+	private boolean hydrateElements;
 	
 	public LoadCnAElementByType(Class<T> type) {
-		this(type, null);
+		this(type, true);
 	}
 	
-	public LoadCnAElementByType(Class<T> type, HydrateCallback<T> hc) {
+	public LoadCnAElementByType(Class<T> type, boolean hydrateElements) {
 		this.clazz = type;
-		this.hydrateCallback = hc;
+		this.hydrateElements = hydrateElements;
 	}
 	
 	public void execute() {
 		IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(clazz);
 		elements = dao.findAll();
-		if (hydrateCallback == null)
+		if (hydrateElements)
 			HydratorUtil.hydrateElements(dao, elements, false);
-		else
-			hydrateCallback.hydrate(elements);
 	}
 
 	public List<T> getElements() {
 		return elements;
 	}
 	
-	public interface HydrateCallback<T> extends Serializable
-	{
-		void hydrate(List<T> elements);
-	}
-
 }

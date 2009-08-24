@@ -19,15 +19,13 @@ package sernet.gs.ui.rcp.main.service.grundschutzparser;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 
+@SuppressWarnings("serial")
 public class LoadBausteine extends GenericCommand {
 
 	private List<Baustein> bausteine;

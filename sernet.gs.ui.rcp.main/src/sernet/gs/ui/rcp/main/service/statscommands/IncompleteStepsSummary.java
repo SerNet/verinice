@@ -14,6 +14,7 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster> - use custom SQL query
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
@@ -73,6 +74,9 @@ public class IncompleteStepsSummary extends MassnahmenSummary {
 		public Object doInHibernate(Session session) throws HibernateException,
 				SQLException {
 
+			// Returns all the seal level and the amount of entries for a specific
+			// seal level for all MassnahmenUmsetzung instances which have not been
+			// fullfilled (see {@link MassnahmenUmsetzung#isCompleted).			
 			Query query = session.createSQLQuery(
 					"select p1.propertyvalue as pv, count(p1.propertyvalue) as amount "
 					+ "from properties p1, properties p2 "
