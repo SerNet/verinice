@@ -40,7 +40,7 @@ public class Activator extends Plugin {
 
 	private static final String OSGI_EXTENDER_SYMBOLIC_NAME = "org.springframework.osgi.extender";
 
-	private static final String PAX_WEB_SYMBOLIC_NAME = "org.ops4j.pax.web.pax-web-bundle";
+	private static final String PAX_WEB_SYMBOLIC_NAME = "org.ops4j.pax.web.pax-web-service";
 	
 	private WebContainer webContainer;
 	
