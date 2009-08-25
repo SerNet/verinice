@@ -97,6 +97,7 @@ public class ShowKonsolidatorAction extends Action implements
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException,
 								InterruptedException {
+							Activator.inheritVeriniceContextState();
 							monitor.setTaskName("Konsolidiere Bausteine...");
 							monitor.beginTask("Konsolidator", selectedElements
 									.size() + 1);
