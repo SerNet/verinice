@@ -16,6 +16,7 @@ Bundle-Vendor: SerNet
 Import-Package: com.mchange.v2.resourcepool,
  javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0",
+ net.sf.cglib.proxy,
  org.aopalliance.aop;version="1.0.0",
  org.apache.log4j,
  org.eclipse.core.runtime;version="3.4.0",
