@@ -14,51 +14,27 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - use custom SQL
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.migrationcommands;
 
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
-import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.Client;
-import sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
-import sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
-import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.Raum;
-import sernet.gs.ui.rcp.main.bsi.model.Server;
-import sernet.gs.ui.rcp.main.bsi.model.ServerKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
-import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
-import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
-import sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB;
-import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
-import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
-import sernet.gs.ui.rcp.main.ds.model.Zweckbestimmung;
-import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.PropertyList;
+import sernet.gs.ui.rcp.main.connect.IBaseDao;
 
 /**
  * Adds UUID to all required objects.
@@ -68,98 +44,143 @@ import sernet.hui.common.connect.PropertyList;
  * $LastChangedBy$
  *
  */
+@SuppressWarnings("serial")
 public class MigrateDbTo0_94 extends DbMigration {
+	
+	private static final Logger log = Logger.getLogger(MigrateDbTo0_94.class);
 
-	private Class[] cnatreeSubclasses = new Class[] {
-			Anwendung.class,
-			AnwendungenKategorie.class,
-			BausteinUmsetzung.class,
-			BSIModel.class,
-			Client.class,
-			ClientsKategorie.class,
-			Datenverarbeitung.class,
-			FinishedRiskAnalysis.class,
-			Gebaeude.class,
-			GebaeudeKategorie.class,
-			GefaehrdungsUmsetzung.class,
-			ITVerbund.class,
-			MassnahmenUmsetzung.class,
-			NetzKomponente.class,
-			NKKategorie.class,
-			Person.class,
-			Personengruppen.class,
-			PersonenKategorie.class,
-			RaeumeKategorie.class,
-			Raum.class,
-			Server.class,
-			ServerKategorie.class,
-			SonstigeITKategorie.class,
-			SonstIT.class,
-			StellungnahmeDSB.class,
-			TelefonKomponente.class,
-			TKKategorie.class,
-			VerantwortlicheStelle.class,
-			Verarbeitungsangaben.class,
-			Zweckbestimmung.class,
-			RisikoMassnahme.class,
-			OwnGefaehrdung.class,
-			FinishedRiskAnalysisLists.class
-
+	private String[] tables = {
+			"cnatreeelement",
+			"finishedriskanalysislists",
+			"entity",
+			"propertylist",
+			"risikomassnahme",
+			"gefaehrdung"
 	};
-
+	
 	@Override
 	public double getVersion() {
 		return 0.94D;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void execute() {
-		for (Class clazz : cnatreeSubclasses) {
-			setUUID(clazz);
-		}
+		IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 		
-		
-		List<PropertyList> list = getDaoFactory().getDAO(PropertyList.class).findAll();
-		for (PropertyList propertyList : list) {
-			propertyList.setUuid(UUID.randomUUID().toString());
-		}
-		
-		List<Entity> list2 = getDaoFactory().getDAO(Entity.class).findAll();
-		Logger.getLogger(this.getClass()).debug("Generating UUIDs all elements of type " + Entity.class.getSimpleName());
-		for (Entity element : list2) {
-			element.setUuid(UUID.randomUUID().toString());
-		}
-
-		List<FinishedRiskAnalysisLists> list3 = getDaoFactory().getDAO(FinishedRiskAnalysisLists.class).findAll();
-		Logger.getLogger(this.getClass()).debug("Generating UUIDs all elements of type " + FinishedRiskAnalysisLists.class.getSimpleName());
-		for (FinishedRiskAnalysisLists element : list3) {
-			element.setUuid(UUID.randomUUID().toString());
-		}
-		
-		List<Gefaehrdung> list4 = getDaoFactory().getDAO(Gefaehrdung.class).findAll();
-		Logger.getLogger(this.getClass()).debug("Generating UUIDs all elements of type " + Gefaehrdung.class.getSimpleName());
-		for (Gefaehrdung element : list4) {
-			element.setUuid(UUID.randomUUID().toString());
-		}
-
-		List<OwnGefaehrdung> list5 = getDaoFactory().getDAO(OwnGefaehrdung.class).findAll();
-		Logger.getLogger(this.getClass()).debug("Generating UUIDs all elements of type " + OwnGefaehrdung.class.getSimpleName());
-		for (OwnGefaehrdung element : list5) {
-			element.setUuid(UUID.randomUUID().toString());
+		// Retrieves all rows (ids only) of the tables mentioned in the array and sets the
+		// uuid column in each row.
+		for (String table : tables)
+		{
+			log.info("migrating table: " + table);
+			
+			try
+			{
+			List<Integer> idIterator = (List<Integer>) dao.findByCallback(new FindIdsCallback(table));
+			dao.executeCallback(new CreateUuidCallback(table, idIterator));
+			} catch (HibernateException he)
+			{
+				ExceptionUtil.log(he.getCause(), "Error during database migration.");
+			}
 		}
 		
 		super.updateVersion();
 	}
 
-	private <T extends CnATreeElement> void setUUID(Class<T> clazz) {
-		Logger.getLogger(this.getClass()).debug("Generating UUIDs all elements of type " + clazz.getSimpleName());
-		List<T> list = getDaoFactory().getDAO(clazz).findAll();
-		for (T element : list) {
-			element.setUuid(UUID.randomUUID().toString());
-		}		
+	private static class FindIdsCallback implements HibernateCallback, Serializable
+	{
+		private String table;
+		
+		
+		FindIdsCallback(String table)
+		{
+			this.table = table;
+		}
+
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+			
+				Query query = session.createSQLQuery(
+						"select t.dbid as dbid from " + table +  " t")
+						.addScalar("dbid");
+				
+				log.debug("generated query: " + query.getQueryString());
+
+			return query.list();
+		}
+		
 	}
 
+	private static class CreateUuidCallback implements HibernateCallback, Serializable
+	{
+		private String table;
+		
+		private List<Integer> idIterator;
+		
+		CreateUuidCallback(String table, List<Integer> idIterator)
+		{
+			this.table = table;
+			this.idIterator = idIterator;
+		}
 
-	
-	
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+			Connection connection = session.connection();
+			connection.setAutoCommit(false);
+			
+			int i = 0;
+			final int size = idIterator.size();
+			Iterator<Integer> iterator = idIterator.iterator();
+			while(iterator.hasNext())
+			{
+				Integer id = iterator.next();
+				String uuidString = UUID.randomUUID().toString();
+				
+				/*
+				 * We would like to use Hibernate SQL query mechanism but
+				 * this does not work due to a bug in Hibernate caused by
+				 * a memory leak.
+				 * see http://opensource.atlassian.com/projects/hibernate/browse/HHH-2470
+
+				Query query = session.createSQLQuery(
+						"update " + table + " "
+						+ "set uuid = :uuid "
+						+ "where dbid = :id ")
+						.setString("uuid", UUID.randomUUID().toString())
+						.setInteger("id", id);
+				*/
+				
+				// Create statements manually and commit every 10k rows. 
+				Statement stmt = connection.createStatement();
+				String sql = "update " + table
+							+ " set uuid = '" + uuidString + "' "
+							+ "where dbid = " + id;
+				stmt.executeUpdate(sql);
+				
+				iterator.remove();
+
+				++i;
+				if (log.isInfoEnabled() && (i % 500 == 0 || i < size - 1))
+				{
+					log.info("migrating table [" + table + "] - processed elements: " + i + "/" + size);
+				}
+				
+				if (i % 10000 == 0)
+				{
+					connection.commit();
+				}
+				
+				/* Not used because of Hibernate bug. See above.
+				
+				query.executeUpdate();
+				*/
+			}
+			
+			// Commits after creating the final rows.
+			connection.commit();
+		
+			return null;
+		}
+		
+	}
 
 }

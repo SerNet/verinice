@@ -40,7 +40,9 @@ public interface IBaseDao<T, ID extends Serializable> {
 		 public List findByQuery(String hqlQuery, Object[] params);
 		 
 		 public List findByCallback(HibernateCallback hcb);
-				
+		 
+		 public Object executeCallback(HibernateCallback hcb);
+					
 		 public int updateByQuery(String hqlQuery, Object[] values);
 		 
 		 public void refresh(T element);

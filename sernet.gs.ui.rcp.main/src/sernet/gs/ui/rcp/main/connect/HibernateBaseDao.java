@@ -68,6 +68,10 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			return getHibernateTemplate().executeFind(hcb);
 		}
 
+		public Object executeCallback(HibernateCallback hcb) {
+			return getHibernateTemplate().execute(hcb);
+		}
+
 		public int updateByQuery(String hqlQuery, Object[] values) {
 			return getHibernateTemplate().bulkUpdate(hqlQuery, values);
 		}
