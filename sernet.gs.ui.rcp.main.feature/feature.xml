@@ -695,6 +695,77 @@ Public License instead of this License.  But first, please read
       <update label="Verinice Updates und Features" url="http://updates.verinice.org/pub/verinice/Verinice-Update-Site"/>
    </url>
 
+   <requires>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="com.ibm.icu"/>
+      <import plugin="org.eclipse.osgi.services"/>
+      <import plugin="org.eclipse.core.jobs"/>
+      <import plugin="org.eclipse.equinox.common"/>
+      <import plugin="org.eclipse.equinox.registry"/>
+      <import plugin="org.apache.lucene"/>
+      <import plugin="org.eclipse.equinox.preferences"/>
+      <import plugin="org.eclipse.core.commands"/>
+      <import plugin="org.eclipse.core.contenttype"/>
+      <import plugin="org.eclipse.core.databinding.beans"/>
+      <import plugin="org.eclipse.core.databinding"/>
+      <import plugin="org.eclipse.core.expressions"/>
+      <import plugin="org.eclipse.core.filebuffers"/>
+      <import plugin="org.eclipse.core.filesystem"/>
+      <import plugin="org.eclipse.core.net"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.runtime.compatibility.auth"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.equinox.app"/>
+      <import plugin="org.eclipse.equinox.launcher"/>
+      <import plugin="org.eclipse.help.base"/>
+      <import plugin="org.eclipse.help"/>
+      <import plugin="org.eclipse.help.ui"/>
+      <import plugin="org.eclipse.jface.databinding"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.update.configurator"/>
+      <import plugin="org.eclipse.update.core"/>
+      <import plugin="org.eclipse.update.scheduler"/>
+      <import plugin="org.eclipse.update.ui"/>
+      <import plugin="org.eclipse.ui.intro"/>
+      <import plugin="org.eclipse.ui.cheatsheets"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="com.springsource.javassist"/>
+      <import plugin="com.springsource.javax.transaction"/>
+      <import plugin="org.junit4"/>
+      <import plugin="org.apache.commons.codec"/>
+      <import plugin="com.springsource.org.apache.commons.io"/>
+      <import plugin="com.springsource.org.apache.log4j"/>
+      <import plugin="org.eclipse.swt"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.browser"/>
+      <import plugin="com.springsource.org.hibernate"/>
+      <import plugin="org.springframework.beans"/>
+      <import plugin="org.springframework.core"/>
+      <import plugin="org.springframework.transaction"/>
+      <import plugin="org.springframework.jdbc"/>
+      <import plugin="org.springframework.orm"/>
+      <import plugin="org.springframework.osgi.core"/>
+      <import plugin="org.springframework.osgi.extender"/>
+      <import plugin="org.springframework.context"/>
+      <import plugin="org.springframework.security.core"/>
+      <import plugin="sernet.springclient"/>
+      <import plugin="org.eclipse.ui.net"/>
+      <import plugin="com.springsource.com.mchange.v2.c3p0"/>
+      <import plugin="org.ops4j.pax.web.pax-web-service"/>
+      <import plugin="com.springsource.net.sf.cglib"/>
+      <import plugin="com.springsource.org.aopalliance"/>
+      <import plugin="com.springsource.org.quartz"/>
+      <import plugin="org.springframework.aop"/>
+      <import plugin="org.springframework.web"/>
+      <import plugin="org.springframework.context.support"/>
+      <import plugin="com.springsource.net.sf.ehcache"/>
+   </requires>
+
    <plugin
          id="com.ibm.icu"
          download-size="0"
@@ -2103,6 +2174,46 @@ Public License instead of this License.  But first, please read
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.cglib.fragment"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.db.fragment"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.ehcache.fragment"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.log4j.fragment"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.springweb.fragment"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>
