@@ -17,15 +17,35 @@
    </license>
 
    <requires>
-      <import plugin="javax.servlet" version="2.5.0" match="greaterOrEqual"/>
+      <import plugin="com.springsource.com.mchange.v2.c3p0"/>
+      <import plugin="com.springsource.javax.transaction"/>
+      <import plugin="org.junit4"/>
+      <import plugin="com.springsource.net.sf.cglib"/>
+      <import plugin="com.springsource.net.sf.ehcache"/>
+      <import plugin="com.springsource.org.aopalliance"/>
       <import plugin="org.apache.commons.httpclient" version="3.1.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi.services" version="3.1.200" match="greaterOrEqual"/>
       <import plugin="sernet.gs.ui.rcp.main" version="0.8.0" match="greaterOrEqual"/>
-      <import plugin="sernet.hui.common" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.springsource.org.apache.log4j"/>
+      <import plugin="com.springsource.org.aspectj.weaver"/>
+      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.equinox.app"/>
+      <import plugin="com.springsource.org.hibernate"/>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.springframework.aop"/>
+      <import plugin="org.springframework.beans"/>
+      <import plugin="org.springframework.context"/>
+      <import plugin="org.springframework.core"/>
+      <import plugin="org.springframework.transaction"/>
+      <import plugin="org.springframework.jdbc"/>
+      <import plugin="org.springframework.orm"/>
+      <import plugin="org.springframework.osgi.core"/>
+      <import plugin="org.springframework.osgi.web"/>
+      <import plugin="org.springframework.web"/>
+      <import plugin="org.springframework.security.core"/>
+      <import plugin="org.springframework.web.servlet"/>
       <import plugin="sernet.gs.service" version="1.7.1" match="greaterOrEqual"/>
-      <import plugin="sernet.springclient" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="org.ops4j.pax.web.pax-web-service" version="0.6.0" match="greaterOrEqual"/>
+      <import plugin="sernet.hui.common" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.ops4j.pax.web.pax-web-service"/>
    </requires>
 
    <plugin
