@@ -756,14 +756,13 @@ Public License instead of this License.  But first, please read
       <import plugin="sernet.springclient"/>
       <import plugin="org.eclipse.ui.net"/>
       <import plugin="com.springsource.com.mchange.v2.c3p0"/>
-      <import plugin="org.ops4j.pax.web.pax-web-service"/>
       <import plugin="com.springsource.net.sf.cglib"/>
       <import plugin="com.springsource.org.aopalliance"/>
       <import plugin="com.springsource.org.quartz"/>
       <import plugin="org.springframework.aop"/>
       <import plugin="org.springframework.web"/>
       <import plugin="org.springframework.context.support"/>
-      <import plugin="com.springsource.net.sf.ehcache"/>
+      <import plugin="javax.servlet"/>
    </requires>
 
    <plugin
@@ -2193,14 +2192,6 @@ Public License instead of this License.  But first, please read
          unpack="false"/>
 
    <plugin
-         id="sernet.gs.ehcache.fragment"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="sernet.gs.log4j.fragment"
          download-size="0"
          install-size="0"
@@ -2214,6 +2205,21 @@ Public License instead of this License.  But first, please read
          install-size="0"
          version="0.0.0"
          fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.hibernate.fragment"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.hui.server"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
