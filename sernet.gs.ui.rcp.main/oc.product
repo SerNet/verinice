@@ -52,7 +52,6 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
       </win>
    </launcher>
 
-
    <vm>
    </vm>
 
@@ -126,7 +125,8 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
    </plugins>
 
    <features>
-      <feature id="sernet.gs.ui.rcp.main.feature" version="1.0.0"/>
+      <feature id="sernet.gs.ui.rcp.main.feature" version="0.8.0"/>
+      <feature id="sernet.gs.server.feature" version="1.0.0"/>
    </features>
 
 </product>
