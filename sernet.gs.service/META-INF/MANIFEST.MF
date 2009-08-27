@@ -21,5 +21,6 @@ Export-Package: org.ccil.cowan.tagsoup,
  sernet.gs.scraper,
  sernet.gs.service
 Import-Package: org.apache.commons.io,
- org.apache.log4j
+ org.apache.log4j,
+ org.hibernate.proxy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

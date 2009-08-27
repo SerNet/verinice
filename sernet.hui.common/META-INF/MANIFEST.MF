@@ -5,8 +5,10 @@ Bundle-SymbolicName: sernet.hui.common
 Bundle-Version: 1.0.0
 Bundle-ClassPath: .
 Bundle-Localization: plugin
-Import-Package: org.apache.log4j,
+Import-Package: net.sf.cglib.proxy,
+ org.apache.log4j,
  org.eclipse.core.runtime,
+ org.hibernate.proxy,
  org.springframework.core.io
 Export-Package: sernet.hui.common,
  sernet.hui.common.connect,
