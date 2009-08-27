@@ -28,6 +28,14 @@ import sernet.gs.ui.rcp.main.bsi.model.IMassnahmeUmsetzung;
 
 
 public class MassnahmenUmsetzungFilter extends ViewerFilter {
+	
+	/**
+	 * Denotes the property which triggers a filtering when an element
+	 * is updated.
+	 * 
+	 * <p>Use this string when calling {@link StructuredViewer#update(Object, String[])}.</p>
+	 */
+	public static final String UMSETZUNG_PROPERTY = "umsetzung";
 
 	private StructuredViewer viewer;
 	private Collection<String> umsetzungPattern;
@@ -73,7 +81,8 @@ public class MassnahmenUmsetzungFilter extends ViewerFilter {
 		return umsetzungPattern.contains(mn.getUmsetzung());
 	}
 	
-//	public boolean isFilterProperty(Object element, String property) {
-//		return true;
-//	}
+	public boolean isFilterProperty(Object element, String property) {
+		return property == UMSETZUNG_PROPERTY;
+	}
+	
 }

@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
@@ -225,7 +226,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 				viewer.add(child);
 				return;
 			case UPDATE:
-				viewer.refresh(child);
+				viewer.update(child, new String[] { MassnahmenUmsetzungFilter.UMSETZUNG_PROPERTY });
 				return;
 			case REMOVE:
 				viewer.remove(child);
@@ -243,7 +244,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 					viewer.add(child);
 					return;
 				case UPDATE:
-					viewer.refresh(child);
+					viewer.update(child, new String[] { MassnahmenUmsetzungFilter.UMSETZUNG_PROPERTY });
 					return;
 				case REMOVE:
 					viewer.remove(child);

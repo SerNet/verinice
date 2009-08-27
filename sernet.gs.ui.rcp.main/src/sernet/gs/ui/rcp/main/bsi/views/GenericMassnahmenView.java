@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
@@ -425,6 +426,33 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 
 	@Override
 	public final void createPartControl(Composite parent) {
+		// Customized table viewer implementation that automatically
+		// replaces the 'data' item when it is looked up.
+		// This makes it possible that when
+		// * given a model instance A from the DB
+		// * given a model instance B from memory
+		// * it holds A.equals(B)
+		// A is put into memory now, since it is regarded as being
+		// more recent.
+		viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | 
+				SWT.MULTI | SWT.FULL_SELECTION)
+		{
+			@SuppressWarnings("unchecked")
+			public void update(Object o, String[] props)
+			{
+				Widget w = doFindItem(o);
+				if (w != null)
+				{
+					List<Object> list = (List<Object>) getInput();
+					list.set(list.indexOf(w.getData()), o);
+					
+					w.setData(o);
+				}
+				
+				super.update(o, props);
+			}
+		};
+
 		createPartControlImpl(parent);
 
 		createFilters();
@@ -724,4 +752,6 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 
 		return retval[0];
 	}
+	
+	
 }

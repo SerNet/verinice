@@ -25,7 +25,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
@@ -129,8 +128,6 @@ public class TodoView extends GenericMassnahmenView {
 
 	@Override
 	protected void createPartControlImpl(Composite parent) {
-		viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | 
-				SWT.MULTI | SWT.FULL_SELECTION);
 		Table table = viewer.getTable();
 		
 		iconColumn = new TableColumn(table, SWT.LEFT);
