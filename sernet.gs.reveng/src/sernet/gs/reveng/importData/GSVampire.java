@@ -1,6 +1,5 @@
 package sernet.gs.reveng.importData;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -20,7 +19,6 @@ import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MSchutzbedarfkategTxtDAO;
 import sernet.gs.reveng.MUmsetzStatTxt;
 import sernet.gs.reveng.MbBaust;
-import sernet.gs.reveng.MbDringlichkeitDAO;
 import sernet.gs.reveng.MbDringlichkeitTxt;
 import sernet.gs.reveng.MbDringlichkeitTxtDAO;
 import sernet.gs.reveng.MbMassn;
@@ -31,7 +29,6 @@ import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstId;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.ModZobjBstMassId;
-import sernet.gs.reveng.ModZobjBstMassMitarb;
 import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.NZielobjektDAO;
 import sernet.gs.reveng.NZobSb;

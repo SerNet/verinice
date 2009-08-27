@@ -5,7 +5,6 @@ import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.MbMassn;
 import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstMass;
-import sernet.gs.reveng.ModZobjBstMassMitarb;
 
 public class BausteineMassnahmenResult {
 	public MbBaust baustein;
