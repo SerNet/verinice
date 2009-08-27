@@ -431,7 +431,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 		// This makes it possible that when
 		// * given a model instance A from the DB
 		// * given a model instance B from memory
-		// * it holds A.equals(B)
+		// * A.equals(B) holds
+		//
 		// A is put into memory now, since it is regarded as being
 		// more recent.
 		viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | 
@@ -440,16 +441,38 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 			@SuppressWarnings("unchecked")
 			public void update(Object o, String[] props)
 			{
-				Widget w = doFindItem(o);
-				if (w != null)
+				// Access the list containing the elements directly
+				List<Object> list = (List<Object>) getInput();
+				
+				// Find the old instance using the new one. Works because
+				// old.equals(new) holds (even if certain properties differ!).
+				int index = list.indexOf(o);
+				
+				// Find out whether the element really is being regarded.
+				if (index >= 0)
 				{
-					List<Object> list = (List<Object>) getInput();
-					list.set(list.indexOf(w.getData()), o);
+					// Replace the object in memory with the one from the DB.
+					list.set(index, o);
 					
-					w.setData(o);
+					// Look up whether there is a widget for the object in question.
+					Widget w = doFindItem(o);
+					if (w != null)
+					{
+						// Replace the object in the widget as well.
+						w.setData(o);
+						
+						// Provokes a refresh the line that changed. 
+						super.update(o, props);
+					}
+					else
+					{
+						// There is no widget for the element in question. Do a
+						// refresh() so one is created.
+						refresh();
+					}
+					
 				}
 				
-				super.update(o, props);
 			}
 		};
 
