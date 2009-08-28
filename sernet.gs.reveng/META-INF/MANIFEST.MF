@@ -5,8 +5,12 @@ Bundle-SymbolicName: sernet.gs.reveng
 Bundle-Version: 1.0.0
 Export-Package:  sernet.gs.reveng,
  sernet.gs.reveng.importData
-Import-Package: org.apache.commons.logging,
+Import-Package: net.sourceforge.jtds.jdbc,
+ org.apache.commons.logging,
  org.hibernate,
  org.hibernate.cfg,
- org.hibernate.criterion
+ org.hibernate.criterion,
+ org.hibernate.proxy,
+ org.springframework.core.io,
+ org.springframework.orm.hibernate3
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

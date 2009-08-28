@@ -1,18 +1,51 @@
-package sernet.gs.reveng;
+/*******************************************************************************
+ * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ *     This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU General Public License for more details.
+ *     You should have received a copy of the GNU General Public 
+ * License along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de - reworked to use LocalSessionFactoryBean
+ ******************************************************************************/
+ package sernet.gs.reveng;
 
-import java.io.File;
+import java.net.URL;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.SessionFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
+
 
 /**
  * Configures and provides access to Hibernate sessions, tied to the
  * current thread of execution.  Follows the Thread Local Session
  * pattern, see {@link http://hibernate.org/42.html }.
+ * 
+ * <p>The creation of {@link Session} instances is managed through the Spring
+ * class {@link LocalSessionFactoryBean}. By using this class the loading
+ * of the mappings can be done using the right class loader in an OSGi
+ * environment. For a non-OSGi environment this has no effect.</p>
+ * 
+ * <p>This class needs spring-orm and spring-core.</p>
  */
 public class HibernateSessionFactory {
 
+	private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
+	
     /** 
      * Location of hibernate.cfg.xml file.
      * Location should be on the classpath as Hibernate uses  
@@ -22,24 +55,15 @@ public class HibernateSessionFactory {
      * the location of the configuration file for the current session.   
      */
     private static String CONFIG_FILE_LOCATION = "/hibernate-vampire.cfg.xml";
-	private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
-    private  static Configuration configuration = new Configuration();    
-    private static org.hibernate.SessionFactory sessionFactory;
-    private static String configFile = CONFIG_FILE_LOCATION;
-
-	static {
-    	
-    }
+    
+	private static Resource configLocation = new ClassPathResource(CONFIG_FILE_LOCATION);
+	
+	private static LocalSessionFactoryBean sessionFactoryBean;
+	
+    private static SessionFactory sessionFactory;
 	
     private HibernateSessionFactory() {
-    	try {
-			configuration.configure(configFile);
-			sessionFactory = configuration.buildSessionFactory();
-		} catch (Exception e) {
-			System.err
-					.println("%%%% Error Creating SessionFactory %%%%");
-			e.printStackTrace();
-		}
+    	// Intentionally do nothing.
     }
     
 	/**
@@ -49,7 +73,7 @@ public class HibernateSessionFactory {
      *  @return Session
      *  @throws HibernateException
      */
-    public static Session getSession() throws HibernateException {
+    static Session getSession() throws HibernateException {
         Session session = (Session) threadLocal.get();
 
 		if (session == null || !session.isOpen()) {
@@ -68,16 +92,15 @@ public class HibernateSessionFactory {
      *  Rebuild hibernate session factory
      *
      */
-	public static void rebuildSessionFactory() {
+	private static void rebuildSessionFactory() {
 		try {
-			try {
-				// try resource: from classpath
-				configuration.configure(configFile);
-			} catch (HibernateException e) {
-				// try file:
-				configuration.configure(new File(configFile));
-			}
-			sessionFactory = configuration.buildSessionFactory();
+        	sessionFactoryBean = new LocalSessionFactoryBean();
+        	sessionFactoryBean.setConfigLocation(configLocation);
+        	sessionFactoryBean.setBeanClassLoader(HibernateSessionFactory.class.getClassLoader());
+        	
+        	sessionFactoryBean.afterPropertiesSet();
+        	
+        	sessionFactory = (org.hibernate.SessionFactory) sessionFactoryBean.getObject();
 		} catch (Exception e) {
 			System.err
 					.println("%%%% Error Creating SessionFactory %%%%");
@@ -86,7 +109,7 @@ public class HibernateSessionFactory {
 	}
 
 	/**
-     *  Close the single hibernate session instance.
+     *  Closes the single hibernate session instance.
      *
      *  @throws HibernateException
      */
@@ -100,30 +123,49 @@ public class HibernateSessionFactory {
     }
 
 	/**
-     *  return session factory
+     *  Returns the session factory
      *
      */
-	public static org.hibernate.SessionFactory getSessionFactory() {
+	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
+	private static void setConfigResource(Resource r)
+	{
+		if (threadLocal.get() != null)
+			throw new IllegalStateException("A session instance is still available. Close it first!");
+		
+		if (sessionFactoryBean != null)
+		{
+			sessionFactoryBean.destroy();
+			sessionFactoryBean = null;
+		}
+		sessionFactory = null;
+		
+		configLocation = r;
+	}
+	
 	/**
-     *  return session factory
-     *
-     *	session factory will be rebuilt in the next call
+	 * Provides a location in the local filesystem where
+	 * the hibernate configuration is located.
+	 * 
+	 * <p>Changing the location requires all previously opened
+	 * sessions to be closed. An {@link IllegalStateException} is
+	 * thrown if this precondition is violated.</p>
      */
 	public static void setConfigFile(String configFile) {
-		configuration = new Configuration();
-		HibernateSessionFactory.configFile = configFile;
-		sessionFactory = null;
+		setConfigResource(new FileSystemResource(configFile));
 	}
 
 	/**
-     *  return hibernate configuration
-     *
+	 * Provides an arbitrary URL which points to a
+	 * hibernate configuration.
+	 * 
+	 * <p>Changing the location requires all previously opened
+	 * sessions to be closed. An {@link IllegalStateException} is
+	 * thrown if this precondition is violated.</p>
      */
-	public static Configuration getConfiguration() {
-		return configuration;
+	public static void setConfigURL(URL url) {
+		setConfigResource(new UrlResource(url));
 	}
-
 }
