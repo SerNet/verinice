@@ -54,11 +54,9 @@
       <import plugin="com.springsource.org.objectweb.asm"/>
       <import plugin="com.springsource.org.objectweb.asm.attrs"/>
       <import plugin="com.springsource.org.mortbay.util"/>
-      <import plugin="com.springsource.org.apache.commons.dbcp"/>
       <import plugin="org.apache.commons.codec"/>
       <import plugin="com.springsource.org.mortbay.jetty.server"/>
       <import plugin="org.eclipse.osgi.services"/>
-      <import plugin="com.springsource.org.apache.commons.pool"/>
       <import plugin="com.springsource.org.quartz"/>
       <import plugin="org.eclipse.equinox.common"/>
       <import plugin="org.springframework.osgi.io"/>
