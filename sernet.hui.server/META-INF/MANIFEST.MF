@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Server
 Bundle-SymbolicName: sernet.hui.server
 Bundle-Version: 1.0.0
-Bundle-ClassPath: server.jar,
+Bundle-ClassPath: .,
  lib/xstream-1.2.1.jar,
  lib/jug.jar,
  lib/xpp3_min-1.1.3.4.O.jar
