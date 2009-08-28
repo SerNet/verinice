@@ -28,12 +28,19 @@ import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
+import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.Client;
+import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.bsi.model.Raum;
+import sernet.gs.ui.rcp.main.bsi.model.Server;
+import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -121,8 +128,11 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 			{
 				todoView.compoundRemoved((ITVerbund) child);
 			}
-			else if (child instanceof BausteinUmsetzung && isOfInterest(child))
+			else if (canContainMeasures(child)  && isOfInterest(child))
 			{
+				// When an element has been deleted it could have contained BausteinUmsetzung
+				// and MassnahmenUmsetzung instances. If this happens in an ITVerbund we are
+				// watching, reload the measures.
 				reloadMeasures();
 			}
 		}
@@ -290,5 +300,24 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 		}
 		
 		return parent.equals(expectedCompound);
+	}
+	
+	private boolean canContainMeasures(CnATreeElement child)
+	{
+		// TODO rschus: Could be more elegantly solved by adding a method 'canHaveMeasures'
+		// to CnATreeElement, implement it to return false by default and override it in the
+		// classes below to return true.
+		Class<?>[] classes = {
+				BausteinUmsetzung.class, Anwendung.class, Server.class,
+				Client.class, SonstIT.class, Gebaeude.class, NetzKomponente.class,
+				Raum.class };
+		
+		for (Class<?> c : classes)
+		{
+			if (c.isAssignableFrom(child.getClass()))
+				return true;
+		}
+		
+		return false;
 	}
 }
