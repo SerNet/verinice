@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -53,6 +54,8 @@ import sernet.gs.ui.rcp.main.bsi.views.Messages;
  */
 public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
+	
+	private static final Logger log = Logger.getLogger(GSImportRestorePreferencePage.class);
 
 	public static final String ID = "sernet.gs.ui.rcp.main.page5";
 
@@ -127,20 +130,23 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 						Messages.GSImportPreferencePage_2) {
 
 					public IStatus runInWorkspace(final IProgressMonitor monitor) {
-						Activator.inheritVeriniceContextState();
 						
 						monitor.beginTask(Messages.GSImportPreferencePage_1,
 								IProgressMonitor.UNKNOWN);
 						monitor.setTaskName(Messages.GSImportPreferencePage_1);
 						try {
+							log.debug("Loading MSSQL JDBC driver.");
 							Class.forName("net.sourceforge.jtds.jdbc.Driver"); //$NON-NLS-1$
+							log.debug("Establishing database connection");
 							Connection con = DriverManager.getConnection(
 									urlString, userString, passString);
+							log.debug("Running test query.");
 							Statement stmt = con.createStatement();
 							stmt.executeQuery(TEST_QUERY); //$NON-NLS-1$
 							stmt.close();
 							con.close();
-
+							log.debug("Finished MSSQL connection test.");
+							
 							// success:
 							Display.getDefault().syncExec(new Runnable() {
 								public void run() {
@@ -167,6 +173,7 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 							}
 							return Status.CANCEL_STATUS;
 						}
+						
 						return Status.OK_STATUS;
 					}
 				};

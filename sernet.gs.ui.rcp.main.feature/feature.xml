@@ -737,6 +737,7 @@ Public License instead of this License.  But first, please read
       <import plugin="com.springsource.javassist"/>
       <import plugin="com.springsource.javax.transaction"/>
       <import plugin="org.junit4"/>
+      <import plugin="com.springsource.net.sf.cglib"/>
       <import plugin="org.apache.commons.codec"/>
       <import plugin="com.springsource.org.apache.commons.io"/>
       <import plugin="com.springsource.org.apache.log4j"/>
@@ -753,16 +754,15 @@ Public License instead of this License.  But first, please read
       <import plugin="org.springframework.osgi.extender"/>
       <import plugin="org.springframework.context"/>
       <import plugin="org.springframework.security.core"/>
+      <import plugin="sernet.gs.reveng"/>
       <import plugin="sernet.springclient"/>
       <import plugin="org.eclipse.ui.net"/>
       <import plugin="com.springsource.com.mchange.v2.c3p0"/>
-      <import plugin="com.springsource.net.sf.cglib"/>
-      <import plugin="com.springsource.org.aopalliance"/>
-      <import plugin="com.springsource.org.quartz"/>
-      <import plugin="org.springframework.aop"/>
       <import plugin="org.springframework.web"/>
-      <import plugin="org.springframework.context.support"/>
-      <import plugin="javax.servlet"/>
+      <import plugin="com.springsource.net.sf.ehcache"/>
+      <import plugin="sernet.gs.service"/>
+      <import plugin="sernet.hui.common"/>
+      <import plugin="sernet.hui.swtclient"/>
    </requires>
 
    <plugin
@@ -2121,8 +2121,7 @@ Public License instead of this License.  But first, please read
          id="sernet.gs.ui.rcp.main"
          download-size="35000"
          install-size="0"
-         version="0.8.0"
-         unpack="false"/>
+         version="0.8.0"/>
 
    <plugin
          id="org.eclipse.ui.net"
@@ -2148,38 +2147,31 @@ Public License instead of this License.  But first, please read
          unpack="false"/>
 
    <plugin
-         id="sernet.springclient"
-         download-size="0"
-         install-size="0"
-         version="1.1.0"
-         unpack="false"/>
-
-   <plugin
          id="sernet.hui.common"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0"
          unpack="false"/>
 
    <plugin
          id="sernet.hui.swtclient"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0"
          unpack="false"/>
 
    <plugin
          id="sernet.gs.service"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.7.1"
          unpack="false"/>
 
    <plugin
          id="sernet.gs.db.fragment"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2187,7 +2179,7 @@ Public License instead of this License.  But first, please read
          id="sernet.gs.log4j.fragment"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2195,7 +2187,7 @@ Public License instead of this License.  But first, please read
          id="sernet.gs.springweb.fragment"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2203,14 +2195,74 @@ Public License instead of this License.  But first, please read
          id="sernet.hui.server"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0"
          unpack="false"/>
 
    <plugin
          id="sernet.gs.ehcache.fragment"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.reveng"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.springclient"
+         download-size="0"
+         install-size="0"
+         version="1.1.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.browser"
+         download-size="0"
+         install-size="0"
+         version="3.2.201.v20080708_34x"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.browser.nl-de"
+         download-size="0"
+         install-size="0"
+         version="3.4.0.v20081019043401"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.browser.nl-fr"
+         download-size="0"
+         install-size="0"
+         version="3.4.0.v20081019043401"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.osgi.services"
+         download-size="0"
+         install-size="0"
+         version="3.1.200.v20071203"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.osgi.services.nl-de"
+         download-size="0"
+         install-size="0"
+         version="3.4.0.v20081019043401"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.osgi.services.nl-fr"
+         download-size="0"
+         install-size="0"
+         version="3.4.0.v20081019043401"
          fragment="true"
          unpack="false"/>
 

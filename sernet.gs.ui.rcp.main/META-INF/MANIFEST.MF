@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Verinice Anwendung
-Bundle-SymbolicName: sernet.gs.ui.rcp.main; singleton:=true
+Bundle-SymbolicName: sernet.gs.ui.rcp.main;singleton:=true
 Bundle-Version: 0.8.0
 Bundle-ClassPath: .,
  lib/xstream/jug.jar,
@@ -67,6 +67,7 @@ Import-Package: javassist.util.proxy,
  javax.transaction,
  junit.framework,
  net.sf.cglib.proxy,
+ net.sourceforge.jtds.jdbc,
  org.apache.commons.codec.binary,
  org.apache.commons.io,
  org.apache.log4j,
