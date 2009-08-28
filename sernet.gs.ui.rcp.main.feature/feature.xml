@@ -738,6 +738,7 @@ Public License instead of this License.  But first, please read
       <import plugin="com.springsource.javax.transaction"/>
       <import plugin="org.junit4"/>
       <import plugin="com.springsource.net.sf.cglib"/>
+      <import plugin="com.springsource.com.mchange.v2.c3p0"/>
       <import plugin="org.apache.commons.codec"/>
       <import plugin="com.springsource.org.apache.commons.io"/>
       <import plugin="com.springsource.org.apache.log4j"/>
@@ -754,15 +755,20 @@ Public License instead of this License.  But first, please read
       <import plugin="org.springframework.osgi.extender"/>
       <import plugin="org.springframework.context"/>
       <import plugin="org.springframework.security.core"/>
-      <import plugin="sernet.gs.reveng"/>
-      <import plugin="sernet.springclient"/>
-      <import plugin="org.eclipse.ui.net"/>
-      <import plugin="com.springsource.com.mchange.v2.c3p0"/>
-      <import plugin="org.springframework.web"/>
-      <import plugin="com.springsource.net.sf.ehcache"/>
       <import plugin="sernet.gs.service"/>
+      <import plugin="sernet.gs.reveng"/>
       <import plugin="sernet.hui.common"/>
       <import plugin="sernet.hui.swtclient"/>
+      <import plugin="sernet.springclient"/>
+      <import plugin="org.eclipse.ui.net"/>
+      <import plugin="org.springframework.web"/>
+      <import plugin="com.springsource.net.sf.ehcache"/>
+      <import plugin="com.springsource.org.apache.commons.logging"/>
+      <import plugin="javax.servlet"/>
+      <import plugin="com.springsource.org.aopalliance"/>
+      <import plugin="com.springsource.org.quartz"/>
+      <import plugin="org.springframework.aop"/>
+      <import plugin="org.springframework.context.support"/>
    </requires>
 
    <plugin
@@ -2118,12 +2124,6 @@ Public License instead of this License.  But first, please read
          unpack="false"/>
 
    <plugin
-         id="sernet.gs.ui.rcp.main"
-         download-size="35000"
-         install-size="0"
-         version="0.8.0"/>
-
-   <plugin
          id="org.eclipse.ui.net"
          download-size="0"
          install-size="0"
@@ -2264,6 +2264,13 @@ Public License instead of this License.  But first, please read
          install-size="0"
          version="3.4.0.v20081019043401"
          fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.ui.rcp.main"
+         download-size="0"
+         install-size="0"
+         version="0.8.0"
          unpack="false"/>
 
 </feature>
