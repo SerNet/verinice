@@ -17,6 +17,10 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
@@ -107,6 +111,39 @@ public class Activator extends AbstractUIPlugin {
 		}
 		else
 			internalServer = new ServerDummy();
+		
+		if (prefs.getString(PreferenceConstants.GSACCESS).equals(PreferenceConstants.GSACCESS_DIR))
+		{
+			try
+			{
+				internalServer.setGSCatalogURL(
+						new File(prefs.getString(PreferenceConstants.BSIDIR)).toURI().toURL());
+			} catch (MalformedURLException mfue)
+			{
+				log.warn("Stored GS catalog dir is an invalid URL.");
+			}
+		}
+		else
+		{
+			try
+			{
+				internalServer.setGSCatalogURL(
+						new File(prefs.getString(PreferenceConstants.BSIZIPFILE)).toURI().toURL());
+			} catch (MalformedURLException mfue)
+			{
+				log.warn("Stored GS catalog zip file path is an invalid URL.");
+			}
+
+		}
+		
+		try
+		{
+			internalServer.setDSCatalogURL(
+					new File(prefs.getString(PreferenceConstants.DSZIPFILE)).toURI().toURL());
+		} catch (MalformedURLException mfue)
+		{
+			log.warn("Stored DS catalog zip file path is an invalid URL.");
+		}
 		
 		// Provide initial DB connection details to server.
 		internalServer.configure(prefs
@@ -210,6 +247,15 @@ public class Activator extends AbstractUIPlugin {
 		public boolean isRunning() {
 			return true;
 		}
+		
+		public void setGSCatalogURL(URL _) {
+			// Intentionally do nothing.
+		}
+		
+		public void setDSCatalogURL(URL _) {
+			// Intentionally do nothing.
+		}
+		
 		
 	}
 }

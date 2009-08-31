@@ -17,6 +17,11 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
+import java.io.File;
+import java.net.MalformedURLException;
+
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -34,6 +39,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.service.IInternalServer;
 
 /**
  * Main preference page for CnA Tool Settings.
@@ -44,6 +50,8 @@ import sernet.gs.ui.rcp.main.Activator;
 public class KatalogePreferencePage
 	extends FieldEditorPreferencePage
 	implements IWorkbenchPreferencePage {
+	
+	private static final Logger log = Logger.getLogger(KatalogePreferencePage.class);
 
 	private FileFieldEditor zipfilePath;
 	private FileFieldEditor datenschutzZipPath;
@@ -128,6 +136,59 @@ public class KatalogePreferencePage
 		super.propertyChange(event);
 		if (event.getProperty().equals(FieldEditor.VALUE)) {
 			checkState();
+			IInternalServer internalServer = Activator.getDefault().getInternalServer();
+			Preferences prefs = Activator.getDefault().getPluginPreferences();
+			String accessMethod = prefs.getString(PreferenceConstants.GSACCESS);
+			
+			if (event.getSource() == zipfilePath && accessMethod.equals(PreferenceConstants.GSACCESS_ZIP))
+			{
+				try {
+					internalServer.setGSCatalogURL(
+							new File(zipfilePath.getStringValue()).toURI().toURL());
+				} catch (MalformedURLException e) {
+					log.warn("GS catalog zip file path is an invalid URL.");
+				}
+			}
+			else if (event.getSource() == bsiUrl && accessMethod.equals(PreferenceConstants.GSACCESS_DIR))
+			{
+				try {
+					internalServer.setGSCatalogURL(
+							new File(bsiUrl.getStringValue()).toURI().toURL());
+				} catch (MalformedURLException e) {
+					log.warn("GS catalog directory path is an invalid URL.");
+				}
+			}
+			else if (event.getSource() == datenschutzZipPath)
+			{
+				try {
+					internalServer.setDSCatalogURL(
+							new File(datenschutzZipPath.getStringValue()).toURI().toURL());
+				} catch (MalformedURLException e) {
+					log.warn("DS catalog zip file path is an invalid URL.");
+				}
+			}
+			else if (event.getSource() == gsAccessMethod)
+			{
+				if (accessMethod.equals(PreferenceConstants.GSACCESS_DIR))
+				{
+					try {
+						internalServer.setGSCatalogURL(
+								new File(prefs.getString(PreferenceConstants.BSIDIR)).toURI().toURL());
+					} catch (MalformedURLException e) {
+						log.warn("GS catalog directory path is an invalid URL.");
+					}
+				}
+				else
+				{
+					try {
+						internalServer.setGSCatalogURL(
+								new File(prefs.getString(PreferenceConstants.BSIZIPFILE)).toURI().toURL());
+					} catch (MalformedURLException e) {
+						log.warn("GS catalog zip file path is an invalid URL.");
+					}
+				}
+				
+			}
 		}
 	}
 

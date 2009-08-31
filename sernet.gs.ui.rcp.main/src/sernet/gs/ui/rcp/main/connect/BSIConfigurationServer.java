@@ -71,7 +71,7 @@ public class BSIConfigurationServer implements IBSIConfig {
 	}
 
 	public boolean isFromZipFile() {
-		return true;
+		return new File(getGsPath()).isFile();
 	}
 
 	public void setGrundschutzKataloge(Resource grundschutzKataloge) {
