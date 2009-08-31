@@ -18,6 +18,7 @@
  ******************************************************************************/
 package sernet.gs.server;
 
+import java.net.URL;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -85,5 +86,12 @@ public class ServerPropertyPlaceholderConfigurer extends
 					"classpath:/server_hibernate_derby.cfg.xml");
 	}
 
+	public static void setGSCatalogURL(URL url) {
+		overrideProperties.put("veriniceserver.grundschutzKataloge", url.toString());
+	}
+	
+	public static void setDSCatalogURL(URL url) {
+		overrideProperties.put("veriniceserver.datenschutzBaustein", url.toString());
+	}
 
 }

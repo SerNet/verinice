@@ -19,6 +19,7 @@ package sernet.gs.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -93,6 +94,14 @@ public class InternalServer implements IInternalServer {
 		
 		ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user,
 				pass, driver, dialect);
+	}
+	
+	public void setGSCatalogURL(URL url) {
+		ServerPropertyPlaceholderConfigurer.setGSCatalogURL(url);
+	}
+	
+	public void setDSCatalogURL(URL url) {
+		ServerPropertyPlaceholderConfigurer.setDSCatalogURL(url);
 	}
 
 	/**
