@@ -734,41 +734,42 @@ Public License instead of this License.  But first, please read
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="com.springsource.javassist"/>
-      <import plugin="com.springsource.javax.transaction"/>
-      <import plugin="org.junit4"/>
-      <import plugin="com.springsource.net.sf.cglib"/>
-      <import plugin="com.springsource.com.mchange.v2.c3p0"/>
-      <import plugin="org.apache.commons.codec"/>
-      <import plugin="com.springsource.org.apache.commons.io"/>
-      <import plugin="com.springsource.org.apache.log4j"/>
-      <import plugin="org.eclipse.swt"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui.browser"/>
-      <import plugin="com.springsource.org.hibernate"/>
-      <import plugin="org.springframework.beans"/>
-      <import plugin="org.springframework.core"/>
-      <import plugin="org.springframework.transaction"/>
-      <import plugin="org.springframework.jdbc"/>
-      <import plugin="org.springframework.orm"/>
-      <import plugin="org.springframework.osgi.core"/>
-      <import plugin="org.springframework.osgi.extender"/>
-      <import plugin="org.springframework.context"/>
-      <import plugin="org.springframework.security.core"/>
-      <import plugin="sernet.gs.service"/>
-      <import plugin="sernet.gs.reveng"/>
-      <import plugin="sernet.hui.common"/>
-      <import plugin="sernet.hui.swtclient"/>
-      <import plugin="sernet.springclient"/>
       <import plugin="org.eclipse.ui.net"/>
+      <import plugin="com.springsource.net.sf.cglib"/>
+      <import plugin="com.springsource.org.apache.log4j"/>
+      <import plugin="com.springsource.org.hibernate"/>
+      <import plugin="org.springframework.core"/>
+      <import plugin="org.eclipse.swt"/>
+      <import plugin="sernet.hui.common"/>
+      <import plugin="com.springsource.org.apache.commons.io"/>
+      <import plugin="com.springsource.com.mchange.v2.c3p0"/>
       <import plugin="org.springframework.web"/>
+      <import plugin="org.junit4"/>
       <import plugin="com.springsource.net.sf.ehcache"/>
+      <import plugin="org.springframework.beans"/>
+      <import plugin="org.springframework.security.core"/>
       <import plugin="com.springsource.org.apache.commons.logging"/>
+      <import plugin="org.springframework.orm"/>
       <import plugin="javax.servlet"/>
       <import plugin="com.springsource.org.aopalliance"/>
       <import plugin="com.springsource.org.quartz"/>
       <import plugin="org.springframework.aop"/>
+      <import plugin="org.springframework.context"/>
+      <import plugin="org.springframework.transaction"/>
+      <import plugin="org.springframework.jdbc"/>
+      <import plugin="org.springframework.osgi.core"/>
       <import plugin="org.springframework.context.support"/>
+      <import plugin="sernet.gs.service"/>
+      <import plugin="org.eclipse.ui.browser"/>
+      <import plugin="com.springsource.javassist"/>
+      <import plugin="com.springsource.javax.transaction"/>
+      <import plugin="org.apache.commons.codec"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.springframework.osgi.extender"/>
+      <import plugin="sernet.gs.reveng"/>
+      <import plugin="sernet.hui.swtclient"/>
+      <import plugin="sernet.springclient"/>
+      <import plugin="com.springsource.antlr"/>
    </requires>
 
    <plugin
@@ -2271,6 +2272,29 @@ Public License instead of this License.  But first, please read
          download-size="0"
          install-size="0"
          version="0.8.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.antlr.fragment"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.hibernate.fragment"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.antlr"
+         download-size="0"
+         install-size="0"
+         version="2.7.6"
          unpack="false"/>
 
 </feature>
