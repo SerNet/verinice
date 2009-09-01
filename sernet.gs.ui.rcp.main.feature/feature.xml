@@ -2275,14 +2275,6 @@ Public License instead of this License.  But first, please read
          unpack="false"/>
 
    <plugin
-         id="sernet.gs.antlr.fragment"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="sernet.gs.hibernate.fragment"
          download-size="0"
          install-size="0"

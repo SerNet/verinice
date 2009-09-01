@@ -149,7 +149,6 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="sernet.gs.ui.rcp.main.application"
             name="verinice">
          <property
                name="aboutText"
