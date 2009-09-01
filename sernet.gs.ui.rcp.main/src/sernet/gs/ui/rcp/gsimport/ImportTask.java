@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
+import org.hibernate.Hibernate;
 import org.hibernate.exception.SQLGrammarException;
 
 import sernet.gs.reveng.MSchutzbedarfkategTxt;
@@ -131,6 +132,17 @@ public class ImportTask {
 	}
 
 	public void execute(int importType, IProgress monitor) throws Exception {
+		// On this thread Hibernate will access Antlr in order to create a lexer.
+		// Hibernate will provide the name of a Hibernate-based class to Antlr. Antlr
+		// will try to load that class. In an OSGi-environment this will miserably
+		// fail since the Antlr bundle's classloader has no access to the Hibernate
+		// bundle's classes. However Antlr will use the context classloader if it
+		// finds one. For this reason we initialize the context classloader with
+		// a classloader from a Hibernate class. This classloader is able to resolve
+		// Hibernate classes and can be used successfully by Antlr to access.
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		Thread.currentThread().setContextClassLoader(Hibernate.class.getClassLoader());
+		
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
 		if (sourceDbUrl.indexOf("odbc") > -1) {
@@ -146,6 +158,10 @@ public class ImportTask {
 		
 		transferData = new TransferData(vampire, importRollen);
 		importZielobjekte();
+		
+		// Set back the original context class loader.
+		Thread.currentThread().setContextClassLoader(cl);
+		
 		CnAElementFactory.getInstance().reloadModelFromDatabase();
 
 	}

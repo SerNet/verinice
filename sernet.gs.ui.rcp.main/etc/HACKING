@@ -52,7 +52,6 @@ Eclipse IDE:
     change requires a restart of the IDE
   - check out the following projects from trunk:
   
-  	sernet.gs.antlr.fragment
   	sernet.gs.db.fragment
   	sernet.gs.ehcache.fragment
 	sernet.gs.hibernate.fragment
