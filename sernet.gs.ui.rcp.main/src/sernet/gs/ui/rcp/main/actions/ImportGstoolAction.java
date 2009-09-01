@@ -29,6 +29,7 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.gsimport.IProgress;
 import sernet.gs.ui.rcp.gsimport.ImportTask;
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.GSImportDialog;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
@@ -70,7 +71,6 @@ public class ImportGstoolAction extends Action {
 	
 	public void run() {
 		try {
-			
 			final GSImportDialog dialog = new GSImportDialog(Display.getCurrent().getActiveShell());
 			if (dialog.open() != InputDialog.OK)
 				return;
@@ -78,6 +78,8 @@ public class ImportGstoolAction extends Action {
 			PlatformUI.getWorkbench().getProgressService().
 			busyCursorWhile(new IRunnableWithProgress() {
 				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					Activator.inheritVeriniceContextState();
+					
 					ImportTask importTask = new ImportTask(
 							dialog.isBausteine(),
 							dialog.isMassnahmenPersonen(),

@@ -40,7 +40,7 @@ public class BSIConfigurationServer implements IBSIConfig {
 		try {
 			return grundschutzKataloge.getURL();
 		} catch (IOException e) {
-			log.error("accessing the URL for the Grundschutz catalogue failed.");
+			log.error("accessing the URL for the Grundschutz catalog failed.");
 			throw new RuntimeException(e);
 		}
 	}
@@ -50,7 +50,7 @@ public class BSIConfigurationServer implements IBSIConfig {
 		try {
 			return datenschutzBaustein.getURL();
 		} catch (IOException e) {
-			log.error("accessing the URL for the Datenschutzbaustein catalogue failed.");
+			log.error("accessing the URL for the Datenschutzbaustein catalog failed.");
 			throw new RuntimeException(e);
 		}
 	}
@@ -71,7 +71,11 @@ public class BSIConfigurationServer implements IBSIConfig {
 	}
 
 	public boolean isFromZipFile() {
-		return new File(getGsPath()).isFile();
+		try {
+			return grundschutzKataloge.getFile().isFile();
+		} catch (IOException e) {
+			return false;
+		}
 	}
 
 	public void setGrundschutzKataloge(Resource grundschutzKataloge) {
