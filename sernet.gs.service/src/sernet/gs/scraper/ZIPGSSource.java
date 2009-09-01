@@ -76,6 +76,11 @@ public class ZIPGSSource implements IGSSource {
 		// fileName may be an URL actually. In that case we transparently
 		// retrieve it from the URL and place the contents in a 
 		// temp file from which it is accessed normally.
+		// However if what we have is a 'file:' url then we extract
+		// the filesystem path out of it.
+		if (fileName.startsWith("file://"))
+			fileName = fileName.substring(7);
+		
 		File file = new File(fileName);
 		if (!file.exists())
 		{
