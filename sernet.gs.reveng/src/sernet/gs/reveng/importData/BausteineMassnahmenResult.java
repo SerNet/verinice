@@ -1,12 +1,15 @@
 package sernet.gs.reveng.importData;
 
+import java.io.Serializable;
+
 import sernet.gs.reveng.MUmsetzStatTxt;
 import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.MbMassn;
 import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstMass;
 
-public class BausteineMassnahmenResult {
+@SuppressWarnings("serial")
+public class BausteineMassnahmenResult implements Serializable {
 	public MbBaust baustein;
 	public MbMassn massnahme;
 	public MUmsetzStatTxt umstxt;

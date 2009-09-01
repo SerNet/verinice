@@ -29,7 +29,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 
-
 /**
  * Configures and provides access to Hibernate sessions, tied to the
  * current thread of execution.  Follows the Thread Local Session
@@ -94,6 +93,10 @@ public class HibernateSessionFactory {
      */
 	private static void rebuildSessionFactory() {
 		try {
+			Class.forName("net.sourceforge.jtds.jdbc.Driver",
+					true,
+					SessionFactory.class.getClassLoader());
+			
         	sessionFactoryBean = new LocalSessionFactoryBean();
         	sessionFactoryBean.setConfigLocation(configLocation);
         	sessionFactoryBean.setBeanClassLoader(HibernateSessionFactory.class.getClassLoader());
