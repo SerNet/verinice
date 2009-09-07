@@ -146,5 +146,5 @@ Import-Package: javassist.util.proxy,
  sernet.hui.swt.widgets.URL,
  sernet.snutils,
  sernet.springclient
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: sernet.springclient
