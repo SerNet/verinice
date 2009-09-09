@@ -49,23 +49,17 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveConfiguration;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
-import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 
 public class ConfigurationAction implements IObjectActionDelegate {
 
 	public static final String ID = "sernet.gs.ui.rcp.main.personconfiguration";
 
-
 	private static final String[] ALLOWED_ROLES = new String[] {ApplicationRoles.ROLE_ADMIN};
-
 
 	private Configuration configuration;
 
 	private IWorkbenchPart targetPart;
-
-
-
 
 	private String oldPassword;
 
@@ -143,6 +137,8 @@ public class ConfigurationAction implements IObjectActionDelegate {
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException,
 								InterruptedException {
+							Activator.inheritVeriniceContextState();
+							
 							// save configuration:
 							SaveConfiguration<Configuration> command 
 								= new SaveConfiguration<Configuration>(configuration, updatePassword);
