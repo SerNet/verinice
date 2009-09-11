@@ -42,26 +42,17 @@ Template:
 	 <huiproperty
             name="Passwort"
             id="configuration_passwort" />
+            
+     <!-- TODO rschuster: Should not be a single textfield but a
+     textfield with a button beside it. The button should open a dialog and
+     there one should be able to select from existing roles and add new ones
+     on the fly.
+     -->
 	 <huiproperty
-            name="Benutzertyp"
+            name="Rollen"
             id="configuration_rolle"
-         	inputtype="singleoption">
-			<option
-				id="configuration_rolle_ciso"
-				name="IS-Beauftragter" />   
-			<option
-				id="configuration_rolle_user"
-				name="Verinice-Benutzer" />   
-			<option
-				id="configuration_rolle_admin"
-				name="Verinice-Administrator" />   
-			<option
-				id="configuration_rolle_umsverantw"
-				name="(Umsetzungsverantwortlicher)" />   
-			<option
-				id="configuration_rolle_auditor"
-				name="(Auditor)" />   
-     </huiproperty>
+            tooltip="Liste von Anwendungsrollen"
+     />
      
      <huipropertygroup
 			id="configuration_mailing"

@@ -187,6 +187,12 @@
     <property name="sessionFactory" ref="sessionFactory"/>
 </bean>
 
+<bean id="permissionDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <constructor-arg>
+        <value>sernet.gs.ui.rcp.main.common.model.Permission</value>
+    </constructor-arg>
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
 
 <bean id="personDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
     <constructor-arg>

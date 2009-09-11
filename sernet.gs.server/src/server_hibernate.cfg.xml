@@ -66,6 +66,7 @@
         <mapping resource="sernet/gs/ui/rcp/hibernate/Risikomassnahme.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/FinishedRiskAnalysisLists.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/Configuration.hbm.xml"/>
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Permission.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/BausteinVorschlag.hbm.xml"/>
         
         <!-- Workaround for Hibernate bug HHH-2146

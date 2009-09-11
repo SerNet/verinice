@@ -17,9 +17,7 @@
  ******************************************************************************/
 package sernet.gs.server.security;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.userdetails.UserDetails;
@@ -28,11 +26,9 @@ import org.springframework.security.userdetails.UsernameNotFoundException;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.service.ICommandService;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadUserConfiguration;
+import sernet.gs.ui.rcp.main.service.crudcommands.ILoadUserConfiguration;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.Property;
 
 /**
  * Provides access to user details in the verinice database.
@@ -49,7 +45,9 @@ import sernet.hui.common.connect.Property;
 public class DbUserDetailsService implements UserDetailsService {
 
 	// injected by spring
-	private ICommandService commandService;
+	private ILoadUserConfiguration loadUserConfigurationCommand;
+	
+	private VeriniceContext.State workObjects;
 	
 	// injected by spring
 	private String adminuser = "";
@@ -57,77 +55,46 @@ public class DbUserDetailsService implements UserDetailsService {
 	// injected by spring
 	private String adminpass = "";
 
-	
-
-	private final static Map<String, String[]> roleMap = new HashMap<String, String[]>();
-
-	{
-		roleMap.put("configuration_rolle_ciso",
-				new String[] { ApplicationRoles.ROLE_USER });
-		roleMap.put("configuration_rolle_isbeauftragter",
-				new String[] { ApplicationRoles.ROLE_USER });
-		roleMap.put("configuration_rolle_user",
-				new String[] { ApplicationRoles.ROLE_USER });
-		roleMap.put("configuration_rolle_admin", new String[] {
-				ApplicationRoles.ROLE_USER, ApplicationRoles.ROLE_ADMIN });
-		roleMap.put("configuration_rolle_umsverantw",
-				new String[] { ApplicationRoles.ROLE_USER });
-		roleMap.put("configuration_rolle_auditor",
-				new String[] { ApplicationRoles.ROLE_USER });
-	}
-
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException, DataAccessException {
+		VeriniceContext.setState(workObjects);
 
 		if (adminuser.length() > 0 && adminpass.length() > 0
 				&& username.equals(adminuser))
-			return defaultUser();
+			return privilegedUser();
 
-		try {
-			LoadUserConfiguration command = new LoadUserConfiguration();
-			command = commandService.executeCommand(command);
-			List<Entity> entities = command.getEntities();
+		// This command is created and maintained by Spring. We bypass the command
+		// service because we cannot use it at this time since the authentication
+		// information is missing yet.
+		loadUserConfigurationCommand.execute();
+		
+		List<Entity> entities = loadUserConfigurationCommand.getEntities();
 
-			for (Entity entity : entities) {
-				if (isUser(username, entity)) {
-					return newUserDetails(entity);
-				}
+		for (Entity entity : entities) {
+			if (isUser(username, entity)) {
+				return nonPrivilegedUser(entity);
 			}
-		} catch (CommandException e) {
-			throw new UsernameNotFoundException(
-					"Fehler beim Zugriff auf Benutzer in DB.", e);
 		}
 		throw new UsernameNotFoundException(Messages
 				.getString("DbUserDetailsService.4")); //$NON-NLS-1$
 	}
 
-	private UserDetails defaultUser() {
+	private UserDetails privilegedUser() {
 		VeriniceUserDetails user = new VeriniceUserDetails(adminuser, adminpass);
 		user.addRole(ApplicationRoles.ROLE_ADMIN);
 		user.addRole(ApplicationRoles.ROLE_USER);
 		return user;
 	}
 
-	private UserDetails newUserDetails(Entity entity) {
+	private UserDetails nonPrivilegedUser(Entity entity) {
 		VeriniceUserDetails userDetails = new VeriniceUserDetails(entity
 				.getSimpleValue(Configuration.PROP_USERNAME), entity
 				.getSimpleValue(Configuration.PROP_PASSWORD));
-		List<Property> properties = entity.getProperties(
-				Configuration.PROP_ROLES).getProperties();
-		for (Property displayedRoles : properties) {
-			String[] appRoles = translateToApplicationRole(displayedRoles
-					.getPropertyValue());
-			if (appRoles != null) {
-				for (String appRole : appRoles) {
-					userDetails.addRole(appRole);
-				}
-			}
-		}
+		
+		// All non-privileged users have the role "ROLE_USER".
+		userDetails.addRole(ApplicationRoles.ROLE_USER);
+		
 		return userDetails;
-	}
-
-	private String[] translateToApplicationRole(String displayRole) {
-		return roleMap.get(displayRole);
 	}
 
 	private boolean isUser(String username, Entity entity) {
@@ -136,20 +103,29 @@ public class DbUserDetailsService implements UserDetailsService {
 
 	}
 
-	public ICommandService getCommandService() {
-		return commandService;
-	}
-
-	public void setCommandService(ICommandService commandService) {
-		this.commandService = commandService;
-	}
-
 	public void setAdminuser(String adminuser) {
 		this.adminuser = adminuser;
 	}
 
 	public void setAdminpass(String adminpass) {
 		this.adminpass = adminpass;
+	}
+
+	public ILoadUserConfiguration getLoadUserConfigurationCommand() {
+		return loadUserConfigurationCommand;
+	}
+
+	public void setLoadUserConfigurationCommand(
+			ILoadUserConfiguration loadUserConfigurationCommand) {
+		this.loadUserConfigurationCommand = loadUserConfigurationCommand;
+	}
+
+	public VeriniceContext.State getWorkObjects() {
+		return workObjects;
+	}
+
+	public void setWorkObjects(VeriniceContext.State workObjects) {
+		this.workObjects = workObjects;
 	}
 
 

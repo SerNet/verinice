@@ -35,7 +35,7 @@ import sernet.gs.ui.rcp.main.service.IAuthService;
  * $LastChangedBy$
  *
  */
-public class AuthenticationService implements IAuthService {
+public final class AuthenticationService implements IAuthService {
 
 	private DigestProcessingFilterEntryPoint entryPoint;
 	
@@ -80,4 +80,8 @@ public class AuthenticationService implements IAuthService {
 		return "";
 	}
 
+	public boolean isPermissionHandlingNeeded()
+	{
+		return true;
+	}
 }

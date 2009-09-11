@@ -14,8 +14,27 @@
 	<property name="nonceValiditySeconds" value="${veriniceserver.nonceValiditySeconds}" />
 </bean>
 
+<bean
+	id="rawLoadUserConfigurationCommand"
+	class="sernet.gs.ui.rcp.main.service.crudcommands.LoadUserConfiguration">
+	
+	<property name="daoFactory" ref="daoFactory"/>
+</bean>
+
+<bean id="loadUserConfigurationCommand" parent="baseTxProxy">
+  <property name="target" ref="rawLoadUserConfigurationCommand"/>
+  <property name="transactionAttributes">
+      <props merge="true">
+          <prop key="loadUserByUsername">PROPAGATION_REQUIRED</prop> 
+      </props>
+  </property>
+  
+</bean>
+
 <bean id="uds" class="sernet.gs.server.security.DbUserDetailsService">
-	<property name="commandService" ref="commandService"/>
+	<property name="loadUserConfigurationCommand" ref="loadUserConfigurationCommand"/>
+
+	<property name="workObjects" ref="workObjects"/>
 
 	<property name="adminuser">
 		<value>${admin.username}</value>

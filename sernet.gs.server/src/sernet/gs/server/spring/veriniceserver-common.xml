@@ -112,6 +112,7 @@ This variant:
 	  	<property name="configurationDao" ref="configurationDao"/>
 	  	<property name="bausteinVorschlagDao" ref="bausteinVorschlagDao"/>
 	  	<property name="changeLogEntryDAO" ref="changeLogEntryDAO"/>
+		<property name="permissionDAO" ref="personDAO"/>
 
 		<!-- DAOs for subclasses of CnATreeElement: -->	  	
 	  	<property name="anwendungDAO" ref="anwendungDAO"/>
