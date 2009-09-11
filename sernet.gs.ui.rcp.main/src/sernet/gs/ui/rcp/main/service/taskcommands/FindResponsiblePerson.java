@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +32,7 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 
+@SuppressWarnings("serial")
 public class FindResponsiblePerson extends GenericCommand {
 	
 	private Integer massnahmenUmsetzungDbId;
@@ -53,11 +53,7 @@ public class FindResponsiblePerson extends GenericCommand {
 		
 		foundPersons = new ArrayList<Person>(1);
 		// try to find someone responsible directly by role:
-		List<Person> persons = getLinkedPersonsByRoles(field);
-		StringBuilder names = new StringBuilder();
-		for (Iterator<Person> iterator = persons.iterator(); iterator.hasNext();) {
-			foundPersons.add(iterator.next());
-		}
+		foundPersons = getLinkedPersonsByRoles(field);
 	}
 	
 	/**
@@ -68,7 +64,7 @@ public class FindResponsiblePerson extends GenericCommand {
 	 * 
 	 * @return
 	 */
-	public List<Person>  getLinkedPersonsByRoles(String propertyTypeId) {
+	public List<Person> getLinkedPersonsByRoles(String propertyTypeId) {
 		PropertyList roles = umsetzung.getEntity().getProperties(propertyTypeId);
 		List<Person> result = new ArrayList<Person>();
 		if (roles.getProperties() == null || roles.getProperties().size() == 0 )
