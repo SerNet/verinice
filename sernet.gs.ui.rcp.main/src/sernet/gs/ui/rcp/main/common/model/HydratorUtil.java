@@ -70,8 +70,8 @@ public class HydratorUtil {
 		dao.initialize(element.getLinksDown());
 		dao.initialize(element.getLinksUp());
 
-		// TODO rschuster: This is needed for the moment. Not sure whether we really
-		// want that.
+		// Initialize permission so it should be possible to access an elements'
+		// permissions anywhere. 
 		for (Permission p : element.getPermissions())
 		{
 			p.getRole();
