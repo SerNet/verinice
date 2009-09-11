@@ -14,15 +14,20 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - reworked to allow custom roles
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model.configuration;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
 
 /**
@@ -35,6 +40,7 @@ import sernet.hui.common.connect.PropertyType;
  * $LastChangedBy$
  *
  */
+@SuppressWarnings("serial")
 public class Configuration implements Serializable {
 
 	private Entity entity;
@@ -82,6 +88,10 @@ public class Configuration implements Serializable {
 		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_USERNAME);
 		entity.setSimpleValue(type, user);
 	}
+	
+	public String getUser() {
+		return entity.getSimpleValue(PROP_USERNAME);
+	}
 
 	public void setPass(String pass) {
 		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_USERNAME);
@@ -93,5 +103,32 @@ public class Configuration implements Serializable {
 		entity.createNewProperty(type, string);
 	}
 	
+	/**
+	 * Returns a set of roles the person to which this configuration
+	 * belongs is in.
+	 * 
+	 * <p>The roles returned herein are to be used for checking whether
+	 * the user has access to elements of the {@link BSIModel}.</p>
+	 * 
+	 * <p>In contrast the roles of the type {@link Person} are only meant
+	 * for the IT security model.</p>
+	 * 
+	 * @return
+	 */
+	public Set<String> getRoles()
+	{
+		List<Property> properties = entity.getProperties(
+				Configuration.PROP_ROLES).getProperties();
+		
+		Set<String> roles = new HashSet<String>(properties.size());
+		for (Property p : properties)
+		{
+			roles.add(p.getPropertyValue());
+		}
+		
+		roles.add(getUser());
+
+		return roles;
+	}
 	
 }

@@ -114,7 +114,12 @@ public class TransactionLogWatcher {
 			}
 
 			break;
-
+		case ChangeLogEntry.TYPE_PERMISSION:
+			// Changes to the permissions are potentially disruptive (items may
+			// be invisible now etc). As such reload everything. 
+			
+			CnAElementFactory.getInstance().reloadModelFromDatabase();
+			break;
 		default:
 			Logger.getLogger(this.getClass()).debug("Unrecognized change type received from server.");
 			break;

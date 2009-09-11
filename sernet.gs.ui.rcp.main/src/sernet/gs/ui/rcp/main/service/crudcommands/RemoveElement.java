@@ -32,6 +32,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.Permission;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -40,8 +41,9 @@ import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.FindRiskAnalysisListsByParentID;
 
+@SuppressWarnings("serial")
 public class RemoveElement<T extends CnATreeElement> extends GenericCommand
-	implements IChangeLoggingCommand {
+	implements IChangeLoggingCommand, INoAccessControl {
 
 	private T element;
 	private String stationId;
@@ -171,7 +173,12 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 		if (conf != null) {
 			IBaseDao<Configuration, Serializable> confDAO = getDaoFactory().getDAO(Configuration.class);
 			confDAO.delete(conf);
+			
+			// When a Configuration instance got deleted the server needs to update
+			// its cached role map. This is done here.
+			getCommandService().discardRoleMap();
 		}
+		
 	}
 
 	/* (non-Javadoc)

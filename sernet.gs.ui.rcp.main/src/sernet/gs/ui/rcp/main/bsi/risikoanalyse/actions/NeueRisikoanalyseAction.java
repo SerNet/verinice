@@ -34,7 +34,9 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -115,5 +117,26 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate {
      * @param selection the current selection, or <code>null</code> if there
      * 		is no selection.
      */
-	public void selectionChanged(IAction action, ISelection selection) {}
+	public void selectionChanged(IAction action, ISelection selection) {
+		// Realizes that the action to create a new risk analysis is greyed out,
+		// when there is no right to do so.
+		Object sel = ((IStructuredSelection) selection).getFirstElement();
+		
+		// Risk analysis should not work on category instances.
+		if (sel instanceof IBSIStrukturKategorie)
+			action.setEnabled(false);
+		
+		// To make a risk analysis one needs write permission for the object in question.
+		if (sel instanceof CnATreeElement)
+		{
+			boolean b = CnAElementHome
+				.getInstance()
+				.isWriteAllowed((CnATreeElement) sel);
+			
+			// Only change state when it is enabled, since we do not want to
+			// trash the enablement settings of plugin.xml
+			if (action.isEnabled())
+				action.setEnabled(b);
+		}
+	}
 }

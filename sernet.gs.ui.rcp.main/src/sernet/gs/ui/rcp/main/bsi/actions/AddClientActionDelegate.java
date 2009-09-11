@@ -18,9 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -30,7 +28,7 @@ import sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
-public class AddClientActionDelegate implements IObjectActionDelegate {
+public class AddClientActionDelegate extends AbstractAddCnATreeElementActionDelegate {
 	private IWorkbenchPart targetPart;
 	
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -54,10 +52,6 @@ public class AddClientActionDelegate implements IObjectActionDelegate {
 			ExceptionUtil.log(e, "Konnte Objekt nicht hinzufügen.");
 		}
 	
-	}
-
-	public void selectionChanged(IAction action, ISelection selection) {
-
 	}
 
 }

@@ -23,6 +23,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
+
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
@@ -43,6 +46,8 @@ import sernet.hui.common.connect.PropertyList;
  *
  */
 public class HydratorUtil {
+	
+	private static final Logger log = Logger.getLogger(HydratorUtil.class);
 
 	public static void hydrateEntity(IBaseDao dao, Entity entity) {
 		if (entity == null)
@@ -64,6 +69,15 @@ public class HydratorUtil {
 		dao.initialize(element.getLinks());
 		dao.initialize(element.getLinksDown());
 		dao.initialize(element.getLinksUp());
+
+		// TODO rschuster: This is needed for the moment. Not sure whether we really
+		// want that.
+		for (Permission p : element.getPermissions())
+		{
+			p.getRole();
+			p.isReadAllowed();
+			p.isWriteAllowed();
+		}
 		
 		// Initialize the complete child->parent chain, since that is needed for checks
 		// whether an element belongs to a specific IT-Verbund.

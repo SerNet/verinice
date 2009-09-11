@@ -42,5 +42,5 @@ import sernet.gs.ui.rcp.main.service.commands.ICommand;
 public interface ICommandService {
 	public  <T extends ICommand> T executeCommand(T command) throws CommandException;
 
-	
+	public void discardRoleMap();	
 }

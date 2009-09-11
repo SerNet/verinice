@@ -18,16 +18,22 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.StaleObjectStateException;
 
+import sernet.gs.common.ApplicationRoles;
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
+import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -37,6 +43,8 @@ import sernet.gs.ui.rcp.main.service.crudcommands.CreateLink;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCurrentUserConfiguration;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshMultipleElements;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
@@ -54,6 +62,8 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
  */
 
 public class CnAElementHome {
+	
+	private Set<String> roles = null;
 
 	private static CnAElementHome instance;
 
@@ -234,6 +244,85 @@ public class CnAElementHome {
 		FindAllTags command = new FindAllTags();
 		command = commandService.executeCommand(command);
 		return command.getTags();
+	}
+	
+	/**
+	 * Returns whether it is allowed to perform a delete
+	 * operation on the given element.
+	 * 
+	 * @param cte
+	 * @return
+	 */
+	public boolean isDeleteAllowed(CnATreeElement cte)
+	{
+		// Category objects cannot be deleted. If a request
+		// to delete such an item is made, then this means
+		// to delete all its children. As such we check the
+		// write access on the category instance.
+		// For all other instances we check its parent's write
+		// permission.
+		return isWriteAllowed(
+					(cte instanceof IBSIStrukturKategorie)
+					? cte
+					: cte.getParent());
+	}
+	
+	/**
+	 * Returns whether it is allowed to perform the creation
+	 * of a new child element on the given element.
+	 * 
+	 * @param cte
+	 * @return
+	 */
+	public boolean isNewChildAllowed(CnATreeElement cte)
+	{
+		return cte instanceof BSIModel || isWriteAllowed(cte);
+	}
+	
+	/**
+	 * Returns whether it is allowed to perform modifications
+	 * to properties of this element.
+	 * 
+	 * @param cte
+	 * @return
+	 */
+	public boolean isWriteAllowed(CnATreeElement cte)
+	{
+		// Short cut: If no permission handling is needed than all objects are writable.
+		if (!ServiceFactory.lookupAuthService().isPermissionHandlingNeeded())
+			return true;
+		
+		// Short cut 2: If we are the admin, then everything is writable as well.
+		if (AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN } ))
+			return true;
+		
+		if (roles == null)
+		{
+			LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
+			try {
+				lcuc = (LoadCurrentUserConfiguration) commandService.executeCommand(lcuc);
+			} catch (CommandException e) {
+				ExceptionUtil.log(e, "Fehler bei Abfrage der Schreibrechte.");
+				return false;
+			}
+			
+			Configuration c = lcuc.getConfiguration();
+			
+			// No configuration for the current user (anymore?). Then nothing is writable. 
+			if (c == null)
+				return false;
+			
+			roles = c.getRoles();
+		}
+		
+		for (Permission p : cte.getPermissions())
+		{
+			if (p.isWriteAllowed()
+				&& roles.contains(p.getRole()))
+				return true;
+		}
+		
+		return false;
 	}
 
 }

@@ -36,6 +36,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
@@ -178,7 +179,20 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// do nothing
+		// Realizes that the action to delete an element is greyed out,
+		// when there is no right to do so. 
+		Object sel = ((IStructuredSelection) selection).getFirstElement();
+		if (sel instanceof CnATreeElement)
+		{
+			boolean b = CnAElementHome
+				.getInstance()
+				.isDeleteAllowed((CnATreeElement) sel);
+			
+			// Only change state when it is enabled, since we do not want to
+			// trash the enablement settings of plugin.xml
+			if (action.isEnabled())
+				action.setEnabled(b);
+		}
 	}
 
 }

@@ -31,7 +31,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 
-public class AddGebaudeActionDelegate implements IObjectActionDelegate {
+public class AddGebaudeActionDelegate extends AbstractAddCnATreeElementActionDelegate {
 	private IWorkbenchPart targetPart;
 	
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -56,10 +56,6 @@ public class AddGebaudeActionDelegate implements IObjectActionDelegate {
 			ExceptionUtil.log(e, "Konnte Gebäude nicht hinzufügen.");
 		}
 	
-	}
-
-	public void selectionChanged(IAction action, ISelection selection) {
-
 	}
 
 }

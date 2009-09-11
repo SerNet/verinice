@@ -40,4 +40,14 @@ public interface IAuthService {
 	 */
 	public String hashPassword(String username, String clearText);
 
+	/**
+	 * Returns whether the creation and management of {@link Permission}
+	 * objects is needed.
+	 * 
+	 * <p>By default permission handling is not needed for the standalone
+	 * client with the integrated server.</p>
+	 * 
+	 * @return
+	 */
+	public boolean isPermissionHandlingNeeded();
 }

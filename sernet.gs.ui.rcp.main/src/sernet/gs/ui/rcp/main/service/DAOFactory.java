@@ -54,6 +54,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
+import sernet.gs.ui.rcp.main.common.model.Permission;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
@@ -222,6 +223,12 @@ public class DAOFactory {
      */
     public void setNKKategorieDAO(IBaseDao<NKKategorie, Integer> daoToSet) {
         daos.put(NKKategorie.class, daoToSet);
+    }
+    /** 
+     * Setter method used by spring to inject DAO.
+     */
+    public void setPermissionDAO(IBaseDao<Permission, Integer> daoToSet) {
+        daos.put(Permission.class, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.

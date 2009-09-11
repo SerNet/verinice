@@ -25,7 +25,8 @@ import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.hui.common.connect.Entity;
 
-public class LoadUserConfiguration extends GenericCommand {
+@SuppressWarnings("serial")
+public class LoadUserConfiguration extends GenericCommand implements ILoadUserConfiguration {
 	
 	private static final String QUERY = "from Entity entity " +
 	"join fetch entity.typedPropertyLists " +

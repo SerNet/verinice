@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+ * Copyright (c) 2009 Robert Schuster <r.schuster@tarent.de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -13,33 +13,21 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
- ******************************************************************************/
+ *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
+*/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.util.List;
+import sernet.gs.ui.rcp.main.service.commands.ICommand;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-
-public class LoadBSIModel extends GenericCommand implements INoAccessControl {
-
-
-	private BSIModel model;
-
-	public LoadBSIModel() {
-	}
-	
-	public void execute() {
-		List<BSIModel> models = getDaoFactory().getDAO(BSIModel.class).findAll();
-		if (models != null && models.size()>0)
-			model = models.get(0);
-	}
-
-	public BSIModel getModel() {
-		return model;
-	}
-	
-	
-
+/**
+ * Marker interface that can be used by {@link ICommand} implementations
+ * which should work without access control restrictions.
+ * 
+ * <p>This is either neccessary because the command does not touch any
+ * restricted resource or because there is a special demand for this.</p>
+ * 
+ * @author Robert Schuster <r.schuster@tarent.de>
+ *
+ */
+public interface INoAccessControl {
 }

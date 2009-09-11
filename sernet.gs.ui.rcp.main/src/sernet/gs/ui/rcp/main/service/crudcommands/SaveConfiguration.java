@@ -61,6 +61,10 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand
 			if (updatePassword)
 				hashPassword();
 			element = dao.merge(element);
+			
+			// The roles may have been modified. As such the server needs to throw away its
+			// cached role data.
+			getCommandService().discardRoleMap();
 	}
 
 	private void hashPassword() {

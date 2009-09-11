@@ -18,6 +18,14 @@
 			name="uuid"
 		/>
 		
+		<set name="permissions"
+			cascade="all"
+			inverse="true"
+			batch-size="10">
+			<key column="cte_id"/>
+			<one-to-many class="Permission"/>
+		</set>
+		
 		<many-to-one 
 			name="entity"
 			column="entity_id"

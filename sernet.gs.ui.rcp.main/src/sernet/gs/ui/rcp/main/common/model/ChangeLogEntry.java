@@ -30,11 +30,13 @@ import org.apache.log4j.Logger;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
+@SuppressWarnings("serial")
 public class ChangeLogEntry implements Serializable {
 
 	public static final int TYPE_UPDATE = 0;
 	public static final int TYPE_INSERT = 1;
 	public static final int TYPE_DELETE = 2;
+	public static final int TYPE_PERMISSION = 3;
 
 	private Integer dbId;
 

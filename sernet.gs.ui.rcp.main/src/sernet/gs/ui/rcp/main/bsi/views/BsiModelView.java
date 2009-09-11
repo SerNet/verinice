@@ -58,6 +58,7 @@ import org.eclipse.ui.part.ViewPart;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
@@ -143,6 +144,8 @@ public class BsiModelView extends ViewPart {
 
 	private ShowBulkEditAction bulkEditAction;
 
+	private ShowAccessControlEditAction accessControlEditAction;
+
 	private Action selectEqualsAction;
 
 	private ShowKonsolidatorAction konsolidatorAction;
@@ -227,6 +230,7 @@ public class BsiModelView extends ViewPart {
 		manager.add(copyAction);
 		manager.add(pasteAction);
 		manager.add(bulkEditAction);
+		manager.add(accessControlEditAction);
 		manager.add(selectEqualsAction);
 		manager.add(selectLinksAction);
 		selectEqualsAction.setEnabled(bausteinSelected());
@@ -350,6 +354,10 @@ public class BsiModelView extends ViewPart {
 
 		bulkEditAction = new ShowBulkEditAction(getViewSite()
 				.getWorkbenchWindow(), "Bulk Edit...");
+
+		
+		accessControlEditAction = new ShowAccessControlEditAction(getViewSite()
+				.getWorkbenchWindow(), "Zugriffsrechte...");
 
 		konsolidatorAction = new ShowKonsolidatorAction(getViewSite()
 				.getWorkbenchWindow(), "Konsolidator...");

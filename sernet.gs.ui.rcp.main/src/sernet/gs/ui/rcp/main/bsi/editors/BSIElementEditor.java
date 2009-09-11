@@ -86,6 +86,12 @@ public class BSIElementEditor extends EditorPart {
 	
 
 	private void save(boolean completeRefresh) {
+		if (!CnAElementHome.getInstance().isWriteAllowed(cnAElement))
+		{
+			ExceptionUtil.log(new IllegalStateException(), "Keine Schreibrechte auf dem gegebenen Element.");
+			return;
+		}	
+		
 		BSIElementEditorInput editorinput = (BSIElementEditorInput) getEditorInput();
 		try {
 			CnAElementHome.getInstance().update(cnAElement);
@@ -142,8 +148,18 @@ public class BSIElementEditor extends EditorPart {
 			Entity entity = cnAElement.getEntity();
 			EntityType entityType = HitroUtil.getInstance().getTypeFactory()
 				.getEntityType(entity.getEntityType());
-			// add listener to mark editor as dirty on changes:
-			entity.addChangeListener(this.modelListener);
+			
+			// Enable dirty listener only for writable objects.
+			if (CnAElementHome.getInstance().isWriteAllowed(cnAElement))
+			{
+				// add listener to mark editor as dirty on changes:
+				entity.addChangeListener(this.modelListener);
+			}
+			else
+			{
+				setPartName(getPartName() + " (SCHREIBGESCHÜTZT)");
+			}
+			
 			huiComposite.createView(entity, true, true);
 			InputHelperFactory.setInputHelpers(entityType, huiComposite);
 			huiComposite.resetInitialFocus();

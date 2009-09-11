@@ -37,11 +37,13 @@ import org.eclipse.ui.internal.cheatsheets.actions.CheatSheetCategoryBasedSelect
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
+import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
 import sernet.gs.ui.rcp.main.actions.ManageUpdatesAction;
 import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
 import sernet.gs.ui.rcp.main.actions.ReloadAction;
+import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
 import sernet.gs.ui.rcp.main.actions.ShowExportWizardAction;
@@ -58,7 +60,9 @@ import sernet.gs.ui.rcp.main.bsi.views.TodoView;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewCloseDBAction;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
+import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of
@@ -114,6 +118,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private BSIModelViewCloseDBAction closeDBAction;
 
 	private ShowBulkEditAction bulkEditAction;
+	
+	private ShowAccessControlEditAction accessControlEditAction;
 
 	private ShowCheatSheetAction showCheatSheetAction;
 
@@ -225,6 +231,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		bulkEditAction = new ShowBulkEditAction(window, "Bulk Edit...");
 		register(bulkEditAction);
 		
+		accessControlEditAction = new ShowAccessControlEditAction(window, "Zugriffsrechte ...");
+		register(accessControlEditAction);
+		
 		konsolidatorAction = new ShowKonsolidatorAction(window, "Konsolidator");
 		register(konsolidatorAction);
 		
@@ -272,6 +281,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 				IWorkbenchActionConstants.M_EDIT);
 
 		editMenu.add(bulkEditAction);
+		editMenu.add(accessControlEditAction);
 		editMenu.add(konsolidatorAction);
 		editMenu.add(showWizardAction);
 		editMenu.add(new Separator());
@@ -345,6 +355,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		myToolbar.add(saveAction);
 		myToolbar.add(showWizardAction);
 		myToolbar.add(bulkEditAction);
+		myToolbar.add(accessControlEditAction);
 		myToolbar.add(konsolidatorAction);
 
 		myToolbar.add(new Separator());

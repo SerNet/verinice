@@ -19,12 +19,17 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.Permission;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.service.IAuthService;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 
@@ -38,13 +43,16 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
  *
  * @param <T>
  */
-public class CreateElement<T extends CnATreeElement> extends GenericCommand 
-	implements IChangeLoggingCommand {
+@SuppressWarnings("serial")
+public class CreateElement<T extends CnATreeElement> extends GenericCommand
+	implements IChangeLoggingCommand, IAuthAwareCommand {
 
 	private CnATreeElement container;
 	private Class<T> type;
 	protected T child;
 	private String stationId;
+	
+	private transient IAuthService authService;
 
 	public CreateElement(CnATreeElement container, Class<T> type) {
 		this.container = container;
@@ -62,6 +70,32 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
 			
 			// get constructor with parent-parameter and create new object:
 			child = type.getConstructor(CnATreeElement.class).newInstance(container);
+
+			if (authService.isPermissionHandlingNeeded())
+			{
+				// By default, inherit permissions from parent element but ITVerbund
+				// instances cannot do this, as its parents (BSIModel) is not visible
+				// and has no permissions. Therefore we use the name of the currently
+				// logged in user as a role which has read and write permissions for
+				// the new ITVerbund.
+				if (child instanceof ITVerbund)
+				{
+					HashSet<Permission> newperms = new HashSet<Permission>();
+					newperms.add(Permission.createPermission(
+							child,
+							authService.getUsername(),
+							true, true));
+					child.setPermissions(newperms);
+				}
+				else
+				{
+					child.setPermissions(
+						Permission.clonePermissions(
+								child,
+								container.getPermissions()));
+				}
+			}
+			
 			child = dao.merge(child, false);
 			container.addChild(child);
 			child.setParent(container);
@@ -99,6 +133,14 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
 		ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
 		result.add(child);
 		return result;
+	}
+
+	public IAuthService getAuthService() {
+		return authService;
+	}
+
+	public void setAuthService(IAuthService service) {
+		this.authService = service;
 	}
 	
 	

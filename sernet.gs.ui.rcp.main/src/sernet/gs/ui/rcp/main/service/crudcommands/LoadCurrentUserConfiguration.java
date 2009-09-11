@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+ * Copyright (c) 2009 Robert Schuster <r.schuster@tarent.de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -13,63 +13,72 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.service.IAuthService;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 
 /**
- * Load configuration items for person, or global configuration if person is null.
- * 
- * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * Loads the configuration item of the currently logged in user.
  */
 @SuppressWarnings("serial")
-public class LoadConfiguration extends GenericCommand {
+public class LoadCurrentUserConfiguration extends GenericCommand implements IAuthAwareCommand, INoAccessControl {
 
-	private Person person;
-	private Configuration configuration;
+	private Configuration configuration = null;
 	
-	private static final String QUERY = "from Configuration as conf " +
-			"join fetch conf.person as p where p.uuid = ?";
+	private transient IAuthService authService;
 
-	private static final String QUERY_NULL = "from Configuration as conf where conf.person is null";
-
-	public LoadConfiguration(Person elmt) {
-		this.person = elmt;
+	public LoadCurrentUserConfiguration() {
 	}
 
 	public void execute() {
-		IBaseDao<Configuration, Serializable> dao = getDaoFactory().getDAO(Configuration.class);
-		List queryResult;
-		if (person == null) {
-			queryResult = dao.findByQuery(QUERY_NULL, new Object[] {});
-		} else
-			queryResult = dao.findByQuery(QUERY, new Object[] {person.getUuid()});
+		String user = authService.getUsername();
 		
-		if (queryResult != null && queryResult.size()>0) {
-			configuration = (Configuration) queryResult.get(0);
-			HydratorUtil.hydrateElement(dao, configuration, false);
+		IBaseDao<Configuration, Serializable> dao = getDaoFactory().getDAO(Configuration.class);
+		List<Configuration> confs = dao.findAll();
+		
+		for (Configuration c : confs)
+		{
+			if (user.equals(c.getUser()))
+			{
+				c.getRoles();
+				
+				configuration = c;
+				
+				return;
+			}
 		}
 		
+		// configuration instance will be null at this point!
 	}
 
-	public Person getPerson() {
-		return person;
-	}
-
+	/**
+	 * Returns the {@link Configuration} instance of the currently logged
+	 * in user or <code>null</code> if there is none.
+	 * 
+	 * <p>In such a case the application should forbid any modifications to
+	 * existing items.</p>
+	 *  
+	 * @return
+	 */
 	public Configuration getConfiguration() {
 		return configuration;
+	}
+
+	public IAuthService getAuthService() {
+		return authService;
+	}
+
+	public void setAuthService(IAuthService service) {
+		authService = service;
 	}
 
 }

@@ -23,7 +23,8 @@ Bundle-ClassPath: .,
  lib/NOA/unoil.jar,
  lib/xstream/jug.jar,
  lib/xstream/xpp3_min-1.1.3.4.O.jar,
- lib/xstream/xstream-1.2.1.jar
+ lib/xstream/xstream-1.2.1.jar,
+ lib/miglayout/miglayout-3.7.1-swt.jar
 Bundle-Activator: sernet.gs.ui.rcp.main.Activator
 Bundle-Vendor: SerNet
 Bundle-Localization: plugin

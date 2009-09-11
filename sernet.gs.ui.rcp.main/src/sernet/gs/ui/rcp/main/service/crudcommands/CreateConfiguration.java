@@ -22,6 +22,7 @@ import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 
+@SuppressWarnings("serial")
 public class CreateConfiguration extends GenericCommand {
 
 	private Person person;

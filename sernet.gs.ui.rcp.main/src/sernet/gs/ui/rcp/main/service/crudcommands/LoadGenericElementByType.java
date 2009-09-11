@@ -21,6 +21,7 @@ import java.util.List;
 
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
+@SuppressWarnings("serial")
 public class LoadGenericElementByType<T> extends GenericCommand {
 
 

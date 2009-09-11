@@ -17,16 +17,20 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service;
 
+
 /**
  * Authentication service to be used when no service is configured.
  * 
+ * <p>This implementation is to be used in the standalone client and
+ * the internal server. It requests that the application does not
+ * {@link Permission} instances.</p>
  * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$
  *
  */
-public class NoAuthenticationService implements IAuthService {
+public final class NoAuthenticationService implements IAuthService {
 
 	private static final String[] NO_ROLES = new String[0];
 
@@ -41,7 +45,7 @@ public class NoAuthenticationService implements IAuthService {
 	 * @see sernet.gs.ui.rcp.main.service.IAuthService#getUsername()
 	 */
 	public String getUsername() {
-		return "";
+		return "internalAdmin";
 	}
 
 	/* (non-Javadoc)
@@ -51,4 +55,11 @@ public class NoAuthenticationService implements IAuthService {
 		return null;
 	}
 
+	/**
+	 * {@link Permission} instance handling not needed.
+	 */
+	public boolean isPermissionHandlingNeeded()
+	{
+		return false;
+	}
 }

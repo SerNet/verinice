@@ -31,6 +31,7 @@ import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.service.crudcommands.INoAccessControl;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPolymorphicCnAElementById;
 
 /**
@@ -41,7 +42,8 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadPolymorphicCnAElementById;
  * $LastChangedBy$
  *
  */
-public class GetChangesSince extends GenericCommand {
+@SuppressWarnings("serial")
+public class GetChangesSince extends GenericCommand implements INoAccessControl {
 
 	private static final String QUERY = "from ChangeLogEntry entry " + 
 		"where entry.changetime > ? " + 

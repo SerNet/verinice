@@ -49,6 +49,7 @@ import sernet.hui.common.connect.PropertyList;
  * @author koderman@sernet.de
  * 
  */
+@SuppressWarnings("serial")
 public abstract class CnATreeElement implements Serializable, IBSIModelListener {
 
 	private Integer dbId;
@@ -67,6 +68,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	private LinkKategorie links = new LinkKategorie(this);
 
 	private Set<CnATreeElement> children;
+	
+	private Set<Permission> permissions = new HashSet<Permission>();
 	
 	private boolean childrenLoaded = false;
 	
@@ -456,5 +459,20 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		getModelChangeListener().modelReload(newModel);
 	}
 
+	public Set<Permission> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(Set<Permission> permissions) {
+		this.permissions = permissions;
+	}
+
+	public void addPermission(Permission permission) {
+		permissions.add(permission);
+	}
+	
+	public boolean removePermission(Permission permission) {
+		return permissions.remove(permission);
+	}
 
 }

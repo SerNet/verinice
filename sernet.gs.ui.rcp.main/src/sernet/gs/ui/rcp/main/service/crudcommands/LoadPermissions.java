@@ -15,38 +15,50 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.actions;
+package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IWorkbenchPart;
+import java.io.Serializable;
+import java.util.Set;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.Permission;
+import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
+/**
+ * Load permission items for cnatreeelement.
+ * 
+ */
+@SuppressWarnings("serial")
+public class LoadPermissions extends GenericCommand {
 
-public class AddITVerbundActionDelegate extends AbstractAddCnATreeElementActionDelegate {
-	private IWorkbenchPart targetPart;
+	private CnATreeElement cte;
 	
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
+	private Set<Permission> permissions;
+	
+	public LoadPermissions(CnATreeElement cte) {
+		this.cte = cte;
 	}
 
-	public void run(IAction action) {
+	public void execute() {
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(cte.getClass());
 		
-		try {
-			CnATreeElement newElement=null;
-			
-			newElement = CnAElementFactory.getInstance()
-					.saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null);
-
-			if (newElement != null)
-				EditorFactory.getInstance().openEditor(newElement);
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Konnte IT-Verbund nicht hinzufügen.");
+		cte = dao.findById(cte.getDbId());
+		
+		permissions = cte.getPermissions();
+		
+		// Hydrate the elements.
+		for (Permission p : permissions)
+		{
+			p.getRole();
+			p.isReadAllowed();
+			p.isWriteAllowed();
 		}
-	
 	}
+	
+	public Set<Permission> getPermissions()
+	{
+		return permissions;
+	}
+
 }

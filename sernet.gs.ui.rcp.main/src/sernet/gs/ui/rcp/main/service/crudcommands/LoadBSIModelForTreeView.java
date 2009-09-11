@@ -24,7 +24,8 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 
-public class LoadBSIModelForTreeView extends GenericCommand {
+@SuppressWarnings("serial")
+public class LoadBSIModelForTreeView extends GenericCommand implements INoAccessControl {
 
 	private BSIModel model;
 
