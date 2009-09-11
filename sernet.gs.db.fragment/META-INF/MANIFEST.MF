@@ -16,4 +16,5 @@ Bundle-ClassPath: .,
 Export-Package: com.mysql.jdbc,
  org.apache.derby.jdbc,
  org.gjt.mm.mysql,
- org.postgresql
+ org.postgresql,
+ org.postgresql.util
