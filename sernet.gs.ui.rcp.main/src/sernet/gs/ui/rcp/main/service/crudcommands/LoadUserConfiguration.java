@@ -23,6 +23,7 @@ import java.util.List;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.ILoadUserConfiguration;
 import sernet.hui.common.connect.Entity;
 
 @SuppressWarnings("serial")

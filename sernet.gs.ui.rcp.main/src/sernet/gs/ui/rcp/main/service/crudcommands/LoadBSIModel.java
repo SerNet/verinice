@@ -21,6 +21,7 @@ import java.util.List;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 
 public class LoadBSIModel extends GenericCommand implements INoAccessControl {
 

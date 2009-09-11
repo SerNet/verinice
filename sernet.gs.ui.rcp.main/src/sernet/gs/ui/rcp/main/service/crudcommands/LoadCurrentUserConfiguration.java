@@ -25,6 +25,7 @@ import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.IAuthService;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
+import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 
 /**
  * Loads the configuration item of the currently logged in user.

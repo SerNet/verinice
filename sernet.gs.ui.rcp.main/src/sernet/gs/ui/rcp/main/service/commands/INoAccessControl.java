@@ -14,25 +14,19 @@
  * 
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
- ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+*/
+package sernet.gs.ui.rcp.main.service.commands;
 
-import java.util.List;
-
-import sernet.hui.common.connect.Entity;
 
 /**
- * This interface is needed for the {@link LoadUserConfiguration}
- * class as it is automatically proxied using Spring on the server.
+ * Marker interface that can be used by {@link ICommand} implementations
+ * which should work without access control restrictions.
  * 
- * <p>The interface ensures that the methods can be called on the proxy.</p>
+ * <p>This is either neccessary because the command does not touch any
+ * restricted resource or because there is a special demand for this.</p>
  * 
  * @author Robert Schuster <r.schuster@tarent.de>
  *
  */
-public interface ILoadUserConfiguration {
-	
-	List<Entity> getEntities();
-
-	void execute();
+public interface INoAccessControl {
 }
