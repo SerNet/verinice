@@ -26,7 +26,7 @@ import org.springframework.security.userdetails.UsernameNotFoundException;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.service.crudcommands.ILoadUserConfiguration;
+import sernet.gs.ui.rcp.main.service.commands.ILoadUserConfiguration;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 
