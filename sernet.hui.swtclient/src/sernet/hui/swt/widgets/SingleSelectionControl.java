@@ -38,6 +38,7 @@ import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.snutils.AssertException;
 
 /**
@@ -59,7 +60,7 @@ public class SingleSelectionControl implements IHuiControl {
 
 	private String[] labels;
 
-	private ArrayList options;
+	private ArrayList<IMLPropertyOption> options;
 
 	private Property savedProp;
 
@@ -98,7 +99,7 @@ public class SingleSelectionControl implements IHuiControl {
 			Label label = new Label(composite, SWT.NULL);
 			label.setText(fieldType.getName());
 
-			List savedProps = entity.getProperties(fieldType.getId())
+			List<Property> savedProps = entity.getProperties(fieldType.getId())
 					.getProperties();
 			savedProp = savedProps != null ? (Property) savedProps.get(0)
 					: null;
@@ -109,9 +110,8 @@ public class SingleSelectionControl implements IHuiControl {
 			options = fieldType.getOptions();
 			labels = new String[options.size()];
 			int i = 0;
-			for (Iterator iter = options.iterator(); iter.hasNext(); i++) {
-				PropertyOption option = (PropertyOption) iter.next();
-				labels[i] = option.getName();
+			for (Iterator<IMLPropertyOption> iter = options.iterator(); iter.hasNext(); i++) {
+				labels[i] = iter.next().getName();
 			}
 			combo.setItems(labels);
 			if (savedProp == null) {
