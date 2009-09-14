@@ -3,7 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Server
 Bundle-SymbolicName: sernet.gs.server;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: WebContent/WEB-INF/classes,.
+Bundle-ClassPath: WebContent/WEB-INF/classes,
+ .,
+ WebContent/WEB-INF/lib/gnumail-1.1.2.jar
 Bundle-Activator: sernet.gs.server.Activator
 Import-Package: com.mchange.v2.c3p0,
  com.mysql.jdbc,
@@ -33,6 +35,7 @@ Import-Package: com.mchange.v2.c3p0,
  org.osgi.framework,
  org.osgi.service.http,
  org.postgresql,
+ org.quartz,
  org.springframework.aop,
  org.springframework.aop.framework,
  org.springframework.beans.factory,
@@ -44,12 +47,15 @@ Import-Package: com.mchange.v2.c3p0,
  org.springframework.core.io,
  org.springframework.dao,
  org.springframework.jdbc.support,
+ org.springframework.mail,
+ org.springframework.mail.javamail,
  org.springframework.orm.hibernate3,
  org.springframework.orm.hibernate3.support,
  org.springframework.osgi.context.support,
  org.springframework.osgi.web.context.support,
  org.springframework.remoting.httpinvoker,
  org.springframework.remoting.support,
+ org.springframework.scheduling.quartz,
  org.springframework.security,
  org.springframework.security.config,
  org.springframework.security.context,
