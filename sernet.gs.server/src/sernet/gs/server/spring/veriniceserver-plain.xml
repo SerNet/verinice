@@ -25,8 +25,7 @@
 		<property name="port" value="${veriniceserver.notification.smtp.port}"/>
 </bean>
 
-<bean name="mailJob" class="org.springframework.scheduling.quartz.JobDetailBean">
-  <property name="concurrent" value="false" />
+<bean name="notificationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
   <property name="jobClass" value="sernet.gs.server.MailJob" />
   <property name="jobDataAsMap">
     <map>
@@ -37,7 +36,7 @@
 </bean>
 
 <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-    <property name="jobDetail" ref="exampleJob" />
+    <property name="jobDetail" ref="notificationJob" />
     <property name="cronExpression" value="0 ${veriniceserver.notification.minute} ${veriniceserver.notification.hour} * * ?" />
 </bean>
 
