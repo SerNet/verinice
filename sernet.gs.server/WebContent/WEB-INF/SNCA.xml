@@ -86,7 +86,8 @@ Template:
 			
 			<huiproperty 
 				name="Änderung am Umsetzungsstatus" 
-				id="configuration_mailing_status">
+				id="configuration_mailing_status"
+				inputtype="singleoption">
 				<option id="configuration_mailing_status_yes" name="An"/>
 				<option id="configuration_mailing_status_no" name="Aus"/>
 			</huiproperty>
