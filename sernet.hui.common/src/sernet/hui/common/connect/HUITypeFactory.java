@@ -269,7 +269,7 @@ public class HUITypeFactory {
 		}
 	}
 	
-	public PropertyType readPropertyType(String id) {
+	private PropertyType readPropertyType(String id) {
 		Element prop = doc.getElementById(id);
 		if (prop == null)
 			return null;
@@ -308,7 +308,7 @@ public class HUITypeFactory {
 		return "";
 	}
 
-	public PropertyGroup readPropertyGroup(String id) {
+	private PropertyGroup readPropertyGroup(String id) {
 		Element group = doc.getElementById(id);
 		if (group == null)
 			return null;
@@ -366,7 +366,7 @@ public class HUITypeFactory {
 		return params;
 	}
 
-	public ArrayList getOptionsForPropertyType(String id) {
+	private ArrayList getOptionsForPropertyType(String id) {
 		Element prop = doc.getElementById(id);
 		NodeList values = prop.getElementsByTagName("option");
 		ArrayList possibleValues = new ArrayList(values.getLength());
@@ -380,7 +380,7 @@ public class HUITypeFactory {
 		return possibleValues;
 	}
 
-	public PropertyOption getOptionById(String valueId) {
+	private PropertyOption getOptionById(String valueId) {
 		Element value = doc.getElementById(valueId);
 		if (value == null)
 			return null;
@@ -388,10 +388,6 @@ public class HUITypeFactory {
 		dv.setId(value.getAttribute("id"));
 		dv.setName(value.getAttribute("name"));
 		return dv;
-	}
-
-	public List<PropertyType> getAllPropertyTypes(String entityTypeID) {
-		return allEntities.get(entityTypeID).getPropertyTypes();
 	}
 
 	public PropertyType getPropertyType(String entityTypeID, String id) {
