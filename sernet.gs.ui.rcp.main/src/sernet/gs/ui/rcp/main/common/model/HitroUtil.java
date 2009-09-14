@@ -207,36 +207,6 @@ public class HitroUtil {
 			
 			return typeFactory.getURLPropertyTypes();
 		}
-		
-		public PropertyType readPropertyType(String id) {
-			initDelegate();
-			
-			return typeFactory.readPropertyType(id);
-		}
-			
-		public PropertyGroup readPropertyGroup(String id) {
-			initDelegate();
-			
-			return typeFactory.readPropertyGroup(id);
-		}
-
-		public ArrayList getOptionsForPropertyType(String id) {
-			initDelegate();
-			
-			return typeFactory.getOptionsForPropertyType(id);
-		}
-		
-		public PropertyOption getOptionById(String valueId) {
-			initDelegate();
-			
-			return typeFactory.getOptionById(valueId);
-		}
-
-		public List<PropertyType> getAllPropertyTypes(String entityTypeID) {
-			initDelegate();
-			
-			return typeFactory.getAllPropertyTypes(entityTypeID);
-		}
 
 		public PropertyType getPropertyType(String entityTypeID, String id) {
 			initDelegate();
