@@ -44,22 +44,31 @@ public class LoadConfiguration extends GenericCommand {
 			"join fetch conf.person as p where p.uuid = ?";
 
 	private static final String QUERY_NULL = "from Configuration as conf where conf.person is null";
+	
+	private boolean hydrateElement;
 
 	public LoadConfiguration(Person elmt) {
+		this(elmt, true);
+	}
+	
+	public LoadConfiguration(Person elmt, boolean hydrateElement) {
 		this.person = elmt;
+		this.hydrateElement = hydrateElement;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void execute() {
 		IBaseDao<Configuration, Serializable> dao = getDaoFactory().getDAO(Configuration.class);
-		List queryResult;
+		List<Configuration> queryResult;
 		if (person == null) {
-			queryResult = dao.findByQuery(QUERY_NULL, new Object[] {});
+			queryResult = (List<Configuration>) dao.findByQuery(QUERY_NULL, new Object[] {});
 		} else
-			queryResult = dao.findByQuery(QUERY, new Object[] {person.getUuid()});
+			queryResult = (List<Configuration>) dao.findByQuery(QUERY, new Object[] {person.getUuid()});
 		
 		if (queryResult != null && queryResult.size()>0) {
 			configuration = (Configuration) queryResult.get(0);
-			HydratorUtil.hydrateElement(dao, configuration, false);
+			if (hydrateElement)
+				HydratorUtil.hydrateElement(dao, configuration, false);
 		}
 		
 	}

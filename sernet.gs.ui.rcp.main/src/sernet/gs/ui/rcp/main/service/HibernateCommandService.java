@@ -39,7 +39,7 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.ICommand;
-import sernet.gs.ui.rcp.main.service.crudcommands.INoAccessControl;
+import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 import sernet.hui.common.VeriniceContext;
 
 /**

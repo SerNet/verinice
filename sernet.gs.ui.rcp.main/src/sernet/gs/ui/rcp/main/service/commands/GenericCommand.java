@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.service.commands;
 import sernet.gs.ui.rcp.main.service.DAOFactory;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 
+@SuppressWarnings("serial")
 public abstract class GenericCommand implements ICommand {
 	
 	

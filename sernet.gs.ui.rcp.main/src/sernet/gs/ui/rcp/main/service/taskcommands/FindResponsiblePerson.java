@@ -64,7 +64,7 @@ public class FindResponsiblePerson extends GenericCommand {
 	 * 
 	 * @return
 	 */
-	public List<Person> getLinkedPersonsByRoles(String propertyTypeId) {
+	private List<Person> getLinkedPersonsByRoles(String propertyTypeId) {
 		PropertyList roles = umsetzung.getEntity().getProperties(propertyTypeId);
 		List<Person> result = new ArrayList<Person>();
 		if (roles.getProperties() == null || roles.getProperties().size() == 0 )

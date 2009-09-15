@@ -51,6 +51,14 @@ public class Configuration implements Serializable {
 	public static final String PROP_PASSWORD = "configuration_passwort"; //$NON-NLS-1$
 	public static final String PROP_ROLES = "configuration_rolle"; //$NON-NLS-1$
 	
+	public static final String PROP_NOTIFICATION = "configuration_mailing_yesno"; //$NON-NLS-1$
+	public static final String PROP_NOTIFICATION_EXPIRATION = "configuration_mailing_expiring"; //$NON-NLS-1$
+	public static final String PROP_NOTIFICATION_EXPIRATION_DAYS = "configuration_mailing_expiredays"; //$NON-NLS-1$
+	
+	public static final String PROP_NOTIFICATION_GLOBAL = "configuration_mailing_owner"; //$NON-NLS-1$
+	
+	public static final String PROP_NOTIFICATION_EMAIL = "configuration_mailing_email";
+		
 	private Person person;
 	
 	private Integer dbId;
@@ -103,6 +111,56 @@ public class Configuration implements Serializable {
 		entity.createNewProperty(type, string);
 	}
 	
+	public void setNotificationEnabled(boolean b) {
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION);
+		entity.setSimpleValue(type, (b ? "configuration_mailing_yesno_yes" : "configuration_mailing_yesno_no"));
+	}
+	
+	public boolean isNotificationEnabled() {
+		return isRawPropertyValueEqual(PROP_NOTIFICATION, "configuration_mailing_yesno_yes");
+	}
+	
+	public void setNotificationExpirationEnabled(boolean b) {
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_EXPIRATION);
+		entity.setSimpleValue(type, (b ? "configuration_mailing_expiring_yes" : "configuration_mailing_expiring_no"));
+	}
+	
+	public boolean isNotificationExpirationEnabled() {
+		return isRawPropertyValueEqual(PROP_NOTIFICATION_EXPIRATION, "configuration_mailing_expiring_yes");
+	}
+	
+	public void setNotificationExpirationDays(int days) {
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_EXPIRATION_DAYS);
+		entity.setSimpleValue(type, String.valueOf(days));
+	}
+	
+	public int getNotificationExpirationDays() {
+		String s = entity.getSimpleValue(PROP_NOTIFICATION_EXPIRATION_DAYS);
+		if (s != null && s.length() > 0)
+			return Integer.parseInt(s);
+		
+		// No value set, then say there is no limit.
+		return 0;
+	}
+	
+	public String getNotificationEmail() {
+		return entity.getSimpleValue(PROP_NOTIFICATION_EMAIL);
+	}
+	
+	public void setNotificationEmail(String email) {
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_EMAIL);
+		entity.setSimpleValue(type, email);
+	}
+	
+	public void setNotificationGlobal(boolean b) {
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_GLOBAL);
+		entity.setSimpleValue(type, (b ? "configuration_mailing_owner_all" : "configuration_mailing_owner_self"));
+	}
+	
+	public boolean isNotificationGlobal() {
+		return isRawPropertyValueEqual(PROP_NOTIFICATION_GLOBAL, "configuration_mailing_owner_all");
+	}
+	
 	/**
 	 * Returns a set of roles the person to which this configuration
 	 * belongs is in.
@@ -131,4 +189,32 @@ public class Configuration implements Serializable {
 		return roles;
 	}
 	
+	/**
+	 * Convenience method that safely checks whether the value of a
+	 * given propertytype is equal to a given value.
+	 * 
+	 * <p>The method assumes that the property is single-valued.</p>
+	 * 
+	 * <p>The method safely handles the fact that a property might
+	 * not exist at all. In this case the result is always
+	 * <code>false</code></p>
+	 * 
+	 * <p>The given value shall not be <code>null</code>, otherwise
+	 * a {@link NullPointerException} is thrown.</p>
+	 * 
+	 * <p>The expected value is compared to the so called raw value of
+	 * the property. In the Hitro UI configuration this is what is provided
+	 * by the "id" attribute of an <em>option</em> element.</p> 
+	 * 
+	 * @param expected
+	 */
+	private boolean isRawPropertyValueEqual(String propertyType, String expected)
+	{
+		Property p = entity.getProperties(propertyType).getProperty(0);
+		if (p != null)
+			return expected.equals(p.getPropertyValue());
+		
+		return false;
+	}
+
 }
