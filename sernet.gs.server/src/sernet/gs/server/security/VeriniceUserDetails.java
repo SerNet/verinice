@@ -24,6 +24,7 @@ import org.springframework.security.GrantedAuthority;
 import org.springframework.security.GrantedAuthorityImpl;
 import org.springframework.security.userdetails.UserDetails;
 
+@SuppressWarnings("serial")
 public class VeriniceUserDetails implements UserDetails {
 
 	public VeriniceUserDetails(String user, String pass) {

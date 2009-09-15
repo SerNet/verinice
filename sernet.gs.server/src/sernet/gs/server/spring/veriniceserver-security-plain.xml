@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
  	xmlns:security="http://www.springframework.org/schema/security"
+ 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
-	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd 
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 <!-- BEGIN Security configuration ============================================================================ -->
 
@@ -14,27 +16,21 @@
 	<property name="nonceValiditySeconds" value="${veriniceserver.nonceValiditySeconds}" />
 </bean>
 
+<!--
+	Command to retrieve user configurations. We need to have this as a named bean to explicitly
+    give security privileges to this instance.
+     
+    See the 'internalAuthenticationProvider' bean.
+-->
 <bean
-	id="rawLoadUserConfigurationCommand"
-	class="sernet.gs.ui.rcp.main.service.crudcommands.LoadUserConfiguration">
-	
-	<property name="daoFactory" ref="daoFactory"/>
+	id="loadUserConfigurationCommand"
+	class="sernet.gs.server.commands.LoadUserConfiguration">
 </bean>
-
-<bean id="loadUserConfigurationCommand" parent="baseTxProxy">
-  <property name="target" ref="rawLoadUserConfigurationCommand"/>
-  <property name="transactionAttributes">
-      <props merge="true">
-          <prop key="loadUserByUsername">PROPAGATION_REQUIRED</prop> 
-      </props>
-  </property>
-  
-</bean>
-
+ 
 <bean id="uds" class="sernet.gs.server.security.DbUserDetailsService">
 	<property name="loadUserConfigurationCommand" ref="loadUserConfigurationCommand"/>
-
-	<property name="workObjects" ref="workObjects"/>
+	
+	<property name="commandService" ref="commandService" />
 
 	<property name="adminuser">
 		<value>${admin.username}</value>
@@ -57,7 +53,7 @@
 	<security:intercept-methods>
 	<!-- must be logged in to access roles: -->
 	<security:protect
-		method="sernet.gs.server.security.AuthenticationService.getRoles" access="ROLE_USER" />
+		method="sernet.gs.server.security.AuthenticationService.getRoles" access="ROLE_USER,ROLE_ANONYMOUS" />
 	<!-- must be logged in as admin to change passwords: -->
 	<security:protect
 		method="sernet.gs.server.security.AuthenticationService.hashPassword" access="ROLE_ADMIN" />
@@ -130,6 +126,31 @@
 <security:authentication-provider  
 	user-service-ref="uds">
 </security:authentication-provider>
+
+<bean id="internalAuthenticationProvider"
+    class="sernet.gs.server.security.InternalAuthenticationProvider">
+    <security:custom-authentication-provider />
+    
+    <property name="allowedInstances">
+    	<set>
+    		<ref bean="loadUserConfigurationCommand" />
+    		<ref bean="penCommand" />
+    	</set>
+    </property>
+</bean>
+
+<aop:config>
+	<aop:aspect
+		ref="internalAuthenticationProvider" >
+	
+		<aop:pointcut
+			id="commandServicePointcut" 
+			expression="execution(* sernet.gs.ui.rcp.main.service.HibernateCommandService.executeCommand(..))" />
+		
+		<aop:around method="doInsertAuthentication" pointcut-ref="commandServicePointcut"/>
+		
+	</aop:aspect>
+</aop:config>
 
 <!-- END Security configuration ============================================================================ -->
 

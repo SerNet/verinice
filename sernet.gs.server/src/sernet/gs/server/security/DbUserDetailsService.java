@@ -25,8 +25,11 @@ import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 
 import sernet.gs.common.ApplicationRoles;
+import sernet.gs.server.commands.LoadUserConfiguration;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.service.commands.ILoadUserConfiguration;
+import sernet.gs.ui.rcp.main.service.ICommandService;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 
@@ -43,11 +46,11 @@ import sernet.hui.common.connect.Entity;
  *
  */
 public class DbUserDetailsService implements UserDetailsService {
+	
+	private ICommandService commandService;
 
 	// injected by spring
-	private ILoadUserConfiguration loadUserConfigurationCommand;
-	
-	private VeriniceContext.State workObjects;
+	private LoadUserConfiguration loadUserConfigurationCommand;
 	
 	// injected by spring
 	private String adminuser = "";
@@ -57,8 +60,6 @@ public class DbUserDetailsService implements UserDetailsService {
 
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException, DataAccessException {
-		VeriniceContext.setState(workObjects);
-
 		if (adminuser.length() > 0 && adminpass.length() > 0
 				&& username.equals(adminuser))
 			return privilegedUser();
@@ -66,7 +67,11 @@ public class DbUserDetailsService implements UserDetailsService {
 		// This command is created and maintained by Spring. We bypass the command
 		// service because we cannot use it at this time since the authentication
 		// information is missing yet.
-		loadUserConfigurationCommand.execute();
+		try {
+			commandService.executeCommand(loadUserConfigurationCommand);
+		} catch (CommandException e) {
+			throw new RuntimeException("Failed to retrieve user configurations.", e);
+		}
 		
 		List<Entity> entities = loadUserConfigurationCommand.getEntities();
 
@@ -111,23 +116,21 @@ public class DbUserDetailsService implements UserDetailsService {
 		this.adminpass = adminpass;
 	}
 
-	public ILoadUserConfiguration getLoadUserConfigurationCommand() {
+	public LoadUserConfiguration getLoadUserConfigurationCommand() {
 		return loadUserConfigurationCommand;
 	}
 
 	public void setLoadUserConfigurationCommand(
-			ILoadUserConfiguration loadUserConfigurationCommand) {
+			LoadUserConfiguration loadUserConfigurationCommand) {
 		this.loadUserConfigurationCommand = loadUserConfigurationCommand;
 	}
 
-	public VeriniceContext.State getWorkObjects() {
-		return workObjects;
+	public ICommandService getCommandService() {
+		return commandService;
 	}
 
-	public void setWorkObjects(VeriniceContext.State workObjects) {
-		this.workObjects = workObjects;
+	public void setCommandService(ICommandService commandService) {
+		this.commandService = commandService;
 	}
-
-
 
 }

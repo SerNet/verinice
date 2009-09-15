@@ -25,12 +25,16 @@
 		<property name="port" value="${veriniceserver.notification.smtp.port}"/>
 </bean>
 
+<bean name="penCommand" class="sernet.gs.server.commands.PrepareExpirationNotification"/>
+
 <bean name="notificationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
   <property name="jobClass" value="sernet.gs.server.MailJob" />
   <property name="jobDataAsMap">
     <map>
       <entry key="mailSender" value-ref="mailSender" />
-      <entry key="workObjects" value-ref="workObjects" />
+      <entry key="commandService" value-ref="commandService" />
+      <entry key="penCommand" value-ref="penCommand" />
+      <entry key="notificationEnabled" value="${veriniceserver.notification.enabled}" />
     </map>
   </property>
 </bean>
@@ -40,10 +44,18 @@
     <property name="cronExpression" value="0 ${veriniceserver.notification.minute} ${veriniceserver.notification.hour} * * ?" />
 </bean>
 
+
 <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="triggers">
         <list>
-            <ref bean="cronTrigger" />
+              <ref bean="cronTrigger" />
+            
+            <!--  for debugging purposes, fires the mail scheduler after 2 seconds --> 
+			<bean class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+				<property name="jobDetail" ref="notificationJob" />
+				<property name="startDelay" value="2000" />
+				<property name="repeatInterval" value="100000" />
+			</bean>
         </list>
     </property>
 </bean>
