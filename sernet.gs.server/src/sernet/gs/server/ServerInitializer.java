@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
-import sernet.gs.ui.rcp.main.service.HibernateCommandService;
+import sernet.gs.ui.rcp.main.service.IHibernateCommandService;
 import sernet.hui.common.VeriniceContext;
 
 /**
@@ -36,7 +36,7 @@ public class ServerInitializer {
 	
 	private VeriniceContext.State workObjects;
 	
-	private HibernateCommandService hibernateCommandService;
+	private IHibernateCommandService hibernateCommandService;
 	
 	private IProgress nullMonitor = new IProgress() {
 		public void beginTask(String name, int totalWork) {
@@ -85,11 +85,11 @@ public class ServerInitializer {
 		return workObjects;
 	}
 
-	public void setHibernateCommandService(HibernateCommandService hibernateCommandService) {
+	public void setHibernateCommandService(IHibernateCommandService hibernateCommandService) {
 		this.hibernateCommandService = hibernateCommandService;
 	}
 
-	public HibernateCommandService getHibernateCommandService() {
+	public IHibernateCommandService getHibernateCommandService() {
 		return hibernateCommandService;
 	}
 

@@ -16,27 +16,38 @@ import org.quartz.StatefulJob;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import sernet.gs.server.commands.PrepareExpirationNotification;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.taskcommands.PrepareExpirationNotification;
-import sernet.hui.common.VeriniceContext;
 
 public class MailJob extends QuartzJobBean implements StatefulJob {
 	
 	private static final Logger log = Logger.getLogger(MailJob.class);
 	
+	private boolean notificationEnabled;
+	
+	private PrepareExpirationNotification penCommand;
+	
 	private JavaMailSender mailSender;
 	
-	private VeriniceContext.State workObjects;
-
-	public VeriniceContext.State getWorkObjects() {
-		return workObjects;
+	private ICommandService commandService;
+	
+	public PrepareExpirationNotification getPenCommand() {
+		return penCommand;
 	}
 
-	public void setWorkObjects(VeriniceContext.State workObjects) {
-		this.workObjects = workObjects;
+	public void setPenCommand(PrepareExpirationNotification penCommand) {
+		this.penCommand = penCommand;
+	}
+
+	public boolean isNotificationEnabled() {
+		return notificationEnabled;
+	}
+
+	public void setNotificationEnabled(boolean notificationEnabled) {
+		this.notificationEnabled = notificationEnabled;
 	}
 
 	public JavaMailSender getMailSender() {
@@ -49,19 +60,18 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
-		VeriniceContext.setState(workObjects);
-		
-		PrepareExpirationNotification pen = new PrepareExpirationNotification();
+		if (!notificationEnabled)
+			return;
 		
 		try {
-			pen = (PrepareExpirationNotification) 
-				ServiceFactory.lookupCommandService().executeCommand(pen);
+			commandService.executeCommand(penCommand);
 		} catch (CommandException e) {
+			throw new JobExecutionException("Exception when retrieving expiration information.", e);
 		}
 		
 		// Send mails for an expiring completion
 		for (Map.Entry<Configuration, List<MassnahmenUmsetzung>> e
-				: pen.getGlobalExpiringCompletionDateNotifees().entrySet())
+				: penCommand.getGlobalExpiringCompletionDateNotifees().entrySet())
 		{
 			MessageHelper mh = new MessageHelper(e.getKey(), mailSender.createMimeMessage());
 			
@@ -81,7 +91,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		
 		// Send mails for an expiring revision
 		for (Map.Entry<Configuration, List<MassnahmenUmsetzung>> e
-				: pen.getGlobalExpiringRevisionDateNotifees().entrySet())
+				: penCommand.getGlobalExpiringRevisionDateNotifees().entrySet())
 		{
 			MessageHelper mh = new MessageHelper(e.getKey(), mailSender.createMimeMessage());
 			
@@ -99,7 +109,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			}
 		}
 
-		for (Configuration c : pen.getExpiringCompletionDateNotifees())
+		for (Configuration c : penCommand.getExpiringCompletionDateNotifees())
 		{
 			MessageHelper mh = new MessageHelper(c, mailSender.createMimeMessage());
 			
@@ -114,7 +124,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			}
 		}
 		
-		for (Configuration c : pen.getExpiringRevisionDateNotifees())
+		for (Configuration c : penCommand.getExpiringRevisionDateNotifees())
 		{
 			MessageHelper mh = new MessageHelper(c, mailSender.createMimeMessage());
 			
@@ -131,6 +141,14 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 
 	}
 	
+	public ICommandService getCommandService() {
+		return commandService;
+	}
+
+	public void setCommandService(ICommandService commandService) {
+		this.commandService = commandService;
+	}
+
 	private static class MessageHelper
 	{
 		String to;
