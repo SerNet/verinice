@@ -50,7 +50,7 @@ import sernet.hui.common.VeriniceContext;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class HibernateCommandService implements ICommandService {
+public class HibernateCommandService implements ICommandService, IHibernateCommandService {
 	
 	private Logger log = Logger.getLogger(HibernateCommandService.class);
 
