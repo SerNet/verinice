@@ -16,3 +16,4 @@ jar_cmd sernet.hui.swtclient
 jar_cmd sernet.hui.server
 jar_cmd sernet.gs.ui.rcp.main
 jar_cmd sernet.gs.service
+jar_cmd sernet.gs.reveng
