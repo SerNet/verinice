@@ -82,6 +82,9 @@ public final class InternalAuthenticationProvider implements AuthenticationProvi
 	 * <p>Is purpose is to provide privileged and non-privileged access for {@link ICommand} instances
 	 * that are started by the server itself.</p>
 	 * 
+	 * <p>Another use-case is preliminary authentication when the real authentication scheme is not
+	 * completed.</p>
+	 * 
 	 * <p>To achieve this this method checks whether no authentication information is provided yet.
 	 * If that is the case it will test whether the argument to the <code>executeCommand</code> is
 	 * a well-known instance. If the test is positive an {@link Authentication} instance is put into the
@@ -99,7 +102,8 @@ public final class InternalAuthenticationProvider implements AuthenticationProvi
 	{
 		SecurityContext ctx = SecurityContextHolder.getContext();
 		
-		if (ctx.getAuthentication() == null)
+		Authentication auth = ctx.getAuthentication();
+		if (ctx.getAuthentication() == null || !auth.isAuthenticated())
 		{
 			Object arg = pjp.getArgs()[0];
 			if (!(arg instanceof ICommand))
@@ -111,7 +115,20 @@ public final class InternalAuthenticationProvider implements AuthenticationProvi
 			ctx.setAuthentication(authentication);
 		}
 		
-		return pjp.proceed();
+		Object result = null;
+		
+		try
+		{
+			result = pjp.proceed();
+		}
+		finally
+		{
+			// Whatever 'auth' was before (null or something that is not authenticated yet)
+			// we need to put it back.
+			ctx.setAuthentication(auth);
+		}
+		
+		return result;
 	}
 
 }
