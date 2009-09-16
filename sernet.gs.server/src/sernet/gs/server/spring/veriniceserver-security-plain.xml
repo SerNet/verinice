@@ -127,6 +127,30 @@
 	user-service-ref="uds">
 </security:authentication-provider>
 
+<!--
+  Security configuration for pre-http authentication and internal commands.
+  
+  The security configuration above only deals with the authentication of the verinice
+  client against the verinice server via http. However it misses two important issues:
+  
+  - for the login process we need to call a LoadUserConfiguration command
+    At that time there is no valid authentication information and as such calling
+    methods like AuthenticationService.getRole() fails.
+  
+  - internal commands like the mail notification job cannot authenticate via http
+    As such those commands have no authentication information at all.
+    
+  For these cases we added another authentication mechanism. What we authenticate
+  are <em>individual</em> ICommand instances which we trust. All trusted ICommand
+  instances have to be created in the Spring configuration as a named bean and
+  registered in the 'internalAuthenticationProvider' bean below.
+  
+  This Bean provides an AOP advice, ie. a method which is called for a pointcut.
+  The advice intercepts the invocation of HibernateCommandService.executeCommand()
+  and inspects the authentification situation and the first argument (an ICommand
+  instance). If the instance is well-known the authentication is granted.   
+-->
+
 <bean id="internalAuthenticationProvider"
     class="sernet.gs.server.security.InternalAuthenticationProvider">
     <security:custom-authentication-provider />
