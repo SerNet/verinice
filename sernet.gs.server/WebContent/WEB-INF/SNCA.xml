@@ -77,19 +77,11 @@ Template:
 			</huiproperty>
 
 			<huiproperty 
-				name="Neu zugeordnete Aufgaben" 
-				id="configuration_mailing_assigned"
+				name="Änderung an Massnahmen" 
+				id="configuration_mailing_measure_modification"
 				inputtype="singleoption">
-				<option id="configuration_mailing_assigned_yes" name="An"/>
-				<option id="configuration_mailing_assigned_no" name="Aus"/>
-			</huiproperty>
-			
-			<huiproperty 
-				name="Änderung am Umsetzungsstatus" 
-				id="configuration_mailing_status"
-				inputtype="singleoption">
-				<option id="configuration_mailing_status_yes" name="An"/>
-				<option id="configuration_mailing_status_no" name="Aus"/>
+				<option id="configuration_mailing_measure_modification_yesno_yes" name="An"/>
+				<option id="configuration_mailing_measure_modification_yesno_no" name="Aus"/>
 			</huiproperty>
 
 			<huiproperty 
