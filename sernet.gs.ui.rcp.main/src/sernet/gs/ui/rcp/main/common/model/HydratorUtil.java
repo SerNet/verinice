@@ -25,7 +25,6 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
