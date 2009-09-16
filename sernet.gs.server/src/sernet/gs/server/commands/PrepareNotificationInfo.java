@@ -22,11 +22,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
@@ -43,26 +45,27 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindResponsiblePerson;
  * <li>... expiring revision dates of their own measures</li>
  * <li>... expiring completion dates of any measure</li>
  * <li>... expiring revision dates of any measure</li>
+ * <li>... modified measures</li>
  * </ul>
  *
  * <p>The result can be retrieved as a {@link Collection} instance
- * containing {@link ExpirationInfo} instances. This class makes
+ * containing {@link NotificationInfo} instances. This class makes
  * it simple to access the required information.</p>
  * 
  * @author Robert Schuster <r.schuster@tarent.de>
  */
 @SuppressWarnings("serial")
-public class PrepareExpirationNotification extends GenericCommand {
+public class PrepareNotificationInfo extends GenericCommand {
 	
-	private Map<Configuration, ExpirationInfo> resultMap = new HashMap<Configuration, ExpirationInfo>();
+	private Map<Configuration, NotificationInfo> resultMap = new HashMap<Configuration, NotificationInfo>();
 	
 	private Map<Person, Configuration> personCache = new HashMap<Person, Configuration>(); 
 	
-	public PrepareExpirationNotification() {
+	public PrepareNotificationInfo() {
 		// Intentionally does nothing.
 	}
 	
-	public Collection<ExpirationInfo> getExpirationInfo()
+	public Collection<NotificationInfo> getExpirationInfo()
 	{
 		return resultMap.values();
 	}
@@ -75,10 +78,17 @@ public class PrepareExpirationNotification extends GenericCommand {
 			throw new RuntimeException(e);
 		}
 		
+		collectExpirationNotifees(lc.getElements());
+		
+		collectModificationNotifees(lc.getElements());
+	}
+	
+	private void collectExpirationNotifees(List<Configuration> configurations) {
+		
 		// Prepares a set of Configuration instances which needs to get informed about any
 		// expiration. 
 		Set<Configuration> globalNotifees = new HashSet<Configuration>();
-		for (Configuration c : lc.getElements())
+		for (Configuration c : configurations)
 		{
 			if (c.isNotificationEnabled()
 					&& c.isNotificationExpirationEnabled()
@@ -139,10 +149,10 @@ public class PrepareExpirationNotification extends GenericCommand {
 	
 	private void addGlobalNotificationRevision(Configuration c, MassnahmenUmsetzung mu)
 	{
-		ExpirationInfo ei = resultMap.get(c);
+		NotificationInfo ei = resultMap.get(c);
 		if (ei == null)
 		{
-			ei = new ExpirationInfo(c);
+			ei = new NotificationInfo(c);
 			resultMap.put(c, ei);
 			
 			c.getNotificationEmail();
@@ -157,10 +167,10 @@ public class PrepareExpirationNotification extends GenericCommand {
 	
 	private void addGlobalNotificationCompletion(Configuration c, MassnahmenUmsetzung mu)
 	{
-		ExpirationInfo ei = resultMap.get(c);
+		NotificationInfo ei = resultMap.get(c);
 		if (ei == null)
 		{
-			ei = new ExpirationInfo(c);
+			ei = new NotificationInfo(c);
 			resultMap.put(c, ei);
 			
 			c.getNotificationEmail();
@@ -175,10 +185,10 @@ public class PrepareExpirationNotification extends GenericCommand {
 
 	private void addExpiringRevisionDateNotifee(Configuration c)
 	{
-		ExpirationInfo i = resultMap.get(c);
+		NotificationInfo i = resultMap.get(c);
 		if (i == null)
 		{
-			i = new ExpirationInfo(c);
+			i = new NotificationInfo(c);
 			resultMap.put(c, i);
 			
 			c.getNotificationEmail();
@@ -189,10 +199,10 @@ public class PrepareExpirationNotification extends GenericCommand {
 	
 	private void addExpiringCompletionDateNotifee(Configuration c)
 	{
-		ExpirationInfo i = resultMap.get(c);
+		NotificationInfo i = resultMap.get(c);
 		if (i == null)
 		{
-			i = new ExpirationInfo(c);
+			i = new NotificationInfo(c);
 			resultMap.put(c, i);
 			
 			c.getNotificationEmail();
@@ -221,6 +231,7 @@ public class PrepareExpirationNotification extends GenericCommand {
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
 					&& c.isNotificationEnabled()
+					&& c.isNotificationExpirationEnabled()
 					&& !c.isNotificationGlobal())
 			{
 				Calendar limit = Calendar.getInstance();
@@ -266,6 +277,7 @@ public class PrepareExpirationNotification extends GenericCommand {
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
 					&& c.isNotificationEnabled()
+					&& c.isNotificationExpirationEnabled()
 					&& !c.isNotificationGlobal())
 			{
 				Calendar limit = Calendar.getInstance();
@@ -291,4 +303,85 @@ public class PrepareExpirationNotification extends GenericCommand {
 		
 	}
 
+	private void collectModificationNotifees(List<Configuration> configurations)
+	{
+		// Prepares a set of Configuration instances which needs to get informed about any
+		// change in a measure 
+		Set<Configuration> globalNotifees = new HashSet<Configuration>();
+		for (Configuration c : configurations)
+		{
+			if (c.isNotificationEnabled()
+					&& c.isNotificationMeasureModification()
+					&& c.isNotificationGlobal())
+			{
+				globalNotifees.add(c);
+			}
+		}
+		
+		Calendar keydate = Calendar.getInstance();
+		keydate.add(Calendar.DAY_OF_YEAR, -1);
+		
+		GetChangedElementsSince gces = new GetChangedElementsSince(keydate, MassnahmenUmsetzung.class);
+		
+		try {
+			gces = (GetChangedElementsSince) getCommandService().executeCommand(gces);
+		} catch (CommandException e) {
+			throw new RuntimeException(e);
+		}
+		
+		for (CnATreeElement cte : gces.getChangedElements())
+		{
+			MassnahmenUmsetzung mu = (MassnahmenUmsetzung) cte;
+			handleChangedMeasure(mu, globalNotifees);
+		}
+		
+	}
+	
+	private void handleChangedMeasure(MassnahmenUmsetzung mu, Set<Configuration> globalNotifees)
+	{
+		FindResponsiblePerson frp = new FindResponsiblePerson(mu.getDbId(), MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
+		
+		try {
+			frp = (FindResponsiblePerson) getCommandService().executeCommand(frp);
+		} catch (CommandException e) {
+			throw new RuntimeException(e);
+		}
+
+		for (Person p : frp.getFoundPersons())
+		{
+			Configuration c = retrieveConfiguration(p);
+			if (c != null
+					&& c.isNotificationEnabled()
+					&& c.isNotificationMeasureModification()
+					&& !c.isNotificationGlobal())
+			{
+				addModifiedMeasure(c, mu);
+			}
+		}
+		
+		for (Configuration c : globalNotifees)
+		{
+			addModifiedMeasure(c, mu);
+		}
+		
+	}
+	
+	private void addModifiedMeasure(Configuration c, MassnahmenUmsetzung mu)
+	{
+		NotificationInfo i = resultMap.get(c);
+		if (i == null)
+		{
+			i = new NotificationInfo(c);
+			resultMap.put(c, i);
+			
+			c.getNotificationEmail();
+		}
+		
+		mu.getTitel();
+		mu.getParent().getParent().getTitel();
+		
+		i.addModifiedMeasure(mu);
+	}
+
+	
 }

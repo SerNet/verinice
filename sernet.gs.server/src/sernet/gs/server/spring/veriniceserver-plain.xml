@@ -25,7 +25,7 @@
 		<property name="port" value="${veriniceserver.notification.smtp.port}"/>
 </bean>
 
-<bean name="penCommand" class="sernet.gs.server.commands.PrepareExpirationNotification"/>
+<bean name="pniCommand" class="sernet.gs.server.commands.PrepareNotificationInfo"/>
 
 <bean name="notificationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
   <property name="jobClass" value="sernet.gs.server.MailJob" />
@@ -33,7 +33,7 @@
     <map>
       <entry key="mailSender" value-ref="mailSender" />
       <entry key="commandService" value-ref="commandService" />
-      <entry key="penCommand" value-ref="penCommand" />
+      <entry key="pniCommand" value-ref="pniCommand" />
       <entry key="notificationEnabled" value="${veriniceserver.notification.enabled}" />
     </map>
   </property>

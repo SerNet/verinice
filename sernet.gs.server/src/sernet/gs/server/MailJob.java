@@ -17,8 +17,8 @@ import org.quartz.StatefulJob;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import sernet.gs.server.commands.ExpirationInfo;
-import sernet.gs.server.commands.PrepareExpirationNotification;
+import sernet.gs.server.commands.NotificationInfo;
+import sernet.gs.server.commands.PrepareNotificationInfo;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
@@ -31,28 +31,24 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	
 	private boolean notificationEnabled;
 	
-	private PrepareExpirationNotification penCommand;
+	private PrepareNotificationInfo pniCommand;
 	
 	private JavaMailSender mailSender;
 	
 	private ICommandService commandService;
 	
-	public PrepareExpirationNotification getPenCommand() {
-		return penCommand;
-	}
-
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
 		if (!notificationEnabled)
 			return;
 		
 		try {
-			commandService.executeCommand(penCommand);
+			commandService.executeCommand(pniCommand);
 		} catch (CommandException e) {
 			throw new JobExecutionException("Exception when retrieving expiration information.", e);
 		}
 		
-		for (ExpirationInfo ei : penCommand.getExpirationInfo())
+		for (NotificationInfo ei : pniCommand.getExpirationInfo())
 		{
 			MessageHelper mh = new MessageHelper(ei.getConfiguration(), mailSender.createMimeMessage());
 			
@@ -70,6 +66,9 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				for (MassnahmenUmsetzung mu : ei.getGlobalExpiredRevisions())
 					mh.addRevisionExpirationEvent(mu);
 				
+				for (MassnahmenUmsetzung mu : ei.getModifiedMeasures())
+					mh.addMeasureModifiedEvent(mu);
+
 				mailSender.send(mh.createMailMessage());
 			}
 			catch (MessagingException me)
@@ -85,8 +84,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		this.commandService = commandService;
 	}
 
-	public void setPenCommand(PrepareExpirationNotification penCommand) {
-		this.penCommand = penCommand;
+	public void setPniCommand(PrepareNotificationInfo pniCommand) {
+		this.pniCommand = pniCommand;
 	}
 
 	public void setNotificationEnabled(boolean notificationEnabled) {
@@ -103,7 +102,9 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		
 		List<String> events = new ArrayList<String>();
 		
-		Map<CnATreeElement, List<String>> globalEvents = new HashMap<CnATreeElement, List<String>>();
+		Map<CnATreeElement, List<String>> globalExpirationEvents = new HashMap<CnATreeElement, List<String>>();
+
+		Map<CnATreeElement, List<String>> measureModificationEvents = new HashMap<CnATreeElement, List<String>>();
 		
 		MimeMessage mm;
 		
@@ -126,11 +127,11 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		void addCompletionExpirationEvent(MassnahmenUmsetzung mu)
 		{
 			CnATreeElement cte = mu.getParent().getParent();
-			List<String> l = globalEvents.get(cte);
+			List<String> l = globalExpirationEvents.get(cte);
 			if (l == null)
 			{
 				l = new ArrayList<String>();
-				globalEvents.put(cte, l);
+				globalExpirationEvents.put(cte, l);
 			}
 			
 			l.add("\tUmsetzung: " + mu.getTitel() + "\n");
@@ -139,14 +140,27 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		void addRevisionExpirationEvent(MassnahmenUmsetzung mu)
 		{
 			CnATreeElement cte = mu.getParent().getParent();
-			List<String> l = globalEvents.get(cte);
+			List<String> l = globalExpirationEvents.get(cte);
 			if (l == null)
 			{
 				l = new ArrayList<String>();
-				globalEvents.put(cte, l);
+				globalExpirationEvents.put(cte, l);
 			}
 			
 			l.add("\tRevision: " + mu.getTitel() + "\n");
+		}
+		
+		void addMeasureModifiedEvent(MassnahmenUmsetzung mu)
+		{
+			CnATreeElement cte = mu.getParent().getParent();
+			List<String> l = measureModificationEvents.get(cte);
+			if (l == null)
+			{
+				l = new ArrayList<String>();
+				measureModificationEvents.put(cte, l);
+			}
+			
+			l.add("\t" + mu.getTitel() + "\n");
 		}
 		
 		MimeMessage createMailMessage() throws MessagingException
@@ -164,9 +178,16 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				sb.append(" * " + evt + "\n");
 			}
 			
-			for (Map.Entry<CnATreeElement, List<String>> e : globalEvents.entrySet())
+			for (Map.Entry<CnATreeElement, List<String>> e : globalExpirationEvents.entrySet())
 			{
 				sb.append(" * Abgelaufene Fristen für " + e.getKey().getTitel() + ": \n");
+				for (String s : e.getValue())
+					sb.append(s);
+			}
+			
+			for (Map.Entry<CnATreeElement, List<String>> e : measureModificationEvents.entrySet())
+			{
+				sb.append(" * Änderungen an Massnahmen für " + e.getKey().getTitel() + ": \n");
 				for (String s : e.getValue())
 					sb.append(s);
 			}
