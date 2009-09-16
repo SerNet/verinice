@@ -17,12 +17,11 @@
  ******************************************************************************/
 package sernet.gs.server.commands;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,27 +44,17 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindResponsiblePerson;
  * <li>... expiring completion dates of any measure</li>
  * <li>... expiring revision dates of any measure</li>
  * </ul>
- * 
- * A {@link Configuration} instance can either be in a collection for their
- * own measures or in one for any.</p>
- * 
- * <p>A {@link Configuration} instance can be in a collection for an expiring
- * completion and an expiring revision date at the same time.</p>
- * 
- * <p>A <code>Notifee</code> is the recipient of a notification.</p>
+ *
+ * <p>The result can be retrieved as a {@link Collection} instance
+ * containing {@link ExpirationInfo} instances. This class makes
+ * it simple to access the required information.</p>
  * 
  * @author Robert Schuster <r.schuster@tarent.de>
  */
 @SuppressWarnings("serial")
 public class PrepareExpirationNotification extends GenericCommand {
 	
-	private Set<Configuration> expiringCompletionDateNotifees = new HashSet<Configuration>();
-
-	private Set<Configuration> expiringRevisionDateNotifees = new HashSet<Configuration>();
-	
-	private Map<Configuration, List<MassnahmenUmsetzung>> globalExpiringCompletionDateNotifees = new HashMap<Configuration, List<MassnahmenUmsetzung>>();
-	
-	private Map<Configuration, List<MassnahmenUmsetzung>> globalExpiringRevisionDateNotifees = new HashMap<Configuration, List<MassnahmenUmsetzung>>();
+	private Map<Configuration, ExpirationInfo> resultMap = new HashMap<Configuration, ExpirationInfo>();
 	
 	private Map<Person, Configuration> personCache = new HashMap<Person, Configuration>(); 
 	
@@ -73,58 +62,9 @@ public class PrepareExpirationNotification extends GenericCommand {
 		// Intentionally does nothing.
 	}
 	
-	/**
-	 * Returns the collection of {@link Configuration} instances which need
-	 * to get notified of an expiring completion date (of one of their own
-	 * measures).
-	 * 
-	 * @return
-	 */
-	public Set<Configuration> getExpiringCompletionDateNotifees()
+	public Collection<ExpirationInfo> getExpirationInfo()
 	{
-		return expiringCompletionDateNotifees;
-	}
-	
-	/**
-	 * Returns the collection of {@link Configuration} instances which need
-	 * to get notified of an expiring revision date (of one of their own
-	 * measures).
-	 * 
-	 * @return
-	 */
-	public Set<Configuration> getExpiringRevisionDateNotifees()
-	{
-		return expiringRevisionDateNotifees;
-	}
-	
-	/**
-	 * Returns the collection of {@link Configuration} instances which need
-	 * to get notified of an expiring completion date of <em>any</em>
-	 * measures.
-	 * 
-	 * <p>The measures in question are assigned to each {@link Configuration}
-	 * instance.</p>
-	 * 
-	 * @return
-	 */
-	public Map<Configuration, List<MassnahmenUmsetzung>> getGlobalExpiringCompletionDateNotifees()
-	{
-		return globalExpiringCompletionDateNotifees;
-	}
-	
-	/**
-	 * Returns the collection of {@link Configuration} instances which need
-	 * to get notified of an expiring revision date of <em>any</em>
-	 * measures.
-	 * 
-	 * <p>The measures in question are assigned to each {@link Configuration}
-	 * instance.</p>
-	 * 
-	 * @return
-	 */
-	public Map<Configuration, List<MassnahmenUmsetzung>> getGlobalExpiringRevisionDateNotifees()
-	{
-		return globalExpiringRevisionDateNotifees;
+		return resultMap.values();
 	}
 	
 	public void execute() {
@@ -135,8 +75,9 @@ public class PrepareExpirationNotification extends GenericCommand {
 			throw new RuntimeException(e);
 		}
 		
+		// Prepares a set of Configuration instances which needs to get informed about any
+		// expiration. 
 		Set<Configuration> globalNotifees = new HashSet<Configuration>();
-		
 		for (Configuration c : lc.getElements())
 		{
 			if (c.isNotificationEnabled()
@@ -195,6 +136,70 @@ public class PrepareExpirationNotification extends GenericCommand {
 	{
 		personCache.clear();
 	}
+	
+	private void addGlobalNotificationRevision(Configuration c, MassnahmenUmsetzung mu)
+	{
+		ExpirationInfo ei = resultMap.get(c);
+		if (ei == null)
+		{
+			ei = new ExpirationInfo(c);
+			resultMap.put(c, ei);
+			
+			c.getNotificationEmail();
+		}
+		
+		// Hydrates fields which will be needed later
+		mu.getTitel();
+		mu.getParent().getParent().getTitel();
+		
+		ei.addGlobalExpiredRevision(mu);
+	}
+	
+	private void addGlobalNotificationCompletion(Configuration c, MassnahmenUmsetzung mu)
+	{
+		ExpirationInfo ei = resultMap.get(c);
+		if (ei == null)
+		{
+			ei = new ExpirationInfo(c);
+			resultMap.put(c, ei);
+			
+			c.getNotificationEmail();
+		}
+		
+		// Hydrates fields which will be needed later
+		mu.getTitel();
+		mu.getParent().getParent().getTitel();
+		
+		ei.addGlobalExpiredCompletion(mu);
+	}
+
+	private void addExpiringRevisionDateNotifee(Configuration c)
+	{
+		ExpirationInfo i = resultMap.get(c);
+		if (i == null)
+		{
+			i = new ExpirationInfo(c);
+			resultMap.put(c, i);
+			
+			c.getNotificationEmail();
+		}
+		
+		i.setRevisionExpired(true);
+	}
+	
+	private void addExpiringCompletionDateNotifee(Configuration c)
+	{
+		ExpirationInfo i = resultMap.get(c);
+		if (i == null)
+		{
+			i = new ExpirationInfo(c);
+			resultMap.put(c, i);
+			
+			c.getNotificationEmail();
+		}
+		
+		i.setCompletionExpired(true);
+	}
 
 	private void handleCompletedMeasure(MassnahmenUmsetzung mu, Set<Configuration> globalNotifees)
 	{
@@ -223,8 +228,7 @@ public class PrepareExpirationNotification extends GenericCommand {
 				
 				if (limit.after(deadline))
 				{
-					c.getNotificationEmail();
-					expiringRevisionDateNotifees.add(c);
+					addExpiringRevisionDateNotifee(c);
 				}
 			}
 		}
@@ -236,43 +240,10 @@ public class PrepareExpirationNotification extends GenericCommand {
 			
 			if (limit.after(deadline))
 			{
-				c.getNotificationEmail();
 				addGlobalNotificationRevision(c, mu);
 			}
 		}
 		
-	}
-
-	private void addGlobalNotificationRevision(Configuration c, MassnahmenUmsetzung mu)
-	{
-		List<MassnahmenUmsetzung> list = globalExpiringRevisionDateNotifees.get(c);
-		if (list == null)
-		{
-			list = new ArrayList<MassnahmenUmsetzung>();
-			globalExpiringRevisionDateNotifees.put(c, list);
-		}
-		
-		// Hydrates fields which will be needed later
-		mu.getTitel();
-		c.getNotificationEmail();
-		
-		list.add(mu);
-	}
-	
-	private void addGlobalNotificationCompletion(Configuration c, MassnahmenUmsetzung mu)
-	{
-		List<MassnahmenUmsetzung> list = globalExpiringCompletionDateNotifees.get(c);
-		if (list == null)
-		{
-			list = new ArrayList<MassnahmenUmsetzung>();
-			globalExpiringCompletionDateNotifees.put(c, list);
-		}
-		
-		// Hydrates fields which will be needed later
-		mu.getTitel();
-		c.getNotificationEmail();
-		
-		list.add(mu);
 	}
 	
 	private void handleIncompletedMeasure(MassnahmenUmsetzung mu, Set<Configuration> globalNotifees)
@@ -302,8 +273,7 @@ public class PrepareExpirationNotification extends GenericCommand {
 				
 				if (limit.after(deadline))
 				{
-					c.getNotificationEmail();
-					expiringCompletionDateNotifees.add(c);
+					addExpiringCompletionDateNotifee(c);
 				}
 			}
 		}
