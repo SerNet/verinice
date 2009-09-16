@@ -90,11 +90,11 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate {
 		// Realizes that the action to create a new element is greyed out,
 		// when there is no right to do so. 
 		Object sel = ((IStructuredSelection) selection).getFirstElement();
-		if (sel instanceof LinkKategorie)
+		if (sel instanceof CnALink)
 		{
 			boolean b = CnAElementHome
 				.getInstance()
-				.isDeleteAllowed(((LinkKategorie) sel).getParent());
+				.isDeleteAllowed(((CnALink) sel));
 			
 			// Only change state when it is enabled, since we do not want to
 			// trash the enablement settings of plugin.xml

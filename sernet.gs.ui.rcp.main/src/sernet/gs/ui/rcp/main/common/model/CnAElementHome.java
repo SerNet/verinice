@@ -255,16 +255,29 @@ public class CnAElementHome {
 	 */
 	public boolean isDeleteAllowed(CnATreeElement cte)
 	{
-		// Category objects cannot be deleted. If a request
-		// to delete such an item is made, then this means
-		// to delete all its children. As such we check the
-		// write access on the category instance.
-		// For all other instances we check its parent's write
-		// permission.
-		return isWriteAllowed(
-					(cte instanceof IBSIStrukturKategorie)
-					? cte
-					: cte.getParent());
+		// Category objects cannot be deleted.
+		if (cte instanceof IBSIStrukturKategorie)
+			return false;
+		
+		// For normal CnATreeElement we need write privileges on the
+		// instance and its parent to be able to delete it.
+		return isWriteAllowed(cte) && isWriteAllowed(cte.getParent());
+	}
+	
+	/**
+	 * Returns whether it is allowed to perform a delete
+	 * operation on the given {@link CnALink} element.
+	 * 
+	 * <p>The link can be deleted if write permissions
+	 * exist on the {@link CnATreeElement} instance
+	 * the link belongs to.</p>
+	 * 
+	 * @param cte
+	 * @return
+	 */
+	public boolean isDeleteAllowed(CnALink cl)
+	{
+		return isWriteAllowed(cl.getDependant());
 	}
 	
 	/**
