@@ -19,8 +19,8 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,34 +49,40 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
 		"where entry.changetime > ? " + 
 		"and entry.stationId != ?";
 	
-	
 	private Date lastChecked;
 	private String stationId;
 
 	private List<ChangeLogEntry> entries;
 	private Map<Integer, CnATreeElement> changedElements;
-
+	
 	/**
-	 * New query for changes.
+	 * Creates a changeset retrieval command for the given station id
+	 * and date.
+	 * 
+	 * <p>Both arguments must not be <code>null</code>.</p>
 	 * 
 	 * @param lastChecked only get changes after this timestamp
 	 * @param stationId filter out / remove changes for this client (self)
+	 * @throws IllegalArgumentException when stationId is null.
 	 */
 	public GetChangesSince(Date lastChecked, String stationId) {
+		if (stationId == null || lastChecked == null)
+			throw new IllegalArgumentException("Neither argument may be null!");
 		this.stationId = stationId;
 		this.lastChecked = lastChecked;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
 	 */
+	@SuppressWarnings("unchecked")
 	public void execute() {
 		/* save date now before query is executed, to ensure that overlapping new entries made 
 		 * by another thread will definitely be included in next query:
 		 * (the alternative would be to save the date after the query and possibly
 		 * loose changes made between execution of the query and setting of the date)
 		 */
-		Date now = GregorianCalendar.getInstance().getTime();
+		Date now = Calendar.getInstance().getTime();
 		
 		// client has never checked the log, start from now:
 		if (lastChecked == null) {
@@ -84,7 +90,8 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
 		}
 		
 		IBaseDao<ChangeLogEntry, Serializable> dao = getDaoFactory().getDAO(ChangeLogEntry.class);
-		entries = dao.findByQuery(QUERY, new Object[] {lastChecked, stationId});
+		entries = (List<ChangeLogEntry>) dao.findByQuery(QUERY, new Object[] {lastChecked, stationId});
+		
 		lastChecked = now;
 	
 		try { 
@@ -106,11 +113,9 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
 		changedElements = new HashMap<Integer, CnATreeElement>(entries2.size());
 		
 		// get IDs of changed items:
-		int i=0;
 		for (ChangeLogEntry logEntry : entries2) {
 			if (logEntry.getElementId() != null)
 				IDs.add(logEntry.getElementId());
-			++i;
 		}
 		Integer[] IDArray = (Integer[]) IDs.toArray(new Integer[IDs.size()]);
 		

@@ -156,6 +156,9 @@ public class ChangeLogEntry implements Serializable {
 
 		case TYPE_INSERT:
 			return "insert";
+			
+		case TYPE_PERMISSION:
+			return "permission";
 		default:
 			break;
 		}

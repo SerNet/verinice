@@ -52,12 +52,14 @@ public class Configuration implements Serializable {
 	public static final String PROP_ROLES = "configuration_rolle"; //$NON-NLS-1$
 	
 	public static final String PROP_NOTIFICATION = "configuration_mailing_yesno"; //$NON-NLS-1$
-	public static final String PROP_NOTIFICATION_EXPIRATION = "configuration_mailing_expiring"; //$NON-NLS-1$
-	public static final String PROP_NOTIFICATION_EXPIRATION_DAYS = "configuration_mailing_expiredays"; //$NON-NLS-1$
+	public static final String PROP_NOTIFICATION_EMAIL = "configuration_mailing_email";
 	
 	public static final String PROP_NOTIFICATION_GLOBAL = "configuration_mailing_owner"; //$NON-NLS-1$
 	
-	public static final String PROP_NOTIFICATION_EMAIL = "configuration_mailing_email";
+	public static final String PROP_NOTIFICATION_EXPIRATION = "configuration_mailing_expiring"; //$NON-NLS-1$
+	public static final String PROP_NOTIFICATION_EXPIRATION_DAYS = "configuration_mailing_expiredays"; //$NON-NLS-1$
+
+	public static final String PROP_NOTIFICATION_MEASURE_MODIFICATION = "configuration_mailing_measure_modification"; //$NON-NLS-1$
 		
 	private Person person;
 	
@@ -161,6 +163,15 @@ public class Configuration implements Serializable {
 		return isRawPropertyValueEqual(PROP_NOTIFICATION_GLOBAL, "configuration_mailing_owner_all");
 	}
 	
+	public void setNotificationMeasureModification(boolean b) {
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_MEASURE_MODIFICATION);
+		entity.setSimpleValue(type, (b ? "configuration_mailing_measure_modification_yesno_yes" : "configuration_mailing_measure_modification_yesno_no"));
+	}
+	
+	public boolean isNotificationMeasureModification() {
+		return isRawPropertyValueEqual(PROP_NOTIFICATION_MEASURE_MODIFICATION, "configuration_mailing_measure_modification_yesno_yes");
+	}
+
 	/**
 	 * Returns a set of roles the person to which this configuration
 	 * belongs is in.
