@@ -34,11 +34,15 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
+
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
@@ -198,6 +202,21 @@ public class ConfigurationAction implements IObjectActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
+		if (action.isEnabled())
+		{
+			// Conditions for availability of this action:
+			// - Database connection must be open (Implicitly assumes that login credentials have
+			//   been transferred and that the server can be queried. This is neccessary since this
+			//   method will be called before the server connection is enabled.)
+			// - permission handling is needed by IAuthService implementation
+			// - user has administrator privileges
+			boolean b =
+				CnAElementHome.getInstance().isOpen()
+				&& ServiceFactory.lookupAuthService().isPermissionHandlingNeeded()
+				&& AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
+	
+			action.setEnabled(b);
+		}
 	}
 
 }

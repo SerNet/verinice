@@ -38,6 +38,9 @@ public class LinkDropper {
 	public boolean dropLink(final List<CnATreeElement> toDrop,
 			final CnATreeElement target) {
 			
+			// Prevent creation of new link when parent is not allowed to be modified. 
+			if (!CnAElementHome.getInstance().isWriteAllowed(target))
+				return false;
 			
 			try {
 				// close all editors first:

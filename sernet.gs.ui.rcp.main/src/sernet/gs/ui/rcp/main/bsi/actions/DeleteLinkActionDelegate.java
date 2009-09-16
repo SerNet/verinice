@@ -29,9 +29,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
  * Delete items on user request.
@@ -85,7 +87,21 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// do nothing
+		// Realizes that the action to create a new element is greyed out,
+		// when there is no right to do so. 
+		Object sel = ((IStructuredSelection) selection).getFirstElement();
+		if (sel instanceof LinkKategorie)
+		{
+			boolean b = CnAElementHome
+				.getInstance()
+				.isDeleteAllowed(((LinkKategorie) sel).getParent());
+			
+			// Only change state when it is enabled, since we do not want to
+			// trash the enablement settings of plugin.xml
+			if (action.isEnabled())
+				action.setEnabled(b);
+		}
+
 	}
 
 }

@@ -28,6 +28,7 @@ import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 
+@SuppressWarnings("serial")
 public class RemoveLink<T extends CnALink> extends GenericCommand implements IChangeLoggingCommand {
 
 	private T element;

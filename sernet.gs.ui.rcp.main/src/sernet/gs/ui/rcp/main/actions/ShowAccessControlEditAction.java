@@ -90,8 +90,9 @@ public class ShowAccessControlEditAction extends Action implements ISelectionLis
 		//   method will be called before the server connection is enabled.)
 		// - permission handling is needed by IAuthService implementation
 		// - user has administrator privileges
-		boolean b = 
-			CnAElementHome.getInstance().isOpen()
+		boolean b =
+			((IStructuredSelection) selection).getFirstElement() instanceof CnATreeElement
+			&& CnAElementHome.getInstance().isOpen()
 			&& ServiceFactory.lookupAuthService().isPermissionHandlingNeeded()
 			&& AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
 

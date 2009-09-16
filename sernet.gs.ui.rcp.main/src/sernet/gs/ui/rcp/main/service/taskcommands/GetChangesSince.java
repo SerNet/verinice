@@ -59,15 +59,15 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
 	 * Creates a changeset retrieval command for the given station id
 	 * and date.
 	 * 
-	 * <p>Both arguments must not be <code>null</code>.</p>
+	 * <p>The station id must not be <code>null</code>.</p>
 	 * 
 	 * @param lastChecked only get changes after this timestamp
 	 * @param stationId filter out / remove changes for this client (self)
 	 * @throws IllegalArgumentException when stationId is null.
 	 */
 	public GetChangesSince(Date lastChecked, String stationId) {
-		if (stationId == null || lastChecked == null)
-			throw new IllegalArgumentException("Neither argument may be null!");
+		if (stationId == null)
+			throw new IllegalArgumentException("Station id must not be null.");
 		this.stationId = stationId;
 		this.lastChecked = lastChecked;
 	}

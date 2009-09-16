@@ -136,7 +136,7 @@ public class CnAElementHome {
 		return saveCommand.getNewElement();
 	}
 	
-	public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged) throws CommandException { 
+	public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged) throws CommandException {
 		Logger.getLogger(this.getClass()).debug(
 				"Saving new link from " + dropTarget + " to " + dragged);
 		CreateLink command = new CreateLink(dropTarget, dragged);
