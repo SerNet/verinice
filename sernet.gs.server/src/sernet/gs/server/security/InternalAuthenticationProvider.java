@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2009 Robert Schuster <r.schuster@tarent.de>.
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ *     This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU General Public License for more details.
+ *     You should have received a copy of the GNU General Public 
+ * License along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
+ ******************************************************************************/
 package sernet.gs.server.security;
 
 import java.util.IdentityHashMap;
@@ -17,17 +34,46 @@ import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.service.HibernateCommandService;
 import sernet.gs.ui.rcp.main.service.commands.ICommand;
 
+/**
+ * {@link AuthenticationProvider} implementation which authenticates
+ * internal {@link ICommand} instances.
+ * 
+ * <p>An in-depth explanation of how this works and why it is needed
+ * can be found in the <code>veriniceserver-security-plain.xml</code>
+ * file.</p>
+ * 
+ * @author Robert Schuster <r.schuster@tarent.de>
+ *
+ */
 @SuppressWarnings("serial")
 public final class InternalAuthenticationProvider implements AuthenticationProvider {
 	
+	private static final Object lock = new Object();
+	
+	private static InternalAuthenticationProvider instance;
+	
 	private IdentityHashMap<ICommand, ICommand> allowedInstances;
 
+	/**
+	 * The {@link Authentication} instance which gives user and admin privileges.
+	 */
 	private InternalAuthentication authentication = new InternalAuthentication(
 			"$internaluser$", "$notused$",
 			new GrantedAuthority[] { new GrantedAuthorityImpl(
 					ApplicationRoles.ROLE_USER),
 					new GrantedAuthorityImpl(
 							ApplicationRoles.ROLE_ADMIN)});
+	
+	public InternalAuthenticationProvider()
+	{
+		synchronized (lock)
+		{
+			if (instance != null)
+				throw new IllegalStateException("Only one instance of this class allowed.");
+			
+			instance = this;
+		}
+	}
 
 	public Authentication authenticate(Authentication auth)
 			throws AuthenticationException {
@@ -51,6 +97,8 @@ public final class InternalAuthenticationProvider implements AuthenticationProvi
 		}
 
 		public void setAuthenticated(boolean b) {
+			// Allow being authenticated only when the caller is an
+			// InternalAuthenticationProvider instance.
 			StackTraceElement[] t = Thread.currentThread().getStackTrace();
 			if (b && t.length >= 1) {
 				if (InternalAuthenticationProvider.class.getName().equals(
