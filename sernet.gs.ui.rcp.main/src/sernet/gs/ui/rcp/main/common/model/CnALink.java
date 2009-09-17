@@ -32,6 +32,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Raum;
  * $LastChangedBy$
  *
  */
+@SuppressWarnings("serial")
 public class CnALink implements Serializable {
 
 	public static final int DEPENDANT_ON      	= 1;
