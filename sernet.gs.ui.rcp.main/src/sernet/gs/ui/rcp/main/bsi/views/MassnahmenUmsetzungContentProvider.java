@@ -120,6 +120,9 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 				} catch (CommandException e) {
 					Logger.getLogger(this.getClass()).debug("Fehler beim Aktualisieren von TodoView", e);
 				}
+			} else if (child instanceof ITVerbund)
+			{
+				todoView.compoundChanged((ITVerbund) child);
 			}
 		}
 

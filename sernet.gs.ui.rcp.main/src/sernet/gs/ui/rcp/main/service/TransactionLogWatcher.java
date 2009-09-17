@@ -48,6 +48,8 @@ public class TransactionLogWatcher {
 	private ICommandService commandService;
 
 	public void checkLog() {
+		Activator.inheritVeriniceContextState();
+		
 		if (!CnAElementFactory.isModelLoaded())
 			return;
 		

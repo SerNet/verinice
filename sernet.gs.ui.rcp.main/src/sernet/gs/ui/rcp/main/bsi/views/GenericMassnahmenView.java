@@ -332,9 +332,43 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 				i++;
 			}
 		}
+		
+		/**
+		 * Updates a compound when it was modified.
+		 * 
+		 * <p>
+		 * This method is to be called when a compound was changed in the
+		 * DB.
+		 * </p>
+		 * 
+		 * @param compound
+		 */
+		void compoundChanged(ITVerbund compound) {
+			int i = 0;
+			for (ITVerbund c : elements)
+			{
+				if (c.equals(compound))
+				{
+					elements.set(i, compound);
+					if (combo.getSelectionIndex() == i + 1)
+					{
+						combo.setItem(i + 1, compound.getTitel());
+						combo.select(i + 1);
+					}
+					else
+					{
+						combo.setItem(i + 1, compound.getTitel());
+					}
+					
+					return;
+				}
+				
+				i++;
+			}
+		}
 
 	}
-
+	
 	/**
 	 * TODO rschuster: This class shares much functionality with
 	 * MassnahmenUmsetzungContentProvider. It would be better to move it there.
@@ -516,7 +550,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 		if (choseMessage)
 			viewer.setInput(new PlaceHolder("IT-Verbund wählen."));
 		else
-			viewer.setInput(new ArrayList());
+			viewer.setInput(new ArrayList<Object>());
 	}
 
 	/**
@@ -765,6 +799,15 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 		});
 	}
 
+	public final void compoundChanged(final ITVerbund compound) {
+		log.debug("handling changed compound: " + compound.getTitel());
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				compoundChoser.compoundChanged(compound);
+			}
+		});
+	}
+	
 	public final ITVerbund getCurrentCompound() {
 		final ITVerbund[] retval = new ITVerbund[1];
 		Display.getDefault().syncExec(new Runnable() {

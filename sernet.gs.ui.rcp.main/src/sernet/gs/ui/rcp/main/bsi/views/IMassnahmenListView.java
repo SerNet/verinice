@@ -27,5 +27,7 @@ public interface IMassnahmenListView {
 	
 	void compoundRemoved(ITVerbund verbund);
 	
+	void compoundChanged(ITVerbund verbund);
+	
 	ITVerbund getCurrentCompound();
 }
