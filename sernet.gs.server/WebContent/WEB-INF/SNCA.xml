@@ -78,6 +78,14 @@ Template:
 				<option id="configuration_mailing_owner_all" name="Alle"/>
 				<option id="configuration_mailing_owner_self" name="Nur eigene"/>
 			</huiproperty>
+			
+			<huiproperty 
+				name="Neue zu prüfende Aufgaben" 
+				id="configuration_mailing_assigned"
+				inputtype="singleoption">
+				<option id="configuration_mailing_assigned_yesno_yes" name="An"/>
+				<option id="configuration_mailing_assigned_yesno_no" name="Aus"/>
+			</huiproperty>
 
 			<huiproperty 
 				name="Änderung an Massnahmen" 
