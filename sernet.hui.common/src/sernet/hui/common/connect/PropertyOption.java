@@ -50,6 +50,17 @@ public class PropertyOption implements IMLPropertyOption {
 
 	private String id;
 	private String name;
+	
+	public PropertyOption()
+	{
+		// Intentionally does nothing.
+	}
+	
+	public PropertyOption(String id, String name)
+	{
+		this.id = id;
+		this.name = name;
+	}
 
 	/**
 	 * @return Returns the id.
