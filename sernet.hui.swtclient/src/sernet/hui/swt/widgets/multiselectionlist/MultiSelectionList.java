@@ -76,7 +76,7 @@ public class MultiSelectionList {
 	private Group group;
 
 	// map with key-value "optionid : checkbox"
-	Map checkboxes = new HashMap();
+	Map<String, Button> checkboxes = new HashMap<String, Button>();
 
 	private GridData customLayout;
 
@@ -152,9 +152,9 @@ public class MultiSelectionList {
 		
 		int btnsHeight = 0;
 		int i = 0;
-		for (Iterator iter = options.iterator(); iter.hasNext();) {
+		for (Iterator<IMLPropertyOption> iter = options.iterator(); iter.hasNext();) {
 			++i;
-			final IMLPropertyOption option = (IMLPropertyOption) iter.next();
+			final IMLPropertyOption option = iter.next();
 			Button checkbox = new Button(list, SWT.CHECK | SWT.LEFT);
 			checkbox.setText(option.getName());
 			checkbox.setData(option);
@@ -176,14 +176,14 @@ public class MultiSelectionList {
 				}
 
 				private void unselectOthers(IMLPropertyOption option) {
-					ArrayList opts = type.getOptions();
-					for (Iterator iterator = opts.iterator(); iterator
-							.hasNext();) {
-						IMLPropertyOption opt = (IMLPropertyOption) iterator
-								.next();
+					ArrayList<IMLPropertyOption> opts = type.getOptions();
+					Iterator<IMLPropertyOption> iterator = opts.iterator();
+					while (iterator.hasNext())
+					{
+						IMLPropertyOption opt = iterator.next();
+						
 						if (!opt.getId().equals(option.getId())) {
-							((Button) checkboxes.get(opt.getId()))
-									.setSelection(false);
+							checkboxes.get(opt.getId()).setSelection(false);
 							fireUnselect(type, opt);
 						}
 					}
