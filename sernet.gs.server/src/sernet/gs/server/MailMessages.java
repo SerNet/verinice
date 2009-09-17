@@ -1,0 +1,25 @@
+package sernet.gs.server;
+
+import org.eclipse.osgi.util.NLS;
+
+public class MailMessages extends NLS {
+	private static final String BUNDLE_NAME = "sernet.gs.server.mailmessages"; //$NON-NLS-1$
+	public static String MailJob_1;
+	public static String MailJob_10;
+	public static String MailJob_11;
+	public static String MailJob_2;
+	public static String MailJob_3;
+	public static String MailJob_4;
+	public static String MailJob_5;
+	public static String MailJob_6;
+	public static String MailJob_7;
+	public static String MailJob_8;
+	public static String MailJob_9;
+	static {
+		// initialize resource bundle
+		NLS.initializeMessages(BUNDLE_NAME, MailMessages.class);
+	}
+
+	private MailMessages() {
+	}
+}

@@ -11,6 +11,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 
 import org.apache.log4j.Logger;
+import org.eclipse.osgi.util.NLS;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
@@ -45,7 +46,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		try {
 			commandService.executeCommand(pniCommand);
 		} catch (CommandException e) {
-			throw new JobExecutionException("Exception when retrieving expiration information.", e);
+			throw new JobExecutionException("Exception when retrieving expiration information.", e); //$NON-NLS-1$
 		}
 		
 		for (NotificationInfo ei : pniCommand.getExpirationInfo())
@@ -73,7 +74,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			}
 			catch (MessagingException me)
 			{
-				log.warn("failed to create/send notification message: " + me);
+				log.warn("failed to create/send notification message: " + me); //$NON-NLS-1$
 			}
 			
 		}
@@ -116,12 +117,12 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		
 		void addCompletionExpirationEvent()
 		{
-			events.add("Die Frist zur Umsetzung einer Massnahme läuft ab.");
+			events.add(MailMessages.MailJob_1);
 		}
 		
 		void addRevisionExpirationEvent()
 		{
-			events.add("Die Frist zur Revision einer Massnahme läuft ab.");
+			events.add(MailMessages.MailJob_2);
 		}
 		
 		void addCompletionExpirationEvent(MassnahmenUmsetzung mu)
@@ -134,7 +135,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				globalExpirationEvents.put(cte, l);
 			}
 			
-			l.add("\tUmsetzung: " + mu.getTitel() + "\n");
+			l.add(NLS.bind(MailMessages.MailJob_3, mu.getTitel()));
 		}
 		
 		void addRevisionExpirationEvent(MassnahmenUmsetzung mu)
@@ -147,7 +148,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				globalExpirationEvents.put(cte, l);
 			}
 			
-			l.add("\tRevision: " + mu.getTitel() + "\n");
+			l.add(NLS.bind(MailMessages.MailJob_4, mu.getTitel()));
 		}
 		
 		void addMeasureModifiedEvent(MassnahmenUmsetzung mu)
@@ -160,42 +161,41 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				measureModificationEvents.put(cte, l);
 			}
 			
-			l.add("\t" + mu.getTitel() + "\n");
+			l.add("\t" + mu.getTitel() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
 		MimeMessage createMailMessage() throws MessagingException
 		{
-			mm.setFrom(new InternetAddress("mail@donotreply.com"));
+			mm.setFrom(new InternetAddress(MailMessages.MailJob_5));
 			mm.setRecipient(RecipientType.TO, new InternetAddress(this.to));
 			
-			mm.setSubject("verinice - Benachrichtigung");
+			mm.setSubject(MailMessages.MailJob_6);
 			
 			StringBuffer sb = new StringBuffer();
-			sb.append("Es liegen neue Ereignisse für Sie vor:\n");
+			sb.append(MailMessages.MailJob_7);
 			
 			for (String evt : events)
 			{
-				sb.append(" * " + evt + "\n");
+				sb.append(NLS.bind(MailMessages.MailJob_8, evt));
 			}
 			
 			for (Map.Entry<CnATreeElement, List<String>> e : globalExpirationEvents.entrySet())
 			{
-				sb.append(" * Abgelaufene Fristen für " + e.getKey().getTitel() + ": \n");
+				sb.append(NLS.bind(MailMessages.MailJob_9, e.getKey().getTitel()));
 				for (String s : e.getValue())
 					sb.append(s);
 			}
 			
 			for (Map.Entry<CnATreeElement, List<String>> e : measureModificationEvents.entrySet())
 			{
-				sb.append(" * Änderungen an Massnahmen für " + e.getKey().getTitel() + ": \n");
+				sb.append(NLS.bind(MailMessages.MailJob_10, e.getKey().getTitel()));
 				for (String s : e.getValue())
 					sb.append(s);
 			}
 			
-			sb.append("\n");
+			sb.append("\n"); //$NON-NLS-1$
 			
-			sb.append("Mit freundlichen Grüßen,\n");
-			sb.append("Ihr verinice-Benachrichtigungssystem");
+			sb.append(MailMessages.MailJob_11);
 			
 			mm.setText(sb.toString());
 			
