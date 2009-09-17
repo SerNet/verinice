@@ -39,7 +39,7 @@ import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadMassnahmenTitles;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 
@@ -99,7 +99,7 @@ public class TestVeriniceServer extends TestCase {
 	}
 	
 	public void testGetMassnahmenTitles() throws CommandException {
-		LoadMassnahmenTitles<MassnahmenUmsetzung> command = new LoadMassnahmenTitles<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
+		LoadCnATreeElementTitles<MassnahmenUmsetzung> command = new LoadCnATreeElementTitles<MassnahmenUmsetzung>(MassnahmenUmsetzung.class);
 		command = commandService.executeCommand(command);
 		List<MassnahmenUmsetzung> elements = command.getElements();
 		assertNotNull(elements);
