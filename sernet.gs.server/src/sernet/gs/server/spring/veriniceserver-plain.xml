@@ -50,12 +50,13 @@
         <list>
               <ref bean="cronTrigger" />
             
-            <!--  for debugging purposes, fires the mail scheduler after 2 seconds --> 
+            <!--  for debugging purposes, fires the mail scheduler after 2 seconds 
 			<bean class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 				<property name="jobDetail" ref="notificationJob" />
 				<property name="startDelay" value="2000" />
 				<property name="repeatInterval" value="100000" />
 			</bean>
+			 -->
         </list>
     </property>
 </bean>

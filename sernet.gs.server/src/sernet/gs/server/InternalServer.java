@@ -85,11 +85,11 @@ public class InternalServer implements IInternalServer {
 		}
 		catch (ClassNotFoundException cnfe)
 		{
-			throw new IllegalStateException("Database class not found: " + driver);
+			throw new IllegalStateException(Messages.InternalServer_0 + driver);
 		}
 		catch (SQLException sqle)
 		{
-			throw new IllegalStateException("Invalid database credentials.");
+			throw new IllegalStateException(Messages.InternalServer_1);
 		}
 		
 		ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user,
@@ -117,7 +117,7 @@ public class InternalServer implements IInternalServer {
 	 */
 	public void start() throws IllegalStateException {
 		if (running)
-			throw new IllegalStateException("Server is still running.");
+			throw new IllegalStateException(Messages.InternalServer_2);
 
 		try {
 			if (wc == null)
@@ -125,14 +125,14 @@ public class InternalServer implements IInternalServer {
 
 			setupSpringServlets();
 		} catch (ServletException se) {
-			throw new IllegalStateException("Could not start internal server.",
+			throw new IllegalStateException(Messages.InternalServer_3,
 					se);
 		} catch (NamespaceException nse) {
-			throw new IllegalStateException("Could not start internal server.",
+			throw new IllegalStateException(Messages.InternalServer_3,
 					nse);
 		} catch (Exception e)
 		{
-			throw new IllegalStateException("Could not start internal server.",
+			throw new IllegalStateException(Messages.InternalServer_3,
 					e);
 		}
 
@@ -176,26 +176,26 @@ public class InternalServer implements IInternalServer {
 		ctx = wc.createDefaultHttpContext();
 
 		Dictionary<String, String> dict = new Hashtable<String, String>();
-		dict.put("contextConfigLocation", "\n"
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-common.xml \n"
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-osgi.xml \n"
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-common.xml \n"
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-osgi.xml \n"
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml \n");
+		dict.put("contextConfigLocation", "\n" //$NON-NLS-1$ //$NON-NLS-2$
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-common.xml \n" //$NON-NLS-1$
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-osgi.xml \n" //$NON-NLS-1$
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-common.xml \n" //$NON-NLS-1$
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-osgi.xml \n" //$NON-NLS-1$
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml \n"); //$NON-NLS-1$
 		dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
 				OsgiBundleXmlWebApplicationContext.class.getName());
 		wc.setContextParam(dict, ctx);
 
 		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "GetHitroConfig");
-		dict.put("snca.xml.path", "/WebContent/WEB-INF/SNCA.xml");
+		dict.put("servlet-name", "GetHitroConfig"); //$NON-NLS-1$ //$NON-NLS-2$
+		dict.put("snca.xml.path", "/WebContent/WEB-INF/SNCA.xml"); //$NON-NLS-1$ //$NON-NLS-2$
 		wc.registerServlet(new GetHitroConfig(),
-				new String[] { "/GetHitroConfig" }, dict, ctx);
+				new String[] { "/GetHitroConfig" }, dict, ctx); //$NON-NLS-1$
 
 		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "serverTest");
+		dict.put("servlet-name", "serverTest"); //$NON-NLS-1$ //$NON-NLS-2$
 		wc.registerServlet(new ServerTestServlet(),
-				new String[] { "/servertest" }, dict, ctx);
+				new String[] { "/servertest" }, dict, ctx); //$NON-NLS-1$
 	}
 
 	/**
@@ -209,18 +209,18 @@ public class InternalServer implements IInternalServer {
 			NamespaceException {
 		Dictionary<String, String> dict = new Hashtable<String, String>();
 		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "context");
+		dict.put("servlet-name", "context"); //$NON-NLS-1$ //$NON-NLS-2$
 		dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
 				OsgiBundleXmlWebApplicationContext.class.getName());
 		contextLoaderServlet = new ContextLoaderServlet();
-		wc.registerServlet("/context", contextLoaderServlet, dict, ctx);
+		wc.registerServlet("/context", contextLoaderServlet, dict, ctx); //$NON-NLS-1$
 
 		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "springDispatcher");
-		dict.put("contextConfigLocation",
-				"classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml");
+		dict.put("servlet-name", "springDispatcher"); //$NON-NLS-1$ //$NON-NLS-2$
+		dict.put("contextConfigLocation", //$NON-NLS-1$
+				"classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$
 		dispatcherServlet = new DispatcherServlet();
-		wc.registerServlet(dispatcherServlet, new String[] { "/service/*" },
+		wc.registerServlet(dispatcherServlet, new String[] { "/service/*" }, //$NON-NLS-1$
 				dict, ctx);
 	}
 
@@ -249,13 +249,16 @@ public class InternalServer implements IInternalServer {
 		@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 				throws ServletException, IOException {
-			System.err.println("doGet");
+			System.err.println("doGet"); //$NON-NLS-1$
 
-			resp.setContentType("text/html");
+			resp.setContentType("text/html"); //$NON-NLS-1$
 
 			PrintWriter w = resp.getWriter();
 
-			w.println("internal verinice server is running: " + running);
+			if (running)
+				w.println(Messages.InternalServer_4);
+			else
+				w.println(Messages.InternalServer_5);
 
 			w.flush();
 		}
