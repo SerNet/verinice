@@ -52,12 +52,18 @@ class GetChangedElementsSince extends GenericCommand {
 
 	private List<CnATreeElement> changedElements;
 	
-	private String className;
+	private String[] classNames;
 	private Date keydate;
+	private int type;
 
-	public GetChangedElementsSince(Calendar keydate, Class<?> klass) {
+	public GetChangedElementsSince(Calendar keydate, int type, Class<?> klass) {
+		this(keydate, type, new String[] { klass.getName() });
+	}
+	
+	public GetChangedElementsSince(Calendar keydate, int type, String[] classNames) {
 		this.keydate = keydate.getTime();
-		className = klass.getName();
+		this.classNames = classNames;
+		this.type = type;
 	}
 	
 	public List<CnATreeElement> getChangedElements()
@@ -72,7 +78,7 @@ class GetChangedElementsSince extends GenericCommand {
 				ChangeLogEntry.class);
 		
 		List<ChangeLogEntry> entries = (List<ChangeLogEntry>) 
-			dao.findByCallback(new Callback(keydate, new String[] { className }));
+			dao.findByCallback(new Callback(keydate, type, classNames));
 		
 		try
 		{
@@ -108,9 +114,12 @@ class GetChangedElementsSince extends GenericCommand {
 		
 		String[] classNames;
 		
-		Callback(Date keydate, String[] classNames)
+		int type;
+		
+		Callback(Date keydate, int type, String[] classNames)
 		{
 			this.keydate = keydate;
+			this.type = type;
 			this.classNames = classNames;
 		}
 
@@ -124,7 +133,7 @@ class GetChangedElementsSince extends GenericCommand {
 					+ "and entry.change= :type "
 					+ "and entry.elementClass in (:classNames)")
 					.setDate("keydate", keydate)
-					.setInteger("type", ChangeLogEntry.TYPE_UPDATE)
+					.setInteger("type", type)
 					.setParameterList("classNames", classNames);
 			
 			return query.list();

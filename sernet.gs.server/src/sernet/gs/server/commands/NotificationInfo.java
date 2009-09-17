@@ -45,7 +45,9 @@ public class NotificationInfo {
 	
 	private List<MassnahmenUmsetzung> globalExpiredRevisions = new ArrayList<MassnahmenUmsetzung>();
 	
-	private List<MassnahmenUmsetzung> modifiedMeasures = new ArrayList<MassnahmenUmsetzung>(); 
+	private List<MassnahmenUmsetzung> modifiedMeasures = new ArrayList<MassnahmenUmsetzung>();
+	
+	private List<MassnahmenUmsetzung> assignedMeasures = new ArrayList<MassnahmenUmsetzung>(); 
 	
 	NotificationInfo(Configuration c)
 	{
@@ -109,6 +111,16 @@ public class NotificationInfo {
 	public List<MassnahmenUmsetzung> getModifiedMeasures()
 	{
 		return modifiedMeasures;
+	}
+	
+	public void addAssignedMeasure(MassnahmenUmsetzung mu)
+	{
+		assignedMeasures.add(mu);
+	}
+
+	public List<MassnahmenUmsetzung> getAssignedMeasures()
+	{
+		return assignedMeasures;
 	}
 
 	public Configuration getConfiguration() {

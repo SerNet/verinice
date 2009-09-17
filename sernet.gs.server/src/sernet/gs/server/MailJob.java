@@ -105,6 +105,9 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				
 				for (MassnahmenUmsetzung mu : ei.getModifiedMeasures())
 					mh.addMeasureModifiedEvent(mu);
+				
+				for (MassnahmenUmsetzung mu : ei.getAssignedMeasures())
+					mh.addMeasureAssignmentEvent(mu);
 
 				mailSender.send(mh.createMailMessage());
 			}
@@ -170,6 +173,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 
 		Map<CnATreeElement, List<String>> measureModificationEvents = new HashMap<CnATreeElement, List<String>>();
 		
+		Map<CnATreeElement, List<String>> measureAssignmentEvents = new HashMap<CnATreeElement, List<String>>();
+		
 		MimeMessage mm;
 		
 		MessageHelper(Configuration recipient, MimeMessage mm)
@@ -227,6 +232,19 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			l.add("\t" + mu.getTitel() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
+		void addMeasureAssignmentEvent(MassnahmenUmsetzung mu)
+		{
+			CnATreeElement cte = mu.getParent().getParent();
+			List<String> l = measureAssignmentEvents.get(cte);
+			if (l == null)
+			{
+				l = new ArrayList<String>();
+				measureAssignmentEvents.put(cte, l);
+			}
+			
+			l.add("\t" + mu.getTitel() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		
 		MimeMessage createMailMessage() throws MessagingException
 		{
 			mm.setFrom(new InternetAddress(MailMessages.MailJob_5));
@@ -239,17 +257,24 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			
 			for (String evt : events)
 			{
-				sb.append(NLS.bind(MailMessages.MailJob_8, evt));
+				sb.append(" * " + evt + "\n");
 			}
 			
 			for (Map.Entry<CnATreeElement, List<String>> e : globalExpirationEvents.entrySet())
+			{
+				sb.append(NLS.bind(MailMessages.MailJob_8, e.getKey().getTitel()));
+				for (String s : e.getValue())
+					sb.append(s);
+			}
+			
+			for (Map.Entry<CnATreeElement, List<String>> e : measureModificationEvents.entrySet())
 			{
 				sb.append(NLS.bind(MailMessages.MailJob_9, e.getKey().getTitel()));
 				for (String s : e.getValue())
 					sb.append(s);
 			}
 			
-			for (Map.Entry<CnATreeElement, List<String>> e : measureModificationEvents.entrySet())
+			for (Map.Entry<CnATreeElement, List<String>> e : measureAssignmentEvents.entrySet())
 			{
 				sb.append(NLS.bind(MailMessages.MailJob_10, e.getKey().getTitel()));
 				for (String s : e.getValue())

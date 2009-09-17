@@ -26,8 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -46,6 +48,7 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindResponsiblePerson;
  * <li>... expiring completion dates of any measure</li>
  * <li>... expiring revision dates of any measure</li>
  * <li>... modified measures</li>
+ * <li>... assigned measures</li>
  * </ul>
  *
  * <p>The result can be retrieved as a {@link Collection} instance
@@ -80,7 +83,17 @@ public class PrepareNotificationInfo extends GenericCommand {
 		
 		collectExpirationNotifees(lc.getElements());
 		
+		// The following command rely upon inspection of the ChangeLogEntry instances.
+		// All results of insertion and modification changes are taken into account. If an
+		// element has been deleted in the same time period, it is assumed that the database
+		// won't be able to retrieve the neccessary instance anymore.
+		// 
+		// E.g. someone modifies some MassnahmenUmsetzung, later this one is removed. The
+		// instance is not in the database anymore so it won't be regarded.
+		
+		// TODO rschuster: Test this.
 		collectModificationNotifees(lc.getElements());
+		collectAssignmentNotifees(lc.getElements());
 	}
 	
 	private void collectExpirationNotifees(List<Configuration> configurations) {
@@ -321,7 +334,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		Calendar keydate = Calendar.getInstance();
 		keydate.add(Calendar.DAY_OF_YEAR, -1);
 		
-		GetChangedElementsSince gces = new GetChangedElementsSince(keydate, MassnahmenUmsetzung.class);
+		GetChangedElementsSince gces = new GetChangedElementsSince(keydate, ChangeLogEntry.TYPE_UPDATE, MassnahmenUmsetzung.class);
 		
 		try {
 			gces = (GetChangedElementsSince) getCommandService().executeCommand(gces);
@@ -383,5 +396,98 @@ public class PrepareNotificationInfo extends GenericCommand {
 		i.addModifiedMeasure(mu);
 	}
 
+	private void collectAssignmentNotifees(List<Configuration> configurations)
+	{
+		// Prepares a set of Configuration instances which needs to get informed about any
+		// new assignments 
+		Set<Configuration> globalNotifees = new HashSet<Configuration>();
+		for (Configuration c : configurations)
+		{
+			if (c.isNotificationEnabled()
+					&& c.isNotificationMeasureAssignment()
+					&& c.isNotificationGlobal())
+			{
+				globalNotifees.add(c);
+			}
+		}
+		
+		Calendar keydate = Calendar.getInstance();
+		keydate.add(Calendar.DAY_OF_YEAR, -1);
+		
+		GetChangedElementsSince gces = new GetChangedElementsSince(keydate, ChangeLogEntry.TYPE_INSERT, BausteinUmsetzung.class);
+		
+		try {
+			gces = getCommandService().executeCommand(gces);
+		} catch (CommandException e) {
+			throw new RuntimeException(e);
+		}
+		
+		for (CnATreeElement cte : gces.getChangedElements())
+		{
+			BausteinUmsetzung bu = (BausteinUmsetzung) cte;
+			for (MassnahmenUmsetzung mu : bu.getMassnahmenUmsetzungen())
+			{
+				handleAssignedMeasure(mu, globalNotifees);
+			}
+		}
+		
+		// TODO: New assignment can also happen (and in fact do so in a more straightforward
+		// way) when someone adds a new link of type 'responsible for'. However no changelog entries
+		// are created in that case.
+		/*
+		gces = new GetChangedElementsSince(keydate, ChangeLogEntry.TYPE_INSERT, CnALink.class);
+		try {
+			gces = getCommandService().executeCommand(gces);
+		} catch (CommandException e) {
+			throw new RuntimeException(e);
+		}
+		*/
+	}
+	
+	private void handleAssignedMeasure(MassnahmenUmsetzung mu, Set<Configuration> globalNotifees)
+	{
+		FindResponsiblePerson frp = new FindResponsiblePerson(mu.getDbId(), MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
+		
+		try {
+			frp = (FindResponsiblePerson) getCommandService().executeCommand(frp);
+		} catch (CommandException e) {
+			throw new RuntimeException(e);
+		}
+
+		for (Person p : frp.getFoundPersons())
+		{
+			Configuration c = retrieveConfiguration(p);
+			if (c != null
+					&& c.isNotificationEnabled()
+					&& c.isNotificationMeasureAssignment()
+					&& !c.isNotificationGlobal())
+			{
+				addAssignedMeasure(c, mu);
+			}
+		}
+		
+		for (Configuration c : globalNotifees)
+		{
+			addAssignedMeasure(c, mu);
+		}
+		
+	}
+	
+	private void addAssignedMeasure(Configuration c, MassnahmenUmsetzung mu)
+	{
+		NotificationInfo i = resultMap.get(c);
+		if (i == null)
+		{
+			i = new NotificationInfo(c);
+			resultMap.put(c, i);
+			
+			c.getNotificationEmail();
+		}
+		
+		mu.getTitel();
+		mu.getParent().getParent().getTitel();
+		
+		i.addAssignedMeasure(mu);
+	}
 	
 }
