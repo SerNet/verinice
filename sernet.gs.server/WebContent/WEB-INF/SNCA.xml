@@ -52,7 +52,10 @@ Template:
             name="Rollen"
             id="configuration_rolle"
             tooltip="Liste von Anwendungsrollen"
-     />
+			inputtype="reference" 
+			required="true">
+			<references entitytype="role"/>
+     </huiproperty>
      
      <huipropertygroup
 			id="configuration_mailing"
