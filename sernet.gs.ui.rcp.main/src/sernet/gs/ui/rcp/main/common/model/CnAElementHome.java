@@ -258,8 +258,13 @@ public class CnAElementHome {
 		if (cte instanceof IBSIStrukturKategorie)
 			return false;
 		
-		// For normal CnATreeElement we need write privileges on the
-		// instance and its parent to be able to delete it.
+		// ITVerbund instances can be removed when
+		// one has write access to it (There is no parent to check).
+		if (cte instanceof ITVerbund)
+			return isWriteAllowed(cte);
+		
+		// For normal CnATreeElement instance we need write privileges
+		// on the instance and its parent to be able to delete it.
 		return isWriteAllowed(cte) && isWriteAllowed(cte.getParent());
 	}
 	
