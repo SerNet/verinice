@@ -63,7 +63,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadMassnahmenTitles;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
 
 /**
@@ -594,7 +594,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 
 				try {
 					monitor.setTaskName("");
-					LoadMassnahmenTitles<ITVerbund> compoundLoader = new LoadMassnahmenTitles<ITVerbund>(
+					LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<ITVerbund>(
 							ITVerbund.class);
 					compoundLoader = ServiceFactory.lookupCommandService()
 							.executeCommand(compoundLoader);

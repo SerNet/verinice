@@ -24,13 +24,18 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
-public class LoadMassnahmenTitles<T extends CnATreeElement> extends GenericCommand {
-
+/**
+ * Retrieves all instances of a {@link CnATreeElement} subclass
+ * and hydrates their title property.
+ * 
+ */
+@SuppressWarnings("serial")
+public class LoadCnATreeElementTitles<T extends CnATreeElement> extends GenericCommand {
 
 	private List<T> elements;
 	private Class<T> clazz;
 
-	public LoadMassnahmenTitles(Class<T> type) {
+	public LoadCnATreeElementTitles(Class<T> type) {
 		this.clazz = type;
 	}
 	
