@@ -24,14 +24,13 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 @SuppressWarnings("serial")
 public class LoadGenericElementByType<T> extends GenericCommand {
 
-
 	private List<T> elements;
 	private Class<T> clazz;
 
 	public LoadGenericElementByType(Class<T> type) {
 		this.clazz = type;
 	}
-	
+
 	public void execute() {
 		elements = getDaoFactory().getDAO(clazz).findAll();
 	}
@@ -39,7 +38,5 @@ public class LoadGenericElementByType<T> extends GenericCommand {
 	public List<T> getElements() {
 		return elements;
 	}
-	
-	
 
 }
