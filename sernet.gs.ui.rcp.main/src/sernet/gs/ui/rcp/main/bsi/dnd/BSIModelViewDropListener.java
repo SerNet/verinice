@@ -37,6 +37,7 @@ import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -74,6 +75,10 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 
 	private boolean dropBaustein() {
 		final CnATreeElement target = (CnATreeElement) getCurrentTarget();
+		
+		if (!CnAElementHome.getInstance().isNewChildAllowed(target))
+			return false;
+		
 		final List<Baustein> toDrop = DNDItems.getItems();
 		Check: for (Baustein baustein : toDrop) {
 			int targetSchicht = 0;

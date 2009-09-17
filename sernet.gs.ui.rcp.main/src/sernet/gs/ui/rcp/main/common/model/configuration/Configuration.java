@@ -62,6 +62,8 @@ public class Configuration implements Serializable {
 	public static final String PROP_NOTIFICATION_EXPIRATION_DAYS = "configuration_mailing_expiredays"; //$NON-NLS-1$
 
 	public static final String PROP_NOTIFICATION_MEASURE_MODIFICATION = "configuration_mailing_measure_modification"; //$NON-NLS-1$
+	
+	public static final String PROP_NOTIFICATION_MEASURE_ASSIGNMENT = "configuration_mailing_assigned"; //$NON-NLS-1$
 		
 	private Person person;
 	
@@ -172,6 +174,15 @@ public class Configuration implements Serializable {
 	
 	public boolean isNotificationMeasureModification() {
 		return isRawPropertyValueEqual(PROP_NOTIFICATION_MEASURE_MODIFICATION, "configuration_mailing_measure_modification_yesno_yes");
+	}
+	
+	public void setNotificationMeasureAssignment(boolean b) {
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_MEASURE_MODIFICATION);
+		entity.setSimpleValue(type, (b ? "configuration_mailing_assigned_yesno_yes" : "configuration_mailing_assigned_yesno_no"));
+	}
+	
+	public boolean isNotificationMeasureAssignment() {
+		return isRawPropertyValueEqual(PROP_NOTIFICATION_MEASURE_ASSIGNMENT, "configuration_mailing_assigned_yesno_yes");
 	}
 
 	/**
