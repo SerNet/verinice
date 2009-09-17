@@ -26,9 +26,11 @@ import java.util.Set;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
+import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindHuiUrls;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -36,6 +38,7 @@ import sernet.hui.common.connect.HuiUrl;
 import sernet.hui.common.connect.IReferenceResolver;
 import sernet.hui.common.connect.IUrlResolver;
 import sernet.hui.common.connect.PropertyGroup;
+import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 
@@ -55,11 +58,13 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
  */
 public class EntityResolverFactory {
 
+	private static IReferenceResolver roleResolver;
 	private static IReferenceResolver personResolver;
 	private static IUrlResolver urlresolver;
 
 	public static void createResolvers(HUITypeFactory typeFactory) {
 		createPersonResolver();
+		createRoleResolver();
 
 		// set person resolver for all properties that reference persons:
 		Collection<EntityType> allEntityTypes = typeFactory.getAllEntityTypes();
@@ -67,11 +72,13 @@ public class EntityResolverFactory {
 			List<PropertyType> propertyTypes = entityType.getPropertyTypes();
 
 			addPersonResolverToTypes(typeFactory, entityType, propertyTypes);
+			addRoleResolverToTypes(typeFactory, entityType, propertyTypes);
 			
 			List<PropertyGroup> groups = entityType.getPropertyGroups();
 			for (PropertyGroup group : groups) {
 				List<PropertyType> typesInGroup = group.getPropertyTypes();
 				addPersonResolverToTypes(typeFactory, entityType, typesInGroup);
+				addRoleResolverToTypes(typeFactory, entityType, typesInGroup);
 			}
 		}
 		
@@ -94,6 +101,20 @@ public class EntityResolverFactory {
 					typeFactory.getPropertyType(entityType.getId(),
 							propertyType.getId()).setReferenceResolver(
 							personResolver);
+				}
+			}
+		}
+	}
+	
+	private static void addRoleResolverToTypes(HUITypeFactory typeFactory,
+			EntityType entityType, List<PropertyType> propertyTypes) {
+		for (PropertyType propertyType : propertyTypes) {
+			if (propertyType.isReference()) {
+				if (propertyType.getReferencedEntityTypeId().equals(
+						Configuration.ROLE_TYPE_ID)) {
+					typeFactory.getPropertyType(entityType.getId(),
+							propertyType.getId()).setReferenceResolver(
+							roleResolver);
 				}
 			}
 		}
@@ -165,5 +186,34 @@ public class EntityResolverFactory {
 			};
 		}
 	}
+	
+	private static void createRoleResolver() {
+		if (roleResolver == null) {
+			roleResolver = new IReferenceResolver() {
 
+				public List<IMLPropertyOption> getAllEntitesForType(
+						String entityTypeID) {
+					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
+					
+					try {
+						FindAllRoles far = new FindAllRoles();
+						far = ServiceFactory.lookupCommandService()
+							.executeCommand(far);
+						
+						for (String role : far.getRoles())
+						{
+							// Empty roles may happen for non-initialized Configuration instances. 
+							if (role.length() > 0)
+								result.add(new PropertyOption(role, role));
+						}
+						
+					} catch (Exception e) {
+						throw new RuntimeCommandException("Fehler beim Datenzugriff.", e);
+					}
+					return result;
+				}
+			};
+		}
+	}
+	
 }

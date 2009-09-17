@@ -54,7 +54,6 @@ public class FindAllRoles extends GenericCommand {
 
 		List<Configuration> confs = lc.getElements();
 
-		HashSet<String> roles = new HashSet<String>();
 		for (Configuration c : confs) {
 			roles.addAll(c.getRoles());
 		}

@@ -46,6 +46,8 @@ public class Configuration implements Serializable {
 	private Entity entity;
 	
 	private static final String TYPE_ID = "configuration";
+
+	public static final String ROLE_TYPE_ID = "role";
 	
 	public static final String PROP_USERNAME = "configuration_benutzername"; //$NON-NLS-1$
 	public static final String PROP_PASSWORD = "configuration_passwort"; //$NON-NLS-1$
@@ -189,11 +191,18 @@ public class Configuration implements Serializable {
 		List<Property> properties = entity.getProperties(
 				Configuration.PROP_ROLES).getProperties();
 		
-		Set<String> roles = new HashSet<String>(properties.size());
-		for (Property p : properties)
+		Set<String> roles = null;
+			
+		if (properties != null)
 		{
-			roles.add(p.getPropertyValue());
+			roles = new HashSet<String>(properties.size());
+			for (Property p : properties)
+			{
+				roles.add(p.getPropertyValue());
+			}
 		}
+		else
+			roles = new HashSet<String>();
 		
 		roles.add(getUser());
 
