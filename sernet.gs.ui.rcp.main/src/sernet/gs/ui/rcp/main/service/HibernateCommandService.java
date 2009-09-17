@@ -108,7 +108,8 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 			// When a command is being executed that should be subject to access
 			// control (this is the default) and the logged in user is non-
 			// privileged the filter is configured and activated.
-			if (!(command instanceof INoAccessControl)
+			if (authService.isPermissionHandlingNeeded()
+					&& !(command instanceof INoAccessControl)
 					&& !hasAdminRole(authService.getRoles()))
 			{
 				log.debug("Enabling security access filter for user: " + authService.getUsername());
