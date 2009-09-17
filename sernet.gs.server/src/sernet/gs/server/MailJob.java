@@ -43,6 +43,21 @@ import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 
+/**
+ * A {@link MailJob} instance is a job that is to run once per day.
+ * 
+ * <p>An instance of this class is created in the Spring configuration.</p>
+ * 
+ * <p>The class runs the command that prepares all the neccessary information
+ * to prepare the notification mails, then iterates through the results and generates
+ * the individual messages and sends them.</p>
+ * 
+ * <p>To adjust the content of the notification mail modify the strings in the
+ * <code>mailmessages.properties</code> file.</p>
+ *  
+ * @author Robert Schuster <r.schuster@tarent.de>
+ *
+ */
 public class MailJob extends QuartzJobBean implements StatefulJob {
 	
 	private static final Logger log = Logger.getLogger(MailJob.class);
@@ -57,15 +72,19 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
+		
+		// Do nothing if the notification feature is deactivated in the configuration.
 		if (!notificationEnabled)
 			return;
 		
+		// Retrieves the notification information.
 		try {
 			commandService.executeCommand(pniCommand);
 		} catch (CommandException e) {
 			throw new JobExecutionException("Exception when retrieving expiration information.", e); //$NON-NLS-1$
 		}
 		
+		// Iterates through the result, generate and send the individual messages.
 		for (NotificationInfo ei : pniCommand.getExpirationInfo())
 		{
 			MessageHelper mh = new MessageHelper(ei.getConfiguration(), mailSender.createMimeMessage());
@@ -114,6 +133,12 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		this.mailSender = mailSender;
 	}
 
+	/**
+	 * Simple class that helps preparing a notification mail's body.
+	 * 
+	 * @author Robert Schuster <r.schuster@tarent.de>
+	 *
+	 */
 	private static class MessageHelper
 	{
 		String to;
