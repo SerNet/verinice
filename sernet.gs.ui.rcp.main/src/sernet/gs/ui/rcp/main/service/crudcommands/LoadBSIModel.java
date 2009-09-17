@@ -23,8 +23,8 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 
+@SuppressWarnings("serial")
 public class LoadBSIModel extends GenericCommand implements INoAccessControl {
-
 
 	private BSIModel model;
 
@@ -35,6 +35,8 @@ public class LoadBSIModel extends GenericCommand implements INoAccessControl {
 		List<BSIModel> models = getDaoFactory().getDAO(BSIModel.class).findAll();
 		if (models != null && models.size()>0)
 			model = models.get(0);
+		
+		// TODO rschuster: What about extra BSIModels? Should we remove them?
 	}
 
 	public BSIModel getModel() {

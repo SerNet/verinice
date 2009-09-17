@@ -33,12 +33,11 @@ import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
+@SuppressWarnings("serial")
 public class LoadChildrenForExpansion extends GenericCommand {
 	
 	private static final Logger log = Logger.getLogger(LoadChildrenForExpansion.class);
 
-	private static final long serialVersionUID = 6961271339569071215L;
-	
 	private CnATreeElement parent;
 	private Integer dbId;
 	private Class<? extends CnATreeElement> clazz;
