@@ -19,7 +19,7 @@ package sernet.gs.server;
 
 import org.eclipse.osgi.util.NLS;
 
-public class MailMessages extends NLS {
+class MailMessages extends NLS {
 	private static final String BUNDLE_NAME = "sernet.gs.server.mailmessages"; //$NON-NLS-1$
 	public static String MailJob_1;
 	public static String MailJob_10;
