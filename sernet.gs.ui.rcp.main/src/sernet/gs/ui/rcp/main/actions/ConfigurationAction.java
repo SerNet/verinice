@@ -34,15 +34,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
-
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
@@ -73,10 +70,11 @@ public class ConfigurationAction implements IObjectActionDelegate {
 
 	public void run(IAction action) {
 		Activator.inheritVeriniceContextState();
-		// ignore selection if role doesn't allow editing:
+		
+		// If this code is run then something is wrong, because the action should have been
+		// disabled programmatically. See method selectionChanged().
 		boolean hasRole = AuthenticationHelper.getInstance().currentUserHasRole(ALLOWED_ROLES);
 		if (!hasRole) {
-			// FIXME server: disable actions for unavailable roles, i.e. using system property and enablement in plugin.xml
 			MessageDialog.openWarning((Shell) targetPart.getAdapter(Shell.class), 
 					"Autorisierung", "Ihr Account ist nicht berechtigt, die gewählte Funktion auszuführen.");
 			return;
