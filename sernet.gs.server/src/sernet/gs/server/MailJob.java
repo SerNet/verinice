@@ -136,6 +136,27 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	/**
 	 * Simple class that helps preparing a notification mail's body.
 	 * 
+	 * <p>The mail's body contains all the information for a particular
+	 * user. That means that the user does not get one mail per incident
+	 * but all incidents are collected in a single mail. This class' main
+	 * contribution is to make this possible.</p>
+	 * 
+	 * <p>When at least one measure's deadline, for a measure
+	 * the user is responsible, expires (either completion or revision).
+	 * There will be one event for either expiration kind. The idea is
+	 * that a user knows which measure she is responsible for and will
+	 * look for them after loggin in.</p>
+	 * 
+	 * <p>When a user wants to get notified of an expiration of any
+	 * measure the mail will contain one sentence per measure and one
+	 * sentence for the element that this measure belongs to.</p>
+	 * 
+	 * <p>When a user wants to get notified of changes to a measure
+	 * (regardless of whether she is responsible for them or whether
+	 * this affects all measures) the mail will contain one sentence
+	 * per modified measure and one sentence for the element that
+	 * this measure belongs to.</p>
+	 * 
 	 * @author Robert Schuster <r.schuster@tarent.de>
 	 *
 	 */
