@@ -14,12 +14,19 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Robert Schuster <r.schuster@tarent.de> - use HibernateCallback
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -27,40 +34,48 @@ import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
+@SuppressWarnings("serial")
 public class LoadPolymorphicCnAElementById extends GenericCommand {
-
-
+	
 	public LoadPolymorphicCnAElementById(Integer[] ds) {
-		IDs = ds;
+		ids = ds;
 	}
 
-	private Integer[] IDs;
+	private Integer[] ids;
 
 	private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
 	
-	private static final String QUERY = "from CnATreeElement elmt " +
-		"where elmt.dbId  = ? "; 
-
-	
-
+	@SuppressWarnings("unchecked")
 	public void execute() {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 		
-		List<CnATreeElement> loaded = new ArrayList<CnATreeElement>(IDs.length);
-		for (Integer id : IDs) {
-			list = dao.findByQuery(QUERY, new Integer[] {id});
-			if (list != null)  {
-				loaded.addAll(list);
-			}
-				
-		}
-		list = loaded;
-		HydratorUtil.hydrateElements(dao, loaded, false);
+		list = (List<CnATreeElement>) dao.findByCallback(new Callback(ids));
+		HydratorUtil.hydrateElements(dao, list, false);
 	}
 
 	public List<CnATreeElement> getElements() {
 		return list;
 	}
 
+	private static class Callback implements HibernateCallback, Serializable {
+		
+		Integer[] ids;
+		
+		Callback(Integer[] ids)
+		{
+			this.ids = ids;
+		}
 
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+			
+			Query query = session.createQuery(
+					"from CnATreeElement cte "
+					+ "where cte.dbId in (:ids)")
+					.setParameterList("ids", ids);
+			
+			return query.list();
+		}
+
+	}
 }

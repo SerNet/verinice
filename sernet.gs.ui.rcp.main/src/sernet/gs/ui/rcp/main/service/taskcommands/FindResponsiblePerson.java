@@ -51,9 +51,8 @@ public class FindResponsiblePerson extends GenericCommand {
 		IBaseDao<MassnahmenUmsetzung, Serializable> mnDAO = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
 		umsetzung = mnDAO.findById(massnahmenUmsetzungDbId);
 		
-		foundPersons = new ArrayList<Person>(1);
 		// try to find someone responsible directly by role:
-		foundPersons = getLinkedPersonsByRoles(field);
+		foundPersons = getLinkedPersonsByRoles();
 	}
 	
 	/**
@@ -64,8 +63,8 @@ public class FindResponsiblePerson extends GenericCommand {
 	 * 
 	 * @return
 	 */
-	private List<Person> getLinkedPersonsByRoles(String propertyTypeId) {
-		PropertyList roles = umsetzung.getEntity().getProperties(propertyTypeId);
+	private List<Person> getLinkedPersonsByRoles() {
+		PropertyList roles = umsetzung.getEntity().getProperties(field);
 		List<Person> result = new ArrayList<Person>();
 		if (roles.getProperties() == null || roles.getProperties().size() == 0 )
 			return result;
