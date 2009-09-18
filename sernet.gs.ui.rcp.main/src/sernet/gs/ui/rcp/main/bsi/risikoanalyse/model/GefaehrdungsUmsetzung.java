@@ -28,6 +28,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
 
+@SuppressWarnings("serial")
 public class GefaehrdungsUmsetzung extends CnATreeElement
 	implements IGefaehrdungsBaumElement {
 
@@ -188,7 +189,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	
 	@Override
 	public String getTypeId() {
-		return this.TYPE_ID;
+		return TYPE_ID;
 	}
 
 	public String getText() {
