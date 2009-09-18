@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
@@ -59,6 +61,8 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindResponsiblePerson;
  */
 @SuppressWarnings("serial")
 public class PrepareNotificationInfo extends GenericCommand {
+	
+	private static final Logger log = Logger.getLogger(PrepareNotificationInfo.class);
 	
 	private Map<Configuration, NotificationInfo> resultMap = new HashMap<Configuration, NotificationInfo>();
 	
@@ -424,11 +428,18 @@ public class PrepareNotificationInfo extends GenericCommand {
 		
 		for (CnATreeElement cte : gces.getChangedElements())
 		{
-			BausteinUmsetzung bu = (BausteinUmsetzung) cte;
-			for (MassnahmenUmsetzung mu : bu.getMassnahmenUmsetzungen())
-			{
-				handleAssignedMeasure(mu, globalNotifees);
-			}
+				for (CnATreeElement child : cte.getChildren())
+				{
+					if (child instanceof MassnahmenUmsetzung)
+					{
+						handleAssignedMeasure((MassnahmenUmsetzung) child, globalNotifees);
+					}
+					else
+					{
+						log.warn("Retrieved a child of an element that is supposed to be a BausteinUmsetzung instance that is not a MassnahmenUmsetzung.");
+					}
+				}
+				
 		}
 		
 		// TODO: New assignment can also happen (and in fact do so in a more straightforward

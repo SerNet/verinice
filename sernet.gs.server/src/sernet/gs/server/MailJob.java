@@ -81,7 +81,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		try {
 			commandService.executeCommand(pniCommand);
 		} catch (CommandException e) {
-			throw new JobExecutionException("Exception when retrieving expiration information.", e); //$NON-NLS-1$
+			log.warn("Exception when retrieving notification information. Notification mails may miss details!", e);
 		}
 		
 		// Iterates through the result, generate and send the individual messages.
