@@ -72,7 +72,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		// Intentionally does nothing.
 	}
 	
-	public Collection<NotificationInfo> getExpirationInfo()
+	public Collection<NotificationInfo> getNotificationInfos()
 	{
 		return resultMap.values();
 	}

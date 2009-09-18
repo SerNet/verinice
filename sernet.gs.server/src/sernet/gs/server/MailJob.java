@@ -85,7 +85,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		}
 		
 		// Iterates through the result, generate and send the individual messages.
-		for (NotificationInfo ei : pniCommand.getExpirationInfo())
+		for (NotificationInfo ei : pniCommand.getNotificationInfos())
 		{
 			MessageHelper mh = new MessageHelper(ei.getConfiguration(), mailSender.createMimeMessage());
 			

@@ -17,8 +17,8 @@
  ******************************************************************************/
 package sernet.gs.server.commands;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
@@ -41,13 +41,13 @@ public class NotificationInfo {
 	
 	private boolean revisionExpired;
 
-	private List<MassnahmenUmsetzung> globalExpiredCompletions = new ArrayList<MassnahmenUmsetzung>(); 
+	private Set<MassnahmenUmsetzung> globalExpiredCompletions = new HashSet<MassnahmenUmsetzung>(); 
 	
-	private List<MassnahmenUmsetzung> globalExpiredRevisions = new ArrayList<MassnahmenUmsetzung>();
+	private Set<MassnahmenUmsetzung> globalExpiredRevisions = new HashSet<MassnahmenUmsetzung>();
 	
-	private List<MassnahmenUmsetzung> modifiedMeasures = new ArrayList<MassnahmenUmsetzung>();
+	private Set<MassnahmenUmsetzung> modifiedMeasures = new HashSet<MassnahmenUmsetzung>();
 	
-	private List<MassnahmenUmsetzung> assignedMeasures = new ArrayList<MassnahmenUmsetzung>(); 
+	private Set<MassnahmenUmsetzung> assignedMeasures = new HashSet<MassnahmenUmsetzung>(); 
 	
 	NotificationInfo(Configuration c)
 	{
@@ -88,7 +88,7 @@ public class NotificationInfo {
 		globalExpiredCompletions.add(mu);
 	}
 	
-	public List<MassnahmenUmsetzung> getGlobalExpiredCompletions()
+	public Set<MassnahmenUmsetzung> getGlobalExpiredCompletions()
 	{
 		return globalExpiredCompletions;
 	}
@@ -98,7 +98,7 @@ public class NotificationInfo {
 		globalExpiredRevisions.add(mu);
 	}
 
-	public List<MassnahmenUmsetzung> getGlobalExpiredRevisions()
+	public Set<MassnahmenUmsetzung> getGlobalExpiredRevisions()
 	{
 		return globalExpiredRevisions;
 	}
@@ -108,7 +108,7 @@ public class NotificationInfo {
 		modifiedMeasures.add(mu);
 	}
 
-	public List<MassnahmenUmsetzung> getModifiedMeasures()
+	public Set<MassnahmenUmsetzung> getModifiedMeasures()
 	{
 		return modifiedMeasures;
 	}
@@ -118,7 +118,7 @@ public class NotificationInfo {
 		assignedMeasures.add(mu);
 	}
 
-	public List<MassnahmenUmsetzung> getAssignedMeasures()
+	public Set<MassnahmenUmsetzung> getAssignedMeasures()
 	{
 		return assignedMeasures;
 	}
