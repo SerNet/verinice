@@ -84,7 +84,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	}
 	
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		if (uuid != null)
 			return uuid.hashCode();
 		return super.hashCode(); // basically only used during migration of old objects (without hashcode)

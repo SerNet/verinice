@@ -248,4 +248,24 @@ public class Configuration implements Serializable {
 		return false;
 	}
 
+	public int hashCode()
+	{
+		return dbId.hashCode();
+	}
+	
+	public boolean equals(Object o)
+	{
+		try
+		{
+			Configuration that = (Configuration) o;
+			
+			// TODO rschuster: Comparing non-saved Configuration instances is troublesome.
+			
+			return this.dbId.equals(that.dbId);
+		}
+		catch (ClassCastException cce)
+		{
+			return false;
+		}
+	}
 }
