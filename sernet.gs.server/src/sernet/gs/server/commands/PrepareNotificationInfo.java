@@ -17,8 +17,10 @@
  ******************************************************************************/
 package sernet.gs.server.commands;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,9 +39,12 @@ import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsByIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindResponsiblePerson;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 
 /**
  * Iterates over all {@link MassnahmenUmsetzung} instances and prepares the following collections containing
@@ -228,22 +233,93 @@ public class PrepareNotificationInfo extends GenericCommand {
 		i.setCompletionExpired(true);
 	}
 
+	/**
+	 * Retrieves a list of {@link Person} instances which is directly responsible for the given measure.
+	 * 
+	 * <p>Directly means that the respective field of {@link MassnahmenUmsetzung} are used to specify the
+	 * responsibility. Indirect responsibility is achieved through the responsibility property of parent
+	 * object of the measure. This method is not dealing with this kind in any way.</p>
+	 * 
+	 * <p>When no direct responsibility is set, the method returns an empty list</p>.
+	 * 
+	 * <p>When <code>isCompletion</code> is <code>true</code> then the method returns the {@link Person}
+	 * objects which are set to be responsible for <em>completing</em> a measure. When the value is
+	 * <code>false</code> the persons which are responsible for <em>revising</em> the measure are retrieved.</p>
+	 * 
+	 * @param mu
+	 * @param useImplementor
+	 * @return
+	 */
+	private List<Person> retrievePersonsDirectlyResponsible(MassnahmenUmsetzung mu, boolean isCompletion)
+	{
+		String field = (isCompletion ? MassnahmenUmsetzung.P_UMSETZUNGDURCH_LINK : MassnahmenUmsetzung.P_NAECHSTEREVISIONDURCH_LINK);
+		PropertyList pl = mu.getEntity().getProperties(field);
+		List<Property> props = null; 
+			
+		if (pl != null)
+			props = pl.getProperties();
+		
+		if (props != null && !props.isEmpty())
+		{
+			List<Integer> ids = new ArrayList<Integer>(props.size());
+			for (Property p : props)
+			{
+				ids.add(Integer.valueOf(p.getPropertyValue()));
+			}
+			
+			LoadCnAElementsByIds<Person> le = new LoadCnAElementsByIds<Person>(Person.class, ids);
+			try
+			{
+				le = getCommandService().executeCommand(le);
+			}
+			catch (CommandException ce)
+			{
+				new RuntimeException(ce);
+			}
+			
+			return le.getFoundItems();
+		}
+		
+		return Collections.emptyList();
+	}
+	
+	/**
+	 * Returns a list of {@link Person} which are responsible to <em>complete</em> the given measure.
+	 * 
+	 * <p>The method first tries to find direct responsibles. If there are none, the indirect responsibilities
+	 * are used instead.</p>
+	 * 
+	 * @param mu
+	 * @return
+	 */
+	private List<Person> retrievePersonsResponsibleForCompletion(MassnahmenUmsetzung mu)
+	{
+		List<Person> res = retrievePersonsDirectlyResponsible(mu, true);
+		if (res.isEmpty())
+		{
+			FindResponsiblePerson frp = new FindResponsiblePerson(mu.getDbId(), MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
+			
+			try {
+				frp = getCommandService().executeCommand(frp);
+				
+				res = frp.getFoundPersons();
+			} catch (CommandException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
+		return res;
+	}
+
 	private void handleCompletedMeasure(MassnahmenUmsetzung mu, Set<Configuration> globalNotifees)
 	{
-		FindResponsiblePerson frp = new FindResponsiblePerson(mu.getDbId(), MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_INITIIERUNG);
-		
-		try {
-			frp = (FindResponsiblePerson) getCommandService().executeCommand(frp);
-		} catch (CommandException e) {
-			throw new RuntimeException(e);
-		}
 		
 		Date date = mu.getNaechsteRevision();
 		Calendar deadline = Calendar.getInstance();
 		if (date != null)
 			deadline.setTime(date);
 
-		for (Person p : frp.getFoundPersons())
+		for (Person p : retrievePersonsDirectlyResponsible(mu, false))
 		{
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
@@ -276,20 +352,13 @@ public class PrepareNotificationInfo extends GenericCommand {
 	
 	private void handleIncompletedMeasure(MassnahmenUmsetzung mu, Set<Configuration> globalNotifees)
 	{
-		FindResponsiblePerson frp = new FindResponsiblePerson(mu.getDbId(), MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
-		
-		try {
-			frp = (FindResponsiblePerson) getCommandService().executeCommand(frp);
-		} catch (CommandException e) {
-			throw new RuntimeException(e);
-		}
 
 		Date date = mu.getUmsetzungBis();
 		Calendar deadline = Calendar.getInstance();
 		if (date != null)
 			deadline.setTime(date);
 
-		for (Person p : frp.getFoundPersons())
+		for (Person p : retrievePersonsResponsibleForCompletion(mu))
 		{
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
@@ -356,15 +425,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 	
 	private void handleChangedMeasure(MassnahmenUmsetzung mu, Set<Configuration> globalNotifees)
 	{
-		FindResponsiblePerson frp = new FindResponsiblePerson(mu.getDbId(), MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
-		
-		try {
-			frp = (FindResponsiblePerson) getCommandService().executeCommand(frp);
-		} catch (CommandException e) {
-			throw new RuntimeException(e);
-		}
-
-		for (Person p : frp.getFoundPersons())
+		for (Person p : retrievePersonsResponsibleForCompletion(mu))
 		{
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
@@ -457,15 +518,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 	
 	private void handleAssignedMeasure(MassnahmenUmsetzung mu, Set<Configuration> globalNotifees)
 	{
-		FindResponsiblePerson frp = new FindResponsiblePerson(mu.getDbId(), MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
-		
-		try {
-			frp = (FindResponsiblePerson) getCommandService().executeCommand(frp);
-		} catch (CommandException e) {
-			throw new RuntimeException(e);
-		}
-
-		for (Person p : frp.getFoundPersons())
+		for (Person p : retrievePersonsResponsibleForCompletion(mu))
 		{
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
