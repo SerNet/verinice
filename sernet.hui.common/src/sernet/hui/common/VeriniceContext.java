@@ -1,13 +1,3 @@
-package sernet.hui.common;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Assert;
-
-import sernet.hui.common.connect.HUITypeFactory;
-
 /*******************************************************************************
  * Copyright (c) 2009 Robert Schuster <r.schuster@tarent.de>.
  * This program is free software: you can redistribute it and/or 
@@ -25,6 +15,14 @@ import sernet.hui.common.connect.HUITypeFactory;
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
+package sernet.hui.common;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import sernet.hui.common.connect.HUITypeFactory;
 
 /**
  * This class is a crucial helper to make accessing certain beans (the work objects)
@@ -83,6 +81,8 @@ public class VeriniceContext {
 	public static String GS_SCRAPER_UTIL = "gsScraperUtil";
 	
 	public static String COMMAND_SERVICE = "commandService";
+	
+	public static String AUTH_SERVICE = "commandService";
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();
 

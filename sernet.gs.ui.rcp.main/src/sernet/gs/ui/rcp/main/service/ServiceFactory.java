@@ -26,7 +26,6 @@ import sernet.springclient.SpringClientPlugin;
 
 public abstract class ServiceFactory {
 	
-	private static final String AUTH_SERVICE = "authService";
 	private static final String WORK_OBJECTS = "workObjects";
 
 	public static void openCommandService() throws MalformedURLException {
@@ -54,7 +53,7 @@ public abstract class ServiceFactory {
 	
 	/** Retrieves the client's IAuthService instance.
 	 * 
-	 * <p>The method works only on the client.</p>
+	 * <p>The method works on the server as well as the client.</p>
 	 * 
 	 * <p>Note: Usage of this method is discouraged. If the class that needs
 	 * the auth service is managed by Spring declare a property and
@@ -63,9 +62,7 @@ public abstract class ServiceFactory {
 	 * @return
 	 */
 	public static IAuthService lookupAuthService() {
-		IAuthService authService = (IAuthService) SpringClientPlugin.getDefault()
-			.getBeanFactory().getBean(AUTH_SERVICE);
-		return authService;
+		return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
 	}
 	
 	/**

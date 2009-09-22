@@ -115,6 +115,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 			<entry key="hitroUtil" value-ref="hitroUtil"/>
 			<entry key="huiTypeFactory" value-ref="huiTypeFactory"/>
 			<entry key="commandService" value-ref="commandService"/>
+			<entry key="authService" value-ref="authService"/>
 		</map>
 	</property>
 	</bean>
