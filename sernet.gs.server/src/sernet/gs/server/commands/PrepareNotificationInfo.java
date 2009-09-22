@@ -107,9 +107,10 @@ public class PrepareNotificationInfo extends GenericCommand {
 	
 	private void collectExpirationNotifees(List<Configuration> configurations) {
 		
-		// Prepares a set of Configuration instances which needs to get informed about any
-		// expiration. 
+		// Prepares sets of Configuration instances which need to get informed about
+		// the completion or revision expiration of any measure.
 		Set<Configuration> globalNotifees = new HashSet<Configuration>();
+		Set<Configuration> globalAuditorNotifees = new HashSet<Configuration>();
 		for (Configuration c : configurations)
 		{
 			if (c.isNotificationEnabled()
@@ -117,6 +118,13 @@ public class PrepareNotificationInfo extends GenericCommand {
 					&& c.isNotificationGlobal())
 			{
 				globalNotifees.add(c);
+			}
+			
+			if (c.isNotificationEnabled()
+					&& c.isAuditorNotificationExpirationEnabled()
+					&& c.isAuditorNotificationGlobal())
+			{
+				globalAuditorNotifees.add(c);
 			}
 		}
 		
@@ -132,7 +140,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		{
 			if (mu.isCompleted())
 			{
-				handleCompletedMeasure(mu, globalNotifees);
+				handleCompletedMeasure(mu, globalAuditorNotifees);
 			}
 			else
 			{
@@ -313,7 +321,6 @@ public class PrepareNotificationInfo extends GenericCommand {
 
 	private void handleCompletedMeasure(MassnahmenUmsetzung mu, Set<Configuration> globalNotifees)
 	{
-		
 		Date date = mu.getNaechsteRevision();
 		Calendar deadline = Calendar.getInstance();
 		if (date != null)
@@ -324,11 +331,11 @@ public class PrepareNotificationInfo extends GenericCommand {
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
 					&& c.isNotificationEnabled()
-					&& c.isNotificationExpirationEnabled()
-					&& !c.isNotificationGlobal())
+					&& c.isAuditorNotificationExpirationEnabled()
+					&& !c.isAuditorNotificationGlobal())
 			{
 				Calendar limit = Calendar.getInstance();
-				limit.add(Calendar.DAY_OF_WEEK, c.getNotificationExpirationDays());
+				limit.add(Calendar.DAY_OF_WEEK, c.getAuditorNotificationExpirationDays());
 				
 				if (limit.after(deadline))
 				{
@@ -340,7 +347,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		for (Configuration c : globalNotifees)
 		{
 			Calendar limit = Calendar.getInstance();
-			limit.add(Calendar.DAY_OF_WEEK, c.getNotificationExpirationDays());
+			limit.add(Calendar.DAY_OF_WEEK, c.getAuditorNotificationExpirationDays());
 			
 			if (limit.after(deadline))
 			{
