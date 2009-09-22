@@ -20,6 +20,7 @@ package sernet.gs.server.commands;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -99,13 +100,16 @@ class GetChangedElementsSince extends GenericCommand {
 			if (logEntry.getElementId() != null)
 				ids.add(logEntry.getElementId());
 		}
-		Integer[] idArray = (Integer[]) ids.toArray(new Integer[ids.size()]);
 
-		LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(
-				idArray);
-		command = getCommandService().executeCommand(command);
-
-		changedElements = command.getElements();
+		if (ids.isEmpty())
+			changedElements = Collections.emptyList();
+		else
+		{
+			LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(ids);
+			command = getCommandService().executeCommand(command);
+	
+			changedElements = command.getElements();
+		}
 	}
 
 	private static class Callback implements HibernateCallback, Serializable {

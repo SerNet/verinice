@@ -39,7 +39,7 @@ import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsByIds;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsByEntityIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindResponsiblePerson;
@@ -267,7 +267,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 				ids.add(Integer.valueOf(p.getPropertyValue()));
 			}
 			
-			LoadCnAElementsByIds<Person> le = new LoadCnAElementsByIds<Person>(Person.class, ids);
+			LoadCnAElementsByEntityIds<Person> le = new LoadCnAElementsByEntityIds<Person>(Person.class, ids);
 			try
 			{
 				le = getCommandService().executeCommand(le);
@@ -277,7 +277,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 				new RuntimeException(ce);
 			}
 			
-			return le.getFoundItems();
+			return le.getElements();
 		}
 		
 		return Collections.emptyList();
