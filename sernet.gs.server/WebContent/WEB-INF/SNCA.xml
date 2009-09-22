@@ -126,14 +126,6 @@ Template:
 			</huiproperty>
 	
 			<huiproperty 
-				name="Neue zu prüfende Aufgaben" 
-				id="configuration_auditmailing_assigned"
-				inputtype="singleoption">
-				<option id="configuration_auditmailing_assigned_yes" name="An"/>
-				<option id="configuration_auditmailing_assigned_no" name="Aus"/>
-			</huiproperty>
-			
-			<huiproperty 
 				name="Terminwarnung: an / aus" 
 				id="configuration_auditmailing_expiring"
 				inputtype="singleoption">
