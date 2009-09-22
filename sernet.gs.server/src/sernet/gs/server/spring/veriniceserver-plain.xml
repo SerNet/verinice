@@ -37,6 +37,7 @@
       <entry key="notificationEnabled" value="${veriniceserver.notification.enabled}" />
       <entry key="notificationEmailFrom" value="${veriniceserver.notification.email.from}" />
       <entry key="notificationEmailReplyTo" value="${veriniceserver.notification.email.replyto}" />
+      <entry key="notificationEmailDateFormat" value="${veriniceserver.notification.email.dateformat}" />
     </map>
   </property>
 </bean>

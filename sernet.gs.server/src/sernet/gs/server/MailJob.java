@@ -17,7 +17,10 @@
  ******************************************************************************/
 package sernet.gs.server;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +78,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	
 	private String notificationEmailReplyTo;
 	
+	private DateFormat notificationEmailDateFormat;
+
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
 		
@@ -96,7 +101,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 					notificationEmailFrom,
 					notificationEmailReplyTo,
 					ei.getConfiguration(),
-					mailSender.createMimeMessage());
+					mailSender.createMimeMessage(),
+					notificationEmailDateFormat);
 			
 			try
 			{
@@ -156,6 +162,11 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	public void setNotificationEmailReplyTo(String notificationEmailReplyTo) {
 		this.notificationEmailReplyTo = notificationEmailReplyTo;
 	}
+	
+	public void setNotificationEmailDateFormat(
+			String notificationEmailDateFormat) {
+		this.notificationEmailDateFormat = new SimpleDateFormat(notificationEmailDateFormat);
+	}
 
 	/**
 	 * Simple class that helps preparing a notification mail's body.
@@ -198,12 +209,15 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		
 		MimeMessage mm;
 		
-		MessageHelper(String replyTo, String from, Configuration recipient, MimeMessage mm)
+		DateFormat dateFormat;
+		
+		MessageHelper(String replyTo, String from, Configuration recipient, MimeMessage mm, DateFormat df)
 		{
 			this.replyTo = replyTo;
 			this.from = from;
 			this.to = recipient.getNotificationEmail();
 			this.mm = mm;
+			dateFormat = df;
 		}
 		
 		void addCompletionExpirationEvent()
@@ -216,6 +230,18 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			events.add(MailMessages.MailJob_2);
 		}
 		
+		String titleAndDate(MassnahmenUmsetzung mu, boolean isCompletion)
+		{
+			StringBuffer sb = new StringBuffer();
+			sb.append(mu.getTitel());
+			sb.append(" (");
+			Date d = (isCompletion ? mu.getUmsetzungBis() : mu.getNaechsteRevision());
+			sb.append(dateFormat.format(d));
+			sb.append(")");
+			
+			return sb.toString();
+		}
+		
 		void addCompletionExpirationEvent(MassnahmenUmsetzung mu)
 		{
 			CnATreeElement cte = mu.getParent().getParent();
@@ -226,7 +252,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				globalExpirationEvents.put(cte, l);
 			}
 			
-			l.add(NLS.bind(MailMessages.MailJob_3, mu.getTitel()));
+			l.add(NLS.bind(MailMessages.MailJob_3, titleAndDate(mu, true)));
 		}
 		
 		void addRevisionExpirationEvent(MassnahmenUmsetzung mu)
@@ -239,7 +265,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				globalExpirationEvents.put(cte, l);
 			}
 			
-			l.add(NLS.bind(MailMessages.MailJob_4, mu.getTitel()));
+			l.add(NLS.bind(MailMessages.MailJob_4, titleAndDate(mu, false)));
 		}
 		
 		void addMeasureModifiedEvent(MassnahmenUmsetzung mu)
