@@ -20,6 +20,7 @@ package sernet.gs.server;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -235,8 +236,12 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			StringBuffer sb = new StringBuffer();
 			sb.append(mu.getTitel());
 			sb.append(" (");
+			Calendar c = Calendar.getInstance();
 			Date d = (isCompletion ? mu.getUmsetzungBis() : mu.getNaechsteRevision());
-			sb.append(dateFormat.format(d));
+			if (d != null)
+				c.setTime(d);
+			
+			sb.append(dateFormat.format(c.getTime()));
 			sb.append(")");
 			
 			return sb.toString();
