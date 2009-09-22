@@ -71,6 +71,10 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	
 	private ICommandService commandService;
 	
+	private String notificationEmailFrom;
+	
+	private String notificationEmailReplyTo;
+	
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
 		
@@ -88,7 +92,11 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		// Iterates through the result, generate and send the individual messages.
 		for (NotificationInfo ei : pniCommand.getNotificationInfos())
 		{
-			MessageHelper mh = new MessageHelper(ei.getConfiguration(), mailSender.createMimeMessage());
+			MessageHelper mh = new MessageHelper(
+					notificationEmailFrom,
+					notificationEmailReplyTo,
+					ei.getConfiguration(),
+					mailSender.createMimeMessage());
 			
 			try
 			{
@@ -141,6 +149,14 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		this.mailSender = mailSender;
 	}
 
+	public void setNotificationEmailFrom(String notificationEmailFrom) {
+		this.notificationEmailFrom = notificationEmailFrom;
+	}
+
+	public void setNotificationEmailReplyTo(String notificationEmailReplyTo) {
+		this.notificationEmailReplyTo = notificationEmailReplyTo;
+	}
+
 	/**
 	 * Simple class that helps preparing a notification mail's body.
 	 * 
@@ -170,7 +186,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	 */
 	private static class MessageHelper
 	{
-		String to;
+		String replyTo, from, to;
 		
 		List<String> events = new ArrayList<String>();
 		
@@ -182,8 +198,10 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		
 		MimeMessage mm;
 		
-		MessageHelper(Configuration recipient, MimeMessage mm)
+		MessageHelper(String replyTo, String from, Configuration recipient, MimeMessage mm)
 		{
+			this.replyTo = replyTo;
+			this.from = from;
 			this.to = recipient.getNotificationEmail();
 			this.mm = mm;
 		}
@@ -252,7 +270,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		
 		MimeMessage createMailMessage() throws MessagingException
 		{
-			mm.setFrom(new InternetAddress(MailMessages.MailJob_5));
+			mm.setFrom(new InternetAddress(from));
+			mm.setReplyTo(new InternetAddress[] { new InternetAddress(replyTo) });
 			mm.setRecipient(RecipientType.TO, new InternetAddress(this.to));
 			
 			mm.setSubject(MailMessages.MailJob_6);
