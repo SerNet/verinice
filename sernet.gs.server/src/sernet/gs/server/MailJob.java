@@ -32,6 +32,7 @@ import org.eclipse.osgi.util.NLS;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
@@ -113,7 +114,11 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			}
 			catch (MessagingException me)
 			{
-				log.warn("failed to create/send notification message: " + me); //$NON-NLS-1$
+				log.warn("failed to prepare notification message: " + me); //$NON-NLS-1$
+			}
+			catch (MailSendException mse)
+			{
+				log.warn("failed to send notification message: " + mse); //$NON-NLS-1$
 			}
 			
 		}
