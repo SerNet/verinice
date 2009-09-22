@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -109,24 +110,28 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
 		if (entries2.size()<1)
 			return;
 		
-		List<Integer> IDs = new ArrayList<Integer>(entries2.size());
+		List<Integer> ids = new ArrayList<Integer>(entries2.size());
 		changedElements = new HashMap<Integer, CnATreeElement>(entries2.size());
 		
 		// get IDs of changed items:
 		for (ChangeLogEntry logEntry : entries2) {
 			if (logEntry.getElementId() != null)
-				IDs.add(logEntry.getElementId());
+				ids.add(logEntry.getElementId());
 		}
-		Integer[] IDArray = (Integer[]) IDs.toArray(new Integer[IDs.size()]);
-		
-		// 
-		LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(IDArray);
-		command = getCommandService().executeCommand(command);
-		
-		List<CnATreeElement> elements = command.getElements();
-		for (CnATreeElement elmt : elements) {
-			changedElements.put(elmt.getDbId(), elmt);
+
+		if (ids.isEmpty())
+			changedElements = Collections.emptyMap();
+		else
+		{
+			LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(ids);
+			command = getCommandService().executeCommand(command);
+	
+			List<CnATreeElement> elements = command.getElements();
+			for (CnATreeElement elmt : elements) {
+				changedElements.put(elmt.getDbId(), elmt);
+			}
 		}
+
 	}
 
 	public Date getLastChecked() {
