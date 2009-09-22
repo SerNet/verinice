@@ -82,7 +82,7 @@ public class VeriniceContext {
 	
 	public static String COMMAND_SERVICE = "commandService";
 	
-	public static String AUTH_SERVICE = "commandService";
+	public static String AUTH_SERVICE = "authService";
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();
 
