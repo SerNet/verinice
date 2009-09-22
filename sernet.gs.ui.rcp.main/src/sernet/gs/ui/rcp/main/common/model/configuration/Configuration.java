@@ -64,7 +64,11 @@ public class Configuration implements Serializable {
 	public static final String PROP_NOTIFICATION_MEASURE_MODIFICATION = "configuration_mailing_measure_modification"; //$NON-NLS-1$
 	
 	public static final String PROP_NOTIFICATION_MEASURE_ASSIGNMENT = "configuration_mailing_assigned"; //$NON-NLS-1$
-		
+	
+	public static final String PROP_AUDITOR_NOTIFICATION_GLOBAL = "configuration_auditmailing_owner"; //$NON-NLS-1$
+	public static final String PROP_AUDITOR_NOTIFICATION_EXPIRATION = "configuration_auditmailing_expiring"; //$NON-NLS-1$
+	public static final String PROP_AUDITOR_NOTIFICATION_EXPIRATION_DAYS = "configuration_auditmailing_expiredays"; //$NON-NLS-1$
+
 	private Person person;
 	
 	private Integer dbId;
@@ -183,6 +187,38 @@ public class Configuration implements Serializable {
 	
 	public boolean isNotificationMeasureAssignment() {
 		return isRawPropertyValueEqual(PROP_NOTIFICATION_MEASURE_ASSIGNMENT, "configuration_mailing_assigned_yesno_yes");
+	}
+
+	public void setAuditorNotificationExpirationEnabled(boolean b) {
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_AUDITOR_NOTIFICATION_EXPIRATION);
+		entity.setSimpleValue(type, (b ? "configuration_auditmailing_expiring_yes" : "configuration_auditmailing_expiring_no"));
+	}
+	
+	public boolean isAuditorNotificationExpirationEnabled() {
+		return isRawPropertyValueEqual(PROP_AUDITOR_NOTIFICATION_EXPIRATION, "configuration_auditmailing_expiring_yes");
+	}
+	
+	public void setAuditorNotificationExpirationDays(int days) {
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_AUDITOR_NOTIFICATION_EXPIRATION_DAYS);
+		entity.setSimpleValue(type, String.valueOf(days));
+	}
+	
+	public int getAuditorNotificationExpirationDays() {
+		String s = entity.getSimpleValue(PROP_AUDITOR_NOTIFICATION_EXPIRATION_DAYS);
+		if (s != null && s.length() > 0)
+			return Integer.parseInt(s);
+		
+		// No value set, then say there is no limit.
+		return 0;
+	}
+
+	public void setAuditorNotificationGlobal(boolean b) {
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_AUDITOR_NOTIFICATION_GLOBAL);
+		entity.setSimpleValue(type, (b ? "configuration_auditmailing_owner_all" : "configuration_auditmailing_owner_self"));
+	}
+	
+	public boolean isAuditorNotificationGlobal() {
+		return isRawPropertyValueEqual(PROP_AUDITOR_NOTIFICATION_GLOBAL, "configuration_auditmailing_owner_all");
 	}
 
 	/**
