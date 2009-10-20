@@ -59,6 +59,7 @@
 	<logger name="org.hibernate.SQL">
 		<level value="DEBUG" />
 	</logger>
+	-->
 	<!-- SQL Parameter -->
 	<!--
 	<logger name="org.hibernate.type">
