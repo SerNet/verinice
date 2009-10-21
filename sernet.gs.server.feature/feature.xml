@@ -2,7 +2,7 @@
 <feature
       id="sernet.gs.server.feature"
       label="verinice server Feature"
-      version="1.0.0">
+      version="1.0.14">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -67,7 +67,7 @@
          id="sernet.gs.server"
          download-size="0"
          install-size="0"
-         version="1.0.0"
+         version="1.0.15"
          unpack="false"/>
 
    <plugin
@@ -354,7 +354,7 @@
          id="sernet.gs.ehcache.fragment"
          download-size="0"
          install-size="0"
-         version="1.0.0"
+         version="1.0.14"
          fragment="true"
          unpack="false"/>
 
@@ -362,7 +362,7 @@
          id="sernet.hui.server"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="1.0.14"/>
 
    <plugin
          id="org.junit4"

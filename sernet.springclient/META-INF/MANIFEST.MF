@@ -2,9 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SpringClient Plug-in
 Bundle-SymbolicName: sernet.springclient
-Bundle-Version: 1.1.0
+Bundle-Version: 1.1.15
 Bundle-Activator: sernet.springclient.SpringClientPlugin
-Bundle-ActivationPolicy: lazy
 Eclipse-BuddyPolicy: registered
 Bundle-ClassPath: .
 Export-Package: sernet.springclient;
@@ -14,6 +13,8 @@ Export-Package: sernet.springclient;
    org.springframework.beans.factory"
 Bundle-Vendor: SerNet
 Import-Package: com.mchange.v2.resourcepool,
+ com.mysql.jdbc,
+ com.mysql.jdbc.exceptions,
  javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0",
  net.sf.cglib.proxy,
@@ -44,3 +45,4 @@ Import-Package: com.mchange.v2.resourcepool,
  org.springframework.scheduling.quartz,
  org.springframework.transaction,
  sernet.gs.service
+Bundle-ActivationPolicy: lazy
