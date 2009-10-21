@@ -25,41 +25,44 @@
 
 	<!-- Logger for verinice -->
 	<!--
+	-->
 	<logger name="sernet">
 		<level value="DEBUG" />
 	</logger>
-	-->
 	
 	<!-- Logging verinice Command-Service -->
 	<!--
+	-->
 	<logger name="sernet.gs.ui.rcp.main.service">
 		<level value="DEBUG" />
 	</logger>
-	-->
 
 	<!--
+	-->
 	<logger name="org.springframework.osgi.extender"> 
 		<level value="INFO"/>
 	</logger>
-	-->
 	
 	<!-- Hibernate Logging -->
 	<!--
+	-->
 	<logger name="org.hibernate">
 		<level value="INFO" />
 	</logger>
-	-->
+
 	<!--
+	-->
 	<logger name="org.hibernate.cache">
 		<level value="INFO" />
 	</logger>
-	-->
+
 	<!-- SQL -->
 	<!-- 
 	<logger name="org.hibernate.SQL">
 		<level value="DEBUG" />
 	</logger>
 	-->
+	
 	<!-- SQL Parameter -->
 	<!--
 	<logger name="org.hibernate.type">
@@ -71,7 +74,7 @@
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
-		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</root>
 
 </log4j:configuration>

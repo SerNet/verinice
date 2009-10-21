@@ -105,7 +105,8 @@ class GetChangedElementsSince extends GenericCommand {
 			changedElements = Collections.emptyList();
 		else
 		{
-			LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(ids);
+			Integer[] idArray = (Integer[]) ids.toArray(new Integer[ids.size()]);
+			LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(idArray);
 			command = getCommandService().executeCommand(command);
 	
 			changedElements = command.getElements();

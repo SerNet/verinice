@@ -19,6 +19,7 @@ package sernet.gs.server.security;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
@@ -62,11 +63,10 @@ public class DbUserDetailsService implements UserDetailsService {
 			throws UsernameNotFoundException, DataAccessException {
 		if (adminuser.length() > 0 && adminpass.length() > 0
 				&& username.equals(adminuser))
-			return privilegedUser();
+			return defaultUser();
+		
+		Logger.getLogger(this.getClass()).debug("Loading user from DB: " + username);
 
-		// This command is created and maintained by Spring. We bypass the command
-		// service because we cannot use it at this time since the authentication
-		// information is missing yet.
 		try {
 			commandService.executeCommand(loadUserConfigurationCommand);
 		} catch (CommandException e) {
@@ -77,27 +77,32 @@ public class DbUserDetailsService implements UserDetailsService {
 
 		for (Entity entity : entities) {
 			if (isUser(username, entity)) {
-				return nonPrivilegedUser(entity);
+				return databaseUser(entity);
 			}
 		}
 		throw new UsernameNotFoundException(Messages
 				.getString("DbUserDetailsService.4")); //$NON-NLS-1$
 	}
 
-	private UserDetails privilegedUser() {
+	private UserDetails defaultUser() {
 		VeriniceUserDetails user = new VeriniceUserDetails(adminuser, adminpass);
 		user.addRole(ApplicationRoles.ROLE_ADMIN);
 		user.addRole(ApplicationRoles.ROLE_USER);
 		return user;
 	}
 
-	private UserDetails nonPrivilegedUser(Entity entity) {
+	private UserDetails databaseUser(Entity entity) {
 		VeriniceUserDetails userDetails = new VeriniceUserDetails(entity
 				.getSimpleValue(Configuration.PROP_USERNAME), entity
 				.getSimpleValue(Configuration.PROP_PASSWORD));
 		
 		// All non-privileged users have the role "ROLE_USER".
 		userDetails.addRole(ApplicationRoles.ROLE_USER);
+		
+		// if set in the entity, the user may also have the admin role:
+		if (entity.isSelected(Configuration.PROP_ISADMIN, "configuration_isadmin_yes"))
+			userDetails.addRole(ApplicationRoles.ROLE_ADMIN);
+			
 		
 		return userDetails;
 	}

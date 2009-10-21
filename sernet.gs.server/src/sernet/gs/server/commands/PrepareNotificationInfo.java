@@ -510,7 +510,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 				
 		}
 		
-		// TODO: New assignment can also happen (and in fact do so in a more straightforward
+		// FIXME New assignment can also happen (and in fact do so in a more straightforward
 		// way) when someone adds a new link of type 'responsible for'. However no changelog entries
 		// are created in that case.
 		/*

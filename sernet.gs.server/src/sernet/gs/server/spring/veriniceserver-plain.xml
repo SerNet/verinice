@@ -53,7 +53,7 @@
         <list>
               <ref bean="cronTrigger" />
             
-            <!--  for debugging purposes, fires the mail scheduler after 2 seconds and every 60 seconds 
+            <!--  for debugging purposes, fires the mail scheduler after 2 seconds and then every 60
 			<bean class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 				<property name="jobDetail" ref="notificationJob" />
 				<property name="startDelay" value="2000" />

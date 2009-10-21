@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.NamespaceException;
@@ -75,6 +76,7 @@ public class InternalServer implements IInternalServer {
 	public void configure(String url, String user, String pass, String driver,
 			String dialect) {
 		
+		boolean fail = false;
 		try
 		{
 			Class.forName(driver);
@@ -89,11 +91,18 @@ public class InternalServer implements IInternalServer {
 		}
 		catch (SQLException sqle)
 		{
-			throw new IllegalStateException(Messages.InternalServer_1);
+			Logger.getLogger(this.getClass()).error(Messages.InternalServer_1);
+			fail = true;
 		}
-		
-		ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user,
-				pass, driver, dialect);
+
+		if (fail) {
+			ServerPropertyPlaceholderConfigurer.setDatabaseProperties("", "", "", "", "");
+			
+		}
+		else {
+			ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user,
+					pass, driver, dialect);
+		}
 	}
 	
 	public void setGSCatalogURL(URL url) {

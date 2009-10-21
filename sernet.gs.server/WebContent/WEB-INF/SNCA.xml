@@ -11,7 +11,8 @@
 	Concrete selections or values entered by the user will be saved in the 
 	database.
 	
-    Author:  <koderman@sernet.de>
+    Authors:  <koderman@sernet.de>
+    		rschuster
 -->
 
 <!--
@@ -32,6 +33,9 @@ Template:
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.sernet.de/hitro hitro.xsd">
 
+<!-- akoderman pro-forma Entity for resolution of roles -->
+<huientity name ="Rollen" id="role" />
+
  <huientity
         name="Configuration"
         id="configuration">
@@ -43,19 +47,23 @@ Template:
             name="Passwort"
             id="configuration_passwort" />
             
-     <!-- TODO rschuster: Should not be a single textfield but a
-     textfield with a button beside it. The button should open a dialog and
-     there one should be able to select from existing roles and add new ones
-     on the fly.
-     -->
 	 <huiproperty
             name="Rollen"
             id="configuration_rolle"
             tooltip="Liste von Anwendungsrollen"
 			inputtype="reference" 
-			required="true">
-			<references entitytype="role"/>
+			required="true" 
+			crudButtons="true">
+			<references entitytype="role" />
      </huiproperty>
+     
+   	<huiproperty 
+				name="Administrator" 
+				id="configuration_isadmin"
+				inputtype="singleoption">
+				<option id="configuration_isadmin_yes" name="Ja"/>
+				<option id="configuration_isadmin_no" name="Nein"/>
+	</huiproperty>
      
      <huipropertygroup
 			id="configuration_mailing"
@@ -125,6 +133,14 @@ Template:
 				<option id="configuration_auditmailing_owner_self" name="Nur eigene"/>
 			</huiproperty>
 	
+			<huiproperty 
+				name="Neue zu prüfende Aufgaben" 
+				id="configuration_auditmailing_assigned"
+				inputtype="singleoption">
+				<option id="configuration_auditmailing_assigned_yes" name="An"/>
+				<option id="configuration_auditmailing_assigned_no" name="Aus"/>
+			</huiproperty>
+			
 			<huiproperty 
 				name="Terminwarnung: an / aus" 
 				id="configuration_auditmailing_expiring"

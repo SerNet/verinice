@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.server;
 
+import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,6 +67,8 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 public class MailJob extends QuartzJobBean implements StatefulJob {
 	
 	private static final Logger log = Logger.getLogger(MailJob.class);
+
+	private static SimpleDateFormat dateFormat =  new SimpleDateFormat("yyyy-MM-dd, EE"); //$NON-NLS-1$
 	
 	private boolean notificationEnabled;
 	
@@ -200,6 +203,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	{
 		String replyTo, from, to;
 		
+		
+		
 		List<String> events = new ArrayList<String>();
 		
 		Map<CnATreeElement, List<String>> globalExpirationEvents = new HashMap<CnATreeElement, List<String>>();
@@ -257,7 +262,10 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				globalExpirationEvents.put(cte, l);
 			}
 			
-			l.add(NLS.bind(MailMessages.MailJob_3, titleAndDate(mu, true)));
+			String dateString = mu.getUmsetzungBis() != null 
+									? dateFormat.format(mu.getUmsetzungBis())
+									: "<kein Datum>";
+			l.add(NLS.bind(MailMessages.MailJob_3, dateString + " " + mu.getTitel()));
 		}
 		
 		void addRevisionExpirationEvent(MassnahmenUmsetzung mu)
@@ -269,8 +277,10 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				l = new ArrayList<String>();
 				globalExpirationEvents.put(cte, l);
 			}
-			
-			l.add(NLS.bind(MailMessages.MailJob_4, titleAndDate(mu, false)));
+			String dateString = mu.getNaechsteRevision() != null
+								? dateFormat.format(mu.getNaechsteRevision())
+								: "<kein Datum>";
+			l.add(NLS.bind(MailMessages.MailJob_4, dateString + " " + mu.getTitel()));
 		}
 		
 		void addMeasureModifiedEvent(MassnahmenUmsetzung mu)
