@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Point;
@@ -84,6 +85,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 			"und installiert nichts ohne Ihre ausdrückliche Zustimmung!\n\n" +
 			"Kurzfassung: \nVerinice telefoniert nicht nach Hause und installiert keinen Bundestrojaner. ;-)");
 		}
+		
+		
 		
 		showFirstSteps();
 		preloadDBMapper();

@@ -131,9 +131,6 @@ public class OOWrapper {
 	private void disconnect() {
 		try {
 			setLibraryPath(oldPath);
-			officeApplication.deactivate();
-			officeApplication.dispose();
-			officeApplication = null;
 		} catch (OfficeApplicationException e) {
 			ExceptionUtil.log(e, "Fehler beim Trennen von OpenOffice.");
 		} catch (Exception e) {
@@ -570,7 +567,7 @@ public class OOWrapper {
 			System.setProperty("java.library.path", newPath);
 			Logger.getLogger(this.getClass())
 					.debug(
-							"Setting old VM library path " + oldPath + " to "
+							"Setting old VM library path:\n" + oldPath + " to:\n "
 									+ newPath);
 		} catch (SecurityException e) {
 			Logger.getLogger(this.getClass()).error(e);

@@ -18,11 +18,21 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
@@ -31,6 +41,7 @@ import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.AuditView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -49,16 +60,45 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
  * @author r.schuster@tarent.de
  *
  */
+@SuppressWarnings("serial")
 public class FindMassnahmenForITVerbund extends GenericCommand {
 	
-	private static final long serialVersionUID = -629395120227759190L;
-
 	private static final Logger log = Logger.getLogger(FindMassnahmenForITVerbund.class);
 
-	private List<TodoViewItem> all = new ArrayList<TodoViewItem>(5000);
-	private Integer dbId = null;
+	private List<TodoViewItem> all = new ArrayList<TodoViewItem>(2000);
+	private Integer itverbundDbId = null;
 
 	private Integer massnahmeId = null;
+	
+	@SuppressWarnings("serial")
+	private class FindMassnahmenForITVerbundCallback implements
+			HibernateCallback, Serializable {
+		
+		
+		private Integer itverbundID;
+
+		FindMassnahmenForITVerbundCallback(Integer itverbundID) {
+			this.itverbundID = itverbundID;
+		}
+
+		public Object doInHibernate(Session session) throws HibernateException,
+				SQLException {
+			
+			Query query = session.createQuery(
+					"from MassnahmenUmsetzung mn " +
+					"join fetch mn.entity " +
+					"join fetch mn.parent.parent.entity " +
+					"where mn.parent.parent.parent.parent = :id " +
+					"or mn.parent.parent = :id2")
+					.setInteger("id", itverbundID)
+					.setInteger("id2", itverbundID);
+			query.setReadOnly(true);
+			List result = query.list();
+			
+			return result;
+		}
+
+	}
 	
 	public FindMassnahmenForITVerbund(Integer dbId) {
 		this(dbId, null);
@@ -66,16 +106,18 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 	
 	public FindMassnahmenForITVerbund(Integer dbId, Integer massnahmeId) {
 		Logger.getLogger(this.getClass()).debug("Looking up Massnahme for IT-Verbund " + dbId);
-		this.dbId = dbId;
+		this.itverbundDbId = dbId;
 		this.massnahmeId = massnahmeId;
 	}
 
 	public void execute() {
 		try {
-			ITVerbund verbund = getDaoFactory().getDAO(ITVerbund.class).findById(dbId);
 			
 			List<MassnahmenUmsetzung> list = new ArrayList<MassnahmenUmsetzung>();
-			retrieveMassnahmen(verbund, list);
+			IBaseDao<MassnahmenUmsetzung, Serializable> dao = getDaoFactory().getDAO(
+					MassnahmenUmsetzung.class);
+			list =  
+				dao.findByCallback(new FindMassnahmenForITVerbundCallback(itverbundDbId));
 			
 			// create display items:
 			fillList(list);
@@ -85,17 +127,6 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 		}
 	}
 	
-	private void retrieveMassnahmen(CnATreeElement parent, List<MassnahmenUmsetzung> list)
-	{
-		for (CnATreeElement child : parent.getChildren())
-		{
-			if (child instanceof MassnahmenUmsetzung)
-				list.add((MassnahmenUmsetzung) child);
-			else
-				retrieveMassnahmen(child, list);
-		}
-	}
-
 	/**
 	 * Initialize lazy loaded field values needed for the view.
 	 * 
@@ -104,9 +135,11 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 	 */
 	private void fillList(List<MassnahmenUmsetzung> alleMassnahmen) throws CommandException {
 		int count = 0;
+		Set<UnresolvedItem> unresolvedItems = new HashSet<UnresolvedItem>();
+		
 		for (MassnahmenUmsetzung mn : alleMassnahmen) {
-			log.debug("Processing Massnahme: " + ++count);
-			hydrate(mn);
+//			log.debug("Processing Massnahme: " + count);
+//			hydrate(mn);
 			
 			TodoViewItem item = new TodoViewItem();
 
@@ -123,30 +156,41 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 			item.setNaechsteRevision(mn.getNaechsteRevision());
 			item.setRevisionDurch(mn.getRevisionDurch());
 			
-			
-			
-			if (mn.getUmsetzungDurch() != null && mn.getUmsetzungDurch().length()>0)
-				item.setUmsetzungDurch(mn.getUmsetzungDurch());
-			else {
-				FindResponsiblePerson command = new FindResponsiblePerson(mn.getDbId(), MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
-				command = FindMassnahmenForITVerbund.this.getCommandService().executeCommand(command);
-				List<Person> foundPersons = command.getFoundPersons();
-				if (foundPersons.size()==0)
-					item.setUmsetzungDurch("");
-				else {
-					item.setUmsetzungDurch(getNames(foundPersons));
-				}
-			}
-			
-			
 			item.setStufe(mn.getStufe());
 			item.setUrl(mn.getUrl());
 			item.setStand(mn.getStand());
 			item.setDbId(mn.getDbId());
 			
+			if (mn.getUmsetzungDurch() != null && mn.getUmsetzungDurch().length()>0) {
+				item.setUmsetzungDurch(mn.getUmsetzungDurch());
+				all.add(item);
+			}
+			else {
+				unresolvedItems.add(new UnresolvedItem(item, mn.getDbId()));
+			}
 			
-			all.add(item);
+			
 		}
+		// find persons according to roles and relation:
+		FindResponsiblePersons command = new FindResponsiblePersons(unresolvedItems, 
+				MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
+		command = this.getCommandService().executeCommand(command);
+		unresolvedItems = command.getResolvedItems();
+		for (UnresolvedItem resolvedItem : unresolvedItems) {
+			all.add(resolvedItem.getItem());
+		}
+	}
+
+	/**
+	 * @param unresolvedItems
+	 */
+	private void resolve(Map<MassnahmenUmsetzung, TodoViewItem> unresolvedItems) {
+	// FIXME server findpersons	
+//		FindResponsiblePersons command = new FindResponsiblePersons(unresolvedItems, MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
+//		command = FindMassnahmenForITVerbund.this.getCommandService().executeCommand(command);
+		
+		
+		
 	}
 
 	private String getNames(List<Person> persons) {
@@ -161,8 +205,8 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 	}
 
 	private void hydrate(MassnahmenUmsetzung mn) {
-		IBaseDao<MassnahmenUmsetzung, Serializable> dao = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
-		dao.initialize(mn);
+//		IBaseDao<MassnahmenUmsetzung, Serializable> dao = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
+//		dao.initialize(mn);
 	}
 
 	public List<TodoViewItem> getAll() {

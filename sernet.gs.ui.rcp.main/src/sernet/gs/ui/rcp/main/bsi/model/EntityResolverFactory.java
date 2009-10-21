@@ -24,33 +24,55 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+
+import com.sun.star.beans.GetPropertyTolerantResult;
+
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.service.crudcommands.FastLoadCnAElementsByIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsByIds;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
+import sernet.gs.ui.rcp.main.service.taskcommands.DeleteRole;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindHuiUrls;
+import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiUrl;
 import sernet.hui.common.connect.IReferenceResolver;
 import sernet.hui.common.connect.IUrlResolver;
+import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.IContextMenuListener;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 
 /**
  * The HUI framework has no knowledge aout the database, so this factory
  * generates the necessary callback methods to get objects for it.
  * 
- * Basically this is needed to get objects referenced in propertytypes,
- * i.e. a list of Authors for the field "Authors" in the entity "Book".
+ * Basically this is needed to get objects referenced in propertytypes, i.e. a
+ * list of Authors for the field "Authors" in the entity "Book".
  * 
- * It is also used to get previously entered URLs in the URL edit dialog, so 
- * the user can simply select them from a drop-down box.
+ * It is also used to get previously entered URLs in the URL edit dialog, so the
+ * user can simply select them from a drop-down box.
  * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
@@ -73,7 +95,7 @@ public class EntityResolverFactory {
 
 			addPersonResolverToTypes(typeFactory, entityType, propertyTypes);
 			addRoleResolverToTypes(typeFactory, entityType, propertyTypes);
-			
+
 			List<PropertyGroup> groups = entityType.getPropertyGroups();
 			for (PropertyGroup group : groups) {
 				List<PropertyType> typesInGroup = group.getPropertyTypes();
@@ -81,16 +103,15 @@ public class EntityResolverFactory {
 				addRoleResolverToTypes(typeFactory, entityType, typesInGroup);
 			}
 		}
-		
+
 		createUrlResolver(typeFactory);
-		
+
 		// set url resolver for all URL fields:
 		List<PropertyType> types = typeFactory.getURLPropertyTypes();
 		for (PropertyType type : types) {
 			type.setUrlResolver(urlresolver);
 		}
 	}
-
 
 	private static void addPersonResolverToTypes(HUITypeFactory typeFactory,
 			EntityType entityType, List<PropertyType> propertyTypes) {
@@ -105,7 +126,7 @@ public class EntityResolverFactory {
 			}
 		}
 	}
-	
+
 	private static void addRoleResolverToTypes(HUITypeFactory typeFactory,
 			EntityType entityType, List<PropertyType> propertyTypes) {
 		for (PropertyType propertyType : propertyTypes) {
@@ -120,7 +141,6 @@ public class EntityResolverFactory {
 		}
 	}
 
-	
 	private static void createUrlResolver(HUITypeFactory typeFactory) {
 		// create list of all fields containing urls:
 		final Set<String> allIDs = new HashSet<String>();
@@ -133,23 +153,24 @@ public class EntityResolverFactory {
 		} catch (Exception e) {
 			return;
 		}
-		
+
 		// get urls out of these fields:
 		urlresolver = new IUrlResolver() {
 			public List<HuiUrl> resolve() {
 				List<HuiUrl> result = Collections.emptyList();
-				
+
 				try {
 					FindHuiUrls command = new FindHuiUrls(allIDs);
-					
-					command = ServiceFactory.lookupCommandService().executeCommand(command);
-					
+
+					command = ServiceFactory.lookupCommandService()
+							.executeCommand(command);
+
 					result = command.getList();
-						
+
 				} catch (Exception e) {
 					ExceptionUtil.log(e, "Fehler beim Datenzugriff."); //$NON-NLS-1$
 				}
-				
+
 				return result;
 			}
 		};
@@ -161,32 +182,66 @@ public class EntityResolverFactory {
 
 				public List<IMLPropertyOption> getAllEntitesForType(
 						String entityTypeID) {
-					
-					
-					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
-					
 
-					LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
-					
+					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
+
+					LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(
+							Person.class);
+
 					try {
 						command = ServiceFactory.lookupCommandService()
-							.executeCommand(command);
-						
+								.executeCommand(command);
+
 						List<Person> personen = command.getElements();
-						
+
 						for (Person person : personen) {
-							result.add(new PersonEntityOptionWrapper(person));
+							result.add(new PersonEntityOptionWrapper(person.getEntity()));
 						}
-						
+
 					} catch (Exception e) {
-						throw new RuntimeCommandException("Fehler beim Datenzugriff.", e);
+						throw new RuntimeCommandException(
+								"Fehler beim Datenzugriff.", e);
 					}
 					return result;
+				}
+
+				public void addNewEntity(Entity parentEntity, String name) {
+					// not supported, do nothing
+				}
+
+				public List<IMLPropertyOption> getReferencedEntitesForType(
+						String referencedEntityTypeId, List<Property> references) {
+
+					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
+
+					List<Integer> dbIds = new ArrayList<Integer>();
+					for (Property prop : references) {
+						dbIds.add( Integer.parseInt(prop.getPropertyValue()) );
+					}
+					FastLoadCnAElementsByIds command = new FastLoadCnAElementsByIds(dbIds);
+					
+
+					try {
+						command = ServiceFactory.lookupCommandService()
+								.executeCommand(command);
+
+						List<Entity> personen = command.getFoundItems();
+
+						for (Entity person : personen) {
+							result.add(new PersonEntityOptionWrapper(person));
+						}
+
+					} catch (Exception e) {
+						throw new RuntimeCommandException(
+								"Fehler beim Datenzugriff.", e);
+					}
+					return result;
+				
 				}
 			};
 		}
 	}
-	
+
 	private static void createRoleResolver() {
 		if (roleResolver == null) {
 			roleResolver = new IReferenceResolver() {
@@ -196,7 +251,7 @@ public class EntityResolverFactory {
 					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
 					
 					try {
-						FindAllRoles far = new FindAllRoles();
+						FindAllRoles far = new FindAllRoles(false /* filter out user roles, should not be selectable by end user*/);
 						far = ServiceFactory.lookupCommandService()
 							.executeCommand(far);
 						
@@ -204,6 +259,7 @@ public class EntityResolverFactory {
 						{
 							// Empty roles may happen for non-initialized Configuration instances. 
 							if (role.length() > 0)
+								
 								result.add(new PropertyOption(role, role));
 						}
 						
@@ -212,8 +268,26 @@ public class EntityResolverFactory {
 					}
 					return result;
 				}
+
+				public void addNewEntity(Entity parentEntity, String newName) {
+					try {
+						PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, Configuration.PROP_ROLES);
+						parentEntity.createNewProperty(type, newName);
+
+						SaveElement<Entity>command = new SaveElement<Entity>(parentEntity);
+						command = ServiceFactory.lookupCommandService()
+								.executeCommand(command);
+					} catch (CommandException e) {
+						throw new RuntimeCommandException("Fehler beim Datenzugriff.", e);
+					}
+				}
+
+				public List<IMLPropertyOption> getReferencedEntitesForType(
+						String referencedEntityTypeId, List<Property> references) {
+					return null;
+				}
 			};
 		}
+		
 	}
-	
 }

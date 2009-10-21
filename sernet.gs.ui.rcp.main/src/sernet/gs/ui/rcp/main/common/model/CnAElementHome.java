@@ -305,8 +305,11 @@ public class CnAElementHome {
 	 */
 	public boolean isWriteAllowed(CnATreeElement cte)
 	{
+		
+		// FIXME akoderman: this should only be used to determine icon state on the client. write check needs to implemented on the server side on saveOrUpdate() / merge() as well
+		
 		// Short cut: If no permission handling is needed than all objects are writable.
-		if (!ServiceFactory.lookupAuthService().isPermissionHandlingNeeded())
+		if (!ServiceFactory.isPermissionHandlingNeeded())
 			return true;
 		
 		// Short cut 2: If we are the admin, then everything is writable as well.

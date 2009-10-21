@@ -27,6 +27,7 @@ import sernet.springclient.SpringClientPlugin;
 public abstract class ServiceFactory {
 	
 	private static final String WORK_OBJECTS = "workObjects";
+	private static Boolean permissionHandlingNeeded = null;
 
 	public static void openCommandService() throws MalformedURLException {
 		SpringClientPlugin.getDefault().openBeanFactory();
@@ -53,7 +54,7 @@ public abstract class ServiceFactory {
 	
 	/** Retrieves the client's IAuthService instance.
 	 * 
-	 * <p>The method works on the server as well as the client.</p>
+	 * <p>The method works only on the client.</p>
 	 * 
 	 * <p>Note: Usage of this method is discouraged. If the class that needs
 	 * the auth service is managed by Spring declare a property and
@@ -62,7 +63,21 @@ public abstract class ServiceFactory {
 	 * @return
 	 */
 	public static IAuthService lookupAuthService() {
-		return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+		// Cache result of permission handling config for the configured service.
+		// Otherwise, the server was queried on every call to determine this:
+		
+		IAuthService authService = (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+		
+		if (permissionHandlingNeeded == null)
+			permissionHandlingNeeded = authService.isPermissionHandlingNeeded();
+		
+		return authService;
+	}
+	
+	public static boolean isPermissionHandlingNeeded() {
+		if (permissionHandlingNeeded == null)
+			return true; /* return true, just to be safe */
+		return permissionHandlingNeeded;
 	}
 	
 	/**

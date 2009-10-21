@@ -21,11 +21,21 @@ import java.io.Serializable;
 import java.util.Properties;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 
+@SuppressWarnings("serial")
 public abstract class Report implements Serializable {
 
-	private BSIModel model;
 	protected Properties reportProperties;
+	private ITVerbund itverbund;
+	
+	public ITVerbund getItverbund() {
+		return itverbund;
+	}
+
+	public void setItverbund(ITVerbund itverbund) {
+		this.itverbund = itverbund;
+	}
 
 	public Report(Properties reportProperties) {
 		this.reportProperties = reportProperties;
@@ -42,12 +52,5 @@ public abstract class Report implements Serializable {
 		return (prop.indexOf(property_id) > -1 );
 	}
 
-	public BSIModel getModel() {
-		return this.model;
-	}
-	
-	public void setModel(BSIModel model) {
-		this.model = model;
-	}
 
 }

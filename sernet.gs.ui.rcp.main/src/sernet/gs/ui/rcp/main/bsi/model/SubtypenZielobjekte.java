@@ -20,9 +20,11 @@ package sernet.gs.ui.rcp.main.bsi.model;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -43,10 +45,12 @@ public class SubtypenZielobjekte {
 				Logger.getLogger(this.getClass())
 					.error("Fehler beim Laden der Zuordnung von Zielobjekt-Typen zu Bausteinen", e);
 			}
-			
-			Set<String> names = properties.stringPropertyNames();
-			for (String name : names) {
-				String property = properties.getProperty(name);
+
+			// TODO server test if this works
+			Set<Entry<Object, Object>> entrySet = properties.entrySet();
+			for (Entry<Object, Object> entry : entrySet) {
+				String name = entry.getKey().toString();
+				String property = entry.getValue().toString();
 				BausteinVorschlag vorschlag = new BausteinVorschlag(name, property);
 				mapping.add(vorschlag);
 			}

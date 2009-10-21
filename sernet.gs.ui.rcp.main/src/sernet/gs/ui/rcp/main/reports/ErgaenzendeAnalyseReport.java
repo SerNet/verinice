@@ -95,12 +95,8 @@ public class ErgaenzendeAnalyseReport extends Report
 			return items;
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
-			BSIModel model = super.getModel();
-			List<ITVerbund> itverbuende = model.getItverbuende();
-			
-			for (ITVerbund verbund : itverbuende) {
-				getStrukturElements(verbund);
-			}
+		
+		getStrukturElements(getItverbund());
 		return items;
 	}
 

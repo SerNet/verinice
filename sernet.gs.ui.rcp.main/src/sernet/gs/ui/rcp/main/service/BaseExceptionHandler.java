@@ -23,7 +23,37 @@ public class BaseExceptionHandler implements ICommandExceptionHandler {
 
 	public void handle(Exception e) throws CommandException {
 		throw new CommandException(
-				"Ausführungsfehler in DB-Service-Layer", e);
+				"Ausführungsfehler in DB-Service-Layer\n\n", getDetails(e));
+	}
+
+	/**
+	 * @param e
+	 */
+	private CommandException getDetails(Exception e) {
+		if (e == null)
+			return null;
+		
+		Throwable cause;
+		if (e.getCause() != null && e.getCause().getMessage() != null)
+			cause = e.getCause();
+		else
+			cause = e;
+		
+		CommandException commandException = new CommandException(cause.getClass().getSimpleName() + getMessage(cause));
+		commandException.setStackTrace(cause.getStackTrace());
+		return commandException;
+		
+		
+	}
+
+	/**
+	 * @param cause
+	 * @return
+	 */
+	private String getMessage(Throwable cause) {
+		return cause.getLocalizedMessage() != null 
+			? ", " + cause.getLocalizedMessage()
+			: "";
 	}
 
 }

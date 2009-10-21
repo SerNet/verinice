@@ -70,15 +70,13 @@ public class MassnahmenumsetzungReport extends Report
 			return items;
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
-		List<ITVerbund> itverbuende;
-			BSIModel model = super.getModel();
-			itverbuende = model.getItverbuende();
-			for (ITVerbund verbund : itverbuende) {
-				items.add(verbund);
-				if (! categories.contains(verbund.getParent()))
-					categories.add(verbund.getParent());
-				getStrukturElements(verbund);
-			}
+		
+		
+			ITVerbund verbund  = getItverbund();
+			items.add(verbund);
+			if (! categories.contains(verbund.getParent()))
+				categories.add(verbund.getParent());
+			getStrukturElements(verbund);
 		return items;
 	}
 

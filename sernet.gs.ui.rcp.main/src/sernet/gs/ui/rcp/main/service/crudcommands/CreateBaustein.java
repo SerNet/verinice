@@ -19,16 +19,21 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenFactory;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.Permission;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.service.IAuthService;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 
@@ -42,13 +47,15 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
  *
  * @param <T>
  */
-public class CreateBaustein extends GenericCommand implements IChangeLoggingCommand {
+public class CreateBaustein extends GenericCommand implements IChangeLoggingCommand, 
+	IAuthAwareCommand {
 
 	private BausteinUmsetzung child;
 	private Baustein baustein;
 	private String stationId;
 	private Integer dbId;
 	private Class<? extends CnATreeElement> clazz;
+	private transient IAuthService authService;
 
 	public CreateBaustein(CnATreeElement container, Baustein baustein) {
 		
@@ -71,6 +78,7 @@ public class CreateBaustein extends GenericCommand implements IChangeLoggingComm
 			if (container.containsBausteinUmsetzung(baustein.getId()))
 				return;
 			
+			
 			MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
 
 			child = new BausteinUmsetzung(container);
@@ -82,11 +90,29 @@ public class CreateBaustein extends GenericCommand implements IChangeLoggingComm
 			child.setUrl(baustein.getUrl());
 			child.setStand(baustein.getStand());
 
+			
+			
 			List<Massnahme> massnahmen = baustein
 					.getMassnahmen();
 			for (Massnahme mn : massnahmen) {
 				massnahmenFactory.createMassnahmenUmsetzung(child, mn);
 			}
+			
+			if (authService.isPermissionHandlingNeeded())
+			{
+				child.setPermissions(
+					Permission.clonePermissions(
+							child,
+							container.getPermissions()));
+				
+				for (CnATreeElement elmt: child.getChildren()) {
+					elmt.setPermissions(
+							Permission.clonePermissions(
+									elmt,
+									container.getPermissions()));
+				}
+			}
+			
 			
 		} catch (Exception e) {
 			throw new RuntimeCommandException(e);
@@ -118,6 +144,14 @@ public class CreateBaustein extends GenericCommand implements IChangeLoggingComm
 	 */
 	public String getStationId() {
 		return stationId;
+	}
+	
+	public IAuthService getAuthService() {
+		return authService;
+	}
+
+	public void setAuthService(IAuthService service) {
+		this.authService = service;
 	}
 
 }

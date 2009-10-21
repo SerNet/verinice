@@ -18,92 +18,147 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.io.Serializable;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
+import sernet.gs.ui.rcp.main.common.model.TransactionAbortedException;
 
 /**
- * On a change event, iterates through all linked items, searching
- * for the maximum protection level to apply.
+ * On a change event, iterates through all linked items, searching for the
+ * maximum protection level to apply.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * 
  */
-public class MaximumSchutzbedarfListener implements ILinkChangeListener, Serializable {
+public class MaximumSchutzbedarfListener implements ILinkChangeListener,
+		Serializable {
 
 	private CnATreeElement sbTarget;
-	
-	
-	
+
 	public MaximumSchutzbedarfListener(CnATreeElement item) {
 		this.sbTarget = item;
 	}
 
-	public void integritaetChanged(CascadingTransaction ta) {
+	public void determineIntegritaet(CascadingTransaction ta)
+			throws TransactionAbortedException {
+		if (hasBeenVisited(ta))
+			return;
+		ta.enter(sbTarget);
+
+		// get protection level from upward links:
+		int highestValue = 0;
+		allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+			CnATreeElement upwardElmt = link.getDependant();
+			if (upwardElmt.isSchutzbedarfProvider()) {
+
+				// upwardElement might depend on maximum level itself, so
+				// recurse up:
+				upwardElmt.getLinkChangeListener().determineIntegritaet(ta);
+
+				int value = upwardElmt.getSchutzbedarfProvider()
+						.getIntegritaet();
+				if (value > highestValue)
+					highestValue = value;
+				if (highestValue == Schutzbedarf.SEHRHOCH)
+					break allLinks;
+			}
+		}
 		
-		
+		// if we dont use the maximum principle, keep current level:
 		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
 				.getIntegritaetDescription()))
 			return;
 		
+		sbTarget.getSchutzbedarfProvider().setIntegritaet(highestValue);
+	}
+
+	/**
+	 * @param ta
+	 * @return
+	 */
+	private boolean hasBeenVisited(CascadingTransaction ta) {
+		if (ta.hasBeenVisited(sbTarget)) {
+			Logger
+					.getLogger(this.getClass())
+					.debug(
+							"Skipping object " + ((CnATreeElement) ta.getLoopedObject()).getTitel()); //$NON-NLS-1$
+			return true; // we have already been down this path
+		}
+		return false;
+	}
+
+	public void determineVerfuegbarkeit(CascadingTransaction ta)
+			throws TransactionAbortedException {
+		if (hasBeenVisited(ta))
+			return;
+		ta.enter(sbTarget);
+
+
+		// otherwise get protection level from upward links:
 		int highestValue = 0;
-		allLinks: for(CnALink link : sbTarget.getLinksUp()) {
-			CnATreeElement elmt = link.getDependant();
-			if (elmt.isSchutzbedarfProvider()) {
-				int value = elmt.getSchutzbedarfProvider().getIntegritaet();
+		allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+			CnATreeElement upwardElmt = link.getDependant();
+			if (upwardElmt.isSchutzbedarfProvider()) {
+
+				// upwardElement might depend on maximum level itself, so
+				// recurse up:
+				upwardElmt.getLinkChangeListener().determineVerfuegbarkeit(ta);
+
+				int value = upwardElmt.getSchutzbedarfProvider()
+						.getVerfuegbarkeit();
 				if (value > highestValue)
 					highestValue = value;
 				if (highestValue == Schutzbedarf.SEHRHOCH)
 					break allLinks;
 			}
 		}
-		sbTarget.getSchutzbedarfProvider().setIntegritaet(highestValue, ta);
-	}
 
-	
-
-	public void verfuegbarkeitChanged(CascadingTransaction ta) {
-		
+		// if we dont use the maximum principle, keep current level:
 		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
 				.getVerfuegbarkeitDescription()))
 			return;
 		
+		sbTarget.getSchutzbedarfProvider().setVerfuegbarkeit(highestValue);
+	}
+
+	public void determineVertraulichkeit(CascadingTransaction ta)
+			throws TransactionAbortedException {
+
+		if (hasBeenVisited(ta))
+			return;
+		ta.enter(sbTarget);
+
+		// otherwise get protection level from upward links:
 		int highestValue = 0;
-		allLinks: for(CnALink link : sbTarget.getLinksUp()) {
-			CnATreeElement elmt = link.getDependant();
-			if (elmt.isSchutzbedarfProvider()) {
-				int value = elmt.getSchutzbedarfProvider().getVerfuegbarkeit();
+		allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+			CnATreeElement upwardElmt = link.getDependant();
+			if (upwardElmt.isSchutzbedarfProvider()) {
+
+				// upwardElement might depend on maximum level itself, so
+				// recurse up:
+				upwardElmt.getLinkChangeListener().determineVertraulichkeit(ta);
+
+				int value = upwardElmt.getSchutzbedarfProvider()
+						.getVertraulichkeit();
 				if (value > highestValue)
 					highestValue = value;
 				if (highestValue == Schutzbedarf.SEHRHOCH)
 					break allLinks;
 			}
 		}
-		sbTarget.getSchutzbedarfProvider().setVerfuegbarkeit(highestValue, ta);
-	}
-
-	public void vertraulichkeitChanged(CascadingTransaction ta) {
-		
+		// if we dont use the maximum principle, keep current level:
 		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
 				.getVertraulichkeitDescription()))
 			return;
 		
-		int highestValue = 0;
-		allLinks: for(CnALink link : sbTarget.getLinksUp()) {
-			CnATreeElement elmt = link.getDependant();
-			if (elmt.isSchutzbedarfProvider()) {
-				int value = elmt.getSchutzbedarfProvider().getVertraulichkeit();
-				if (value > highestValue)
-					highestValue = value;
-				if (highestValue == Schutzbedarf.SEHRHOCH)
-					break allLinks;
-			}
-		}
-		sbTarget.getSchutzbedarfProvider().setVertraulichkeit(highestValue, ta);
+		sbTarget.getSchutzbedarfProvider().setVertraulichkeit(highestValue);
+
 	}
-	
+
 }

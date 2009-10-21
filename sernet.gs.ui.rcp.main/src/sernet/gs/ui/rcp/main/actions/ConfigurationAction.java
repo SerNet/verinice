@@ -210,7 +210,7 @@ public class ConfigurationAction implements IObjectActionDelegate {
 			// - user has administrator privileges
 			boolean b =
 				CnAElementHome.getInstance().isOpen()
-				&& ServiceFactory.lookupAuthService().isPermissionHandlingNeeded()
+				&& ServiceFactory.isPermissionHandlingNeeded()
 				&& AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
 	
 			action.setEnabled(b);

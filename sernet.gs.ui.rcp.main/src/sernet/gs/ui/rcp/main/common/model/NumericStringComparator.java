@@ -148,7 +148,7 @@ public class NumericStringComparator implements Comparator {
 			}
 			
 			if (edx1 != -1) {
-				// FIXME ak the next line sometimes produces an ArrayOutOfBounds exception
+				// TODO ak the next line sometimes produces an ArrayOutOfBounds exception
 				try {
 					int comp = compare(s1.substring(edx1), s2.substring(edx2));
 					if (comp != 0) {

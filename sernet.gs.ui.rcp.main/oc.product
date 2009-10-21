@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
-<product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.0.0" useFeatures="true">
+<product name="verinice 1.0.15 RC2" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.0.15" useFeatures="true">
 
    <aboutInfo>
       <image path="icons/product_lg.gif"/>
@@ -20,10 +20,18 @@ or
 Visit our homepage:
 http://www.verinice.org
 
+Contributors:
+Alexander Koderman 		&lt;ak@sernet.de&gt;
+Anne Hanekop 			&lt;ah@sernet.de&gt;
+Marek Seeger			&lt;ms@sernet.de&gt;
+Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;
+Robert Schuster			&lt;rschuster@tarent.de&gt;
+
+
 This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it under certain conditions.
 Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.
-See the LICENSE.txt contained in the program folder or the verinice Plugin-Details in the help menu for details.
+See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.
       </text>
    </aboutInfo>
 
@@ -51,6 +59,8 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
             winLargeLow="/sernet.gs.ui.rcp.main/icons/ico8-48x48.bmp"/>
       </win>
    </launcher>
+
+   <intro introId="sernet.gs.ui.rcp.main.intro1"/>
 
    <vm>
    </vm>
@@ -117,16 +127,16 @@ See the LICENSE.txt contained in the program folder or the verinice Plugin-Detai
       <plugin id="sernet.gs.service"/>
       <plugin id="sernet.gs.tagsoup_ak"/>
       <plugin id="sernet.gs.ui.rcp.main"/>
-      <plugin id="verinice.nl1.org.eclipse.jface"/>
-      <plugin id="verinice.nl1.org.eclipse.swt"/>
-      <plugin id="verinice.nl1.org.eclipse.ui"/>
-      <plugin id="verinice.nl1.org.eclipse.ui.cheatsheets"/>
-      <plugin id="verinice.nl1.org.eclipse.ui.workbench"/>
+      <plugin id="verinice.nl1.org.eclipse.jface" fragment="true"/>
+      <plugin id="verinice.nl1.org.eclipse.swt" fragment="true"/>
+      <plugin id="verinice.nl1.org.eclipse.ui" fragment="true"/>
+      <plugin id="verinice.nl1.org.eclipse.ui.cheatsheets" fragment="true"/>
+      <plugin id="verinice.nl1.org.eclipse.ui.workbench" fragment="true"/>
    </plugins>
 
    <features>
-      <feature id="sernet.gs.ui.rcp.main.feature" version="0.8.0"/>
-      <feature id="sernet.gs.server.feature" version="1.0.0"/>
+      <feature id="sernet.gs.server.feature" version="1.0.14"/>
+      <feature id="sernet.gs.ui.rcp.main.feature" version="1.0.14"/>
    </features>
 
 </product>

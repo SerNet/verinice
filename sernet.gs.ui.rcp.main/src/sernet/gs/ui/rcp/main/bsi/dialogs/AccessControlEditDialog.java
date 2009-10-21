@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -26,8 +27,10 @@ import net.miginfocom.swt.MigLayout;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -40,6 +43,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdatePermissions;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
 
 /**
  * Simple dialog that allows defining the access options for an element.
@@ -51,20 +55,26 @@ public class AccessControlEditDialog extends Dialog {
 	
 	private static final Logger log = Logger.getLogger(AccessControlEditDialog.class);
 
-	private CnATreeElement cte;
+	private List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
 	
 	private List<RawPermission> rawPermissions = new ArrayList<RawPermission>();
 	
 	private Button inheritButton;
+
+	private String[] allRoles;
 	
-	public AccessControlEditDialog(Shell parent, CnATreeElement cte) {
+	public AccessControlEditDialog(Shell parent, IStructuredSelection selection) {
 		super(parent);
 		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
-		
-		this.cte = cte;
-		
-		// TODO rschuster: Disallow creation of this dialog when user has
-		// no administrator role?
+
+		Iterator iterator = selection.iterator();
+		while (iterator.hasNext()) {
+			Object next = iterator.next();
+			if (next instanceof CnATreeElement) {
+				CnATreeElement nextElement = (CnATreeElement) next;
+				elements.add(nextElement);
+			}
+		}
 	}
 
 	@Override
@@ -96,21 +106,30 @@ public class AccessControlEditDialog extends Dialog {
 		// Otherwise the client that did modifications to the permissions would not see
 		// the changes.
 		
+		// TODO akoderman: for now, only the permissions of the first element are displayed, changes will be writte to all selected elements
+		CnATreeElement firstElement = elements.get(0);
+		
 		// TODO rschuster: Do this in a separate thread
-		LoadPermissions lp = new LoadPermissions(cte);
+		LoadPermissions lp = new LoadPermissions(firstElement);
+		FindAllRoles findAllRoles = new FindAllRoles(true);
 		try {
 			lp = (LoadPermissions) ServiceFactory.lookupCommandService().executeCommand(lp);
+			findAllRoles = (FindAllRoles) ServiceFactory.lookupCommandService().executeCommand(findAllRoles);
 		} catch (CommandException e) {
 			// TODO rschuster: Handle this more gracefully
 			throw new RuntimeException(e);
 		}
 		
+		Set<String> roles = findAllRoles.getRoles();
+		this.allRoles = (String[]) roles.toArray(new String[roles.size()]);
+		
 		Set<Permission> perms = lp.getPermissions();
-		Text t;
+		Combo t;
 		Button r, w;
 		for (Permission p : perms)
 		{
-			t = new Text(container, SWT.BORDER);
+			t = new Combo(container,  SWT.DROP_DOWN | SWT.READ_ONLY);
+			t.setItems(allRoles);
 			t.setText(p.getRole());
 			
 			r = new Button(container, SWT.CHECK | SWT.BORDER);
@@ -125,24 +144,33 @@ public class AccessControlEditDialog extends Dialog {
 		// TODO rschuster: The next lines provide some empty rows which the
 		// user can use for new permissions. Ideally we want an 'add'
 		// button that dynamically creates a new row for us.
-		t = new Text(container, SWT.BORDER); t.setText("");
+		t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
+		t.setText("");
+		t.setItems(allRoles);
 		r = new Button(container, SWT.CHECK | SWT.BORDER); r.setSelection(false);
 		w = new Button(container, SWT.CHECK | SWT.BORDER); w.setSelection(false);
 		rawPermissions.add(new RawPermission(t, r, w));
 
-		t = new Text(container, SWT.BORDER); t.setText("");
+		t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
+		t.setText("");
+		t.setItems(allRoles);
 		r = new Button(container, SWT.CHECK | SWT.BORDER); r.setSelection(false);
 		w = new Button(container, SWT.CHECK | SWT.BORDER); w.setSelection(false);
 		rawPermissions.add(new RawPermission(t, r, w));
 		
-		t = new Text(container, SWT.BORDER); t.setText("");
+		t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
+		t.setText("");
+		t.setItems(allRoles);
 		r = new Button(container, SWT.CHECK | SWT.BORDER); r.setSelection(false);
 		w = new Button(container, SWT.CHECK | SWT.BORDER); w.setSelection(false);
 		rawPermissions.add(new RawPermission(t, r, w));
 
 		inheritButton = new Button(container, SWT.CHECK);
 		inheritButton.setLayoutData("spanx 3, grow");
-		inheritButton.setSelection(true);
+		if (elements.size()<2)
+			inheritButton.setSelection(true);
+		else 
+			inheritButton.setSelection(false);
 		inheritButton.setText("Rechte auf alle Kindelemente anwenden");
 		
 		return container;
@@ -150,11 +178,11 @@ public class AccessControlEditDialog extends Dialog {
 		
 	static class RawPermission {
 		
-		Text role;
+		Combo role;
 		
 		Button read, write;
 		
-		RawPermission(Text role, Button read, Button write)
+		RawPermission(Combo role, Button read, Button write)
 		{
 			this.role = role;
 			this.read = read;
@@ -179,16 +207,18 @@ public class AccessControlEditDialog extends Dialog {
 				newPerms.add(p);
 			}
 			
-			UpdatePermissions up = new UpdatePermissions(
-					cte,
-					newPerms,
-					inheritButton.getSelection());
-			
-			try {
-				ServiceFactory.lookupCommandService().executeCommand(up);
-			} catch (CommandException e) {
-				// TODO rschuster: Handle this more gracefully
-				throw new RuntimeException(e);
+			for (CnATreeElement element : elements) {
+				UpdatePermissions up = new UpdatePermissions(
+						element,
+						newPerms,
+						inheritButton.getSelection());
+				
+				try {
+					ServiceFactory.lookupCommandService().executeCommand(up);
+				} catch (CommandException e) {
+					// TODO rschuster: Handle this more gracefully
+					throw new RuntimeException(e);
+				}
 			}
 		}
 

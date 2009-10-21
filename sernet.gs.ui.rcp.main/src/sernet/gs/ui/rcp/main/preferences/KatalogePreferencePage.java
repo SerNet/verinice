@@ -223,6 +223,13 @@ public class KatalogePreferencePage
 		datenschutzZipPath.setEnabled(enable, getFieldEditorParent());
 		gsAccessMethod.setEnabled(enable, getFieldEditorParent());
 		zipfilePath.setEnabled(enable, getFieldEditorParent());
+		
+		if (enable) {
+			setMessage(null);
+		}
+		else {
+			setMessage("Die Kataloge werden vom Server bezogen und müssen hier nicht konfiguriert werden.");
+		}
 	}
 	
 	@Override

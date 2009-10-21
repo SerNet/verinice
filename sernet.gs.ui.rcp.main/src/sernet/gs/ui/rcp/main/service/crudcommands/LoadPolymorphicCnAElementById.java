@@ -21,7 +21,6 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -38,19 +37,19 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 @SuppressWarnings("serial")
 public class LoadPolymorphicCnAElementById extends GenericCommand {
 	
-	private Collection<Integer> ids;
+	public LoadPolymorphicCnAElementById(Integer[] ds) {
+		ids = ds;
+	}
+
+	private Integer[] ids;
 
 	private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
 	
-	public LoadPolymorphicCnAElementById(Collection<Integer> ids) {
-		this.ids = ids;
-		
-		if (ids.isEmpty())
-			throw new IllegalArgumentException("There must be at least one id available.");
-	}
-	
 	@SuppressWarnings("unchecked")
 	public void execute() {
+		if (ids == null || ids.length == 0)
+			return;
+		
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 		
 		list = (List<CnATreeElement>) dao.findByCallback(new Callback(ids));
@@ -63,9 +62,9 @@ public class LoadPolymorphicCnAElementById extends GenericCommand {
 
 	private static class Callback implements HibernateCallback, Serializable {
 		
-		Collection<Integer> ids;
+		Integer[] ids;
 		
-		Callback(Collection<Integer> ids)
+		Callback(Integer[] ids)
 		{
 			this.ids = ids;
 		}

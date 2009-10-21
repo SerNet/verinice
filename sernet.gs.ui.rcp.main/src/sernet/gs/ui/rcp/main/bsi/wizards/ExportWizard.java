@@ -33,6 +33,7 @@ import org.eclipse.ui.IWorkbench;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.PropertySelection;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -58,6 +59,7 @@ public class ExportWizard extends Wizard implements IExportWizard {
 
 	private PropertySelection shownPropertyTypes;
 	private String textTemplatePath;
+	private ChooseITVerbundPage chooseITverbundPage;
 
 	
 	public void resetShownPropertyTypes() {
@@ -94,6 +96,9 @@ public class ExportWizard extends Wizard implements IExportWizard {
 		
 		chooseReportPage = new ChooseReportPage();
 		addPage(chooseReportPage);
+		
+		chooseITverbundPage = new ChooseITVerbundPage();
+		addPage(chooseITverbundPage);
 		
 		chooseExportMethodPage = new ChooseExportMethodPage();
 		addPage(chooseExportMethodPage);
@@ -160,7 +165,7 @@ public class ExportWizard extends Wizard implements IExportWizard {
 //			}
 			mon.done();
 		} catch (java.lang.Exception e) {
-			ExceptionHandlerFactory.getDefaultHandler().handleException(e);
+			ExceptionUtil.log(e, "Fehler beim Export.");
 		}
 	}
 
@@ -196,6 +201,13 @@ public class ExportWizard extends Wizard implements IExportWizard {
 	
 	public String getTextTemplatePath() {
 		return this.textTemplatePath;
+	}
+
+	/**
+	 * @return
+	 */
+	public ITVerbund getITVerbund() {
+		return chooseITverbundPage.getSelectedITVerbund();
 	}
 
 }

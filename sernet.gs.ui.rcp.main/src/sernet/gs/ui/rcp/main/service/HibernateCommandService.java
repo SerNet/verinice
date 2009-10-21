@@ -130,7 +130,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 			command.clear();
 		} 
 		catch (Exception e) {
-			// TODO ak kein exception handler -> ganz böse
+			// TODO ak kein exception handler -> initialization must have gone wrong, abort application completely?
 			if (exceptionHandler != null)
 				exceptionHandler.handle(e);
 		}

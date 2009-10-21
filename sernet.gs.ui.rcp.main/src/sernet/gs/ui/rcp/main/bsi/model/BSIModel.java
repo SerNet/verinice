@@ -41,7 +41,7 @@ import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
  */
 public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
-	private static final String TYPE_ID = "bsimodel"; //$NON-NLS-1$
+	public static final String TYPE_ID = "bsimodel"; //$NON-NLS-1$
 
 	/**
 	 * DB version of this BSI model.
@@ -223,7 +223,8 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 			}
 		}
 		catch (Exception e) {
-			// FIXME server: implement dialog for consolidator that loads and displays necessary bausteine 
+			// DONE  implement dialog for consolidator that loads and displays necessary bausteine 
+			// FIXME consolidator does not update changed elements in GUI, user has to click reload
 		}
 	}
 
@@ -332,6 +333,10 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
 	@Override
 	public void databaseChildAdded(CnATreeElement child) {
+		if (child == null)
+			return;
+		
+		Logger.getLogger(this.getClass()).debug("Added child in database: " + child.getTitel());
 		for (IBSIModelListener listener : getListeners()) {
 			listener.databaseChildAdded(child);
 		}

@@ -25,10 +25,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -86,6 +89,25 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 				.getSelectionService().getSelection();
 		if (selection == null)
 			return;
+		
+		// Realizes that the action to delete an element is greyed out,
+		// when there is no right to do so. 
+		Iterator iterator = ((IStructuredSelection) selection).iterator();
+		while (iterator.hasNext()) {
+			Object next = iterator.next();
+			if (next instanceof CnATreeElement)
+			{
+				boolean writeallowed = CnAElementHome
+				.getInstance()
+				.isWriteAllowed((CnATreeElement) next);
+				if (!writeallowed) {
+					MessageDialog.openWarning(window.getShell(),"Keine Berechtigung", "Sie haben nicht die nötigen Schreibrechte um dieses Objekt zu verändern: " +
+							((CnATreeElement)next).getTitel());
+					setEnabled(false);
+					return;
+				}
+			}
+		}
 		
 		final List<Integer> dbIDs = new ArrayList<Integer>(selection.size());
 		final ArrayList<CnATreeElement> selectedElements = new ArrayList<CnATreeElement>();
@@ -186,7 +208,8 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 	public void selectionChanged(IWorkbenchPart part, ISelection input) {
 		if (input instanceof IStructuredSelection) {
 			IStructuredSelection selection = (IStructuredSelection) input;
-
+			
+			
 			// check for listitems:
 			TodoViewItem item;
 			if (selection.size() > 0

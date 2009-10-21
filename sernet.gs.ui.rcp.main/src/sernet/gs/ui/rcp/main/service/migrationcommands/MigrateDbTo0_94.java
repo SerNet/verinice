@@ -158,10 +158,11 @@ public class MigrateDbTo0_94 extends DbMigration {
 				
 				iterator.remove();
 
+				// speed up debug logging:
 				++i;
-				if (log.isInfoEnabled() && (i % 500 == 0 || i < size - 1))
+				if (log.isDebugEnabled() && (i % 500 == 0))
 				{
-					log.info("migrating table [" + table + "] - processed elements: " + i + "/" + size);
+					log.debug("migrating table [" + table + "] - processed elements: " + i + "/" + size);
 				}
 				
 				if (i % 10000 == 0)

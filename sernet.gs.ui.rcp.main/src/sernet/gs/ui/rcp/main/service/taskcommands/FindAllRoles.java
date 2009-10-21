@@ -36,9 +36,10 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 public class FindAllRoles extends GenericCommand {
 
 	private Set<String> roles = new HashSet<String>();
+	private boolean withUserRoles;
 
-	public FindAllRoles() {
-		// Intentionally does nothing.
+	public FindAllRoles(boolean withUserRoles) {
+		this.withUserRoles = withUserRoles;
 	}
 
 	public void execute() {
@@ -49,13 +50,13 @@ public class FindAllRoles extends GenericCommand {
 			lc = getCommandService().executeCommand(lc);
 		} catch (CommandException e) {
 			throw new RuntimeException(
-					"Exception when retrieving configuration elements.", e);
+					"Exception while retrieving configuration elements.", e);
 		}
 
 		List<Configuration> confs = lc.getElements();
 
 		for (Configuration c : confs) {
-			roles.addAll(c.getRoles());
+			roles.addAll(c.getRoles(withUserRoles));
 		}
 
 	}

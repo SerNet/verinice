@@ -106,7 +106,7 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
 		}
 		e.setPermissions(Permission.clonePermissions(e, perms));
 		
-		dao.saveOrUpdate(e);
+		//dao.saveOrUpdate(e);
 	}
 
 	public String getStationId() {

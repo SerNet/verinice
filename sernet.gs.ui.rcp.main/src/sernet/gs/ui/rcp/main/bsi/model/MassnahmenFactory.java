@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 import sernet.gs.model.Massnahme;
+import sernet.gs.ui.rcp.main.common.model.Permission;
 import sernet.hui.common.connect.Entity;
 
 public class MassnahmenFactory {
@@ -29,6 +30,7 @@ public class MassnahmenFactory {
 	 */
 	public void createMassnahmenUmsetzung(BausteinUmsetzung bu, Massnahme mn) {
 		MassnahmenUmsetzung mu = new MassnahmenUmsetzung(bu);
+		
 		copyValues(mn, mu);
 		bu.addChild(mu);
 	}

@@ -60,7 +60,7 @@ extends GenericCommand {
 		targetDao.reload(target, target.getDbId());
 		
 		link = new CnALink(target, dragged);
-		linkDao.merge(link);
+		linkDao.merge(link, true);
 		
 		// make sure parent object is loaded for tree display:
 		link.getParent().getParent();

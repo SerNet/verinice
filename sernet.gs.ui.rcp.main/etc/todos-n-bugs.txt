@@ -19,6 +19,14 @@ Ideen / Todos:
 - NEW benutzerdefinierte Bausteine
 - NEW Edit dialog für eigene Maßnahmen / Gefährdungen ausserhalb des Wizard
 
+- Standalone:
+    - Änderen Kataloge führt nicht zu Reload, erst nach Neustart
+    - verhindern dass Standalone Modus auf nicht selbst gestartetetn Jetty
+      zugreift
+    - doppelte Zuordnung von Baustein über Rechtsklick -> autom. zuordnen
+      bringt Nullpointer (freundlichere Fehlermeldung erwünscht)
+
+
 
 Risk Analysis:
 - FIX filter für gefährdungen

@@ -36,7 +36,7 @@ public class SchutzbedarfszuordnungReport
 
 	
 	public SchutzbedarfszuordnungReport(Properties reportProperties) {
-		super(reportProperties);
+		super(reportProperties); 
 		// TODO Auto-generated constructor stub
 	}
 

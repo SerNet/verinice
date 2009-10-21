@@ -19,6 +19,8 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.util.Collection;
 
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+
 /**
  * Marker interface for BSI Grundschutz Elements created
  * as part of the initial inventory ("Strukturanalyse").
@@ -28,11 +30,11 @@ import java.util.Collection;
  *
  */
 public interface IBSIStrukturElement {
+	
 	public int getSchicht();
 	
 	public String getKuerzel();
 
 	public Collection<? extends String> getTags();
-
 
 }

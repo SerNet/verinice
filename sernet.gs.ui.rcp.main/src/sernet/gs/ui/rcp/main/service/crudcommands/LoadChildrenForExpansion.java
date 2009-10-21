@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
@@ -87,7 +88,7 @@ public class LoadChildrenForExpansion extends GenericCommand {
 			return;
 		}
 		
-		HydratorUtil.hydrateElement(getDaoFactory().getDAOForObject(element), 
+		HydratorUtil.hydrateElement(getDaoFactory().getDAO(BSIModel.class), 
 				element, true);
 		
 		// initialize all children:

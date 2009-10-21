@@ -45,7 +45,7 @@ public class Configuration implements Serializable {
 
 	private Entity entity;
 	
-	private static final String TYPE_ID = "configuration";
+	public static final String TYPE_ID = "configuration";
 
 	public static final String ROLE_TYPE_ID = "role";
 	
@@ -64,6 +64,9 @@ public class Configuration implements Serializable {
 	public static final String PROP_NOTIFICATION_MEASURE_MODIFICATION = "configuration_mailing_measure_modification"; //$NON-NLS-1$
 	
 	public static final String PROP_NOTIFICATION_MEASURE_ASSIGNMENT = "configuration_mailing_assigned"; //$NON-NLS-1$
+
+	public static final String PROP_ISADMIN = "configuration_isadmin";
+		
 	
 	public static final String PROP_AUDITOR_NOTIFICATION_GLOBAL = "configuration_auditmailing_owner"; //$NON-NLS-1$
 	public static final String PROP_AUDITOR_NOTIFICATION_EXPIRATION = "configuration_auditmailing_expiring"; //$NON-NLS-1$
@@ -121,6 +124,16 @@ public class Configuration implements Serializable {
 		entity.createNewProperty(type, string);
 	}
 	
+	public void deleteRole(String string) {
+		// cannot delete the special user role:
+		if (string.equals(getUser()))
+			return;
+		
+		
+		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_ROLES);
+		entity.remove(type, string);
+	}
+	
 	public void setNotificationEnabled(boolean b) {
 		PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION);
 		entity.setSimpleValue(type, (b ? "configuration_mailing_yesno_yes" : "configuration_mailing_yesno_no"));
@@ -128,6 +141,10 @@ public class Configuration implements Serializable {
 	
 	public boolean isNotificationEnabled() {
 		return isRawPropertyValueEqual(PROP_NOTIFICATION, "configuration_mailing_yesno_yes");
+	}
+	
+	public boolean isAdminUser() {
+		return isRawPropertyValueEqual(PROP_ISADMIN, "configuration_isadmin_yes");
 	}
 	
 	public void setNotificationExpirationEnabled(boolean b) {
@@ -233,7 +250,7 @@ public class Configuration implements Serializable {
 	 * 
 	 * @return
 	 */
-	public Set<String> getRoles()
+	public Set<String> getRoles(boolean withUserRole)
 	{
 		List<Property> properties = entity.getProperties(
 				Configuration.PROP_ROLES).getProperties();
@@ -251,9 +268,14 @@ public class Configuration implements Serializable {
 		else
 			roles = new HashSet<String>();
 		
-		roles.add(getUser());
+		if (withUserRole)
+			roles.add(getUser());
 
 		return roles;
+	}
+	
+	public Set<String> getRoles() {
+		return getRoles(true);
 	}
 	
 	/**

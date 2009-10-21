@@ -117,3 +117,7 @@ As of now you can:
   - start the verinice client (oc.product) which automatically starts an
     internal server on port 8800 when configured for the standalone
     mode
+  - If you get exception saying there is no schema
+    for Spring security, then the OSGi extender is not running.
+
+

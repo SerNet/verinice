@@ -51,13 +51,9 @@ public class SchutzbedarfsDefinitionReport extends Report implements IBSIReport 
 			return items;
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
-		List<ITVerbund> itverbuende;
-			BSIModel model = super.getModel();
-			itverbuende = model.getItverbuende();
 			
-			for (ITVerbund verbund : itverbuende) {
-				items.add(verbund);
-			}
+		ITVerbund verbund = getItverbund();
+		items.add(verbund);
 		return items;
 	}
 

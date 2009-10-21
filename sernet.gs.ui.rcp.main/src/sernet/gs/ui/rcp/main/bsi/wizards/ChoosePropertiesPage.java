@@ -34,6 +34,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
+import sernet.gs.ui.rcp.main.reports.Report;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.ReportGetItemsCommand;
@@ -149,8 +150,10 @@ public class ChoosePropertiesPage extends WizardPage {
 		getExportWizard().resetShownPropertyTypes();
 		
 		// iterate over shown items and add each found type of item to the list:
-		IBSIReport report = getExportWizard().getReport();
+		Report report = (Report) getExportWizard().getReport();
+		report.setItverbund(getExportWizard().getITVerbund());
 		ReportGetItemsCommand command = new ReportGetItemsCommand(report);
+		
 		try {
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			ArrayList<CnATreeElement> items = command.getItems(); 

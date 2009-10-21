@@ -21,10 +21,13 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import sernet.gs.ui.rcp.gsimport.AttachDbFileTask;
 import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.LoopException;
 
@@ -35,7 +38,27 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		 public HibernateBaseDao(Class<T> type){
 		     this.type = type;
 		 }
-
+		 
+		 // FIXME akoderman implement security check for write permission on server here
+		 
+		 /*
+		  * It has to be noted that updates can happen without any call being made to any of these methods.
+		  * When an object has been loaded into the session, any changes made by a command are persisted
+		  * by hibernate into the database directly.
+		  * 
+		  * Therefore a hibernate interceptor should be used for to check authorization during object's lifecycle events.
+		  */
+		 
+		 /*
+		  * For more complex methods, i.e. all that execute a SQL query, the caller (command, webservice or similar,  but always on the server side!) 
+		  * may be responsible for checking security. To ensure this contract, a security callback object must be passed to every such method, the caller must implement the method hasWritePersmission():
+		  * 
+				 interface SecurityCallback {
+					 public void hasWritePermission() throws AuthorizationException;
+				 }
+		  * 
+		  */
+		 
 		 public void saveOrUpdate(T entity) {
 		     getHibernateTemplate().saveOrUpdate(entity);
 		     if (entity instanceof CnATreeElement) {
@@ -43,8 +66,8 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		    	 fireChange(elmt);
 		     }
 		 }
-
 		 public void delete(T entity) {
+			 // TODO akoderman update protection requirements on delete (see how it's done during merge())
 			 Logger.getLogger(this.getClass()).debug("Deleting element " + entity);
 		     getHibernateTemplate().delete(entity);
 		 }
@@ -86,12 +109,19 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 
 		public T merge(T entity, boolean fireChange) {
 			T mergedElement = (T) getHibernateTemplate().merge(entity);
+			
 			if (fireChange
 					&& mergedElement instanceof CnATreeElement) {
 				CnATreeElement elmt = (CnATreeElement) mergedElement;
 				fireChange(elmt);
-				fireChange(elmt.getParent());
 			}
+			
+			if (fireChange && mergedElement instanceof CnALink) {
+				CnALink link = (CnALink) mergedElement;
+				fireChange(link.getDependency());
+			}
+			
+			
 			return mergedElement;
 		}
 		
@@ -107,6 +137,11 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			getHibernateTemplate().load(element, id);
 		}
 
+		/**
+		 * Causes changes in protection level (schutzbedarf) to be propagated.
+		 * 
+		 * @param elmt the element that had its protection level or protection level description changed.
+		 */
 		private void fireChange(CnATreeElement elmt) {
 				Object loopedObject = null;
 				CascadingTransaction ta;
@@ -126,9 +161,6 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 				if (ta.hasLooped())
 					loopedObject = ta.getLoopedObject();
 				
-				if (loopedObject != null) {
-					throw new LoopException(loopedObject);
-				}
 		}
 
 		public Class<T> getType() {

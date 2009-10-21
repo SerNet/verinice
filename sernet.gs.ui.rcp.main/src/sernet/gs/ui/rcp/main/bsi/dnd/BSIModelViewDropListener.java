@@ -30,6 +30,7 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
@@ -102,6 +103,8 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 					.getString("BSIModelViewDropListener.3")) { //$NON-NLS-1$
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
+					Activator.inheritVeriniceContextState();
+					
 					try {
 						createBausteinUmsetzung(toDrop, target);
 					} catch (Exception e) {
@@ -113,6 +116,8 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 					return Status.OK_STATUS;
 				}
 			};
+			dropJob.setUser(true);
+			dropJob.setSystem(false);
 			dropJob.schedule();
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass()).error(
@@ -124,11 +129,15 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 
 	private void createBausteinUmsetzung(List<Baustein> toDrop,
 			CnATreeElement target) throws Exception {
+		CnATreeElement saveNew = null;
 		for (Baustein baustein : toDrop) {
-			CnAElementFactory.getInstance().saveNew(target,
+			saveNew = CnAElementFactory.getInstance().saveNew(target,
 					BausteinUmsetzung.TYPE_ID,
-					new BuildInput<Baustein>(baustein));
+					new BuildInput<Baustein>(baustein),
+					false /* do not notify single elements*/);
 		}
+		// notifying for the last element is sufficient to update all views:
+		CnAElementFactory.getLoadedModel().databaseChildAdded(saveNew);
 	}
 
 	@Override

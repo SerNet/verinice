@@ -32,6 +32,15 @@ public class PropertiesRow implements IOOTableRow, ICnaItemRow {
 
 	private CnATreeElement item;
 	private List<String> properties;
+
+	protected List<String> getProperties() {
+		return properties;
+	}
+
+	protected void setProperties(List<String> properties) {
+		this.properties = properties;
+	}
+
 	private String style;
 	
 

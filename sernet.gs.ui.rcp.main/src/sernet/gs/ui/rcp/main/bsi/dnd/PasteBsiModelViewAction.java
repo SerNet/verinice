@@ -32,6 +32,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
@@ -81,6 +82,7 @@ public class PasteBsiModelViewAction extends Action {
 				
 				Job dropJob = bausteinDropJob(sel);
 				dropJob.setUser(true);
+				dropJob.setSystem(false);
 				dropJob.schedule();
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(Messages.getString("PasteBsiModelViewAction.1"), e); //$NON-NLS-1$
@@ -112,21 +114,22 @@ public class PasteBsiModelViewAction extends Action {
 		Job dropJob = new Job(Messages.getString("PasteBsiModelViewAction.2")) { //$NON-NLS-1$
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
+				Activator.inheritVeriniceContextState();
+				
 				monitor.beginTask(Messages.getString("PasteBsiModelViewAction.3"), targets.size()); //$NON-NLS-1$
 				try {
+					CnATreeElement saveNew = null;
 					for (Iterator iter = targets.iterator(); iter.hasNext();) {
 						Object o = (Object) iter.next();
 						if (o instanceof CnATreeElement) {
 							CnATreeElement target = (CnATreeElement) o;
-							pasteBausteine(target, monitor);
+							saveNew = pasteBausteine(target, monitor);
 						}
 						monitor.worked(1);
 					}
 					
-					// notify listeners:
-					for (Iterator iter = targets.iterator(); iter.hasNext();) {
-						CnAElementFactory.getLoadedModel().databaseChildAdded((CnATreeElement) iter.next());
-					}
+					// notifying for one child is sufficient to update the views:
+					CnAElementFactory.getLoadedModel().databaseChildAdded(saveNew);
 					
 					
 				} catch (Exception e) {
@@ -165,9 +168,7 @@ public class PasteBsiModelViewAction extends Action {
 									.getSchicht(), targetSchicht))
 								return false;
 							else
-								break Check; // user says he knows what
-							// he's doing, stop
-							// checking.
+								break Check; // user says he knows what he's doing, stop checking.
 						}
 					}
 				}
@@ -176,8 +177,9 @@ public class PasteBsiModelViewAction extends Action {
 	return true;
 	}
 
-	private void pasteBausteine(CnATreeElement target, IProgressMonitor mon) {
+	private CnATreeElement pasteBausteine(CnATreeElement target, IProgressMonitor mon) {
 		List items = CnPItems.getItems();
+		CnATreeElement saveNew = null;
 		for (Iterator iter = items.iterator(); iter.hasNext();) {
 			Object o = iter.next();
 			if (o instanceof Baustein) {
@@ -185,9 +187,10 @@ public class PasteBsiModelViewAction extends Action {
 				if (target.canContain(baustein)) {
 					try {
 						mon.subTask(baustein.getTitel());
-						CnAElementFactory.getInstance().saveNew(target,
+						saveNew = CnAElementFactory.getInstance().saveNew(target,
 								BausteinUmsetzung.TYPE_ID,
-								new BuildInput<Baustein>(baustein));
+								new BuildInput<Baustein>(baustein),
+								false /* do not notify single elements*/);
 					} catch (Exception e) {
 						Logger.getLogger(this.getClass()).error(
 								Messages.getString("PasteBsiModelViewAction.5"), e); //$NON-NLS-1$
@@ -195,6 +198,7 @@ public class PasteBsiModelViewAction extends Action {
 				}
 			}
 		}
+		return saveNew;
 	}
 
 }

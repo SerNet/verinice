@@ -19,8 +19,10 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -47,6 +49,8 @@ public class FindMassnahmenForTodoView extends GenericCommand {
 	public FindMassnahmenForTodoView() {
 		// default constructor
 	}
+	
+	
 
 	public void execute() {
 		try {
@@ -75,6 +79,8 @@ public class FindMassnahmenForTodoView extends GenericCommand {
 	 * @throws CommandException 
 	 */
 	private void fillList(List<MassnahmenUmsetzung> alleMassnahmen) throws CommandException {
+		Set<UnresolvedItem> unresolvedItems = new HashSet<UnresolvedItem>();
+		
 		for (MassnahmenUmsetzung mn : alleMassnahmen) {
 			hydrate(mn);
 			
@@ -93,42 +99,31 @@ public class FindMassnahmenForTodoView extends GenericCommand {
 			item.setNaechsteRevision(mn.getNaechsteRevision());
 			item.setRevisionDurch(mn.getRevisionDurch());
 			
-			
-			
-			if (mn.getUmsetzungDurch() != null && mn.getUmsetzungDurch().length()>0)
-				item.setUmsetzungDurch(mn.getUmsetzungDurch());
-			else {
-				FindResponsiblePerson command = new FindResponsiblePerson(mn.getDbId(), MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
-				command = FindMassnahmenForTodoView.this.getCommandService().executeCommand(command);
-				List<Person> foundPersons = command.getFoundPersons();
-				if (foundPersons.size()==0)
-					item.setUmsetzungDurch("");
-				else {
-					item.setUmsetzungDurch(getNames(foundPersons));
-				}
-			}
-			
-			
 			item.setStufe(mn.getStufe());
 			item.setUrl(mn.getUrl());
 			item.setStand(mn.getStand());
 			item.setDbId(mn.getDbId());
 			
-			
-			all.add(item);
+			if (mn.getUmsetzungDurch() != null && mn.getUmsetzungDurch().length()>0) {
+				item.setUmsetzungDurch(mn.getUmsetzungDurch());
+				all.add(item);
+			}
+			else {
+				unresolvedItems.add(new UnresolvedItem(item, mn.getDbId()));
+			}
+		}
+
+		// find persons according to roles and relation:
+		FindResponsiblePersons command = new FindResponsiblePersons(unresolvedItems, 
+				MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
+		command = FindMassnahmenForTodoView.this.getCommandService().executeCommand(command);
+		unresolvedItems = command.getResolvedItems();
+		for (UnresolvedItem resolvedItem : unresolvedItems) {
+			all.add(resolvedItem.getItem());
 		}
 	}
 
-	private String getNames(List<Person> persons) {
-		StringBuffer names = new StringBuffer();
-		for (Iterator iterator = persons.iterator(); iterator.hasNext();) {
-			Person person = (Person) iterator.next();
-			names.append(person.getFullName());
-			if (iterator.hasNext())
-				names.append(", "); //$NON-NLS-1$
-		}
-		return names.toString();
-	}
+	
 
 	private void hydrate(MassnahmenUmsetzung mn) {
 		IBaseDao<MassnahmenUmsetzung, Serializable> dao = getDaoFactory().getDAO(MassnahmenUmsetzung.class);

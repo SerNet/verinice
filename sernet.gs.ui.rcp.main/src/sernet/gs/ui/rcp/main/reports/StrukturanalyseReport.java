@@ -21,10 +21,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.hibernate.proxy.HibernateProxy;
+
+import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.Client;
+import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
+import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.bsi.model.Raum;
+import sernet.gs.ui.rcp.main.bsi.model.Server;
+import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
+import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.DAOFactory;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 
 /**
@@ -37,6 +49,21 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
 public class StrukturanalyseReport extends Report
 	implements IBSIReport {
 
+	// this is necessary because hibernate returns proxy objects that will not implement the marker interface IBSIStrukturelement
+	// TODO akoderman change marker interface to object composition: add adaptable interface for strukturelements to model classes
+	public static final String[] strukturElementTypes = new String[] {
+		Anwendung.TYPE_ID,
+		BSIModel.TYPE_ID,
+		Client.TYPE_ID,
+		Gebaeude.TYPE_ID,
+		ITVerbund.TYPE_ID,
+		NetzKomponente.TYPE_ID,
+		Person.TYPE_ID,
+		Raum.TYPE_ID,
+		Server.TYPE_ID,
+		SonstIT.TYPE_ID,
+		TelefonKomponente.TYPE_ID
+	};
 	
 	public StrukturanalyseReport(Properties reportProperties) {
 		super(reportProperties);
@@ -52,13 +79,26 @@ public class StrukturanalyseReport extends Report
 
 	private void getStrukturElements(CnATreeElement parent) {
 		for (CnATreeElement child : parent.getChildren()) {
-				if (child instanceof IBSIStrukturElement) {
-					items.add(child);
-					if (! categories.contains(child.getParent()))
-						categories.add(child.getParent());
-				}
-				getStrukturElements(child);
+			
+			if ( isStrukturElement(child) ) {
+				items.add(child);
+				if (! categories.contains(child.getParent()))
+					categories.add(child.getParent());
+			}
+			getStrukturElements(child);
 		}
+	}
+
+	/**
+	 * @param child
+	 * @return
+	 */
+	private boolean isStrukturElement(CnATreeElement child) {
+		for (String strukturType : strukturElementTypes) {
+			if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType))
+				return true;
+		}
+		return false;
 	}
 
 	public ArrayList<CnATreeElement> getItems() {
@@ -67,13 +107,8 @@ public class StrukturanalyseReport extends Report
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
 		
-		List<ITVerbund> itverbuende;
-		BSIModel model = super.getModel();
-		itverbuende = model.getItverbuende();
-		
-		for (ITVerbund verbund : itverbuende) {
-			getStrukturElements(verbund);
-		}
+		ITVerbund verbund = getItverbund();
+		getStrukturElements(verbund);
 		return items;
 	}
 

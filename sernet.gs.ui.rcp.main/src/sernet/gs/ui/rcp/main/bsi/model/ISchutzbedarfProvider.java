@@ -25,17 +25,17 @@ public interface ISchutzbedarfProvider {
 	public int getVerfuegbarkeit();
 	public int getIntegritaet();
 	
-	public void setVertraulichkeit(int i, CascadingTransaction ta);
-	public void setIntegritaet(int i, CascadingTransaction ta);
-	public void setVerfuegbarkeit(int i, CascadingTransaction ta);
+	public void setVertraulichkeit(int i);
+	public void setIntegritaet(int i);
+	public void setVerfuegbarkeit(int i);
 	
 	public String getVertraulichkeitDescription();
 	public String getIntegritaetDescription();
 	public String getVerfuegbarkeitDescription();
 
-	public void setVertraulichkeitDescription(String text, CascadingTransaction ta);
-	public void setIntegritaetDescription(String text, CascadingTransaction ta);
-	public void setVerfuegbarkeitDescription(String text, CascadingTransaction ta);
+	public void setVertraulichkeitDescription(String text);
+	public void setIntegritaetDescription(String text);
+	public void setVerfuegbarkeitDescription(String text);
 	
 	public void updateVertraulichkeit(CascadingTransaction ta);
 	public void updateIntegritaet(CascadingTransaction ta);

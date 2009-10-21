@@ -40,7 +40,7 @@ public class OpenMultipleViewAction extends Action {
         
 		setId("ACTION_" + viewId);
         // Associate the action with a pre-defined command, to allow key bindings.
-		// FIXME add command ids for each view opened using this action
+		// TODO add command ids for each view opened using this action
 		//setActionDefinitionId(ICommandIds.CMD_OPEN);
 		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(imageDesc));
 	}

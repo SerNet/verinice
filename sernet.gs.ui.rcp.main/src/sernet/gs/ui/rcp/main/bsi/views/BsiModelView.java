@@ -380,7 +380,7 @@ public class BsiModelView extends ViewPart {
 					wizDialog.open();
 				}
 				
-				// FIXME server: double click on link loads and jumps to linked object
+				// FIXME server: double click on link should load and jump to linked object
 //				else if (sel instanceof CnALink) {
 //					// jump to linked item:
 //					viewer.setSelection(new StructuredSelection(((CnALink) sel)

@@ -108,12 +108,8 @@ public class ModellierungReport extends Report
 
 		modell = new Modellierung();
 
-		List<ITVerbund> itverbuende;
-			BSIModel model = super.getModel();
-			itverbuende = model.getItverbuende();
-			for (ITVerbund verbund : itverbuende) {
-				getModellierung(verbund);
-			}
+		ITVerbund verbund = getItverbund();
+		getModellierung(verbund);
 		return modell.getFlatList();
 	}
 

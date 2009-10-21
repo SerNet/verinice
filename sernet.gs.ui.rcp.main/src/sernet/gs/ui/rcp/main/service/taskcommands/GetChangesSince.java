@@ -20,9 +20,9 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +37,9 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadPolymorphicCnAElementById;
 
 /**
  * Get list of changes from transaction log.
+ * Used by rich clients to update their view.
+ * Will not contain a complete list of all changes soince some duplicate events are filtered out
+ * where they would cause unnecessary updates of clients business objects.
  * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
@@ -94,6 +97,25 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
 		entries = (List<ChangeLogEntry>) dao.findByQuery(QUERY, new Object[] {lastChecked, stationId});
 		
 		lastChecked = now;
+		
+		// reduce numer of permission change events to one max (causes complete update of clients model):
+		boolean permissionChange = false;
+		Iterator<ChangeLogEntry> iterator = entries.iterator();
+		
+		
+		while (iterator.hasNext()) {
+			ChangeLogEntry entry = iterator.next();
+			if (entry.getChange() == ChangeLogEntry.TYPE_PERMISSION) {
+				// already seen a permission change in this batch?
+				if (permissionChange) {
+					// remove duplicate event:
+					iterator.remove();
+				}
+				else {
+					permissionChange = true;
+				}
+			}
+		}
 	
 		try { 
 			hydrateChangedItems(entries);
@@ -110,28 +132,24 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
 		if (entries2.size()<1)
 			return;
 		
-		List<Integer> ids = new ArrayList<Integer>(entries2.size());
+		List<Integer> IDs = new ArrayList<Integer>(entries2.size());
 		changedElements = new HashMap<Integer, CnATreeElement>(entries2.size());
 		
 		// get IDs of changed items:
 		for (ChangeLogEntry logEntry : entries2) {
 			if (logEntry.getElementId() != null)
-				ids.add(logEntry.getElementId());
+				IDs.add(logEntry.getElementId());
 		}
-
-		if (ids.isEmpty())
-			changedElements = Collections.emptyMap();
-		else
-		{
-			LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(ids);
-			command = getCommandService().executeCommand(command);
-	
-			List<CnATreeElement> elements = command.getElements();
-			for (CnATreeElement elmt : elements) {
-				changedElements.put(elmt.getDbId(), elmt);
-			}
+		Integer[] IDArray = (Integer[]) IDs.toArray(new Integer[IDs.size()]);
+		
+		// 
+		LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(IDArray);
+		command = getCommandService().executeCommand(command);
+		
+		List<CnATreeElement> elements = command.getElements();
+		for (CnATreeElement elmt : elements) {
+			changedElements.put(elmt.getDbId(), elmt);
 		}
-
 	}
 
 	public Date getLastChecked() {

@@ -53,7 +53,7 @@ public class ShowAccessControlEditAction extends Action implements ISelectionLis
 		setId(ID);
 		setActionDefinitionId(ID);
 		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(
-				ImageCache.CASCADE));
+				ImageCache.SECURITY));
 		setToolTipText("Zugriffsrechte editieren.");
 
 		window.getSelectionService().addSelectionListener(BsiModelView.ID, this);
@@ -64,14 +64,10 @@ public class ShowAccessControlEditAction extends Action implements ISelectionLis
 
 		IStructuredSelection selection = (IStructuredSelection) window
 				.getSelectionService().getSelection();
-		if (selection == null)
+		if (selection == null || selection.size()<1)
 			return;
 		
-		CnATreeElement cte = (CnATreeElement) selection.getFirstElement();
-		if (cte == null)
-			return;
-		
-		final AccessControlEditDialog dialog = new AccessControlEditDialog(window.getShell(), cte);
+		final AccessControlEditDialog dialog = new AccessControlEditDialog(window.getShell(), selection);
 
 		if (dialog.open() != InputDialog.OK)
 			return;
@@ -93,7 +89,7 @@ public class ShowAccessControlEditAction extends Action implements ISelectionLis
 		boolean b =
 			((IStructuredSelection) selection).getFirstElement() instanceof CnATreeElement
 			&& CnAElementHome.getInstance().isOpen()
-			&& ServiceFactory.lookupAuthService().isPermissionHandlingNeeded()
+			&& ServiceFactory.isPermissionHandlingNeeded()
 			&& AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
 
 		setEnabled(b);

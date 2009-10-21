@@ -18,6 +18,8 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -38,15 +40,15 @@ import sernet.hui.common.connect.PropertyList;
  */
 public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable {
 
-	private CnATreeElement parent;
+	private CnATreeElement cnaTreeElement;
 
 	public SchutzbedarfAdapter(CnATreeElement parent) {
-		this.parent = parent;
+		this.cnaTreeElement = parent;
 	}
 
 	public int getIntegritaet() {
-		PropertyList properties = parent.getEntity().getProperties(
-				parent.getTypeId() + Schutzbedarf.INTEGRITAET);
+		PropertyList properties = cnaTreeElement.getEntity().getProperties(
+				cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET);
 		if (properties != null && properties.getProperties().size() > 0)
 			return Schutzbedarf.toInt(properties.getProperty(0)
 					.getPropertyValue());
@@ -55,8 +57,8 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 	}
 
 	public int getVerfuegbarkeit() {
-		PropertyList properties = parent.getEntity().getProperties(
-				parent.getTypeId() + Schutzbedarf.VERFUEGBARKEIT);
+		PropertyList properties = cnaTreeElement.getEntity().getProperties(
+				cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT);
 		if (properties != null && properties.getProperties().size() > 0)
 			return Schutzbedarf.toInt(properties.getProperty(0)
 					.getPropertyValue());
@@ -65,8 +67,8 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 	}
 
 	public int getVertraulichkeit() {
-		PropertyList properties = parent.getEntity().getProperties(
-				parent.getTypeId() + Schutzbedarf.VERTRAULICHKEIT);
+		PropertyList properties = cnaTreeElement.getEntity().getProperties(
+				cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT);
 		if (properties != null && properties.getProperties().size() > 0)
 			return Schutzbedarf.toInt(properties.getProperty(0)
 					.getPropertyValue());
@@ -74,166 +76,190 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 			return Schutzbedarf.UNDEF;
 	}
 
-	public void setIntegritaet(int i, CascadingTransaction ta) {
+	public void setIntegritaet(int i) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
-				parent.getEntity().getEntityType());
-		String option = Schutzbedarf.toOption(parent.getTypeId(),
+				cnaTreeElement.getEntity().getEntityType());
+		String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(),
 				Schutzbedarf.INTEGRITAET, i);
 
-		parent.getEntity().setSimpleValue(
-				entityType.getPropertyType(parent.getTypeId()
+		cnaTreeElement.getEntity().setSimpleValue(
+				entityType.getPropertyType(cnaTreeElement.getTypeId()
 						+ Schutzbedarf.INTEGRITAET), option);
-		parent.fireIntegritaetChanged(ta);
+//		cnaTreeElement.fireIntegritaetChanged(ta);
 	}
 
-	public void setVerfuegbarkeit(int i, CascadingTransaction ta) {
+	public void setVerfuegbarkeit(int i) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
-				parent.getEntity().getEntityType());
-		String option = Schutzbedarf.toOption(parent.getTypeId(),
+				cnaTreeElement.getEntity().getEntityType());
+		String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(),
 				Schutzbedarf.VERFUEGBARKEIT, i);
-		parent.getEntity().setSimpleValue(
-				entityType.getPropertyType(parent.getTypeId()
+		cnaTreeElement.getEntity().setSimpleValue(
+				entityType.getPropertyType(cnaTreeElement.getTypeId()
 						+ Schutzbedarf.VERFUEGBARKEIT), option);
-		parent.fireVerfuegbarkeitChanged(ta);
+//		cnaTreeElement.fireVerfuegbarkeitChanged(ta);
 	}
 
-	public void setVertraulichkeit(int i, CascadingTransaction ta) {
+	public void setVertraulichkeit(int i) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
-				parent.getEntity().getEntityType());
-		String option = Schutzbedarf.toOption(parent.getTypeId(),
+				cnaTreeElement.getEntity().getEntityType());
+		String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(),
 				Schutzbedarf.VERTRAULICHKEIT, i);
-		parent.getEntity().setSimpleValue(
-				entityType.getPropertyType(parent.getTypeId()
+		cnaTreeElement.getEntity().setSimpleValue(
+				entityType.getPropertyType(cnaTreeElement.getTypeId()
 						+ Schutzbedarf.VERTRAULICHKEIT), option);
-		parent.fireVertraulichkeitChanged(ta);
+//		cnaTreeElement.fireVertraulichkeitChanged(ta);
 	}
 
 	public String getIntegritaetDescription() {
-		return parent.getEntity().getSimpleValue(
-				parent.getTypeId() + Schutzbedarf.INTEGRITAET_BEGRUENDUNG);
+		return cnaTreeElement.getEntity().getSimpleValue(
+				cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET_BEGRUENDUNG);
 	}
 
 	public String getVerfuegbarkeitDescription() {
-		return parent.getEntity().getSimpleValue(
-				parent.getTypeId() + Schutzbedarf.VERFUEGBARKEIT_BEGRUENDUNG);
+		return cnaTreeElement.getEntity().getSimpleValue(
+				cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT_BEGRUENDUNG);
 	}
 
 	public String getVertraulichkeitDescription() {
-		return parent.getEntity().getSimpleValue(
-				parent.getTypeId() + Schutzbedarf.VERTRAULICHKEIT_BEGRUENDUNG);
+		return cnaTreeElement.getEntity().getSimpleValue(
+				cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT_BEGRUENDUNG);
 	}
 
-	public void setIntegritaetDescription(String text, CascadingTransaction ta) {
+	public void setIntegritaetDescription(String text) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
-				parent.getEntity().getEntityType());
-		parent.getEntity().setSimpleValue(
-				entityType.getPropertyType(parent.getTypeId()
+				cnaTreeElement.getEntity().getEntityType());
+		cnaTreeElement.getEntity().setSimpleValue(
+				entityType.getPropertyType(cnaTreeElement.getTypeId()
 						+ Schutzbedarf.INTEGRITAET_BEGRUENDUNG), text);
-		parent.fireIntegritaetChanged(ta);
+//		cnaTreeElement.fireIntegritaetChanged(ta);
 	}
 
-	public void setVerfuegbarkeitDescription(String text, CascadingTransaction ta) {
+	public void setVerfuegbarkeitDescription(String text) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
-				parent.getEntity().getEntityType());
-		parent.getEntity().setSimpleValue(
-				entityType.getPropertyType(parent.getTypeId()
+				cnaTreeElement.getEntity().getEntityType());
+		cnaTreeElement.getEntity().setSimpleValue(
+				entityType.getPropertyType(cnaTreeElement.getTypeId()
 						+ Schutzbedarf.VERFUEGBARKEIT_BEGRUENDUNG), text);
-		parent.fireVerfuegbarkeitChanged(ta);
+//		cnaTreeElement.fireVerfuegbarkeitChanged(ta);
 	}
 
-	public void setVertraulichkeitDescription(String text, CascadingTransaction ta) {
+	public void setVertraulichkeitDescription(String text) {
 		EntityType entityType = HUITypeFactory.getInstance().getEntityType(
-				parent.getEntity().getEntityType());
-		parent.getEntity().setSimpleValue(
-				entityType.getPropertyType(parent.getTypeId()
+				cnaTreeElement.getEntity().getEntityType());
+		cnaTreeElement.getEntity().setSimpleValue(
+				entityType.getPropertyType(cnaTreeElement.getTypeId()
 						+ Schutzbedarf.VERTRAULICHKEIT_BEGRUENDUNG), text);
-		parent.fireVertraulichkeitChanged(ta);
+//		cnaTreeElement.fireVertraulichkeitChanged(ta);
 	}
 
 	private void fireVerfuegbarkeitChanged(CascadingTransaction ta) {
-		if (ta.hasBeenVisited(parent)) {
-			Logger.getLogger(this.getClass()).debug(
-					"(Verfügbarkeit) Loop on object " + parent.getTitel()); //$NON-NLS-1$
-
-			return; // we have already been down this path
-		}
-
+		
 		try {
-			ta.enter(parent);
-			for (CnALink link : parent.getLinksDown()) {
-				link.getDependency().getLinkChangeListener()
-						.verfuegbarkeitChanged(ta);
+			// 1st step: traverse down:
+			// find bottom nodes from which to start:
+			CascadingTransaction downwardsTA = new CascadingTransaction();
+			Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>(); 
+			findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
+			
+			// 2nd step: traverse up:
+			for (CnATreeElement bottomNode : bottomNodes) {
+				// determine protection level from parents (or keep own depending on description):
+				bottomNode.getLinkChangeListener().determineVerfuegbarkeit(ta);
+				
 			}
-			// FIXME server: vererbung not working try this: fire for both item and dependency
-			if (ta.isInitiator(parent)) { 
-				ta.end(parent);
-			}
+			
 		} catch (TransactionAbortedException tae) {
 			Logger.getLogger(this.getClass()).debug(
-					"Verfuegbarkeit-Änderung abgebrochen.");
-			// try to end properly:
-			ta.end(parent);
+					"Verfügbarkeitsänderung abgebrochen.");
 		} catch (Exception e) {
 			ta.abort();
 		}
 	}
 
 	private void fireVertraulichkeitChanged(CascadingTransaction ta) {
-		if (ta.hasBeenVisited(parent)) {
-			Logger.getLogger(this.getClass()).debug(
-					"(Vertraulichkeit) Loop on object " + parent.getTitel()); //$NON-NLS-1$
-			return; // we have already been down this path
-		}
+		
 		try {
-			ta.enter(parent);
-			for (CnALink link : parent.getLinksDown()) {
-				link.getDependency().getLinkChangeListener()
-						.vertraulichkeitChanged(ta);
+			// 1st step: traverse down:
+			// find bottom nodes from which to start:
+			CascadingTransaction downwardsTA = new CascadingTransaction();
+			Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>(); 
+			findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
+			
+			// 2nd step: traverse up:
+			for (CnATreeElement bottomNode : bottomNodes) {
+				// determine protection level from parents (or keep own depending on description):
+				bottomNode.getLinkChangeListener().determineVertraulichkeit(ta);
+				
 			}
-			if (ta.isInitiator(parent)) {
-				ta.end(parent);
-			}
+			
 		} catch (TransactionAbortedException tae) {
 			Logger.getLogger(this.getClass()).debug(
-					"Vertraulichkeitsänderung abgebrochen..");
-			// try to end properly:
-			ta.end(parent);
+					"Vertraulichkeitsänderung abgebrochen.");
 		} catch (Exception e) {
 			ta.abort();
 		}
 	}
 	
 	private void fireIntegritaetChanged(CascadingTransaction ta) {
-		if (ta.hasBeenVisited(parent)) {
-			Logger.getLogger(this.getClass()).debug(
-					"(Integrität) Loop on object " + parent.getTitel()); //$NON-NLS-1$
-			return; // we have already been down this path
-		}
+		
 		try {
-			ta.enter(parent);
-			for (CnALink link : parent.getLinksDown()) {
-				link.getDependency().getLinkChangeListener()
-						.integritaetChanged(ta);
+			// 1st step: traverse down:
+			// find bottom nodes from which to start:
+			CascadingTransaction downwardsTA = new CascadingTransaction();
+			Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>(); 
+			findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
+			
+			// 2nd step: traverse up:
+			for (CnATreeElement bottomNode : bottomNodes) {
+				// determine protection level from parents (or keep own depending on description):
+				bottomNode.getLinkChangeListener().determineIntegritaet(ta);
+				
 			}
-			if (ta.isInitiator(parent)) {
-				ta.end(parent);
-			}
+			
 		} catch (TransactionAbortedException tae) {
 			Logger.getLogger(this.getClass()).debug(
 					"Integritätsänderung abgebrochen.");
-			// try to end properly:
-			ta.end(parent);
 		} catch (Exception e) {
 			ta.abort();
 		}
 	}
 
+	/**
+	 * @param downwardElement
+	 * @param downwardsTA 
+	 * @param bottomNodes 
+	 * @return
+	 */
+	private void findBottomNodes(CnATreeElement downwardElement, Set<CnATreeElement> bottomNodes, CascadingTransaction downwardsTA) {
+		if (downwardsTA.hasBeenVisited(downwardElement))
+			return;
+		
+		try {
+			downwardsTA.enter(downwardElement);
+		} catch (TransactionAbortedException e) {
+			Logger.getLogger(this.getClass()).error("Aborted while determining bottom node for protection requirements on object: " + downwardElement.getTitel(), e);
+			return;
+		}
+
+		int countLinks = 0;
+		for (CnALink link : downwardElement.getLinksDown()) {
+			if (link.getDependency().isSchutzbedarfProvider()) {
+				countLinks++;
+				findBottomNodes(link.getDependency(), bottomNodes, downwardsTA);
+			}
+		}
+
+		// could not go further down, so add this node:
+		if (countLinks == 0)
+			bottomNodes.add(downwardElement);
+	}
+
 	public CnATreeElement getParent() {
-		return parent;
+		return cnaTreeElement;
 	}
 
 	public void setParent(CnATreeElement parent) {
-		this.parent = parent;
+		this.cnaTreeElement = parent;
 	}
 
 	public void updateIntegritaet(CascadingTransaction ta) {

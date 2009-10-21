@@ -64,25 +64,17 @@ public class ImportTransferSchutzbedarf extends GenericCommand {
 
 		ISchutzbedarfProvider zielElmt = element.getSchutzbedarfProvider();
 
-		CascadingTransaction ta;
-
-		ta = new CascadingTransaction();
-		zielElmt.setVertraulichkeit(vertraulichkeit, ta);
+		zielElmt.setVertraulichkeit(vertraulichkeit);
 	
-		ta = new CascadingTransaction();
-		zielElmt.setVertraulichkeitDescription(vertrBegruendung, ta);
+		zielElmt.setVertraulichkeitDescription(vertrBegruendung);
 
-		ta = new CascadingTransaction();
-		zielElmt.setVerfuegbarkeit(verfuegbarkeit, ta);
+		zielElmt.setVerfuegbarkeit(verfuegbarkeit);
 
-		ta = new CascadingTransaction();
-		zielElmt.setVerfuegbarkeitDescription(verfuBegruendung, ta);
+		zielElmt.setVerfuegbarkeitDescription(verfuBegruendung);
 
-		ta = new CascadingTransaction();
-		zielElmt.setIntegritaet(integritaet, ta);
+		zielElmt.setIntegritaet(integritaet);
 		
-		ta = new CascadingTransaction();
-		zielElmt.setIntegritaetDescription(integBegruendung, ta);
+		zielElmt.setIntegritaetDescription(integBegruendung);
 
 		if (isPersonenbezogen == 1 && element instanceof Anwendung) {
 			Anwendung anwendung = (Anwendung) element;

@@ -94,12 +94,6 @@ public class CnALink implements Serializable {
 		dependant.addLinkDown(this);
 		this.linkType = linkTypeFor(dependency);
 		
-		// update target:
-		CascadingTransaction ta = new CascadingTransaction();
-		dependency.getLinkChangeListener().integritaetChanged(ta);
-		dependency.getLinkChangeListener().verfuegbarkeitChanged(ta);
-		dependency.getLinkChangeListener().vertraulichkeitChanged(ta);
-		
 	}
 	
 	@Override
@@ -125,11 +119,6 @@ public class CnALink implements Serializable {
 		dependant.removeLinkDown(this);
 		dependency.removeLinkUp(this);
 
-		// update target:
-		CascadingTransaction ta = new CascadingTransaction();
-		dependency.getLinkChangeListener().integritaetChanged(ta);
-		dependency.getLinkChangeListener().verfuegbarkeitChanged(ta);
-		dependency.getLinkChangeListener().vertraulichkeitChanged(ta);
 	}
 
 	private int linkTypeFor(CnATreeElement target) {

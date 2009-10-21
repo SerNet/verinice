@@ -58,7 +58,7 @@
     <!-- Place configuration for your caches following -->
 
         <cache name="sernet.hui.common.connect.Entity"
-			maxElementsInMemory="50000"
+			maxElementsInMemory="100000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
@@ -66,21 +66,21 @@
 		/>
 		
 		 <cache name="sernet.hui.common.connect.Entity.typedPropertyLists"
-			maxElementsInMemory="10000"
+			maxElementsInMemory="100000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.hui.common.connect.PropertyList"
-			maxElementsInMemory="10000"
+			maxElementsInMemory="100000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.hui.common.connect.PropertyList.properties"
-			maxElementsInMemory="10000"
+			maxElementsInMemory="100000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"

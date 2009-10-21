@@ -336,11 +336,12 @@ public class ImportTask {
 				String integBegruendung = schubeda.getZsbIntegBegr();
 				
 				Short isPersonenbezogen = schubeda.getZsbPersDaten();
+                if (isPersonenbezogen == null)
+                    isPersonenbezogen = 0;
 				
 				ImportTransferSchutzbedarf command = new ImportTransferSchutzbedarf(element, 
 						vertraulichkeit, verfuegbarkeit, integritaet,
-						vertrBegruendung, verfuBegruendung, integBegruendung,
-						isPersonenbezogen);
+						vertrBegruendung, verfuBegruendung, integBegruendung, isPersonenbezogen);
 				command = ServiceFactory.lookupCommandService().executeCommand(
 						command);
 			}

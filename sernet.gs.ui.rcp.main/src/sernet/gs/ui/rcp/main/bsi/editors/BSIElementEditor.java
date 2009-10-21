@@ -17,13 +17,17 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.hibernate.StaleObjectStateException;
 
@@ -77,9 +81,40 @@ public class BSIElementEditor extends EditorPart {
 	
 	public void doSave(IProgressMonitor monitor) {
 		if (isModelModified) {
+			
+			
 			monitor.beginTask("Speichern", IProgressMonitor.UNKNOWN);
 			save(true);
 			monitor.done();
+
+			// TODO akoderman we need a way to close (with save dialog) or update editors of objects that have been changed in the database, i.e. by triggers (protection level)
+//			// close all other open editors on save (but only the ones without changes):
+			IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+			ArrayList<IEditorReference> closeOthers = new ArrayList<IEditorReference>();
+			BSIElementEditorInput myInput = (BSIElementEditorInput) getEditorInput();
+			
+			allEditors: for (IEditorReference editorReference : editorReferences) {
+				IEditorInput input;
+				try {
+					if (editorReference.isPinned() || editorReference.isDirty())
+						continue allEditors;
+						
+					input = editorReference.getEditorInput();
+					if (input instanceof BSIElementEditorInput) {
+						BSIElementEditorInput bsiInput = (BSIElementEditorInput) input;
+						if (!bsiInput.getId().equals(myInput.getId())) {
+							closeOthers.add(editorReference);
+						}
+					}
+				} catch (PartInitException e) {
+					ExceptionUtil.log(e, "Fehler beim Schließen des Editors.");
+				}
+			}
+			
+			IEditorReference[] closeArray = (IEditorReference[]) closeOthers
+			.toArray(new IEditorReference[closeOthers.size()]);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+			.getActivePage().closeEditors(closeArray, true /*as save*/);
 		}
 	}
 	
@@ -92,8 +127,13 @@ public class BSIElementEditor extends EditorPart {
 			return;
 		}	
 		
-		BSIElementEditorInput editorinput = (BSIElementEditorInput) getEditorInput();
+		
 		try {
+			
+
+			
+			// save element, refresh etc:
+			BSIElementEditorInput editorinput = (BSIElementEditorInput) getEditorInput();
 			CnAElementHome.getInstance().update(cnAElement);
 			isModelModified = false;
 			firePropertyChange(IEditorPart.PROP_DIRTY);

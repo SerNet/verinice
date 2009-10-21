@@ -21,6 +21,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
@@ -30,34 +32,43 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
+import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 
 public class ReportGetItemsCommand extends GenericCommand {
 
-	private IBSIReport report;
+	private Report report;
 	private ArrayList<CnATreeElement> items;
+	private Integer itverbundDbId;
 
-	public ReportGetItemsCommand(IBSIReport report) {
+	public ReportGetItemsCommand(Report report) {
 		this.report = report;
+		itverbundDbId = report.getItverbund().getDbId();
+		
 	}
-
+	
 	public void execute() {
 		try {
-			LoadBSIModel command = new LoadBSIModel();
-			getCommandService().executeCommand(command);
-			BSIModel model = command.getModel();
-			((Report)report).setModel(model);
+
+			LoadCnAElementById command = new LoadCnAElementById(ITVerbund.class, itverbundDbId);
+			command = getCommandService().executeCommand(command);
+			ITVerbund itverbund = (ITVerbund) command.getFound();
 			
-			items = report.getItems();
-			for (CnATreeElement item : items) {
-				IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOForObject(item);
-				HydratorUtil.hydrateElement(dao, item, false);
-			}
+			// replace report's itverbund with the DB-connected instance: 
+			((Report)report).setItverbund(itverbund);
+			
+			IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(ITVerbund.class);
+			
+			items = ((IBSIReport)report).getItems();
+			HydratorUtil.hydrateElements(dao, items, false);
+			
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
 		}
 		
 		report = null;
 	}
+
 
 	public ArrayList<CnATreeElement> getItems() {
 		return items;

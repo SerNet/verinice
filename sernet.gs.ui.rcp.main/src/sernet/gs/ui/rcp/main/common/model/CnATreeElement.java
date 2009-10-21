@@ -53,6 +53,28 @@ import sernet.hui.common.connect.PropertyList;
 public abstract class CnATreeElement implements Serializable, IBSIModelListener {
 
 	private Integer dbId;
+
+	private String sourceId;
+
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
+	}
+
+
+
+	private String externalId;
 	
 	private static final String ENTITY_TITLE = "ENTITY_";
 
@@ -307,16 +329,22 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 
 	public ILinkChangeListener getLinkChangeListener() {
 		return new ILinkChangeListener() {
-			public void integritaetChanged(CascadingTransaction ta) {
+			public void determineIntegritaet(CascadingTransaction ta)
+					throws TransactionAbortedException {
 				// do nothing
+				
 			}
 
-			public void verfuegbarkeitChanged(CascadingTransaction ta) {
+			public void determineVerfuegbarkeit(CascadingTransaction ta)
+					throws TransactionAbortedException {
 				// do nothing
+				
 			}
 
-			public void vertraulichkeitChanged(CascadingTransaction ta) {
+			public void determineVertraulichkeit(CascadingTransaction ta)
+					throws TransactionAbortedException {
 				// do nothing
+				
 			}
 		};
 	}

@@ -18,14 +18,16 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.hui.common.connect.Entity;
+import sernet.hui.common.multiselectionlist.ICheckBoxHandler;
 import sernet.hui.common.multiselectionlist.IContextMenuListener;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 
 public class PersonEntityOptionWrapper implements IMLPropertyOption {
 
-	private Person person;
+	private Entity person;
 
-	public PersonEntityOptionWrapper(Person entity) {
+	public PersonEntityOptionWrapper(Entity entity) {
 		this.person = entity;
 	}
 
@@ -34,11 +36,25 @@ public class PersonEntityOptionWrapper implements IMLPropertyOption {
 	}
 
 	public String getId() {
-		return person.getEntity().getDbId().toString();
+		return person.getDbId().toString();
 	}
 
 	public String getName() {
-		return person.getTitel();
+		return Person.getTitel(person);
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.hui.common.multiselectionlist.IMLPropertyOption#getCheckboxHandler()
+	 */
+	public ICheckBoxHandler getCheckboxHandler() {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.hui.common.multiselectionlist.IMLPropertyOption#setCheckboxHandler(sernet.hui.common.multiselectionlist.ICheckBoxHandler)
+	 */
+	public void setCheckboxHandler(ICheckBoxHandler checkBoxHandler) {
+		// do nothing
 	}
 
 }

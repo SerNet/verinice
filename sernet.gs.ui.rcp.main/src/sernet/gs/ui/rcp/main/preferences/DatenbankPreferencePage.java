@@ -120,6 +120,12 @@ public class DatenbankPreferencePage
 		user.setEnabled(enable, parent);
 		pass.setEnabled(enable, parent);
 		
+		if (enable) {
+			setMessage(null);
+		}
+		else {
+			setMessage("DB-Verbindung derzeit geöffnet oder verinice-Server konfiguriert.");
+		}
 	}
 
 	private void createRadioGroup() {

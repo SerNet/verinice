@@ -98,14 +98,15 @@ public class BSIModelViewOpenDBAction extends Action {
 	private void showDerbyWarning() {
 		if (Activator.getDefault().getPluginPreferences().getBoolean(
 				PreferenceConstants.FIRSTSTART)
-				&& Activator.getDefault().getPluginPreferences().getString(
+			) {
+			Preferences prefs = Activator.getDefault().getPluginPreferences();
+			prefs.setValue(PreferenceConstants.FIRSTSTART,
+					false);			
+		
+			if (Activator.getDefault().getPluginPreferences().getString(
 				PreferenceConstants.DB_DRIVER).equals(
 				PreferenceConstants.DB_DRIVER_DERBY)
 				) {
-
-			Preferences prefs = Activator.getDefault().getPluginPreferences();
-			prefs.setValue(PreferenceConstants.FIRSTSTART,
-					false);
 
 			// Do not show dialog if remote server is configured instead of internal server.
 			if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER))
@@ -121,6 +122,7 @@ public class BSIModelViewOpenDBAction extends Action {
 									+ "Einstellungen eine externe Datenbank angeben (Postgres / MySQL).\n\n"
 									+ "Dieser Hinweis wird nicht erneut angezeigt.");
 			
+			}
 		}
 	}
 	

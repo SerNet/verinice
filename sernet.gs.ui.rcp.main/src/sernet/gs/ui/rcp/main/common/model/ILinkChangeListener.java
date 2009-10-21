@@ -19,9 +19,33 @@ package sernet.gs.ui.rcp.main.common.model;
 
 
 public interface ILinkChangeListener {
-	public void vertraulichkeitChanged(CascadingTransaction ta);
-	public void integritaetChanged(CascadingTransaction ta);
-	public void verfuegbarkeitChanged(CascadingTransaction ta);
+	
+	/**
+	 * Determine protection level, either by going upwards through <code>CnALinks</code> for
+	 * maximum protection level or by just sticking with the current one, depending
+	 * on the description and tehreby the rules set by the user.
+	 * 
+	 * @param ta
+	 */
+	public void determineVertraulichkeit(CascadingTransaction ta) throws TransactionAbortedException ;
+	
+	/**
+	 * Determine protection level, either by going upwards through <code>CnALinks</code> for
+	 * maximum protection level or by just sticking with the current one, depending
+	 * on the description and tehreby the rules set by the user.
+	 * 
+	 * @param ta
+	 */
+	public void determineIntegritaet(CascadingTransaction ta) throws TransactionAbortedException ;
+	
+	/**
+	 * Determine protection level, either by going upwards through <code>CnALinks</code> for
+	 * maximum protection level or by just sticking with the current one, depending
+	 * on the description and tehreby the rules set by the user.
+	 * 
+	 * @param ta
+	 */
+	public void determineVerfuegbarkeit(CascadingTransaction ta) throws TransactionAbortedException ;
 	
 	
 }

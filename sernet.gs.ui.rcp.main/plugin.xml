@@ -122,6 +122,12 @@
             id="sernet.gs.ui.rcp.main.reloadaction"
             name="Aktualisieren">
       </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="Zugriffsberechtigungen ändern"
+            id="sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"
+            name="Zeige Zugriffsberechtigungsdialog">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -144,16 +150,21 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="CTRL+F5">
       </key>
+      <key
+            commandId="sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+R">
+      </key>
    </extension>
    <extension
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
             application="sernet.gs.ui.rcp.main.application"
-            name="verinice">
+            name="verinice 1.0.15 RC2">
          <property
                name="aboutText"
-               value="SerNet verinice&#x0A;&#x0A;(c) SerNet Service Network GmbH and others&#x0A;1996-2009&#x0A;&#x0A;&#x0A;Contact the authors:&#x0A;verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage:&#x0A;http://www.verinice.org&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder or the verinice Plugin-Details in the help menu for details."/>
+               value="SerNet verinice&#x0A;&#x0A;(c) SerNet Service Network GmbH and others&#x0A;1996-2009&#x0A;&#x0A;&#x0A;Contact the authors:&#x0A;verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage:&#x0A;http://www.verinice.org&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&lt;ak@sernet.de&gt;&#x0A;Anne Hanekop 			&lt;ah@sernet.de&gt;&#x0A;Marek Seeger			&lt;ms@sernet.de&gt;&#x0A;Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;&#x0A;Robert Schuster			&lt;rschuster@tarent.de&gt;&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details."/>
          <property
                name="windowImages"
                value="icons/window16.gif,icons/window32.gif"/>
@@ -162,7 +173,7 @@
                value="icons/product_lg.gif"/>
          <property
                name="appName"
-               value="verinice">
+               value="verinice 1.0.15 RC2">
          </property>
       </product>
    </extension>
@@ -420,10 +431,10 @@
             objectClass="sernet.gs.ui.rcp.main.bsi.model.Person">
          <action
                class="sernet.gs.ui.rcp.main.actions.ConfigurationAction"
-               enablesFor="+"
+               enablesFor="1"
                icon="icons/user_edit.png"
                id="sernet.gs.ui.rcp.main.personconfiguration"
-               label="Benutzereinstellungen..."
+               label="Account-Einstellungen..."
                menubarPath="additions"
                style="push"
                tooltip="Username, Passwort, Mailadresse u.a. benutzerspezifische Einstellungen">
@@ -446,24 +457,22 @@
             id="sernet.gs.ui.rcp.main.page4"
             name="Allgemeine Einstellungen"/>
       <page
-            category="sernet.gs.ui.rcp.main.page6"
             class="sernet.gs.ui.rcp.main.preferences.KatalogePreferencePage"
             id="sernet.gs.ui.rcp.main.preferences.CnAPreferencePage1"
             name="BSI IT-Grundschutz"/>
       <page
             class="sernet.gs.ui.rcp.main.preferences.ClientServerPreferencePage"
             id="sernet.gs.ui.rcp.main.page6"
-            name="Datenbanken / Server">
+            name="Betriebsmodus (Server / Standalone)">
       </page>
       <page
-            category="sernet.gs.ui.rcp.main.page6"
             class="sernet.gs.ui.rcp.main.preferences.DatenbankPreferencePage"
             id="sernet.gs.ui.rcp.main.page2"
             name="Datenbank"/>
       <page
             class="sernet.gs.ui.rcp.main.preferences.ReportPreferencePage"
             id="sernet.gs.ui.rcp.main.page3"
-            name="Reporting / Export"/>
+            name="Reporting / Export (OpenOffice)"/>
       <page
             class="sernet.gs.ui.rcp.main.preferences.GSImportPreferencePage"
             id="sernet.gs.ui.rcp.main.page5"

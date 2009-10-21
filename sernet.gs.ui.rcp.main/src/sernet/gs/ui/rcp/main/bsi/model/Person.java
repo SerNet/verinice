@@ -77,13 +77,20 @@ implements IBSIStrukturElement {
 		if (getEntity() == null)
 			return ""; //$NON-NLS-1$
 		
+		return getTitel(getEntity());
+	}
+	
+	public static String getTitel(Entity entity) {
+		if (entity == null)
+			return ""; //$NON-NLS-1$
+		
 		StringBuffer buff = new StringBuffer();
-		buff.append(getEntity().getSimpleValue(P_VORNAME));
+		buff.append(entity.getSimpleValue(P_VORNAME));
 		if (buff.length() > 0)
 			buff.append(" "); //$NON-NLS-1$
-		buff.append( getEntity().getSimpleValue(P_NAME));
+		buff.append( entity.getSimpleValue(P_NAME));
 		
-		String rollen = getRollen();
+		String rollen = getRollen(entity);
 		if (rollen.length() > 0)
 			buff.append(" [" + rollen + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 		
@@ -106,9 +113,15 @@ implements IBSIStrukturElement {
 	private String getRollen() {
 		if (getEntity() == null)
 			return ""; //$NON-NLS-1$
+		return getRollen(getEntity());
+	}
+	
+	private static String getRollen(Entity entity) {
+		if (entity == null)
+			return ""; //$NON-NLS-1$
 		
 		StringBuffer buf = new StringBuffer();
-		PropertyList propertyList = getEntity().getProperties(P_ROLLEN);
+		PropertyList propertyList = entity.getProperties(P_ROLLEN);
 		PropertyType type = HUITypeFactory.getInstance().getPropertyType(TYPE_ID, P_ROLLEN);
 		List<Property> properties = propertyList.getProperties();
 		

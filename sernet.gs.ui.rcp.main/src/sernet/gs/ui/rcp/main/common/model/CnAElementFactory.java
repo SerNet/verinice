@@ -244,18 +244,25 @@ public class CnAElementFactory {
 	 */
 	@SuppressWarnings("unchecked")
 	public CnATreeElement saveNew(CnATreeElement container,
-			String buildableTypeId, BuildInput input) throws Exception {
+			String buildableTypeId, BuildInput input, boolean fireUpdates) throws Exception {
 		IElementBuilder builder = bsiElementbuilders.get(buildableTypeId);
 		if (builder == null)
 			throw new Exception("Konnte Element nicht erzeugen.");
 		CnATreeElement child = builder.build(container, input);
 
 		// notify all listeners:
-		getLoadedModel().childAdded(container, child);
-		CnAElementFactory.getLoadedModel().databaseChildAdded(child);
+		if (fireUpdates) {
+			getLoadedModel().childAdded(container, child);
+			CnAElementFactory.getLoadedModel().databaseChildAdded(child);
+		}
 		return child;
 	}
 
+	public CnATreeElement saveNew(CnATreeElement container,
+			String buildableTypeId, BuildInput input) throws Exception {
+		return saveNew(container, buildableTypeId, input, true);
+	}
+	
 	public static BSIModel getLoadedModel() {
 		return loadedModel;
 	}
@@ -354,9 +361,9 @@ public class CnAElementFactory {
 									.log(
 											new Exception(
 													"Das hier dauert und dauert..."),
-											"Wenn diese Aktion länger als eine "
-													+ "Minute dauert, sollten Sie ihre Datenbank von Derby nach Postgres migrieren. Falls das "
-													+ "schon geschehen ist, sollten Sie ihre Postgres/MySQL-DB tunen. In der FAQ auf http://verinice.org/ finden "
+											"Die Migration der Datenbank auf einen neue Version kann einige Zeit in Anspruch nehmen. Wenn diese Aktion länger als 5 "
+													+ "Minuten dauert, sollten Sie allerdings ihre Datenbank von Derby nach Postgres migrieren. Falls das "
+													+ "schon geschehen ist, sollten Sie ihre Postgres / MySQL-DB tunen. In der FAQ auf http://verinice.org/ finden "
 													+ "Sie weitere Hinweise. Ab einer gewissen Größe des IT-Verbundes wird der Einsatz des Verinice-Servers " +
 															"unverzichtbar. Auch hierzu finden Sie weitere Informationen auf unserer Webseite.");
 							return;
