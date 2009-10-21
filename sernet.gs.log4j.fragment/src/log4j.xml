@@ -24,14 +24,16 @@
 	</appender>
 
 	<!-- Logger for verinice -->
-	<!--
+	
 	<logger name="sernet">
 		<level value="DEBUG" />
 	</logger>
 
+	<!--
 	<logger name="org.springframework.osgi.extender">
 		<level value="INFO" />
 	</logger>
+	-->
 
 	<!-- Logger for embedded Servlet container -->
 	<!--
@@ -51,7 +53,7 @@
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
-		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</root>
 
 </log4j:configuration>
