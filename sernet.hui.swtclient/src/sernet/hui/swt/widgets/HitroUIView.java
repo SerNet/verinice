@@ -271,9 +271,9 @@ public class HitroUIView implements IEntityChangedListener   {
 		else if (type.isSingleSelect())
 			createSingleOptionField(type, editableField, parent, type.isFocus());
 		else if (type.isReference())
-			createMultiOptionField(type, editableField, parent, type.isFocus(), true);
+			createMultiOptionField(type, editableField, parent, type.isFocus(), true, type.isCrudButtons());
 		else if (type.isMultiselect())
-			createMultiOptionField(type, editableField, parent, type.isFocus(), false);
+			createMultiOptionField(type, editableField, parent, type.isFocus(), false, false);
 		else if (type.isDate())
 			createDateField(type, editableField, parent, type.isFocus());
 		else if (type.isText())
@@ -315,14 +315,15 @@ public class HitroUIView implements IEntityChangedListener   {
 
 	/**
 	 * Create a selection list for the given property with all defined options.
+	 * @param crudButtons 
 	 * 
 	 * @param props
 	 * @throws AssertException
 	 */
 	private void createMultiOptionField(PropertyType type, boolean editable, Composite parent,
-			boolean focus, boolean reference) {
+			boolean focus, boolean reference, boolean crudButtons) {
 		MultiSelectionControl mlControl = new MultiSelectionControl(entity, type,
-				parent, editable, reference);
+				parent, editable, reference, crudButtons);
 		mlControl.create();
 		if (focus)
 			focusField = mlControl;

@@ -29,6 +29,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import sernet.hui.common.connect.Entity;
@@ -111,6 +112,11 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 			GridData containerLData = new GridData();
 			containerLData.horizontalAlignment = GridData.END;
 			buttons.setLayoutData(containerLData);
+			
+			if (mList.isContextMenuPresent()) {
+				Label label = new Label(buttons, SWT.NONE);
+				label.setText("Rechtsklick für Kontextmenü");
+			}
 			
 			Button okayBtn = new Button(buttons, SWT.PUSH);
 			okayBtn.setText("Fertig");

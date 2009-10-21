@@ -39,6 +39,9 @@ package sernet.hui.swt.widgets.multiselectionlist;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -76,6 +79,7 @@ public class MultiSelectionControl implements IHuiControl {
 	private Color bgColor;
 	private Color fgColor;
 	private boolean referencesEntities;
+	private boolean crudButtons;
 	
 	
 	public Control getControl() {
@@ -86,14 +90,16 @@ public class MultiSelectionControl implements IHuiControl {
 	 * @param entity
 	 * @param type
 	 * @param reference 
+	 * @param crudButtons 
 	 * @param composite
 	 */
-	public MultiSelectionControl(Entity entity, PropertyType type, Composite parent, boolean edit, boolean reference) {
+	public MultiSelectionControl(Entity entity, PropertyType type, Composite parent, boolean edit, boolean reference, boolean crudButtons) {
 		this.entity = entity;
 		this.type = type;
 		this.parent = parent;
 		this.editable = edit;
 		this.referencesEntities = reference;
+		this.crudButtons = crudButtons;
 	}
 	
 	/**
@@ -137,6 +143,23 @@ public class MultiSelectionControl implements IHuiControl {
 				showSelectionDialog();
 			}
 		});
+		
+		if (crudButtons) {
+			// create buttons to add / delete new properties:
+			Button addBtn = new Button(container, SWT.PUSH);
+			addBtn.setText("Hinzufügen...");
+			addBtn.setEnabled(editable);
+			addBtn.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent arg0) {
+					showAddDialog();
+				}
+				
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+					widgetSelected(arg0);
+				}
+			});
+		}
+		
 		
 		writeToTextField();
 	}
@@ -214,6 +237,22 @@ public class MultiSelectionControl implements IHuiControl {
 		MultiSelectionDialog dialog = new MultiSelectionDialog(shell, SWT.NULL, 
 				this.entity, this.type, this.referencesEntities);
 		dialog.open();
+	}
+	
+	void showAddDialog() {
+		InputDialog dialog = new InputDialog(Display.getCurrent().getActiveShell(), "Neue Rolle", "Neue Rolle anlegen", "", new IInputValidator() {
+			public String isValid(String newText) {
+				if (newText.length()<1)
+					return "Namen für neue Rolle angeben.";
+				return null;
+			}
+		});
+		
+		if (dialog.open() == Window.OK) {
+			type.getReferenceResolver().addNewEntity(this.entity, dialog.getValue());
+		}
+		
+		writeToTextField();
 	}
 
 	public void select(IMLPropertyType type, IMLPropertyOption option) throws AssertException {

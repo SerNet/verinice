@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.ICheckBoxHandler;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.common.multiselectionlist.ISelectOptionHandler;
@@ -85,6 +86,12 @@ public class MultiSelectionList {
 	private List<IMLPropertyOption> options;
 
 	private PropertyType type;
+
+	private boolean contextMenuPresent = false;
+
+	public boolean isContextMenuPresent() {
+		return contextMenuPresent;
+	}
 
 	public MultiSelectionList(ISelectOptionHandler entity, PropertyType type,
 			Composite parent, boolean referencesEntities) {
@@ -195,12 +202,24 @@ public class MultiSelectionList {
 
 			// add context menu if defined:
 			if (option.getContextMenuListener() != null) {
+				this.contextMenuPresent = true;
 				checkbox.addListener(SWT.MenuDetect,  new Listener() {
 					public void handleEvent(Event event) {
-						option.getContextMenuListener().showContextMenu();
+						option.getContextMenuListener().showContextMenu(event.x, event.y);
 					}
 				});
 			}
+			
+//			// put callback handler in option for created checkbox:
+//			option.setCheckboxHandler(new ICheckBoxHandler() {
+//				public void optionDeleted() {
+//					checkboxes.get(option.getId()).setEnabled(false);
+//				}
+//
+//				public void optionAdded(IMLPropertyOption option) {
+//					xxx
+//				}
+//			});
 
 			checkboxes.put(option.getId(), checkbox);
 			if (i < 6) {
