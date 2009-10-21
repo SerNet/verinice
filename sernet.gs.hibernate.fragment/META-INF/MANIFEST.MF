@@ -1,11 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Fragment Fragment
+Bundle-Name: MSSQL Driver Fragment
 Bundle-SymbolicName: sernet.gs.hibernate.fragment
-Bundle-Version: 1.0.0
-Fragment-Host: com.springsource.org.hibernate
+Bundle-Version: 1.0.14
+Fragment-Host: com.springsource.org.hibernate;bundle-version="1.0.12"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: lib/mssql/jackcess-1.1.18.jar,
  lib/mssql/jtds-1.2.2.jar,
  .
-Export-Package: net.sourceforge.jtds.jdbc
+Export-Package: com.healthmarketscience.jackcess;uses:="org.apache.commons.logging,new com.healthmarketscience.jackcess",
+ net.sourceforge.jtds.jdbc;uses:="net.sourceforge.jtds.util,javax.transaction.xa"

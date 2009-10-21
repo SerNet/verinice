@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JDBC Driver Class Providing Fragment
 Bundle-SymbolicName: sernet.gs.db.fragment
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.14
 Fragment-Host: com.springsource.com.mchange.v2.c3p0
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .,
@@ -14,6 +14,7 @@ Bundle-ClassPath: .,
  lib/mysql/mysql-connector-java-5.0.7-bin.jar,
  lib/postgres/postgresql-8.2-504.jdbc3.jar
 Export-Package: com.mysql.jdbc,
+ com.mysql.jdbc.exceptions,
  org.apache.derby.jdbc,
  org.gjt.mm.mysql,
  org.postgresql,
