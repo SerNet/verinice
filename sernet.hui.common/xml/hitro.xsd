@@ -87,8 +87,13 @@ be displayed when one of the given options has been previously selected.
 	<xs:attribute name="option" type="xs:IDREF" />
 </xs:complexType>
 
+<!-- 
+	Complex type to define references to other entities which can be selected by the user to create links.
+ -->
 <xs:complexType name="referencestype">
+	<!-- Which entities should be listed to create references? -->
 	<xs:attribute name="entitytype" type="xs:IDREF" />
+	
 </xs:complexType>
 	    	
 <!-- 
@@ -174,16 +179,21 @@ be displayed when one of the given options has been previously selected.
     
 	<!-- Is visible in GUI? -->
 	<xs:attribute name="visible" type="xs:boolean" default="true"/> 
+	
+	<!-- Should the user be presented with buttons to create / delete entities directly in the selection dialog?
+		If true, a listener must be registered to handle the button's actions.
+	-->
+	<xs:attribute name="crudButtons" type="xs:boolean" default="false"/> 
 </xs:complexType>
 
 <xs:simpleType name="inputtypes" >
 	<xs:restriction base="xs:string">
-	<xs:enumeration value="line"/>
-	<xs:enumeration value="singleoption"/>
-	<xs:enumeration value="multioption"/>
-	<xs:enumeration value="text"/>
-	<xs:enumeration value="reference"/>
-	<xs:enumeration value="date"/>
+		<xs:enumeration value="line"/>
+		<xs:enumeration value="singleoption"/>
+		<xs:enumeration value="multioption"/>
+		<xs:enumeration value="text"/>
+		<xs:enumeration value="reference"/>
+		<xs:enumeration value="date"/>
 	</xs:restriction>
 </xs:simpleType>
 

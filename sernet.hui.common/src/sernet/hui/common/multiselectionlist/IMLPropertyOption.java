@@ -44,4 +44,12 @@ public interface IMLPropertyOption {
 	 */
 	IContextMenuListener getContextMenuListener();
 
+	/**
+	 * Callback Handler to allow the option to notify its checkbox when the display name changes or similar.
+	 * @param checkBoxHandler
+	 */
+	public void setCheckboxHandler(ICheckBoxHandler checkBoxHandler);
+	
+	public ICheckBoxHandler getCheckboxHandler();
+
 }

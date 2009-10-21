@@ -36,6 +36,7 @@
 package sernet.hui.common.connect;
 
 
+import sernet.hui.common.multiselectionlist.ICheckBoxHandler;
 import sernet.hui.common.multiselectionlist.IContextMenuListener;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 
@@ -50,7 +51,12 @@ public class PropertyOption implements IMLPropertyOption {
 
 	private String id;
 	private String name;
+	private ICheckBoxHandler checkboxHandler;
 	
+	public ICheckBoxHandler getCheckboxHandler() {
+		return checkboxHandler;
+	}
+
 	public PropertyOption()
 	{
 		// Intentionally does nothing.
@@ -88,6 +94,13 @@ public class PropertyOption implements IMLPropertyOption {
 	}
 	public IContextMenuListener getContextMenuListener() {
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.hui.common.multiselectionlist.IMLPropertyOption#setCheckboxHandler(sernet.hui.common.multiselectionlist.ICheckBoxHandler)
+	 */
+	public void setCheckboxHandler(ICheckBoxHandler checkBoxHandler) {
+		this.checkboxHandler = checkBoxHandler;
 	}
 	
 }

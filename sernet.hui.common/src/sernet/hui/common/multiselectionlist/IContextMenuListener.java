@@ -18,5 +18,5 @@
 package sernet.hui.common.multiselectionlist;
 
 public interface IContextMenuListener {
-	public void showContextMenu();
+	public void showContextMenu(int x, int y);
 }

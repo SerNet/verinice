@@ -21,8 +21,43 @@ import java.util.List;
 
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 
+/**
+ * Must be implemented for the underlying data model and ORM mapper.
+ * Resolves entities from the database that are referenced by other entities.
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public interface IReferenceResolver {
 
+	// TODO akoderman DB-IDs are used as identifiers for refernces, but these are not mapped as such in the Database. 
+	// Consequently, when the import/export feature is ready, we must make sure that all exported references are correctly handled during
+	// import, or the references will be lost
+	
+	
+	/**
+	 * Get all entities of the given type.
+	 */
 	public List<IMLPropertyOption> getAllEntitesForType(String referencedEntityTypeId);
+
+	/**
+	 * Allows for the creation of new entities on the spot.
+	 * 
+	 * @param parentEntity 
+	 * @param newName 
+	 */
+	public void addNewEntity(Entity parentEntity, String newName);
+
+	/**
+	 * Get only those entities that match the given referenced IDs.
+	 * 
+	 * @param referencedEntityTypeId
+	 * @param references
+	 * @return
+	 */
+	public List<IMLPropertyOption> getReferencedEntitesForType(
+			String referencedEntityTypeId, List<Property> references);
 
 }

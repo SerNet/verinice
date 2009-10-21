@@ -140,8 +140,8 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 	 * @return
 	 */
 	public String getSimpleValue(String propertyType) {
-		PropertyList list = typedPropertyLists.get(propertyType);
-		if (list == null || list.getProperties().size() == 0)
+		PropertyList propertyList = typedPropertyLists.get(propertyType);
+		if (propertyList == null || propertyList.getProperties().size() == 0)
 			return "";
 
 		PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, 
@@ -150,18 +150,18 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 		
 		List<IMLPropertyOption> referencedEntities = new ArrayList<IMLPropertyOption>();
 		if (type.isReference()) {
-			referencedEntities = type.getReferencedEntities();
-			for (Iterator iter = list.getProperties().iterator(); iter.hasNext();) {
-				Property prop = (Property) iter.next();
-				for (IMLPropertyOption option : referencedEntities) {
-					if (option.getId().equals(prop.getPropertyValue()))
-						result.append(option.getName());
+			referencedEntities = type.getReferencedEntities(propertyList.getProperties()); 
+			for (Iterator iter = propertyList.getProperties().iterator(); iter.hasNext();) {
+				Property reference = (Property) iter.next();
+				for (IMLPropertyOption resolvedReference : referencedEntities) {
+					if (resolvedReference.getId().equals(reference.getPropertyValue()))
+						result.append(resolvedReference.getName());
 				}
 			}
 			return result.toString();
 		}
 		
-		for (Iterator iter = list.getProperties().iterator(); iter.hasNext();) {
+		for (Iterator iter = propertyList.getProperties().iterator(); iter.hasNext();) {
 			Property prop = (Property) iter.next();
 			
 			if (type.isSingleSelect()

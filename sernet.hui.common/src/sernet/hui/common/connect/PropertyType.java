@@ -37,6 +37,10 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 
 	private String name;
 
+	public boolean isCrudButtons() {
+		return crudButtons;
+	}
+
 	private HashSet dependencies = new HashSet();
 
 	private byte inputtype = INPUT_LINE;
@@ -77,6 +81,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	private IReferenceResolver referenceResolver;
 
 	private IUrlResolver urlResolver;
+
+	private boolean crudButtons;
 
 	public void addValidator(IValidationRule rule) {
 		if (!validators.contains(rule))
@@ -356,4 +362,24 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	public void setUrlResolver(IUrlResolver urlResolver) {
 		this.urlResolver = urlResolver;
 	}
+
+	/**
+	 * @param b
+	 */
+	public void setCrudButtons(boolean b) {
+		this.crudButtons = b;
+	}
+
+	/**
+	 * @param properties
+	 * @return
+	 */
+	public List<IMLPropertyOption> getReferencedEntities(
+			List<Property> references) {
+		if (referenceResolver != null)
+			return referenceResolver.getReferencedEntitesForType(referencedEntityTypeId, references);
+		return new ArrayList<IMLPropertyOption>();
+	}
+
+
 }

@@ -212,8 +212,8 @@ public class VeriniceContext {
 	 * @param s
 	 */
 	public static void setState(State s) {
-		log.debug("putting state in thread: "
-				+ Thread.currentThread().getName());
+//		log.debug("putting state in thread: "
+//				+ Thread.currentThread().getName());
 
 		instance().threadLocal.set(s.getMap());
 	}

@@ -279,6 +279,7 @@ public class HUITypeFactory {
 		propObj.setName(prop.getAttribute("name"));
 		propObj.setTooltiptext(prop.getAttribute("tooltip"));
 		propObj.setInputType(prop.getAttribute("inputtype"));
+		propObj.setCrudButtons(prop.getAttribute("crudButtons").equals("true"));
 		propObj.setRequired(prop.getAttribute("required").equals("true"));
 		propObj.setInitialFocus(prop.getAttribute("focus").equals("true"));
 		propObj.setEditable(prop.getAttribute("editable").equals("true"));
