@@ -1,0 +1,19 @@
+/* ######################################################################################################
+** # "Yet Another Multicolum Layout" (c) by Dirk Jesse (http://www.yaml.de) #############################
+** # "YAML for TYPO3" (c) by Dieter Bunkerd (http://yaml.t3net.de) ######################################
+** ######################################################################################################
+**
+**  YAML Version: 2.5.2
+**  Dateiversion: 19.1.07
+**  Datei       : layout_2col_left_vlines.css
+**  Funktion    : Zentrales Stylesheet 2-Spalten-Layout mit grafikfreien Spaltentrennern (Randspalte links)
+**
+*/
+@import url(base.css);
+@import url(basemod.css);
+@import url(basemod_2col_left_vlines.css);
+@import url(nav_slidingdoor.css);
+@import url(nav_vlist.css);
+@import url(content.css);
+@import url(typo3-RTE.css);
+@import url(print_003.css);
