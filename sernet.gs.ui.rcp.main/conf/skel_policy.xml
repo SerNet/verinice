@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+This file is used to reroute update request from clients in the case that an
+update server is present and configured (=verinice server url is set on client).
+In this case, clients will look for updates on the (local) company server
+instead of using updates.verinice.org.
+ -->
+ 
+<update-policy>
+  <url-map pattern="*" url="{updatesiteurl}"/>
+</update-policy>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.4"?>
+
+<product name="verinice" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.0.0" useFeatures="true">
+
+   <aboutInfo>
+      <image path="icons/product_lg.gif"/>
+      <text>
+         SerNet verinice
+
+(c) SerNet Service Network GmbH and others
+1996-2009
+
+
+Contact the author:
+verinice@sernet.de
+
+or
+
+Visit our homepage:
+http://www.verinice.org
+
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it under certain conditions.
+Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.
+See the LICENSE.txt contained in the program folder or the verinice Plugin-Details in the help menu for details.
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgs>-Xms64m -Xmx512m</vmArgs>
+   </launcherArgs>
+
+   <windowImages i16="/sernet.gs.ui.rcp.main/icons/window16.gif" i32="/sernet.gs.ui.rcp.main/icons/window32.gif"/>
+
+
+   <launcher name="verinice">
+      <linux icon="/sernet.gs.ui.rcp.main/wxcas.xpm"/>
+      <macosx icon="/sernet.gs.ui.rcp.main/icons/v_logo_mac.icns"/>
+      <solaris/>
+      <win useIco="true">
+         <ico path="/sernet.gs.ui.rcp.main/icons/v_48.ico"/>
+         <bmp
+            winSmallHigh="/sernet.gs.ui.rcp.main/icons/ico32-16.bmp"
+            winSmallLow="/sernet.gs.ui.rcp.main/icons/ico8-16.bmp"
+            winMediumHigh="/sernet.gs.ui.rcp.main/icons/ico32-32x32.bmp"
+            winMediumLow="/sernet.gs.ui.rcp.main/icons/ico8-32x32.bmp"
+            winLargeHigh="/sernet.gs.ui.rcp.main/icons/ico32-48x48.bmp"
+            winLargeLow="/sernet.gs.ui.rcp.main/icons/ico8-48x48.bmp"/>
+      </win>
+   </launcher>
+
+
+   <vm>
+   </vm>
+
+  <plugins>
+      <plugin id="SpringClient"/>
+      <plugin id="com.ibm.icu"/>
+      <plugin id="com.ibm.icu.source"/>
+      <plugin id="org.apache.lucene"/>
+      <plugin id="org.apache.lucene.analysis"/>
+      <plugin id="org.eclipse.core.commands"/>
+      <plugin id="org.eclipse.core.contenttype"/>
+      <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.expressions"/>
+      <plugin id="org.eclipse.core.filebuffers"/>
+      <plugin id="org.eclipse.core.filesystem"/>
+      <plugin id="org.eclipse.core.filesystem.hpux.ia64_32" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.linux.ppc" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.linux.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.linux.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.macosx" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.solaris.sparc" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.resources"/>
+      <plugin id="org.eclipse.core.resources.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.runtime"/>
+      <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.help"/>
+      <plugin id="org.eclipse.help.base"/>
+      <plugin id="org.eclipse.help.ui"/>
+      <plugin id="org.eclipse.jface"/>
+      <plugin id="org.eclipse.jface.databinding"/>
+      <plugin id="org.eclipse.jface.text"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.rcp"/>
+      <plugin id="org.eclipse.swt"/>
+      <plugin id="org.eclipse.swt.carbon.macosx" fragment="true"/>
+      <plugin id="org.eclipse.swt.gtk.linux.ppc" fragment="true"/>
+      <plugin id="org.eclipse.swt.gtk.linux.x86" fragment="true"/>
+      <plugin id="org.eclipse.swt.gtk.linux.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.swt.gtk.solaris.sparc" fragment="true"/>
+      <plugin id="org.eclipse.swt.motif.aix.ppc" fragment="true"/>
+      <plugin id="org.eclipse.swt.motif.hpux.ia64_32" fragment="true"/>
+      <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.swt.win32.win32.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.swt.wpf.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.text"/>
+      <plugin id="org.eclipse.ui"/>
+      <plugin id="org.eclipse.ui.carbon" fragment="true"/>
+      <plugin id="org.eclipse.ui.cheatsheets"/>
+      <plugin id="org.eclipse.ui.editors"/>
+      <plugin id="org.eclipse.ui.forms"/>
+      <plugin id="org.eclipse.ui.ide"/>
+      <plugin id="org.eclipse.ui.intro"/>
+      <plugin id="org.eclipse.ui.win32" fragment="true"/>
+      <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="org.eclipse.ui.workbench.texteditor"/>
+      <plugin id="sernet.gs.log4j"/>
+      <plugin id="sernet.gs.saxon9"/>
+      <plugin id="sernet.gs.service"/>
+      <plugin id="sernet.gs.tagsoup_ak"/>
+      <plugin id="sernet.gs.ui.rcp.main"/>
+      <plugin id="verinice.nl1.org.eclipse.jface" fragment="true"/>
+      <plugin id="verinice.nl1.org.eclipse.swt" fragment="true"/>
+      <plugin id="verinice.nl1.org.eclipse.ui" fragment="true"/>
+      <plugin id="verinice.nl1.org.eclipse.ui.cheatsheets" fragment="true"/>
+      <plugin id="verinice.nl1.org.eclipse.ui.workbench" fragment="true"/>
+   </plugins>
+
+   <features>
+      <feature id="sernet.gs.ui.rcp.main.feature" version="1.0.0"/>
+   </features>
+
+</product>

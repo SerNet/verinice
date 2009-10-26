@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="sernet.gs.ui.rcp.main.common.model">
+
+	<class name="CnATreeElement" 
+		batch-size="10"
+		abstract="true">
+		
+		<cache usage="read-write" />
+			
+		<id name="dbId" 
+			type="java.lang.Integer" 
+			column="dbId"
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+		<property
+			name="uuid"
+			not-null="true"
+			unique="true"
+		/>
+		
+		<set name="permissions"
+			inverse="true"
+			cascade="all"
+			batch-size="10" >
+			<key column="cte_id"/>
+			<one-to-many class="Permission"/>
+		</set>
+		
+		<many-to-one 
+			name="entity"
+			column="entity_id"
+			class="sernet.hui.common.connect.Entity"
+			cascade="all"
+			fetch="join"
+			/>
+			
+		<many-to-one 
+			name="parent"
+			column="parent"
+			class="CnATreeElement" 	
+			/>
+			
+		<set name="children" 
+			cascade="all"
+			inverse="true"
+			batch-size="10"
+			fetch="subselect"
+			>
+			<cache usage="read-write" />
+			<key column="parent"  />
+			<one-to-many class="CnATreeElement" />
+			
+			<filter
+	  			name="userAccessReadFilter"
+	  			condition="exists (select p.dbid from permission p where p.cte_id = dbId and p.role in (:currentRoles) and p.readAllowed = :readAllowed )"
+	 		/>
+			
+		</set>
+		
+		<set name="linksDown"
+			inverse="true"
+			cascade="delete,delete-orphan">
+			
+			<cache usage="read-write" />
+			
+			<key column="DEPENDANT_ID" />
+			<one-to-many class="CnALink"/>
+		</set>
+		
+		<set name="linksUp"
+			inverse="true"
+			cascade="delete,delete-orphan">
+			
+			<cache usage="read-write" />
+			
+			<key column="DEPENDENCY_ID"  />
+			<one-to-many class="CnALink"/>
+		</set>
+		
+		
+<!-- Grundschutz-Elemente: ################################################################# -->
+
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+		
+		<joined-subclass
+			name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung"
+			extends="MassnahmenUmsetzung"
+		>
+			<key column="dbId"/>
+			
+		</joined-subclass>
+		
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.Gebaeude"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.Person"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.Anwendung"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.Client"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.SonstIT"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.NetzKomponente"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.Raum"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.Server"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+		
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.NKKategorie"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.ServerKategorie"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.TKKategorie"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.BSIModel"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+		<property name="dbVersion"/>
+ 	
+	</joined-subclass>
+	
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.ITVerbund"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+
+<!-- Datenschutz Elemente: ################################################################# -->
+
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.ds.model.Personengruppen"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+
+	<joined-subclass 
+		name="sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB"
+		extends="CnATreeElement"
+	>
+		<key column="dbId"/>
+	</joined-subclass>
+	
+
+	<!-- This filter implements the access check (read access) for CnATreeElement instances (and subclasses).
+	
+	When activated and given a list of roles (parameterRoles) all retrievals of CnATreeElements will be restricted
+	to those elements which the user has read access, to.
+	 
+	-->	
+  	<filter
+  		name="userAccessReadFilter"
+  		condition="exists (select p.dbid from permission p where p.cte_id = dbId and p.role in (:currentRoles) and p.readAllowed = :readAllowed )"
+ 	/>
+
+	</class>
+
+	<!-- A few workarounds for Hibernate issues here:
+	 - it was not possible to define the condition here, although Hibernate
+	   documentation mentions that possibility (causes NullPointerException
+	   in configuration parser)
+	 - it was neccessary to define the comparison value for the "p.readAllowed ="
+	   expression as a parameter. When hardcoding using 'true' hibernate always
+	   treated that constant like the name of a column from the cnatreelement
+	   table. 
+	-->
+	<filter-def name="userAccessReadFilter">
+		<filter-param name="currentRoles" type="string"/>
+		<filter-param name="readAllowed" type="boolean"/>
+	</filter-def>
+	
+</hibernate-mapping>
