@@ -23,7 +23,7 @@ public abstract class AbstractAddCnATreeElementActionDelegate implements IObject
 			// Only change state when it is enabled, since we do not want to
 			// trash the enablement settings of plugin.xml
 			if (action.isEnabled())
-				action.setEnabled(b);
+				action.setEnabled(b); 
 		}
 	}
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
-<product name="verinice 1.0.15 RC2" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.0.15" useFeatures="true">
+<product name="verinice 1.0.16" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.0.16" useFeatures="true">
 
    <aboutInfo>
       <image path="icons/product_lg.gif"/>
@@ -135,8 +135,8 @@ See the LICENSE.txt contained in the program folder, the verinice Plugin-Details
    </plugins>
 
    <features>
-      <feature id="sernet.gs.server.feature" version="1.0.14"/>
-      <feature id="sernet.gs.ui.rcp.main.feature" version="1.0.14"/>
+      <feature id="sernet.gs.server.feature" version="1.0.15"/>
+      <feature id="sernet.gs.ui.rcp.main.feature" version="1.0.15"/>
    </features>
 
 </product>

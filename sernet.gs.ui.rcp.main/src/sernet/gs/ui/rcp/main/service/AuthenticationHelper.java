@@ -20,14 +20,27 @@ package sernet.gs.ui.rcp.main.service;
 
 public class AuthenticationHelper {
 
-	private String[] currentRoles;
+	private String[] currentRoles = null;
 	private static AuthenticationHelper instance = new AuthenticationHelper();
 
 	private AuthenticationHelper() {
-		currentRoles = ServiceFactory.lookupAuthService().getRoles();
+		
 	}
 	
 	public boolean currentUserHasRole(String[] allowedRoles) {
+		if (currentRoles == null) {
+			try {
+				currentRoles = ServiceFactory.lookupAuthService().getRoles();
+			} catch (Exception e) {
+				// no auth service available
+				currentRoles = null;
+			} 
+		}
+		
+		// roles might still be uninitialized (authservice can also return null):
+		if (currentRoles == null)
+			return false;
+		
 		for (String role : allowedRoles) {
 			for (String userRole : currentRoles) {
 				if (role.equals(userRole))

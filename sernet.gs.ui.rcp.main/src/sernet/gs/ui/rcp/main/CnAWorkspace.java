@@ -81,7 +81,7 @@ public class CnAWorkspace {
 
 	private static final String POLICY_FILE = "updatePolicyURL";
 
-	private static final Object LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site";
+	private static final Object LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-1.0";
 
 	private static CnAWorkspace instance;
 	

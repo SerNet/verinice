@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Server
 Bundle-SymbolicName: sernet.gs.server;singleton:=true
-Bundle-Version: 1.0.15
+Bundle-Version: 1.0.16
 Bundle-ClassPath: WebContent/WEB-INF/classes,
  .,
  WebContent/WEB-INF/lib/gnumail-1.1.2.jar

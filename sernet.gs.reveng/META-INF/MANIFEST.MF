@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Reveng
 Bundle-SymbolicName: sernet.gs.reveng
-Bundle-Version: 1.0.14
+Bundle-Version: 1.0.16
 Export-Package: sernet.gs.reveng,
  sernet.gs.reveng.importData
 Import-Package: antlr,

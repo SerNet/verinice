@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Server
 Bundle-SymbolicName: sernet.hui.server
-Bundle-Version: 1.0.14
+Bundle-Version: 1.0.16
 Bundle-ClassPath: .,
  lib/xstream-1.2.1.jar,
  lib/jug.jar,

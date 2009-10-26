@@ -2,7 +2,7 @@
 <feature
       id="sernet.gs.ui.rcp.main.feature"
       label="Verinice Anwendung"
-      version="1.0.14"
+      version="1.0.15"
       provider-name="sernet.de"
       plugin="sernet.gs.ui.rcp.main">
 
@@ -692,7 +692,7 @@ Public License instead of this License.  But first, please read
    </license>
 
    <url>
-      <update label="Verinice Updates und Features" url="http://updates.verinice.org/pub/verinice/Verinice-Update-Site"/>
+      <update label="Verinice Updates und Features" url="http://updates.verinice.org/pub/verinice/Verinice-Update-Site-1.0"/>
    </url>
 
    <requires>
@@ -2151,28 +2151,28 @@ Public License instead of this License.  But first, please read
          id="sernet.hui.common"
          download-size="0"
          install-size="0"
-         version="1.0.14"
+         version="1.0.16"
          unpack="false"/>
 
    <plugin
          id="sernet.hui.swtclient"
          download-size="0"
          install-size="0"
-         version="1.0.14"
+         version="1.0.16"
          unpack="false"/>
 
    <plugin
          id="sernet.gs.service"
          download-size="0"
          install-size="0"
-         version="1.10.14"
+         version="1.10.16"
          unpack="false"/>
 
    <plugin
          id="sernet.gs.db.fragment"
          download-size="0"
          install-size="0"
-         version="1.0.14"
+         version="1.0.16"
          fragment="true"
          unpack="false"/>
 
@@ -2180,7 +2180,7 @@ Public License instead of this License.  But first, please read
          id="sernet.gs.log4j.fragment"
          download-size="0"
          install-size="0"
-         version="1.0.14"
+         version="1.0.16"
          fragment="true"
          unpack="false"/>
 
@@ -2188,7 +2188,7 @@ Public License instead of this License.  But first, please read
          id="sernet.gs.springweb.fragment"
          download-size="0"
          install-size="0"
-         version="1.0.14"
+         version="1.0.16"
          fragment="true"
          unpack="false"/>
 
@@ -2196,14 +2196,14 @@ Public License instead of this License.  But first, please read
          id="sernet.hui.server"
          download-size="0"
          install-size="0"
-         version="1.0.14"
+         version="1.0.16"
          unpack="false"/>
 
    <plugin
          id="sernet.gs.ehcache.fragment"
          download-size="0"
          install-size="0"
-         version="1.0.14"
+         version="1.0.16"
          fragment="true"
          unpack="false"/>
 
@@ -2211,14 +2211,14 @@ Public License instead of this License.  But first, please read
          id="sernet.gs.reveng"
          download-size="0"
          install-size="0"
-         version="1.0.14"
+         version="1.0.16"
          unpack="false"/>
 
    <plugin
          id="sernet.springclient"
          download-size="0"
          install-size="0"
-         version="1.1.15"
+         version="1.1.16"
          unpack="false"/>
 
    <plugin
@@ -2269,16 +2269,16 @@ Public License instead of this License.  But first, please read
 
    <plugin
          id="sernet.gs.ui.rcp.main"
-         download-size="0"
-         install-size="0"
-         version="1.0.15"
+         download-size="60"
+         install-size="188"
+         version="1.0.16"
          unpack="false"/>
 
    <plugin
          id="sernet.gs.hibernate.fragment"
          download-size="0"
          install-size="0"
-         version="1.0.14"
+         version="1.0.16"
          fragment="true"
          unpack="false"/>
 

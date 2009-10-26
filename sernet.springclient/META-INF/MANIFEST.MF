@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SpringClient Plug-in
 Bundle-SymbolicName: sernet.springclient
-Bundle-Version: 1.1.15
+Bundle-Version: 1.1.16
 Bundle-Activator: sernet.springclient.SpringClientPlugin
 Eclipse-BuddyPolicy: registered
 Bundle-ClassPath: .
