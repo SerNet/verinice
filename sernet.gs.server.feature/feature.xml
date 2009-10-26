@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="sernet.gs.server.feature"
+      label="verinice server Feature"
+      version="1.0.15"
+      provider-name="sernet.de">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <url>
+      <update label="Verinice Updates und Features" url="http://updates.verinice.org/pub/verinice/Verinice-Update-Site-1.0"/>
+   </url>
+
+   <requires>
+      <import plugin="javax.servlet"/>
+      <import plugin="com.springsource.javax.transaction"/>
+      <import plugin="org.junit4"/>
+      <import plugin="com.springsource.net.sf.cglib"/>
+      <import plugin="com.springsource.net.sf.ehcache"/>
+      <import plugin="com.springsource.org.aopalliance"/>
+      <import plugin="org.apache.commons.httpclient" version="3.1.0" match="greaterOrEqual"/>
+      <import plugin="com.springsource.org.apache.log4j"/>
+      <import plugin="com.springsource.org.aspectj.weaver"/>
+      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.equinox.app"/>
+      <import plugin="com.springsource.org.hibernate"/>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.springframework.aop"/>
+      <import plugin="org.springframework.beans"/>
+      <import plugin="org.springframework.context"/>
+      <import plugin="org.springframework.core"/>
+      <import plugin="org.springframework.transaction"/>
+      <import plugin="org.springframework.jdbc"/>
+      <import plugin="org.springframework.orm"/>
+      <import plugin="org.springframework.osgi.core"/>
+      <import plugin="org.springframework.osgi.web"/>
+      <import plugin="org.springframework.web"/>
+      <import plugin="org.springframework.security.core"/>
+      <import plugin="org.springframework.web.servlet"/>
+      <import plugin="sernet.gs.ui.rcp.main" version="0.8.0" match="greaterOrEqual"/>
+      <import plugin="sernet.gs.service" version="1.7.1" match="greaterOrEqual"/>
+      <import plugin="sernet.hui.common" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.springsource.org.apache.commons.logging"/>
+      <import plugin="com.springsource.javax.xml.stream"/>
+      <import plugin="com.springsource.antlr"/>
+      <import plugin="com.springsource.javassist"/>
+      <import plugin="org.apache.commons.collections"/>
+      <import plugin="com.springsource.org.dom4j"/>
+      <import plugin="com.springsource.org.objectweb.asm"/>
+      <import plugin="com.springsource.org.objectweb.asm.attrs"/>
+      <import plugin="com.springsource.org.mortbay.util"/>
+      <import plugin="org.apache.commons.codec"/>
+      <import plugin="com.springsource.org.mortbay.jetty.server"/>
+      <import plugin="org.eclipse.osgi.services"/>
+      <import plugin="com.springsource.org.quartz"/>
+      <import plugin="org.eclipse.equinox.common"/>
+      <import plugin="org.springframework.osgi.io"/>
+      <import plugin="org.springframework.context.support"/>
+   </requires>
+
+   <plugin
+         id="sernet.gs.server"
+         download-size="40"
+         install-size="86"
+         version="1.0.16"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.antlr"
+         download-size="0"
+         install-size="0"
+         version="2.7.6"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.com.mchange.v2.c3p0"
+         download-size="0"
+         install-size="0"
+         version="0.9.1.2"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.javassist"
+         download-size="0"
+         install-size="0"
+         version="3.3.0.ga"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.javax.transaction"
+         download-size="0"
+         install-size="0"
+         version="1.1.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.javax.xml.stream"
+         download-size="0"
+         install-size="0"
+         version="1.0.1"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.net.sf.cglib"
+         download-size="0"
+         install-size="0"
+         version="2.1.3"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.aopalliance"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.apache.commons.io"
+         download-size="0"
+         install-size="0"
+         version="1.4.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.apache.commons.logging"
+         download-size="0"
+         install-size="0"
+         version="1.1.1"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.apache.log4j"
+         download-size="0"
+         install-size="0"
+         version="1.2.15"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.aspectj.weaver"
+         download-size="0"
+         install-size="0"
+         version="1.6.5.RELEASE"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.dom4j"
+         download-size="0"
+         install-size="0"
+         version="1.6.1"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.hibernate"
+         download-size="0"
+         install-size="0"
+         version="3.2.6.ga"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.mortbay.jetty.server"
+         download-size="0"
+         install-size="0"
+         version="6.1.9"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.mortbay.util"
+         download-size="0"
+         install-size="0"
+         version="6.1.9"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.objectweb.asm"
+         download-size="0"
+         install-size="0"
+         version="1.5.3"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.objectweb.asm.attrs"
+         download-size="0"
+         install-size="0"
+         version="1.5.3"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.quartz"
+         download-size="0"
+         install-size="0"
+         version="1.6.2"
+         unpack="false"/>
+
+   <plugin
+         id="javax.servlet"
+         download-size="0"
+         install-size="0"
+         version="2.5.0.v200806031605"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.codec"
+         download-size="0"
+         install-size="0"
+         version="1.3.0.v20080530-1600"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.collections"
+         download-size="0"
+         install-size="0"
+         version="3.2.0.v200803061811"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.httpclient"
+         download-size="0"
+         install-size="0"
+         version="3.1.0.v20080605-1935"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.lucene"
+         download-size="0"
+         install-size="0"
+         version="1.9.1.v200711021015"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.lucene.analysis"
+         download-size="0"
+         install-size="0"
+         version="1.9.1.v200711021015"
+         unpack="false"/>
+
+   <plugin
+         id="org.ops4j.pax.web.pax-web-bundle"
+         download-size="0"
+         install-size="0"
+         version="0.6.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.aop"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.beans"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.context"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.context.support"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.core"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.jdbc"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.orm"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.osgi.core"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.osgi.extender"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.osgi.io"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.osgi.web"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.security.core"
+         download-size="0"
+         install-size="0"
+         version="2.0.5.RELEASE"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.transaction"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.web"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.web.servlet"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.ehcache.fragment"
+         download-size="0"
+         install-size="0"
+         version="1.0.16"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.hui.server"
+         download-size="0"
+         install-size="0"
+         version="1.0.16"/>
+
+   <plugin
+         id="org.junit4"
+         download-size="0"
+         install-size="0"
+         version="4.3.1"/>
+
+   <plugin
+         id="org.junit4.nl-de"
+         download-size="0"
+         install-size="0"
+         version="3.4.0.v20081019043401"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.junit4.nl-fr"
+         download-size="0"
+         install-size="0"
+         version="3.4.0.v20081019043401"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.net.sf.ehcache"
+         download-size="0"
+         install-size="0"
+         version="1.6.0"
+         unpack="false"/>
+
+</feature>
