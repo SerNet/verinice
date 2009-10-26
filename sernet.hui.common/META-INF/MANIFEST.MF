@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hitro-UI Common
 Bundle-SymbolicName: sernet.hui.common
-Bundle-Version: 1.0.14
+Bundle-Version: 1.0.16
 Bundle-ClassPath: .
 Bundle-Localization: plugin
 Import-Package: net.sf.cglib.proxy,
