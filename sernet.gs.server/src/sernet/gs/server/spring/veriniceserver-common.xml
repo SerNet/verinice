@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 <!--
 	All configuration options for the verinice server are available in the
@@ -82,10 +83,17 @@ This variant:
 
 <bean id="dataSource"
    class="com.mchange.v2.c3p0.ComboPooledDataSource">
-   <property name="driverClass" value="${jdbc.driverClass}" />
-   <property name="jdbcUrl" value="${jdbc.url}" />
-   <property name="user" value="${jdbc.username}" />
-   <property name="password" value="${jdbc.password}" />
+	<property name="driverClass" value="${jdbc.driverClass}" />
+	<property name="jdbcUrl" value="${jdbc.url}" />
+	<property name="user" value="${jdbc.username}" />
+	<property name="password" value="${jdbc.password}" />
+	<property name="minPoolSize" value="20"/>
+	<property name="initialPoolSize" value="21"/>
+	<property name="maxPoolSize" value="100"/>
+	<property name="acquireIncrement" value="10"/>
+	<property name="maxStatements" value="100"/>
+	<property name="checkoutTimeout" value="10000"/>
+	<property name="idleConnectionTestPeriod" value="180"/>
 </bean>
 
 <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" >
@@ -188,5 +196,8 @@ This variant:
   </property>
   
 </bean>
+
+<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
+<!--<import resource="veriniceserver-debug.xml"/>-->
 
 </beans>
