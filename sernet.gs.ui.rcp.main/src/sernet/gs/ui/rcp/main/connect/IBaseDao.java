@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.connect;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 
@@ -34,10 +35,14 @@ public interface IBaseDao<T, ID extends Serializable> {
 		 public void delete(T entity);
 
 		 public T findById(ID id);
+		 
+		 public T retrieve(ID id, RetrieveInfo ri);
 
 		 public List<T> findAll();
 		 
 		 public List findByQuery(String hqlQuery, Object[] params);
+		 
+		 public List findByCriteria(DetachedCriteria criteria);
 		 
 		 public List findByCallback(HibernateCallback hcb);
 		 
