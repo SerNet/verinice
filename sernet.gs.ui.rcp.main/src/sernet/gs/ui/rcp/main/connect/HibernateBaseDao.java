@@ -22,6 +22,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -30,11 +33,14 @@ import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.LoopException;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
 
 public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSupport 
 	implements IBaseDao<T, ID> {
 		 private Class<T> type;
 
+		 private static final Logger log = Logger.getLogger(HibernateBaseDao.class);
+		 
 		 public HibernateBaseDao(Class<T> type){
 		     this.type = type;
 		 }
@@ -82,9 +88,84 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		 public T findById(ID id) {
 			 return (T) getHibernateTemplate().load(type, id);
 		 }
+		 
+		public T retrieve(ID id, RetrieveInfo ri) {
+			if(log.isDebugEnabled()) {
+				log.debug("retrieve - id: " + id + " " + ri);
+			}
+			
+			DetachedCriteria criteria = DetachedCriteria.forClass(type);
+			criteria.add(Restrictions.eq("dbId", id));
+			if(ri.isProperties()) {
+				criteria.setFetchMode("entity", FetchMode.JOIN);
+				criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
+				criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+			}
+			
+			if(ri.isLinksDown()) {
+				criteria.setFetchMode("linksDown", FetchMode.JOIN);
+				if(ri.isLinksDownProperties()) {
+					criteria.setFetchMode("linksDown.dependency", FetchMode.JOIN);
+					criteria.setFetchMode("linksDown.dependency.entity", FetchMode.JOIN);
+					criteria.setFetchMode("linksDown.dependency.entity.typedPropertyLists", FetchMode.JOIN);
+					criteria.setFetchMode("linksDown.dependency.entity.typedPropertyLists.properties", FetchMode.JOIN);
+				}
+			}
+			if(ri.isLinksUp()) {
+				criteria.setFetchMode("linksUp", FetchMode.JOIN);
+				if(ri.isLinksUpProperties()) {
+					criteria.setFetchMode("linksUp.dependant", FetchMode.JOIN);
+					criteria.setFetchMode("linksUp.dependant.entity", FetchMode.JOIN);
+					criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists", FetchMode.JOIN);
+					criteria.setFetchMode("linksUp.dependency.entity.typedPropertyLists.properties", FetchMode.JOIN);
+				}
+			}
+			if( ri.isChildren()) {
+				criteria.setFetchMode("children", FetchMode.JOIN);
+				DetachedCriteria criteriaChildren=null, criteriaEntity=null;
+				if(ri.isInnerJoin()) {
+					criteriaChildren = criteria.createCriteria("children");
+				}
+				if(ri.isChildrenProperties()) {
+					criteria.setFetchMode("children.entity", FetchMode.JOIN);
+					if(ri.isInnerJoin()) {
+						criteriaEntity = criteriaChildren.createCriteria("entity");
+					}
+					criteria.setFetchMode("children.entity.typedPropertyLists", FetchMode.JOIN);
+					if(ri.isInnerJoin()) {
+						criteriaEntity.createCriteria("typedPropertyLists");
+					}
+					criteria.setFetchMode("children.entity.typedPropertyLists.properties", FetchMode.JOIN);				
+				}
+			}
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			
+			return loadByCriteria(criteria);
+		}
+
+		private T loadByCriteria(DetachedCriteria criteria) {
+			List<T> resultList = findByCriteria(criteria);
+			T result = null;
+			if(resultList!=null ) {
+				if( resultList.size()>1) {
+					// TODO: dm - exception handling
+					final String message = "More than one entry find, criteria is: " + criteria.toString();
+					log.error(message);
+					throw new RuntimeException(message);
+				}
+				if(resultList.size()==1) {
+					result = resultList.get(0);
+				}
+			}
+			return result;
+		}
 
 		public List findByQuery(String hqlQuery, Object[] values) {
 			return getHibernateTemplate().find(hqlQuery, values);
+		}
+		
+		public List findByCriteria(DetachedCriteria criteria) {
+			return getHibernateTemplate().findByCriteria(criteria);
 		}
 		
 		public List findByCallback(HibernateCallback hcb) {
@@ -166,4 +247,6 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		public Class<T> getType() {
 			return this.type;
 		}
+
+		
 }
