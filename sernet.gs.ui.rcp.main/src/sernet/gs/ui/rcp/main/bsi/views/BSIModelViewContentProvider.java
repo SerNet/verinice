@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -31,6 +33,7 @@ import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadLinksDown;
 
 /**
  * Content provider for BSI model elements.
@@ -87,18 +90,31 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 					return children;
 				}
 			} catch (CommandException e) {
+				log.error("Error while loading child elements", e);
 				ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
 			}
 		}
 
 		else if (parent instanceof LinkKategorie) {
-			// loadedparent = loadlinksdown
-			// parent.getlinksdown ersetzen durch loadedparent.getlinkssdown:
-			// parent.setlinksdown(Set<cnalkink>)
-			return ((LinkKategorie) parent).getChildren().toArray();
+			try {
+				LinkKategorie linkKategorie = (LinkKategorie) parent;
+				CnATreeElement el = linkKategorie.getParent();
+				Set<CnALink> linkDownSet = loadLinksDown(el);
+				el.setLinksDown(linkDownSet);
+				return linkDownSet.toArray();
+			} catch (CommandException e) {
+				log.error("Error while loading child elements", e);
+				ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
+			}
 		}
 
 		return null;
+	}
+	
+	private Set<CnALink> loadLinksDown(CnATreeElement element) throws CommandException {
+		LoadLinksDown command = new LoadLinksDown(element);
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
+		return command.getLinksDown();
 	}
 
 	private CnATreeElement loadChildren(CnATreeElement el) throws CommandException {
