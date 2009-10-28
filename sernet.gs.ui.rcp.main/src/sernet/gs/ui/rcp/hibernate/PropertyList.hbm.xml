@@ -47,12 +47,14 @@
 		        	name="propertyValue"
 		        	type="java.lang.String"
 		        	length="30000"/>
-		
+				<!--
 				<many-to-one 
 					name="parent"
 					class="Entity"
-					fetch="join"
+					fetch="select"
 					 />
+				-->	 
+					 
 			</composite-element>
 				
 		</list>
