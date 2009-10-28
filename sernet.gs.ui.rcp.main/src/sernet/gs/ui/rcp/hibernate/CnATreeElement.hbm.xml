@@ -18,6 +18,8 @@
 			<generator class="native" />
 		</id>
 		
+		<discriminator column="OBJECT_TYPE" type="string"/>	
+		
 		<property
 			name="uuid"
 			not-null="true"
@@ -38,6 +40,7 @@
 			class="sernet.hui.common.connect.Entity"
 			cascade="all"
 			fetch="join"
+			not-null="false"
 			/>
 			
 		<many-to-one 
@@ -53,7 +56,7 @@
 			fetch="subselect"
 			>
 			<cache usage="read-write" />
-			<key column="parent"  />
+			<key column="parent"  not-null="false"/>
 			<one-to-many class="CnATreeElement" />
 			
 			<filter
@@ -86,223 +89,162 @@
 		
 <!-- Grundschutz-Elemente: ################################################################# -->
 
-	<joined-subclass 
-		name="sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung"
-		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
-	
-	<joined-subclass 
-		name="sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung"
-		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-		
-		<joined-subclass
-			name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung"
-			extends="MassnahmenUmsetzung"
-		>
-			<key column="dbId"/>
-			
-		</joined-subclass>
-		
-	</joined-subclass>
-	
-	<joined-subclass 
-		name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung"
-		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
-
-	<joined-subclass 
-		name="sernet.gs.ui.rcp.main.bsi.model.Gebaeude"
-		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
-
-	<joined-subclass 
-		name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis"
-		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
-	
-	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.Person"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="person"/>
+
+	<subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung"
+		extends="CnATreeElement"
+		discriminator-value="baustein-umsetzung"/>
 	
-	<joined-subclass 
+	<subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung"
+		extends="CnATreeElement"
+		discriminator-value="massnahmen-umsetzung">
+		
+		<subclass
+			name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung"
+			extends="MassnahmenUmsetzung"
+			discriminator-value="risiko-massnahmen-umsetzung"/>
+		
+	</subclass>
+	
+	<subclass 
+		name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung"
+		extends="CnATreeElement"
+		discriminator-value="gefaehrdungs-umsetzung"/>
+
+	<subclass 
+		name="sernet.gs.ui.rcp.main.bsi.model.Gebaeude"
+		extends="CnATreeElement"
+		discriminator-value="gebaeude"/>
+
+	<subclass 
+		name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis"
+		extends="CnATreeElement"
+		discriminator-value="finished-risk-analysis"/>
+	
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.Anwendung"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="anwendung"/>
 
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.Client"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="client"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.SonstIT"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="sonst-it"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.NetzKomponente"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="netz-komponente"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.Raum"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="raum"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="telefon-komponente"/>
+
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.Server"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="server"/>
 
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="gebaeude-kategorie"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
-	
+		discriminator-value="anwendungen-kategorie"/>
 		
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="clients-kategorie"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="sonstige-it-kategorie"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.NKKategorie"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="nk-kategorie"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="personen-kategorie"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="raeume-kategorie"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.ServerKategorie"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="server-kategorie"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.TKKategorie"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="tk-kategorie"/>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.BSIModel"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
+		discriminator-value="bsimodel">
 		<property name="dbVersion"/>
- 	
-	</joined-subclass>
+	</subclass>
 	
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.ITVerbund"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="it-verbund"/>
 
 <!-- Datenschutz Elemente: ################################################################# -->
 
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="verarbeitungsangaben"/>
 
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="verantwortliche-stelle"/>
 
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.ds.model.Personengruppen"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="personengruppen"/>
 
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="datenverarbeitung"/>
 
-	<joined-subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB"
 		extends="CnATreeElement"
-	>
-		<key column="dbId"/>
-	</joined-subclass>
+		discriminator-value="stellungnahme-dsb"/>
 	
 
 	<!-- This filter implements the access check (read access) for CnATreeElement instances (and subclasses).
