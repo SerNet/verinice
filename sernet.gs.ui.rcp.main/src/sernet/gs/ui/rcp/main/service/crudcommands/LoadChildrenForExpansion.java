@@ -23,15 +23,14 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 @SuppressWarnings("serial")
@@ -59,9 +58,11 @@ public class LoadChildrenForExpansion extends GenericCommand {
 	
 	public void execute() {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
-		parent = dao.findById(dbId);
 		
-		log.debug("Loading children for " + parent.getTitel());
+		RetrieveInfo ri = new RetrieveInfo();
+		ri.setChildren(true).setChildrenProperties(true).setProperties(true).setLinksDown(true);
+		parent = dao.retrieve(dbId,ri);
+		
 		hydrate(parent);
 		
 		if (log.isDebugEnabled() && !filteredClasses.isEmpty())
@@ -72,24 +73,31 @@ public class LoadChildrenForExpansion extends GenericCommand {
 			if (!filteredClasses.contains(child.getClass()))
 				hydrate(child);
 		}
+		
 	}
 
 	private void hydrate(CnATreeElement element) {
 		if (element == null)
 			return;
 		
+		log.debug("Hydrate element of type: " + element.getClass().getSimpleName());
+		
 		if (element instanceof MassnahmenUmsetzung) {
 			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
 			mn.getKapitelValue();
-			mn.getTitel();
+			String titel = mn.getTitel();	
 			mn.getUmsetzung();
 			mn.getUrl();
 			mn.getStand();
 			return;
 		}
 		
-		HydratorUtil.hydrateElement(getDaoFactory().getDAO(BSIModel.class), 
-				element, true);
+		RetrieveInfo ri = new RetrieveInfo();
+		ri.setChildren(true).setLinksDown(true);
+		if (element instanceof BausteinUmsetzung) {
+			ri.setChildrenProperties(true).setInnerJoin(true);
+		}
+		HydratorUtil.hydrateElement(getDaoFactory().getDAO(element.getClass()), element, ri);
 		
 		// initialize all children:
 		if (element instanceof FinishedRiskAnalysis
@@ -101,16 +109,18 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		}
 		
 		if (element instanceof BausteinUmsetzung) {
+			IBaseDao<? extends BausteinUmsetzung, Serializable> dao = getDaoFactory().getDAO(BausteinUmsetzung.class);
+			
 			BausteinUmsetzung bst = (BausteinUmsetzung) element;
 			bst.getKapitel();
-			log.debug("Hydrating Baustein " + bst.getKapitel());
-			
 			Set<CnATreeElement> massnahmen = bst.getChildren();
 			for (CnATreeElement massnahme : massnahmen) {
 				hydrate(massnahme);
 			}
 		}
 		
+		/*
+		log.debug("Hydrating links down...");
 		if (element.getLinksDown().size() > 0 ) {
 			Set<CnALink> links = element.getLinks().getChildren();
 			for (CnALink link : links) {
@@ -118,6 +128,9 @@ public class LoadChildrenForExpansion extends GenericCommand {
 				link.getDependency().getUuid();
 			}
 		}
+		log.debug("Links down hydrated");
+		*/
+		
 	}
 	
 	public CnATreeElement getElementWithChildren() {
