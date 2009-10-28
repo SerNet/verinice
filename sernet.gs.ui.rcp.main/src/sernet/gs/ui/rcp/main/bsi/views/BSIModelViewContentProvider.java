@@ -39,153 +39,159 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
  * 
  */
 public class BSIModelViewContentProvider implements ITreeContentProvider {
-	
+
+	private static final Logger log = Logger.getLogger(BSIModelViewContentProvider.class);
+
 	private BSIModelElementFilter modelFilter;
-	
+
 	public BSIModelViewContentProvider(TreeViewerCache cache) {
 		super();
 		this.cache = cache;
 	}
-	
+
 	private TreeViewerCache cache;
-	
 
-		public void dispose() {
+	public void dispose() {
+	}
+
+	public Object[] getChildren(Object parent) {
+		// Logger.getLogger(this.getClass()).debug("getChildren " +parent);
+
+		// replace object in event with the one actually displayed in the tree:
+		Object cachedObject = cache.getCachedObject(parent);
+		// Logger.getLogger(this.getClass()).debug("Retrieved from view cache: "
+		// + cachedObject);
+		if (cachedObject != null)
+			parent = cachedObject;
+
+		if (parent instanceof NullModel) {
+			NullModel model = (NullModel) parent;
+			return model.getChildrenAsArray();
 		}
 
-		public Object[] getChildren(Object parent) {
-//			Logger.getLogger(this.getClass()).debug("getChildren " +parent);
-			
-			// replace object in event with the one actually displayed in the tree:
-			Object cachedObject = cache.getCachedObject(parent);
-//			Logger.getLogger(this.getClass()).debug("Retrieved from view cache: " + cachedObject);
-			if (cachedObject != null)
-				parent = cachedObject;
-			
-			if (parent instanceof NullModel) {
-				NullModel model = (NullModel) parent;
-				return model.getChildrenAsArray();
-			}
-			
-			if (parent instanceof CnATreeElement) {
-				CnATreeElement el = (CnATreeElement) parent;
-				CnATreeElement newElement;
-				try {
-					newElement = loadChildren(el);
-					el.replace(newElement);
-					el = newElement;
-					CnATreeElement[] children = el.getChildrenAsArray();
-					if (el.getLinksDown().size() > 0) {
-						// add linkkategorie object:
-						Object[] result = new Object[children.length + 1];
-						System.arraycopy(children, 0, result, 0, children.length);
-						result[children.length] = el.getLinks();
-						return result;
-					} else {
-						return children;
-					}
-				} catch (CommandException e) {
-					ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
+		if (parent instanceof CnATreeElement) {
+			CnATreeElement el = (CnATreeElement) parent;
+			CnATreeElement newElement;
+			try {
+				newElement = loadChildren(el);
+				el.replace(newElement);
+				el = newElement;
+				CnATreeElement[] children = el.getChildrenAsArray();
+				if (el.getLinksDown().size() > 0) {
+					// add linkkategorie object:
+					Object[] result = new Object[children.length + 1];
+					System.arraycopy(children, 0, result, 0, children.length);
+					result[children.length] = el.getLinks();
+					return result;
+				} else {
+					return children;
 				}
-			} 
-			
-			else if (parent instanceof LinkKategorie) {
-				return ((LinkKategorie) parent).getChildren().toArray();
+			} catch (CommandException e) {
+				ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
 			}
-			
-			return null;
 		}
 
-		private CnATreeElement loadChildren(CnATreeElement el) throws CommandException {
-			if (el.isChildrenLoaded()) {
-//				Logger.getLogger(this.getClass()).debug("NOT loading children because of positive flag on parent " + el);
-				return el;
-			}
-			
-			Logger.getLogger(this.getClass()).debug("Loading children from DB for " + el);
-			
-			LoadChildrenForExpansion command;
-			if (modelFilter != null)
-			{
-				command = new LoadChildrenForExpansion(el,
-						modelFilter.getFilteredClasses());
-			}
-			else
-			{
-				command = new LoadChildrenForExpansion(el);
-			}
-			
-			command = ServiceFactory.lookupCommandService().executeCommand(
-					command);
-			CnATreeElement newElement = command.getElementWithChildren();
-			
-			// If a filter was active the tree element for which we loaded the children
-			// is *not* marked as if its children have been really loaded. This is only
-			// done when no classes have been filtered.
-			// By doing this the element gets automatically reloaded (and now its children
-			// as well) as soon as the user disables the filter.
-			if (modelFilter == null || modelFilter.isEmpty())
-			{
-				newElement.setChildrenLoaded(true);
-			}
-			
-			// replace with loaded object in cache:
-			Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
-			cache.clear(el);
-			cache.addObject(newElement);
-			
-			// TODO ak synchronization problem?
-			
-			return newElement;
+		else if (parent instanceof LinkKategorie) {
+			// loadedparent = loadlinksdown
+			// parent.getlinksdown ersetzen durch loadedparent.getlinkssdown:
+			// parent.setlinksdown(Set<cnalkink>)
+			return ((LinkKategorie) parent).getChildren().toArray();
 		}
 
-		public Object[] getElements(Object parent) {
-			return getChildren(parent);
+		return null;
+	}
+
+	private CnATreeElement loadChildren(CnATreeElement el) throws CommandException {
+		if (el.isChildrenLoaded()) {
+			// Logger.getLogger(this.getClass()).debug("NOT loading children because of positive flag on parent "
+			// + el);
+			return el;
 		}
 
-		public Object getParent(Object child) {
-			if (child instanceof CnATreeElement) {
-				CnATreeElement el = (CnATreeElement) child;
-				return el.getParent();
-			} else if (child instanceof LinkKategorie) {
-				LinkKategorie kat = (LinkKategorie) child;
-				return kat.getParent();
-			} else if (child instanceof CnALink) {
-				CnALink link = (CnALink) child;
-				return link.getParent();
-			}
-			return null;
+		Logger.getLogger(this.getClass()).debug("Loading children from DB for " + el);
+
+		LoadChildrenForExpansion command;
+		if (modelFilter != null) {
+			command = new LoadChildrenForExpansion(el, modelFilter.getFilteredClasses());
+		} else {
+			command = new LoadChildrenForExpansion(el);
 		}
 
-		public boolean hasChildren(Object parent) {
-			if (parent instanceof MassnahmenUmsetzung)
-				return false;
-			
-			if (parent instanceof CnATreeElement) {
-				try {
-					CnATreeElement el = (CnATreeElement) parent;
-					boolean hasChildren = el.getChildren().size() > 0
-						|| el.getLinksDown().size() > 0;
-					return hasChildren;
-				} catch (Exception e) {
-					//Logger.getLogger(this.getClass()).error(e);
-					return true;
-				}
-				
-			}
-			if (parent instanceof LinkKategorie) {
-				LinkKategorie kat = (LinkKategorie) parent;
-				return kat.getChildren().size() > 0;
-			}
+		command = ServiceFactory.lookupCommandService().executeCommand(command);
+		CnATreeElement newElement = command.getElementWithChildren();
+
+		// If a filter was active the tree element for which we loaded the
+		// children
+		// is *not* marked as if its children have been really loaded. This is
+		// only
+		// done when no classes have been filtered.
+		// By doing this the element gets automatically reloaded (and now its
+		// children
+		// as well) as soon as the user disables the filter.
+		if (modelFilter == null || modelFilter.isEmpty()) {
+			newElement.setChildrenLoaded(true);
+		}
+
+		// replace with loaded object in cache:
+		Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
+		cache.clear(el);
+		cache.addObject(newElement);
+
+		// TODO ak synchronization problem?
+
+		return newElement;
+	}
+
+	public Object[] getElements(Object parent) {
+		return getChildren(parent);
+	}
+
+	public Object getParent(Object child) {
+		if (child instanceof CnATreeElement) {
+			CnATreeElement el = (CnATreeElement) child;
+			return el.getParent();
+		} else if (child instanceof LinkKategorie) {
+			LinkKategorie kat = (LinkKategorie) child;
+			return kat.getParent();
+		} else if (child instanceof CnALink) {
+			CnALink link = (CnALink) child;
+			return link.getParent();
+		}
+		return null;
+	}
+
+	public boolean hasChildren(Object parent) {
+		if (parent instanceof MassnahmenUmsetzung)
 			return false;
-		}
 
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-			cache.clear();
-		}
+		if (parent instanceof CnATreeElement) {
+			try {
+				CnATreeElement el = (CnATreeElement) parent;
+				boolean hasChildren = el.getChildren().size() > 0 || el.getLinksDown().size() > 0;
+				return hasChildren;
+			} catch (Exception e) {
+				if (parent != null) {
+					log.error("Error in hasChildren, element type: " + parent.getClass().getSimpleName(), e);
+				} else {
+					log.error("Error in hasChildren, element is null", e);
+				}
+				return true;
+			}
 
-		void setModelElementFilter(BSIModelElementFilter modelFilter) {
-			this.modelFilter = modelFilter;
 		}
+		if (parent instanceof LinkKategorie) {
+			LinkKategorie kat = (LinkKategorie) parent;
+			return kat.getChildren().size() > 0;
+		}
+		return false;
+	}
+
+	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+		cache.clear();
+	}
+
+	void setModelElementFilter(BSIModelElementFilter modelFilter) {
+		this.modelFilter = modelFilter;
+	}
 
 }
