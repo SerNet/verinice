@@ -24,40 +24,58 @@
 	</appender>
 
 	<!-- Logger for verinice -->
-	<!--
-	-->
 	<logger name="sernet">
 		<level value="DEBUG" />
 	</logger>
 	
+	<!-- Runtime Logger -->
+	<!--
+	<logger name="sernet.gs.server.RuntimeLogger">
+		<level value="DEBUG" />
+	</logger>
+	-->
+	
 	<!-- Logging verinice Command-Service -->
 	<!--
-	-->
 	<logger name="sernet.gs.ui.rcp.main.service">
 		<level value="DEBUG" />
 	</logger>
+	-->
+	
+	<!-- Dao Logging -->
+	<!--
+	<logger name="sernet.gs.ui.rcp.main.connect">
+		<level value="DEBUG" />
+	</logger>
+	-->
 
 	<!--
-	-->
 	<logger name="org.springframework.osgi.extender"> 
 		<level value="INFO"/>
 	</logger>
+	-->
 	
 	<!-- Hibernate Logging -->
 	<!--
-	-->
 	<logger name="org.hibernate">
 		<level value="INFO" />
 	</logger>
-
-	<!--
 	-->
+	<!--
 	<logger name="org.hibernate.cache">
 		<level value="INFO" />
 	</logger>
-
+	-->
+	
+	<!-- c3p0 logging -->
+	<!--
+	<logger name="com.mchange.v2.c3p0">
+		<level value="DEBUG" />
+	</logger>
+	-->
+	
 	<!-- SQL -->
-	<!-- 
+	<!--
 	<logger name="org.hibernate.SQL">
 		<level value="DEBUG" />
 	</logger>
@@ -75,6 +93,8 @@
 	<root>
 		<priority value="WARN" />
 		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+		
 	</root>
 
 </log4j:configuration>
