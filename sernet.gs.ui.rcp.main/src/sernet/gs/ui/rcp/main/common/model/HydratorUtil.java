@@ -25,11 +25,13 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.PropertyList;
 
@@ -59,15 +61,21 @@ public class HydratorUtil {
 		}
 	}
 	
+	public static void hydrateElement(IBaseDao dao, CnATreeElement element, boolean retrieveChildren) {
+		RetrieveInfo ri = null;
+		if(retrieveChildren) {
+			ri = new RetrieveInfo();
+			ri.setChildren(true);
+		}
+		hydrateElement(dao, element, ri);
+	}
 	
-	public static void hydrateElement(IBaseDao dao, CnATreeElement element, boolean includingCollections) {
+	
+	public static void hydrateElement(IBaseDao dao, CnATreeElement element, RetrieveInfo ri) {
 		if (element == null)
 			return;
 		
 		hydrateEntity(dao, element.getEntity());
-		dao.initialize(element.getLinks());
-		dao.initialize(element.getLinksDown());
-		dao.initialize(element.getLinksUp());
 
 		// Initialize permissions, so it should be possible to access an elements'
 		// permissions anywhere. 
@@ -82,18 +90,29 @@ public class HydratorUtil {
 		// whether an element belongs to a specific IT-Verbund.
 		for (CnATreeElement e = element.getParent(); e != null; e = e.getParent());
 
-		if (includingCollections ) {
-			dao.initialize(element.getChildren());
+		if (ri!=null ) {
+			CnATreeElement elementWithChildren = (CnATreeElement) dao.retrieve(element.getDbId(),ri);
+			element.setChildren(elementWithChildren.getChildren());
 		}
+		
 	}
 	
 	public static void hydrateEntity(IBaseDao dao, CnATreeElement element) {
 		hydrateEntity(dao, element.getEntity());
 	}
 	
-	public static <T extends CnATreeElement> void hydrateElements(IBaseDao dao, List<T> elements, boolean includingCollections) {
+	public static <T extends CnATreeElement> void hydrateElements(IBaseDao dao, List<T> elements, boolean retrieveChildren) {
+		RetrieveInfo ri = null;
+		if(retrieveChildren) {
+			ri = new RetrieveInfo();
+			ri.setChildren(true);
+		}
+		hydrateElements(dao, elements, ri);
+	}
+	
+	public static <T extends CnATreeElement> void hydrateElements(IBaseDao dao, List<T> elements, RetrieveInfo ri) {
 		for (CnATreeElement element : elements) {
-			hydrateElement(dao, element, includingCollections);
+			hydrateElement(dao, element, ri);
 		}
 	}
 
@@ -127,13 +146,15 @@ public class HydratorUtil {
 		dao.initialize(list3);
 		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : list3) {
 			hydrateEntity(dao, gefaehrdungsUmsetzung.getEntity());
-			hydrateElement(dao, gefaehrdungsUmsetzung, true);
+			RetrieveInfo ri = new RetrieveInfo();
+			ri.setChildren(true);
+			hydrateElement(dao, gefaehrdungsUmsetzung, ri);
 			
 			Set<CnATreeElement> children = gefaehrdungsUmsetzung.getChildren();
 			for (CnATreeElement child : children) {
 				if (child instanceof MassnahmenUmsetzung) {
 					MassnahmenUmsetzung mn = (MassnahmenUmsetzung) child;
-					hydrateElement(dao, mn, false);
+					hydrateElement(dao, mn, null);
 				}
 			}
 		}
