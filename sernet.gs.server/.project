@@ -3,6 +3,7 @@
 	<name>sernet.gs.server</name>
 	<comment></comment>
 	<projects>
+		<project>sernet.gs.ui.rcp.main</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
