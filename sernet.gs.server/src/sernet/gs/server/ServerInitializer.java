@@ -34,7 +34,7 @@ import sernet.hui.common.VeriniceContext;
  */
 public class ServerInitializer {
 	
-	private VeriniceContext.State workObjects;
+	private static VeriniceContext.State state;
 	
 	private IHibernateCommandService hibernateCommandService;
 	
@@ -55,18 +55,30 @@ public class ServerInitializer {
 		}
 		
 	};
+	
+	/**
+	 * Initializes the current thread with the VeriniceContext.State
+	 * of the client application.
+	 * 
+	 * <p>Calling this method is needed when the Activator was run on a
+	 * different thread then the Application class.</p>
+	 */
+	public static void inheritVeriniceContextState()
+	{
+		VeriniceContext.setState(state);
+	}
 
 	public void initialize() {
 		Logger.getLogger(this.getClass()).debug("Initializing server context...");
 		// After this we can use the getInstance() methods from HitroUtil and
 		// GSScraperUtil
-		VeriniceContext.setState(workObjects);
+		VeriniceContext.setState(state);
 		
 		// The work objects in the HibernateCommandService can only be set
 		// at this point because otherwise we would have a circular dependency
 		// in the Spring configuration (= commandService needs workObjects
 		// and vice versa)
-		hibernateCommandService.setWorkObjects(workObjects);
+		hibernateCommandService.setWorkObjects(state);
 		
 		GSScraperUtil gsScraperUtil = GSScraperUtil.getInstance();
 		// initialize grundschutz scraper:
@@ -78,11 +90,11 @@ public class ServerInitializer {
 	}
 
 	public void setWorkObjects(VeriniceContext.State workObjects) {
-		this.workObjects = workObjects;
+		ServerInitializer.state = workObjects;
 	}
 
 	public VeriniceContext.State getWorkObjects() {
-		return workObjects;
+		return state;
 	}
 
 	public void setHibernateCommandService(IHibernateCommandService hibernateCommandService) {
