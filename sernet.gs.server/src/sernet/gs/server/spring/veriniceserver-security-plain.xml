@@ -82,6 +82,9 @@
 <bean id="springSecurityFilterChain"
 	class="org.springframework.security.util.FilterChainProxy">
 	<security:filter-chain-map path-type="ant">
+		<security:filter-chain pattern="/todo/**"
+			filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
+	
 		<security:filter-chain pattern="/service/**"
 			filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
 	</security:filter-chain-map>
@@ -101,6 +104,8 @@
 	
 	<property name="objectDefinitionSource">
 		<security:filter-invocation-definition-source>
+			<security:intercept-url pattern="/todo/**"
+				access="ROLE_USER" />
 			<security:intercept-url pattern="/service/**"
 				access="ROLE_USER" />
 		</security:filter-invocation-definition-source>
