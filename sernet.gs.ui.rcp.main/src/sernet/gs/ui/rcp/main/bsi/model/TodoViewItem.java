@@ -19,8 +19,22 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Hashtable;
+import java.util.Map;
+
+import sernet.gs.ui.rcp.main.ImageCache;
 
 public class TodoViewItem implements Serializable, IMassnahmeUmsetzung {
+	
+	private static final Map<String, String> umsetzungImageMap = new Hashtable<String, String>();
+	
+	static {
+		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_JA, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_NEIN, ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
+		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET, ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
+	}
 	
 	private String titel;
 	private String umsetzung;
@@ -42,6 +56,10 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung {
 
 	public String getUmsetzung() {
 		return umsetzung;
+	}
+	
+	public String getUmsetzungIcon() {
+		return umsetzungImageMap.get(getUmsetzung());
 	}
 
 	public Date getUmsetzungBis() {
@@ -107,21 +125,6 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung {
 	public void setDbId(Integer dbId2) {
 		this.dbId = dbId2;
 	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		return (this == obj
-				|| (obj instanceof TodoViewItem
-					&& this.getParentTitle().equals(((TodoViewItem)obj).getParentTitle())
-					&& this.titel.equals(((TodoViewItem)obj).getTitel())
-					)
-				);
-	}
-	
-	@Override
-	public int hashCode() {
-		return dbId.hashCode() + url.hashCode() + titel.hashCode();
-	}
 
 	public void setNaechsteRevision(Date naechsteRevision) {
 		this.naechsteRevision = naechsteRevision; 
@@ -137,6 +140,31 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung {
 
 	public Date getNaechsteRevision() {
 		return this.naechsteRevision;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TodoViewItem other = (TodoViewItem) obj;
+		if (dbId == null) {
+			if (other.dbId != null)
+				return false;
+		} else if (!dbId.equals(other.dbId))
+			return false;
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dbId == null) ? 0 : dbId.hashCode());
+		return result;
 	}
 
 }
