@@ -1,0 +1,25 @@
+body {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: small;
+}
+
+div.selectDiv {
+	height: 35px;
+	overflow: auto;
+}
+
+div.tableDiv {
+	height: 400px;
+	overflow: auto;
+}
+
+div.editDiv {
+	height: 90px;
+	overflow: auto;
+}
+.oddRow {
+	background-color:  #FAEAEE;
+}
+.selectedRow {
+	background-color:  #FDFFC5;
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:o="http://openfaces.org/"
+      template="/template.xhtml">
+	<ui:define name="content">
+		<div id="selectDiv" class="selectDiv">
+			<h:form id="verbundForm">
+				<h:panelGrid columns="3">
+					<h:outputText value="IT-Verbund" />
+					<o:dropDownField var="itVerbund" value="#{toDo.selectedItVerbund}" converter="#{toDo.itVerbundConverter}">
+						<!-- <o:reloadComponents event="onchange" componentIds=":tableForm:toDoTable" requestDelay="300"/>	-->	
+			  			<o:dropDownItems value="#{toDo.itVerbundList}"/>
+			  			<h:outputText value="#{itVerbund.titel}"/>	  			
+			  		</o:dropDownField>
+			  		<a4j:commandButton id="loadTable" value="Todos laden" action="#{toDo.loadToDoList}" reRender="toDoTable"/>
+		  		</h:panelGrid>
+		  	</h:form>
+		</div>
+		<div id="tableDiv" class="tableDiv">
+			<h:form id="tableForm">
+				<o:dataTable 
+					id="toDoTable" 
+					var="item" 
+					value="#{toDo.todoList}" 
+					useAjax="true" 
+					sortColumnId="umsetzung"
+					bodyOddRowClass="oddRow">
+					<o:singleRowSelection rowData="#{toDo.selectedItem}" action="#{toDo.loadToDo}" styleClass="selectedRow"/>					
+					<o:column id="umsetzung" sortingExpression="#{item.umsetzung}">
+					    <h:graphicImage url="/image/icon/#{item.umsetzungIcon}" />
+					</o:column>
+					<o:column sortingExpression="#{item.umsetzungBis}">
+						<f:facet name="header">
+					    	<h:outputText value="Fälligkeit" />
+					    </f:facet>
+					    <h:outputText value="#{item.umsetzungBis}">
+					    	<f:convertDateTime dateStyle="short" type="date" />
+					    </h:outputText>
+					</o:column>
+					<o:column sortingExpression="#{item.umsetzungDurch}" sortingComparator="caseInsensitiveText">
+						<f:facet name="header">
+					    	<h:outputText value="Verantwortlich" />
+					    </f:facet>
+					    <h:outputText value="#{item.umsetzungDurch}"/>
+					</o:column>
+					<o:column sortingExpression="#{item.stufe}" >
+						<f:facet name="header">
+					    	<h:outputText value="S" />
+					    </f:facet>
+					    <h:outputText value="#{item.stufe}"/>
+					</o:column>
+					<o:column sortingExpression="#{item.parentTitle}" sortingComparator="caseInsensitiveText">
+						<f:facet name="header">
+					    	<h:outputText value="Zielobjekt" />
+					    </f:facet>
+					    <h:outputText value="#{item.parentTitle}"/>
+					</o:column>
+					<o:column id="titel" sortingExpression="#{item.titel}" sortingComparator="caseInsensitiveText">
+						<f:facet name="header">
+					    	<h:outputText value="Titel" />
+					    </f:facet>
+					    <h:outputText value="#{item.titel}"/>			    	
+					</o:column>		
+				</o:dataTable>
+			</h:form>
+		</div>
+			<a4j:form id="editForm">
+				<a4j:outputPanel id="editPanel">
+					<h:panelGrid id="panel" columns="2">
+						<f:facet name="header">
+						  <h:outputText value="#{toDo.massnahmeUmsetzung.titel}"/>
+						</f:facet>
+						<h:outputLabel for="umsetzung" value="Umsetzung" />
+						<o:dropDownField value="#{toDo.umsetzung}" converter="#{toDo.umsetzungConverter}">
+  							<o:dropDownItems value="#{toDo.umsetzungList}"/>
+  						</o:dropDownField>					
+						<h:outputLabel for="umsetzungBis" value="Umsetzung bis" />
+						<o:dateChooser id="umsetzungBis" value="#{toDo.massnahmeUmsetzung.umsetzungBis}" pattern="EEE, d.M.yyyy"/>
+						<h:outputLabel for="submit" value="" />
+						<a4j:commandButton id="submit" value="Speichern" action="#{toDo.save}" reRender="toDoTable"/>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</a4j:form>
+		<div id="editDiv">
+		
+		</div>
+	</ui:define>
+	
+</ui:composition>
