@@ -239,6 +239,12 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 			return null;
 		return new Date(Long.parseLong(dateString));
 	}
+	
+	public void setUmsetzungBis(Date date) {
+		if(date!=null) {
+			getEntity().setSimpleValue(getEntityType().getPropertyType(P_UMSETZUNGBIS), String.valueOf(date.getTime()));
+		}
+	}
 
 	public Date getNaechsteRevision() {
 		PropertyList properties = getEntity().getProperties(
