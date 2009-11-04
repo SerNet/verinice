@@ -88,6 +88,7 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 					"from MassnahmenUmsetzung mn " +
 					"join fetch mn.entity " +
 					"join fetch mn.parent.parent.entity " +
+					"join fetch mn.parent.parent.parent.parent.entity " +
 					"where mn.parent.parent.parent.parent = :id " +
 					"or mn.parent.parent = :id2")
 					.setInteger("id", itverbundID)
@@ -112,7 +113,7 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 
 	public void execute() {
 		try {
-			
+			long start = System.currentTimeMillis();
 			List<MassnahmenUmsetzung> list = new ArrayList<MassnahmenUmsetzung>();
 			IBaseDao<MassnahmenUmsetzung, Serializable> dao = getDaoFactory().getDAO(
 					MassnahmenUmsetzung.class);
@@ -121,7 +122,10 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 			
 			// create display items:
 			fillList(list);
-			
+			if(log.isDebugEnabled()) {
+				long runtime = System.currentTimeMillis() - start;
+				log.debug("FindMassnahmenForITVerbund runtime: " + runtime + " ms.");
+			}
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
 		}
