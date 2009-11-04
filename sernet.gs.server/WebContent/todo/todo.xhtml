@@ -13,7 +13,6 @@
 				<h:panelGrid columns="3">
 					<h:outputText value="IT-Verbund" />
 					<o:dropDownField var="itVerbund" value="#{toDo.selectedItVerbund}" converter="#{toDo.itVerbundConverter}">
-						<!-- <o:reloadComponents event="onchange" componentIds=":tableForm:toDoTable" requestDelay="300"/>	-->	
 			  			<o:dropDownItems value="#{toDo.itVerbundList}"/>
 			  			<h:outputText value="#{itVerbund.titel}"/>	  			
 			  		</o:dropDownField>
