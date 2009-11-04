@@ -49,6 +49,9 @@
 
         <!-- Should database schema be automatically updated when needed:
         <property name="hbm2ddl.auto">validate</property>
+        Use "update" only in development, it does not work with all changes, i.e. indices aren't created.
+        Use a proper migration script instead (@see DbVersion.java)
+        <property name="hbm2ddl.auto">update</property>
 		-->
          <property name="hbm2ddl.auto">update</property>
 
