@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.migrationcommands;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
@@ -43,7 +45,7 @@ public class DbVersion extends GenericCommand  {
 	/**
 	 * Version number of DB that can be used:
 	 */
-	public static final double COMPATIBLE_DB_VERSION = 0.95D;
+	public static final double COMPATIBLE_DB_VERSION = 0.96D;
 	
 	/**
 	 * Version number of client that can be used.
@@ -57,7 +59,7 @@ public class DbVersion extends GenericCommand  {
 	 * If verinice runs standalone (just on a client without server), the version 
 	 * number will always be the same.
 	 */
-	public static final double COMPATIBLE_CLIENT_VERSION = 0.95D;
+	public static final double COMPATIBLE_CLIENT_VERSION = 0.96D;
 
 	/**
 	 * Update DB version to compatible DB version.
@@ -89,6 +91,12 @@ public class DbVersion extends GenericCommand  {
 				 DbMigration migration = new MigrateDbTo0_95();
 				 getCommandService().executeCommand(migration);
 			 }
+
+			 if (dbVersion < 0.96D) {
+				 // schema update must have been done by SchemaCreator.java, before Hibernate session was started:
+				 Logger.getLogger(this.getClass()).debug("Database schema was not correctly updated to V 0.96.");
+				 throw new CommandException("Datenbank konnte nicht auf V0.96 upgedated werden.");
+			 }
 	}
 
 
@@ -100,12 +108,15 @@ public class DbVersion extends GenericCommand  {
 		}
 		
 		LoadBSIModel command = new LoadBSIModel();
+		double dbVersion;
 		try {
 			command = getCommandService().executeCommand(command);
-			if (command.getModel() == null)
-				return;
-			
-			double dbVersion = command.getModel().getDbVersion();
+			if (command.getModel() == null) {
+					Logger.getLogger(this.getClass()).debug("Not migrating database: could not determine current database version or no database created yet.");
+					return;
+			}
+			// set current db version as determined from database:
+			dbVersion = command.getModel().getDbVersion();
 			updateDBVersion(dbVersion);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException("Fehler beim Migrieren der Datenbank auf aktuelle Version.", e);

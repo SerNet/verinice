@@ -125,6 +125,21 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung {
 	public void setDbId(Integer dbId2) {
 		this.dbId = dbId2;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return (this == obj
+				|| (obj instanceof TodoViewItem
+					&& this.getParentTitle().equals(((TodoViewItem)obj).getParentTitle())
+					&& this.titel.equals(((TodoViewItem)obj).getTitel())
+					)
+				);
+	}
+	
+	@Override
+	public int hashCode() {
+		return dbId.hashCode() + url.hashCode() + titel.hashCode();
+	}
 
 	public void setNaechsteRevision(Date naechsteRevision) {
 		this.naechsteRevision = naechsteRevision; 
@@ -140,31 +155,6 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung {
 
 	public Date getNaechsteRevision() {
 		return this.naechsteRevision;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		TodoViewItem other = (TodoViewItem) obj;
-		if (dbId == null) {
-			if (other.dbId != null)
-				return false;
-		} else if (!dbId.equals(other.dbId))
-			return false;
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((dbId == null) ? 0 : dbId.hashCode());
-		return result;
 	}
 
 }
