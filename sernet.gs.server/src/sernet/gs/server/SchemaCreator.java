@@ -40,10 +40,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 // TODO akoderman remove this and integrate LiquidBase changelog instead
 
 public class SchemaCreator implements InitializingBean {
+	
+	final private Logger log = Logger.getLogger(this.getClass());
+	
 	private DataSource dataSource;
 	
-	private static String SQL_GETDBVERSION_PRE_096 	= "select  dbversion from bsimodel";
-	private static String SQL_GETDBVERSION_POST_096 = "select dbversion from cnatreeelement";
+	private static String SQL_GETDBVERSION_PRE_096 	= "select dbversion from bsimodel";
+	private static String SQL_GETDBVERSION_POST_096 = "select dbversion from cnatreeelement where object_type='bsimodel'";
 	
 	private static String SQL_Ver_095_096 = "sernet/gs/server/hibernate/update-095-096.sql";
 
@@ -56,14 +59,20 @@ public class SchemaCreator implements InitializingBean {
 	}
 
 	public void afterPropertiesSet() throws Exception {
+		log.debug("afterPropertiesSet");
+		
 		double dbVersion = determineDbVersion();
 		
 		if (dbVersion == -1D) {
-			Logger.getLogger(this.getClass()).debug("No database version defined, no database created yet?");
+			log.debug("No database version defined, no database created yet?");
 			return;
 		}
 
 		try {
+			if (dbVersion < 0.95D) {
+				log.error("Db version is: " + dbVersion + ". Can not upgrade from version below 0.95.");
+				throw new RuntimeException("Db version is: " + dbVersion + ". Can not upgrade from version below 0.95.");
+			}
 			if (dbVersion == 0.95D) {
 				updateDbVersion(SQL_Ver_095_096);
 			}
@@ -87,7 +96,10 @@ public class SchemaCreator implements InitializingBean {
 		while ((query = buffRead.readLine()) != null) {
 			if (query.matches("^$") || query.matches("^--"))
 				continue;
-
+			// remove ; for Derby
+			if(query.endsWith(";")) {
+				query = query.substring(0, query.length()-1);
+			}
 			if (Logger.getLogger(this.getClass()).isDebugEnabled())
 				Logger.getLogger(this.getClass()).debug("Executing query: " + query);
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
@@ -100,12 +112,14 @@ public class SchemaCreator implements InitializingBean {
 	 * @return
 	 */
 	private double determineDbVersion() {
+		log.debug("determineDbVersion");
 		Double dbVersion = -1D;
 		try {
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			dbVersion = (Double) jdbcTemplate.queryForObject(SQL_GETDBVERSION_PRE_096, Double.class);
 		} catch (Exception e) {
-			// do nothing (i.e. table may have been removed, see below)
+			log.info("Can not determine db-version. Maybe database version is >0.95.");
+			log.debug("cause: ", e);
 		}
 		
 		try {
@@ -115,7 +129,7 @@ public class SchemaCreator implements InitializingBean {
 				dbVersion = (Double) jdbcTemplate.queryForObject(SQL_GETDBVERSION_POST_096, Double.class);
 			}
 		} catch (Exception e) {
-			// do nothing, i.e. db may not exist at all yet, will be initialized by hibernate hbm2ddl
+				log.error("Can not determine db-version", e);
 		}
 		
 		return dbVersion;
