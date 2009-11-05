@@ -96,7 +96,7 @@ public class InternalServer implements IInternalServer {
 		}
 
 		if (fail) {
-			ServerPropertyPlaceholderConfigurer.setDatabaseProperties("", "", "", "", "");
+			ServerPropertyPlaceholderConfigurer.setDatabaseProperties("InternalServer.configure.failed", "InternalServer.configure.failed", "InternalServer.configure.failed", "InternalServer.configure.failed", "InternalServer.configure.failed");
 			
 		}
 		else {
