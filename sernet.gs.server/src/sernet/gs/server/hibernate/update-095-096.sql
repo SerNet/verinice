@@ -1,4 +1,4 @@
-ALTER TABLE cnatreeelement ADD object_type VARCHAR(255);
+ALTER TABLE cnatreeelement ADD COLUMN object_type VARCHAR(255);
 
 UPDATE cnatreeelement set object_type='gebaeude' WHERE cnatreeelement.dbid IN (SELECT dbid from gebaeude);
 UPDATE cnatreeelement set object_type='person' WHERE cnatreeelement.dbid IN (SELECT dbid from person);
@@ -31,7 +31,7 @@ UPDATE cnatreeelement set object_type='personengruppen' WHERE cnatreeelement.dbi
 UPDATE cnatreeelement set object_type='datenverarbeitung' WHERE cnatreeelement.dbid IN (SELECT dbid from datenverarbeitung);
 UPDATE cnatreeelement set object_type='stellungnahme-dsb' WHERE cnatreeelement.dbid IN (SELECT dbid from stellungnahmedsb);
 
-ALTER TABLE cnatreeelement ADD dbversion FLOAT8;
+ALTER TABLE cnatreeelement ADD COLUMN dbversion FLOAT;
 
 ALTER TABLE properties DROP CONSTRAINT fkc8cd8d337b233bb1;
 ALTER TABLE properties DROP COLUMN parent;
@@ -50,15 +50,12 @@ DROP TABLE clientskategorie;
 
 DROP TABLE datenverarbeitung;
 
-DROP TABLE dbcopytest;
-
 DROP TABLE finishedriskanalysis;
 
 DROP TABLE gebaeude;
 
 DROP TABLE gebaeudekategorie;
 
--- allgefaehrdungsumsetzungen
 ALTER TABLE allgefaehrdungsumsetzungen DROP CONSTRAINT fka34df65360f2f8b4;
 ALTER TABLE allgefaehrdungsumsetzungen ADD CONSTRAINT agu_cnatreeelement FOREIGN KEY (elt) REFERENCES cnatreeelement (dbid);
 ALTER TABLE associatedgefaehrdungen DROP CONSTRAINT fk44cc7bc360f2f8b4;
@@ -78,7 +75,6 @@ DROP TABLE netzkomponente;
 
 DROP TABLE nkkategorie;
 
--- person
 ALTER TABLE configuration DROP CONSTRAINT fka2d2a4d688446992;
 ALTER TABLE configuration ADD CONSTRAINT configuration_cnatreeelement FOREIGN KEY (person_id) REFERENCES cnatreeelement (dbid);
 DROP TABLE person;
@@ -109,4 +105,4 @@ DROP TABLE verantwortlichestelle;
 
 DROP TABLE verarbeitungsangaben;
 
-UPDATE cnatreeelement SET dbversion='0.96' WHERE object_type='bsimodel';
+UPDATE cnatreeelement SET dbversion=0.96 WHERE object_type='bsimodel';
