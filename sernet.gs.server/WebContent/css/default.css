@@ -6,20 +6,36 @@ body {
 div.selectDiv {
 	height: 35px;
 	overflow: auto;
+	border: solid;
+	border-width: 1px;
+	border-color: #aaaaaa;
 }
 
 div.tableDiv {
 	height: 400px;
 	overflow: auto;
+	border: solid;
+	border-width: 1px;
+	border-color: #aaaaaa;
 }
 
 div.editDiv {
-	height: 90px;
+	height: 120px;
 	overflow: auto;
+	border: solid;
+	border-width: 1px;
+	border-color: #aaaaaa;
 }
 .oddRow {
-	background-color:  #FAEAEE;
+	background-color:  #FFEFF5;
 }
 .selectedRow {
 	background-color:  #FDFFC5;
+}
+.formLabel {
+	width: 110px;
+	text-align: right;
+}
+.formElement {
+	width: 177px;
 }
