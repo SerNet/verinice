@@ -21,12 +21,16 @@
 
 package sernet.gs.web;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.convert.Converter;
 
 import org.apache.log4j.Logger;
+import org.openfaces.util.FacesUtil;
 
 import sernet.gs.server.RuntimeLogger;
 import sernet.gs.server.ServerInitializer;
@@ -56,6 +60,8 @@ public class ToDoBean {
 	
 	ITVerbund selectedItVerbund;
 	
+	String selectedItVerbundTitel;
+	
 	List<TodoViewItem> todoList;
 	
 	TodoViewItem selectedItem;
@@ -66,12 +72,22 @@ public class ToDoBean {
 	
 	Converter itVerbundConverter = new ItVerbundConverter(this);
 	
-	List<String> umsetzungList;
+	List<String> executionList;
 	
+	boolean executionNo = true;
+	boolean executionYes = false;
+	boolean executionPartly = true;
+	boolean executionDispensable = false;					    
+	boolean executionUntreated = true;
 	
+	boolean sealA = true;
+	boolean sealB = true;
+	boolean sealC = true;
+	boolean sealZ = true;
+		
 	public ToDoBean() {
 		super();
-		umsetzungList = Arrays.asList(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH,MassnahmenUmsetzung.P_UMSETZUNG_JA,MassnahmenUmsetzung.P_UMSETZUNG_NEIN,MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE,MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET);
+		executionList = Arrays.asList(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH,MassnahmenUmsetzung.P_UMSETZUNG_JA,MassnahmenUmsetzung.P_UMSETZUNG_NEIN,MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE,MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET);
 		loadItVerbundList();
 	}
 	
@@ -88,11 +104,16 @@ public class ToDoBean {
 	}
 
 	public void loadToDoList() {
+		setSelectedItVerbund((ITVerbund) itVerbundConverter.getAsObject(null, null, getSelectedItVerbundTitel()));
+		setSelectedItem(null);
+		setMassnahmeUmsetzung(null);
 		Integer itVerbundId = (getSelectedItVerbund()==null) ? null : getSelectedItVerbund().getDbId();
 		if(itVerbundId!=null) {
 			ServerInitializer.inheritVeriniceContextState();
 			ICommandService service = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 			FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(itVerbundId);
+			command.setExecutionSet(createExecutionSet());
+			command.setSealSet(createSealSet());
 			try {
 				service.executeCommand(command);
 				setTodoList(command.getAll());
@@ -103,6 +124,44 @@ public class ToDoBean {
 		}
 	}
 	
+	private Set<String> createExecutionSet() {
+		Set<String> executionSet = new HashSet<String>(5);
+		if(isExecutionDispensable()) {
+			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
+		}
+		if(isExecutionNo()) {
+			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_NEIN);
+		}
+		if(isExecutionPartly()) {
+			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE);
+		}
+		if(isExecutionUntreated()) {
+			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET);
+		}
+		if(isExecutionYes()) {
+			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_JA);
+		}
+		return executionSet;
+	}
+	
+	private Set<String> createSealSet() {
+		Set<String> sealSet = new HashSet<String>(4);
+		if(isSealA()) {
+			sealSet.add("A");
+		}
+		if(isSealB()) {
+			sealSet.add("B");
+		}
+		if(isSealC()) {
+			sealSet.add("C");
+		}
+		if(isSealZ()) {
+			sealSet.add("Z");
+		}
+		
+		return sealSet;
+	}
+
 	public void loadToDo() {
 		LOG.debug("loadToDo");
 		ServerInitializer.inheritVeriniceContextState();
@@ -166,6 +225,14 @@ public class ToDoBean {
 		return selectedItVerbund;
 	}
 
+	public String getSelectedItVerbundTitel() {
+		return selectedItVerbundTitel;
+	}
+
+	public void setSelectedItVerbundTitel(String selectedItVerbundId) {
+		this.selectedItVerbundTitel = selectedItVerbundId;
+	}
+
 	public String getUmsetzung() {
 		String umsetzung = null;
 		if(getMassnahmeUmsetzung()!=null) {
@@ -178,6 +245,22 @@ public class ToDoBean {
 		if(getMassnahmeUmsetzung()!=null) {
 			getMassnahmeUmsetzung().setUmsetzung(umsetzung);
 		}
+	}
+	
+	public int getToDoListSize() {
+		return getTodoList().size();
+	}
+	
+	public TodoViewItem getItemById() {
+		TodoViewItem result = null;
+		int dbId = ((Integer)FacesUtil.getRequestMapValue("rowKey")).intValue();
+		for (TodoViewItem item : getTodoList()) {
+			if(item.getdbId()==dbId) {
+				result = item;
+				break;
+			}
+		}
+		return result;
 	}
 	
 	public List<TodoViewItem> getTodoList() {
@@ -220,12 +303,84 @@ public class ToDoBean {
 		this.itVerbundConverter = itVerbundConverter;
 	}
 
-	public List<String> getUmsetzungList() {
-		return umsetzungList;
+	public List<String> getExecutionList() {
+		return executionList;
 	}
 
-	public void setUmsetzungList(List<String> umsetzungList) {
-		this.umsetzungList = umsetzungList;
+	public void setExecutionList(List<String> umsetzungList) {
+		this.executionList = umsetzungList;
+	}
+
+	public boolean isExecutionNo() {
+		return executionNo;
+	}
+
+	public void setExecutionNo(boolean executionNo) {
+		this.executionNo = executionNo;
+	}
+
+	public boolean isExecutionYes() {
+		return executionYes;
+	}
+
+	public void setExecutionYes(boolean executionYes) {
+		this.executionYes = executionYes;
+	}
+
+	public boolean isExecutionPartly() {
+		return executionPartly;
+	}
+
+	public void setExecutionPartly(boolean executionPartly) {
+		this.executionPartly = executionPartly;
+	}
+
+	public boolean isExecutionDispensable() {
+		return executionDispensable;
+	}
+
+	public void setExecutionDispensable(boolean executionDispensable) {
+		this.executionDispensable = executionDispensable;
+	}
+
+	public boolean isExecutionUntreated() {
+		return executionUntreated;
+	}
+
+	public void setExecutionUntreated(boolean executionUntreated) {
+		this.executionUntreated = executionUntreated;
+	}
+
+	public boolean isSealA() {
+		return sealA;
+	}
+
+	public void setSealA(boolean sealA) {
+		this.sealA = sealA;
+	}
+
+	public boolean isSealB() {
+		return sealB;
+	}
+
+	public void setSealB(boolean sealB) {
+		this.sealB = sealB;
+	}
+
+	public boolean isSealC() {
+		return sealC;
+	}
+
+	public void setSealC(boolean sealC) {
+		this.sealC = sealC;
+	}
+
+	public boolean isSealZ() {
+		return sealZ;
+	}
+
+	public void setSealZ(boolean sealZ) {
+		this.sealZ = sealZ;
 	}
 
 	public int getSize() {
