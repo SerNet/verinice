@@ -44,6 +44,7 @@ import sernet.gs.ui.rcp.main.bsi.views.TodoView;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
@@ -69,6 +70,10 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 	private Integer itverbundDbId = null;
 
 	private Integer massnahmeId = null;
+	
+	private Set<String> executionSet;
+	
+	private Set<String> sealSet;
 	
 	@SuppressWarnings("serial")
 	private class FindMassnahmenForITVerbundCallback implements
@@ -145,32 +150,39 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 //			log.debug("Processing Massnahme: " + count);
 //			hydrate(mn);
 			
-			TodoViewItem item = new TodoViewItem();
-
-			if (mn.getParent() instanceof GefaehrdungsUmsetzung)
-				item.setParentTitle( // risikoanalyse.getparent()
-						mn.getParent().getParent().getParent().getTitel());
-			else
-				item.setParentTitle(
-						mn.getParent().getParent().getTitel());
+			String umsetzung = mn.getUmsetzung();
+			String siegelStufe = String.valueOf(mn.getStufe());
 			
-			item.setTitel(mn.getTitel());
-			item.setUmsetzung(mn.getUmsetzung());
-			item.setUmsetzungBis(mn.getUmsetzungBis());
-			item.setNaechsteRevision(mn.getNaechsteRevision());
-			item.setRevisionDurch(mn.getRevisionDurch());
+			if((getExecutionSet()==null || getExecutionSet().contains(umsetzung)) &&
+			   (getSealSet()==null || getSealSet().contains(siegelStufe))) {
 			
-			item.setStufe(mn.getStufe());
-			item.setUrl(mn.getUrl());
-			item.setStand(mn.getStand());
-			item.setDbId(mn.getDbId());
-			
-			if (mn.getUmsetzungDurch() != null && mn.getUmsetzungDurch().length()>0) {
-				item.setUmsetzungDurch(mn.getUmsetzungDurch());
-				all.add(item);
-			}
-			else {
-				unresolvedItems.add(new UnresolvedItem(item, mn.getDbId()));
+				TodoViewItem item = new TodoViewItem();
+	
+				if (mn.getParent() instanceof GefaehrdungsUmsetzung)
+					item.setParentTitle( // risikoanalyse.getparent()
+							mn.getParent().getParent().getParent().getTitel());
+				else
+					item.setParentTitle(
+							mn.getParent().getParent().getTitel());
+				
+				item.setTitel(mn.getTitel());
+				item.setUmsetzung(umsetzung);
+				item.setUmsetzungBis(mn.getUmsetzungBis());
+				item.setNaechsteRevision(mn.getNaechsteRevision());
+				item.setRevisionDurch(mn.getRevisionDurch());
+				
+				item.setStufe(siegelStufe.charAt(0));
+				item.setUrl(mn.getUrl());
+				item.setStand(mn.getStand());
+				item.setDbId(mn.getDbId());
+				
+				if (mn.getUmsetzungDurch() != null && mn.getUmsetzungDurch().length()>0) {
+					item.setUmsetzungDurch(mn.getUmsetzungDurch());
+					all.add(item);
+				}
+				else {
+					unresolvedItems.add(new UnresolvedItem(item, mn.getDbId()));
+				}
 			}
 			
 			
@@ -215,6 +227,22 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 
 	public List<TodoViewItem> getAll() {
 		return all;
+	}
+
+	public Set<String> getExecutionSet() {
+		return executionSet;
+	}
+
+	public void setExecutionSet(Set<String> umsetzungSet) {
+		this.executionSet = umsetzungSet;
+	}
+
+	public Set<String> getSealSet() {
+		return sealSet;
+	}
+
+	public void setSealSet(Set<String> sealSet) {
+		this.sealSet = sealSet;
 	}
 
 }
