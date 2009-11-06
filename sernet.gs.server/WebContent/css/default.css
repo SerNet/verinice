@@ -1,41 +1,14 @@
-body {
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: small;
+input.submit {
+	margin-top:1em;
 }
-
-div.selectDiv {
-	height: 35px;
-	overflow: auto;
-	border: solid;
-	border-width: 1px;
-	border-color: #aaaaaa;
-}
-
-div.tableDiv {
-	height: 400px;
-	overflow: auto;
-	border: solid;
-	border-width: 1px;
-	border-color: #aaaaaa;
-}
-
-div.editDiv {
-	height: 120px;
-	overflow: auto;
-	border: solid;
-	border-width: 1px;
-	border-color: #aaaaaa;
+.mainMenu ul li a.selected {
+	background-color:#c7242a;
+	color:#ffffff;
 }
 .oddRow {
-	background-color:  #FFEFF5;
+	background-color:#fff8fa;
 }
-.selectedRow {
-	background-color:  #FDFFC5;
-}
-.formLabel {
-	width: 110px;
-	text-align: right;
-}
-.formElement {
-	width: 177px;
+.selected {
+	background-color:#c7242a;
+	color:#ffffff;
 }

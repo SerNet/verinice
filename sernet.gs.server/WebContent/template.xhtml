@@ -1,40 +1,59 @@
- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<title>verinice - ToDoList</title>
-		<link href="/veriniceserver/css/default.css" rel="stylesheet" type="text/css"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+		<!-- 
+		YAML - Yet Another Multicolumn Layout, Version 4.5.0
+		-->
+		
+		<link rel="stylesheet" type="text/css" href="/veriniceserver/css/default.css" />
+		<link rel="stylesheet" type="text/css" href="/veriniceserver/portal.verinice.private/typo3temp/stylesheet_e99aac0be0.css" />
+		
+		<script type="text/javascript" src="/veriniceserver/portal.verinice.private/fileadmin/scripts/cookies.js"></script>
+		<script type="text/javascript" src="/veriniceserver/portal.verinice.private/fileadmin/scripts/efa_fontsize.js"></script>
+		
+		<link href="/veriniceserver/portal.verinice.private/fileadmin/css/layout_2col_left_vlines.css" rel="stylesheet" type="text/css" />
+		<!--[if lte IE 7]>
+		<link href="/veriniceserver/portal.verinice.private/fileadmin/template/../css/explorer/iehacks_2col_left_vlines.css" rel="stylesheet" type="text/css" />
+		<![endif]-->
+	
+		<title>verinice Server: Verinice - Open Source ISMS Tool</title>
+		<script type="text/javascript" src="/veriniceserver/portal.verinice.private/typo3temp/javascript_8d985c2683.js"></script>
+	
 	</head>
-
 	<body>
-		<table class="layout">
-			<tr>
-				<td>
-					<ui:insert name="header">
-						<ui:include src="/header.xhtml"/>
-					</ui:insert>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<ui:insert name="navigation">
-						<ui:include src="/navigation.xhtml"/>
-					</ui:insert>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<ui:insert name="content">Default content</ui:insert>
-				</td>
-			</tr>
-			<tr>
-		  		<td>
-					<ui:insert name="footer">
-						<ui:include src="/footer.xhtml"/>
-					</ui:insert>
-				</td>
-			</tr>
-		</table>
+	
+		<script type="text/javascript">if (efa_fontSize) efa_fontSize.efaInit();</script>
+		<div id="page_margins"><!--###page_margins### begin -->
+		<div id="page" class="hold_floats"><!--###page### begin -->
+		
+		<ui:insert name="header">
+			<ui:include src="/header.xhtml"/>
+		</ui:insert>
+		
+		<!-- #nav: Hauptnavigation -->
+		<ui:insert name="navigation">
+			<ui:include src="/navigation.xhtml"/>
+		</ui:insert>
+		<!-- #nav: - Ende -->
+		
+		<!-- #main: Beginn Inhaltsbereich -->
+		<ui:insert name="content">Default content</ui:insert>
+		<!-- #main: - Ende -->
+		
+		<!-- #footer: Beginn Fusszeile -->
+		<ui:insert name="footer">
+			<ui:include src="/footer.xhtml"/>
+		</ui:insert>
+		<!-- #footer: Ende -->
+		<!--###page### end --></div>
+		<!--###page_margins### end --></div>
+	
 	</body>
 </html>
