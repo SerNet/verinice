@@ -30,7 +30,6 @@ import java.util.Set;
 import javax.faces.convert.Converter;
 
 import org.apache.log4j.Logger;
-import org.openfaces.util.FacesUtil;
 
 import sernet.gs.server.RuntimeLogger;
 import sernet.gs.server.ServerInitializer;
@@ -249,18 +248,6 @@ public class ToDoBean {
 	
 	public int getToDoListSize() {
 		return getTodoList().size();
-	}
-	
-	public TodoViewItem getItemById() {
-		TodoViewItem result = null;
-		int dbId = ((Integer)FacesUtil.getRequestMapValue("rowKey")).intValue();
-		for (TodoViewItem item : getTodoList()) {
-			if(item.getdbId()==dbId) {
-				result = item;
-				break;
-			}
-		}
-		return result;
 	}
 	
 	public List<TodoViewItem> getTodoList() {
