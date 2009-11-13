@@ -11,4 +11,45 @@ input.submit {
 .selected {
 	background-color:#c7242a;
 	color:#ffffff;
+	font-weight: bold;
+}
+.floatbox ul {
+	border-left:1px solid #DDDDDD;
+	list-style-type:none;
+	margin:0;
+	padding-left: 3px;
+	overflow:hidden;
+}
+.floatbox ul a {
+	display:block;
+	text-decoration:none;
+}
+.floatbox ul li {
+	margin-left: 0px;
+	padding-bottom: 0px;
+}
+.floatbox ul li a.selected {
+	background-color:#C7242A;
+	color:#FFFFFF;
+}
+.floatbox ul li a {
+	background-color:#FFFFFF;
+	border-bottom:1px solid #EEEEEE;
+	color:#444444;
+	padding:3px 0 3px;
+	width:100%;
+}
+.floatbox ul li a:hover {
+	background-color:#C7242A;
+	color:#FFFFFF;
+}
+.rich-tab-inactive {
+    cursor: pointer;
+}
+.rich-tabpanel-content {
+    border-width: 1px 1px 1px 1px;
+    background-color: transparent;
+}
+.rich-tab-bottom-line table {
+	margin-bottom: 0;
 }

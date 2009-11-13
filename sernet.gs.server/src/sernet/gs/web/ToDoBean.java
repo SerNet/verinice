@@ -24,27 +24,29 @@ package sernet.gs.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.faces.convert.Converter;
 
 import org.apache.log4j.Logger;
+import org.richfaces.component.html.HtmlExtendedDataTable;
+import org.richfaces.model.selection.Selection;
+import org.richfaces.model.selection.SimpleSelection;
 
-import sernet.gs.server.RuntimeLogger;
 import sernet.gs.server.ServerInitializer;
-import sernet.gs.ui.rcp.main.bsi.model.IMassnahmeUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityId;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
+import sernet.gs.ui.rcp.main.service.taskcommands.LoadChildrenAndMassnahmen;
 import sernet.hui.common.VeriniceContext;
 
 /**
@@ -55,13 +57,31 @@ public class ToDoBean {
 
 	final static Logger LOG = Logger.getLogger(ToDoBean.class);
 	
+	final static int SOURCE_VERBUND = 1;
+	
+	final static int SOURCE_ELEMENT = 2;
+	
 	List<ITVerbund> itVerbundList;
+	
+	private Selection selection = new SimpleSelection(); 
+	
+	private HtmlExtendedDataTable table;
 	
 	ITVerbund selectedItVerbund;
 	
 	String selectedItVerbundTitel;
 	
-	List<TodoViewItem> todoList;
+	Integer selectedElementId;
+	
+	List<TodoViewItem> todoList = new ArrayList<TodoViewItem>();
+	
+	private List<CnATreeElement> gebaeudeList = new ArrayList<CnATreeElement>(10);
+	private List<CnATreeElement> raumList = new ArrayList<CnATreeElement>(10);
+	private List<CnATreeElement> clienteList = new ArrayList<CnATreeElement>(10);
+	private List<CnATreeElement> serverList = new ArrayList<CnATreeElement>(10);
+	private List<CnATreeElement> netzList = new ArrayList<CnATreeElement>(10);
+	private List<CnATreeElement> anwendungList = new ArrayList<CnATreeElement>(10);
+	private List<CnATreeElement> personList = new ArrayList<CnATreeElement>(10);
 	
 	TodoViewItem selectedItem;
 	
@@ -101,25 +121,46 @@ public class ToDoBean {
 			LOG.error("Error while loading IT-Verbuende", e);
 		}	
 	}
+	
+	public void loadToDoListForVerbund() {
+		loadToDoList(SOURCE_VERBUND);
+	}
+	
+	public void loadToDoListForElement() {
+		loadToDoList(SOURCE_ELEMENT);
+	}
 
-	public void loadToDoList() {
+	public void loadToDoList(int source) {
 		setSelectedItVerbund((ITVerbund) itVerbundConverter.getAsObject(null, null, getSelectedItVerbundTitel()));
 		setSelectedItem(null);
 		setMassnahmeUmsetzung(null);
 		Integer itVerbundId = (getSelectedItVerbund()==null) ? null : getSelectedItVerbund().getDbId();
-		if(itVerbundId!=null) {
+		if(itVerbundId!=null || selectedElementId!=null) {
 			ServerInitializer.inheritVeriniceContextState();
 			ICommandService service = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
-			FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(itVerbundId);
+			int id = (SOURCE_VERBUND==source) ? itVerbundId : selectedElementId;
+			LoadChildrenAndMassnahmen command = new LoadChildrenAndMassnahmen(id);
 			command.setExecutionSet(createExecutionSet());
 			command.setSealSet(createSealSet());
 			try {
 				service.executeCommand(command);
-				setTodoList(command.getAll());
+				getTodoList().clear();
+				getTodoList().addAll(command.getMassnahmen());
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("ToDo List size: " + getToDoListSize());
+				}
+				if(SOURCE_VERBUND==source) {
+					setAnwendungList(command.getAnwendungList());
+					setClienteList(command.getClienteList());
+					setGebaeudeList(command.getGebaeudeList());
+					setNetzList(command.getNetzList());
+					setPersonList(command.getPersonList());
+					setRaumList(command.getRaumList());
+					setServerList(command.getServerList());
+				}
 			} catch (CommandException e) {
 				LOG.error("Error while loading todos for id: " + itVerbundId, e);
 			}
-			setTodoList(command.getAll());
 		}
 	}
 	
@@ -164,6 +205,15 @@ public class ToDoBean {
 	public void loadToDo() {
 		LOG.debug("loadToDo");
 		ServerInitializer.inheritVeriniceContextState();
+		Iterator<Object> iterator = getSelection().getKeys();
+        while (iterator.hasNext()) {
+            Object key = iterator.next();
+            table.setRowKey(key);
+            if (table.isRowAvailable()) {
+                setSelectedItem( (TodoViewItem) table.getRowData());
+            }
+        }
+
 		ICommandService service = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 		if(getSelectedItem()!=null) {
 			int massnahmeId = getSelectedItem().getdbId();
@@ -198,7 +248,7 @@ public class ToDoBean {
 				if(LOG.isDebugEnabled()) {
 					LOG.debug("Massnahme saved, id: " + getMassnahmeUmsetzung().getDbId());
 				}
-				loadToDoList();
+				loadToDoListForElement();
 			} catch (CommandException e) {
 				LOG.error("Error while saving massnahme: " + getMassnahmeUmsetzung().getDbId(), e);
 			}		
@@ -216,6 +266,24 @@ public class ToDoBean {
 		return itVerbundList;
 	}
 
+	public Selection getSelection()
+    {
+        return selection;
+    }
+
+    public void setSelection(Selection selection)
+    {
+        this.selection = selection;
+    } 
+    
+    public void setTable(HtmlExtendedDataTable table) {
+        this.table = table;
+    }
+
+    public HtmlExtendedDataTable getTable() {
+        return table;
+    }
+	
 	public void setSelectedItVerbund(ITVerbund selectedItVerbund) {
 		this.selectedItVerbund = selectedItVerbund;
 	}
@@ -230,6 +298,14 @@ public class ToDoBean {
 
 	public void setSelectedItVerbundTitel(String selectedItVerbundId) {
 		this.selectedItVerbundTitel = selectedItVerbundId;
+	}
+
+	public Integer getSelectedElementId() {
+		return selectedElementId;
+	}
+
+	public void setSelectedElementId(Integer selectedElementId) {
+		this.selectedElementId = selectedElementId;
 	}
 
 	public String getUmsetzung() {
@@ -258,6 +334,62 @@ public class ToDoBean {
 		this.todoList = todoList;
 	}
 	
+	public List<CnATreeElement> getGebaeudeList() {
+		return gebaeudeList;
+	}
+
+	public void setGebaeudeList(List<CnATreeElement> gebaeudeList) {
+		this.gebaeudeList = gebaeudeList;
+	}
+
+	public List<CnATreeElement> getRaumList() {
+		return raumList;
+	}
+
+	public void setRaumList(List<CnATreeElement> raumList) {
+		this.raumList = raumList;
+	}
+
+	public List<CnATreeElement> getClienteList() {
+		return clienteList;
+	}
+
+	public void setClienteList(List<CnATreeElement> clienteList) {
+		this.clienteList = clienteList;
+	}
+
+	public List<CnATreeElement> getServerList() {
+		return serverList;
+	}
+
+	public void setServerList(List<CnATreeElement> serverList) {
+		this.serverList = serverList;
+	}
+
+	public List<CnATreeElement> getNetzList() {
+		return netzList;
+	}
+
+	public void setNetzList(List<CnATreeElement> netzList) {
+		this.netzList = netzList;
+	}
+
+	public List<CnATreeElement> getAnwendungList() {
+		return anwendungList;
+	}
+
+	public void setAnwendungList(List<CnATreeElement> anwendungList) {
+		this.anwendungList = anwendungList;
+	}
+
+	public List<CnATreeElement> getPersonList() {
+		return personList;
+	}
+
+	public void setPersonList(List<CnATreeElement> personList) {
+		this.personList = personList;
+	}
+
 	public TodoViewItem getSelectedItem() {
 		return selectedItem;
 	}
@@ -267,6 +399,7 @@ public class ToDoBean {
 	}
 
 	public MassnahmenUmsetzung getMassnahmeUmsetzung() {
+		ServerInitializer.inheritVeriniceContextState();
 		return massnahmeUmsetzung;
 	}
 

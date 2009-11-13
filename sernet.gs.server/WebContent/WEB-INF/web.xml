@@ -41,6 +41,10 @@
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
 		<param-value>.xhtml</param-value>
 	</context-param>
+	<context-param>
+	    <param-name>org.richfaces.CONTROL_SKINNING</param-name>
+	    <param-value>enable</param-value>
+	</context-param>
 	<!-- Webclient conf end -->
     
 	<filter>
