@@ -124,24 +124,23 @@ public class FindURLs extends GenericCommand {
 
 		public Object doInHibernate(Session session) throws HibernateException,
 				SQLException {
+			
 			/**
 			 * Retrieves the property elements which are URLs along with
 			 * the CnATreeElement id that uses it.
 			 */
-			 Query query = session.createSQLQuery(
-					"select p.propertyValue, e.dbid "
-							+ "from properties p, entity e "
-							+ "where p.propertytype in (:types) "
-							+ "and p.propertyvalue != '' "
-							+ "and p.parent = e.dbid ")
-					.addScalar("propertyvalue", Hibernate.STRING)
-					.addScalar("dbid", Hibernate.INTEGER)
-					.setParameterList("types", types, Hibernate.STRING);
-							
-			 if (log.isDebugEnabled())
-				 log.debug("created statement: " + query.getQueryString());
+			StringBuilder sb = new StringBuilder();
+			sb.append("SELECT p.propertyValue,pl.entityId FROM PropertyList as pl INNER JOIN pl.properties as p ");
+			sb.append("WHERE p.propertyType IN (:types) ");
+			sb.append("AND p.propertyValue != '')");
+			final String hql = sb.toString();
+			if (log.isDebugEnabled()) {
+				log.debug("hql: " + hql);
+			}
+			Query hqlQuery = session.createQuery(hql);
+			hqlQuery.setParameterList("types", types, Hibernate.STRING);
 
-			return query.list();
+			return hqlQuery.list();
 		}
 
 	}
