@@ -6,5 +6,8 @@
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/gnumail-1.1.2.jar" sourcepath="sernet.gs.serversrc.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.6.0_16"/>
 	<classpathentry kind="lib" path="lib/jsf-api-1.2_12.jar"/>
+	<classpathentry kind="lib" path="lib/richfaces-api-3.3.2.SR1.jar"/>
+	<classpathentry kind="lib" path="lib/richfaces-ui-3.3.2.SR1.jar"/>
+	<classpathentry kind="lib" path="lib/richfaces-impl-3.3.2.SR1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
