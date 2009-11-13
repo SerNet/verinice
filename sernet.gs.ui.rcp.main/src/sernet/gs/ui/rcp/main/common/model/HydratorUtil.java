@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 
 /**
@@ -57,7 +58,12 @@ public class HydratorUtil {
 		Set<Entry<String, PropertyList>> entrySet = lists.entrySet();
 		for (Entry<String, PropertyList> entry : entrySet) {
 			PropertyList list = entry.getValue();
-			dao.initialize(list.getProperties());
+			List<Property> propertyList = list.getProperties();
+			dao.initialize(propertyList);
+			//set the parent in the property since it is not mapped by hibernate anymore
+			for (Property property : propertyList) {
+				property.setParent(entity);
+			}
 		}
 	}
 	
