@@ -21,6 +21,12 @@
 		<discriminator column="OBJECT_TYPE" type="string"/>	
 		
 		<property
+			name="objectType"
+			column="OBJECT_TYPE"
+			insert="false"
+			update="false"/>
+		
+		<property
 			name="uuid"
 			not-null="true"
 			unique="true"
@@ -255,7 +261,7 @@
 	-->	
   	<filter
   		name="userAccessReadFilter"
-  		condition="exists (select p.dbid from permission p where p.cte_id = dbId and p.role in (:currentRoles) and p.readAllowed = :readAllowed )"
+  		condition="(object_type='bsimodel' or exists (select p.dbid from permission p where p.cte_id = dbId and p.role in (:currentRoles) and p.readAllowed = :readAllowed))"
  	/>
 
 	</class>
