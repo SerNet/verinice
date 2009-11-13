@@ -62,18 +62,18 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		RetrieveInfo ri = new RetrieveInfo();
 		ri.setChildren(true).setChildrenProperties(true).setProperties(true).setLinksDown(true);
 		parent = dao.retrieve(dbId,ri);
-		
-		hydrate(parent);
-		
-		if (log.isDebugEnabled() && !filteredClasses.isEmpty())
-			log.debug("Skipping the following model classes: " + filteredClasses);
-		
-		Set<CnATreeElement> children = parent.getChildren();
-		for (CnATreeElement child : children) {
-			if (!filteredClasses.contains(child.getClass()))
-				hydrate(child);
+		if(parent!=null) {
+			hydrate(parent);
+			
+			if (log.isDebugEnabled() && !filteredClasses.isEmpty())
+				log.debug("Skipping the following model classes: " + filteredClasses);
+			
+			Set<CnATreeElement> children = parent.getChildren();
+			for (CnATreeElement child : children) {
+				if (!filteredClasses.contains(child.getClass()))
+					hydrate(child);
+			}
 		}
-		
 	}
 
 	private void hydrate(CnATreeElement element) {
