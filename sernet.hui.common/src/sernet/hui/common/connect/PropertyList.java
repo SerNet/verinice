@@ -34,6 +34,8 @@ public class PropertyList implements Serializable  {
 	
 	private Integer dbId;
 	
+	private Integer entityId;
+	
 	private String uuid;
 	
 	
@@ -94,6 +96,14 @@ public class PropertyList implements Serializable  {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	public Integer getEntityId() {
+		return entityId;
+	}
+
+	public void setEntityId(Integer entityId) {
+		this.entityId = entityId;
 	}
 
 }
