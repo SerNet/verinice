@@ -119,7 +119,6 @@ public class SchemaCreator implements InitializingBean {
 			dbVersion = (Double) jdbcTemplate.queryForObject(SQL_GETDBVERSION_PRE_096, Double.class);
 		} catch (Exception e) {
 			log.info("Can not determine db-version. Maybe database version is >0.95.");
-			log.debug("cause: ", e);
 		}
 		
 		try {
