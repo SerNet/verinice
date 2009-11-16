@@ -1,4 +1,6 @@
-last modified: 2009-08-11 Robert Schuster <r.schuster@tarent.de>
+# 2009-08-11 Robert Schuster <r.schuster@tarent.de>
+# 2009-11-09 akoderman added instructions for JSF, workaround for additional
+#       plugin folder and Tomcat6
 
 (not yet finished)
 
@@ -83,6 +85,9 @@ Eclipse IDE:
     - add a new target platform
     - specify 'eclipse-3.4.1-rcp-sdk/eclipse/plugins' and 'additional' as
       directories to look for plugins
+    - (the additional folder seems to make the PDE builder unstable, so instead
+      you can just copy the contents of the "additional" folder into the
+      rcp-sdk folder!
   - open all projects, do a refresh on all projects
   - if eclipse mentions problems with the compiler level, follow the quick
     fix to set the version to 1.5
@@ -92,8 +97,9 @@ Eclipse IDE:
    'PDE Tools/Update classpath ...'.
   - open the 'Servers' view (Window/Show View/Others...)
     - do a right-click and chose 'New/Server'
-    - chose Tomcat 5.5
+    - chose Tomcat 6
     - add the sernet.gs.sever project
+    - copy lib/jsf-additional/*.jar into tomcat/lib
   - download the catalogues IT-Grundschutz and the Datenschutzbaustein
     and place both files into the WebContent/WEB-INF directory of the
     sernet.gs.server project (do a refresh in Eclipse for that project)
