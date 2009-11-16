@@ -56,7 +56,6 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 		allLinks: for (CnALink link : sbTarget.getLinksUp()) {
 			CnATreeElement upwardElmt = link.getDependant();
 			if (upwardElmt.isSchutzbedarfProvider()) {
-
 				// upwardElement might depend on maximum level itself, so
 				// recurse up:
 				upwardElmt.getLinkChangeListener().determineIntegritaet(ta);
@@ -65,8 +64,6 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 						.getIntegritaet();
 				if (value > highestValue)
 					highestValue = value;
-				if (highestValue == Schutzbedarf.SEHRHOCH)
-					break allLinks;
 			}
 		}
 		
@@ -84,10 +81,6 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 	 */
 	private boolean hasBeenVisited(CascadingTransaction ta) {
 		if (ta.hasBeenVisited(sbTarget)) {
-			Logger
-					.getLogger(this.getClass())
-					.debug(
-							"Skipping object " + ((CnATreeElement) ta.getLoopedObject()).getTitel()); //$NON-NLS-1$
 			return true; // we have already been down this path
 		}
 		return false;
@@ -114,8 +107,6 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 						.getVerfuegbarkeit();
 				if (value > highestValue)
 					highestValue = value;
-				if (highestValue == Schutzbedarf.SEHRHOCH)
-					break allLinks;
 			}
 		}
 
@@ -148,8 +139,6 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 						.getVertraulichkeit();
 				if (value > highestValue)
 					highestValue = value;
-				if (highestValue == Schutzbedarf.SEHRHOCH)
-					break allLinks;
 			}
 		}
 		// if we dont use the maximum principle, keep current level:
