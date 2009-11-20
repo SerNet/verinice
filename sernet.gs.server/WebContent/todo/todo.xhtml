@@ -24,7 +24,7 @@
 					<div class="mainMenu">
 						<h:form id="verbundForm">
 							<ul>
-						  		<o:forEach id="itVerbundList" items="#{toDo.itVerbundList}" var="itVerbund">
+								<o:forEach id="itVerbundList" items="#{toDo.itVerbundList}" var="itVerbund">
 						  			<li>
 								  		<a4j:commandLink 
 								  			value="#{itVerbund.titel}" 
@@ -34,10 +34,12 @@
 								            <a4j:actionparam name="itVerbundTitel" value="#{itVerbund.titel}" assignTo="#{toDo.selectedItVerbundTitel}"/>
 								        </a4j:commandLink>
 								    </li>
-							    </o:forEach>
+								</o:forEach>
 							</ul>
 							<h1>Umsetzung</h1>
 							<ul>
+								<!-- Grundschutz -->
+								<!--
 					  			<li>
 							  		<o:selectBooleanCheckbox id="executionNo" value="#{toDo.executionNo}" />
 							  		<h:outputLabel for="executionNo" value="Nein"/>
@@ -54,10 +56,34 @@
 								    <o:selectBooleanCheckbox id="executionDispensable" value="#{toDo.executionDispensable}" />
 							  		<h:outputLabel for="executionDispensable" value="Entbehrlich"/>
 							  	</li>
+							  	-->
 							  	<li>					    
 								    <o:selectBooleanCheckbox id="executionUntreated" value="#{toDo.executionUntreated}" />
 							  		<h:outputLabel for="executionUntreated" value="Unbearbeitet"/>						    
 							    </li>
+							    
+							    					    
+							    <!-- ISO 27001 -->						
+					  			<li>
+							  		<o:selectBooleanCheckbox id="executionPerformed" value="#{toDo.executionPerformed}" />
+							  		<h:outputLabel for="executionPerformed" value="Performed"/>
+							  	</li>
+					  			<li>
+							  		<o:selectBooleanCheckbox id="executionManaged" value="#{toDo.executionManaged}" />
+							  		<h:outputLabel for="executionManaged" value="Managed"/>
+							  	</li>
+					  			<li>
+							  		<o:selectBooleanCheckbox id="executionEstablished" value="#{toDo.executionEstablished}" />
+							  		<h:outputLabel for="executionEstablished" value="Established"/>
+							  	</li>
+					  			<li>
+							  		<o:selectBooleanCheckbox id="executionPredictable" value="#{toDo.executionPredictable}" />
+							  		<h:outputLabel for="executionPredictable" value="Predictable"/>
+							  	</li>
+					  			<li>
+							  		<o:selectBooleanCheckbox id="executionOptimizing" value="#{toDo.executionOptimizing}" />
+							  		<h:outputLabel for="executionOptimizing" value="Optimizing"/>
+							  	</li>	
 							</ul>
 							<h1>Siegelstufe</h1>
 							<ul>
@@ -85,234 +111,256 @@
 			 	<!--###col1### end -->
 			</div>
 			<!-- #col1: - Ende -->
-		
+			
+			<!-- #col2: Zweite Float-Spalte des Inhaltsbereiches -->
+			<div id="col2">
+				<!--###col1### begin -->
+				<div id="col2_content" class="clearfix">
+					<div id="col3_innen" class="floatbox">
+				    	<a id="c86"></a>
+					    <div class="csc-textpic-text">
+				      			<a4j:outputPanel id="editPanel">
+				      				<a4j:outputPanel id="editHeader" rendered="#{toDo.massnahmeUmsetzung!=null}" styleClass="csc-header csc-header-n1">
+					      				<h1 class="csc-firstHeader"><h:outputText value="Massnahme #{toDo.massnahmeUmsetzung.titel}"/></h1>
+					      			</a4j:outputPanel>
+				      				<a4j:form id="editForm" rendered="#{toDo.massnahmeUmsetzung!=null}">		
+										<table>
+											<tr>
+												<td>
+													<h:outputLabel for="umsetzung" value="Umsetzung" styleClass="formLabel"/>
+												</td>
+												<td>
+													<o:dropDownField value="#{toDo.umsetzung}" converter="#{toDo.umsetzungConverter}" style="margin-left:1em;margin-right:1em;width:161px;">
+							  							<o:dropDownItems value="#{toDo.executionList}"/>
+							  						</o:dropDownField>
+												</td>
+												<td>
+													<h:outputLabel for="erlaeuterung" value="Erläuterung" styleClass="formLabel"/>					  					
+												</td>
+												<td rowspan="2">
+													<h:inputTextarea value="#{toDo.massnahmeUmsetzung.erlaeuterung}" style="width:298px;height:50px;"/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<h:outputLabel for="umsetzungBis" value="Umsetzung bis" styleClass="formLabel"/>
+												</td>
+												<td>
+													<rich:calendar id="umsetzungBis" value="#{toDo.massnahmeUmsetzung.umsetzungBis}" timeZone="#{toDo.timeZone}" datePattern="d. MMM. yyyy"  style="width: 130px"/>										
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<h:outputLabel for="submit" value="" />
+												</td>
+												<td>
+													<a4j:commandButton id="submit" value="Speichern" action="#{toDo.save}" reRender="tablePanel" style="margin-top:1em"/>
+												</td>
+											</tr>
+										</table>
+									</a4j:form>
+								</a4j:outputPanel>						
+								<a4j:outputPanel id="tablePanel">
+									<div class="csc-header csc-header-n1">
+					      				<h1 class="csc-firstHeader"><h:outputText value="Massnahmen - #{toDo.selectedItVerbundTitel}"/></h1>
+					      			</div>
+					      			<h:form id="tableForm">
+					      				 <rich:extendedDataTable
+					      				 	id="toDoTable"
+							                value="#{toDo.todoList}" 
+							                var="item"
+							                binding="#{toDo.table}"
+							                width="650"
+							                selectionMode="single"
+							                selection="#{toDo.selection}">
+							                <rich:column id="colUmsetzung"
+					      						sortable="true" 
+					      						sortBy="#{item.umsetzung}"
+							                    width="35px"
+							                    label="Umsetzung">
+							                     <h:graphicImage url="/image/icon/#{item.umsetzungIcon}" />
+							                </rich:column>
+							                <rich:column id="colUmsetzungBis"
+					      						sortable="true" 
+					      						sortBy="#{item.umsetzungBis}"
+							                    width="55px"
+							                    label="bis">
+							                    <f:facet name="header">
+							                        <h:outputText value="bis" />
+							                    </f:facet>
+							                    <h:outputText value="#{item.umsetzungBis}">
+											    	<f:convertDateTime dateStyle="short" type="date" timeZone="#{toDo.timeZone}" />
+											    </h:outputText>
+							                </rich:column>
+							                <rich:column id="colUmsetzungDurch"
+					      						sortable="true" 
+					      						sortBy="#{item.umsetzungDurch}"
+							                    width="95px"
+							                    label="Verantwortlich">
+							                    <f:facet name="header">
+							                        <h:outputText value="Verantwortlich" />
+							                    </f:facet>
+							                    <h:outputText value="#{item.umsetzungDurch}"/>
+							                </rich:column>
+							                <rich:column id="colStufe"
+					      						sortable="true" 
+					      						sortBy="#{item.stufe}"
+							                    width="45px"
+							                    label="Stufe">
+							                    <f:facet name="header">
+							                        <h:outputText value="Stufe" />
+							                    </f:facet>
+							                    <h:outputText value="#{item.stufe}"/>
+							                </rich:column>
+							                <rich:column id="colParentTitle"
+					      						sortable="true" 
+					      						sortBy="#{item.parentTitle}"
+							                    width="160px"
+							                    label="Zielobjekt">
+							                    <f:facet name="header">
+							                        <h:outputText value="Zielobjekt" />
+							                    </f:facet>
+							                    <h:outputText value="#{item.parentTitle}"/>
+							                </rich:column>
+							                <rich:column id="colTitel"
+					      						sortable="true" 
+					      						sortBy="#{item.titel}"
+							                    width="260px"
+							                    label="Titel">
+							                    <f:facet name="header">
+							                        <h:outputText value="Titel" />
+							                    </f:facet>
+							                    <h:outputText value="#{item.titel}"/>
+							                </rich:column>
+					      					 <a4j:support reRender="editPanel"
+							                    action="#{toDo.loadToDo}"
+							                    event="onselectionchange" />
+							            </rich:extendedDataTable>								
+									</h:form>
+								</a4j:outputPanel>
+				      		</div>
+				    	</div>			    
+				    </div>
+				</div>
+			 	<!--###col2### end -->
+			</div>
+			<!-- #col2: - Ende -->
+			
 			<a id="content" name="content"></a> <!-- Skiplink-Anker: Content -->
 			<!-- #col3: Statische Spalte des Inhaltsbereiches -->
 			<div id="col3">
 				<!--###col3### begin -->
 		      	<div id="col3_content" class="clearfix">
 		      		<!--###col3_content### begin -->
-		      		<div id="col3_innen" class="floatbox"><a id="c86"></a>
-			      		<div class="csc-textpic-text">
-			      			<a4j:outputPanel id="editPanel">
-			      				<a4j:outputPanel id="editHeader" rendered="#{toDo.massnahmeUmsetzung!=null}" styleClass="csc-header csc-header-n1">
-				      				<h1 class="csc-firstHeader"><h:outputText value="Massnahme #{toDo.massnahmeUmsetzung.titel}"/></h1>
-				      			</a4j:outputPanel>
-			      				<a4j:form id="editForm" rendered="#{toDo.massnahmeUmsetzung!=null}">		
-									<h:panelGrid id="panel" columns="2">
-										<h:outputLabel for="umsetzung" value="Umsetzung" styleClass="formLabel"/>
-										<o:dropDownField value="#{toDo.umsetzung}" converter="#{toDo.umsetzungConverter}" styleClass="formElement">
-				  							<o:dropDownItems value="#{toDo.executionList}"/>
-				  						</o:dropDownField>					
-										<h:outputLabel for="umsetzungBis" value="Umsetzung bis" styleClass="formLabel"/>
-										<o:dateChooser id="umsetzungBis" value="#{toDo.massnahmeUmsetzung.umsetzungBis}" pattern="EEE, d.M.yyyy" styleClass="formElement"/>
-										<h:outputLabel for="submit" value="" />
-										<a4j:commandButton id="submit" value="Speichern" action="#{toDo.save}" reRender="tablePanel" styleClass="formElement"/>
-									</h:panelGrid>
-								</a4j:form>
-							</a4j:outputPanel>
-							<div class="csc-header csc-header-n1">
-			      				<h1 class="csc-firstHeader">Zielobjekte</h1>
-			      			</div>
-			      			<h:form id="childrenForm">
-			      				<rich:tabPanel id="elementPanel" switchType="ajax">
-			      					<rich:tab id="tabGebaeude" label="Gebäude" rendered="#{not empty toDo.gebaeudeList}">
-			      						<div style="overflow: auto;height: 300px">	      						
-				      						<ul>
-										  		<a4j:repeat id="gebaeudeList" value="#{toDo.gebaeudeList}" var="item">
-										  			<li>
-												  		<a4j:commandLink 
-												  			value="#{item.titel}" 
-												  			action="#{toDo.loadToDoListForElement}" 
-												  			reRender="tablePanel,editPanel,elementPanel" 
-												  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}" >
-												            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
-												        </a4j:commandLink>
-												    </li>
-											    </a4j:repeat>
-											</ul>
-										</div>					
-			      					</rich:tab>
-			      					<rich:tab id="tabRaeume" label="Räume" rendered="#{not empty toDo.raumList}">
-			      						<div style="overflow: auto;height: 300px">
-				      						<ul>
-										  		<a4j:repeat id="raumList" value="#{toDo.raumList}" var="item">
-										  			<li>
-												  		<a4j:commandLink value="#{item.titel}" 
-												  			action="#{toDo.loadToDoListForElement}" 
-												  			reRender="tablePanel,editPanel,elementPanel" 
-												  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
-												            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
-												        </a4j:commandLink>
-												    </li>
-											    </a4j:repeat>
-											</ul>  
-										</div> 						
-			      					</rich:tab>
-			      					<rich:tab label="Clients" rendered="#{not empty toDo.clienteList}">
-			      						<div style="overflow: auto;height: 300px">
-				      						<ul>
-										  		<a4j:repeat id="clienteList" value="#{toDo.clienteList}" var="item">
-										  			<li>
-												  		<a4j:commandLink value="#{item.titel}" 
-												  			action="#{toDo.loadToDoListForElement}"									  			 
-												  			reRender="tablePanel,editPanel,elementPanel" 
-												  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
-												            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
-												        </a4j:commandLink>
-												    </li>
-											    </a4j:repeat>
-											</ul>
-										</div>					
-			      					</rich:tab>
-			      					<rich:tab label="Server" rendered="#{not empty toDo.serverList}">
-			      						<div style="overflow: auto;height: 300px">
-				      						<ul>
-										  		<a4j:repeat id="serverList" value="#{toDo.serverList}" var="item">
-										  			<li>
-												  		<a4j:commandLink value="#{item.titel}" 
-												  			action="#{toDo.loadToDoListForElement}"
-												  			reRender="tablePanel,editPanel,elementPanel" 
-												  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
-												            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
-												        </a4j:commandLink>
-												    </li>
-											    </a4j:repeat>
-											</ul> 
-										</div>   						
-			      					</rich:tab>
-			      					<rich:tab label="Netze" rendered="#{not empty toDo.netzList}">
-			      						<div style="overflow: auto;height: 300px">
-				      						<ul>
-										  		<a4j:repeat id="netzList" value="#{toDo.netzList}" var="item">
-										  			<li>
-												  		<a4j:commandLink value="#{item.titel}" 
-												  			action="#{toDo.loadToDoListForElement}" 
-												  			reRender="tablePanel,editPanel,elementPanel" 
-												  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
-												            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
-												        </a4j:commandLink>
-												    </li>
-											    </a4j:repeat>
-											</ul>    	
-										</div>					
-			      					</rich:tab>
-			      					<rich:tab label="Anwendungen" rendered="#{not empty toDo.anwendungList}">
-			      						<div style="overflow: auto;height: 300px">
-				      						<ul>
-										  		<a4j:repeat id="anwendungList" value="#{toDo.anwendungList}" var="item">
-										  			<li>
-												  		<a4j:commandLink value="#{item.titel}" 
-												  			action="#{toDo.loadToDoListForElement}" 
-												  			reRender="tablePanel,editPanel,elementPanel" 
-												  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
-												            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
-												        </a4j:commandLink>
-												    </li>
-											    </a4j:repeat>
-											</ul>
-										</div>  						
-			      					</rich:tab>
-			      					<rich:tab label="Personen" rendered="#{not empty toDo.personList}">
-			      						<div style="overflow: auto;height: 300px">
-				      						<ul>
-										  		<a4j:repeat id="personList" value="#{toDo.personList}" var="item">
-										  			<li>
-												  		<a4j:commandLink value="#{item.titel}" 
-												  			action="#{toDo.loadToDoListForElement}" 
-												  			reRender="tablePanel,editPanel,elementPanel" 
-												  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
-												            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
-												        </a4j:commandLink>
-												    </li>
-											    </a4j:repeat>
-											</ul>
-										</div>    						
-			      					</rich:tab>
-			      				</rich:tabPanel>
-							</h:form>
-							<a4j:outputPanel id="tablePanel">
-								<div class="csc-header csc-header-n1">
-				      				<h1 class="csc-firstHeader"><h:outputText value="Massnahmen - #{toDo.selectedItVerbundTitel}"/></h1>
-				      			</div>
-				      			<h:form id="tableForm">
-				      				 <rich:extendedDataTable
-				      				 	id="toDoTable"
-						                value="#{toDo.todoList}" 
-						                var="item"
-						                binding="#{toDo.table}"
-						                width="794"
-						                selectionMode="single"
-						                selection="#{toDo.selection}">
-						                <rich:column id="colUmsetzung"
-				      						sortable="true" 
-				      						sortBy="#{item.umsetzung}"
-						                    width="35px"
-						                    label="Umsetzung">
-						                     <h:graphicImage url="/image/icon/#{item.umsetzungIcon}" />
-						                </rich:column>
-						                <rich:column id="colUmsetzungBis"
-				      						sortable="true" 
-				      						sortBy="#{item.umsetzungBis}"
-						                    width="55px"
-						                    label="bis">
-						                    <f:facet name="header">
-						                        <h:outputText value="bis" />
-						                    </f:facet>
-						                    <h:outputText value="#{item.umsetzungBis}">
-										    	<f:convertDateTime dateStyle="short" type="date" />
-										    </h:outputText>
-						                </rich:column>
-						                <rich:column id="colUmsetzungDurch"
-				      						sortable="true" 
-				      						sortBy="#{item.umsetzungDurch}"
-						                    width="95px"
-						                    label="Verantwortlich">
-						                    <f:facet name="header">
-						                        <h:outputText value="Verantwortlich" />
-						                    </f:facet>
-						                    <h:outputText value="#{item.umsetzungDurch}"/>
-						                </rich:column>
-						                <rich:column id="colStufe"
-				      						sortable="true" 
-				      						sortBy="#{item.stufe}"
-						                    width="45px"
-						                    label="Stufe">
-						                    <f:facet name="header">
-						                        <h:outputText value="Stufe" />
-						                    </f:facet>
-						                    <h:outputText value="#{item.stufe}"/>
-						                </rich:column>
-						                <rich:column id="colParentTitle"
-				      						sortable="true" 
-				      						sortBy="#{item.parentTitle}"
-						                    width="200px"
-						                    label="Zielobjekt">
-						                    <f:facet name="header">
-						                        <h:outputText value="Zielobjekt" />
-						                    </f:facet>
-						                    <h:outputText value="#{item.parentTitle}"/>
-						                </rich:column>
-						                <rich:column id="colTitel"
-				      						sortable="true" 
-				      						sortBy="#{item.titel}"
-						                    width="342px"
-						                    label="Titel">
-						                    <f:facet name="header">
-						                        <h:outputText value="Titel" />
-						                    </f:facet>
-						                    <h:outputText value="#{item.titel}"/>
-						                </rich:column>
-				      					 <a4j:support reRender="editPanel"
-						                    action="#{toDo.loadToDo}"
-						                    event="onselectionchange" />
-						            </rich:extendedDataTable>								
-								</h:form>
-							</a4j:outputPanel>
-			      		</div>
-			    	</div>
+		      		<div id="col3_innen" class="floatbox">
+		      			<div class="csc-header csc-header-n1">
+		      				<h1 class="csc-firstHeader">Zielobjekte</h1>
+		      			</div>
+		      			<h:form id="elementsForm">
+			      			<rich:panelBar id="elementPanel" height="500" width="161">
+			      				<rich:panelBarItem label="Gebäude" rendered="#{not empty toDo.gebaeudeList}">
+						        	<ul>
+								 		<a4j:repeat id="gebaeudeList" value="#{toDo.gebaeudeList}" var="item">
+								 			<li>
+										  		<a4j:commandLink 
+										  			value="#{item.titel}" 
+										  			action="#{toDo.loadToDoListForElement}" 
+										  			reRender="tablePanel,editPanel,elementPanel" 
+										  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}" >
+										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
+										        </a4j:commandLink>
+										    </li>
+									    </a4j:repeat>
+									</ul>
+						        </rich:panelBarItem>
+						        <rich:panelBarItem label="Räume" rendered="#{not empty toDo.raumList}">
+						        	<ul>
+								  		<a4j:repeat id="raumList" value="#{toDo.raumList}" var="item">
+								  			<li>
+										  		<a4j:commandLink value="#{item.titel}" 
+										  			action="#{toDo.loadToDoListForElement}" 
+										  			reRender="tablePanel,editPanel,elementPanel" 
+										  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
+										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
+										        </a4j:commandLink>
+										    </li>
+									    </a4j:repeat>
+									</ul>
+						        </rich:panelBarItem>				     					
+						        <rich:panelBarItem  label="Clients" rendered="#{not empty toDo.clienteList}">			      						
+		      						<ul>
+								  		<a4j:repeat id="clienteList" value="#{toDo.clienteList}" var="item">
+								  			<li>
+										  		<a4j:commandLink value="#{item.titel}" 
+										  			action="#{toDo.loadToDoListForElement}"									  			 
+										  			reRender="tablePanel,editPanel,elementPanel" 
+										  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
+										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
+										        </a4j:commandLink>
+										    </li>
+									    </a4j:repeat>
+									</ul>			        	
+						        </rich:panelBarItem>				     					
+						        <rich:panelBarItem label="Server" rendered="#{not empty toDo.serverList}">
+		      						<ul>
+								  		<a4j:repeat id="serverList" value="#{toDo.serverList}" var="item">
+								  			<li>
+										  		<a4j:commandLink value="#{item.titel}" 
+										  			action="#{toDo.loadToDoListForElement}"
+										  			reRender="tablePanel,editPanel,elementPanel" 
+										  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
+										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
+										        </a4j:commandLink>
+										    </li>
+									    </a4j:repeat>
+									</ul>
+						        </rich:panelBarItem>				     					
+						        <rich:panelBarItem label="Netze" rendered="#{not empty toDo.netzList}">
+		      						<ul>
+								  		<a4j:repeat id="netzList" value="#{toDo.netzList}" var="item">
+								  			<li>
+										  		<a4j:commandLink value="#{item.titel}" 
+										  			action="#{toDo.loadToDoListForElement}" 
+										  			reRender="tablePanel,editPanel,elementPanel" 
+										  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
+										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
+										        </a4j:commandLink>
+										    </li>
+									    </a4j:repeat>
+									</ul>
+						        </rich:panelBarItem>				     					
+						        <rich:panelBarItem label="Anwendungen" rendered="#{not empty toDo.anwendungList}">
+		      						<ul>
+								  		<a4j:repeat id="anwendungList" value="#{toDo.anwendungList}" var="item">
+								  			<li>
+										  		<a4j:commandLink value="#{item.titel}" 
+										  			action="#{toDo.loadToDoListForElement}" 
+										  			reRender="tablePanel,editPanel,elementPanel" 
+										  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
+										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
+										        </a4j:commandLink>
+										    </li>
+									    </a4j:repeat>
+									</ul>
+						        </rich:panelBarItem>				     					
+						        <rich:panelBarItem label="Personen" rendered="#{not empty toDo.personList}">
+		      						<ul>
+								  		<a4j:repeat id="personList" value="#{toDo.personList}" var="item">
+								  			<li>
+										  		<a4j:commandLink value="#{item.titel}" 
+										  			action="#{toDo.loadToDoListForElement}" 
+										  			reRender="tablePanel,editPanel,elementPanel" 
+										  			styleClass="#{item.dbId==toDo.selectedElementId ? 'selected' : 'normal'}">
+										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{toDo.selectedElementId}"/>
+										        </a4j:commandLink>
+										    </li>
+									    </a4j:repeat>
+									</ul>
+						        </rich:panelBarItem>				  
+						    </rich:panelBar>
+						</h:form>		
 					<!--###col3_content### end -->
-				</div>
+					</div>
 				<!-- IE Column Clearing -->
 				<div id="ie_clearing"><!--###ie_clearing### begin -->&nbsp;<!--###ie_clearing### end --></div>
 				<!-- Ende: IE Column Clearing -->
