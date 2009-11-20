@@ -47,11 +47,19 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	public static final String P_LETZTEREVISIONDURCH_LINK = "mnums_letzterevisiondurch_link"; //$NON-NLS-1$
 
 	public static final String P_UMSETZUNG = "mnums_umsetzung"; //$NON-NLS-1$
+	// Grundschtuz
 	public static final String P_UMSETZUNG_NEIN = "mnums_umsetzung_nein"; //$NON-NLS-1$
 	public static final String P_UMSETZUNG_JA = "mnums_umsetzung_ja"; //$NON-NLS-1$
 	public static final String P_UMSETZUNG_TEILWEISE = "mnums_umsetzung_teilweise"; //$NON-NLS-1$
 	public static final String P_UMSETZUNG_ENTBEHRLICH = "mnums_umsetzung_entbehrlich"; //$NON-NLS-1$
 	public static final String P_UMSETZUNG_UNBEARBEITET = "mnums_umsetzung_unbearbeitet"; //$NON-NLS-1$
+	// ISO 27001
+	public static final String P_UMSETZUNG_PERFORMED = "mnums_umsetzung_performed"; //$NON-NLS-1$
+	public static final String P_UMSETZUNG_MANAGED = "mnums_umsetzung_managed"; //$NON-NLS-1$
+	public static final String P_UMSETZUNG_ESTABLISHED = "mnums_umsetzung_established"; //$NON-NLS-1$
+	public static final String P_UMSETZUNG_PREDICTABLE = "mnums_umsetzung_predictable"; //$NON-NLS-1$
+	public static final String P_UMSETZUNG_OPTIMIZING = "mnums_umsetzung_optimizing"; //$NON-NLS-1$
+	
 	public static final String P_URL = "mnums_url"; //$NON-NLS-1$
 	public static final String P_STAND = "mnums_stand"; //$NON-NLS-1$
 	public static final String P_ERLAEUTERUNG = "mnums_erlaeuterung"; //$NON-NLS-1$
@@ -240,11 +248,25 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		return new Date(Long.parseLong(dateString));
 	}
 	
+	public void setErlaeuterung(String text) {
+		if(text!=null) {
+			getEntity().setSimpleValue(getEntityType().getPropertyType(P_ERLAEUTERUNG), text);
+		}
+	}
+	
+	public String getErlaeuterung() {
+		if (getEntity().getProperties(P_ERLAEUTERUNG).getProperty(0) == null)
+			return null;
+		return getEntity().getProperties(P_ERLAEUTERUNG).getProperty(0).getPropertyValue();
+	}
+	
 	public void setUmsetzungBis(Date date) {
 		if(date!=null) {
 			getEntity().setSimpleValue(getEntityType().getPropertyType(P_UMSETZUNGBIS), String.valueOf(date.getTime()));
 		}
 	}
+	
+	
 
 	public Date getNaechsteRevision() {
 		PropertyList properties = getEntity().getProperties(
