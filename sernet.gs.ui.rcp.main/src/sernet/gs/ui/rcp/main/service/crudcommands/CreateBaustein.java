@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
@@ -50,6 +52,15 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 public class CreateBaustein extends GenericCommand implements IChangeLoggingCommand, 
 	IAuthAwareCommand {
 
+	private transient Logger log = Logger.getLogger(CreateBaustein.class);
+	
+	private Logger getLogger() {
+		if(log==null) {
+			log = Logger.getLogger(CreateBaustein.class);
+		}
+		return log;
+	}
+	
 	private BausteinUmsetzung child;
 	private Baustein baustein;
 	private String stationId;
@@ -115,6 +126,7 @@ public class CreateBaustein extends GenericCommand implements IChangeLoggingComm
 			
 			
 		} catch (Exception e) {
+			getLogger().error("Error while creating executing", e);
 			throw new RuntimeCommandException(e);
 		}
 	}
