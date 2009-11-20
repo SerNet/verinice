@@ -98,7 +98,9 @@ public class HydratorUtil {
 
 		if (ri!=null ) {
 			CnATreeElement elementWithChildren = (CnATreeElement) dao.retrieve(element.getDbId(),ri);
-			element.setChildren(elementWithChildren.getChildren());
+			if(elementWithChildren!=null) {
+				element.setChildren(elementWithChildren.getChildren());
+			}
 		}
 		
 	}
