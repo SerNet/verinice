@@ -21,15 +21,21 @@
 
 package sernet.gs.web;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TimeZone;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
@@ -38,6 +44,7 @@ import org.richfaces.component.html.HtmlExtendedDataTable;
 import org.richfaces.model.selection.Selection;
 import org.richfaces.model.selection.SimpleSelection;
 
+import sernet.gs.model.Massnahme;
 import sernet.gs.server.ServerInitializer;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
@@ -59,6 +66,8 @@ import sernet.hui.common.VeriniceContext;
 public class ToDoBean {
 
 	final static Logger LOG = Logger.getLogger(ToDoBean.class);
+	
+	public static final String BOUNDLE_NAME = "sernet.gs.web.Messages";
 	
 	final static int SOURCE_VERBUND = 1;
 	
@@ -136,6 +145,14 @@ public class ToDoBean {
 		}	
 	}
 	
+	public void loadToDoList() {
+		if(getSelectedElementId()!=null && getSelectedElementId()>0) {
+			loadToDoListForElement();
+		} else {
+			loadToDoListForVerbund();
+		}
+	}
+	
 	public void loadToDoListForVerbund() {
 		loadToDoList(SOURCE_VERBUND);
 	}
@@ -146,8 +163,7 @@ public class ToDoBean {
 
 	public void loadToDoList(int source) {
 		setSelectedItVerbund((ITVerbund) itVerbundConverter.getAsObject(null, null, getSelectedItVerbundTitel()));
-		setSelectedItem(null);
-		setMassnahmeUmsetzung(null);
+		
 		Integer itVerbundId = (getSelectedItVerbund()==null) ? null : getSelectedItVerbund().getDbId();
 		if(itVerbundId!=null || selectedElementId!=null) {
 			ServerInitializer.inheritVeriniceContextState();
@@ -159,7 +175,22 @@ public class ToDoBean {
 			try {
 				service.executeCommand(command);
 				getTodoList().clear();
-				getTodoList().addAll(command.getMassnahmen());
+				Set<TodoViewItem> massnahmenList = command.getMassnahmen();			
+				getTodoList().addAll(massnahmenList);
+				MassnahmenUmsetzung selectedMassnahme = getMassnahmeUmsetzung();
+				boolean massnahmeInList = false;
+				if(selectedMassnahme!=null) {
+					for (TodoViewItem item : massnahmenList) {
+						if(selectedMassnahme.getDbId()==item.getdbId()) {
+							massnahmeInList = true;
+							break;
+						}
+					}
+					if(!massnahmeInList) {
+						setSelectedItem(null);
+						setMassnahmeUmsetzung(null);
+					}
+				}
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("ToDo List size: " + getToDoListSize());
 				}
@@ -175,6 +206,9 @@ public class ToDoBean {
 			} catch (CommandException e) {
 				LOG.error("Error while loading todos for id: " + itVerbundId, e);
 			}
+		} else {
+			setSelectedItem(null);
+			setMassnahmeUmsetzung(null);
 		}
 	}
 	
@@ -280,6 +314,7 @@ public class ToDoBean {
 				if(LOG.isDebugEnabled()) {
 					LOG.debug("Massnahme saved, id: " + getMassnahmeUmsetzung().getDbId());
 				}
+				ToDoBean.addInfo("submit", getMessage("todo.saved"));
 				loadToDoListForElement();
 			} catch (CommandException e) {
 				LOG.error("Error while saving massnahme: " + getMassnahmeUmsetzung().getDbId(), e);
@@ -586,4 +621,81 @@ public class ToDoBean {
 	public int getSize() {
 		return getTodoList()==null ? 0 : getTodoList().size();
 	}
+	
+	public static void english() {
+		FacesContext context = FacesContext.getCurrentInstance();
+        context.getViewRoot().setLocale(Locale.ENGLISH);
+	}
+	
+	public static void german() {
+		FacesContext context = FacesContext.getCurrentInstance();
+        context.getViewRoot().setLocale(Locale.GERMAN);
+	}
+	
+	private static void addInfo(String componentId, String text ) {
+		addMessage(componentId, text, FacesMessage.SEVERITY_INFO );
+	}
+	
+	private static void addError(String componentId, String text ) {
+		addMessage(componentId, text, FacesMessage.SEVERITY_ERROR );
+	}
+	
+	private static void addMessage(String componentId, String text, Severity severity ) {
+		 FacesMessage message = new FacesMessage(severity, text, null);
+         FacesContext context = FacesContext.getCurrentInstance();
+         UIComponent component = findComponent(context.getViewRoot(), componentId);
+         context.addMessage(component.getClientId(context), message);
+
+	}
+	
+	private static UIComponent findComponent(UIComponent parent, String id) {
+		UIComponent component = null;
+		if (id.equals(parent.getId())) {
+			component = parent;
+		} else {
+			Iterator<UIComponent> kids = parent.getFacetsAndChildren();
+			while (kids.hasNext()) {
+				UIComponent kid = kids.next();
+				UIComponent found = findComponent(kid, id);
+				if (found != null) {
+					component = found;
+					break;
+				}
+			}
+		}
+		return component;
+	}
+	
+	protected static ClassLoader getCurrentClassLoader(Object defaultObject){	
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();	
+		if(loader == null){
+			loader = defaultObject.getClass().getClassLoader();
+		}
+	
+		return loader;
+	}
+	
+	public static String getMessage(String key) {
+		return getMessage(key, null);
+	}
+
+	public static String getMessage(String key,Object params[]){
+		String text = null;
+		Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+		ResourceBundle bundle = ResourceBundle.getBundle(
+				BOUNDLE_NAME, 
+				locale);	
+		try{
+			text = bundle.getString(key);
+		} catch(MissingResourceException e){
+			text = "? " + key + " ?";
+		}
+		
+		if(params != null){
+			MessageFormat mf = new MessageFormat(text, locale);
+			text = mf.format(params, new StringBuffer(), null).toString();
+		}	
+		return text;
+	}
+
 }
