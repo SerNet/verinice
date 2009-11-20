@@ -25,7 +25,7 @@
 .mainMenu ul li ul li strong {display:block; width:95%; padding:3px 0px 3px 14%; background-color:#aab; color:#fff; font-weight:bold; border-bottom:1px #ddd solid;}
 .mainMenu ul li ul li ul li strong {display:block; width:95%; padding:3px 0px 3px 21%; background-color:#aab; color:#fff; font-weight:bold; border-bottom:1px #ddd solid;}
 .mainMenu ul li a { width:95%; padding:3px 0px 3px 7%; background-color:#fff; color:#444; border-bottom:1px #eee solid;}
-.mainMenu ul li a:hover {background-color:#c7242a; color:#fff;}
+.mainMenu ul li a:hover {background-color:#F1EEE9;}
 .mainMenu ul li ul {list-style-type:none; margin:0; padding:0;}
 .mainMenu ul li ul li {float:left; width:100%; margin:0; padding:0;}
 .mainMenu ul li ul li a {width:90%; padding:3px 0px 3px 14%; background-color:#f8f8f8; color:#666; border-bottom:1px #ddd solid;}

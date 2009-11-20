@@ -1,8 +1,17 @@
  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:h="http://java.sun.com/jsf/html">
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:a4j="http://richfaces.org/a4j">
 	<div id="header">
+		<div id="status">
+			<a4j:status>
+                <f:facet name="start">
+                    <h:graphicImage value="/image/ajax-loader.gif"/>
+                </f:facet>
+            </a4j:status>
+		</div>
 		<div id="topnav">
 			<a class="skip" href="index.html#navigation" title="Direkt zur Navigation springen">Zur Navigation springen</a><a class="skip" href="index.html#content" title="Direkt zum Content springen">Zum Content springen</a><strong>verinice Server&nbsp;&#124;&nbsp;</strong><a href="Impressum.72.0.html">Impressum</a>
 		</div>

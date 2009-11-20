@@ -1,23 +1,22 @@
 input.submit {
 	margin-top:1em;
 }
+.formElement {
+	width: 150px;
+	margin-left:1em;
+}
 .mainMenu ul li a.selected {
-	background-color:#c7242a;
-	color:#ffffff;
+	background-color:#F1EEE9;
 }
 .oddRow {
 	background-color:#fff8fa;
 }
 .selected {
-	background-color:#c7242a;
-	color:#ffffff;
-	font-weight: bold;
+	background-color:#F1EEE9;
 }
 .floatbox ul {
-	border-left:1px solid #DDDDDD;
 	list-style-type:none;
 	margin:0;
-	padding-left: 3px;
 	overflow:hidden;
 }
 .floatbox ul a {
@@ -29,8 +28,7 @@ input.submit {
 	padding-bottom: 0px;
 }
 .floatbox ul li a.selected {
-	background-color:#C7242A;
-	color:#FFFFFF;
+	background-color:#F1EEE9;
 }
 .floatbox ul li a {
 	background-color:#FFFFFF;
@@ -40,16 +38,29 @@ input.submit {
 	width:100%;
 }
 .floatbox ul li a:hover {
-	background-color:#C7242A;
-	color:#FFFFFF;
+	background-color:#F1EEE9;
+}
+#col3 li {
+	line-height:1em;
+}
+#col3 ul li a {
+	padding:0 1px 1px 5px;
+	display:block;
 }
 .rich-tab-inactive {
     cursor: pointer;
 }
-.rich-tabpanel-content {
-    border-width: 1px 1px 1px 1px;
-    background-color: transparent;
+.rich-panelbar-content {
+    padding: 0;
 }
 .rich-tab-bottom-line table {
 	margin-bottom: 0;
+}
+#status {
+	position:absolute;
+	top: 50px;
+	right: 50px;
+	color: #fff;
+	background: transparent;
+	text-align: right; /* Erforderlich, damit im Opera 6 wirklich rechts plaziert ! */
 }
