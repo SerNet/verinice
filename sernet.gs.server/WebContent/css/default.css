@@ -44,18 +44,27 @@ input.submit {
 	line-height:1em;
 }
 #col3 ul li a {
-	padding:0 1px 1px 5px;
+	padding:5px 3px 3px 7px;
 	display:block;
 }
-.rich-tab-inactive {
-    cursor: pointer;
-}
+
 .rich-panelbar-content {
     padding: 0;
+}
+.rich-panelbar-header {
+	padding:5px 3px 3px 7px;
+}
+.rich-panelbar-header-act {
+	padding:5px 3px 3px 7px;
+}
+
+.rich-tab-inactive {
+    cursor: pointer;
 }
 .rich-tab-bottom-line table {
 	margin-bottom: 0;
 }
+
 #status {
 	position:absolute;
 	top: 50px;
@@ -63,4 +72,20 @@ input.submit {
 	color: #fff;
 	background: transparent;
 	text-align: right; /* Erforderlich, damit im Opera 6 wirklich rechts plaziert ! */
+}
+
+#messages {
+	margin: 0;
+	padding: 0;
+	background: #fdffc5;
+	color: #765;
+}
+#messages div {
+	float: left;
+	width: auto;
+	margin-right: 1em;
+	vertical-align: middle;
+}
+#messages div dl {
+	margin: 0.5em;
 }
