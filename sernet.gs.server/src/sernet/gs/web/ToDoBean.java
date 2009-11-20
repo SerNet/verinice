@@ -26,8 +26,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 
+import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
 import org.apache.log4j.Logger;
@@ -93,11 +96,19 @@ public class ToDoBean {
 	
 	List<String> executionList;
 	
-	boolean executionNo = true;
+	// Grundschutz
+	boolean executionNo = false;
 	boolean executionYes = false;
-	boolean executionPartly = true;
+	boolean executionPartly = false;
 	boolean executionDispensable = false;					    
 	boolean executionUntreated = true;
+	
+	// ISO 27001
+	boolean executionPerformed = true;
+	boolean executionManaged = true;
+	boolean executionEstablished = true;
+	boolean executionPredictable = true;
+	boolean executionOptimizing = true;
 	
 	boolean sealA = true;
 	boolean sealB = true;
@@ -106,7 +117,10 @@ public class ToDoBean {
 		
 	public ToDoBean() {
 		super();
+		// Grundschutz
 		executionList = Arrays.asList(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH,MassnahmenUmsetzung.P_UMSETZUNG_JA,MassnahmenUmsetzung.P_UMSETZUNG_NEIN,MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE,MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET);
+		// ISO 27001
+		//executionList = Arrays.asList(MassnahmenUmsetzung.P_UMSETZUNG_ESTABLISHED,MassnahmenUmsetzung.P_UMSETZUNG_MANAGED,MassnahmenUmsetzung.P_UMSETZUNG_OPTIMIZING,MassnahmenUmsetzung.P_UMSETZUNG_PERFORMED,MassnahmenUmsetzung.P_UMSETZUNG_PREDICTABLE);
 		loadItVerbundList();
 	}
 	
@@ -166,6 +180,7 @@ public class ToDoBean {
 	
 	private Set<String> createExecutionSet() {
 		Set<String> executionSet = new HashSet<String>(5);
+		// Grundschutz
 		if(isExecutionDispensable()) {
 			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
 		}
@@ -181,6 +196,23 @@ public class ToDoBean {
 		if(isExecutionYes()) {
 			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_JA);
 		}
+		// ISO 27001
+		if(isExecutionEstablished()) {
+			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_ESTABLISHED);
+		}
+		if(isExecutionManaged()) {
+			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_MANAGED);
+		}
+		if(isExecutionOptimizing()) {
+			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_OPTIMIZING);
+		}
+		if(isExecutionPerformed()) {
+			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_PERFORMED);
+		}
+		if(isExecutionPredictable()) {
+			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_PREDICTABLE);
+		}
+		
 		return executionSet;
 	}
 	
@@ -256,6 +288,14 @@ public class ToDoBean {
 		else {
 			LOG.warn("Massnahme is null. Can not save massnahme.");
 		}
+	}
+	
+	public Locale getLocale() {
+		return FacesContext.getCurrentInstance().getViewRoot().getLocale();
+	}
+	
+	public TimeZone getTimeZone() {
+		return TimeZone.getDefault();
 	}
 	
 	public void setItVerbundList(List<ITVerbund> itVerbundList) {
@@ -469,6 +509,46 @@ public class ToDoBean {
 
 	public void setExecutionUntreated(boolean executionUntreated) {
 		this.executionUntreated = executionUntreated;
+	}
+
+	public boolean isExecutionPerformed() {
+		return executionPerformed;
+	}
+
+	public void setExecutionPerformed(boolean executionPerformed) {
+		this.executionPerformed = executionPerformed;
+	}
+
+	public boolean isExecutionManaged() {
+		return executionManaged;
+	}
+
+	public void setExecutionManaged(boolean executionManaged) {
+		this.executionManaged = executionManaged;
+	}
+
+	public boolean isExecutionEstablished() {
+		return executionEstablished;
+	}
+
+	public void setExecutionEstablished(boolean executionEstablished) {
+		this.executionEstablished = executionEstablished;
+	}
+
+	public boolean isExecutionPredictable() {
+		return executionPredictable;
+	}
+
+	public void setExecutionPredictable(boolean executionPredictable) {
+		this.executionPredictable = executionPredictable;
+	}
+
+	public boolean isExecutionOptimizing() {
+		return executionOptimizing;
+	}
+
+	public void setExecutionOptimizing(boolean executionOptimizing) {
+		this.executionOptimizing = executionOptimizing;
 	}
 
 	public boolean isSealA() {
