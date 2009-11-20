@@ -34,6 +34,11 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung {
 		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_NEIN, ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
 		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
 		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET, ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
+		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_ESTABLISHED, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_MANAGED, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_OPTIMIZING, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_PERFORMED, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_PREDICTABLE, ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
 	}
 	
 	private String titel;
@@ -59,6 +64,9 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung {
 	}
 	
 	public String getUmsetzungIcon() {
+		// ISO 27001
+		//return umsetzungImageMap.get(getStand());
+		// Grundschutz
 		return umsetzungImageMap.get(getUmsetzung());
 	}
 
