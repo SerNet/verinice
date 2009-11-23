@@ -134,7 +134,7 @@ public class ToDoBean {
 	}
 	
 	public void loadItVerbundList() {
-		ServerInitializer.inheritVeriniceContextState();
+		//ServerInitializer.inheritVeriniceContextState();
 		ICommandService service = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 		LoadCnAElementByType<ITVerbund> command = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
 		try {
@@ -166,7 +166,6 @@ public class ToDoBean {
 		
 		Integer itVerbundId = (getSelectedItVerbund()==null) ? null : getSelectedItVerbund().getDbId();
 		if(itVerbundId!=null || selectedElementId!=null) {
-			ServerInitializer.inheritVeriniceContextState();
 			ICommandService service = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 			int id = (SOURCE_VERBUND==source) ? itVerbundId : selectedElementId;
 			LoadChildrenAndMassnahmen command = new LoadChildrenAndMassnahmen(id);
@@ -270,7 +269,7 @@ public class ToDoBean {
 
 	public void loadToDo() {
 		LOG.debug("loadToDo");
-		ServerInitializer.inheritVeriniceContextState();
+		//ServerInitializer.inheritVeriniceContextState();
 		Iterator<Object> iterator = getSelection().getKeys();
         while (iterator.hasNext()) {
             Object key = iterator.next();
@@ -305,7 +304,6 @@ public class ToDoBean {
 
 	public void save() {
 		LOG.debug("save");
-		ServerInitializer.inheritVeriniceContextState();
 		ICommandService service = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 		if(getMassnahmeUmsetzung()!=null) {
 			SaveElement<MassnahmenUmsetzung> command = new SaveElement<MassnahmenUmsetzung>(getMassnahmeUmsetzung());
@@ -474,7 +472,6 @@ public class ToDoBean {
 	}
 
 	public MassnahmenUmsetzung getMassnahmeUmsetzung() {
-		ServerInitializer.inheritVeriniceContextState();
 		return massnahmeUmsetzung;
 	}
 
