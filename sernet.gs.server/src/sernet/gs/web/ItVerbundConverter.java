@@ -29,9 +29,9 @@ import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 
 public class ItVerbundConverter implements Converter {
 
-	ToDoBean toDoBean;
+	AssetNavigationBean toDoBean;
 	
-	public ItVerbundConverter(ToDoBean toDoBean) {
+	public ItVerbundConverter(AssetNavigationBean toDoBean) {
 		super();
 		this.toDoBean = toDoBean;
 	}
