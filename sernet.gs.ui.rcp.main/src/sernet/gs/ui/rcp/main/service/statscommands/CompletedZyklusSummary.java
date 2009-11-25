@@ -75,8 +75,9 @@ public class CompletedZyklusSummary extends MassnahmenSummary {
 			// fullfilled (see {@link MassnahmenUmsetzung#isCompleted).			
 			Query query = session.createSQLQuery(
 					"select p1.propertyvalue as pv, count(p1.propertyvalue) as amount "
-					+ "from properties p1, properties p2 "
-					+ "where p1.parent = p2.parent "
+					+ "from properties p1 inner join propertylist pl1 on p1.properties_id=pl1.dbid, "
+					+ "properties p2 inner join propertylist pl2 on p2.properties_id=pl2.dbid "
+					+ "where pl1.typedlist_id = pl2.typedlist_id "
 					+ "and p1.propertytype = :p1type "
 					+ "and p2.propertytype = :p2type "
 					+ "and p2.propertyvalue in (:p2values) "

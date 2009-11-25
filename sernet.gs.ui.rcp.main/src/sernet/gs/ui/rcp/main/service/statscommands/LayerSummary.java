@@ -94,9 +94,10 @@ public class LayerSummary extends CompletedLayerSummary {
 			 */
 			Query query = session.createSQLQuery(
 					"select p.propertyvalue as pv, count(p.propertyvalue) as amount "
-					+ "from properties p, entity bu, cnatreeelement buc, cnatreeelement muc "
+					+ "from properties p, propertylist pl, entity bu, cnatreeelement buc, cnatreeelement muc "
 					+ "where p.propertytype = :type "
-					+ "and p.parent = bu.dbid "
+					+ "and p.properties_id = pl.dbid "
+					+ "and pl.typedlist_id = bu.dbid "
 					+ "and bu.dbid = buc.entity_id "
 					+ "and buc.dbid = muc.parent "
 					+ "group by p.propertyvalue")

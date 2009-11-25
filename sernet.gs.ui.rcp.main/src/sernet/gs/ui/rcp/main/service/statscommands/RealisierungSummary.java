@@ -65,7 +65,8 @@ public class RealisierungSummary extends GenericCommand {
 		
 		for (Object[] r : list) {
 			String rawDate = (String) r[0];
-			boolean isCompleted = ((Boolean) r[1]);
+			boolean isCompleted = (MassnahmenUmsetzung.P_UMSETZUNG_JA.equals((String)r[1]) 
+					|| MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH.equals((String)r[1]));
 			
 			//fixme umgesetzte sollten datum der umsetzung gesetzt haben! fix in bulk edit
 			Date date = (rawDate == null || rawDate.length() == 0)
@@ -98,20 +99,18 @@ public class RealisierungSummary extends GenericCommand {
 		public Object doInHibernate(Session session) throws HibernateException,
 				SQLException {
 			
-			Query query = session.createSQLQuery(
-					"select p1.propertyvalue as pv, (p2.propertyvalue in (:p2values)) as iscompleted "
-					+ "from properties p1, properties p2 "
-					+ "where p1.parent = p2.parent "
-					+ "and p1.propertytype = :p1type "
-					+ "and p2.propertytype = :p2type ")
-					.addScalar("pv", Hibernate.STRING)
-					.addScalar("iscompleted", Hibernate.BOOLEAN)
+			Query query = session.createQuery(
+					"select p1.propertyValue, p2.propertyValue "
+					+ "from PropertyList plist1 inner join plist1.properties as p1, "
+					+ "PropertyList plist2 inner join plist2.properties as p2 "
+					+ "where plist1.entityId = plist2.entityId "
+					+ "and p1.propertyType = :p1type "
+					+ "and p2.propertyType = :p2type ")
 					.setString("p1type", MassnahmenUmsetzung.P_UMSETZUNGBIS)
-					.setString("p2type", MassnahmenUmsetzung.P_UMSETZUNG)
-					.setParameterList("p2values", new Object[] { MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH }, Hibernate.STRING);
+					.setString("p2type", MassnahmenUmsetzung.P_UMSETZUNG);
 			
 			if (log.isDebugEnabled())
-				log.debug("generated query:" + query.getQueryString());
+				log.debug("generated query: " + query.getQueryString());
 					
 			return query.list();
 		}

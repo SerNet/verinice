@@ -108,13 +108,15 @@ public class CompletedLayerSummary extends MassnahmenSummary {
 			 */
 			Query query = session.createSQLQuery(
 					"select bup.propertyvalue as pv, count(bup.propertyvalue) as amount "
-					+ "from properties bup, entity bu, cnatreeelement buc, cnatreeelement muc, entity mu, properties mup "
+					+ "from properties bup, propertylist bupl, entity bu, cnatreeelement buc, cnatreeelement muc, entity mu, propertylist mupl, properties mup "
 					+ "where bup.propertytype = :buptype "
-					+ "and bup.parent = bu.dbid "
+					+ "and bup.properties_id = bupl.dbid "
+					+ "and bupl.typedlist_id = bu.dbid "
 					+ "and bu.dbid = buc.entity_id "
 					+ "and buc.dbid = muc.parent "
 					+ "and muc.entity_id = mu.dbid "
-					+ "and mu.dbid = mup.parent "
+					+ "and mu.dbid = mupl.typedlist_id "
+					+ "and mupl.dbid = mup.properties_id "
 					+ "and mup.propertytype = :muptype "
 					+ "and mup.propertyvalue in (:mupvalues) "
 					+ "group by bup.propertyvalue")
