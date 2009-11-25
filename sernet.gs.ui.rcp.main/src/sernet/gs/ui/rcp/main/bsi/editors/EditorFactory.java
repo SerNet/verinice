@@ -78,23 +78,16 @@ public class EditorFactory {
 
 				// replace element with new instance from DB:
 				CnATreeElement cnaElement = (CnATreeElement) o;
-				CnATreeElement newElement = CnAElementHome.getInstance()
-						.loadById(cnaElement.getClass(), cnaElement.getDbId());
-				BSIElementEditorInput input = new BSIElementEditorInput(
-						newElement);
+				CnATreeElement newElement = CnAElementHome.getInstance().loadById(cnaElement.getClass(), cnaElement.getDbId());
+				BSIElementEditorInput input = new BSIElementEditorInput(newElement);
 
-				if ((editor = EditorRegistry.getInstance().getOpenEditor(
-						input.getId())) == null) {
+				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {
 					// open new editor:
-					editor = Activator.getActivePage().openEditor(input,
-							BSIElementEditor.EDITOR_ID);
-					EditorRegistry.getInstance().registerOpenEditor(
-							input.getId(), editor);
+					editor = Activator.getActivePage().openEditor(input, BSIElementEditor.EDITOR_ID);
+					EditorRegistry.getInstance().registerOpenEditor(input.getId(), editor);
 				} else {
 					// show existing editor:
-					Activator.getActivePage()
-							.openEditor(editor.getEditorInput(),
-									BSIElementEditor.EDITOR_ID);
+					Activator.getActivePage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
 				}
 			}
 
@@ -127,24 +120,16 @@ public class EditorFactory {
 
 				// replace element with new instance from DB:
 				TodoViewItem selection = (TodoViewItem) o;
-				CnATreeElement newElement = CnAElementHome.getInstance()
-						.loadById(MassnahmenUmsetzung.class,
-								selection.getdbId());
-				BSIElementEditorInput input = new BSIElementEditorInput(
-						newElement);
+				CnATreeElement newElement = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.class, selection.getdbId());
+				BSIElementEditorInput input = new BSIElementEditorInput(newElement);
 
-				if ((editor = EditorRegistry.getInstance().getOpenEditor(
-						input.getId())) == null) {
+				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {
 					// open new editor:
-					editor = Activator.getActivePage().openEditor(input,
-							BSIElementEditor.EDITOR_ID);
-					EditorRegistry.getInstance().registerOpenEditor(
-							input.getId(), editor);
+					editor = Activator.getActivePage().openEditor(input, BSIElementEditor.EDITOR_ID);
+					EditorRegistry.getInstance().registerOpenEditor(input.getId(), editor);
 				} else {
 					// show existing editor:
-					Activator.getActivePage()
-							.openEditor(editor.getEditorInput(),
-									BSIElementEditor.EDITOR_ID);
+					Activator.getActivePage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
 				}
 			}
 
@@ -173,8 +158,7 @@ public class EditorFactory {
 			try {
 				fact.openEditorFor(sel);
 			} catch (HibernateException e) {
-				MessageDialog.openError(Display.getCurrent().getActiveShell(),
-						"Error", "Der Editor kann nicht geöffnet werden.");
+				MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error", "Der Editor kann nicht geöffnet werden.");
 			} catch (Exception e) {
 				ExceptionUtil.log(e, "Konnte Editor nicht öffnen.");
 			}
