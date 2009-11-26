@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Fragment Fragment
 Bundle-SymbolicName: sernet.gs.springweb.fragment
-Bundle-Version: 1.0.16
+Bundle-Version: 1.0.17
 Fragment-Host: org.springframework.web
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: net.sf.cglib.proxy

@@ -9,5 +9,5 @@
 	<classpathentry kind="lib" path="lib/richfaces-api-3.3.2.SR1.jar"/>
 	<classpathentry kind="lib" path="lib/richfaces-ui-3.3.2.SR1.jar"/>
 	<classpathentry kind="lib" path="lib/richfaces-impl-3.3.2.SR1.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>
