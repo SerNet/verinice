@@ -35,7 +35,6 @@
  */
 package sernet.hui.swt.widgets;
 
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -60,7 +59,6 @@ import sernet.snutils.AssertException;
  */
 public class TextControl implements IHuiControl {
 
-	
 	private Entity entity;
 	private PropertyType fieldType;
 	private Composite composite;
@@ -71,13 +69,12 @@ public class TextControl implements IHuiControl {
 	private Color bgColor;
 	private Color fgColor;
 	private boolean useRule;
-	
+
 	public Control getControl() {
 		return text;
 	}
 
-	public TextControl(Entity ent, PropertyType type, 
-			Composite parent, boolean edit, int lines, boolean rules) {
+	public TextControl(Entity ent, PropertyType type, Composite parent, boolean edit, int lines, boolean rules) {
 		this.entity = ent;
 		this.fieldType = type;
 		this.composite = parent;
@@ -87,7 +84,7 @@ public class TextControl implements IHuiControl {
 	}
 
 	/**
-	 * @throws AssertException 
+	 * @throws AssertException
 	 * 
 	 */
 	public void create() {
@@ -95,65 +92,59 @@ public class TextControl implements IHuiControl {
 		label.setText(fieldType.getName());
 
 		PropertyList propList = entity.getProperties(fieldType.getId());
-			savedProp = propList != null ? 
-										propList.getProperty(0) 
-										: null;
+		savedProp = propList != null ? propList.getProperty(0) : null;
 
-				if (savedProp == null) {
-					// create property in which to save entered value:
-					String defaultValue =""; 
-					if (useRule && fieldType.getDefaultRule() != null)
-							defaultValue = fieldType.getDefaultRule().getValue();
-					savedProp = entity.createNewProperty(fieldType, defaultValue);
-					text = createText();
-				} else {
-					text = createText();
-					// use saved property:
-					text.setText(notNull(savedProp.getPropertyValue()));
-				}
-				
-				bgColor = text.getBackground();
-				fgColor = text.getForeground();
+		if (savedProp == null) {
+			// create property in which to save entered value:
+			String defaultValue = "";
+			if (useRule && fieldType.getDefaultRule() != null)
+				defaultValue = fieldType.getDefaultRule().getValue();
+			savedProp = entity.createNewProperty(fieldType, defaultValue);
+			text = createText();
+		} else {
+			text = createText();
+			// use saved property:
+			text.setText(notNull(savedProp.getPropertyValue()));
+		}
 
-				// change value when user enters text:
-				text.addListener(SWT.Modify, new Listener() {
-					public void handleEvent(Event e) {
-						Text field = (Text) e.widget;
-						savedProp.setPropertyValue(field.getText(), true, text);
-						validate();
-					}
-				});
-				
-				composite.layout();
+		bgColor = text.getBackground();
+		fgColor = text.getForeground();
+
+		// change value when user enters text:
+		text.addListener(SWT.Modify, new Listener() {
+			public void handleEvent(Event e) {
+				Text field = (Text) e.widget;
+				savedProp.setPropertyValue(field.getText(), true, text);
+				validate();
+			}
+		});
+
+		composite.layout();
 	}
 
 	public boolean validate() {
-		
+
 		if (this.fieldType.validate(text.getText(), null)) {
 			text.setForeground(fgColor);
 			text.setBackground(bgColor);
 			return true;
 		}
-		
+
 		text.setForeground(Colors.BLACK);
 		text.setBackground(Colors.YELLOW);
 		return false;
 	}
 
-
 	private Text createText() {
 		if (lines > 1) {
-			Text text = new Text(composite,SWT.MULTI
-					| SWT.WRAP
-					| SWT.V_SCROLL
-					| SWT.BORDER);
-			
+			Text text = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
+
 			GridData textLData = new GridData();
 			textLData.verticalAlignment = GridData.FILL;
 			textLData.horizontalAlignment = GridData.FILL;
 			textLData.heightHint = lines * 20;
 			textLData.grabExcessHorizontalSpace = true;
-			//textLData.grabExcessVerticalSpace = true;
+			// textLData.grabExcessVerticalSpace = true;
 			text.setLayoutData(textLData);
 			text.setEditable(editable);
 			if (!editable)
@@ -183,15 +174,12 @@ public class TextControl implements IHuiControl {
 	public void setFocus() {
 		this.text.setFocus();
 	}
-	
+
 	public void update() {
 		PropertyList propList = entity.getProperties(fieldType.getId());
 		Property entityProp;
-			entityProp = propList != null ? 
-										propList.getProperty(0) 
-										: null;
-		if (entityProp != null
-				&& !text.getText().equals(entityProp.getPropertyValue())) {
+		entityProp = propList != null ? propList.getProperty(0) : null;
+		if (entityProp != null && !text.getText().equals(entityProp.getPropertyValue())) {
 			savedProp = entityProp;
 			if (Display.getCurrent() != null) {
 				text.setText(savedProp.getPropertyValue());
