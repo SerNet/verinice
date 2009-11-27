@@ -90,8 +90,7 @@ public class Anwendung extends CnATreeElement
 	public Anwendung(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME),
-				"Neue Anwendung");
+		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME),"Neue Anwendung");
 	}
 
 	protected Anwendung() {
