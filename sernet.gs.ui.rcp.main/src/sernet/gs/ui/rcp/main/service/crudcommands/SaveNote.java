@@ -24,6 +24,9 @@ import org.apache.log4j.Logger;
 import sernet.gs.ui.rcp.main.bsi.model.Note;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 
 public class SaveNote extends GenericCommand {
 
@@ -52,6 +55,14 @@ public class SaveNote extends GenericCommand {
 			dao.saveOrUpdate(getNote());
 			if (getLog().isDebugEnabled()) {
 				getLog().debug("note saved, id: " + getNote().getDbId());
+			}
+			Entity entity = getNote().getEntity();
+			if(entity!=null) {
+				for (PropertyList pl : entity.getTypedPropertyLists().values()) {
+					for (Property p : pl.getProperties()) {
+						p.setParent(entity);
+					}
+				}
 			}
 		}
 	}

@@ -30,6 +30,9 @@ import org.hibernate.criterion.Restrictions;
 import sernet.gs.ui.rcp.main.bsi.model.Note;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 
 public class LoadNotes extends GenericCommand {
 
@@ -75,6 +78,16 @@ public class LoadNotes extends GenericCommand {
 			List<Note> noteList = dao.findByCriteria(crit);
 			if (getLog().isDebugEnabled()) {
 				getLog().debug("number of notes found: " + noteList.size());
+			}
+			for (Note note : noteList) {
+				Entity entity = note.getEntity();
+				if(entity!=null) {
+					for (PropertyList pl : entity.getTypedPropertyLists().values()) {
+						for (Property p : pl.getProperties()) {
+							p.setParent(entity);
+						}
+					}
+				}
 			}
 			setNoteList(noteList);
 		}
