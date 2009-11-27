@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="sernet.gs.ui.rcp.main.bsi.model">
+ <class name="Note" table="note">
+  <id column="dbId" name="dbId" type="java.lang.Integer">
+   <generator class="native"/>
+  </id>
+  <property column="cnatreeelement_id" name="cnATreeElementId" type="integer"/>
+  <many-to-one 
+  	name="entity" 
+  	class="sernet.hui.common.connect.Entity"
+  	cascade="all"
+  	column="entity_id" 
+  	unique="true"/>
+ </class>
+</hibernate-mapping>

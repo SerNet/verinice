@@ -90,6 +90,15 @@
             id="sernet.gs.ui.rcp.main.documentview"
             name="Richtlinien">
       </view>
+      <view
+            allowMultiple="false"
+            category="sernet.gs.ui.rcp.main.bsi.views"
+            class="sernet.gs.ui.rcp.main.bsi.views.NoteView"
+            icon="icons/note.png"
+            id="sernet.gs.ui.rcp.main.bsi.views.NoteView"
+            name="Notizen"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -440,6 +449,21 @@
                tooltip="Username, Passwort, Mailadresse u.a. benutzerspezifische Einstellungen">
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bsi.notecontrib"
+            objectClass="sernet.gs.ui.rcp.main.common.model.CnATreeElement">
+         <action
+               class="sernet.gs.ui.rcp.main.bsi.actions.AddNoteActionDelegate"
+               enablesFor="1"
+               icon="icons/note.png"
+               id="sernet.gs.ui.rcp.main.bsi.actions.addnote"
+               label="neue Notiz"
+               menubarPath="additions"
+               style="push"
+               tooltip="Neue Notiz hinzufügen">
+         </action>
+      </objectContribution>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -449,6 +473,13 @@
             icon="icons/24-tool-a.png"
             id="sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor"
             name="BSI Objekteditor"/>
+      <editor
+            class="sernet.gs.ui.rcp.main.bsi.editors.NoteEditor"
+            default="false"
+            icon="icons/note.png"
+            id="sernet.gs.ui.rcp.main.bsi.editors.noteeditor"
+            name="Note Editor">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">

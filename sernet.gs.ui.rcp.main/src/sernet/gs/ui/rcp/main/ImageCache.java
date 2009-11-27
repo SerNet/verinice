@@ -95,6 +95,7 @@ public class ImageCache {
 	public static final String VIEW_DSMODEL = "shield.png";
 	public static final String VIEW_TODO = "24-em-check.png";
 	public static final String VIEW_AUDIT = "24-zoom.png";
+	public static final String VIEW_NOTE = "note.png";
 
 	public static final String EXPANDALL   = "expandall.gif";
 	public static final String COLLAPSEALL = "collapseall.gif";
@@ -122,8 +123,11 @@ public class ImageCache {
 
 	public static final String RELOAD = "arrow_refresh.png";
 
-	
+	public static final String NOTE = "note.png";
 
+	public static final String NOTE_NEW = "note-new.png";
+
+	public static final String DELETE = "delete.png";
 
 	
 	

@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
+import sernet.gs.ui.rcp.main.bsi.model.Note;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Raum;
 import sernet.gs.ui.rcp.main.bsi.model.Server;
@@ -136,6 +137,28 @@ public class EditorFactory {
 		};
 
 		typedFactories.put(TodoViewItem.class, todoItemEditorFactory);
+
+		IEditorTypeFactory noteEditorFactory = new IEditorTypeFactory() {
+
+			public void openEditorFor(Object o) throws Exception {
+				IEditorPart editor;
+
+				// replace element with new instance from DB:
+				Note selection = (Note) o;
+				NoteEditorInput input = new NoteEditorInput(selection);
+
+				if ((editor = EditorRegistry.getInstance().getOpenEditor(String.valueOf(input.getId()))) == null) {
+					// open new editor:
+					editor = Activator.getActivePage().openEditor(input, NoteEditor.EDITOR_ID);
+					EditorRegistry.getInstance().registerOpenEditor(String.valueOf(input.getId()), editor);
+				} else {
+					// show existing editor:
+					Activator.getActivePage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
+				}
+			}
+			
+		};
+		typedFactories.put(Note.class, noteEditorFactory);
 
 		// TODO register more editor-factories here
 	}

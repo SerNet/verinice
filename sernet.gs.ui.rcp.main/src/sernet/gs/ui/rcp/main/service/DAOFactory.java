@@ -36,6 +36,7 @@ import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
+import sernet.gs.ui.rcp.main.bsi.model.Note;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie;
@@ -345,6 +346,10 @@ public class DAOFactory {
 
     public void setRisikoMassnahmeUmsetzungDAO(IBaseDao<RisikoMassnahmenUmsetzung, Integer> daoToSet) {
     	daos.put(RisikoMassnahmenUmsetzung.class, daoToSet);
+    }
+    
+    public void setNoteDAO(IBaseDao<Note, Integer> daoToSet) {
+    	daos.put(Note.class, daoToSet);
     }
     
 
