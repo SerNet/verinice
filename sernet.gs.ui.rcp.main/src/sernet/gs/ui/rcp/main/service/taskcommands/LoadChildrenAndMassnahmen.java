@@ -59,7 +59,7 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
  * 
  */
 @SuppressWarnings("serial")
-public class LoadChildrenAndMassnahmen extends GenericCommand {
+public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadChildren {
 
 	private static final Logger log = Logger.getLogger(LoadChildrenAndMassnahmen.class);
 
@@ -101,11 +101,17 @@ public class LoadChildrenAndMassnahmen extends GenericCommand {
 		}
 
 	}
+	
+	public LoadChildrenAndMassnahmen() {
+	}
 
 	public LoadChildrenAndMassnahmen(Integer dbId) {
 		this.id = dbId;
 	}
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.taskcommands.ILoadChildren#execute()
+	 */
 	public void execute() {
 		try {
 			long start = System.currentTimeMillis();
@@ -222,6 +228,17 @@ public class LoadChildrenAndMassnahmen extends GenericCommand {
 		return massnahmen;
 	}
 	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.taskcommands.ILoadChildren#getGebaeudeList()
+	 */
 	public List<CnATreeElement> getGebaeudeList() {
 		return gebaeudeList;
 	}
@@ -230,6 +247,9 @@ public class LoadChildrenAndMassnahmen extends GenericCommand {
 		this.gebaeudeList = gebaeudeList;
 	}
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.taskcommands.ILoadChildren#getRaumList()
+	 */
 	public List<CnATreeElement> getRaumList() {
 		return raumList;
 	}
@@ -238,6 +258,9 @@ public class LoadChildrenAndMassnahmen extends GenericCommand {
 		this.raumList = raumList;
 	}
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.taskcommands.ILoadChildren#getClienteList()
+	 */
 	public List<CnATreeElement> getClienteList() {
 		return clienteList;
 	}
@@ -246,6 +269,9 @@ public class LoadChildrenAndMassnahmen extends GenericCommand {
 		this.clienteList = clienteList;
 	}
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.taskcommands.ILoadChildren#getServerList()
+	 */
 	public List<CnATreeElement> getServerList() {
 		return serverList;
 	}
@@ -254,6 +280,9 @@ public class LoadChildrenAndMassnahmen extends GenericCommand {
 		this.serverList = serverList;
 	}
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.taskcommands.ILoadChildren#getNetzList()
+	 */
 	public List<CnATreeElement> getNetzList() {
 		return netzList;
 	}
@@ -262,6 +291,9 @@ public class LoadChildrenAndMassnahmen extends GenericCommand {
 		this.netzList = netzList;
 	}
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.taskcommands.ILoadChildren#getAnwendungList()
+	 */
 	public List<CnATreeElement> getAnwendungList() {
 		return anwendungList;
 	}
@@ -270,6 +302,9 @@ public class LoadChildrenAndMassnahmen extends GenericCommand {
 		this.anwendungList = anwendungList;
 	}
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.taskcommands.ILoadChildren#getPersonList()
+	 */
 	public List<CnATreeElement> getPersonList() {
 		return personList;
 	}
