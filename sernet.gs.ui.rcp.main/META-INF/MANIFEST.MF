@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Verinice Anwendung
 Bundle-SymbolicName: sernet.gs.ui.rcp.main;singleton:=true
-Bundle-Version: 1.0.17
+Bundle-Version: 1.0.18
 Bundle-ClassPath: .,
  lib/jfreechart/jcommon-1.0.14.jar,
  lib/jfreechart/jfreechart-1.0.11-experimental.jar,

@@ -145,6 +145,7 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 	private void fillList(List<MassnahmenUmsetzung> alleMassnahmen) throws CommandException {
 		int count = 0;
 		Set<UnresolvedItem> unresolvedItems = new HashSet<UnresolvedItem>();
+		Set<MassnahmenUmsetzung> unresolvedMeasures = new HashSet<MassnahmenUmsetzung>();
 		
 		for (MassnahmenUmsetzung mn : alleMassnahmen) {
 //			log.debug("Processing Massnahme: " + count);
@@ -169,24 +170,27 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 				item.setUmsetzung(umsetzung);
 				item.setUmsetzungBis(mn.getUmsetzungBis());
 				item.setNaechsteRevision(mn.getNaechsteRevision());
-				item.setRevisionDurch(mn.getRevisionDurch());
 				
 				item.setStufe(siegelStufe.charAt(0));
 				item.setUrl(mn.getUrl());
 				item.setStand(mn.getStand());
 				item.setDbId(mn.getDbId());
+			
+				unresolvedItems.add(new UnresolvedItem(item, mn.getDbId(), 
+						mn.getEntity().getProperties(MassnahmenUmsetzung.P_UMSETZUNGDURCH_LINK),
+						mn.getEntity().getProperties(MassnahmenUmsetzung.P_NAECHSTEREVISIONDURCH_LINK)));
 				
-				if (mn.getUmsetzungDurch() != null && mn.getUmsetzungDurch().length()>0) {
-					item.setUmsetzungDurch(mn.getUmsetzungDurch());
-					all.add(item);
-				}
-				else {
-					unresolvedItems.add(new UnresolvedItem(item, mn.getDbId()));
-				}
 			}
-			
-			
 		}
+
+		// find persons linked directly:
+		FindLinkedPersons findCommand = new FindLinkedPersons(unresolvedItems);
+		findCommand = this.getCommandService().executeCommand(findCommand);
+		all.addAll(findCommand.getResolvedItems());
+		unresolvedItems = findCommand.getUnresolvedItems();
+		
+		
+		
 		// find persons according to roles and relation:
 		FindResponsiblePersons command = new FindResponsiblePersons(unresolvedItems, 
 				MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
@@ -195,18 +199,6 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 		for (UnresolvedItem resolvedItem : unresolvedItems) {
 			all.add(resolvedItem.getItem());
 		}
-	}
-
-	/**
-	 * @param unresolvedItems
-	 */
-	private void resolve(Map<MassnahmenUmsetzung, TodoViewItem> unresolvedItems) {
-	// FIXME server findpersons	
-//		FindResponsiblePersons command = new FindResponsiblePersons(unresolvedItems, MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
-//		command = FindMassnahmenForITVerbund.this.getCommandService().executeCommand(command);
-		
-		
-		
 	}
 
 	private String getNames(List<Person> persons) {

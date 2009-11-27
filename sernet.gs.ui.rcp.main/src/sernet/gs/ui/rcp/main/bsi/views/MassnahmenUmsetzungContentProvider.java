@@ -49,7 +49,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForTodoView;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
 
 /**
  * Gets Massnahmen from current BSIModel and reacts to model changes.
@@ -109,7 +109,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 						return;
 					}
 					
-					FindMassnahmenForTodoView command = new FindMassnahmenForTodoView(child.getDbId());
+					FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(child.getDbId());
 					command = ServiceFactory.lookupCommandService().executeCommand(
 							command);
 					List<TodoViewItem> items = command.getAll();

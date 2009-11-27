@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.Serializable;
 
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
+import sernet.hui.common.connect.PropertyList;
 
 /**
  * @author koderman@sernet.de
@@ -31,6 +32,24 @@ import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 public class UnresolvedItem implements Serializable {
 		private TodoViewItem item;
 		private Integer dbId;
+		private PropertyList revisionDurchLinks;
+		public PropertyList getRevisionDurchLinks() {
+			return revisionDurchLinks;
+		}
+
+		public void setRevisionDurchLinks(PropertyList revisionDurchLinks) {
+			this.revisionDurchLinks = revisionDurchLinks;
+		}
+
+		public PropertyList getUmsetzungDurchLinks() {
+			return umsetzungDurchLinks;
+		}
+
+		public void setUmsetzungDurchLinks(PropertyList umsetzungDurchLinks) {
+			this.umsetzungDurchLinks = umsetzungDurchLinks;
+		}
+
+		private PropertyList umsetzungDurchLinks;
 		
 		public TodoViewItem getItem() {
 			return item;
@@ -43,6 +62,20 @@ public class UnresolvedItem implements Serializable {
 		UnresolvedItem(TodoViewItem item, Integer dbId) {
 			this.item = item;
 			this.dbId = dbId;
+		}
+
+		/**
+		 * @param item2
+		 * @param dbId2
+		 * @param properties
+		 * @param properties2
+		 */
+		public UnresolvedItem(TodoViewItem item2, Integer dbId2,
+				PropertyList umsetzungDurchLinks, PropertyList revisionDurchLinks) {
+			this(item2, dbId2);
+			this.umsetzungDurchLinks = umsetzungDurchLinks;
+			this.revisionDurchLinks = revisionDurchLinks;
+			
 		}
 		
 		
