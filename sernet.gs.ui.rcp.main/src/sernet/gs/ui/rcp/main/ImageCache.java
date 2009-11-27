@@ -128,8 +128,9 @@ public class ImageCache {
 	public static final String NOTE_NEW = "note-new.png";
 
 	public static final String DELETE = "delete.png";
-
 	
+	public static final String EDIT = "edit.png";
+
 	
 	
 	private static ImageCache instance;

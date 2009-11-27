@@ -144,6 +144,7 @@ public class NoteView extends ViewPart {
 			public void run() {
 				Note note = new Note();
 				note.setCnATreeElementId(getCurrentCnaElement().getDbId());
+				note.setCnAElementTitel(getCurrentCnaElement().getTitel());
 				note.setTitel("neue Notiz");
 				EditorFactory.getInstance().openEditor(note);			
 			}
@@ -164,6 +165,8 @@ public class NoteView extends ViewPart {
 				test.pack();
 			} else {
 				for (final Note note : noteList) {
+					// set transient cna-element-titel
+					note.setCnAElementTitel(getCurrentCnaElement().getTitel());
 					Composite composite = new Composite(expandBar, SWT.NONE);
 				    GridLayout layout = new GridLayout(2, false);
 				    layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 4;
@@ -175,28 +178,40 @@ public class NoteView extends ViewPart {
 					gdText.grabExcessVerticalSpace = false;
 					gdText.horizontalAlignment = GridData.FILL;
 					gdText.verticalAlignment = GridData.CENTER;
-					gdText.heightHint=50;
+					gdText.heightHint=60;
+					gdText.verticalSpan=2;
 				    Text text = new Text(composite, SWT.BORDER | SWT.MULTI);
 				    text.setLayoutData(gdText);
-					text.setText(note.getText());
+				    if(note.getText()!=null) {
+				    	text.setText(note.getText());
+				    }
+					
+					Button editButton = new Button(composite,SWT.NONE);
+					editButton.setImage(ImageCache.getInstance().getImage(ImageCache.EDIT));
+					editButton.setToolTipText("Notiz bearbeiten");
+					editButton.addSelectionListener(new SelectionListener(){
+						public void widgetDefaultSelected(SelectionEvent e) {				
+						}
+						public void widgetSelected(SelectionEvent e) {
+							editNote(note);
+						}		    	
+				    });
 					
 					Button deleteButton = new Button(composite,SWT.NONE);
 				    deleteButton.setImage(ImageCache.getInstance().getImage(ImageCache.DELETE));
 				    deleteButton.setToolTipText("Notiz löschen");
 				    deleteButton.addSelectionListener(new SelectionListener(){
-
-						public void widgetDefaultSelected(SelectionEvent e) {
-							// TODO Auto-generated method stub					
+						public void widgetDefaultSelected(SelectionEvent e) {				
 						}
-
 						public void widgetSelected(SelectionEvent e) {
 							deleteNote(note);
-						}
-				    	
+						}		    	
 				    });
 					
 				    ExpandItem item0 = new ExpandItem(expandBar, SWT.NONE, 0);
-				    item0.setText(note.getTitel());
+				    if(note.getTitel()!=null) {
+				    	item0.setText(note.getTitel());
+				    }
 				    item0.setHeight(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 				    item0.setControl(composite);
 				    item0.setExpanded(true);
@@ -206,6 +221,10 @@ public class NoteView extends ViewPart {
 			LOG.error("Error while loading notes", e);
 			ExceptionUtil.log(e, "Error while loading notes");
 		}
+	}
+	
+	protected void editNote(Note note) {
+		EditorFactory.getInstance().openEditor(note);
 	}
 	
 	protected void deleteNote(Note note) {

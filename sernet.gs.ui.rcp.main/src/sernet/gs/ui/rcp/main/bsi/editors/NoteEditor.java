@@ -101,6 +101,8 @@ public class NoteEditor extends EditorPart {
 		note = command.getNote();
 		isModelModified = false;
 		firePropertyChange(IEditorPart.PROP_DIRTY);
+		note.getEntity().addChangeListener(this.modelListener);
+		setTitle(note.getTitel());
 		NoteView noteView = (NoteView) Activator.getActivePage().findView(NoteView.ID);
 		noteView.clear();
 		noteView.loadNotes();
@@ -168,6 +170,7 @@ public class NoteEditor extends EditorPart {
 		gdTitel.horizontalAlignment = GridData.FILL;
 		gdTitel.verticalAlignment = GridData.CENTER;
 		Text title = new Text(contentComp,SWT.BORDER | SWT.NULL);	
+		
 		title.setLayoutData(gdTitel);
 		title.addListener(SWT.Modify, new Listener() {
 			public void handleEvent(Event e) {
@@ -194,6 +197,14 @@ public class NoteEditor extends EditorPart {
 			}
 		});
 		
+		if(note!=null) {
+			if(note.getTitel()!=null) {
+				title.setText(note.getTitel());
+			}
+			if(note.getText()!=null) {
+				textNote.setText(note.getText());
+			}
+		}
 		
 		contentComp.pack();
 		contentComp.layout();
