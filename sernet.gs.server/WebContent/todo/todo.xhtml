@@ -186,13 +186,11 @@
 												<td>
 													
 												</td>
-												<td>
-													<a4j:commandButton id="submit" value="#{msg['todo.save']}" action="#{toDo.save}" reRender="editPanel,tablePanel" style="margin-top:1em"/>												
-												</td>
-												<td colspan="2">
+												<td colspan="3">
+													<a4j:commandButton id="submit" value="#{msg['todo.save']}" action="#{toDo.save}" reRender="editPanel,tablePanel" style="margin-top:1em"/>					
 													<rich:message for="submit">
 														<f:facet name="errorMarker">
-								                        	<h:graphicImage value="/image/error.gif" />   
+								                        	<h:graphicImage value="/image/error.gif" style="margin-left:0.5em;margin-right:0.5em;"/>   
 								                    	</f:facet>
 								                    </rich:message>
 												</td>
