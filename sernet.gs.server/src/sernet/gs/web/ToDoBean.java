@@ -125,6 +125,7 @@ public class ToDoBean {
 		
 		// extract measures from command
 		Set<TodoViewItem> massnahmenList = command.getMassnahmen();			
+		getTodoList().clear();	
 		getTodoList().addAll(massnahmenList);
 		MassnahmenUmsetzung selectedMassnahme = getMassnahmeUmsetzung();
 		boolean massnahmeInList = false;
