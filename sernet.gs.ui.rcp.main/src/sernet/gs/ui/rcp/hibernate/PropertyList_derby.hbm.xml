@@ -19,6 +19,7 @@
 			name="uuid"
 		/>
 		
+		<property name="entityId" column="typedlist_id" insert="false" update="false"/>
 		
 		<list 
 			name="properties" 
