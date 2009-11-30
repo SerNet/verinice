@@ -2719,5 +2719,18 @@ Template:
         />
         
     </huientity>
-    
+
+	 <huientity
+        id="note"
+        name="Notiz">        
+        <huiproperty
+            id="note_name"
+            name="Titel" 
+        />   
+        <huiproperty
+			id="note_text"
+			name="Text"
+            inputtype="text"
+        />
+      </huientity>
 </huientities>
