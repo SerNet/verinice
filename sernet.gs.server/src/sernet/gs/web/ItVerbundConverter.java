@@ -36,7 +36,6 @@ public class ItVerbundConverter implements Converter {
 		this.toDoBean = toDoBean;
 	}
 
-	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String text) {
 		Object value = null;
 		if(toDoBean!=null && text!=null) {
@@ -55,7 +54,6 @@ public class ItVerbundConverter implements Converter {
 		return value;
 	}
 
-	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object value) {
 		ServerInitializer.inheritVeriniceContextState();
 		ITVerbund itVerbund = (ITVerbund) value;

@@ -46,7 +46,6 @@ public class UmsetzungConverter implements Converter {
 	private static final String PREDICTABLE = "Level 4: Predictable";
 	
 	
-	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String text) {
 		Object value = null;
 		if(ENTBERHRLICH.equals(text)) {
@@ -73,7 +72,6 @@ public class UmsetzungConverter implements Converter {
 		return value;
 	}
 
-	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object value) {
 		String text = null;
 		if(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH.equals(value)) {
