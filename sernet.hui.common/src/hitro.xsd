@@ -49,14 +49,26 @@
 		One entity with all its properties.
  -->
 <xs:complexType name="huientitytype">
-	<xs:sequence minOccurs="0" maxOccurs="unbounded">
-	     		<xs:element  name="huiproperty" 
-                  		type="hitro:huipropertytype"
-                 		minOccurs="0" maxOccurs="unbounded" />
-	           	<xs:element  name="huipropertygroup" 
-                  		type="hitro:huipropertygrouptype"
-                 		minOccurs="0" maxOccurs="unbounded" />
+	<xs:sequence
+		minOccurs="0"
+		maxOccurs="unbounded">
+		<xs:element
+			name="huiproperty"
+			type="hitro:huipropertytype"
+			minOccurs="0"
+			maxOccurs="unbounded" />
+		<xs:element
+			name="huipropertygroup"
+			type="hitro:huipropertygrouptype"
+			minOccurs="0"
+			maxOccurs="unbounded" />
 
+		<xs:element
+			name="huirelation"
+			type="hitro:huirelationtype"
+			maxOccurs="unbounded"
+			minOccurs="0">
+		</xs:element>
 	</xs:sequence>
 	<xs:attribute name="id" type="xs:ID" use="required"/>
 	<xs:attribute name="name" type="xs:string" use="required"/>
@@ -197,4 +209,28 @@ be displayed when one of the given options has been previously selected.
 	</xs:restriction>
 </xs:simpleType>
 
+
+    <xs:complexType name="huirelationtype">
+    	<xs:attribute
+    		name="id"
+    		type="xs:ID"
+    		use="required">
+    	</xs:attribute>
+    	<xs:attribute
+    		use="required"
+    		name="name"
+    		type="xs:string">
+    	</xs:attribute>
+        <xs:attribute name="reversename" type="xs:string">
+    	</xs:attribute>
+        <xs:attribute
+    		name="to"
+    		type="xs:IDREF"
+    		use="required">
+    	</xs:attribute>
+    	<xs:attribute
+    		name="tooltip"
+    		type="xs:string">
+    	</xs:attribute>
+    </xs:complexType>
 </xs:schema>

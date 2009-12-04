@@ -19,8 +19,11 @@ package sernet.hui.common.connect;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 public class EntityType {
 	private String id;
@@ -29,6 +32,9 @@ public class EntityType {
 	private List<IEntityElement> elements = new ArrayList<IEntityElement>();
 	private Map<String, PropertyType> propertyTypes = new HashMap<String, PropertyType>();
 	private List<PropertyGroup> propertyGroups = new ArrayList<PropertyGroup>();
+	
+	// map of target EntityType ID : set of relation descriptions 
+	private Map<String, Set<HuiRelation>> relations = new HashMap<String, Set<HuiRelation>>();
 	
 	public void addPropertyType(PropertyType prop) {
 		propertyTypes.put(prop.getId(), prop);
@@ -77,6 +83,38 @@ public class EntityType {
 				return type;
 		}
 		// none found:
+		return null;
+	}
+
+	/**
+	 * @param relation
+	 */
+	public void addRelation(HuiRelation relation) {
+		if (relations.get(relation.getId()) == null) {
+			this.relations.put(relation.getTo(), new HashSet<HuiRelation>());
+		}
+		this.relations.get(relation.getTo()).add(relation);
+	}
+	
+	public Set<HuiRelation> getPossibleRelations(String toEntityType) {
+		return relations.get(toEntityType) != null 
+			? relations.get(toEntityType)
+			: new HashSet<HuiRelation>(0);
+	}
+
+	/**
+	 * @param typeId
+	 * @return
+	 */
+	public HuiRelation getPossibleRelation(String typeId) {
+		Set<Entry<String, Set<HuiRelation>>> entrySet = relations.entrySet();
+		for (Entry<String, Set<HuiRelation>> entry : entrySet) {
+			Set<HuiRelation> value = entry.getValue();
+			for (HuiRelation huiRelation : value) {
+				if (huiRelation.getId().equals(typeId))
+					return huiRelation;
+			}
+		}
 		return null;
 	}
 	

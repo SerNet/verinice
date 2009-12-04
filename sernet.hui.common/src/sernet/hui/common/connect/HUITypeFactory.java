@@ -266,9 +266,25 @@ public class HUITypeFactory {
 				entityType.addPropertyGroup(group);
 				readChildElements(entityType, group);
 			}
+			else if (child.getTagName().equals("huirelation")) {
+				HuiRelation relation = new HuiRelation(child.getAttribute("id"));
+				entityType.addRelation(relation);
+				readRelation(child, relation);
+			}
 		}
 	}
 	
+	/**
+	 * @param child
+	 * @param relation
+	 */
+	private void readRelation(Element child, HuiRelation relation) {
+		relation.setName(child.getAttribute("name"));
+		relation.setReversename(child.getAttribute("reversename"));
+		relation.setTo(child.getAttribute("to"));
+		relation.setTooltip(child.getAttribute("tooltip"));
+	}
+
 	private PropertyType readPropertyType(String id) {
 		Element prop = doc.getElementById(id);
 		if (prop == null)
@@ -394,9 +410,36 @@ public class HUITypeFactory {
 	public PropertyType getPropertyType(String entityTypeID, String id) {
 		return allEntities.get(entityTypeID).getPropertyType(id);
 	}
+	
+	/**
+	 * Get list of possible relations from one entity to another.
+	 * 
+	 * @param fromEntityTypeID
+	 * @param toEntityTypeID
+	 * @return
+	 */
+	public Set<HuiRelation> getPossibleRelations(String fromEntityTypeID, String toEntityTypeID) {
+		return getEntityType(fromEntityTypeID).getPossibleRelations(toEntityTypeID);
+	}
 
 	public boolean isDependency(IMLPropertyOption opt) {
 		return allDependecies.contains(opt.getId());
+	}
+
+	/**
+	 * @param typeId
+	 */
+	public HuiRelation getRelation(String typeId) {
+		if (allEntities == null)
+			return null;
+		Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
+		for (Entry<String, EntityType> entry : entrySet) {
+			EntityType entityType = entry.getValue();
+		    HuiRelation possibleRelation = entityType.getPossibleRelation(typeId);
+		    if (possibleRelation != null)
+		    	return possibleRelation;
+		}
+		return null;
 	}
 	
 }
