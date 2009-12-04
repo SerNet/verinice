@@ -20,11 +20,19 @@ package sernet.gs.ui.rcp.main.bsi.model;
 import java.io.Serializable;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 
+
+/**
+ * Base class for all entities which add additional data to {@link CnATreeElement}s
+ * 
+ * @see Note
+ * @see Attachment
+ * @author Daniel Murygin <dm@sernet.de>
+ */
 @SuppressWarnings("serial")
 public class Addition implements Serializable{
 	
