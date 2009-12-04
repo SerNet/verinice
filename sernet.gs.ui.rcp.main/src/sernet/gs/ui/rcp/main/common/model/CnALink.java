@@ -40,23 +40,45 @@ public class CnALink implements Serializable {
 //	public static final int USED_BY 			= 3;
 	public static final int LOCATED_IN 		= 4;
 	
+	// relation type according to HitroRelation:
+	private String typeId;
 	
+	// user entered comment:
+	private String comment;
+	
+	
+	
+	public String getTypeId() {
+		return typeId;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
 	public static class Id implements Serializable {
 		private Integer dependantId;
 		private Integer dependencyId;
+		private String typeId;
 		
 		public Id() {}
 		
 		public Id(Integer dependantId, Integer dependencyId) {
+			this(dependantId, dependencyId, "");
+		}
+
+		public Id(Integer dependantId, Integer dependencyId, String typeId) {;
 			this.dependantId = dependantId;
 			this.dependencyId = dependencyId;
+			this.typeId = typeId;
 		}
 		
 		public boolean equals(Object o) {
 			if (o != null && o instanceof Id) {
 				Id that = (Id)o;
 				return this.dependantId.equals(that.dependantId)
-					&& this.dependencyId.equals(that.dependencyId);
+					&& this.dependencyId.equals(that.dependencyId)
+					&& this.typeId.equals(that.typeId);
 			} 
 			else {
 				return false;
@@ -64,15 +86,16 @@ public class CnALink implements Serializable {
 		}
 		
 		public int hashCode() {
-			if (dependantId == null || dependencyId == null)	
+			if (dependantId == null || dependencyId == null || typeId == null)	
 					return super.hashCode();
-			return dependantId.hashCode() + dependencyId.hashCode();
+			return dependantId.hashCode() + dependencyId.hashCode() + typeId.hashCode();
 		}
 		
 	}
 
 	private Id id;
 	
+	// link type category as definied by integer constand (see above):
 	private int linkType =0;
 	
 	private CnATreeElement dependant;
@@ -80,22 +103,36 @@ public class CnALink implements Serializable {
 	
 	protected CnALink() {}
 	
-	public CnALink(CnATreeElement dependant, CnATreeElement dependency) {
+	public CnALink(CnATreeElement dependant, CnATreeElement dependency, String typeId, String comment) {
 		// set linked items:
 		this.dependant = dependant;
 		this.dependency = dependency;
+		this.typeId = typeId;
+		this.comment = comment;
 		
 		// set IDs:
 		getId().dependantId = dependant.getDbId();
 		getId().dependencyId = dependency.getDbId();
+		getId().typeId = typeId;
 	
 		// maintain bi-directional association:
 		dependency.addLinkUp(this);
 		dependant.addLinkDown(this);
 		this.linkType = linkTypeFor(dependency);
-		
 	}
 	
+	protected void setTypeId(String typeId) {
+		this.typeId = typeId;
+	}
+
+	protected void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	protected void setLinkType(int linkType) {
+		this.linkType = linkType;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -159,10 +196,6 @@ public class CnALink implements Serializable {
 		return linkType;
 	}
 
-	public void setLinkType(int linkType) {
-		this.linkType = linkType;
-	}
-
 	public String getTitle() {
 		return typeTitle() + dependency.getTitel();
 	}
@@ -181,9 +214,9 @@ public class CnALink implements Serializable {
 		return ""; //$NON-NLS-1$
 	}
 
-	public LinkKategorie getParent() {
-		return dependant.getLinks();
-	}
+//	public LinkKategorie getParent() {
+//		return dependant.getLinks();
+//	}
 
 	
 }

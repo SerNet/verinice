@@ -123,6 +123,9 @@ public class ImageCache {
 
 	public static final String RELOAD = "arrow_refresh.png";
 
+	public static final String LINK_DOWN = "link_down.png";
+	public static final String LINK_UP = "link_up.png";
+
 	public static final String NOTE = "note.png";
 
 	public static final String NOTE_NEW = "note-new.png";
@@ -130,6 +133,7 @@ public class ImageCache {
 	public static final String DELETE = "delete.png";
 	
 	public static final String EDIT = "edit.png";
+
 
 	public static final String SAVE = "save.png";
 	

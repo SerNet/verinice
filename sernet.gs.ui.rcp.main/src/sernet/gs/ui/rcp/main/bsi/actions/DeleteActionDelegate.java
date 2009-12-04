@@ -177,6 +177,8 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 		}
 
 	}
+	
+	
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		// Realizes that the action to delete an element is greyed out,

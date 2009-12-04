@@ -85,7 +85,7 @@ public class BSIModelFilterDialog extends FilterDialog {
 		// is to use the i18n and use the same string for the button and this code.
 		possibleFilters.put("Bausteinzuordnungen", BausteinUmsetzung.class);
 		possibleFilters.put("Maßnahmenumsetzungen", MassnahmenUmsetzung.class);
-		possibleFilters.put("Verknüpfungen", LinkKategorie.class); 
+		//possibleFilters.put("Verknüpfungen", LinkKategorie.class); 
 	}
 	
 	private static final String[] LZ_ITEMS = new String[] {
@@ -277,10 +277,10 @@ private void createAusblendenCheckboxes(Group parent) {
 		button2.setSelection(getFilterSelectionForButton(button2));
 		button2.addSelectionListener(new SelectionHelper(button2));
 		
-		final Button button3 = new Button(parent, SWT.CHECK);
-		button3.setText("Verknüpfungen");
-		button3.setSelection(getFilterSelectionForButton(button3));
-		button3.addSelectionListener(new SelectionHelper(button3));
+//		final Button button3 = new Button(parent, SWT.CHECK);
+//		button3.setText("Verknüpfungen");
+//		button3.setSelection(getFilterSelectionForButton(button3));
+//		button3.addSelectionListener(new SelectionHelper(button3));
 			
 	}
 

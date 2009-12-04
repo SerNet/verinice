@@ -151,7 +151,7 @@ public class CnAElementHome {
 	}
 
 	public void remove(CnALink element) throws Exception {
-		RemoveLink command = new RemoveLink(element);
+		RemoveLink command = new RemoveLink(element.getId());
 		command = commandService.executeCommand(command);
 	}
 

@@ -119,22 +119,23 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 	}
 
 	public void linkChanged(CnALink link) {
-		// is top element visible?
-		CnATreeElement oldElement = cache.getCachedObject(link.getParent()
-				.getParent());
-		
-		if (oldElement != null) {
-			// load and add linkkategory:
-			oldElement.setLinks(link.getParent());
-			link.getParent().setParent(oldElement);
-			
-			// replace old instance of link with new one:
-			oldElement.removeLinkDown(link);
-			oldElement.addLinkDown(link);
-			updater.refresh(link);
-			updater.refresh(oldElement);
-			updater.reveal(link);
-		}
+		// TODO akoderman do nothing, links displayed in relationview now
+//		// is top element visible?
+//		CnATreeElement oldElement = cache.getCachedObject(link.getParent()
+//				.getParent());
+//		
+//		if (oldElement != null) {
+//			// load and add linkkategory:
+//			oldElement.setLinks(link.getParent());
+//			link.getParent().setParent(oldElement);
+//			
+//			// replace old instance of link with new one:
+//			oldElement.removeLinkDown(link);
+//			oldElement.addLinkDown(link);
+//			updater.refresh(link);
+//			updater.refresh(oldElement);
+//			updater.reveal(link);
+//		}
 	}
 	
 	public void linkAdded(CnALink link) {
@@ -143,13 +144,14 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 	
 	
 	public void linkRemoved(CnALink link) {
-		// is link visible?
-		CnALink oldElement = cache.getCachedObject(link);
-		
-		if (oldElement != null) {
-			oldElement.getParent().getParent().removeLinkDown(oldElement);
-			updater.remove(oldElement);
-		}
+		// TODO akoderman do nothing, li nks displayed in relationview now 
+//		// is link visible?
+//		CnALink oldElement = cache.getCachedObject(link);
+//		
+//		if (oldElement != null) {
+//			oldElement.getParent().getParent().removeLinkDown(oldElement);
+//			updater.remove(oldElement);
+//		}
 	}
 
 	public void databaseChildAdded(CnATreeElement child) {

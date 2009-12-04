@@ -27,6 +27,18 @@
    </extension>
    <extension
          point="org.eclipse.ui.views">
+      <category
+            id="sernet.verinice.iso27k.ui.views.relationview"
+            name="ISMS">
+      </category>
+      <view
+            name="Relationen"
+            icon="icons/link.png"
+            category="sernet.gs.ui.rcp.main.views"
+            class="sernet.gs.ui.rcp.main.bsi.views.RelationView"
+            id="sernet.gs.ui.rcp.main.bsi.views.RelationView">
+      </view>
+     
       <view
             allowMultiple="true"
             category="sernet.gs.ui.rcp.main.views"

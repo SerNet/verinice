@@ -183,6 +183,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 		 */
 		public void databaseChildRemoved(ChangeLogEntry entry) {
 			// TODO server: remove element
+			// TODO akoderman really? this seems to be working fine.
 		}
 
 	};

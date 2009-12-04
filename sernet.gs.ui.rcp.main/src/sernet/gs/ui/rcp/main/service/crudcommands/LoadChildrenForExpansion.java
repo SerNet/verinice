@@ -60,7 +60,7 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
 		
 		RetrieveInfo ri = new RetrieveInfo();
-		ri.setChildren(true).setChildrenProperties(true).setProperties(true).setLinksDown(true);
+		ri.setChildren(true).setChildrenProperties(true).setProperties(true).setLinksDown(false).setLinksUp(false);
 		parent = dao.retrieve(dbId,ri);
 		if(parent!=null) {
 			hydrate(parent);
@@ -80,23 +80,25 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		if (element == null)
 			return;
 		
-		log.debug("Hydrate element of type: " + element.getClass().getSimpleName());
+		//log.debug("Hydrate element of type: " + element.getClass().getSimpleName());
 		
 		if (element instanceof MassnahmenUmsetzung) {
 			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
 			mn.getKapitelValue();
-			String titel = mn.getTitel();	
+			mn.getTitel();	
 			mn.getUmsetzung();
 			mn.getUrl();
 			mn.getStand();
 			return;
 		}
 		
-		RetrieveInfo ri = new RetrieveInfo();
-		ri.setChildren(true).setLinksDown(true);
+		RetrieveInfo ri = null;
+		ri = new RetrieveInfo();
+		ri.setChildren(true).setLinksDown(false);
 		if (element instanceof BausteinUmsetzung) {
 			ri.setChildrenProperties(true).setInnerJoin(true);
 		}
+		
 		HydratorUtil.hydrateElement(getDaoFactory().getDAO(element.getClass()), element, ri);
 		
 		// initialize all children:

@@ -24,6 +24,7 @@ import java.util.List;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.CnALink.Id;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
@@ -31,17 +32,18 @@ import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 @SuppressWarnings("serial")
 public class RemoveLink<T extends CnALink> extends GenericCommand implements IChangeLoggingCommand {
 
-	private T element;
 	private String stationId;
+	private Id linkId;
+	private transient CnALink element;
 
-	public RemoveLink(T element) {
-		this.element = element;
+	public RemoveLink(CnALink.Id linkId) {
+		this.linkId = linkId;
 		this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
 	public void execute() {
-		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
-		element = dao.findById(element.getId());
+		IBaseDao<CnALink, Serializable> dao = (IBaseDao<CnALink, Serializable>) getDaoFactory().getDAO(CnALink.class);
+		element = dao.findById(linkId);
 		element.remove();
 		dao.delete(element);
 	}
@@ -51,6 +53,7 @@ public class RemoveLink<T extends CnALink> extends GenericCommand implements ICh
 	 */
 	@Override
 	public void clear() {
+		linkId = null;
 		element = null;
 	}
 
@@ -67,7 +70,7 @@ public class RemoveLink<T extends CnALink> extends GenericCommand implements ICh
 	public List<CnATreeElement> getChangedElements() {
 		// return link category item:
 		List<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
-		result.add(element.getParent().getParent());
+		result.add(element.getDependant()); 
 		return result;
 	}
 

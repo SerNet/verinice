@@ -21,63 +21,63 @@ import java.io.Serializable;
 
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.CnALink.Id;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 /**
- * Create and save new element of type type to the database using its class to lookup
- * the DAO from the factory.
- * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$
  *
- * @param <T>
  */
-public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends CnATreeElement> 
-extends GenericCommand {
+public class ChangeLinkType extends GenericCommand {
 
-	private U dragged;
-	private V target;
-	private CnALink link;
-	private String typeId;
+	private Id linkId;
+	private String linkTypeID;
 	private String comment;
 
-	public CreateLink(V target, U dragged) {
-		this(target, dragged, "", "");
-	}
-
-	public CreateLink(V target, U dragged, String typeId, String comment) {
-		this.target = target;
-		this.dragged = dragged;
-		this.typeId = typeId;
+	/**
+	 * @param id
+	 * @param linkTypeID 
+	 */
+	public ChangeLinkType(Id id, String linkTypeID, String comment) {
+		this.linkId = id;
+		this.linkTypeID = linkTypeID;
 		this.comment = comment;
 	}
 	
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
+	 */
+	@Override
+	public void clear() {
+		linkId = null;
+		linkTypeID = null;
+		comment = null;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+	 */
 	public void execute() {
-		IBaseDao<CnALink, Serializable> linkDao 
-			= (IBaseDao<CnALink, Serializable>) getDaoFactory().getDAO(CnALink.class);
-		
-		IBaseDao<U, Serializable> draggedDao 
-		= (IBaseDao<U, Serializable>) getDaoFactory().getDAO(dragged.getClass());
-
-		IBaseDao<V, Serializable> targetDao 
-		= (IBaseDao<V, Serializable>) getDaoFactory().getDAO(target.getClass());
-		
-		draggedDao.reload(dragged, dragged.getDbId());
-		targetDao.reload(target, target.getDbId());
-		
-		link = new CnALink(target, dragged, typeId, comment);
-		linkDao.merge(link, true);
-		
-		// make sure parent object is loaded for tree display:
-		//link.getParent().getParent();
-		//link.getTitle();
+		try {
+			IBaseDao<CnALink, Serializable> dao = getDaoFactory().getDAO(CnALink.class);
+			CnALink link = dao.findById(linkId);
+			CnATreeElement dependant = link.getDependant();
+			CnATreeElement dependency = link.getDependency();
+			
+			// links are immutable, so we have to recreate the link:
+			
+			RemoveLink<CnALink> command = new RemoveLink<CnALink>(linkId);
+			command = getCommandService().executeCommand(command);
+			
+			CreateLink<CnALink, CnATreeElement, CnATreeElement> command2 = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(dependant, dependency, linkTypeID, comment);
+			command2 = getCommandService().executeCommand(command2);
+			
+		} catch (CommandException e) {
+		}
 	}
-
-	public CnALink getLink() {
-		return link;
-	}
-
 
 }

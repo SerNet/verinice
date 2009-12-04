@@ -120,7 +120,7 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 					criteria.setFetchMode("linksUp.dependant", FetchMode.JOIN);
 					criteria.setFetchMode("linksUp.dependant.entity", FetchMode.JOIN);
 					criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists", FetchMode.JOIN);
-					criteria.setFetchMode("linksUp.dependency.entity.typedPropertyLists.properties", FetchMode.JOIN);
+					criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists.properties", FetchMode.JOIN);
 				}
 			}
 			if( ri.isChildren()) {
@@ -152,7 +152,7 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			if(resultList!=null ) {
 				if( resultList.size()>1) {
 					// TODO: dm - exception handling
-					final String message = "More than one entry find, criteria is: " + criteria.toString();
+					final String message = "More than one entry found, criteria is: " + criteria.toString();
 					log.error(message);
 					throw new RuntimeException(message);
 				}

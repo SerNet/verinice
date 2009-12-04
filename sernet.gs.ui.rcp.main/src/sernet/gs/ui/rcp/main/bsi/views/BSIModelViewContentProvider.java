@@ -80,42 +80,43 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 				el.replace(newElement);
 				el = newElement;
 				CnATreeElement[] children = el.getChildrenAsArray();
-				if (el.getLinksDown().size() > 0) {
-					// add linkkategorie object:
-					Object[] result = new Object[children.length + 1];
-					System.arraycopy(children, 0, result, 0, children.length);
-					result[children.length] = el.getLinks();
-					return result;
-				} else {
+				// TODO akoderman links only displayed in relationView
+//				if (el.getLinksDown().size() > 0) {
+//					// add linkkategorie object:
+//					Object[] result = new Object[children.length + 1];
+//					System.arraycopy(children, 0, result, 0, children.length);
+//					result[children.length] = el.getLinks();
+//					return result;
+//				} else {
 					return children;
-				}
+//				}
 			} catch (CommandException e) {
 				log.error("Error while loading child elements", e);
 				ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
 			}
 		}
 
-		else if (parent instanceof LinkKategorie) {
-			try {
-				LinkKategorie linkKategorie = (LinkKategorie) parent;
-				CnATreeElement el = linkKategorie.getParent();
-				Set<CnALink> linkDownSet = loadLinksDown(el);
-				el.setLinksDown(linkDownSet);
-				return linkDownSet.toArray();
-			} catch (CommandException e) {
-				log.error("Error while loading child elements", e);
-				ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
-			}
-		}
+//		else if (parent instanceof LinkKategorie) {
+//			try {
+//				LinkKategorie linkKategorie = (LinkKategorie) parent;
+//				CnATreeElement el = linkKategorie.getParent();
+//				Set<CnALink> linkDownSet = loadLinksDown(el);
+//				el.setLinksDown(linkDownSet);
+//				return linkDownSet.toArray();
+//			} catch (CommandException e) {
+//				log.error("Error while loading child elements", e);
+//				ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
+//			}
+//		}
 
 		return null;
 	}
 	
-	private Set<CnALink> loadLinksDown(CnATreeElement element) throws CommandException {
-		LoadLinksDown command = new LoadLinksDown(element);
-		command = ServiceFactory.lookupCommandService().executeCommand(command);
-		return command.getLinksDown();
-	}
+//	private Set<CnALink> loadLinksDown(CnATreeElement element) throws CommandException {
+//		LoadLinksDown command = new LoadLinksDown(element);
+//		command = ServiceFactory.lookupCommandService().executeCommand(command);
+//		return command.getLinksDown();
+//	}
 
 	private CnATreeElement loadChildren(CnATreeElement el) throws CommandException {
 		if (el.isChildrenLoaded()) {
@@ -166,13 +167,15 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 		if (child instanceof CnATreeElement) {
 			CnATreeElement el = (CnATreeElement) child;
 			return el.getParent();
-		} else if (child instanceof LinkKategorie) {
-			LinkKategorie kat = (LinkKategorie) child;
-			return kat.getParent();
-		} else if (child instanceof CnALink) {
-			CnALink link = (CnALink) child;
-			return link.getParent();
-		}
+		} 
+//		else if (child instanceof LinkKategorie) {
+//			LinkKategorie kat = (LinkKategorie) child;
+//			return kat.getParent();
+//		}
+//		else if (child instanceof CnALink) {
+//			CnALink link = (CnALink) child;
+//			return link.getParent();
+//		}
 		return null;
 	}
 
@@ -183,7 +186,7 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 		if (parent instanceof CnATreeElement) {
 			try {
 				CnATreeElement el = (CnATreeElement) parent;
-				boolean hasChildren = el.getChildren().size() > 0 || el.getLinksDown().size() > 0;
+				boolean hasChildren = el.getChildren().size() > 0;
 				return hasChildren;
 			} catch (Exception e) {
 				if (parent != null) {
@@ -195,10 +198,10 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 			}
 
 		}
-		if (parent instanceof LinkKategorie) {
-			LinkKategorie kat = (LinkKategorie) parent;
-			return kat.getChildren().size() > 0;
-		}
+//		if (parent instanceof LinkKategorie) {
+//			LinkKategorie kat = (LinkKategorie) parent;
+//			return kat.getChildren().size() > 0;
+//		}
 		return false;
 	}
 

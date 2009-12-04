@@ -190,7 +190,8 @@ public class BSIElementEditor extends EditorPart {
 				.getEntityType(entity.getEntityType());
 			
 			// Enable dirty listener only for writable objects.
-			if (CnAElementHome.getInstance().isWriteAllowed(cnAElement))
+			boolean writeAllowed = CnAElementHome.getInstance().isWriteAllowed(cnAElement);
+			if (writeAllowed)
 			{
 				// add listener to mark editor as dirty on changes:
 				entity.addChangeListener(this.modelListener);
@@ -200,7 +201,7 @@ public class BSIElementEditor extends EditorPart {
 				setPartName(getPartName() + " (SCHREIBGESCHÜTZT)");
 			}
 			
-			huiComposite.createView(entity, true, true);
+			huiComposite.createView(entity, writeAllowed, true);
 			InputHelperFactory.setInputHelpers(entityType, huiComposite);
 			huiComposite.resetInitialFocus();
 		} catch (Exception e) {
