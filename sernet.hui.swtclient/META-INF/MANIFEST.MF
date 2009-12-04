@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Swtclient
 Bundle-SymbolicName: sernet.hui.swtclient
-Bundle-Version: 1.0.17
+Bundle-Version: 1.0.19
 Bundle-Localization: plugin
 Export-Package: sernet.hui.swt.dialogs,
  sernet.hui.swt.widgets,

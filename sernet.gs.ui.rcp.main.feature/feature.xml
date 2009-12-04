@@ -2,7 +2,7 @@
 <feature
       id="sernet.gs.ui.rcp.main.feature"
       label="Verinice Anwendung"
-      version="1.0.17"
+      version="1.0.19"
       provider-name="sernet.de"
       plugin="sernet.gs.ui.rcp.main">
 
@@ -2151,14 +2151,14 @@ Public License instead of this License.  But first, please read
          id="sernet.hui.common"
          download-size="0"
          install-size="0"
-         version="1.0.17"
+         version="1.0.19"
          unpack="false"/>
 
    <plugin
          id="sernet.hui.swtclient"
          download-size="0"
          install-size="0"
-         version="1.0.17"
+         version="1.0.19"
          unpack="false"/>
 
    <plugin
@@ -2196,7 +2196,7 @@ Public License instead of this License.  But first, please read
          id="sernet.hui.server"
          download-size="0"
          install-size="0"
-         version="1.0.17"
+         version="1.0.19"
          unpack="false"/>
 
    <plugin
@@ -2271,7 +2271,7 @@ Public License instead of this License.  But first, please read
          id="sernet.gs.ui.rcp.main"
          download-size="60"
          install-size="188"
-         version="1.0.17"
+         version="1.0.18"
          unpack="false"/>
 
    <plugin
