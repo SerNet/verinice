@@ -23,20 +23,21 @@ import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.bsi.model.Attachment;
 import sernet.gs.ui.rcp.main.bsi.model.Note;
 
-public class NoteEditorInput implements IEditorInput {
+public class AttachmentEditorInput implements IEditorInput {
 
-	private Note input;
+	private Attachment input;
 	
 	
 
-	public NoteEditorInput(Note selection) {
+	public AttachmentEditorInput(Attachment selection) {
 		input = selection;
 	}
 	
-	public Integer getId() {
-		return (input!=null) ? input.getCnATreeElementId() : null;
+	public String getId() {
+		return (input!=null && input.getEntity()!=null) ? input.getEntity().getUuid() : null;
 	}
 
 	public boolean exists() {
@@ -64,11 +65,11 @@ public class NoteEditorInput implements IEditorInput {
 		return null;
 	}
 	
-	public Note getInput() {
+	public Attachment getInput() {
 		return input;
 	}
 
-	public void setInput(Note input) {
+	public void setInput(Attachment input) {
 		this.input = input;
 	}
 

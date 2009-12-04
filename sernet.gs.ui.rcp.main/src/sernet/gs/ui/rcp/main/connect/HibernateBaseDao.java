@@ -93,6 +93,9 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			if(log.isDebugEnabled()) {
 				log.debug("retrieve - id: " + id + " " + ri);
 			}
+			if(ri==null) {
+				ri = new RetrieveInfo();
+			}
 			
 			DetachedCriteria criteria = DetachedCriteria.forClass(type);
 			criteria.add(Restrictions.eq("dbId", id));

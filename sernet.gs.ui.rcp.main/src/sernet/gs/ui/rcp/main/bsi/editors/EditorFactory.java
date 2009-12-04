@@ -27,6 +27,7 @@ import org.hibernate.HibernateException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
+import sernet.gs.ui.rcp.main.bsi.model.Attachment;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
@@ -138,6 +139,30 @@ public class EditorFactory {
 
 		typedFactories.put(TodoViewItem.class, todoItemEditorFactory);
 
+		
+		IEditorTypeFactory attachmentEditorFactory = new IEditorTypeFactory() {
+
+			public void openEditorFor(Object o) throws Exception {
+				IEditorPart editor;
+
+				// replace element with new instance from DB:
+				Attachment attachment = (Attachment) o;
+				AttachmentEditorInput input = new AttachmentEditorInput(attachment);
+
+				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {
+					// open new editor:
+					editor = Activator.getActivePage().openEditor(input, AttachmentEditor.EDITOR_ID);
+					EditorRegistry.getInstance().registerOpenEditor(String.valueOf(input.getId()), editor);
+				} else {
+					// show existing editor:
+					((AttachmentEditorInput)editor.getEditorInput()).setInput(attachment);
+					Activator.getActivePage().openEditor(editor.getEditorInput(), AttachmentEditor.EDITOR_ID);
+				}
+			}
+			
+		};
+		typedFactories.put(Attachment.class, attachmentEditorFactory);
+		
 		IEditorTypeFactory noteEditorFactory = new IEditorTypeFactory() {
 
 			public void openEditorFor(Object o) throws Exception {
@@ -153,13 +178,14 @@ public class EditorFactory {
 					EditorRegistry.getInstance().registerOpenEditor(String.valueOf(input.getId()), editor);
 				} else {
 					// show existing editor:
-					Activator.getActivePage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
+					((NoteEditorInput)editor.getEditorInput()).setInput(selection);
+					Activator.getActivePage().openEditor(editor.getEditorInput(), NoteEditor.EDITOR_ID);
 				}
 			}
 			
 		};
 		typedFactories.put(Note.class, noteEditorFactory);
-
+		
 		// TODO register more editor-factories here
 	}
 

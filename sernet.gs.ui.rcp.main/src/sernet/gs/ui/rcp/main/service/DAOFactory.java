@@ -23,8 +23,11 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.ui.rcp.main.bsi.model.Addition;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.Attachment;
+import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
@@ -352,7 +355,17 @@ public class DAOFactory {
     	daos.put(Note.class, daoToSet);
     }
     
-
+    public void setAttachmentDAO(IBaseDao<Attachment, Integer> daoToSet) {
+    	daos.put(Attachment.class, daoToSet);
+    }
+    
+    public void setAdditionDAO(IBaseDao<Addition, Integer> daoToSet) {
+    	daos.put(Addition.class, daoToSet);
+    }
+    
+    public void setAttachmentFileDAO(IBaseDao<AttachmentFile, Integer> daoToSet) {
+    	daos.put(AttachmentFile.class, daoToSet);
+    }
     
     
 	public <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype) {

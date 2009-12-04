@@ -45,7 +45,10 @@ import org.eclipse.ui.part.ViewPart;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.Note;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -70,6 +73,10 @@ public class NoteView extends ViewPart {
 	private CnATreeElement currentCnaElement;
 	
 	private Action addNoteAction;
+
+	private IBSIModelListener modelListener;
+	
+	List<Note> noteList;
 
 	public NoteView() {
 	}
@@ -118,7 +125,7 @@ public class NoteView extends ViewPart {
 			return;
 		try {
 			Object element = ((IStructuredSelection) selection).getFirstElement();
-			if(element instanceof CnATreeElement) {
+			if(element instanceof CnATreeElement && !element.equals(getCurrentCnaElement())) {
 				addNoteAction.setEnabled(true);
 				setCurrentCnaElement((CnATreeElement) element);
 				clear();
@@ -146,6 +153,12 @@ public class NoteView extends ViewPart {
 				note.setCnATreeElementId(getCurrentCnaElement().getDbId());
 				note.setCnAElementTitel(getCurrentCnaElement().getTitel());
 				note.setTitel("neue Notiz");
+				note.addListener(new Note.INoteChangedListener() {
+					public void noteChanged() {
+						clear();
+						loadNotes();
+					}
+				});
 				EditorFactory.getInstance().openEditor(note);			
 			}
 		};
@@ -158,13 +171,20 @@ public class NoteView extends ViewPart {
 		try {
 			LoadNotes command = new LoadNotes(getCurrentCnaElement().getDbId());		
 			command = getCommandService().executeCommand(command);		
-			List<Note> noteList = command.getNoteList();
+			noteList = command.getNoteList();
 			if(noteList==null || noteList.size()==0) {
 				Label test = new Label(parent, SWT.NONE);
 				test.setText("keine Notiz vorhanden");		
 				test.pack();
 			} else {
 				for (final Note note : noteList) {
+					note.addListener(new Note.INoteChangedListener() {
+						public void noteChanged() {
+							clear();
+							loadNotes();
+						}
+					});
+					
 					// set transient cna-element-titel
 					note.setCnAElementTitel(getCurrentCnaElement().getTitel());
 					Composite composite = new Composite(expandBar, SWT.NONE);
@@ -235,7 +255,6 @@ public class NoteView extends ViewPart {
 			LOG.error("Error while saving note", e);
 			ExceptionUtil.log(e, "Fehler beim Speichern der Notiz.");
 		}
-		note = command.getNote();
 		clear();
 		loadNotes();
 	}
@@ -266,6 +285,13 @@ public class NoteView extends ViewPart {
 
 	public void setCurrentCnaElement(CnATreeElement currentCnaElement) {
 		this.currentCnaElement = currentCnaElement;
+	}
+	
+	@Override
+	public void dispose() {
+		BSIModel model = CnAElementFactory.getLoadedModel();
+		model.removeBSIModelListener(modelListener);
+		super.dispose();
 	}
 
 }

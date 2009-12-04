@@ -21,6 +21,7 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.bsi.model.Addition;
 import sernet.gs.ui.rcp.main.bsi.model.Note;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
@@ -36,9 +37,9 @@ private transient Logger log = Logger.getLogger(SaveNote.class);
 		return log;
 	}
 	
-	Note note;
+	Addition note;
 
-	public DeleteNote(Note note) {
+	public DeleteNote(Addition note) {
 		super();
 		this.note = note;
 	}
@@ -48,15 +49,15 @@ private transient Logger log = Logger.getLogger(SaveNote.class);
 			getLog().debug("executing...");
 		}
 		if(getNote()!=null) {
-			IBaseDao<Note, Serializable> dao = getDaoFactory().getDAO(Note.class);
+			IBaseDao<Addition, Serializable> dao = getDaoFactory().getDAO(Addition.class);
 			dao.delete(getNote());
 			if (getLog().isDebugEnabled()) {
-				getLog().debug("note deleted, id: " + getNote().getDbId());
+				getLog().debug("Addition deleted, id: " + getNote().getDbId());
 			}
 		}
 	}
 	
-	public Note getNote() {
+	public Addition getNote() {
 		return note;
 	}
 

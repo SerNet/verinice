@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.Note;
+import sernet.gs.ui.rcp.main.bsi.model.Addition;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.hui.common.connect.Entity;
@@ -39,39 +39,44 @@ public class SaveNote extends GenericCommand {
 		return log;
 	}
 	
-	Note note;
+	Addition addition;
 
-	public SaveNote(Note note) {
+	public SaveNote(Addition note) {
 		super();
-		this.note = note;
+		this.addition = note;
 	}
 
 	public void execute() {
 		if (getLog().isDebugEnabled()) {
 			getLog().debug("executing...");
 		}
-		if(getNote()!=null) {
-			IBaseDao<Note, Serializable> dao = getDaoFactory().getDAO(Note.class);
-			dao.saveOrUpdate(getNote());
-			if (getLog().isDebugEnabled()) {
-				getLog().debug("note saved, id: " + getNote().getDbId());
-			}
-			Entity entity = getNote().getEntity();
-			if(entity!=null) {
-				for (PropertyList pl : entity.getTypedPropertyLists().values()) {
-					for (Property p : pl.getProperties()) {
-						p.setParent(entity);
+		try {
+			if(getAddition()!=null) {
+				IBaseDao<Addition, Serializable> dao = getDaoFactory().getDAO(Addition.class);
+				dao.saveOrUpdate(getAddition());
+				if (getLog().isDebugEnabled()) {
+					getLog().debug("addition saved, id: " + getAddition().getDbId());
+				}
+				Entity entity = getAddition().getEntity();
+				if(entity!=null) {
+					for (PropertyList pl : entity.getTypedPropertyLists().values()) {
+						for (Property p : pl.getProperties()) {
+							p.setParent(entity);
+						}
 					}
 				}
 			}
+		} catch (RuntimeException e) {
+			log.error("Error while executing", e);
+			throw e;
 		}
 	}
 	
-	public Note getNote() {
-		return note;
+	public Addition getAddition() {
+		return addition;
 	}
 
-	public void setNote(Note note) {
-		this.note = note;
+	public void setAddition(Addition note) {
+		this.addition = note;
 	}
 }

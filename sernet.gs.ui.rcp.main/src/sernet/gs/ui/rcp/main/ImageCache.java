@@ -131,6 +131,24 @@ public class ImageCache {
 	
 	public static final String EDIT = "edit.png";
 
+	public static final String SAVE = "save.png";
+	
+	public static final String ATTACH = "attach.png";
+	
+	public static final String VIEW = "view.png";
+	
+	public static final String MIME_ARCHIVE = "mime-archive.png";
+	public static final String MIME_AUDIO = "mime-audio.png";
+	public static final String MIME_DOCUMENT = "mime-document.png";
+	public static final String MIME_HTML = "mime-html.png";
+	public static final String MIME_PDF = "mime-pdf.png";
+	public static final String MIME_PRESENTATION = "mime-presentation.png";
+	public static final String MIME_SPREADSHEET = "mime-spreadsheet.png";
+	public static final String MIME_TEXT = "mime-text.png";
+	public static final String MIME_UNKNOWN = "mime-unknown.png";
+	public static final String MIME_VIDEO = "mime-video.png";
+	public static final String MIME_XML = "mime-xml.png";
+	public static final String MIME_IMAGE = "mime-image.png";
 	
 	
 	private static ImageCache instance;
