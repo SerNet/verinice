@@ -26,58 +26,58 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 
 @SuppressWarnings("serial")
-public class Note extends Addition implements Serializable{
-
-	public static final String PROP_NAME = "note_name"; //$NON-NLS-1$
+public class Addition implements Serializable{
 	
-	public static final String PROP_TEXT = "note_text"; //$NON-NLS-1$
-
-	public static final String TYPE_ID = "note"; //$NON-NLS-1$
+	private transient CopyOnWriteArraySet<INoteChangedListener>  listeners;
 	
-	private transient EntityType subEntityType;
-	
+	Integer dbId;
 
-	public Note() {
+	Integer cnATreeElementId;
+	
+	private transient String cnAElementTitel;
+	
+	Entity entity;
+
+	public Addition() {
 		super();
-		setEntity(new Entity(TYPE_ID));
 	}
 	
-
-	public String getTitel() {
-		if(getEntity()!=null && getEntity().getProperties(PROP_NAME)!=null && getEntity().getProperties(PROP_NAME).getProperty(0)!=null) {
-			return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
-		} else {
-			return null;
-		}
-	}
-	
-	public void setTitel(String titel) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), titel);
-	}
-	
-	
-	public String getText() {
-		if(getEntity()!=null && getEntity().getProperties(PROP_TEXT)!=null && getEntity().getProperties(PROP_TEXT).getProperty(0)!=null) {
-			return getEntity().getProperties(PROP_TEXT).getProperty(0).getPropertyValue();
-		} else {
-			return null;
-		}
-	}
-	
-	public void setText(String text) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TEXT), text);
-	}
-	
-	public EntityType getEntityType() {
-		if (subEntityType == null)
-			subEntityType = getTypeFactory().getEntityType(getTypeId());
-		return subEntityType;
+	public Integer getDbId() {
+		return dbId;
 	}
 
-	
-	public String getTypeId() {
-		return TYPE_ID;
+	public void setDbId(Integer dbId) {
+		this.dbId = dbId;
 	}
+	
+	public Integer getCnATreeElementId() {
+		return cnATreeElementId;
+	}
+
+	public void setCnATreeElementId(Integer cnATreeElementId) {
+		this.cnATreeElementId = cnATreeElementId;
+	}
+	
+	public String getCnAElementTitel() {
+		return cnAElementTitel;
+	}
+
+	public void setCnAElementTitel(String cnAElementTitel) {
+		this.cnAElementTitel = cnAElementTitel;
+	}
+
+	public Entity getEntity() {
+		return entity;
+	}
+
+	public void setEntity(Entity entity) {
+		this.entity = entity;
+	}
+	
+	protected HUITypeFactory getTypeFactory() {
+		return HitroUtil.getInstance().getTypeFactory();
+	}
+	
 
 	@Override
 	public int hashCode() {
@@ -96,7 +96,7 @@ public class Note extends Addition implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Note other = (Note) obj;
+		Addition other = (Addition) obj;
 		if (cnATreeElementId == null) {
 			if (other.cnATreeElementId != null)
 				return false;
@@ -109,5 +109,31 @@ public class Note extends Addition implements Serializable{
 			return false;
 		return true;
 	}
+
+	public void fireChange() {
+		for (INoteChangedListener list : getListener()) {
+			list.noteChanged();
+		}
+	}
+	
+	public interface INoteChangedListener {
+		public void noteChanged();
+	}
+	
+	public CopyOnWriteArraySet<INoteChangedListener> getListener() {
+		if(listeners==null) {
+			listeners = new CopyOnWriteArraySet<INoteChangedListener>();
+		}
+		return listeners;
+	}
+	
+	public void addListener(INoteChangedListener listener) {
+		getListener().add(listener);
+	}
+	
+	public void removeListener(INoteChangedListener listener) {
+		getListener().remove(listener);
+	}
+
 
 }
