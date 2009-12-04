@@ -1,0 +1,195 @@
+/*******************************************************************************
+ * Copyright (c) 2009 Daniel Murygin <dm@sernet.de>.
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ *     This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU General Public License for more details.
+ *     You should have received a copy of the GNU General Public 
+ * License along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Daniel Murygin <dm@sernet.de> - initial API and implementation
+ ******************************************************************************/
+package sernet.gs.ui.rcp.main.bsi.model;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.io.ObjectInputStream.GetField;
+import java.util.Date;
+
+import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.EntityType;
+
+/**
+ * File-Data is loaded and saved by {@link AttachmentFile}.
+ * 
+ * @author Daniel <dm@sernet.de>
+ */
+@SuppressWarnings("serial")
+public class Attachment extends Addition implements Serializable{
+
+	public static final String PROP_NAME = "attachment_name"; //$NON-NLS-1$
+	
+	public static final String PROP_TEXT = "attachment_text"; //$NON-NLS-1$
+
+	public static final String PROP_FILE_NAME = "attachment_file_name"; //$NON-NLS-1$
+
+	public static final String PROP_MIME_TYPE = "attachment_mime_type"; //$NON-NLS-1$
+
+	public static final String PROP_VERSION = "attachment_version"; //$NON-NLS-1$
+
+	public static final String PROP_DATE = "attachment_date"; //$NON-NLS-1$
+	
+	public static final String TYPE_ID = "attachment"; //$NON-NLS-1$
+	
+	public static String[] DOCUMENT_MIME_TYPES = new String[] {"doc","odt","docx"};
+	
+	public static String[] PDF_MIME_TYPES = new String[] {"pdf"};
+	
+	public static String[] IMAGE_MIME_TYPES = new String[] {"gif","jpg","jpeg","png","tif","tiff","bmp","svg","psd"};
+	
+	public static String[] SPREADSHEET_MIME_TYPES = new String[] {"xls","ods","xlsx"};
+	
+	public static String[] PRESENTATION_MIME_TYPES = new String[] {"ppt","odp","pptx"};
+	
+	public static String[] HTML_MIME_TYPES = new String[] {"htm","html","php"};
+	
+	public static String[] XML_MIME_TYPES = new String[] {"xml","xsd"};
+	
+	public static String[] AUDIO_MIME_TYPES = new String[] {"mp3","mp2","mp4","ogg","wav","fla","wma"};
+	
+	public static String[] VIDEO_MIME_TYPES = new String[] {"xvid","divx","ogv","flv","avi","vob","mpeg"};
+	
+	public static String[] ARCHIVE_MIME_TYPES = new String[] {"zip","rar","tar","gz","gzip","arj"};
+	
+	public static String[] TEXT_MIME_TYPES = new String[] {"txt","log","readme"};
+	
+	
+	private transient EntityType subEntityType;
+	
+	private String filePath;
+	
+	public Attachment() {
+		super();
+		setEntity(new Entity(TYPE_ID));
+	}
+
+	public String getTitel() {
+		if(getEntity()!=null && getEntity().getProperties(PROP_NAME)!=null && getEntity().getProperties(PROP_NAME).getProperty(0)!=null) {
+			return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
+		} else {
+			return null;
+		}
+	}
+	
+	public void setTitel(String titel) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), titel);
+	}
+	
+	
+	public String getText() {
+		if(getEntity()!=null && getEntity().getProperties(PROP_TEXT)!=null && getEntity().getProperties(PROP_TEXT).getProperty(0)!=null) {
+			return getEntity().getProperties(PROP_TEXT).getProperty(0).getPropertyValue();
+		} else {
+			return null;
+		}
+	}
+	
+	public void setText(String text) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TEXT), text);
+	}
+	
+	public String getFileName() {
+		if(getEntity()!=null && getEntity().getProperties(PROP_FILE_NAME)!=null && getEntity().getProperties(PROP_FILE_NAME).getProperty(0)!=null) {
+			return getEntity().getProperties(PROP_FILE_NAME).getProperty(0).getPropertyValue();
+		} else {
+			return null;
+		}
+	}
+	
+	public void setFileName(String fileName) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_FILE_NAME), fileName);
+	}
+	
+	public String getMimeType() {
+		if(getEntity()!=null && getEntity().getProperties(PROP_MIME_TYPE)!=null && getEntity().getProperties(PROP_MIME_TYPE).getProperty(0)!=null) {
+			return getEntity().getProperties(PROP_MIME_TYPE).getProperty(0).getPropertyValue();
+		} else {
+			return null;
+		}
+	}
+	
+	public void setMimeType(String mimeType) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_MIME_TYPE), mimeType);
+	}
+	
+	
+	public String getVersion() {
+		if(getEntity()!=null && getEntity().getProperties(PROP_VERSION)!=null && getEntity().getProperties(PROP_VERSION).getProperty(0)!=null) {
+			return getEntity().getProperties(PROP_VERSION).getProperty(0).getPropertyValue();
+		} else {
+			return null;
+		}
+	}
+	
+	public void setVersion(String version) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_VERSION), version);
+	}
+	
+	public Date getDate() {
+		if (getEntity().getProperties(PROP_DATE).getProperty(0) == null)
+			return null;
+
+		String dateString = getEntity().getProperties(PROP_DATE).getProperty(0).getPropertyValue();
+
+		if (dateString == null || dateString.length() == 0)
+			return null;
+		return new Date(Long.parseLong(dateString));
+	}
+	
+	public void setDate(Date date) {
+		if(date!=null) {
+			getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DATE), String.valueOf(date.getTime()));
+		}
+	}
+	public EntityType getEntityType() {
+		if (subEntityType == null)
+			subEntityType = getTypeFactory().getEntityType(getTypeId());
+		return subEntityType;
+	}
+
+	
+	public String getTypeId() {
+		return TYPE_ID;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+		if(filePath!=null) {
+			File file = new File(filePath);
+			String name = file.getName();
+			if(name!=null) {
+				setFileName(file.getName());
+				if(name.lastIndexOf('.')!=-1) {
+					setMimeType(name.substring(name.lastIndexOf('.')+1).toLowerCase());
+				}
+			}
+		}
+	}
+
+
+}
