@@ -87,10 +87,10 @@ This variant:
 	<property name="jdbcUrl" value="${jdbc.url}" />
 	<property name="user" value="${jdbc.username}" />
 	<property name="password" value="${jdbc.password}" />
-	<property name="minPoolSize" value="20"/>
-	<property name="initialPoolSize" value="21"/>
-	<property name="maxPoolSize" value="100"/>
-	<property name="acquireIncrement" value="10"/>
+	<property name="minPoolSize" value="5"/>
+	<property name="initialPoolSize" value="5"/>
+	<property name="maxPoolSize" value="20"/>
+	<property name="acquireIncrement" value="2"/>
 	<property name="maxStatements" value="100"/>
 	<property name="checkoutTimeout" value="10000"/>
 	<property name="idleConnectionTestPeriod" value="180"/>
@@ -126,7 +126,10 @@ This variant:
 	  	<property name="bausteinVorschlagDao" ref="bausteinVorschlagDao"/>
 	  	<property name="changeLogEntryDAO" ref="changeLogEntryDAO"/>
 		<property name="permissionDAO" ref="personDAO"/>	
+		<property name="additionDAO" ref="additionDAO"/>
 		<property name="noteDAO" ref="noteDAO"/>
+		<property name="attachmentDAO" ref="attachmentDAO"/>		
+		<property name="attachmentFileDAO" ref="attachmentFileDAO"/>
 		
 		<!-- DAOs for subclasses of CnATreeElement: -->	  	
 	  	<property name="anwendungDAO" ref="anwendungDAO"/>
