@@ -37,6 +37,7 @@ import sernet.hui.common.connect.PropertyList;
 
 /**
  * Loads files/attachmets meta data for a {@link CnATreeElement}
+ * or for all elements if no id is set.
  * File data will not be loaded by this command. 
  * Use {@link LoadAttachmentFile} to load file data from database.
  * 
@@ -71,9 +72,10 @@ public class LoadAttachments extends GenericCommand {
 
 	/**
 	 * Creates a new command, to load attachments for {@link CnATreeElement}
-	 * with id cnAElementId
+	 * with id cnAElementId.
+	 * If cnAElementId all attachments will be loaded.
 	 * 
-	 * @param cnAElementId Id of a {@link CnATreeElement}, must not be null
+	 * @param cnAElementId Id of a {@link CnATreeElement} or null
 	 */
 	public LoadAttachments(Integer cnAElementId) {
 		super();
@@ -92,30 +94,31 @@ public class LoadAttachments extends GenericCommand {
 		if (getLog().isDebugEnabled()) {
 			getLog().debug("executing, id is: " + getCnAElementId() + "...");
 		}
+		IBaseDao<Attachment, Serializable> dao = getDaoFactory().getDAO(Attachment.class);
+		DetachedCriteria crit = DetachedCriteria.forClass(Attachment.class);
 		if(getCnAElementId()!=null) {
-			IBaseDao<Attachment, Serializable> dao = getDaoFactory().getDAO(Attachment.class);
-			DetachedCriteria crit = DetachedCriteria.forClass(Attachment.class);
 			crit.add(Restrictions.eq("cnATreeElementId", getCnAElementId()));
-			crit.setFetchMode("entity", FetchMode.JOIN);
-			crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
-			crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
-			crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			List<Attachment> attachmentList = dao.findByCriteria(crit);
-			if (getLog().isDebugEnabled()) {
-				getLog().debug("number of attachments found: " + attachmentList.size());
-			}
-			for (Attachment attachment : attachmentList) {
-				Entity entity = attachment.getEntity();
-				if(entity!=null) {
-					for (PropertyList pl : entity.getTypedPropertyLists().values()) {
-						for (Property p : pl.getProperties()) {
-							p.setParent(entity);
-						}
+		}
+		crit.setFetchMode("entity", FetchMode.JOIN);
+		crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
+		crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		List<Attachment> attachmentList = dao.findByCriteria(crit);
+		if (getLog().isDebugEnabled()) {
+			getLog().debug("number of attachments found: " + attachmentList.size());
+		}
+		for (Attachment attachment : attachmentList) {
+			Entity entity = attachment.getEntity();
+			if(entity!=null) {
+				for (PropertyList pl : entity.getTypedPropertyLists().values()) {
+					for (Property p : pl.getProperties()) {
+						p.setParent(entity);
 					}
 				}
 			}
-			setAttachmentList(attachmentList);
 		}
+		setAttachmentList(attachmentList);
+		
 	}
 
 	public void setCnAElementId(Integer cnAElementId) {

@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
@@ -36,7 +38,11 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
@@ -46,6 +52,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
@@ -78,6 +85,44 @@ public class FileView extends ViewPart {
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.FileView"; //$NON-NLS-1$
 	
+	private static Map<String, String> mimeImageMap = new Hashtable<String, String>();
+	static {
+		for (int i = 0; i < Attachment.ARCHIVE_MIME_TYPES.length; i++) {
+			mimeImageMap.put(Attachment.ARCHIVE_MIME_TYPES[i], ImageCache.MIME_ARCHIVE);
+		}
+		for (int i = 0; i < Attachment.AUDIO_MIME_TYPES.length; i++) {
+			mimeImageMap.put(Attachment.AUDIO_MIME_TYPES[i], ImageCache.MIME_AUDIO);
+		}
+		for (int i = 0; i < Attachment.DOCUMENT_MIME_TYPES.length; i++) {
+			mimeImageMap.put(Attachment.DOCUMENT_MIME_TYPES[i], ImageCache.MIME_DOCUMENT);
+		}
+		for (int i = 0; i < Attachment.HTML_MIME_TYPES.length; i++) {
+			mimeImageMap.put(Attachment.HTML_MIME_TYPES[i], ImageCache.MIME_HTML);
+		}
+		for (int i = 0; i < Attachment.IMAGE_MIME_TYPES.length; i++) {
+			mimeImageMap.put(Attachment.IMAGE_MIME_TYPES[i], ImageCache.MIME_IMAGE);
+		}
+		for (int i = 0; i < Attachment.PDF_MIME_TYPES.length; i++) {
+			mimeImageMap.put(Attachment.PDF_MIME_TYPES[i], ImageCache.MIME_PDF);
+		}
+		for (int i = 0; i < Attachment.PRESENTATION_MIME_TYPES.length; i++) {
+			mimeImageMap.put(Attachment.PRESENTATION_MIME_TYPES[i], ImageCache.MIME_PRESENTATION);
+		}
+		for (int i = 0; i < Attachment.SPREADSHEET_MIME_TYPES.length; i++) {
+			mimeImageMap.put(Attachment.SPREADSHEET_MIME_TYPES[i], ImageCache.MIME_SPREADSHEET);
+		}
+		for (int i = 0; i < Attachment.TEXT_MIME_TYPES.length; i++) {
+			mimeImageMap.put(Attachment.TEXT_MIME_TYPES[i], ImageCache.MIME_TEXT);
+		}
+		for (int i = 0; i < Attachment.VIDEO_MIME_TYPES.length; i++) {
+			mimeImageMap.put(Attachment.VIDEO_MIME_TYPES[i], ImageCache.MIME_VIDEO);
+		}
+		for (int i = 0; i < Attachment.XML_MIME_TYPES.length; i++) {
+			mimeImageMap.put(Attachment.XML_MIME_TYPES[i], ImageCache.MIME_XML);
+		}
+		
+	}
+	
 	private ICommandService	commandService;
 	
 	private Composite parent;
@@ -89,6 +134,7 @@ public class FileView extends ViewPart {
 	protected TableColumn textColumn;
 	protected TableColumn dateColumn;
 	protected TableColumn versionColumn;
+	TableSorter tableSorter = new TableSorter();
 	
 	private AttachmentContentProvider contentProvider = new AttachmentContentProvider(this);
 	
@@ -103,6 +149,10 @@ public class FileView extends ViewPart {
 	private Action saveCopyAction;
 	
 	private Action openAction;
+	
+	private Action toggleLinkAction;
+	
+	private boolean linkToElements = true;
 	
 	private CnATreeElement currentCnaElement;
 	
@@ -134,23 +184,36 @@ public class FileView extends ViewPart {
 		Table table = viewer.getTable();
 		iconColumn = new TableColumn(table, SWT.LEFT);;
 		iconColumn.setWidth(26);
+		iconColumn.addSelectionListener(new SortSelectionAdapter(this,iconColumn,0));
+		
 		fileNameColumn = new TableColumn(table, SWT.LEFT);
 		fileNameColumn.setText("Name");
 		fileNameColumn.setWidth(120);
+		fileNameColumn.addSelectionListener(new SortSelectionAdapter(this,fileNameColumn,1));
+		
 		mimeTypeColumn = new TableColumn(table, SWT.LEFT);
 		mimeTypeColumn.setText("Typ");
 		mimeTypeColumn.setWidth(50);
+		mimeTypeColumn.addSelectionListener(new SortSelectionAdapter(this,mimeTypeColumn,2));
+		
 		textColumn = new TableColumn(table, SWT.LEFT);
 		textColumn.setText("Info");
 		textColumn.setWidth(350);
+		textColumn.addSelectionListener(new SortSelectionAdapter(this,textColumn,3));
+		
 		dateColumn = new TableColumn(table, SWT.LEFT);
 		dateColumn.setText("Datum");
 		dateColumn.setWidth(120);
+		dateColumn.addSelectionListener(new SortSelectionAdapter(this,dateColumn,4));
+		
 		versionColumn = new TableColumn(table, SWT.LEFT);
 		versionColumn.setText("Version");
 		versionColumn.setWidth(60);
+		versionColumn.addSelectionListener(new SortSelectionAdapter(this,versionColumn,5));
+		
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
+		viewer.setSorter(tableSorter);
 		
 	}
 	
@@ -218,14 +281,20 @@ public class FileView extends ViewPart {
 	
 	public void loadFiles() {
 		try {
-			LoadAttachments command = new LoadAttachments(getCurrentCnaElement().getDbId());		
+			Integer id = null;
+			if(linkToElements && getCurrentCnaElement()!=null) {
+				id = getCurrentCnaElement().getDbId();
+			}
+			LoadAttachments command = new LoadAttachments(id);		
 			command = getCommandService().executeCommand(command);		
 			List<Attachment> attachmentList = command.getAttachmentList();
 			if(attachmentList!=null) {
 				viewer.setInput(attachmentList);
 				for (final Attachment attachment : attachmentList) {
 					// set transient cna-element-titel
-					attachment.setCnAElementTitel(getCurrentCnaElement().getTitel());
+					if(getCurrentCnaElement()!=null) {
+						attachment.setCnAElementTitel(getCurrentCnaElement().getTitel());
+					}
 					attachment.addListener(new Attachment.INoteChangedListener() {
 						public void noteChanged() {
 							clear();
@@ -267,6 +336,7 @@ public class FileView extends ViewPart {
 	private void fillLocalToolBar() {
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager manager = bars.getToolBarManager();
+		manager.add(this.toggleLinkAction);
 		manager.add(this.addFileAction);
 		manager.add(this.deleteFileAction);
 		manager.add(this.saveCopyAction);
@@ -344,6 +414,17 @@ public class FileView extends ViewPart {
 		};
 		openAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.VIEW));
 		openAction.setEnabled(false);
+		
+		toggleLinkAction = new Action("Link to elements", SWT.TOGGLE) {
+			public void run() {
+				linkToElements=!linkToElements;
+				toggleLinkAction.setChecked(linkToElements);
+				clear();
+				loadFiles();
+			}
+		};
+		toggleLinkAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+		toggleLinkAction.setChecked(linkToElements);
 	}
 	
 	private void openFile() {
@@ -423,6 +504,11 @@ public class FileView extends ViewPart {
 		getSite().getPage().removePostSelectionListener(selectionListener);
 	}
 	
+	
+	public static String getImageForMimeType(String mimeType) {
+		return mimeImageMap.get(mimeType);
+	}
+	
 	private static class AttachmentLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 		public Image getColumnImage(Object element, int columnIndex) {
@@ -431,31 +517,8 @@ public class FileView extends ViewPart {
 			}
 			Attachment attachment = (Attachment) element;
 			if(columnIndex==0) {
-				String mimeType = (attachment.getMimeType()!=null)?attachment.getMimeType().toLowerCase():null;
-				if(Arrays.asList(Attachment.ARCHIVE_MIME_TYPES).contains(mimeType)) {
-					return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_ARCHIVE).createImage();
-				} else if(Arrays.asList(Attachment.AUDIO_MIME_TYPES).contains(mimeType)) {
-					return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_AUDIO).createImage();
-				} else if(Arrays.asList(Attachment.DOCUMENT_MIME_TYPES).contains(mimeType)) {
-					return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_DOCUMENT).createImage();
-				} else if(Arrays.asList(Attachment.HTML_MIME_TYPES).contains(mimeType)) {
-					return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_HTML).createImage();
-				} else if(Arrays.asList(Attachment.IMAGE_MIME_TYPES).contains(mimeType)) {
-					return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_IMAGE).createImage();
-				} else if(Arrays.asList(Attachment.PDF_MIME_TYPES).contains(mimeType)) {
-					return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_PDF).createImage();
-				}else if(Arrays.asList(Attachment.PRESENTATION_MIME_TYPES).contains(mimeType)) {
-					return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_PRESENTATION).createImage();
-				}else if(Arrays.asList(Attachment.SPREADSHEET_MIME_TYPES).contains(mimeType)) {
-					return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_SPREADSHEET).createImage();
-				}else if(Arrays.asList(Attachment.TEXT_MIME_TYPES).contains(mimeType)) {
-					return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_TEXT).createImage();
-				}else if(Arrays.asList(Attachment.VIDEO_MIME_TYPES).contains(mimeType)) {
-					return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_VIDEO).createImage();
-				}else if(Arrays.asList(Attachment.XML_MIME_TYPES).contains(mimeType)) {
-					return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_XML).createImage();
-				}			
-				return ImageCache.getInstance().getImageDescriptor(ImageCache.MIME_UNKNOWN).createImage();
+				String mimeType = (attachment.getMimeType()!=null) ? attachment.getMimeType().toLowerCase() : null;			
+				return ImageCache.getInstance().getImageDescriptor(mimeImageMap.get(mimeType)).createImage();
 			}
 			return null;
 		}
@@ -491,5 +554,99 @@ public class FileView extends ViewPart {
 			}
 		}
 		
+	}
+	
+	private static class TableSorter extends ViewerSorter {
+		private int propertyIndex;
+		private static final int DEFAULT_SORT_COLUMN = 0;
+		private static final int DESCENDING = 1;
+		private static final int ASCENDING = 0;
+		private int direction = ASCENDING;
+
+		public TableSorter() {
+			this.propertyIndex = DEFAULT_SORT_COLUMN;
+			this.direction = ASCENDING;
+		}
+
+		public void setColumn(int column) {
+			if (column == this.propertyIndex) {
+				// Same column as last sort; toggle the direction
+				direction = (direction==ASCENDING) ? DESCENDING : ASCENDING;
+			} else {
+				// New column; do an ascending sort
+				this.propertyIndex = column;
+				direction = ASCENDING;
+			}
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+		 */
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			Attachment a1 = (Attachment) e1;
+			Attachment a2 = (Attachment) e2;
+			int rc = 0;
+			switch (propertyIndex) {
+			case 0:
+				String image1 = mimeImageMap.get(a1.getMimeType());
+				String image2 = mimeImageMap.get(a2.getMimeType());				
+				if(image1!=null && image2!=null) {
+					rc = image1.compareTo(image2);
+				}
+				break;
+			case 1:
+				rc = a1.getFileName().compareTo(a2.getFileName());
+				break;
+			case 2:
+				rc = a1.getMimeType().compareTo(a2.getMimeType());
+				break;
+			case 3:
+				rc = a1.getText().compareTo(a2.getText());
+				break;
+			case 4:
+				rc = a1.getDate().compareTo(a2.getDate());
+				break;
+			case 5:
+				rc = a1.getVersion().compareTo(a2.getVersion());
+				break;
+			default:
+				rc = 0;
+			}
+			// If descending order, flip the direction
+			if (direction == DESCENDING) {
+				rc = -rc;
+			}
+			return rc;
+		}
+
+	}
+	
+	private static class SortSelectionAdapter extends SelectionAdapter {
+		FileView fileView;
+		TableColumn column;
+		int index;
+		
+		public SortSelectionAdapter(FileView fileView, TableColumn column, int index) {
+			this.fileView = fileView;
+			this.column = column;
+			this.index = index;
+		}
+	
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			fileView.tableSorter.setColumn(index);
+			int dir = fileView.viewer.getTable().getSortDirection();
+			if (fileView.viewer.getTable().getSortColumn() == column) {
+				dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
+			} else {
+
+				dir = SWT.DOWN;
+			}
+			fileView.viewer.getTable().setSortDirection(dir);
+			fileView.viewer.getTable().setSortColumn(column);
+			fileView.viewer.refresh();
+		}
+
 	}
 }
