@@ -2722,15 +2722,34 @@ Template:
     <huientity
         id="note"
         name="Notiz">        
-        <huiproperty
-            id="note_name"
-            name="Titel" 
-        />   
-        <huiproperty
-			id="note_text"
+        <huiproperty id="note_name"
+            name="Titel" />   
+        <huiproperty id="note_text"
 			name="Text"
-            inputtype="text"
-        />
+            inputtype="text" />
+    </huientity>
+	<huientity
+        id="attachment"
+        name="Attachment">        
+        <huiproperty id="attachment_name"
+            name="Titel" />
+        <huiproperty id="attachment_file_name"
+			name="Datei"
+            editable="false"
+            visible="true" />
+        <huiproperty id="attachment_text"
+			name="Beschreibung"
+            inputtype="text" />
+        <huiproperty id="attachment_mime_type"
+			name="MIME-Type"
+            editable="false"
+            visible="false" />
+		<huiproperty id="attachment_version"
+            name="Version" />
+        <huiproperty id="attachment_date"
+			name="Datum"
+			inputtype="date"
+            editable="false" />
       </huientity>
     
 </huientities>
