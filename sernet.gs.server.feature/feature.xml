@@ -2,7 +2,7 @@
 <feature
       id="sernet.gs.server.feature"
       label="verinice server Feature"
-      version="1.0.17"
+      version="1.0.20"
       provider-name="sernet.de">
 
    <description url="http://verinice.org">
@@ -1033,7 +1033,7 @@ Public License instead of this License.  But first, please read
          id="sernet.hui.server"
          download-size="0"
          install-size="0"
-         version="1.0.17"/>
+         version="1.0.19"/>
 
    <plugin
          id="org.junit4"
@@ -1068,7 +1068,7 @@ Public License instead of this License.  But first, please read
          id="sernet.gs.server"
          download-size="4000"
          install-size="8600"
-         version="1.0.17"
+         version="1.0.20"
          unpack="false"/>
 
 </feature>

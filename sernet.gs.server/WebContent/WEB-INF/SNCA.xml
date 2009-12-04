@@ -8,11 +8,11 @@
 	in this file and the necessary GUI forms created to allow 
 	selection of or entering data.
 	
-	Concrete selections or values entered by the user will be saved in the 
+	Specific selections or values entered by the user will be saved in the 
 	database.
 	
-    Authors:  <koderman@sernet.de>
-    		rschuster
+    Authors:  akoderman,
+    		  rschuster
 -->
 
 <!--
@@ -36,6 +36,7 @@ Template:
 <!-- akoderman pro-forma Entity for resolution of roles -->
 <huientity name ="Rollen" id="role" />
 
+<!-- akoderman configuration entity to save per-user account details -->
  <huientity
         name="Configuration"
         id="configuration">
@@ -296,6 +297,21 @@ Template:
  <huientity
         name="Server"
         id="server">
+        
+        <huirelation to="person" 
+        	id="server_person_responsible" 
+        	name="responsible person" 
+        	reversename="responsible for" 
+        	tooltip="Responsible person"/>
+        <huirelation to="person" id="server_person_accountable" 
+        	name="accountable person" reversename="accountable for" tooltip="Accountable person"/>
+        <huirelation to="person" id="server_person_consulted" 
+        	name="consulted person" reversename="consulted for" tooltip="Consulted person"/>
+        <huirelation to="person" id="server_person_informed" 
+        	name="informed person" reversename="informed about" tooltip="Informed person"/>
+
+        <huirelation to="raum" id="server_raum_located" name="located in" reversename="houses" tooltip="Equipment is located here."/>
+        
         <huiproperty
             name="Kürzel"
             id="server_kuerzel"
