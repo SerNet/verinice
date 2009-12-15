@@ -18,11 +18,15 @@
 package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
+import sernet.gs.ui.rcp.main.common.model.Permission;
+import sernet.gs.ui.rcp.main.service.IAuthService;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 
 /**
  * Assign a threat to a risk analysis: create a new threat instance.
@@ -32,30 +36,55 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
  * $LastChangedBy$
  *
  */
-public class AssociateGefaehrdungsUmsetzung extends GenericCommand {
+public class AssociateGefaehrdungsUmsetzung extends GenericCommand implements IAuthAwareCommand {
 
 	private Gefaehrdung currentGefaehrdung;
 	private GefaehrdungsUmsetzung gefaehrdungsUmsetzung;
 	private Integer listDbId;
 	private FinishedRiskAnalysisLists finishedRiskLists;
+	private Integer riskAnalysisDbId;
+	
+	private transient IAuthService authService;
 
+	
+	public IAuthService getAuthService() {
+		return authService;
+	}
+
+	public void setAuthService(IAuthService service) {
+		this.authService = service;
+	}
+	
 	/**
 	 * @param finishedRiskLists 
 	 * @param currentGefaehrdung
+	 * @param integer 
+	 * @param finishedRiskAnalysis 
 	 */
-	public AssociateGefaehrdungsUmsetzung(Integer listDbId, Gefaehrdung currentGefaehrdung) {
+	public AssociateGefaehrdungsUmsetzung(Integer listDbId, Gefaehrdung currentGefaehrdung, Integer riskAnalysisDbId) {
 		this.currentGefaehrdung = currentGefaehrdung;
 		this.listDbId = listDbId;
+		this.riskAnalysisDbId = riskAnalysisDbId;
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
 	 */
 	public void execute() {
+		FinishedRiskAnalysis riskAnalysis = getDaoFactory().getDAO(FinishedRiskAnalysis.class).findById(riskAnalysisDbId);
 		finishedRiskLists = getDaoFactory().getDAO(FinishedRiskAnalysisLists.class).findById(listDbId);
 		
 		gefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory.build(null, currentGefaehrdung);
 		getDaoFactory().getDAO(GefaehrdungsUmsetzung.class).saveOrUpdate(gefaehrdungsUmsetzung);
+		
+		if (authService.isPermissionHandlingNeeded())
+		{
+			gefaehrdungsUmsetzung.setPermissions(
+				Permission.clonePermissions(
+						gefaehrdungsUmsetzung,
+						riskAnalysis.getPermissions()));
+		}
+		
 		finishedRiskLists.getAssociatedGefaehrdungen().add(gefaehrdungsUmsetzung);
 	}
 

@@ -19,7 +19,10 @@ package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.Permission;
+import sernet.gs.ui.rcp.main.service.IAuthService;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 
 /**
  * Assign a control instance to a threat instance.
@@ -30,11 +33,22 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
  *
  */
 @SuppressWarnings("serial")
-public class AddMassnahmeToGefaherdung extends GenericCommand {
+public class AddMassnahmeToGefaherdung extends GenericCommand implements IAuthAwareCommand {
 
 	private RisikoMassnahmenUmsetzung child;
 	private GefaehrdungsUmsetzung parent;
 
+	private transient IAuthService authService;
+
+	
+	public IAuthService getAuthService() {
+		return authService;
+	}
+
+	public void setAuthService(IAuthService service) {
+		this.authService = service;
+	}
+	
 	/**
 	 * @param parent
 	 * @param child
@@ -51,6 +65,15 @@ public class AddMassnahmeToGefaherdung extends GenericCommand {
 	public void execute() {
 		child = (RisikoMassnahmenUmsetzung) getDaoFactory().getDAOForObject(child).merge(child);
 		getDaoFactory().getDAOForObject(parent).reload(parent, parent.getDbId());
+		
+
+		if (authService.isPermissionHandlingNeeded())
+		{
+			child.setPermissions(
+				Permission.clonePermissions(
+						child,
+						parent.getPermissions()));
+		}
 		
 		parent.addGefaehrdungsBaumChild(child);
 		child.setParent(parent);

@@ -120,24 +120,13 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	 */
 	@Override
 	public boolean performFinish() {
-		// try {
-		// LoadChildrenForExpansion command = new
-		// LoadChildrenForExpansion(finishedRiskAnalysis);
-		// command =
-		// ServiceFactory.lookupCommandService().executeCommand(command);
-		// finishedRiskAnalysis = (FinishedRiskAnalysis)
-		// command.getElementWithChildren();
-		// CnAElementFactory.getLoadedModel().databaseChildChanged(finishedRiskAnalysis);
-
+		// all has been saved by now, so no need to do anything except refresh the view:
+		
 		// FIXME server: just reload risk analysis instead of complete model.
 
 		CnAElementFactory.getInstance().reloadModelFromDatabase();
 
 		return true;
-		// } catch (CommandException e) {
-		// ExceptionUtil.log(e, "");
-		// }
-		// return false;
 	}
 
 	/**
@@ -249,6 +238,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 		List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance()
 				.getBausteine();
 		alleBausteine: for (Baustein baustein : bausteine) {
+			if (baustein.getGefaehrdungen() == null)
+				continue;
 			alleGefaehrdungen: for (Gefaehrdung gefaehrdung : baustein
 					.getGefaehrdungen()) {
 				Boolean duplicate = false;
@@ -519,7 +510,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 					.getAssociatedGefaehrdungen(), currentGefaehrdung)) {
 				/* Add to List of Associated Gefaehrdungen */
 				AssociateGefaehrdungsUmsetzung command = new AssociateGefaehrdungsUmsetzung(
-						finishedRiskLists.getDbId(), currentGefaehrdung);
+						finishedRiskLists.getDbId(), currentGefaehrdung, this.finishedRiskAnalysis.getDbId());
 				command = ServiceFactory.lookupCommandService().executeCommand(
 						command);
 

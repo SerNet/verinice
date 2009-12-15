@@ -101,6 +101,13 @@ public class Permission implements Serializable {
 		return p;
 	}
 
+	/**
+	 * Copy a set of permissions to an object.
+	 * 
+	 * @param cte the target object on which to set the permissions
+	 * @param perms the permission currently assigned on the source object
+	 * @return newly created set of permissions
+	 */
 	public static Set<Permission> clonePermissions(CnATreeElement cte, Set<Permission> perms)
 	{
 		HashSet<Permission> clone = new HashSet<Permission>();

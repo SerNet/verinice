@@ -27,6 +27,8 @@ import net.miginfocom.swt.MigLayout;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -167,10 +169,7 @@ public class AccessControlEditDialog extends Dialog {
 
 		inheritButton = new Button(container, SWT.CHECK);
 		inheritButton.setLayoutData("spanx 3, grow");
-		if (elements.size()<2)
-			inheritButton.setSelection(true);
-		else 
-			inheritButton.setSelection(false);
+		inheritButton.setSelection(false);
 		inheritButton.setText("Rechte auf alle Kindelemente anwenden");
 		
 		return container;
@@ -192,6 +191,13 @@ public class AccessControlEditDialog extends Dialog {
 	
 	protected void okPressed()
 	{
+		if (this.inheritButton.getSelection()) {
+			boolean openConfirm = MessageDialog.openConfirm(getParentShell(), "Bestätigen", 
+					"Neue Rechte wirklich auf alle untergeordneten Elemente anwenden? VORSICHT: existierende Berechtigungen werden dabei unterschrieben!");
+			if (!openConfirm)
+				return;
+		}
+		
 		Set<Permission> newPerms = new HashSet<Permission>();
 		for (RawPermission rp : rawPermissions)
 		{

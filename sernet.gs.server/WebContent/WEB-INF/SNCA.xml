@@ -721,6 +721,10 @@ Template:
         <huiproperty
             name="Ext. Netz"
             id="netzkomponente_extnetz"/>
+        
+        <huipropertygroup
+            id="netz_group_kritikalitaet"
+            name="Schutzbedarf" >
         <huiproperty
             name="Kritikalität"
             id="netzkomponente_kritikalitaet"
@@ -749,7 +753,9 @@ Template:
             name="Erläuterung"
             inputtype="text"
             id="netzkomponente_erlaeuterung" />
-            
+        </huipropertygroup>
+
+
             <huipropertygroup 
 			name="Managementbewertung" 
 			id="nkkomponente_mgmtreview">

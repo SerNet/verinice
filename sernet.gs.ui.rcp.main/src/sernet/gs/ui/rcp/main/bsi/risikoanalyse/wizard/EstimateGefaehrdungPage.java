@@ -54,9 +54,11 @@ import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.PositiveEstimateG
 
 /**
  * WizardPage lists all previously selected Gefaehrdungen for the user to decide
- * which Gefaehrdungen further processing need.
+ * which Gefaehrdungen need further processing.
  * 
  * @author ahanekop@sernet.de
+ * @author koderman
+ * 
  */
 public class EstimateGefaehrdungPage extends WizardPage {
 
@@ -393,9 +395,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 		 */
 		public boolean select(Viewer viewer, Object parentElement,
 				Object element) {
-			if (element instanceof OwnGefaehrdung)
-				return true;
-			return false;
+			return isOwnGefaehrung(element);
 		}
 	}
 
@@ -407,7 +407,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	class GefaehrdungenFilter extends ViewerFilter {
 
 		/**
-		 * Returns true, if the given element is a Gefaehrdung.
+		 * Returns true, if the given element is a BSI Gefaehrdung.
 		 * 
 		 * @param viewer
 		 *            the Viewer to operate on
@@ -419,11 +419,17 @@ public class EstimateGefaehrdungPage extends WizardPage {
 		 */
 		public boolean select(Viewer viewer, Object parentElement,
 				Object element) {
-			if (!(element instanceof OwnGefaehrdung)) {
-				return true;
-			} else {
-				return false;
-			}
+			return !isOwnGefaehrung(element);
+		}
+	}
+	
+	public boolean isOwnGefaehrung(Object element) {
+		if (element instanceof GefaehrdungsUmsetzung) {
+			GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
+			// only gefaehrdungen from BSI catalog have a URL associated with them:
+			return (gef.getUrl() == null || gef.getUrl().length() == 0 || gef.getUrl().equals("null"));
+		} else {
+			return false;
 		}
 	}
 

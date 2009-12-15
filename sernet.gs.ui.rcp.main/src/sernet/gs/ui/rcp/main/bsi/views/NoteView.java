@@ -289,6 +289,7 @@ public class NoteView extends ViewPart {
 	
 	@Override
 	public void dispose() {
+		getSite().getPage().removePostSelectionListener(selectionListener);
 		BSIModel model = CnAElementFactory.getLoadedModel();
 		model.removeBSIModelListener(modelListener);
 		super.dispose();

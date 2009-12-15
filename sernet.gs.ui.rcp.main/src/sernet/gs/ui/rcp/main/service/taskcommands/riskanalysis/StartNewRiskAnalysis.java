@@ -17,10 +17,16 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
+import java.util.HashSet;
+
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.Permission;
+import sernet.gs.ui.rcp.main.service.IAuthService;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 
 /**
  * @author koderman@sernet.de
@@ -28,11 +34,15 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
  * $LastChangedBy$
  *
  */
-public class StartNewRiskAnalysis extends GenericCommand {
+@SuppressWarnings("serial")
+public class StartNewRiskAnalysis extends GenericCommand implements IAuthAwareCommand {
 
 	private CnATreeElement cnaElement;
 	private FinishedRiskAnalysis finishedRiskAnalysis;
 	private FinishedRiskAnalysisLists finishedRiskLists;
+	
+	private transient IAuthService authService;
+
 
 	/**
 	 * @param cnaElement
@@ -40,6 +50,14 @@ public class StartNewRiskAnalysis extends GenericCommand {
 	public StartNewRiskAnalysis(CnATreeElement cnaElement) {
 		this.cnaElement = cnaElement;
 		
+	}
+	
+	public IAuthService getAuthService() {
+		return authService;
+	}
+
+	public void setAuthService(IAuthService service) {
+		this.authService = service;
 	}
 
 	/* (non-Javadoc)
@@ -50,6 +68,14 @@ public class StartNewRiskAnalysis extends GenericCommand {
 		finishedRiskAnalysis = new FinishedRiskAnalysis(cnaElement);
 		getDaoFactory().getDAO(FinishedRiskAnalysis.class).saveOrUpdate(finishedRiskAnalysis);
 		cnaElement.addChild(finishedRiskAnalysis);
+		
+		if (authService.isPermissionHandlingNeeded())
+		{
+			finishedRiskAnalysis.setPermissions(
+				Permission.clonePermissions(
+						finishedRiskAnalysis,
+						cnaElement.getPermissions()));
+		}
 
 		finishedRiskLists = new FinishedRiskAnalysisLists();
 		finishedRiskLists.setFinishedRiskAnalysisId(finishedRiskAnalysis.getDbId());

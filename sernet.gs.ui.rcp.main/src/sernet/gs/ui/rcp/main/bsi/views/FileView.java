@@ -23,12 +23,14 @@ import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -174,7 +176,15 @@ public class FileView extends ViewPart {
 		}	
 		makeActions();
 		hookActions();
+		hookDND();
 		fillLocalToolBar();
+	}
+
+	/**
+	 * 
+	 */
+	private void hookDND() {
+		new FileDropTarget(this);
 	}
 
 	private void createTable(Composite parent) {
@@ -197,7 +207,7 @@ public class FileView extends ViewPart {
 		mimeTypeColumn.addSelectionListener(new SortSelectionAdapter(this,mimeTypeColumn,2));
 		
 		textColumn = new TableColumn(table, SWT.LEFT);
-		textColumn.setText("Info");
+		textColumn.setText("Beschreibung");
 		textColumn.setWidth(350);
 		textColumn.addSelectionListener(new SortSelectionAdapter(this,textColumn,3));
 		
@@ -259,7 +269,6 @@ public class FileView extends ViewPart {
 			if(element instanceof CnATreeElement) {
 				addFileAction.setEnabled(true);		
 				setCurrentCnaElement((CnATreeElement) element);
-				clear();
 				loadFiles();
 				
 			} else {
@@ -273,10 +282,6 @@ public class FileView extends ViewPart {
 		} catch (Exception e) {
 			LOG.error("Error while loading notes", e);
 		}
-	}
-	
-	public void clear() {
-		
 	}
 	
 	public void loadFiles() {
@@ -297,7 +302,6 @@ public class FileView extends ViewPart {
 					}
 					attachment.addListener(new Attachment.INoteChangedListener() {
 						public void noteChanged() {
-							clear();
 							loadFiles();
 						}
 					});
@@ -322,7 +326,6 @@ public class FileView extends ViewPart {
 			LOG.error("Error while saving attachment", e);
 			ExceptionUtil.log(e, "Fehler beim Speichern der Datei.");
 		}
-		clear();
 		loadFiles();
 	}
 
@@ -348,18 +351,21 @@ public class FileView extends ViewPart {
 			public void run() {
 				FileDialog fd = new FileDialog(FileView.this.getSite().getShell());
 		        fd.setText("Anhang auswählen...");
-		        fd.setFilterPath("~");
+		        fd.setFilterPath(System.getProperty("user.home"));
 		        String selected = fd.open();
 		        if(selected!=null && selected.length()>0) {
+		        	File file = new File(selected);
+		    		if (file.isDirectory())
+		    			return;
+		    		
 					Attachment attachment = new Attachment();
 					attachment.setCnATreeElementId(getCurrentCnaElement().getDbId());
 					attachment.setCnAElementTitel(getCurrentCnaElement().getTitel());
-					attachment.setTitel("neue Datei");
+					attachment.setTitel(file.getName());
 					attachment.setDate(Calendar.getInstance().getTime());
 					attachment.setFilePath(selected);
 					attachment.addListener(new Attachment.INoteChangedListener() {
 						public void noteChanged() {
-							clear();
 							loadFiles();
 						}
 					});
@@ -368,20 +374,30 @@ public class FileView extends ViewPart {
 			}
 		};
 		addFileAction.setText("Datei hinzufügen...");
+		addFileAction.setToolTipText("Datei hinzufügen (oder einfach Dateien per DragnDrop in dieses Fenster ziehen)");
 		addFileAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
 		addFileAction.setEnabled(false);
 		
 		deleteFileAction = new Action() {
 			public void run() {
-				Attachment sel = (Attachment) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-				DeleteNote command = new DeleteNote(sel);		
-				try {
-					command = getCommandService().executeCommand(command);
-				} catch (CommandException e) {
-					LOG.error("Error while saving note", e);
-					ExceptionUtil.log(e, "Fehler beim Speichern der Notiz.");
+				int count = ((IStructuredSelection) viewer.getSelection()).size();
+				boolean confirm = MessageDialog.openConfirm(getViewer().getControl().getShell(), "Wirklich löschen?", 
+						"Wollen Sie die markierten " + count + " Attachments wirklich löschen?");
+				if (!confirm)
+					return;
+				
+				Iterator iterator = ((IStructuredSelection) viewer.getSelection()).iterator();
+				while (iterator.hasNext()) {
+					Attachment sel = (Attachment) iterator.next();
+					DeleteNote command = new DeleteNote(sel);		
+					try {
+						command = getCommandService().executeCommand(command);
+					} catch (CommandException e) {
+						LOG.error("Error while saving note", e);
+						ExceptionUtil.log(e, "Fehler beim Löschen der Notiz.");
+					}
 				}
-				clear();
+				
 				loadFiles();			
 			}
 		};
@@ -419,7 +435,6 @@ public class FileView extends ViewPart {
 			public void run() {
 				linkToElements=!linkToElements;
 				toggleLinkAction.setChecked(linkToElements);
-				clear();
 				loadFiles();
 			}
 		};
@@ -450,7 +465,7 @@ public class FileView extends ViewPart {
 				}
 			} catch(Exception e) {
 				LOG.error("Error while loading attachment", e);
-				ExceptionUtil.log(e, "Error while attachment notes");
+				ExceptionUtil.log(e, "Error while attaching notes");
 			}
 		}
 	}
@@ -517,7 +532,7 @@ public class FileView extends ViewPart {
 			}
 			Attachment attachment = (Attachment) element;
 			if(columnIndex==0) {
-				String mimeType = (attachment.getMimeType()!=null) ? attachment.getMimeType().toLowerCase() : null;			
+				String mimeType = (attachment.getMimeType()!=null) ? attachment.getMimeType().toLowerCase() : "";			
 				return ImageCache.getInstance().getImageDescriptor(mimeImageMap.get(mimeType)).createImage();
 			}
 			return null;
@@ -589,8 +604,12 @@ public class FileView extends ViewPart {
 			int rc = 0;
 			switch (propertyIndex) {
 			case 0:
-				String image1 = mimeImageMap.get(a1.getMimeType());
-				String image2 = mimeImageMap.get(a2.getMimeType());				
+				String mimeType1 = a1.getMimeType();
+				String mimeType2 = a2.getMimeType();
+				if (mimeType1 == null || mimeType2 == null)
+					return 0;
+				String image1 = mimeImageMap.get(mimeType1);
+				String image2 = mimeImageMap.get(mimeType2);				
 				if(image1!=null && image2!=null) {
 					rc = image1.compareTo(image2);
 				}
@@ -648,5 +667,12 @@ public class FileView extends ViewPart {
 			fileView.viewer.refresh();
 		}
 
+	}
+
+	/**
+	 * @return
+	 */
+	public TableViewer getViewer() {
+		return this.viewer;
 	}
 }
