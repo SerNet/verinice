@@ -21,16 +21,17 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.update.ui.UpdateJob;
 import org.eclipse.update.ui.UpdateManagerUI;
 
-public class ManageUpdatesAction extends Action implements IAction {
+public class UpdateManualAction extends Action implements IAction {
 	private IWorkbenchWindow window;
 	
-	public ManageUpdatesAction(IWorkbenchWindow window) {
+	public UpdateManualAction(IWorkbenchWindow window) {
 		this.window = window;
-		setId("sernet.gs.ui.rcp.main.actions.manageupdatesaction");
-		setText("Installierte Updates anzeigen...");
-		setToolTipText("Anzeigen / Bearbeiten installierter Programmbestandteile");
+		setId("sernet.gs.ui.rcp.main.actions.updateaction");
+		setText("Hinzufügen neuer Plugins...");
+		setToolTipText("Suche nach neuen Updates und hinzufügen neuer Plugins für verinice");
 		
 	}
 	
@@ -38,8 +39,7 @@ public class ManageUpdatesAction extends Action implements IAction {
 	public void run() {
 		BusyIndicator.showWhile(window.getShell().getDisplay(), new Runnable() {
 			public void run() {
-				UpdateManagerUI.openConfigurationManager(window.getShell());
-				
+				UpdateManagerUI.openInstaller(window.getShell());
 			}
 		});
 	}

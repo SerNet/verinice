@@ -49,6 +49,7 @@ import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
 import sernet.gs.ui.rcp.main.actions.ShowExportWizardAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.actions.UpdateAction;
+import sernet.gs.ui.rcp.main.actions.UpdateManualAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.views.AuditView;
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
@@ -58,6 +59,7 @@ import sernet.gs.ui.rcp.main.bsi.views.DSModelView;
 import sernet.gs.ui.rcp.main.bsi.views.DocumentView;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.bsi.views.NoteView;
+import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewCloseDBAction;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction;
@@ -114,6 +116,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private OpenViewAction openNoteAction;
 	
 	private OpenViewAction openFileAction;
+
+	private OpenViewAction openRelationViewAction;
 	
 	private IWorkbenchAction copyAction;
 
@@ -139,6 +143,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	private UpdateAction updateAction;
 
+	private UpdateManualAction manualUpdate;
+	
 	private ManageUpdatesAction manageUpdatesAction;
 
 	private BausteinZuordnungAction bausteinZuordnungAction;
@@ -194,6 +200,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		openFileAction = new OpenViewAction(window, "Dateien",
 				FileView.ID, ImageCache.ATTACH);
 		register(openFileAction);
+
+		openRelationViewAction = new OpenViewAction(window, "Relationen",
+				RelationView.ID, ImageCache.LINKS);
+		register(openRelationViewAction);
 
 		openBSIViewAction = new OpenViewAction(window, "GS Kataloge",
 				BSIMassnahmenView.ID, ImageCache.VIEW_MASSNAHMEN);
@@ -260,6 +270,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		
 		updateAction = new UpdateAction(window);
 		manageUpdatesAction = new ManageUpdatesAction(window);
+		manualUpdate = new UpdateManualAction(window);
 		
 	}
 
@@ -283,6 +294,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		helpMenu.add(new Separator());
 		helpMenu.add(updateAction);
 		helpMenu.add(manageUpdatesAction);
+		helpMenu.add(manualUpdate);
 		return helpMenu;
 	}
 
@@ -346,6 +358,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		viewsMenu.add(openDocumentViewAction);
 		viewsMenu.add(openNoteAction);
 		viewsMenu.add(openFileAction);
+		viewsMenu.add(openRelationViewAction);
 		// viewsMenu.add(viewList);
 
 //		MenuManager perspectivesMenu = new MenuManager("Öffne Perspektive...");
@@ -384,6 +397,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		myToolbar.add(openDocumentViewAction);
 		myToolbar.add(openNoteAction);
 		myToolbar.add(openFileAction);
+		myToolbar.add(openRelationViewAction);
 		
 		//myToolbar.add(openDSViewAction);
 	}

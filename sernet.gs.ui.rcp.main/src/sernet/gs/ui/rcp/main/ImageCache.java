@@ -55,6 +55,9 @@ public class ImageCache {
 
 	public static final String EXPLORER = "tree_explorer.gif";
 
+	public static final String ARROW_IN = "arrow_in.png";
+	public static final String ARROW_OUT = "arrow_out.png";
+
 	public static final String BAUSTEIN_UMSETZUNG = "16-cube-blue.png";
 	
 	public static final String BAUSTEIN_UMSETZUNG_A = "baustein_a.png";

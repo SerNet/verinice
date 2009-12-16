@@ -49,6 +49,7 @@ import org.eclipse.ui.part.ViewPart;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.PropertiesComboBoxCellModifier;
@@ -74,8 +75,11 @@ import sernet.hui.common.connect.HuiRelation;
  *
  */
 public class RelationView extends ViewPart {
+
+	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.RelationView"; //$NON-NLS-1$
+	
 	private TableViewer viewer;
-	private Action action1;
+	private Action jumpToAction;
 	private Action action2;
 	private Action doubleClickAction;
 	private ISelectionListener selectionListener;
@@ -131,6 +135,7 @@ public class RelationView extends ViewPart {
 			case 0:
 				return "";
 			case 1:
+				// if we can't find a real name for the relation, we just display "depends on" or "necessary for":
 				if (isDownwardLink(link))
 					return (relation != null) ? relation.getName() : "hängt ab von";
 				else
@@ -224,9 +229,6 @@ public class RelationView extends ViewPart {
 		};
 		job.setUser(false);
 		job.schedule();
-
-	
-				
 	}
 
 	/**
@@ -234,7 +236,7 @@ public class RelationView extends ViewPart {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer = new TableViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setSorter(new NameSorter());
@@ -265,12 +267,25 @@ public class RelationView extends ViewPart {
 				SWT.READ_ONLY);
 		typeEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
 
-		viewer.setCellEditors(new CellEditor[] {null,typeEditor,null});	
+		viewer.setCellEditors(new CellEditor[] {null,typeEditor,null});
 	    viewer.setCellModifier(new ICellModifier() {
 
 
 			public boolean canModify(Object element, String property) {
-				return property.equals(COLUMN_TYPE);
+				if (!property.equals(COLUMN_TYPE)
+						|| 	!(element instanceof CnALink))
+					return false;
+				
+				
+				CnALink link = (CnALink) element;
+				String currentName = getCurrentName(link);
+				Set<HuiRelation> possibleRelations = HitroUtil.getInstance()
+						.getTypeFactory().getPossibleRelations(
+								link.getDependant().getEntityType().getId(),
+								link.getDependency().getEntityType().getId());
+
+				return (possibleRelations != null && possibleRelations.size() > 0);
+				
 			}
 
 			public Object getValue(Object element, String property) {
@@ -345,6 +360,10 @@ public class RelationView extends ViewPart {
 	 */
 	protected String getCurrentName(CnALink link) {
 		HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(link.getTypeId());
+		if (relation == null) {
+			String name = isDownwardLink(link) ? "" : "";
+		}
+		
 		String name = isDownwardLink(link) ? relation.getName() : relation.getReversename();
 		return name;
 	}
@@ -405,42 +424,61 @@ public class RelationView extends ViewPart {
 
 		if (((IStructuredSelection) selection).size() != 1)
 			return;
-		
+
 		Object element = ((IStructuredSelection) selection).getFirstElement();
-			if (element instanceof CnATreeElement) {
-				CnATreeElement elmt = (CnATreeElement) element;
-				loadLinks(elmt);
-			}
+		if (element instanceof CnATreeElement) {
+			setNewInput((CnATreeElement)element);
+		}
+	}
+	
+	/**
+	 * @param element
+	 */
+	private void setNewInput(CnATreeElement elmt) {
+		loadLinks(elmt);
+		setViewTitle("Relationen für: " + elmt.getTitel());
+	}
+
+	private void setViewTitle(String title) {
+		this.setContentDescription(title);
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(action1);
+		manager.add(jumpToAction);
 		manager.add(new Separator());
 		manager.add(action2);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-		manager.add(action1);
+		manager.add(jumpToAction);
 		manager.add(action2);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(action1);
+		manager.add(jumpToAction);
 		manager.add(action2);
 	}
 
 	private void makeActions() {
-		action1 = new Action() {
+		jumpToAction = new Action() {
 			public void run() {
-				showMessage("Action 1 executed");
+				ISelection selection = viewer.getSelection();
+				Object obj = ((IStructuredSelection)selection).getFirstElement();
+				if (obj == null)
+					return;
+				
+				CnALink link = (CnALink) obj;
+				if (isDownwardLink(link))
+					setNewInput(link.getDependency());
+				else
+					setNewInput(link.getDependant());
 			}
 		};
-		action1.setText("Action 1");
-		action1.setToolTipText("Action 1 tooltip");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		jumpToAction.setText("Springe zu...");
+		jumpToAction.setToolTipText("Springe zum Ziel der markierten Relation");
+		jumpToAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
 		
 		action2 = new Action() {
 			public void run() {
@@ -455,7 +493,13 @@ public class RelationView extends ViewPart {
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection)selection).getFirstElement();
-				showMessage("Double-click detected on "+obj.toString());
+				CnALink link = (CnALink) obj;
+
+				// open the object on the other side of the link:
+				if (isDownwardLink(link))
+					EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
+				else
+					EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
 			}
 		};
 	}

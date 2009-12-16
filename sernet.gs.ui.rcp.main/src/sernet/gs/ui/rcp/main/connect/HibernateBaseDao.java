@@ -45,7 +45,7 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		     this.type = type;
 		 }
 		 
-		 // FIXME akoderman implement security check for write permission on server here
+		 // FIXME akoderman implement security check for write permission on server here (update, delete, merge...)
 		 
 		 /*
 		  * It has to be noted that updates can happen without any call being made to any of these methods.
@@ -79,6 +79,7 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		 }
 
 		 public List findAll() {
+			 // this could be used to limit result size:
 //			 DetachedCriteria criteria = DetachedCriteria.forClass(type);
 //			 List results = getHibernateTemplate().findByCriteria(criteria, 0, 1000);
 //			 return results;
@@ -86,13 +87,16 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		 }
 
 		 public T findById(ID id) {
-			 return (T) getHibernateTemplate().load(type, id);
+//			 return (T) getHibernateTemplate().load(type, id);
+			 return retrieve(id, (new RetrieveInfo()).setProperties(true)
+			 	);
 		 }
 		 
 		public T retrieve(ID id, RetrieveInfo ri) {
-			if(log.isDebugEnabled()) {
-				log.debug("retrieve - id: " + id + " " + ri);
-			}
+			// akoderman this eats too much performance, since we currently ship verinice with log level set to 'debug' I commented it out:
+//			if(log.isDebugEnabled()) {
+//				log.debug("retrieve - id: " + id + " " + ri);
+//			}
 			if(ri==null) {
 				ri = new RetrieveInfo();
 			}

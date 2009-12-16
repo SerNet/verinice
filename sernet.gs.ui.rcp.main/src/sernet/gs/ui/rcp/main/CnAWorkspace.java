@@ -294,13 +294,6 @@ public class CnAWorkspace {
 				workDir);
 	}
 
-	public void createReportTempFile() {
-		URL url = Platform.getInstanceLocation().getURL();
-		File officeDir = new File(url.getPath() + File.separator + OFFICEDIR);
-
-		// TODO rschus: This method effectively does nothing and is not called by anything. Remove?
-	}
-
 	private void createOfficeDir() throws NullPointerException, IOException {
 		URL url = Platform.getInstanceLocation().getURL();
 		File officeDir = new File(url.getPath() + File.separator + OFFICEDIR);

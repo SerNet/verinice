@@ -58,7 +58,7 @@ public class AttachmentEditorInput implements IEditorInput {
 	}
 
 	public String getToolTipText() {
-		return "Notiz";
+		return "File";
 	}
 
 	public Object getAdapter(Class adapter) {

@@ -258,6 +258,8 @@
 	When activated and given a list of roles (parameterRoles) all retrievals of CnATreeElements will be restricted
 	to those elements which the user has read access, to.
 	 
+	 Filter is also set on property "children" (see above)
+	 
 	-->	
   	<filter
   		name="userAccessReadFilter"
