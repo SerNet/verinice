@@ -58,7 +58,7 @@ public class Attachment extends Addition implements Serializable{
 	
 	public static String[] IMAGE_MIME_TYPES = new String[] {"gif","jpg","jpeg","png","tif","tiff","bmp","svg","psd"};
 	
-	public static String[] SPREADSHEET_MIME_TYPES = new String[] {"xls","ods","xlsx"};
+	public static String[] SPREADSHEET_MIME_TYPES = new String[] {"xls","ods","xlsx","csv"};
 	
 	public static String[] PRESENTATION_MIME_TYPES = new String[] {"ppt","odp","pptx"};
 	
