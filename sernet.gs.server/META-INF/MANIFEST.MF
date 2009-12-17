@@ -11,7 +11,9 @@ Bundle-ClassPath: .,
  lib/richfaces-impl-3.3.2.SR1.jar,
  lib/richfaces-ui-3.3.2.SR1.jar
 Bundle-Activator: sernet.gs.server.Activator
-Import-Package: com.mchange.v2.c3p0,
+Import-Package: au.com.bytecode.opencsv,
+ au.com.bytecode.opencsv.bean,
+ com.mchange.v2.c3p0,
  com.mysql.jdbc,
  javax.servlet,
  javax.servlet.http,
