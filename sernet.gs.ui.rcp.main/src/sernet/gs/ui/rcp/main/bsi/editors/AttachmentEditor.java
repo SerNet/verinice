@@ -52,6 +52,7 @@ import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 import sernet.hui.common.connect.Entity;
@@ -132,9 +133,10 @@ public class AttachmentEditor extends EditorPart {
 			if(isNew) {
 				AttachmentFile attachmentFile = new AttachmentFile();
 				attachmentFile.readFileData(attachment.getFilePath());	
-				SaveElement<AttachmentFile> saveFileCommand = new SaveElement<AttachmentFile>(attachmentFile);
+				SaveAttachment saveFileCommand = new SaveAttachment(attachmentFile);
 				attachmentFile.setDbId(attachment.getDbId());
 				saveFileCommand = getCommandService().executeCommand(saveFileCommand);
+				saveFileCommand.clear();
 			}
 		} catch (Exception e) {
 			LOG.error("Error while saving file", e);
