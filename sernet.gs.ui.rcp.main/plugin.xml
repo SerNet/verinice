@@ -120,6 +120,24 @@
             name="Dateien"
             restorable="true">
       </view>
+      <view
+            allowMultiple="false"
+            category="sernet.verinice.iso27k.rcp"
+            class="sernet.verinice.iso27k.rcp.CatalogView"
+            icon="icons/wrench.png"
+            id="sernet.verinice.iso27k.rcp.CatalogView"
+            name="Maßnahmen Katalog"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="sernet.verinice.iso27k.rcp"
+            class="sernet.verinice.iso27k.rcp.MeasureView"
+            icon="icons/wrench.png"
+            id="sernet.verinice.iso27k.rcp.MeasureView"
+            name="Maßnahme"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
