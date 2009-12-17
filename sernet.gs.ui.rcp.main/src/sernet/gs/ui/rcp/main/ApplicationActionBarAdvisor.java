@@ -67,6 +67,8 @@ import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
+import sernet.verinice.iso27k.rcp.CatalogView;
+import sernet.verinice.iso27k.rcp.MeasureView;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of
@@ -118,6 +120,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private OpenViewAction openFileAction;
 
 	private OpenViewAction openRelationViewAction;
+	
+	private OpenViewAction openCatalogAction;
+	
+	private OpenViewAction openMeasureAction;
 	
 	private IWorkbenchAction copyAction;
 
@@ -200,6 +206,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		openFileAction = new OpenViewAction(window, "Dateien",
 				FileView.ID, ImageCache.ATTACH);
 		register(openFileAction);
+		
+		openCatalogAction = new OpenViewAction(window, "Maßnahmen Katalog",
+				CatalogView.ID, ImageCache.WRENCH);
+		register(openCatalogAction);
+		
+		openMeasureAction = new OpenViewAction(window, "Maßnahme",
+				MeasureView.ID, ImageCache.WRENCH);
+		register(openMeasureAction);
 
 		openRelationViewAction = new OpenViewAction(window, "Relationen",
 				RelationView.ID, ImageCache.LINKS);
@@ -359,6 +373,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		viewsMenu.add(openNoteAction);
 		viewsMenu.add(openFileAction);
 		viewsMenu.add(openRelationViewAction);
+		viewsMenu.add(openCatalogAction);
+		viewsMenu.add(openMeasureAction);
 		// viewsMenu.add(viewList);
 
 //		MenuManager perspectivesMenu = new MenuManager("Öffne Perspektive...");
@@ -398,6 +414,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		myToolbar.add(openNoteAction);
 		myToolbar.add(openFileAction);
 		myToolbar.add(openRelationViewAction);
+		myToolbar.add(openCatalogAction);
+		myToolbar.add(openMeasureAction);
 		
 		//myToolbar.add(openDSViewAction);
 	}
