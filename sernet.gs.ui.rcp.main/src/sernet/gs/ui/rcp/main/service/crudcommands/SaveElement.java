@@ -39,7 +39,7 @@ import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
  */
 public class SaveElement<T> extends GenericCommand implements IChangeLoggingCommand {
 
-	private T element;
+	protected T element;
 	private String stationId;
 
 	public SaveElement(T element) {
@@ -84,6 +84,8 @@ public class SaveElement<T> extends GenericCommand implements IChangeLoggingComm
 		return stationId;
 	}
 	
-	
+	public void clear() {
+		
+	}
 
 }
