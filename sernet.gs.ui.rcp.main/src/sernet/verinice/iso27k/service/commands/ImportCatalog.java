@@ -22,15 +22,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.Iterator;
-import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadNotes;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 import sernet.verinice.iso27k.service.Catalog;
 import sernet.verinice.iso27k.service.ICatalog;
 import sernet.verinice.iso27k.service.ICatalogImporter;
@@ -48,6 +43,7 @@ import au.com.bytecode.opencsv.CSVReader;
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
+@SuppressWarnings("serial")
 public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 
 	private transient Logger log = Logger.getLogger(ImportCatalog.class);
@@ -75,13 +71,12 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 	 */
 	public void execute() {
 		try {
-			config = new ImportConfiguration(csvFile);
+			config = new ImportConfiguration(csvFile);			
 			importCatalog();
 		} catch(Exception e) {
 			getLog().error("Error while executing", e);
 		}	
 	}
-	
 
 	/* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.service.ICatalogImporter#importCatalog()
