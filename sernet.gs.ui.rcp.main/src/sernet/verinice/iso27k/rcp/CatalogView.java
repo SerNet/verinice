@@ -17,6 +17,10 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
@@ -34,9 +38,17 @@ import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.model.Attachment;
+import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 import sernet.verinice.iso27k.service.IItem;
+import sernet.verinice.iso27k.service.commands.CsvFile;
 import sernet.verinice.iso27k.service.commands.ImportCatalog;
 
 /**
@@ -99,6 +111,7 @@ public class CatalogView extends ViewPart {
 					try {
 						ImportCatalog importCatalog = new ImportCatalog(selected);
 						importCatalog = getCommandService().executeCommand(importCatalog);
+						saveFile(importCatalog);
 						if(importCatalog.getCatalog()!=null) {
 							viewer.setInput(importCatalog.getCatalog().getRoot());
 						}
@@ -113,6 +126,48 @@ public class CatalogView extends ViewPart {
 		addCatalogAction.setText("Katalog importieren...");
 		addCatalogAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
 		addCatalogAction.setEnabled(true);
+	}
+	
+	/**
+	 * @throws CommandException 
+	 * 
+	 */
+	private void saveFile(ImportCatalog importCatalog) throws CommandException {
+		CsvFile csvFile = importCatalog.getCsvFile();
+		
+		if(csvFile!=null) {
+			LoadBSIModel loadBSIModel = new LoadBSIModel();
+			loadBSIModel = getCommandService().executeCommand(loadBSIModel);
+			BSIModel model = loadBSIModel.getModel();
+			
+			Attachment attachment = new Attachment();
+			attachment.setCnATreeElementId(model.getDbId());
+			attachment.setCnAElementTitel(model.getTitel());
+			Date now = Calendar.getInstance().getTime();
+			attachment.setDate(now);
+			String fileName = csvFile.getFilePath();
+			char separator = '\\';
+			if(fileName.contains("/")) {
+				separator = '/';
+			}
+			int lastSeparator = fileName.lastIndexOf(separator);
+			if(lastSeparator!=-1) {
+				fileName = fileName.substring(lastSeparator+1);
+			}
+			attachment.setFileName(fileName);
+			attachment.setTitel(fileName);
+			attachment.setText("Measure catalog imported at: " + DateFormat.getDateTimeInstance().format(now));
+			SaveNote command = new SaveNote(attachment);	
+			command = getCommandService().executeCommand(command);
+			attachment = (Attachment) command.getAddition();
+			
+			AttachmentFile attachmentFile = new AttachmentFile();
+			attachmentFile.setDbId(attachment.getDbId());
+			attachmentFile.setFileData(csvFile.getFileContent());
+			SaveAttachment saveAttachmentFile = new SaveAttachment(attachmentFile);
+			saveAttachmentFile = getCommandService().executeCommand(saveAttachmentFile);
+			saveAttachmentFile.clear();
+		}
 	}
 
 	/**
