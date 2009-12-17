@@ -56,6 +56,8 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import java.util.Comparator;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 
 /**
@@ -72,6 +74,8 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
  */
 public class NumericStringComparator implements Comparator {
 
+	private final Logger log = Logger.getLogger(NumericStringComparator.class);
+	
 	public NumericStringComparator() {
 	}
 
@@ -131,15 +135,21 @@ public class NumericStringComparator implements Comparator {
 			}
 			
 			if (edx1 != -1) {
-				// TODO ak the next line sometimes produces an ArrayOutOfBounds exception
-				try {
-					int comp = compare(s1.substring(edx1), s2.substring(edx2));
-					if (comp != 0) {
-						ret = comp;
+				if(edx2 > -1) {
+					// TODO ak the next line sometimes produces an ArrayOutOfBounds exception
+					try {
+						int comp = compare(s1.substring(edx1), s2.substring(edx2));
+						if (comp != 0) {
+							ret = comp;
+						}
+					} catch (Exception e) {
+						log.error("Fehler bei Stringvergleich: " + s1 + " : " + s2,e);
 					}
-				} catch (Exception e) {
-					ExceptionUtil.log(e, "Fehler bei Stringvergleich: " + s1 + " : " + s2);
+				} else {
+					ret = 1;
 				}
+			} else if (edx2 != -1) {
+				ret = -1;
 			}
 			return ret;
 		} else {
