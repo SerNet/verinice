@@ -53,6 +53,8 @@ public class ImageCache {
 	
 	public static final String TOOL= "24-tool-a.png";
 
+	public static final String WRENCH= "wrench.png";
+	
 	public static final String EXPLORER = "tree_explorer.gif";
 
 	public static final String ARROW_IN = "arrow_in.png";
@@ -136,7 +138,6 @@ public class ImageCache {
 	public static final String DELETE = "delete.png";
 	
 	public static final String EDIT = "edit.png";
-
 
 	public static final String SAVE = "save.png";
 	
