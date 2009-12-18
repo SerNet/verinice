@@ -17,9 +17,11 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
@@ -30,11 +32,18 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
+import org.jfree.util.Log;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -44,6 +53,8 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachmentFile;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachments;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
@@ -67,6 +78,12 @@ public class CatalogView extends ViewPart {
 
 	private TreeViewer viewer;
 	
+	private Combo comboCatalog;
+	
+	private BSIModel bsiModel;
+	
+	List<Attachment> attachmentList;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -75,8 +92,18 @@ public class CatalogView extends ViewPart {
 	 * .Composite)
 	 */
 	@Override
-	public void createPartControl(Composite parent) {		
+	public void createPartControl(Composite parent) {
+		GridLayout gl = new GridLayout(1, false);
+		parent.setLayout(gl);
+		comboCatalog = new Combo(parent, SWT.DROP_DOWN);
+		comboCatalog.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		comboCatalog.addSelectionListener(new SelectionAdapter() {
+		      public void widgetSelected(SelectionEvent e) {
+		    	  openCatalog();
+		      }
+		    });
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		//viewer.setSorter(new KapitelSorter());
@@ -86,6 +113,58 @@ public class CatalogView extends ViewPart {
 		makeActions();
 		hookActions();
 		fillLocalToolBar();
+		
+		loadCatalogAttachmets();
+	}
+
+	/**
+	 * 
+	 */
+	private void loadCatalogAttachmets() {
+		try {
+			LoadAttachments command = new LoadAttachments(getBsiModel().getDbId());		
+			command = getCommandService().executeCommand(command);		
+			attachmentList = command.getAttachmentList();
+			String[] fileNameArray = new String[attachmentList.size()];
+			int i = 0;
+			for (Attachment attachment : attachmentList) {
+				fileNameArray[i] = attachment.getFileName();
+				i++;
+			}
+			setContentDescription("Hallo Welt.");
+			comboCatalog.setItems(fileNameArray);
+		} catch(Exception e) {
+			
+		}
+	}
+	
+	/**
+	 * @throws CommandException 
+	 * 
+	 */
+	private void saveFile(ImportCatalog importCatalog) throws CommandException {
+		CsvFile csvFile = importCatalog.getCsvFile();
+		
+		if(csvFile!=null) {			
+			Attachment attachment = new Attachment();
+			attachment.setCnATreeElementId(getBsiModel().getDbId());
+			attachment.setCnAElementTitel(getBsiModel().getTitel());
+			Date now = Calendar.getInstance().getTime();
+			attachment.setDate(now);
+			attachment.setFilePath(csvFile.getFilePath());
+			attachment.setTitel(attachment.getFileName());
+			attachment.setText("Measure catalog imported at: " + DateFormat.getDateTimeInstance().format(now));
+			SaveNote command = new SaveNote(attachment);	
+			command = getCommandService().executeCommand(command);
+			attachment = (Attachment) command.getAddition();
+			
+			AttachmentFile attachmentFile = new AttachmentFile();
+			attachmentFile.setDbId(attachment.getDbId());
+			attachmentFile.setFileData(csvFile.getFileContent());
+			SaveAttachment saveAttachmentFile = new SaveAttachment(attachmentFile);
+			saveAttachmentFile = getCommandService().executeCommand(saveAttachmentFile);
+			saveAttachmentFile.clear();
+		}
 	}
 
 	/*
@@ -128,47 +207,7 @@ public class CatalogView extends ViewPart {
 		addCatalogAction.setEnabled(true);
 	}
 	
-	/**
-	 * @throws CommandException 
-	 * 
-	 */
-	private void saveFile(ImportCatalog importCatalog) throws CommandException {
-		CsvFile csvFile = importCatalog.getCsvFile();
-		
-		if(csvFile!=null) {
-			LoadBSIModel loadBSIModel = new LoadBSIModel();
-			loadBSIModel = getCommandService().executeCommand(loadBSIModel);
-			BSIModel model = loadBSIModel.getModel();
-			
-			Attachment attachment = new Attachment();
-			attachment.setCnATreeElementId(model.getDbId());
-			attachment.setCnAElementTitel(model.getTitel());
-			Date now = Calendar.getInstance().getTime();
-			attachment.setDate(now);
-			String fileName = csvFile.getFilePath();
-			char separator = '\\';
-			if(fileName.contains("/")) {
-				separator = '/';
-			}
-			int lastSeparator = fileName.lastIndexOf(separator);
-			if(lastSeparator!=-1) {
-				fileName = fileName.substring(lastSeparator+1);
-			}
-			attachment.setFileName(fileName);
-			attachment.setTitel(fileName);
-			attachment.setText("Measure catalog imported at: " + DateFormat.getDateTimeInstance().format(now));
-			SaveNote command = new SaveNote(attachment);	
-			command = getCommandService().executeCommand(command);
-			attachment = (Attachment) command.getAddition();
-			
-			AttachmentFile attachmentFile = new AttachmentFile();
-			attachmentFile.setDbId(attachment.getDbId());
-			attachmentFile.setFileData(csvFile.getFileContent());
-			SaveAttachment saveAttachmentFile = new SaveAttachment(attachmentFile);
-			saveAttachmentFile = getCommandService().executeCommand(saveAttachmentFile);
-			saveAttachmentFile.clear();
-		}
-	}
+	
 
 	/**
 	 * 
@@ -232,6 +271,47 @@ public class CatalogView extends ViewPart {
 
 		public String getText(Object obj) {
 			return ((IItem)obj).getName();
+		}
+	}
+
+	public BSIModel getBsiModel() {
+		if(bsiModel==null) {
+			bsiModel = loadBsiModel();
+		}
+		return bsiModel;
+	}
+
+	public void setBsiModel(BSIModel bsiModel) {
+		this.bsiModel = bsiModel;
+	}
+	
+	public BSIModel loadBsiModel() {
+		LoadBSIModel loadBSIModel = new LoadBSIModel();
+		try {
+			loadBSIModel = getCommandService().executeCommand(loadBSIModel);
+		} catch (CommandException e) {
+			LOG.error("Error while loading BSI-Model.", e);
+		}
+		bsiModel = loadBSIModel.getModel();
+		return bsiModel;
+	}
+
+	private void openCatalog() {
+		try {
+			Attachment selected = attachmentList.get(comboCatalog.getSelectionIndex());
+			LoadAttachmentFile loadAttachmentFile = new LoadAttachmentFile(selected.getDbId());
+			loadAttachmentFile = getCommandService().executeCommand(loadAttachmentFile);
+			if(loadAttachmentFile!=null && loadAttachmentFile.getAttachmentFile()!=null && loadAttachmentFile.getAttachmentFile().getFileData()!=null) {
+				ImportCatalog importCatalog = new ImportCatalog(loadAttachmentFile.getAttachmentFile().getFileData());
+				importCatalog = getCommandService().executeCommand(importCatalog);
+				if(importCatalog.getCatalog()!=null) {
+					viewer.setInput(importCatalog.getCatalog().getRoot());
+				}
+			}
+			setContentDescription(selected.getFileName());
+		} catch(Exception e) {
+			LOG.error("Error while loading catalog", e);
+			ExceptionUtil.log(e, "Error while loading catalog");
 		}
 	}
 }
