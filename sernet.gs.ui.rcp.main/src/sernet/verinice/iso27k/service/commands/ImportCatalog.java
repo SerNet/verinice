@@ -65,6 +65,11 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 		super();
 		csvFile = new CsvFile(filePath);
 	}
+	
+	public ImportCatalog(byte[] fileContent) throws IOException {
+		super();
+		csvFile = new CsvFile(fileContent);
+	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
