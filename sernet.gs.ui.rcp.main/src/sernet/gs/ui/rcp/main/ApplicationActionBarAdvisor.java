@@ -121,7 +121,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	private OpenViewAction openRelationViewAction;
 	
-	private OpenViewAction openCatalogAction;
+	private OpenMultipleViewAction openCatalogAction;
 	
 	private OpenViewAction openMeasureAction;
 	
@@ -207,7 +207,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 				FileView.ID, ImageCache.ATTACH);
 		register(openFileAction);
 		
-		openCatalogAction = new OpenViewAction(window, "Maßnahmen Katalog",
+		openCatalogAction = new OpenMultipleViewAction(window, "Maßnahmen Katalog",
 				CatalogView.ID, ImageCache.WRENCH);
 		register(openCatalogAction);
 		
@@ -391,6 +391,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	}
 
 	protected void fillCoolBar(ICoolBarManager coolBar) {
+		// TODO akoderman make less evil
 		IToolBarManager myToolbar = new ToolBarManager(coolBar.getStyle());
 		coolBar.add(new ToolBarContributionItem(myToolbar));
 		myToolbar.add(saveAction);
