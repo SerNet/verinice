@@ -38,6 +38,11 @@ public class CsvFile implements Serializable{
 		this.filePath = filePath;
 		readFile();
 	}
+	
+	public CsvFile(byte[] fileContent) throws IOException {
+		super();
+		setFileContent(fileContent);
+	}
 
 	public void readFile() throws IOException {
 		if( getFilePath()!=null) {
