@@ -121,7 +121,7 @@
             restorable="true">
       </view>
       <view
-            allowMultiple="false"
+            allowMultiple="true"
             category="sernet.verinice.iso27k.rcp"
             class="sernet.verinice.iso27k.rcp.CatalogView"
             icon="icons/wrench.png"
