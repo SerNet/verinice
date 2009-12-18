@@ -83,7 +83,8 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 //			 DetachedCriteria criteria = DetachedCriteria.forClass(type);
 //			 List results = getHibernateTemplate().findByCriteria(criteria, 0, 1000);
 //			 return results;
-			 return getHibernateTemplate().loadAll(type);
+			 DetachedCriteria criteria = DetachedCriteria.forClass(type);
+			 return findByCriteria(criteria);
 		 }
 
 		 public T findById(ID id) {

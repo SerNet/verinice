@@ -81,6 +81,11 @@ public class EditorFactory {
 				// replace element with new instance from DB:
 				CnATreeElement cnaElement = (CnATreeElement) o;
 				CnATreeElement newElement = CnAElementHome.getInstance().loadById(cnaElement.getClass(), cnaElement.getDbId());
+				
+				// may be null, i.e. if we don't have permission to open the object:
+				if (newElement == null)
+					throw new Exception("Öffnen wurde verweigert. Leseberechtigung überprüfen.");
+				
 				BSIElementEditorInput input = new BSIElementEditorInput(newElement);
 
 				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {
@@ -145,7 +150,6 @@ public class EditorFactory {
 			public void openEditorFor(Object o) throws Exception {
 				IEditorPart editor;
 
-				// replace element with new instance from DB:
 				Attachment attachment = (Attachment) o;
 				AttachmentEditorInput input = new AttachmentEditorInput(attachment);
 
