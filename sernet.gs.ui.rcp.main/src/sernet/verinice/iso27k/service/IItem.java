@@ -30,11 +30,19 @@ import java.util.Collection;
  */
 public interface IItem extends Serializable {
 	
+	static final int CONTROL = 0;
+	
+	static final int THREAD = 1;
+	
 	String getName();
 	
 	String getDescription();
 	
 	void setDescription( String description );
+	
+	int getTypeId();
+
+	void setTypeId(int typeId);
 	
 	void addItem(IItem item);
 	

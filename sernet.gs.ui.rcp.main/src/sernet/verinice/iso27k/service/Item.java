@@ -39,6 +39,8 @@ public class Item implements IItem {
 	
 	private transient Logger log = Logger.getLogger(Item.class);
 	
+	
+	
 	public Logger getLog() {
 		if(log==null) {
 			log = Logger.getLogger(Item.class);
@@ -51,6 +53,8 @@ public class Item implements IItem {
 	protected String description;
 	
 	private String numberString;
+	
+	private int typeId = CONTROL;
 
 	/**
 	 * tree map to store and sort the items
@@ -74,6 +78,20 @@ public class Item implements IItem {
 	 */
 	public Item(String name) {
 		this.name = name;
+		itemMap = new TreeMap<Integer,IItem>();
+	}
+	
+	/**
+	 * Creates an item with the given name and type id.
+	 * Creates an empty tree map to store items
+	 * 
+	 * @param name name of the item
+	 */
+	public Item(String name, String typeId) {
+		this.name = name;
+		if(typeId!=null && typeId.length()>0) {
+			this.typeId = Integer.valueOf(typeId);
+		}
 		itemMap = new TreeMap<Integer,IItem>();
 	}
 	
@@ -148,6 +166,14 @@ public class Item implements IItem {
 
 	public String getNumberString() {
 		return numberString;
+	}
+
+	public int getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(int typeId) {
+		this.typeId = typeId;
 	}
 
 	/* (non-Javadoc)
