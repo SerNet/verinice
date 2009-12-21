@@ -37,7 +37,6 @@ import org.eclipse.ui.internal.cheatsheets.actions.CheatSheetCategoryBasedSelect
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
 import sernet.gs.ui.rcp.main.actions.ManageUpdatesAction;
 import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
@@ -61,14 +60,9 @@ import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.bsi.views.NoteView;
 import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
-import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewCloseDBAction;
-import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.verinice.iso27k.rcp.CatalogView;
-import sernet.verinice.iso27k.rcp.MeasureView;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of
@@ -122,8 +116,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private OpenViewAction openRelationViewAction;
 	
 	private OpenMultipleViewAction openCatalogAction;
-	
-	private OpenViewAction openMeasureAction;
 	
 	private IWorkbenchAction copyAction;
 
@@ -210,10 +202,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		openCatalogAction = new OpenMultipleViewAction(window, "Maßnahmen Katalog",
 				CatalogView.ID, ImageCache.WRENCH);
 		register(openCatalogAction);
-		
-		openMeasureAction = new OpenViewAction(window, "Maßnahme",
-				MeasureView.ID, ImageCache.WRENCH);
-		register(openMeasureAction);
 
 		openRelationViewAction = new OpenViewAction(window, "Relationen",
 				RelationView.ID, ImageCache.LINKS);
@@ -374,7 +362,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		viewsMenu.add(openFileAction);
 		viewsMenu.add(openRelationViewAction);
 		viewsMenu.add(openCatalogAction);
-		viewsMenu.add(openMeasureAction);
 		// viewsMenu.add(viewList);
 
 //		MenuManager perspectivesMenu = new MenuManager("Öffne Perspektive...");
@@ -416,7 +403,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		myToolbar.add(openFileAction);
 		myToolbar.add(openRelationViewAction);
 		myToolbar.add(openCatalogAction);
-		myToolbar.add(openMeasureAction);
 		
 		//myToolbar.add(openDSViewAction);
 	}
