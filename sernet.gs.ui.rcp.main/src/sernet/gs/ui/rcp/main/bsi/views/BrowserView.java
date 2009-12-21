@@ -18,9 +18,13 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
@@ -47,9 +51,12 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.verinice.iso27k.service.IItem;
 
 public class BrowserView extends ViewPart {
 
+	private static final Logger LOG = Logger.getLogger(BrowserView.class);
+	
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.browserview"; //$NON-NLS-1$
 
 	private Browser browser;
@@ -100,20 +107,17 @@ public class BrowserView extends ViewPart {
 			StatusLine.setErrorMessage("");
 			if (element instanceof Massnahme) {
 				Massnahme mn = (Massnahme) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(mn.getUrl(), mn
-						.getStand()));
+				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(mn.getUrl(), mn.getStand()));
 			}
 
 			if (element instanceof Baustein) {
 				Baustein bst = (Baustein) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst
-						.getStand()));
+				setUrl(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()));
 			}
 
 			if (element instanceof Gefaehrdung) {
 				Gefaehrdung gef = (Gefaehrdung) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getGefaehrdung(gef.getUrl(), gef
-						.getStand()));
+				setUrl(GSScraperUtil.getInstance().getModel().getGefaehrdung(gef.getUrl(), gef.getStand()));
 			}
 
 			if (element instanceof GefaehrdungsUmsetzung) {
@@ -125,8 +129,7 @@ public class BrowserView extends ViewPart {
 					return;
 				}
 				
-				setUrl(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),
-						gefUms.getStand()));
+				setUrl(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),gefUms.getStand()));
 			}
 
 			if (element instanceof RisikoMassnahmenUmsetzung) {
@@ -140,20 +143,38 @@ public class BrowserView extends ViewPart {
 
 			if (element instanceof MassnahmenUmsetzung) {
 				MassnahmenUmsetzung mnu = (MassnahmenUmsetzung) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(mnu.getUrl(), mnu
-						.getStand()));
+				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(mnu.getUrl(), mnu.getStand()));
 			}
 			
 			if (element instanceof TodoViewItem) {
 				TodoViewItem item = (TodoViewItem) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(item.getUrl(), item.getStand())
-						);
+				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(item.getUrl(), item.getStand()));
 			}
 
 			if (element instanceof BausteinUmsetzung) {
 				BausteinUmsetzung bst = (BausteinUmsetzung) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst
-						.getStand()));
+				setUrl(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()));
+			}
+			
+			if (element instanceof IItem) {
+				IItem item = (IItem) element;
+				StringBuilder sb = new StringBuilder();
+				sb.append("<html>\n");
+				sb.append("<head>\n");
+				sb.append("<link rel=\"stylesheet\" href=\"../screen.css\" type=\"text/css\" media=\"projection, screen\"  />\n");
+				sb.append("</head>\n");
+				sb.append("<body>\n");
+				sb.append("<h1>").append(item.getName()).append("</h1>");
+				if(item.getDescription()!=null) {
+					sb.append(item.getDescription());
+				}
+				sb.append("</body>\n");
+				sb.append("</html>\n");
+				try {
+					setUrl(new ByteArrayInputStream(sb.toString().getBytes("UTF-8")));
+				} catch (UnsupportedEncodingException e) {
+					LOG.error("Error while opening item: " + item.getName());
+				} 
 			}
 
 		} catch (GSServiceException e) {
