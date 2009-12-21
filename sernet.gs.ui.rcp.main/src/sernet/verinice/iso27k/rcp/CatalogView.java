@@ -17,11 +17,15 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import javax.swing.text.DateFormatter;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
@@ -71,6 +75,8 @@ public class CatalogView extends ViewPart {
 	private static final Logger LOG = Logger.getLogger(CatalogView.class);
 
 	public static final String ID = "sernet.verinice.iso27k.rcp.CatalogView"; //$NON-NLS-1$
+	
+	public static final DateFormat DATE_TIME_FORMAT_SHORT = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
 	private Action addCatalogAction;
 
@@ -126,12 +132,15 @@ public class CatalogView extends ViewPart {
 			command = getCommandService().executeCommand(command);		
 			attachmentList = command.getAttachmentList();
 			String[] fileNameArray = new String[attachmentList.size()];
-			int i = 0;
+			int i = 0;		
 			for (Attachment attachment : attachmentList) {
-				fileNameArray[i] = attachment.getFileName();
+				StringBuilder sb = new StringBuilder();
+				sb.append(attachment.getFileName());
+				sb.append(" (").append(DATE_TIME_FORMAT_SHORT.format(attachment.getDate())).append(")");
+				fileNameArray[i] = sb.toString();			
 				i++;
 			}
-			setContentDescription("Hallo Welt.");
+			Arrays.sort(fileNameArray);
 			comboCatalog.setItems(fileNameArray);
 		} catch(Exception e) {
 			
@@ -181,25 +190,7 @@ public class CatalogView extends ViewPart {
 	private void makeActions() {
 		addCatalogAction = new Action() {
 			public void run() {
-				FileDialog fd = new FileDialog(CatalogView.this.getSite().getShell());
-				fd.setText("Katalog auswählen...");
-				fd.setFilterPath("~");
-				fd.setFilterExtensions(new String[] { "*.csv" });
-				String selected = fd.open();
-				if (selected != null && selected.length() > 0) {
-					try {
-						ImportCatalog importCatalog = new ImportCatalog(selected);
-						importCatalog = getCommandService().executeCommand(importCatalog);
-						saveFile(importCatalog);
-						if(importCatalog.getCatalog()!=null) {
-							viewer.setInput(importCatalog.getCatalog().getRoot());
-						}
-						
-					} catch (Exception e) {
-						LOG.error("Error while reading file data", e);
-						ExceptionUtil.log(e, "Fehler beim Lesen der Datei.");
-					}
-				}
+				importCatalog();
 			}
 		};
 		addCatalogAction.setText("Katalog importieren...");
@@ -265,8 +256,15 @@ public class CatalogView extends ViewPart {
 	static class ViewLabelProvider extends LabelProvider {
 
 		public Image getImage(Object obj) {
-			// TODO: return a nice image
-			return ImageCache.getInstance().getImage(ImageCache.UNKNOWN);	
+			IItem item = (IItem) obj;
+			String image = ImageCache.UNKNOWN;
+			if(item.getDescription()!=null && item.getTypeId()==IItem.CONTROL) {
+				image = ImageCache.WRENCH;
+			}
+			if(item.getDescription()!=null && item.getTypeId()==IItem.THREAD) {
+				image = ImageCache.GEFAEHRDUNG;
+			}
+			return ImageCache.getInstance().getImage(image);	
 		}
 
 		public String getText(Object obj) {
@@ -312,6 +310,30 @@ public class CatalogView extends ViewPart {
 		} catch(Exception e) {
 			LOG.error("Error while loading catalog", e);
 			ExceptionUtil.log(e, "Error while loading catalog");
+		}
+	}
+
+	private void importCatalog() {
+		FileDialog fd = new FileDialog(CatalogView.this.getSite().getShell());
+		fd.setText("Katalog auswählen...");
+		fd.setFilterPath("~");
+		fd.setFilterExtensions(new String[] { "*.csv" });
+		String selected = fd.open();
+		if (selected != null && selected.length() > 0) {
+			try {
+				ImportCatalog importCatalog = new ImportCatalog(selected);
+				importCatalog = getCommandService().executeCommand(importCatalog);
+				saveFile(importCatalog);
+				if(importCatalog.getCatalog()!=null) {
+					viewer.setInput(importCatalog.getCatalog().getRoot());
+				}
+				File file = new File(selected);
+				setContentDescription(file.getName());	
+				loadCatalogAttachmets();
+			} catch (Exception e) {
+				LOG.error("Error while reading file data", e);
+				ExceptionUtil.log(e, "Fehler beim Lesen der Datei.");
+			}
 		}
 	}
 }
