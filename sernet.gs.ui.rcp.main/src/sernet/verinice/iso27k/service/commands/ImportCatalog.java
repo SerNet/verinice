@@ -97,7 +97,8 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 		        if (getLog().isDebugEnabled()) {
 		        	getLog().debug("#: " + nextLine[0]);
 		        	getLog().debug("heading: " + nextLine[1]);
-		        	getLog().debug("text: " + nextLine[2]);
+		        	getLog().debug("type: " + nextLine[2]);
+		        	getLog().debug("text: " + nextLine[3]);
 				}	        
 		        if(nextLine[0]!=null && nextLine[0].length()>0) {
 		        	if(item!=null) {
@@ -105,13 +106,15 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 		        		catalog.bufferItem(item);
 		        	}
 		        	// create a new one
-		        	item = new Item(nextLine[1]);
+		        	item = new Item(nextLine[1],nextLine[2]);
 		        	item.setNumberString(nextLine[0]);
-		        	item.setDescription(nextLine[2]);
+		        	StringBuilder sb = new StringBuilder();
+		        	sb.append("<p>").append(nextLine[3]).append("</p>");
+		        	item.setDescription(sb.toString());
 		        } else {
 		        	// add a new paragraph to the existing item
 		        	StringBuilder sb = new StringBuilder(item.getDescription());
-		        	sb.append("\n\n").append(nextLine[2]);
+		        	sb.append("<p>").append(nextLine[3]).append("</p>");
 		        	item.setDescription(sb.toString());
 		        }
 		        
