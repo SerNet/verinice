@@ -36,6 +36,7 @@ import org.richfaces.model.selection.SimpleSelection;
 
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
@@ -238,14 +239,28 @@ public class ToDoBean {
 			Util.addError("toDoTable", Util.getMessage("todo.load.failed"));
 		}
 	}
+	
+	public boolean writeEnabled() {
+		boolean enabled = false;
+		if(getMassnahmeUmsetzung()!=null) {
+			// causes NoClassDefFoundError: org/eclipse/ui/plugin/AbstractUIPlugin
+			// TODO: fix this dependency to eclipse related classes.
+			enabled = CnAElementHome.getInstance().isWriteAllowed(getMassnahmeUmsetzung());
+		}
+		return enabled;
+	}
 
 	public void save() {
-		LOG.debug("save");
+		LOG.debug("save called...");
 		int massnahmeId = -1;
 		try {
-			massnahmeId = getMassnahmeUmsetzung().getDbId();
-			ICommandService service = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 			if(getMassnahmeUmsetzung()!=null) {
+				if (!writeEnabled())
+				{
+					throw new SecurityException("write is not allowed" );
+				}
+				massnahmeId = getMassnahmeUmsetzung().getDbId();
+				ICommandService service = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 				SaveElement<MassnahmenUmsetzung> command = new SaveElement<MassnahmenUmsetzung>(getMassnahmeUmsetzung());							
 				service.executeCommand(command);
 				if(LOG.isDebugEnabled()) {
@@ -255,12 +270,23 @@ public class ToDoBean {
 				Util.addInfo("submit", Util.getMessage("todo.saved"));					
 			}
 			else {
-				LOG.warn("Massnahme is null. Can not save massnahme.");
+				LOG.warn("Control is null. Can not save.");
 			}
+		} catch (SecurityException e) {
+			LOG.error("Saving of control is not allowed: " + massnahmeId, e);
+			Util.addError("submit", Util.getMessage("todo.save.forbidden"));
 		} catch (Exception e) {
 			LOG.error("Error while saving massnahme: " + massnahmeId, e);
 			Util.addError("submit", Util.getMessage("todo.save.failed"));
 		}
+	}
+	
+	public void english() {
+		Util.english();
+	}
+	
+	public void german() {
+		Util.german();
 	}
 	
 	public AssetNavigationBean getAssetNavigation() {
