@@ -62,6 +62,8 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
 
 public class CnAElementHome {
 	
+	private final Logger log = Logger.getLogger(CnAElementHome.class);
+	
 	private Set<String> roles = null;
 
 	private static CnAElementHome instance;
@@ -104,6 +106,18 @@ public class CnAElementHome {
 		monitor.beginTask("Initialisiere Service-Layer...", IProgress.UNKNOWN_WORK);
 		ServiceFactory.openCommandService();
 		commandService = ServiceFactory.lookupCommandService();
+	}
+	
+	public void open() throws Exception {
+		// causes NoClassDefFoundError: org/eclipse/ui/plugin/AbstractUIPlugin in web environment
+		// TODO: fix this dependency to eclipse related classes.
+		ServiceFactory.openCommandService();
+		commandService = createCommandService();
+	}
+	
+	private ICommandService createCommandService() {
+		commandService = ServiceFactory.lookupCommandService();
+		return commandService;
 	}
 
 	public void close() {
@@ -307,6 +321,10 @@ public class CnAElementHome {
 	{
 		
 		// FIXME akoderman: this should only be used to determine icon state on the client. write check needs to implemented on the server side on saveOrUpdate() / merge() as well
+		
+		if(commandService == null) {
+			createCommandService();
+		}
 		
 		// Short cut: If no permission handling is needed than all objects are writable.
 		if (!ServiceFactory.isPermissionHandlingNeeded())
