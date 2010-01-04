@@ -17,15 +17,23 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.actions;
 
+import java.io.File;
+import java.util.Calendar;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IObjectActionDelegate;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.model.Attachment;
+import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class AddFileActionDelegate implements IObjectActionDelegate {
@@ -41,11 +49,35 @@ public class AddFileActionDelegate implements IObjectActionDelegate {
 		try {
 			Object sel = ((IStructuredSelection)targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
 			if(sel instanceof CnATreeElement) {
-				Attachment  attachment = new Attachment();
-				attachment.setCnATreeElementId(((CnATreeElement)sel).getDbId());
-				attachment.setCnAElementTitel(((CnATreeElement)sel).getTitel());
-				attachment.setTitel("neuer Dateianhang");
-				EditorFactory.getInstance().openEditor(attachment);
+				CnATreeElement element = (CnATreeElement) sel;
+				FileDialog fd = new FileDialog(targetPart.getSite().getShell());
+		        fd.setText("Anhang auswählen...");
+		        fd.setFilterPath(System.getProperty("user.home"));
+		        String selected = fd.open();
+		        if(selected!=null && selected.length()>0) {
+		        	File file = new File(selected);
+		    		if (file.isDirectory())
+		    			return;
+		    		
+					Attachment attachment = new Attachment();
+					attachment.setCnATreeElementId(element.getDbId());
+					attachment.setCnAElementTitel(element.getTitel());
+					attachment.setTitel(file.getName());
+					attachment.setDate(Calendar.getInstance().getTime());
+					attachment.setFilePath(selected);
+					
+					attachment.addListener(new Attachment.INoteChangedListener() {
+						public void noteChanged() {
+							IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(FileView.ID);
+							if(page!=null) {
+								((FileView)page).loadFiles();
+							}
+							
+						}
+					});
+					
+					EditorFactory.getInstance().openEditor(attachment);	
+		        }
 			}
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Fehler");
