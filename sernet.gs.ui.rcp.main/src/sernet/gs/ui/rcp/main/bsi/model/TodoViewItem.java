@@ -24,7 +24,7 @@ import java.util.Map;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 
-public class TodoViewItem implements Serializable, IMassnahmeUmsetzung {
+public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparable<TodoViewItem> {
 	
 	private static final Map<String, String> umsetzungImageMap = new Hashtable<String, String>();
 	
@@ -163,6 +163,23 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung {
 
 	public Date getNaechsteRevision() {
 		return this.naechsteRevision;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	public int compareTo(TodoViewItem other) {
+		int result = 1;
+		if(other!=null && other.getTitel()!=null) {
+			if(this.getTitel()==null) {
+				result = -1;
+			} else {
+				result = this.getTitel().compareTo(other.getTitel());
+			}
+		} else if(this.getTitel()==null) {
+			result = 0;		
+		}
+		return result;
 	}
 
 }
