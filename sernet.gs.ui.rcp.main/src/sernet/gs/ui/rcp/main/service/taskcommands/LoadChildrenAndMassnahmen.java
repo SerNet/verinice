@@ -20,6 +20,8 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -63,6 +65,8 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 
 	private static final Logger log = Logger.getLogger(LoadChildrenAndMassnahmen.class);
 
+	private final Comparator<CnATreeElement> cnAComparator = new CnAComparator();
+	
 	private Set<TodoViewItem> massnahmen = new HashSet<TodoViewItem>(20);
 	
 	private List<CnATreeElement> gebaeudeList = new ArrayList<CnATreeElement>(10);
@@ -174,6 +178,14 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 				}
 			}
 		}
+		
+		Collections.sort(anwendungList, cnAComparator);
+		Collections.sort(clienteList, cnAComparator);
+		Collections.sort(gebaeudeList, cnAComparator);
+		Collections.sort(personList, cnAComparator);
+		Collections.sort(netzList, cnAComparator);
+		Collections.sort(raumList, cnAComparator);
+		Collections.sort(serverList, cnAComparator);
 		
 		// find persons according to roles and relation:
 		FindResponsiblePersons command = new FindResponsiblePersons(unresolvedItems, MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
@@ -331,6 +343,27 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 
 	public void setSealSet(Set<String> sealSet) {
 		this.sealSet = sealSet;
+	}
+	
+	public class CnAComparator implements Comparator<CnATreeElement> {
+
+		/* (non-Javadoc)
+		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+		 */
+		public int compare(CnATreeElement o1, CnATreeElement o2) {
+			int result = -1;
+			if(o1!=null && o1.getTitel()!=null) {
+				if(o2==null || o2.getTitel()==null) {
+					result = 1;
+				} else {
+					result = o1.getTitel().compareTo(o2.getTitel());
+				}
+			} else if(o2==null || o2.getTitel()==null) {
+				result = 0;
+			}
+			return result;
+		}
+		
 	}
 
 }
