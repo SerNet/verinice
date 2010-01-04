@@ -81,7 +81,7 @@
 	}
 	/* linke Spalte */
 	#col1 {
-		width: 18%;
+		width: 15%;
 	}
 	#col1_content {
 		margin-left: 1em;
@@ -99,7 +99,7 @@
 	}
 	/* Mittlere Spalte */
 	#col3 {
-		margin-left: 18%;
+		margin-left: 15%;
 		margin-right: 64%;
 		border-left: 0px dotted #ddd;
 		border-right: 0px dotted #ddd;
