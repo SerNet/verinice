@@ -602,35 +602,46 @@ public class FileView extends ViewPart {
 			Attachment a1 = (Attachment) e1;
 			Attachment a2 = (Attachment) e2;
 			int rc = 0;
-			switch (propertyIndex) {
-			case 0:
-				String mimeType1 = a1.getMimeType();
-				String mimeType2 = a2.getMimeType();
-				if (mimeType1 == null || mimeType2 == null)
-					return 0;
-				String image1 = mimeImageMap.get(mimeType1);
-				String image2 = mimeImageMap.get(mimeType2);				
-				if(image1!=null && image2!=null) {
-					rc = image1.compareTo(image2);
+			if(e1==null) {
+				if(e2!=null) {
+					rc = 1;
 				}
-				break;
-			case 1:
-				rc = a1.getFileName().compareTo(a2.getFileName());
-				break;
-			case 2:
-				rc = a1.getMimeType().compareTo(a2.getMimeType());
-				break;
-			case 3:
-				rc = a1.getText().compareTo(a2.getText());
-				break;
-			case 4:
-				rc = a1.getDate().compareTo(a2.getDate());
-				break;
-			case 5:
-				rc = a1.getVersion().compareTo(a2.getVersion());
-				break;
-			default:
-				rc = 0;
+			} else if(e2==null) {
+				if(e1!=null) {
+					rc = -1;
+				}
+			} else {
+				// e1 and e2 != null	
+				switch (propertyIndex) {
+				case 0:
+					String mimeType1 = a1.getMimeType();
+					String mimeType2 = a2.getMimeType();
+					if (mimeType1 == null || mimeType2 == null)
+						return 0;
+					String image1 = mimeImageMap.get(mimeType1);
+					String image2 = mimeImageMap.get(mimeType2);				
+					if(image1!=null && image2!=null) {
+						rc = image1.compareTo(image2);
+					}
+					break;
+				case 1:
+					rc = a1.getFileName().compareTo(a2.getFileName());
+					break;
+				case 2:
+					rc = a1.getMimeType().compareTo(a2.getMimeType());
+					break;
+				case 3:
+					rc = a1.getText().compareTo(a2.getText());
+					break;
+				case 4:
+					rc = a1.getDate().compareTo(a2.getDate());
+					break;
+				case 5:
+					rc = a1.getVersion().compareTo(a2.getVersion());
+					break;
+				default:
+					rc = 0;
+				}
 			}
 			// If descending order, flip the direction
 			if (direction == DESCENDING) {
