@@ -281,131 +281,131 @@
 				    </div>
 				</div>
 			 	<!--###col2### end -->
-			</div>
-			<!-- #col2: - Ende -->
 			
-			<a id="content" name="content"></a> <!-- Skiplink-Anker: Content -->
-			<!-- #col3: Statische Spalte des Inhaltsbereiches -->
-			<div id="col3">
-				<!--###col3### begin -->
-		      	<div id="col3_content" class="clearfix">
-		      		<!--###col3_content### begin -->
-		      		<div id="col3_innen" class="floatbox">
-		      			<div class="csc-header csc-header-n1">
-		      				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.assets']}" /></h1>
-		      			</div>
-		      			<h:form id="elementsForm">
-			      			<rich:panelBar id="elementPanel" height="500" width="161">
-			      				<rich:panelBarItem label="#{msg['todo.buildings']}" rendered="#{not empty assetNavigation.gebaeudeList}">
-						        	<ul>
-								 		<a4j:repeat id="gebaeudeList" value="#{assetNavigation.gebaeudeList}" var="item">
-								 			<li>
-										  		<a4j:commandLink 
-										  			value="#{item.titel}" 
-										  			action="#{toDo.loadToDoListForElement}" 
-										  			reRender="tablePanel,editPanel,elementPanel" 
-										  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
-										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
-										        </a4j:commandLink>
-										    </li>
-									    </a4j:repeat>
-									</ul>
-						        </rich:panelBarItem>
-						        <rich:panelBarItem label="#{msg['todo.rooms']}" rendered="#{not empty assetNavigation.raumList}">
-						        	<ul>
-								  		<a4j:repeat id="raumList" value="#{assetNavigation.raumList}" var="item">
-								  			<li>
-										  		<a4j:commandLink value="#{item.titel}" 
-										  			action="#{toDo.loadToDoListForElement}" 
-										  			reRender="tablePanel,editPanel,elementPanel" 
-										  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
-										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
-										        </a4j:commandLink>
-										    </li>
-									    </a4j:repeat>
-									</ul>
-						        </rich:panelBarItem>				     					
-						        <rich:panelBarItem  label="#{msg['todo.clients']}" rendered="#{not empty assetNavigation.clienteList}">			      						
-		      						<ul>
-								  		<a4j:repeat id="clienteList" value="#{assetNavigation.clienteList}" var="item">
-								  			<li>
-										  		<a4j:commandLink value="#{item.titel}" 
-										  			action="#{toDo.loadToDoListForElement}"									  			 
-										  			reRender="tablePanel,editPanel,elementPanel" 
-										  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
-										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
-										        </a4j:commandLink>
-										    </li>
-									    </a4j:repeat>
-									</ul>			        	
-						        </rich:panelBarItem>				     					
-						        <rich:panelBarItem label="#{msg['todo.server']}" rendered="#{not empty assetNavigation.serverList}">
-		      						<ul>
-								  		<a4j:repeat id="serverList" value="#{assetNavigation.serverList}" var="item">
-								  			<li>
-										  		<a4j:commandLink value="#{item.titel}" 
-										  			action="#{toDo.loadToDoListForElement}"
-										  			reRender="tablePanel,editPanel,elementPanel" 
-										  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
-										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
-										        </a4j:commandLink>
-										    </li>
-									    </a4j:repeat>
-									</ul>
-						        </rich:panelBarItem>				     					
-						        <rich:panelBarItem label="#{msg['todo.networks']}" rendered="#{not empty assetNavigation.netzList}">
-		      						<ul>
-								  		<a4j:repeat id="netzList" value="#{assetNavigation.netzList}" var="item">
-								  			<li>
-										  		<a4j:commandLink value="#{item.titel}" 
-										  			action="#{toDo.loadToDoListForElement}" 
-										  			reRender="tablePanel,editPanel,elementPanel" 
-										  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
-										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
-										        </a4j:commandLink>
-										    </li>
-									    </a4j:repeat>
-									</ul>
-						        </rich:panelBarItem>				     					
-						        <rich:panelBarItem label="#{msg['todo.applications']}" rendered="#{not empty assetNavigation.anwendungList}">
-		      						<ul>
-								  		<a4j:repeat id="anwendungList" value="#{assetNavigation.anwendungList}" var="item">
-								  			<li>
-										  		<a4j:commandLink value="#{item.titel}" 
-										  			action="#{toDo.loadToDoListForElement}" 
-										  			reRender="tablePanel,editPanel,elementPanel" 
-										  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
-										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
-										        </a4j:commandLink>
-										    </li>
-									    </a4j:repeat>
-									</ul>
-						        </rich:panelBarItem>				     					
-						        <rich:panelBarItem label="#{msg['todo.employees']}" rendered="#{not empty assetNavigation.personList}">
-		      						<ul>
-								  		<a4j:repeat id="personList" value="#{assetNavigation.personList}" var="item">
-								  			<li>
-										  		<a4j:commandLink value="#{item.titel}" 
-										  			action="#{toDo.loadToDoListForElement}" 
-										  			reRender="tablePanel,editPanel,elementPanel" 
-										  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
-										            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
-										        </a4j:commandLink>
-										    </li>
-									    </a4j:repeat>
-									</ul>
-						        </rich:panelBarItem>				  
-						    </rich:panelBar>
-						</h:form>		
-					<!--###col3_content### end -->
-					</div>
-				<!-- IE Column Clearing -->
-				<div id="ie_clearing"><!--###ie_clearing### begin -->&nbsp;<!--###ie_clearing### end --></div>
-				<!-- Ende: IE Column Clearing -->
-		    	<!--###col3### end -->
-		    </div>
-			<!-- #col3: - Ende -->
-			<!--###main### end -->
+				<a id="content" name="content"></a> <!-- Skiplink-Anker: Content -->
+				<!-- #col3: Statische Spalte des Inhaltsbereiches -->
+				<div id="col3">
+					<!--###col3### begin -->
+			      	<div id="col3_content" class="clearfix">
+			      		<!--###col3_content### begin -->
+			      		<div id="col3_innen" class="floatbox">
+			      			<div class="csc-header csc-header-n1">
+			      				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.assets']}" /></h1>
+			      			</div>
+			      			<h:form id="elementsForm">
+				      			<rich:panelBar id="elementPanel" height="500">
+				      				<rich:panelBarItem label="#{msg['todo.buildings']}" rendered="#{not empty assetNavigation.gebaeudeList}">
+							        	<ul>
+									 		<a4j:repeat id="gebaeudeList" value="#{assetNavigation.gebaeudeList}" var="item">
+									 			<li>
+											  		<a4j:commandLink 
+											  			value="#{item.titel}" 
+											  			action="#{toDo.loadToDoListForElement}" 
+											  			reRender="tablePanel,editPanel,elementPanel" 
+											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+											            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+											        </a4j:commandLink>
+											    </li>
+										    </a4j:repeat>
+										</ul>
+							        </rich:panelBarItem>
+							        <rich:panelBarItem label="#{msg['todo.rooms']}" rendered="#{not empty assetNavigation.raumList}">
+							        	<ul>
+									  		<a4j:repeat id="raumList" value="#{assetNavigation.raumList}" var="item">
+									  			<li>
+											  		<a4j:commandLink value="#{item.titel}" 
+											  			action="#{toDo.loadToDoListForElement}" 
+											  			reRender="tablePanel,editPanel,elementPanel" 
+											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+											            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+											        </a4j:commandLink>
+											    </li>
+										    </a4j:repeat>
+										</ul>
+							        </rich:panelBarItem>				     					
+							        <rich:panelBarItem  label="#{msg['todo.clients']}" rendered="#{not empty assetNavigation.clienteList}">			      						
+			      						<ul>
+									  		<a4j:repeat id="clienteList" value="#{assetNavigation.clienteList}" var="item">
+									  			<li>
+											  		<a4j:commandLink value="#{item.titel}" 
+											  			action="#{toDo.loadToDoListForElement}"									  			 
+											  			reRender="tablePanel,editPanel,elementPanel" 
+											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+											            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+											        </a4j:commandLink>
+											    </li>
+										    </a4j:repeat>
+										</ul>			        	
+							        </rich:panelBarItem>				     					
+							        <rich:panelBarItem label="#{msg['todo.server']}" rendered="#{not empty assetNavigation.serverList}">
+			      						<ul>
+									  		<a4j:repeat id="serverList" value="#{assetNavigation.serverList}" var="item">
+									  			<li>
+											  		<a4j:commandLink value="#{item.titel}" 
+											  			action="#{toDo.loadToDoListForElement}"
+											  			reRender="tablePanel,editPanel,elementPanel" 
+											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+											            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+											        </a4j:commandLink>
+											    </li>
+										    </a4j:repeat>
+										</ul>
+							        </rich:panelBarItem>				     					
+							        <rich:panelBarItem label="#{msg['todo.networks']}" rendered="#{not empty assetNavigation.netzList}">
+			      						<ul>
+									  		<a4j:repeat id="netzList" value="#{assetNavigation.netzList}" var="item">
+									  			<li>
+											  		<a4j:commandLink value="#{item.titel}" 
+											  			action="#{toDo.loadToDoListForElement}" 
+											  			reRender="tablePanel,editPanel,elementPanel" 
+											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+											            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+											        </a4j:commandLink>
+											    </li>
+										    </a4j:repeat>
+										</ul>
+							        </rich:panelBarItem>				     					
+							        <rich:panelBarItem label="#{msg['todo.applications']}" rendered="#{not empty assetNavigation.anwendungList}">
+			      						<ul>
+									  		<a4j:repeat id="anwendungList" value="#{assetNavigation.anwendungList}" var="item">
+									  			<li>
+											  		<a4j:commandLink value="#{item.titel}" 
+											  			action="#{toDo.loadToDoListForElement}" 
+											  			reRender="tablePanel,editPanel,elementPanel" 
+											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+											            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+											        </a4j:commandLink>
+											    </li>
+										    </a4j:repeat>
+										</ul>
+							        </rich:panelBarItem>				     					
+							        <rich:panelBarItem label="#{msg['todo.employees']}" rendered="#{not empty assetNavigation.personList}">
+			      						<ul>
+									  		<a4j:repeat id="personList" value="#{assetNavigation.personList}" var="item">
+									  			<li>
+											  		<a4j:commandLink value="#{item.titel}" 
+											  			action="#{toDo.loadToDoListForElement}" 
+											  			reRender="tablePanel,editPanel,elementPanel" 
+											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+											            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+											        </a4j:commandLink>
+											    </li>
+										    </a4j:repeat>
+										</ul>
+							        </rich:panelBarItem>				  
+							    </rich:panelBar>
+							</h:form>		
+						<!--###col3_content### end -->
+						</div>
+					<!-- IE Column Clearing -->
+					<div id="ie_clearing"><!--###ie_clearing### begin -->&nbsp;<!--###ie_clearing### end --></div>
+					<!-- Ende: IE Column Clearing -->
+			    	<!--###col3### end -->
+			    </div>
+				<!-- #col3: - Ende -->
+				<!--###main### end -->
+			</div>
 		</div>
+		<!-- #main - Ende -->
 	</ui:define>
 </ui:composition>
