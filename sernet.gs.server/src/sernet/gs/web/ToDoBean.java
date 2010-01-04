@@ -19,6 +19,7 @@ package sernet.gs.web;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -125,9 +126,10 @@ public class ToDoBean {
 		getAssetNavigation().loadChildren(command,source);
 		
 		// extract measures from command
-		Set<TodoViewItem> massnahmenList = command.getMassnahmen();			
+		Set<TodoViewItem> massnahmenList = command.getMassnahmen();
 		getTodoList().clear();	
 		getTodoList().addAll(massnahmenList);
+		Collections.sort(getTodoList());
 		MassnahmenUmsetzung selectedMassnahme = getMassnahmeUmsetzung();
 		boolean massnahmeInList = false;
 		if(selectedMassnahme!=null) {
