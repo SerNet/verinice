@@ -501,6 +501,7 @@
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddFileActionDelegate"
                enablesFor="1"
+               icon="icons/attach.png"
                id="sernet.gs.ui.rcp.main.bsi.actions.addfile"
                label="neue Datei"
                menubarPath="additions"
@@ -729,5 +730,4 @@
          </presentation>
       </config>
    </extension>
-
 </plugin>
