@@ -18,12 +18,9 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.io.Serializable;
-import java.util.concurrent.CopyOnWriteArraySet;
 
-import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
-import sernet.hui.common.connect.HUITypeFactory;
 
 @SuppressWarnings("serial")
 public class Note extends Addition implements Serializable{
