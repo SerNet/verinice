@@ -18,6 +18,8 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -45,6 +47,7 @@ public class LoadNotes extends GenericCommand {
 		return log;
 	}
 
+	private final NoteSorter sorter = new NoteSorter();
 
 	private Integer cnAElementId;
 	
@@ -89,6 +92,7 @@ public class LoadNotes extends GenericCommand {
 					}
 				}
 			}
+			Collections.sort(noteList, sorter);
 			setNoteList(noteList);
 		}
 	}
@@ -100,6 +104,27 @@ public class LoadNotes extends GenericCommand {
 
 	public Integer getCnAElementId() {
 		return cnAElementId;
+	}
+	
+	class NoteSorter implements Comparator<Note>, Serializable {
+
+		/* (non-Javadoc)
+		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+		 */
+		public int compare(Note o1, Note o2) {
+			int result = -1;
+			if(o1!=null && o1.getTitel()!=null) {
+				if(o2==null || o2.getTitel()==null) {
+					result = 1;
+				} else {
+					result = o1.getTitel().compareTo(o2.getTitel());
+				}
+			} else if(o2==null || o2.getTitel()==null) {
+				result = 0;
+			}
+			return result;
+		}
+		
 	}
 
 }
