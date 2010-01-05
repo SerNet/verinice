@@ -19,9 +19,12 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.List;
 
+import javax.security.auth.callback.ConfirmationCallback;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -172,11 +175,7 @@ public class NoteView extends ViewPart {
 			LoadNotes command = new LoadNotes(getCurrentCnaElement().getDbId());		
 			command = getCommandService().executeCommand(command);		
 			noteList = command.getNoteList();
-			if(noteList==null || noteList.size()==0) {
-				Label test = new Label(parent, SWT.NONE);
-				test.setText("keine Notiz vorhanden");		
-				test.pack();
-			} else {
+			if(noteList!=null && noteList.size()>0) {		
 				for (final Note note : noteList) {
 					note.addListener(new Note.INoteChangedListener() {
 						public void noteChanged() {
@@ -184,7 +183,7 @@ public class NoteView extends ViewPart {
 							loadNotes();
 						}
 					});
-					
+				
 					// set transient cna-element-titel
 					note.setCnAElementTitel(getCurrentCnaElement().getTitel());
 					Composite composite = new Composite(expandBar, SWT.NONE);
@@ -200,7 +199,7 @@ public class NoteView extends ViewPart {
 					gdText.verticalAlignment = GridData.CENTER;
 					gdText.heightHint=60;
 					gdText.verticalSpan=2;
-				    Text text = new Text(composite, SWT.BORDER | SWT.MULTI);
+				    Text text = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY);
 				    text.setLayoutData(gdText);
 				    if(note.getText()!=null) {
 				    	text.setText(note.getText());
@@ -224,7 +223,10 @@ public class NoteView extends ViewPart {
 						public void widgetDefaultSelected(SelectionEvent e) {				
 						}
 						public void widgetSelected(SelectionEvent e) {
-							deleteNote(note);
+							boolean b = MessageDialog.openQuestion(NoteView.this.getSite().getShell(), "Notiz löschen?", "Soll die Notiz \"" + note.getTitel() + "\" gelöscht werden?");
+							if(b) {
+								deleteNote(note);
+							}
 						}		    	
 				    });
 					
@@ -235,8 +237,8 @@ public class NoteView extends ViewPart {
 				    item0.setHeight(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 				    item0.setControl(composite);
 				    item0.setExpanded(true);
-				}
-		}
+				} // end for
+			}
 		} catch(Exception e) {
 			LOG.error("Error while loading notes", e);
 			ExceptionUtil.log(e, "Error while loading notes");
