@@ -35,6 +35,8 @@ import org.richfaces.component.html.HtmlExtendedDataTable;
 import org.richfaces.model.selection.Selection;
 import org.richfaces.model.selection.SimpleSelection;
 
+import sernet.gs.service.GSServiceException;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -71,6 +73,8 @@ public class ToDoBean {
 	Converter umsetzungConverter = new UmsetzungConverter();
 	
 	List<String> executionList;
+	
+	boolean showDescription = false;
 	
 	// Grundschutz
 	boolean executionNo = false;
@@ -231,7 +235,7 @@ public class ToDoBean {
 						LOG.debug("Massnahme loaded, id: " + massnahmeId);
 					}
 					setMassnahmeUmsetzung(result);
-				
+					showDescription = false;
 			}
 			else {
 				LOG.warn("No todo-item selected. Can not load massnahme.");
@@ -283,12 +287,38 @@ public class ToDoBean {
 		}
 	}
 	
+	public String getMassnahmeHtml() {
+		final MassnahmenUmsetzung massnahme = getMassnahmeUmsetzung();
+		String text = null;
+		if(massnahme!=null) {
+			try {
+				text = GSScraperUtil.getInstanceWeb().getModel().getMassnahmeHtml(massnahme.getUrl(), massnahme.getStand());
+			} catch (GSServiceException e) {
+				LOG.error("Error while loading massnahme description.", e);
+				Util.addError("submit", Util.getMessage("todo.load.failed"));
+			}
+		}
+		int start = text.indexOf("<div id=\"content\">");
+		int end = text.lastIndexOf("</body>");
+		if(start==-1 || end==-1) {
+			LOG.error("Can not find content of control description: " + text);
+			text = "";
+		} else {
+			text = text.substring(start, end);
+		}
+		return text;
+	}
+	
 	public void english() {
 		Util.english();
 	}
 	
 	public void german() {
 		Util.german();
+	}
+	
+	public void toggleDescription() {
+		showDescription = !showDescription;
 	}
 	
 	public AssetNavigationBean getAssetNavigation() {
@@ -499,6 +529,10 @@ public class ToDoBean {
 
 	public int getSize() {
 		return getTodoList()==null ? 0 : getTodoList().size();
+	}
+	
+	public boolean getShowDescription() {
+		return showDescription;
 	}
 
 }
