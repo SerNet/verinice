@@ -196,8 +196,17 @@
 												</td>
 											</tr>
 										</table>
+										<a4j:outputPanel id="descriptionPanel">
+											<a4j:outputPanel id="descriptionPanelHeader" rendered="#{toDo.massnahmeUmsetzung!=null}" styleClass="csc-header csc-header-n1">
+					      						<h1 class="csc-firstHeader">
+					      							<a4j:commandLink action="#{toDo.toggleDescription}" value="#{msg['todo.description']}" reRender="descriptionPanel" rendered="#{toDo.massnahmeUmsetzung!=null}"/>
+					      						</h1>
+					      						<a4j:commandLink action="#{toDo.toggleDescription}" value="#{toDo.showDescription ? msg['todo.hide'] : msg['todo.show']}" reRender="descriptionPanel" rendered="#{toDo.massnahmeUmsetzung!=null}"/>
+					      					</a4j:outputPanel>									
+											<h:outputText value="#{toDo.massnahmeHtml}" escape="false" rendered="#{toDo.massnahmeUmsetzung!=null and toDo.showDescription}"/>									
+										</a4j:outputPanel>
 									</a4j:form>
-								</a4j:outputPanel>						
+								</a4j:outputPanel>			
 								<a4j:outputPanel id="tablePanel">
 									<div class="csc-header csc-header-n1">
 					      				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.measures']} - #{assetNavigation.selectedItVerbundTitel}"/></h1>
