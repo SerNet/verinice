@@ -40,6 +40,22 @@ input.submit {
 .floatbox ul li a:hover {
 	background-color:#F1EEE9;
 }
+h1 a {
+	font-size:1.1em; 
+	color:#765;
+}
+h1 a:visited {
+	color:#765;
+}
+
+/* h1+a: a after h1 */
+h1+a {
+	color:#765;
+}
+h1+a:visited {
+	color:#765;
+}
+
 #col3 li {
 	line-height:1em;
 }
