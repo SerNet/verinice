@@ -36,15 +36,20 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.util.Log;
@@ -54,6 +59,8 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.Attachment;
 import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.views.Messages;
+import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -79,16 +86,26 @@ public class CatalogView extends ViewPart {
 	public static final DateFormat DATE_TIME_FORMAT_SHORT = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
 	private Action addCatalogAction;
+	
+	private Action filterAction;
 
 	private ICommandService commandService;
 
 	private TreeViewer viewer;
 	
+	private Label labelCatalog;
+	
 	private Combo comboCatalog;
+	
+	private Label labelFilter;
+	
+	private Text filter;
 	
 	private BSIModel bsiModel;
 	
 	List<Attachment> attachmentList;
+	
+	private CatalogTextFilter textFilter;
 	
 	/*
 	 * (non-Javadoc)
@@ -99,15 +116,42 @@ public class CatalogView extends ViewPart {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		GridLayout gl = new GridLayout(1, false);
+		
+		GridLayout gl = new GridLayout(1, true);
 		parent.setLayout(gl);
-		comboCatalog = new Combo(parent, SWT.DROP_DOWN);
+		
+		Composite compForm = new Composite(parent,SWT.NONE);
+		GridLayout glForm = new GridLayout(2, false);
+		compForm.setLayout(glForm);
+		labelCatalog = new Label(compForm,SWT.NONE);
+		labelCatalog.setText("Katalog");
+		comboCatalog = new Combo(compForm, SWT.DROP_DOWN);
 		comboCatalog.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		comboCatalog.addSelectionListener(new SelectionAdapter() {
 		      public void widgetSelected(SelectionEvent e) {
 		    	  openCatalog();
 		      }
 		    });
+		
+		labelFilter = new Label(compForm,SWT.NONE);
+		labelFilter.setText("Filter");
+		filter = new Text(compForm, SWT.BORDER);
+		filter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		filter.addKeyListener(new KeyListener() {
+
+			int minLength = 3;
+			
+			public void keyPressed(KeyEvent e) {
+				
+				
+			}
+
+			public void keyReleased(KeyEvent e) {
+				textFilter.setPattern(filter.getText());
+			}
+		
+		});
+		
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.setContentProvider(new ViewContentProvider());
@@ -122,6 +166,8 @@ public class CatalogView extends ViewPart {
 		
 		loadCatalogAttachmets();
 	}
+	
+
 
 	/**
 	 * 
@@ -196,6 +242,9 @@ public class CatalogView extends ViewPart {
 		addCatalogAction.setText("Katalog importieren...");
 		addCatalogAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
 		addCatalogAction.setEnabled(true);
+		
+		textFilter = new CatalogTextFilter(viewer);
+		filterAction = new CatalogViewFilterAction(viewer, this.textFilter);
 	}
 	
 	
