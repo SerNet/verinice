@@ -204,6 +204,8 @@
 					      						<a4j:commandLink action="#{toDo.toggleDescription}" value="#{toDo.showDescription ? msg['todo.hide'] : msg['todo.show']}" reRender="descriptionPanel" rendered="#{toDo.massnahmeUmsetzung!=null}"/>
 					      					</a4j:outputPanel>									
 											<h:outputText value="#{toDo.massnahmeHtml}" escape="false" rendered="#{toDo.massnahmeUmsetzung!=null and toDo.showDescription}"/>									
+											<br/>
+											<a4j:commandLink action="#{toDo.toggleDescription}" value="#{msg['todo.hide']}" reRender="descriptionPanel" rendered="#{toDo.massnahmeUmsetzung!=null and toDo.showDescription}" style="color:#765;"/>
 										</a4j:outputPanel>
 									</a4j:form>
 								</a4j:outputPanel>			
