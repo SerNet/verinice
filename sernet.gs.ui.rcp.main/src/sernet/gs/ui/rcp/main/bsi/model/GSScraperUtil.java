@@ -37,6 +37,12 @@ public class GSScraperUtil {
 		return (GSScraperUtil) VeriniceContext.get(VeriniceContext.GS_SCRAPER_UTIL);
 	}
 	
+	public static GSScraperUtil getInstanceWeb() {
+		GSScraperUtil instance = (GSScraperUtil) VeriniceContext.get(VeriniceContext.GS_SCRAPER_UTIL);
+		instance.getModel().setLayoutConfig(new WebLayoutConfig());
+		return instance;
+	}
+	
 	public BSIMassnahmenModel getModel()
 	{
 		return model;

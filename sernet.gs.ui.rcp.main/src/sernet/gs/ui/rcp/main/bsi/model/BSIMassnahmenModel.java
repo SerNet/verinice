@@ -17,11 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -70,6 +71,9 @@ public class BSIMassnahmenModel {
 	private static String previouslyReadFileDS = ""; //$NON-NLS-1$
 	
 	private IBSIConfig config;
+	
+	// not configured by Spring
+	private ILayoutConfig layoutConfig;
 	
 	public BSIMassnahmenModel(IBSIConfig config)
 	{
@@ -246,8 +250,7 @@ public class BSIMassnahmenModel {
 		return new ByteArrayInputStream(text.getBytes("iso-8859-1"));
 	}
 
-	public InputStream getMassnahme(String url, String stand)
-			throws GSServiceException {
+	public InputStream getMassnahme(String url, String stand) throws GSServiceException {
 		
 		if (config instanceof BSIConfigurationRemoteSource) {
 			return getMassnahmeFromServer(url, stand);
@@ -261,6 +264,48 @@ public class BSIMassnahmenModel {
 				massnahme = dsScrape.getMassnahme(url, stand);
 		}
 		return massnahme;
+	}
+	
+	public String getMassnahmeHtml(String url, String stand) throws GSServiceException {
+		try {
+			InputStreamReader read = new InputStreamReader(getMassnahme(url, stand), "iso-8859-1"); //$NON-NLS-1$
+			BufferedReader buffRead = new BufferedReader(read);
+			StringBuilder b = new StringBuilder();
+			String line;
+			boolean skip = false;
+			boolean skipComplete = false;
+			
+			String cssFile = getLayoutConfig().getCssFilePath();
+				
+			while ((line = buffRead.readLine()) != null) {
+				if (!skipComplete) {
+					if (line.matches(".*div.*class=\"standort\".*")) //$NON-NLS-1$
+						skip = true;
+					else if (line.matches(".*div.*id=\"content\".*")) { //$NON-NLS-1$
+						skip = false;
+						skipComplete = true;
+					}
+				}
+	
+				// we strip away images et al to keep just the information we
+				// need:
+				line = line.replace("../../../screen.css", cssFile); //$NON-NLS-1$
+				line = line.replace("../../screen.css", cssFile); //$NON-NLS-1$
+				line = line.replace("../screen.css", cssFile); //$NON-NLS-1$
+				line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+				line = line.replaceAll("</a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+				line = line.replaceAll("<img.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+				line = line.replace((char) 160, ' '); // replace non-breaking spaces
+	
+				if (!skip) {
+					b.append(line);
+				}
+			}
+			return b.toString();
+		} catch(Exception e) {
+			log.error("Error in getMassnahmeHtml", e);
+			throw new GSServiceException("Error in getMassnahmeHtml", e);
+		}
 	}
 
 	private InputStream getMassnahmeFromServer(String url, String stand) throws GSServiceException {
@@ -351,6 +396,17 @@ public class BSIMassnahmenModel {
 
 	public IBSIConfig getBSIConfig() {
 		return config;
+	}
+
+	public ILayoutConfig getLayoutConfig() {
+		if(layoutConfig==null) {
+			layoutConfig = new RcpLayoutConfig();
+		}
+		return layoutConfig;
+	}
+
+	public void setLayoutConfig(ILayoutConfig layoutConfig) {
+		this.layoutConfig = layoutConfig;
 	}
 
 }

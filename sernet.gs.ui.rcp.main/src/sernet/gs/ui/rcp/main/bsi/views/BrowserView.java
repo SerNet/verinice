@@ -107,7 +107,7 @@ public class BrowserView extends ViewPart {
 			StatusLine.setErrorMessage("");
 			if (element instanceof Massnahme) {
 				Massnahme mn = (Massnahme) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(mn.getUrl(), mn.getStand()));
+				setText(GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mn.getUrl(), mn.getStand()));
 			}
 
 			if (element instanceof Baustein) {
@@ -143,12 +143,12 @@ public class BrowserView extends ViewPart {
 
 			if (element instanceof MassnahmenUmsetzung) {
 				MassnahmenUmsetzung mnu = (MassnahmenUmsetzung) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(mnu.getUrl(), mnu.getStand()));
+				setText(GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mnu.getUrl(), mnu.getStand()));
 			}
 			
 			if (element instanceof TodoViewItem) {
 				TodoViewItem item = (TodoViewItem) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getMassnahme(item.getUrl(), item.getStand()));
+				setText(GSScraperUtil.getInstance().getModel().getMassnahmeHtml(item.getUrl(), item.getStand()));
 			}
 
 			if (element instanceof BausteinUmsetzung) {
@@ -170,11 +170,7 @@ public class BrowserView extends ViewPart {
 				}
 				sb.append("</body>\n");
 				sb.append("</html>\n");
-				try {
-					setUrl(new ByteArrayInputStream(sb.toString().getBytes("UTF-8")));
-				} catch (UnsupportedEncodingException e) {
-					LOG.error("Error while opening item: " + item.getName());
-				} 
+				setText(sb.toString());			
 			}
 
 		} catch (GSServiceException e) {
@@ -280,6 +276,17 @@ public class BrowserView extends ViewPart {
 		} catch (Exception e) {
 			Logger.getLogger(BrowserView.class).error(e);
 		}
+	}
+	
+	/**
+	 * Sets the contents to be displayed in the browser window.
+	 * 
+	 * @param is
+	 *            The HTML page to be displayed as an input stream
+	 */
+	public void setText(String text) {
+		browser.stop();
+		browser.setText(text);
 	}
 
 	@Override
