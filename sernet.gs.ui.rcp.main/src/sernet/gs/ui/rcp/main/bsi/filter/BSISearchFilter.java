@@ -19,26 +19,19 @@ package sernet.gs.ui.rcp.main.bsi.filter;
 
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 
-public class BSISearchFilter extends ViewerFilter {
+public class BSISearchFilter extends TextFilter {
 
-	private Pattern regex;
-	private String suche;
-	private StructuredViewer viewer;
-
-	
 	
 	public BSISearchFilter(StructuredViewer viewer) {
-		this.viewer = viewer;
+		super(viewer);
 	}
 
 	@Override
@@ -90,29 +83,5 @@ public class BSISearchFilter extends ViewerFilter {
 		return false;
 	}
 	
-	public String getPattern() {
-		return suche;
-	}
-	
-	public void setPattern(String newPattern) {
-		boolean active = suche != null;
-		if (newPattern != null && newPattern.length() > 0) {
-			suche = newPattern;
-			regex = Pattern.compile(suche, Pattern.CASE_INSENSITIVE);
-			if (active)
-				viewer.refresh();
-			else {
-				viewer.addFilter(this);
-				active = true;
-			}
-			return;
-		}
-		
-		// else deactivate:
-		suche = null;
-		regex=null;
-		if (active)
-			viewer.removeFilter(this);
-	}
 
 }
