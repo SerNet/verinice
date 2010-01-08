@@ -102,8 +102,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		for (NotificationInfo ei : pniCommand.getNotificationInfos())
 		{
 			MessageHelper mh = new MessageHelper(
-					notificationEmailFrom,
 					notificationEmailReplyTo,
+					notificationEmailFrom,
 					ei.getConfiguration(),
 					mailSender.createMimeMessage(),
 					notificationEmailDateFormat);
