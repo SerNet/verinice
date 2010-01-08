@@ -50,23 +50,23 @@ import sernet.hui.swt.widgets.HitroUIComposite;
 /**
  * Editor for all BSI elements with attached HUI entities.
  * 
- * Uses the HUI framework to edit all properties defined
- * in the entity's xml description (SNCA.xml)
+ * Uses the HUI framework to edit all properties defined in the entity's xml
+ * description (SNCA.xml)
  * 
  * @author koderman@sernet.de
- *
+ * 
  */
 public class BSIElementEditor extends EditorPart {
 	public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor";
 	private HitroUIComposite huiComposite;
 	private boolean isModelModified = false;
-	
+
 	private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
 		public void dependencyChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
 			// not relevant
 		}
-		
+
 		public void selectionChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
 			modelChanged();
 		}
@@ -77,28 +77,29 @@ public class BSIElementEditor extends EditorPart {
 
 	};
 	private CnATreeElement cnAElement;
-	
-	
+
 	public void doSave(IProgressMonitor monitor) {
 		if (isModelModified) {
-			
-			
+
 			monitor.beginTask("Speichern", IProgressMonitor.UNKNOWN);
 			save(true);
 			monitor.done();
 
-			// TODO akoderman we need a way to close (with save dialog) or update editors of objects that have been changed in the database, i.e. by triggers (protection level)
-//			// close all other open editors on save (but only the ones without changes):
+			// TODO akoderman we need a way to close (with save dialog) or
+			// update editors of objects that have been changed in the database,
+			// i.e. by triggers (protection level)
+			// // close all other open editors on save (but only the ones
+			// without changes):
 			IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
 			ArrayList<IEditorReference> closeOthers = new ArrayList<IEditorReference>();
 			BSIElementEditorInput myInput = (BSIElementEditorInput) getEditorInput();
-			
+
 			allEditors: for (IEditorReference editorReference : editorReferences) {
 				IEditorInput input;
 				try {
 					if (editorReference.isPinned() || editorReference.isDirty())
 						continue allEditors;
-						
+
 					input = editorReference.getEditorInput();
 					if (input instanceof BSIElementEditorInput) {
 						BSIElementEditorInput bsiInput = (BSIElementEditorInput) input;
@@ -110,46 +111,39 @@ public class BSIElementEditor extends EditorPart {
 					ExceptionUtil.log(e, "Fehler beim Schließen des Editors.");
 				}
 			}
-			
-			IEditorReference[] closeArray = (IEditorReference[]) closeOthers
-			.toArray(new IEditorReference[closeOthers.size()]);
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-			.getActivePage().closeEditors(closeArray, true /*as save*/);
+
+			IEditorReference[] closeArray = (IEditorReference[]) closeOthers.toArray(new IEditorReference[closeOthers.size()]);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(closeArray, true /*
+																												 * as
+																												 * save
+																												 */);
 		}
 	}
-	
-	
 
 	private void save(boolean completeRefresh) {
-		if (!CnAElementHome.getInstance().isWriteAllowed(cnAElement))
-		{
+		if (!CnAElementHome.getInstance().isWriteAllowed(cnAElement)) {
 			ExceptionUtil.log(new IllegalStateException(), "Keine Schreibrechte auf dem gegebenen Element.");
 			return;
-		}	
-		
-		
+		}
 		try {
-			
-
-			
 			// save element, refresh etc:
 			BSIElementEditorInput editorinput = (BSIElementEditorInput) getEditorInput();
 			CnAElementHome.getInstance().update(cnAElement);
 			isModelModified = false;
 			firePropertyChange(IEditorPart.PROP_DIRTY);
-			
+
 			// notify all views of change:
 			CnAElementFactory.getLoadedModel().childChanged(cnAElement.getParent(), cnAElement);
-			
-			// cause complete refresh, necessary for viewers to call getchildren etc.
+
+			// cause complete refresh, necessary for viewers to call getchildren
+			// etc.
 			if (completeRefresh)
 				CnAElementFactory.getLoadedModel().refreshAllListeners(IBSIModelListener.SOURCE_EDITOR);
-			
+
 		} catch (StaleObjectStateException se) {
 			// close editor, loosing changes:
 			ExceptionUtil.log(se, "Fehler beim Speichern.");
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			ExceptionUtil.log(e, "Fehler beim Speichern.");
 		}
 	}
@@ -158,61 +152,51 @@ public class BSIElementEditor extends EditorPart {
 	public void doSaveAs() {
 		// not supported
 	}
-	
+
 	void modelChanged() {
 		boolean wasDirty = isDirty();
 		isModelModified = true;
-		
+
 		if (!wasDirty)
 			firePropertyChange(IEditorPart.PROP_DIRTY);
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
-		if (! (input instanceof BSIElementEditorInput))
+	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+		if (!(input instanceof BSIElementEditorInput))
 			throw new PartInitException("invalid input");
 		setSite(site);
 		setInput(input);
 		setPartName(input.getName());
 	}
-	
+
 	private void initContent() {
 		try {
-			cnAElement = ((BSIElementEditorInput)getEditorInput()).getCnAElement();
+			cnAElement = ((BSIElementEditorInput) getEditorInput()).getCnAElement();
 			RefreshElement<CnATreeElement> command = new RefreshElement<CnATreeElement>(cnAElement);
-			command = ServiceFactory.lookupCommandService().executeCommand(
-					command);
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			cnAElement = command.getElement();
-			
+
 			Entity entity = cnAElement.getEntity();
-			EntityType entityType = HitroUtil.getInstance().getTypeFactory()
-				.getEntityType(entity.getEntityType());
-			
+			EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entity.getEntityType());
+
 			// Enable dirty listener only for writable objects.
 			boolean writeAllowed = CnAElementHome.getInstance().isWriteAllowed(cnAElement);
-			if (writeAllowed)
-			{
+			if (writeAllowed) {
 				// add listener to mark editor as dirty on changes:
 				entity.addChangeListener(this.modelListener);
-			}
-			else
-			{
+			} else {
 				setPartName(getPartName() + " (SCHREIBGESCHÜTZT)");
 			}
-			
+
 			huiComposite.createView(entity, writeAllowed, true);
 			InputHelperFactory.setInputHelpers(entityType, huiComposite);
 			huiComposite.resetInitialFocus();
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Konnte BSI Element Editor nicht öffnen");
 		}
-		
+
 	}
-	
-	
-
-
 
 	@Override
 	public boolean isDirty() {
@@ -223,7 +207,7 @@ public class BSIElementEditor extends EditorPart {
 	public boolean isSaveAsAllowed() {
 		return false;
 	}
-	
+
 	@Override
 	public void createPartControl(Composite parent) {
 		huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
@@ -231,26 +215,24 @@ public class BSIElementEditor extends EditorPart {
 		// if opened the first time, save initialized entity:
 		if (isDirty())
 			save(false);
-			
+
 	}
-	
+
 	public boolean isNotAskAndSave() {
 		return true;
 	}
 
 	@Override
 	public void setFocus() {
-		//huiComposite.setFocus();
+		// huiComposite.setFocus();
 		huiComposite.resetInitialFocus();
 	}
-	
+
 	@Override
 	public void dispose() {
 		huiComposite.closeView();
 		cnAElement.getEntity().removeListener(modelListener);
-		EditorRegistry.getInstance().closeEditor(
-				( (BSIElementEditorInput)getEditorInput() ).getId()
-				);
+		EditorRegistry.getInstance().closeEditor(((BSIElementEditorInput) getEditorInput()).getId());
 		super.dispose();
 	}
 
