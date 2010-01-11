@@ -253,7 +253,11 @@ public class ToDoBean {
 			// TODO: fix this dependency to eclipse related classes.
 			enabled = CnAElementHome.getInstance().isWriteAllowed(getMassnahmeUmsetzung());
 		}
-		return enabled;
+		
+// TODO remove this
+return true;
+		
+		//return enabled;
 	}
 
 	public void save() {
@@ -278,12 +282,9 @@ public class ToDoBean {
 			else {
 				LOG.warn("Control is null. Can not save.");
 			}
-		} catch (SecurityException e) {
-			LOG.error("Saving of control is not allowed: " + massnahmeId, e);
-			Util.addError("submit", Util.getMessage("todo.save.forbidden"));
 		} catch (Exception e) {
 			LOG.error("Error while saving massnahme: " + massnahmeId, e);
-			Util.addError("submit", Util.getMessage("todo.save.failed"));
+			ExceptionHandler.handle(e);
 		}
 	}
 	
