@@ -43,7 +43,7 @@ public class ServerExceptionHandler extends BaseExceptionHandler {
 					"korrekt sind und Sie über die nötige Berechtigung (Rolle) für die Operation verfügen. Details: " + e.getMessage()));
 		}
 		if (e instanceof sernet.gs.common.SecurityException) {
-			throw new CommandException("Sicherheitsverstoß.", new Exception("Sicherheitsüberprüfung fehlgeschlagen. Prüfen Sie, ob Sie über die nötige Berechtigung (Rolle) für die Operation verfügen."));
+			throw new CommandException("Sicherheitsverstoß.", new sernet.gs.common.SecurityException("Sicherheitsüberprüfung fehlgeschlagen. Prüfen Sie, ob Sie über die nötige Berechtigung (Rolle) für die Operation verfügen."));
 		}
 		super.handle(e);
 	}
