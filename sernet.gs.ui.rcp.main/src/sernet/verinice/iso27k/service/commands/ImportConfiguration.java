@@ -24,8 +24,6 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
-
 /**
  * @author Daniel <dm@sernet.de>
  */
@@ -109,7 +107,6 @@ public class ImportConfiguration implements Serializable {
 						line = lineList.get(i);
 						// ignore empty lines
 						if(line!=null && line.length()>0) {
-							line=line;
 							sb.append(line).append('\n');
 							if(sepComma) {
 								sepComma = (nComma==line.replaceAll("[^,]","").length() && nComma>0);
