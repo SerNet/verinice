@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Display;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.exception.GenericJDBCException;
 
+import sernet.gs.common.SecurityException;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 
@@ -49,6 +50,17 @@ public class ExceptionUtil {
 							"aktualisiert. Ihre Aktion wurde abgebrochen um zu verhindern, dass unbeabsichtigt " +
 							"Daten überschrieben werden. Bitte überprüfen Sie die Änderungen und führen Sie ihre" +
 							"Eingabe ggf. erneut aus.");
+				}
+			});
+			return;
+		}
+		
+		if (e instanceof SecurityException) {
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openError(Display.getDefault().getActiveShell(),
+							"Aktion nicht erlaubt",
+							"Sie haben nicht die Berechtigung, um diese Aktion auszuführen.");
 				}
 			});
 			return;
