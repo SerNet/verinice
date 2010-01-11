@@ -45,8 +45,6 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		     this.type = type;
 		 }
 		 
-		 // FIXME akoderman implement security check for write permission on server here (update, delete, merge...)
-		 
 		 /*
 		  * It has to be noted that updates can happen without any call being made to any of these methods.
 		  * When an object has been loaded into the session, any changes made by a command are persisted
@@ -63,6 +61,18 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 					 public void hasWritePermission() throws AuthorizationException;
 				 }
 		  * 
+		  */
+		 
+		 /*
+		  * It is much more easier to implement the check in a class which extends HibernateBaseDao. 
+		  * Since this is the only possible entry point for updates its an appropriate way to go.
+		  * 
+		  * see http://zimbra:81/cgi-bin/bugzilla/show_bug.cgi?id=5
+		  */
+		 
+		 /*
+		  * CnATElementDao extends HibernateBaseDao and overrides the merge and delete method. 
+		  * All cnaTreeElement daos must be changed to this type in spring configuration.
 		  */
 		 
 		 public void saveOrUpdate(T entity) {
