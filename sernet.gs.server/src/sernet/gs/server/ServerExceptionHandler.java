@@ -37,9 +37,13 @@ public class ServerExceptionHandler extends BaseExceptionHandler {
 
 	@Override
 	public void handle(Exception e) throws CommandException {
+		// logging is done in HibernateCommandService
 		if (e instanceof SpringSecurityException) {
 			throw new CommandException("Sicherheitsverstoß.", new Exception("Sicherheitsüberprüfung fehlgeschlagen. Prüfen Sie, ob Benutzername und Passwort " +
 					"korrekt sind und Sie über die nötige Berechtigung (Rolle) für die Operation verfügen. Details: " + e.getMessage()));
+		}
+		if (e instanceof sernet.gs.common.SecurityException) {
+			throw new CommandException("Sicherheitsverstoß.", new Exception("Sicherheitsüberprüfung fehlgeschlagen. Prüfen Sie, ob Sie über die nötige Berechtigung (Rolle) für die Operation verfügen."));
 		}
 		super.handle(e);
 	}
