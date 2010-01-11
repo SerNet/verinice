@@ -60,7 +60,8 @@ public class BSIElementEditor extends EditorPart {
 	public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor";
 	private HitroUIComposite huiComposite;
 	private boolean isModelModified = false;
-
+	private Boolean isWriteAllowed = null;
+	
 	private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
 		public void dependencyChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
@@ -121,7 +122,7 @@ public class BSIElementEditor extends EditorPart {
 	}
 
 	private void save(boolean completeRefresh) {
-		if (!CnAElementHome.getInstance().isWriteAllowed(cnAElement)) {
+		if (!getIsWriteAllowed()) {
 			ExceptionUtil.log(new IllegalStateException(), "Keine Schreibrechte auf dem gegebenen Element.");
 			return;
 		}
@@ -181,15 +182,15 @@ public class BSIElementEditor extends EditorPart {
 			EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entity.getEntityType());
 
 			// Enable dirty listener only for writable objects.
-			boolean writeAllowed = CnAElementHome.getInstance().isWriteAllowed(cnAElement);
-			if (writeAllowed) {
+			
+			if (getIsWriteAllowed()) {
 				// add listener to mark editor as dirty on changes:
 				entity.addChangeListener(this.modelListener);
 			} else {
 				setPartName(getPartName() + " (SCHREIBGESCHÜTZT)");
 			}
 
-			huiComposite.createView(entity, writeAllowed, true);
+			huiComposite.createView(entity, getIsWriteAllowed(), true);
 			InputHelperFactory.setInputHelpers(entityType, huiComposite);
 			huiComposite.resetInitialFocus();
 		} catch (Exception e) {
@@ -206,6 +207,22 @@ public class BSIElementEditor extends EditorPart {
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
+	}
+
+	public void setIsWriteAllowed(Boolean isWriteAllowed) {
+		this.isWriteAllowed = isWriteAllowed;
+	}
+
+	public Boolean getIsWriteAllowed() {
+		if(isWriteAllowed==null) {		
+			isWriteAllowed = createIsWriteAllowed();
+		}
+		return isWriteAllowed;	
+	}
+	
+	public Boolean createIsWriteAllowed() {
+		isWriteAllowed = CnAElementHome.getInstance().isWriteAllowed(cnAElement);
+		return isWriteAllowed;
 	}
 
 	@Override
