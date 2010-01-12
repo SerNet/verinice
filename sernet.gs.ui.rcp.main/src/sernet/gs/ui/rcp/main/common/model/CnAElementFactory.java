@@ -74,8 +74,7 @@ public class CnAElementFactory {
 	private static BSIModel loadedModel;
 
 	private interface IElementBuilder<T extends CnATreeElement, U> {
-		public T build(CnATreeElement container, BuildInput<U> input)
-				throws Exception;
+		public T build(CnATreeElement container, BuildInput<U> input) throws Exception;
 	}
 
 	public void addLoadListener(IModelLoadListener listener) {
@@ -92,8 +91,7 @@ public class CnAElementFactory {
 		dbHome = CnAElementHome.getInstance();
 
 		bsiElementbuilders.put(Gebaeude.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 				Gebaeude child = dbHome.save(container, Gebaeude.class);
 				container.addChild(child);
 				child.setParent(container);
@@ -102,8 +100,7 @@ public class CnAElementFactory {
 		});
 
 		bsiElementbuilders.put(Client.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 				Client child = dbHome.save(container, Client.class);
 				container.addChild(child);
 				child.setParent(container);
@@ -112,8 +109,7 @@ public class CnAElementFactory {
 		});
 
 		bsiElementbuilders.put(SonstIT.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 				SonstIT child = dbHome.save(container, SonstIT.class);
 				container.addChild(child);
 				child.setParent(container);
@@ -122,8 +118,7 @@ public class CnAElementFactory {
 		});
 
 		bsiElementbuilders.put(Server.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 				Server child = dbHome.save(container, Server.class);
 				container.addChild(child);
 				child.setParent(container);
@@ -131,21 +126,17 @@ public class CnAElementFactory {
 			}
 		});
 
-		bsiElementbuilders.put(TelefonKomponente.TYPE_ID,
-				new IElementBuilder() {
-					public CnATreeElement build(CnATreeElement container,
-							BuildInput input) throws Exception {
-						TelefonKomponente child = dbHome.save(container,
-								TelefonKomponente.class);
-						container.addChild(child);
-						child.setParent(container);
-						return child;
-					}
-				});
+		bsiElementbuilders.put(TelefonKomponente.TYPE_ID, new IElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				TelefonKomponente child = dbHome.save(container, TelefonKomponente.class);
+				container.addChild(child);
+				child.setParent(container);
+				return child;
+			}
+		});
 
 		bsiElementbuilders.put(Raum.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 				Raum child = dbHome.save(container, Raum.class);
 				container.addChild(child);
 				child.setParent(container);
@@ -154,10 +145,8 @@ public class CnAElementFactory {
 		});
 
 		bsiElementbuilders.put(NetzKomponente.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
-				NetzKomponente child = dbHome.save(container,
-						NetzKomponente.class);
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				NetzKomponente child = dbHome.save(container, NetzKomponente.class);
 				container.addChild(child);
 				child.setParent(container);
 				return child;
@@ -165,8 +154,7 @@ public class CnAElementFactory {
 		});
 
 		bsiElementbuilders.put(Person.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 				Person child = dbHome.save(container, Person.class);
 				container.addChild(child);
 				child.setParent(container);
@@ -175,15 +163,11 @@ public class CnAElementFactory {
 		});
 
 		bsiElementbuilders.put(Anwendung.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 
-				Logger.getLogger(this.getClass()).debug(
-						"Creating new Anwendung in " + container);
-				CreateAnwendung saveCommand = new CreateAnwendung(container,
-						Anwendung.class);
-				saveCommand = ServiceFactory.lookupCommandService()
-						.executeCommand(saveCommand);
+				Logger.getLogger(this.getClass()).debug("Creating new Anwendung in " + container);
+				CreateAnwendung saveCommand = new CreateAnwendung(container, Anwendung.class);
+				saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
 				Anwendung child = saveCommand.getNewElement();
 
 				container.addChild(child);
@@ -193,32 +177,25 @@ public class CnAElementFactory {
 			}
 		});
 
-		bsiElementbuilders.put(BausteinUmsetzung.TYPE_ID,
-				new IElementBuilder<BausteinUmsetzung, Baustein>() {
-					public BausteinUmsetzung build(CnATreeElement container,
-							BuildInput<Baustein> input) throws Exception {
+		bsiElementbuilders.put(BausteinUmsetzung.TYPE_ID, new IElementBuilder<BausteinUmsetzung, Baustein>() {
+			public BausteinUmsetzung build(CnATreeElement container, BuildInput<Baustein> input) throws Exception {
 
-						BausteinUmsetzung bu = dbHome.save(container, input
-								.getInput());
-						if (bu == null)
-							return null;
+				BausteinUmsetzung bu = dbHome.save(container, input.getInput());
+				if (bu == null)
+					return null;
 
-						container.addChild(bu);
-						bu.setParent(container);
-						return bu;
-					}
-				});
+				container.addChild(bu);
+				bu.setParent(container);
+				return bu;
+			}
+		});
 
 		bsiElementbuilders.put(ITVerbund.TYPE_ID, new IElementBuilder() {
-			public ITVerbund build(CnATreeElement container, BuildInput input)
-					throws Exception {
+			public ITVerbund build(CnATreeElement container, BuildInput input) throws Exception {
 
-				Logger.getLogger(this.getClass()).debug(
-						"Creating new ITVerbund in " + container);
-				CreateITVerbund saveCommand = new CreateITVerbund(container,
-						ITVerbund.class);
-				saveCommand = ServiceFactory.lookupCommandService()
-						.executeCommand(saveCommand);
+				Logger.getLogger(this.getClass()).debug("Creating new ITVerbund in " + container);
+				CreateITVerbund saveCommand = new CreateITVerbund(container, ITVerbund.class);
+				saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
 				ITVerbund verbund = saveCommand.getNewElement();
 
 				verbund.setParent(loadedModel);
@@ -243,8 +220,7 @@ public class CnAElementFactory {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public CnATreeElement saveNew(CnATreeElement container,
-			String buildableTypeId, BuildInput input, boolean fireUpdates) throws Exception {
+	public CnATreeElement saveNew(CnATreeElement container, String buildableTypeId, BuildInput input, boolean fireUpdates) throws Exception {
 		IElementBuilder builder = bsiElementbuilders.get(buildableTypeId);
 		if (builder == null)
 			throw new Exception("Konnte Element nicht erzeugen.");
@@ -258,11 +234,10 @@ public class CnAElementFactory {
 		return child;
 	}
 
-	public CnATreeElement saveNew(CnATreeElement container,
-			String buildableTypeId, BuildInput input) throws Exception {
+	public CnATreeElement saveNew(CnATreeElement container, String buildableTypeId, BuildInput input) throws Exception {
 		return saveNew(container, buildableTypeId, input, true);
 	}
-	
+
 	public static BSIModel getLoadedModel() {
 		return loadedModel;
 	}
@@ -288,15 +263,14 @@ public class CnAElementFactory {
 			listener.loaded(loadedModel);
 		}
 	}
-	
+
 	/**
 	 * Returns whether there is an active database connection.
 	 * 
 	 * @return
 	 */
 	public boolean isDbOpen() {
-		return dbHome != null
-			&& dbHome.isOpen();
+		return dbHome != null && dbHome.isOpen();
 	}
 
 	public BSIModel loadOrCreateModel(IProgress monitor) throws Exception {
@@ -335,11 +309,9 @@ public class CnAElementFactory {
 	private void createBausteinVorschlaege(BSIModel newModel) {
 		SubtypenZielobjekte mapping = new SubtypenZielobjekte();
 		List<BausteinVorschlag> list = mapping.getMapping();
-		UpdateMultipleElements<BausteinVorschlag> command = new UpdateMultipleElements<BausteinVorschlag>(
-				list, ChangeLogEntry.STATION_ID, ChangeLogEntry.TYPE_INSERT);
+		UpdateMultipleElements<BausteinVorschlag> command = new UpdateMultipleElements<BausteinVorschlag>(list, ChangeLogEntry.STATION_ID, ChangeLogEntry.TYPE_INSERT);
 		try {
-			command = ServiceFactory.lookupCommandService().executeCommand(
-					command);
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
 		}
@@ -357,15 +329,12 @@ public class CnAElementFactory {
 						sleep(1000);
 						long now = System.currentTimeMillis();
 						if (now - startTime > 30000) {
-							ExceptionUtil
-									.log(
-											new Exception(
-													"Das hier dauert und dauert..."),
-											"Die Migration der Datenbank auf einen neue Version kann einige Zeit in Anspruch nehmen. Wenn diese Aktion länger als 5 "
-													+ "Minuten dauert, sollten Sie allerdings ihre Datenbank von Derby nach Postgres migrieren. Falls das "
-													+ "schon geschehen ist, sollten Sie ihre Postgres / MySQL-DB tunen. In der FAQ auf http://verinice.org/ finden "
-													+ "Sie weitere Hinweise. Ab einer gewissen Größe des IT-Verbundes wird der Einsatz des Verinice-Servers " +
-															"unverzichtbar. Auch hierzu finden Sie weitere Informationen auf unserer Webseite.");
+							ExceptionUtil.log(new Exception("Das hier dauert und dauert..."), 
+									"Die Migration der Datenbank auf einen neue Version kann einige Zeit in Anspruch nehmen. Wenn diese Aktion länger als 5 " 
+									+ "Minuten dauert, sollten Sie allerdings ihre Datenbank von Derby nach Postgres migrieren. Falls das " 
+									+ "schon geschehen ist, sollten Sie ihre Postgres / MySQL-DB tunen. In der FAQ auf http://verinice.org/ finden "
+									+ "Sie weitere Hinweise. Ab einer gewissen Größe des IT-Verbundes wird der Einsatz des Verinice-Servers " 
+									+ "unverzichtbar. Auch hierzu finden Sie weitere Informationen auf unserer Webseite.");
 							return;
 						}
 					} catch (InterruptedException e) {
@@ -375,10 +344,8 @@ public class CnAElementFactory {
 		};
 		timeout.start();
 		try {
-			DbVersion command = new DbVersion(
-					DbVersion.COMPATIBLE_CLIENT_VERSION);
-			command = ServiceFactory.lookupCommandService().executeCommand(
-					command);
+			DbVersion command = new DbVersion(DbVersion.COMPATIBLE_CLIENT_VERSION);
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			done[0] = true;
 		} catch (CommandException e) {
 			done[0] = true;
