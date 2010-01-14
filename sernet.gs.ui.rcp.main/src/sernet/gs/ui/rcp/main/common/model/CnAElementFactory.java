@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
@@ -45,18 +46,20 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateAnwendung;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateITVerbund;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
-import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 
 /**
  * Factory for all model elements. Contains typed factories for sub-elements.
  * 
  * 
- * To add new model types: - add new class with new type-id (String) - add
- * type-id to Hitro-UI XML Config (SNCA.xml) - add a factory for the type-id
- * here - add the type to hibernate's cnatreeelement.hbm.xml - don't forget to
- * change the method canContain() in the parent to include the new type - add
- * Actions (add, delete) to plugin.xml - create ActionDelegates which use this
- * factory to create new instances - register editor for type in EditorFactory
+ * To add new model types: 
+ * - add new class with new type-id (String) 
+ * - add  type-id to Hitro-UI XML Config (SNCA.xml) 
+ * - add a factory for the type-id here 
+ * - add the type to hibernate's cnatreeelement.hbm.xml 
+ * - don't forget to change the method canContain() in the parent to include the new type 
+ * - add Actions (add, delete) to plugin.xml 
+ * - create ActionDelegates which use this factory to create new instances 
+ * - register editor for type in EditorFactory
  * 
  * @author koderman@sernet.de
  * 
@@ -279,7 +282,7 @@ public class CnAElementFactory {
 		}
 
 		monitor.setTaskName("Überprüfe / Aktualisiere DB-Version.");
-		checkDbVersion();
+		Activator.checkDbVersion();
 
 		loadedModel = dbHome.loadModel(monitor);
 		if (loadedModel != null) {
@@ -314,45 +317,6 @@ public class CnAElementFactory {
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
-		}
-	}
-
-	private void checkDbVersion() throws CommandException {
-		final boolean[] done = new boolean[1];
-		done[0] = false;
-		Thread timeout = new Thread() {
-			@Override
-			public void run() {
-				long startTime = System.currentTimeMillis();
-				while (!done[0]) {
-					try {
-						sleep(1000);
-						long now = System.currentTimeMillis();
-						if (now - startTime > 30000) {
-							ExceptionUtil.log(new Exception("Das hier dauert und dauert..."), 
-									"Die Migration der Datenbank auf einen neue Version kann einige Zeit in Anspruch nehmen. Wenn diese Aktion länger als 5 " 
-									+ "Minuten dauert, sollten Sie allerdings ihre Datenbank von Derby nach Postgres migrieren. Falls das " 
-									+ "schon geschehen ist, sollten Sie ihre Postgres / MySQL-DB tunen. In der FAQ auf http://verinice.org/ finden "
-									+ "Sie weitere Hinweise. Ab einer gewissen Größe des IT-Verbundes wird der Einsatz des Verinice-Servers " 
-									+ "unverzichtbar. Auch hierzu finden Sie weitere Informationen auf unserer Webseite.");
-							return;
-						}
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-		};
-		timeout.start();
-		try {
-			DbVersion command = new DbVersion(DbVersion.COMPATIBLE_CLIENT_VERSION);
-			command = ServiceFactory.lookupCommandService().executeCommand(command);
-			done[0] = true;
-		} catch (CommandException e) {
-			done[0] = true;
-			throw e;
-		} catch (RuntimeException re) {
-			done[0] = true;
-			throw re;
 		}
 	}
 
