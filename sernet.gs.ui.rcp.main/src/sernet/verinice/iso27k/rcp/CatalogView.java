@@ -208,7 +208,7 @@ public class CatalogView extends ViewPart {
 			attachment.setDate(now);
 			attachment.setFilePath(csvFile.getFilePath());
 			attachment.setTitel(attachment.getFileName());
-			attachment.setText("Measure catalog imported at: " + DateFormat.getDateTimeInstance().format(now));
+			attachment.setText("Control / threat catalog imported at: " + DateFormat.getDateTimeInstance().format(now));
 			SaveNote command = new SaveNote(attachment);	
 			command = getCommandService().executeCommand(command);
 			attachment = (Attachment) command.getAddition();
