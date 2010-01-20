@@ -252,6 +252,71 @@
 		extends="CnATreeElement"
 		discriminator-value="stellungnahme-dsb"/>
 	
+	<!-- ISO 27000 Elements -->
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.ISO27KModel"
+		extends="CnATreeElement"
+		discriminator-value="iso27kmodel" />
+
+	<subclass 
+		name="sernet.verinice.iso27k.model.Organization"
+		extends="CnATreeElement"
+		discriminator-value="org" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.AssetGroup"
+		extends="CnATreeElement"
+		discriminator-value="assetgroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Asset"
+		extends="CnATreeElement"
+		discriminator-value="asset" />
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.ControlGroup"
+		extends="CnATreeElement"
+		discriminator-value="controlgroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Control"
+		extends="CnATreeElement"
+		discriminator-value="control" />
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.AuditGroup"
+		extends="CnATreeElement"
+		discriminator-value="auditgroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Audit"
+		extends="CnATreeElement"
+		discriminator-value="audit" />
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.ExceptionGroup"
+		extends="CnATreeElement"
+		discriminator-value="exceptiongroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Exception"
+		extends="CnATreeElement"
+		discriminator-value="exception" />
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.PersonGroup"
+		extends="CnATreeElement"
+		discriminator-value="persongroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.PersonIso"
+		extends="CnATreeElement"
+		discriminator-value="person-iso" />
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.RequirementGroup"
+		extends="CnATreeElement"
+		discriminator-value="requirementgroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Requirement"
+		extends="CnATreeElement"
+		discriminator-value="requirement" />
 
 	<!-- This filter implements the access check (read access) for CnATreeElement instances (and subclasses).
 	
