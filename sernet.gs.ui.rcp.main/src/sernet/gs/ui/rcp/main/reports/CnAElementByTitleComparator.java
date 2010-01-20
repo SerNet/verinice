@@ -36,7 +36,7 @@ public class CnAElementByTitleComparator implements
 			return (new Integer(kap1[0] * 1000 + kap1[1])
 					.compareTo((kap2[0] * 1000 + kap2[1])));
 		}
-		return Collator.getInstance().compare(o1.getTitel(), o2.getTitel());
+		return Collator.getInstance().compare(o1.getTitle(), o2.getTitle());
 	}
 
 }

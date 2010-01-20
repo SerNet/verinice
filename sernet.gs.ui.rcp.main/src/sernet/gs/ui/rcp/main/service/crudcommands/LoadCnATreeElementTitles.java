@@ -43,7 +43,7 @@ public class LoadCnATreeElementTitles<T extends CnATreeElement> extends GenericC
 		IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(clazz);
 		elements = dao.findAll();
 		for (CnATreeElement elmt : elements) {
-			elmt.getTitel();
+			elmt.getTitle();
 		}
 	}
 

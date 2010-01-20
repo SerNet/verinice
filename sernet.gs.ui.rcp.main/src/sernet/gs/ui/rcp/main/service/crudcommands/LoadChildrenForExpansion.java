@@ -85,7 +85,7 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		if (element instanceof MassnahmenUmsetzung) {
 			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
 			mn.getKapitelValue();
-			mn.getTitel();	
+			mn.getTitle();	
 			mn.getUmsetzung();
 			mn.getUrl();
 			mn.getStand();

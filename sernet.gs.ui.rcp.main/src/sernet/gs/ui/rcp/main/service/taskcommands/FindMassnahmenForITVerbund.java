@@ -161,12 +161,12 @@ public class FindMassnahmenForITVerbund extends GenericCommand {
 	
 				if (mn.getParent() instanceof GefaehrdungsUmsetzung)
 					item.setParentTitle( // risikoanalyse.getparent()
-							mn.getParent().getParent().getParent().getTitel());
+							mn.getParent().getParent().getParent().getTitle());
 				else
 					item.setParentTitle(
-							mn.getParent().getParent().getTitel());
+							mn.getParent().getParent().getTitle());
 				
-				item.setTitel(mn.getTitel());
+				item.setTitel(mn.getTitle());
 				item.setUmsetzung(umsetzung);
 				item.setUmsetzungBis(mn.getUmsetzungBis());
 				item.setNaechsteRevision(mn.getNaechsteRevision());

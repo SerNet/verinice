@@ -102,7 +102,7 @@ public class FindURLs extends GenericCommand {
 			CnATreeElement element = treeElements.get(i);
 			
 			DocumentReference reference = new DocumentReference(element);
-			element.getTitel();
+			element.getTitle();
 
 			link.addChild(reference);
 		}

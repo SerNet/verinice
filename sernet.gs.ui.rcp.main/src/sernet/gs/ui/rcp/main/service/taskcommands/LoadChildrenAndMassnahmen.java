@@ -207,11 +207,11 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 			item = new TodoViewItem();
 
 			if (el.getParent() instanceof GefaehrdungsUmsetzung)
-				item.setParentTitle(el.getParent().getParent().getParent().getTitel());
+				item.setParentTitle(el.getParent().getParent().getParent().getTitle());
 			else
-				item.setParentTitle(el.getParent().getParent().getTitel());
+				item.setParentTitle(el.getParent().getParent().getTitle());
 
-			item.setTitel(el.getTitel());
+			item.setTitel(el.getTitle());
 			item.setUmsetzung(umsetzung);
 			item.setUmsetzungBis(el.getUmsetzungBis());
 			item.setNaechsteRevision(el.getNaechsteRevision());
@@ -233,7 +233,7 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 	}
 	
 	public void hydrate(CnATreeElement el) {
-		el.getTitel();
+		el.getTitle();
 	}
 
 	public Set<TodoViewItem> getMassnahmen() {
@@ -352,13 +352,13 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 		 */
 		public int compare(CnATreeElement o1, CnATreeElement o2) {
 			int result = -1;
-			if(o1!=null && o1.getTitel()!=null) {
-				if(o2==null || o2.getTitel()==null) {
+			if(o1!=null && o1.getTitle()!=null) {
+				if(o2==null || o2.getTitle()==null) {
 					result = 1;
 				} else {
-					result = o1.getTitel().compareTo(o2.getTitel());
+					result = o1.getTitle().compareTo(o2.getTitle());
 				}
-			} else if(o2==null || o2.getTitel()==null) {
+			} else if(o2==null || o2.getTitle()==null) {
 				result = 0;
 			}
 			return result;

@@ -75,7 +75,7 @@ public class MigratePersonContacts extends GenericCommand {
 	private Person findPerson(String personName) {
 		List<Person> all = personDao.findAll();
 		for (Person person : all) {
-			if (person.getTitel().equals(personName))
+			if (person.getTitle().equals(personName))
 				return person;
 		}
 		return null;

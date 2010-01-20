@@ -151,7 +151,7 @@ public class MigrateDbTo0_92 extends DbMigration {
 
 	private String findActualPerson(String oldName) {
 		for (Person person : personen) {
-			if (person.getTitel().equals(oldName))
+			if (person.getTitle().equals(oldName))
 				return person.getEntity().getDbId().toString();
 		}
 		return null;

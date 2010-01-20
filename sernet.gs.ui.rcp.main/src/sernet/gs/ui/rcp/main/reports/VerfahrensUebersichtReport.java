@@ -95,7 +95,7 @@ public class VerfahrensUebersichtReport extends Report implements IBSIReport {
 
 		AllCategories: for (CnATreeElement anwendung : categories) {
 			rows.add(new SimpleRow(IOOTableRow.ROW_STYLE_HEADER, anwendung
-					.getTitel()));
+					.getTitle()));
 
 			AllItems: for (CnATreeElement dsElement : getItems(anwendung)) {
 				ArrayList<IOOTableRow> categoryRows = new ArrayList<IOOTableRow>();
@@ -105,7 +105,7 @@ public class VerfahrensUebersichtReport extends Report implements IBSIReport {
 					continue AllItems;
 
 				categoryRows.add(new SimpleRow(IOOTableRow.ROW_STYLE_SUBHEADER,
-						dsElement.getTitel()));
+						dsElement.getTitle()));
 
 				addProperties(categoryRows, dsElement, columns);
 				

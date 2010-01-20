@@ -70,7 +70,7 @@ public class MigrateDbTo0_93 extends DbMigration {
 				Massnahme vorlagenMassnahme = findMassnahme(mnums);
 				if (vorlagenMassnahme == null) {
 					Logger.getLogger(this.getClass())
-						.debug("Keine Vorlage gefunden für Massnahme " + cnATreeElement.getTitel());
+						.debug("Keine Vorlage gefunden für Massnahme " + cnATreeElement.getTitle());
 					continue;
 				}
 				
