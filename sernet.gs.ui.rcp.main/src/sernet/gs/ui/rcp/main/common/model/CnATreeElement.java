@@ -150,7 +150,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	 * @param child
 	 */
 	public void removeChild(CnATreeElement child) {
-		if (children.remove(child)) {
+		if (children.remove(child) && getParent()!=null) {
 			getParent().childRemoved(this, child);
 		}
 	}
@@ -236,7 +236,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		return parent;
 	}
 
-	public abstract String getTitel();
+	public abstract String getTitle();
 
 	public String getId() {
 		return ENTITY_TITLE + getEntity().getDbId();
@@ -527,6 +527,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	
 	public boolean removePermission(Permission permission) {
 		return permissions.remove(permission);
+	}
+	
+	public void refreshAllListeners(Object source) {
+		// override this in model classes
 	}
 
 }
