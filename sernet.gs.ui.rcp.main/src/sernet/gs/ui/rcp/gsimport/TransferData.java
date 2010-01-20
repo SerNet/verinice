@@ -170,7 +170,7 @@ public class TransferData {
 					Logger.getLogger(this.getClass()).debug("Rolle konnte nicht übertragen werden: " + 
 							rolle.getName());
 				else
-					Logger.getLogger(this.getClass()).debug("Rolle übertragen: " + rolle.getName() + " für Benutzer " + element.getTitel());
+					Logger.getLogger(this.getClass()).debug("Rolle übertragen: " + rolle.getName() + " für Benutzer " + element.getTitle());
 			}
 		}
 		

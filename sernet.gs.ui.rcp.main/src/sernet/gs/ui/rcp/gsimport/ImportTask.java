@@ -274,7 +274,7 @@ public class ImportTask {
 
 				transferData.transfer(element, result);
 				
-				monitor.subTask(element.getTitel());
+				monitor.subTask(element.getTitle());
 				createBausteine(element, result.zielobjekt);
 				CnAElementHome.getInstance().update(element);
 			}
@@ -362,7 +362,7 @@ public class ImportTask {
 			List<NZielobjekt> dependencies = vampire
 					.findLinksByZielobjekt(zielobjekt);
 			for (NZielobjekt dependency : dependencies) {
-				monitor.subTask(dependant.getTitel());
+				monitor.subTask(dependant.getTitle());
 				CnATreeElement dependencyElement = findZielobjektFor(dependency);
 				if (dependencyElement == null) {
 					Logger.getLogger(this.getClass()).debug(
@@ -371,8 +371,8 @@ public class ImportTask {
 					continue;
 				}
 				Logger.getLogger(this.getClass()).debug(
-						"Neue Verknüpfung von " + dependant.getTitel() + " zu "
-								+ dependencyElement.getTitel());
+						"Neue Verknüpfung von " + dependant.getTitle() + " zu "
+								+ dependencyElement.getTitle());
 
 				// verinice models dependencies DOWN, not UP as the gstool.
 				// therefore we need to turn things around, except for persons,
@@ -417,7 +417,7 @@ public class ImportTask {
 				alleMassnahmen.size());
 		for (ModZobjBstMass obm : alleMassnahmen.keySet()) {
 			monitor.worked(1);
-			monitor.subTask(alleMassnahmen.get(obm).getTitel());
+			monitor.subTask(alleMassnahmen.get(obm).getTitle());
 			// transferiere individuell verknüpfte verantowrtliche in massnahmen
 			// (TAB "Verantwortlich" im GSTOOL):
 			Set<NZielobjekt> personenSrc = vampire
@@ -435,8 +435,8 @@ public class ImportTask {
 				for (Person personToLink : dependencies) {
 					Logger.getLogger(this.getClass()).debug(
 							"Verknüpfe Massnahme "
-									+ dependantMassnahme.getTitel()
-									+ " mit Person " + personToLink.getTitel());
+									+ dependantMassnahme.getTitle()
+									+ " mit Person " + personToLink.getTitle());
 					dependantMassnahme.addUmsetzungDurch(personToLink);
 				}
 			}
@@ -465,7 +465,7 @@ public class ImportTask {
 					if (personen != null && personen.size() > 0) {
 						Logger.getLogger(this.getClass()).debug(
 								"Befragung für Baustein "
-										+ bausteinUmsetzung.getTitel()
+										+ bausteinUmsetzung.getTitle()
 										+ " durchgeführt von "
 										+ personen.get(0));
 						bausteinUmsetzung.addBefragungDurch(personen.get(0));
@@ -484,13 +484,13 @@ public class ImportTask {
 								.debug(
 										"ACHTUNG: Es wurde mindestens eine Person für die "
 												+ "zu verknüpfenden Interviewpartner nicht gefunden.");
-					monitor.subTask(bausteinUmsetzung.getTitel());
+					monitor.subTask(bausteinUmsetzung.getTitle());
 					for (Person personToLink : dependencies) {
 						Logger.getLogger(this.getClass()).debug(
 								"Verknüpfe Baustein "
-										+ bausteinUmsetzung.getTitel()
+										+ bausteinUmsetzung.getTitle()
 										+ " mit befragter Person "
-										+ personToLink.getTitel());
+										+ personToLink.getTitle());
 						bausteinUmsetzung.addBefragtePersonDurch(personToLink);
 					}
 				}
