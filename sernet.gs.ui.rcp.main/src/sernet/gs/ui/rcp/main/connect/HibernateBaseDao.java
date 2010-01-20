@@ -96,6 +96,19 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			 DetachedCriteria criteria = DetachedCriteria.forClass(type);
 			 return findByCriteria(criteria);
 		 }
+		 
+		 public List findAll(RetrieveInfo ri) {
+			 // this could be used to limit result size:
+//			 DetachedCriteria criteria = DetachedCriteria.forClass(type);
+//			 List results = getHibernateTemplate().findByCriteria(criteria, 0, 1000);
+//			 return results;
+			 if(ri==null) {
+				 ri = new RetrieveInfo();
+			 }
+			 DetachedCriteria criteria = DetachedCriteria.forClass(type);
+			 configureCriteria(criteria, ri);
+			 return findByCriteria(criteria);
+		 }
 
 		 public T findById(ID id) {
 //			 return (T) getHibernateTemplate().load(type, id);
@@ -114,6 +127,12 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			
 			DetachedCriteria criteria = DetachedCriteria.forClass(type);
 			criteria.add(Restrictions.eq("dbId", id));
+			configureCriteria(criteria, ri);
+			
+			return loadByCriteria(criteria);
+		}
+
+		private void configureCriteria(DetachedCriteria criteria, RetrieveInfo ri) {
 			if(ri.isProperties()) {
 				criteria.setFetchMode("entity", FetchMode.JOIN);
 				criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
@@ -138,6 +157,12 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 					criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists.properties", FetchMode.JOIN);
 				}
 			}
+			if(ri.isParent()) {
+				criteria.setFetchMode("parent", FetchMode.JOIN);
+				if(ri.isSiblings()) {
+					criteria.setFetchMode("parent.children", FetchMode.JOIN);
+				}
+			}
 			if( ri.isChildren()) {
 				criteria.setFetchMode("children", FetchMode.JOIN);
 				DetachedCriteria criteriaChildren=null, criteriaEntity=null;
@@ -156,9 +181,10 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 					criteria.setFetchMode("children.entity.typedPropertyLists.properties", FetchMode.JOIN);				
 				}
 			}
+			if( ri.isGrandchildren()) {
+				criteria.setFetchMode("children.children", FetchMode.JOIN);
+			}
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			
-			return loadByCriteria(criteria);
 		}
 
 		private T loadByCriteria(DetachedCriteria criteria) {
