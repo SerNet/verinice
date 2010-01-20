@@ -50,6 +50,18 @@ import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
 import sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB;
 import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
 import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
+import sernet.verinice.iso27k.model.Asset;
+import sernet.verinice.iso27k.model.AssetGroup;
+import sernet.verinice.iso27k.model.Audit;
+import sernet.verinice.iso27k.model.AuditGroup;
+import sernet.verinice.iso27k.model.Control;
+import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.iso27k.model.ExceptionGroup;
+import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.iso27k.model.PersonGroup;
+import sernet.verinice.iso27k.model.PersonIso;
+import sernet.verinice.iso27k.model.Requirement;
+import sernet.verinice.iso27k.model.RequirementGroup;
 
 /**
  * This class maps editors for different ressources and either opens a new
@@ -120,6 +132,22 @@ public class EditorFactory {
 		typedFactories.put(Datenverarbeitung.class, bsiEditorFactory);
 		typedFactories.put(StellungnahmeDSB.class, bsiEditorFactory);
 
+		// ISO 27000 elements
+		typedFactories.put(Organization.class, bsiEditorFactory);
+		typedFactories.put(AssetGroup.class, bsiEditorFactory);
+		typedFactories.put(Asset.class, bsiEditorFactory);
+		typedFactories.put(PersonGroup.class, bsiEditorFactory);
+		typedFactories.put(PersonIso.class, bsiEditorFactory);
+		typedFactories.put(AuditGroup.class, bsiEditorFactory);
+		typedFactories.put(Audit.class, bsiEditorFactory);
+		typedFactories.put(ControlGroup.class, bsiEditorFactory);
+		typedFactories.put(Control.class, bsiEditorFactory);
+		typedFactories.put(ExceptionGroup.class, bsiEditorFactory);
+		typedFactories.put(sernet.verinice.iso27k.model.Exception.class, bsiEditorFactory);
+		typedFactories.put(RequirementGroup.class, bsiEditorFactory);
+		typedFactories.put(Requirement.class, bsiEditorFactory);
+
+		
 		IEditorTypeFactory todoItemEditorFactory = new IEditorTypeFactory() {
 
 			public void openEditorFor(Object o) throws Exception {
