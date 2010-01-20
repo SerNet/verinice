@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.model.Addition;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
@@ -69,6 +71,20 @@ import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
 import sernet.gs.ui.rcp.main.ds.model.Zweckbestimmung;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.iso27k.model.Asset;
+import sernet.verinice.iso27k.model.AssetGroup;
+import sernet.verinice.iso27k.model.Audit;
+import sernet.verinice.iso27k.model.AuditGroup;
+import sernet.verinice.iso27k.model.Control;
+import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.iso27k.model.Exception;
+import sernet.verinice.iso27k.model.ExceptionGroup;
+import sernet.verinice.iso27k.model.ISO27KModel;
+import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.iso27k.model.PersonGroup;
+import sernet.verinice.iso27k.model.PersonIso;
+import sernet.verinice.iso27k.model.Requirement;
+import sernet.verinice.iso27k.model.RequirementGroup;
 
 /**
  * Registry for DAOs for different types of objects. DAOs are managed by and injected by the Spring framework. 
@@ -79,6 +95,8 @@ import sernet.hui.common.connect.PropertyList;
  *
  */
 public class DAOFactory {
+	
+	private final Logger log = Logger.getLogger(DAOFactory.class);
 	
 	// injected by spring
 	private HashMap<Class, IBaseDao> daos = new HashMap<Class, IBaseDao>(); 
@@ -367,7 +385,57 @@ public class DAOFactory {
     	daos.put(AttachmentFile.class, daoToSet);
     }
     
+    public void setISO27KModelDAO(IBaseDao<ISO27KModel, Integer> daoToSet) {
+    	daos.put(ISO27KModel.class, daoToSet);
+    }
     
+    public void setOrganizationDAO(IBaseDao<Organization, Integer> daoToSet) {
+    	daos.put(Organization.class, daoToSet);
+    }
+    
+    public void setAssetGroupDAO(IBaseDao<AssetGroup, Integer> daoToSet) {
+    	daos.put(AssetGroup.class, daoToSet);
+    }
+    public void setAssetDAO(IBaseDao<Asset, Integer> daoToSet) {
+    	daos.put(Asset.class, daoToSet);
+    }
+    
+    public void setControlGroupDAO(IBaseDao<ControlGroup, Integer> daoToSet) {
+    	daos.put(ControlGroup.class, daoToSet);
+    }
+    public void setControlDAO(IBaseDao<Control, Integer> daoToSet) {
+    	daos.put(Control.class, daoToSet);
+    }
+    
+    public void setAuditGroupDAO(IBaseDao<AuditGroup, Integer> daoToSet) {
+    	daos.put(AuditGroup.class, daoToSet);
+    }
+    public void setAuditDAO(IBaseDao<Audit, Integer> daoToSet) {
+    	daos.put(Audit.class, daoToSet);
+    }
+    
+    public void setExceptionGroupDAO(IBaseDao<ExceptionGroup, Integer> daoToSet) {
+    	daos.put(ExceptionGroup.class, daoToSet);
+    }
+    public void setExceptionDAO(IBaseDao<Exception, Integer> daoToSet) {
+    	daos.put(Exception.class, daoToSet);
+    }
+    
+    public void setPersonGroupDAO(IBaseDao<PersonGroup, Integer> daoToSet) {
+    	daos.put(PersonGroup.class, daoToSet);
+    }
+    public void setPersonIsoDAO(IBaseDao<PersonIso, Integer> daoToSet) {
+    	daos.put(PersonIso.class, daoToSet);
+    }
+    
+    public void setRequirementGroupDAO(IBaseDao<RequirementGroup, Integer> daoToSet) {
+    	daos.put(RequirementGroup.class, daoToSet);
+    }
+    public void setRequirementDAO(IBaseDao<Requirement, Integer> daoToSet) {
+    	daos.put(Requirement.class, daoToSet);
+    }
+    
+  
 	public <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype) {
 		IBaseDao dao = daos.get(daotype);
 		if (dao != null)
@@ -378,6 +446,11 @@ public class DAOFactory {
 		for (Class clazz : daos.keySet()) {
 			if (clazz.isAssignableFrom(daotype))
 				return daos.get(clazz);
+		}
+		if(daotype!=null) {
+			log.warn("No dao found for class: " + daotype.getName());
+		} else {
+			log.warn("dao-type-class is null, could not return dao");
 		}
 		return null;
 	}
