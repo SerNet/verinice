@@ -23,41 +23,46 @@ import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-
 public interface IBaseDao<T, ID extends Serializable> {
 
-		 public void saveOrUpdate(T entity);
-		 
-		 public T merge(T entity);
+	public void saveOrUpdate(T entity);
 
-		 public T merge(T entity, boolean fireUpdates);
+	public T merge(T entity);
 
-		 public void delete(T entity);
+	public T merge(T entity, boolean fireUpdates);
 
-		 public T findById(ID id);
-		 
-		 public T retrieve(ID id, RetrieveInfo ri);
+	public void delete(T entity);
 
-		 public List<T> findAll();
-		 
-		 public List findByQuery(String hqlQuery, Object[] params);
-		 
-		 public List findByCriteria(DetachedCriteria criteria);
-		 
-		 public List findByCallback(HibernateCallback hcb);
-		 
-		 public Object executeCallback(HibernateCallback hcb);
-					
-		 public int updateByQuery(String hqlQuery, Object[] values);
-		 
-		 public void refresh(T element);
-		 
-		 public void reload(T element, Serializable id);
+	public T findById(ID id);
 
-		 public void initialize(Object collection);
-		 
-		 public void flush();
+	public T retrieve(ID id, RetrieveInfo ri);
 
-		 public Class<T> getType();
-		 
+	public List<T> findAll();
+
+	/**
+	 * @param ri
+	 * @return
+	 */
+	public List findAll(RetrieveInfo ri);
+
+	public List findByQuery(String hqlQuery, Object[] params);
+
+	public List findByCriteria(DetachedCriteria criteria);
+
+	public List findByCallback(HibernateCallback hcb);
+
+	public Object executeCallback(HibernateCallback hcb);
+
+	public int updateByQuery(String hqlQuery, Object[] values);
+
+	public void refresh(T element);
+
+	public void reload(T element, Serializable id);
+
+	public void initialize(Object collection);
+
+	public void flush();
+
+	public Class<T> getType();
+
 }
