@@ -33,8 +33,14 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ImageCache {
 
-	public static final String UNKNOWN = "generic_elements.gif";
+	public static final String UNKNOWN = "generic_element.gif";
+	
+	public static final String UNKNOW_NEW = "generic_element_new.png";
 
+	public static final String UNKNOWN_GROUP = "generic_elements.gif";
+
+	public static final String UNKNOWN_GROUP_NEW = "generic_elements_new.png";
+	
 	public static final String PRODUCT_LG = "product_lg.gif";
 
 	public static final String GEBAEUDE = "building.png";
