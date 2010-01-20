@@ -203,7 +203,7 @@ public class CatalogView extends ViewPart {
 		if(csvFile!=null) {			
 			Attachment attachment = new Attachment();
 			attachment.setCnATreeElementId(getBsiModel().getDbId());
-			attachment.setCnAElementTitel(getBsiModel().getTitel());
+			attachment.setCnAElementTitel(getBsiModel().getTitle());
 			Date now = Calendar.getInstance().getTime();
 			attachment.setDate(now);
 			attachment.setFilePath(csvFile.getFilePath());
