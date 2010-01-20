@@ -79,6 +79,17 @@ public class CnAElementHome {
 
 	private ICommandService commandService;
 
+	public ICommandService getCommandService() {
+		if(commandService==null) {
+			try {
+				open();
+			} catch (Exception e) {
+				log.error("Error while opening command service", e);
+			}
+		}
+		return commandService;
+	}
+
 	private CnAElementHome() {
 		// singleton
 	}
@@ -129,7 +140,7 @@ public class CnAElementHome {
 			Logger.getLogger(this.getClass()).debug(
 					"Saving new element: " + element);
 			SaveElement<T> saveCommand = new SaveElement<T>(element);
-			saveCommand = commandService.executeCommand(saveCommand);
+			saveCommand = getCommandService().executeCommand(saveCommand);
 			return saveCommand.getElement();
 	}
 	
@@ -137,7 +148,7 @@ public class CnAElementHome {
 		Logger.getLogger(this.getClass()).debug(
 				"Creating new element in " + container);
 		CreateElement<T> saveCommand = new CreateElement<T>(container, type);
-		saveCommand = commandService.executeCommand(saveCommand);
+		saveCommand = getCommandService().executeCommand(saveCommand);
 		return saveCommand.getNewElement();
 	}
 	
@@ -145,7 +156,7 @@ public class CnAElementHome {
 		Logger.getLogger(this.getClass()).debug(
 				"Creating new element in " + container);
 		CreateBaustein saveCommand = new CreateBaustein(container, baustein);
-		saveCommand = commandService.executeCommand(saveCommand);
+		saveCommand = getCommandService().executeCommand(saveCommand);
 		return saveCommand.getNewElement();
 	}
 	
@@ -153,37 +164,37 @@ public class CnAElementHome {
 		Logger.getLogger(this.getClass()).debug(
 				"Saving new link from " + dropTarget + " to " + dragged);
 		CreateLink command = new CreateLink(dropTarget, dragged);
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 		
 		return command.getLink();
 	}
 	
 	public void remove(CnATreeElement element) throws Exception {
-		Logger.getLogger(this.getClass()).debug("Deleting " + element.getTitel());
+		Logger.getLogger(this.getClass()).debug("Deleting " + element.getTitle());
 		RemoveElement command = new RemoveElement(element);
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 	}
 
 	public void remove(CnALink element) throws Exception {
 		RemoveLink command = new RemoveLink(element.getId());
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 	}
 
 	public CnATreeElement update(CnATreeElement element) throws Exception {	
 		UpdateElement command = new UpdateElement(element, true, ChangeLogEntry.STATION_ID);
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 		return (CnATreeElement) command.getElement();
 	}
 
 	public void update(List<? extends CnATreeElement> elements)
 			throws StaleObjectStateException, CommandException {
 		UpdateMultipleElements command = new UpdateMultipleElements(elements, ChangeLogEntry.STATION_ID);
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 	}
 
 	public void refresh(List<? extends CnATreeElement> elements) throws CommandException {
 		RefreshMultipleElements command = new RefreshMultipleElements(elements);
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 	}
 
 	/**
@@ -197,7 +208,7 @@ public class CnAElementHome {
 	@SuppressWarnings("unchecked")
 	public CnATreeElement loadById(Class<? extends CnATreeElement> clazz, int id) throws CommandException {
 		LoadCnAElementById command = new LoadCnAElementById(clazz, id);
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 		return command.getFound();
 	}
 
@@ -219,7 +230,7 @@ public class CnAElementHome {
 		nullMonitor.setTaskName("Lade Grundschutz Modell...");
 		
 		LoadBSIModelForTreeView command = new LoadBSIModelForTreeView();
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 		BSIModel model = command.getModel();
 		return model;
 	}
@@ -235,27 +246,27 @@ public class CnAElementHome {
 	 */
 	public void refresh(CnATreeElement cnAElement) throws CommandException {
 		RefreshElement command = new RefreshElement(cnAElement);
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 		CnATreeElement refreshedElement = command.getElement();
 		cnAElement.setEntity(refreshedElement.getEntity());
 	}
 
 	public List<ITVerbund> getItverbuende() throws CommandException {
 		LoadCnAElementByType<ITVerbund> command = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 		return command.getElements();
 	}
 
 	public List<Person> getPersonen() throws CommandException {
 		LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 		return command.getElements();
 		
 	}
 
 	public List<String> getTags() throws CommandException {
 		FindAllTags command = new FindAllTags();
-		command = commandService.executeCommand(command);
+		command = getCommandService().executeCommand(command);
 		return command.getTags();
 	}
 	
@@ -319,12 +330,8 @@ public class CnAElementHome {
 	 */
 	public boolean isWriteAllowed(CnATreeElement cte)
 	{
-		
 		// FIXME akoderman: this should only be used to determine icon state on the client. write check needs to implemented on the server side on saveOrUpdate() / merge() as well
 		
-		if(commandService == null) {
-			createCommandService();
-		}
 		
 		// Short cut: If no permission handling is needed than all objects are writable.
 		if (!ServiceFactory.isPermissionHandlingNeeded())
@@ -338,7 +345,7 @@ public class CnAElementHome {
 		{
 			LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
 			try {
-				lcuc = (LoadCurrentUserConfiguration) commandService.executeCommand(lcuc);
+				lcuc = (LoadCurrentUserConfiguration) getCommandService().executeCommand(lcuc);
 			} catch (CommandException e) {
 				ExceptionUtil.log(e, "Fehler bei Abfrage der Schreibrechte.");
 				return false;
