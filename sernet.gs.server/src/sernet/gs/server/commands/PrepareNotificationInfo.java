@@ -189,8 +189,8 @@ public class PrepareNotificationInfo extends GenericCommand {
 		}
 		
 		// Hydrates fields which will be needed later
-		mu.getTitel();
-		mu.getParent().getParent().getTitel();
+		mu.getTitle();
+		mu.getParent().getParent().getTitle();
 		
 		ei.addGlobalExpiredRevision(mu);
 	}
@@ -207,8 +207,8 @@ public class PrepareNotificationInfo extends GenericCommand {
 		}
 		
 		// Hydrates fields which will be needed later
-		mu.getTitel();
-		mu.getParent().getParent().getTitel();
+		mu.getTitle();
+		mu.getParent().getParent().getTitle();
 		
 		ei.addGlobalExpiredCompletion(mu);
 	}
@@ -462,8 +462,8 @@ public class PrepareNotificationInfo extends GenericCommand {
 			c.getNotificationEmail();
 		}
 		
-		mu.getTitel();
-		mu.getParent().getParent().getTitel();
+		mu.getTitle();
+		mu.getParent().getParent().getTitle();
 		
 		i.addModifiedMeasure(mu);
 	}
@@ -555,8 +555,8 @@ public class PrepareNotificationInfo extends GenericCommand {
 			c.getNotificationEmail();
 		}
 		
-		mu.getTitel();
-		mu.getParent().getParent().getTitel();
+		mu.getTitle();
+		mu.getParent().getParent().getTitle();
 		
 		i.addAssignedMeasure(mu);
 	}

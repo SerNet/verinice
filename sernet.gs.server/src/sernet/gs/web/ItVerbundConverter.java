@@ -44,7 +44,7 @@ public class ItVerbundConverter implements Converter {
 			if(itVerbundList!=null) {
 				for (Iterator<ITVerbund> iterator = itVerbundList.iterator(); iterator.hasNext();) {
 					ITVerbund itVerbund = iterator.next();
-					if(text.equals(itVerbund.getTitel())) {
+					if(text.equals(itVerbund.getTitle())) {
 						value = itVerbund;
 						break;
 					}
@@ -57,7 +57,7 @@ public class ItVerbundConverter implements Converter {
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object value) {
 		ServerInitializer.inheritVeriniceContextState();
 		ITVerbund itVerbund = (ITVerbund) value;
-		return (itVerbund==null) ? null : itVerbund.getTitel();
+		return (itVerbund==null) ? null : itVerbund.getTitle();
 	}
 
 }

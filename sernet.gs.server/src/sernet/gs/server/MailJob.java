@@ -239,7 +239,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		String titleAndDate(MassnahmenUmsetzung mu, boolean isCompletion)
 		{
 			StringBuffer sb = new StringBuffer();
-			sb.append(mu.getTitel());
+			sb.append(mu.getTitle());
 			sb.append(" (");
 			Calendar c = Calendar.getInstance();
 			Date d = (isCompletion ? mu.getUmsetzungBis() : mu.getNaechsteRevision());
@@ -265,7 +265,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			String dateString = mu.getUmsetzungBis() != null 
 									? dateFormat.format(mu.getUmsetzungBis())
 									: "<kein Datum>";
-			l.add(NLS.bind(MailMessages.MailJob_3, dateString + " " + mu.getTitel()));
+			l.add(NLS.bind(MailMessages.MailJob_3, dateString + " " + mu.getTitle()));
 		}
 		
 		void addRevisionExpirationEvent(MassnahmenUmsetzung mu)
@@ -280,7 +280,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			String dateString = mu.getNaechsteRevision() != null
 								? dateFormat.format(mu.getNaechsteRevision())
 								: "<kein Datum>";
-			l.add(NLS.bind(MailMessages.MailJob_4, dateString + " " + mu.getTitel()));
+			l.add(NLS.bind(MailMessages.MailJob_4, dateString + " " + mu.getTitle()));
 		}
 		
 		void addMeasureModifiedEvent(MassnahmenUmsetzung mu)
@@ -293,7 +293,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				measureModificationEvents.put(cte, l);
 			}
 			
-			l.add("\t" + mu.getTitel() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			l.add("\t" + mu.getTitle() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
 		void addMeasureAssignmentEvent(MassnahmenUmsetzung mu)
@@ -306,7 +306,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 				measureAssignmentEvents.put(cte, l);
 			}
 			
-			l.add("\t" + mu.getTitel() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			l.add("\t" + mu.getTitle() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
 		MimeMessage createMailMessage() throws MessagingException
@@ -327,21 +327,21 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			
 			for (Map.Entry<CnATreeElement, List<String>> e : globalExpirationEvents.entrySet())
 			{
-				sb.append(NLS.bind(MailMessages.MailJob_8, e.getKey().getTitel()));
+				sb.append(NLS.bind(MailMessages.MailJob_8, e.getKey().getTitle()));
 				for (String s : e.getValue())
 					sb.append(s);
 			}
 			
 			for (Map.Entry<CnATreeElement, List<String>> e : measureModificationEvents.entrySet())
 			{
-				sb.append(NLS.bind(MailMessages.MailJob_9, e.getKey().getTitel()));
+				sb.append(NLS.bind(MailMessages.MailJob_9, e.getKey().getTitle()));
 				for (String s : e.getValue())
 					sb.append(s);
 			}
 			
 			for (Map.Entry<CnATreeElement, List<String>> e : measureAssignmentEvents.entrySet())
 			{
-				sb.append(NLS.bind(MailMessages.MailJob_10, e.getKey().getTitel()));
+				sb.append(NLS.bind(MailMessages.MailJob_10, e.getKey().getTitle()));
 				for (String s : e.getValue())
 					sb.append(s);
 			}
