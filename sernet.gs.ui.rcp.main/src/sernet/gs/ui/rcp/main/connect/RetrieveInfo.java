@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.connect;
 
+import java.io.Serializable;
+
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 
@@ -26,7 +28,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
-public class RetrieveInfo {
+public class RetrieveInfo implements Serializable{
 
 	boolean properties = false;
 	
@@ -41,6 +43,12 @@ public class RetrieveInfo {
 	boolean children = false;
 	
 	boolean childrenProperties = false;
+	
+	private boolean grandchildren = false;
+	
+	boolean parent = false;
+	
+	boolean siblings = false;
 	
 	boolean innerJoin = false;
 
@@ -132,6 +140,33 @@ public class RetrieveInfo {
 		return this;
 	}
 	
+	public RetrieveInfo setGrandchildren(boolean grandchildren) {
+		this.grandchildren = grandchildren;
+		return this;
+	}
+
+	public boolean isGrandchildren() {
+		return grandchildren;
+	}
+
+	public boolean isParent() {
+		return parent;
+	}
+
+	public RetrieveInfo setParent(boolean parent) {
+		this.parent = parent;
+		return this;
+	}
+
+	public boolean isSiblings() {
+		return siblings;
+	}
+
+	public RetrieveInfo setSiblings(boolean siblings) {
+		this.siblings = siblings;
+		return this;
+	}
+
 	/**
 	 * @return true if inner joins are used
 	 */
