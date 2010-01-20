@@ -33,6 +33,7 @@ import org.hibernate.StaleObjectStateException;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -46,6 +47,7 @@ import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
+import sernet.verinice.iso27k.model.IISO27kElement;
 
 /**
  * Editor for all BSI elements with attached HUI entities.
@@ -134,12 +136,13 @@ public class BSIElementEditor extends EditorPart {
 			firePropertyChange(IEditorPart.PROP_DIRTY);
 
 			// notify all views of change:
-			CnAElementFactory.getLoadedModel().childChanged(cnAElement.getParent(), cnAElement);
+			CnAElementFactory.getModel(cnAElement).childChanged(cnAElement.getParent(), cnAElement);
 
 			// cause complete refresh, necessary for viewers to call getchildren
 			// etc.
-			if (completeRefresh)
-				CnAElementFactory.getLoadedModel().refreshAllListeners(IBSIModelListener.SOURCE_EDITOR);
+			if (completeRefresh) {			
+				CnAElementFactory.getModel(cnAElement).refreshAllListeners(IBSIModelListener.SOURCE_EDITOR);
+			}
 
 		} catch (StaleObjectStateException se) {
 			// close editor, loosing changes:

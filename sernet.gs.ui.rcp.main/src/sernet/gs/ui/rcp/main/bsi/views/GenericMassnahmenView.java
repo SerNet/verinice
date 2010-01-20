@@ -272,7 +272,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 			this.elements = elements;
 
 			for (ITVerbund c : elements)
-				combo.add(c.getTitel());
+				combo.add(c.getTitle());
 		}
 
 		/**
@@ -288,7 +288,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 		 */
 		void compoundAdded(ITVerbund compound) {
 			elements.add(compound);
-			combo.add(compound.getTitel());
+			combo.add(compound.getTitle());
 		}
 
 		/**
@@ -352,12 +352,12 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 					elements.set(i, compound);
 					if (combo.getSelectionIndex() == i + 1)
 					{
-						combo.setItem(i + 1, compound.getTitel());
+						combo.setItem(i + 1, compound.getTitle());
 						combo.select(i + 1);
 					}
 					else
 					{
-						combo.setItem(i + 1, compound.getTitel());
+						combo.setItem(i + 1, compound.getTitle());
 					}
 					
 					return;
@@ -781,7 +781,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 	}
 
 	public final void compoundAdded(final ITVerbund compound) {
-		log.debug("handling added compound: " + compound.getTitel());
+		log.debug("handling added compound: " + compound.getTitle());
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				compoundChoser.compoundAdded(compound);
@@ -790,7 +790,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 	}
 
 	public final void compoundRemoved(final ITVerbund compound) {
-		log.debug("handling removed compound: " + compound.getTitel());
+		log.debug("handling removed compound: " + compound.getTitle());
 
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
@@ -800,7 +800,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 	}
 
 	public final void compoundChanged(final ITVerbund compound) {
-		log.debug("handling changed compound: " + compound.getTitel());
+		log.debug("handling changed compound: " + compound.getTitle());
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				compoundChoser.compoundChanged(compound);

@@ -142,9 +142,9 @@ public class RelationView extends ViewPart {
 					return (relation != null) ? relation.getReversename() : "ist nötig für";
 			case 2:
 				if (isDownwardLink(link))
-					return link.getDependency().getTitel();
+					return link.getDependency().getTitle();
 				else
-					return link.getDependant().getTitel();
+					return link.getDependant().getTitle();
 			default:
 				return "";
 			}
@@ -436,7 +436,7 @@ public class RelationView extends ViewPart {
 	 */
 	private void setNewInput(CnATreeElement elmt) {
 		loadLinks(elmt);
-		setViewTitle("Relationen für: " + elmt.getTitel());
+		setViewTitle("Relationen für: " + elmt.getTitle());
 	}
 
 	private void setViewTitle(String title) {

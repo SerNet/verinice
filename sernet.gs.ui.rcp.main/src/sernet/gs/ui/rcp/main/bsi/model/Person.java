@@ -73,7 +73,7 @@ implements IBSIStrukturElement {
 	}
 	
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		if (getEntity() == null)
 			return ""; //$NON-NLS-1$
 		

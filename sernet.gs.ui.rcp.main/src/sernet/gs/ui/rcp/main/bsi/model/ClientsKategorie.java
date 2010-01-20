@@ -33,7 +33,7 @@ public class ClientsKategorie extends CnATreeElement
 	}
 
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return "IT-Systeme: Clients";
 	}
 	

@@ -20,7 +20,7 @@ package sernet.gs.ui.rcp.main.bsi.model;
 import java.util.Date;
 
 public interface IMassnahmeUmsetzung {
-	public String getTitel();
+	public String getTitle();
 
 	public String getUmsetzung() ;
 

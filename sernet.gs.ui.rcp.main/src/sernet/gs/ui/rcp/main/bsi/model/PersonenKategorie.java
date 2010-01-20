@@ -32,7 +32,7 @@ public class PersonenKategorie extends CnATreeElement implements IBSIStrukturKat
 		
 	}
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return "Mitarbeiter";
 	}
 	

@@ -138,7 +138,7 @@ public class ChooseITVerbundPage extends WizardPage {
 			itverbundCombo.removeAll();
 
 			for (ITVerbund c : itverbuende)
-				itverbundCombo.add(c.getTitel());
+				itverbundCombo.add(c.getTitle());
 			itverbundCombo.setEnabled(true);
 			itverbundCombo.pack();
 	}

@@ -109,7 +109,7 @@ public class CheckboxTableViewerLabelProvider implements ITableLabelProvider {
 		case 2:
 			return gef.getId();
 		case 3:
-			return gef.getTitel();
+			return gef.getTitle();
 		case 4:
 			return gef.getKategorie();
 		};

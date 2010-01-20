@@ -58,7 +58,7 @@ public class InputHelperFactory {
 						String[] titles = new String[personen.size()];
 						int i=0;
 						for (Person person : personen) {
-							titles[i++] = person.getTitel();
+							titles[i++] = person.getTitle();
 						}
 						return titles.length > 0 
 						? titles

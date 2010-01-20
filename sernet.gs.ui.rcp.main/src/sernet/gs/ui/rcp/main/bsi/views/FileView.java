@@ -298,7 +298,7 @@ public class FileView extends ViewPart {
 				for (final Attachment attachment : attachmentList) {
 					// set transient cna-element-titel
 					if(getCurrentCnaElement()!=null) {
-						attachment.setCnAElementTitel(getCurrentCnaElement().getTitel());
+						attachment.setCnAElementTitel(getCurrentCnaElement().getTitle());
 					}
 					attachment.addListener(new Attachment.INoteChangedListener() {
 						public void noteChanged() {
@@ -360,7 +360,7 @@ public class FileView extends ViewPart {
 		    		
 					Attachment attachment = new Attachment();
 					attachment.setCnATreeElementId(getCurrentCnaElement().getDbId());
-					attachment.setCnAElementTitel(getCurrentCnaElement().getTitel());
+					attachment.setCnAElementTitel(getCurrentCnaElement().getTitle());
 					attachment.setTitel(file.getName());
 					attachment.setDate(Calendar.getInstance().getTime());
 					attachment.setFilePath(selected);

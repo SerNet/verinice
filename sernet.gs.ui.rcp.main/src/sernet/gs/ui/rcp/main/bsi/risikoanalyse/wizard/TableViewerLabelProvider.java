@@ -63,7 +63,7 @@ public class TableViewerLabelProvider implements ITableLabelProvider {
 		case 1:
 			return gef.getId();
 		case 2:
-			return gef.getTitel();
+			return gef.getTitle();
 		case 3:
 			return gef.getAlternativeText();
 		};

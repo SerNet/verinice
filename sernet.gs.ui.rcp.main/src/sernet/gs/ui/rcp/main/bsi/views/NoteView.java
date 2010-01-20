@@ -154,7 +154,7 @@ public class NoteView extends ViewPart {
 			public void run() {
 				Note note = new Note();
 				note.setCnATreeElementId(getCurrentCnaElement().getDbId());
-				note.setCnAElementTitel(getCurrentCnaElement().getTitel());
+				note.setCnAElementTitel(getCurrentCnaElement().getTitle());
 				note.setTitel("neue Notiz");
 				note.addListener(new Note.INoteChangedListener() {
 					public void noteChanged() {
@@ -185,7 +185,7 @@ public class NoteView extends ViewPart {
 					});
 				
 					// set transient cna-element-titel
-					note.setCnAElementTitel(getCurrentCnaElement().getTitel());
+					note.setCnAElementTitel(getCurrentCnaElement().getTitle());
 					Composite composite = new Composite(expandBar, SWT.NONE);
 				    GridLayout layout = new GridLayout(2, false);
 				    layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 4;

@@ -192,7 +192,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	}
 
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return getEntity().getSimpleValue(P_KAPITEL) //$NON-NLS-1$
 				+ " [" + getEntity().getSimpleValue(P_SIEGEL) //$NON-NLS-1$
 				+ "] " //$NON-NLS-1$
@@ -337,7 +337,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	}
 
 	public String getParentTitle() {
-		return getParent().getParent().getTitel();
+		return getParent().getParent().getTitle();
 	}
 
 

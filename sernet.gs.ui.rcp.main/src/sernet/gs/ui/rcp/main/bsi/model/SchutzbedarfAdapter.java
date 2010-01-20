@@ -237,7 +237,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 		try {
 			downwardsTA.enter(downwardElement);
 		} catch (TransactionAbortedException e) {
-			Logger.getLogger(this.getClass()).error("Aborted while determining bottom node for protection requirements on object: " + downwardElement.getTitel(), e);
+			Logger.getLogger(this.getClass()).error("Aborted while determining bottom node for protection requirements on object: " + downwardElement.getTitle(), e);
 			return;
 		}
 

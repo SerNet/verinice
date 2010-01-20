@@ -222,7 +222,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 				boolean confirmed = MessageDialog.openQuestion(composite
 						.getShell(), "Bestätigung",
 						"Wollen Sie die Massnahme mit dem Titel \""
-								+ selectedRisikoMassnahmenUmsetzung.getTitel()
+								+ selectedRisikoMassnahmenUmsetzung.getTitle()
 								+ "\" wirklich löschen?");
 				if (confirmed) {
 					deleteTreeViewerRisikoMassnahmenUmsetzung(selectedRisikoMassnahmenUmsetzung);
@@ -318,7 +318,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 					boolean confirmed = MessageDialog.openQuestion(composite
 							.getShell(), "Bestätigung",
 							"Wollen Sie die Massnahme mit dem Titel \""
-									+ selectedMassnahmenUmsetzung.getTitel()
+									+ selectedMassnahmenUmsetzung.getTitle()
 									+ "\" wirklich löschen?");
 					/* delete */
 					if (confirmed) {
@@ -713,7 +713,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 				Object element) {
 
 			MassnahmenUmsetzung massnahmeUmsetzung = (MassnahmenUmsetzung) element;
-			String title = massnahmeUmsetzung.getTitel();
+			String title = massnahmeUmsetzung.getTitle();
 			Matcher matcher = pattern.matcher(title);
 
 			if (matcher.find()) {

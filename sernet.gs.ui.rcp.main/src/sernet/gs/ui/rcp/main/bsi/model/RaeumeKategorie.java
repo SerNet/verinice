@@ -32,7 +32,7 @@ public class RaeumeKategorie extends CnATreeElement implements IBSIStrukturKateg
 	}
 	
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return "Räume";
 	}
 	

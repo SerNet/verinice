@@ -62,8 +62,8 @@ class CnAElementByTitelSorter extends ViewerSorter {
 					&& e2 instanceof IBSIStrukturElement) {
 //				String k1 = ((IBSIStrukturElement)e1).getKuerzel();
 //				String k2 = ((IBSIStrukturElement)e2).getKuerzel();
-				String k1 = ((IBSIStrukturElement)e1).getKuerzel() + ((CnATreeElement)e1).getTitel();
-				String k2 = ((IBSIStrukturElement)e2).getKuerzel() + ((CnATreeElement)e2).getTitel();
+				String k1 = ((IBSIStrukturElement)e1).getKuerzel() + ((CnATreeElement)e1).getTitle();
+				String k2 = ((IBSIStrukturElement)e2).getKuerzel() + ((CnATreeElement)e2).getTitle();
 				return numComp.compare(k1, k2);
 			}
 

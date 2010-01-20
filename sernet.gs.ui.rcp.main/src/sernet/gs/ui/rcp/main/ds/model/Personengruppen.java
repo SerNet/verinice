@@ -39,7 +39,7 @@ public class Personengruppen extends CnATreeElement
 	}
 	
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return getEntityType().getName();
 	}
 

@@ -38,7 +38,7 @@ public class Datenverarbeitung extends CnATreeElement
 	}
 	
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return getEntityType().getName();
 	}
 

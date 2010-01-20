@@ -101,7 +101,7 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 		gridTextName.verticalAlignment = SWT.CENTER;
 		gridTextName.grabExcessHorizontalSpace = true;
 		textName.setLayoutData(gridTextName);
-		textName.setText(notNull(risikoMassnahmenUmsetzung.getTitel()));
+		textName.setText(notNull(risikoMassnahmenUmsetzung.getTitle()));
 
 		/* label description */
 		final Label labelDescription = new Label(container, SWT.NONE);

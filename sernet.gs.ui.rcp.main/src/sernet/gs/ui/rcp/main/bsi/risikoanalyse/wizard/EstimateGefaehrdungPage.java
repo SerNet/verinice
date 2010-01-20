@@ -471,7 +471,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 				gefaehrdungTitle = gefaehrdung.getTitel();
 			} else if (element instanceof GefaehrdungsUmsetzung) {
 				GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) element;
-				gefaehrdungTitle = gefaehrdung.getTitel();
+				gefaehrdungTitle = gefaehrdung.getTitle();
 			}
 
 			Matcher matcher = pattern.matcher(gefaehrdungTitle);

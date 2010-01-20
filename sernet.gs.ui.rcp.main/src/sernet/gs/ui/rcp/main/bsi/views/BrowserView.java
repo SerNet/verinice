@@ -193,7 +193,7 @@ public class BrowserView extends ViewPart {
 						+ "<link REL=\"stylesheet\" media=\"screen\" HREF=\""
 						+ cssDir + "\"/>"
 						+ "</head><body><div id=\"content\"><h1>");
-		buf.append(ums.getId() + " " + ums.getTitel());
+		buf.append(ums.getId() + " " + ums.getTitle());
 		buf.append("</h1><p>");
 		buf.append("");
 		buf.append(ums.getDescription().replaceAll("\\n", "<br/>"));

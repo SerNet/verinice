@@ -100,7 +100,7 @@ public class BSIModelViewLabelProvider extends LabelProvider {
 			if (obj instanceof IBSIStrukturElement) {
 				IBSIStrukturElement el = (IBSIStrukturElement) obj;
 				CnATreeElement el2 = (CnATreeElement) obj;
-				return el.getKuerzel() + " " + el2.getTitel();
+				return el.getKuerzel() + " " + el2.getTitle();
 			}
 
 			else if (obj instanceof LinkKategorie)
@@ -112,7 +112,7 @@ public class BSIModelViewLabelProvider extends LabelProvider {
 			}
 
 			CnATreeElement el = (CnATreeElement) obj;
-			return el.getTitel();
+			return el.getTitle();
 		}
 
 }

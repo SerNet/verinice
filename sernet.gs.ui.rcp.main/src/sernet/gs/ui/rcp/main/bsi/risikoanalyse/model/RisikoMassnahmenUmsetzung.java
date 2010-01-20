@@ -102,7 +102,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 * @return - name of the RisikoMassnahmenUmsetzung
 	 */
 	public String getText() {
-		return this.getTitel();
+		return this.getTitle();
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	 * @return - title of the RisikoMassnahmenUmsetzung
 	 */
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return super.getName();
 	}
 	

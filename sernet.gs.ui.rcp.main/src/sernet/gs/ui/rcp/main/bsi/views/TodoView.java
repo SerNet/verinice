@@ -92,7 +92,7 @@ public class TodoView extends GenericMassnahmenView {
 			case 4: // zielobjekt
 				return mn.getParentTitle();
 			case 5: // title
-				return mn.getTitel();
+				return mn.getTitle();
 			}
 			return ""; //$NON-NLS-1$
 		}

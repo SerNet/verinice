@@ -80,7 +80,7 @@ public class FileDropTarget extends DropTargetAdapter {
 		
 		Attachment attachment = new Attachment();
 		attachment.setCnATreeElementId(view.getCurrentCnaElement().getDbId());
-		attachment.setCnAElementTitel(view.getCurrentCnaElement().getTitel());
+		attachment.setCnAElementTitel(view.getCurrentCnaElement().getTitle());
 		attachment.setTitel(file.getName());
 		attachment.setDate(Calendar.getInstance().getTime());
 		attachment.setFilePath(selected);

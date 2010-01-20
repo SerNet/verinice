@@ -55,7 +55,7 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 
 	
 
-	public String getTitel() {
+	public String getTitle() {
 		return titel;
 	}
 
@@ -139,7 +139,7 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 		return (this == obj
 				|| (obj instanceof TodoViewItem
 					&& this.getParentTitle().equals(((TodoViewItem)obj).getParentTitle())
-					&& this.titel.equals(((TodoViewItem)obj).getTitel())
+					&& this.titel.equals(((TodoViewItem)obj).getTitle())
 					)
 				);
 	}
@@ -170,13 +170,13 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 	 */
 	public int compareTo(TodoViewItem other) {
 		int result = 1;
-		if(other!=null && other.getTitel()!=null) {
-			if(this.getTitel()==null) {
+		if(other!=null && other.getTitle()!=null) {
+			if(this.getTitle()==null) {
 				result = -1;
 			} else {
-				result = this.getTitel().compareTo(other.getTitel());
+				result = this.getTitle().compareTo(other.getTitle());
 			}
-		} else if(this.getTitel()==null) {
+		} else if(this.getTitle()==null) {
 			result = 0;		
 		}
 		return result;

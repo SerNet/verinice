@@ -134,7 +134,7 @@ public class DocumentView extends ViewPart {
 			public String getText(Object element) {
 				if (element instanceof DocumentReference) {
 					DocumentReference docref = (DocumentReference) element;
-					return docref.getCnaTreeElement().getTitel();
+					return docref.getCnaTreeElement().getTitle();
 				}
 				return "";
 			}
@@ -153,7 +153,7 @@ public class DocumentView extends ViewPart {
 				if (e1 instanceof DocumentReference && e2 instanceof DocumentReference) {
 					DocumentReference ref1 = (DocumentReference) e1;
 					DocumentReference ref2 = (DocumentReference) e2;
-					return ref1.getCnaTreeElement().getTitel().compareTo(ref2.getCnaTreeElement().getTitel());
+					return ref1.getCnaTreeElement().getTitle().compareTo(ref2.getCnaTreeElement().getTitle());
 				}
 				return 0;
 			}

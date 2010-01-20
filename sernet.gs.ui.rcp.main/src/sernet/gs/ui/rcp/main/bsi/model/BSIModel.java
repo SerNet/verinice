@@ -74,7 +74,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 	}
 
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return "GS-Modellierung";
 	}
 
@@ -127,6 +127,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		}
 	}
 
+	@Override
 	public void refreshAllListeners(Object source) {
 		Logger.getLogger(this.getClass()).debug("Model refresh to all listeners.");
 		for (IBSIModelListener listener : getListeners()) {
@@ -336,7 +337,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		if (child == null)
 			return;
 		
-		Logger.getLogger(this.getClass()).debug("Added child in database: " + child.getTitel());
+		Logger.getLogger(this.getClass()).debug("Added child in database: " + child.getTitle());
 		for (IBSIModelListener listener : getListeners()) {
 			listener.databaseChildAdded(child);
 		}

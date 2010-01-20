@@ -180,7 +180,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 			removeChild((CnATreeElement) child);
 	}
 
-	public String getTitel() {
+	public String getTitle() {
 		return  "[" + getAlternative() + "] " + 
 			getEntity().getSimpleValue(PROP_TITEL)
 			+ " (" + getAlternativeText() + ")";

@@ -70,7 +70,7 @@ public class Raum extends CnATreeElement
 	}
 	
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
 	}
 

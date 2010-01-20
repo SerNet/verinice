@@ -32,7 +32,7 @@ public class NKKategorie extends CnATreeElement implements IBSIStrukturKategorie
 		
 	}
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return "Netzverbindungen";
 	}
 	

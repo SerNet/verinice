@@ -35,7 +35,7 @@ public class AnwendungenKategorie extends CnATreeElement
 	}
 	
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return "Anwendungen";
 	}
 	

@@ -85,7 +85,6 @@ public class ThreadSafeViewerUpdate {
 			viewer.refresh();
 		}
 		else {
-			
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					if (viewer != null && !viewer.getControl().isDisposed())

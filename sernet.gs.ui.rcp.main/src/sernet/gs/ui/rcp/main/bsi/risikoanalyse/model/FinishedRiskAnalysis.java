@@ -34,7 +34,7 @@ public class FinishedRiskAnalysis extends CnATreeElement  {
 	
 
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return "Risikoanalyse";
 	}
 
