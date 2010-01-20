@@ -22,9 +22,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -33,10 +40,15 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
+import sernet.gs.ui.rcp.main.bsi.views.Messages;
+import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction;
+import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction.StatusResult;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.IInternalServer;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
 
 /**
@@ -194,6 +206,122 @@ public class Activator extends AbstractUIPlugin {
 	public IInternalServer getInternalServer()
 	{
 		return internalServer;
+	}
+
+	public static void checkDbVersion() throws CommandException {
+		final boolean[] done = new boolean[1];
+		done[0] = false;
+		Thread timeout = new Thread() {
+			@Override
+			public void run() {
+				long startTime = System.currentTimeMillis();
+				while (!done[0]) {
+					try {
+						sleep(1000);
+						long now = System.currentTimeMillis();
+						if (now - startTime > 30000) {
+							ExceptionUtil.log(new Exception("Das hier dauert und dauert..."), 
+									"Die Migration der Datenbank auf einen neue Version kann einige Zeit in Anspruch nehmen. Wenn diese Aktion länger als 5 " 
+									+ "Minuten dauert, sollten Sie allerdings ihre Datenbank von Derby nach Postgres migrieren. Falls das " 
+									+ "schon geschehen ist, sollten Sie ihre Postgres / MySQL-DB tunen. In der FAQ auf http://verinice.org/ finden "
+									+ "Sie weitere Hinweise. Ab einer gewissen Größe des IT-Verbundes wird der Einsatz des Verinice-Servers " 
+									+ "unverzichtbar. Auch hierzu finden Sie weitere Informationen auf unserer Webseite.");
+							return;
+						}
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+		};
+		timeout.start();
+		try {
+			DbVersion command = new DbVersion(DbVersion.COMPATIBLE_CLIENT_VERSION);
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
+			done[0] = true;
+		} catch (CommandException e) {
+			done[0] = true;
+			throw e;
+		} catch (RuntimeException re) {
+			done[0] = true;
+			throw re;
+		}
+	}
+
+	public static void showDerbyWarning(Shell shell) {
+		if (getDefault().getPluginPreferences().getBoolean(
+				PreferenceConstants.FIRSTSTART)
+			) {
+			Preferences prefs = getDefault().getPluginPreferences();
+			prefs.setValue(PreferenceConstants.FIRSTSTART,
+					false);			
+		
+			if (getDefault().getPluginPreferences().getString(
+				PreferenceConstants.DB_DRIVER).equals(
+				PreferenceConstants.DB_DRIVER_DERBY)
+				) {
+	
+			// Do not show dialog if remote server is configured instead of internal server.
+			if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER))
+				return;
+			
+			MessageDialog.openInformation(
+							new Shell(shell),
+							"Datenbank nicht konfiguriert",
+							"HINWEIS: Sie haben keine Datenbank konfiguriert. "
+									+ "Verinice verwendet die integrierte "
+									+ "Derby-Datenbank. Alternativ können Sie in den "
+									+ "Einstellungen eine externe Datenbank angeben (Postgres / MySQL).\n\n"
+									+ "Dieser Hinweis wird nicht erneut angezeigt.");
+			
+			}
+		}
+	}
+
+	/**
+	 * Tries to start the internal server via a workspace thread
+	 * and returns a result object for that operation.
+	 * 
+	 * @param mutex 
+	 * 
+	 * @return
+	 */
+	public static BSIModelViewOpenDBAction.StatusResult startServer(ISchedulingRule mutex)
+	{
+		final BSIModelViewOpenDBAction.StatusResult result = new BSIModelViewOpenDBAction.StatusResult();
+		final IInternalServer internalServer = getDefault().getInternalServer();
+		if (!internalServer.isRunning())
+		{
+			WorkspaceJob job = new WorkspaceJob(Messages.BsiModelView_4) {
+				public IStatus runInWorkspace(final IProgressMonitor monitor) {
+					inheritVeriniceContextState();
+					
+					try {
+						monitor.beginTask("Starte internen Server ...", IProgressMonitor.UNKNOWN);
+						internalServer.start();
+						result.status = Status.OK_STATUS;
+					} catch (RuntimeException re) {
+						ExceptionUtil
+								.log(re,
+										"Konnte internen Server nicht starten.");
+						result.status = Status.CANCEL_STATUS;
+					} catch (Exception e) {
+						ExceptionUtil
+							.log(e,
+								"Konnte internen Server nicht starten.");
+						result.status = Status.CANCEL_STATUS;
+					}
+					
+					return result.status;
+				}
+			};
+			job.setRule(mutex);
+			job.setUser(true);
+			job.schedule();
+		}
+		else
+			result.status = Status.OK_STATUS;
+		
+		return result;
 	}
 
 	/**
