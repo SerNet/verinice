@@ -63,6 +63,7 @@ import sernet.gs.ui.rcp.main.bsi.views.TodoView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 import sernet.verinice.iso27k.rcp.CatalogView;
+import sernet.verinice.iso27k.rcp.ISMView;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of
@@ -96,6 +97,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private OpenViewAction openDSViewAction;
 
 	private OpenViewAction openBSIModelViewAction;
+	
+	private OpenViewAction openISMViewAction;
 
 	private OpenViewAction openTodoViewAction;
 
@@ -214,6 +217,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		openBSIModelViewAction = new OpenViewAction(window, "GS Modell",
 				BsiModelView.ID, ImageCache.VIEW_BSIMODEL);
 		register(openBSIModelViewAction);
+		
+		openISMViewAction = new OpenViewAction(window, "Information Security Model",
+				ISMView.ID, ImageCache.VIEW_BSIMODEL);
+		register(openISMViewAction);
 
 		openDSViewAction = new OpenViewAction(window, "Datenschutz",
 				DSModelView.ID, ImageCache.VIEW_DSMODEL);
@@ -351,6 +358,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		// .create(window);
 
 		viewsMenu.add(openBSIModelViewAction);
+		viewsMenu.add(openISMViewAction);
 		viewsMenu.add(openBSIBrowserAction);
 		viewsMenu.add(openBSIViewAction);
 		viewsMenu.add(openTodoViewAction);
@@ -393,6 +401,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		myToolbar.add(new Separator());
 		myToolbar.add(openBSIViewAction);
 		myToolbar.add(openBSIModelViewAction);
+		myToolbar.add(openISMViewAction);
 		myToolbar.add(openBSIBrowserAction);
 		myToolbar.add(openTodoViewAction);
 		myToolbar.add(openAuditViewAction);
