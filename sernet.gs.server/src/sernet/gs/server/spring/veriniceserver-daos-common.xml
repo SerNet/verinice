@@ -339,6 +339,87 @@
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	
+	<!-- ISO 27000 Daos ================================================================================= -->
+	
+	<bean id="ISO27KModelDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.ISO27KModel</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="organizationDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Organization</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="assetGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.AssetGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="assetDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Asset</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="controlGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.ControlGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="controlDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Control</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="auditGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.AuditGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="auditDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Audit</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="exceptionGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.ExceptionGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="exceptionDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Exception</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="personGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.PersonGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="personIsoDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.PersonIso</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="requirementGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.RequirementGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="requirementDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Requirement</value>
+		</constructor-arg>
+	</bean>
 
 	<!-- END dao definitions ============================================================================ -->
 

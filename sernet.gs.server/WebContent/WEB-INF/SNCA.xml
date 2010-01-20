@@ -2741,6 +2741,120 @@ Template:
         />
         
     </huientity>
+    <!-- ISO27000 Elements -->
+    <huientity
+        name="Organization"
+        id="org" >
+        <huiproperty
+            name="Title"
+            id="org_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="org_abbr" />
+    </huientity>
+    <huientity
+        name="Asset-Group"
+        id="assetgroup" >
+        <huiproperty
+            name="Title"
+            id="assetgroup_name" />
+    </huientity>
+    <huientity
+        name="Asset"
+        id="asset" >
+        <huiproperty
+            name="Title"
+            id="asset_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="asset_abbr" />
+    </huientity>
+    <huientity
+        name="Person-Group"
+        id="persongroup" >
+        <huiproperty
+            name="Title"
+            id="persongroup_name" />
+    </huientity>
+    <huientity
+        name="Person"
+        id="person-iso" >
+        <huiproperty
+            name="Title"
+            id="person_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="person_abbr" />
+    </huientity>
+    <huientity
+        name="Audit-Group"
+        id="auditgroup" >
+        <huiproperty
+            name="Title"
+            id="auditgroup_name" />
+    </huientity>
+    <huientity
+        name="Audit"
+        id="audit" >
+        <huiproperty
+            name="Title"
+            id="audit_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="audit_abbr" />
+    </huientity>
+    <huientity
+        name="Control-Group"
+        id="controlgroup" >
+        <huiproperty
+            name="Title"
+            id="controlgroup_name" />
+    </huientity>
+    <huientity
+        name="Control"
+        id="control" >
+        <huiproperty
+            name="Title"
+            id="control_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="control_abbr" />
+    </huientity>
+    <huientity
+        name="Exception-Group"
+        id="exceptiongroup" >
+        <huiproperty
+            name="Title"
+            id="exceptiongroup_name" />
+    </huientity>
+    <huientity
+        name="Exception"
+        id="exception" >
+        <huiproperty
+            name="Title"
+            id="exception_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="exception_abbr" />
+    </huientity>
+    <huientity
+        name="Requirement-Group"
+        id="requirementgroup" >
+        <huiproperty
+            name="Title"
+            id="requirementgroup_name" />
+    </huientity>
+    <huientity
+        name="Requirement"
+        id="requirement" >
+        <huiproperty
+            name="Title"
+            id="requirement_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="requirement_abbr" />
+    </huientity>
+    
     <huientity
         id="note"
         name="Notiz">        
