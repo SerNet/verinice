@@ -42,6 +42,8 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.iso27k.model.IISO27kElement;
+import sernet.verinice.iso27k.model.IISO27kRoot;
 
 /**
  * Delete items on user request.
@@ -72,11 +74,24 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 		Iterator iterator = selection.iterator();
 		Object object;
 		while (iterator.hasNext()) {
-			if ((object = iterator.next()) instanceof ITVerbund) {
+			object = iterator.next();
+			if (object instanceof ITVerbund || object instanceof IISO27kRoot) {
 				if (!goahead)
 					return;
 
-				if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), "IT-Verbund wirklich löschen?", "Sie haben den IT-Verbund " + ((ITVerbund) object).getTitel() + " zum Löschen markiert. " + "Das wird alle darin enthaltenen Objekte entfernen " + "(Server, Clients, Personen...)\n\n" + "Wirklich wirklich löschen, wirklich?")) {
+				String title="Objekt wirklich löschen";
+				String message = "Sool das Objekt wirklich gelöscht werden?";
+				if(object instanceof ITVerbund) {
+					title = "IT-Verbund wirklich löschen?";
+					message = "Sie haben den IT-Verbund " + ((ITVerbund) object).getTitle() + " zum Löschen markiert. " + "Das wird alle darin enthaltenen Objekte entfernen " + "(Server, Clients, Personen...)\n\n" + "Wirklich wirklich löschen, wirklich?";
+				}
+				if(object instanceof IISO27kRoot) {
+					title = "Really Delete Organization?";
+					message = "Organization " + ((IISO27kRoot) object).getTitle() + " is maked for deletion. All elements i8n this organization will bew deleted. Do you really want't to delete organization and all it's elements?";
+				}
+				
+				
+				if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class),title, message )) {
 					skipQuestion = true;
 					goahead = false;
 					return;
@@ -95,7 +110,13 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 					for (Iterator iter = selection.iterator(); iter.hasNext();) {
 						Object sel = (Object) iter.next();
 
-						if (sel instanceof IBSIStrukturElement || sel instanceof BausteinUmsetzung || sel instanceof FinishedRiskAnalysis || sel instanceof GefaehrdungsUmsetzung || sel instanceof ITVerbund) {
+						if (sel instanceof IBSIStrukturElement 
+							|| sel instanceof BausteinUmsetzung 
+							|| sel instanceof FinishedRiskAnalysis 
+							|| sel instanceof GefaehrdungsUmsetzung 
+							|| sel instanceof ITVerbund
+							|| sel instanceof IISO27kRoot
+							|| sel instanceof IISO27kElement) {
 
 							// do not delete last ITVerbund:
 							try {
@@ -110,7 +131,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 							CnATreeElement el = (CnATreeElement) sel;
 
 							try {
-								monitor.setTaskName("Lösche: " + el.getTitel());
+								monitor.setTaskName("Lösche: " + el.getTitle() );
 								el.getParent().removeChild(el);
 								CnAElementHome.getInstance().remove(el);
 								monitor.worked(1);
@@ -124,7 +145,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
 					// notify all listeners:
 					CnATreeElement child = (CnATreeElement) selection.iterator().next();
-					CnAElementFactory.getLoadedModel().databaseChildRemoved(child);
+					CnAElementFactory.getModel(child).databaseChildRemoved(child);
 				}
 			});
 		} catch (InvocationTargetException e) {
