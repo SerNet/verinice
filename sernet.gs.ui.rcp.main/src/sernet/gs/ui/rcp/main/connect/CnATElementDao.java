@@ -72,7 +72,6 @@ public class CnATElementDao extends HibernateBaseDao<CnATreeElement, Integer> {
 	 */
 	@Override
 	public CnATreeElement merge(CnATreeElement entity) {
-		checkRights(entity);
 		return super.merge(entity);
 	}
 
@@ -85,7 +84,10 @@ public class CnATElementDao extends HibernateBaseDao<CnATreeElement, Integer> {
 	 */
 	@Override
 	public CnATreeElement merge(CnATreeElement entity, boolean fireChange) {
-		checkRights(entity);
+		// check rights only while updating
+		if(entity.getDbId()!=null) {
+			checkRights(entity);
+		}
 		return super.merge(entity, fireChange);
 	}
 
