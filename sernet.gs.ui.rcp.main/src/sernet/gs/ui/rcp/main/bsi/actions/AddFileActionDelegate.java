@@ -61,7 +61,7 @@ public class AddFileActionDelegate implements IObjectActionDelegate {
 		    		
 					Attachment attachment = new Attachment();
 					attachment.setCnATreeElementId(element.getDbId());
-					attachment.setCnAElementTitel(element.getTitel());
+					attachment.setCnAElementTitel(element.getTitle());
 					attachment.setTitel(file.getName());
 					attachment.setDate(Calendar.getInstance().getTime());
 					attachment.setFilePath(selected);

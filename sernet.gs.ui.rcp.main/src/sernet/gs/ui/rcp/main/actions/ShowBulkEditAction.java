@@ -102,7 +102,7 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 				.isWriteAllowed((CnATreeElement) next);
 				if (!writeallowed) {
 					MessageDialog.openWarning(window.getShell(),"Keine Berechtigung", "Sie haben nicht die nötigen Schreibrechte um dieses Objekt zu verändern: " +
-							((CnATreeElement)next).getTitel());
+							((CnATreeElement)next).getTitle());
 					setEnabled(false);
 					return;
 				}
@@ -141,7 +141,7 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 						elmt.getEntity().getEntityType());
 				selectedElements.add(elmt);
 				Logger.getLogger(this.getClass()).debug(
-						"Adding to bulk edit: " + elmt.getTitel());
+						"Adding to bulk edit: " + elmt.getTitle());
 			}
 			clazz=null;
 		}

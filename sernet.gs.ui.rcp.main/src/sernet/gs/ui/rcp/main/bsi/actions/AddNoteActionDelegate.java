@@ -43,7 +43,7 @@ public class AddNoteActionDelegate implements IObjectActionDelegate {
 			if(sel instanceof CnATreeElement) {
 				Note note = new Note();
 				note.setCnATreeElementId(((CnATreeElement)sel).getDbId());
-				note.setCnAElementTitel(((CnATreeElement)sel).getTitel());
+				note.setCnAElementTitel(((CnATreeElement)sel).getTitle());
 				note.setTitel("neue Notiz");
 				EditorFactory.getInstance().openEditor(note);
 			}

@@ -97,7 +97,7 @@ public class ConfigurationAction implements IObjectActionDelegate {
 					elmt = (Person) o;
 
 				Logger.getLogger(this.getClass()).debug(
-						"Loading configuration for user " + elmt.getTitel());
+						"Loading configuration for user " + elmt.getTitle());
 				LoadConfiguration command = new LoadConfiguration(elmt);
 				command = ServiceFactory.lookupCommandService().executeCommand(
 						command);
