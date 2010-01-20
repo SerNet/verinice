@@ -28,7 +28,7 @@ public class NullModel extends BSIModel {
 		}
 	
 		@Override
-		public String getTitel() {
+		public String getTitle() {
 			return "";
 		}
 		

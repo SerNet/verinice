@@ -24,7 +24,7 @@ public class CnAPlaceholder extends CnATreeElement {
 	}
 
 	@Override
-	public String getTitel() {
+	public String getTitle() {
 		return "DB-Verbindung: geschlossen";
 	}
 

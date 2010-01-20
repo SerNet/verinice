@@ -197,7 +197,7 @@ public class CnALink implements Serializable {
 	}
 
 	public String getTitle() {
-		return typeTitle() + dependency.getTitel();
+		return typeTitle() + dependency.getTitle();
 	}
 
 	private String typeTitle() {
