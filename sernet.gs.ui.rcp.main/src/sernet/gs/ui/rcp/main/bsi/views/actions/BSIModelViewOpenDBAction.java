@@ -22,11 +22,9 @@ import java.io.IOException;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Shell;
 
@@ -39,8 +37,6 @@ import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.service.IInternalServer;
 
 /**
  * 
@@ -60,33 +56,27 @@ public class BSIModelViewOpenDBAction extends Action {
 		this.bsiView = bsiView;
 		shell = viewer.getControl().getShell();
 		setToolTipText("Öffnet eine Verbindung zur konfigurierten Datenbank.");
-		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(
-				ImageCache.DBCONNECT));
+		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DBCONNECT));
 	}
 
 	@Override
 	public void run() {
-		showDerbyWarning();
+		Activator.showDerbyWarning(shell);
 		//CnAElementFactory.getInstance().closeModel();
 		try {
 			CnAWorkspace.getInstance().createDatabaseConfig();
 		} catch (IllegalStateException e) {
-			ExceptionUtil.log(e,
-					"Fehler beim Aktualisieren der DB-Konfiguration.");
-			
+			ExceptionUtil.log(e, "Fehler beim Aktualisieren der DB-Konfiguration.");		
 			return;
-		} catch (IOException ioe)
-		{
-			ExceptionUtil.log(ioe,
-				"Fehler beim Aktualisieren der DB-Konfiguration.");
-			
+		} catch (IOException ioe) {
+			ExceptionUtil.log(ioe, "Fehler beim Aktualisieren der DB-Konfiguration.");		
 			return;
 		}
 		
 		// The methods below are using WorkspaceJobs. The order in which they
 		// are run is guaranteed by the 'mutex' instance.
 		
-		StatusResult result = startServer();
+		StatusResult result = Activator.startServer(mutex);
 		
 		// Since the loading of the model depends on having a running server
 		// a result object is returned which can be used by the worker that load
@@ -95,62 +85,26 @@ public class BSIModelViewOpenDBAction extends Action {
 		createModel(result);
 	}
 
-	private void showDerbyWarning() {
-		if (Activator.getDefault().getPluginPreferences().getBoolean(
-				PreferenceConstants.FIRSTSTART)
-			) {
-			Preferences prefs = Activator.getDefault().getPluginPreferences();
-			prefs.setValue(PreferenceConstants.FIRSTSTART,
-					false);			
-		
-			if (Activator.getDefault().getPluginPreferences().getString(
-				PreferenceConstants.DB_DRIVER).equals(
-				PreferenceConstants.DB_DRIVER_DERBY)
-				) {
-
-			// Do not show dialog if remote server is configured instead of internal server.
-			if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER))
-				return;
-			
-			MessageDialog
-					.openInformation(
-							new Shell(shell),
-							"Datenbank nicht konfiguriert",
-							"HINWEIS: Sie haben keine Datenbank konfiguriert. "
-									+ "Verinice verwendet die integrierte "
-									+ "Derby-Datenbank. Alternativ können Sie in den "
-									+ "Einstellungen eine externe Datenbank angeben (Postgres / MySQL).\n\n"
-									+ "Dieser Hinweis wird nicht erneut angezeigt.");
-			
-			}
-		}
-	}
-	
-
 	private void createModel(final StatusResult serverStartResult) {
 		WorkspaceJob job = new WorkspaceJob(Messages.BsiModelView_0) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				// If server could not be started for whatever reason do not try to
 				// load the model either.
-				if (serverStartResult.status == Status.CANCEL_STATUS)
+				if (serverStartResult.status == Status.CANCEL_STATUS) {
 					return Status.CANCEL_STATUS;
+				}
 				
 				Activator.inheritVeriniceContextState();
 				
 				try {
 					monitor.beginTask("Starte OR-Mapper...", IProgressMonitor.UNKNOWN);
 					monitor.setTaskName("Starte OR-Mapper...");
-					BSIModel model = CnAElementFactory.getInstance()
-							.loadOrCreateModel(new ProgressAdapter(monitor));
+					BSIModel model = CnAElementFactory.getInstance().loadOrCreateModel(new ProgressAdapter(monitor));
 					bsiView.setModel(model);
 				} catch (RuntimeException re) {
-					ExceptionUtil
-							.log(re,
-									"Konnte keine Verbindung zur Datenbank herstellen.");
+					ExceptionUtil.log(re, "Konnte keine Verbindung zur Datenbank herstellen.");
 				} catch (Exception e) {
-					ExceptionUtil
-							.log(e,
-									"Konnte keine Verbindung zur Datenbank herstellen.");
+					ExceptionUtil.log(e, "Konnte keine Verbindung zur Datenbank herstellen.");
 				}
 				return Status.OK_STATUS;
 			}
@@ -160,51 +114,6 @@ public class BSIModelViewOpenDBAction extends Action {
 		job.schedule();
 	}
 
-	/**
-	 * Tries to start the internal server via a workspace thread
-	 * and returns a result object for that operation.
-	 * 
-	 * @return
-	 */
-	private StatusResult startServer()
-	{
-		final StatusResult result = new StatusResult();
-		final IInternalServer internalServer = Activator.getDefault().getInternalServer();
-		if (!internalServer.isRunning())
-		{
-			WorkspaceJob job = new WorkspaceJob(Messages.BsiModelView_4) {
-				public IStatus runInWorkspace(final IProgressMonitor monitor) {
-					Activator.inheritVeriniceContextState();
-					
-					try {
-						monitor.beginTask("Starte internen Server ...", IProgressMonitor.UNKNOWN);
-						internalServer.start();
-						result.status = Status.OK_STATUS;
-					} catch (RuntimeException re) {
-						ExceptionUtil
-								.log(re,
-										"Konnte internen Server nicht starten.");
-						result.status = Status.CANCEL_STATUS;
-					} catch (Exception e) {
-						ExceptionUtil
-							.log(e,
-								"Konnte internen Server nicht starten.");
-						result.status = Status.CANCEL_STATUS;
-					}
-					
-					return result.status;
-				}
-			};
-			job.setRule(mutex);
-			job.setUser(true);
-			job.schedule();
-		}
-		else
-			result.status = Status.OK_STATUS;
-		
-		return result;
-	}
-	
 	/**
 	 * Implementation of {@link ISchedulingRule} which enforces
 	 * that two jobs containing an instance of this rule cannot be
@@ -227,7 +136,7 @@ public class BSIModelViewOpenDBAction extends Action {
 		
 	}
 	
-	static class StatusResult {
-		IStatus status;
+	public static class StatusResult {
+		public IStatus status;
 	}
 }
