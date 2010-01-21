@@ -43,6 +43,7 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -54,6 +55,7 @@ import sernet.gs.ui.rcp.main.service.taskcommands.BulkEditUpdate;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.verinice.iso27k.model.IISO27kElement;
 
 /**
  * Erlaubt das gemeinsame Editieren der Eigenschaften von gleichen, ausgewählten
@@ -84,9 +86,8 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 
 	public void run() {
 		Activator.inheritVeriniceContextState();
-
-		IStructuredSelection selection = (IStructuredSelection) window
-				.getSelectionService().getSelection();
+		
+		IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
 		if (selection == null)
 			return;
 		
@@ -97,9 +98,7 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 			Object next = iterator.next();
 			if (next instanceof CnATreeElement)
 			{
-				boolean writeallowed = CnAElementHome
-				.getInstance()
-				.isWriteAllowed((CnATreeElement) next);
+				boolean writeallowed = CnAElementHome.getInstance().isWriteAllowed((CnATreeElement) next);
 				if (!writeallowed) {
 					MessageDialog.openWarning(window.getShell(),"Keine Berechtigung", "Sie haben nicht die nötigen Schreibrechte um dieses Objekt zu verändern: " +
 							((CnATreeElement)next).getTitle());
@@ -115,7 +114,7 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 		final Class clazz;
 
 		if (selection.getFirstElement() instanceof TodoViewItem) {
-			// prepare list according to selected lightweight todo items:
+				// prepare list according to selected lightweight todo items:
 				for (Iterator iter = selection.iterator(); iter.hasNext();) {
 					TodoViewItem item = (TodoViewItem) iter.next();
 					dbIDs.add(item.getdbId());
@@ -128,8 +127,9 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 			for (Iterator iter = selection.iterator(); iter.hasNext();) {
 				Object o = iter.next();
 				CnATreeElement elmt = null;
-				if (o instanceof CnATreeElement)
+				if (o instanceof CnATreeElement) {
 					elmt = (CnATreeElement) o;
+				}
 				else if (o instanceof DocumentReference) {
 					DocumentReference ref = (DocumentReference) o;
 					elmt = ref.getCnaTreeElement();
@@ -137,54 +137,57 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
 				if (elmt == null)
 					continue;
 				
-				entType = HUITypeFactory.getInstance().getEntityType(
-						elmt.getEntity().getEntityType());
+				entType = HUITypeFactory.getInstance().getEntityType(elmt.getEntity().getEntityType());
 				selectedElements.add(elmt);
-				Logger.getLogger(this.getClass()).debug(
-						"Adding to bulk edit: " + elmt.getTitle());
+				Logger.getLogger(this.getClass()).debug("Adding to bulk edit: " + elmt.getTitle());
 			}
 			clazz=null;
 		}
 		
 
-		final BulkEditDialog dialog = new BulkEditDialog(window.getShell(),
-				entType);
+		final BulkEditDialog dialog = new BulkEditDialog(window.getShell(),entType);
 		if (dialog.open() != InputDialog.OK)
 			return;
 
 		try {
 			// close editors first:
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().closeAllEditors(true /* ask save */);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */);
 
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
-					new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor)
-								throws InvocationTargetException,
-								InterruptedException {
-							Activator.inheritVeriniceContextState();
-							
-							// the selected items are of type CnaTreeelement and can be edited right here:
-							if (selectedElements.size() >0)
-								editLocally(selectedElements, dialog.getEntity(), monitor);
-							else {
-								// the selected elements are of type TodoView or other light weight items,
-								// editing has to be deferred to server (lookup of real items needed)
-								try {
-									editOnServer(clazz, dbIDs, dialog.getEntity(), monitor);
-								} catch (CommandException e) {
-									throw new InterruptedException(e.getLocalizedMessage());
-								}
-							}
-							
-							monitor.done();
-							// update once when finished:
-							CnAElementFactory.getLoadedModel()
-									.refreshAllListeners(IBSIModelListener.SOURCE_BULK_EDIT);
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile( new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
+					Activator.inheritVeriniceContextState();
+					
+					// the selected items are of type CnaTreeelement and can be edited right here:
+					if (selectedElements.size() >0)
+						editLocally(selectedElements, dialog.getEntity(), monitor);
+					else {
+						// the selected elements are of type TodoView or other light weight items,
+						// editing has to be deferred to server (lookup of real items needed)
+						try {
+							editOnServer(clazz, dbIDs, dialog.getEntity(), monitor);
+						} catch (CommandException e) {
+							throw new InterruptedException(e.getLocalizedMessage());
 						}
-
-						
-					});
+					}
+					
+					monitor.done();
+					
+					boolean isIsoElement = false;
+					for (CnATreeElement cnATreeElement : selectedElements) {
+						isIsoElement = (cnATreeElement instanceof IISO27kElement);
+						if(isIsoElement) {
+							break;
+						}
+					}
+					// update once when finished:
+					if( CnAElementFactory.getLoadedModel()!=null) {
+						CnAElementFactory.getLoadedModel().refreshAllListeners(IBSIModelListener.SOURCE_BULK_EDIT);
+					}
+					if(isIsoElement) {
+						CnAElementFactory.getInstance().getISO27kModel().refreshAllListeners(IBSIModelListener.SOURCE_BULK_EDIT);
+					}
+				}					
+			});
 		} catch (InvocationTargetException e) {
 			ExceptionUtil.log(e, "Error executing bulk edit.");
 		} catch (InterruptedException e) {
