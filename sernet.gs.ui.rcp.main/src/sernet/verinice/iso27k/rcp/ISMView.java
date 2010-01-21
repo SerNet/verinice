@@ -50,6 +50,7 @@ import org.eclipse.ui.part.ViewPart;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
@@ -87,6 +88,8 @@ public class ISMView extends ViewPart {
 	private ICommandService commandService;
 
 	private Action doubleClickAction; 
+	
+	private ShowBulkEditAction bulkEditAction;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -155,6 +158,8 @@ public class ISMView extends ViewPart {
 				}
 			}
 		};
+		
+		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), "Bulk Edit...");
 	}
 	
 	private void hookDoubleClickAction() {
@@ -170,7 +175,8 @@ public class ISMView extends ViewPart {
 	 */
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(new GroupMarker("content")); //$NON-NLS-1$
-		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));	
+		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		manager.add(bulkEditAction);	
 	}
 
 	/* (non-Javadoc)
