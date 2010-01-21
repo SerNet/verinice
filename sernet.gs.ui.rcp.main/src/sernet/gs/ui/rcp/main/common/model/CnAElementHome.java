@@ -52,6 +52,8 @@ import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
+import sernet.verinice.iso27k.model.IISO27kGroup;
+import sernet.verinice.iso27k.model.Organization;
 
 /**
  * DAO class for model objects. Uses Hibernate as persistence framework.
@@ -282,6 +284,11 @@ public class CnAElementHome {
 		// Category objects cannot be deleted.
 		if (cte instanceof IBSIStrukturKategorie)
 			return false;
+		
+		// first level ISO 27k groups cannot be deleted
+		if(cte instanceof IISO27kGroup && cte.getParent() instanceof Organization) {
+			return false;
+		}
 		
 		// ITVerbund instances can be removed when
 		// one has write access to it (There is no parent to check).
