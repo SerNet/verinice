@@ -28,7 +28,6 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.verinice.iso27k.command.RetrieveCnATreeElement;
@@ -127,6 +126,14 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 		// TODO ak synchronization problem?
 
 		return newElement;
+	}
+	
+	public Object getCachedObject(Object o) {
+		return cache.getCachedObject(o);
+	}
+	
+	public void addCachedObject(Object o) {
+		cache.addObject(o);
 	}
 
 	public Object[] getElements(Object parent) {
