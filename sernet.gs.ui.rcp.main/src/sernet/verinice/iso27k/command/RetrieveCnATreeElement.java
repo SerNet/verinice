@@ -79,7 +79,7 @@ public class RetrieveCnATreeElement extends GenericCommand {
 	public static RetrieveCnATreeElement getElementISMViewInstance(Integer dbId, Class<? extends CnATreeElement> clazz) {
 		RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(clazz, dbId);
 		RetrieveInfo retrieveInfo = new RetrieveInfo();
-		retrieveInfo.setChildren(true);
+		retrieveInfo.setProperties(true).setChildren(true);
 		retrieveElement.setRetrieveInfo(retrieveInfo);
 		return retrieveElement;
 	}
