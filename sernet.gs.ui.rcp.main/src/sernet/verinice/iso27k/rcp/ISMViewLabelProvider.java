@@ -56,7 +56,6 @@ public class ISMViewLabelProvider extends LabelProvider {
 
 	@Override
 	public String getText(Object obj) {
-
 		String title = "unknown";
 		if (obj != null) {	
 			Object cachedObject = cache.getCachedObject(obj);
@@ -65,11 +64,9 @@ public class ISMViewLabelProvider extends LabelProvider {
 			} else {
 				obj = cachedObject;
 			}
-	
 			if (obj instanceof CnATreeElement) {
 				title = ((CnATreeElement)obj).getTitle();
 			}
-	
 		}
 		return title;
 	}
