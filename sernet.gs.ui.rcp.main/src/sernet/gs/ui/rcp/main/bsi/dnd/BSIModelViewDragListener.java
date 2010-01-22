@@ -27,6 +27,7 @@ import org.eclipse.swt.dnd.DragSourceListener;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.verinice.iso27k.model.IISO27kElement;
 
 public class BSIModelViewDragListener implements DragSourceListener {
 
@@ -61,8 +62,9 @@ public class BSIModelViewDragListener implements DragSourceListener {
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object o = iter.next();
 			if (!(o instanceof BausteinUmsetzung
-					|| o instanceof IBSIStrukturElement)
-				|| o instanceof ITVerbund) {
+				  || o instanceof IBSIStrukturElement
+				  || o instanceof IISO27kElement)
+				  || o instanceof ITVerbund) {
 				event.doit = false;
 				return;	
 			}
