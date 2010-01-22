@@ -20,6 +20,7 @@
 package sernet.verinice.iso27k.model;
 
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -73,6 +74,21 @@ public interface IISO27KModelListener {
 	 * @param entry
 	 */
 	void databaseChildRemoved(ChangeLogEntry entry);
+
+	/**
+	 * @param link
+	 */
+	void linkChanged(CnALink link);
+
+	/**
+	 * @param link
+	 */
+	void linkRemoved(CnALink link);
+
+	/**
+	 * @param link
+	 */
+	void linkAdded(CnALink link);
 	
 
 
