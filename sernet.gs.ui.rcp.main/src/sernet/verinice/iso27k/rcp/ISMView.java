@@ -17,59 +17,60 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
+import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
-import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction.StatusResult;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.verinice.iso27k.command.LoadModel;
-import sernet.verinice.iso27k.command.LoadOrganizations;
 import sernet.verinice.iso27k.command.RetrieveCnATreeElement;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.model.Organization;
-import sernet.verinice.iso27k.rcp.CatalogView.ViewContentProvider;
-import sernet.verinice.iso27k.rcp.CatalogView.ViewLabelProvider;
-import sernet.verinice.iso27k.service.IItem;
+import sernet.verinice.iso27k.rcp.action.CollapseAction;
+import sernet.verinice.iso27k.rcp.action.ExpandAction;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -85,11 +86,21 @@ public class ISMView extends ViewPart {
 	
 	TreeViewerCache cache = new TreeViewerCache();
 	
-	private ICommandService commandService;
+	ISMViewContentProvider contentProvider;
 
 	private Action doubleClickAction; 
 	
 	private ShowBulkEditAction bulkEditAction;
+	
+	private ExpandAction expandAction;
+	
+	private CollapseAction collapseAction;
+	
+	private Action expandAllAction;
+
+	private Action collapseAllAction;
+	
+	private ISchedulingRule mutex = new Mutex(); 
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -97,9 +108,10 @@ public class ISMView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		try {
+			contentProvider = new ISMViewContentProvider(cache);
 			viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 			viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
-			viewer.setContentProvider(new ISMViewContentProvider(cache));
+			viewer.setContentProvider(contentProvider);
 			viewer.setLabelProvider(new ISMViewLabelProvider(cache));
 			
 			getSite().setSelectionProvider(viewer);
@@ -117,7 +129,9 @@ public class ISMView extends ViewPart {
 			
 			hookContextMenu();
 			makeActions();
-			hookDoubleClickAction();
+			addActions();
+			fillToolBar();
+			hookDNDListeners();
 		} catch (Exception e) {
 			LOG.error("Error while creating organiozation view", e);
 		}
@@ -135,6 +149,13 @@ public class ISMView extends ViewPart {
 		viewer.setInput(organization);
 	}
 	
+	private void fillToolBar() {
+		IActionBars bars = getViewSite().getActionBars();
+		IToolBarManager manager = bars.getToolBarManager();
+		manager.add(expandAllAction);
+		manager.add(collapseAllAction);
+	}
+	
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
@@ -149,6 +170,13 @@ public class ISMView extends ViewPart {
 		getSite().registerContextMenu(menuMgr, viewer);
 	}
 	
+	private void hookDNDListeners() {
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
+		int operations = DND.DROP_COPY | DND.DROP_MOVE;
+		viewer.addDropSupport(operations, types, new BSIModelViewDropListener(viewer));
+		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
+	}
+	
 	private void makeActions() {
 		doubleClickAction = new Action() {
 			public void run() {
@@ -160,14 +188,47 @@ public class ISMView extends ViewPart {
 		};
 		
 		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), "Bulk Edit...");
+	
+		expandAction = new ExpandAction(viewer, contentProvider);
+		expandAction.setText("Expand Children");
+		expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+
+		collapseAction = new CollapseAction(viewer);
+		collapseAction.setText("Collapse Children");
+		collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+	
+		expandAllAction = new Action() {
+			@Override
+			public void run() {
+				expandAll();
+			}
+		};
+		expandAllAction.setText("Expand All");
+		expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+
+		collapseAllAction = new Action() {
+			@Override
+			public void run() {
+				viewer.collapseAll();
+			}
+		};
+		collapseAllAction.setText("Collapse All");
+		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 	}
 	
-	private void hookDoubleClickAction() {
+	private void expandAll() {
+		// TODO: do this a new thread and show user a progress bar
+		viewer.expandAll();
+	}
+	
+	private void addActions() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
 		});
+		viewer.addSelectionChangedListener(expandAction);
+		viewer.addSelectionChangedListener(collapseAction);
 	}
 
 	/**
@@ -176,7 +237,9 @@ public class ISMView extends ViewPart {
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(new GroupMarker("content")); //$NON-NLS-1$
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-		manager.add(bulkEditAction);	
+		manager.add(bulkEditAction);
+		manager.add(expandAction);
+		manager.add(collapseAction);
 	}
 
 	/* (non-Javadoc)
@@ -184,26 +247,6 @@ public class ISMView extends ViewPart {
 	 */
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
-	}
-	
-	private ICommandService getCommandService() {
-		if(commandService==null) {
-			commandService = createCommandService();
-		}
-		return commandService;
-	}
-	
-	private ICommandService createCommandService() {
-		try {
-			ServiceFactory.openCommandService();
-		} catch (MalformedURLException e) {
-			LOG.error("Error while opening command service", e);
-			throw new RuntimeException("Error while opening command service", e);
-		}
-		commandService = ServiceFactory.lookupCommandService();
-		return commandService;
 	}
 	
 	static class ViewContentProviderOld implements IStructuredContentProvider, ITreeContentProvider {
@@ -332,5 +375,27 @@ public class ISMView extends ViewPart {
 			commandService = ServiceFactory.lookupCommandService();
 			return commandService;
 		}
+	}
+	
+	/**
+	 * Implementation of {@link ISchedulingRule} which enforces
+	 * that two jobs containing an instance of this rule cannot be
+	 * run at the same time.
+	 * 
+	 * <p>In short this enforces that the scheduler runs the jobs
+	 * in the order they are scheduled.</p>
+	 * 
+	 */
+	static class Mutex implements ISchedulingRule
+	{
+
+		public boolean contains(ISchedulingRule rule) {
+			return rule == this;
+		}
+
+		public boolean isConflicting(ISchedulingRule rule) {
+			return rule == this;
+		}
+		
 	}
 }
