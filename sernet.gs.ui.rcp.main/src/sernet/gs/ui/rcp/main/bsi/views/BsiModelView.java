@@ -21,9 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -102,9 +106,6 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
  */
 public class BsiModelView extends ViewPart {
 	
-
-	
-
 	public static final String ID = "sernet.gs.ui.rcp.main.views.bsimodelview"; //$NON-NLS-1$
 
 	private Action doubleClickAction;
@@ -285,13 +286,10 @@ public class BsiModelView extends ViewPart {
 	}
 
 	private void hookDNDListeners() {
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance(),
-				FileTransfer.getInstance() };
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		viewer.addDropSupport(operations, types, new BSIModelViewDropListener(
-				viewer));
-		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(
-				viewer));
+		viewer.addDropSupport(operations, types, new BSIModelViewDropListener(viewer));
+		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
 	}
 
 	private void hookDoubleClickAction() {
@@ -401,7 +399,7 @@ public class BsiModelView extends ViewPart {
 		expandAllAction = new Action() {
 			@Override
 			public void run() {
-				viewer.expandAll();
+				expandAll();
 			}
 		};
 		expandAllAction.setText("Alle aufklappen");
@@ -426,6 +424,11 @@ public class BsiModelView extends ViewPart {
 		closeDBAction = new BSIModelViewCloseDBAction(this, viewer);
 
 	}
+	
+	private void expandAll() {
+		// TODO: do this a new thread and show user a progress bar
+		viewer.expandAll();
+	}
 
 	/**
 	 * Passing the focus request to the viewer's control.
@@ -435,8 +438,7 @@ public class BsiModelView extends ViewPart {
 	}
 
 	private void createPullDownMenu() {
-		IMenuManager menuManager = getViewSite().getActionBars()
-				.getMenuManager();
+		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
 		menuManager.add(openDBAction);
 		menuManager.add(closeDBAction);
 		menuManager.add(filterAction);
