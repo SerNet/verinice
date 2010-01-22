@@ -26,6 +26,7 @@ import sernet.gs.ui.rcp.main.bsi.views.ThreadSafeViewerUpdate;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.verinice.iso27k.model.IISO27KModelListener;
@@ -149,8 +150,29 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
 			updater.refresh();
 		}	
 	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.verinice.iso27k.model.IISO27KModelListener#linkChanged(sernet.gs.ui.rcp.main.common.model.CnALink)
+	 */
+	public void linkChanged(CnALink link) {
+		// nothing to do, since links are displayed in relation view
+	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.verinice.iso27k.model.IISO27KModelListener#linkAdded(sernet.gs.ui.rcp.main.common.model.CnALink)
+	 */
+	public void linkAdded(CnALink link) {
+		// nothing to do, since links are displayed in relation view
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see sernet.verinice.iso27k.model.IISO27KModelListener#linkRemoved(sernet.gs.ui.rcp.main.common.model.CnALink)
+	 */
+	public void linkRemoved(CnALink link) {
+		// nothing to do, since links are displayed in relation view
+	}
 
 
 	
-
 }
