@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -28,11 +29,13 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.iso27k.model.IISO27kElement;
 
 public class LinkDropper {
 	public boolean dropLink(final List<CnATreeElement> toDrop,
@@ -44,8 +47,7 @@ public class LinkDropper {
 			
 			try {
 				// close all editors first:
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage().closeAllEditors(true /* ask save */);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */);
 				
 				Job dropJob = new Job(Messages.getString("LinkDropper.0")) { //$NON-NLS-1$
 					@Override
@@ -59,7 +61,6 @@ public class LinkDropper {
 						DNDItems.clear();
 						return Status.OK_STATUS;
 					}
-
 				};
 				dropJob.schedule();
 			} catch (Exception e) {
@@ -69,8 +70,7 @@ public class LinkDropper {
 			return true;
 		}
 
-		private void createLink(final CnATreeElement dropTarget, 
-				final List<CnATreeElement> toDrop) {
+		private void createLink(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					List<CnALink> newLinks = new ArrayList<CnALink>();
@@ -87,8 +87,16 @@ public class LinkDropper {
 							CnAElementFactory.getInstance().reloadModelFromDatabase();
 							return;
 						}
-						else
-							CnAElementFactory.getLoadedModel().linkChanged(link);
+						else {
+							if(link.getDependant() instanceof IBSIStrukturElement
+							   || link.getDependency() instanceof IBSIStrukturElement) {
+								CnAElementFactory.getLoadedModel().linkChanged(link);
+							}
+							if(link.getDependant() instanceof IISO27kElement
+							   || link.getDependency() instanceof IISO27kElement) {
+								CnAElementFactory.getInstance().getISO27kModel().linkChanged(link);
+							}
+						}
 					}
 				}
 			});

@@ -40,6 +40,7 @@ import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.iso27k.model.IISO27kElement;
 
 /**
  * Handles drop events of objects to create links between them.
@@ -52,6 +53,8 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
  */
 public class BSIModelViewDropListener extends ViewerDropAdapter {
 
+	private static final Logger LOG = Logger.getLogger(BSIModelViewDropListener.class);
+	
 	public BSIModelViewDropListener(TreeViewer viewer) {
 		super(viewer);
 	}
@@ -61,7 +64,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 		Object toDrop = DNDItems.getItems().get(0);
 		if (toDrop != null && toDrop instanceof Baustein) {
 			return dropBaustein();
-		} else if (toDrop != null && toDrop instanceof IBSIStrukturElement) {
+		} else if (toDrop != null && (toDrop instanceof IBSIStrukturElement || toDrop instanceof IISO27kElement)) {
 			CnATreeElement target;
 			if (getCurrentTarget() instanceof LinkKategorie)
 				target = ((LinkKategorie) getCurrentTarget()).getParent();
@@ -99,8 +102,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 		}
 
 		try {
-			Job dropJob = new Job(Messages
-					.getString("BSIModelViewDropListener.3")) { //$NON-NLS-1$
+			Job dropJob = new Job(Messages.getString("BSIModelViewDropListener.3")) { //$NON-NLS-1$
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					Activator.inheritVeriniceContextState();
@@ -108,8 +110,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 					try {
 						createBausteinUmsetzung(toDrop, target);
 					} catch (Exception e) {
-						Logger.getLogger(this.getClass()).error(
-								"Drop failed", e); //$NON-NLS-1$
+						Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
 						return Status.CANCEL_STATUS;
 					}
 					DNDItems.clear();
@@ -120,8 +121,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 			dropJob.setSystem(false);
 			dropJob.schedule();
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(
-					Messages.getString("BSIModelViewDropListener.5"), e); //$NON-NLS-1$
+			Logger.getLogger(this.getClass()).error(Messages.getString("BSIModelViewDropListener.5"), e); //$NON-NLS-1$
 			return false;
 		}
 		return true;
@@ -141,9 +141,10 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 	}
 
 	@Override
-	public boolean validateDrop(Object target, int operation,
-			TransferData transferType) {
-		// Logger.getLogger(this.getClass()).debug("Drop target: " + target);
+	public boolean validateDrop(Object target, int operation, TransferData transferType) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("validateDrop, target: " + target);
+		}
 
 		if (target == null)
 			return false;
@@ -158,8 +159,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 
 		// use bstUms as template for bstUmsTarget
 		if (DNDItems.getItems().get(0) instanceof BausteinUmsetzung) {
-			BausteinUmsetzung sourceBst = (BausteinUmsetzung) DNDItems
-					.getItems().get(0);
+			BausteinUmsetzung sourceBst = (BausteinUmsetzung) DNDItems.getItems().get(0);
 			if (target instanceof BausteinUmsetzung) {
 				BausteinUmsetzung targetBst = (BausteinUmsetzung) target;
 				if (targetBst.getKapitel().equals(sourceBst.getKapitel()))
@@ -169,24 +169,25 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 		}
 
 		// link drop:
-		if (DNDItems.getItems().get(0) instanceof IBSIStrukturElement) {
+		if (DNDItems.getItems().get(0) instanceof IBSIStrukturElement || DNDItems.getItems().get(0) instanceof IISO27kElement) {
 			List itemsToDrop = DNDItems.getItems();
 			for (Object item : itemsToDrop) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("validateDrop, draged item: " + item );
+				}
 				if (target.equals(item))
 					return false;
 
-				if (!(item instanceof IBSIStrukturElement))
+				if (!(item instanceof IBSIStrukturElement || item instanceof IISO27kElement))
 					return false;
 
-				if (item instanceof IBSIStrukturElement
-						&& target instanceof LinkKategorie) {
-					if (((LinkKategorie) target).getParent().equals(item)) /*
-																			 * is
-																			 * same
-																			 * object
-																			 */
+				if (item instanceof IBSIStrukturElement && target instanceof LinkKategorie) {
+					if (((LinkKategorie) target).getParent().equals(item)) /* is same object */
 						return false;
 				}
+			}
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("validateDrop, validated!");
 			}
 			return true;
 		}
