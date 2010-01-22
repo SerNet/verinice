@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -120,6 +121,26 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 	public void databaseChildChanged(CnATreeElement child) {
 		for (IISO27KModelListener listener : getListeners()) {
 			listener.databaseChildChanged(child);
+		}
+	}
+	
+	@Override
+	public void linkChanged(CnALink link) {
+		for (IISO27KModelListener listener : getListeners()) {
+			listener.linkChanged(link);
+		}
+	}
+	
+	@Override
+	public void linkRemoved(CnALink link) {
+		for (IISO27KModelListener listener : getListeners()) {
+			listener.linkRemoved(link);
+		}
+	}
+	
+	public void linkAdded(CnALink link) {
+		for (IISO27KModelListener listener : getListeners()) {
+			listener.linkAdded(link);
 		}
 	}
 	
