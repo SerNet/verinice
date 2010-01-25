@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -57,11 +58,21 @@ import sernet.verinice.iso27k.model.AuditGroup;
 import sernet.verinice.iso27k.model.Control;
 import sernet.verinice.iso27k.model.ControlGroup;
 import sernet.verinice.iso27k.model.ExceptionGroup;
+import sernet.verinice.iso27k.model.Incident;
+import sernet.verinice.iso27k.model.IncidentGroup;
+import sernet.verinice.iso27k.model.IncidentScenario;
+import sernet.verinice.iso27k.model.IncidentScenarioGroup;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.model.PersonGroup;
 import sernet.verinice.iso27k.model.PersonIso;
 import sernet.verinice.iso27k.model.Requirement;
 import sernet.verinice.iso27k.model.RequirementGroup;
+import sernet.verinice.iso27k.model.Response;
+import sernet.verinice.iso27k.model.ResponseGroup;
+import sernet.verinice.iso27k.model.Threat;
+import sernet.verinice.iso27k.model.ThreatGroup;
+import sernet.verinice.iso27k.model.Vulnerability;
+import sernet.verinice.iso27k.model.VulnerabilityGroup;
 
 /**
  * This class maps editors for different ressources and either opens a new
@@ -72,6 +83,9 @@ import sernet.verinice.iso27k.model.RequirementGroup;
  * 
  */
 public class EditorFactory {
+	
+	private final Logger log = Logger.getLogger(EditorFactory.class);
+	
 	private static EditorFactory instance;
 	private static HashMap<Class, IEditorTypeFactory> typedFactories = new HashMap<Class, IEditorTypeFactory>();
 
@@ -146,6 +160,16 @@ public class EditorFactory {
 		typedFactories.put(sernet.verinice.iso27k.model.Exception.class, bsiEditorFactory);
 		typedFactories.put(RequirementGroup.class, bsiEditorFactory);
 		typedFactories.put(Requirement.class, bsiEditorFactory);
+		typedFactories.put(IncidentGroup.class, bsiEditorFactory);
+		typedFactories.put(Incident.class, bsiEditorFactory);
+		typedFactories.put(IncidentScenarioGroup.class, bsiEditorFactory);
+		typedFactories.put(IncidentScenario.class, bsiEditorFactory);
+		typedFactories.put(ResponseGroup.class, bsiEditorFactory);
+		typedFactories.put(Response.class, bsiEditorFactory);
+		typedFactories.put(ThreatGroup.class, bsiEditorFactory);
+		typedFactories.put(Threat.class, bsiEditorFactory);
+		typedFactories.put(VulnerabilityGroup.class, bsiEditorFactory);
+		typedFactories.put(Vulnerability.class, bsiEditorFactory);
 
 		
 		IEditorTypeFactory todoItemEditorFactory = new IEditorTypeFactory() {
@@ -239,8 +263,10 @@ public class EditorFactory {
 			try {
 				fact.openEditorFor(sel);
 			} catch (HibernateException e) {
+				log.error("Hibernate error while opening editor.", e);
 				MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error", "Der Editor kann nicht geöffnet werden.");
 			} catch (Exception e) {
+				log.error("Error while opening editor.", e);
 				ExceptionUtil.log(e, "Konnte Editor nicht öffnen.");
 			}
 		}
