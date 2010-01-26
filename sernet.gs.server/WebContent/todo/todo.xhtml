@@ -44,7 +44,7 @@
 								<o:forEach id="itVerbundList" items="#{assetNavigation.itVerbundList}" var="itVerbund">
 						  			<li>
 								  		<a4j:commandLink 
-								  			value="#{itVerbund.titel}" 
+								  			value="#{itVerbund.title}" 
 								  			action="#{toDo.loadToDoListForVerbund}" 
 								  			reRender="tablePanel,elementPanel,itVerbundList,editPanel" 
 								  			styleClass="#{itVerbund.dbId==assetNavigation.selectedItVerbund.dbId ? 'selected' : 'normal'}">
