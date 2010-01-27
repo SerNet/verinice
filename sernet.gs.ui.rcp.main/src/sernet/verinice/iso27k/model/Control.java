@@ -32,12 +32,14 @@ public class Control extends CnATreeElement implements IISO27kElement {
 	public static final String TYPE_ID = "control"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "control_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "control_name"; //$NON-NLS-1$
+	public static final String PROP_DESC = "control_desc"; //$NON-NLS-1$
 	
 	/**
 	 * Creates an empty asset
 	 */
 	public Control() {
 		super();
+		setEntity(new Entity(TYPE_ID));
 	}
 	
 	public Control(CnATreeElement parent) {
@@ -72,6 +74,14 @@ public class Control extends CnATreeElement implements IISO27kElement {
 	
 	public void setAbbreviation(String abbreviation) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+	}
+	
+	public String getDescription() {
+		return getEntity().getSimpleValue(PROP_DESC);
+	}
+	
+	public void setDescription(String description) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
 	}
 
 }
