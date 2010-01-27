@@ -57,11 +57,19 @@ import sernet.verinice.iso27k.model.Audit;
 import sernet.verinice.iso27k.model.AuditGroup;
 import sernet.verinice.iso27k.model.Control;
 import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.iso27k.model.Document;
+import sernet.verinice.iso27k.model.DocumentGroup;
+import sernet.verinice.iso27k.model.Evidence;
+import sernet.verinice.iso27k.model.EvidenceGroup;
 import sernet.verinice.iso27k.model.ExceptionGroup;
+import sernet.verinice.iso27k.model.Finding;
+import sernet.verinice.iso27k.model.FindingGroup;
 import sernet.verinice.iso27k.model.Incident;
 import sernet.verinice.iso27k.model.IncidentGroup;
 import sernet.verinice.iso27k.model.IncidentScenario;
 import sernet.verinice.iso27k.model.IncidentScenarioGroup;
+import sernet.verinice.iso27k.model.Interview;
+import sernet.verinice.iso27k.model.InterviewGroup;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.model.PersonGroup;
 import sernet.verinice.iso27k.model.PersonIso;
@@ -170,6 +178,14 @@ public class EditorFactory {
 		typedFactories.put(Threat.class, bsiEditorFactory);
 		typedFactories.put(VulnerabilityGroup.class, bsiEditorFactory);
 		typedFactories.put(Vulnerability.class, bsiEditorFactory);
+		typedFactories.put(DocumentGroup.class, bsiEditorFactory);
+		typedFactories.put(Document.class, bsiEditorFactory);
+		typedFactories.put(InterviewGroup.class, bsiEditorFactory);
+		typedFactories.put(Interview.class, bsiEditorFactory);
+		typedFactories.put(EvidenceGroup.class, bsiEditorFactory);
+		typedFactories.put(Evidence.class, bsiEditorFactory);
+		typedFactories.put(FindingGroup.class, bsiEditorFactory);
+		typedFactories.put(Finding.class, bsiEditorFactory);
 
 		
 		IEditorTypeFactory todoItemEditorFactory = new IEditorTypeFactory() {
