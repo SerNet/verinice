@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -38,69 +37,80 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.verinice.iso27k.model.IISO27kElement;
 
 public class LinkDropper {
-	public boolean dropLink(final List<CnATreeElement> toDrop,
-			final CnATreeElement target) {
-			
-			// Prevent creation of new link when parent is not allowed to be modified. 
-			if (!CnAElementHome.getInstance().isWriteAllowed(target))
-				return false;
-			
-			try {
-				// close all editors first:
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */);
-				
-				Job dropJob = new Job(Messages.getString("LinkDropper.0")) { //$NON-NLS-1$
-					@Override
-					protected IStatus run(IProgressMonitor monitor) {
-						try {
-							createLink(target, toDrop);
-						} catch (Exception e) {
-							Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
-							return Status.CANCEL_STATUS;
-						}
-						DNDItems.clear();
-						return Status.OK_STATUS;
-					}
-				};
-				dropJob.schedule();
-			} catch (Exception e) {
-				Logger.getLogger(this.getClass()).error(Messages.getString("LinkDropper.2"), e); //$NON-NLS-1$
-				return false;
-			}
-			return true;
-		}
 
-		private void createLink(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					List<CnALink> newLinks = new ArrayList<CnALink>();
-					for (CnATreeElement dragged : toDrop) {
-						try {
-							CnALink link = CnAElementHome.getInstance().createLink(dropTarget, dragged);
-							newLinks.add(link);
-						} catch (Exception e) {
-							Logger.getLogger(this.getClass()).debug("Saving link failed.", e); //$NON-NLS-1$
-						}
+	private static final Logger LOG = Logger.getLogger(LinkDropper.class);
+
+	public boolean dropLink(final List<CnATreeElement> toDrop, final CnATreeElement target) {
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("dropLink...");
+		}
+		// Prevent creation of new link when parent is not allowed to be
+		// modified.
+		if (!CnAElementHome.getInstance().isWriteAllowed(target))
+			return false;
+
+		try {
+			// close all editors first:
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /*
+																									 * ask
+																									 * save
+																									 */);
+
+			Job dropJob = new Job(Messages.getString("LinkDropper.0")) { //$NON-NLS-1$
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					try {
+						createLink(target, toDrop);
+					} catch (Exception e) {
+						LOG.error("Drop failed", e); //$NON-NLS-1$
+						return Status.CANCEL_STATUS;
 					}
-					for (CnALink link : newLinks) {
-						if (link.getDependant() instanceof ITVerbund) {
-							CnAElementFactory.getInstance().reloadModelFromDatabase();
-							return;
+					return Status.OK_STATUS;
+				}
+			};
+			dropJob.schedule();
+		} catch (Exception e) {
+			LOG.error(Messages.getString("LinkDropper.2"), e); //$NON-NLS-1$
+			return false;
+		}
+		return true;
+	}
+
+	private void createLink(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("createLink...");
+		}
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				List<CnALink> newLinks = new ArrayList<CnALink>();
+				for (CnATreeElement dragged : toDrop) {
+					try {
+						CnALink link = CnAElementHome.getInstance().createLink(dropTarget, dragged);
+						newLinks.add(link);
+						if (LOG.isDebugEnabled()) {
+							LOG.debug("Link created");
 						}
-						else {
-							if(link.getDependant() instanceof IBSIStrukturElement
-							   || link.getDependency() instanceof IBSIStrukturElement) {
-								CnAElementFactory.getLoadedModel().linkChanged(link);
-							}
-							if(link.getDependant() instanceof IISO27kElement
-							   || link.getDependency() instanceof IISO27kElement) {
-								CnAElementFactory.getInstance().getISO27kModel().linkChanged(link);
-							}
+					} catch (Exception e) {
+						LOG.debug("Saving link failed.", e); //$NON-NLS-1$
+					}
+				}
+				for (CnALink link : newLinks) {
+					if (link.getDependant() instanceof ITVerbund) {
+						CnAElementFactory.getInstance().reloadModelFromDatabase();
+						return;
+					} else {
+						if (link.getDependant() instanceof IBSIStrukturElement || link.getDependency() instanceof IBSIStrukturElement) {
+							CnAElementFactory.getLoadedModel().linkChanged(link);
+						}
+						if (link.getDependant() instanceof IISO27kElement || link.getDependency() instanceof IISO27kElement) {
+							CnAElementFactory.getInstance().getISO27kModel().linkChanged(link);
 						}
 					}
 				}
-			});
-		}
-
+				DNDItems.clear();
+			}
+		});
+	}
 
 }
