@@ -40,6 +40,7 @@ public class GeneralSettingsPage
 	private BooleanFieldEditor errorPopups;
 	private BooleanFieldEditor derbyWarning;
 	private BooleanFieldEditor inputHelperHints;
+	private BooleanFieldEditor infoDialogTransformCatalogItems;
 
 	public GeneralSettingsPage() {
 		super(GRID);
@@ -68,6 +69,11 @@ public class GeneralSettingsPage
 				"Zeige Tooltip für Eingabehilfe (\"Hilfe: Pfeil-Runter-Taste\") für neu geöffnete Editoren",
 				getFieldEditorParent());
 		addField(inputHelperHints);
+		
+		infoDialogTransformCatalogItems =  new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_ADDED, 
+				Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
+				getFieldEditorParent());
+		addField(infoDialogTransformCatalogItems);
 		
 	}
 	
