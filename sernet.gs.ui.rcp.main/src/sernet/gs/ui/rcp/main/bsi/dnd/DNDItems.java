@@ -20,9 +20,13 @@ package sernet.gs.ui.rcp.main.bsi.dnd;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 public class DNDItems {
 	// TODO use system DND, (dragsource and droptarget)
 
+	private static final Logger LOG = Logger.getLogger(DNDItems.class);
+	
 	public static final String BAUSTEIN = "baustein"; //$NON-NLS-1$
 	public static final Object BAUSTEINUMSETZUNG = "bausteinumsetzung"; //$NON-NLS-1$
 	public static final Object CNAITEM = "cnaitem"; //$NON-NLS-1$
@@ -31,6 +35,9 @@ public class DNDItems {
 	private static List dndItems = new ArrayList();
 
 	public static void setItems(List items) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("setItems, list: " + items);
+		}
 		dndItems = items; 
 	}
 
@@ -39,7 +46,7 @@ public class DNDItems {
 	}
 
 	public static void clear() {
-		dndItems = null;
+		dndItems.clear();
 	}
 	
 }
