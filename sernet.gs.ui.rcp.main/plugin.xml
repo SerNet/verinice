@@ -778,7 +778,6 @@
             targetID="sernet.verinice.iso27k.rcp.ISMView">
          <action
                class="sernet.verinice.iso27k.rcp.action.AddOrganisation"
-               enablesFor="!"
                icon="icons/note-new.png"
                id="sernet.verinice.iso27k.rcp.action.AddOrganisation"
                label="new organization..."
