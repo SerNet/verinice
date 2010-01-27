@@ -87,15 +87,27 @@ public class EntityType {
 	}
 
 	/**
+	 * Add definition for a relation from the XML file to this EntityType.
+	 * 
+	 * 
 	 * @param relation
 	 */
-	public void addRelation(HuiRelation relation) {
-		if (relations.get(relation.getId()) == null) {
+	public void addRelation(HuiRelation relation) { 
+		if (relations.get(relation.getTo()) == null) {
 			this.relations.put(relation.getTo(), new HashSet<HuiRelation>());
 		}
 		this.relations.get(relation.getTo()).add(relation);
 	}
 	
+	/**
+	 * Returns all possible relation from this EntityType to the specified EntityType. I.e. from "product" to "person" the following 
+	 * relations could be defined: "bought by", "sold by", "manufactured by" etc.
+	 * 
+	 * Links (i.e. CnALinks) should only be created for allowed relations.
+	 * 
+	 * @param toEntityType
+	 * @return
+	 */
 	public Set<HuiRelation> getPossibleRelations(String toEntityType) {
 		return relations.get(toEntityType) != null 
 			? relations.get(toEntityType)

@@ -268,8 +268,8 @@ public class HUITypeFactory {
 			}
 			else if (child.getTagName().equals("huirelation")) {
 				HuiRelation relation = new HuiRelation(child.getAttribute("id"));
-				entityType.addRelation(relation);
 				readRelation(child, relation);
+				entityType.addRelation(relation);
 			}
 		}
 	}
