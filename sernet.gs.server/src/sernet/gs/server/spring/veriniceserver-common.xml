@@ -165,7 +165,25 @@ This variant:
 		<property name="personGroupDAO" ref="personGroupDAO" />
 		<property name="personIsoDAO" ref="personIsoDAO" />
 		<property name="requirementGroupDAO" ref="requirementGroupDAO" />
-		<property name="requirementDAO" ref="requirementDAO" />
+		<property name="requirementDAO" ref="requirementDAO" />	
+		<property name="incidentGroupDAO" ref="incidentGroupDAO" />
+		<property name="incidentDAO" ref="incidentDAO" />
+		<property name="incidentScenarioGroupDAO" ref="incidentScenarioGroupDAO" />
+		<property name="incidentScenarioDAO" ref="incidentScenarioDAO" />
+		<property name="responseGroupDAO" ref="responseGroupDAO" />
+		<property name="responseDAO" ref="responseDAO" />
+		<property name="threatGroupDAO" ref="threatGroupDAO" />
+		<property name="threatDAO" ref="threatDAO" />
+		<property name="vulnerabilityGroupDAO" ref="vulnerabilityGroupDAO" />
+		<property name="vulnerabilityDAO" ref="vulnerabilityDAO" />
+		<property name="documentGroupDAO" ref="documentGroupDAO" />
+		<property name="documentDAO" ref="documentDAO" />
+		<property name="evidenceGroupDAO" ref="evidenceGroupDAO" />
+		<property name="evidenceDAO" ref="evidenceDAO" />
+		<property name="interviewGroupDAO" ref="interviewGroupDAO" />
+		<property name="interviewDAO" ref="interviewDAO" />
+		<property name="findingGroupDAO" ref="findingGroupDAO" />
+		<property name="findingDAO" ref="findingDAO" />
 	</bean>
 
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">

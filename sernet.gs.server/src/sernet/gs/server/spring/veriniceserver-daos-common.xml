@@ -420,6 +420,105 @@
 			<value>sernet.verinice.iso27k.model.Requirement</value>
 		</constructor-arg>
 	</bean>
+	
+	<bean id="incidentGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.IncidentGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="incidentDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Incident</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="incidentScenarioGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.IncidentScenarioGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="incidentScenarioDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.IncidentScenario</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="responseGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.ResponseGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="responseDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Response</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="threatGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.ThreatGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="threatDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Threat</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="vulnerabilityGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.VulnerabilityGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="vulnerabilityDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Vulnerability</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="documentGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.DocumentGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="documentDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Document</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="evidenceGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.EvidenceGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="evidenceDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Evidence</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="interviewGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.InterviewGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="interviewDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Interview</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="findingGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.FindingGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="findingDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Finding</value>
+		</constructor-arg>
+	</bean>
 
 	<!-- END dao definitions ============================================================================ -->
 

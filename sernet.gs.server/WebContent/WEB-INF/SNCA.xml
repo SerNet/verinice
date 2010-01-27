@@ -2819,6 +2819,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="control_abbr" />
+        <huiproperty
+            name="Description"
+            id="control_desc"
+            inputtype="text" />
     </huientity>
     <huientity
         name="Exception-Group"
@@ -2853,6 +2857,159 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="requirement_abbr" />
+    </huientity>
+    <huientity
+        name="Incident"
+        id="incident" >
+        <huiproperty
+            name="Title"
+            id="incident_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="incident_abbr" />
+    </huientity>
+    <huientity
+        name="Incident-Group"
+        id="incident_group" >
+        <huiproperty
+            name="Title"
+            id="incident_group_name" />
+    </huientity>
+    <huientity
+        name="Incident-Scenario"
+        id="incident_scenario" >
+        <huiproperty
+            name="Title"
+            id="incident_scenario_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="incident_scenario_abbr" />
+    </huientity>
+    <huientity
+        name="Incident-Scenario-Group"
+        id="incident_scenario_group" >
+        <huiproperty
+            name="Title"
+            id="incident_scenario_group_name" />
+    </huientity>
+    <huientity
+        name="Response"
+        id="response" >
+        <huiproperty
+            name="Title"
+            id="response_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="response_abbr" />
+    </huientity>
+    <huientity
+        name="Response-Group"
+        id="response_group" >
+        <huiproperty
+            name="Title"
+            id="response_group_name" />
+    </huientity>
+    <huientity
+        name="Threat"
+        id="threat" >
+        <huiproperty
+            name="Title"
+            id="threat_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="threat_abbr" />
+    </huientity>
+    <huientity
+        name="Threat-Group"
+        id="threat_group" >
+        <huiproperty
+            name="Title"
+            id="threat_group_name" />
+    </huientity>
+    <huientity
+        name="Vulnerability"
+        id="vulnerability" >
+        <huiproperty
+            name="Title"
+            id="vulnerability_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="vulnerability_abbr" />
+    </huientity>
+    <huientity
+        name="Vulnerability-Group"
+        id="vulnerability_group" >
+        <huiproperty
+            name="Title"
+            id="vulnerability_group_name" />
+    </huientity>
+    <huientity
+        name="Document"
+        id="document" >
+        <huiproperty
+            name="Title"
+            id="document_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="document_abbr" />
+    </huientity>
+    <huientity
+        name="Document-Group"
+        id="document_group" >
+        <huiproperty
+            name="Title"
+            id="document_group_name" />
+    </huientity>
+    <huientity
+        name="Interview"
+        id="interview" >
+        <huiproperty
+            name="Title"
+            id="interview_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="interview_abbr" />
+    </huientity>
+    <huientity
+        name="Interview-Group"
+        id="interview_group" >
+        <huiproperty
+            name="Title"
+            id="interview_group_name" />
+    </huientity>
+    <huientity
+        name="Evidence"
+        id="evidence" >
+        <huiproperty
+            name="Title"
+            id="evidence_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="evidence_abbr" />
+    </huientity>
+    <huientity
+        name="Evidence-Group"
+        id="evidence_group" >
+        <huiproperty
+            name="Title"
+            id="evidence_group_name" />
+    </huientity>
+    <huientity
+        name="Finding"
+        id="finding" >
+        <huiproperty
+            name="Title"
+            id="finding_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="finding_abbr" />
+    </huientity>
+    <huientity
+        name="Finding-Group"
+        id="finding_group" >
+        <huiproperty
+            name="Title"
+            id="finding_group_name" />
     </huientity>
     
     <huientity

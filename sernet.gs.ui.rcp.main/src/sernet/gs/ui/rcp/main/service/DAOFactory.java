@@ -77,14 +77,32 @@ import sernet.verinice.iso27k.model.Audit;
 import sernet.verinice.iso27k.model.AuditGroup;
 import sernet.verinice.iso27k.model.Control;
 import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.iso27k.model.Document;
+import sernet.verinice.iso27k.model.DocumentGroup;
+import sernet.verinice.iso27k.model.Evidence;
+import sernet.verinice.iso27k.model.EvidenceGroup;
 import sernet.verinice.iso27k.model.Exception;
 import sernet.verinice.iso27k.model.ExceptionGroup;
+import sernet.verinice.iso27k.model.Finding;
+import sernet.verinice.iso27k.model.FindingGroup;
 import sernet.verinice.iso27k.model.ISO27KModel;
+import sernet.verinice.iso27k.model.Incident;
+import sernet.verinice.iso27k.model.IncidentGroup;
+import sernet.verinice.iso27k.model.IncidentScenario;
+import sernet.verinice.iso27k.model.IncidentScenarioGroup;
+import sernet.verinice.iso27k.model.Interview;
+import sernet.verinice.iso27k.model.InterviewGroup;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.model.PersonGroup;
 import sernet.verinice.iso27k.model.PersonIso;
 import sernet.verinice.iso27k.model.Requirement;
 import sernet.verinice.iso27k.model.RequirementGroup;
+import sernet.verinice.iso27k.model.Response;
+import sernet.verinice.iso27k.model.ResponseGroup;
+import sernet.verinice.iso27k.model.Threat;
+import sernet.verinice.iso27k.model.ThreatGroup;
+import sernet.verinice.iso27k.model.Vulnerability;
+import sernet.verinice.iso27k.model.VulnerabilityGroup;
 
 /**
  * Registry for DAOs for different types of objects. DAOs are managed by and injected by the Spring framework. 
@@ -99,6 +117,7 @@ public class DAOFactory {
 	private final Logger log = Logger.getLogger(DAOFactory.class);
 	
 	// injected by spring
+	@SuppressWarnings("unchecked")
 	private HashMap<Class, IBaseDao> daos = new HashMap<Class, IBaseDao>(); 
 	
 	/**
@@ -435,7 +454,70 @@ public class DAOFactory {
     	daos.put(Requirement.class, daoToSet);
     }
     
-  
+    public void setIncidentGroupDAO(IBaseDao<IncidentGroup, Integer> daoToSet) {
+    	daos.put(IncidentGroup.class, daoToSet);
+    }
+    public void setIncidentDAO(IBaseDao<Incident, Integer> daoToSet) {
+    	daos.put(Incident.class, daoToSet);
+    }
+    
+    public void setIncidentScenarioGroupDAO(IBaseDao<IncidentScenarioGroup, Integer> daoToSet) {
+    	daos.put(IncidentScenarioGroup.class, daoToSet);
+    }
+    public void setIncidentScenarioDAO(IBaseDao<IncidentScenario, Integer> daoToSet) {
+    	daos.put(IncidentScenario.class, daoToSet);
+    }
+    
+    public void setResponseGroupDAO(IBaseDao<ResponseGroup, Integer> daoToSet) {
+    	daos.put(ResponseGroup.class, daoToSet);
+    }
+    public void setResponseDAO(IBaseDao<Response, Integer> daoToSet) {
+    	daos.put(Response.class, daoToSet);
+    }
+    
+    public void setThreatGroupDAO(IBaseDao<ThreatGroup, Integer> daoToSet) {
+    	daos.put(ThreatGroup.class, daoToSet);
+    }
+    public void setThreatDAO(IBaseDao<Threat, Integer> daoToSet) {
+    	daos.put(Threat.class, daoToSet);
+    }
+    
+    public void setVulnerabilityGroupDAO(IBaseDao<VulnerabilityGroup, Integer> daoToSet) {
+    	daos.put(VulnerabilityGroup.class, daoToSet);
+    }
+    public void setVulnerabilityDAO(IBaseDao<Vulnerability, Integer> daoToSet) {
+    	daos.put(Vulnerability.class, daoToSet);
+    }
+    
+    public void setDocumentGroupDAO(IBaseDao<DocumentGroup, Integer> daoToSet) {
+    	daos.put(DocumentGroup.class, daoToSet);
+    }
+    public void setDocumentDAO(IBaseDao<Document, Integer> daoToSet) {
+    	daos.put(Document.class, daoToSet);
+    }
+    
+    public void setEvidenceGroupDAO(IBaseDao<EvidenceGroup, Integer> daoToSet) {
+    	daos.put(EvidenceGroup.class, daoToSet);
+    }
+    public void setEvidenceDAO(IBaseDao<Evidence, Integer> daoToSet) {
+    	daos.put(Evidence.class, daoToSet);
+    }
+    
+    public void setInterviewGroupDAO(IBaseDao<InterviewGroup, Integer> daoToSet) {
+    	daos.put(InterviewGroup.class, daoToSet);
+    }
+    public void setInterviewDAO(IBaseDao<Interview, Integer> daoToSet) {
+    	daos.put(Interview.class, daoToSet);
+    }
+    
+    public void setFindingGroupDAO(IBaseDao<FindingGroup, Integer> daoToSet) {
+    	daos.put(FindingGroup.class, daoToSet);
+    }
+    public void setFindingDAO(IBaseDao<Finding, Integer> daoToSet) {
+    	daos.put(Finding.class, daoToSet);
+    }
+    
+	@SuppressWarnings("unchecked")
 	public <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype) {
 		IBaseDao dao = daos.get(daotype);
 		if (dao != null)
@@ -455,6 +537,7 @@ public class DAOFactory {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T> IBaseDao<T, Serializable> getDAOForObject(Object o) {
 		Set<Entry<Class, IBaseDao>> entrySet = daos.entrySet();
 		for (Entry<Class, IBaseDao> entry : entrySet) {
