@@ -34,6 +34,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -41,15 +42,19 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
@@ -57,7 +62,7 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
-import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -65,12 +70,14 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.verinice.iso27k.command.RetrieveCnATreeElement;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
+import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
+import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
+import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -81,6 +88,9 @@ public class ISMView extends ViewPart {
 	private static final Logger LOG = Logger.getLogger(ISMView.class);
 	
 	public static final String ID = "sernet.verinice.iso27k.rcp.ISMView";
+	
+	private static Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
+	private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
 	
 	private TreeViewer viewer;
 	
@@ -100,8 +110,18 @@ public class ISMView extends ViewPart {
 
 	private Action collapseAllAction;
 	
-	private ISchedulingRule mutex = new Mutex(); 
+	private MetaDropAdapter metaDropAdapter;
 
+	private ControlDropPerformer controlDropAdapter;
+
+	private BSIModelViewDropPerformer bsiDropAdapter;
+	
+	private ISelectionListener selectionListener;
+
+	private boolean bsiListenerAdded = false;
+
+	private boolean catalogListenerAdded = false;
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -149,34 +169,6 @@ public class ISMView extends ViewPart {
 		viewer.setInput(organization);
 	}
 	
-	private void fillToolBar() {
-		IActionBars bars = getViewSite().getActionBars();
-		IToolBarManager manager = bars.getToolBarManager();
-		manager.add(expandAllAction);
-		manager.add(collapseAllAction);
-	}
-	
-	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				fillContextMenu(manager);
-			}			
-		});
-		Menu menu = menuMgr.createContextMenu(viewer.getControl());
-		
-		viewer.getControl().setMenu(menu);
-		getSite().registerContextMenu(menuMgr, viewer);
-	}
-	
-	private void hookDNDListeners() {
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
-		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		viewer.addDropSupport(operations, types, new BSIModelViewDropListener(viewer));
-		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
-	}
-	
 	private void makeActions() {
 		doubleClickAction = new Action() {
 			public void run() {
@@ -214,6 +206,39 @@ public class ISMView extends ViewPart {
 		};
 		collapseAllAction.setText("Collapse All");
 		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+
+		metaDropAdapter = new MetaDropAdapter(viewer);
+		controlDropAdapter = new ControlDropPerformer(this);
+		bsiDropAdapter = new BSIModelViewDropPerformer();
+		metaDropAdapter.addAdapter(controlDropAdapter);
+		metaDropAdapter.addAdapter(bsiDropAdapter);	
+	}
+	
+	private void fillToolBar() {
+		IActionBars bars = getViewSite().getActionBars();
+		IToolBarManager manager = bars.getToolBarManager();
+		manager.add(expandAllAction);
+		manager.add(collapseAllAction);
+	}
+	
+	private void hookContextMenu() {
+		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				fillContextMenu(manager);
+			}			
+		});
+		Menu menu = menuMgr.createContextMenu(viewer.getControl());
+		
+		viewer.getControl().setMenu(menu);
+		getSite().registerContextMenu(menuMgr, viewer);
+	}
+	
+	private void hookDNDListeners() {
+		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
+		viewer.addDropSupport(operations, types, metaDropAdapter);
+		
 	}
 	
 	private void expandAll() {

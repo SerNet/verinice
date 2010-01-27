@@ -36,6 +36,11 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -69,6 +74,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachments;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
+import sernet.verinice.iso27k.rcp.action.ControlDragListener;
 import sernet.verinice.iso27k.service.IItem;
 import sernet.verinice.iso27k.service.commands.CsvFile;
 import sernet.verinice.iso27k.service.commands.ImportCatalog;
@@ -88,6 +94,8 @@ public class CatalogView extends ViewPart {
 	private Action addCatalogAction;
 	
 	private Action filterAction;
+	
+	private DragSourceListener dragListener;
 
 	private ICommandService commandService;
 
@@ -162,6 +170,7 @@ public class CatalogView extends ViewPart {
 		
 		makeActions();
 		hookActions();
+		hookDNDListeners();
 		fillLocalToolBar();
 		
 		loadCatalogAttachmets();
@@ -245,6 +254,8 @@ public class CatalogView extends ViewPart {
 		
 		textFilter = new CatalogTextFilter(viewer);
 		filterAction = new CatalogViewFilterAction(viewer, this.textFilter);
+		
+		dragListener = new ControlDragListener(viewer);
 	}
 	
 	
@@ -253,10 +264,13 @@ public class CatalogView extends ViewPart {
 	 * 
 	 */
 	private void hookActions() {
-		// TODO Auto-generated method stub
-
 	}
-
+	
+	private void hookDNDListeners() {
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
+		int operations = DND.DROP_COPY | DND.DROP_MOVE;
+		viewer.addDragSupport(operations, types, dragListener);
+	}
 	/**
 	 * 
 	 */
