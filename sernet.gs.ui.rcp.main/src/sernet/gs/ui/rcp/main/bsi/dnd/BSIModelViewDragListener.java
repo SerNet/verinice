@@ -17,7 +17,9 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -47,7 +49,12 @@ public class BSIModelViewDragListener implements DragSourceListener {
 
 	public void dragStart(DragSourceEvent event) {
 		IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
-
+		if(selection==null) {
+			event.doit = false;
+			return;	
+		}
+		List selectionList = new ArrayList(selection.size());
+		
 		if (selection.size() != 1) {
 			// check if only structure elements are selected:
 			Iterator iterator = selection.iterator();
@@ -61,6 +68,7 @@ public class BSIModelViewDragListener implements DragSourceListener {
 			
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object o = iter.next();
+			selectionList.add(o);
 			if (!(o instanceof BausteinUmsetzung
 				  || o instanceof IBSIStrukturElement
 				  || o instanceof IISO27kElement)
@@ -70,7 +78,7 @@ public class BSIModelViewDragListener implements DragSourceListener {
 			}
 		}
 		event.doit = true;
-		DNDItems.setItems(selection.toList());
+		DNDItems.setItems(selectionList);
 	}
 
 }
