@@ -30,10 +30,10 @@ import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.verinice.iso27k.command.RetrieveCnATreeElement;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 
 /**
  * Content provider for BSI model elements.
