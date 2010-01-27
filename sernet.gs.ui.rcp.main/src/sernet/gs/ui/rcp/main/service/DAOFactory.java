@@ -467,7 +467,8 @@ public class DAOFactory {
     public void setIncidentScenarioDAO(IBaseDao<IncidentScenario, Integer> daoToSet) {
     	daos.put(IncidentScenario.class, daoToSet);
     }
-    
+  
+
     public void setResponseGroupDAO(IBaseDao<ResponseGroup, Integer> daoToSet) {
     	daos.put(ResponseGroup.class, daoToSet);
     }
@@ -525,6 +526,7 @@ public class DAOFactory {
 		
 		// we might have been passed a proxy (class enhanced by cglib), so try to find
 		// a DAO that works:
+		// FIXME akoderman this doesn't work, we still need a better solution for this, you often get a NullPointerException because no DAO was found for a CGLib enhanced obect
 		for (Class clazz : daos.keySet()) {
 			if (clazz.isAssignableFrom(daotype))
 				return daos.get(clazz);

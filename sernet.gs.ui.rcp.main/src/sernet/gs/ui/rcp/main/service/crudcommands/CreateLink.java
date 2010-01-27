@@ -19,8 +19,10 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
@@ -63,16 +65,17 @@ extends GenericCommand {
 
 		IBaseDao<V, Serializable> targetDao 
 		= (IBaseDao<V, Serializable>) getDaoFactory().getDAO(target.getClass());
-		
-		draggedDao.reload(dragged, dragged.getDbId());
-		targetDao.reload(target, target.getDbId());
+
+		// if dragged or target are cglib enhanced, we won't get a DAO, but in this case we don't need to reload
+		// because we're already inside the session:
+		if (draggedDao != null && targetDao != null) {
+			draggedDao.reload(dragged, dragged.getDbId());
+			targetDao.reload(target, target.getDbId());
+		}
 		
 		link = new CnALink(target, dragged, typeId, comment);
 		linkDao.merge(link, true);
 		
-		// make sure parent object is loaded for tree display:
-		//link.getParent().getParent();
-		//link.getTitle();
 	}
 
 	public CnALink getLink() {

@@ -17,7 +17,7 @@
 			<key-property name="dependencyId"
 				access="field"
 				column="DEPENDENCY_ID"/>
-			<key-property name="typeId"
+			<key-property name="relationId"
 				access="field"
 				column="TYPE_ID"/>
 		</composite-id>

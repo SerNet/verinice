@@ -19,7 +19,7 @@
 			<key-property name="dependencyId"
 				access="field"
 				column="DEPENDENCY_ID"/>
-			<key-property name="typeId"
+			<key-property name="relationId"
 				access="field"
 				column="TYPE_ID"/>
 		</composite-id>
@@ -27,7 +27,7 @@
 		<property name="linkType"/>
 
 		<property name="comment"/> 
-		
+
 		<many-to-one name="dependant"
 			column="DEPENDANT_ID"
 			not-null="true"

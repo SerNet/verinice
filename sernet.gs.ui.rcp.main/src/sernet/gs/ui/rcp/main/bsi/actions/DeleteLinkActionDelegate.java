@@ -71,7 +71,6 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate {
 		
 			if (sel instanceof CnALink) {
 				CnALink link = (CnALink) sel;
-				//link.remove();
 				try {
 					CnAElementHome.getInstance().remove(link);
 					CnAElementFactory.getLoadedModel().linkRemoved(link);

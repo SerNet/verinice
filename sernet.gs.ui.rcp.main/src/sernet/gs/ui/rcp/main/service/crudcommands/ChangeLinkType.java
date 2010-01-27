@@ -19,14 +19,19 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.common.model.CnALink.Id;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 /**
+ * Changes the link type. Because links are immutable, the link will be deleted and inserted again with new link type.
+ * The newly created link will be in the command after execution and requested using the getLink() method.
+ * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$
@@ -34,16 +39,24 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
  */
 public class ChangeLinkType extends GenericCommand {
 
-	private Id linkId;
+	private CnALink link;
+	private CnALink getLink() {
+		return link;
+	}
+
 	private String linkTypeID;
 	private String comment;
 
 	/**
-	 * @param id
-	 * @param linkTypeID 
+	 * Change the link type of a link.
+	 * Because links are immutable, the link has to be deleted an recreated.
+	 * 
+	 * @param link The link that should be changed
+	 * @param linkTypeID the new id of the link type according to the XML definition, i.e. "server_to_person_responsible"
+	 * @param comment a user's comment that should be saved along with the link
 	 */
-	public ChangeLinkType(Id id, String linkTypeID, String comment) {
-		this.linkId = id;
+	public ChangeLinkType(CnALink link, String linkTypeID, String comment) {
+		this.link = link;
 		this.linkTypeID = linkTypeID;
 		this.comment = comment;
 	}
@@ -53,7 +66,6 @@ public class ChangeLinkType extends GenericCommand {
 	 */
 	@Override
 	public void clear() {
-		linkId = null;
 		linkTypeID = null;
 		comment = null;
 	}
@@ -64,17 +76,19 @@ public class ChangeLinkType extends GenericCommand {
 	public void execute() {
 		try {
 			IBaseDao<CnALink, Serializable> dao = getDaoFactory().getDAO(CnALink.class);
-			CnALink link = dao.findById(linkId);
+			dao.reload(link, link.getId());
+
+			
 			CnATreeElement dependant = link.getDependant();
 			CnATreeElement dependency = link.getDependency();
-			
 			// links are immutable, so we have to recreate the link:
+			RemoveLink<CnALink> command3 = new RemoveLink<CnALink>(link);
+			command3 = getCommandService().executeCommand(command3);
 			
-			RemoveLink<CnALink> command = new RemoveLink<CnALink>(linkId);
-			command = getCommandService().executeCommand(command);
-			
-			CreateLink<CnALink, CnATreeElement, CnATreeElement> command2 = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(dependant, dependency, linkTypeID, comment);
-			command2 = getCommandService().executeCommand(command2);
+			CreateLink<CnALink, CnATreeElement, CnATreeElement> command4 
+				= new CreateLink<CnALink, CnATreeElement, CnATreeElement>(dependant, dependency, linkTypeID, comment);
+			command4 = getCommandService().executeCommand(command4);
+			this.link = command4.getLink();
 			
 		} catch (CommandException e) {
 		}

@@ -33,17 +33,16 @@ import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 public class RemoveLink<T extends CnALink> extends GenericCommand implements IChangeLoggingCommand {
 
 	private String stationId;
-	private Id linkId;
-	private transient CnALink element;
+	private CnALink element;
 
-	public RemoveLink(CnALink.Id linkId) {
-		this.linkId = linkId;
+	public RemoveLink(CnALink link) {
 		this.stationId = ChangeLogEntry.STATION_ID;
+		this.element = link;
 	}
 	
 	public void execute() {
 		IBaseDao<CnALink, Serializable> dao = (IBaseDao<CnALink, Serializable>) getDaoFactory().getDAO(CnALink.class);
-		element = dao.findById(linkId);
+		dao.refresh(element);
 		element.remove();
 		dao.delete(element);
 	}
@@ -53,7 +52,6 @@ public class RemoveLink<T extends CnALink> extends GenericCommand implements ICh
 	 */
 	@Override
 	public void clear() {
-		linkId = null;
 		element = null;
 	}
 

@@ -111,7 +111,8 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 		 }
 
 		 public T findById(ID id) {
-//			 return (T) getHibernateTemplate().load(type, id);
+			// NEVER use load() because it does not use the filter used to restrict read access!
+//			 return (T) getHibernateTemplate().load(type, id); 
 			 return retrieve(id, (new RetrieveInfo()).setProperties(true)
 			 	);
 		 }

@@ -298,19 +298,17 @@ Template:
         name="Server"
         id="server">
         
-        <huirelation to="person" 
-        	id="server_person_responsible" 
-        	name="responsible person" 
-        	reversename="responsible for" 
-        	tooltip="Responsible person"/>
-        <huirelation to="person" id="server_person_accountable" 
-        	name="accountable person" reversename="accountable for" tooltip="Accountable person"/>
-        <huirelation to="person" id="server_person_consulted" 
-        	name="consulted person" reversename="consulted for" tooltip="Consulted person"/>
-        <huirelation to="person" id="server_person_informed" 
-        	name="informed person" reversename="informed about" tooltip="Informed person"/>
+        <huirelation to="raum" id="server_raum_located" 
+        	name="located in" reversename="houses" tooltip="This asset is physically located here."/>
+        
+        <huirelation to="person" id="server_person_systemadmin" 
+        	name="system administered by" reversename="administers system" tooltip="This person is responsible for administration of this server."/>
+        	
+        <huirelation to="person" id="server_person_applicationadmin" 
+        	name="application administered by" reversename="administers application on" tooltip="This person is responsible for administration of applications on this server."/>
 
-        <huirelation to="raum" id="server_raum_located" name="located in" reversename="houses" tooltip="Equipment is located here."/>
+        <huirelation to="person" id="server_person_networkadmin" 
+        	name="network administered by" reversename="administers network for" tooltip="This person is responsible for network connectivity of this server."/>
         
         <huiproperty
             name="Kürzel"
@@ -2055,6 +2053,21 @@ Template:
     <huientity
         id="anwendung"
         name="Anwendung">
+        
+          <huirelation to="person" 
+        	id="anwendung_person_responsible"
+        	name="responsible" 
+        	reversename="responsible for" 
+        	tooltip="Responsible person"/>
+     
+        <huirelation to="person" id="anwendung_person_accountable" 
+        	name="accountable" reversename="accountable for" tooltip="Accountable person"/>
+      
+        <huirelation to="person" id="anwendung_person_consulted" 
+        	name="consulted" reversename="consulted for" tooltip="Consulted person"/>
+      
+        <huirelation to="person" id="anwendung_person_informed" 
+        	name="informed" reversename="informed about" tooltip="Informed person"/>
         
         <huiproperty
 			name="Kürzel"

@@ -23,6 +23,7 @@ import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Raum;
+import sernet.hui.common.connect.HuiRelation;
 
 /**
  * Association class for links between items.
@@ -40,16 +41,35 @@ public class CnALink implements Serializable {
 //	public static final int USED_BY 			= 3;
 	public static final int LOCATED_IN 		= 4;
 	
-	// relation type according to HitroRelation:
-	private String typeId;
-	
 	// user entered comment:
 	private String comment;
 	
+	/**
+	 * @param link
+	 * @return
+	 */
+	public static String getCurrentName(CnATreeElement fromElement, CnALink link) {
+		HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(link.getRelationId());
+		String name;
+		if (relation == null) {
+			name = isDownwardLink(fromElement, link) ? "" : "";
+		}
+		else {
+			name = isDownwardLink(fromElement, link) ? relation.getName() : relation.getReversename();
+		}
+		return name;
+	}
 	
+	/**
+	 * @param link
+	 * @return
+	 */
+	public static boolean isDownwardLink(CnATreeElement fromElement, CnALink link) {
+		return fromElement.getLinksDown().contains(link);
+	}
 	
-	public String getTypeId() {
-		return typeId;
+	public String getRelationId() {
+		return getId().relationId;
 	}
 
 	public String getComment() {
@@ -59,7 +79,7 @@ public class CnALink implements Serializable {
 	public static class Id implements Serializable {
 		private Integer dependantId;
 		private Integer dependencyId;
-		private String typeId;
+		private String relationId;
 		
 		public Id() {}
 		
@@ -67,10 +87,10 @@ public class CnALink implements Serializable {
 			this(dependantId, dependencyId, "");
 		}
 
-		public Id(Integer dependantId, Integer dependencyId, String typeId) {;
+		public Id(Integer dependantId, Integer dependencyId, String relationId) {;
 			this.dependantId = dependantId;
 			this.dependencyId = dependencyId;
-			this.typeId = typeId;
+			this.relationId = relationId;
 		}
 		
 		public boolean equals(Object o) {
@@ -78,7 +98,7 @@ public class CnALink implements Serializable {
 				Id that = (Id)o;
 				return this.dependantId.equals(that.dependantId)
 					&& this.dependencyId.equals(that.dependencyId)
-					&& this.typeId.equals(that.typeId);
+					&& this.relationId.equals(that.relationId);
 			} 
 			else {
 				return false;
@@ -86,9 +106,9 @@ public class CnALink implements Serializable {
 		}
 		
 		public int hashCode() {
-			if (dependantId == null || dependencyId == null || typeId == null)	
+			if (dependantId == null || dependencyId == null || relationId == null)	
 					return super.hashCode();
-			return dependantId.hashCode() + dependencyId.hashCode() + typeId.hashCode();
+			return dependantId.hashCode() + dependencyId.hashCode() + relationId.hashCode();
 		}
 		
 	}
@@ -103,17 +123,16 @@ public class CnALink implements Serializable {
 	
 	protected CnALink() {}
 	
-	public CnALink(CnATreeElement dependant, CnATreeElement dependency, String typeId, String comment) {
+	public CnALink(CnATreeElement dependant, CnATreeElement dependency, String relationId, String comment) {
 		// set linked items:
 		this.dependant = dependant;
 		this.dependency = dependency;
-		this.typeId = typeId;
 		this.comment = comment;
 		
 		// set IDs:
 		getId().dependantId = dependant.getDbId();
 		getId().dependencyId = dependency.getDbId();
-		getId().typeId = typeId;
+		getId().relationId = relationId;
 	
 		// maintain bi-directional association:
 		dependency.addLinkUp(this);
@@ -121,10 +140,6 @@ public class CnALink implements Serializable {
 		this.linkType = linkTypeFor(dependency);
 	}
 	
-	protected void setTypeId(String typeId) {
-		this.typeId = typeId;
-	}
-
 	protected void setComment(String comment) {
 		this.comment = comment;
 	}
