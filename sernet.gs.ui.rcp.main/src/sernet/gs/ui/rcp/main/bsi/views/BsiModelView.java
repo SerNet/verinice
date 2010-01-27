@@ -67,7 +67,7 @@ import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
-import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
 import sernet.gs.ui.rcp.main.bsi.dnd.CopyBSIModelViewAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.PasteBsiModelViewAction;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -94,6 +94,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 
 /**
  * View for model of own "ITVerbund" with associated controls, risk analysis
@@ -158,6 +159,8 @@ public class BsiModelView extends ViewPart {
 	private TreeViewerCache cache;
 
 	private BausteinZuordnungAction bausteinZuordnungAction;
+	
+	private MetaDropAdapter dropAdapter;
 
 	public void setNullModel() {
 		model = new NullModel();
@@ -288,7 +291,7 @@ public class BsiModelView extends ViewPart {
 	private void hookDNDListeners() {
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		viewer.addDropSupport(operations, types, new BSIModelViewDropListener(viewer));
+		viewer.addDropSupport(operations, types, dropAdapter);
 		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
 	}
 
@@ -422,6 +425,10 @@ public class BsiModelView extends ViewPart {
 		openDBAction = new BSIModelViewOpenDBAction(this, viewer);
 
 		closeDBAction = new BSIModelViewCloseDBAction(this, viewer);
+		
+		dropAdapter = new MetaDropAdapter(viewer);
+		dropAdapter.addAdapter(new BSIModelViewDropPerformer());
+		
 
 	}
 	

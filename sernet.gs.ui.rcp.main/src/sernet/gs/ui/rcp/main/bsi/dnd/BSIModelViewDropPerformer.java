@@ -25,8 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.gs.model.Baustein;
@@ -41,6 +40,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.verinice.iso27k.model.IISO27kElement;
+import sernet.verinice.iso27k.rcp.action.DropPerformer;
 
 /**
  * Handles drop events of objects to create links between them.
@@ -51,35 +51,38 @@ import sernet.verinice.iso27k.model.IISO27kElement;
  * $LastChangedBy$
  *
  */
-public class BSIModelViewDropListener extends ViewerDropAdapter {
+public class BSIModelViewDropPerformer implements DropPerformer {
 
-	private static final Logger LOG = Logger.getLogger(BSIModelViewDropListener.class);
+	private static final Logger LOG = Logger.getLogger(BSIModelViewDropPerformer.class);
 	
-	public BSIModelViewDropListener(TreeViewer viewer) {
-		super(viewer);
+	private boolean isActive = false;
+	
+	public BSIModelViewDropPerformer() {
 	}
 
-	@Override
-	public boolean performDrop(Object data) {
+	public boolean performDrop(Object data, Object target, Viewer viewer ) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("performDrop...");
+		}
 		Object toDrop = DNDItems.getItems().get(0);
-		if (toDrop != null && toDrop instanceof Baustein) {
-			return dropBaustein();
-		} else if (toDrop != null && (toDrop instanceof IBSIStrukturElement || toDrop instanceof IISO27kElement)) {
-			CnATreeElement target;
-			if (getCurrentTarget() instanceof LinkKategorie)
-				target = ((LinkKategorie) getCurrentTarget()).getParent();
-			else
-				target = (CnATreeElement) getCurrentTarget();
-			LinkDropper dropper = new LinkDropper();
-			return dropper.dropLink(DNDItems.getItems(), target);
+		if(isActive()) {
+			if (toDrop != null && toDrop instanceof Baustein) {
+				return dropBaustein((CnATreeElement) target, viewer);
+			} else if (toDrop != null && (toDrop instanceof IBSIStrukturElement || toDrop instanceof IISO27kElement)) {
+				CnATreeElement element;
+				if (target instanceof LinkKategorie)
+					element = ((LinkKategorie) target).getParent();
+				else
+					element = (CnATreeElement) target;
+				LinkDropper dropper = new LinkDropper();
+				return dropper.dropLink(DNDItems.getItems(), element);
+			}
 		}
 		return false;
 
 	}
 
-	private boolean dropBaustein() {
-		final CnATreeElement target = (CnATreeElement) getCurrentTarget();
-		
+	private boolean dropBaustein(final CnATreeElement target, Viewer viewer) {
 		if (!CnAElementHome.getInstance().isNewChildAllowed(target))
 			return false;
 		
@@ -90,8 +93,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 				targetSchicht = ((IBSIStrukturElement) target).getSchicht();
 
 			if (baustein.getSchicht() != targetSchicht) {
-				if (!SanityCheckDialog.checkLayer(super.getViewer()
-						.getControl().getShell(), baustein.getSchicht(),
+				if (!SanityCheckDialog.checkLayer(viewer.getControl().getShell(), baustein.getSchicht(),
 						targetSchicht))
 					return false;
 				else
@@ -127,8 +129,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 		return true;
 	}
 
-	private void createBausteinUmsetzung(List<Baustein> toDrop,
-			CnATreeElement target) throws Exception {
+	private void createBausteinUmsetzung(List<Baustein> toDrop, CnATreeElement target) throws Exception {
 		CnATreeElement saveNew = null;
 		for (Baustein baustein : toDrop) {
 			saveNew = CnAElementFactory.getInstance().saveNew(target,
@@ -140,71 +141,80 @@ public class BSIModelViewDropListener extends ViewerDropAdapter {
 		CnAElementFactory.getLoadedModel().databaseChildAdded(saveNew);
 	}
 
-	@Override
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("validateDrop, target: " + target);
 		}
 
 		if (target == null)
-			return false;
+			return isActive=false;
 
 		if (!(target instanceof CnATreeElement || target instanceof LinkKategorie))
-			return false;
+			return isActive=false;
 
 		if (target instanceof IBSIStrukturKategorie)
-			return false;
+			return isActive=false;
 
 		List items = DNDItems.getItems();
 
+		if(items==null || items.isEmpty()) {
+			return isActive=false;
+		}
+		
 		// use bstUms as template for bstUmsTarget
-		if (DNDItems.getItems().get(0) instanceof BausteinUmsetzung) {
+		if (items.get(0) instanceof BausteinUmsetzung) {
 			BausteinUmsetzung sourceBst = (BausteinUmsetzung) DNDItems.getItems().get(0);
 			if (target instanceof BausteinUmsetzung) {
 				BausteinUmsetzung targetBst = (BausteinUmsetzung) target;
 				if (targetBst.getKapitel().equals(sourceBst.getKapitel()))
-					return true;
+					return isActive=true;
 			}
-			return false;
+			return isActive=false;
 		}
 
 		// link drop:
-		if (DNDItems.getItems().get(0) instanceof IBSIStrukturElement || DNDItems.getItems().get(0) instanceof IISO27kElement) {
-			List itemsToDrop = DNDItems.getItems();
-			for (Object item : itemsToDrop) {
+		if (items.get(0) instanceof IBSIStrukturElement || items.get(0) instanceof IISO27kElement) {
+			for (Object item : items) {
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("validateDrop, draged item: " + item );
 				}
 				if (target.equals(item))
-					return false;
+					return isActive=false;
 
 				if (!(item instanceof IBSIStrukturElement || item instanceof IISO27kElement))
-					return false;
+					return isActive=false;
 
 				if (item instanceof IBSIStrukturElement && target instanceof LinkKategorie) {
 					if (((LinkKategorie) target).getParent().equals(item)) /* is same object */
-						return false;
+						return isActive=false;
 				}
 			}
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("validateDrop, validated!");
 			}
-			return true;
+			return isActive=true;
 		}
 
 		// other drop type:
 		if (!(target instanceof CnATreeElement))
-			return false;
+			return isActive=false;
 
 		for (Iterator iter = items.iterator(); iter.hasNext();) {
 			Object obj = iter.next();
 			// Logger.getLogger(this.getClass()).debug("Drop item: " + obj);
 			CnATreeElement cont = (CnATreeElement) target;
 			if (!cont.canContain(obj))
-				return false;
+				return isActive=false;
 
 		}
-		return true;
+		return isActive=true;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.verinice.iso27k.rcp.action.DropPerformer#isActive()
+	 */
+	public boolean isActive() {
+		return isActive;
 	}
 
 }
