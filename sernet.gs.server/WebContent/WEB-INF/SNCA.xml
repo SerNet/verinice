@@ -2772,16 +2772,132 @@ Template:
             name="Title"
             id="assetgroup_name" />
     </huientity>
+    
     <huientity
         name="Asset"
         id="asset" >
+        
+        <huirelation to="person-iso" id="asset-person-owner" 
+        	name="owner" reversename="is owner of" tooltip="Person is owner as defined in ISO27001."/>
+        
+        <huirelation to="person-iso" id="asset-person-delegated" 
+        	name="delegated to" reversename="operationally responsible for" tooltip="Operational responsibility is delegated to this person."/>
+        
         <huiproperty
             name="Title"
-            id="asset_name" />
+            id="asset_name" 
+            inputtype=""/>
         <huiproperty
             name="Abbreviation"
             id="asset_abbr" />
+
+	<huiproperty
+		name="Type of Asset"
+		id="asset_type"
+		inputtype="singleoption">
+		<option
+			name="Informtion"
+			id="asset_type_inf" />
+		<option
+			name="Software"
+			id="asset_type_software" />
+		<option
+			name="Physical"
+			id="asset_type_phys" />
+		<option
+			name="Service"
+			id="asset_type_service" />
+		<option
+			name="People"
+			id="asset_type_people" />
+		<option
+			name="Intangible"
+			id="asset_type_intangible" />
+	</huiproperty>
+	
+	<huipropertygroup id="asset_value_group" name="Asset Value">
+	<huiproperty
+				id="asset_value_confidentiality"
+				name="Confidentiality"
+				inputtype="singleoption">
+				<option
+					id="asset_value_confidentiality_normal"
+					name="Low" />
+				<option
+					id="asset_value_confidentiality_hoch"
+					name="Medium" />
+				<option
+					id="asset_value_confidentiality_sehrhoch"
+					name="High" />
+			</huiproperty>
+			<huiproperty
+				id="asset_value_availability"
+				name="Availability"
+				inputtype="singleoption">
+				<option
+					id="asset_value_availability_normal"
+					name="Low" />
+				<option
+					id="asset_value_availability_hoch"
+					name="Medium" />
+				<option
+					id="asset_value_availability_sehrhoch"
+					name="High" />
+			</huiproperty>
+			<huiproperty
+				id="asset_value_integrity"
+				name="Integrity"
+				inputtype="singleoption">
+				<option
+					id="asset_value_integrity_normal"
+					name="Low" />
+				<option
+					id="asset_value_integrity_hoch"
+					name="Medium" />
+				<option
+					id="asset_value_integrity_sehrhoch"
+					name="High" />
+			</huiproperty>
+			<huiproperty
+				name="Explanation"
+				inputtype="text"
+				id="asset_value_comment" />
+	</huipropertygroup>
+	
+	<huipropertygroup id="asset_impact_group" name="Business Impact">
+			<huiproperty
+				id="asset_impact_auto"
+				name="Method"
+				inputtype="singleoption"
+				>
+				<option
+					id="asset_impact_auto_yes"
+					name="Calculate" />
+				<option
+					id="asset_impact_auto_no"
+					name="Manual" />
+			</huiproperty>
+			
+			<huiproperty
+				id="asset_impact_manual"
+				name="Business Impact"
+				inputtype="singleoption"
+				>
+				<option
+					id="asset_impact_manual_low"
+					name="Low" />
+				<option
+					id="asset_impact_manual_medium"
+					name="Medium" />
+				<option
+					id="asset_impact_manual_high"
+					name="High" />
+			</huiproperty>
+			
+	</huipropertygroup>
+	
     </huientity>
+    
     <huientity
         name="Person-Group"
         id="persongroup" >
