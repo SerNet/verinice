@@ -37,6 +37,7 @@ public class ControlGroup extends Group<Control> {
 	
 	public ControlGroup() {
 		super();
+		setEntity(new Entity(TYPE_ID));
 	}
 	
 	public ControlGroup(CnATreeElement parent) {
