@@ -39,8 +39,6 @@ public class Item implements IItem {
 	
 	private transient Logger log = Logger.getLogger(Item.class);
 	
-	
-	
 	public Logger getLog() {
 		if(log==null) {
 			log = Logger.getLogger(Item.class);
@@ -210,5 +208,32 @@ public class Item implements IItem {
 		}
 		return sb.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((numberString == null) ? 0 : numberString.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Item other = (Item) obj;
+		if (numberString == null) {
+			if (other.numberString != null)
+				return false;
+		} else if (!numberString.equals(other.numberString))
+			return false;
+		return true;
+	}
+	
+	
 
 }
