@@ -19,57 +19,35 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import sernet.verinice.iso27k.model.Control;
+import sernet.verinice.iso27k.model.ControlGroup;
 
 /**
+ * 
  * @author Daniel Murygin <dm@sernet.de>
- *
  */
-public class ItemControlTransformer implements ITransformer<IItem, Control> {
+public class ItemControlTransformer {
 
-	List<IItem> itemList;
-	List<Control> controlList;
-	
 	/**
-	 * @param itemList
+	 * @param item
+	 * @return
 	 */
-	public ItemControlTransformer(List<IItem> itemList) {
-		this.itemList = itemList;
-		transform();
+	public static Control transform(IItem item) {
+		Control control = new Control();
+		control.setAbbreviation(item.getName());
+		control.setTitel(item.getName());
+		control.setDescription(item.getDescription());
+		return control;
 	}
 
 	/**
-	 * 
+	 * @param item
+	 * @return
 	 */
-	private void transform() {
-		if(itemList!=null) {
-			if(controlList==null) {
-				controlList = new ArrayList<Control>(itemList.size());
-			} else {
-				controlList.clear();
-			}
-			for (IItem item : itemList) {
-				Control control = new Control();
-				control.setAbbreviation(item.getName());
-				control.setTitel(item.getName());
-				control.setDescription(item.getDescription());
-				controlList.add(control);		
-			}	
-		}	
-	}
-
-	/* (non-Javadoc)
-	 * @see sernet.verinice.iso27k.service.ITransformer#getResultList()
-	 */
-	public List<Control> getResultList() {
-		if( (itemList!=null && controlList==null) 
-			|| (itemList!=null && itemList.size()!=controlList.size()) ) {
-			transform();
-		}
-		return controlList;
+	public static ControlGroup transformToGroup(IItem item) {
+		ControlGroup controlGroup = new ControlGroup();
+		controlGroup.setTitel(item.getName());
+		return controlGroup;
 	}
 
 }
