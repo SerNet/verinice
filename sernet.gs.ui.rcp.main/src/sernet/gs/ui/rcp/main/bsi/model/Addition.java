@@ -85,13 +85,11 @@ public class Addition implements Serializable{
 	protected HUITypeFactory getTypeFactory() {
 		return HitroUtil.getInstance().getTypeFactory();
 	}
-	
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cnATreeElementId == null) ? 0 : cnATreeElementId.hashCode());
 		result = prime * result + ((dbId == null) ? 0 : dbId.hashCode());
 		return result;
 	}
@@ -105,11 +103,6 @@ public class Addition implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Addition other = (Addition) obj;
-		if (cnATreeElementId == null) {
-			if (other.cnATreeElementId != null)
-				return false;
-		} else if (!cnATreeElementId.equals(other.cnATreeElementId))
-			return false;
 		if (dbId == null) {
 			if (other.dbId != null)
 				return false;

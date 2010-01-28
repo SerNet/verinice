@@ -74,7 +74,6 @@ public class Attachment extends Addition implements Serializable{
 	
 	public static String[] TEXT_MIME_TYPES = new String[] {"txt","log","readme"};
 	
-	
 	private transient EntityType subEntityType;
 	
 	private String filePath;
@@ -191,5 +190,37 @@ public class Attachment extends Addition implements Serializable{
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		if(dbId!=null) {
+			return super.hashCode();
+		}
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((filePath == null) ? 0 : filePath.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(dbId!=null && obj!=null && (obj instanceof Addition) && ((Addition)obj).getDbId()!=null) {
+			return super.equals(obj);
+		}
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Attachment other = (Attachment) obj;
+		if (filePath == null) {
+			if (other.filePath != null)
+				return false;
+		} else if (!filePath.equals(other.filePath))
+			return false;
+		return true;
+	}
+
+	
 
 }
