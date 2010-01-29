@@ -20,6 +20,8 @@
 package sernet.verinice.iso27k.model;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
@@ -63,5 +65,10 @@ public abstract class Group<T> extends CnATreeElement implements IISO27kGroup {
 		}
 		return canContain;
 	}
-
+	
+	public Collection<? extends String> getTags() {
+		// empty, override this to add tags to groups
+		// dont't forget to add a huiproperty to your SNCA.xml
+		return Collections.emptyList();
+	}
 }

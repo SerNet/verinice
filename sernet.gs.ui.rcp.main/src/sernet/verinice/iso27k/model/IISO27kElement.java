@@ -19,10 +19,17 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.model;
 
+import java.util.Collection;
+
 /**
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
 public interface IISO27kElement {
 
+	public String getTypeId();
+	
+	public String getTitle();
+	
+	public Collection<? extends String> getTags();
 }

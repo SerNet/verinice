@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.model;
 
+import java.util.Collection;
+
+import sernet.gs.ui.rcp.main.bsi.model.TagHelper;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
 
@@ -32,6 +35,7 @@ public class Control extends CnATreeElement implements IISO27kElement {
 	public static final String TYPE_ID = "control"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "control_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "control_name"; //$NON-NLS-1$
+	public static final String PROP_TAG = "control_tag"; //$NON-NLS-1$
 	public static final String PROP_DESC = "control_desc"; //$NON-NLS-1$
 	
 	/**
@@ -74,6 +78,10 @@ public class Control extends CnATreeElement implements IISO27kElement {
 	
 	public void setAbbreviation(String abbreviation) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+	}
+	
+	public Collection<? extends String> getTags() {
+		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
 	public String getDescription() {
