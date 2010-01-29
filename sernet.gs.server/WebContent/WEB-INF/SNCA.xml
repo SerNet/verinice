@@ -2914,6 +2914,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="person_abbr" />
+        <huiproperty
+            id="person-iso_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Audit-Group"
@@ -2931,6 +2935,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="audit_abbr" />
+        <huiproperty
+            id="audit_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Control-Group"
@@ -2948,6 +2956,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="control_abbr" />
+        <huiproperty
+            id="control_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
         <huiproperty
             name="Description"
             id="control_desc"
@@ -2969,6 +2981,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="exception_abbr" />
+        <huiproperty
+            id="exception_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Requirement-Group"
@@ -2986,6 +3002,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="requirement_abbr" />
+        <huiproperty
+            id="requirement_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Incident"
@@ -2996,6 +3016,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="incident_abbr" />
+        <huiproperty
+            id="incident_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Incident-Group"
@@ -3013,6 +3037,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="incident_scenario_abbr" />
+        <huiproperty
+            id="incident_scenario_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Incident-Scenario-Group"
@@ -3030,6 +3058,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="response_abbr" />
+        <huiproperty
+            id="response_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Response-Group"
@@ -3047,6 +3079,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="threat_abbr" />
+        <huiproperty
+            id="threat_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Threat-Group"
@@ -3064,6 +3100,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="vulnerability_abbr" />
+        <huiproperty
+            id="vulnerability_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Vulnerability-Group"
@@ -3081,6 +3121,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="document_abbr" />
+        <huiproperty
+            id="document_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Document-Group"
@@ -3098,6 +3142,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="interview_abbr" />
+        <huiproperty
+            id="interview_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Interview-Group"
@@ -3115,6 +3163,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="evidence_abbr" />
+        <huiproperty
+            id="evidence_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Evidence-Group"
@@ -3132,6 +3184,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="finding_abbr" />
+        <huiproperty
+            id="finding_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Finding-Group"
