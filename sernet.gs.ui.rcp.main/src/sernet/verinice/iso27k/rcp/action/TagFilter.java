@@ -1,0 +1,83 @@
+/*******************************************************************************
+ * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ *     This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU General Public License for more details.
+ *     You should have received a copy of the GNU General Public 
+ * License along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ ******************************************************************************/
+package sernet.verinice.iso27k.rcp.action;
+
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+
+import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.verinice.iso27k.model.IISO27kElement;
+
+public class TagFilter extends ViewerFilter {
+	
+	public static final String NO_TAG = "[keine Tags]";
+
+	String[] pattern;
+	private StructuredViewer viewer;
+	
+	public TagFilter(StructuredViewer viewer) {
+		this.viewer = viewer;
+	}
+	
+	@Override
+	public boolean select(Viewer viewer, Object parentElement, Object o) {
+		boolean result = true;
+		if ((o instanceof IISO27kElement) ) {
+			result = false;
+			IISO27kElement element = (IISO27kElement) o;
+			for (String tag : pattern) {
+				if (tag.equals(NO_TAG)) {
+					if (element.getTags().size()<1)
+						result =  true;
+				}
+				for (String zielTag : element.getTags()) {
+					if (zielTag.equals(tag))
+						result =  true;
+				}
+			}
+		}
+		return result;
+	}
+
+	public String[] getPattern() {
+		return pattern;
+	}
+
+	public void setPattern(String[] newPattern) {
+		boolean active = pattern != null;
+		if (newPattern != null && newPattern.length > 0) {
+			pattern = newPattern;
+			if (active)
+				viewer.refresh();
+			else {
+				viewer.addFilter(this);
+				active = true;
+			}
+			return;
+		}
+		
+		// else deactivate:
+		pattern = null;
+		if (active)
+			viewer.removeFilter(this);
+		
+	}
+
+}

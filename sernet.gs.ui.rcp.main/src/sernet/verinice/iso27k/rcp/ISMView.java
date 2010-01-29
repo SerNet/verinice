@@ -55,6 +55,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
@@ -64,7 +65,13 @@ import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.bsi.filter.LebenszyklusPropertyFilter;
+import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
+import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
+import sernet.gs.ui.rcp.main.bsi.filter.ObjektLebenszyklusPropertyFilter;
+import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
+import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
@@ -76,7 +83,9 @@ import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
+import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
+import sernet.verinice.iso27k.rcp.action.TagFilter;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 
 /**
@@ -98,6 +107,8 @@ public class ISMView extends ViewPart {
 	
 	ISMViewContentProvider contentProvider;
 
+	private DrillDownAdapter drillDownAdapter;
+
 	private Action doubleClickAction; 
 	
 	private ShowBulkEditAction bulkEditAction;
@@ -109,6 +120,8 @@ public class ISMView extends ViewPart {
 	private Action expandAllAction;
 
 	private Action collapseAllAction;
+	
+	private ISMViewFilter filterAction;
 	
 	private MetaDropAdapter metaDropAdapter;
 
@@ -130,6 +143,7 @@ public class ISMView extends ViewPart {
 		try {
 			contentProvider = new ISMViewContentProvider(cache);
 			viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+			drillDownAdapter = new DrillDownAdapter(viewer);
 			viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 			viewer.setContentProvider(contentProvider);
 			viewer.setLabelProvider(new ISMViewLabelProvider(cache));
@@ -207,6 +221,10 @@ public class ISMView extends ViewPart {
 		collapseAllAction.setText("Collapse All");
 		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
+		filterAction = new ISMViewFilter(viewer,
+				Messages.BsiModelView_3,
+				new TagFilter(viewer));
+		
 		metaDropAdapter = new MetaDropAdapter(viewer);
 		controlDropAdapter = new ControlDropPerformer(this);
 		bsiDropAdapter = new BSIModelViewDropPerformer();
@@ -219,6 +237,8 @@ public class ISMView extends ViewPart {
 		IToolBarManager manager = bars.getToolBarManager();
 		manager.add(expandAllAction);
 		manager.add(collapseAllAction);
+		drillDownAdapter.addNavigationActions(manager);
+		manager.add(filterAction);
 	}
 	
 	private void hookContextMenu() {
@@ -265,6 +285,7 @@ public class ISMView extends ViewPart {
 		manager.add(bulkEditAction);
 		manager.add(expandAction);
 		manager.add(collapseAction);
+		drillDownAdapter.addNavigationActions(manager);
 	}
 
 	/* (non-Javadoc)
