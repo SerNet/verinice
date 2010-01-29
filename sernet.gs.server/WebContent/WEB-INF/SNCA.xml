@@ -2764,6 +2764,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="org_abbr" />
+        <huiproperty
+            id="org_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
     </huientity>
     <huientity
         name="Asset-Group"
@@ -2790,6 +2794,10 @@ Template:
         <huiproperty
             name="Abbreviation"
             id="asset_abbr" />
+        <huiproperty
+            id="asset_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
 
 	<huiproperty
 		name="Type of Asset"
