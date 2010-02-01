@@ -72,20 +72,6 @@ public class ISMViewFilterDialog extends Dialog {
 	private CheckboxTableViewer viewer;
 	private Composite container;
 	
-	private static HashMap<String, Class<?>> possibleFilters = new HashMap<String, Class<?>>();
-	
-	static
-	{
-		// Initializes the set of classes which can be filtered. The key to the classes
-		// is the label of the button that allows switching the filter.
-		// Note: If the labels change. This part must be adjusted as well. The best idea
-		// is to use the i18n and use the same string for the button and this code.
-		possibleFilters.put("Bausteinzuordnungen", BausteinUmsetzung.class);
-		possibleFilters.put("Maßnahmenumsetzungen", MassnahmenUmsetzung.class);
-		//possibleFilters.put("Verknüpfungen", LinkKategorie.class); 
-	}
-	
-	
 	private String[] checkedElements;
 
 
@@ -94,7 +80,6 @@ public class ISMViewFilterDialog extends Dialog {
 		setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
 		
 		this.tagPattern = tags;
-		
 	}
 
 
