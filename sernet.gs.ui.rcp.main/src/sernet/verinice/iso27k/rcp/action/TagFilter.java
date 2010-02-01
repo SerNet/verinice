@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.verinice.iso27k.model.IISO27kElement;
+import sernet.verinice.iso27k.model.IISO27kGroup;
 
 public class TagFilter extends ViewerFilter {
 	
@@ -39,7 +40,7 @@ public class TagFilter extends ViewerFilter {
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object o) {
 		boolean result = true;
-		if ((o instanceof IISO27kElement) ) {
+		if ((o instanceof IISO27kElement && !(o instanceof IISO27kGroup)) ) {
 			result = false;
 			IISO27kElement element = (IISO27kElement) o;
 			for (String tag : pattern) {
