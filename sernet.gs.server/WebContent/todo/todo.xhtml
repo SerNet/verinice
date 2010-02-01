@@ -48,7 +48,7 @@
 								  			action="#{toDo.loadToDoListForVerbund}" 
 								  			reRender="tablePanel,elementPanel,itVerbundList,editPanel" 
 								  			styleClass="#{itVerbund.dbId==assetNavigation.selectedItVerbund.dbId ? 'selected' : 'normal'}">
-								            <a4j:actionparam name="itVerbundTitel" value="#{itVerbund.titel}" assignTo="#{assetNavigation.selectedItVerbundTitel}"/>
+								            <a4j:actionparam name="itVerbundTitel" value="#{itVerbund.title}" assignTo="#{assetNavigation.selectedItVerbundTitel}"/>
 								        </a4j:commandLink>
 								    </li>
 								</o:forEach>
@@ -154,7 +154,7 @@
 					    <div class="csc-textpic-text">
 				      			<a4j:outputPanel id="editPanel">
 				      				<a4j:outputPanel id="editHeader" rendered="#{toDo.massnahmeUmsetzung!=null}" styleClass="csc-header csc-header-n1">
-					      				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.measure']} #{toDo.massnahmeUmsetzung.titel}"/></h1>
+					      				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.measure']} #{toDo.massnahmeUmsetzung.title}"/></h1>
 					      			</a4j:outputPanel>
 				      				<a4j:form id="editForm" rendered="#{toDo.massnahmeUmsetzung!=null}">	
 										<table>
@@ -273,13 +273,13 @@
 							                </rich:column>
 							                <rich:column id="colTitel"
 					      						sortable="true" 
-					      						sortBy="#{item.titel}"
+					      						sortBy="#{item.title}"
 							                    width="260px"
 							                    label="Titel">
 							                    <f:facet name="header">
 							                        <h:outputText value="#{msg['todo.title']}" />
 							                    </f:facet>
-							                    <h:outputText value="#{item.titel}"/>
+							                    <h:outputText value="#{item.title}"/>
 							                </rich:column>
 					      					 <a4j:support reRender="editPanel"
 							                    action="#{toDo.loadToDo}"
@@ -310,7 +310,7 @@
 									 		<a4j:repeat id="gebaeudeList" value="#{assetNavigation.gebaeudeList}" var="item">
 									 			<li>
 											  		<a4j:commandLink 
-											  			value="#{item.titel}" 
+											  			value="#{item.title}" 
 											  			action="#{toDo.loadToDoListForElement}" 
 											  			reRender="tablePanel,editPanel,elementPanel" 
 											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
@@ -324,7 +324,7 @@
 							        	<ul>
 									  		<a4j:repeat id="raumList" value="#{assetNavigation.raumList}" var="item">
 									  			<li>
-											  		<a4j:commandLink value="#{item.titel}" 
+											  		<a4j:commandLink value="#{item.title}" 
 											  			action="#{toDo.loadToDoListForElement}" 
 											  			reRender="tablePanel,editPanel,elementPanel" 
 											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
@@ -338,7 +338,7 @@
 			      						<ul>
 									  		<a4j:repeat id="clienteList" value="#{assetNavigation.clienteList}" var="item">
 									  			<li>
-											  		<a4j:commandLink value="#{item.titel}" 
+											  		<a4j:commandLink value="#{item.title}" 
 											  			action="#{toDo.loadToDoListForElement}"									  			 
 											  			reRender="tablePanel,editPanel,elementPanel" 
 											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
@@ -352,7 +352,7 @@
 			      						<ul>
 									  		<a4j:repeat id="serverList" value="#{assetNavigation.serverList}" var="item">
 									  			<li>
-											  		<a4j:commandLink value="#{item.titel}" 
+											  		<a4j:commandLink value="#{item.title}" 
 											  			action="#{toDo.loadToDoListForElement}"
 											  			reRender="tablePanel,editPanel,elementPanel" 
 											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
@@ -366,7 +366,7 @@
 			      						<ul>
 									  		<a4j:repeat id="netzList" value="#{assetNavigation.netzList}" var="item">
 									  			<li>
-											  		<a4j:commandLink value="#{item.titel}" 
+											  		<a4j:commandLink value="#{item.title}" 
 											  			action="#{toDo.loadToDoListForElement}" 
 											  			reRender="tablePanel,editPanel,elementPanel" 
 											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
@@ -380,7 +380,7 @@
 			      						<ul>
 									  		<a4j:repeat id="anwendungList" value="#{assetNavigation.anwendungList}" var="item">
 									  			<li>
-											  		<a4j:commandLink value="#{item.titel}" 
+											  		<a4j:commandLink value="#{item.title}" 
 											  			action="#{toDo.loadToDoListForElement}" 
 											  			reRender="tablePanel,editPanel,elementPanel" 
 											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
@@ -394,7 +394,7 @@
 			      						<ul>
 									  		<a4j:repeat id="personList" value="#{assetNavigation.personList}" var="item">
 									  			<li>
-											  		<a4j:commandLink value="#{item.titel}" 
+											  		<a4j:commandLink value="#{item.title}" 
 											  			action="#{toDo.loadToDoListForElement}" 
 											  			reRender="tablePanel,editPanel,elementPanel" 
 											  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
