@@ -20,6 +20,7 @@ package sernet.verinice.iso27k.rcp.action;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -37,7 +38,7 @@ public class ISMViewFilter extends Action {
 	public ISMViewFilter(StructuredViewer viewer,
 			String title,
 			TagFilter tagFilter) {
-		super(title);
+		super(title,SWT.TOGGLE);
 		shell = new Shell();
 		this.tagFilter = tagFilter;
 		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
@@ -50,6 +51,8 @@ public class ISMViewFilter extends Action {
 
 		if (dialog.open() != InputDialog.OK)
 			return;
+		
+		this.setChecked(dialog.getCheckedElements().length>0);
 		
 		tagFilter.setPattern(dialog.getCheckedElements());
 	}
