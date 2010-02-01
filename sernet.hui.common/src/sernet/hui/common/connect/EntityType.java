@@ -115,6 +115,20 @@ public class EntityType {
 	}
 
 	/**
+	 * Returns all possible (meaning "defined in SNCA.xml") relations as a flat list.
+	 * @return all possible relations from this element to other elements.
+	 */
+	public Set<HuiRelation> getPossibleRelations() {
+		HashSet<HuiRelation> allRelations = new HashSet<HuiRelation>();
+		Set<Entry<String, Set<HuiRelation>>> entrySet = relations.entrySet();
+		for (Entry<String, Set<HuiRelation>> entry : entrySet) {
+			Set<HuiRelation> relationsToOneOtherType = entry.getValue();
+			allRelations.addAll(relationsToOneOtherType);
+		}
+		return allRelations;
+	}
+	
+	/**
 	 * @param typeId
 	 * @return
 	 */
