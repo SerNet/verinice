@@ -106,6 +106,9 @@ Import-Package: au.com.bytecode.opencsv,
  sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis,
  sernet.hui.common,
  sernet.hui.common.connect,
- sernet.hui.common.multiselectionlist
+ sernet.hui.common.multiselectionlist,
+ sernet.verinice.iso27k.model,
+ sernet.verinice.iso27k.service,
+ sernet.verinice.iso27k.service.commands
 Export-Package: sernet.gs.server
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

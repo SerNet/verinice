@@ -78,7 +78,7 @@ import sernet.hui.common.connect.HuiRelation;
  * $LastChangedBy$
  *
  */
-public class RelationView extends ViewPart {
+public class RelationView extends ViewPart implements IRelationTable {
 
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.RelationView"; //$NON-NLS-1$
 	
@@ -101,71 +101,9 @@ public class RelationView extends ViewPart {
 	private static final String COLUMN_TITLE = "_title";
 
 	 
-	class ViewContentProvider implements IStructuredContentProvider {
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-			if (newInput instanceof PlaceHolder)
-				return;
-			inputElmt = (CnATreeElement) newInput;
-			viewer.refresh();
-		}
-		
-		public void dispose() {
-		}
-
-		public Object[] getElements(Object obj) {
-			if (obj instanceof PlaceHolder) {
-				return new Object[] {obj};
-			}
-			
-			HashSet<CnALink> result = new HashSet<CnALink>();
-			result.addAll(inputElmt.getLinksDown());
-			result.addAll(inputElmt.getLinksUp());
-			return (CnALink[]) result.toArray(new CnALink[result.size()]);
-		}
-	}
 	
-	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
-		public String getColumnText(Object obj, int index) {
-			if (obj instanceof PlaceHolder) {
-				if (index != 1)
-					return "";
-				PlaceHolder pl = (PlaceHolder) obj;
-				return pl.getTitle();
-			}
-			
-			CnALink link = (CnALink) obj;
-			HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(link.getRelationId());
-			
-			switch (index) {
-			case 0:
-				return "";
-			case 1:
-				// if we can't find a real name for the relation, we just display "depends on" or "necessary for":
-				if (CnALink.isDownwardLink(inputElmt, link))
-					return (relation != null) ? relation.getName() : "hängt ab von";
-				else
-					return (relation != null) ? relation.getReversename() : "ist nötig für";
-			case 2:
-				return getRelationObjectTitle(inputElmt, link);
-			default:
-				return "";
-			}
-		}
-		
-		public Image getColumnImage(Object obj, int index) {
-			if (index != 0)
-				return null;
-			if (obj instanceof PlaceHolder)
-				return null;
-			
-			CnALink link = (CnALink) obj;
-			if (CnALink.isDownwardLink(inputElmt, link))
-				return ImageCache.getInstance().getImage(ImageCache.LINK_DOWN);
-			else
-				return ImageCache.getInstance().getImage(ImageCache.LINK_UP);
-		}
-		
-	}
+	
+	
 	class NameSorter extends ViewerSorter {
 		public boolean isSorterProperty(Object arg0, String arg1) {
 			return arg1.equals(COLUMN_TITLE); //$NON-NLS-1$
@@ -177,8 +115,8 @@ public class RelationView extends ViewPart {
 			CnALink link1 = (CnALink) o1;
 			CnALink link2 = (CnALink) o2;
 			
-			String title1 = getRelationObjectTitle(inputElmt, link1);
-			String title2 = getRelationObjectTitle(inputElmt, link2);
+			String title1 = CnALink.getRelationObjectTitle(inputElmt, link1);
+			String title2 = CnALink.getRelationObjectTitle(inputElmt, link2);
 
 			return title1.compareTo(title2);
 		}
@@ -189,16 +127,6 @@ public class RelationView extends ViewPart {
 	 * The constructor.
 	 */
 	public RelationView() {
-	}
-
-	/**
-	 * @param link
-	 */
-	public String getRelationObjectTitle(CnATreeElement inputElmt, CnALink link) {
-		if (CnALink.isDownwardLink(inputElmt, link))
-			return link.getDependency().getTitle();
-		else
-			return link.getDependant().getTitle();
 	}
 
 	/**
@@ -251,8 +179,8 @@ public class RelationView extends ViewPart {
 	 */
 	public void createPartControl(Composite parent) {
 		viewer = new TableViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setContentProvider(new ViewContentProvider());
-		viewer.setLabelProvider(new ViewLabelProvider());
+		viewer.setContentProvider(new RelationViewContentProvider(this));
+		viewer.setLabelProvider(new RelationViewLabelProvider(this));
 		viewer.setSorter(new NameSorter());
 
 		table = viewer.getTable();
@@ -294,84 +222,6 @@ public class RelationView extends ViewPart {
 				COLUMN_TITLE //$NON-NLS-1$
 		});
 		
-//		final ComboBoxCellEditor typeEditor = new RelationTypeComboBoxCellEditor(table, 
-//				currentLinkTypeNames, 
-//				SWT.READ_ONLY);
-//		typeEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
-//
-//		viewer.setCellEditors(new CellEditor[] {null,typeEditor,null});
-//		
-//	    viewer.setCellModifier(new ICellModifier() {
-//			public boolean canModify(Object element, String property) {
-//				if (!property.equals(COLUMN_TYPE)
-//						|| 	!(element instanceof CnALink))
-//					return false;
-//				
-//				
-//				CnALink link = (CnALink) element;
-//				String currentName = getCurrentName(link);
-//				Set<HuiRelation> possibleRelations = HitroUtil.getInstance()
-//						.getTypeFactory().getPossibleRelations(
-//								link.getDependant().getEntityType().getId(),
-//								link.getDependency().getEntityType().getId());
-//
-//				return (possibleRelations != null && possibleRelations.size() > 0);
-//				
-//			}
-//
-//			public Object getValue(Object element, String property) {
-//				// build array for combobox and return index of currently selected element:
-//				if (!(element instanceof CnALink))
-//					return null;
-//				CnALink link = (CnALink) element;
-//				String currentName = getCurrentName(link);
-//				Set<HuiRelation> possibleRelations = HitroUtil.getInstance()
-//						.getTypeFactory().getPossibleRelations(
-//								link.getDependant().getEntityType().getId(),
-//								link.getDependency().getEntityType().getId());
-//				Set<String> names = new HashSet<String>();
-//				Set<String> IDs = new HashSet<String>();
-//
-//				for (HuiRelation huiRelation : possibleRelations) {
-//					String id = huiRelation.getId();
-//					String name = (isDownwardLink(link)) ? huiRelation
-//							.getName() : huiRelation.getReversename();
-//					names.add(name);
-//					IDs.add(id);
-//				}
-//				currentLinkTypeIDs = (String[]) IDs.toArray(new String[IDs.size()]);
-//				currentLinkTypeNames = (String[]) names
-//						.toArray(new String[names.size()]);
-//				return getIndex(currentName);
-//			}
-//
-//			private int getIndex(String currentName) {
-//				int i=0;
-//				for (String name : currentLinkTypeNames) {
-//					if (name.equals(currentName))
-//						return i;
-//					++i;
-//				}
-//				return -1;
-//			}
-//
-//			public void modify(Object element, String property, Object value) {
-//				if (element == null)
-//					return;
-//
-//				CnALink link = (CnALink) ((TableItem) element).getData();
-//				int index = (Integer) value;
-//				String linkTypeID = currentLinkTypeIDs[index];
-//				ChangeLinkType command = new ChangeLinkType(link.getId(), linkTypeID, "");
-//				try {
-//					command = ServiceFactory.lookupCommandService().executeCommand(
-//							command);
-//				} catch (CommandException e) {
-//					ExceptionUtil.log(e, "Fehler beim Ändern der Relation.");
-//				}
-//			}
-//
-//		});
 		
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -554,5 +404,19 @@ public class RelationView extends ViewPart {
 	 */
 	public void reload() {
 		loadLinks(inputElmt);
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#getInputElmt()
+	 */
+	public CnATreeElement getInputElmt() {
+		return this.inputElmt;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#setInputElmt(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+	 */
+	public void setInputElmt(CnATreeElement inputElmt) {
+		this.inputElmt = inputElmt;
 	}
 }

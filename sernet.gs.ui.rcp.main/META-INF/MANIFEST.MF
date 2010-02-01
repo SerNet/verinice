@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Verinice Anwendung
 Bundle-SymbolicName: sernet.gs.ui.rcp.main;singleton:=true
-Bundle-Version: 1.0.18
+Bundle-Version: 1.0.19
 Bundle-ClassPath: .,
  lib/jfreechart/jcommon-1.0.14.jar,
  lib/jfreechart/jfreechart-1.0.11-experimental.jar,
@@ -67,7 +67,12 @@ Export-Package: au.com.bytecode.opencsv,
  sernet.gs.ui.rcp.main.service.statscommands,
  sernet.gs.ui.rcp.main.service.taskcommands,
  sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis,
- sernet.gs.ui.rcp.office
+ sernet.gs.ui.rcp.office,
+ sernet.verinice.iso27k.model,
+ sernet.verinice.iso27k.rcp,
+ sernet.verinice.iso27k.rcp.action,
+ sernet.verinice.iso27k.service,
+ sernet.verinice.iso27k.service.commands
 Import-Package: au.com.bytecode.opencsv,
  au.com.bytecode.opencsv.bean,
  javassist.util.proxy,

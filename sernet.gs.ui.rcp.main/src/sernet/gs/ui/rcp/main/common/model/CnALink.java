@@ -45,10 +45,27 @@ public class CnALink implements Serializable {
 	private String comment;
 	
 	/**
+	 * Takes an object and a link and gives back the correct display name for the object on the *other* side
+	 * of the link. 
+	 * Which side is the other side, is determined on whether the link goes from or to the object.
+	 * 
+	 * @param link
+	 */
+	public static String getRelationObjectTitle(CnATreeElement inputElmt, CnALink link) {
+		if (CnALink.isDownwardLink(inputElmt, link))
+			return link.getDependency().getTitle();
+		else
+			return link.getDependant().getTitle();
+	}
+	
+	/**
+	 * Returns the correct title for a link for e given element and a given link.
+	 * The correct name is determined using the direction in which the link points to the object.
+	 * 
 	 * @param link
 	 * @return
 	 */
-	public static String getCurrentName(CnATreeElement fromElement, CnALink link) {
+	public static String getRelationName(CnATreeElement fromElement, CnALink link) {
 		HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(link.getRelationId());
 		String name;
 		if (relation == null) {

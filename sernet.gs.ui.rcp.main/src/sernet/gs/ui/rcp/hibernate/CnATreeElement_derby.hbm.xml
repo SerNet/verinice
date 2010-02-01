@@ -231,6 +231,152 @@
 		extends="CnATreeElement"
 		discriminator-value="stellungnahme-dsb"/>
 	
+<!-- ISO 27000 Elements -->
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.ISO27KModel"
+		extends="CnATreeElement"
+		discriminator-value="iso27kmodel" />
+
+	<subclass 
+		name="sernet.verinice.iso27k.model.Organization"
+		extends="CnATreeElement"
+		discriminator-value="org" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.AssetGroup"
+		extends="CnATreeElement"
+		discriminator-value="assetgroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Asset"
+		extends="CnATreeElement"
+		discriminator-value="asset" />
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.ControlGroup"
+		extends="CnATreeElement"
+		discriminator-value="controlgroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Control"
+		extends="CnATreeElement"
+		discriminator-value="control" />
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.AuditGroup"
+		extends="CnATreeElement"
+		discriminator-value="auditgroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Audit"
+		extends="CnATreeElement"
+		discriminator-value="audit" />
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.ExceptionGroup"
+		extends="CnATreeElement"
+		discriminator-value="exceptiongroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Exception"
+		extends="CnATreeElement"
+		discriminator-value="exception" />
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.PersonGroup"
+		extends="CnATreeElement"
+		discriminator-value="persongroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.PersonIso"
+		extends="CnATreeElement"
+		discriminator-value="person-iso" />
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.RequirementGroup"
+		extends="CnATreeElement"
+		discriminator-value="requirementgroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Requirement"
+		extends="CnATreeElement"
+		discriminator-value="requirement" />
+	
+	<subclass 
+		name="sernet.verinice.iso27k.model.IncidentGroup"
+		extends="CnATreeElement"
+		discriminator-value="incidentgroup" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Incident"
+		extends="CnATreeElement"
+		discriminator-value="incident" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.IncidentScenarioGroup"
+		extends="CnATreeElement"
+		discriminator-value="incident_scenario_group" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.IncidentScenario"
+		extends="CnATreeElement"
+		discriminator-value="incident_scenario" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.ResponseGroup"
+		extends="CnATreeElement"
+		discriminator-value="response_group" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Response"
+		extends="CnATreeElement"
+		discriminator-value="response" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.ThreatGroup"
+		extends="CnATreeElement"
+		discriminator-value="threat_group" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Threat"
+		extends="CnATreeElement"
+		discriminator-value="threat" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.VulnerabilityGroup"
+		extends="CnATreeElement"
+		discriminator-value="vulnerability_group" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Vulnerability"
+		extends="CnATreeElement"
+		discriminator-value="vulnerability" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.DocumentGroup"
+		extends="CnATreeElement"
+		discriminator-value="document_group" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Document"
+		extends="CnATreeElement"
+		discriminator-value="document" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.EvidenceGroup"
+		extends="CnATreeElement"
+		discriminator-value="evidence_group" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Evidence"
+		extends="CnATreeElement"
+		discriminator-value="evidence" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.FindingGroup"
+		extends="CnATreeElement"
+		discriminator-value="finding_group" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Finding"
+		extends="CnATreeElement"
+		discriminator-value="finding" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.InterviewGroup"
+		extends="CnATreeElement"
+		discriminator-value="interview_group" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Interview"
+		extends="CnATreeElement"
+		discriminator-value="interview" />
 	
 
 	</class>

@@ -80,6 +80,7 @@ public class BSIElementEditor extends EditorPart {
 
 	};
 	private CnATreeElement cnAElement;
+	private LinkMaker linkMaker;
 
 	public void doSave(IProgressMonitor monitor) {
 		if (isModelModified) {
@@ -117,7 +118,7 @@ public class BSIElementEditor extends EditorPart {
 
 			IEditorReference[] closeArray = (IEditorReference[]) closeOthers.toArray(new IEditorReference[closeOthers.size()]);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(closeArray, true /*
-																												 * as
+																												 * ask
 																												 * save
 																												 */);
 		}
@@ -190,12 +191,17 @@ public class BSIElementEditor extends EditorPart {
 				// add listener to mark editor as dirty on changes:
 				entity.addChangeListener(this.modelListener);
 			} else {
+				// do not add listener, user will never be offered to save this editor:
 				setPartName(getPartName() + " (SCHREIBGESCHÜTZT)");
 			}
 
+			// create view of all properties, read only or read/write:
 			huiComposite.createView(entity, getIsWriteAllowed(), true);
 			InputHelperFactory.setInputHelpers(entityType, huiComposite);
 			huiComposite.resetInitialFocus();
+			
+			// create in place editor for links to other objects:
+			linkMaker.createView(cnAElement, getIsWriteAllowed());
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Konnte BSI Element Editor nicht öffnen");
 		}
@@ -231,6 +237,7 @@ public class BSIElementEditor extends EditorPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
+		linkMaker = new LinkMaker(parent);
 		initContent();
 		// if opened the first time, save initialized entity:
 		if (isDirty())
@@ -251,6 +258,7 @@ public class BSIElementEditor extends EditorPart {
 	@Override
 	public void dispose() {
 		huiComposite.closeView();
+		linkMaker.close();
 		cnAElement.getEntity().removeListener(modelListener);
 		EditorRegistry.getInstance().closeEditor(((BSIElementEditorInput) getEditorInput()).getId());
 		super.dispose();
