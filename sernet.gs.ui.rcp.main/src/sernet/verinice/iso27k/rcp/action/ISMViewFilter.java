@@ -48,12 +48,9 @@ public class ISMViewFilter extends Action {
 	@Override
 	public void run() {
 		ISMViewFilterDialog dialog = new ISMViewFilterDialog(shell,tagFilter.getPattern());
-
-		if (dialog.open() != InputDialog.OK)
-			return;
-		
-		this.setChecked(dialog.getCheckedElements().length>0);
-		
-		tagFilter.setPattern(dialog.getCheckedElements());
+		if (dialog.open() == InputDialog.OK) {
+			tagFilter.setPattern(dialog.getCheckedElements());
+		}
+		this.setChecked(tagFilter.getPattern()!=null && tagFilter.getPattern().length>0);
 	}
 }
