@@ -2789,8 +2789,7 @@ Template:
         
         <huiproperty
             name="Title"
-            id="asset_name" 
-            inputtype=""/>
+            id="asset_name"/>
         <huiproperty
             name="Abbreviation"
             id="asset_abbr" />
