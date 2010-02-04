@@ -30,6 +30,22 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
  */
 public class RetrieveInfo implements Serializable{
 
+	private static final RetrieveInfo PROPERTY_INSTANCE;
+	private static final RetrieveInfo CHILDREN_INSTANCE;
+	private static final RetrieveInfo PROPERTY_CHILDREN_INSTANCE;
+	
+	static {
+		PROPERTY_INSTANCE = new RetrieveInfo();
+		PROPERTY_INSTANCE.setProperties(true);
+		
+		CHILDREN_INSTANCE = new RetrieveInfo();
+		CHILDREN_INSTANCE.setChildren(true);
+		
+		PROPERTY_CHILDREN_INSTANCE = new RetrieveInfo();
+		PROPERTY_CHILDREN_INSTANCE.setProperties(true);
+		PROPERTY_CHILDREN_INSTANCE.setChildren(true);
+	}
+	
 	boolean properties = false;
 	
 	boolean linksUp = false;
@@ -52,6 +68,18 @@ public class RetrieveInfo implements Serializable{
 	
 	boolean innerJoin = false;
 
+	public static RetrieveInfo getPropertyInstance() {
+		return PROPERTY_INSTANCE;
+	}
+	
+	public static RetrieveInfo getChildrenInstance() {
+		return CHILDREN_INSTANCE;
+	}
+	
+	public static RetrieveInfo getPropertyChildrenInstance() {
+		return PROPERTY_CHILDREN_INSTANCE;
+	}
+	
 	public RetrieveInfo() {
 		super();
 	}
