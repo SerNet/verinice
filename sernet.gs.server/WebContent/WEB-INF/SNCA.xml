@@ -2970,7 +2970,7 @@ Template:
         <huiproperty
             name="Description"
             id="control_desc"
-            inputtype="text" />
+            visible="false"/>
     </huientity>
     <huientity
         name="Exception-Group"

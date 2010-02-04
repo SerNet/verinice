@@ -25,7 +25,9 @@ import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.verinice.iso27k.service.Catalog;
 import sernet.verinice.iso27k.service.ICatalog;
 import sernet.verinice.iso27k.service.ICatalogImporter;
@@ -80,6 +82,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 			importCatalog();
 		} catch(Exception e) {
 			getLog().error("Error while executing", e);
+			throw new RuntimeCommandException("Fehler beim Importieren des Katalogs.", e);
 		}	
 	}
 

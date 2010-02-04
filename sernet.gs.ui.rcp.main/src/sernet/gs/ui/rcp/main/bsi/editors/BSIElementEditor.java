@@ -201,7 +201,7 @@ public class BSIElementEditor extends EditorPart {
 			huiComposite.resetInitialFocus();
 			
 			// create in place editor for links to other objects:
-			linkMaker.createView(cnAElement, getIsWriteAllowed());
+//			linkMaker.createView(cnAElement, getIsWriteAllowed());
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Konnte BSI Element Editor nicht öffnen");
 		}
@@ -237,7 +237,7 @@ public class BSIElementEditor extends EditorPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
-		linkMaker = new LinkMaker(parent);
+//		linkMaker = new LinkMaker(parent);
 		initContent();
 		// if opened the first time, save initialized entity:
 		if (isDirty())

@@ -51,6 +51,7 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.verinice.iso27k.model.Control;
 import sernet.verinice.iso27k.service.IItem;
 
 public class BrowserView extends ViewPart {
@@ -159,17 +160,14 @@ public class BrowserView extends ViewPart {
 			if (element instanceof IItem) {
 				IItem item = (IItem) element;
 				StringBuilder sb = new StringBuilder();
-				sb.append("<html>\n");
-				sb.append("<head>\n");
-				sb.append("<link rel=\"stylesheet\" href=\"../screen.css\" type=\"text/css\" media=\"projection, screen\"  />\n");
-				sb.append("</head>\n");
-				sb.append("<body>\n");
-				sb.append("<h1>").append(item.getName()).append("</h1>");
-				if(item.getDescription()!=null) {
-					sb.append(item.getDescription());
-				}
-				sb.append("</body>\n");
-				sb.append("</html>\n");
+				writeHtml(sb, item.getName(), item.getDescription());
+				setText(sb.toString());			
+			}
+			
+			if (element instanceof Control) {
+				Control item = (Control) element;
+				StringBuilder sb = new StringBuilder();
+				writeHtml(sb, item.getTitle(), item.getDescription());
 				setText(sb.toString());			
 			}
 
@@ -183,40 +181,30 @@ public class BrowserView extends ViewPart {
 	}
 
 	private String toHtml(GefaehrdungsUmsetzung ums) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
+		writeHtml(buf, ums.getId() + " " + ums.getTitle(), ums.getDescription());
+		return buf.toString();
+	}
+	
+	private void writeHtml(StringBuilder buf, String headline, String bodytext) {
 		String cssDir = CnAWorkspace.getInstance().getWorkdir()
 				+ File.separator + "html" + File.separator + "screen.css"; //$NON-NLS-1$ //$NON-NLS-2$
-
 		buf
 				.append("<html><head>"
 						+ "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=iso-8859-1\"/>\n"
 						+ "<link REL=\"stylesheet\" media=\"screen\" HREF=\""
 						+ cssDir + "\"/>"
 						+ "</head><body><div id=\"content\"><h1>");
-		buf.append(ums.getId() + " " + ums.getTitle());
+		buf.append(headline);
 		buf.append("</h1><p>");
 		buf.append("");
-		buf.append(ums.getDescription().replaceAll("\\n", "<br/>"));
+		buf.append(bodytext.replaceAll("\\n", "<br/>"));
 		buf.append("</p></div></body></html>");
-		return buf.toString();
 	}
 
 	private String toHtml(RisikoMassnahmenUmsetzung ums) {
-		StringBuffer buf = new StringBuffer();
-		String cssDir = CnAWorkspace.getInstance().getWorkdir()
-				+ File.separator + "html" + File.separator + "screen.css"; //$NON-NLS-1$ //$NON-NLS-2$
-
-		buf
-				.append("<html><head>"
-						+ "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=iso-8859-1\"/>\n"
-						+ "<link REL=\"stylesheet\" media=\"screen\" HREF=\""
-						+ cssDir + "\"/>"
-						+ "</head><body><div id=\"content\"><h1>");
-		buf.append(ums.getNumber() + " " + ums.getName());
-		buf.append("</h1><p>");
-		buf.append("");
-		buf.append(ums.getDescription().replaceAll("\\n", "<br/>"));
-		buf.append("</p></div></body></html>");
+		StringBuilder buf = new StringBuilder();
+		writeHtml(buf, ums.getNumber() + " " + ums.getName(), ums.getDescription());
 		return buf.toString();
 	}
 

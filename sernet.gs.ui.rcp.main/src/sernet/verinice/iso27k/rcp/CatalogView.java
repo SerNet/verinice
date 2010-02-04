@@ -30,6 +30,8 @@ import javax.swing.text.DateFormatter;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -264,7 +266,9 @@ public class CatalogView extends ViewPart {
 		
 		deleteCatalogAction = new Action() {
 			public void run() {
-				deleteCatalog();
+				boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), "Wirklich löschen?", "Diesen Katalog wirklich löschen?");
+				if (confirm)
+					deleteCatalog();
 			}
 		};
 		deleteCatalogAction.setText("Katalog löschen...");
