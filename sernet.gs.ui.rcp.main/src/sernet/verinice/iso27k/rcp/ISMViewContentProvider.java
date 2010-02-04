@@ -18,6 +18,9 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -45,6 +48,8 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 
 	private static final Logger log = Logger.getLogger(ISMViewContentProvider.class);
 
+	private final ElementComparator comparator = new ElementComparator();
+	
 	private BSIModelElementFilter modelFilter;
 
 	public ISMViewContentProvider(TreeViewerCache cache) {
@@ -58,7 +63,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 	}
 
 	public Object[] getChildren(Object parent) {
-		Object[] children = null;
+		CnATreeElement[] children = null;
 
 		// replace object in event with the one actually displayed in the tree:
 		Object cachedObject = cache.getCachedObject(parent);
@@ -67,15 +72,23 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 		}
 			
 		if(parent instanceof List) {
-			children = ((List)parent).toArray();
+			List<CnATreeElement> list = (List<CnATreeElement>)parent;
+			children = list.toArray(new CnATreeElement[list.size()]);
 		} else if (parent instanceof CnATreeElement) {
 			CnATreeElement el = (CnATreeElement) parent;
 			CnATreeElement newElement;
 			try {
-				newElement = loadChildren(el);
-				el.replace(newElement);
-				el = newElement;
-				children = el.getChildrenAsArray();
+				if(!el.isChildrenLoaded()) {
+					newElement = loadChildren(el);
+					el.replace(newElement);
+					el = newElement;
+					children = el.getChildrenAsArray();
+					
+				} else {
+					children = el.getChildrenAsArray();
+				}
+				Arrays.sort(children,comparator);
+				
 			} catch (CommandException e) {
 				log.error("Error while loading child elements", e);
 				ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
@@ -169,5 +182,26 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 	
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		cache.clear();
+	}
+	
+	class ElementComparator implements Comparator<CnATreeElement> {
+
+		public int compare(CnATreeElement o1, CnATreeElement o2) {
+			int FIRST_IS_LESS = -1;
+			int EQUAL = 0;
+			int FIRST_IS_GREATER = 1;
+			int result = FIRST_IS_LESS;
+			if(o1!=null && o1.getTitle()!=null) {
+				if(o2!=null && o2.getTitle()!=null) {
+					result = o1.getTitle().toLowerCase().compareTo(o2.getTitle().toLowerCase());
+				} else {
+					result = FIRST_IS_GREATER;
+				}
+			} else if(o2==null) {
+				result = EQUAL;
+			}
+			return result;
+		}
+		
 	}
 }
