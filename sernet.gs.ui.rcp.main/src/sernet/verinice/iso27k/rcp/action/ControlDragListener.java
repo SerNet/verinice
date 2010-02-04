@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -37,6 +38,8 @@ import sernet.verinice.iso27k.service.IItem;
  *
  */
 public class ControlDragListener implements DragSourceListener {
+	
+	private static final Logger LOG = Logger.getLogger(ControlDragListener.class);
 	
 	TreeViewer viewer;
 	
@@ -60,10 +63,16 @@ public class ControlDragListener implements DragSourceListener {
 		
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object o = iter.next();
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("dragStart, selected element: " +  o);
+			}
 			if (!(o instanceof IItem)) {
 				event.doit = false;
 			} else {
 				dragedItemList.add((IItem) o);
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("dragStart, added to dragedItemList: " + ((IItem) o).getName());
+				}
 			}
 		}
 	}
