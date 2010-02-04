@@ -117,6 +117,7 @@ public class Item implements IItem {
 						}
 					}
 					child = new Item(name);
+					child.setNumberString(name);
 					getItemMap().put(firstNumber-1, child);
 				}
 				if (getLog().isDebugEnabled()) {
