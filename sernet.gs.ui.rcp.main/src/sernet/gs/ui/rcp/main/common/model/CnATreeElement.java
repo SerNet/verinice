@@ -176,8 +176,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	}
 
 	public CnATreeElement[] getChildrenAsArray() {
-		return (CnATreeElement[]) children.toArray(new CnATreeElement[children
-				.size()]);
+		return (CnATreeElement[]) children.toArray(new CnATreeElement[children.size()]);
 	}
 
 	public void childAdded(CnATreeElement category, CnATreeElement child) {
@@ -237,7 +236,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	}
 
 	public abstract String getTitle();
-
+	
+	public void setTitel(String name) {
+		// this method must be overriden
+		throw new RuntimeException("Method not implemented in this object");
+	}
+	
 	public String getId() {
 		return ENTITY_TITLE + getEntity().getDbId();
 	}
