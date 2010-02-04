@@ -18,43 +18,29 @@
 package sernet.verinice.iso27k.rcp;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
@@ -65,19 +51,9 @@ import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.filter.LebenszyklusPropertyFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.ObjektLebenszyklusPropertyFilter;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
-import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.ICommandService;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
@@ -86,7 +62,6 @@ import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.iso27k.rcp.action.TagFilter;
-import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -100,7 +75,7 @@ public class ISMView extends ViewPart {
 	
 	private static Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
 	private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
-	
+
 	private TreeViewer viewer;
 	
 	TreeViewerCache cache = new TreeViewerCache();
@@ -128,12 +103,6 @@ public class ISMView extends ViewPart {
 	private ControlDropPerformer controlDropAdapter;
 
 	private BSIModelViewDropPerformer bsiDropAdapter;
-	
-	private ISelectionListener selectionListener;
-
-	private boolean bsiListenerAdded = false;
-
-	private boolean catalogListenerAdded = false;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -241,6 +210,7 @@ public class ISMView extends ViewPart {
 		manager.add(filterAction);
 	}
 	
+
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
@@ -286,6 +256,8 @@ public class ISMView extends ViewPart {
 		manager.add(expandAction);
 		manager.add(collapseAction);
 		drillDownAdapter.addNavigationActions(manager);
+		
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	/* (non-Javadoc)
@@ -295,153 +267,10 @@ public class ISMView extends ViewPart {
 	public void setFocus() {
 	}
 	
-	static class ViewContentProviderOld implements IStructuredContentProvider, ITreeContentProvider {
-
-		ICommandService commandService;
-		
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-		 */
-		public Object[] getElements(Object inputElement) {
-			return getChildren(inputElement);
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-		 */
-		public void dispose() {
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-		 */
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {	
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-		 */
-		@SuppressWarnings("unchecked")
-		public Object[] getChildren(Object parentElement) {
-			Object[] children = new Object[] {};
-			if(parentElement instanceof List) {
-				children = ((List)parentElement).toArray();
-			} else if(parentElement instanceof Organization) {
-				children = getChildrenOfOrganization((Organization)parentElement);
-			} else if( parentElement instanceof Group) {
-				children = getChildrenOfGroup((Group)parentElement);
-			} else if( parentElement instanceof CnATreeElement) {
-				children = getChildrenOfCnATreeElement((CnATreeElement)parentElement);
-			}
-			return children;
-		}
-
-		/**
-		 * @param organization
-		 * @return
-		 */
-		private CnATreeElement[] getChildrenOfOrganization(Organization organization) {
-			RetrieveCnATreeElement retrieveElement = RetrieveCnATreeElement.getOrganizationISMViewInstance(organization.getDbId());
-			try {
-				retrieveElement = getCommandService().executeCommand(retrieveElement);
-			} catch (CommandException e) {
-				LOG.error("Error while getting children of organization.", e);
-			}
-			CnATreeElement[] children = new CnATreeElement[] {};
-			if(retrieveElement.getElement()!=null) {
-				Set<CnATreeElement> set = retrieveElement.getElement().getChildren();
-				children = (CnATreeElement[])set.toArray(new CnATreeElement[set.size()]);
-			}
-			return children;
-		} 
-		
-		/**
-		 * @param group
-		 */
-		@SuppressWarnings("unchecked")
-		private CnATreeElement[] getChildrenOfGroup(Group group) {
-			RetrieveCnATreeElement retrieveElement = RetrieveCnATreeElement.getGroupISMViewInstance(group.getDbId(), (Class<Group>) group.getClass());
-			try {
-				retrieveElement = getCommandService().executeCommand(retrieveElement);
-			} catch (CommandException e) {
-				LOG.error("Error while getting children of organization.", e);
-			}
-			CnATreeElement[] children = new CnATreeElement[] {};
-			if(retrieveElement.getElement()!=null) {
-				Set<CnATreeElement> set = retrieveElement.getElement().getChildren();
-				children = (CnATreeElement[])set.toArray(new CnATreeElement[set.size()]);
-			}
-			return children;
-		}
-		
-		/**
-		 * @param element
-		 * @return
-		 */
-		private CnATreeElement[] getChildrenOfCnATreeElement(CnATreeElement element) {
-			RetrieveCnATreeElement retrieveElement = RetrieveCnATreeElement.getElementISMViewInstance(element.getDbId(), element.getClass());
-			try {
-				retrieveElement = getCommandService().executeCommand(retrieveElement);
-			} catch (CommandException e) {
-				LOG.error("Error while getting children of organization.", e);
-			}
-			CnATreeElement[] children = new CnATreeElement[] {};
-			if(retrieveElement.getElement()!=null) {
-				Set<CnATreeElement> set = retrieveElement.getElement().getChildren();
-				children = (CnATreeElement[])set.toArray(new CnATreeElement[set.size()]);
-			}
-			return children;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
-		 */
-		public Object getParent(Object element) {
-			return null;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-		 */
-		public boolean hasChildren(Object element) {
-			// TODO Check if there is a better way to do this
-			return getChildren(element).length>0;
-		}
-		
-		
-		
-		private ICommandService getCommandService() {
-			if(commandService==null) {
-				commandService = createCommandService();
-			}
-			return commandService;
-		}
-		
-		private ICommandService createCommandService() {
-			commandService = ServiceFactory.lookupCommandService();
-			return commandService;
-		}
+	public ISMViewContentProvider getContentProvider() {
+		return contentProvider;
 	}
 	
-	/**
-	 * Implementation of {@link ISchedulingRule} which enforces
-	 * that two jobs containing an instance of this rule cannot be
-	 * run at the same time.
-	 * 
-	 * <p>In short this enforces that the scheduler runs the jobs
-	 * in the order they are scheduled.</p>
-	 * 
-	 */
-	static class Mutex implements ISchedulingRule
-	{
 
-		public boolean contains(ISchedulingRule rule) {
-			return rule == this;
-		}
 
-		public boolean isConflicting(ISchedulingRule rule) {
-			return rule == this;
-		}
-		
-	}
 }
