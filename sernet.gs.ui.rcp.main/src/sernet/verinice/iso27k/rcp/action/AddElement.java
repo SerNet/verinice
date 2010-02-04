@@ -62,6 +62,7 @@ public class AddElement implements IObjectActionDelegate {
 			if (sel instanceof Group) {
 				Group group = (Group) sel;
 				if(group.getChildTypes()!=null && group.getChildTypes().length==1) {
+					// TODO: Fix this for group.getChildTypes().length > 1
 					newElement = CnAElementFactory.getInstance().saveNew(group, group.getChildTypes()[0], null);
 				} else {
 					LOG.error("Can not determine child type");
