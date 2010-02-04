@@ -31,29 +31,24 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.service.ICommandService;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.iso27k.model.Control;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.rcp.ControlTransformOperation;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
- *
  */
 public class ControlDropPerformer implements DropPerformer {
 
-	private ICommandService commandService;
 	private boolean isActive;
-	private ViewPart viewPart;
 	
 	/**
 	 * @param view 
 	 * @param viewer
 	 */
 	public ControlDropPerformer(ViewPart view) {
-		this.viewPart = view;
 	}
 
 	private static final Logger LOG = Logger.getLogger(ControlDropPerformer.class);
@@ -73,21 +68,22 @@ public class ControlDropPerformer implements DropPerformer {
 			try {
 				IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 				progressService.run(true, true, operation);
+				IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+				boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_CONTROLS_ADDED);
+				if(!dontShow) {
+					MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
+							"Status Information", 
+							operation.getNumberOfControls() + " controls added to group " + ((Group) target).getTitle(),
+							"Don't show this message again (You can change this in the preferences)",
+							dontShow,
+							preferenceStore,
+							PreferenceConstants.INFO_CONTROLS_ADDED);
+					preferenceStore.setValue(PreferenceConstants.INFO_CONTROLS_ADDED, dialog.getToggleState());
+				}
 			} catch (Exception e) {
 				LOG.error("Error while transforming items to controls", e);
-			}
-			IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-			boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_CONTROLS_ADDED);
-			if(!dontShow) {
-				MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
-						"Status Information", 
-						operation.getNumberOfControls() + " controls added to group " + ((Group) target).getTitle(),
-						"Don't show this message again (You can change this in the preferences)",
-						dontShow,
-						preferenceStore,
-						PreferenceConstants.INFO_CONTROLS_ADDED);
-				preferenceStore.setValue(PreferenceConstants.INFO_CONTROLS_ADDED, dialog.getToggleState());
-			}
+				ExceptionUtil.log(e, "Error while transforming items to controls");
+			}	
 		}
 		return success;
 	}
@@ -105,17 +101,6 @@ public class ControlDropPerformer implements DropPerformer {
 			valid = Arrays.asList(((Group)target).getChildTypes()).contains(Control.TYPE_ID);
 		}
 		return isActive=valid;
-	}
-	
-	public ICommandService getCommandService() {
-		if (commandService == null) {
-			commandService = createCommandServive();
-		}
-		return commandService;
-	}
-
-	private ICommandService createCommandServive() {
-		return ServiceFactory.lookupCommandService();
 	}
 
 	/* (non-Javadoc)
