@@ -48,6 +48,14 @@ public class RetrieveCnATreeElement extends GenericCommand {
 		this.dbId = dbId;
 	}
 	
+
+	public RetrieveCnATreeElement(Class<? extends CnATreeElement> clazz, Integer dbId, RetrieveInfo retrieveInfo) {
+		this.clazz = clazz;
+		this.dbId = dbId;
+		this.retrieveInfo = retrieveInfo;
+	}
+	
+	
 	/**
 	 * @param dbId2
 	 * @return
