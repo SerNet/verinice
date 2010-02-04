@@ -25,4 +25,5 @@ package sernet.verinice.iso27k.model;
  */
 public interface IISO27kGroup extends IISO27kElement {
 
+	boolean canContain(Object obj);
 }
