@@ -20,13 +20,20 @@ package sernet.gs.ui.rcp.main.bsi.dnd;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 public class CnPItems {
 	// TODO use system clipboard
 
+	private static final Logger LOG = Logger.getLogger(CnPItems.class);
+	
 	private static List copyPasteItems = new ArrayList();
 
 	public static void setItems(List items) {
-		copyPasteItems = items; 
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("setItems: " + items);
+		}
+		copyPasteItems.addAll(items); 
 	}
 
 	public static List getItems() {
