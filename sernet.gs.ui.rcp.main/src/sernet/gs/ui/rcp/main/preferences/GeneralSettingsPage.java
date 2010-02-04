@@ -41,6 +41,7 @@ public class GeneralSettingsPage
 	private BooleanFieldEditor derbyWarning;
 	private BooleanFieldEditor inputHelperHints;
 	private BooleanFieldEditor infoDialogTransformCatalogItems;
+	private BooleanFieldEditor infoDialogCopy;
 
 	public GeneralSettingsPage() {
 		super(GRID);
@@ -74,6 +75,11 @@ public class GeneralSettingsPage
 				Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(infoDialogTransformCatalogItems);
+		
+		infoDialogCopy =  new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_COPIED, 
+				Messages.getString("GeneralSettingsPage.InfoCopy"), //$NON-NLS-1$
+				getFieldEditorParent());
+		addField(infoDialogCopy);
 		
 	}
 	
