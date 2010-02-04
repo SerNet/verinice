@@ -176,6 +176,18 @@
             id="sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"
             name="Zeige Zugriffsberechtigungsdialog">
       </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="Copy an Element"
+            id="sernet.verinice.iso27k.rcp.commands.copy"
+            name="Copy">
+      </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="Paste an Element"
+            id="sernet.verinice.iso27k.rcp.commands.paste"
+            name="Paste">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -551,6 +563,20 @@
          </action>
       </objectContribution>
    </extension>
+   <extension point="org.eclipse.ui.menus">
+   	  <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=additions">
+         <command
+               commandId="org.eclipse.ui.edit.copy"
+               disabledIcon="icons/copy.png"
+               icon="icons/copy.png"
+               label="Copy element(s)"/>
+         <command
+               commandId="org.eclipse.ui.edit.paste"
+               disabledIcon="icons/copy.png"
+               icon="icons/paste.png"
+               label="Paste element(s)"/>
+      </menuContribution>
+   </extension>
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -788,4 +814,48 @@
          </action>
       </viewContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="sernet.verinice.iso27k.rcp.action.CopyHandler"
+            commandId="org.eclipse.ui.edit.copy">
+         <activeWhen>
+            <with variable="activePartId">
+               <equals value="sernet.verinice.iso27k.rcp.ISMView">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="sernet.verinice.iso27k.rcp.action.PasteHandler"
+            commandId="org.eclipse.ui.edit.paste">
+         <activeWhen>
+     		<with variable="activePartId">
+           		<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+        	</with>
+         </activeWhen> 
+         <enabledWhen>
+		 	<and>
+            	<with variable="selection">
+	                <iterate operator="and">
+	                    <instanceof value="sernet.verinice.iso27k.model.Group"/>
+	                    <test property="sernet.verinice.iso27k.model.canContain"/>           
+	                </iterate>
+            	</with>
+            	<with variable="selection">
+					<count value="1" />
+      			</with> 
+         	</and>          
+		 </enabledWhen>
+      </handler>
+   </extension>
+   <extension point="org.eclipse.core.expressions.propertyTesters">
+	   <propertyTester
+	         id="sernet.verinice.iso27k.rcp.action.GroupTester"
+	         class="sernet.verinice.iso27k.rcp.action.GroupTester"
+	         type="sernet.verinice.iso27k.model.Group"
+	         namespace="sernet.verinice.iso27k.model"
+	         properties="canContain">
+	   </propertyTester>
+	</extension>
 </plugin>
