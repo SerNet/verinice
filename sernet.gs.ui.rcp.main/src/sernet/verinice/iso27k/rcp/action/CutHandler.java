@@ -38,9 +38,9 @@ import sernet.verinice.iso27k.rcp.CnPItems;
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public class CopyHandler extends AbstractHandler {
+public class CutHandler extends AbstractHandler {
 
-	private static final Logger LOG = Logger.getLogger(CopyHandler.class);
+private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 	
 	List<IISO27kElement> selectedElementList = new ArrayList<IISO27kElement>();
 	
@@ -49,9 +49,9 @@ public class CopyHandler extends AbstractHandler {
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		changeSelection(HandlerUtil.getCurrentSelection(event));
-		CnPItems.clearCutItems();
 		CnPItems.clearCopyItems();
-		CnPItems.setCopyItems(selectedElementList);	
+		CnPItems.clearCutItems();
+		CnPItems.setCutItems(selectedElementList);	
 		return null;
 	}
 	

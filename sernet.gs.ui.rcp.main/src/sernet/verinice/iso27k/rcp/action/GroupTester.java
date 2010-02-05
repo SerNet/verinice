@@ -19,12 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp.action;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.expressions.PropertyTester;
 
-import sernet.gs.ui.rcp.main.bsi.dnd.CnPItems;
 import sernet.verinice.iso27k.model.Group;
+import sernet.verinice.iso27k.rcp.CnPItems;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -38,14 +39,22 @@ public class GroupTester extends PropertyTester {
 	@SuppressWarnings("unchecked")
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		Group selectedGroup = (Group) receiver;
-		List sourceItemList = CnPItems.getItems();
-		boolean enabled = (sourceItemList!=null && sourceItemList.size()>0);
-		for (Object object : sourceItemList) {
+		List copyList = CnPItems.getCopyItems();
+		List cutList = CnPItems.getCutItems();
+		List activeList = Collections.EMPTY_LIST;
+		boolean enabled = ((copyList!=null && copyList.size()>0) || (cutList!=null && cutList.size()>0));
+		if(!copyList.isEmpty()) {
+			activeList = copyList;
+		} else if(!copyList.isEmpty()) {
+			activeList = cutList;
+		}
+		for (Object object : activeList) {
 			if(!selectedGroup.canContain(object)) {
 				enabled = false;
 				break;
 			}
 		}
+		
 		return enabled;
 	}
 

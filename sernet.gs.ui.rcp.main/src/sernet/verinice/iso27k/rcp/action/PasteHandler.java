@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp.action;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -32,15 +35,17 @@ import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.dnd.CnPItems;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.iso27k.model.Group;
+import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.iso27k.rcp.CopyOperation;
+import sernet.verinice.iso27k.rcp.CutOperation;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
+@SuppressWarnings("unchecked")
 public class PasteHandler extends AbstractHandler {
 
 	private static final Logger LOG = Logger.getLogger(PasteHandler.class);
@@ -50,25 +55,14 @@ public class PasteHandler extends AbstractHandler {
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
-			
 			Object selection = HandlerUtil.getCurrentSelection(event);
 			if(selection instanceof IStructuredSelection) {
 				Object sel = ((IStructuredSelection) selection).getFirstElement();			
-				if (sel instanceof Group) {	
-					CopyOperation operation = new CopyOperation((Group) sel, CnPItems.getItems());
-					IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-					progressService.run(true, true, operation);
-					IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-					boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_ELEMENTS_COPIED);
-					if(!dontShow) {
-						MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
-								"Status Information", 
-								operation.getNumberOfElements() + " elements copied to group " + ((Group) sel).getTitle(),
-								"Don't show this message again (You can change this in the preferences)",
-								dontShow,
-								preferenceStore,
-								PreferenceConstants.INFO_ELEMENTS_COPIED);
-						preferenceStore.setValue(PreferenceConstants.INFO_ELEMENTS_COPIED, dialog.getToggleState());
+				if (sel instanceof Group) {
+					if(!CnPItems.getCopyItems().isEmpty()) {
+						copy(sel,CnPItems.getCopyItems());
+					} else if(!CnPItems.getCutItems().isEmpty()) {
+						cut(sel,CnPItems.getCutItems());
 					}
 				}
 			}
@@ -77,6 +71,42 @@ public class PasteHandler extends AbstractHandler {
 			ExceptionUtil.log(e, "Could not paste elements.");
 		}
 		return null;
+	}
+	
+	private void copy(Object sel, List copyList) throws InvocationTargetException, InterruptedException {
+		CopyOperation operation = new CopyOperation((Group) sel, copyList);
+		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+		progressService.run(true, true, operation);
+		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+		boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_ELEMENTS_COPIED);
+		if(!dontShow) {
+			MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
+					"Status Information", 
+					operation.getNumberOfElements() + " elements copied to group " + ((Group) sel).getTitle(),
+					"Don't show this message again (You can change this in the preferences)",
+					dontShow,
+					preferenceStore,
+					PreferenceConstants.INFO_ELEMENTS_COPIED);
+			preferenceStore.setValue(PreferenceConstants.INFO_ELEMENTS_COPIED, dialog.getToggleState());
+		}
+	}
+	
+	private void cut(Object sel, List cutList) throws InvocationTargetException, InterruptedException {
+		CutOperation operation = new CutOperation((Group) sel, cutList);
+		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+		progressService.run(true, true, operation);
+		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+		boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_ELEMENTS_CUT);
+		if(!dontShow) {
+			MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
+					"Status Information", 
+					operation.getNumberOfElements() + " elements moved to group " + ((Group) sel).getTitle(),
+					"Don't show this message again (You can change this in the preferences)",
+					dontShow,
+					preferenceStore,
+					PreferenceConstants.INFO_ELEMENTS_CUT);
+			preferenceStore.setValue(PreferenceConstants.INFO_ELEMENTS_CUT, dialog.getToggleState());
+		}
 	}
 
 }

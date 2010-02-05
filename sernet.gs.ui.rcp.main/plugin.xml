@@ -566,6 +566,11 @@
    <extension point="org.eclipse.ui.menus">
    	  <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=additions">
          <command
+               commandId="org.eclipse.ui.edit.cut"
+               disabledIcon="icons/cut.png"
+               icon="icons/cut.png"
+               label="Cut element(s)"/>
+         <command
                commandId="org.eclipse.ui.edit.copy"
                disabledIcon="icons/copy.png"
                icon="icons/copy.png"
@@ -814,11 +819,20 @@
          </action>
       </viewContribution>
    </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
+   <extension point="org.eclipse.ui.handlers">
       <handler
             class="sernet.verinice.iso27k.rcp.action.CopyHandler"
             commandId="org.eclipse.ui.edit.copy">
+         <activeWhen>
+            <with variable="activePartId">
+               <equals value="sernet.verinice.iso27k.rcp.ISMView">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="sernet.verinice.iso27k.rcp.action.CutHandler"
+            commandId="org.eclipse.ui.edit.cut">
          <activeWhen>
             <with variable="activePartId">
                <equals value="sernet.verinice.iso27k.rcp.ISMView">
