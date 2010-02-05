@@ -42,6 +42,7 @@ public class PreferenceConstants {
 	public static final String INPUTHINTS = "cna_inputhelperhints";
 	public static final String INFO_CONTROLS_ADDED = "info_controls_added";
 	public static final String INFO_ELEMENTS_COPIED = "info_elements_copied";
+	public static final String INFO_ELEMENTS_CUT = "info_elements_cut";
 
 	
 	public static final String DB_DRIVER = "cna_driver"; //$NON-NLS-1$

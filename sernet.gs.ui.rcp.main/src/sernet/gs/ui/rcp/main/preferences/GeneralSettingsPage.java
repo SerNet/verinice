@@ -42,6 +42,7 @@ public class GeneralSettingsPage
 	private BooleanFieldEditor inputHelperHints;
 	private BooleanFieldEditor infoDialogTransformCatalogItems;
 	private BooleanFieldEditor infoDialogCopy;
+	private BooleanFieldEditor infoDialogCut;
 
 	public GeneralSettingsPage() {
 		super(GRID);
@@ -80,6 +81,11 @@ public class GeneralSettingsPage
 				Messages.getString("GeneralSettingsPage.InfoCopy"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(infoDialogCopy);
+		
+		infoDialogCut =  new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_CUT, 
+				Messages.getString("GeneralSettingsPage.CutCopy"), //$NON-NLS-1$
+				getFieldEditorParent());
+		addField(infoDialogCut);
 		
 	}
 	
