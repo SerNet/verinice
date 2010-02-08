@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+@SuppressWarnings("unchecked")
 public class DNDItems {
 	// TODO use system DND, (dragsource and droptarget)
 
@@ -46,7 +47,7 @@ public class DNDItems {
 	}
 
 	public static void clear() {
-		dndItems.clear();
+		dndItems = new ArrayList();
 	}
 	
 }
