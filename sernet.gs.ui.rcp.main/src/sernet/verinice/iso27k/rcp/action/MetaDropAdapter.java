@@ -27,6 +27,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
+
 /**
  * MetaDropAdapter is a {@link ViewerDropAdapter} with a list of {@link DropPerformer}s.
  * Since RCP allowes only one ViewerDropAdapter for a view you can
@@ -71,6 +73,7 @@ public class MetaDropAdapter extends ViewerDropAdapter {
 			LOG.debug("performDrop...");
 		}
 		boolean success = false;
+		try {
 		for (DropPerformer adapter : performerSet) {
 			if(adapter.isActive()) {
 				if(adapter.performDrop(data, getCurrentTarget(), getViewer())) {
@@ -82,6 +85,10 @@ public class MetaDropAdapter extends ViewerDropAdapter {
 			} else if (LOG.isDebugEnabled()) {
 				LOG.debug("performDrop, adapter is not active: " + adapter);
 			}
+		}
+		} catch( RuntimeException e ) {
+			LOG.error("Error while performing drop.", e);
+			throw e;
 		}
 		return success;
 	}
