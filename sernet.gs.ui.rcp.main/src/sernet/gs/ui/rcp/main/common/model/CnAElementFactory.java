@@ -36,6 +36,7 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
@@ -600,11 +601,10 @@ public class CnAElementFactory {
 	 */
 	public static CnATreeElement getModel(CnATreeElement element) {
 		CnATreeElement model = null;
-		if(element instanceof IBSIStrukturElement) {
-			model = CnAElementFactory.getLoadedModel();
-		}
 		if(element instanceof IISO27kElement) {
 			model = CnAElementFactory.getInstance().getISO27kModel();
+		} else {
+			model = CnAElementFactory.getLoadedModel();
 		}
 		return model;
 	}
