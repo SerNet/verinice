@@ -45,14 +45,13 @@ public class CutOperation implements IRunnableWithProgress {
 	
 	private CutService service;
 	
-	@SuppressWarnings("unchecked")
-	private Group selectedGroup;
+	private CnATreeElement selectedGroup;
 
 	private List<CnATreeElement> elements;
 	
 
 	@SuppressWarnings("unchecked")
-	public CutOperation(Group selectedGroup, List<CnATreeElement> elements) {
+	public CutOperation(CnATreeElement selectedGroup, List<CnATreeElement> elements) {
 		this.selectedGroup = selectedGroup;
 		this.elements = elements;
 	}

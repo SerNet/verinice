@@ -35,6 +35,7 @@ import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.rcp.CnPItems;
@@ -58,11 +59,12 @@ public class PasteHandler extends AbstractHandler {
 			Object selection = HandlerUtil.getCurrentSelection(event);
 			if(selection instanceof IStructuredSelection) {
 				Object sel = ((IStructuredSelection) selection).getFirstElement();			
-				if (sel instanceof Group) {
+				if (sel instanceof CnATreeElement) {
+					CnATreeElement element = (CnATreeElement) sel;
 					if(!CnPItems.getCopyItems().isEmpty()) {
-						copy(sel,CnPItems.getCopyItems());
+						copy(element,CnPItems.getCopyItems());
 					} else if(!CnPItems.getCutItems().isEmpty()) {
-						cut(sel,CnPItems.getCutItems());
+						cut(element,CnPItems.getCutItems());
 					}
 				}
 			}
@@ -73,8 +75,8 @@ public class PasteHandler extends AbstractHandler {
 		return null;
 	}
 	
-	private void copy(Object sel, List copyList) throws InvocationTargetException, InterruptedException {
-		CopyOperation operation = new CopyOperation((Group) sel, copyList);
+	private void copy(CnATreeElement sel, List copyList) throws InvocationTargetException, InterruptedException {
+		CopyOperation operation = new CopyOperation(sel, copyList);
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 		progressService.run(true, true, operation);
 		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
@@ -82,7 +84,7 @@ public class PasteHandler extends AbstractHandler {
 		if(!dontShow) {
 			MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
 					"Status Information", 
-					operation.getNumberOfElements() + " elements copied to group " + ((Group) sel).getTitle(),
+					operation.getNumberOfElements() + " elements copied to group " + sel.getTitle(),
 					"Don't show this message again (You can change this in the preferences)",
 					dontShow,
 					preferenceStore,
@@ -91,8 +93,8 @@ public class PasteHandler extends AbstractHandler {
 		}
 	}
 	
-	private void cut(Object sel, List cutList) throws InvocationTargetException, InterruptedException {
-		CutOperation operation = new CutOperation((Group) sel, cutList);
+	private void cut(CnATreeElement sel, List cutList) throws InvocationTargetException, InterruptedException {
+		CutOperation operation = new CutOperation(sel, cutList);
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 		progressService.run(true, true, operation);
 		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
@@ -100,7 +102,7 @@ public class PasteHandler extends AbstractHandler {
 		if(!dontShow) {
 			MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
 					"Status Information", 
-					operation.getNumberOfElements() + " elements moved to group " + ((Group) sel).getTitle(),
+					operation.getNumberOfElements() + " elements moved to group " + sel.getTitle(),
 					"Don't show this message again (You can change this in the preferences)",
 					dontShow,
 					preferenceStore,

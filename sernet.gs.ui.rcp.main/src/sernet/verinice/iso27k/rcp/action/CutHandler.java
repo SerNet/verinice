@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.verinice.iso27k.model.IISO27kElement;
 import sernet.verinice.iso27k.rcp.CnPItems;
 
@@ -42,7 +43,7 @@ public class CutHandler extends AbstractHandler {
 
 private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 	
-	List<IISO27kElement> selectedElementList = new ArrayList<IISO27kElement>();
+	List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -62,8 +63,8 @@ private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 			if(selection instanceof IStructuredSelection) {
 				for (Iterator iterator = ((IStructuredSelection) selection).iterator(); iterator.hasNext();) {
 					Object sel = iterator.next();
-					if(sel instanceof IISO27kElement) {
-						selectedElementList.add((IISO27kElement) sel);
+					if(sel instanceof CnATreeElement) {
+						selectedElementList.add((CnATreeElement) sel);
 					}
 				}			
 			}		

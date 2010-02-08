@@ -24,8 +24,9 @@ import java.util.List;
 
 import org.eclipse.core.expressions.PropertyTester;
 
-import sernet.verinice.iso27k.model.Group;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.verinice.iso27k.rcp.CnPItems;
+import sernet.verinice.iso27k.service.CopyService;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -38,7 +39,7 @@ public class GroupTester extends PropertyTester {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		Group selectedGroup = (Group) receiver;
+		CnATreeElement selectedElement = (CnATreeElement) receiver;
 		List copyList = CnPItems.getCopyItems();
 		List cutList = CnPItems.getCutItems();
 		List activeList = Collections.EMPTY_LIST;
@@ -49,9 +50,16 @@ public class GroupTester extends PropertyTester {
 			activeList = cutList;
 		}
 		for (Object object : activeList) {
-			if(!selectedGroup.canContain(object)) {
+			if(!selectedElement.canContain(object)) {
 				enabled = false;
 				break;
+			}
+			if(object instanceof CnATreeElement) {
+				CnATreeElement element = (CnATreeElement) object;
+				if(CopyService.BLACKLIST.contains(element.getTypeId())) {
+					enabled = false;
+					break;
+				}
 			}
 		}
 		

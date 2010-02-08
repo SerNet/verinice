@@ -48,14 +48,13 @@ public class CopyOperation implements IRunnableWithProgress {
 	
 	private CopyService service;
 	
-	@SuppressWarnings("unchecked")
-	private Group selectedGroup;
+	private CnATreeElement selectedGroup;
 
 	private List<CnATreeElement> elements;
 	
 
 	@SuppressWarnings("unchecked")
-	public CopyOperation(Group selectedGroup, List<CnATreeElement> elements) {
+	public CopyOperation(CnATreeElement selectedGroup, List<CnATreeElement> elements) {
 		this.selectedGroup = selectedGroup;
 		this.elements = elements;
 	}
