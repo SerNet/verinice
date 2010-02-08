@@ -51,20 +51,20 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
  * Simple dialog that allows defining the access options for an element.
  * 
  * @author Robert Schuster <r.schuster@tarent.de>
- *
+ * 
  */
 public class AccessControlEditDialog extends Dialog {
-	
+
 	private static final Logger log = Logger.getLogger(AccessControlEditDialog.class);
 
 	private List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
-	
+
 	private List<RawPermission> rawPermissions = new ArrayList<RawPermission>();
-	
+
 	private Button inheritButton;
 
 	private String[] allRoles;
-	
+
 	public AccessControlEditDialog(Shell parent, IStructuredSelection selection) {
 		super(parent);
 		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
@@ -82,35 +82,38 @@ public class AccessControlEditDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		
+
 		// TODO rschuster: Translate me.
 		newShell.setText("Rechtevergabe");
 		newShell.setSize(400, 800);
 	}
-	
+
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		MigLayout ml = new MigLayout("wrap 3", "[grow, fill][left][left]", "[]");
 		container.setLayout(ml);
-		
+
 		Label l = new Label(container, SWT.NONE);
 		l.setText("Rolle");
-		
+
 		l = new Label(container, SWT.NONE);
 		l.setText("lesen");
-		
+
 		l = new Label(container, SWT.NONE);
 		l.setText("schreiben");
-		
+
 		// Note: The permissions should always be loaded right from the database
-		// instead of relying on the data that is currently in the CnATreeElement instance.
-		// Otherwise the client that did modifications to the permissions would not see
+		// instead of relying on the data that is currently in the
+		// CnATreeElement instance.
+		// Otherwise the client that did modifications to the permissions would
+		// not see
 		// the changes.
-		
-		// TODO akoderman: for now, only the permissions of the first element are displayed, changes will be writte to all selected elements
+
+		// TODO akoderman: for now, only the permissions of the first element
+		// are displayed, changes will be writte to all selected elements
 		CnATreeElement firstElement = elements.get(0);
-		
+
 		// TODO rschuster: Do this in a separate thread
 		LoadPermissions lp = new LoadPermissions(firstElement);
 		FindAllRoles findAllRoles = new FindAllRoles(true);
@@ -121,25 +124,24 @@ public class AccessControlEditDialog extends Dialog {
 			// TODO rschuster: Handle this more gracefully
 			throw new RuntimeException(e);
 		}
-		
+
 		Set<String> roles = findAllRoles.getRoles();
 		this.allRoles = (String[]) roles.toArray(new String[roles.size()]);
-		
+
 		Set<Permission> perms = lp.getPermissions();
 		Combo t;
 		Button r, w;
-		for (Permission p : perms)
-		{
-			t = new Combo(container,  SWT.DROP_DOWN | SWT.READ_ONLY);
+		for (Permission p : perms) {
+			t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
 			t.setItems(allRoles);
 			t.setText(p.getRole());
-			
+
 			r = new Button(container, SWT.CHECK | SWT.BORDER);
 			r.setSelection(p.isReadAllowed());
 
 			w = new Button(container, SWT.CHECK | SWT.BORDER);
 			w.setSelection(p.isWriteAllowed());
-			
+
 			rawPermissions.add(new RawPermission(t, r, w));
 		}
 
@@ -149,76 +151,72 @@ public class AccessControlEditDialog extends Dialog {
 		t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
 		t.setText("");
 		t.setItems(allRoles);
-		r = new Button(container, SWT.CHECK | SWT.BORDER); r.setSelection(false);
-		w = new Button(container, SWT.CHECK | SWT.BORDER); w.setSelection(false);
+		r = new Button(container, SWT.CHECK | SWT.BORDER);
+		r.setSelection(false);
+		w = new Button(container, SWT.CHECK | SWT.BORDER);
+		w.setSelection(false);
 		rawPermissions.add(new RawPermission(t, r, w));
 
 		t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
 		t.setText("");
 		t.setItems(allRoles);
-		r = new Button(container, SWT.CHECK | SWT.BORDER); r.setSelection(false);
-		w = new Button(container, SWT.CHECK | SWT.BORDER); w.setSelection(false);
+		r = new Button(container, SWT.CHECK | SWT.BORDER);
+		r.setSelection(false);
+		w = new Button(container, SWT.CHECK | SWT.BORDER);
+		w.setSelection(false);
 		rawPermissions.add(new RawPermission(t, r, w));
-		
+
 		t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
 		t.setText("");
 		t.setItems(allRoles);
-		r = new Button(container, SWT.CHECK | SWT.BORDER); r.setSelection(false);
-		w = new Button(container, SWT.CHECK | SWT.BORDER); w.setSelection(false);
+		r = new Button(container, SWT.CHECK | SWT.BORDER);
+		r.setSelection(false);
+		w = new Button(container, SWT.CHECK | SWT.BORDER);
+		w.setSelection(false);
 		rawPermissions.add(new RawPermission(t, r, w));
 
 		inheritButton = new Button(container, SWT.CHECK);
 		inheritButton.setLayoutData("spanx 3, grow");
 		inheritButton.setSelection(false);
 		inheritButton.setText("Rechte auf alle Kindelemente anwenden");
-		
+
 		return container;
 	}
-		
+
 	static class RawPermission {
-		
+
 		Combo role;
-		
+
 		Button read, write;
-		
-		RawPermission(Combo role, Button read, Button write)
-		{
+
+		RawPermission(Combo role, Button read, Button write) {
 			this.role = role;
 			this.read = read;
 			this.write = write;
 		}
 	}
-	
-	protected void okPressed()
-	{
+
+	protected void okPressed() {
 		if (this.inheritButton.getSelection()) {
-			boolean openConfirm = MessageDialog.openConfirm(getParentShell(), "Bestätigen", 
-					"Neue Rechte wirklich auf alle untergeordneten Elemente anwenden? VORSICHT: existierende Berechtigungen werden dabei unterschrieben!");
+			boolean openConfirm = MessageDialog.openConfirm(getParentShell(), "Bestätigen", "Neue Rechte wirklich auf alle untergeordneten Elemente anwenden? VORSICHT: existierende Berechtigungen werden dabei unterschrieben!");
 			if (!openConfirm)
 				return;
 		}
-		
+
 		Set<Permission> newPerms = new HashSet<Permission>();
-		for (RawPermission rp : rawPermissions)
-		{
+		for (RawPermission rp : rawPermissions) {
 			String role = rp.role.getText();
 			boolean r = rp.read.getSelection();
 			boolean w = rp.write.getSelection();
-			if (role != null && role.length() > 0
-					&& (r || w))
-			{
-				Permission p = Permission.createPermission(
-						null, role, r, w);
-				
+			if (role != null && role.length() > 0 && (r || w)) {
+				Permission p = Permission.createPermission(null, role, r, w);
+
 				newPerms.add(p);
 			}
-			
+
 			for (CnATreeElement element : elements) {
-				UpdatePermissions up = new UpdatePermissions(
-						element,
-						newPerms,
-						inheritButton.getSelection());
-				
+				UpdatePermissions up = new UpdatePermissions(element, newPerms, inheritButton.getSelection());
+
 				try {
 					ServiceFactory.lookupCommandService().executeCommand(up);
 				} catch (CommandException e) {
@@ -230,5 +228,5 @@ public class AccessControlEditDialog extends Dialog {
 
 		super.okPressed();
 	}
-	
+
 }
