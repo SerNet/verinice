@@ -38,6 +38,10 @@ import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.IISO27kGroup;
 
 /**
+ * A CopyService is a job, which
+ * copies a list of elements to an Element-{@link Group}.
+ * The progress of the copy process can be monitored by a {@link IProgressObserver}.
+ * 
  * @author Daniel Murygin <dm@sernet.de>
  */
 public class CopyService {
@@ -62,16 +66,22 @@ public class CopyService {
 	}
 	
 	/**
-	 * @param progressObserver
-	 * @param selectedGroup
-	 * @param element 
+	 * Creates a new CopyService
+	 * 
+	 * @param progressObserver used to monitor the job process
+	 * @param group an element group, elements are copied to this group
+	 * @param elementList a list of elements
 	 */
-	public CopyService(IProgressObserver progressObserver, Group selectedGroup, List<CnATreeElement> element) {
+	@SuppressWarnings("unchecked")
+	public CopyService(IProgressObserver progressObserver, Group group, List<CnATreeElement> elementList) {
 		this.progressObserver = progressObserver;
-		this.selectedGroup = selectedGroup;
-		this.elements = element;	
+		this.selectedGroup = group;
+		this.elements = elementList;	
 	}
 
+	/**
+	 * Starts the execution of the copy job.
+	 */
 	public void run()  {
 		try {	
 			Activator.inheritVeriniceContextState();
@@ -131,7 +141,7 @@ public class CopyService {
 		newElement.getEntity().copyEntity(copyElement.getEntity());
 		String title = newElement.getTitle();
 		newElement.setTitel(getUniqueTitle(title, title, toGroup.getChildren(), 0));
-		SaveElement saveCommand = new SaveElement(newElement);
+		SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(newElement);
 		saveCommand = getCommandService().executeCommand(saveCommand);
 		newElement = (CnATreeElement) saveCommand.getElement();
 		newElement.setParent(toGroup);

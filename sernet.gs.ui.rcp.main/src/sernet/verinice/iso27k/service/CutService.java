@@ -20,17 +20,13 @@
 package sernet.verinice.iso27k.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
@@ -38,6 +34,9 @@ import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.IISO27kGroup;
 
 /**
+ * A CutService is a job, which moves a list of elements from one to another Element-{@link Group}.
+ * The progress of the job can be monitored by a {@link IProgressObserver}.
+ * 
  * @author Daniel Murygin <dm@sernet.de>
  */
 public class CutService {
@@ -62,16 +61,22 @@ public class CutService {
 	}
 	
 	/**
-	 * @param progressObserver
-	 * @param selectedGroup
-	 * @param element 
+	 * Creates a new CutService
+	 * 
+	 * @param progressObserver used to monitor the job process
+	 * @param group an element group, elements are moved to this group
+	 * @param elementList a list of elements
 	 */
-	public CutService(IProgressObserver progressObserver, Group selectedGroup, List<CnATreeElement> element) {
+	@SuppressWarnings("unchecked")
+	public CutService(IProgressObserver progressObserver, Group group, List<CnATreeElement> elementList) {
 		this.progressObserver = progressObserver;
-		this.selectedGroup = selectedGroup;
-		this.elements = element;	
+		this.selectedGroup = group;
+		this.elements = elementList;	
 	}
 
+	/**
+	 * Starts the execution of the moving job.
+	 */
 	public void run()  {
 		try {	
 			Activator.inheritVeriniceContextState();
@@ -134,28 +139,6 @@ public class CutService {
 		monitor.processed(1);
 		numberProcessed++;
 		return element;
-	}
-
-	/**
-	 * @param title
-	 * @param siblings
-	 * @return
-	 */
-	private String getUniqueTitle(String title, String copyTitle, Set<CnATreeElement> siblings, int n) {
-		String result = copyTitle;
-		for (CnATreeElement cnATreeElement : siblings) {
-			cnATreeElement = Retriever.retrieveElement(cnATreeElement,RetrieveInfo.getPropertyInstance());
-			if(cnATreeElement.getTitle()!=null && (cnATreeElement.getTitle().equals(copyTitle)) ) {
-				n++;
-				return getUniqueTitle(title, getCopyTitle(title, n), siblings, n);
-			}
-		}
-		return result;
-	}
-	
-	private String getCopyTitle(String title, int n) {
-		StringBuilder sb = new StringBuilder();
-		return sb.append(title).append(" (Copy ").append(n).append(")").toString();
 	}
 
 	private List<CnATreeElement> createInsertList(List<CnATreeElement> elementDragList) {
