@@ -111,7 +111,7 @@ This variant:
 		<property name="configurationDao" ref="configurationDao" />
 		<property name="bausteinVorschlagDao" ref="bausteinVorschlagDao" />
 		<property name="changeLogEntryDAO" ref="changeLogEntryDAO" />
-		<property name="permissionDAO" ref="personDAO" />
+		<property name="permissionDAO" ref="permissionDAO" />
 		<property name="additionDAO" ref="additionDAO" />
 		<property name="noteDAO" ref="noteDAO" />
 		<property name="attachmentDAO" ref="attachmentDAO" />
