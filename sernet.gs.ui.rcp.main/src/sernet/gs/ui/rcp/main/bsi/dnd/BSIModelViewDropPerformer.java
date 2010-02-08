@@ -123,7 +123,7 @@ public class BSIModelViewDropPerformer implements DropPerformer {
 			dropJob.setSystem(false);
 			dropJob.schedule();
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(Messages.getString("BSIModelViewDropListener.5"), e); //$NON-NLS-1$
+			LOG.error(Messages.getString("BSIModelViewDropListener.5"), e); //$NON-NLS-1$
 			return false;
 		}
 		return true;
