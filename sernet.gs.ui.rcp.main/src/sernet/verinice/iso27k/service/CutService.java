@@ -47,8 +47,7 @@ public class CutService {
 	
 	private IProgressObserver progressObserver;
 	
-	@SuppressWarnings("unchecked")
-	private Group selectedGroup;
+	private CnATreeElement selectedGroup;
 	
 	private int numberOfElements;
 	
@@ -68,7 +67,7 @@ public class CutService {
 	 * @param elementList a list of elements
 	 */
 	@SuppressWarnings("unchecked")
-	public CutService(IProgressObserver progressObserver, Group group, List<CnATreeElement> elementList) {
+	public CutService(IProgressObserver progressObserver, CnATreeElement group, List<CnATreeElement> elementList) {
 		this.progressObserver = progressObserver;
 		this.selectedGroup = group;
 		this.elements = elementList;	
@@ -107,7 +106,7 @@ public class CutService {
 	 * @throws Exception 
 	 */
 	@SuppressWarnings("unchecked")
-	private CnATreeElement move(IProgressObserver monitor, Group group, CnATreeElement element) throws Exception {
+	private CnATreeElement move(IProgressObserver monitor, CnATreeElement group, CnATreeElement element) throws Exception {
 		if(monitor.isCanceled()) {
 			log.warn("Copying canceled. " + numberProcessed + " of " + numberOfElements + " elements copied.");
 			return null;

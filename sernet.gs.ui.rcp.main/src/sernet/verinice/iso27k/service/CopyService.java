@@ -20,6 +20,7 @@
 package sernet.verinice.iso27k.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,12 +49,17 @@ public class CopyService {
 	
 	private final Logger log = Logger.getLogger(CopyService.class);
 	
+	public static List<String> BLACKLIST;
+	
+	static {
+		BLACKLIST = Arrays.asList("riskanalysis","bstumsetzung","mnums");
+	}
+	
 	private ICommandService commandService;
 	
 	private IProgressObserver progressObserver;
 	
-	@SuppressWarnings("unchecked")
-	private Group selectedGroup;
+	private CnATreeElement selectedGroup;
 	
 	private int numberOfElements;
 	
@@ -73,7 +79,7 @@ public class CopyService {
 	 * @param elementList a list of elements
 	 */
 	@SuppressWarnings("unchecked")
-	public CopyService(IProgressObserver progressObserver, Group group, List<CnATreeElement> elementList) {
+	public CopyService(IProgressObserver progressObserver, CnATreeElement group, List<CnATreeElement> elementList) {
 		this.progressObserver = progressObserver;
 		this.selectedGroup = group;
 		this.elements = elementList;	
@@ -92,7 +98,7 @@ public class CopyService {
 			progressObserver.beginTask(sb.toString(), numberOfElements);
 			numberProcessed = 0;
 			
-			for (CnATreeElement element : elementList) {
+			for (CnATreeElement element : elementList) {			
 				CnATreeElement elementCopy = insertCopy(progressObserver, selectedGroup, element);
 				CnAElementFactory.getModel(elementCopy).childAdded(selectedGroup, elementCopy);
 				CnAElementFactory.getModel(elementCopy).databaseChildAdded(elementCopy);
@@ -112,20 +118,28 @@ public class CopyService {
 	 * @throws Exception 
 	 */
 	@SuppressWarnings("unchecked")
-	private CnATreeElement insertCopy(IProgressObserver monitor, Group group, CnATreeElement element) throws Exception {
+	private CnATreeElement insertCopy(IProgressObserver monitor, CnATreeElement group, CnATreeElement element) throws Exception {
 		if(monitor.isCanceled()) {
 			log.warn("Copying canceled. " + numberProcessed + " of " + numberOfElements + " elements copied.");
 			return null;
 		}
-		element = Retriever.retrieveElement(element, RetrieveInfo.getPropertyChildrenInstance());
-		monitor.setTaskName(getText(numberOfElements,numberProcessed,element.getTitle()));
-		CnATreeElement elementCopy = copyElement(group, element);
-		monitor.processed(1);
-		numberProcessed++;
-		if(element.getChildren()!=null) {
-			for (CnATreeElement child : element.getChildren()) {
-				insertCopy(monitor,(Group) elementCopy,child);
+		CnATreeElement elementCopy = element;
+		if(element!=null 
+			&& element.getTypeId()!=null 
+			&& !BLACKLIST.contains(element.getTypeId()) 
+			&& selectedGroup.canContain(element)) {
+			element = Retriever.retrieveElement(element, RetrieveInfo.getPropertyChildrenInstance());
+			monitor.setTaskName(getText(numberOfElements,numberProcessed,element.getTitle()));
+			elementCopy = copyElement(group, element);
+			monitor.processed(1);
+			numberProcessed++;
+			if(element.getChildren()!=null) {
+				for (CnATreeElement child : element.getChildren()) {
+					insertCopy(monitor,elementCopy,child);
+				}
 			}
+		} else {
+			log.warn("Can not copy element with pk: " + element.getDbId() + " to group with pk: " + selectedGroup.getDbId());
 		}
 		return elementCopy;
 	}
@@ -139,8 +153,10 @@ public class CopyService {
 	private CnATreeElement copyElement(CnATreeElement toGroup, CnATreeElement copyElement) throws Exception {
 		CnATreeElement newElement = CnAElementFactory.getInstance().saveNew(toGroup, copyElement.getTypeId(), null, false);
 		newElement.getEntity().copyEntity(copyElement.getEntity());
-		String title = newElement.getTitle();
-		newElement.setTitel(getUniqueTitle(title, title, toGroup.getChildren(), 0));
+		if(toGroup.getChildren()!=null && toGroup.getChildren().size()>0) {
+			String title = newElement.getTitle();
+			newElement.setTitel(getUniqueTitle(title, title, toGroup.getChildren(), 0));
+		}
 		SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(newElement);
 		saveCommand = getCommandService().executeCommand(saveCommand);
 		newElement = (CnATreeElement) saveCommand.getElement();
