@@ -101,24 +101,32 @@ public class CnATElementDao extends HibernateBaseDao<CnATreeElement, Integer> {
 				log.debug("Username: " + username);
 			}
 			String[] roleArray = getDynamicRoles(username);
-			if (log.isDebugEnabled()) {
-				log.debug("Roles: ");
-				for (int i = 0; i < roleArray.length; i++) {
-					log.debug(roleArray[i]);
-				}
-			}		
-			String hql = "select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (?) and p.writeAllowed = ?";
+					
+			
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < roleArray.length; i++) {
-				sb.append(roleArray[i]);
+				sb.append("'").append(roleArray[i]).append("'");
 				if(i<roleArray.length-1) {
 					sb.append(",");
 				}			
 			}
-			Object[] params = new Object[]{entity.getDbId(),sb.toString(),Boolean.TRUE};
+			String roleParam = sb.toString();
+			
+			sb = new StringBuilder();
+			sb.append("select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
+			// workaraound, because adding roles as ? param does not work
+			sb.append(roleParam);
+			sb.append(") and p.writeAllowed = ?");
+			String hql = sb.toString();
+			
+			Object[] params = new Object[]{entity.getDbId(),Boolean.TRUE};
+			if (log.isDebugEnabled()) {
+				log.debug("checkRights, hql: " + hql);
+				log.debug("checkRights, entity db-id: " + entity.getDbId() );
+			}
 			List<Integer> idList = getPermissionDao().findByQuery(hql, params);
 			if (log.isDebugEnabled()) {
-				log.debug("Permission ids: ");
+				log.debug("checkRights, permission ids: ");
 				for (Integer integer : idList) {
 					log.debug(integer);
 				}
