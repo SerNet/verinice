@@ -581,6 +581,23 @@
                icon="icons/paste.png"
                label="Paste element(s)"/>
       </menuContribution>
+   	  <menuContribution locationURI="popup:sernet.gs.ui.rcp.main.views.bsimodelview?after=additions">
+         <command
+               commandId="org.eclipse.ui.edit.cut"
+               disabledIcon="icons/cut.png"
+               icon="icons/cut.png"
+               label="Cut element(s)"/>
+         <command
+               commandId="org.eclipse.ui.edit.copy"
+               disabledIcon="icons/copy.png"
+               icon="icons/copy.png"
+               label="Copy element(s)"/>
+         <command
+               commandId="org.eclipse.ui.edit.paste"
+               disabledIcon="icons/copy.png"
+               icon="icons/paste.png"
+               label="Paste element(s)"/>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -824,36 +841,43 @@
             class="sernet.verinice.iso27k.rcp.action.CopyHandler"
             commandId="org.eclipse.ui.edit.copy">
          <activeWhen>
-            <with variable="activePartId">
-               <equals value="sernet.verinice.iso27k.rcp.ISMView">
-               </equals>
-            </with>
+         	<with variable="activePartId">
+     			<or>
+       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+       			</or>
+    		</with>
          </activeWhen>
       </handler>
       <handler
             class="sernet.verinice.iso27k.rcp.action.CutHandler"
             commandId="org.eclipse.ui.edit.cut">
          <activeWhen>
-            <with variable="activePartId">
-               <equals value="sernet.verinice.iso27k.rcp.ISMView">
-               </equals>
-            </with>
+     		<with variable="activePartId">
+     			<or>
+       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+       			</or>
+    		</with>
          </activeWhen>
       </handler>
       <handler
             class="sernet.verinice.iso27k.rcp.action.PasteHandler"
             commandId="org.eclipse.ui.edit.paste">
          <activeWhen>
-     		<with variable="activePartId">
-           		<equals value="sernet.verinice.iso27k.rcp.ISMView" />
-        	</with>
+         	<with variable="activePartId">
+     			<or>
+       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+       			</or>
+    		</with>
          </activeWhen> 
          <enabledWhen>
 		 	<and>
             	<with variable="selection">
 	                <iterate operator="and">
-	                    <instanceof value="sernet.verinice.iso27k.model.Group"/>
-	                    <test property="sernet.verinice.iso27k.model.canContain"/>           
+	                    <instanceof value="sernet.gs.ui.rcp.main.common.model.CnATreeElement"/>
+	                    <test property="sernet.verinice.iso27k.model.canContain"/>       
 	                </iterate>
             	</with>
             	<with variable="selection">
@@ -867,7 +891,7 @@
 	   <propertyTester
 	         id="sernet.verinice.iso27k.rcp.action.GroupTester"
 	         class="sernet.verinice.iso27k.rcp.action.GroupTester"
-	         type="sernet.verinice.iso27k.model.Group"
+	         type="sernet.gs.ui.rcp.main.common.model.CnATreeElement"
 	         namespace="sernet.verinice.iso27k.model"
 	         properties="canContain">
 	   </propertyTester>
