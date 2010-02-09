@@ -219,7 +219,7 @@ public class CnAElementFactory {
 		elementbuilders.put(Anwendung.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 
-				Logger.getLogger(this.getClass()).debug("Creating new Anwendung in " + container);
+				log.debug("Creating new Anwendung in " + container);
 				CreateAnwendung saveCommand = new CreateAnwendung(container, Anwendung.class);
 				saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
 				Anwendung child = saveCommand.getNewElement();
@@ -247,7 +247,7 @@ public class CnAElementFactory {
 		elementbuilders.put(ITVerbund.TYPE_ID, new IElementBuilder() {
 			public ITVerbund build(CnATreeElement container, BuildInput input) throws Exception {
 
-				Logger.getLogger(this.getClass()).debug("Creating new ITVerbund in " + container);
+				log.debug("Creating new ITVerbund in " + container);
 				CreateITVerbund saveCommand = new CreateITVerbund(container, ITVerbund.class);
 				saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
 				ITVerbund verbund = saveCommand.getNewElement();
@@ -565,6 +565,10 @@ public class CnAElementFactory {
 	public static boolean isModelLoaded() {
 		return (loadedModel != null);
 	}
+	
+	public static boolean isIsoModelLoaded() {
+		return (isoModel != null);
+	}
 
 	public void closeModel() {
 		dbHome.close();
@@ -623,6 +627,7 @@ public class CnAElementFactory {
 	 * @return
 	 */
 	private ISO27KModel loadIsoModel() {
+		ISO27KModel model = null;
 		try {
 			CnAWorkspace.getInstance().createDatabaseConfig();
 			
@@ -631,11 +636,14 @@ public class CnAElementFactory {
 			
 			LoadModel loadModel = new LoadModel();
 			loadModel = getCommandService().executeCommand(loadModel);
-			isoModel = loadModel.getModel();			
+			model = loadModel.getModel();
+			if(model!=null) {
+				fireLoad();
+			}
 		} catch(Exception e) {
 			log.error("Error while loading ISO27KModel", e);
 		}
-		return isoModel;
+		return model;
 	}
 	
 	/**
@@ -649,6 +657,9 @@ public class CnAElementFactory {
 			isoModel = saveCommand.getElement();
 			if (log.isInfoEnabled()) {
 				log.info("ISO27KModel created");
+			}
+			if(isoModel!=null) {
+				fireLoad();
 			}
 		} catch(Exception e) {
 			log.error("Error while creating ISO27KModel", e);
@@ -672,7 +683,7 @@ public class CnAElementFactory {
 		}
 
 		// none found, create new model:
-		Logger.getLogger(this.getClass()).debug("Creating new model in DB.");
+		log.debug("Creating new model in DB.");
 		monitor.setTaskName("Erzeuge neues Modell...");
 		loadedModel = new BSIModel();
 
@@ -703,9 +714,21 @@ public class CnAElementFactory {
 	public void reloadModelFromDatabase() {
 		try {
 			fireClosed();
-			BSIModel newModel = dbHome.loadModel(new NullMonitor());
-			loadedModel.modelReload(newModel);
-			loadedModel = newModel;
+			
+			if(isModelLoaded()) {
+				BSIModel newModel = dbHome.loadModel(new NullMonitor());
+				loadedModel.modelReload(newModel);
+				loadedModel = newModel;
+			}
+			if(isIsoModelLoaded()) {
+				ISO27KModel newModel = loadIsoModel();
+				if (log.isDebugEnabled()) {
+					log.debug("reloadModelFromDatabase, ISO-model loaded");
+				}
+				isoModel.modelReload(newModel);
+				isoModel = newModel;
+			}
+			
 			fireLoad();
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Konnte Modell nicht aus der Datenbank erneuern..");
@@ -728,6 +751,18 @@ public class CnAElementFactory {
 		}
 		commandService = ServiceFactory.lookupCommandService();
 		return commandService;
+	}
+
+	/**
+	 * @param changeLogEntry
+	 */
+	public static void databaseChildRemoved(ChangeLogEntry changeLogEntry) {
+		if(isModelLoaded()) {
+			CnAElementFactory.getLoadedModel().databaseChildRemoved(changeLogEntry);
+		}
+		if(isIsoModelLoaded()) {
+			CnAElementFactory.getInstance().getISO27kModel().databaseChildRemoved(changeLogEntry);
+		}
 	}
 
 }
