@@ -36,7 +36,7 @@ public class LoadModel extends GenericCommand implements INoAccessControl {
 	
 	public void execute() {
 		RetrieveInfo ri = new RetrieveInfo();
-		//ri.setChildren(true);
+		ri.setChildren(true);
 		List<ISO27KModel> modelList = getDaoFactory().getDAO(ISO27KModel.class).findAll(ri);
 		if(modelList != null) {
 			if(modelList.size()>1) {
