@@ -138,8 +138,6 @@ public class BsiModelView extends ViewPart {
 
 	private BSIModelViewCloseDBAction closeDBAction;
 
-	private PasteBsiModelViewAction pasteAction;
-
 	private Action expandAllAction;
 
 	private Action collapseAction;
@@ -151,8 +149,6 @@ public class BsiModelView extends ViewPart {
 	private Action selectEqualsAction;
 
 	private ShowKonsolidatorAction konsolidatorAction;
-
-	private CopyBSIModelViewAction copyAction;
 
 	private Action selectLinksAction;
 
@@ -220,10 +216,6 @@ public class BsiModelView extends ViewPart {
 	}
 
 	private void hookGlobalActions() {
-		getViewSite().getActionBars().setGlobalActionHandler(
-				ActionFactory.PASTE.getId(), pasteAction);
-		getViewSite().getActionBars().setGlobalActionHandler(
-				ActionFactory.COPY.getId(), copyAction);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -231,8 +223,6 @@ public class BsiModelView extends ViewPart {
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 
 		manager.add(new Separator());
-		manager.add(copyAction);
-		manager.add(pasteAction);
 		manager.add(bulkEditAction);
 		manager.add(accessControlEditAction);
 		manager.add(selectEqualsAction);
@@ -419,9 +409,6 @@ public class BsiModelView extends ViewPart {
 		collapseAction.setImageDescriptor(ImageCache.getInstance()
 				.getImageDescriptor(ImageCache.COLLAPSEALL));
 
-		copyAction = new CopyBSIModelViewAction(this, "Kopieren");
-		pasteAction = new PasteBsiModelViewAction(this.viewer, "Einfügen");
-
 		openDBAction = new BSIModelViewOpenDBAction(this, viewer);
 
 		closeDBAction = new BSIModelViewCloseDBAction(this, viewer);
@@ -453,8 +440,8 @@ public class BsiModelView extends ViewPart {
 		menuManager.add(collapseAction);
 
 		menuManager.add(new Separator());
-		menuManager.add(copyAction);
-		menuManager.add(pasteAction);
+		//menuManager.add(copyAction);
+		//menuManager.add(pasteAction);
 
 	}
 
