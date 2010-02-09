@@ -46,7 +46,7 @@ public class GroupTester extends PropertyTester {
 		boolean enabled = ((copyList!=null && copyList.size()>0) || (cutList!=null && cutList.size()>0));
 		if(!copyList.isEmpty()) {
 			activeList = copyList;
-		} else if(!copyList.isEmpty()) {
+		} else if(!cutList.isEmpty()) {
 			activeList = cutList;
 		}
 		for (Object object : activeList) {
