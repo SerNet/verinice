@@ -42,6 +42,9 @@ import sernet.gs.ui.rcp.main.service.taskcommands.GetChangesSince;
  */
 // TODO server: implement server-side push of events (beacon service)
 public class TransactionLogWatcher {
+	
+	private final Logger log = Logger.getLogger(TransactionLogWatcher.class);
+	
 	private Date lastChecked = null;
 
 	/** ICommandService instance is injected by Spring. */
@@ -50,8 +53,10 @@ public class TransactionLogWatcher {
 	public void checkLog() {
 		Activator.inheritVeriniceContextState();
 
-		if (!CnAElementFactory.isModelLoaded())
+		if (!CnAElementFactory.isModelLoaded() && !CnAElementFactory.isIsoModelLoaded())
+		{
 			return;
+		}
 
 		// No need to do anything when the internal server is used as this
 		// means that there is only one user.
@@ -67,6 +72,9 @@ public class TransactionLogWatcher {
 
 			lastChecked = command.getLastChecked();
 			List<ChangeLogEntry> entries = command.getEntries();
+			if (log.isDebugEnabled() && (entries==null || entries.isEmpty()) ) {
+				log.debug("No changes");
+			}
 			for (ChangeLogEntry changeLogEntry : entries) {
 				Integer elementId = changeLogEntry.getElementId();
 				CnATreeElement changedElement = command.getChangedElements().get(elementId);
@@ -74,7 +82,7 @@ public class TransactionLogWatcher {
 			}
 
 		} catch (CommandException e) {
-			Logger.getLogger(this.getClass()).error("Fehler bei Abfrage des Transaktionslogfiles.", e);
+			log.error("Fehler bei Abfrage des Transaktionslogfiles.", e);
 		}
 	}
 
@@ -84,37 +92,39 @@ public class TransactionLogWatcher {
 	 */
 	private void process(ChangeLogEntry changeLogEntry, CnATreeElement changedElement) {
 		int changetype = changeLogEntry.getChange();
-		Logger.getLogger(this.getClass()).debug("Processing change event from user " + changeLogEntry.getUsername() + " for element " + changeLogEntry.getElementClass() + " / " + changeLogEntry.getElementId());
-
+		if (log.isInfoEnabled()) {
+			log.info("Processing change event type " + changeLogEntry.getChangeDescription() + " from user " + changeLogEntry.getUsername() + " for element " + changeLogEntry.getElementClass() + " / " + changeLogEntry.getElementId());
+		}
+	
 		switch (changetype) {
-		case ChangeLogEntry.TYPE_UPDATE:
-			CnAElementFactory.getLoadedModel().databaseChildChanged(changedElement);
-			break;
-
-		case ChangeLogEntry.TYPE_INSERT:
-			CnAElementFactory.getLoadedModel().databaseChildAdded(changedElement);
-
-			break;
-		case ChangeLogEntry.TYPE_DELETE:
-			if (changedElement == null) {
-				// element no longer retrievable, notify by ID:
-				CnAElementFactory.getLoadedModel().databaseChildRemoved(changeLogEntry);
-			} else {
-				// element was retrieved before deletion took place, notify
-				// using element itself:
-				CnAElementFactory.getLoadedModel().databaseChildRemoved(changedElement);
-			}
-
-			break;
-		case ChangeLogEntry.TYPE_PERMISSION:
-			// Changes to the permissions are potentially disruptive (items may
-			// be invisible now etc). As such reload everything.
-
-			CnAElementFactory.getInstance().reloadModelFromDatabase();
-			break;
-		default:
-			Logger.getLogger(this.getClass()).debug("Unrecognized change type received from server.");
-			break;
+			case ChangeLogEntry.TYPE_UPDATE:
+				CnAElementFactory.getModel(changedElement).databaseChildChanged(changedElement);
+				break;
+	
+			case ChangeLogEntry.TYPE_INSERT:
+				CnAElementFactory.getModel(changedElement).databaseChildAdded(changedElement);
+	
+				break;
+			case ChangeLogEntry.TYPE_DELETE:
+				if (changedElement == null) {
+					// element no longer retrievable, notify by ID:
+					CnAElementFactory.databaseChildRemoved(changeLogEntry);
+				} else {
+					// element was retrieved before deletion took place, notify
+					// using element itself:
+					CnAElementFactory.getModel(changedElement).databaseChildRemoved(changedElement);
+				}
+	
+				break;
+			case ChangeLogEntry.TYPE_PERMISSION:
+				// Changes to the permissions are potentially disruptive (items may
+				// be invisible now etc). As such reload everything.
+	
+				CnAElementFactory.getInstance().reloadModelFromDatabase();
+				break;
+			default:
+				Logger.getLogger(this.getClass()).debug("Unrecognized change type received from server.");
+				break;
 		}
 	}
 

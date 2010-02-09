@@ -22,6 +22,7 @@ package sernet.verinice.iso27k.rcp;
 import org.eclipse.jface.viewers.TreeViewer;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.views.ThreadSafeViewerUpdate;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
@@ -30,6 +31,7 @@ import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.verinice.iso27k.model.IISO27KModelListener;
+import sernet.verinice.iso27k.model.ISO27KModel;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -37,11 +39,13 @@ import sernet.verinice.iso27k.model.IISO27KModelListener;
  */
 public class ISO27KModelViewUpdate implements IISO27KModelListener {
 
+	private TreeViewer viewer;
 	private TreeViewerCache cache;
 	private ThreadSafeViewerUpdate updater;
 	
 	public ISO27KModelViewUpdate(TreeViewer viewer, TreeViewerCache cache) {
 		super();
+		this.viewer = viewer;
 		this.cache = cache;
 		this.updater = new ThreadSafeViewerUpdate(viewer);
 	}
@@ -132,6 +136,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
 		}
 		if (cachedChild != null) {
 			cachedChild.setEntity(child.getEntity());
+			cachedChild.setChildrenLoaded(false);
 		}
 		updater.refresh();	
 	}
@@ -171,6 +176,38 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
 	 */
 	public void linkRemoved(CnALink link) {
 		// nothing to do, since links are displayed in relation view
+	}
+
+
+	/* (non-Javadoc)
+	 * @see sernet.verinice.iso27k.model.IISO27KModelListener#modelReload(sernet.gs.ui.rcp.main.bsi.model.BSIModel)
+	 */
+	public void modelReload(ISO27KModel newModel) {
+		// remove listener from currently displayed model:
+		getModel(viewer.getInput()).removeISO27KModelListener(this);
+		newModel.addISO27KModelListener(this);
+		updater.setInput(newModel);
+		updater.refresh();
+	}
+	
+	/**
+	 * Get model, may be current viewer input or the root of the currently displayed
+	 * element.
+	 * 
+	 * @param input
+	 * @return
+	 */
+	private ISO27KModel getModel(Object input) {
+		if (input instanceof ISO27KModel)
+			return (ISO27KModel) input;
+		
+		if (input instanceof CnATreeElement) {
+			CnATreeElement elmt = (CnATreeElement) input;
+			return getModel(elmt.getParent());
+		}
+		
+		// input is not part of a proper tree / no BSIModel object could be found as parent:
+		return null;
 	}
 
 

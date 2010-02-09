@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
@@ -35,6 +36,8 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 @SuppressWarnings("serial")
 public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 
+	private transient Logger log;
+	
 	public static final String TYPE_ID = "iso27kmodel"; //$NON-NLS-1$
 	
 	public static final String TITLE = "ISO 27000 Modeling"; //$NON-NLS-1$
@@ -144,9 +147,23 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 		}
 	}
 	
+	public void modelReload(ISO27KModel newModel) {
+		for (IISO27KModelListener listener : getListeners()) {
+			listener.modelReload(newModel);
+			if (getLog().isDebugEnabled()) {
+				getLog().debug("modelReload, listener: " + listener);
+			}
+		}
+	}
+	
 	public void addISO27KModelListener(IISO27KModelListener listener) {
 		if (!getListeners().contains(listener))
 			getListeners().add(listener);
+	}
+	
+	public void removeISO27KModelListener(IISO27KModelListener listener) {
+		if (getListeners().contains(listener))
+			getListeners().remove(listener);
 	}
 	
 	private synchronized List<IISO27KModelListener> getListeners() {
@@ -161,5 +178,12 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 		for (IISO27KModelListener listener : getListeners()) {
 			listener.modelRefresh(source);
 		}
+	}
+	
+	private Logger getLog() {
+		if(log==null) {
+			log = Logger.getLogger(ISO27KModel.class);
+		}
+		return log;
 	}
 }

@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.model;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -89,6 +90,11 @@ public interface IISO27KModelListener {
 	 * @param link
 	 */
 	void linkAdded(CnALink link);
+
+	/**
+	 * @param newModel
+	 */
+	void modelReload(ISO27KModel newModel);
 	
 
 

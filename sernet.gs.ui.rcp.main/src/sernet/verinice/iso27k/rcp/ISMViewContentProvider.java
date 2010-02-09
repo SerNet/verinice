@@ -63,7 +63,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 	}
 
 	public Object[] getChildren(Object parent) {
-		CnATreeElement[] children = null;
+		CnATreeElement[] children = new CnATreeElement[]{};
 
 		// replace object in event with the one actually displayed in the tree:
 		Object cachedObject = cache.getCachedObject(parent);
@@ -80,9 +80,11 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 			try {
 				if(!el.isChildrenLoaded()) {
 					newElement = loadChildren(el);
-					el.replace(newElement);
-					el = newElement;
-					children = el.getChildrenAsArray();
+					if(newElement!=null) {
+						el.replace(newElement);
+						el = newElement;
+						children = el.getChildrenAsArray();
+					}
 					
 				} else {
 					children = el.getChildrenAsArray();
@@ -119,25 +121,25 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		CnATreeElement newElement = command.getElement();
 
-		// If a filter was active the tree element for which we loaded the
-		// children
-		// is *not* marked as if its children have been really loaded. This is
-		// only
-		// done when no classes have been filtered.
-		// By doing this the element gets automatically reloaded (and now its
-		// children
-		// as well) as soon as the user disables the filter.
-		if (modelFilter == null || modelFilter.isEmpty()) {
-			newElement.setChildrenLoaded(true);
+		if (newElement!=null) {
+			// If a filter was active the tree element for which we loaded the
+			// children
+			// is *not* marked as if its children have been really loaded. This is
+			// only
+			// done when no classes have been filtered.
+			// By doing this the element gets automatically reloaded (and now its
+			// children
+			// as well) as soon as the user disables the filter.
+			
+			if(modelFilter == null || modelFilter.isEmpty()) {
+				newElement.setChildrenLoaded(true);
+			}
+	
+			// replace with loaded object in cache:
+			Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
+			cache.clear(el);
+			cache.addObject(newElement);
 		}
-
-		// replace with loaded object in cache:
-		Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
-		cache.clear(el);
-		cache.addObject(newElement);
-
-		// TODO ak synchronization problem?
-
 		return newElement;
 	}
 	
