@@ -47,6 +47,7 @@ import org.eclipse.ui.part.ViewPart;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
@@ -103,6 +104,8 @@ public class ISMView extends ViewPart {
 	private ControlDropPerformer controlDropAdapter;
 
 	private BSIModelViewDropPerformer bsiDropAdapter;
+	
+	private ShowAccessControlEditAction accessControlEditAction;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -199,6 +202,8 @@ public class ISMView extends ViewPart {
 		bsiDropAdapter = new BSIModelViewDropPerformer();
 		metaDropAdapter.addAdapter(controlDropAdapter);
 		metaDropAdapter.addAdapter(bsiDropAdapter);	
+		
+		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), "Access control...");
 	}
 	
 	private void fillToolBar() {
@@ -256,8 +261,8 @@ public class ISMView extends ViewPart {
 		manager.add(expandAction);
 		manager.add(collapseAction);
 		drillDownAdapter.addNavigationActions(manager);
-		
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+
+		manager.add(accessControlEditAction);
 	}
 
 	/* (non-Javadoc)
