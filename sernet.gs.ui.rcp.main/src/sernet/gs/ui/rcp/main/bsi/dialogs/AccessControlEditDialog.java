@@ -220,7 +220,7 @@ public class AccessControlEditDialog extends Dialog {
 				try {
 					ServiceFactory.lookupCommandService().executeCommand(up);
 				} catch (CommandException e) {
-					// TODO rschuster: Handle this more gracefully
+					log.error("Error while updating permissions", e);
 					throw new RuntimeException(e);
 				}
 			}
