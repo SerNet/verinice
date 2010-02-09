@@ -114,6 +114,27 @@ public class ChangeLogEntry implements Serializable {
 	public void setChange(int change) {
 		this.change = change;
 	}
+	
+	public String getChangeDescription() {
+		String desc = null;
+		switch(this.change) {
+			case ChangeLogEntry.TYPE_UPDATE:
+				desc = "update";
+				break;
+			case ChangeLogEntry.TYPE_INSERT:
+				desc = "insert";
+				break;
+			case ChangeLogEntry.TYPE_DELETE:
+				desc = "delete";
+				break;
+			case ChangeLogEntry.TYPE_PERMISSION:
+				desc = "permission";
+				break;
+			default:
+				desc = "unknown, id: " + this.change;	
+		}
+		return desc;
+	}
 
 	public void setElementClass(String elementClass) {
 		this.elementClass = elementClass;
@@ -141,28 +162,6 @@ public class ChangeLogEntry implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	/**
-	 * @return
-	 */
-	public String getChangeDescription() {
-		switch (this.change) {
-		case TYPE_UPDATE:
-			return "update";
-
-		case TYPE_DELETE:
-			return "delete";
-
-		case TYPE_INSERT:
-			return "insert";
-			
-		case TYPE_PERMISSION:
-			return "permission";
-		default:
-			break;
-		}
-		return "";
 	}
 
 }
