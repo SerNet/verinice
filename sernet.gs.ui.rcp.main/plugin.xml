@@ -586,17 +586,20 @@
                commandId="org.eclipse.ui.edit.cut"
                disabledIcon="icons/cut.png"
                icon="icons/cut.png"
-               label="Cut element(s)"/>
+               label="Ausschneiden"
+               tooltip="Element(e) ausschneiden"/>
          <command
                commandId="org.eclipse.ui.edit.copy"
                disabledIcon="icons/copy.png"
                icon="icons/copy.png"
-               label="Copy element(s)"/>
+               label="Kopieren"
+               tooltip="Element(e) kopieren"/>
          <command
                commandId="org.eclipse.ui.edit.paste"
                disabledIcon="icons/copy.png"
                icon="icons/paste.png"
-               label="Paste element(s)"/>
+               label="Einfügen"
+               tooltip="Element(e) einfügen"/>
       </menuContribution>
    </extension>
    <extension
