@@ -25,11 +25,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.IISO27kGroup;
 
@@ -118,16 +120,16 @@ public class CutService {
 		group.addChild(element);
 		
 		// save old parent
-		SaveElement saveOldParentCommand = new SaveElement(parentOld);
-		saveOldParentCommand = getCommandService().executeCommand(saveOldParentCommand);
-		parentOld = (CnATreeElement) saveOldParentCommand.getElement();
+		UpdateElement command = new UpdateElement(parentOld, true, ChangeLogEntry.STATION_ID);
+		command = getCommandService().executeCommand(command);
+		parentOld = (CnATreeElement) command.getElement();
 		
 		CnAElementFactory.getModel(parentOld).childRemoved(parentOld, element);
 		CnAElementFactory.getModel(parentOld).databaseChildRemoved(element);
 		
 		// save element
 		SaveElement saveElementCommand = new SaveElement(element);
-		saveOldParentCommand = getCommandService().executeCommand(saveElementCommand);
+		saveElementCommand = getCommandService().executeCommand(saveElementCommand);
 		element = (CnATreeElement) saveElementCommand.getElement();
 		
 		element.setParent(group);
