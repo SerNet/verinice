@@ -43,30 +43,27 @@ import sernet.gs.ui.rcp.main.service.taskcommands.GetChangesSince;
 // TODO server: implement server-side push of events (beacon service)
 public class TransactionLogWatcher {
 	private Date lastChecked = null;
-	
+
 	/** ICommandService instance is injected by Spring. */
 	private ICommandService commandService;
 
 	public void checkLog() {
 		Activator.inheritVeriniceContextState();
-		
+
 		if (!CnAElementFactory.isModelLoaded())
 			return;
-		
+
 		// No need to do anything when the internal server is used as this
 		// means that there is only one user.
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		if (prefs.getString(PreferenceConstants.OPERATION_MODE)
-				.equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER))
+		if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER))
 			return;
 
-//		Logger.getLogger(this.getClass()).debug("Checking transaction log...");
-		
+		// Logger.getLogger(this.getClass()).debug("Checking transaction log...");
+
 		try {
-			GetChangesSince command = new GetChangesSince(lastChecked,
-					ChangeLogEntry.STATION_ID);
-			command = commandService.executeCommand(
-					command);
+			GetChangesSince command = new GetChangesSince(lastChecked, ChangeLogEntry.STATION_ID);
+			command = commandService.executeCommand(command);
 
 			lastChecked = command.getLastChecked();
 			List<ChangeLogEntry> entries = command.getEntries();
@@ -77,49 +74,42 @@ public class TransactionLogWatcher {
 			}
 
 		} catch (CommandException e) {
-			Logger.getLogger(this.getClass()).error(
-					"Fehler bei Abfrage des Transaktionslogfiles.", e);
+			Logger.getLogger(this.getClass()).error("Fehler bei Abfrage des Transaktionslogfiles.", e);
 		}
 	}
 
 	/**
 	 * @param changeLogEntry
-	 * @param changedElement 
+	 * @param changedElement
 	 */
 	private void process(ChangeLogEntry changeLogEntry, CnATreeElement changedElement) {
 		int changetype = changeLogEntry.getChange();
-		Logger.getLogger(this.getClass()).debug("Processing change event from user " 
-				+ changeLogEntry.getUsername() + " for element " + changeLogEntry.getElementClass() 
-				+ " / " + changeLogEntry.getElementId());
+		Logger.getLogger(this.getClass()).debug("Processing change event from user " + changeLogEntry.getUsername() + " for element " + changeLogEntry.getElementClass() + " / " + changeLogEntry.getElementId());
 
 		switch (changetype) {
 		case ChangeLogEntry.TYPE_UPDATE:
-			CnAElementFactory.getLoadedModel().databaseChildChanged(
-					changedElement);
+			CnAElementFactory.getLoadedModel().databaseChildChanged(changedElement);
 			break;
 
 		case ChangeLogEntry.TYPE_INSERT:
-			CnAElementFactory.getLoadedModel().databaseChildAdded(
-					changedElement);
+			CnAElementFactory.getLoadedModel().databaseChildAdded(changedElement);
 
 			break;
 		case ChangeLogEntry.TYPE_DELETE:
 			if (changedElement == null) {
 				// element no longer retrievable, notify by ID:
-				CnAElementFactory.getLoadedModel().databaseChildRemoved(
-						changeLogEntry);
-			}
-			else {
-				// element was retrieved before deletion took place, notify using element itself:
-				CnAElementFactory.getLoadedModel().databaseChildRemoved(
-						changedElement);
+				CnAElementFactory.getLoadedModel().databaseChildRemoved(changeLogEntry);
+			} else {
+				// element was retrieved before deletion took place, notify
+				// using element itself:
+				CnAElementFactory.getLoadedModel().databaseChildRemoved(changedElement);
 			}
 
 			break;
 		case ChangeLogEntry.TYPE_PERMISSION:
 			// Changes to the permissions are potentially disruptive (items may
-			// be invisible now etc). As such reload everything. 
-			
+			// be invisible now etc). As such reload everything.
+
 			CnAElementFactory.getInstance().reloadModelFromDatabase();
 			break;
 		default:
