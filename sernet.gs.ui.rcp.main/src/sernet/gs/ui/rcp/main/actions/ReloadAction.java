@@ -66,14 +66,11 @@ public class ReloadAction extends Action {
 
 		try {
 			// close editors:
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-			.getActivePage().closeAllEditors(true /* ask save */);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */);
 
 			PlatformUI.getWorkbench().getProgressService().
 			busyCursorWhile(new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					
-					
 					CnAElementFactory.getInstance().reloadModelFromDatabase();
 				}
 			});
