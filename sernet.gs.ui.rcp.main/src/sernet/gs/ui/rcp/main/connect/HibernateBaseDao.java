@@ -139,6 +139,9 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 				criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
 				criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
 			}
+			if(ri.isPermissions()) {
+				criteria.setFetchMode("permissions", FetchMode.JOIN);
+			}
 			
 			if(ri.isLinksDown()) {
 				criteria.setFetchMode("linksDown", FetchMode.JOIN);
@@ -180,6 +183,12 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 						criteriaEntity.createCriteria("typedPropertyLists");
 					}
 					criteria.setFetchMode("children.entity.typedPropertyLists.properties", FetchMode.JOIN);				
+				}
+				if(ri.isChildrenPermissions()) {
+					criteria.setFetchMode("children.permissions", FetchMode.JOIN);
+					if(ri.isInnerJoin()) {
+						criteriaChildren.createCriteria("permissions");
+					}
 				}
 			}
 			if( ri.isGrandchildren()) {

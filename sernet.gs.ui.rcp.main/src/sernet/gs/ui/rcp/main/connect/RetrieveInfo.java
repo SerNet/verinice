@@ -66,6 +66,10 @@ public class RetrieveInfo implements Serializable{
 	
 	boolean siblings = false;
 	
+	boolean permissions = false;
+	
+	boolean childrenPermissions = false;
+	
 	boolean innerJoin = false;
 
 	public static RetrieveInfo getPropertyInstance() {
@@ -195,6 +199,24 @@ public class RetrieveInfo implements Serializable{
 		return this;
 	}
 
+	public boolean isPermissions() {
+		return permissions;
+	}
+	
+	public RetrieveInfo setPermissions(boolean permissions) {
+		this.permissions = permissions;
+		return this;
+	}
+
+	public RetrieveInfo setChildrenPermissions(boolean childrenPermissions) {
+		this.childrenPermissions = childrenPermissions;
+		return this;
+	}
+
+	public boolean isChildrenPermissions() {
+		return childrenPermissions;
+	}
+
 	/**
 	 * @return true if inner joins are used
 	 */
@@ -232,6 +254,15 @@ public class RetrieveInfo implements Serializable{
 		}
 		if(childrenProperties) {
 			sb.append(" innerJoin");
+		}
+		if(isSiblings()) {
+			sb.append(" siblings");
+		}
+		if(isPermissions()) {
+			sb.append(" permissions");
+		}
+		if(isChildrenPermissions()) {
+			sb.append(" childrenPermissions");
 		}
 		return sb.toString();
 	}
