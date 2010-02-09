@@ -38,6 +38,8 @@ import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.iso27k.model.IISO27kElement;
+import sernet.verinice.iso27k.model.IISO27kGroup;
 
 /**
  * Starts the wizard for a risk analysis according to
@@ -122,13 +124,14 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate {
 		// when there is no right to do so.
 		Object sel = ((IStructuredSelection) selection).getFirstElement();
 		
-		// Risk analysis should not work on category instances.
-		if (sel instanceof IBSIStrukturKategorie)
-			action.setEnabled(false);
 		
-		// To make a risk analysis one needs write permission for the object in question.
-		if (sel instanceof CnATreeElement)
-		{
+		if (sel instanceof IBSIStrukturKategorie) {
+			// Risk analysis should not work on category instances.
+			action.setEnabled(false);
+		} else if (sel instanceof IISO27kElement ) {
+			action.setEnabled(false);
+		} else if (sel instanceof CnATreeElement ) {
+			// To make a risk analysis one needs write permission for the object in question.
 			boolean b = CnAElementHome
 				.getInstance()
 				.isWriteAllowed((CnATreeElement) sel);
