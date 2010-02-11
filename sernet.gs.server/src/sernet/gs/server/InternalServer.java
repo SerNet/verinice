@@ -124,7 +124,7 @@ public class InternalServer implements IInternalServer {
 	 * <p>In case the server could not be started an @{link IllegalStateException}
 	 * is thrown.</p>
 	 */
-	public void start() throws IllegalStateException {
+	public synchronized void start() throws IllegalStateException {
 		if (running)
 			throw new IllegalStateException(Messages.InternalServer_2);
 
