@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -47,6 +49,8 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 public class CreateElement<T extends CnATreeElement> extends GenericCommand
 	implements IChangeLoggingCommand, IAuthAwareCommand {
 
+	transient private Logger log = Logger.getLogger(CreateElement.class);
+	
 	private CnATreeElement container;
 	private Class<T> type;
 	protected T child;
@@ -104,6 +108,7 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
 			// initialize UUID, used to find container in display in views:
 			container.getUuid();
 		} catch (Exception e) {
+			getLogger().error("Error while creating element", e);
 			throw new RuntimeCommandException(e);
 		}
 	}
@@ -143,6 +148,11 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
 		this.authService = service;
 	}
 	
-	
+	private Logger getLogger() {
+		if(log==null) {
+			log = Logger.getLogger(CreateElement.class);;
+		}
+		return log;
+	}
 
 }
