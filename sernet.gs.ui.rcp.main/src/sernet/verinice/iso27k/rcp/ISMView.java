@@ -17,16 +17,21 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -38,6 +43,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -46,15 +52,19 @@ import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
+import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
@@ -63,6 +73,7 @@ import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.iso27k.rcp.action.TagFilter;
+import sernet.verinice.rcp.StatusResult;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -111,38 +122,65 @@ public class ISMView extends ViewPart {
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	public void createPartControl(Composite parent) {
+	public void createPartControl(final Composite parent) {
 		try {
-			contentProvider = new ISMViewContentProvider(cache);
-			viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-			drillDownAdapter = new DrillDownAdapter(viewer);
-			viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
-			viewer.setContentProvider(contentProvider);
-			viewer.setLabelProvider(new ISMViewLabelProvider(cache));
+			initView(parent);
 			
-			getSite().setSelectionProvider(viewer);
+			final StatusResult result = Activator.startServer();
+			Activator.initDatabase(JobScheduler.getInitMutex(),result);
 			
-			Activator.showDerbyWarning(this.getSite().getShell());
-			CnAWorkspace.getInstance().createDatabaseConfig();
+			WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+				public IStatus runInWorkspace(final IProgressMonitor monitor) {
+					IStatus status = Status.OK_STATUS;
+					try {
+						monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+						if (result.status == Status.CANCEL_STATUS) {
+							status = Status.CANCEL_STATUS;
+						} else {
+							initData();
+						}
+					} catch (Exception e) {
+						LOG.error("Error while loading data.", e);
+						status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+					} finally {
+						monitor.done();
+					}
+					return status;
+				}
+			};
+			JobScheduler.scheduleInitJob(initDataJob);
 			
-			Activator.inheritVeriniceContextState();
-			Activator.checkDbVersion();
-			
-			CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(new ISO27KModelViewUpdate(viewer,cache));
-			
-			
-			setInput(CnAElementFactory.getInstance().getISO27kModel());
-			
-			hookContextMenu();
-			makeActions();
-			addActions();
-			fillToolBar();
-			hookDNDListeners();
 		} catch (Exception e) {
-			LOG.error("Error while creating organiozation view", e);
+			LOG.error("Error while creating organization view", e);
+			ExceptionUtil.log(e, "Error while opening ISM-View.");
 		}
+		
 	}
 	
+	private void initView(Composite parent) {
+		contentProvider = new ISMViewContentProvider(cache);
+		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		drillDownAdapter = new DrillDownAdapter(viewer);
+		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
+		viewer.setContentProvider(contentProvider);
+		viewer.setLabelProvider(new ISMViewLabelProvider(cache));
+		getSite().setSelectionProvider(viewer);
+		hookContextMenu();
+		makeActions();
+		addActions();
+		fillToolBar();
+		hookDNDListeners();
+	}
+
+	private void initData() {
+		CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(new ISO27KModelViewUpdate(viewer,cache));
+		Display.getDefault().syncExec(new Runnable(){
+			public void run() {
+				setInput(CnAElementFactory.getInstance().getISO27kModel());
+			}
+		}); 	
+	}
+
 	public void setInput(ISO27KModel model) {
 		viewer.setInput(model);
 	}
@@ -275,7 +313,5 @@ public class ISMView extends ViewPart {
 	public ISMViewContentProvider getContentProvider() {
 		return contentProvider;
 	}
-	
-
 
 }

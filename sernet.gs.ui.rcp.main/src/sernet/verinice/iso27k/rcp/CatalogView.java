@@ -17,20 +17,18 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.text.DateFormatter;
-
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -47,27 +45,27 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
-import org.jfree.util.Log;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.Attachment;
 import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
-import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.NullMonitor;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -82,6 +80,7 @@ import sernet.verinice.iso27k.service.IItem;
 import sernet.verinice.iso27k.service.Item;
 import sernet.verinice.iso27k.service.commands.CsvFile;
 import sernet.verinice.iso27k.service.commands.ImportCatalog;
+import sernet.verinice.rcp.StatusResult;
 
 /**
  * @author Daniel <dm@sernet.de>
@@ -134,7 +133,42 @@ public class CatalogView extends ViewPart {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		
+		try {
+			initView(parent);
+			
+			final StatusResult result = Activator.startServer();
+			Activator.initDatabase(JobScheduler.getInitMutex(),result);
+			
+			WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+				public IStatus runInWorkspace(final IProgressMonitor monitor) {
+					IStatus status = Status.OK_STATUS;
+					try {
+						monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+						if (result.status == Status.CANCEL_STATUS) {
+							status = Status.CANCEL_STATUS;
+						} else {
+							loadCatalogAttachmets();
+						}
+					} catch (Exception e) {
+						LOG.error("Error while loading data.", e);
+						status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+					} finally {
+						monitor.done();
+					}
+					return status;
+				}
+			};
+			JobScheduler.scheduleInitJob(initDataJob);
+
+		} catch (Exception e) {
+			LOG.error("Error while creating catalog view", e);
+			ExceptionUtil.log(e, "Error while opening Catalog-View.");
+		}	
+	}
+
+
+
+	private void initView(Composite parent) {
 		GridLayout gl = new GridLayout(1, true);
 		parent.setLayout(gl);
 		
@@ -166,8 +200,7 @@ public class CatalogView extends ViewPart {
 		labelFilter.setText("Filter");
 		filter = new Text(compForm, SWT.BORDER);
 		filter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		filter.addKeyListener(new KeyListener() {
-			int minLength = 3;			
+		filter.addKeyListener(new KeyListener() {		
 			public void keyPressed(KeyEvent e) {				
 			}
 			public void keyReleased(KeyEvent e) {
@@ -187,24 +220,27 @@ public class CatalogView extends ViewPart {
 		hookActions();
 		hookDNDListeners();
 		fillLocalToolBar();
-		
-		loadCatalogAttachmets();
 	}
 	
-
-
 	/**
 	 * 
 	 */
 	private void loadCatalogAttachmets() {
 		try {
+			Activator.inheritVeriniceContextState();
 			LoadAttachments command = new LoadAttachments(getBsiModel().getDbId());		
 			command = getCommandService().executeCommand(command);		
 			List<Attachment> attachmentList = command.getAttachmentList();	
 			for (Attachment attachment : attachmentList) {
 				comboModel.add(attachment);
 			}
-			comboCatalog.setItems(comboModel.getLabelArray());
+			Display.getDefault().syncExec(new Runnable(){
+				public void run() {
+					comboCatalog.setItems(comboModel.getLabelArray());
+				}
+			});
+			
+			
 		} catch(Exception e) {
 			LOG.error("Error while loading catalogs", e);
 			ExceptionUtil.log(e, "Error while loading catalogs");
@@ -380,7 +416,11 @@ public class CatalogView extends ViewPart {
 
 	public BSIModel getBsiModel() {
 		if(bsiModel==null) {
-			bsiModel = loadBsiModel();
+			try {
+				bsiModel = CnAElementFactory.getInstance().loadOrCreateModel(new NullMonitor());
+			} catch (Exception e) {
+				LOG.error("Error while creating BSI-Model", e);
+			}
 		}
 		return bsiModel;
 	}
