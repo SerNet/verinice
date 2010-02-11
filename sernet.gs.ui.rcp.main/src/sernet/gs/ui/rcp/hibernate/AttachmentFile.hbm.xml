@@ -6,6 +6,10 @@
 		<id column="dbId" name="dbId" type="java.lang.Integer">
 			<generator class="native"/>
 		</id>
-		<property name="fileData" type="binary"/>
+		<!--<property name="fileData" type="sernet.verinice.hibernate.ByteArrayType" >-->
+		<property name="fileData" type="binary" >
+			<!-- 10 MB = 10485760 B -->
+			<column name="fileData" length="10485760"/>
+		</property>
 	</class>
 </hibernate-mapping>
