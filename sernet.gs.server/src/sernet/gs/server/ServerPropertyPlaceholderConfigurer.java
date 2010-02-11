@@ -81,9 +81,12 @@ public class ServerPropertyPlaceholderConfigurer extends
 		// Derby uses a different hibernate configuration file.
 		// TODO rschuster: Ideally I would like to avoid hardcoding the path here and access the value
 		// of the property jdbc.hibernate.config of the file verinice-osgi.properties instead.
-		if (overrideProperties.getProperty("jdbc.url").contains("derby"))
-			overrideProperties.put("hibernate.config.resource",
-					"classpath:/server_hibernate_derby.cfg.xml");
+		if (overrideProperties.getProperty("jdbc.url").contains("derby")) {
+			overrideProperties.put("hibernate.config.resource", "classpath:/server_hibernate_derby.cfg.xml");
+			if (log.isInfoEnabled()) {
+				log.info("Using Derby configuration file: server_hibernate_derby.cfg.xml");
+			}
+		}
 	}
 
 	public static void setGSCatalogURL(URL url) {
