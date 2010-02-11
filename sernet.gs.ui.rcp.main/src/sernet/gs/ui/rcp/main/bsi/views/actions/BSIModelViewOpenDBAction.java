@@ -23,7 +23,6 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Shell;
@@ -37,6 +36,8 @@ import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
+import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.rcp.StatusResult;
 
 /**
  * 
@@ -48,8 +49,6 @@ public class BSIModelViewOpenDBAction extends Action {
 	private Shell shell;
 
 	private BsiModelView bsiView;
-	
-	private ISchedulingRule mutex = new Mutex(); 
 
 	public BSIModelViewOpenDBAction(BsiModelView bsiView, Viewer viewer) {
 		super("Öffne Datenbankverbindung");
@@ -76,7 +75,7 @@ public class BSIModelViewOpenDBAction extends Action {
 		// The methods below are using WorkspaceJobs. The order in which they
 		// are run is guaranteed by the 'mutex' instance.
 		
-		StatusResult result = Activator.startServer(mutex);
+		StatusResult result = Activator.startServer();
 		
 		// Since the loading of the model depends on having a running server
 		// a result object is returned which can be used by the worker that load
@@ -109,34 +108,9 @@ public class BSIModelViewOpenDBAction extends Action {
 				return Status.OK_STATUS;
 			}
 		};
-		job.setRule(mutex);
+		job.setRule(JobScheduler.getInitMutex());
 		job.setUser(true);
 		job.schedule();
 	}
 
-	/**
-	 * Implementation of {@link ISchedulingRule} which enforces
-	 * that two jobs containing an instance of this rule cannot be
-	 * run at the same time.
-	 * 
-	 * <p>In short this enforces that the scheduler runs the jobs
-	 * in the order they are scheduled.</p>
-	 * 
-	 */
-	static class Mutex implements ISchedulingRule
-	{
-
-		public boolean contains(ISchedulingRule rule) {
-			return rule == this;
-		}
-
-		public boolean isConflicting(ISchedulingRule rule) {
-			return rule == this;
-		}
-		
-	}
-	
-	public static class StatusResult {
-		public IStatus status;
-	}
 }
