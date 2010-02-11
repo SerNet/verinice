@@ -70,12 +70,12 @@ public class HitroUIComposite extends ScrolledComposite {
 		contentComp.setLayoutData(contentCompLD);
 
 		GridLayout contentCompLayout = new GridLayout(4, true);
-		contentCompLayout.marginWidth = 5;
-		contentCompLayout.marginHeight = 5;
+		contentCompLayout.marginWidth = 1;
+		contentCompLayout.marginHeight = 1;
 		contentCompLayout.numColumns = 4;
 		contentCompLayout.makeColumnsEqualWidth = false;
-		contentCompLayout.horizontalSpacing = 5;
-		contentCompLayout.verticalSpacing = 5;
+		contentCompLayout.horizontalSpacing = 1;
+		contentCompLayout.verticalSpacing = 1;
 		contentComp.setLayout(contentCompLayout);
 		
 		// HUI composite:

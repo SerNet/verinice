@@ -300,7 +300,8 @@ public class HitroUIView implements IEntityChangedListener   {
 		for (int i = 0; i < children.length; i++) {
 			size += children[i].getSize().y;
 		}
-		return size;
+		// add 2 for margin (1px at top, 1px at bottom, see contentCompLayout in HitroUIComposite.java)
+		return size+2;
 	}
 
 	private void createTextField(PropertyType type, boolean editable, Composite parent,
