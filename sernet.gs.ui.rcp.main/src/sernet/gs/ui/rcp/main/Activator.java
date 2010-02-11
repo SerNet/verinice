@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -41,8 +42,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
-import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction;
-import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction.StatusResult;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.IInternalServer;
@@ -50,14 +49,16 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.rcp.StatusResult;
 
 /**
  * The activator class controls the plug-in life cycle
  */
 public class Activator extends AbstractUIPlugin {
-	
-	Logger log = Logger.getLogger(Activator.class);
 
+	private static final Logger LOG = Logger.getLogger(Activator.class);
+	
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main";
 
@@ -108,12 +109,12 @@ public class Activator extends AbstractUIPlugin {
 		{
 			Bundle bundle = Platform.getBundle("sernet.gs.server");
 			if (bundle == null)
-				log.warn("verinice server bundle is not available. Assuming it is started separately.");
+				LOG.warn("verinice server bundle is not available. Assuming it is started separately.");
 			else if (bundle.getState() == Bundle.INSTALLED
 							|| bundle.getState() == Bundle.RESOLVED) {
-						log.debug("Manually starting GS Server");
-						bundle.start();
-					}
+				LOG.debug("Manually starting GS Server");
+				bundle.start();
+			}
 			
 			ServiceReference sr = context.getServiceReference(IInternalServer.class.getName());
 			if (sr == null)
@@ -132,29 +133,22 @@ public class Activator extends AbstractUIPlugin {
 						new File(prefs.getString(PreferenceConstants.BSIDIR)).toURI().toURL());
 			} catch (MalformedURLException mfue)
 			{
-				log.warn("Stored GS catalog dir is an invalid URL.");
+				LOG.warn("Stored GS catalog dir is an invalid URL.");
 			}
 		}
-		else
-		{
-			try
-			{
+		else {
+			try{
 				internalServer.setGSCatalogURL(
 						new File(prefs.getString(PreferenceConstants.BSIZIPFILE)).toURI().toURL());
-			} catch (MalformedURLException mfue)
-			{
-				log.warn("Stored GS catalog zip file path is an invalid URL.");
+			} catch (MalformedURLException mfue) {
+				LOG.warn("Stored GS catalog zip file path is an invalid URL.");
 			}
 
 		}
-		
-		try
-		{
-			internalServer.setDSCatalogURL(
-					new File(prefs.getString(PreferenceConstants.DSZIPFILE)).toURI().toURL());
-		} catch (MalformedURLException mfue)
-		{
-			log.warn("Stored DS catalog zip file path is an invalid URL.");
+		try{
+			internalServer.setDSCatalogURL(new File(prefs.getString(PreferenceConstants.DSZIPFILE)).toURI().toURL());
+		} catch (MalformedURLException mfue){
+			LOG.warn("Stored DS catalog zip file path is an invalid URL.");
 		}
 		
 		// Provide initial DB connection details to server.
@@ -172,7 +166,7 @@ public class Activator extends AbstractUIPlugin {
 			ServiceFactory.openCommandService();
 		} catch (Exception e) {
 			// if this fails, try rewriting config:
-			log.error("Exception while connection to command service, forcing recreation of " +
+			LOG.error("Exception while connection to command service, forcing recreation of " +
 					"service factory configuration from preferences.", e);
 			CnAWorkspace.getInstance().prepare(true);
 		}
@@ -206,6 +200,37 @@ public class Activator extends AbstractUIPlugin {
 	public IInternalServer getInternalServer()
 	{
 		return internalServer;
+	}
+	
+	public static void initDatabase() {
+		initDatabase(JobScheduler.getInitMutex(), new StatusResult());
+	}
+	
+	public static void initDatabase(ISchedulingRule mutex, final StatusResult result) {
+		WorkspaceJob initDbJob = new WorkspaceJob(Messages.ISMView_InitDatabase) {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				IStatus status = Status.OK_STATUS;
+				try {
+					monitor.beginTask(Messages.ISMView_InitDatabase, IProgressMonitor.UNKNOWN);
+					// If server could not be started for whatever reason do not try to
+					// load the model either.
+					if (result.status == Status.CANCEL_STATUS) {
+						status = Status.CANCEL_STATUS;
+					} else {				
+						CnAWorkspace.getInstance().createDatabaseConfig();
+						Activator.inheritVeriniceContextState();
+						Activator.checkDbVersion();
+					}
+				} catch (Exception e) {
+					LOG.error("Error while initializing database.", e);
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while initializing database.",e); //$NON-NLS-1$
+				} finally {
+					monitor.done();
+				}
+				return status;
+			}
+		};
+		JobScheduler.scheduleJob(initDbJob, mutex, JobScheduler.getInitProgressMonitor());
 	}
 
 	public static void checkDbVersion() throws CommandException {
@@ -277,6 +302,11 @@ public class Activator extends AbstractUIPlugin {
 		}
 	}
 
+	public static StatusResult startServer()
+	{
+		return startServer(JobScheduler.getInitMutex(), new StatusResult());
+	}
+	
 	/**
 	 * Tries to start the internal server via a workspace thread
 	 * and returns a result object for that operation.
@@ -285,38 +315,30 @@ public class Activator extends AbstractUIPlugin {
 	 * 
 	 * @return
 	 */
-	public static BSIModelViewOpenDBAction.StatusResult startServer(ISchedulingRule mutex)
+	public static StatusResult startServer(ISchedulingRule mutex, final StatusResult result)
 	{
-		final BSIModelViewOpenDBAction.StatusResult result = new BSIModelViewOpenDBAction.StatusResult();
 		final IInternalServer internalServer = getDefault().getInternalServer();
 		if (!internalServer.isRunning())
 		{
 			WorkspaceJob job = new WorkspaceJob(Messages.BsiModelView_4) {
 				public IStatus runInWorkspace(final IProgressMonitor monitor) {
-					inheritVeriniceContextState();
-					
+					inheritVeriniceContextState();				
 					try {
-						monitor.beginTask("Starte internen Server ...", IProgressMonitor.UNKNOWN);
-						internalServer.start();
+						if (!internalServer.isRunning()) {
+							monitor.beginTask("Starte internen Server ...", IProgressMonitor.UNKNOWN);
+							internalServer.start();
+						}
 						result.status = Status.OK_STATUS;
-					} catch (RuntimeException re) {
-						ExceptionUtil
-								.log(re,
-										"Konnte internen Server nicht starten.");
-						result.status = Status.CANCEL_STATUS;
 					} catch (Exception e) {
-						ExceptionUtil
-							.log(e,
-								"Konnte internen Server nicht starten.");
-						result.status = Status.CANCEL_STATUS;
-					}
-					
+						ExceptionUtil.log(e, "Konnte internen Server nicht starten.");
+						result.status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while starting internal server.",e);
+					} finally {
+						monitor.done();
+					}	
 					return result.status;
 				}
 			};
-			job.setRule(mutex);
-			job.setUser(true);
-			job.schedule();
+			JobScheduler.scheduleJob(job, JobScheduler.getInitMutex(), JobScheduler.getInitProgressMonitor());
 		}
 		else
 			result.status = Status.OK_STATUS;
