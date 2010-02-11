@@ -29,9 +29,7 @@
 
 
         <!-- Enable session context management -->
-        <property name="current_session_context_class">
-        org.springframework.orm.hibernate3.SpringSessionContext
-        </property>
+        <property name="current_session_context_class">org.springframework.orm.hibernate3.SpringSessionContext</property>
 		
 
         <!-- Disable the second-level cache  -->
@@ -46,9 +44,8 @@
          <property name="hbm2ddl.auto">create-drop</property>
         <property name="hbm2ddl.auto">validate</property>
 		-->
-         <property name="hbm2ddl.auto">update</property>
+        <property name="hbm2ddl.auto">update</property>
         
-
 		<!-- Optimized mappings for derby DB -->
         <mapping resource="sernet/gs/ui/rcp/hibernate/Entity_derby.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/CnALink_derby.hbm.xml"/>
