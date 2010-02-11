@@ -28,7 +28,7 @@ import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.ICnaItemRow;
 import sernet.gs.ui.rcp.main.reports.PropertySelection;
-import sernet.gs.ui.rcp.main.reports.Report;
+import sernet.gs.ui.rcp.main.reports.BsiReport;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
@@ -48,10 +48,10 @@ public class ReportGetRowsCommand extends GenericCommand {
 			PropertySelection shownPropertyTypes) {
 		this.shownPropertyTypes = shownPropertyTypes;
 		this.report = report;
-		itverbundDbId = ((Report)report).getItverbund().getDbId();
+		itverbundDbId = ((BsiReport)report).getItverbund().getDbId();
 		
 		// remove full itverbund to save bandwith:
-		((Report)report).setItverbund(null);
+		((BsiReport)report).setItverbund(null);
 		
 		
 	}
@@ -62,8 +62,8 @@ public class ReportGetRowsCommand extends GenericCommand {
 			command = getCommandService().executeCommand(command);
 			ITVerbund itverbund = (ITVerbund) command.getFound();
 			
-			// replace report's tiverbund with the DB-connected instance: 
-			((Report)report).setItverbund(itverbund);
+			// replace report's ITverbund with the DB-connected instance: 
+			((BsiReport)report).setItverbund(itverbund);
 			
 			
 			// initialize items: 

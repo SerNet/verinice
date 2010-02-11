@@ -37,7 +37,7 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
  * @author koderman@sernet.de
  *
  */
-public class MassnahmenumsetzungReport extends Report
+public class MassnahmenumsetzungReport extends BsiReport
 	implements IBSIReport {
 
 	

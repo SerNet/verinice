@@ -35,7 +35,7 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
  * @author koderman@sernet.de
  *
  */
-public class ModellierungReport extends Report
+public class ModellierungReport extends BsiReport
 	implements IBSIReport{
 
 	public ModellierungReport(Properties reportProperties) {

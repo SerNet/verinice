@@ -21,6 +21,10 @@ import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -39,6 +43,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementForEditor;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
@@ -177,21 +182,26 @@ public class BSIElementEditor extends EditorPart {
 
 	private void initContent() {
 		try {
+			
 			cnAElement = ((BSIElementEditorInput) getEditorInput()).getCnAElement();
-			RefreshElement<CnATreeElement> command = new RefreshElement<CnATreeElement>(cnAElement);
-			command = ServiceFactory.lookupCommandService().executeCommand(command);
+			
+			LoadElementForEditor command = new LoadElementForEditor(cnAElement);
+			command = ServiceFactory.lookupCommandService().executeCommand(
+					command);
+			
+//			RefreshElement<CnATreeElement> command = new RefreshElement<CnATreeElement>(cnAElement);
+//			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			cnAElement = command.getElement();
 
 			Entity entity = cnAElement.getEntity();
 			EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entity.getEntityType());
 
-			// Enable dirty listener only for writable objects.
-			
+			// Enable dirty listener only for writable objects:
 			if (getIsWriteAllowed()) {
 				// add listener to mark editor as dirty on changes:
 				entity.addChangeListener(this.modelListener);
 			} else {
-				// do not add listener, user will never be offered to save this editor:
+				// do not add listener, user will never be offered to save this editor, modify title to show this:
 				setPartName(getPartName() + " (SCHREIBGESCHÜTZT)");
 			}
 
@@ -201,7 +211,8 @@ public class BSIElementEditor extends EditorPart {
 			huiComposite.resetInitialFocus();
 			
 			// create in place editor for links to other objects:
-//			linkMaker.createView(cnAElement, getIsWriteAllowed());
+			linkMaker.createPartControl(getIsWriteAllowed());
+			linkMaker.setInputElmt(cnAElement);
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Konnte BSI Element Editor nicht öffnen");
 		}
@@ -236,8 +247,25 @@ public class BSIElementEditor extends EditorPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		FormLayout formLayout = new FormLayout();
+		parent.setLayout(formLayout);
+		
 		huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
-//		linkMaker = new LinkMaker(parent);
+		FormData formData = new FormData();
+		formData.top = new FormAttachment(0, 1);
+		formData.left = new FormAttachment(0, 1);
+		formData.right = new FormAttachment(100, -1);
+		formData.bottom = new FormAttachment(66, -1);
+		huiComposite.setLayoutData(formData);
+		
+		linkMaker = new LinkMaker(parent);
+		FormData formData2 = new FormData();
+		formData2.top = new FormAttachment(66, 1);
+		formData2.left = new FormAttachment(0,1);
+		formData2.right = new FormAttachment(100, -1);
+		formData2.bottom = new FormAttachment(100, -1);
+		linkMaker.setLayoutData(formData2);
+		
 		initContent();
 		// if opened the first time, save initialized entity:
 		if (isDirty())
@@ -258,7 +286,6 @@ public class BSIElementEditor extends EditorPart {
 	@Override
 	public void dispose() {
 		huiComposite.closeView();
-		linkMaker.close();
 		cnAElement.getEntity().removeListener(modelListener);
 		EditorRegistry.getInstance().closeEditor(((BSIElementEditorInput) getEditorInput()).getId());
 		super.dispose();

@@ -64,6 +64,14 @@ public class FileDropTarget extends DropTargetAdapter {
 			for (int i = 0; i < files.length; i++) {
 				String selected = files[i];
 				 if(selected!=null && selected.length()>0) {
+					 	File file = new File(selected);
+					 	// the user can drag-n-drop a directory with files, but only one level deep:
+					 	if (file.isDirectory()) {
+					 		File[] dirFiles = file.listFiles();
+					 		for (File dirFile : dirFiles) {
+					 			createFile(dirFile.getAbsolutePath());
+							}
+					 	}
 						createFile(selected);
 			        }
 			}

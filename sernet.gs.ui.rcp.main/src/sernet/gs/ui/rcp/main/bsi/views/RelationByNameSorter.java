@@ -17,52 +17,42 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import java.util.HashSet;
-
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 
 /**
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ $LastChangedBy$
- * 
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
  */
-public class RelationViewContentProvider implements IStructuredContentProvider {
-
-
+public class RelationByNameSorter extends ViewerSorter {
+	
+	private String sorterProperty;
 	private IRelationTable view;
-	private TableViewer viewer;
 
-	public RelationViewContentProvider(IRelationTable view, TableViewer viewer) {
+	public RelationByNameSorter(String sorterProperty, IRelationTable view) {
 		this.view = view;
-		this.viewer = viewer;
+		this.sorterProperty = sorterProperty;
 	}
+	
 
-	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		if (newInput instanceof PlaceHolder)
-			return;
-		CnATreeElement inputElmt = (CnATreeElement) newInput;
-		view.setInputElmt(inputElmt);
-		viewer.refresh();
-	}
-
-	public void dispose() {
-	}
-
-	public Object[] getElements(Object obj) {
-		if (obj instanceof PlaceHolder) {
-			return new Object[] { obj };
+		public boolean isSorterProperty(Object arg0, String arg1) {
+			return arg1.equals(sorterProperty); //$NON-NLS-1$
 		}
+		
+		public int compare(Viewer viewer, Object o1, Object o2) {
+			if (o1 == null || o2 == null)
+				return 0;
+			CnALink link1 = (CnALink) o1;
+			CnALink link2 = (CnALink) o2;
+			
+			String title1 = CnALink.getRelationObjectTitle(view.getInputElmt(), link1);
+			String title2 = CnALink.getRelationObjectTitle(view.getInputElmt(), link2);
 
-		HashSet<CnALink> result = new HashSet<CnALink>();
-		result.addAll(view.getInputElmt().getLinksDown());
-		result.addAll(view.getInputElmt().getLinksUp());
-		return (CnALink[]) result.toArray(new CnALink[result.size()]);
-	}
+			return title1.compareTo(title2);
+		}
 }

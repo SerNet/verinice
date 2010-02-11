@@ -27,7 +27,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
-import sernet.gs.ui.rcp.main.reports.Report;
+import sernet.gs.ui.rcp.main.reports.BsiReport;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
@@ -37,11 +37,11 @@ import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 
 public class ReportGetItemsCommand extends GenericCommand {
 
-	private Report report;
+	private BsiReport report;
 	private ArrayList<CnATreeElement> items;
 	private Integer itverbundDbId;
 
-	public ReportGetItemsCommand(Report report) {
+	public ReportGetItemsCommand(BsiReport report) {
 		this.report = report;
 		itverbundDbId = report.getItverbund().getDbId();
 		
@@ -55,7 +55,7 @@ public class ReportGetItemsCommand extends GenericCommand {
 			ITVerbund itverbund = (ITVerbund) command.getFound();
 			
 			// replace report's itverbund with the DB-connected instance: 
-			((Report)report).setItverbund(itverbund);
+			((BsiReport)report).setItverbund(itverbund);
 			
 			IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(ITVerbund.class);
 			

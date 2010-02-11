@@ -15,12 +15,13 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.views;
+package sernet.gs.ui.rcp.main.reports;
 
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TableViewer;
+import java.util.ArrayList;
 
+import sernet.gs.ui.rcp.main.bsi.wizards.IHIbernateReport;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.office.IOOTableRow;
 
 /**
  * @author koderman@sernet.de
@@ -28,27 +29,39 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
  * $LastChangedBy$
  *
  */
-public interface IRelationTable {
-	
-	public static final String COLUMN_IMG = "_img";
-	public static final String COLUMN_TYPE = "_type";
-	public static final String COLUMN_TITLE = "_title";
+public class SelfAssessmentReport implements IHIbernateReport {
 
+	private ArrayList<IOOTableRow> rows;
 
-
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.wizards.ISimpleReport#getReport(sernet.gs.ui.rcp.main.reports.PropertySelection)
 	 */
-	public CnATreeElement getInputElmt();
+	public ArrayList<IOOTableRow> getReport(PropertySelection shownPropertyTypes) {
+		return rows;
+	}
 
-	/**
-	 * @param inputElmt
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.wizards.ISimpleReport#getTitle()
 	 */
-	public void setInputElmt(CnATreeElement inputElmt);
+	public String getTitle() {
+		return "Self Asessment";
+	}
 
-	/**
-	 * 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.wizards.IHIbernateReport#getQuery()
 	 */
-	public void reload();
+	public String getQuery() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.wizards.IHIbernateReport#getValues()
+	 */
+	public Object[] getValues() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

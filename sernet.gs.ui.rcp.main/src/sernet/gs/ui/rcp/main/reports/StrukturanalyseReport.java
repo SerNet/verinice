@@ -46,7 +46,7 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
  * @author koderman@sernet.de
  *
  */
-public class StrukturanalyseReport extends Report
+public class StrukturanalyseReport extends BsiReport
 	implements IBSIReport {
 
 	// this is necessary because hibernate returns proxy objects that will not implement the marker interface IBSIStrukturelement

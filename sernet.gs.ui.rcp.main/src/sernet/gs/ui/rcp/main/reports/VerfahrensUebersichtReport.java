@@ -37,7 +37,7 @@ import sernet.hui.common.connect.PropertyType;
  * @author koderman@sernet.de
  * 
  */
-public class VerfahrensUebersichtReport extends Report implements IBSIReport {
+public class VerfahrensUebersichtReport extends BsiReport implements IBSIReport {
 
 	public VerfahrensUebersichtReport(Properties reportProperties) {
 		super(reportProperties);

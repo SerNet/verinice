@@ -142,9 +142,9 @@ public class BSIModelViewDropPerformer implements DropPerformer {
 	}
 
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("validateDrop, target: " + target);
-		}
+//		if (LOG.isDebugEnabled()) {
+//			LOG.debug("validateDrop, target: " + target);
+//		}
 
 		if (target == null)
 			return isActive=false;
@@ -175,9 +175,9 @@ public class BSIModelViewDropPerformer implements DropPerformer {
 		// link drop:
 		if (items.get(0) instanceof IBSIStrukturElement || items.get(0) instanceof IISO27kElement) {
 			for (Object item : items) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("validateDrop, draged item: " + item );
-				}
+//				if (LOG.isDebugEnabled()) {
+//					LOG.debug("validateDrop, draged item: " + item );
+//				}
 				if (target.equals(item))
 					return isActive=false;
 
@@ -189,9 +189,9 @@ public class BSIModelViewDropPerformer implements DropPerformer {
 						return isActive=false;
 				}
 			}
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("validateDrop, validated!");
-			}
+//			if (LOG.isDebugEnabled()) {
+//				LOG.debug("validateDrop, validated!");
+//			}
 			return isActive=true;
 		}
 

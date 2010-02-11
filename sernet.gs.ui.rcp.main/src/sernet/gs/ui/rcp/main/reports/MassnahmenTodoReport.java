@@ -37,7 +37,7 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
  *
  */
 // TODO change structure to list just the safeguards grouped by asset
-public class MassnahmenTodoReport extends Report
+public class MassnahmenTodoReport extends BsiReport
 	implements IBSIReport {
 
 	public MassnahmenTodoReport(Properties reportProperties) {

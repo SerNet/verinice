@@ -36,9 +36,9 @@ public class DNDItems {
 	private static List dndItems = new ArrayList();
 
 	public static void setItems(List items) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("setItems, list: " + items);
-		}
+//		if (LOG.isDebugEnabled()) {
+//			LOG.debug("setItems, list: " + items);
+//		}
 		dndItems = items; 
 	}
 

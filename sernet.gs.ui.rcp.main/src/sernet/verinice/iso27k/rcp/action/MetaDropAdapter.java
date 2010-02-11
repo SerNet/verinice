@@ -104,9 +104,9 @@ public class MetaDropAdapter extends ViewerDropAdapter {
 				success = true;
 			}
 		}
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("validateDrop, returning: " + success );
-		}
+//		if (LOG.isDebugEnabled()) {
+//			LOG.debug("validateDrop, returning: " + success );
+//		}
 		return success;
 	}
 

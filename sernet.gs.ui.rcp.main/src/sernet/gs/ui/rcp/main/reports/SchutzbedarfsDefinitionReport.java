@@ -35,7 +35,7 @@ import sernet.hui.common.connect.PropertyType;
  * @author koderman@sernet.de
  * 
  */
-public class SchutzbedarfsDefinitionReport extends Report implements IBSIReport {
+public class SchutzbedarfsDefinitionReport extends BsiReport implements IBSIReport {
 
 	public SchutzbedarfsDefinitionReport(Properties reportProperties) {
 		super(reportProperties);

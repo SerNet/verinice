@@ -37,7 +37,7 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
  * @author koderman@sernet.de
  *
  */
-public class ErgaenzendeAnalyseReport extends Report
+public class ErgaenzendeAnalyseReport extends BsiReport
 	implements IBSIReport {
 
 	

@@ -96,31 +96,11 @@ public class RelationView extends ViewPart implements IRelationTable {
 
 	private Table table;
 
-	private static final String COLUMN_IMG = "_img";
-	private static final String COLUMN_TYPE = "_type";
-	private static final String COLUMN_TITLE = "_title";
-
-	 
+		 
 	
 	
 	
-	class NameSorter extends ViewerSorter {
-		public boolean isSorterProperty(Object arg0, String arg1) {
-			return arg1.equals(COLUMN_TITLE); //$NON-NLS-1$
-		}
-		
-		public int compare(Viewer viewer, Object o1, Object o2) {
-			if (o1 == null || o2 == null)
-				return 0;
-			CnALink link1 = (CnALink) o1;
-			CnALink link2 = (CnALink) o2;
-			
-			String title1 = CnALink.getRelationObjectTitle(inputElmt, link1);
-			String title2 = CnALink.getRelationObjectTitle(inputElmt, link2);
-
-			return title1.compareTo(title2);
-		}
-	}
+	
 
 
 	/**
@@ -178,65 +158,16 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
-		viewer = new TableViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setContentProvider(new RelationViewContentProvider(this));
+		viewer = new RelationTableViewer(this, parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer.setContentProvider(new RelationViewContentProvider(this, viewer));
 		viewer.setLabelProvider(new RelationViewLabelProvider(this));
-		viewer.setSorter(new NameSorter());
+		viewer.setSorter(new RelationByNameSorter(COLUMN_TITLE, this));
 
-		table = viewer.getTable();
-		
-		col1 = new TableColumn(table, SWT.LEFT);
-		col1.setText("");
-		col1.setWidth(25);
-		col1.setResizable(false);
-		
-		viewerCol2 = new TableViewerColumn(viewer, SWT.LEFT);
-		viewerCol2.getColumn().setText("Relation");
-		viewerCol2.getColumn().setWidth(100);
-		
-		viewerCol2.setLabelProvider(new ColumnLabelProvider() {
-			public String getText(Object obj) {
-				if (!(obj instanceof CnALink))
-					return "";
-				
-				CnALink link = (CnALink) obj;
-				HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(link.getRelationId());
-
-				// if we can't find a real name for the relation, we just display "depends on" or "necessary for":
-					if (CnALink.isDownwardLink(inputElmt, link))
-						return (relation != null) ? relation.getName() : "hängt ab von";
-					else
-						return (relation != null) ? relation.getReversename() : "ist nötig für";
-			}
-		});
-		viewerCol2.setEditingSupport(new RelationTypeEditingSupport(this));
-
-		
-		col3 = new TableColumn(table, SWT.LEFT);
-		col3.setText("Titel");
-		col3.setWidth(250);
-		
-		viewer.setColumnProperties(new String[] {
-				COLUMN_IMG, //$NON-NLS-1$
-				COLUMN_TYPE, //$NON-NLS-1$
-				COLUMN_TITLE //$NON-NLS-1$
-		});
-		
-		
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		
-		
-		
 		makeActions();
 		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();
 		hookPageSelection();
-	}
-	
-	public TableViewer getViewer() {
-		return viewer;
 	}
 	
 	public CnATreeElement getInputElement() {

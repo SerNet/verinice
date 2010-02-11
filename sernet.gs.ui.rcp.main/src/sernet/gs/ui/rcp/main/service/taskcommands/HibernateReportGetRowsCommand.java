@@ -15,12 +15,16 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.views;
+package sernet.gs.ui.rcp.main.service.taskcommands;
 
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TableViewer;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.wizards.IHIbernateReport;
+import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.gs.ui.rcp.office.IOOTableRow;
 
 /**
  * @author koderman@sernet.de
@@ -28,27 +32,34 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
  * $LastChangedBy$
  *
  */
-public interface IRelationTable {
-	
-	public static final String COLUMN_IMG = "_img";
-	public static final String COLUMN_TYPE = "_type";
-	public static final String COLUMN_TITLE = "_title";
+public class HibernateReportGetRowsCommand extends GenericCommand {
 
+	private IHIbernateReport report;
+	private ArrayList<IOOTableRow> rows;
 
+	/**
+	 * @param report
+	 */
+	public HibernateReportGetRowsCommand(IHIbernateReport report) {
+		this.report = report;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+	 */
+	public void execute() {
+		String hqlQuery = report.getQuery();
+		Object[] values = report.getValues();
+		IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
+		//dao.findByCallback(hcb)
+		// FIXME akoderman finish self assessment report
+	}
 
 	/**
 	 * @return
 	 */
-	public CnATreeElement getInputElmt();
-
-	/**
-	 * @param inputElmt
-	 */
-	public void setInputElmt(CnATreeElement inputElmt);
-
-	/**
-	 * 
-	 */
-	public void reload();
+	public ArrayList<IOOTableRow> getRows() {
+		return rows;
+	}
 
 }

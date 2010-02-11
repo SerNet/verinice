@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+ * Copyright (c) 2010 Alexander Koderman <ak@sernet.de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -15,42 +15,43 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.reports;
+package sernet.gs.ui.rcp.main.bsi.wizards;
 
 import java.io.Serializable;
-import java.util.Properties;
+import java.util.ArrayList;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.gs.ui.rcp.main.reports.PropertySelection;
+import sernet.gs.ui.rcp.office.IOOTableRow;
 
-@SuppressWarnings("serial")
-public abstract class Report implements Serializable {
-
-	protected Properties reportProperties;
-	private ITVerbund itverbund;
+/**
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
+public interface IHIbernateReport extends Serializable {
+	/**
+	 * Get the title for this report. 
+	 */
+	public String getTitle();
 	
-	public ITVerbund getItverbund() {
-		return itverbund;
-	}
-
-	public void setItverbund(ITVerbund itverbund) {
-		this.itverbund = itverbund;
-	}
-
-	public Report(Properties reportProperties) {
-		this.reportProperties = reportProperties;
-	}
+	/**
+	 * Get the complete report as data source for OpenOffice Calc export.
+	 * 
+	 * @param shownPropertyTypes
+	 * @return
+	 */
+	public ArrayList<IOOTableRow> getReport(PropertySelection shownPropertyTypes);
 
 	/**
-	 * Check if list of default columns for export contains the given column.
-	 * 
+	 * Get parameters for hibernate query
+	 * @return
 	 */
-	public boolean isDefaultColumn(String property_id) {
-		String prop = reportProperties.getProperty(getClass().getSimpleName());
-		if (prop == null)
-			return false;
-		return (prop.indexOf(property_id) > -1 );
-	}
+	public Object[] getValues();
 
-
+	/**
+	 * Get query used in hibernate callback.
+	 * @return
+	 */
+	public String getQuery();
 }

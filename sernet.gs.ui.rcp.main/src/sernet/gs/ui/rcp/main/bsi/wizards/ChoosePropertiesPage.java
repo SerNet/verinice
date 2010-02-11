@@ -34,7 +34,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
-import sernet.gs.ui.rcp.main.reports.Report;
+import sernet.gs.ui.rcp.main.reports.BsiReport;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.ReportGetItemsCommand;
@@ -150,7 +150,7 @@ public class ChoosePropertiesPage extends WizardPage {
 		getExportWizard().resetShownPropertyTypes();
 		
 		// iterate over shown items and add each found type of item to the list:
-		Report report = (Report) getExportWizard().getReport();
+		BsiReport report = (BsiReport) getExportWizard().getReport();
 		report.setItverbund(getExportWizard().getITVerbund());
 		ReportGetItemsCommand command = new ReportGetItemsCommand(report);
 		
@@ -179,33 +179,39 @@ public class ChoosePropertiesPage extends WizardPage {
 	}
 	
 	private void checkDefaults() {
+		IBSIReport report = getExportWizard().getReport();
+		if (report == null) {
+			return;
+		}
+		IBSIReport bsiReport = (IBSIReport) report;;
+		
 		for (Object element : shownEntityTypes) {
 
 			if (element instanceof EntityType) {
 				EntityType type = (EntityType) element;
 				for (PropertyType child : type.getPropertyTypes()) {
-					if (getExportWizard().getReport().isDefaultColumn(child.getId()))
+					if (bsiReport.isDefaultColumn(child.getId()))
 						viewer.setChecked(child, true);
 					else 
 						viewer.setChecked(child, false);
 				}
 				
 				for (PropertyGroup group : type.getPropertyGroups()) {
-					checkGroupDefaults(group);
+					checkGroupDefaults(bsiReport, group);
 				}
 			}
 			
 			if (element instanceof PropertyGroup) {
 				PropertyGroup group = (PropertyGroup) element;
-				checkGroupDefaults(group);
+				checkGroupDefaults(bsiReport, group);
 			}
 			updatePropertiesToExport();
 		}
 	}
 	
-	private void checkGroupDefaults(PropertyGroup group) {
+	private void checkGroupDefaults(IBSIReport report, PropertyGroup group) {
 		for (PropertyType child : group.getPropertyTypes()) {
-			if (getExportWizard().getReport().isDefaultColumn(child.getId()))
+			if (report.isDefaultColumn(child.getId()))
 				viewer.setChecked(child, true);
 			else 
 				viewer.setChecked(child, false);

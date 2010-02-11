@@ -18,52 +18,40 @@
 package sernet.gs.ui.rcp.main.reports;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Properties;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.wizards.IHIbernateReport;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.office.IOOTableRow;
 
-/**
- * Interface for different BSI report types that will be exported to OpenOffice.
- * 
- * @author koderman@sernet.de
- *
- */
-public interface IBSIReport extends Serializable {
+@SuppressWarnings("serial")
+public abstract class BsiReport implements Serializable, IBSIReport {
+
+	protected Properties reportProperties;
+	private ITVerbund itverbund;
 	
-	public static String PROPERTY_FILE = "reports.properties";
-	
+	public ITVerbund getItverbund() {
+		return itverbund;
+	}
+
+	public void setItverbund(ITVerbund itverbund) {
+		this.itverbund = itverbund;
+	}
+
+	public BsiReport(Properties reportProperties) {
+		this.reportProperties = reportProperties;
+	}
+
 	/**
-	 * Get all items to include in the report as flat list,
-	 * regardless of category.
+	 * Check if list of default columns for export contains the given column.
 	 * 
-	 * @return
 	 */
-	public ArrayList<CnATreeElement> getItems();
-
-	
-	/**
-	 * Get the title for this report. 
-	 */
-	public String getTitle();
-	
-	/**
-	 * Get the complete report as data source for OpenOffice Calc export.
-	 * 
-	 * @param shownPropertyTypes
-	 * @return
-	 */
-	public ArrayList<IOOTableRow> getReport(PropertySelection shownPropertyTypes);
-		
-	/**
-	 * Which columns should be included in this report?
-	 * 
-	 * @param property_id
-	 * @return
-	 */
-	public boolean isDefaultColumn(String property_id);
+	public boolean isDefaultColumn(String property_id) {
+		String prop = reportProperties.getProperty(getClass().getSimpleName());
+		if (prop == null)
+			return false;
+		return (prop.indexOf(property_id) > -1 );
+	}
 
 
-	
 }

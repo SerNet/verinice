@@ -47,7 +47,7 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
  * @author koderman@sernet.de
  *
  */
-public class AllItemsReport extends Report
+public class AllItemsReport extends BsiReport
 	implements IBSIReport {
 
 	public AllItemsReport(Properties reportProperties) {

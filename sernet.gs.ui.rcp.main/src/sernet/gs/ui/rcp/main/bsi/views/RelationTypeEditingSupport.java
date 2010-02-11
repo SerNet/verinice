@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.TableViewer;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
@@ -41,10 +42,12 @@ import sernet.hui.common.connect.HuiRelation;
 public class RelationTypeEditingSupport extends EditingSupport {
 
 	private CellEditor dropDownEditor;
-	private RelationView view;
+	private IRelationTable view;
+	private TableViewer viewer;
 
-	public RelationTypeEditingSupport(RelationView view) {
-		super(view.getViewer());
+	public RelationTypeEditingSupport(IRelationTable view, TableViewer viewer) {
+		super(viewer);
+		this.viewer = viewer;
 		this.view = view;
 	}
 
@@ -53,7 +56,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
 			return false;
 
 		CnALink link = (CnALink) element;
-		String currentName = CnALink.getRelationName(view.getInputElement(),
+		String currentName = CnALink.getRelationName(view.getInputElmt(),
 				link);
 		Set<HuiRelation> possibleRelations = HitroUtil.getInstance()
 				.getTypeFactory().getPossibleRelations(
@@ -69,8 +72,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
 		CnALink link = (CnALink) element;
 
 		String[] currentLinkTypeNames = getPossibleLinkTypeNames(link);
-		ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(view
-				.getViewer().getTable(), currentLinkTypeNames);
+		ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(viewer.getTable(), currentLinkTypeNames);
 		choiceEditor
 				.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
 		return choiceEditor;
@@ -86,7 +88,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
 
 		for (HuiRelation huiRelation : possibleRelations) {
 			String id = huiRelation.getId();
-			String name = (CnALink.isDownwardLink(view.getInputElement(), link)) ? huiRelation
+			String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation
 					.getName()
 					: huiRelation.getReversename();
 			names.add(name);
@@ -102,7 +104,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
 		if (!(element instanceof CnALink))
 			return null;
 		CnALink link = (CnALink) element;
-		String currentName = CnALink.getRelationName(view.getInputElement(),
+		String currentName = CnALink.getRelationName(view.getInputElmt(),
 				link);
 		Logger.getLogger(this.getClass()).debug("current name " + currentName);
 
@@ -154,7 +156,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
 
 		for (HuiRelation huiRelation : possibleRelations) {
 			String id = huiRelation.getId();
-			String name = (CnALink.isDownwardLink(view.getInputElement(), link)) ? huiRelation
+			String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation
 					.getName()
 					: huiRelation.getReversename();
 			if (name.equals(linkTypeName))

@@ -38,6 +38,7 @@ import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.PropertySelection;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.ReportGetRowsCommand;
+import sernet.gs.ui.rcp.main.service.taskcommands.HibernateReportGetRowsCommand;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.gs.ui.rcp.office.OOWrapper;
 import sernet.snutils.ExceptionHandlerFactory;
@@ -51,7 +52,18 @@ import sernet.snutils.ExceptionHandlerFactory;
 public class ExportWizard extends Wizard implements IExportWizard {
 
 	private ChooseReportPage chooseReportPage;
+	
 	private IBSIReport report;
+	private IHIbernateReport queryReport;
+	
+	public IHIbernateReport getQueryReport() {
+		return queryReport;
+	}
+
+	public void setQueryReport(IHIbernateReport queryReport) {
+		this.queryReport = queryReport;
+	}
+
 	private String ooPath;
 	private String templatePath;
 	private ChooseExportMethodPage chooseExportMethodPage;
@@ -118,7 +130,7 @@ public class ExportWizard extends Wizard implements IExportWizard {
 	public void setReport(IBSIReport report) {
 		this.report = report;
 	}
-
+	
 	public IBSIReport getReport() {
 		return report;
 	}
@@ -142,10 +154,21 @@ public class ExportWizard extends Wizard implements IExportWizard {
 	protected void doExport(IProgressMonitor mon, String ooPath, String odtPath) {
 		try {
 			
-			ReportGetRowsCommand command = new ReportGetRowsCommand(report, shownPropertyTypes);
-			command = ServiceFactory.lookupCommandService().executeCommand(
-					command);
-			ArrayList<IOOTableRow> rows = command.getRows();
+			ArrayList<IOOTableRow> rows = null;
+			if (report != null) {
+				IBSIReport bsiReport = (IBSIReport) report;
+				ReportGetRowsCommand command = new ReportGetRowsCommand(bsiReport, shownPropertyTypes);
+				command = ServiceFactory.lookupCommandService().executeCommand(
+						command);
+				rows = command.getRows();
+			}
+			
+			else if (queryReport != null) {
+				HibernateReportGetRowsCommand command = new HibernateReportGetRowsCommand(queryReport);
+				command = ServiceFactory.lookupCommandService().executeCommand(
+						command);
+				rows = command.getRows();
+			}
 
 			//shownPropertyTypes.printall();
 			OOWrapper ooWrap = new OOWrapper(ooPath);
