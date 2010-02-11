@@ -106,6 +106,11 @@ public class Messages extends NLS {
 	public static String TodoView_8;
 
 	public static String TodoView_9;
+	
+	public static String ISMView_InitDatabase;
+	
+	public static String ISMView_InitData;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
