@@ -58,6 +58,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
@@ -72,6 +73,8 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachmentFile;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachments;
+import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.rcp.StatusResult;
 
 /**
  * Lists files {@link Attachment} attached to a CnATreeElement.
@@ -163,6 +166,13 @@ public class FileView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		initView(parent);
+		
+		final StatusResult result = Activator.startServer();
+		Activator.initDatabase(JobScheduler.getInitMutex(),result);
+	}
+
+	private void initView(Composite parent) {
 		this.parent = parent;
 		parent.setLayout(new FillLayout());
 		try {
