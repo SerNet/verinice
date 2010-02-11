@@ -115,20 +115,27 @@ public class SchemaCreator implements InitializingBean {
 		log.debug("determineDbVersion");
 		Double dbVersion = -1D;
 		try {
+			// check for db schema < 0.9.6:
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			dbVersion = (Double) jdbcTemplate.queryForObject(SQL_GETDBVERSION_PRE_096, Double.class);
 		} catch (Exception e) {
-			log.info("Can not determine db-version. Maybe database version is >0.95.");
+			log.info("Can not determine db-version. Database is new and empty or version is > 0.95.");
+			if (log.isDebugEnabled()) {
+				log.debug("stacktrace: ", e);
+			}
 		}
 		
 		try {
-			// try again for new db schema:
+			// try again for db schema > 0.9.6:
 			if (dbVersion == -1D) {
 				JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 				dbVersion = (Double) jdbcTemplate.queryForObject(SQL_GETDBVERSION_POST_096, Double.class);
 			}
 		} catch (Exception e) {
-				log.error("Can not determine db-version", e);
+			log.info("Can not determine db-version. Database is new and empty or unknown error occurred.");
+			if (log.isDebugEnabled()) {
+				log.debug("stacktrace: ", e);
+			}
 		}
 		
 		return dbVersion;
