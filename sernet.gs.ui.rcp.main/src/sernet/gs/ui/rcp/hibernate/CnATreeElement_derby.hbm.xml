@@ -4,6 +4,7 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="sernet.gs.ui.rcp.main.common.model">
+
 	<class name="CnATreeElement" 
 		batch-size="10"
 		abstract="true">
@@ -27,9 +28,9 @@
 		/>
 		
 		<set name="permissions"
-			cascade="all"
 			inverse="true"
-			batch-size="10">
+			cascade="all"
+			batch-size="10" >
 			<key column="cte_id"/>
 			<one-to-many class="Permission"/>
 		</set>
@@ -74,7 +75,7 @@
 		
 <!-- Grundschutz-Elemente: ################################################################# -->
 
-		<subclass 
+	<subclass 
 		name="sernet.gs.ui.rcp.main.bsi.model.Person"
 		extends="CnATreeElement"
 		discriminator-value="person"/>
@@ -231,7 +232,7 @@
 		extends="CnATreeElement"
 		discriminator-value="stellungnahme-dsb"/>
 	
-<!-- ISO 27000 Elements -->
+	<!-- ISO 27000 Elements -->
 	
 	<subclass 
 		name="sernet.verinice.iso27k.model.ISO27KModel"
