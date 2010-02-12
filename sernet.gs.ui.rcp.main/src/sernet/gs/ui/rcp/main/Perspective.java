@@ -24,6 +24,8 @@ import org.eclipse.ui.IPerspectiveFactory;
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
+import sernet.verinice.iso27k.rcp.CatalogView;
+import sernet.verinice.iso27k.rcp.ISMView;
 
 public class Perspective implements IPerspectiveFactory {
 	public static final String ID = "sernet.gs.ui.rcp.main.perspective";
@@ -32,18 +34,21 @@ public class Perspective implements IPerspectiveFactory {
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(true);
 		
-		//layout.addStandaloneView(NavigationView.ID,  false, IPageLayout.LEFT, 0.25f, editorArea);
-		layout.addView(BSIMassnahmenView.ID,  IPageLayout.LEFT, 0.3f, editorArea);
-		
-		layout.addView(BsiModelView.ID,  IPageLayout.LEFT, 0.4f, editorArea);
-		
-		IFolderLayout folder = layout.createFolder("messages", 
-				IPageLayout.BOTTOM, 0.5f, editorArea);
-		folder.addPlaceholder(BrowserView.ID + ":*");
-		folder.addView(BrowserView.ID);
-		
+		IFolderLayout controlFolder = layout.createFolder("control", IPageLayout.LEFT, 0.3f, editorArea);
+		controlFolder.addView(BSIMassnahmenView.ID);
+		controlFolder.addPlaceholder(CatalogView.ID + ":*");
 		layout.getViewLayout(BSIMassnahmenView.ID).setCloseable(true);
-		layout.getViewLayout(BrowserView.ID).setCloseable(true);
+		layout.getViewLayout(CatalogView.ID).setCloseable(true);
+		
+		IFolderLayout modelFolder = layout.createFolder("model", IPageLayout.LEFT, 0.4f, editorArea);
+		modelFolder.addView(BsiModelView.ID);
+		modelFolder.addPlaceholder(ISMView.ID + ":*");
+		layout.getViewLayout(BSIMassnahmenView.ID).setCloseable(true);
+		layout.getViewLayout(ISMView.ID).setCloseable(true);
+		
+		IFolderLayout folder = layout.createFolder("datails",IPageLayout.BOTTOM, 0.5f, editorArea);
+		folder.addPlaceholder(BrowserView.ID + ":*");	
+		layout.getViewLayout(BSIMassnahmenView.ID).setCloseable(true);
 	}
 	
 	
