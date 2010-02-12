@@ -107,6 +107,7 @@ Import-Package: au.com.bytecode.opencsv,
  sernet.hui.common,
  sernet.hui.common.connect,
  sernet.hui.common.multiselectionlist,
+ sernet.verinice.hibernate,
  sernet.verinice.iso27k.model,
  sernet.verinice.iso27k.service,
  sernet.verinice.iso27k.service.commands
