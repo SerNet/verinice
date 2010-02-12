@@ -322,8 +322,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		linksDown.add(link);
 	}
 	
-	public void linkChanged(CnALink link) {
-		getModelChangeListener().linkChanged(link);
+	public void linkChanged(CnALink old, CnALink link) {
+		getModelChangeListener().linkChanged(old, link);
 	}
 	
 	public void linkRemoved(CnALink link) {
@@ -334,8 +334,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		getModelChangeListener().linkAdded(link);
 	}
 
-	public void removeLinkDown(CnALink link) {
-		linksDown.remove(link);
+	public boolean removeLinkDown(CnALink link) {
+		return linksDown.remove(link);
 	}
 
 	public void addLinkUp(CnALink link) {
@@ -353,8 +353,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		getModelChangeListener().modelRefresh(null);
 	}
 
-	public void removeLinkUp(CnALink link) {
-		linksUp.remove(link);
+	public boolean removeLinkUp(CnALink link) {
+		return linksUp.remove(link);
 	}
 
 	public ILinkChangeListener getLinkChangeListener() {

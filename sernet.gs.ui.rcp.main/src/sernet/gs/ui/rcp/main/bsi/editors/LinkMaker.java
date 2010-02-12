@@ -21,6 +21,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -30,22 +39,31 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.views.IRelationTable;
 import sernet.gs.ui.rcp.main.bsi.views.RelationByNameSorter;
 import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer;
 import sernet.gs.ui.rcp.main.bsi.views.RelationViewContentProvider;
 import sernet.gs.ui.rcp.main.bsi.views.RelationViewLabelProvider;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
+import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HuiRelation;
 
 /**
- * A SWT composite that allow the user to create links to other objects, display the existing links, 
- * change or delete them etc.
+ * A SWT composite that allow the user to create links (relations) to other objects, display the existing links, 
+ * change or delete them, jump between linked items in the editor area etc.
  * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
@@ -56,12 +74,14 @@ import sernet.hui.common.connect.HuiRelation;
 // i.e. for server select "Add&Link" to create a new person and link it as "owner" immediately.
 public class LinkMaker extends Composite implements IRelationTable {
 
-	private CnATreeElement cnaElement;
+	private CnATreeElement inputElmt;
 	private boolean writeable;
 	private Set<HuiRelation> relationsFromHere;
 	private RelationTableViewer viewer;
 	private Combo combo;
-
+	private Action doubleClickAction;
+	private RelationViewContentProvider contentProvider;
+	
 	/**
 	 * @param parent
 	 * @param style
@@ -70,7 +90,6 @@ public class LinkMaker extends Composite implements IRelationTable {
 		super(parent, SWT.BORDER);
 		FormLayout formLayout = new FormLayout();
 		this.setLayout(formLayout);
-		
 	}
 
 
@@ -106,11 +125,56 @@ public class LinkMaker extends Composite implements IRelationTable {
 		viewer.getTable().setLayoutData(formData3);
 		viewer.getTable().setEnabled(writeable);
 		
-		viewer.setContentProvider(new RelationViewContentProvider(this, viewer));
+		contentProvider = new RelationViewContentProvider(this, viewer);
+		viewer.setContentProvider(contentProvider);
 		viewer.setLabelProvider(new RelationViewLabelProvider(this));
 		viewer.setSorter(new RelationByNameSorter(IRelationTable.COLUMN_TITLE, this));
 		
+		CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
+		CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
+		createDoubleClickAction();
+		hookDoubleClickAction();
+		
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.Widget#dispose()
+	 */
+	@Override
+	public void dispose() {
+		CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(contentProvider);
+		CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
+		super.dispose();
+	}
+
+	/**
+	 * 
+	 */
+	private void createDoubleClickAction() {
+		doubleClickAction = new Action() {
+			public void run() {
+				ISelection selection = viewer.getSelection();
+				Object obj = ((IStructuredSelection)selection).getFirstElement();
+				CnALink link = (CnALink) obj;
+
+				// open the object on the other side of the link:
+				if (CnALink.isDownwardLink(getInputElmt(), link))
+					EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
+				else
+					EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
+			}
+		};		
+		
+	}
+	
+	private void hookDoubleClickAction() {
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				doubleClickAction.run();
+			}
+		});
+	}
+
 
 	private String[] getNames(Set<HuiRelation> relationsFromHere2) {
 		if (relationsFromHere2 == null)
@@ -131,7 +195,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 	 */
 	private void fillPossibleLinkLists() {
 		relationsFromHere = new HashSet<HuiRelation>();
-		EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(cnaElement.getEntity().getEntityType());
+		EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(inputElmt.getEntity().getEntityType());
 		
 		relationsFromHere = entityType.getPossibleRelations();
 		
@@ -146,27 +210,90 @@ public class LinkMaker extends Composite implements IRelationTable {
 	 * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#getInputElmt()
 	 */
 	public CnATreeElement getInputElmt() {
-		return cnaElement;
+		return inputElmt;
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#reload()
 	 */
-	public void reload() {
-		// TODO Auto-generated method stub
+	public void reload(CnALink oldLink, CnALink newLink) {
+		newLink.setDependant(oldLink.getDependant());
+		newLink.setDependency(oldLink.getDependency());
 		
+		boolean removedLinkDown = inputElmt.removeLinkDown(oldLink);
+		boolean removedLinkUp = inputElmt.removeLinkUp(oldLink);
+		if (removedLinkUp)
+			inputElmt.addLinkUp(newLink);
+		if (removedLinkDown)
+			inputElmt.addLinkDown(newLink);
+		viewer.refresh();
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#setInputElmt(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
 	 */
 	public void setInputElmt(CnATreeElement inputElmt) {
-		if (inputElmt == null || inputElmt == cnaElement)
+		if (inputElmt == null || this.inputElmt == inputElmt)
 			return;
 		
-		this.cnaElement = inputElmt;
+		this.inputElmt = inputElmt;
 		fillPossibleLinkLists();
 		combo.setItems(getNames(relationsFromHere));
 		viewer.setInput(inputElmt);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#reloadAll()
+	 */
+	public void reloadAll() {
+		reloadLinks();
+	}
+
+
+	/**
+	 * 
+	 */
+	private void reloadLinks() {
+
+
+		if (!CnAElementHome.getInstance().isOpen()) {
+			return;
+		}
+
+		viewer.setInput(new PlaceHolder("Lade Relationen..."));
+
+		WorkspaceJob job = new WorkspaceJob("Lade Relationen...") {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				Activator.inheritVeriniceContextState();
+
+				try {
+					monitor.setTaskName("Lade Relationen...");
+
+					FindRelationsFor command = new FindRelationsFor(inputElmt);
+					command = ServiceFactory.lookupCommandService()
+							.executeCommand(command);
+					final CnATreeElement linkElmt = command.getElmt();
+
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							viewer.setInput(linkElmt);
+						}
+					});
+				} catch (Exception e) {
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							viewer.setInput(new PlaceHolder("Fehler beim Laden."));
+						}
+					});
+
+					ExceptionUtil.log(e, "Fehler beim Laden von Beziehungen.");
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		job.setUser(false);
+		job.schedule();
+			
 	}
 }

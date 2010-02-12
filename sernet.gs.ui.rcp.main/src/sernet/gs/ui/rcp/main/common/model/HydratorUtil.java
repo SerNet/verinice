@@ -52,8 +52,13 @@ public class HydratorUtil {
 	private static final Logger log = Logger.getLogger(HydratorUtil.class);
 
 	public static void hydrateEntity(IBaseDao dao, Entity entity) {
+		if (dao == null) {
+			Logger.getLogger(HydratorUtil.class).error("Missing DAO, cannot hydrate.");
+			return;
+		}
 		if (entity == null)
 			return;
+		
 		Map<String, PropertyList> lists = entity.getTypedPropertyLists();
 		Set<Entry<String, PropertyList>> entrySet = lists.entrySet();
 		for (Entry<String, PropertyList> entry : entrySet) {

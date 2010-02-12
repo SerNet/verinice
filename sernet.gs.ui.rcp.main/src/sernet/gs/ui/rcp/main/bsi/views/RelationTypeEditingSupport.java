@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -134,15 +135,18 @@ public class RelationTypeEditingSupport extends EditingSupport {
 		String linkTypeID = getLinkIdForName(link, linkTypeName);
 		Logger.getLogger(this.getClass()).debug("Setting value " + linkTypeID);
 
-		ChangeLinkType command = new ChangeLinkType(link, linkTypeID, "");
+		ChangeLinkType command = new ChangeLinkType(link, linkTypeID, link.getComment());
+		
+		CnALink newLink = null;
 		try {
 			command = ServiceFactory.lookupCommandService().executeCommand(
 					command);
+			newLink = command.getLink();
 		} catch (CommandException e) {
 			ExceptionUtil.log(e, "Fehler beim Ändern der Relation.");
 		}
 		
-		view.reload();
+		CnAElementFactory.getModel(link.getDependant()).linkChanged(link, newLink);
 	}
 
 	/**

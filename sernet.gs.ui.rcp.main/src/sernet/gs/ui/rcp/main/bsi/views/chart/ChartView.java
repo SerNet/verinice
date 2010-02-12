@@ -240,7 +240,7 @@ public class ChartView extends ViewPart {
 				// do nothing
 			}
 			
-			public void linkChanged(CnALink link) {
+			public void linkChanged(CnALink old, CnALink link) {
 				// do nothing
 			}
 			

@@ -24,16 +24,21 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.verinice.iso27k.model.IISO27KModelListener;
+import sernet.verinice.iso27k.model.ISO27KModel;
 
 /**
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class RelationViewContentProvider implements IStructuredContentProvider {
+public class RelationViewContentProvider implements IStructuredContentProvider, IBSIModelListener, IISO27KModelListener {
 
 
 	private IRelationTable view;
@@ -64,5 +69,114 @@ public class RelationViewContentProvider implements IStructuredContentProvider {
 		result.addAll(view.getInputElmt().getLinksDown());
 		result.addAll(view.getInputElmt().getLinksUp());
 		return (CnALink[]) result.toArray(new CnALink[result.size()]);
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childAdded(sernet.gs.ui.rcp.main.common.model.CnATreeElement, sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+	 */
+	public void childAdded(CnATreeElement category, CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childChanged(sernet.gs.ui.rcp.main.common.model.CnATreeElement, sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+	 */
+	public void childChanged(CnATreeElement category, CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childRemoved(sernet.gs.ui.rcp.main.common.model.CnATreeElement, sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+	 */
+	public void childRemoved(CnATreeElement category, CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildAdded(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+	 */
+	public void databaseChildAdded(CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildChanged(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+	 */
+	public void databaseChildChanged(CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+	 */
+	public void databaseChildRemoved(CnATreeElement child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
+	 */
+	public void databaseChildRemoved(ChangeLogEntry entry) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkAdded(sernet.gs.ui.rcp.main.common.model.CnALink)
+	 */
+	public void linkAdded(CnALink link) {
+		view.reloadAll();
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkChanged(sernet.gs.ui.rcp.main.common.model.CnALink)
+	 */
+	public void linkChanged(CnALink old, CnALink link) {
+		view.reload(old, link);
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkRemoved(sernet.gs.ui.rcp.main.common.model.CnALink)
+	 */
+	public void linkRemoved(CnALink link) {
+		view.reloadAll();
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelRefresh()
+	 */
+	public void modelRefresh() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelRefresh(java.lang.Object)
+	 */
+	public void modelRefresh(Object source) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelReload(sernet.gs.ui.rcp.main.bsi.model.BSIModel)
+	 */
+	public void modelReload(BSIModel newModel) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.verinice.iso27k.model.IISO27KModelListener#modelReload(sernet.verinice.iso27k.model.ISO27KModel)
+	 */
+	public void modelReload(ISO27KModel newModel) {
+		// TODO Auto-generated method stub
+		
 	}
 }

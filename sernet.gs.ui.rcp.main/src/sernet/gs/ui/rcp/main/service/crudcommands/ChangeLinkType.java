@@ -25,6 +25,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.common.model.CnALink.Id;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.service.DAOFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
@@ -40,7 +41,8 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 public class ChangeLinkType extends GenericCommand {
 
 	private CnALink link;
-	private CnALink getLink() {
+	
+	public CnALink getLink() {
 		return link;
 	}
 
@@ -88,7 +90,8 @@ public class ChangeLinkType extends GenericCommand {
 			CreateLink<CnALink, CnATreeElement, CnATreeElement> command4 
 				= new CreateLink<CnALink, CnATreeElement, CnATreeElement>(dependant, dependency, linkTypeID, comment);
 			command4 = getCommandService().executeCommand(command4);
-			this.link = command4.getLink();
+			link = command4.getLink();
+			
 			
 		} catch (CommandException e) {
 		}

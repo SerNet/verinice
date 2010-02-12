@@ -159,7 +159,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
 	/* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.model.IISO27KModelListener#linkChanged(sernet.gs.ui.rcp.main.common.model.CnALink)
 	 */
-	public void linkChanged(CnALink link) {
+	public void linkChanged(CnALink old, CnALink link) {
 		// nothing to do, since links are displayed in relation view
 	}
 	

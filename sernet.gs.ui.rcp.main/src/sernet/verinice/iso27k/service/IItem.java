@@ -32,7 +32,7 @@ public interface IItem extends Serializable {
 	
 	static final int CONTROL = 0;
 	
-	static final int THREAD = 1;
+	static final int THREAT = 1;
 	
 	String getName();
 	

@@ -188,9 +188,6 @@ public class BSIElementEditor extends EditorPart {
 			LoadElementForEditor command = new LoadElementForEditor(cnAElement);
 			command = ServiceFactory.lookupCommandService().executeCommand(
 					command);
-			
-//			RefreshElement<CnATreeElement> command = new RefreshElement<CnATreeElement>(cnAElement);
-//			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			cnAElement = command.getElement();
 
 			Entity entity = cnAElement.getEntity();

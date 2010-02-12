@@ -25,7 +25,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
+import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 
@@ -41,7 +45,7 @@ public class RelationTableViewer extends TableViewer {
 	private TableViewerColumn viewerCol2;
 	private TableColumn col3;
 	private IRelationTable view;
-
+	
 	/**
 	 * @param parent
 	 * @param i
@@ -94,5 +98,4 @@ public class RelationTableViewer extends TableViewer {
 		table.setLinesVisible(true);
 
 	}
-
 }

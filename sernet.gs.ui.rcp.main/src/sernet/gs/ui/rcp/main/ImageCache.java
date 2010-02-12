@@ -82,6 +82,7 @@ public class ImageCache {
 	
 	public static final String BAUSTEIN = "16-cube-blue.png";
 
+	public static final String STUFE_NONE = "stufe_none.png";
 	public static final String STUFE_A = "stufe_a.png";
 	public static final String STUFE_B = "stufe_b.png";
 	public static final String STUFE_C = "stufe_c.png";

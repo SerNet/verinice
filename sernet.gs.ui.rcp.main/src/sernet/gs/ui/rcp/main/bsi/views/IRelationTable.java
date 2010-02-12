@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 /**
@@ -47,8 +48,12 @@ public interface IRelationTable {
 	public void setInputElmt(CnATreeElement inputElmt);
 
 	/**
+	 * @param newLink 
+	 * @param oldLink 
 	 * 
 	 */
-	public void reload();
+	public void reload(CnALink oldLink, CnALink newLink);
+	
+	public void reloadAll();
 
 }

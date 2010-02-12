@@ -118,28 +118,11 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 		return null;
 	}
 
-	public void linkChanged(CnALink link) {
-		// TODO akoderman do nothing, links displayed in relationview now
-//		// is top element visible?
-//		CnATreeElement oldElement = cache.getCachedObject(link.getParent()
-//				.getParent());
-//		
-//		if (oldElement != null) {
-//			// load and add linkkategory:
-//			oldElement.setLinks(link.getParent());
-//			link.getParent().setParent(oldElement);
-//			
-//			// replace old instance of link with new one:
-//			oldElement.removeLinkDown(link);
-//			oldElement.addLinkDown(link);
-//			updater.refresh(link);
-//			updater.refresh(oldElement);
-//			updater.reveal(link);
-//		}
+	public void linkChanged(CnALink old, CnALink link) {
 	}
 	
 	public void linkAdded(CnALink link) {
-		
+		// TODO akoderman do nothing, li nks displayed in relationview now 
 	}
 	
 	

@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -159,7 +161,7 @@ public class CatalogView extends ViewPart {
 				}
 			};
 			JobScheduler.scheduleInitJob(initDataJob);
-
+		
 		} catch (Exception e) {
 			LOG.error("Error while creating catalog view", e);
 			ExceptionUtil.log(e, "Error while opening Catalog-View.");
@@ -200,7 +202,7 @@ public class CatalogView extends ViewPart {
 		labelFilter.setText("Filter");
 		filter = new Text(compForm, SWT.BORDER);
 		filter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		filter.addKeyListener(new KeyListener() {		
+		filter.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {				
 			}
 			public void keyReleased(KeyEvent e) {
@@ -222,6 +224,8 @@ public class CatalogView extends ViewPart {
 		fillLocalToolBar();
 	}
 	
+
+
 	/**
 	 * 
 	 */
@@ -236,7 +240,7 @@ public class CatalogView extends ViewPart {
 			}
 			Display.getDefault().syncExec(new Runnable(){
 				public void run() {
-					comboCatalog.setItems(comboModel.getLabelArray());
+			comboCatalog.setItems(comboModel.getLabelArray());
 				}
 			});
 			
@@ -400,10 +404,14 @@ public class CatalogView extends ViewPart {
 		public Image getImage(Object obj) {
 			IItem item = (IItem) obj;
 			String image = ImageCache.UNKNOWN;
-			if(item.getDescription()!=null && item.getTypeId()==IItem.CONTROL) {
-				image = ImageCache.WRENCH;
+			
+			if(item.getDescription()!=null && item.getItems().size()>0) {
+				image = ImageCache.BAUSTEIN;
 			}
-			if(item.getDescription()!=null && item.getTypeId()==IItem.THREAD) {
+			else if(item.getDescription()!=null && item.getTypeId()==IItem.CONTROL) {
+				image = ImageCache.STUFE_NONE;
+			}
+			else if(item.getDescription()!=null && item.getTypeId()==IItem.THREAT) {
 				image = ImageCache.GEFAEHRDUNG;
 			}
 			return ImageCache.getInstance().getImage(image);	

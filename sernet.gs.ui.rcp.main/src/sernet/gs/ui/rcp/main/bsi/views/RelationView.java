@@ -54,14 +54,17 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.PropertiesComboBoxCellModifier;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
+import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -96,12 +99,9 @@ public class RelationView extends ViewPart implements IRelationTable {
 
 	private Table table;
 
-		 
-	
-	
-	
-	
+	private RelationViewContentProvider contentProvider;
 
+	private IModelLoadListener loadListener;
 
 	/**
 	 * The constructor.
@@ -159,10 +159,15 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 */
 	public void createPartControl(Composite parent) {
 		viewer = new RelationTableViewer(this, parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setContentProvider(new RelationViewContentProvider(this, viewer));
+		contentProvider = new RelationViewContentProvider(this, viewer);
+		viewer.setContentProvider(contentProvider);
 		viewer.setLabelProvider(new RelationViewLabelProvider(this));
 		viewer.setSorter(new RelationByNameSorter(COLUMN_TITLE, this));
 
+		// try to add listeners once on startup, and register for model changes:
+		addModelListeners();
+		hookModelLoadListener();
+		
 		makeActions();
 		hookContextMenu();
 		hookDoubleClickAction();
@@ -170,9 +175,49 @@ public class RelationView extends ViewPart implements IRelationTable {
 		hookPageSelection();
 	}
 	
+	/**
+	 * 
+	 */
+	private void hookModelLoadListener() {
+		this.loadListener = new IModelLoadListener() {
+
+			public void closed(BSIModel model) {
+				removeModelListeners();
+				//viewer.setInput(null);
+			}
+
+			public void loaded(BSIModel model) {
+				addModelListeners();
+			}
+			
+		};
+		CnAElementFactory.getInstance().addLoadListener(loadListener);
+	}
+
+	/**
+	 * 
+	 */
+	protected void addModelListeners() {
+		if (CnAElementFactory.isModelLoaded())
+			CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
+		
+		if (CnAElementFactory.isIsoModelLoaded())
+			CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
+	}
+
+	/**
+	 * 
+	 */
+	protected void removeModelListeners() {
+		CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(contentProvider);
+		CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
+	}
+
 	public CnATreeElement getInputElement() {
 		return this.inputElmt;
 	}
+	
+	
 	
 
 	private void hookContextMenu() {
@@ -216,7 +261,10 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 */
 	@Override
 	public void dispose() {
+		CnAElementFactory.getInstance().removeLoadListener(loadListener);
+		removeModelListeners();
 		getSite().getPage().removePostSelectionListener(selectionListener);
+		super.dispose();
 	}
 	
 	protected void pageSelectionChanged(IWorkbenchPart part,
@@ -240,6 +288,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 * @param element
 	 */
 	private void setNewInput(CnATreeElement elmt) {
+		this.inputElmt = elmt;
 		loadLinks(elmt);
 		setViewTitle("Relationen für: " + elmt.getTitle());
 	}
@@ -294,6 +343,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 		action2.setToolTipText("Action 2 tooltip");
 		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
@@ -333,8 +383,18 @@ public class RelationView extends ViewPart implements IRelationTable {
 	/**
 	 * 
 	 */
-	public void reload() {
-		loadLinks(inputElmt);
+	public void reload(CnALink oldLink, CnALink newLink) {
+		newLink.setDependant(oldLink.getDependant());
+		newLink.setDependency(oldLink.getDependency());
+		
+		boolean removedLinkDown = inputElmt.removeLinkDown(oldLink);
+		boolean removedLinkUp = inputElmt.removeLinkUp(oldLink);
+		if (removedLinkUp)
+			inputElmt.addLinkUp(newLink);
+		if (removedLinkDown)
+			inputElmt.addLinkDown(newLink);
+		viewer.refresh();
+		
 	}
 
 	/* (non-Javadoc)
@@ -349,5 +409,12 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 */
 	public void setInputElmt(CnATreeElement inputElmt) {
 		this.inputElmt = inputElmt;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#reloadAll()
+	 */
+	public void reloadAll() {
+		loadLinks(inputElmt);
 	}
 }

@@ -101,10 +101,10 @@ public class LinkDropper {
 						return;
 					} else {
 						if (link.getDependant() instanceof IBSIStrukturElement || link.getDependency() instanceof IBSIStrukturElement) {
-							CnAElementFactory.getLoadedModel().linkChanged(link);
+							CnAElementFactory.getLoadedModel().linkAdded(link);
 						}
 						if (link.getDependant() instanceof IISO27kElement || link.getDependency() instanceof IISO27kElement) {
-							CnAElementFactory.getInstance().getISO27kModel().linkChanged(link);
+							CnAElementFactory.getInstance().getISO27kModel().linkAdded(link);
 						}
 					}
 				}
