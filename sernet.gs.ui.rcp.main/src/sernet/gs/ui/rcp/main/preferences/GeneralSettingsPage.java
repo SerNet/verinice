@@ -83,7 +83,7 @@ public class GeneralSettingsPage
 		addField(infoDialogCopy);
 		
 		infoDialogCut =  new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_CUT, 
-				Messages.getString("GeneralSettingsPage.CutCopy"), //$NON-NLS-1$
+				Messages.getString("GeneralSettingsPage.InfoCut"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(infoDialogCut);
 		
