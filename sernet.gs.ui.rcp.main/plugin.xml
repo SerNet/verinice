@@ -24,6 +24,11 @@
             icon="icons/sample.gif"
             id="sernet.gs.ui.rcp.main.dsperspective"
             name="Datenschutz"/>
+      <perspective
+            class="sernet.verinice.iso27k.rcp.Iso27kPerspective"
+            id="sernet.verinice.iso27k.rcp.Iso27kPerspective"
+            name="ISO 27000 Perspective">
+      </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -899,4 +904,9 @@
 	         properties="canContain">
 	   </propertyTester>
 	</extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="sernet.verinice.rcp.PerspectiveSwitcher"></startup>
+   </extension>
 </plugin>
