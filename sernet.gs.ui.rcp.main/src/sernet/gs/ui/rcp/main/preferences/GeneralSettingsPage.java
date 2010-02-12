@@ -17,14 +17,18 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.verinice.iso27k.rcp.CatalogView;
+import sernet.verinice.iso27k.rcp.ISMView;
 
 /**
  * Main preference page for CnA Tool Settings.
@@ -43,6 +47,8 @@ public class GeneralSettingsPage
 	private BooleanFieldEditor infoDialogTransformCatalogItems;
 	private BooleanFieldEditor infoDialogCopy;
 	private BooleanFieldEditor infoDialogCut;
+	private BooleanFieldEditor switchPerspectiveIsmView;
+	private BooleanFieldEditor switchPerspectiveCatalogView;
 
 	public GeneralSettingsPage() {
 		super(GRID);
@@ -87,7 +93,19 @@ public class GeneralSettingsPage
 				getFieldEditorParent());
 		addField(infoDialogCut);
 		
+		switchPerspectiveIsmView =  new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(ISMView.class), 
+				Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$
+				getFieldEditorParent());
+		addField(switchPerspectiveIsmView);
+		
+		switchPerspectiveCatalogView =  new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(CatalogView.class), 
+				Messages.getString("GeneralSettingsPage.SwitchPerspectiveCatalog"), //$NON-NLS-1$
+				getFieldEditorParent());
+		addField(switchPerspectiveCatalogView);
+		
 	}
+	
+	
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {

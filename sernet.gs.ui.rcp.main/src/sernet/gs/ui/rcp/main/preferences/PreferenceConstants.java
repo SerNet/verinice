@@ -98,7 +98,28 @@ public class PreferenceConstants {
 	public static final String VNSERVER_USER = "gs_cna_serveruser";
 	public static final String VNSERVER_PASS = "gs_cna_serverpass";
 	
+	public static final String SWITCH_PERSPECTIVE = "switch_perspective";
+	public static final String DONT_ASK_BEFORE_SWITCH_PERSPECTIVE = "switch_perspective_dont_ask";
 	
+	/**
+	 * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view class.
+	 * 
+	 * @param clazz a view class
+	 * @return DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name
+	 */
+	public static String getDontAskBeforeSwitch(Class clazz) {
+		return new StringBuilder(clazz.getName()).append("_").append(PreferenceConstants.DONT_ASK_BEFORE_SWITCH_PERSPECTIVE).toString();		
+	}
+	
+	/**
+	 * Returns the SWITCH_PERSPECTIVE preference name for a view class.
+	 * 
+	 * @param clazz a view class
+	 * @return DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name
+	 */
+	public static String getSwitch(Class clazz) {
+		return new StringBuilder(clazz.getName()).append("_").append(PreferenceConstants.SWITCH_PERSPECTIVE).toString();		
+	}
 	
 	
 }
