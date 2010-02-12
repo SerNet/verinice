@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -25,7 +24,6 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -51,7 +49,6 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
@@ -59,12 +56,9 @@ import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
@@ -73,13 +67,14 @@ import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.iso27k.rcp.action.TagFilter;
+import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.StatusResult;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public class ISMView extends ViewPart {
+public class ISMView extends ViewPart implements IAttachedToPerspective {
 
 	private static final Logger LOG = Logger.getLogger(ISMView.class);
 	
@@ -149,7 +144,6 @@ public class ISMView extends ViewPart {
 				}
 			};
 			JobScheduler.scheduleInitJob(initDataJob);
-			
 		} catch (Exception e) {
 			LOG.error("Error while creating organization view", e);
 			ExceptionUtil.log(e, "Error while opening ISM-View.");
@@ -312,6 +306,13 @@ public class ISMView extends ViewPart {
 	
 	public ISMViewContentProvider getContentProvider() {
 		return contentProvider;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
+	 */
+	public String getPerspectiveId() {
+		return Iso27kPerspective.ID;
 	}
 
 }

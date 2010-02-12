@@ -82,13 +82,14 @@ import sernet.verinice.iso27k.service.IItem;
 import sernet.verinice.iso27k.service.Item;
 import sernet.verinice.iso27k.service.commands.CsvFile;
 import sernet.verinice.iso27k.service.commands.ImportCatalog;
+import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.StatusResult;
 
 /**
  * @author Daniel <dm@sernet.de>
  * 
  */
-public class CatalogView extends ViewPart {
+public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 
 	private static final Logger LOG = Logger.getLogger(CatalogView.class);
 
@@ -161,7 +162,6 @@ public class CatalogView extends ViewPart {
 				}
 			};
 			JobScheduler.scheduleInitJob(initDataJob);
-		
 		} catch (Exception e) {
 			LOG.error("Error while creating catalog view", e);
 			ExceptionUtil.log(e, "Error while opening Catalog-View.");
@@ -522,5 +522,12 @@ public class CatalogView extends ViewPart {
 			ExceptionUtil.log(e, "Fehler beim Löschen des Katalogs");
 		}
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
+	 */
+	public String getPerspectiveId() {
+		return Iso27kPerspective.ID;
 	}
 }
