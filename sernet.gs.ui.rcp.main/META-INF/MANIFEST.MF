@@ -83,6 +83,7 @@ Import-Package: au.com.bytecode.opencsv,
  net.sourceforge.jtds.jdbc,
  org.apache.commons.codec.binary,
  org.apache.commons.io,
+ org.apache.derby.jdbc,
  org.apache.log4j,
  org.eclipse.core.commands,
  org.eclipse.core.commands.common,
@@ -165,7 +166,8 @@ Import-Package: au.com.bytecode.opencsv,
  sernet.hui.swt.widgets,
  sernet.hui.swt.widgets.URL,
  sernet.snutils,
- sernet.springclient
+ sernet.springclient,
+ sernet.verinice.hibernate
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: sernet.springclient
 Require-Bundle: org.eclipse.ui.intro
