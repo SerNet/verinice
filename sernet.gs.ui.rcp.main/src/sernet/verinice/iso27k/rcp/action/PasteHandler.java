@@ -41,6 +41,7 @@ import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.iso27k.rcp.CopyOperation;
 import sernet.verinice.iso27k.rcp.CutOperation;
+import sernet.verinice.rcp.MessageDialogWithShowToggle;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -79,36 +80,22 @@ public class PasteHandler extends AbstractHandler {
 		CopyOperation operation = new CopyOperation(sel, copyList);
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 		progressService.run(true, true, operation);
-		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-		boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_ELEMENTS_COPIED);
-		if(!dontShow) {
-			MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
-					"Status Information", 
-					operation.getNumberOfElements() + " elements copied to group " + sel.getTitle(),
-					"Don't show this message again (You can change this in the preferences)",
-					dontShow,
-					preferenceStore,
-					PreferenceConstants.INFO_ELEMENTS_COPIED);
-			preferenceStore.setValue(PreferenceConstants.INFO_ELEMENTS_COPIED, dialog.getToggleState());
-		}
+		MessageDialogWithShowToggle.openInformation(
+				"Status Information", 
+				operation.getNumberOfElements() + " elements copied to group " + sel.getTitle(),
+				"Don't show this message again (You can change this in the preferences)",
+				PreferenceConstants.INFO_ELEMENTS_COPIED);
 	}
 	
 	private void cut(CnATreeElement sel, List cutList) throws InvocationTargetException, InterruptedException {
 		CutOperation operation = new CutOperation(sel, cutList);
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 		progressService.run(true, true, operation);
-		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-		boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_ELEMENTS_CUT);
-		if(!dontShow) {
-			MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
-					"Status Information", 
-					operation.getNumberOfElements() + " elements moved to group " + sel.getTitle(),
-					"Don't show this message again (You can change this in the preferences)",
-					dontShow,
-					preferenceStore,
-					PreferenceConstants.INFO_ELEMENTS_CUT);
-			preferenceStore.setValue(PreferenceConstants.INFO_ELEMENTS_CUT, dialog.getToggleState());
-		}
+		MessageDialogWithShowToggle.openInformation(
+				"Status Information", 
+				operation.getNumberOfElements() + " elements moved to group " + sel.getTitle(),
+				"Don't show this message again (You can change this in the preferences)",
+				PreferenceConstants.INFO_ELEMENTS_CUT);
 	}
 
 }
