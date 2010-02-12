@@ -41,7 +41,7 @@ import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.iso27k.rcp.CopyOperation;
 import sernet.verinice.iso27k.rcp.CutOperation;
-import sernet.verinice.rcp.MessageDialogWithShowToggle;
+import sernet.verinice.rcp.InfoDialogWithShowToggle;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -80,7 +80,7 @@ public class PasteHandler extends AbstractHandler {
 		CopyOperation operation = new CopyOperation(sel, copyList);
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 		progressService.run(true, true, operation);
-		MessageDialogWithShowToggle.openInformation(
+		InfoDialogWithShowToggle.openInformation(
 				"Status Information", 
 				operation.getNumberOfElements() + " elements copied to group " + sel.getTitle(),
 				"Don't show this message again (You can change this in the preferences)",
@@ -91,7 +91,7 @@ public class PasteHandler extends AbstractHandler {
 		CutOperation operation = new CutOperation(sel, cutList);
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 		progressService.run(true, true, operation);
-		MessageDialogWithShowToggle.openInformation(
+		InfoDialogWithShowToggle.openInformation(
 				"Status Information", 
 				operation.getNumberOfElements() + " elements moved to group " + sel.getTitle(),
 				"Don't show this message again (You can change this in the preferences)",
