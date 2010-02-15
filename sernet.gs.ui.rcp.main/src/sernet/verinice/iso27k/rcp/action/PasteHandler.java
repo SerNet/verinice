@@ -26,21 +26,26 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
 
+import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.dnd.CopyBausteine;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.rcp.CnPItems;
-import sernet.verinice.iso27k.rcp.CopyOperation;
+import sernet.verinice.iso27k.rcp.CopyTreeElements;
 import sernet.verinice.iso27k.rcp.CutOperation;
+import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 
 /**
@@ -59,14 +64,11 @@ public class PasteHandler extends AbstractHandler {
 		try {
 			Object selection = HandlerUtil.getCurrentSelection(event);
 			if(selection instanceof IStructuredSelection) {
-				Object sel = ((IStructuredSelection) selection).getFirstElement();			
-				if (sel instanceof CnATreeElement) {
-					CnATreeElement element = (CnATreeElement) sel;
-					if(!CnPItems.getCopyItems().isEmpty()) {
-						copy(element,CnPItems.getCopyItems());
-					} else if(!CnPItems.getCutItems().isEmpty()) {
-						cut(element,CnPItems.getCutItems());
-					}
+				IStructuredSelection sel = ((IStructuredSelection) selection);		
+				if(!CnPItems.getCopyItems().isEmpty()) {
+					copy(sel,CnPItems.getCopyItems());
+				} else if(!CnPItems.getCutItems().isEmpty()) {
+					cut(sel,CnPItems.getCutItems());
 				}
 			}
 		} catch(Exception e) {
@@ -76,26 +78,61 @@ public class PasteHandler extends AbstractHandler {
 		return null;
 	}
 	
-	private void copy(CnATreeElement sel, List copyList) throws InvocationTargetException, InterruptedException {
-		CopyOperation operation = new CopyOperation(sel, copyList);
-		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-		progressService.run(true, true, operation);
-		InfoDialogWithShowToggle.openInformation(
-				"Status Information", 
-				operation.getNumberOfElements() + " elements copied to group " + sel.getTitle(),
-				"Don't show this message again (You can change this in the preferences)",
-				PreferenceConstants.INFO_ELEMENTS_COPIED);
+	private void copy(IStructuredSelection sel, List copyList) throws InvocationTargetException, InterruptedException {
+		if(copyList!=null && !copyList.isEmpty()) {
+			IProgressRunnable operation = createOperation(sel, copyList);
+			if(operation!=null) {
+				IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+				progressService.run(true, true, operation);
+				InfoDialogWithShowToggle.openInformation(
+						"Status Information", 
+						operation.getNumberOfElements() + " elements copied. ",
+						"Don't show this message again (You can change this in the preferences)",
+						PreferenceConstants.INFO_ELEMENTS_COPIED);
+			}
+		}
 	}
 	
-	private void cut(CnATreeElement sel, List cutList) throws InvocationTargetException, InterruptedException {
-		CutOperation operation = new CutOperation(sel, cutList);
-		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-		progressService.run(true, true, operation);
-		InfoDialogWithShowToggle.openInformation(
-				"Status Information", 
-				operation.getNumberOfElements() + " elements moved to group " + sel.getTitle(),
-				"Don't show this message again (You can change this in the preferences)",
-				PreferenceConstants.INFO_ELEMENTS_CUT);
+	/**
+	 * @param sel
+	 * @param copyList
+	 * @return
+	 */
+	private IProgressRunnable createOperation(IStructuredSelection sel, List copyList) {
+		IProgressRunnable operation = null;
+		if(copyList!=null && !copyList.isEmpty()) {
+			if(copyList.get(0) instanceof CnATreeElement) { 
+				if( sel.size()==1  && sel.getFirstElement() instanceof CnATreeElement) {
+					operation = new CopyTreeElements((CnATreeElement)sel.getFirstElement(),copyList);
+				} else if( sel.size()>1 ) {
+					MessageDialog.openWarning( 
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+							"Information", 
+							"More than one element is selected. Select one element to paste.");
+				}			
+			}
+			if(copyList.get(0) instanceof Baustein) {
+				operation = new CopyBausteine(sel,copyList);
+			}
+		}
+		return operation;
+	}
+
+	private void cut(IStructuredSelection sel, List cutList) throws InvocationTargetException, InterruptedException {
+		if(cutList.get(0) instanceof CnATreeElement 
+			&& sel.size()==1 
+			&& sel.getFirstElement() instanceof CnATreeElement) {
+			CnATreeElement target = (CnATreeElement)sel.getFirstElement();
+			CutOperation operation = new CutOperation(target, cutList);
+			IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+			progressService.run(true, true, operation);
+			InfoDialogWithShowToggle.openInformation(
+					"Status Information", 
+					operation.getNumberOfElements() + " elements moved to group " + target.getTitle(),
+					"Don't show this message again (You can change this in the preferences)",
+					PreferenceConstants.INFO_ELEMENTS_CUT);
+		}
+		
 	}
 
 }
