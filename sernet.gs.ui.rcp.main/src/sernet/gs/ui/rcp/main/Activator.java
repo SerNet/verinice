@@ -41,8 +41,11 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.IInternalServer;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -231,6 +234,37 @@ public class Activator extends AbstractUIPlugin {
 			}
 		};
 		JobScheduler.scheduleJob(initDbJob, mutex, JobScheduler.getInitProgressMonitor());
+	}
+	
+	public static void createModel() {
+		createModel(JobScheduler.getInitMutex(), new StatusResult());
+	}
+	
+	public static void createModel(ISchedulingRule mutex,final StatusResult serverStartResult) {
+		WorkspaceJob job = new WorkspaceJob(Messages.ISMView_LoadModel) {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				IStatus status = Status.OK_STATUS;
+				try {
+					// If server could not be started for whatever reason do not try to
+					// load the model either.
+					if (serverStartResult.status == Status.CANCEL_STATUS) {
+						status = Status.CANCEL_STATUS;
+					}		
+					Activator.inheritVeriniceContextState();
+					monitor.beginTask(Messages.ISMView_LoadModel, IProgressMonitor.UNKNOWN);
+					monitor.setTaskName(Messages.ISMView_LoadModel);
+					CnAElementFactory.getInstance().loadOrCreateModel(new ProgressAdapter(monitor));
+					CnAElementFactory.getInstance().getISO27kModel();
+				} catch (Exception e) {
+					LOG.error("Error while loading model.", e);
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading BSI-Model.",e); //$NON-NLS-1$
+				} finally {
+					monitor.done();
+				}
+				return status;
+			}
+		};
+		JobScheduler.scheduleJob(job, mutex, JobScheduler.getInitProgressMonitor());
 	}
 
 	public static void checkDbVersion() throws CommandException {
