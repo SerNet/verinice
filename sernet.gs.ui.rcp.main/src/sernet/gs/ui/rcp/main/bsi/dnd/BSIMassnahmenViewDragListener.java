@@ -42,6 +42,7 @@ public class BSIMassnahmenViewDragListener implements DragSourceListener {
 		event.data = DNDItems.BAUSTEIN;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void dragStart(DragSourceEvent event) {
 		IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
