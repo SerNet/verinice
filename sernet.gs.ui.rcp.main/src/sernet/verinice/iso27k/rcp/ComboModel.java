@@ -68,6 +68,11 @@ public class ComboModel<T> {
 		}
 	}
 	
+	public void clear() {
+		objectList.clear();
+		selectedIndex = -1;
+	}
+	
 	public T getSelectedObject() {
 		return (selectedIndex>=0) ? objectList.get(selectedIndex).getObject() : null;
 	}
