@@ -25,6 +25,7 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
+import sernet.verinice.iso27k.rcp.CnPItems;
 
 /**
  * Copies modules (Bausteine) from the BSI's GS-catalogues to be used elsewhere.
@@ -41,13 +42,15 @@ public class CopyBSIMassnahmenViewAction extends Action {
 		setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		setDisabledImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
 		setToolTipText(Messages.getString("CopyBSIMassnahmenViewAction.0")); //$NON-NLS-1$
-
 	}
 
 	public void run() {
 		List<Baustein> bausteine = view.getSelectedBausteine();
-		if (bausteine.size() > 0)
-			CnPItems.setItems(bausteine);
+		if (bausteine.size() > 0) {
+			CnPItems.clearCutItems();
+			CnPItems.clearCopyItems();
+			CnPItems.setCopyItems(bausteine);
+		}
 	}
 
 }
