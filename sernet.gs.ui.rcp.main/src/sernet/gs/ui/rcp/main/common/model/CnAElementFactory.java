@@ -628,11 +628,6 @@ public class CnAElementFactory {
 	private ISO27KModel loadIsoModel() {
 		ISO27KModel model = null;
 		try {
-			CnAWorkspace.getInstance().createDatabaseConfig();
-			
-			Activator.inheritVeriniceContextState();
-			Activator.checkDbVersion();
-			
 			LoadModel loadModel = new LoadModel();
 			loadModel = getCommandService().executeCommand(loadModel);
 			model = loadModel.getModel();
