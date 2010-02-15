@@ -880,18 +880,13 @@
        			</or>
     		</with>
          </activeWhen> 
-         <enabledWhen>
-		 	<and>
-            	<with variable="selection">
-	                <iterate operator="and">
-	                    <instanceof value="sernet.gs.ui.rcp.main.common.model.CnATreeElement"/>
-	                    <test property="sernet.verinice.iso27k.model.canContain"/>       
-	                </iterate>
-            	</with>
-            	<with variable="selection">
-					<count value="1" />
-      			</with> 
-         	</and>          
+         <enabledWhen>     	
+        	<with variable="selection">
+                <iterate operator="and">
+                    <instanceof value="sernet.gs.ui.rcp.main.common.model.CnATreeElement"/>
+                    <test property="sernet.verinice.iso27k.model.canContain"/>       
+                </iterate>
+        	</with> 	
 		 </enabledWhen>
       </handler>
    </extension>
