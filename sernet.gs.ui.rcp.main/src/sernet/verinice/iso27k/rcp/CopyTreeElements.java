@@ -23,15 +23,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.iso27k.model.Group;
-import sernet.verinice.iso27k.service.ControlTransformService;
 import sernet.verinice.iso27k.service.CopyService;
 import sernet.verinice.iso27k.service.IProgressObserver;
+import sernet.verinice.rcp.IProgressRunnable;
 
 /**
  * Operation with copies elements and adds them to a group.
@@ -40,9 +36,9 @@ import sernet.verinice.iso27k.service.IProgressObserver;
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
-public class CopyOperation implements IRunnableWithProgress {
+public class CopyTreeElements implements IProgressRunnable {
 
-	private static final Logger LOG = Logger.getLogger(CopyOperation.class);
+	private static final Logger LOG = Logger.getLogger(CopyTreeElements.class);
 
 	private IProgressObserver progressObserver;
 	
@@ -54,7 +50,7 @@ public class CopyOperation implements IRunnableWithProgress {
 	
 
 	@SuppressWarnings("unchecked")
-	public CopyOperation(CnATreeElement selectedGroup, List<CnATreeElement> elements) {
+	public CopyTreeElements(CnATreeElement selectedGroup, List<CnATreeElement> elements) {
 		this.selectedGroup = selectedGroup;
 		this.elements = elements;
 	}
