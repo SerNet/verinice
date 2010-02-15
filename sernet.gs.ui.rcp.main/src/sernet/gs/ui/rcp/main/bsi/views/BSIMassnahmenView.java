@@ -52,6 +52,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.model.IGSModel;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIMassnahmenViewDragListener;
@@ -64,52 +65,44 @@ import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
  * View for parsed BSI IT-Grundschutz catalogues.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * 
  */
 public class BSIMassnahmenView extends ViewPart {
-	
+
 	private static class KapitelSorter extends ViewerSorter {
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			if (e1 instanceof Massnahme
-					&& e2 instanceof Massnahme) {
+			if (e1 instanceof Massnahme && e2 instanceof Massnahme) {
 				// sort chapters correctly by converting 2.45, 2.221, 3.42
 				// to 2045, 2221, 3024
-				
-				return (Integer.valueOf(((Massnahme) e1).getKapitelValue())
-					   .compareTo( ((Massnahme) e2).getKapitelValue()));
-			}
-			
-			if (e1 instanceof Gefaehrdung
-					&& e2 instanceof Gefaehrdung) {
-				return (Integer.valueOf(((Gefaehrdung) e1).getKapitelValue())
-					.compareTo( ((Gefaehrdung) e2).getKapitelValue()));
-				
+
+				return (Integer.valueOf(((Massnahme) e1).getKapitelValue()).compareTo(((Massnahme) e2).getKapitelValue()));
 			}
 
-			if (e1 instanceof Baustein
-					&& e2 instanceof Baustein) {
+			if (e1 instanceof Gefaehrdung && e2 instanceof Gefaehrdung) {
+				return (Integer.valueOf(((Gefaehrdung) e1).getKapitelValue()).compareTo(((Gefaehrdung) e2).getKapitelValue()));
+
+			}
+
+			if (e1 instanceof Baustein && e2 instanceof Baustein) {
 				// sort chapters correctly by converting 2.45, 2.221, 3.42
 				// to 2045, 2221, 3024
-				return (Integer.valueOf(((Baustein) e1).getKapitelValue())
-					   .compareTo( ((Baustein) e2).getKapitelValue()));
+				return (Integer.valueOf(((Baustein) e1).getKapitelValue()).compareTo(((Baustein) e2).getKapitelValue()));
 			}
-			
+
 			return super.compare(viewer, e1, e2);
 		}
 	}
-	
-	static class ViewContentProvider implements IStructuredContentProvider,
-			ITreeContentProvider {
+
+	static class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 
 		public void dispose() {
 		}
 
 		public Object[] getChildren(Object parent) {
 			if (parent instanceof Baustein) {
-				ArrayList children = new ArrayList(100);
+				ArrayList<IGSModel> children = new ArrayList<IGSModel>(100);
 				children.addAll(((Baustein) parent).getGefaehrdungen());
 				children.addAll(((Baustein) parent).getMassnahmen());
 				return children.toArray();
@@ -142,10 +135,10 @@ public class BSIMassnahmenView extends ViewPart {
 	static class ViewLabelProvider extends LabelProvider {
 
 		public Image getImage(Object obj) {
-			
+
 			if (obj instanceof Baustein)
 				return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN);
-			
+
 			if (obj instanceof Massnahme) {
 				Massnahme mn = (Massnahme) obj;
 				char stufe = mn.getSiegelstufe();
@@ -162,12 +155,12 @@ public class BSIMassnahmenView extends ViewPart {
 					return ImageCache.getInstance().getImage(ImageCache.STUFE_W);
 				}
 			}
-			
+
 			if (obj instanceof Gefaehrdung)
 				return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
-			
+
 			return ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
-			
+
 		}
 
 		public String getText(Object obj) {
@@ -177,18 +170,17 @@ public class BSIMassnahmenView extends ViewPart {
 						+ mn.getSiegelstufe() + "] (" + mn.getLZAsString() //$NON-NLS-1$
 						+ ")"; //$NON-NLS-1$
 			}
-			
+
 			if (obj instanceof Gefaehrdung) {
 				Gefaehrdung gef = (Gefaehrdung) obj;
-				return gef.getId() + " " + gef.getTitel() + " ["
-						+ gef.getKategorieAsString() + "]";
+				return gef.getId() + " " + gef.getTitel() + " [" + gef.getKategorieAsString() + "]";
 			}
-			
+
 			return obj.toString();
 		}
 	}
-	
-//	private Clipboard clipboard;
+
+	// private Clipboard clipboard;
 
 	public static final String ID = "sernet.gs.ui.rcp.main.views.bsimassnahmenview"; //$NON-NLS-1$
 
@@ -197,10 +189,8 @@ public class BSIMassnahmenView extends ViewPart {
 	private MassnahmenViewFilterAction filterAction;
 
 	private MassnahmenSiegelFilter siegelFilter;
-	
+
 	private CopyBSIMassnahmenViewAction copyAction;
-	
-	
 
 	private GefaehrdungenFilter gefaehrdungenFilter;
 
@@ -209,17 +199,15 @@ public class BSIMassnahmenView extends ViewPart {
 	private Action collapseAction;
 
 	public void createPartControl(Composite parent) {
-		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.BORDER);
+		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setSorter(new KapitelSorter());
-		
-		WorkspaceJob job = new OpenCataloguesJob(
-				Messages.BSIMassnahmenView_0);
+
+		WorkspaceJob job = new OpenCataloguesJob(Messages.BSIMassnahmenView_0);
 		job.setUser(false);
 		job.schedule();
-		
+
 		viewer.setInput(BSIKatalogInvisibleRoot.getInstance());
 		BSIKatalogInvisibleRoot.getInstance().addListener(new BSIKatalogInvisibleRoot.ISelectionListener() {
 			public void cataloguesChanged() {
@@ -235,28 +223,25 @@ public class BSIMassnahmenView extends ViewPart {
 		hookGlobalActions();
 		getSite().setSelectionProvider(viewer);
 		fillLocalToolBar();
-		
-		
+
 		refresh();
 	}
-	
 
 	private void refresh() {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				viewer.refresh();
 			}
-		});		
+		});
 	}
 
 	private void hookGlobalActions() {
-		getViewSite().getActionBars().setGlobalActionHandler(ActionFactory.COPY.getId(),
-				copyAction);
+		getViewSite().getActionBars().setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);
 	}
 
 	private void createActions() {
 		copyAction = new CopyBSIMassnahmenViewAction(this, "Kopieren");
-		
+
 		expandAllAction = new Action() {
 			@Override
 			public void run() {
@@ -264,8 +249,7 @@ public class BSIMassnahmenView extends ViewPart {
 			}
 		};
 		expandAllAction.setText("Alle aufklappen");
-		expandAllAction.setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.EXPANDALL));
+		expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
 		collapseAction = new Action() {
 			@Override
@@ -274,24 +258,22 @@ public class BSIMassnahmenView extends ViewPart {
 			}
 		};
 		collapseAction.setText("Alle zuklappen");
-		collapseAction.setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.COLLAPSEALL));
+		collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(new GroupMarker("content")); //$NON-NLS-1$
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-		
+
 		manager.add(filterAction);
 		manager.add(expandAllAction);
 		manager.add(collapseAction);
-		
+
 		manager.add(new Separator());
 		manager.add(copyAction);
-		
+
 	}
-	
-	
+
 	private void fillLocalToolBar() {
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager manager = bars.getToolBarManager();
@@ -312,12 +294,9 @@ public class BSIMassnahmenView extends ViewPart {
 	}
 
 	private void hookDNDListener() {
-
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance(),
-				FileTransfer.getInstance() };
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance(), FileTransfer.getInstance() };
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		viewer.addDragSupport(operations, types,
-				new BSIMassnahmenViewDragListener(viewer));
+		viewer.addDragSupport(operations, types, new BSIMassnahmenViewDragListener(viewer));
 	}
 
 	/**
@@ -326,18 +305,15 @@ public class BSIMassnahmenView extends ViewPart {
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
-	
+
 	private void createFilters() {
 		siegelFilter = new MassnahmenSiegelFilter(viewer);
 		gefaehrdungenFilter = new GefaehrdungenFilter(viewer);
 	}
-	
+
 	private void createPullDownMenu() {
 		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
-		filterAction = new MassnahmenViewFilterAction(viewer, 
-				Messages.BSIMassnahmenView_3,
-				this.siegelFilter,
-				this.gefaehrdungenFilter);
+		filterAction = new MassnahmenViewFilterAction(viewer, Messages.BSIMassnahmenView_3, this.siegelFilter, this.gefaehrdungenFilter);
 		menuManager.add(filterAction);
 		menuManager.add(copyAction);
 		menuManager.add(expandAllAction);
@@ -346,18 +322,18 @@ public class BSIMassnahmenView extends ViewPart {
 
 	@Override
 	public void dispose() {
-		
-//		if (clipboard != null)
-//			clipboard.dispose();
-//		super.dispose();
+
+		// if (clipboard != null)
+		// clipboard.dispose();
+		// super.dispose();
 	}
 
-//	public Clipboard getClipboard() {
-//		if (clipboard == null) {
-//			clipboard = new Clipboard(getSite().getShell().getDisplay());
-//		}
-//		return clipboard;
-//	}
+	// public Clipboard getClipboard() {
+	// if (clipboard == null) {
+	// clipboard = new Clipboard(getSite().getShell().getDisplay());
+	// }
+	// return clipboard;
+	// }
 
 	public List<Baustein> getSelectedBausteine() {
 		ArrayList<Baustein> result = new ArrayList<Baustein>();
@@ -371,11 +347,8 @@ public class BSIMassnahmenView extends ViewPart {
 		return result;
 	}
 
-
 	public IStructuredSelection getSelection() {
 		return (IStructuredSelection) viewer.getSelection();
 	}
-	
-	
 
 }
