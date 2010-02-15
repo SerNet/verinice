@@ -111,6 +111,8 @@ public class Messages extends NLS {
 	
 	public static String ISMView_InitData;
 	
+	public static String ISMView_LoadModel;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -28,6 +28,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -49,6 +53,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -65,7 +70,10 @@ import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.model.Attachment;
 import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -161,15 +169,14 @@ public class FileView extends ViewPart {
 	
 	private CnATreeElement currentCnaElement;
 	
+	private IModelLoadListener modelLoadListener;
+	
 	public FileView() {
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
 		initView(parent);
-		
-		final StatusResult result = Activator.startServer();
-		Activator.initDatabase(JobScheduler.getInitMutex(),result);
 	}
 
 	private void initView(Composite parent) {
@@ -294,6 +301,26 @@ public class FileView extends ViewPart {
 		}
 	}
 	
+	protected void startInitDataJob() {
+		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				IStatus status = Status.OK_STATUS;
+				try {
+					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+					Activator.inheritVeriniceContextState();
+					loadFiles();
+				} catch (Exception e) {
+					LOG.error("Error while loading data.", e);
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+				} finally {
+					monitor.done();
+				}
+				return status;
+			}
+		};
+		JobScheduler.scheduleInitJob(initDataJob);
+	}
+	
 	public void loadFiles() {
 		try {
 			Integer id = null;
@@ -302,9 +329,13 @@ public class FileView extends ViewPart {
 			}
 			LoadAttachments command = new LoadAttachments(id);		
 			command = getCommandService().executeCommand(command);		
-			List<Attachment> attachmentList = command.getAttachmentList();
+			final List<Attachment> attachmentList = command.getAttachmentList();
 			if(attachmentList!=null) {
-				viewer.setInput(attachmentList);
+				Display.getDefault().syncExec(new Runnable(){
+					public void run() {
+						viewer.setInput(attachmentList);
+					}
+				});
 				for (final Attachment attachment : attachmentList) {
 					// set transient cna-element-titel
 					if(getCurrentCnaElement()!=null) {
@@ -445,7 +476,23 @@ public class FileView extends ViewPart {
 			public void run() {
 				linkToElements=!linkToElements;
 				toggleLinkAction.setChecked(linkToElements);
-				loadFiles();
+				if(CnAElementFactory.isModelLoaded()) {
+					loadFiles();
+				} else if(modelLoadListener==null) {
+					// model is not loaded yet: add a listener to load data when it's laoded
+					modelLoadListener = new IModelLoadListener() {
+
+						public void closed(BSIModel model) {
+							// nothing to do
+						}
+
+						public void loaded(BSIModel model) {
+							startInitDataJob();
+						}
+						
+					};
+					CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+				}
 			}
 		};
 		toggleLinkAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));

@@ -56,9 +56,11 @@ import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
@@ -113,6 +115,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	
 	private ShowAccessControlEditAction accessControlEditAction;
 	
+	private IModelLoadListener modelLoadListener;
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -120,30 +124,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	public void createPartControl(final Composite parent) {
 		try {
 			initView(parent);
-			
-			final StatusResult result = Activator.startServer();
-			Activator.initDatabase(JobScheduler.getInitMutex(),result);
-			
-			WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
-				public IStatus runInWorkspace(final IProgressMonitor monitor) {
-					IStatus status = Status.OK_STATUS;
-					try {
-						monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-						if (result.status == Status.CANCEL_STATUS) {
-							status = Status.CANCEL_STATUS;
-						} else {
-							initData();
-						}
-					} catch (Exception e) {
-						LOG.error("Error while loading data.", e);
-						status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
-					} finally {
-						monitor.done();
-					}
-					return status;
-				}
-			};
-			JobScheduler.scheduleInitJob(initDataJob);
+			startInitDataJob();
 		} catch (Exception e) {
 			LOG.error("Error while creating organization view", e);
 			ExceptionUtil.log(e, "Error while opening ISM-View.");
@@ -151,6 +132,28 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		
 	}
 	
+	/**
+	 * 
+	 */
+	protected void startInitDataJob() {
+		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				IStatus status = Status.OK_STATUS;
+				try {
+					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+					initData();
+				} catch (Exception e) {
+					LOG.error("Error while loading data.", e);
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+				} finally {
+					monitor.done();
+				}
+				return status;
+			}
+		};
+		JobScheduler.scheduleInitJob(initDataJob);		
+	}
+
 	private void initView(Composite parent) {
 		contentProvider = new ISMViewContentProvider(cache);
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
@@ -167,12 +170,28 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	}
 
 	private void initData() {
-		CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(new ISO27KModelViewUpdate(viewer,cache));
-		Display.getDefault().syncExec(new Runnable(){
-			public void run() {
-				setInput(CnAElementFactory.getInstance().getISO27kModel());
-			}
-		}); 	
+		if(CnAElementFactory.isIsoModelLoaded()) {
+			CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(new ISO27KModelViewUpdate(viewer,cache));
+			Display.getDefault().syncExec(new Runnable(){
+				public void run() {
+					setInput(CnAElementFactory.getInstance().getISO27kModel());
+				}
+			});
+		} else if(modelLoadListener==null) {
+			// model is not loaded yet: add a listener to load data when it's laoded
+			modelLoadListener = new IModelLoadListener() {
+
+				public void closed(BSIModel model) {
+					// nothing to do
+				}
+
+				public void loaded(BSIModel model) {
+					startInitDataJob();
+				}
+				
+			};
+			CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+		}
 	}
 
 	public void setInput(ISO27KModel model) {

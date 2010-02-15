@@ -67,6 +67,7 @@ import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullMonitor;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -77,6 +78,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachments;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
+import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.rcp.action.ControlDragListener;
 import sernet.verinice.iso27k.service.IItem;
 import sernet.verinice.iso27k.service.Item;
@@ -127,6 +129,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	
 	private CatalogTextFilter textFilter;
 	
+	private IModelLoadListener modelLoadListener;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -138,34 +142,35 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	public void createPartControl(Composite parent) {
 		try {
 			initView(parent);
-			
-			final StatusResult result = Activator.startServer();
-			Activator.initDatabase(JobScheduler.getInitMutex(),result);
-			
-			WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
-				public IStatus runInWorkspace(final IProgressMonitor monitor) {
-					IStatus status = Status.OK_STATUS;
-					try {
-						monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-						if (result.status == Status.CANCEL_STATUS) {
-							status = Status.CANCEL_STATUS;
-						} else {
-							loadCatalogAttachmets();
-						}
-					} catch (Exception e) {
-						LOG.error("Error while loading data.", e);
-						status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
-					} finally {
-						monitor.done();
-					}
-					return status;
-				}
-			};
-			JobScheduler.scheduleInitJob(initDataJob);
+			startInitDataJob();		
 		} catch (Exception e) {
 			LOG.error("Error while creating catalog view", e);
 			ExceptionUtil.log(e, "Error while opening Catalog-View.");
 		}	
+	}
+
+
+
+	/**
+	 * 
+	 */
+	protected void startInitDataJob() {
+		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				IStatus status = Status.OK_STATUS;
+				try {
+					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+					loadCatalogAttachmets();
+				} catch (Exception e) {
+					LOG.error("Error while loading data.", e);
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+				} finally {
+					monitor.done();
+				}
+				return status;
+			}
+		};
+		JobScheduler.scheduleInitJob(initDataJob);
 	}
 
 
@@ -232,17 +237,35 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	private void loadCatalogAttachmets() {
 		try {
 			Activator.inheritVeriniceContextState();
-			LoadAttachments command = new LoadAttachments(getBsiModel().getDbId());		
-			command = getCommandService().executeCommand(command);		
-			List<Attachment> attachmentList = command.getAttachmentList();	
-			for (Attachment attachment : attachmentList) {
-				comboModel.add(attachment);
-			}
-			Display.getDefault().syncExec(new Runnable(){
-				public void run() {
-			comboCatalog.setItems(comboModel.getLabelArray());
+			if(getBsiModel()!=null) {
+				// model is loaded: load data
+				LoadAttachments command = new LoadAttachments(getBsiModel().getDbId());		
+				command = getCommandService().executeCommand(command);		
+				List<Attachment> attachmentList = command.getAttachmentList();
+				comboModel.clear();
+				for (Attachment attachment : attachmentList) {
+					comboModel.add(attachment);
 				}
-			});
+				Display.getDefault().syncExec(new Runnable(){
+					public void run() {
+						comboCatalog.setItems(comboModel.getLabelArray());
+					}
+				});
+			} else if(modelLoadListener==null) {
+				// model is not loaded yet: add a listener to load data when it's laoded
+				modelLoadListener = new IModelLoadListener() {
+
+					public void closed(BSIModel model) {
+						// nothing to do
+					}
+
+					public void loaded(BSIModel model) {
+						startInitDataJob();
+					}
+					
+				};
+				CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+			}
 			
 			
 		} catch(Exception e) {
@@ -425,7 +448,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	public BSIModel getBsiModel() {
 		if(bsiModel==null) {
 			try {
-				bsiModel = CnAElementFactory.getInstance().loadOrCreateModel(new NullMonitor());
+				bsiModel = CnAElementFactory.getLoadedModel();
 			} catch (Exception e) {
 				LOG.error("Error while creating BSI-Model", e);
 			}
