@@ -22,6 +22,7 @@ package sernet.verinice.iso27k.rcp.action;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.expressions.PropertyTester;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -34,12 +35,17 @@ import sernet.verinice.iso27k.service.CopyService;
  */
 public class GroupTester extends PropertyTester {
 
+	private static final Logger LOG = Logger.getLogger(GroupTester.class);
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		CnATreeElement selectedElement = (CnATreeElement) receiver;
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Testing target: " + selectedElement);
+		}
 		List copyList = CnPItems.getCopyItems();
 		List cutList = CnPItems.getCutItems();
 		List activeList = Collections.EMPTY_LIST;
@@ -52,14 +58,23 @@ public class GroupTester extends PropertyTester {
 		for (Object object : activeList) {
 			if(!selectedElement.canContain(object)) {
 				enabled = false;
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("target can not cantain object: " + object);
+				}
 				break;
 			}
 			if(object instanceof CnATreeElement) {
 				CnATreeElement element = (CnATreeElement) object;
 				if(CopyService.BLACKLIST.contains(element.getTypeId())) {
 					enabled = false;
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("object is in blacklist: " + object);
+					}
 					break;
 				}
+			}
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Cut/Copy of element ok: " + object);
 			}
 		}
 		
