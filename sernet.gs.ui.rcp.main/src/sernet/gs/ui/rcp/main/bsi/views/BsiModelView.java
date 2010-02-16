@@ -21,13 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -55,21 +50,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
-import sernet.gs.ui.rcp.main.bsi.dnd.CopyBSIModelViewAction;
-import sernet.gs.ui.rcp.main.bsi.dnd.PasteBsiModelViewAction;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.LebenszyklusPropertyFilter;
@@ -95,6 +88,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
+import sernet.verinice.rcp.IAttachedToPerspective;
 
 /**
  * View for model of own "ITVerbund" with associated controls, risk analysis
@@ -105,8 +99,8 @@ import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class BsiModelView extends ViewPart {
-	
+public class BsiModelView extends ViewPart implements IAttachedToPerspective {
+
 	public static final String ID = "sernet.gs.ui.rcp.main.views.bsimodelview"; //$NON-NLS-1$
 
 	private Action doubleClickAction;
@@ -118,16 +112,12 @@ public class BsiModelView extends ViewPart {
 	private TreeViewer viewer;
 
 	private BSIModelViewFilterAction filterAction;
-	
+
 	private BSIModelViewContentProvider contentProvider;
 
 	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if ((event.getProperty().equals(PreferenceConstants.DB_URL)
-					|| event.getProperty().equals(PreferenceConstants.DB_USER)
-					|| event.getProperty()
-							.equals(PreferenceConstants.DB_DRIVER) || event
-					.getProperty().equals(PreferenceConstants.DB_PASS))) {
+			if ((event.getProperty().equals(PreferenceConstants.DB_URL) || event.getProperty().equals(PreferenceConstants.DB_USER) || event.getProperty().equals(PreferenceConstants.DB_DRIVER) || event.getProperty().equals(PreferenceConstants.DB_PASS))) {
 				CnAElementFactory.getInstance().closeModel();
 				setNullModel();
 			}
@@ -155,7 +145,7 @@ public class BsiModelView extends ViewPart {
 	private TreeViewerCache cache;
 
 	private BausteinZuordnungAction bausteinZuordnungAction;
-	
+
 	private MetaDropAdapter dropAdapter;
 
 	public void setNullModel() {
@@ -178,10 +168,10 @@ public class BsiModelView extends ViewPart {
 	private void addBSIFilter() {
 		viewer.addFilter(new ViewerFilter() {
 			@Override
-			public boolean select(Viewer viewer, Object parentElement,
-					Object element) {
-				if (element instanceof IDatenschutzElement)
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if (element instanceof IDatenschutzElement) {
 					return false;
+				}
 				return true;
 			}
 
@@ -189,10 +179,6 @@ public class BsiModelView extends ViewPart {
 	}
 
 	@Override
-	public void dispose() {
-		super.dispose();
-	}
-
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		drillDownAdapter = new DrillDownAdapter(viewer);
@@ -209,8 +195,7 @@ public class BsiModelView extends ViewPart {
 		hookGlobalActions();
 		addBSIFilter();
 		fillLocalToolBar();
-		Activator.getDefault().getPluginPreferences()
-				.addPropertyChangeListener(this.prefChangeListener);
+		Activator.getDefault().getPluginPreferences().addPropertyChangeListener(this.prefChangeListener);
 		setNullModel();
 
 	}
@@ -242,13 +227,11 @@ public class BsiModelView extends ViewPart {
 
 	}
 
-	
-
 	private boolean bausteinSelected() {
 		IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-		if (!sel.isEmpty() && sel.size() == 1
-				&& sel.getFirstElement() instanceof BausteinUmsetzung)
+		if (!sel.isEmpty() && sel.size() == 1 && sel.getFirstElement() instanceof BausteinUmsetzung) {
 			return true;
+		}
 		return false;
 	}
 
@@ -273,13 +256,13 @@ public class BsiModelView extends ViewPart {
 			}
 		});
 		Menu menu = menuMgr.createContextMenu(viewer.getControl());
-		
+
 		viewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(menuMgr, viewer);
 	}
 
 	private void hookDNDListeners() {
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance(), FileTransfer.getInstance() };
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		viewer.addDropSupport(operations, types, dropAdapter);
 		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
@@ -296,29 +279,29 @@ public class BsiModelView extends ViewPart {
 	private void makeActions() {
 
 		selectEqualsAction = new Action() {
+			@Override
 			public void run() {
-				IStructuredSelection sel = (IStructuredSelection) viewer
-						.getSelection();
+				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 				Object o = sel.getFirstElement();
 				if (o instanceof BausteinUmsetzung) {
 					BausteinUmsetzung sourceBst = (BausteinUmsetzung) o;
 					ArrayList newsel = new ArrayList(10);
 					newsel.add(sourceBst);
-					
+
 					try {
 						LoadCnAElementByType<BausteinUmsetzung> command = new LoadCnAElementByType<BausteinUmsetzung>(BausteinUmsetzung.class);
-						command = ServiceFactory.lookupCommandService()
-								.executeCommand(command);
+						command = ServiceFactory.lookupCommandService().executeCommand(command);
 						List<BausteinUmsetzung> bausteine = command.getElements();
 
 						for (BausteinUmsetzung bst : bausteine) {
-							if (bst.getKapitel().equals(sourceBst.getKapitel()))
+							if (bst.getKapitel().equals(sourceBst.getKapitel())) {
 								newsel.add(bst);
+							}
 						}
 					} catch (CommandException e) {
 						ExceptionUtil.log(e, "");
 					}
-					
+
 					viewer.setSelection(new StructuredSelection(newsel));
 				}
 			}
@@ -326,68 +309,53 @@ public class BsiModelView extends ViewPart {
 		selectEqualsAction.setText("Gleiche Bausteine selektieren");
 
 		selectLinksAction = new Action() {
+			@Override
 			public void run() {
-				IStructuredSelection sel = (IStructuredSelection) viewer
-						.getSelection();
+				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 				Object o = sel.getFirstElement();
-				if (o instanceof IBSIStrukturElement
-						&& o instanceof CnATreeElement) {
+				if (o instanceof IBSIStrukturElement && o instanceof CnATreeElement) {
 					CnATreeElement elmt = (CnATreeElement) o;
 					Set<CnALink> links = elmt.getLinksUp();
-					CnALink[] foundLinks = (CnALink[]) links
-							.toArray(new CnALink[links.size()]);
+					CnALink[] foundLinks = links.toArray(new CnALink[links.size()]);
 					viewer.setSelection(new StructuredSelection(foundLinks));
 				}
 			}
 		};
-		selectLinksAction
-				.setText("Alle Verknüpfungen zu diesem Objekt markieren");
+		selectLinksAction.setText("Alle Verknüpfungen zu diesem Objekt markieren");
 
-		bulkEditAction = new ShowBulkEditAction(getViewSite()
-				.getWorkbenchWindow(), "Bulk Edit...");
+		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), "Bulk Edit...");
 
-		
-		accessControlEditAction = new ShowAccessControlEditAction(getViewSite()
-				.getWorkbenchWindow(), "Zugriffsrechte...");
+		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), "Zugriffsrechte...");
 
-		konsolidatorAction = new ShowKonsolidatorAction(getViewSite()
-				.getWorkbenchWindow(), "Konsolidator...");
+		konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(), "Konsolidator...");
 
 		bausteinZuordnungAction = new BausteinZuordnungAction(getViewSite().getWorkbenchWindow());
 
 		doubleClickAction = new Action() {
+			@Override
 			public void run() {
-				Object sel = ((IStructuredSelection) viewer.getSelection())
-						.getFirstElement();
-			
+				Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+
 				if (sel instanceof FinishedRiskAnalysis) {
 					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
-					RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis
-							.getParent(), analysis);
+					RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis.getParent(), analysis);
 					wizard.init(PlatformUI.getWorkbench(), null);
-					WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(
-							new Shell(), wizard);
+					WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(new Shell(), wizard);
 					wizDialog.setPageSize(800, 600);
 					wizDialog.open();
-				}
-				
-				else
+				} else {
 					// open editor:
 					EditorFactory.getInstance().updateAndOpenObject(sel);
+				}
 			}
 		};
 
 		BSIModelElementFilter modelElementFilter = new BSIModelElementFilter(viewer);
 		// The model filter is normally used for the view. By giving the filter
-		// also to the content provider this can be used to minimize database access.
+		// also to the content provider this can be used to minimize database
+		// access.
 		contentProvider.setModelElementFilter(modelElementFilter);
-		filterAction = new BSIModelViewFilterAction(viewer,
-				Messages.BsiModelView_3, new MassnahmenUmsetzungFilter(viewer),
-				new MassnahmenSiegelFilter(viewer),
-				new LebenszyklusPropertyFilter(viewer),
-				new ObjektLebenszyklusPropertyFilter(viewer),
-				modelElementFilter,
-				new TagFilter(viewer));
+		filterAction = new BSIModelViewFilterAction(viewer, Messages.BsiModelView_3, new MassnahmenUmsetzungFilter(viewer), new MassnahmenSiegelFilter(viewer), new LebenszyklusPropertyFilter(viewer), new ObjektLebenszyklusPropertyFilter(viewer), modelElementFilter, new TagFilter(viewer));
 
 		expandAllAction = new Action() {
 			@Override
@@ -396,8 +364,7 @@ public class BsiModelView extends ViewPart {
 			}
 		};
 		expandAllAction.setText("Alle aufklappen");
-		expandAllAction.setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.EXPANDALL));
+		expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
 		collapseAction = new Action() {
 			@Override
@@ -406,19 +373,17 @@ public class BsiModelView extends ViewPart {
 			}
 		};
 		collapseAction.setText("Alle zuklappen");
-		collapseAction.setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.COLLAPSEALL));
+		collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
 		openDBAction = new BSIModelViewOpenDBAction(this, viewer);
 
 		closeDBAction = new BSIModelViewCloseDBAction(this, viewer);
-		
+
 		dropAdapter = new MetaDropAdapter(viewer);
 		dropAdapter.addAdapter(new BSIModelViewDropPerformer());
-		
 
 	}
-	
+
 	private void expandAll() {
 		// TODO: do this a new thread and show user a progress bar
 		viewer.expandAll();
@@ -427,6 +392,7 @@ public class BsiModelView extends ViewPart {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
@@ -440,8 +406,8 @@ public class BsiModelView extends ViewPart {
 		menuManager.add(collapseAction);
 
 		menuManager.add(new Separator());
-		//menuManager.add(copyAction);
-		//menuManager.add(pasteAction);
+		// menuManager.add(copyAction);
+		// menuManager.add(pasteAction);
 
 	}
 
@@ -465,4 +431,12 @@ public class BsiModelView extends ViewPart {
 		return (IStructuredSelection) viewer.getSelection();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
+	 */
+	public String getPerspectiveId() {
+		return Perspective.ID;
+	}
 }
