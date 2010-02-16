@@ -63,6 +63,8 @@ public class Activator extends AbstractUIPlugin {
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main";
 
+	private static final String PAX_WEB_SYMBOLIC_NAME = "org.ops4j.pax.web.pax-web-bundle";
+
 	// The shared instance
 	private static Activator plugin;
 
@@ -124,8 +126,26 @@ public class Activator extends AbstractUIPlugin {
 				throw new IllegalStateException("Cannot retrieve internal server service.");
 
 			internalServer = (IInternalServer) context.getService(sr);
-		} else
+			if (LOG.isInfoEnabled()) {
+				LOG.info("Preference " + PreferenceConstants.OPERATION_MODE + "=" + PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER + ": Using internal server.");
+			}
+		} else {
 			internalServer = new ServerDummy();
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Internal server is not used.");
+			}
+			// Pax Web Http Service (embedded jetty) is starting automatically after loading and starting
+			// the bundle PAX_WEB_SYMBOLIC_NAME which you can not prevent
+			// When internal server is not used bundle and Http Service is stopped here
+			try {
+				Bundle paxWebBundle = Platform.getBundle(PAX_WEB_SYMBOLIC_NAME);
+				if(paxWebBundle!=null) {
+					paxWebBundle.stop();
+				}
+			} catch (Exception e) {
+				LOG.error("Error while stopping pax-web http-service.", e);
+			}
+		}
 
 		if (prefs.getString(PreferenceConstants.GSACCESS).equals(PreferenceConstants.GSACCESS_DIR)) {
 			try {
