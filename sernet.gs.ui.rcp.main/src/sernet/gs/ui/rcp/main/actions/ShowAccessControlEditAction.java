@@ -21,6 +21,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -36,11 +37,11 @@ import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 
 /**
- * {@link Action} that creates a dialog to modify the access
- * rights of a {@link CnATreeElement}.
+ * {@link Action} that creates a dialog to modify the access rights of a
+ * {@link CnATreeElement}.
  * 
  * @author Robert Schuster <r.schuster@tarent.de>
- *
+ * 
  */
 public class ShowAccessControlEditAction extends Action implements ISelectionListener {
 
@@ -52,45 +53,43 @@ public class ShowAccessControlEditAction extends Action implements ISelectionLis
 		setText(label);
 		setId(ID);
 		setActionDefinitionId(ID);
-		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(
-				ImageCache.SECURITY));
+		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
 		setToolTipText("Zugriffsrechte editieren.");
 
 		window.getSelectionService().addSelectionListener(BsiModelView.ID, this);
 	}
 
+	@Override
 	public void run() {
 		Activator.inheritVeriniceContextState();
 
-		IStructuredSelection selection = (IStructuredSelection) window
-				.getSelectionService().getSelection();
-		if (selection == null || selection.size()<1)
+		IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
+		if (selection == null || selection.size() < 1) {
 			return;
-		
+		}
+
 		final AccessControlEditDialog dialog = new AccessControlEditDialog(window.getShell(), selection);
 
-		if (dialog.open() != InputDialog.OK)
+		if (dialog.open() != Window.OK) {
 			return;
+		}
 
 	}
-	
-	public void dispose()
-	{
+
+	public void dispose() {
 		window.getSelectionService().removeSelectionListener(BsiModelView.ID, this);
 	}
 
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		// Conditions for availability of this action:
-		// - Database connection must be open (Implicitly assumes that login credentials have
-		//   been transferred and that the server can be queried. This is neccessary since this
-		//   method will be called before the server connection is enabled.)
+		// - Database connection must be open (Implicitly assumes that login
+		// credentials have
+		// been transferred and that the server can be queried. This is
+		// neccessary since this
+		// method will be called before the server connection is enabled.)
 		// - permission handling is needed by IAuthService implementation
 		// - user has administrator privileges
-		boolean b =
-			((IStructuredSelection) selection).getFirstElement() instanceof CnATreeElement
-			&& CnAElementHome.getInstance().isOpen()
-			&& ServiceFactory.isPermissionHandlingNeeded()
-			&& AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
+		boolean b = ((IStructuredSelection) selection).getFirstElement() instanceof CnATreeElement && CnAElementHome.getInstance().isOpen() && ServiceFactory.isPermissionHandlingNeeded() && AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
 
 		setEnabled(b);
 	}
