@@ -901,10 +901,7 @@
 	</extension>
    <extension
          point="org.eclipse.ui.startup">
-      <startup
-            class="sernet.verinice.rcp.PerspectiveSwitcher"></startup>
-      <startup
-            class="sernet.verinice.iso27k.rcp.action.Initializer">
-      </startup>
+      <startup class="sernet.verinice.rcp.PerspectiveSwitcher" />
+      <startup class="sernet.verinice.iso27k.rcp.action.Initializer" />
    </extension>
 </plugin>
