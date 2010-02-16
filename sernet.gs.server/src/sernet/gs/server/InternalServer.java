@@ -43,12 +43,14 @@ import org.springframework.web.servlet.DispatcherServlet;
 import sernet.gs.ui.rcp.main.service.IInternalServer;
 
 /**
- * Implementation of the {@link IInternalServer} interface which allows
- * managing the internal verinice server.
+ * Implementation of the {@link IInternalServer} interface which allows managing
+ * the internal verinice server.
  * 
- * <p>An instance of this class is supposed to be registered as an
- * OSGi service. The verinice client will lookup this service and
- * interact with the server component through it.</p>
+ * <p>
+ * An instance of this class is supposed to be registered as an OSGi service.
+ * The verinice client will lookup this service and interact with the server
+ * component through it.
+ * </p>
  * 
  */
 public class InternalServer implements IInternalServer {
@@ -64,51 +66,46 @@ public class InternalServer implements IInternalServer {
 	private HttpContext ctx;
 
 	/**
-	 * Applies the given database credentials to the verinice server
-	 * and checks their validity.
+	 * Applies the given database credentials to the verinice server and checks
+	 * their validity.
 	 * 
-	 * <p>If the credentials are invalid an {@link IllegalStateException}
-	 * is thrown.</p>
+	 * <p>
+	 * If the credentials are invalid an {@link IllegalStateException} is
+	 * thrown.
+	 * </p>
 	 * 
-	 * <p>The credentials will be used when the server is started next
-	 * time.</p>
+	 * <p>
+	 * The credentials will be used when the server is started next time.
+	 * </p>
 	 */
-	public void configure(String url, String user, String pass, String driver,
-			String dialect) {
-		
+	public void configure(String url, String user, String pass, String driver, String dialect) {
+
 		boolean fail = false;
-		try
-		{
+		try {
 			Class.forName(driver);
-			
+
 			Connection c = DriverManager.getConnection(url, user, pass);
-			
+
 			c.close();
-		}
-		catch (ClassNotFoundException cnfe)
-		{
+		} catch (ClassNotFoundException cnfe) {
 			throw new IllegalStateException(Messages.InternalServer_0 + driver);
-		}
-		catch (SQLException sqle)
-		{
+		} catch (SQLException sqle) {
 			Logger.getLogger(this.getClass()).error(Messages.InternalServer_1);
 			fail = true;
 		}
 
 		if (fail) {
 			ServerPropertyPlaceholderConfigurer.setDatabaseProperties("InternalServer.configure.failed", "InternalServer.configure.failed", "InternalServer.configure.failed", "InternalServer.configure.failed", "InternalServer.configure.failed");
-			
-		}
-		else {
-			ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user,
-					pass, driver, dialect);
+
+		} else {
+			ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user, pass, driver, dialect);
 		}
 	}
-	
+
 	public void setGSCatalogURL(URL url) {
 		ServerPropertyPlaceholderConfigurer.setGSCatalogURL(url);
 	}
-	
+
 	public void setDSCatalogURL(URL url) {
 		ServerPropertyPlaceholderConfigurer.setDSCatalogURL(url);
 	}
@@ -116,13 +113,19 @@ public class InternalServer implements IInternalServer {
 	/**
 	 * Starts the verinice server.
 	 * 
-	 * <p>Before each start the server must be stopped.</p>
+	 * <p>
+	 * Before each start the server must be stopped.
+	 * </p>
 	 * 
-	 * <p>The first start will also initialize the underlying servlet
-	 * container and as such will take longer.</p>
+	 * <p>
+	 * The first start will also initialize the underlying servlet container and
+	 * as such will take longer.
+	 * </p>
 	 * 
-	 * <p>In case the server could not be started an @{link IllegalStateException}
-	 * is thrown.</p>
+	 * <p>
+	 * In case the server could not be started an @{link IllegalStateException}
+	 * is thrown.
+	 * </p>
 	 */
 	public synchronized void start() throws IllegalStateException {
 		if (running)
@@ -134,15 +137,11 @@ public class InternalServer implements IInternalServer {
 
 			setupSpringServlets();
 		} catch (ServletException se) {
-			throw new IllegalStateException(Messages.InternalServer_3,
-					se);
+			throw new IllegalStateException(Messages.InternalServer_3, se);
 		} catch (NamespaceException nse) {
-			throw new IllegalStateException(Messages.InternalServer_3,
-					nse);
-		} catch (Exception e)
-		{
-			throw new IllegalStateException(Messages.InternalServer_3,
-					e);
+			throw new IllegalStateException(Messages.InternalServer_3, nse);
+		} catch (Exception e) {
+			throw new IllegalStateException(Messages.InternalServer_3, e);
 		}
 
 		running = true;
@@ -151,9 +150,13 @@ public class InternalServer implements IInternalServer {
 	/**
 	 * Stops the verinice server.
 	 * 
-	 * <p>By purpose this does (yet) shutdown the servlet container.</p>
+	 * <p>
+	 * By purpose this does (yet) shutdown the servlet container.
+	 * </p>
 	 * 
-	 * <p>When the server is already stopped this method has no effect.</p>
+	 * <p>
+	 * When the server is already stopped this method has no effect.
+	 * </p>
 	 */
 	public void stop() {
 		if (!running)
@@ -172,9 +175,9 @@ public class InternalServer implements IInternalServer {
 	}
 
 	/**
-	 * Performs the initial setup of the server which means configuring
-	 * things that cannot be changed afterwards or are not dependent upon
-	 * the Spring configuration.</p>
+	 * Performs the initial setup of the server which means configuring things
+	 * that cannot be changed afterwards or are not dependent upon the Spring
+	 * configuration.</p>
 	 * 
 	 * @throws ServletException
 	 * @throws NamespaceException
@@ -191,36 +194,31 @@ public class InternalServer implements IInternalServer {
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-common.xml \n" //$NON-NLS-1$
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-osgi.xml \n" //$NON-NLS-1$
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml \n"); //$NON-NLS-1$
-		dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
-				OsgiBundleXmlWebApplicationContext.class.getName());
+		dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
 		wc.setContextParam(dict, ctx);
 
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "GetHitroConfig"); //$NON-NLS-1$ //$NON-NLS-2$
 		dict.put("snca.xml.path", "/WebContent/WEB-INF/SNCA.xml"); //$NON-NLS-1$ //$NON-NLS-2$
-		wc.registerServlet(new GetHitroConfig(),
-				new String[] { "/GetHitroConfig" }, dict, ctx); //$NON-NLS-1$
+		wc.registerServlet(new GetHitroConfig(), new String[] { "/GetHitroConfig" }, dict, ctx); //$NON-NLS-1$
 
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "serverTest"); //$NON-NLS-1$ //$NON-NLS-2$
-		wc.registerServlet(new ServerTestServlet(),
-				new String[] { "/servertest" }, dict, ctx); //$NON-NLS-1$
+		wc.registerServlet(new ServerTestServlet(), new String[] { "/servertest" }, dict, ctx); //$NON-NLS-1$
 	}
 
 	/**
-	 * Registers the Spring servlets which effectively starts the
-	 * verinice server.
+	 * Registers the Spring servlets which effectively starts the verinice
+	 * server.
 	 * 
 	 * @throws ServletException
 	 * @throws NamespaceException
 	 */
-	private void setupSpringServlets() throws ServletException,
-			NamespaceException {
+	private void setupSpringServlets() throws ServletException, NamespaceException {
 		Dictionary<String, String> dict = new Hashtable<String, String>();
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "context"); //$NON-NLS-1$ //$NON-NLS-2$
-		dict.put(ContextLoader.CONTEXT_CLASS_PARAM,
-				OsgiBundleXmlWebApplicationContext.class.getName());
+		dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
 		contextLoaderServlet = new ContextLoaderServlet();
 		wc.registerServlet("/context", contextLoaderServlet, dict, ctx); //$NON-NLS-1$
 
@@ -234,8 +232,8 @@ public class InternalServer implements IInternalServer {
 	}
 
 	/**
-	 * Unregisters the Spring servlets which effectively stops the
-	 * verinice server.
+	 * Unregisters the Spring servlets which effectively stops the verinice
+	 * server.
 	 * 
 	 * @throws ServletException
 	 * @throws NamespaceException
@@ -248,16 +246,17 @@ public class InternalServer implements IInternalServer {
 	/**
 	 * Helper servlet which tells the state of the internal server.
 	 * 
-	 * <p>The servlet's output can be seen with a web browser at
-	 * <a href="localhost:8800/servertest">localhost:8800/servertest</a> .</p>
+	 * <p>
+	 * The servlet's output can be seen with a web browser at <a
+	 * href="localhost:8800/servertest">localhost:8800/servertest</a> .
+	 * </p>
 	 */
 	private class ServerTestServlet extends HttpServlet {
 
 		private static final long serialVersionUID = 131427514191056452L;
 
 		@Override
-		protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-				throws ServletException, IOException {
+		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 			System.err.println("doGet"); //$NON-NLS-1$
 
 			resp.setContentType("text/html"); //$NON-NLS-1$
