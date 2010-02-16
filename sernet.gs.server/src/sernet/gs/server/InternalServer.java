@@ -55,6 +55,8 @@ import sernet.gs.ui.rcp.main.service.IInternalServer;
  */
 public class InternalServer implements IInternalServer {
 
+	private final Logger log = Logger.getLogger(InternalServer.class);
+	
 	boolean running = false;
 
 	private ContextLoaderServlet contextLoaderServlet;
@@ -90,7 +92,7 @@ public class InternalServer implements IInternalServer {
 		} catch (ClassNotFoundException cnfe) {
 			throw new IllegalStateException(Messages.InternalServer_0 + driver);
 		} catch (SQLException sqle) {
-			Logger.getLogger(this.getClass()).error(Messages.InternalServer_1);
+			log.error(Messages.InternalServer_1);
 			fail = true;
 		}
 
@@ -128,23 +130,31 @@ public class InternalServer implements IInternalServer {
 	 * </p>
 	 */
 	public synchronized void start() throws IllegalStateException {
-		if (running)
+		if (log.isDebugEnabled()) {
+			log.debug("start(), starting internal server...");
+		}
+		if (running) {
 			throw new IllegalStateException(Messages.InternalServer_2);
-
+		}
 		try {
-			if (wc == null)
+			if (wc == null) {
 				initialSetup();
-
+			}
 			setupSpringServlets();
 		} catch (ServletException se) {
+			log.error("Error while starting internal server.",se);
 			throw new IllegalStateException(Messages.InternalServer_3, se);
 		} catch (NamespaceException nse) {
+			log.error("Error while starting internal server.",nse);
 			throw new IllegalStateException(Messages.InternalServer_3, nse);
 		} catch (Exception e) {
+			log.error("Error while starting internal server.",e);
 			throw new IllegalStateException(Messages.InternalServer_3, e);
 		}
-
 		running = true;
+		if (log.isInfoEnabled()) {
+			log.info("Internal server is running now");
+		}
 	}
 
 	/**
@@ -224,11 +234,10 @@ public class InternalServer implements IInternalServer {
 
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "springDispatcher"); //$NON-NLS-1$ //$NON-NLS-2$
-		dict.put("contextConfigLocation", //$NON-NLS-1$
-				"classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$
+		dict.put("contextConfigLocation", "classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$ //$NON-NLS-2$
 		dispatcherServlet = new DispatcherServlet();
-		wc.registerServlet(dispatcherServlet, new String[] { "/service/*" }, //$NON-NLS-1$
-				dict, ctx);
+		wc.registerServlet(dispatcherServlet, new String[] { "/service/*" }, dict, ctx); //$NON-NLS-1$
+				
 	}
 
 	/**
