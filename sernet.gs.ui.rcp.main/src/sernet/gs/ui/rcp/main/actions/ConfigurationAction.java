@@ -23,11 +23,11 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
@@ -56,7 +56,7 @@ public class ConfigurationAction implements IObjectActionDelegate {
 
 	public static final String ID = "sernet.gs.ui.rcp.main.personconfiguration";
 
-	private static final String[] ALLOWED_ROLES = new String[] {ApplicationRoles.ROLE_ADMIN};
+	private static final String[] ALLOWED_ROLES = new String[] { ApplicationRoles.ROLE_ADMIN };
 
 	private Configuration configuration;
 
@@ -70,91 +70,79 @@ public class ConfigurationAction implements IObjectActionDelegate {
 
 	public void run(IAction action) {
 		Activator.inheritVeriniceContextState();
-		
-		// If this code is run then something is wrong, because the action should have been
+
+		// If this code is run then something is wrong, because the action
+		// should have been
 		// disabled programmatically. See method selectionChanged().
 		boolean hasRole = AuthenticationHelper.getInstance().currentUserHasRole(ALLOWED_ROLES);
 		if (!hasRole) {
-			MessageDialog.openWarning((Shell) targetPart.getAdapter(Shell.class), 
-					"Autorisierung", "Ihr Account ist nicht berechtigt, die gewählte Funktion auszuführen.");
+			MessageDialog.openWarning((Shell) targetPart.getAdapter(Shell.class), "Autorisierung", "Ihr Account ist nicht berechtigt, die gewählte Funktion auszuführen.");
 			return;
 		}
-		
+
 		IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
-		IStructuredSelection selection = (IStructuredSelection) window
-				.getSelectionService().getSelection();
-		if (selection == null)
+		IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
+		if (selection == null) {
 			return;
+		}
 		EntityType entType = null;
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			try {
 				Object o = iter.next();
-				if (o == null || !(o instanceof Person))
+				if (o == null || !(o instanceof Person)) {
 					continue;
+				}
 
 				Person elmt = null;
-				if (o instanceof Person)
+				if (o instanceof Person) {
 					elmt = (Person) o;
+				}
 
-				Logger.getLogger(this.getClass()).debug(
-						"Loading configuration for user " + elmt.getTitle());
+				Logger.getLogger(this.getClass()).debug("Loading configuration for user " + elmt.getTitle());
 				LoadConfiguration command = new LoadConfiguration(elmt);
-				command = ServiceFactory.lookupCommandService().executeCommand(
-						command);
+				command = ServiceFactory.lookupCommandService().executeCommand(command);
 				configuration = command.getConfiguration();
 
 				if (configuration == null) {
 					// create new configuration
-					Logger
-							.getLogger(this.getClass())
-							.debug(
-									"No config found, creating new configuration object.");
+					Logger.getLogger(this.getClass()).debug("No config found, creating new configuration object.");
 					CreateConfiguration command2 = new CreateConfiguration(elmt);
-					command2 = ServiceFactory.lookupCommandService()
-							.executeCommand(command2);
+					command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
 					configuration = command2.getConfiguration();
 				}
 
-				entType = HitroUtil.getInstance().getTypeFactory().getEntityType(
-						configuration.getEntity().getEntityType());
+				entType = HitroUtil.getInstance().getTypeFactory().getEntityType(configuration.getEntity().getEntityType());
 			} catch (CommandException e) {
 				ExceptionUtil.log(e, "Fehler beim Laden der Konfiguration");
 			} catch (RuntimeException e) {
 				ExceptionUtil.log(e, "Fehler beim Laden der Konfiguration");
 			}
 		}
-		
+
 		emptyPasswordField(configuration.getEntity());
 
-		final BulkEditDialog dialog = new BulkEditDialog(window.getShell(),
-				entType, true, "Benutzereinstellungen", configuration.getEntity());
-		if (dialog.open() != InputDialog.OK)
+		final BulkEditDialog dialog = new BulkEditDialog(window.getShell(), entType, true, "Benutzereinstellungen", configuration.getEntity());
+		if (dialog.open() != Window.OK) {
 			return;
-		
+		}
+
 		final boolean updatePassword = updatePassword(configuration.getEntity());
 
 		try {
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
-					new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor)
-								throws InvocationTargetException,
-								InterruptedException {
-							Activator.inheritVeriniceContextState();
-							
-							// save configuration:
-							SaveConfiguration<Configuration> command 
-								= new SaveConfiguration<Configuration>(configuration, updatePassword);
-							try {
-								command = ServiceFactory.lookupCommandService()
-										.executeCommand(command);
-							} catch (CommandException e) {
-								ExceptionUtil.log(e, "Fehler beim Speichern der Konfiguration.");
-							}
-						}
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					Activator.inheritVeriniceContextState();
 
-						
+					// save configuration:
+					SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, updatePassword);
+					try {
+						command = ServiceFactory.lookupCommandService().executeCommand(command);
+					} catch (CommandException e) {
+						ExceptionUtil.log(e, "Fehler beim Speichern der Konfiguration.");
+					}
+				}
 
-					});
+			});
 		} catch (InvocationTargetException e) {
 			ExceptionUtil.log(e, "Fehler beim Speichern der Konfiguration.");
 		} catch (InterruptedException e) {
@@ -164,7 +152,8 @@ public class ConfigurationAction implements IObjectActionDelegate {
 	}
 
 	/**
-	 * Remove (hashed) password from field, save hash in case user does NOT enter a new one.
+	 * Remove (hashed) password from field, save hash in case user does NOT
+	 * enter a new one.
 	 * 
 	 * @param entity
 	 */
@@ -175,23 +164,24 @@ public class ConfigurationAction implements IObjectActionDelegate {
 			passwordProperty.setPropertyValue("", false);
 		}
 	}
-	
+
 	/**
-	 * Checks if the user has entered a new password.
-	 * If not, the previously saved hashed password is restored.
-	 * If so, the cleartext password is saved.
+	 * Checks if the user has entered a new password. If not, the previously
+	 * saved hashed password is restored. If so, the cleartext password is
+	 * saved.
 	 * 
-	 * @param entity the entity containing the users input
-	 * @return true if a new cleartext password was saved, that needs to be hashed.
+	 * @param entity
+	 *            the entity containing the users input
+	 * @return true if a new cleartext password was saved, that needs to be
+	 *         hashed.
 	 */
 	private boolean updatePassword(Entity entity) {
 		Property passwordProperty = entity.getProperties(Configuration.PROP_PASSWORD).getProperty(0);
 		if (passwordProperty != null) {
-			if (passwordProperty.getPropertyValue().length()>0) {
+			if (passwordProperty.getPropertyValue().length() > 0) {
 				// new password:
 				return true;
-			}
-			else {
+			} else {
 				// no new password set, insert old one (hash) again:
 				passwordProperty.setPropertyValue(oldPassword, false);
 			}
@@ -200,19 +190,17 @@ public class ConfigurationAction implements IObjectActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		if (action.isEnabled())
-		{
+		if (action.isEnabled()) {
 			// Conditions for availability of this action:
-			// - Database connection must be open (Implicitly assumes that login credentials have
-			//   been transferred and that the server can be queried. This is neccessary since this
-			//   method will be called before the server connection is enabled.)
+			// - Database connection must be open (Implicitly assumes that login
+			// credentials have
+			// been transferred and that the server can be queried. This is
+			// neccessary since this
+			// method will be called before the server connection is enabled.)
 			// - permission handling is needed by IAuthService implementation
 			// - user has administrator privileges
-			boolean b =
-				CnAElementHome.getInstance().isOpen()
-				&& ServiceFactory.isPermissionHandlingNeeded()
-				&& AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
-	
+			boolean b = CnAElementHome.getInstance().isOpen() && ServiceFactory.isPermissionHandlingNeeded() && AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
+
 			action.setEnabled(b);
 		}
 	}
