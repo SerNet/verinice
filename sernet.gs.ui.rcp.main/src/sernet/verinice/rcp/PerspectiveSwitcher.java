@@ -31,7 +31,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -63,7 +62,9 @@ public class PerspectiveSwitcher implements IStartup, IPartListener {
 	 * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void partActivated(final IWorkbenchPart part) {
-		 // nothing to do
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("partActivated: " + part.getTitle());
+		}
 	}
 	
 
@@ -71,27 +72,36 @@ public class PerspectiveSwitcher implements IStartup, IPartListener {
 	 * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void partBroughtToTop(IWorkbenchPart part) {
-		 // nothing to do
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("partBroughtToTop: " + part.getTitle());
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void partClosed(IWorkbenchPart part) {
-		 // nothing to do
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("partClosed: " + part.getTitle());
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void partDeactivated(IWorkbenchPart part) {
-		 // nothing to do
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("partDeactivated: " + part.getTitle());
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void partOpened(final IWorkbenchPart part) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("partOpened: " + part.getTitle());
+		}
 		if (part instanceof IAttachedToPerspective && ((IAttachedToPerspective) part).getPerspectiveId()!=null) {
 			final IWorkbenchWindow workbenchWindow = part.getSite().getPage().getWorkbenchWindow();	
 			final String attachedPerspectiveId = ((IAttachedToPerspective) part).getPerspectiveId();
