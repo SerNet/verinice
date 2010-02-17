@@ -2971,6 +2971,57 @@ Template:
             name="Description"
             id="control_desc"
             visible="false"/>
+        <huipropertygroup id="control_spicegroup" name="Maturity">
+        <huiproperty
+			id="control_umsetzung"
+			name="Status"
+               focus="true"
+               required="true"
+			inputtype="singleoption">
+			<option
+				id="control_umsetzung_0"
+				name="Level 0: Incomplete" />
+			<option
+				id="control_umsetzung_1"
+				name="Level 1: Performed" />
+			<option
+				id="control_umsetzung_2"
+				name="Level 2: Managed" />
+			<option
+				id="control_umsetzung_3"
+				name="Level 3: Established" />
+			<option
+				id="control_umsetzung_4"
+				name="Level 4: Predictable" />
+			<option
+				id="control_umsetzung_5"
+				name="Level 5: Optimizing" />
+		</huiproperty>
+		<huiproperty
+			id="control_erlaeuterung"
+			name="Explanation"
+			inputtype="text" />
+		<huiproperty
+				id="control_umsetzungbis"
+				name="Due Date"
+				inputtype="date">
+                <defaultRule class="Today">
+                    <param>MONTH</param>
+                    <param>2</param>
+                </defaultRule>
+            </huiproperty>
+		<huiproperty
+			id="control_umsetzungdurch_link"
+			name="Assessor"
+			inputtype="reference" 
+			required="true">
+			<references entitytype="person"/>
+		</huiproperty>
+		<huiproperty
+            name="Document"
+            id="control_dokument"
+            isURL="true" />
+        </huipropertygroup>
     </huientity>
     <huientity
         name="Exception-Group"
