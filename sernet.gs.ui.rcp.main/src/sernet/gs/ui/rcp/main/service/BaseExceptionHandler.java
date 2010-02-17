@@ -22,28 +22,28 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 public class BaseExceptionHandler implements ICommandExceptionHandler {
 
 	public void handle(Exception e) throws CommandException {
-		throw new CommandException(
-				"Ausführungsfehler in DB-Service-Layer\n\n", getDetails(e));
+		throw new CommandException("Ausführungsfehler in DB-Service-Layer\n\n", getDetails(e));
 	}
 
 	/**
 	 * @param e
 	 */
 	private CommandException getDetails(Exception e) {
-		if (e == null)
+		if (e == null) {
 			return null;
-		
+		}
+
 		Throwable cause;
-		if (e.getCause() != null && e.getCause().getMessage() != null)
+		if (e.getCause() != null && e.getCause().getMessage() != null) {
 			cause = e.getCause();
-		else
+		} else {
 			cause = e;
-		
+		}
+
 		CommandException commandException = new CommandException(cause.getClass().getSimpleName() + getMessage(cause));
 		commandException.setStackTrace(cause.getStackTrace());
 		return commandException;
-		
-		
+
 	}
 
 	/**
@@ -51,9 +51,7 @@ public class BaseExceptionHandler implements ICommandExceptionHandler {
 	 * @return
 	 */
 	private String getMessage(Throwable cause) {
-		return cause.getLocalizedMessage() != null 
-			? ", " + cause.getLocalizedMessage()
-			: "";
+		return cause.getLocalizedMessage() != null ? ", " + cause.getLocalizedMessage() : "";
 	}
 
 }
