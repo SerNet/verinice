@@ -103,6 +103,7 @@ This variant:
 
 	<bean id="daoFactory" class="sernet.gs.ui.rcp.main.service.DAOFactory">
 		<property name="propertyListDao" ref="propertyListDao" />
+		<property name="propertyDao" ref="propertyDao" />
 		<property name="entityDao" ref="entityDao" />
 		<property name="cnaLinkDao" ref="cnaLinkDao" />
 		<property name="finishedRiskAnalysisListsDAO" ref="finishedRiskAnalysisListsDAO" />

@@ -18,6 +18,14 @@
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	
+	
+	<bean id="propertyDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.hui.common.connect.Property</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
 
 	<!-- Instance of generic hibernate DAO for class Entity -->
 	<bean id="entityDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
