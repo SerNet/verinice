@@ -59,6 +59,7 @@
         <mapping resource="sernet/gs/ui/rcp/hibernate/Entity.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/CnALink.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/PropertyList.hbm.xml"/>
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Property.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/CnATreeElement.hbm.xml"/> 
         <mapping resource="sernet/gs/ui/rcp/hibernate/ChangeLogEntry.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/Gefaehrdung.hbm.xml"/>
