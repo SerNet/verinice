@@ -40,6 +40,7 @@ import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.ICommand;
 import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
+import sernet.gs.ui.rcp.main.service.commands.UsernameExistsRuntimeException;
 import sernet.hui.common.VeriniceContext;
 
 /**
@@ -128,8 +129,14 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 			
 			// clean up:
 			command.clear();
-		} 
-		catch (Exception e) {
+		} catch (UsernameExistsRuntimeException e) {
+			log.info("Username is not available: " + e.getUsername());
+			if (log.isDebugEnabled()) {
+				log.debug("stacktrace: ", e);
+			}
+			if (exceptionHandler != null)
+				exceptionHandler.handle(e);
+		} catch (Exception e) {
 			log.error("Error while executing command", e);
 			// TODO ak kein exception handler -> initialization must have gone wrong, abort application completely?
 			if (exceptionHandler != null)
