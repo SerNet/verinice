@@ -21,11 +21,27 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.filter.AuditDurchFilter;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.iso27k.model.Asset;
+import sernet.verinice.iso27k.model.Audit;
+import sernet.verinice.iso27k.model.Control;
+import sernet.verinice.iso27k.model.Document;
+import sernet.verinice.iso27k.model.Evidence;
+import sernet.verinice.iso27k.model.Exception;
+import sernet.verinice.iso27k.model.Finding;
+import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.IISO27kElement;
 import sernet.verinice.iso27k.model.IISO27kGroup;
+import sernet.verinice.iso27k.model.Incident;
+import sernet.verinice.iso27k.model.IncidentScenario;
+import sernet.verinice.iso27k.model.Interview;
 import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.iso27k.model.PersonIso;
+import sernet.verinice.iso27k.model.Requirement;
+import sernet.verinice.iso27k.model.Threat;
+import sernet.verinice.iso27k.model.Vulnerability;
 
 /**
  * Label provider for ISO 27000 model elements.
@@ -44,13 +60,30 @@ public class ISMViewLabelProvider extends LabelProvider {
 
 	@Override
 	public Image getImage(Object obj) {
-		Image image = null;
-		// TODO: dm - implement this, when icons are ready
-		if (obj instanceof IISO27kGroup || obj instanceof Organization) {
-			image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN_GROUP);
-		} else if (obj instanceof IISO27kElement) {
-			image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
+		Image image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
+		
+		if (!(obj instanceof IISO27kElement))
+			return image;
+		
+		else if (obj instanceof Group) {
+			Group group = (Group) obj;
+            image = ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0]);
+			return image;
 		}
+
+		else if (obj instanceof Control) {
+			Control control = (Control) obj;
+			if (Control.isSufficientlyMature(control))
+				image = ImageCache.getInstance().getImage(ImageCache.ISO27K_CONTROL_YES);
+			else
+				image = ImageCache.getInstance().getImage(ImageCache.ISO27K_CONTROL_NO);
+		}
+		else {
+			// else return type icon:
+			IISO27kElement elmt = (IISO27kElement) obj;
+			image = ImageCache.getInstance().getISO27kTypeImage(elmt.getTypeId());
+		}
+		
 		return image;
 	}
 

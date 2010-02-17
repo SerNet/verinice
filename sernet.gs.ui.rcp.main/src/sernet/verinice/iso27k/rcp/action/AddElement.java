@@ -105,6 +105,7 @@ public class AddElement implements IObjectActionDelegate {
 				action.setText("New Requirement");
 			} else {
 				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImage(ImageCache.UNKNOW_NEW)));	
+				action.setText("New Object");
 			}
 		}
 	}

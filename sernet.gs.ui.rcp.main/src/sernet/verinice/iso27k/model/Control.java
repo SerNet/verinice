@@ -21,9 +21,13 @@ package sernet.verinice.iso27k.model;
 
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.ui.rcp.main.bsi.model.TagHelper;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -38,6 +42,15 @@ public class Control extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_TAG = "control_tag"; //$NON-NLS-1$
 	public static final String PROP_DESC = "control_desc"; //$NON-NLS-1$
 	
+	public static final String PROP_MATURITY = "control_umsetzung"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_0 = "control_umsetzung_0"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_1 = "control_umsetzung_1"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_2 = "control_umsetzung_2"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_3 = "control_umsetzung_3"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_4 = "control_umsetzung_4"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_5 = "control_umsetzung_5"; //$NON-NLS-1$
+	private static final int SUFFICIENT_MATURITY = 2;
+	
 	/**
 	 * Creates an empty asset
 	 */
@@ -50,6 +63,34 @@ public class Control extends CnATreeElement implements IISO27kElement {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
 		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME), "New Control");
+	}
+	
+	public int getMaturity() {
+		String maturity = null;
+		PropertyList properties = getEntity().getProperties(PROP_MATURITY);
+		if (properties == null || properties.getProperties() == null
+				|| properties.getProperties().size() < 1)
+			return -1;
+
+		Property property = properties.getProperty(0);
+		if (property != null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
+			maturity = property.getPropertyValue();
+		
+		if (maturity == null)
+			return -1;
+		if (maturity.equals(PROP_MATURITY_0))
+			return 0;
+		if (maturity.equals(PROP_MATURITY_1))
+			return 1;
+		if (maturity.equals(PROP_MATURITY_2))
+			return 2;
+		if (maturity.equals(PROP_MATURITY_3))
+			return 3;
+		if (maturity.equals(PROP_MATURITY_4))
+			return 4;
+		if (maturity.equals(PROP_MATURITY_5))
+			return 5;
+		return -1;
 	}
 	
 	/* (non-Javadoc)
@@ -90,6 +131,15 @@ public class Control extends CnATreeElement implements IISO27kElement {
 	
 	public void setDescription(String description) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
+	}
+
+	/**
+	 * @param control
+	 * @return
+	 */
+	public static boolean isSufficientlyMature(Control control) {
+		Logger.getLogger(Control.class).debug("Control maturity: " + control.getMaturity());
+		return control.getMaturity() >= Control.SUFFICIENT_MATURITY;
 	}
 
 }

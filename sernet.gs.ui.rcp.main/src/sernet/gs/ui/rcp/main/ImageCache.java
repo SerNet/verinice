@@ -25,6 +25,23 @@ import java.util.Map;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 
+import sernet.verinice.iso27k.model.Asset;
+import sernet.verinice.iso27k.model.Audit;
+import sernet.verinice.iso27k.model.Control;
+import sernet.verinice.iso27k.model.Document;
+import sernet.verinice.iso27k.model.Evidence;
+import sernet.verinice.iso27k.model.Exception;
+import sernet.verinice.iso27k.model.Finding;
+import sernet.verinice.iso27k.model.IISO27kGroup;
+import sernet.verinice.iso27k.model.Incident;
+import sernet.verinice.iso27k.model.IncidentScenario;
+import sernet.verinice.iso27k.model.Interview;
+import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.iso27k.model.PersonIso;
+import sernet.verinice.iso27k.model.Requirement;
+import sernet.verinice.iso27k.model.Threat;
+import sernet.verinice.iso27k.model.Vulnerability;
+
 /**
  * URLs and ImageDescriptors for all images used by the application.
  * 
@@ -104,6 +121,7 @@ public class ImageCache {
 	public static final String VIEW_BROWSER = "tag.png";
 	public static final String VIEW_MASSNAHMEN = "de.png";
 	public static final String VIEW_BSIMODEL = "tree_explorer.gif";
+	public static final String VIEW_ISMVIEW = "sweetie-verinice/png/16-arrow-branch-bgr.png";
 	public static final String VIEW_DSMODEL = "shield.png";
 	public static final String VIEW_TODO = "24-em-check.png";
 	public static final String VIEW_AUDIT = "24-zoom.png";
@@ -168,6 +186,34 @@ public class ImageCache {
 	public static final String LINKED = "linked.gif";
 	
 	public static final String UNLINKED = "unlinked.gif";
+
+	/* ************************************************************************************************** */
+	// ISO 27000 icons - ISM Tree View:
+	public static final String ISO27K_ASSET 			= "sweetie-verinice/png/16-asset-grey.png";
+	public static final String ISO27K_THREAT 			= "sweetie-verinice/png/16-lightening.png";
+	public static final String ISO27K_VULNERABILITY 	= "sweetie-verinice/png/16-shield-blue-broken.png";
+	public static final String ISO27K_INCIDENT_SCENARIO = "sweetie-verinice/png/16-arrow-branch-bgr.png";
+	public static final String ISO27K_INCIDENT 			= "sweetie-verinice/png/16-arrow-incident-red.png";
+	public static final String ISO27K_REQUIREMENT 		= "sweetie-verinice/png/16-paper-gavel-alt.png";
+	public static final String ISO27K_EXCEPTION 		= "sweetie-verinice/png/16-paper-excerpt-yellow.png";
+	public static final String ISO27K_AUDIT 			= "sweetie-verinice/png/16-clipboard-audit.png";
+	public static final String ISO27K_INTERVIEW 		= "sweetie-verinice/png/16-clipboard-comment.png";
+	public static final String ISO27K_IMRPOVEMENT_NOTE 	= "sweetie-verinice/png/16-clipboard-report-bar.png";
+	public static final String ISO27K_EVIDENCE 			= "sweetie-verinice/png/16-clipboard-eye.png";
+	public static final String ISO27K_DOCUMENT 			= "mime-document.png";
+	public static final String ISO27K_RECORD 			= "mime-text.png";
+	public static final String ISO27K_SCOPE 			= "tree_explorer.gif";
+	public static final String ISO27K_PERSON 			= "user_suit.png";
+	public static final String ISO27K_FOLDER 			= "folder.png";
+
+	public static final String ISO27K_CONTROL			= "stufe_none.png";
+	public static final String ISO27K_CONTROL_NO		= "16-em-cross.png";
+	public static final String ISO27K_CONTROL_YES		= "16-em-check.png";
+	
+	// ISO 27k icons - other:
+	public static final String ISO27K_RISK = "sweetie-verinice/png/16-paper-calculate-percent.png";
+	/* ************************************************************************************************** */
+	
 	
 	private static ImageCache instance;
 
@@ -176,12 +222,46 @@ public class ImageCache {
 	
 	private final Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
 
+	// for ISO27k elements: map of <element type> : <icon name> 
+	private HashMap<String, String> iso27kIconMap;
+	
+	private ImageCache() {
+		iso27kIconMap = new HashMap<String, String>();
+		
+		// fill type map for iso27k icons:
+		iso27kIconMap.put(Organization.TYPE_ID, ImageCache.ISO27K_SCOPE);
+		iso27kIconMap.put(Asset.TYPE_ID, ImageCache.ISO27K_ASSET);
+		iso27kIconMap.put(Threat.TYPE_ID, ImageCache.ISO27K_THREAT);
+		iso27kIconMap.put(Vulnerability.TYPE_ID,
+											ImageCache.ISO27K_VULNERABILITY);
+		iso27kIconMap.put(IncidentScenario.TYPE_ID,
+											ImageCache.ISO27K_INCIDENT_SCENARIO);
+		iso27kIconMap.put(Incident.TYPE_ID, ImageCache.ISO27K_INCIDENT);
+		iso27kIconMap.put(Requirement.TYPE_ID, ImageCache.ISO27K_REQUIREMENT);
+		iso27kIconMap.put(Exception.TYPE_ID, ImageCache.ISO27K_EXCEPTION);
+		iso27kIconMap.put(Audit.TYPE_ID, ImageCache.ISO27K_AUDIT);
+		iso27kIconMap.put(Interview.TYPE_ID, ImageCache.ISO27K_INTERVIEW);
+		iso27kIconMap.put(Finding.TYPE_ID, ImageCache.ISO27K_IMRPOVEMENT_NOTE);
+		iso27kIconMap.put(Evidence.TYPE_ID, ImageCache.ISO27K_EVIDENCE);
+		iso27kIconMap.put(Document.TYPE_ID, ImageCache.ISO27K_DOCUMENT);
+		iso27kIconMap.put(PersonIso.TYPE_ID, ImageCache.ISO27K_PERSON);
+		iso27kIconMap.put(Control.TYPE_ID,   ImageCache.ISO27K_CONTROL);
+	}
+
 	public static ImageCache getInstance() {
 		if (instance == null) {
 			instance = new ImageCache();
 			imagePath = Activator.getDefault().getBundle().getEntry("icons/");
 		}
 		return instance;
+	}
+	
+	public Image getISO27kTypeImage(String typeId) {
+		String imageUrl = iso27kIconMap.get(typeId);
+		if (typeId == null || imageUrl == null)
+			return getImage(ImageCache.UNKNOWN);
+		
+		return getImage(imageUrl);
 	}
 	
 	public ImageDescriptor getImageDescriptor(String url) {

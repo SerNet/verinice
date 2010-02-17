@@ -183,7 +183,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 
 			public void closed(BSIModel model) {
 				removeModelListeners();
-				//viewer.setInput(null);
+				viewer.setInput(new PlaceHolder("Datenbank geschlossen."));
 			}
 
 			public void loaded(BSIModel model) {

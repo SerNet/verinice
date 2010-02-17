@@ -29,7 +29,7 @@ import sernet.hui.common.connect.Entity;
 public class EvidenceGroup extends Group<Asset> {
 
 	public static final String TYPE_ID = "evidence_group"; //$NON-NLS-1$
-	public static final String TITLE_DEFAULT = "Evidences"; //$NON-NLS-1$
+	public static final String TITLE_DEFAULT = "Audits: Evidence"; //$NON-NLS-1$
 	public static final String PROP_NAME = "evidence_group_name"; //$NON-NLS-1$
 	
 	public static final String[] CHILD_TYPES = new String[] {Evidence.TYPE_ID};

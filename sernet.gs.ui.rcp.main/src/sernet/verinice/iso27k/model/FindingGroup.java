@@ -29,7 +29,7 @@ import sernet.hui.common.connect.Entity;
 public class FindingGroup extends Group<Asset> {
 
 	public static final String TYPE_ID = "finding_group"; //$NON-NLS-1$
-	public static final String TITLE_DEFAULT = "Findings"; //$NON-NLS-1$
+	public static final String TITLE_DEFAULT = "Audits: Improvement Notes"; //$NON-NLS-1$
 	public static final String PROP_NAME = "finding_group_name"; //$NON-NLS-1$
 	
 	public static final String[] CHILD_TYPES = new String[] {Finding.TYPE_ID};
