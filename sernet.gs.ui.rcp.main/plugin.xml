@@ -17,7 +17,7 @@
             class="sernet.gs.ui.rcp.main.Perspective"
             icon="icons/de.png"
             id="sernet.gs.ui.rcp.main.perspective"
-            name="Datensicherheit">
+            name="BSI Grundschutz">
       </perspective>
       <perspective
             class="sernet.gs.ui.rcp.main.PerspectiveDS"
@@ -27,7 +27,7 @@
       <perspective
             class="sernet.verinice.iso27k.rcp.Iso27kPerspective"
             id="sernet.verinice.iso27k.rcp.Iso27kPerspective"
-            name="ISO 27000 Perspective">
+            name="ISO 27000">
       </perspective>
    </extension>
    <extension
