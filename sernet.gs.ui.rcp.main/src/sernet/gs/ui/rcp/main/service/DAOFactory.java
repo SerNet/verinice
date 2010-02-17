@@ -70,6 +70,7 @@ import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
 import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
 import sernet.gs.ui.rcp.main.ds.model.Zweckbestimmung;
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.iso27k.model.Asset;
 import sernet.verinice.iso27k.model.AssetGroup;
@@ -166,6 +167,13 @@ public class DAOFactory {
 	 */
 	public void setPropertyListDao(IBaseDao<PropertyList, Integer> propertyListDao) {
 		daos.put(PropertyList.class, propertyListDao);
+	}
+	
+	/**
+	 * Setter method used by spring to inject DAO.
+	 */
+	public void setPropertyDao(IBaseDao<Property, Integer> propertyDao) {
+		daos.put(Property.class, propertyDao);
 	}
 
 	/**
