@@ -18,12 +18,20 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.IAuthService;
+import sernet.gs.ui.rcp.main.service.ICommandService;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
+import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
+import sernet.gs.ui.rcp.main.service.commands.UsernameExistsRuntimeException;
 import sernet.hui.common.connect.Property;
 
 /**
@@ -41,6 +49,8 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 	private boolean updatePassword;
 
 	private transient IAuthService authService;
+	
+	private transient IBaseDao<T, Serializable> dao;
 
 	/**
 	 * Save a configuration item
@@ -55,18 +65,53 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 		this.updatePassword = updatePassword;
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+	 */
 	public void execute() {
-		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
+		// check if username is unique
+		checkUsername(element);
+		
 		if (updatePassword) {
 			hashPassword();
 		}
-		element = dao.merge(element);
+		
+		element = getDao().merge(element);
 
 		// The roles may have been modified. As such the server needs to throw
 		// away its
+		
 		// cached role data.
 		getCommandService().discardRoleMap();
 	}
+
+	/**
+	 * Checks if the username in a {@link Configuration} is unique in the database.
+	 * Throws {@link UsernameExistsRuntimeException} if username is not available.
+	 * If username is not set or null no exception is thrown
+	 * 
+	 * @param element a {@link Configuration}
+	 * @throws UsernameExistsRuntimeException if username is not available
+	 */
+	private void checkUsername(T element) throws UsernameExistsRuntimeException {
+		if(element!=null && element.getEntity()!=null && element.getEntity().getProperties(Configuration.PROP_USERNAME)!=null) {
+			Property usernameProperty = element.getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0);
+			if(usernameProperty!=null && usernameProperty.getPropertyValue()!=null) {
+				String username = usernameProperty.getPropertyValue();
+				
+				DetachedCriteria criteria = DetachedCriteria.forClass(Property.class);
+				criteria.add(Restrictions.eq("propertyType", Configuration.PROP_USERNAME));
+				criteria.add(Restrictions.eq("propertyValue", username));
+				
+				List<T> resultList = getDao().findByCriteria(criteria);
+				if(resultList!=null && !resultList.isEmpty()) {
+					throw new UsernameExistsRuntimeException(username,"Username already exists: " + username);
+				}
+			}
+		}
+	}
+
 
 	private void hashPassword() {
 		Property passProperty = element.getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0);
@@ -87,5 +132,17 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 	public void setAuthService(IAuthService service) {
 		this.authService = service;
 	}
+	
+	public IBaseDao<T, Serializable> getDao() {
+		if (dao == null) {
+			dao = createDao();
+		}
+		return dao;
+	}
+
+	private IBaseDao<T, Serializable> createDao() {
+		return (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
+	}
+
 
 }

@@ -18,11 +18,17 @@
 package sernet.gs.ui.rcp.main.service;
 
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
+import sernet.gs.ui.rcp.main.service.commands.UsernameExistsRuntimeException;
 
 public class BaseExceptionHandler implements ICommandExceptionHandler {
 
 	public void handle(Exception e) throws CommandException {
-		throw new CommandException("Ausführungsfehler in DB-Service-Layer\n\n", getDetails(e));
+		if(e instanceof UsernameExistsRuntimeException) {
+			throw new UsernameExistsException(e);
+		} else {
+			throw new CommandException("Ausführungsfehler in DB-Service-Layer\n\n", getDetails(e));
+		}
 	}
 
 	/**

@@ -28,6 +28,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
@@ -43,8 +44,10 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
+import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveConfiguration;
@@ -54,6 +57,8 @@ import sernet.hui.common.connect.Property;
 
 public class ConfigurationAction implements IObjectActionDelegate {
 
+	private static final Logger LOG = Logger.getLogger(ConfigurationAction.class);
+	
 	public static final String ID = "sernet.gs.ui.rcp.main.personconfiguration";
 
 	private static final String[] ALLOWED_ROLES = new String[] { ApplicationRoles.ROLE_ADMIN };
@@ -63,11 +68,14 @@ public class ConfigurationAction implements IObjectActionDelegate {
 	private IWorkbenchPart targetPart;
 
 	private String oldPassword;
+	
+	ICommandService commandService;
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		this.targetPart = targetPart;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		Activator.inheritVeriniceContextState();
 
@@ -98,14 +106,14 @@ public class ConfigurationAction implements IObjectActionDelegate {
 					elmt = (Person) o;
 				}
 
-				Logger.getLogger(this.getClass()).debug("Loading configuration for user " + elmt.getTitle());
+				LOG.debug("Loading configuration for user " + elmt.getTitle());
 				LoadConfiguration command = new LoadConfiguration(elmt);
 				command = ServiceFactory.lookupCommandService().executeCommand(command);
 				configuration = command.getConfiguration();
 
 				if (configuration == null) {
 					// create new configuration
-					Logger.getLogger(this.getClass()).debug("No config found, creating new configuration object.");
+					LOG.debug("No config found, creating new configuration object.");
 					CreateConfiguration command2 = new CreateConfiguration(elmt);
 					command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
 					configuration = command2.getConfiguration();
@@ -120,7 +128,7 @@ public class ConfigurationAction implements IObjectActionDelegate {
 		}
 
 		emptyPasswordField(configuration.getEntity());
-
+		
 		final BulkEditDialog dialog = new BulkEditDialog(window.getShell(), entType, true, "Benutzereinstellungen", configuration.getEntity());
 		if (dialog.open() != Window.OK) {
 			return;
@@ -136,20 +144,30 @@ public class ConfigurationAction implements IObjectActionDelegate {
 					// save configuration:
 					SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, updatePassword);
 					try {
-						command = ServiceFactory.lookupCommandService().executeCommand(command);
-					} catch (CommandException e) {
+						command = getCommandService().executeCommand(command);
+					} catch (final UsernameExistsException e) {
+						LOG.info("Configuration can not be saved. Username exists: " + e.getUsername());
+						if (LOG.isDebugEnabled()) {
+							LOG.debug("stacktrace: ", e);
+						}
+						Display.getDefault().syncExec(new Runnable() {
+							public void run() {
+								MessageDialog.openError(Display.getDefault().getActiveShell(), "Username is not available", "User settings could not be saved. Username '" + e.getUsername() + "' is not available. Choose a different username.");
+							}
+						});	
+					} catch (Exception e) {
+						LOG.error("Error while saving configuration.", e);
 						ExceptionUtil.log(e, "Fehler beim Speichern der Konfiguration.");
 					}
 				}
 
 			});
-		} catch (InvocationTargetException e) {
+		} catch (Exception e) {
+			LOG.error("Error while saving configuration.", e);
 			ExceptionUtil.log(e, "Fehler beim Speichern der Konfiguration.");
-		} catch (InterruptedException e) {
-			ExceptionUtil.log(e, "Abgebrochen.");
-		}
-
+		} 
 	}
+
 
 	/**
 	 * Remove (hashed) password from field, save hash in case user does NOT
@@ -203,6 +221,17 @@ public class ConfigurationAction implements IObjectActionDelegate {
 
 			action.setEnabled(b);
 		}
+	}
+	
+	public ICommandService getCommandService() {
+		if (commandService == null) {
+			commandService = createCommandServive();
+		}
+		return commandService;
+	}
+
+	private ICommandService createCommandServive() {
+		return ServiceFactory.lookupCommandService();
 	}
 
 }
