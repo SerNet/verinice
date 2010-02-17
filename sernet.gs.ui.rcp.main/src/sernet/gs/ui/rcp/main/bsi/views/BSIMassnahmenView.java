@@ -55,11 +55,13 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIMassnahmenViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.CopyBSIMassnahmenViewAction;
 import sernet.gs.ui.rcp.main.bsi.filter.GefaehrdungenFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
+import sernet.verinice.rcp.IAttachedToPerspective;
 
 /**
  * View for parsed BSI IT-Grundschutz catalogues.
@@ -68,7 +70,7 @@ import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class BSIMassnahmenView extends ViewPart {
+public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspective {
 
 	private static class KapitelSorter extends ViewerSorter {
 		@Override
@@ -320,14 +322,6 @@ public class BSIMassnahmenView extends ViewPart {
 		menuManager.add(collapseAction);
 	}
 
-	@Override
-	public void dispose() {
-
-		// if (clipboard != null)
-		// clipboard.dispose();
-		// super.dispose();
-	}
-
 	// public Clipboard getClipboard() {
 	// if (clipboard == null) {
 	// clipboard = new Clipboard(getSite().getShell().getDisplay());
@@ -349,6 +343,13 @@ public class BSIMassnahmenView extends ViewPart {
 
 	public IStructuredSelection getSelection() {
 		return (IStructuredSelection) viewer.getSelection();
+	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
+	 */
+	public String getPerspectiveId() {
+		return Perspective.ID;
 	}
 
 }
