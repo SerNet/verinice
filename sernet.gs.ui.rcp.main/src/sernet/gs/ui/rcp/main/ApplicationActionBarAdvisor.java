@@ -29,9 +29,11 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.OpenPerspectiveAction;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
+import org.eclipse.ui.internal.ChangeToPerspectiveMenu;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.cheatsheets.actions.CheatSheetCategoryBasedSelectionAction;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
@@ -64,6 +66,7 @@ import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
+import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of
@@ -119,6 +122,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private OpenViewAction openRelationViewAction;
 	
 	private OpenMultipleViewAction openCatalogAction;
+	
+	private OpenPerspectiveAction openIsoPerspective;
 	
 	private IWorkbenchAction copyAction;
 
@@ -371,18 +376,29 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		viewsMenu.add(openRelationViewAction);
 		viewsMenu.add(openCatalogAction);
 		// viewsMenu.add(viewList);
-
-//		MenuManager perspectivesMenu = new MenuManager("Öffne Perspektive...");
-//		IContributionItem perspectiveList = ContributionItemFactory.PERSPECTIVES_SHORTLIST
-//				.create(window);
-//		perspectivesMenu.add(perspectiveList);
+		MenuManager perspectivesMenu = new MenuManager("Öffne Perspektive...");
+		addPerspectiveMenu(window,perspectivesMenu,Iso27kPerspective.ID);
+		addPerspectiveMenu(window,perspectivesMenu,Perspective.ID);
 
 		windowMenu.add(newWindowAction);
 		windowMenu.add(reloadAction);
 		windowMenu.add(new Separator());
-//		windowMenu.add(perspectivesMenu);
+		windowMenu.add(perspectivesMenu);
 		windowMenu.add(viewsMenu);
 		return windowMenu;
+	}
+
+
+	/**
+	 * @param window
+	 * @param perspectivesMenu
+	 * @param id
+	 */
+	private void addPerspectiveMenu(IWorkbenchWindow window, MenuManager perspectivesMenu, String perspectiveId) {
+		perspectivesMenu.add(new OpenPerspectiveAction(
+				window, 
+				window.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId(perspectiveId),
+				new ChangeToPerspectiveMenu(window,perspectiveId)));	
 	}
 
 	protected void fillCoolBar(ICoolBarManager coolBar) {
@@ -395,25 +411,29 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		myToolbar.add(accessControlEditAction);
 		myToolbar.add(konsolidatorAction);
 
-		myToolbar.add(new Separator());
 		myToolbar.add(reloadAction);
 		
 		myToolbar.add(new Separator());
+		// Grundschutz items
 		myToolbar.add(openBSIViewAction);
 		myToolbar.add(openBSIModelViewAction);
-		myToolbar.add(openISMViewAction);
-		myToolbar.add(openBSIBrowserAction);
 		myToolbar.add(openTodoViewAction);
 		myToolbar.add(openAuditViewAction);
 		myToolbar.add(openDSViewAction);
 		myToolbar.add(openChartViewAction);
 		myToolbar.add(openDocumentViewAction);
+		
+		myToolbar.add(new Separator());
+		// ISO 27k items
+		myToolbar.add(openISMViewAction);
+		myToolbar.add(openCatalogAction);
+		
+		myToolbar.add(new Separator());
+		// common items
+		myToolbar.add(openBSIBrowserAction);
 		myToolbar.add(openNoteAction);
 		myToolbar.add(openFileAction);
 		myToolbar.add(openRelationViewAction);
-		myToolbar.add(openCatalogAction);
-		
-		//myToolbar.add(openDSViewAction);
 	}
 	
 	
