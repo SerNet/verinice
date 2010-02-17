@@ -128,8 +128,8 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 		    // create the tree
 		    catalog.processItemBuffer();
 		    
-		    if (getLog().isInfoEnabled()) {
-		    	getLog().info(catalog);
+		    if (getLog().isDebugEnabled()) {
+		    	getLog().debug(catalog);
 			}
 		    
 		} catch(IOException e) {
