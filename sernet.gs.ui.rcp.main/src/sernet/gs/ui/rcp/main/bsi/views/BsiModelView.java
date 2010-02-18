@@ -21,6 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.action.Action;
@@ -75,18 +80,18 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
-import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewCloseDBAction;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewFilterAction;
-import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewOpenDBAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.rcp.IAttachedToPerspective;
 
@@ -101,6 +106,8 @@ import sernet.verinice.rcp.IAttachedToPerspective;
  */
 public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 
+	private static final Logger LOG = Logger.getLogger(BsiModelView.class);
+	
 	public static final String ID = "sernet.gs.ui.rcp.main.views.bsimodelview"; //$NON-NLS-1$
 
 	private Action doubleClickAction;
@@ -124,10 +131,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		}
 	};
 
-	private Action openDBAction;
-
-	private BSIModelViewCloseDBAction closeDBAction;
-
 	private Action expandAllAction;
 
 	private Action collapseAction;
@@ -147,6 +150,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	private BausteinZuordnungAction bausteinZuordnungAction;
 
 	private MetaDropAdapter dropAdapter;
+	
+	private IModelLoadListener modelLoadListener;
 
 	public void setNullModel() {
 		model = new NullModel();
@@ -180,6 +185,16 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		try {
+			initView(parent);
+			startInitDataJob();
+		} catch (Exception e) {
+			LOG.error("Error while creating organization view", e);
+			ExceptionUtil.log(e, "Error while opening ISM-View.");
+		}
+	}
+
+	private void initView(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		viewer.setContentProvider(contentProvider = new BSIModelViewContentProvider(cache));
@@ -197,7 +212,45 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		fillLocalToolBar();
 		Activator.getDefault().getPluginPreferences().addPropertyChangeListener(this.prefChangeListener);
 		setNullModel();
-
+	}
+	
+	/**
+	 * 
+	 */
+	protected void startInitDataJob() {
+		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				IStatus status = Status.OK_STATUS;
+				try {
+					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+					initData();
+				} catch (Exception e) {
+					LOG.error("Error while loading data.", e);
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+				} finally {
+					monitor.done();
+				}
+				return status;
+			}
+		};
+		JobScheduler.scheduleInitJob(initDataJob);		
+	}
+	
+	private void initData() {
+		if(CnAElementFactory.isModelLoaded()) {
+			setModel(CnAElementFactory.getLoadedModel());
+		} else if(modelLoadListener==null) {
+			// model is not loaded yet: add a listener to load data when it's laoded
+			modelLoadListener = new IModelLoadListener() {
+				public void closed(BSIModel model) {
+					// nothing to do
+				}
+				public void loaded(BSIModel model) {
+					startInitDataJob();
+				}		
+			};
+			CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+		}
 	}
 
 	private void hookGlobalActions() {
@@ -222,8 +275,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		manager.add(collapseAction);
 
 		manager.add(new Separator());
-		manager.add(this.openDBAction);
-		manager.add(closeDBAction);
 
 	}
 
@@ -238,8 +289,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	private void fillLocalToolBar() {
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager manager = bars.getToolBarManager();
-		manager.add(this.openDBAction);
-		manager.add(this.closeDBAction);
 		manager.add(this.filterAction);
 		// manager.add(expandAllAction);
 
@@ -375,10 +424,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		collapseAction.setText("Alle zuklappen");
 		collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
-		openDBAction = new BSIModelViewOpenDBAction(this, viewer);
-
-		closeDBAction = new BSIModelViewCloseDBAction(this, viewer);
-
 		dropAdapter = new MetaDropAdapter(viewer);
 		dropAdapter.addAdapter(new BSIModelViewDropPerformer());
 
@@ -399,16 +444,11 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 
 	private void createPullDownMenu() {
 		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
-		menuManager.add(openDBAction);
-		menuManager.add(closeDBAction);
 		menuManager.add(filterAction);
 		menuManager.add(expandAllAction);
 		menuManager.add(collapseAction);
 
 		menuManager.add(new Separator());
-		// menuManager.add(copyAction);
-		// menuManager.add(pasteAction);
-
 	}
 
 	public void setModel(BSIModel model2) {
