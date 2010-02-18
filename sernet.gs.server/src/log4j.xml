@@ -14,7 +14,7 @@
 
 	<appender name="FILE" class="org.apache.log4j.RollingFileAppender">
 		<!-- <param name="Threshold" value="INFO" /> -->
-		<param name="File" value="verinice-server.log" />
+		<param name="File" value="${catalina.home}/logs/verinice-server.log" />
 		<param name="Append" value="true" />
 		<param name="MaxFileSize" value="10000KB" />
 		<param name="MaxBackupIndex" value="5" />
@@ -22,18 +22,6 @@
 			<param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
 		</layout>
 	</appender>
-
-	<!-- Logger for verinice -->
-	<logger name="sernet">
-		<level value="DEBUG" />
-	</logger>
-	
-	<!-- Runtime Logger -->
-	<!--
-	<logger name="sernet.gs.server.RuntimeLogger">
-		<level value="DEBUG" />
-	</logger>
-	-->
 	
 	<!-- Logging verinice Command-Service -->
 	<!--
@@ -48,53 +36,30 @@
 		<level value="DEBUG" />
 	</logger>
 	-->
-
-	<!--
-	<logger name="org.springframework.osgi.extender"> 
-		<level value="INFO"/>
-	</logger>
-	-->
 	
 	<!-- Hibernate Logging -->
-	<!--
-	<logger name="org.hibernate">
-		<level value="INFO" />
-	</logger>
-	-->
-	<!--
-	<logger name="org.hibernate.cache">
-		<level value="INFO" />
-	</logger>
-	-->
-	
-	<!-- c3p0 logging -->
-	<!--
-	<logger name="com.mchange.v2.c3p0">
-		<level value="DEBUG" />
-	</logger>
-	-->
-	
 	<!-- SQL -->
 	<!--
 	<logger name="org.hibernate.SQL">
 		<level value="DEBUG" />
 	</logger>
 	-->
-	
 	<!-- SQL Parameter -->
 	<!--
 	<logger name="org.hibernate.type">
 		<level value="TRACE" />
 	</logger>
 	-->
-
+	
+	<!-- Logger for verinice -->
+	<logger name="sernet">
+		<level value="INFO" />
+	</logger>
 
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
-		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
-		
 	</root>
 
 </log4j:configuration>
