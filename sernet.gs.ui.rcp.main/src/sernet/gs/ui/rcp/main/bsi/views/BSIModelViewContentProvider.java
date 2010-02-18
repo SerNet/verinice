@@ -17,23 +17,18 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
-import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadLinksDown;
 
 /**
  * Content provider for BSI model elements.
@@ -79,44 +74,14 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 				newElement = loadChildren(el);
 				el.replace(newElement);
 				el = newElement;
-				CnATreeElement[] children = el.getChildrenAsArray();
-				// TODO akoderman links only displayed in relationView
-//				if (el.getLinksDown().size() > 0) {
-//					// add linkkategorie object:
-//					Object[] result = new Object[children.length + 1];
-//					System.arraycopy(children, 0, result, 0, children.length);
-//					result[children.length] = el.getLinks();
-//					return result;
-//				} else {
-					return children;
-//				}
+				return el.getChildrenAsArray();
 			} catch (CommandException e) {
 				log.error("Error while loading child elements", e);
 				ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
 			}
 		}
-
-//		else if (parent instanceof LinkKategorie) {
-//			try {
-//				LinkKategorie linkKategorie = (LinkKategorie) parent;
-//				CnATreeElement el = linkKategorie.getParent();
-//				Set<CnALink> linkDownSet = loadLinksDown(el);
-//				el.setLinksDown(linkDownSet);
-//				return linkDownSet.toArray();
-//			} catch (CommandException e) {
-//				log.error("Error while loading child elements", e);
-//				ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
-//			}
-//		}
-
 		return null;
 	}
-	
-//	private Set<CnALink> loadLinksDown(CnATreeElement element) throws CommandException {
-//		LoadLinksDown command = new LoadLinksDown(element);
-//		command = ServiceFactory.lookupCommandService().executeCommand(command);
-//		return command.getLinksDown();
-//	}
 
 	private CnATreeElement loadChildren(CnATreeElement el) throws CommandException {
 		if (el.isChildrenLoaded()) {
@@ -168,14 +133,6 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 			CnATreeElement el = (CnATreeElement) child;
 			return el.getParent();
 		} 
-//		else if (child instanceof LinkKategorie) {
-//			LinkKategorie kat = (LinkKategorie) child;
-//			return kat.getParent();
-//		}
-//		else if (child instanceof CnALink) {
-//			CnALink link = (CnALink) child;
-//			return link.getParent();
-//		}
 		return null;
 	}
 
@@ -198,10 +155,6 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 			}
 
 		}
-//		if (parent instanceof LinkKategorie) {
-//			LinkKategorie kat = (LinkKategorie) parent;
-//			return kat.getChildren().size() > 0;
-//		}
 		return false;
 	}
 
