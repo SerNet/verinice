@@ -34,6 +34,8 @@ import sernet.hui.common.VeriniceContext;
  */
 public class ServerInitializer {
 	
+	private final Logger log = Logger.getLogger(ServerInitializer.class);
+	
 	private static VeriniceContext.State state;
 	
 	private IHibernateCommandService hibernateCommandService;
@@ -85,7 +87,10 @@ public class ServerInitializer {
 		try {
 			gsScraperUtil.getModel().loadBausteine(nullMonitor);
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error("Error while loading Grundschutzkataloge", e);
+			log.error("Fehler beim Laden der Grundschutzkataloge: " + e.getMessage());
+			if (log.isDebugEnabled()) {
+				log.debug("stacktrace: " + e);
+			}
 		}
 	}
 
