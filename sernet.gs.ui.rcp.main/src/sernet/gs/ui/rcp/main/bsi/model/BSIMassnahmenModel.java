@@ -50,6 +50,8 @@ import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 
 public class BSIMassnahmenModel {
 	
+	private static final Logger LOG = Logger.getLogger(BSIMassnahmenModel.class);
+	
 	private static final Logger log = Logger.getLogger(BSIMassnahmenModel.class);
 
 	private static final String DS_B01005_BFDI = "b01005_bfdi"; //$NON-NLS-1$
@@ -114,8 +116,10 @@ public class BSIMassnahmenModel {
 				else
 					gsSource = new URLGSSource(gsPath);
 			} catch (IOException e) {
-				Logger.getLogger(BSIMassnahmenModel.class).error(
-						"GS-Kataloge nicht gefunden.", e); //$NON-NLS-1$
+				LOG.error("GS-Kataloge nicht gefunden: " + gsPath + " Download unter: https://www.bsi.bund.de"); //$NON-NLS-1$
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("stacktrace: ", e);
+				}
 				return null;
 			}
 
