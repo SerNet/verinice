@@ -14,7 +14,7 @@
 
 	<appender name="FILE" class="org.apache.log4j.RollingFileAppender">
 		<!-- <param name="Threshold" value="INFO" /> -->
-		<param name="File" value="./verinice-client.log" />
+		<param name="File" value="verinice-client.log" />
 		<param name="Append" value="true" />
 		<param name="MaxFileSize" value="10000KB" />
 		<param name="MaxBackupIndex" value="5" />
@@ -22,6 +22,12 @@
 			<param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
 		</layout>
 	</appender>
+	
+	<!-- Pax logs superfluous warning on system startup -->
+	<logger name="org.ops4j.pax.web.service.internal.ConfigurationImpl">
+		<level value="ERROR" />
+	</logger>
+	
 
 	<!-- Logger for verinice -->
 	<!--
@@ -37,10 +43,10 @@
 	</logger>
 	-->
 
-
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
+		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 	</root>
 
