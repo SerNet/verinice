@@ -14,7 +14,7 @@
 
 	<appender name="FILE" class="org.apache.log4j.RollingFileAppender">
 		<!-- <param name="Threshold" value="INFO" /> -->
-		<param name="File" value="verinice-client.log" />
+		<param name="File" value="./verinice-client.log" />
 		<param name="Append" value="true" />
 		<param name="MaxFileSize" value="10000KB" />
 		<param name="MaxBackupIndex" value="5" />
@@ -24,21 +24,9 @@
 	</appender>
 
 	<!-- Logger for verinice -->
-	
+	<!--
 	<logger name="sernet">
 		<level value="DEBUG" />
-	</logger>
-
-	<!--
-	<logger name="org.springframework.osgi.extender">
-		<level value="INFO" />
-	</logger>
-	-->
-
-	<!-- Logger for embedded Servlet container -->
-	<!--
-	<logger name="org.ops4j.pax.web">
-		<level value="INFO" />
 	</logger>
 	-->
 
@@ -53,7 +41,7 @@
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
 	</root>
 
 </log4j:configuration>
