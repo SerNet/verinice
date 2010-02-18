@@ -79,14 +79,11 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
  * @author r.schuster@tarent.de
  * 
  */
-public abstract class GenericMassnahmenView extends ViewPart implements
-		IMassnahmenListView {
+public abstract class GenericMassnahmenView extends ViewPart implements IMassnahmenListView {
 
-	private static final Logger log = Logger
-			.getLogger(GenericMassnahmenView.class);
+	private static final Logger log = Logger.getLogger(GenericMassnahmenView.class);
 
-	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views."
-			+ "todoview"; //$NON-NLS-1$
+	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." + "todoview"; //$NON-NLS-1$
 
 	/**
 	 * Implementation of {@link ContributionItem} which allows choosing one of
@@ -155,8 +152,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 						// As long as the loading is in progress, no other
 						// IT-Verbund may be selected.
 						combo.setEnabled(false);
-						GenericMassnahmenView.this.loadMeasures(elements
-								.get(s - 1));
+						GenericMassnahmenView.this.loadMeasures(elements.get(s - 1));
 					}
 				}
 
@@ -178,10 +174,11 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 		 */
 		ITVerbund getSelectedCompound() {
 			int s = combo.getSelectionIndex();
-			if (s == 0)
+			if (s == 0) {
 				return null;
-			else
+			} else {
 				return elements.get(s - 1);
+			}
 		}
 
 		/**
@@ -201,8 +198,9 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 		 * @param compound
 		 */
 		void setSelectedCompound(ITVerbund compound) {
-			if (compound == null)
+			if (compound == null) {
 				combo.select(0);
+			}
 
 			int count = 0;
 			for (ITVerbund c : elements) {
@@ -233,8 +231,9 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 		 */
 		boolean isSelectedCompound(ITVerbund compound) {
 			int s = combo.getSelectionIndex();
-			if (s == 0)
+			if (s == 0) {
 				return false;
+			}
 
 			return elements.get(s - 1).equals(compound);
 		}
@@ -251,8 +250,9 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 		 * @param b
 		 */
 		void setEnabled(boolean b) {
-			if (combo != null)
+			if (combo != null) {
 				combo.setEnabled(b);
+			}
 		}
 
 		/**
@@ -271,8 +271,9 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 
 			this.elements = elements;
 
-			for (ITVerbund c : elements)
+			for (ITVerbund c : elements) {
 				combo.add(c.getTitle());
+			}
 		}
 
 		/**
@@ -319,56 +320,48 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 			}
 
 			i = 0;
-			for (ITVerbund c : elements)
-			{
-				if (c.equals(compound))
-				{
+			for (ITVerbund c : elements) {
+				if (c.equals(compound)) {
 					combo.remove(i + 1);
 					elements.remove(i);
-					
+
 					return;
 				}
-				
+
 				i++;
 			}
 		}
-		
+
 		/**
 		 * Updates a compound when it was modified.
 		 * 
 		 * <p>
-		 * This method is to be called when a compound was changed in the
-		 * DB.
+		 * This method is to be called when a compound was changed in the DB.
 		 * </p>
 		 * 
 		 * @param compound
 		 */
 		void compoundChanged(ITVerbund compound) {
 			int i = 0;
-			for (ITVerbund c : elements)
-			{
-				if (c.equals(compound))
-				{
+			for (ITVerbund c : elements) {
+				if (c.equals(compound)) {
 					elements.set(i, compound);
-					if (combo.getSelectionIndex() == i + 1)
-					{
+					if (combo.getSelectionIndex() == i + 1) {
 						combo.setItem(i + 1, compound.getTitle());
 						combo.select(i + 1);
-					}
-					else
-					{
+					} else {
 						combo.setItem(i + 1, compound.getTitle());
 					}
-					
+
 					return;
 				}
-				
+
 				i++;
 			}
 		}
 
 	}
-	
+
 	/**
 	 * TODO rschuster: This class shares much functionality with
 	 * MassnahmenUmsetzungContentProvider. It would be better to move it there.
@@ -396,8 +389,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 				public void run() {
 					if (CnAElementHome.getInstance().isOpen()) {
 						// Connection still open -> explicit reload
-						lastSelectedCompound = compoundChoser
-								.getSelectedCompound();
+						lastSelectedCompound = compoundChoser.getSelectedCompound();
 					} else {
 						// Connection closed -> throw away compound information
 						lastSelectedCompound = null;
@@ -449,8 +441,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 
 	private MassnahmenCompoundChoser compoundChoser = new MassnahmenCompoundChoser();
 
-	private MassnahmenUmsetzungContentProvider contentProvider = new MassnahmenUmsetzungContentProvider(
-			this);
+	private MassnahmenUmsetzungContentProvider contentProvider = new MassnahmenUmsetzungContentProvider(this);
 
 	protected abstract ILabelProvider createLabelProvider();
 
@@ -469,44 +460,39 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 		//
 		// A is put into memory now, since it is regarded as being
 		// more recent.
-		viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | 
-				SWT.MULTI | SWT.FULL_SELECTION)
-		{
+		viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION) {
+			@Override
 			@SuppressWarnings("unchecked")
-			public void update(Object o, String[] props)
-			{
+			public void update(Object o, String[] props) {
 				// Access the list containing the elements directly
 				List<Object> list = (List<Object>) getInput();
-				
+
 				// Find the old instance using the new one. Works because
 				// old.equals(new) holds (even if certain properties differ!).
 				int index = list.indexOf(o);
-				
+
 				// Find out whether the element really is being regarded.
-				if (index >= 0)
-				{
+				if (index >= 0) {
 					// Replace the object in memory with the one from the DB.
 					list.set(index, o);
-					
-					// Look up whether there is a widget for the object in question.
+
+					// Look up whether there is a widget for the object in
+					// question.
 					Widget w = doFindItem(o);
-					if (w != null)
-					{
+					if (w != null) {
 						// Replace the object in the widget as well.
 						w.setData(o);
-						
-						// Provokes a refresh the line that changed. 
+
+						// Provokes a refresh the line that changed.
 						super.update(o, props);
-					}
-					else
-					{
+					} else {
 						// There is no widget for the element in question. Do a
 						// refresh() so one is created.
 						refresh();
 					}
-					
+
 				}
-				
+
 			}
 		};
 
@@ -547,10 +533,11 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 	 * </p>
 	 */
 	void resetTable(boolean choseMessage) {
-		if (choseMessage)
+		if (choseMessage) {
 			viewer.setInput(new PlaceHolder("IT-Verbund wählen."));
-		else
+		} else {
 			viewer.setInput(new ArrayList<Object>());
+		}
 	}
 
 	/**
@@ -589,17 +576,15 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 		viewer.setInput(new PlaceHolder("Lade IT-Verbunde..."));
 
 		WorkspaceJob job = new WorkspaceJob("Lade IT-Verbunde...") {
+			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
 
 				try {
 					monitor.setTaskName("");
-					LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<ITVerbund>(
-							ITVerbund.class);
-					compoundLoader = ServiceFactory.lookupCommandService()
-							.executeCommand(compoundLoader);
-					final List<ITVerbund> elements = compoundLoader
-							.getElements();
+					LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<ITVerbund>(ITVerbund.class);
+					compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
+					final List<ITVerbund> elements = compoundLoader.getElements();
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
 							compoundChoser.setElements(elements);
@@ -627,8 +612,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 
 							// Place a message that asks the user to chose a
 							// compound.
-							viewer.setInput(new PlaceHolder(
-									"IT-Verbund wählen."));
+							viewer.setInput(new PlaceHolder("IT-Verbund wählen."));
 						}
 
 					});
@@ -654,10 +638,11 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 	 */
 	public final void reloadMeasures() {
 		ITVerbund compound = compoundChoser.getSelectedCompound();
-		if (compound == null)
+		if (compound == null) {
 			log.warn("No IT-Verbund was selected during reload.");
-		else
+		} else {
 			loadMeasures(compound);
+		}
 	}
 
 	protected abstract String getMeasureLoadPlaceholderLabel();
@@ -692,15 +677,14 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 		viewer.setInput(new PlaceHolder(getMeasureLoadPlaceholderLabel()));
 
 		WorkspaceJob job = new WorkspaceJob(getMeasureLoadJobLabel()) {
+			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
 
 				try {
 					monitor.setTaskName(getMeasureLoadTaskLabel());
-					FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(
-							itVerbund.getDbId());
-					command = ServiceFactory.lookupCommandService()
-							.executeCommand(command);
+					FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(itVerbund.getDbId());
+					command = ServiceFactory.lookupCommandService().executeCommand(command);
 					final List<TodoViewItem> allMassnahmen = command.getAll();
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
@@ -725,13 +709,10 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 
 	}
 
-	protected abstract Action createFilterAction(
-			MassnahmenUmsetzungFilter umsetzungFilter,
-			MassnahmenSiegelFilter siegelFilter);
+	protected abstract Action createFilterAction(MassnahmenUmsetzungFilter umsetzungFilter, MassnahmenSiegelFilter siegelFilter);
 
 	private void createPullDownMenu() {
-		IMenuManager menuManager = getViewSite().getActionBars()
-				.getMenuManager();
+		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
 		filterAction = createFilterAction(umsetzungFilter, siegelFilter);
 		menuManager.add(filterAction);
 	}
@@ -754,9 +735,9 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 
 	private void makeActions() {
 		doubleClickAction = new Action() {
+			@Override
 			public void run() {
-				Object sel = ((IStructuredSelection) viewer.getSelection())
-						.getFirstElement();
+				Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 				EditorFactory.getInstance().openEditor(sel);
 			}
 		};
@@ -807,7 +788,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 			}
 		});
 	}
-	
+
 	public final ITVerbund getCurrentCompound() {
 		final ITVerbund[] retval = new ITVerbund[1];
 		Display.getDefault().syncExec(new Runnable() {
@@ -818,6 +799,5 @@ public abstract class GenericMassnahmenView extends ViewPart implements
 
 		return retval[0];
 	}
-	
-	
+
 }
