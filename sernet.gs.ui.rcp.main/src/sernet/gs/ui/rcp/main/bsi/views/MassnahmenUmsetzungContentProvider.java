@@ -49,6 +49,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmeById;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
 
 /**
@@ -109,9 +110,8 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 						return;
 					}
 					
-					FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(child.getDbId());
-					command = ServiceFactory.lookupCommandService().executeCommand(
-							command);
+					FindMassnahmeById command = new FindMassnahmeById(child.getDbId());
+					command = ServiceFactory.lookupCommandService().executeCommand(command);
 					List<TodoViewItem> items = command.getAll();
 					if (items.size()>0) {
 						TodoViewItem item = items.get(0);
