@@ -47,6 +47,8 @@ import sernet.gs.service.GSServiceException;
  */
 public class URLGSSource implements IGSSource {
 
+	private static final Logger LOG = Logger.getLogger(URLGSSource.class);
+	
 	private String baseUrl;
 
 	private static final String BAUSTEIN_PATH_2005 = "gshb/deutsch/baust/";
@@ -73,10 +75,13 @@ public class URLGSSource implements IGSSource {
 		try {
 			InputStream stream = getBausteinAsStream(baustein);
 			return (parseDocument(stream));
-
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error("Fehler beim Parsen aus Verzeichnis", e);
-			throw new GSServiceException("Fehler beim Parsen eines Bausteins. (URL)", e);
+			final String message = "Fehler beim Parsen des Bausteins: " + baustein;
+			LOG.error(message);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("stacktrace: ", e);
+			}
+			throw new GSServiceException(message, e);
 		}
 
 	}
