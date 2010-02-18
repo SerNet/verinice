@@ -69,17 +69,14 @@ public class URLGSSource implements IGSSource {
 		this.baseUrl = baseUrl;
 	}
 
-	public Node parseBausteinDocument(String baustein)
-			throws GSServiceException {
+	public Node parseBausteinDocument(String baustein) throws GSServiceException {
 		try {
 			InputStream stream = getBausteinAsStream(baustein);
 			return (parseDocument(stream));
 
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(
-					"Fehler beim Parsen aus Verzeichnis", e);
-			throw new GSServiceException(
-					"Fehler beim Parsen eines Bausteins. (URL)", e);
+			Logger.getLogger(this.getClass()).error("Fehler beim Parsen aus Verzeichnis", e);
+			throw new GSServiceException("Fehler beim Parsen eines Bausteins. (URL)", e);
 		}
 
 	}
@@ -87,8 +84,7 @@ public class URLGSSource implements IGSSource {
 	private Node parseDocument(InputStream stream) throws TransformerConfigurationException, IOException, SAXException {
 		InputStreamReader reader = new InputStreamReader(stream, "ISO-8859-1");
 		BufferedReader buffRead = new BufferedReader(reader);
-		SAXTransformerFactory stf = (SAXTransformerFactory) TransformerFactory
-				.newInstance();
+		SAXTransformerFactory stf = (SAXTransformerFactory) TransformerFactory.newInstance();
 		TransformerHandler th = stf.newTransformerHandler();
 		DOMResult dr = new DOMResult();
 		th.setResult(dr);
@@ -105,8 +101,7 @@ public class URLGSSource implements IGSSource {
 		return domRootNode;
 	}
 
-	public InputStream getBausteinAsStream(String baustein)
-			throws GSServiceException {
+	public InputStream getBausteinAsStream(String baustein) throws GSServiceException {
 		Matcher matcher = relPath.matcher(baustein);
 		baustein = matcher.replaceAll("");
 		try {
@@ -114,8 +109,7 @@ public class URLGSSource implements IGSSource {
 			return url.openStream();
 		} catch (Exception e) {
 			try {
-				URL url = new URL(baseUrl + BAUSTEIN_PATH_2005 + baustein
-						+ SUFFIX);
+				URL url = new URL(baseUrl + BAUSTEIN_PATH_2005 + baustein + SUFFIX);
 				return url.openStream();
 			} catch (IOException e1) {
 				throw new GSServiceException("Error parsing BSI document.", e);
@@ -123,39 +117,31 @@ public class URLGSSource implements IGSSource {
 		}
 	}
 
-	public InputStream getMassnahmeAsStream(String massnahme)
-			throws GSServiceException {
+	public InputStream getMassnahmeAsStream(String massnahme) throws GSServiceException {
 		try {
-			URL url = new URL(baseUrl + MASSNAHME_PATH_2006 + massnahme
-					+ SUFFIX);
+			URL url = new URL(baseUrl + MASSNAHME_PATH_2006 + massnahme + SUFFIX);
 			return url.openStream();
 		} catch (Exception e) {
 			try {
-				URL url = new URL(baseUrl + MASSNAHME_PATH_2005 + massnahme
-						+ SUFFIX);
+				URL url = new URL(baseUrl + MASSNAHME_PATH_2005 + massnahme + SUFFIX);
 				return url.openStream();
 			} catch (Exception e2) {
-				throw new GSServiceException("Massnahme nicht gefunden: "
-						+ massnahme, e2);
+				throw new GSServiceException("Massnahme nicht gefunden: " + massnahme, e2);
 			}
 		}
 	}
 
-	public InputStream getGefaehrdungAsStream(String gefaehrdung)
-			throws GSServiceException {
+	public InputStream getGefaehrdungAsStream(String gefaehrdung) throws GSServiceException {
 
 		try {
-			URL url = new URL(baseUrl + GEFAEHRDUNG_PATH_2006 + gefaehrdung
-					+ SUFFIX);
+			URL url = new URL(baseUrl + GEFAEHRDUNG_PATH_2006 + gefaehrdung + SUFFIX);
 			return url.openStream();
 		} catch (Exception e) {
 			try {
-				URL url = new URL(baseUrl + GEFAEHRDUNG_PATH_2005 + gefaehrdung
-						+ SUFFIX);
+				URL url = new URL(baseUrl + GEFAEHRDUNG_PATH_2005 + gefaehrdung + SUFFIX);
 				return url.openStream();
 			} catch (Exception e2) {
-				throw new GSServiceException("Gefaehrdung nicht gefunden: "
-						+ gefaehrdung, e2);
+				throw new GSServiceException("Gefaehrdung nicht gefunden: " + gefaehrdung, e2);
 			}
 		}
 
