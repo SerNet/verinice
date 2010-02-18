@@ -65,6 +65,9 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
 	public void execute() {
 		try {
 			long start = System.currentTimeMillis();
+			if (log.isDebugEnabled()) {
+				log.debug("FindMassnahmenForITVerbund, itverbundDbId: " + itverbundDbId);
+			}
 			List<MassnahmenUmsetzung> list = new ArrayList<MassnahmenUmsetzung>();
 			IBaseDao<MassnahmenUmsetzung, Serializable> dao = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
 			list = dao.findByCallback(new FindMassnahmenForITVerbundCallback(itverbundDbId));
@@ -92,8 +95,8 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
 			Query query = session.createQuery(
 					"from MassnahmenUmsetzung mn " +
 					"join fetch mn.entity " +
-					"join fetch mn.parent.parent.entity " +
-					"join fetch mn.parent.parent.parent.parent.entity " +
+					"left join fetch mn.parent.parent.entity " +
+					"left join fetch mn.parent.parent.parent.parent.entity " +
 					"where mn.parent.parent.parent.parent = :id " +
 					"or mn.parent.parent = :id2")
 					.setInteger("id", itverbundID)
