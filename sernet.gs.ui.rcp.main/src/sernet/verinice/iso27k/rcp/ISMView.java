@@ -131,6 +131,21 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		}
 		
 	}
+
+	private void initView(Composite parent) {
+		contentProvider = new ISMViewContentProvider(cache);
+		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		drillDownAdapter = new DrillDownAdapter(viewer);
+		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
+		viewer.setContentProvider(contentProvider);
+		viewer.setLabelProvider(new ISMViewLabelProvider(cache));
+		getSite().setSelectionProvider(viewer);
+		hookContextMenu();
+		makeActions();
+		addActions();
+		fillToolBar();
+		hookDNDListeners();
+	}
 	
 	/**
 	 * 
@@ -152,21 +167,6 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 			}
 		};
 		JobScheduler.scheduleInitJob(initDataJob);		
-	}
-
-	private void initView(Composite parent) {
-		contentProvider = new ISMViewContentProvider(cache);
-		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
-		viewer.setContentProvider(contentProvider);
-		viewer.setLabelProvider(new ISMViewLabelProvider(cache));
-		getSite().setSelectionProvider(viewer);
-		hookContextMenu();
-		makeActions();
-		addActions();
-		fillToolBar();
-		hookDNDListeners();
 	}
 
 	private void initData() {
