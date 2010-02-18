@@ -108,25 +108,13 @@ public class HitroUtil {
 	}
 
 	private void initForClientImpl(URL url) {
-		try {
-			typeFactory = HUITypeFactory.createInstance(url);
-
-			EntityResolverFactory.createResolvers(typeFactory);
-		} catch (DBException e) {
-			// The reason for the reason may be that the server is not available
-			// (or the URL is wrong). We do not want to prevent the application
-			// start because of this (otherwise there would be no possibility
-			// for the user to fix the issue).
-			log.warn("creating type factory for client failed: " + e.getLocalizedMessage());
-			
-			// When the internal server is used, then it may not be started yet (it is
-			// intentionally delayed) and therefore the creation of the type factory
-			// fails (which is provided by the server).
-			//
-			// In such a case we create a HUITypeFactory instance which
-			// can initialize itself lazily.
-			typeFactory = new DelegatingHUITypeFactory(url);
-		}
+		// When the internal server is used, then it may not be started yet (it is
+		// intentionally delayed) and therefore the creation of the type factory
+		// fails (which is provided by the server).
+		//
+		// We create a HUITypeFactory instance which
+		// can initialize itself lazily.
+		typeFactory = new DelegatingHUITypeFactory(url);
 	}
 
 	public void setTypeFactory(HUITypeFactory typeFactory) {
