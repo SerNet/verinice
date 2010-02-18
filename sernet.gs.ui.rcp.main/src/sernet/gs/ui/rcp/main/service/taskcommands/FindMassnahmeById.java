@@ -26,11 +26,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 
 /**
+ * Loads a single control and wraps it in a {@link TodoViewItem}.
+ * 
  * @author Daniel Murygin <dm@sernet.de>
  */
 @SuppressWarnings("serial")
