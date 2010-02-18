@@ -22,7 +22,6 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
-import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
@@ -47,7 +46,6 @@ public class Perspective implements IPerspectiveFactory {
 		layout.getViewLayout(ISMView.ID).setCloseable(true);
 		
 		IFolderLayout folder = layout.createFolder("datails",IPageLayout.BOTTOM, 0.5f, editorArea);
-		folder.addPlaceholder(BrowserView.ID + ":*");	
 		layout.getViewLayout(BSIMassnahmenView.ID).setCloseable(true);
 	}
 	
