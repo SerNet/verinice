@@ -61,6 +61,7 @@ import sernet.gs.ui.rcp.main.bsi.dnd.CopyBSIMassnahmenViewAction;
 import sernet.gs.ui.rcp.main.bsi.filter.GefaehrdungenFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
+import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.IAttachedToPerspective;
 
 /**
@@ -71,116 +72,6 @@ import sernet.verinice.rcp.IAttachedToPerspective;
  * 
  */
 public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspective {
-
-	private static class KapitelSorter extends ViewerSorter {
-		@Override
-		public int compare(Viewer viewer, Object e1, Object e2) {
-			if (e1 instanceof Massnahme && e2 instanceof Massnahme) {
-				// sort chapters correctly by converting 2.45, 2.221, 3.42
-				// to 2045, 2221, 3024
-
-				return (Integer.valueOf(((Massnahme) e1).getKapitelValue()).compareTo(((Massnahme) e2).getKapitelValue()));
-			}
-
-			if (e1 instanceof Gefaehrdung && e2 instanceof Gefaehrdung) {
-				return (Integer.valueOf(((Gefaehrdung) e1).getKapitelValue()).compareTo(((Gefaehrdung) e2).getKapitelValue()));
-
-			}
-
-			if (e1 instanceof Baustein && e2 instanceof Baustein) {
-				// sort chapters correctly by converting 2.45, 2.221, 3.42
-				// to 2045, 2221, 3024
-				return (Integer.valueOf(((Baustein) e1).getKapitelValue()).compareTo(((Baustein) e2).getKapitelValue()));
-			}
-
-			return super.compare(viewer, e1, e2);
-		}
-	}
-
-	static class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
-
-		public void dispose() {
-		}
-
-		public Object[] getChildren(Object parent) {
-			if (parent instanceof Baustein) {
-				ArrayList<IGSModel> children = new ArrayList<IGSModel>(100);
-				children.addAll(((Baustein) parent).getGefaehrdungen());
-				children.addAll(((Baustein) parent).getMassnahmen());
-				return children.toArray();
-			} else if (parent instanceof BSIKatalogInvisibleRoot) {
-				return ((BSIKatalogInvisibleRoot) parent).getBausteine().toArray();
-			}
-			return new Object[0];
-		}
-
-		public Object[] getElements(Object parent) {
-			return getChildren(parent);
-		}
-
-		public Object getParent(Object child) {
-			return null;
-		}
-
-		public boolean hasChildren(Object parent) {
-			if (parent instanceof Baustein)
-				return ((Baustein) parent).getMassnahmen().size() > 0;
-			else if (parent instanceof BSIKatalogInvisibleRoot)
-				return ((BSIKatalogInvisibleRoot) parent).getBausteine().size() > 0;
-			return false;
-		}
-
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		}
-	}
-
-	static class ViewLabelProvider extends LabelProvider {
-
-		public Image getImage(Object obj) {
-
-			if (obj instanceof Baustein)
-				return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN);
-
-			if (obj instanceof Massnahme) {
-				Massnahme mn = (Massnahme) obj;
-				char stufe = mn.getSiegelstufe();
-				switch (stufe) {
-				case 'A':
-					return ImageCache.getInstance().getImage(ImageCache.STUFE_A);
-				case 'B':
-					return ImageCache.getInstance().getImage(ImageCache.STUFE_B);
-				case 'C':
-					return ImageCache.getInstance().getImage(ImageCache.STUFE_C);
-				case 'Z':
-					return ImageCache.getInstance().getImage(ImageCache.STUFE_Z);
-				case 'W':
-					return ImageCache.getInstance().getImage(ImageCache.STUFE_W);
-				}
-			}
-
-			if (obj instanceof Gefaehrdung)
-				return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
-
-			return ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
-
-		}
-
-		public String getText(Object obj) {
-			if (obj instanceof Massnahme) {
-				Massnahme mn = (Massnahme) obj;
-				return mn.getId() + " " + mn.getTitel() + " [" //$NON-NLS-1$ //$NON-NLS-2$
-						+ mn.getSiegelstufe() + "] (" + mn.getLZAsString() //$NON-NLS-1$
-						+ ")"; //$NON-NLS-1$
-			}
-
-			if (obj instanceof Gefaehrdung) {
-				Gefaehrdung gef = (Gefaehrdung) obj;
-				return gef.getId() + " " + gef.getTitel() + " [" + gef.getKategorieAsString() + "]";
-			}
-
-			return obj.toString();
-		}
-	}
 
 	// private Clipboard clipboard;
 
@@ -207,8 +98,7 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 		viewer.setSorter(new KapitelSorter());
 
 		WorkspaceJob job = new OpenCataloguesJob(Messages.BSIMassnahmenView_0);
-		job.setUser(false);
-		job.schedule();
+		JobScheduler.scheduleInitJob(job);
 
 		viewer.setInput(BSIKatalogInvisibleRoot.getInstance());
 		BSIKatalogInvisibleRoot.getInstance().addListener(new BSIKatalogInvisibleRoot.ISelectionListener() {
@@ -350,6 +240,116 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 	 */
 	public String getPerspectiveId() {
 		return Perspective.ID;
+	}
+	
+	private static class KapitelSorter extends ViewerSorter {
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			if (e1 instanceof Massnahme && e2 instanceof Massnahme) {
+				// sort chapters correctly by converting 2.45, 2.221, 3.42
+				// to 2045, 2221, 3024
+
+				return (Integer.valueOf(((Massnahme) e1).getKapitelValue()).compareTo(((Massnahme) e2).getKapitelValue()));
+			}
+
+			if (e1 instanceof Gefaehrdung && e2 instanceof Gefaehrdung) {
+				return (Integer.valueOf(((Gefaehrdung) e1).getKapitelValue()).compareTo(((Gefaehrdung) e2).getKapitelValue()));
+
+			}
+
+			if (e1 instanceof Baustein && e2 instanceof Baustein) {
+				// sort chapters correctly by converting 2.45, 2.221, 3.42
+				// to 2045, 2221, 3024
+				return (Integer.valueOf(((Baustein) e1).getKapitelValue()).compareTo(((Baustein) e2).getKapitelValue()));
+			}
+
+			return super.compare(viewer, e1, e2);
+		}
+	}
+
+	static class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+
+		public void dispose() {
+		}
+
+		public Object[] getChildren(Object parent) {
+			if (parent instanceof Baustein) {
+				ArrayList<IGSModel> children = new ArrayList<IGSModel>(100);
+				children.addAll(((Baustein) parent).getGefaehrdungen());
+				children.addAll(((Baustein) parent).getMassnahmen());
+				return children.toArray();
+			} else if (parent instanceof BSIKatalogInvisibleRoot) {
+				return ((BSIKatalogInvisibleRoot) parent).getBausteine().toArray();
+			}
+			return new Object[0];
+		}
+
+		public Object[] getElements(Object parent) {
+			return getChildren(parent);
+		}
+
+		public Object getParent(Object child) {
+			return null;
+		}
+
+		public boolean hasChildren(Object parent) {
+			if (parent instanceof Baustein)
+				return ((Baustein) parent).getMassnahmen().size() > 0;
+			else if (parent instanceof BSIKatalogInvisibleRoot)
+				return ((BSIKatalogInvisibleRoot) parent).getBausteine().size() > 0;
+			return false;
+		}
+
+		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+		}
+	}
+
+	static class ViewLabelProvider extends LabelProvider {
+
+		public Image getImage(Object obj) {
+
+			if (obj instanceof Baustein)
+				return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN);
+
+			if (obj instanceof Massnahme) {
+				Massnahme mn = (Massnahme) obj;
+				char stufe = mn.getSiegelstufe();
+				switch (stufe) {
+				case 'A':
+					return ImageCache.getInstance().getImage(ImageCache.STUFE_A);
+				case 'B':
+					return ImageCache.getInstance().getImage(ImageCache.STUFE_B);
+				case 'C':
+					return ImageCache.getInstance().getImage(ImageCache.STUFE_C);
+				case 'Z':
+					return ImageCache.getInstance().getImage(ImageCache.STUFE_Z);
+				case 'W':
+					return ImageCache.getInstance().getImage(ImageCache.STUFE_W);
+				}
+			}
+
+			if (obj instanceof Gefaehrdung)
+				return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
+
+			return ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
+
+		}
+
+		public String getText(Object obj) {
+			if (obj instanceof Massnahme) {
+				Massnahme mn = (Massnahme) obj;
+				return mn.getId() + " " + mn.getTitel() + " [" //$NON-NLS-1$ //$NON-NLS-2$
+						+ mn.getSiegelstufe() + "] (" + mn.getLZAsString() //$NON-NLS-1$
+						+ ")"; //$NON-NLS-1$
+			}
+
+			if (obj instanceof Gefaehrdung) {
+				Gefaehrdung gef = (Gefaehrdung) obj;
+				return gef.getId() + " " + gef.getTitel() + " [" + gef.getKategorieAsString() + "]";
+			}
+
+			return obj.toString();
+		}
 	}
 
 }
