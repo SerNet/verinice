@@ -19,6 +19,7 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -35,8 +36,10 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
@@ -445,7 +448,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 
 	protected abstract ILabelProvider createLabelProvider();
 
-	protected abstract ViewerSorter createSorter();
+	protected abstract TableSorter createSorter();
 
 	protected abstract void createPartControlImpl(Composite parent);
 
@@ -798,6 +801,133 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		});
 
 		return retval[0];
+	}
+	
+	protected static class SortSelectionAdapter extends SelectionAdapter {
+		GenericMassnahmenView view;
+		TableColumn column;
+		int index;
+		
+		public SortSelectionAdapter(GenericMassnahmenView view, TableColumn column, int index) {
+			this.view = view;
+			this.column = column;
+			this.index = index;
+		}
+	
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			view.createSorter().setColumn(index);
+			int dir = view.viewer.getTable().getSortDirection();
+			if (view.viewer.getTable().getSortColumn() == column) {
+				dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
+			} else {
+
+				dir = SWT.DOWN;
+			}
+			view.viewer.getTable().setSortDirection(dir);
+			view.viewer.getTable().setSortColumn(column);
+			view.viewer.refresh();
+		}
+
+	}
+	
+	protected static class TableSorter extends ViewerSorter {
+		private int propertyIndex;
+		private static final int DEFAULT_SORT_COLUMN = 1;
+		private static final int DESCENDING = 1;
+		private static final int ASCENDING = 0;
+		private int direction = ASCENDING;
+		
+		public TableSorter() {
+			this.propertyIndex = DEFAULT_SORT_COLUMN;
+			this.direction = ASCENDING;
+		}
+
+		public void setColumn(int column) {
+			if (column == this.propertyIndex) {
+				// Same column as last sort; toggle the direction
+				direction = (direction==ASCENDING) ? DESCENDING : ASCENDING;
+			} else {
+				// New column; do an ascending sort
+				this.propertyIndex = column;
+				direction = ASCENDING;
+			}
+		}
+		
+		
+		public int compare(Viewer viewer, Object o1, Object o2) {
+			TodoViewItem mn1 = (TodoViewItem) o1;
+			TodoViewItem mn2 = (TodoViewItem) o2;
+			int rc = 0;
+			if(o1==null) {
+				if(o2!=null) {
+					rc = 1;
+				}
+			} else if(o2==null) {
+				if(o1!=null) {
+					rc = -1;
+				}
+			} else {
+				// e1 and e2 != null	
+				switch (propertyIndex) {
+				case 0:
+					rc = sortByString(mn1.getUmsetzung(),mn2.getUmsetzung());
+					break;
+				case 1:
+					rc = sortByDate(mn1.getUmsetzungBis(), mn2.getUmsetzungBis());
+					break;
+				case 2:
+					rc = sortByString(mn1.getUmsetzungDurch(),mn2.getUmsetzungDurch());
+					break;
+				case 3:
+					rc = sortByString(String.valueOf(mn1.getStufe()), String.valueOf(mn2.getStufe()));
+					break;
+				case 4:
+					rc = sortByString(mn1.getParentTitle(), mn2.getParentTitle());
+					break;
+				case 5:
+					rc = sortByString(mn1.getTitle(), mn2.getTitle());
+					break;
+				default:
+					rc = 0;
+				}
+			}
+			// If descending order, flip the direction
+			if (direction == DESCENDING) {
+				rc = -rc;
+			}
+			return rc;
+		}
+		
+		private int sortByString(String s1, String s2) {
+			int rc = 0;
+			if(s1==null) {
+				if(s2!=null) {
+					rc = 1;
+				}
+			} else if(s2==null) {
+				if(s1!=null) {
+					rc = -1;
+				}
+			} else {
+				rc = s1.compareTo(s2);
+			}
+			return rc;
+		}
+
+		private int sortByDate(Date date1, Date date2) {
+	        if (date1 == null)
+	            return 1;
+	        
+	        if (date2 == null)
+	            return -1;
+	        
+			int comp = date1.compareTo(date2);
+			return comp;
+	        
+		}
+		
+
 	}
 
 }
