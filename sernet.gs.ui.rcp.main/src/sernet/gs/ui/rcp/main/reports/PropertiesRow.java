@@ -17,10 +17,17 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.reports;
 
+import java.util.Iterator;
 import java.util.List;
+
+import org.hibernate.LazyInitializationException;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
+import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
+import sernet.verinice.iso27k.service.Retriever;
 
 /**
  * Returns the given properties as columns for OpenOffice export.
@@ -53,7 +60,7 @@ public class PropertiesRow implements IOOTableRow, ICnaItemRow {
 	public double getCellAsDouble(int column) {
 		return 0;
 	}
-
+	
 	public String getCellAsString(int column) {
 		return item.getEntity().getSimpleValue(properties.get(column));
 	}
