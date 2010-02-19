@@ -28,6 +28,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -51,6 +53,8 @@ public class TodoView extends GenericMassnahmenView {
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." +
 			"todoview"; //$NON-NLS-1$
 
+	TodoSorter tableSorter = new TodoSorter();
+	
 	@Override
 	protected void createPartControlImpl(Composite parent) {
 		Table table = viewer.getTable();
@@ -58,26 +62,32 @@ public class TodoView extends GenericMassnahmenView {
 		iconColumn = new TableColumn(table, SWT.LEFT);
 		iconColumn.setText(" "); //$NON-NLS-1$
 		iconColumn.setWidth(25);
+		iconColumn.addSelectionListener(new SortSelectionAdapter(this,iconColumn,0));
 		
 		dateColumn = new TableColumn(table, SWT.LEFT);
 		dateColumn.setText(Messages.TodoView_8);
 		dateColumn.setWidth(200);
+		dateColumn.addSelectionListener(new SortSelectionAdapter(this,dateColumn,1));
 		
 		bearbeiterColumn = new TableColumn(table, SWT.LEFT);
 		bearbeiterColumn.setText(Messages.TodoView_9);
 		bearbeiterColumn.setWidth(100);
+		bearbeiterColumn.addSelectionListener(new SortSelectionAdapter(this,bearbeiterColumn,2));
 		
 		siegelColumn = new TableColumn(table, SWT.LEFT);
 		siegelColumn.setText(Messages.TodoView_10);
 		siegelColumn.setWidth(20);
+		siegelColumn.addSelectionListener(new SortSelectionAdapter(this,siegelColumn,3));
 		
 		zielColumn = new TableColumn(table, SWT.LEFT);
 		zielColumn.setText(Messages.TodoView_11);
 		zielColumn.setWidth(150);
+		zielColumn.addSelectionListener(new SortSelectionAdapter(this,zielColumn,4));
 		
 		titleColumn = new TableColumn(table, SWT.LEFT);
 		titleColumn.setText(Messages.TodoView_12);
 		titleColumn.setWidth(250);
+		titleColumn.addSelectionListener(new SortSelectionAdapter(this,titleColumn,5));
 		
 		viewer.setColumnProperties(new String[] {
 				"_icon", //$NON-NLS-1$
@@ -125,7 +135,7 @@ public class TodoView extends GenericMassnahmenView {
 
 	@Override
 	protected ViewerSorter createSorter() {
-		return new TodoSorter();
+		return tableSorter;
 	}
 
 	@Override
@@ -185,17 +195,116 @@ public class TodoView extends GenericMassnahmenView {
 		}
 	}
 	
+	private static class SortSelectionAdapter extends SelectionAdapter {
+		TodoView view;
+		TableColumn column;
+		int index;
+		
+		public SortSelectionAdapter(TodoView view, TableColumn column, int index) {
+			this.view = view;
+			this.column = column;
+			this.index = index;
+		}
+	
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			view.tableSorter.setColumn(index);
+			int dir = view.viewer.getTable().getSortDirection();
+			if (view.viewer.getTable().getSortColumn() == column) {
+				dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
+			} else {
+
+				dir = SWT.DOWN;
+			}
+			view.viewer.getTable().setSortDirection(dir);
+			view.viewer.getTable().setSortColumn(column);
+			view.viewer.refresh();
+		}
+
+	}
+	
 	private static class TodoSorter extends ViewerSorter {
-		public boolean isSorterProperty(Object arg0, String arg1) {
-			return arg1.equals("_date"); //$NON-NLS-1$
+		private int propertyIndex;
+		private static final int DEFAULT_SORT_COLUMN = 1;
+		private static final int DESCENDING = 1;
+		private static final int ASCENDING = 0;
+		private int direction = ASCENDING;
+		
+		public TodoSorter() {
+			this.propertyIndex = DEFAULT_SORT_COLUMN;
+			this.direction = ASCENDING;
+		}
+
+		public void setColumn(int column) {
+			if (column == this.propertyIndex) {
+				// Same column as last sort; toggle the direction
+				direction = (direction==ASCENDING) ? DESCENDING : ASCENDING;
+			} else {
+				// New column; do an ascending sort
+				this.propertyIndex = column;
+				direction = ASCENDING;
+			}
 		}
 		
+		
 		public int compare(Viewer viewer, Object o1, Object o2) {
-			if (o1 == null || o2 == null)
-				return 0;
 			TodoViewItem mn1 = (TodoViewItem) o1;
 			TodoViewItem mn2 = (TodoViewItem) o2;
-			return sortByDate(mn1.getUmsetzungBis(), mn2.getUmsetzungBis());
+			int rc = 0;
+			if(o1==null) {
+				if(o2!=null) {
+					rc = 1;
+				}
+			} else if(o2==null) {
+				if(o1!=null) {
+					rc = -1;
+				}
+			} else {
+				// e1 and e2 != null	
+				switch (propertyIndex) {
+				case 0:
+					rc = sortByString(mn1.getUmsetzung(),mn2.getUmsetzung());
+					break;
+				case 1:
+					rc = sortByDate(mn1.getUmsetzungBis(), mn2.getUmsetzungBis());
+					break;
+				case 2:
+					rc = sortByString(mn1.getUmsetzungDurch(),mn2.getUmsetzungDurch());
+					break;
+				case 3:
+					rc = sortByString(String.valueOf(mn1.getStufe()), String.valueOf(mn2.getStufe()));
+					break;
+				case 4:
+					rc = sortByString(mn1.getParentTitle(), mn2.getParentTitle());
+					break;
+				case 5:
+					rc = sortByString(mn1.getTitle(), mn2.getTitle());
+					break;
+				default:
+					rc = 0;
+				}
+			}
+			// If descending order, flip the direction
+			if (direction == DESCENDING) {
+				rc = -rc;
+			}
+			return rc;
+		}
+		
+		private int sortByString(String s1, String s2) {
+			int rc = 0;
+			if(s1==null) {
+				if(s2!=null) {
+					rc = 1;
+				}
+			} else if(s2==null) {
+				if(s1!=null) {
+					rc = -1;
+				}
+			} else {
+				rc = s1.compareTo(s2);
+			}
+			return rc;
 		}
 
 		private int sortByDate(Date date1, Date date2) {
