@@ -73,6 +73,9 @@ import sernet.verinice.iso27k.model.InterviewGroup;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.model.PersonGroup;
 import sernet.verinice.iso27k.model.PersonIso;
+import sernet.verinice.iso27k.model.ProcessGroup;
+import sernet.verinice.iso27k.model.Record;
+import sernet.verinice.iso27k.model.RecordGroup;
 import sernet.verinice.iso27k.model.Requirement;
 import sernet.verinice.iso27k.model.RequirementGroup;
 import sernet.verinice.iso27k.model.Response;
@@ -186,6 +189,10 @@ public class EditorFactory {
 		typedFactories.put(Evidence.class, bsiEditorFactory);
 		typedFactories.put(FindingGroup.class, bsiEditorFactory);
 		typedFactories.put(Finding.class, bsiEditorFactory);
+		typedFactories.put(sernet.verinice.iso27k.model.Process.class, bsiEditorFactory);
+		typedFactories.put(ProcessGroup.class, bsiEditorFactory);
+		typedFactories.put(Record.class, bsiEditorFactory);
+		typedFactories.put(RecordGroup.class, bsiEditorFactory);
 
 		
 		IEditorTypeFactory todoItemEditorFactory = new IEditorTypeFactory() {

@@ -19,19 +19,7 @@ package sernet.verinice.iso27k.model;
 
 import java.util.Collection;
 
-import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.ServerKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.TagHelper;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
 
@@ -39,46 +27,24 @@ import sernet.hui.common.connect.Entity;
  * @author Daniel Murygin <dm@sernet.de>
  */
 @SuppressWarnings("serial")
-public class Organization extends CnATreeElement implements IISO27kGroup {
+public class Record extends CnATreeElement implements IISO27kElement {
 
-	public static final String TYPE_ID = "org"; //$NON-NLS-1$
-	public static final String PROP_ABBR = "org_abbr"; //$NON-NLS-1$
-	public static final String PROP_NAME = "org_name"; //$NON-NLS-1$
-	public static final String PROP_TAG = "org_tag"; //$NON-NLS-1$
+	public static final String TYPE_ID = "record"; //$NON-NLS-1$
+	public static final String PROP_ABBR = "record_abbr"; //$NON-NLS-1$
+	public static final String PROP_NAME = "record_name"; //$NON-NLS-1$
+	public static final String PROP_TAG = "record_tag"; //$NON-NLS-1$
 	
 	/**
-	 * Creates an empty Organization
+	 * Creates an empty asset
 	 */
-	public Organization() {
+	public Record() {
 		super();
 	}
 	
-	public Organization(CnATreeElement parent) {
+	public Record(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME), "New Organization");
-		addChild(new AssetGroup(this));
-		addChild(new ControlGroup(this));
-		addChild(new AuditGroup(this));
-		addChild(new ExceptionGroup(this));
-		addChild(new PersonGroup(this));
-		addChild(new RequirementGroup(this));
-		addChild(new IncidentGroup(this));
-		addChild(new IncidentScenarioGroup(this));
-		addChild(new ResponseGroup(this));
-		addChild(new ThreatGroup(this));
-		addChild(new VulnerabilityGroup(this));
-		addChild(new DocumentGroup(this));
-		addChild(new EvidenceGroup(this));
-		addChild(new FindingGroup(this));
-		addChild(new InterviewGroup(this));
-		addChild(new RecordGroup(this));
-		addChild(new ProcessGroup(this));
-	}
-	
-	@Override
-	public boolean canContain(Object child) {
-		return (child instanceof Group);
+		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME), "New Record");
 	}
 	
 	/* (non-Javadoc)
@@ -97,7 +63,7 @@ public class Organization extends CnATreeElement implements IISO27kGroup {
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
-	public void setTitle(String name) {
+	public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	
@@ -112,5 +78,5 @@ public class Organization extends CnATreeElement implements IISO27kGroup {
 	public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
-	
+
 }

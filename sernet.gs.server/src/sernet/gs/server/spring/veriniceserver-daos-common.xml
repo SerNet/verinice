@@ -527,6 +527,28 @@
 			<value>sernet.verinice.iso27k.model.Finding</value>
 		</constructor-arg>
 	</bean>
+	
+	<bean id="processGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.ProcessGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="processDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Process</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="recordGroupDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.RecordGroup</value>
+		</constructor-arg>
+	</bean>
+	<bean id="recordDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.iso27k.model.Record</value>
+		</constructor-arg>
+	</bean>
 
 	<!-- END dao definitions ============================================================================ -->
 

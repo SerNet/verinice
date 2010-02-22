@@ -96,6 +96,9 @@ import sernet.verinice.iso27k.model.InterviewGroup;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.model.PersonGroup;
 import sernet.verinice.iso27k.model.PersonIso;
+import sernet.verinice.iso27k.model.ProcessGroup;
+import sernet.verinice.iso27k.model.Record;
+import sernet.verinice.iso27k.model.RecordGroup;
 import sernet.verinice.iso27k.model.Requirement;
 import sernet.verinice.iso27k.model.RequirementGroup;
 import sernet.verinice.iso27k.model.Response;
@@ -524,6 +527,20 @@ public class DAOFactory {
     }
     public void setFindingDAO(IBaseDao<Finding, Integer> daoToSet) {
     	daos.put(Finding.class, daoToSet);
+    }
+    
+    public void setProcessGroupDAO(IBaseDao<ProcessGroup, Integer> daoToSet) {
+    	daos.put(ProcessGroup.class, daoToSet);
+    }
+    public void setProcessDAO(IBaseDao<sernet.verinice.iso27k.model.Process, Integer> daoToSet) {
+    	daos.put(sernet.verinice.iso27k.model.Process.class, daoToSet);
+    }
+    
+    public void setRecordGroupDAO(IBaseDao<RecordGroup, Integer> daoToSet) {
+    	daos.put(RecordGroup.class, daoToSet);
+    }
+    public void setRecordDAO(IBaseDao<Record, Integer> daoToSet) {
+    	daos.put(Record.class, daoToSet);
     }
     
 	@SuppressWarnings("unchecked")

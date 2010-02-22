@@ -185,6 +185,10 @@ This variant:
 		<property name="interviewDAO" ref="interviewDAO" />
 		<property name="findingGroupDAO" ref="findingGroupDAO" />
 		<property name="findingDAO" ref="findingDAO" />
+		<property name="processGroupDAO" ref="processGroupDAO" />
+		<property name="processDAO" ref="processDAO" />
+		<property name="recordGroupDAO" ref="recordGroupDAO" />
+		<property name="recordDAO" ref="recordDAO" />
 	</bean>
 
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">

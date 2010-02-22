@@ -38,6 +38,7 @@ import sernet.verinice.iso27k.model.IncidentScenario;
 import sernet.verinice.iso27k.model.Interview;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.model.PersonIso;
+import sernet.verinice.iso27k.model.Record;
 import sernet.verinice.iso27k.model.Requirement;
 import sernet.verinice.iso27k.model.Response;
 import sernet.verinice.iso27k.model.Threat;
@@ -207,6 +208,7 @@ public class ImageCache {
 	public static final String ISO27K_SCOPE 			= "tree_explorer.gif";
 	public static final String ISO27K_PERSON 			= "user_suit.png";
 	public static final String ISO27K_FOLDER 			= "folder.png";
+	public static final String ISO27K_PROCESS 			= "sweetie-verinice/png/16-paper-workplan.png";
 
 	public static final String ISO27K_CONTROL			= "stufe_none.png";
 	public static final String ISO27K_CONTROL_NO		= "16-em-cross.png";
@@ -215,6 +217,8 @@ public class ImageCache {
 	// ISO 27k icons - other:
 	public static final String ISO27K_RISK = "sweetie-verinice/png/16-paper-calculate-percent.png";
 	/* ************************************************************************************************** */
+
+	
 	
 	
 	private static ImageCache instance;
@@ -249,6 +253,8 @@ public class ImageCache {
 		iso27kIconMap.put(PersonIso.TYPE_ID, ImageCache.ISO27K_PERSON);
 		iso27kIconMap.put(Control.TYPE_ID,   ImageCache.ISO27K_CONTROL);
 		iso27kIconMap.put(Response.TYPE_ID,   ImageCache.ISO27K_RESPONSE);
+		iso27kIconMap.put(sernet.verinice.iso27k.model.Process.TYPE_ID,   ImageCache.ISO27K_PROCESS);
+		iso27kIconMap.put(Record.TYPE_ID,   ImageCache.ISO27K_RECORD);
 	}
 
 	public static ImageCache getInstance() {

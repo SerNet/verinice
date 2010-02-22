@@ -23,11 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
@@ -35,8 +33,6 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
@@ -67,7 +63,6 @@ import sernet.verinice.iso27k.model.ExceptionGroup;
 import sernet.verinice.iso27k.model.Finding;
 import sernet.verinice.iso27k.model.FindingGroup;
 import sernet.verinice.iso27k.model.IISO27kElement;
-import sernet.verinice.iso27k.model.IISO27kRoot;
 import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.model.Incident;
 import sernet.verinice.iso27k.model.IncidentGroup;
@@ -77,6 +72,10 @@ import sernet.verinice.iso27k.model.Interview;
 import sernet.verinice.iso27k.model.InterviewGroup;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.model.PersonGroup;
+import sernet.verinice.iso27k.model.Process;
+import sernet.verinice.iso27k.model.ProcessGroup;
+import sernet.verinice.iso27k.model.Record;
+import sernet.verinice.iso27k.model.RecordGroup;
 import sernet.verinice.iso27k.model.Requirement;
 import sernet.verinice.iso27k.model.RequirementGroup;
 import sernet.verinice.iso27k.model.Response;
@@ -515,6 +514,40 @@ public class CnAElementFactory {
 		elementbuilders.put(Evidence.TYPE_ID, new IElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 				Evidence child = dbHome.save(container, Evidence.class);
+				container.addChild(child);
+				child.setParent(container);
+				return child;
+			}
+		});
+		
+		elementbuilders.put(ProcessGroup.TYPE_ID, new IElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				ProcessGroup child = dbHome.save(container, ProcessGroup.class);
+				container.addChild(child);
+				child.setParent(container);
+				return child;
+			}
+		});
+		elementbuilders.put(Process.TYPE_ID, new IElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				Process child = dbHome.save(container, Process.class);
+				container.addChild(child);
+				child.setParent(container);
+				return child;
+			}
+		});
+
+		elementbuilders.put(RecordGroup.TYPE_ID, new IElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				RecordGroup child = dbHome.save(container, RecordGroup.class);
+				container.addChild(child);
+				child.setParent(container);
+				return child;
+			}
+		});
+		elementbuilders.put(Record.TYPE_ID, new IElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				Record child = dbHome.save(container, Record.class);
 				container.addChild(child);
 				child.setParent(container);
 				return child;

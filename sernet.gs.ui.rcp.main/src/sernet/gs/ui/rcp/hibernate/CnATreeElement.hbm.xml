@@ -398,6 +398,24 @@
 		name="sernet.verinice.iso27k.model.Interview"
 		extends="CnATreeElement"
 		discriminator-value="interview" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.ProcessGroup"
+		extends="CnATreeElement"
+		discriminator-value="process_group" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Process"
+		extends="CnATreeElement"
+		discriminator-value="process" />
+		
+	<subclass 
+		name="sernet.verinice.iso27k.model.RecordGroup"
+		extends="CnATreeElement"
+		discriminator-value="record_group" />
+	<subclass 
+		name="sernet.verinice.iso27k.model.Record"
+		extends="CnATreeElement"
+		discriminator-value="record" />
 
 	<!-- This filter implements the access check (read access) for CnATreeElement instances (and subclasses).
 	
