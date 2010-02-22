@@ -1745,6 +1745,26 @@ Template:
 		id="bstumsetzung"
 		name="BausteinUmsetzung"
 		 >
+	
+	     <!-- Bausteine (modules) can now be linked to objects -->	 
+		 <huirelation  to="anwendung" id="rel_bstumsetzung_anwendung"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="raum" id="rel_bstumsetzung_raum"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="server" id="rel_bstumsetzung_server"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="tkkomponente" id="rel_bstumsetzung_tkkomponente"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="netzkomponente" id="rel_bstumsetzung_netzkomponente"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="itverbund" id="rel_bstumsetzung_itverbund"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="client" id="rel_bstumsetzung_client"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="sonstit" id="rel_bstumsetzung_sonstit"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="gebaeude" id="rel_bstumsetzung_gebaeude"
+		 	name="verknüpft mit" reversename="modelliert mit" />
 			
 		<huiproperty
 			id="bstumsetzung_nr"
@@ -2781,11 +2801,14 @@ Template:
         name="Asset"
         id="asset" >
         
+        <huirelation to="asset" id="rel_asset_asset" 
+        	name="depends on" reversename="necessary for" tooltip="One asset may depend on other assets, i.e. an application depending on its server."/>
         <huirelation to="person-iso" id="asset-person-owner" 
-        	name="owner" reversename="is owner of" tooltip="Person is owner as defined in ISO27001."/>
-        
+        	name="owner" reversename="is owner of" tooltip="Person is owner of this asset as defined in ISO 27001."/>
         <huirelation to="person-iso" id="asset-person-delegated" 
-        	name="delegated to" reversename="operationally responsible for" tooltip="Operational responsibility is delegated to this person."/>
+        	name="responsibility delegated to" reversename="is responsible for" tooltip="Operational responsibility is delegated to this person."/>
+        
+        
         
         <huiproperty
             name="Title"
@@ -2803,7 +2826,7 @@ Template:
 		id="asset_type"
 		inputtype="singleoption">
 		<option
-			name="Informtion"
+			name="Information"
 			id="asset_type_inf" />
 		<option
 			name="Software"
@@ -2957,12 +2980,17 @@ Template:
     <huientity
         name="Control"
         id="control" >
+        <huirelation to="asset" id="rel_control_asset" 
+        	name="protects" reversename="protected by" tooltip=""/>
+        	
         <huiproperty
             name="Title"
-            id="control_name" />
+            id="control_name" 
+            inputtype="text"/>
         <huiproperty
             name="Abbreviation"
-            id="control_abbr" />
+            id="control_abbr"
+            visible="false" />
         <huiproperty
             id="control_tag"
             name="Tags"
@@ -2971,38 +2999,38 @@ Template:
             name="Description"
             id="control_desc"
             visible="false"/>
-        <huipropertygroup id="control_spicegroup" name="Maturity">
+        <huipropertygroup id="control_maturitygroup" name="Maturity">
         <huiproperty
-			id="control_umsetzung"
-			name="Status"
+			id="control_maturity"
+			name="Maturity"
                focus="true"
                required="true"
 			inputtype="singleoption">
 			<option
-				id="control_umsetzung_0"
+				id="control_maturity_0"
 				name="Level 0: Incomplete" />
 			<option
-				id="control_umsetzung_1"
+				id="control_maturity_1"
 				name="Level 1: Performed" />
 			<option
-				id="control_umsetzung_2"
+				id="control_maturity_2"
 				name="Level 2: Managed" />
 			<option
-				id="control_umsetzung_3"
+				id="control_maturity_3"
 				name="Level 3: Established" />
 			<option
-				id="control_umsetzung_4"
+				id="control_maturity_4"
 				name="Level 4: Predictable" />
 			<option
-				id="control_umsetzung_5"
+				id="control_maturity_5"
 				name="Level 5: Optimizing" />
 		</huiproperty>
 		<huiproperty
-			id="control_erlaeuterung"
+			id="control_maturity_comment"
 			name="Explanation"
 			inputtype="text" />
 		<huiproperty
-				id="control_umsetzungbis"
+				id="control_maturity_duedate"
 				name="Due Date"
 				inputtype="date">
                 <defaultRule class="Today">
@@ -3011,7 +3039,7 @@ Template:
                 </defaultRule>
             </huiproperty>
 		<huiproperty
-			id="control_umsetzungdurch_link"
+			id="control_maturityassessor_link"
 			name="Assessor"
 			inputtype="reference" 
 			required="true">
@@ -3054,6 +3082,12 @@ Template:
     <huientity
         name="Requirement"
         id="requirement" >
+        
+        <huirelation to="control" id="rel_requirement_control" 
+        	name="fullfilled by" reversename="fullfils" tooltip=""/>
+       	<huirelation to="asset" id="rel_requirement_asset" 
+        	name="applies to" reversename="requires" tooltip=""/>
+        	
         <huiproperty
             name="Title"
             id="requirement_name" />
@@ -3173,6 +3207,40 @@ Template:
     <huientity
         name="Document"
         id="document" >
+        
+        <huirelation to="org" id="rel_document_org" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="asset" id="rel_document_asset" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="person-iso" id="rel_document_person-iso" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="audit" id="rel_document_audit" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="control" id="rel_document_control" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="exception" id="rel_document_exception" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="requirement" id="rel_document_requirement" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="incident" id="rel_document_incident" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="incident_scenario" id="rel_document_incident_scenario" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="response" id="rel_document_response" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="threat" id="rel_document_threat" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="vulnerability" id="rel_document_vulnerability" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="interview" id="rel_document_interview" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="evidence" id="rel_document_evidence" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="finding" id="rel_document_finding" 
+        	name="documents" reversename="related document" tooltip=""/>
+        	
+        
+        
         <huiproperty
             name="Title"
             id="document_name" />
@@ -3183,6 +3251,10 @@ Template:
             id="document_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+            name="Ext. Link"
+            id="document_link"
+            isURL="true" />
     </huientity>
     <huientity
         name="Document-Group"
@@ -3282,6 +3354,13 @@ Template:
             visible="false" />
 		<huiproperty id="attachment_version"
             name="Version" />
+        <huiproperty
+        	id="attachment_publish"
+        	name="Publish"
+        	inputtype="singleoption">
+        	<option id="documet_publish_yes" name="Yes"/>
+        	<option id="documet_publish_no"  name="No"/>
+       	</huiproperty>
         <huiproperty id="attachment_date"
 			name="Datum"
 			inputtype="date"
