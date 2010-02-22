@@ -176,13 +176,18 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 
 	private void initData() {	
 		if(CnAElementFactory.isIsoModelLoaded()) {
-			modelUpdateListener = new ISO27KModelViewUpdate(viewer,cache);
-			CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
-			Display.getDefault().syncExec(new Runnable(){
-				public void run() {
-					setInput(CnAElementFactory.getInstance().getISO27kModel());
-				}
-			});
+			if (modelUpdateListener == null ) {
+				// modellistener should only be created once!
+				if (LOG.isDebugEnabled())
+					Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for ISMView.");
+				modelUpdateListener = new ISO27KModelViewUpdate(viewer,cache);
+				CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
+				Display.getDefault().syncExec(new Runnable(){
+					public void run() {
+						setInput(CnAElementFactory.getInstance().getISO27kModel());
+					}
+				});
+			}
 		} else if(modelLoadListener==null) {
 			// model is not loaded yet: add a listener to load data when it's laoded
 			modelLoadListener = new IModelLoadListener() {
@@ -192,7 +197,9 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 				}
 
 				public void loaded(BSIModel model) {
-					startInitDataJob();
+					synchronized (modelLoadListener) {
+						startInitDataJob();
+					}
 				}
 				
 			};
@@ -206,6 +213,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	@Override
 	public void dispose() {
 		CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(modelUpdateListener);
+		CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
 		super.dispose();
 	}
 
