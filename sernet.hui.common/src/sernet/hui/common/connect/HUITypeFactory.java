@@ -430,8 +430,11 @@ public class HUITypeFactory {
 	 * @param typeId
 	 */
 	public HuiRelation getRelation(String typeId) {
-		if (allEntities == null)
+		if (allEntities == null) {
+			Logger.getLogger(this.getClass()).debug("No entities in HUITypeFactory!! Instance: " + this);
 			return null;
+		}
+		
 		Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
 		for (Entry<String, EntityType> entry : entrySet) {
 			EntityType entityType = entry.getValue();
