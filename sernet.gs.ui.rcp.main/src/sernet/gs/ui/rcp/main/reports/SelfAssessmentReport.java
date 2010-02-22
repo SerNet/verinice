@@ -29,6 +29,7 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
  * $LastChangedBy$
  *
  */
+@SuppressWarnings("serial")
 public class SelfAssessmentReport extends BsiReport  {
 
 	/**

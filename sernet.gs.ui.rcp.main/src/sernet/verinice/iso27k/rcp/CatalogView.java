@@ -184,7 +184,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		compForm.setLayout(glForm);
 		labelCatalog = new Label(compForm,SWT.NONE);
 		labelCatalog.setText("Katalog");
-		comboCatalog = new Combo(compForm, SWT.DROP_DOWN);
+		comboCatalog = new Combo(compForm, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboCatalog.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		comboCatalog.addSelectionListener(new SelectionAdapter() {
 		      public void widgetSelected(SelectionEvent e) {

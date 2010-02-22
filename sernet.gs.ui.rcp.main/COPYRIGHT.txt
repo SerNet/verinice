@@ -2,8 +2,8 @@
 verinice is Open Source Software, Copyright 1996-2008 SerNet Service Network and
 others.
 
-Under the terms of the GPL (see LICENSE.txt) you may freely modify and distribute verinice. 
-All source files in the folder "src" are published under the terms of the GPLv3 license unless otherwise stated in the file itself (some files from other authors may be under the Apache Lixense, Eclipse license, LGPL et al).
+Under the terms of the LGPL (see license.txt) you may freely modify and distribute verinice. 
+All source files in the folder "src" are published under the terms of the LGPLv3 license unless otherwise stated in the file itself (some files from other authors may be under the Apache Lixense, Eclipse license et al).
 
 Some files in verinice contain the "SerNet" and/or "verinice" logo which are registered trademarks of SerNet GmbH in Germany and other countries. We kindly ask you to remove these files and the trademark "Sernet" from all files when distributing verinice on your own:
 
