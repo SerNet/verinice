@@ -21,9 +21,13 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
+ * An {@link IItem} is an element of a tree structured
+ * collection. Items are structured by a number string.
+ * Number string format is: n[.n1..] e.g. 1.2 or 3.4.1 or simply 2
+ * 
  * An item has a name and a description
  * and optionally a collection of child items
- * to create a tree structure.
+ * to create the tree structure.
  * 
  * @see ICatalog 
  * @author Daniel <dm@sernet.de>
@@ -33,6 +37,8 @@ public interface IItem extends Serializable {
 	static final int CONTROL = 0;
 	
 	static final int THREAT = 1;
+	
+	String getNumberString();
 	
 	String getName();
 	
