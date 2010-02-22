@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp.action;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -35,10 +38,21 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.verinice.iso27k.model.AssetGroup;
 import sernet.verinice.iso27k.model.AuditGroup;
 import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.iso27k.model.DocumentGroup;
+import sernet.verinice.iso27k.model.EvidenceGroup;
 import sernet.verinice.iso27k.model.ExceptionGroup;
+import sernet.verinice.iso27k.model.FindingGroup;
 import sernet.verinice.iso27k.model.Group;
+import sernet.verinice.iso27k.model.IncidentGroup;
+import sernet.verinice.iso27k.model.IncidentScenarioGroup;
+import sernet.verinice.iso27k.model.InterviewGroup;
 import sernet.verinice.iso27k.model.PersonGroup;
+import sernet.verinice.iso27k.model.ProcessGroup;
+import sernet.verinice.iso27k.model.RecordGroup;
 import sernet.verinice.iso27k.model.RequirementGroup;
+import sernet.verinice.iso27k.model.ResponseGroup;
+import sernet.verinice.iso27k.model.ThreatGroup;
+import sernet.verinice.iso27k.model.VulnerabilityGroup;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -48,6 +62,29 @@ public class AddElement implements IObjectActionDelegate {
 	private IWorkbenchPart targetPart;
 
 	private static final Logger LOG = Logger.getLogger(AddElement.class);
+	
+	private static final Map<String, String> TITLE_FOR_TYPE;
+	
+	static {
+		TITLE_FOR_TYPE = new HashMap<String, String>();
+		TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, "Add Asset...");
+		TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, "Add Audit...");
+		TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, "Add Control...");
+		TITLE_FOR_TYPE.put(DocumentGroup.TYPE_ID, "Add Document...");
+		TITLE_FOR_TYPE.put(EvidenceGroup.TYPE_ID, "Add Evidence...");
+		TITLE_FOR_TYPE.put(ExceptionGroup.TYPE_ID, "Add Exception...");
+		TITLE_FOR_TYPE.put(FindingGroup.TYPE_ID, "Add Improvement Note...");
+		TITLE_FOR_TYPE.put(IncidentGroup.TYPE_ID, "Add Incident...");
+		TITLE_FOR_TYPE.put(IncidentScenarioGroup.TYPE_ID, "Add Incident Scenario...");
+		TITLE_FOR_TYPE.put(InterviewGroup.TYPE_ID, "Add Interview...");
+		TITLE_FOR_TYPE.put(PersonGroup.TYPE_ID, "Add Person...");
+		TITLE_FOR_TYPE.put(ProcessGroup.TYPE_ID, "Add Process...");
+		TITLE_FOR_TYPE.put(RecordGroup.TYPE_ID, "Add Record...");
+		TITLE_FOR_TYPE.put(RequirementGroup.TYPE_ID, "Add Requirement...");
+		TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, "Add Response...");
+		TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, "Add Threat...");
+		TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, "Add Vulnerability...");
+	}
 	
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		this.targetPart = targetPart;
@@ -61,7 +98,7 @@ public class AddElement implements IObjectActionDelegate {
 
 			if (sel instanceof Group) {
 				Group group = (Group) sel;
-				if(group.getChildTypes()!=null && group.getChildTypes().length==1) {
+				if(group.getChildTypes()!=null && group.getChildTypes().length>0) {
 					// TODO: Fix this for group.getChildTypes().length > 1
 					newElement = CnAElementFactory.getInstance().saveNew(group, group.getChildTypes()[0], null);
 				} else {
@@ -81,32 +118,17 @@ public class AddElement implements IObjectActionDelegate {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
 	 */
+	@SuppressWarnings("unchecked")
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO: dm - set the new icons here
 		if(selection instanceof IStructuredSelection) {
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
-			if(sel instanceof PersonGroup) {
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImage(ImageCache.PERSON)));	
-				action.setText("New Person");
-			} else if(sel instanceof AssetGroup) {
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImage(ImageCache.UNKNOW_NEW)));	
-				action.setText("New Asset");
-			} else if(sel instanceof AuditGroup) {
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImage(ImageCache.UNKNOW_NEW)));	
-				action.setText("New Audit");
-			} else if(sel instanceof ControlGroup) {
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImage(ImageCache.UNKNOW_NEW)));	
-				action.setText("New Control");
-			} else if(sel instanceof ExceptionGroup) {
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImage(ImageCache.UNKNOW_NEW)));	
-				action.setText("New Exception");
-			} else if(sel instanceof RequirementGroup) {
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImage(ImageCache.UNKNOW_NEW)));	
-				action.setText("New Requirement");
-			} else {
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImage(ImageCache.UNKNOW_NEW)));	
-				action.setText("New Object");
+			if(sel instanceof Group) {
+				Group group = (Group) sel;
+				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0])));	
+				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : "New Object" );
 			}
+			
 		}
 	}
 }
