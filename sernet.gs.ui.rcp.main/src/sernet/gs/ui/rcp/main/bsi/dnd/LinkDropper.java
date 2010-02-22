@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -37,6 +38,7 @@ import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.iso27k.model.IISO27kElement;
 
@@ -66,6 +68,7 @@ public class LinkDropper {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
+						Activator.inheritVeriniceContextState();
 						createLink(target, toDrop);
 					} catch (Exception e) {
 						LOG.error("Drop failed", e); //$NON-NLS-1$
@@ -88,6 +91,7 @@ public class LinkDropper {
 		}
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
+				Activator.inheritVeriniceContextState();
 				List<CnALink> newLinks = new ArrayList<CnALink>();
 				allDragged: for (CnATreeElement dragged : toDrop) {
 					try {

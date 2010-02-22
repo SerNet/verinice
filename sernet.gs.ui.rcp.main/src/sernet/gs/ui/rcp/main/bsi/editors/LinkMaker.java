@@ -116,7 +116,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 		combo.setLayoutData(formData2);
 		combo.pack();
 
-		viewer = new RelationTableViewer(this, this, SWT.V_SCROLL | SWT.BORDER);
+		viewer = new RelationTableViewer(this, this, SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
 		FormData formData3 = new FormData();
 		formData3.top = new FormAttachment(combo, 1);
 		formData3.left = new FormAttachment(0, 1);

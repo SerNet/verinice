@@ -44,7 +44,7 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 	public PersonIso(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME), "New PersonIso");
+		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME), "New Person");
 	}
 	
 	/* (non-Javadoc)

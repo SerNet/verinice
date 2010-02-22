@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -71,6 +72,8 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.ChangeLinkType;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.verinice.iso27k.rcp.ISMView;
+import sernet.verinice.iso27k.rcp.JobScheduler;
 
 
 /**
@@ -83,6 +86,9 @@ import sernet.hui.common.connect.HuiRelation;
  */
 public class RelationView extends ViewPart implements IRelationTable {
 
+	private static final Logger LOG = Logger.getLogger(ISMView.class);
+
+	
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.RelationView"; //$NON-NLS-1$
 	
 	private TableViewer viewer;
@@ -158,7 +164,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
-		viewer = new RelationTableViewer(this, parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer = new RelationTableViewer(this, parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		contentProvider = new RelationViewContentProvider(this, viewer);
 		viewer.setContentProvider(contentProvider);
 		viewer.setLabelProvider(new RelationViewLabelProvider(this));
@@ -187,7 +193,9 @@ public class RelationView extends ViewPart implements IRelationTable {
 			}
 
 			public void loaded(BSIModel model) {
-				addModelListeners();
+				synchronized (loadListener) {
+					addModelListeners();
+				}
 			}
 			
 		};
@@ -198,11 +206,27 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 * 
 	 */
 	protected void addModelListeners() {
-		if (CnAElementFactory.isModelLoaded())
-			CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
+		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				IStatus status = Status.OK_STATUS;
+				try {
+					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+					if (CnAElementFactory.isModelLoaded())
+						CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
+					
+					if (CnAElementFactory.isIsoModelLoaded())
+						CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
+				} catch (Exception e) {
+					LOG.error("Error while loading data.", e);
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+				} finally {
+					monitor.done();
+				}
+				return status;
+			}
+		};
+		JobScheduler.scheduleInitJob(initDataJob);		
 		
-		if (CnAElementFactory.isIsoModelLoaded())
-			CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
 	}
 
 	/**

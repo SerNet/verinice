@@ -30,6 +30,7 @@ import sernet.gs.ui.rcp.main.bsi.model.EntityResolverFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.HuiRelation;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
@@ -54,6 +55,7 @@ import sernet.snutils.DBException;
  * </p>
  * 
  * @author koderman@sernet.de
+ * @author Rober Schuster
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
@@ -206,6 +208,11 @@ public class HitroUtil {
 			initDelegate();
 			
 			return typeFactory.isDependency(opt);
+		}
+		
+		public HuiRelation getRelation(String typeId) {
+			initDelegate();
+			return typeFactory.getRelation(typeId);
 		}
 	}
 
