@@ -20,7 +20,9 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -36,8 +38,10 @@ import org.eclipse.ui.part.EditorPart;
 import org.hibernate.StaleObjectStateException;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -52,7 +56,9 @@ import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
+import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.IISO27kElement;
+import sernet.verinice.iso27k.model.IISO27kGroup;
 
 /**
  * Editor for all BSI elements with attached HUI entities.
@@ -216,6 +222,24 @@ public class BSIElementEditor extends EditorPart {
 
 	}
 
+	/**
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	private void setIcon() {
+		Image icon = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
+		if(cnAElement!=null) {
+			if(cnAElement instanceof IISO27kGroup) {
+				icon = ImageCache.getInstance().getISO27kTypeImage(((Group)cnAElement).getChildTypes()[0]);
+			} else if(cnAElement instanceof IISO27kElement) {
+				icon = ImageCache.getInstance().getISO27kTypeImage(cnAElement.getTypeId());
+			} else if(cnAElement instanceof IBSIStrukturElement || cnAElement instanceof IBSIStrukturKategorie) {
+				icon = ImageCache.getInstance().getBSITypeImage(cnAElement.getTypeId());
+			}
+		}
+		setTitleImage(icon);
+	}
+
 	@Override
 	public boolean isDirty() {
 		return isModelModified;
@@ -264,6 +288,7 @@ public class BSIElementEditor extends EditorPart {
 		linkMaker.setLayoutData(formData2);
 		
 		initContent();
+		setIcon();
 		// if opened the first time, save initialized entity:
 		if (isDirty())
 			save(false);
