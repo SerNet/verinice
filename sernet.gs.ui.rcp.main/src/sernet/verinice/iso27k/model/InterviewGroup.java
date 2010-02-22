@@ -29,7 +29,7 @@ import sernet.hui.common.connect.Entity;
 public class InterviewGroup extends Group<Asset> {
 
 	public static final String TYPE_ID = "interview_group"; //$NON-NLS-1$
-	public static final String TITLE_DEFAULT = "Audits: Interviews"; //$NON-NLS-1$
+	public static final String TITLE_DEFAULT = "Audit: Interviews"; //$NON-NLS-1$
 	public static final String PROP_NAME = "interview_group_name"; //$NON-NLS-1$
 	
 	public static final String[] CHILD_TYPES = new String[] {Interview.TYPE_ID};

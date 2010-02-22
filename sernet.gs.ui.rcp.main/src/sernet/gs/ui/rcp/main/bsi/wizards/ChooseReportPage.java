@@ -159,10 +159,10 @@ public class ChooseReportPage extends WizardPage {
 		item.setText(0, report.getTitle());
 		item.setData(report);
 		
-		IHIbernateReport simpleReport = new SelfAssessmentReport();
+		report = new SelfAssessmentReport();
 		item = new TableItem(reportsTable, SWT.NULL);
 		item.setText(0, report.getTitle());
-		item.setData(simpleReport);
+		item.setData(report);
 
 		nameColumn.pack();
 		this.reportsTable.layout(true);

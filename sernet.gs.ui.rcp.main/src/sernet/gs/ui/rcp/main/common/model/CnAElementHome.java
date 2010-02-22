@@ -171,6 +171,15 @@ public class CnAElementHome {
 		return command.getLink();
 	}
 	
+	public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged, String typeId, String comment) throws CommandException {
+		Logger.getLogger(this.getClass()).debug(
+				"Saving new link from " + dropTarget + " to " + dragged + "of type " + typeId );
+		CreateLink command = new CreateLink(dropTarget, dragged, typeId, comment);
+		command = getCommandService().executeCommand(command);
+		
+		return command.getLink();
+	}
+	
 	public void remove(CnATreeElement element) throws Exception {
 		Logger.getLogger(this.getClass()).debug("Deleting " + element.getTitle());
 		RemoveElement command = new RemoveElement(element);

@@ -131,14 +131,14 @@
             class="sernet.verinice.iso27k.rcp.CatalogView"
             icon="icons/wrench.png"
             id="sernet.verinice.iso27k.rcp.CatalogView"
-            name="Maßnahmen Katalog"
+            name="Catalogs"
             restorable="true">
       </view>
       <view
             allowMultiple="false"
             category="sernet.verinice.iso27k.rcp"
             class="sernet.verinice.iso27k.rcp.ISMView"
-            icon="icons/tree_explorer.gif"
+            icon="icons/sweetie-verinice/png/16-arrow-branch-bgr.png"
             id="sernet.verinice.iso27k.rcp.ISMView"
             name="Information Security Model"
             restorable="true">
@@ -880,13 +880,13 @@
        			</or>
     		</with>
          </activeWhen> 
-         <enabledWhen>     	
-        	<with variable="selection">
-                <iterate operator="and">
-                    <instanceof value="sernet.gs.ui.rcp.main.common.model.CnATreeElement"/>
-                    <test property="sernet.verinice.iso27k.model.canContain"/>       
-                </iterate>
-        	</with> 	
+         <enabledWhen>
+            	<with variable="selection">
+	                <iterate operator="and">
+	                    <instanceof value="sernet.gs.ui.rcp.main.common.model.CnATreeElement"/>
+	                    <test property="sernet.verinice.iso27k.model.canContain"/>       
+	                </iterate>
+            	</with>
 		 </enabledWhen>
       </handler>
    </extension>

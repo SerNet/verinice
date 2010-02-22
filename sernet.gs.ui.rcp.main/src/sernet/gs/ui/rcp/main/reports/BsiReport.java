@@ -22,7 +22,6 @@ import java.util.Properties;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.wizards.IHIbernateReport;
 
 @SuppressWarnings("serial")
 public abstract class BsiReport implements Serializable, IBSIReport {

@@ -282,6 +282,7 @@ public class BSIElementEditor extends EditorPart {
 
 	@Override
 	public void dispose() {
+		linkMaker.dispose();
 		huiComposite.closeView();
 		cnAElement.getEntity().removeListener(modelListener);
 		EditorRegistry.getInstance().closeEditor(((BSIElementEditorInput) getEditorInput()).getId());

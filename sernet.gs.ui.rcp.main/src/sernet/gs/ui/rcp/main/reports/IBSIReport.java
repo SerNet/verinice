@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.reports;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import sernet.gs.ui.rcp.main.bsi.wizards.IHIbernateReport;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 

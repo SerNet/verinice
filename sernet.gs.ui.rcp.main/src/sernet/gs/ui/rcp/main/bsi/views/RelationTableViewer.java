@@ -43,8 +43,9 @@ public class RelationTableViewer extends TableViewer {
 
 	private TableColumn col1;
 	private TableViewerColumn viewerCol2;
-	private TableColumn col3;
+	private TableColumn col4;
 	private IRelationTable view;
+	private TableColumn col3;
 	
 	/**
 	 * @param parent
@@ -82,14 +83,18 @@ public class RelationTableViewer extends TableViewer {
 		});
 		viewerCol2.setEditingSupport(new RelationTypeEditingSupport(view, this));
 
-		
 		col3 = new TableColumn(table, SWT.LEFT);
-		col3.setText("Titel");
-		col3.setWidth(250);
+		col3.setText("");
+		col3.setWidth(20);
+		
+		col4 = new TableColumn(table, SWT.LEFT);
+		col4.setText("Titel");
+		col4.setWidth(250);
 		
 		setColumnProperties(new String[] {
 				IRelationTable.COLUMN_IMG, //$NON-NLS-1$
 				IRelationTable.COLUMN_TYPE, //$NON-NLS-1$
+				IRelationTable.COLUMN_TYPE_IMG, //$NON-NLS-1$
 				IRelationTable.COLUMN_TITLE //$NON-NLS-1$
 		});
 		

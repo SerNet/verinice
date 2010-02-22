@@ -26,6 +26,7 @@ import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.hui.common.connect.HuiRelation;
@@ -60,7 +61,7 @@ public class RelationViewLabelProvider extends LabelProvider implements
 
 		switch (index) {
 		case 0:
-			return "";
+			return ""; //image only
 		case 1:
 			// if we can't find a real name for the relation, we just display
 			// "depends on" or "necessary for":
@@ -70,6 +71,8 @@ public class RelationViewLabelProvider extends LabelProvider implements
 				return (relation != null) ? relation.getReversename()
 						: "ist nötig für";
 		case 2:
+			return ""; // image only
+		case 3:
 			return CnALink.getRelationObjectTitle(view.getInputElmt(), link);
 		default:
 			return "";
@@ -77,16 +80,33 @@ public class RelationViewLabelProvider extends LabelProvider implements
 	}
 
 	public Image getColumnImage(Object obj, int index) {
-		if (index != 0)
-			return null;
 		if (obj instanceof PlaceHolder)
 			return null;
 
 		CnALink link = (CnALink) obj;
-		if (CnALink.isDownwardLink(view.getInputElmt(), link))
-			return ImageCache.getInstance().getImage(ImageCache.LINK_DOWN);
-		else
-			return ImageCache.getInstance().getImage(ImageCache.LINK_UP);
+		switch (index) {
+		case 0:
+			if (CnALink.isDownwardLink(view.getInputElmt(), link))
+				return ImageCache.getInstance().getImage(ImageCache.LINK_DOWN);
+			else
+				return ImageCache.getInstance().getImage(ImageCache.LINK_UP);
+		case 2:
+			if (CnALink.isDownwardLink(view.getInputElmt(), link))
+				return getObjTypeImage(link.getDependency());
+			else
+				return getObjTypeImage(link.getDependant());
+		default:
+			return null;
+		}
+		
+	}
+
+	/**
+	 * @param link
+	 * @return
+	 */
+	private Image getObjTypeImage(CnATreeElement elmt) {
+		return ImageCache.getInstance().getISO27kTypeImage(elmt.getTypeId());
 	}
 
 }

@@ -48,7 +48,11 @@ extends GenericCommand {
 	public CreateLink(V target, U dragged) {
 		this(target, dragged, "", "");
 	}
-
+	
+	public CreateLink(V target, U dragged, String typeId) {
+		this(target, dragged, typeId, "");
+	}
+	
 	public CreateLink(V target, U dragged, String typeId, String comment) {
 		this.target = target;
 		this.dragged = dragged;

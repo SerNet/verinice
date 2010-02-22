@@ -42,13 +42,13 @@ public class Control extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_TAG = "control_tag"; //$NON-NLS-1$
 	public static final String PROP_DESC = "control_desc"; //$NON-NLS-1$
 	
-	public static final String PROP_MATURITY = "control_umsetzung"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_0 = "control_umsetzung_0"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_1 = "control_umsetzung_1"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_2 = "control_umsetzung_2"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_3 = "control_umsetzung_3"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_4 = "control_umsetzung_4"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_5 = "control_umsetzung_5"; //$NON-NLS-1$
+	public static final String PROP_MATURITY = "control_maturity"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_0 = "control_maturity_0"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_1 = "control_maturity_1"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_2 = "control_maturity_2"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_3 = "control_maturity_3"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_4 = "control_maturity_4"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_5 = "control_maturity_5"; //$NON-NLS-1$
 	private static final int SUFFICIENT_MATURITY = 2;
 	
 	/**

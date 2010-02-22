@@ -39,6 +39,7 @@ import sernet.verinice.iso27k.model.Interview;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.model.PersonIso;
 import sernet.verinice.iso27k.model.Requirement;
+import sernet.verinice.iso27k.model.Response;
 import sernet.verinice.iso27k.model.Threat;
 import sernet.verinice.iso27k.model.Vulnerability;
 
@@ -200,6 +201,7 @@ public class ImageCache {
 	public static final String ISO27K_INTERVIEW 		= "sweetie-verinice/png/16-clipboard-comment.png";
 	public static final String ISO27K_IMRPOVEMENT_NOTE 	= "sweetie-verinice/png/16-clipboard-report-bar.png";
 	public static final String ISO27K_EVIDENCE 			= "sweetie-verinice/png/16-clipboard-eye.png";
+	public static final String ISO27K_RESPONSE 			= "sweetie-verinice/png/16-paper-arrow-green.png";
 	public static final String ISO27K_DOCUMENT 			= "mime-document.png";
 	public static final String ISO27K_RECORD 			= "mime-text.png";
 	public static final String ISO27K_SCOPE 			= "tree_explorer.gif";
@@ -246,6 +248,7 @@ public class ImageCache {
 		iso27kIconMap.put(Document.TYPE_ID, ImageCache.ISO27K_DOCUMENT);
 		iso27kIconMap.put(PersonIso.TYPE_ID, ImageCache.ISO27K_PERSON);
 		iso27kIconMap.put(Control.TYPE_ID,   ImageCache.ISO27K_CONTROL);
+		iso27kIconMap.put(Response.TYPE_ID,   ImageCache.ISO27K_RESPONSE);
 	}
 
 	public static ImageCache getInstance() {

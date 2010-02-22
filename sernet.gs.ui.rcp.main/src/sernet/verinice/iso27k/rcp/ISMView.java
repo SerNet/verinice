@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -24,6 +25,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -116,6 +118,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	private ShowAccessControlEditAction accessControlEditAction;
 	
 	private IModelLoadListener modelLoadListener;
+
+	private ISO27KModelViewUpdate modelUpdateListener;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -169,9 +173,10 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		JobScheduler.scheduleInitJob(initDataJob);		
 	}
 
-	private void initData() {
+	private void initData() {	
 		if(CnAElementFactory.isIsoModelLoaded()) {
-			CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(new ISO27KModelViewUpdate(viewer,cache));
+			modelUpdateListener = new ISO27KModelViewUpdate(viewer,cache);
+			CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
 			Display.getDefault().syncExec(new Runnable(){
 				public void run() {
 					setInput(CnAElementFactory.getInstance().getISO27kModel());
@@ -192,6 +197,15 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 			};
 			CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+	 */
+	@Override
+	public void dispose() {
+		CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(modelUpdateListener);
+		super.dispose();
 	}
 
 	public void setInput(ISO27KModel model) {
@@ -316,11 +330,12 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		manager.add(accessControlEditAction);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
+	/**
+	 * Passing the focus request to the viewer's control.
 	 */
 	@Override
 	public void setFocus() {
+		viewer.getControl().setFocus();
 	}
 	
 	public ISMViewContentProvider getContentProvider() {

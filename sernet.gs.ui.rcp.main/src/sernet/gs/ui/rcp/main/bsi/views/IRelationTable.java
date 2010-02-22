@@ -33,6 +33,7 @@ public interface IRelationTable {
 	
 	public static final String COLUMN_IMG = "_img";
 	public static final String COLUMN_TYPE = "_type";
+	public static final String COLUMN_TYPE_IMG = "_type_img";
 	public static final String COLUMN_TITLE = "_title";
 
 

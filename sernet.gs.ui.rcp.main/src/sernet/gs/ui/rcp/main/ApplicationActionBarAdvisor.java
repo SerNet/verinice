@@ -224,7 +224,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(openBSIModelViewAction);
 		
 		openISMViewAction = new OpenViewAction(window, "Information Security Model",
-				ISMView.ID, ImageCache.VIEW_BSIMODEL);
+				ISMView.ID, ImageCache.VIEW_ISMVIEW);
 		register(openISMViewAction);
 
 		openDSViewAction = new OpenViewAction(window, "Datenschutz",
