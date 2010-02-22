@@ -25,6 +25,24 @@ import java.util.Map;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 
+import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
+import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.Client;
+import sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
+import sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
+import sernet.gs.ui.rcp.main.bsi.model.Person;
+import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.Raum;
+import sernet.gs.ui.rcp.main.bsi.model.Server;
+import sernet.gs.ui.rcp.main.bsi.model.ServerKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
+import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.verinice.iso27k.model.Asset;
 import sernet.verinice.iso27k.model.Audit;
 import sernet.verinice.iso27k.model.Control;
@@ -228,33 +246,60 @@ public class ImageCache {
 	
 	private final Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
 
-	// for ISO27k elements: map of <element type> : <icon name> 
-	private HashMap<String, String> iso27kIconMap;
+	// for BSI elements: map of <element type> : <icon name> 
+	private static final HashMap<String, String> BSI_ICON_MAP;
 	
-	private ImageCache() {
-		iso27kIconMap = new HashMap<String, String>();
+	// for ISO27k elements: map of <element type> : <icon name> 
+	private static final HashMap<String, String> ISO27K_ICON_MAP;
+	
+	static {
+		ISO27K_ICON_MAP = new HashMap<String, String>();
 		
 		// fill type map for iso27k icons:
-		iso27kIconMap.put(Organization.TYPE_ID, ImageCache.ISO27K_SCOPE);
-		iso27kIconMap.put(Asset.TYPE_ID, ImageCache.ISO27K_ASSET);
-		iso27kIconMap.put(Threat.TYPE_ID, ImageCache.ISO27K_THREAT);
-		iso27kIconMap.put(Vulnerability.TYPE_ID,
-											ImageCache.ISO27K_VULNERABILITY);
-		iso27kIconMap.put(IncidentScenario.TYPE_ID,
-											ImageCache.ISO27K_INCIDENT_SCENARIO);
-		iso27kIconMap.put(Incident.TYPE_ID, ImageCache.ISO27K_INCIDENT);
-		iso27kIconMap.put(Requirement.TYPE_ID, ImageCache.ISO27K_REQUIREMENT);
-		iso27kIconMap.put(Exception.TYPE_ID, ImageCache.ISO27K_EXCEPTION);
-		iso27kIconMap.put(Audit.TYPE_ID, ImageCache.ISO27K_AUDIT);
-		iso27kIconMap.put(Interview.TYPE_ID, ImageCache.ISO27K_INTERVIEW);
-		iso27kIconMap.put(Finding.TYPE_ID, ImageCache.ISO27K_IMRPOVEMENT_NOTE);
-		iso27kIconMap.put(Evidence.TYPE_ID, ImageCache.ISO27K_EVIDENCE);
-		iso27kIconMap.put(Document.TYPE_ID, ImageCache.ISO27K_DOCUMENT);
-		iso27kIconMap.put(PersonIso.TYPE_ID, ImageCache.ISO27K_PERSON);
-		iso27kIconMap.put(Control.TYPE_ID,   ImageCache.ISO27K_CONTROL);
-		iso27kIconMap.put(Response.TYPE_ID,   ImageCache.ISO27K_RESPONSE);
-		iso27kIconMap.put(sernet.verinice.iso27k.model.Process.TYPE_ID,   ImageCache.ISO27K_PROCESS);
-		iso27kIconMap.put(Record.TYPE_ID,   ImageCache.ISO27K_RECORD);
+		ISO27K_ICON_MAP.put(Organization.TYPE_ID, ImageCache.ISO27K_SCOPE);
+		ISO27K_ICON_MAP.put(Asset.TYPE_ID, ImageCache.ISO27K_ASSET);
+		ISO27K_ICON_MAP.put(Threat.TYPE_ID, ImageCache.ISO27K_THREAT);
+		ISO27K_ICON_MAP.put(Vulnerability.TYPE_ID, ImageCache.ISO27K_VULNERABILITY);
+		ISO27K_ICON_MAP.put(IncidentScenario.TYPE_ID,ImageCache.ISO27K_INCIDENT_SCENARIO);
+		ISO27K_ICON_MAP.put(Incident.TYPE_ID, ImageCache.ISO27K_INCIDENT);
+		ISO27K_ICON_MAP.put(Requirement.TYPE_ID, ImageCache.ISO27K_REQUIREMENT);
+		ISO27K_ICON_MAP.put(Exception.TYPE_ID, ImageCache.ISO27K_EXCEPTION);
+		ISO27K_ICON_MAP.put(Audit.TYPE_ID, ImageCache.ISO27K_AUDIT);
+		ISO27K_ICON_MAP.put(Interview.TYPE_ID, ImageCache.ISO27K_INTERVIEW);
+		ISO27K_ICON_MAP.put(Finding.TYPE_ID, ImageCache.ISO27K_IMRPOVEMENT_NOTE);
+		ISO27K_ICON_MAP.put(Evidence.TYPE_ID, ImageCache.ISO27K_EVIDENCE);
+		ISO27K_ICON_MAP.put(Document.TYPE_ID, ImageCache.ISO27K_DOCUMENT);
+		ISO27K_ICON_MAP.put(PersonIso.TYPE_ID, ImageCache.ISO27K_PERSON);
+		ISO27K_ICON_MAP.put(Control.TYPE_ID,   ImageCache.ISO27K_CONTROL);
+		ISO27K_ICON_MAP.put(Response.TYPE_ID,   ImageCache.ISO27K_RESPONSE);
+		ISO27K_ICON_MAP.put(sernet.verinice.iso27k.model.Process.TYPE_ID,   ImageCache.ISO27K_PROCESS);
+		ISO27K_ICON_MAP.put(Record.TYPE_ID,   ImageCache.ISO27K_RECORD);
+		
+		BSI_ICON_MAP = new HashMap<String, String>();
+		
+		// fill type map for BSI icons:
+		BSI_ICON_MAP.put(Anwendung.TYPE_ID, ImageCache.ANWENDUNG);
+		BSI_ICON_MAP.put(Gebaeude.TYPE_ID, ImageCache.GEBAEUDE);
+		BSI_ICON_MAP.put(Client.TYPE_ID, ImageCache.CLIENT);
+		BSI_ICON_MAP.put(Server.TYPE_ID, ImageCache.SERVER);
+		BSI_ICON_MAP.put(SonstIT.TYPE_ID, ImageCache.SONSTIT);
+		BSI_ICON_MAP.put(TelefonKomponente.TYPE_ID, ImageCache.TELEFON);
+		BSI_ICON_MAP.put(Person.TYPE_ID, ImageCache.PERSON);
+		BSI_ICON_MAP.put(NetzKomponente.TYPE_ID, ImageCache.NETWORK);
+		BSI_ICON_MAP.put(Raum.TYPE_ID, ImageCache.RAUM);
+		BSI_ICON_MAP.put(AnwendungenKategorie.TYPE_ID, ImageCache.ANWENDUNG);
+		BSI_ICON_MAP.put(GebaeudeKategorie.TYPE_ID, ImageCache.GEBAEUDE);
+		BSI_ICON_MAP.put(ClientsKategorie.TYPE_ID, ImageCache.CLIENT);
+		BSI_ICON_MAP.put(ServerKategorie.TYPE_ID, ImageCache.SERVER);
+		BSI_ICON_MAP.put(SonstigeITKategorie.TYPE_ID, ImageCache.SONSTIT);
+		BSI_ICON_MAP.put(TKKategorie.TYPE_ID, ImageCache.TELEFON);
+		BSI_ICON_MAP.put(PersonenKategorie.TYPE_ID, ImageCache.PERSON);
+		BSI_ICON_MAP.put(NKKategorie.TYPE_ID, ImageCache.NETWORK);
+		BSI_ICON_MAP.put(RaeumeKategorie.TYPE_ID, ImageCache.RAUM);
+	}
+	
+	private ImageCache() {
+		
 	}
 
 	public static ImageCache getInstance() {
@@ -265,12 +310,20 @@ public class ImageCache {
 		return instance;
 	}
 	
+	public Image getBSITypeImage(String typeId) {
+		Image image = getImage(ImageCache.UNKNOWN);
+		if (typeId != null && BSI_ICON_MAP.get(typeId) != null) {
+			image = getImage(BSI_ICON_MAP.get(typeId));
+		}
+		return image;
+	}
+	
 	public Image getISO27kTypeImage(String typeId) {
-		String imageUrl = iso27kIconMap.get(typeId);
-		if (typeId == null || imageUrl == null)
-			return getImage(ImageCache.UNKNOWN);
-		
-		return getImage(imageUrl);
+		Image image = getImage(ImageCache.UNKNOWN);
+		if (typeId != null && ISO27K_ICON_MAP.get(typeId) != null) {
+			image = getImage(ISO27K_ICON_MAP.get(typeId));
+		}
+		return image;
 	}
 	
 	public ImageDescriptor getImageDescriptor(String url) {
