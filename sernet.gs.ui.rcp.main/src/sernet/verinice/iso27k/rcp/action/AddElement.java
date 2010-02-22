@@ -120,7 +120,6 @@ public class AddElement implements IObjectActionDelegate {
 	 */
 	@SuppressWarnings("unchecked")
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO: dm - set the new icons here
 		if(selection instanceof IStructuredSelection) {
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
 			if(sel instanceof Group) {
