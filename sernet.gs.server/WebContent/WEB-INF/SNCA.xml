@@ -3326,6 +3326,48 @@ Template:
             name="Title"
             id="finding_group_name" />
     </huientity>
+    <huientity
+        name="Process"
+        id="process" >
+        <huiproperty
+            name="Title"
+            id="process_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="process_abbr" />
+        <huiproperty
+            id="process_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+    </huientity>
+    <huientity
+        name="Process-Group"
+        id="process_group" >
+        <huiproperty
+            name="Title"
+            id="process_group_name" />
+    </huientity>
+    <huientity
+        name="Record"
+        id="record" >
+        <huiproperty
+            name="Title"
+            id="record_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="record_abbr" />
+        <huiproperty
+            id="record_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+    </huientity>
+    <huientity
+        name="Record-Group"
+        id="record_group" >
+        <huiproperty
+            name="Title"
+            id="record_group_name" />
+    </huientity>
     
     <huientity
         id="note"
