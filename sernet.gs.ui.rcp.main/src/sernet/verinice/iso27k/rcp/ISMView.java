@@ -32,6 +32,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -321,13 +322,18 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	 */
 	protected void fillContextMenu(IMenuManager manager) {
 		manager.add(new GroupMarker("content")); //$NON-NLS-1$
+		manager.add(new Separator());
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		manager.add(new Separator());
+		manager.add(new GroupMarker("special"));
 		manager.add(bulkEditAction);
+		manager.add(accessControlEditAction);
+		manager.add(new Separator());
 		manager.add(expandAction);
 		manager.add(collapseAction);
 		drillDownAdapter.addNavigationActions(manager);
 
-		manager.add(accessControlEditAction);
+		
 	}
 
 	/**

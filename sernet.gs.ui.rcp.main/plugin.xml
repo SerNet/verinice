@@ -293,26 +293,6 @@
                    </or>
                 </enablement>
              </action>
-             <action
-                   class="sernet.gs.ui.rcp.main.bsi.risikoanalyse.actions.NeueRisikoanalyseAction"
-                   enablesFor="1"
-                   icon="icons/16-message-warn.png"
-                   id="sernet.gs.ui.rcp.main.neueRisikoanalyse"
-                   label="Neue Risikoanalyse"
-                   menubarPath="content"
-                   tooltip="Risikoanalyse durchführen">
-                <enablement>
-                   <and>
-                   		<objectClass name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement"/>
-                   <not>
-                      <or>
-                      		<objectClass name="sernet.gs.ui.rcp.main.bsi.model.ITVerbund"/>
-                      		<objectClass name="sernet.gs.ui.rcp.main.bsi.model.Person"/>
-                      </or>
-                   </not>
-                   </and>
-                </enablement>
-             </action>
             
       </objectContribution>
       
@@ -357,7 +337,7 @@
                icon="icons/building.png"
                id="sernet.gs.ui.rcp.main.addgebaeude"
                label="Neues Gebäude"
-               menubarPath="additions"
+               menubarPath="content"
                style="push"
                tooltip="Neues Gebäude dem IT Verbund hinzufügen"/>
         
@@ -373,7 +353,7 @@
                icon="icons/user.png"
                id="sernet.gs.ui.rcp.main.addperson"
                label="Neuer Mitarbeiter"
-               menubarPath="additions"
+               menubarPath="content"
                style="push"
                tooltip="Neue Person dem IT Verbund hinzufügen"/>
                </objectContribution>
@@ -387,7 +367,7 @@
                icon="icons/application_osx.png"
                id="sernet.gs.ui.rcp.main.addanwendung"
                label="Neue Anwendung"
-               menubarPath="additions"
+               menubarPath="content"
                style="push"
                tooltip="Neue Anwendung hinzufügen"/>
       </objectContribution>
@@ -401,7 +381,7 @@
                icon="icons/computer.png"
                id="sernet.gs.ui.rcp.main.addclient"
                label="Neuer Client"
-               menubarPath="additions"
+               menubarPath="content"
                style="push"
                tooltip="Neuen Client hinzufügen (PC, Laptop...)"/>
       </objectContribution>
@@ -416,7 +396,7 @@
                icon="icons/sonstit.png"
                id="sernet.gs.ui.rcp.main.addsonstit"
                label="Neues IT-System"
-               menubarPath="additions"
+               menubarPath="content"
                style="push"
                tooltip="Neues sonstiges IT-System hinzufügen (PDA, Netzwerkdrucker...)"/>
       </objectContribution>
@@ -431,7 +411,7 @@
                icon="icons/drive_network.png"
                id="sernet.gs.ui.rcp.main.addNk"
                label="Neues Netz / neue Verbindung"
-               menubarPath="additions"
+               menubarPath="content"
                style="push"
                tooltip="Netze / Verbindungen hinzufügen"/>
       </objectContribution>
@@ -445,7 +425,7 @@
                icon="icons/phone.png"
                id="sernet.gs.ui.rcp.main.addTk"
                label="Neue TK-Komponente"
-               menubarPath="additions"
+               menubarPath="content"
                style="push"
                tooltip="Neue Telekommunikations-Komponente"/>
       </objectContribution>
@@ -459,7 +439,7 @@
                icon="icons/server_database.png"
                id="sernet.gs.ui.rcp.main.addServer"
                label="Neuer Server"
-               menubarPath="additions"
+               menubarPath="content"
                style="push"
                tooltip="Neuen Server hinzufügen"/>
       </objectContribution>
@@ -473,7 +453,7 @@
                icon="icons/door_open.png"
                id="sernet.gs.ui.rcp.main.addRaum"
                label="Neuer Raum"
-               menubarPath="additions"
+               menubarPath="content"
                style="push"
                tooltip="Neuen Raum hinzufügen"/>
       </objectContribution>
@@ -487,7 +467,7 @@
                    icon="icons/tree_explorer.gif"
                    id="sernet.gs.ui.rcp.main.additverbund"
                    label="Neuer IT-Verbund"
-                   menubarPath="additions"
+                   menubarPath="content"
                    style="push"
                    tooltip="Neuen IT Verbund hinzufügen">
              </action>
@@ -502,7 +482,7 @@
                icon="icons/user_edit.png"
                id="sernet.gs.ui.rcp.main.personconfiguration"
                label="Account-Einstellungen..."
-               menubarPath="additions"
+               menubarPath="special"
                style="push"
                tooltip="Username, Passwort, Mailadresse u.a. benutzerspezifische Einstellungen">
          </action>
@@ -516,8 +496,8 @@
                enablesFor="1"
                icon="icons/note.png"
                id="sernet.gs.ui.rcp.main.bsi.actions.addnote"
-               label="neue Notiz"
-               menubarPath="additions"
+               label="Notiz hinzufügen..."
+               menubarPath="special"
                style="push"
                tooltip="Neue Notiz hinzufügen">
          </action>
@@ -531,10 +511,10 @@
                enablesFor="1"
                icon="icons/attach.png"
                id="sernet.gs.ui.rcp.main.bsi.actions.addfile"
-               label="neue Datei"
-               menubarPath="additions"
+               label="Datei anhängen..."
+               menubarPath="special"
                style="push"
-               tooltip="neue Datei anhängen...">
+               tooltip="Neue Datei anhängen...">
          </action>
       </objectContribution>
       <!-- ISO27000 actions -->
@@ -548,7 +528,7 @@
                icon="icons/generic_element_new.png"
                id="sernet.verinice.iso27k.rcp.action.AddElement"
                label="New Element"
-               menubarPath="additions"
+               menubarPath="content"
                style="push"
                tooltip="add new element"/>
       </objectContribution>
@@ -562,9 +542,40 @@
                icon="icons/generic_elements_new.png"
                id="sernet.verinice.iso27k.rcp.action.AddGroup"
                label="Add Group"
-               menubarPath="additions"
+               menubarPath="content"
                style="push"
                tooltip="add new group">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bsielementcontrib"
+            objectClass="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement">
+         <action
+               class="sernet.gs.ui.rcp.main.bsi.risikoanalyse.actions.NeueRisikoanalyseAction"
+               enablesFor="1"
+               icon="icons/16-message-warn.png"
+               id="sernet.gs.ui.rcp.main.neueRisikoanalyse"
+               label="Risikoanalyse durchführen..."
+               menubarPath="special"
+               tooltip="Risikoanalyse durchführen...">
+            <enablement>
+               <and>
+                  <objectClass
+                        name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement">
+                  </objectClass>
+                  <not>
+                     <or>
+                        <objectClass
+                              name="sernet.gs.ui.rcp.main.bsi.model.ITVerbund">
+                        </objectClass>
+                        <objectClass
+                              name="sernet.gs.ui.rcp.main.bsi.model.Person">
+                        </objectClass>
+                     </or>
+                  </not>
+               </and>
+            </enablement>
          </action>
       </objectContribution>
    </extension>
