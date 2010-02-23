@@ -26,11 +26,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.ui.actions.NewExampleAction;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.verinice.iso27k.model.Group;
@@ -187,7 +189,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 	}
 	
 	class ElementComparator implements Comparator<CnATreeElement> {
-
+		NumericStringComparator numericStringComparator = new NumericStringComparator(); 
 		public int compare(CnATreeElement o1, CnATreeElement o2) {
 			int FIRST_IS_LESS = -1;
 			int EQUAL = 0;
@@ -195,7 +197,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 			int result = FIRST_IS_LESS;
 			if(o1!=null && o1.getTitle()!=null) {
 				if(o2!=null && o2.getTitle()!=null) {
-					result = o1.getTitle().toLowerCase().compareTo(o2.getTitle().toLowerCase());
+					result = numericStringComparator.compare(o1.getTitle().toLowerCase(), o2.getTitle().toLowerCase());
 				} else {
 					result = FIRST_IS_GREATER;
 				}
