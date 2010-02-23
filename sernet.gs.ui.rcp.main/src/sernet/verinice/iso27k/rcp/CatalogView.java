@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -68,7 +66,6 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.gs.ui.rcp.main.common.model.NullMonitor;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -78,14 +75,12 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachments;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
-import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.rcp.action.ControlDragListener;
 import sernet.verinice.iso27k.service.IItem;
 import sernet.verinice.iso27k.service.Item;
 import sernet.verinice.iso27k.service.commands.CsvFile;
 import sernet.verinice.iso27k.service.commands.ImportCatalog;
 import sernet.verinice.rcp.IAttachedToPerspective;
-import sernet.verinice.rcp.StatusResult;
 
 /**
  * @author Daniel <dm@sernet.de>
@@ -441,7 +436,13 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		}
 
 		public String getText(Object obj) {
-			return ((IItem)obj).getName();
+			IItem item = ((IItem)obj);
+			StringBuilder sb = new StringBuilder();
+			// add the number to the titel
+			if(item.getName()==null || !item.getName().startsWith(item.getNumberString())) {
+				sb.append(item.getNumberString()).append(" ");
+			}
+			return sb.append(item.getName()).toString();
 		}
 	}
 
