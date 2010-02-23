@@ -25,7 +25,6 @@ import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.verinice.iso27k.service.Catalog;
@@ -110,7 +109,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 		        	}
 		        	// create a new one
 		        	item = new Item(nextLine[1],nextLine[2]);
-		        	item.setNumberString(nextLine[0]);
+		        	item.setNumberString(nextLine[0].trim());
 		        	StringBuilder sb = new StringBuilder();
 		        	sb.append("<p>").append(nextLine[3]).append("</p>");
 		        	item.setDescription(sb.toString());
