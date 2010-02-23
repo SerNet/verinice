@@ -1,0 +1,412 @@
+"1.","Prüfung der IT-Strategie (IDW PS 330, Tz. 51 f.)",,
+"1.1","Machen Sie sich mit dem Branchenumfeld den gesamtwirtschaftlichen und branchen- sowie unternehmensspezifischen Risiken und der diesbezüglichen Risikobeurteilung des Mandanten vertraut.",,
+"1.2","Stellen Sie die in schriftlicher Form verfügbaren Unterlagen zur Unternehmensstrategie und der daraus abgeleiteten IT-Strategie, zu dem Sicherheitskonzept und die den IT-Bereich betreffende Planungsunterlagen zusammen. ",,"Verschaffen Sie sich einen Überblick über wesentliche Zielsetzungen, Projekte und Maßnahmen und ergänzen Sie Ihr Verständnis durch weitere Gespräche mit IT-Verantwortlichen"
+"1.3","Stellen Sie fest, ob die IT-Strategie sachgerecht aus der Unternehmensstrategie abgeleitet wurde",,
+"1.4","Beurteilen Sie die Angemessenheit der IT-Strategie sowie der IT-Planung anhand folgender Aspekte",,"Ist die IT-Strategieplanung offiziell von der Unternehmensleitung genehmigt?"
+,,,"Sind wesentliche Aspekte der Unternehmensstrategie angemessen in der mittelfristigen IT-Planung berücksichtigt"
+,,,"Sind in der IT-Planung wichtige Einzelmaßnahmen oder Projekte detailliert beschrieben und hierfür Ziele, Verantwortlichkeiten, Ressourcen, Termine definiert ?"
+,,,"Sind notwendige Kosten und Investitionen explizit in der Investitions- und Personalplanung berücksichtigt"
+,,,"Sind Interdependenzen zwischen wichtigen Projekten berücksichtigt?"
+,,,"Wird die Planung regelmäßig aktualisiert?"
+"1.5","Stellen Sie dar, ob wesentliche geplante Restrukturierungsmaßnahmen einen ausreichenden Niederschlag in der IT-Planung gefunden haben",,
+"1.6","Beurteilen Sie die Angemessenheit des Sicherheitskonzeptes und der daraus abgeleiteten Maßnahmen. Berücksichtigen Sie dabei insbesondere die folgenden Risikoindikatoren:",,"Abhängigkeit des Unternehmens von IT-Anwendungen und der IT-Infrastruktur insbesondere durch die Vernetzung mit anderen Geschäftspartnern"
+,,,"Größere Änderungsprojekte z.B. Einführung neuer Systeme und Technologien sowie Restrukturierungsmaßnahmen"
+,,,"Fehlendes bzw. unzureichendes Know-how bzw. Abhängigkeit von einzeln Mitarbeitern oder IT-Dienstleistern"
+,,,"Fehlende bzw. unzureichende Berücksichtigung wesentlicher Anwendungen / Prozesse (Insellösungen)"
+,,,"Fehlende Kompatibilität mit technischen, wirtschaftlichen oder rechtlichen Rahmenbedingungen"
+"2.","Prüfung des IT-Umfeldes (IDW PS 330, Tz. 51 f.)",,
+"2.1","Verschaffen Sie sich einen Überblick über das IT-Risikobewusstsein im Unternehmen anhand von Erhebungen bzw. Befragungen zu folgenden Punkten:",,"Sind die Risiken aus dem Einsatz von IT Gegenstand der Erörterung in den Aufsichtsgremien oder in den Strategiesitzungen der Geschäftsführungen"
+,,,"Kommuniziert das Unternehmen IT-Risiken und die zur Begegnung dieser Risiken umgesetzten Maßnahmen an die Mitarbeiter? Wird auf aktuelle Risiken aus dem Einsatz von IT hingewiesen (z.B. aktuelle Virenwarnungen per Rundschreiben oder E-Mail?)"
+,,,"Werden IT-Schulungen bzw. andere Aus- und Weiterbildungsmaßnahmen angeboten, die auch das Thema IT-Risiken und IT-Sicherheit behandeln?"
+"2.2","Besteht bei der Unternehmensleitung und Mitarbeitern ein angemessenes Risikobewusstsein bezüglich möglicher Risiken aus dem IT-Einsatz?",,"Beurteilen Sie die Angemessenheit im Hinblick auf die festgestellten Maßnahmen und unter Berücksichtigung folgender Fragestellungen:"
+,,,"Werden vom Risikofrüherkennungssystem die maßgeblichen IT-Risiken erfasst, bewertet und mitgeteilt, die zu einer Bestandsgefährdung führen können?"
+,,,"Sind Sachverhalte aktenkundig, die ihre Ursache in einem Verstoß der Unternehmensleitung oder Mitarbeiter gegen IT-relevante Sicherheitsbestimmungen, Arbeitsanweisungen oder Gesetzesbestimmungen (bspw. Bundesdatenschutzgesetz) haben?"
+,,,"Gab es nennenswerte Ausfälle des IT-Systems, die zu einer Beeinträchtigung der Leistungsbereitschaft des Unternehmens in der Vergangenheit geführt haben?"
+,,,"Wurden unberechtigte Zugriffe auf das IT-System festgestellt?"
+,,,"Sind Schäden aufgetreten, die bspw. auf unzureichende IT-Sicherheitsmaßnahmen bzw. auf Verfügbarkeitsprobleme bezüglich des IT-Systems zurückzuführen sind?"
+"3.","Prüfung der IT-Organisation (IDW PS 330, Tz. 51 f.)",,
+"3.1","Zentrale Aufbauorganisation",,
+"3.1.1","Erheben Sie die Organisation-Struktur- insbesondere die Leitungsstruktur – des IT-Bereiches insbesondere anhand:",,"Verzeichnis aller Mitarbeiter des IT-Bereiches"
+,,,"Tätigkeits- bzw. Funktionsbeschreibungen (z.B. Stellenbeschreibungen)"
+,,,"Aufgliederung des IT-Bereiches in wesentliche Teile/Abteilungen (Systementwicklung, Rechenzentrum)."
+"3.1.2","Informieren Sie sich auf der Basis dieser Unterlagen (zentral und dezentral) über die Verteilung von Aufgaben und Kompetenzen innerhalb des IT-Bereiches sowie in der Unternehmensorganisation:",,"Welchem Vorstands-/Geschäftsführungsressort ist der IT-Bereich zugeordnet?"
+,,,"Welche Gremien, Arbeitskreise etc. sind eingerichtet, deren Beschlüsse und Arbeitsergebnisse sich direkt oder indirekt auf die Struktur, Vorgehensweisen und Arbeiten des IT-Bereiches auswirken (z.B. übergeordneter IT-Lenkungsausschuss)? Ist der IT-Bereich ausreichend in die unternehmensinternen Kommunikations- und Entscheidungsprozesse eingebunden?"
+,,,"Erheben Sie die Regelwerke bzw. Richtlinien für die Formen der Zusammenarbeit zwischen den Fachbereichen und dem IT-Bereich."
+"3.1.3","Beurteilen Sie die Angemessenheit der Stellung des IT-Bereiches in der Unternehmensstruktur.",,"Beurteilen Sie insbesondere, ob im Rahmen der vorgesehenen Organisation die Unabhängigkeit gegenüber den anderen – den IT-Bereich in Anspruch nehmenden – Unternehmensbereichen gegeben ist."
+,,,"Berücksichtigen Sie dabei die folgenden Aspekte:"
+,,,"Sind diese allen Mitarbeitern bekannt?"
+,,,"Sind die notwendige Aufgaben und Funktionen innerhalb des IT-Bereiches schriftlich fixiert?"
+,,,"Werden Aufgaben und Funktionen innerhalb des IT-Bereiches sinnvoll d.h. auch nach Funktionstrennungsgeschichtspunkten (insbesondere zwischen System-/Anwendungsentwicklung und IT-Betrieb) gegliedert (Beurteilen Sie die Angemessenheit der Tätigkeits- bzw. Funktionsbeschreibungen)?"
+"3.1.4","Bietet die Dokumentation zur Aufbauorganisation einen ausreichenden Überblick über den IT-Bereich und dessen Einbindung in die gesamte Organisation?",,
+"3.1.5","Welche Beziehungen und Formen der Zusammenarbeit bestehen zwischen den einzelnen Einheiten des IT-Bereiches?
+Sind diese angemessen?",,
+"3.2","Dezentrale Aufbauorganisation",,
+"3.2.1","Stellen Sie fest, von welchen Stellungen/Gruppen im Unternehmen IT-Aufgaben dezentral wahrgenommen werden.",,
+"3.2.2","Verschaffen Sie sich einen Überblick über die Organisation des dezentralen IT-Bereiches. Berücksichtigen Sie dabei insbesondere folgende Aspekte",,"Welcher Person ist die dezentrale IT-Gruppe bzw. der IT-Verantwortliche im Fachbereich unterstellt?"
+,,,"Existieren eigene Arbeitsrichtlinie zur Abwicklung der dezentralen IT?"
+"3.2.3","Beurteilen Sie die Angemessenheit der Organisationsstrukturen, insbesondere anhand folgender Aspekte:",,"Sind die Verantwortlichkeiten verbindlich geregelt?"
+,,,"Gibt es koordinierende Gremien/Ausschüsse, in denen Vertreter aller dezentralen IT-Gruppen u.ä. vertreten sind? Werden dort Entscheidungen getroffen oder Entscheidungsvorlagen erarbeitet? Lassen Sie sich Besprechungsprotokollen zeigen"
+"3.3","Ablauforganisation",,
+"3.3.1","Erheben Sie anhand der verfügbaren Unterlagen wie Handbücher und Richtlinien die erlassenen Regelungen zur Ablauforganisation",,
+"3.3.2","Beurteilen Sie die Angemessenheit der Ablauforganisation unter Berücksichtigung folgender Aspekte:",,"Sind die Aufgaben und Funktionen der Mitarbeit in Tätigkeits- und Funktionsbeschreibungen (z.B. Stellenbeschreibungen) ausreichend spezifiziert und ausgewiesen?"
+,,,"Sind die Aufgaben klar beschrieben und abgegrenzt?"
+,,,"Stellen die Vertretungsregelungen den verlässlichen IT-Betrieb sowie die notwendige Funktionstrennung auch im Vertretungsfall sicher?"
+,,,"Entsprechen die Inhalte der vorgelegten Tätigkeits-/Funktionsbeschreibungen den tatsächlich von den Mitarbeitern wahrgenommenen Aufgaben?"
+"4.","Prüfung der IT-Infrastruktur (IDW PS 330, Tz. 53 ff.)",,
+"4.1","Physische Sicherungsmaßnahmen",,
+"4.1.1","Verschaffen Sie sich anhand von aktuellen Übersichten einen Überblick über die produktiv eingesetzte IT-Infrastruktur (insbesondere Hardware, Netzwerken, Betriebssystemen und betriebssystemnahen Werkzeugen sowie Datenbanksystemenen) und über die umgesetzten physischen Sicherungsmaßnahmen (insbesondere zum Zugangsschutz, bauliche Maßnahmen zum Feuerschutz und Maßnahmen zur Sicherung der Stromversorgung.",,
+"4.1.2","Informieren Sie sich über die räumlichen und technischen Bedingungen durch eine Begehung des Rechnerraums bzw. des Rechenzentrums sowie der Datensicherungsstandorte .",,
+"4.1.3","Verschaffen Sie sich in diesem Zusammenhang auch einen Überblick, in welchem Umfang und auf welcher vertraglichen Grundlage aktuell Datenverarbeitung außer Haus betrieben wird, Leistungen Dritter in Anspruch genommen werden oder Datenverarbeitung für Dritte durchgeführt wird. Erheben Sie die bestehenden Verträge",,
+"4.1.4","Stellen Sie fest, ob seitens des Unternehmens eine Beurteilung der Sicherheitsrisiken im Hinblick auf eingerichtete physische Sicherungsmaßnahmen vorgenommen wurde.",,
+"4.1.5","Erfolgt seitens des Unternehmens eine Beurteilung des Standorts des Rechenzentrums bzw. der Datensicherungsarchive im Hinblick auf erhöhte Anforderungen an physische Sicherungsmaßnahmen aufgrund der Lage oder baulichen Gegebenheiten?",,
+"4.1.6","Werden die wesentlichen IT-Komponenten (z.B. Maschinen, Server, Operator-Terminals, Konsolen , Datensicherungsmedien) durch Zugangskontrollen geschützt?",,
+"4.1.7","Beurteilen Sie die Zugangsschutzmaßnahmen unter Berücksichtigung der umgesetzten baulichen Maßnahmen ( Zäune, Kameraüberwachung, Absicherung von Fenster und Türen) und der umgesetzten Zutrittsberechtigungskonzepte.",,
+"4.1.8","Überprüfen Sie die Umsetzung der baulichen Zutrittschutzmaßnahmen durch die Vorlage von entsprechenden Unterlagen oder ggf. durch die Begehung der Räumlichkeiten",,
+"4.1.9","Existiert im Rahmen der Zutrittsberechtigungskonzepte eine Codekarten- und Schlüsselverwaltung, die Beantragung, Bestandsverwaltung sowie Aus- und Rückgabe sowohl für  Mitarbeiter als auch für Unternehmensfremde ( auch außerhalb der üblichen Geschäftszeiten) angemessen regelt?",,
+"4.1.10","Wird die Zutrittsberechtigungsvergabe sachgerecht durchgeführt?",,"Gibt es bspw. Nachweise über die Codekarten- und Schlüsselausgabe? Lassen Sie sich Anträge zeigen. Gleichen Sie die im Zutrittssystem eingerichteten Personen mit den in der Organisationsanweisung benannten Personen ab."
+"4.1.11","Sind die angemessenen technischen und baulichen Maßnahmen ergriffen worden, die u.a. folgende Risiken abdecken:",,"Temperaturschwankungen"
+,,,"Einbruch/Diebstahl"
+,,,"Brand- und Wasserschäden"
+,,,"Stromschwankungen bzw. - ausfälle (insbesondere durch den Einsatz von USV-Anlagen, Notstromaggregaten, eigene Stromkreise z.B. für PC-Arbeitsplätze)"
+"4.1.12","Sind angemessene Eskalationsverfahren vorgesehen, die bspw. gewährleisten, dass ausgelöste Alarme ausschließlich an ständig besetze Stellen gemeldet werden?",,
+"4.1.13","Wird durch regelmäßige technische Überprüfungen und Test die Funktionsfähigkeit der Anlagen überprüft bzw. die Durchführbarkeit der Eskalationsverfahren beurteilt?",,
+"4.2","Logische Zugriffskontrollen",,
+"4.2.1","Stellen Sie fest, ob das Benutzer-Berechtigungskonzept im Einklang mit der Risikobeurteilung des Unternehmens um gesetzt wurde. ",,"Ermitteln Sie, ob die eingesetzten Zugriffsschutzverfahren alle Elemente des IT-Systems vor unberechtigtem Zugriff schützen ( IT-Anwendungen einschließlich rechnungslegungsrelevanter Daten bzw. Datenbanken sowie die IT-Infrastruktur einschließlich des Betriebssystems, der Netzwerk- und Kommunikationsinfrastruktur etc.)"
+"4.2.2","Beurteilen Sie das Benutzerberechtigungsverfahren für IT-Anwendungen auf seine Angemessenheit, insbesondere ob im Rahmen einer Rollen- bzw. Arbeitsplatzorientierung sichergestellt ist, dass",,"der unbefugte Zugriff unberechtigter Dritter (insbesondere Externer) ausgeschlossen ist,"
+,,,"die Anforderungen des Datenschutzes umgesetzt sind,"
+,,,"die Berechtigungen durch den Fachvorgesetzten beantragt und genehmigt werden,"
+,,,"die zugewiesen Benutzerrechte den von der Unternehmensleitung festgelegten Kompetenzen für den einzelnen Benutzer (Kompetenzen) entsprechen,"
+,,,"bei Umsetzungen oder Kündigungen von Mitarbeitern die Benutzerberechtigungen geändert bzw. gelöscht werden"
+,,,"die Benutzerberechtigungen im Einklang mit den fachlichen Anforderungen bei der Aufgabenabwicklung der Benutzer stehen"
+,,,"die Aufgabenverteilung zwischen den Fachbereichen und IT-Betrieb auch im Zugriffsschutzsystem abgebildet ist,"
+,,,"verbindliche Regeln zur Verwendung von Passwörtern eingerichtet sind, ( Besteht die Anweisung das Initalpasswörter zwangsweise geändert werden oder dass Passwörter zwingend gewechselt werden müssen?)"
+,,,"systemseitige Aufzeichnungen über die vergebenen Berichtigungen, An und Abmeldungen sowie die getätigten Transaktionen der Benutzer vorliegen."
+"4.2.3","Überzeugen Sie sich von der Einhaltung der Regelungen zur Benutzerverwaltung z.B. durch Einsichtsnahme von Anträgen und durch Logs des Zugriffsschutzverfahrens",,
+"4.2.4","Vergleichen Sie anhand ausgewählter Fälle die eingerichteten mit genehmigten Berechtigungen.",,
+"4.3","Datensicherungs- und Auslagerungsverfahren",,
+"4.3.1","Lassen Sie sich das Datensicherungskonzept und die diesbezüglichen Arbeitsanweisungen vorlegen. ",,"Erheben Sie die für die Datensicherungsverfahren eingesetzte IT-Infrastruktur (z.B. Bandlaufwerke, Sicherungscartridges, Roboter und Juke Boxes) und genutzten Anwendungen (z.B. Streamer- und Archivierungsprogramme)"
+"4.3.2","Erfolgen die Datensicherungen nach einer vorgegebenen Systematik",,"Umfang ( Differenzial- oder Komplettsicherungen),"
+,,,"Generationenprinzip"
+,,,"Logische bzw. anwendungsspezifische Regelungen"
+"4.3.3","Erfolgen die Sicherungsabläufe",,"regelmäßig,"
+,,,"sporadisch auf Anforderung(in welchen Sicherungsintervallen?)"
+,,,"manuell oder automatisch gestartet?"
+"4.3.4","Stellen Sie fest, ob sich das umgesetzte Datensicherungskonzept im Einklang mit der Risikobeurteilung des Unternehmens befindet",,
+"4.3.5","Beurteilen Sie, ob das Datensicherungskonzept und die Anweisungen und Vorkehrungen zur Sicherung der Software- und Datenbestände angemessen sind, insbesondere ob im Bedarfsfall eine Arbeitswiederholung bzw. eine Rekonstruktion von Datenbeständen durchgeführt werden kann.",,"Beurteilen Sie weiterhin, ob die vorhandenen Sicherungsmaßnahmen ausreichen, um insbesondere zeitkritische Daten innerhalb der definierten Wiederanlaufszeit bereitzustellen "
+,,,"die angewendeten Verfahren, sofern die Datensicherungen auch zu Zwecken der Erfüllung gesetzlicher Aufbewahrungsfristen dienen und die verwendeten Sicherungsmedien (Bänder, Kassetten, CD-WORM, Platten, etc.) die Einhaltung der Aufbewahrungsfrist gewährleisten."
+"4.3.6","Wie wird sichergestellt, dass das Datensicherungskonzept in regelmäßigen Abständen bzw. bei der Einführung neuer Systeme oder bei wesentlichen Änderungen existierender Verfahren aktualisiert wird?",,
+"4.3.7","Überzeugen Sie sich von der Einhaltung des Datensicherungskonzept bspw. anhand vom Unternehmer durchgeführter Tests.",,
+"4.3.8","Sind die Verfahren/Prozeduren zur Datensicherung in sich schlüssig und enthalten sie genaue Anweisungen, nach denen zu verfahren ist ?",,
+"4.3.9","Sind diese Unterlagen/Prozeduren den für die Datensicherung zuständigen Mitarbeitern bekannt?",,
+"4.3.10","Wie wird die regelmäßige und fehlerfreie Durchführung der Verfahren / Prozeduren zur Datensicherung sichergestellt? Werden die Durchführungen und dabei auftretende Probleme aufgezeichnet?",,
+"4.3.11","Wird die Durchführung der Datensicherung dokumentiert (Datensicherungsverzeichnis) und kontrolliert?",,
+"4.3.12","Überzeugen Sie sich anhand der Fehlerprotokolle von der Wirksamkeit der getroffenen Maßnahmen, insbesondere von der sachgerechten Behandlung der Fehler / Problemfälle bei der Datensicherung",,
+"4.3.13","Anhand welcher IT-Kontrollen wird sichergestellt, dass zeitkritische Daten innerhalb der definierten Wiederanlaufszeit bereitgestellt werden können?",,
+"4.3.14","Überprüfen Sie die Wirksamkeit der Wiederanlaufverfahren anhand der Testprotokolle.",,
+"4.3.15","Werden die gesicherten Datenbestände feuer- und einbruchsicher aufbewahrt?",,
+"4.3.16","Ist die Feuer- und Einbruchssicherheit belegbar?",,
+"4.3.17","Ist der Zugang zu den gesicherten Datenbeständen auf autorisierte Personen beschränkt?",,
+"4.3.18","Beurteilen Sie die Wirksamkeit Verfahren/Prozeduren zur Zugangsbeschränkungen auf Datenarchive.",,
+"4.3.19","Erfolgt in Abhängigkeit der Klassifizierung der Daten (Wichtigkeit der Daten) eine physische Auslagerung der Datensicherungen?",,
+"4.3.20","Überprüfen Sie die tatsächliche Durchführung der Datenauslagerung (z.B. anhand des Datenträgerverzeichnisses).",,
+"4.3.21","Gewährleisten die angewendeten Datensicherungsverfahren die Einhaltung der gesetzlichen Aufbewahrungsfristen?",,
+"4.3.22","Überzeugen Sie sich von der Wirksamkeit des angewendeten Verfahrens im Hinblick auf die Einhaltung der Aufbewahrungspflicht.",,
+"4.4","Maßnahmen für den geordneten Regelbetrieb",,
+"4.4.1","Erheben Sie die verbindlichen Arbeitsanweisungen sowie Verfahrensbeschreibungen aus dem IT-Betrieb (bspw. RZ-Handbuch, Betriebskonzepte).",,
+"4.4.2","Sind den einzelnen Mitarbeitern spezifische Aufgaben / Arbeitsgebiete zugeordnet? Sind Vertretungsregeln implementiert?",,
+"4.4.3","Gibt es einen Terminplan für die periodisch durchzuführenden Verarbeitungsabläufe?",,
+"4.4.4","Wird die kontrollierte und effiziente Jobabwicklung durch Einsatz von technischen Systemen zur Steuerung des Rechnerbetriebes (Jobsteuerungssysteme, Überwachungssysteme, Verfahren zur Gewährleistung eines operatorlosen RZ-Betriebs) unterstützt?",,
+"4.4.5","Sind in den Arbeitsanweisungen sowie den Verfahrensbeschreibungen folgende Gesichtspunkte / Zuständigkeiten geregelt:",,"Installation und Konfiguration von Hard- und Software-Komponenten"
+,,,"Netzwerkintegration (Ressourcenmanagement)"
+,,,"Produktionsabwicklungen"
+,,,"Nachweisverfahren (Protokolle)"
+,,,"Change- und Problemmanagement"
+,,,"Abnahmeverfahren"
+,,,"Konfigurationsmanagement?"
+"4.4.6","Ist für jedes Anwendungssystem der Verarbeitungsablauf (Jobablauf) eindeutig festgelegt (welche Dateien, welche Programmversionen, welche Programmfolge)?",,
+"4.4.7","Erfolgt die Änderung von Verarbeitungsabläufen in Abstimmung zwischen zuständigen Fachbereich und IT-Bereich? Gibt es eine formale Beauftragung von Änderungen bzw. Ergänzungen?",,
+"4.4.8","Wird die vorgabeentsprechende Verarbeitung der einzelnen Anwendungssysteme überwacht (z.B. durch Kontrolle der Systemprotokolle, Systemnachrichten, durch IT-Verantwortliche etc.) ? Werden Störungen in der Verarbeitung zeitnah mitgeteilt?",,
+"4.4.9","Prüfen Sie anhand ausgewählter Fälle die Einhaltung der Vorgaben, Anweisungen etc. zur Verarbeitung, z.B.",,"Abgleich der Anweisungen zur Ablaufsteuerung mit der tatsächlichen Verarbeitung."
+,,,"Prüfung der in Arbeitsanweisungen und Verfahrensbeschreibungen aufgeführten Protokolle, Jobs und Nachweise auf deren Existenz und angemessene Aufbewahrung "
+,,,"Durchsicht von Verarbeitungsprotokollen auf wiederkehrende Fehler,"
+,,,"Abgleich der Verarbeitungspläne mit den vorliegenden Aufträgen der Fachabteilung etc.,"
+,,,"Prüfen von Datenänderungsprotokollen. Sind die Mitarbeit des IT-Bereiches angewiesen, in Ausnahmefällen erforderliche Änderungen in den Orginaldatenbeständen nur mit Zustimmung und bei Kontrolle durch die jeweils zuständige Fachabteilung vorzunehmen?)"
+"4.4.10","Ist festgelegt, an welchen Personen / Fachbereiche die Verarbeitungsergebnisse in welcher Form (bspw. listen, Protokolle, Online-Reports, Download-Dateien) zu liefern sind ?",,
+"4.4.11","Überzeugen Sie sich von der sachgerechten Zuordnung der Verarbeitungsergebnisse. Beurteilen Sie insbesondere, ob bei der Zuordnung",,"die Grundsätze der Funktionstrennung eingehalten werden ( jeder Anwender bekommt ausschließlich die Verarbeitungsergebnisse zugewiesen, die zur Abwicklung im Tagesgeschäft gemäß der Kompetenz- und Aufgabenverteilung benötigt werden),"
+,,,"die Datenschutzregelungen beachtet werden."
+"4.4.12","Findet innerhalb des IT-Betriebes die Entwicklung von Tools zur Erleichterung der täglichen Arbeit bzw. zur Automatisierung des IT-Betriebes statt?",,
+"4.4.13","Ist sichergestellt, dass ausschließlich genehmigte und qualitätsgesicherte Tools zum Einsatz kommen?",,
+"4.4.14","Überzeugen Sie sich von der Einhaltung der bestehenden Regelungen zum Tool Einsatz.",,
+"4.4.15","Wird die Verarbeitung von einem anderen Rechenzentrum oder einer anderen Stelle aus gesteuert (Remote Operating)?",,
+"4.4.16","Sind Schutzvorkehrungen beim Einsatz von Remote Operating und Fernwartungsfunktionen vorhanden:",,"Call-back-Verfahren"
+,,,"Fallweise Freischaltung des Benutzerzugriffs"
+,,,"Identifikation/Autorisierung des Freigebenden"
+,,,"Protokollierung der Aktivitäten"
+,,,"ggf. Verschlüsselungen"
+,,,
+"4.4.17","Werden Netzaktivitäten protokolliert?",,"Programmaufrufe"
+,,,"Zugriff auf sensible Daten"
+,,,"Stromausfall"
+,,,"Netzüberlastung"
+"4.4.18","Erfolgt eine Auswertung der Protokolle und werden angemessene Maßnahmen bei der Feststellung von Fehler ergriffen? Gibt es geregelte Eskalationsprozeduren?",,
+"4.4.19","Erfolgt eine systematische Problemanalyse und wird die Problembehandlung durch den Einsatz von IT-gestützten Werkzeugen unterstützt?",,
+"4.5","Verfahren für den Notbetrieb",,
+"4.5.1","Gibt es ein Notfallkonzept, das regelt, durch welche Maßnahmen der IT-Betrieb nach einem Totalausfall in angemessener Zeit wieder aufgenommen werden kann ?",,"Stellen Sie fest, ob"
+,,,"Maßnahmen für den Notbetrieb sich in den Einklang mit der Risikobeurteilung des Unternehmens befinden,"
+,,,"bei der Umsetzung der Maßnahmen eine Analyse der Geschäftsprozesse erfolgte und sichergestellt wurde, dass alle rechnungslegungsrelevanten IT-gestützten Geschäftsprozesse abgedeckt werden ( Zur Beurteilung der Angemessenheit der Geschäftsprozessanalyse vergleiche Punkt 4 der Checkliste “Prüfung der Geschäftsprozesse“)"
+"4.5.2","Wurde eine Klassifizierung / Kategorisierung der Systeme nach ihrer Wichtigkeit für den Geschäftsbetrieb durchgeführt?",,"Enthält das Notfallkonzept Angaben zu:"
+,,,"Ausweichszenarien für die Abwicklung der Kern-Geschäftsprozesse (u.U auch ohne IT-Unterstützung)"
+,,,"Konfiguration der Notfallsysteme sowie der notwendigen Kommunikationsstruktur einschließlich der erforderlichen IT-Anwendungen und Systemsoftware (IT-Infrastruktur)"
+,,,"eindeutigen Verantwortlichkeiten"
+,,,"Erreichbarkeit von unbedingt erforderlichen Mitarbeitern"
+,,,"den Ansprechpartnern von IT-Dienstleistern und Lieferanten"
+,,,"Datensicherungs- und Wiederanlaufverfahren?"
+"4.5.3","Ist die Entwicklung und Wartung der Wiederanlauf-Prozeduren nachvollziehbar dokumentiert?",,
+"4.5.4","Werden die Notfalllösungen regelmäßig getestet und ist der geordnete Wiederanlauf der einzelnen Systeme in der von der Unternehmensleitung vorgegebenen Zeit sichergestellt?",,
+"4.6","Sicherung der Betriebsbereitschaft",,
+"4.6.1","Existieren Regelungen / Anweisungen, die eine systematische Überwachung und Beurteilung der Systemkapazitäten (insbesondere Netzwerk- und Serverkapazitäten) vorgesehen?",,
+"4.6.2","Wird die planentsprechende Funktion der IT-Systeme durch die IT-Organisation laufend überwacht und werden zu diesem Zweck spezielle Überwachungswerkzeuge (z.B. Monitoring Software eingesetzt)?",,
+"4.6.3","Werden unter Berücksichtigung spezifischer IT-Risiken Verfügbarkeitsklassen ( Service Level) definiert, die von den IT-Systemen eingehalten werden müssen?",,
+"4.6.4","Werden unter Berücksichtigung festgelegter Service Level Maßnahmen zur Erhöhung der Ausfallsicherheit eingerichtet, bspw.",,"Clustersysteme"
+,,,"Rechner- bzw. Serverkopplungen,"
+,,,"RAID-Verfahren?"
+"4.6.5","Werden flächendeckend, d.h. auf allen Servern und Arbeitsstationen, Virenscanner eingesetzt?",,
+"4.6.6","Gibt es ein geregeltes Verfahren zur Erkennung eines Virusbefalls? Werden solche Infektionen dokumentiert?",,
+"4.6.7","Ist sichergestellt, dass der jeweils aktuellste Stand der Virenscan-Software auf allen Rechnern implementiert ist?",,
+"4.6.8","Ist definiert, für welche IT-Komponenten Wartungen erforderlich sind?",,
+"4.6.9","Anhand welcher Maßnahmen wird sichergestellt, dass die Wartung der IT-Komponenten regelmäßig, sachgerecht und nachweislich durchgeführt wird?",,
+"4.6.10","Wie wird beim Abschluss von Versicherungen für den IT-Bereich sichergestellt, dass alle relevanten Risiken ( Betriebsunterbrechungen, Sachschäden, Ertragsausfälle, Missbrauch etc.) berücksichtigt werden",,
+"4.6.11","Überzeugen Sie sich anhand ausgewählter Fälle von der tatsächlichen Durchführung der Wartungsmaßnahmen.",,
+"5.","Prüfung der IT-Anwendungen (IDW PS 330, Tz. 70 ff.)",,
+"5.1","Auswahl-, Entwicklungs- und Änderungsprozess sowie Implementierung",,
+"5.1.1","Entwicklung von Individualsoftware",,
+"5.1.1.1","Nehmen Sie die Verantwortlichkeiten für die Entwicklung und Pflege von Softwareprodukten aus. Erfolgt eine auftragsbezogene Fremdentwicklung durch Dritte?",,
+"5.1.1.2","Steht eine unabhängige (d.h. von der Produktion getrennte) Entwicklungsumgebungen für die Programmentwicklung zur Verfügung?",,
+"5.1.1.3","Finden Softwareentwicklungen für rechnungslegungsrelevante IT-Anwendungen auf Basis von PC-Standardprodukten (z.B. MS/Access, Excel, Lotus Notes) statt?",,
+"5.1.1.4","Wenn ja, gibt es Regelungen und Normierungen für die Softwareentwicklungen mit PC-Standardprodukten?",,
+"5.1.1.5","Überprüfen Sie anhand ausgewählter typischer Fälle, ob die Regelungen und Normierungen für die Softwareentwicklung mit PC-Standardprodukten angewendet werden.",,
+"5.1.2","Entwicklungsprozess und Pflege der IT-Anwendungen",,
+"5.1.2.1","Erheben Sie Daten zur Organisation der Anwendungsentwicklung und -pflege (z.B. anhand von Beschreibungen der Softwareentwicklungsmethoden/Case Tools, Beschreibungen der Projektorganisation, IT-Organisationshandbuch)",,
+"5.1.2.2","Liegen für den Entwicklungsprozess und die Pflege der IT-Anwendung Standards vor? Werden in der Dokumentation zu folgenden Bereichen Aussagen gemacht?
+In Abhängigkeit von der Komplexität der Entwicklungsprozesse kommen insbesondere folgende Aspekte in Betracht:",,"Auftrags-/Auswahlverfahren"
+,,,"Entwicklungsumgebung (Tools, Programmiersprachen, Datadictionary)"
+,,,"Projektmanagement- und Qualitätssicherungsverfahren"
+,,,"Normierungen und Namenskonventionen für die Programmierung"
+,,,"Erstellen angemessener Konzepte (z.B. Pflichtheft Fachkonzepte, DV-Konzepte etc.)"
+,,,"Versionenführung / Nachweise"
+,,,"Testvorgehensweise / Nachweise"
+,,,"Freigabeerklärungen der Fachabteilung"
+,,,"Dokumentationsrichtlinie für die Onlinedokumentation, für das System-/ Programmänderungen, für das Endanwender-Handbuch etc."
+,,,"Regelungen bei Programmänderungen"
+,,,
+"5.1.2.3","Wie werden die fachlichen und technische Anforderungen der Fachabteilung an die Software festgehalten (z.B. Fachgrob- und -feinkonzept, Machbarkeitsstudie, Pflichtenheft)?",,
+"5.1.2.4","Zur Prüfung der Angemessenheit der Softwareentwicklung können folgende Fragen dienen:",,"Wurde das Entwicklungsprojekt in logisch zusammenhängende Einheiten aufgeteilt?"
+,,,"Erfolgt eine zeitliche und sachliche Koordination durch einen Projektmanagement?"
+,,,"Sind gleich bleibende Aufgaben standardisiert?"
+,,,"Erfolgt bei der Anwendungsentwicklung eine systematische Erfassung aller erforderlichen Datenarten und deren Beziehungen untereinander (Erstellen eines Datenmodells?)"
+,,,"Ist zu den einzelnen Datenbeständen festgelegt, welche Fachabteilung/Fachabteilungen für sie zuständig ist/sind?"
+,,,"Ist die Funktion der Software-Qualitätssicherung vorgesehen und wird diese auch wahrgenommen?"
+,,,"Finden Schulungen für neue Anwendungsentwickler statt?"
+,,,"Entspricht die Softwareentwicklung weitestgehend dem Stand der Technik?"
+,,,"Werden neben den IT-Mitarbeitern auch Mitarbeiter der zuständigen Fachbereiche und/oder der internen Revision in ausreichenden Maße in den Entwicklungsprozess einbezogen?"
+"5.1.2.5.","Genügt die Software den Anforderungen Revisionsfähigkeit? Hierbei sind u.a die Kriterien ",,"Prüfbarkeit,"
+,,,"Wartbarkeit,"
+,,,"Änderbarkeit und"
+,,,"Verständlichkeit der Software zu prüfen."
+"5.1.2.6","Überprüfen Sie anhand ausgewählter Fälle, ob die Regelungen und Normierungen für die Softwareentwicklung angewendet werden",,
+"5.1.3","Auswahl und Beschaffung von Standardsoftware",,
+"5.1.3.1","Existiert ein Pflichtheft, welches die Anforderungen an die zu erwerbende Software hinreichend tief gliedert und darstellt?",,
+"5.1.3.2","Erfolgte vor der Auswahl und Beschaffung der Software eine Überprüfung anhand eigener Test oder anhand einer Softwarebescheinigung gemäß IDW Prüfungsstandard: Erteilung und Verwendung von Softwarebescheinigungen (IDW PS 880), ob eine vollständige und richtige Datenverarbeitungen möglich ist?",,
+"5.1.3.3","Werden bei der Wahl des Software-Anbieters u.a. folgende Kriterien berücksichtigt:",,"Fachkompetenz"
+,,,"Branchen-KnowHow"
+,,,"Referenzen"
+,,,"Wirtschaftliche Position"
+,,,"Kapazität zur Einführungsunterstützung"
+"5.1.3.4","Wird zur Software eine verständliche und gegliederte Benutzerdokumentation mitgeliefert?",,
+"5.1.3.5","Wie werden die Softwareveränderungen zur Anpassung an die Anforderungen des Unternehmens(Customizing) dokumentiert?",,
+"5.1.3.6","Überprüfen Sie anhand ausgewählter Fälle im Prüfungszeitraum durchgeführter Beschaffungsprojekte, ob die Regelungen und Normierungen zur Beschaffung von Standardsoftware angewendet werden.",,
+"5.1.3.7","Überprüfen Sie, ob die dokumentierte Customizing-Anpassung den Einstellungen in der Software entsprechen.",,
+"5.1.4","Test-und Freigabeverfahren für IT-Anwendung",,
+"5.1.4.1","Ist eine Trennung des Testsystems vom Entwicklungssystem und vom produktiv eingesetzten System gewährleistet?",,
+"5.1.4.2","Welche Arten von Test werden bei der Entwicklung/Einführung der Software durchgeführt?",,
+"5.1.4.3","Werden die Funktions- und Integrationstest in einer separaten Testumgebung von Personen durchgeführt, die nicht an der Entwicklung beteiligt sind (Funktionstrennung)?",,
+"5.1.4.4","Werden die durchgeführten Test und die Testergebnisse nachvollziehbar dokumentiert?",,
+"5.1.4.5","Prüfen Sie auszugsweise die Freigabeprotokolle. Enthält die Dokumentation dieser Protokolle eine Bestätigung der Programmierung und der Fachabteilung, dass die Software im Produktionsbetrieb eingesetzt werden kann?",,
+"5.1.4.6","Werden im Rahmen der Test- und Freigabeverfahrens die zuständigen Fachbereiche und die interne Revision in ausreichendem Maße einbezogen?",,
+"5.1.4.7","Lassen Sie sich auszugsweise die diesbezüglichen Prüfungsberichte der internen Revision bzw. die Stellungnahmen der Fachabteilung vorlegen.",,
+"5.1.4.8","Liegen bei einer Freigabe der Software angemessene, aktuelle Anwender- und Verfahrensdokumentationen vor und ist die Funktionsfähigkeit von Schnittstellenprozessen zu vor- und nach gelagerten Anwendungen gegeben?",,
+"5.1.4.9","Wie erfolgt die technische Freigabe bzw. Bereitstellung der Software?
+Gibt es eine geordnetes Verfahren für Softwareinstallationen?",,
+"5.1.4.10","Wählen Sie durchgeführte Änderungsprojekte aus und überprüfen Sie, ob die technische Freigaben nachvollziehbarer Weise dokumentiert und ob das angewiesene Verfahren zur Softwareinstallation beachtet wurde.",,
+"5.1.4.11","Prüfen Sie, ob aus der Entwicklung / Änderung der Software die für die Verfahrensdokumentation erforderlichen Unterlagen / Aufzeichnungen hervorgehen.",,
+"5.1.4.12","Anhand welcher Maßnahmen wird bei einer Implementierung der Software, die  eine Übernahme von Altdaten notwendig macht, sichergestellt, dass eine vollständige und richtige Datenübernahme erfolgt? Wird in diesem Zusammenhang sichergestellt, dass",,
+,"die Qualität der Altdaten vor der Übernahme geprüft wird",,
+,"unvollständige/unrichtige Daten systematisch aktualisiert werden?",,
+"5.1.4.13","Prüfen Sie anhand typischer Fälle, ob die Maßnahmen zur Altdatenübernahme die Vollständigkeit und Richtigkeit der Übernahme gewährleisten.",,
+"5.1.5"," Änderung von IT-Anwendungen",,
+"5.1.5.1","Gibt es ein definiertes Antrags- und Auftragsverfahren für Änderung von IT-Anwendungen?",,
+"5.1.5.2","Ist in diesem Zusammenhang geregelt, wer Änderungen der IT-Anwendungen veranlassen kann?",,
+"5.1.5.3","Vergewissern Sie sich auszugsweise von der Einhaltung des angewiesenen Antrags und Auftragsverfahrens.",,
+"5.1.5.4","Nach welchen Kriterien werden die Änderungen gewichtet? Wer führt einen Bewertung der Änderungsanforderungen durch?",,
+"5.1.5.5","Werden bei Änderungen der IT-Anwendungen die Entwicklungs-, Test- und Freigabeverfahren sinngemäß angewendet?",,
+"5.1.5.6","Vergewissern Sie sich anhand ausgewählter Fälle von der Einhaltung des angewiesenen Entwicklungs-, Test-, und Freigabeverfahren anhand im Prüfungszeitraum durchgeführter Änderungsprojekte",,
+"5.1.5.7","Existiert bei der Einführung geänderter IT-Anwendungen ein geeignetes Versionskonzept?",,
+"5.1.5.8","Stellt das Versionskonzept sicher, dass nur mit einer einheitlichen Programmversion gearbeitet wird?",,
+"5.1.5.9","Vergewissern Sie sich anhand ausgewählter Fälle von der Einhaltung des angewiesenen Versionskonzept anhand im Prüfungszeitraum durchgeführter Änderungsprojekte.",,
+"5.1.5.10","Werden Änderungen der IT-Anwendungen in der Systemdokumentation festgehalten?
+Existierte ein Archivierungskonzept für die Dokumentation?",,
+"5.1.5.11","Vergewissern Sie sich von der tatsächlichen Änderung der Systemdokumentation anhand durchgeführter Änderungsprojekte.",,
+"5.2","Programmfunktion",,
+"5.2.1","Verfahrensdokumentation und Archivierung ",,
+"5.2.1.1","Liegt eine Verfahrensdokumentation (Anwenderdokumentation und technische Systemdokumentation) vor ?
+Gibt es darüber hinaus weitere Unterlagen (z.B. Fachkonzepte, Berichtsprotokolle, Abnahmeprotokolle, Dokumentation der Anwender- und Integrationstests etc.)?",,
+"5.2.1.2","Berücksichtigt die Verfahrensdokumentation folgende Aspekte:",,"Anwenderhandbuch"
+,,,"Beschreibung der systemtechnischen Lösung"
+,,,"Beschreibung, wie die Programmidentität gewahrt wird"
+,,,"Beschreibung, wie die Integrität der Daten gewahrt wird, und"
+,,,"Arbeitsanweisungen für den Anwender."
+"5.2.1.3","Beurteilen Sie, ob bei der Beschreibung der systemtechnischen Lösung insbesondere folgende Aspekte angemessen beachtet wurden:",,"Aufgabenstellung"
+,,,"Datensatzaufbau"
+,,,"Datenausgabe"
+,,,"Verarbeitungsregeln einschließlich Kontroll- und Abstimmverfahren"
+,,,"Fehlerbehandlung"
+,,,"Schlüsselverzeichnisse und"
+,,,"Schnittstellen zu anderen Systemen."
+"5.2.1.4","Beurteilen Sie, ob folgenden generelle Anforderungen an die Dokumentation gewährleistet werden:",,"Die Dokumentation muss vollständig und aktuell sein, d.h. es müssen alle für die Anwendung der Software notwendigen  Informationen enthalten sein."
+,,,"Die Dokumentation muss fehlerfrei und eindeutig sein, d.h. alle Angaben in der Dokumentation müssen zutreffend und untereinander widerspruchsfrei sein."
+,,,"Die Dokumentation muss für den Anwender, der eine bestimmte Arbeitsaufgabe zu erledigen hat, verständlich sein, z.B. durch die geeignete Wahl von Begriffen, grafische Darstellungen und ausreichende Detaillierung"
+,,,"Die Dokumentation muss übersichtlich sein, so dass die Zusammenhänge zwischen den einzelnen Arbeitsbereichen erkennbar sind."
+"5.2.1.5","Wie wird sichergestellt, dass bei einer Veränderung der Systemkonfiguration entsprechende Anpassungen der Dokumentation vorgenommen werden?",,
+"5.2.2","Prüfung der Angemessenheit der rechnungslegungsrelevanten Verarbeitungsregeln",,
+"5.2.2.1","Beurteilen Sie, ob die Erfüllung von Beleg-, Journal- und Kontenfunktion von im Unternehmen eingesetzten IT-Anwendungen gewährleistet wird.",," Soweit für die IT-Anwendungen eine Softwarebescheinigung vorliegt, ist zu prüfen, ob die geprüfte Version der IT-Anwendung mit der eingesetzten IT-Anwendung übereinstimmt. Soweit Abweichungen bestehen, ist zu prüfen inwieweit diese Abweichungen zu einer Beeinträchtigung der Erfüllung von Beleg-, Journal- und Kontenfunktion führen können (vgl. bezüglich der Anforderungen IDW PS 880, Tz. 7 ff.)."
+"5.2.2.2","Soweit für die Beurteilung der Angemessenheit der eingesetzten IT-Anwendungen ein Softwaretestat nicht herangezogen werden kann, müssen zur Beurteilung der Angemessenheit geeignete Prüfungshandlungen vorgenommen werden, um festzustellen, ob die Ordnungsmäßigkeit der Rechnungslegung insbesondere durch die Erfüllung der in IDW PS 880, Tz. 10ff. dargestellten Anforderungen sichergestellt wird.",,"Beurteilen Sie in diesem Zusammenhang,
+ob Programmabläufe bzw. Verarbeitungsregelung und Plausibilitätskontrolle sowie die weitere Verarbeitungsfunktionen (z.B. Mandantenfähigkeit, Verarbeitungsmöglichkeit von Fremdwährungen, Im- und Exportmöglichkeiten von / zu anderen Programmen,) die zwingend abzudeckenden gesetzlichen Anforderungen erfüllen, insbesondere, ob die realisierten Verarbeitungsfunktionen im jeweiligen Aufgabengebiet der Software den Anforderungen an die Ordnungsmäßigkeit der Rechnungslegung genügen,"
+,,,"die parametrisierten Verarbeitungsregeln, die programmierten Verarbeitungsregeln ( wie bspw. Umsatzsteuerermittlung, Summierungen, Kontierung, Buchung, Zinsberechnungen, Berechnung von Skonti und Fälligkeiten, Währungsumrechnungen, Konten- und Periodenzuordnung, Jahreswechsel (Bilanzidentität)) sowie die Plausibilitätskontrollen auf ihre sachlogischen Richtigkeit."
+"5.2.2.3","Beachten Sie, ob bei maschienenintern erzeugten Buchungen die erfolgte Buchung anhand der Verfahrensdokumentation nachvollziehbar und korrekt ist.",,
+"5.2.2.4","Werden Archivsysteme zur elektronischen Archivierung von Belegen eingesetzt?",,
+"5.2.2.5","Wurde die Ordnungsmäßigkeit der Archivsysteme durch die interne bzw. die externe Prüfung festgestellt?",,
+"5.2.3","Prüfung der Funktionsfähigkeit und Wirksamkeit der Programmfunktionen",,
+"5.2.3.1","Steht Ihnen ein Testsystem zur Verfügung prüfen Sie anhand ausgewählter Fälle, ob die sachlogische Richtigkeit der programmierten Verarbeitungsregeln und die Wirksamkeit der im System enthaltene IT-Kontrollen durch eigene Testfallszenarien verifiziert werden können. Zu den IT-Kontrollen zählen z.B.:",,
+,,,"Prüfung der Parameter zur Verarbeitungssteuerung"
+,,,"Prüfen der Felder u.a. auf gültige Formate und Einhaltung vorgegebener Grenzwerte"
+,,,"Prüfung der Existenz von eingegebenen Sach- und Personenkonten, Kostenstellen und -trägern"
+,,,"Prüfung von Soll-Haben-Identität bei der Eingabe von Buchungssätzen"
+,,,"Prüfung der programminternen Nummerierung von Belegen zum Nachweis der Lückenlosigkeit/Eindeutigkeit"
+,,,"Prüfung, dass keine Löschung und Änderung von bebuchten Konten, Kostenstellen und Buchungssätzen möglich ist."
+"5.2.3.2","Neben Test der Eingabe- und Verarbeitungskontrollen sind die Systemausgaben (z.B. Bildschirm-/Druckerausgaben) zu prüfen.",,"Sofern das zu beurteilende Programm aus verschiedenen Teilmodulen besteht, sind übergreifende Integrationstests erforderlich. Eine Prüfung der Programmabläufe anhand der Programmcodierung in den Quellprogrammen ist nur in Ausnahmefällen als Ergänzung zur Prüfung spezifischer Verarbeitungsfunktionen erforderlich."
+"5.2.3.3","Steht Ihnen kein Testsystem zur Verfügung, ist die Funktionsfähigkeit der wesentlichen Funktionalitäten des Systems anhand der Testdokumentation des Mandanten festzustellen.",,"Sind die in der Testdokumentation enthaltenen Testfallszenarien inhaltlich und formal nachvollziehbar?"
+"5.2.3.4","Sind die durchgeführten Test angemessen (hinsichtlich Umfang und Inhalt), um eine verlässliche Aussage über die Funktionsfähigkeit der Software treffen zu können?",,
+"5.2.3.5","Liegt die Testdokumentation des Mandanten nicht vor, oder sind die Test nicht ausreichend nachvollziehbar dokumentiert, sind alternative analytische Prüfungshandlungen z.B. anhand von Downloads aus den Produktivsystemen durchzuführen, die geeignet sind, eine verlässliche Aussage über die Funktionsfähigkeit der Software während des produktiv eingesetzten Zeitraums zu treffen.",,
+"6.","Prüfung IT-gestützter Geschäftsprozesse (IDW PS 330, Tz. 84 ff.)",,
+"6.1","Aufnahme der Geschäftsprozesse",,
+"6.1.1","Berücksichtigen Sie bei der Aufnahme von rechnungslegungsrelevanten Geschäftsprozessen insbesondere die folgenden Aspekte:",,"Erfolgt eine Identifizierung und Strukturierung der rechnungslegungsrelevanten Geschäftsprozesse im Rahmen der IT-Strategie?"
+,,,"Wurden bei der Identifizierung und Strukturierung der rechnungslegungsrelevanten Geschäftsprozesse die dazu eingesetzte IT-Infrastruktur und die IT-Anwendungen sowie die relevanten Schnittstellen erfasst bzw. dargestellt?"
+,,,"Liegt eine Beschreibung des Datenflusses innerhalb der rechnungslegungsrelevanten Geschäftsprozesse vor? Sind in diesem Zusammenhang die prozessbezogenen Kontrollen dargestellt?"
+"6.1.2","Werden bei der Identifizierung und Strukturierung der wesentlichen rechnungslegungsrelevanten Geschäftsprozesse in angemessener Weise das Geschäftsmodell des Unternehmens, daraus abgeleitete Ist-Strategieanalysen, Ist-Risikobeurteilung einschließlich des Sicherheitskonzeptes sowie die Organisationsstrukturen bspw. anhand der Unterlagen von Prozesseignern (Fachabteilung, IT-Bereich etc.) berücksichtigt?",,"Sind in der erstellten Dokumentation die Ergebnisse so weit detailliert, dass alle wesentlichen Prozessschritte in logisch verbundener Folge erkennbar sind?"
+"6.1.3","Ist mit der Prozess-Dokumentation der tatsächliche Prozessablauf hinreichend dargestellt?",,
+"6.1.4","Können auf den Aufzeichnungen die möglichen prozessspezifischen Risiken, Ineffizienzen und sonstigen organisatorischen Schwachstellen hinsichtlich des Prüfungsziels abgeleitet werden?",,"Risiken können sich u.a. in folgenden Bereichen ergeben:"
+,,,"unzureichendes Risiko-Management"
+,,,"Ineffizienzen und Schwachstellen in der Struktur- und Ablauforganisation"
+,,,"Unzulänglichkeiten in dem zugrunde liegenden IT-System, (Verlässlichkeit, Verfügbarkeit, Sicherheit etc.)"
+,,,"Schwachstellen im Controlling und"
+,,,"weitere unternehmensspezifische Risiken."
+"6.1.5","Nehmen Sie dazu Stellung, ob die Darstellung der prozessintegrierten Kontrollen insgesamt, d.h. einschließlich manueller und maschineller Kontrollen eine Beurteilung der Angemessenheit ermöglicht.",,"Bei der Beurteilung der Angemessenheit der prozessintegrierten Kontrollen steht der Kontrollzweck: „Gewährleistung der Ordnungsmäßigkeit und Sicherheit der rechnungslegungsrelevanten Daten“ im Vordergrund."
+"6.1.6","Beurteilen Sie in diesem Zusammenhang, ob bei den IT-Kontrollen eine Funktionstrennung gewährleistet wird. Zu beachten sind hierbei folgende Bereiche:",,
+,"Funktion der Stammdatenpflege und Bewegungsdateneingabe und",,
+,"Verarbeitungs- und Kontrollfunktionen im System",,
+,"Können Stamm- und Tabellendaten nur durch autorisierte Mitarbeiter angelegt, geändert und gelöscht werden?",,
+"6.2","Daten- und Belegfluss",,
+"6.2.1","Der Daten- und Belegfluss betrifft im Wesentlichen die erstmalige Erfassung der Daten sowie die Überleitung der rechnungslegungsrelevanten Daten aus dem Geschäftsprozess in die Rechnungslegung. Diese Schnittstellen sowie die hier implementierten Kontrollen sind in Ihre Unterlagen mit aufzunehmen.",,
+"6.2.2","Berücksichtigen Sie bei der Beurteilung der Angemessenheit des Daten- und Belegflusse folgenden Aspekte:",,"In welcher Form werden Daten erfasst?"
+,,,"Wie wird sichergestellt, dass alle rechnungslegungsrelevanten Daten, die für die Abbildung/Buchung eines Geschäftsvorfalls notwendig sind erfasst und weiterverarbeitet werden?"
+,,,"Wie werden die Daten in den nachfolgenden Prozessschritten verarbeitet?"
+"6.2.3","Wer hat Zugriffs- und Änderungsrechte auf die Daten?",,
+"6.2.4","Entsprechen die vergebenen Rechte den definierten Vorgaben? Sind Änderungen ausschließlich in kontrollierter Form möglich?",,
+"6.2.5","Resultieren aus den Verfahren zur Erfassung und Verarbeitung (inkl. der Schnittstellen) wesentliche inhärente Risiken für die Ordnungsmäßigkeit und Sicherheit der rechnungslegungsrelevanten Daten?",,"Soweit wesentliche inhärente Risiken vorliegen, ist zu prüfen, ob und inwieweit diese Risiken durch die eingerichteten Kontroll- und Abstimmverfahren sowie durch sonstige prozessintegrierte Kontrollen auf ein akzeptables Maß reduziert werden (vgl. hierzu Kontroll- und Abstimmverfahren)"
+"6.3","Kontroll- und Abstimmverfahren",,
+"6.3.1","Identifizieren Sie die Kontroll- und Abstimmverfahren sowie die sonstigen im Geschäftsprozess integrierten Kontrollen, die eine vollständige und richtige Verarbeitung über mehrere Prozessschritte gewährleisten sollen.",,"Welche Arten von Kontrollen werden durchgeführt? Stellen Sie fest, ob insbesondere folgende Kontrollen vorhanden sind:"
+,,,"zutreffende Einstellung der Steuerungsparameter"
+,,,"richtige Belegaufbereitung"
+,,,"Plausibilitätskontrollen der Verarbeitungsergebnis"
+,,,"zeitnahe Verarbeitung von Fehlermeldungen"
+"6.3.2","Nehmen Sie dazu Stellung, ob die vorhanden Kontroll- und Abstimmverfahren insgesamt einschließlich der sonstigen prozessintegrierten Kontrollen, d.h. manuelle einschließlich IT-gestützter Kontrollen konzeptionell grundsätzlich geeignet sind,",,"wesentliche Fehler in der rechnungslegungsrelevanten Datenverarbeitung festzustellen und aufzudecken"
+,,,"die Ordnungsmäßigkeit und Sicherheit der rechnungslegungsrelevanten Daten zu gewährleisten"
+"6.3.3","Kann die Funktionsfähigkeit der eingerichteten Kontrollen anhand der vorgelegten Aufzeichnungen über die unternehmensseitg durchgeführten Tests beurteilt werden?",,"Soweit anhand der vorgelegten Tests eine Beurteilung der Funktionsfähigkeit nicht oder nur in Teilbereichen möglich ist, hat eine Beurteilung der Funktionsfähigkeit anhand eigener Prüfungshandlungen zu erfolgen"
+"6.3.4","Kann zusammenfassend die Angemessenheit und Wirksamkeit der IT-Kontrollen auf auf der Geschäftsprozessebene bestätigt werden?",,
+"7.","Prüfung des IT-Überwachungssystems (IDW PS 330, Tz. 89)",,
+"7.1","Verschaffen Sie sich einen Überblick über die Überwachungsmaßnahmen im Unternehmen bezüglich des IT-Einsatzes. ",,"Zur weiteren Beurteilung des IT-Überwachungssystems identifizieren Sie zunächst die unterschiedlichen Arten der durchgeführten Überwachungsmaßnahmen. Hierbei sind folgende Arten zu unterscheiden:"
+,,,"Prüfung durch die Unternehmensleitung (High-Level-Controls)"
+,,,"Prüfung durch die interne Revision"
+,,,"Prüfung durch einen anderen externen Prüfer"
+"7.2","Beurteilen Sie die High-Level-Controls zunächst anhand der Unterlagen und/oder der Ihnen erteilten Auskünfte. Stellen Sie fest, ob",,"die durchgeführten Kontrollen fehleraufdeckend sind,"
+,,,"die durchgeführten Kontrollen in ihrer Konzeption geeignet sind, Prüfungsrisiken festzustellen,"
+,,,"die Kontrollergebnisse dazu dienen, Fehlerkorrekturen oder Gegensteuerungsmaßnahmen einzuleiten"
+"7.3","Beurteilen Sie die Wirksamkeit der High-Level-Controls:",,"Welche Feststellungen wurden im Rahmen der Überprüfung getroffen und wurden daraufhin Maßnahmen ergriffen?"
+,,,"Waren die getroffenen Maßnahmen geeignet, bestehende Schwächen des IT-Kontrollsystems zu beseitigen?"
+"7.4","Liegt für die Prüfungen der internen Revision ein Prüfungsplan vor?",,
+"7.5","Welche Prüfungen werden/wurden von der internen Revision durchgeführt?",,
+"7.6","Sind die Mitarbeiter der internen Revision fachlich geeignet, bestimmte Prüfungshandlungen durchzuführen?",,
+"7.7","Werden die Prüfungsergebnisse der internen Revision in nachvollziehbaren Ergebnisberichten dokumentiert?",,
+"7.8","Mit wem wurden die Prüfungsergebnisse besprochen?",,
+"7.9 ","Prüfen Sie auszugsweise die Prüfungsvermerke der internen Revision.
+Können hieraus eindeutige Handlungsempfehlungen abgeleitet werden? Wenn ja, welche?",,
+"7.10","Wurden die Handlungsempfehlungen der internen Revision umgesetzt?",,
+"7.11","Hat eine Prüfung durch externe Prüfer stattgefunden?",,
+"7.12","Welche Prüfungshandlungen wurden von externen Prüfern vorgenommen?",,
+"7.13","Zu welchen Ergebnissen sind die externen Prüfer gekommen?",,
+"7.14","Gehen aus dem Bericht der externen Prüfer Handlungsempfehlungen hervor? Wenn ja, welche?",,
+"7.15","Wurden die Handlungsempfehlungen der externen Revision umgesetzt?",,
+"8.","Prüfung des IT-Outsourcing (IDW PS 330, Tz. 90 ff.)",,
+"8.1","Auch bei einem IT-Outsourcing verbleibt die Verantwortung für die Ordnungsmäßigkeit und Sicherheit der Buchführung bei dem zu prüfenden Unternehmen.",,"Bei der Prüfung sind deshalb die Risiken und Probleme im Zusammenwirken von Auftraggeber und Auftragsnehmer besonders zu berücksichtigen."
+,,,"In welchen Umfang wird Outsourcing betrieben?"
+,,,"Wurden alle oder nur Teile der Datenverarbeitungsfunktionen ausgegliedert?"
+,,,"Erfolgt auch die Anwendungsentwicklung/-pflege durch einen Dritten?"
+,,,"Erfolgt die Durchführung der ausgelagerten Tätigkeiten nach strikten Anweisungen des zu prüfenden Unternehmens oder erfolgt eine eigenständige Durchführung der Tätigkeit durch den Outsourcing-Partner? (Soweit nach strikter Anweisung des zu prüfenden Unternehmens vorgegangen wird, kann die Einrichtung organisatorischer Maßnahmen beim zu prüfenden Unternehmen ausreichend sein, um die mit der Auslagerung verbundenen Risiken zu überwachen. Im zweiten Fall muss sich das zu prüfende Unternehmen gegebenenfalls auf das interne Kontrollsystem des Outsourcing-Partner verlassen.)"
+"8.2","Erstellen Sie eine Übersicht der Aufgabenverteilung.
+Werten Sie alle Unterlagen aus, die das Verhältnis zu den jeweiligen Outsourcing-Partnern betreffen.",,"Hierzu zählen u.a."
+,,,"Verträge,"
+,,,"Vereinbarung (z.B. Service Level Agreements),"
+,,,"Arbeitsanweisungen zur Abwicklung und Durchführung etc."
+"8.3","Prüfen Sie diese Unterlagen hinsichtlich Vollständigkeit, Eindeutigkeit und Genauigkeit. Werden z.B. folgende Aspekte eindeutig geregelt?",,"Eigentumsrechte/Verfügungsrecht der Software,"
+,,,"Durchführung einer Daten- und Programmsicherung,"
+,,,"Sicherstellung der Aufbewahrungspflichten,"
+,,,"Freigabeverfahren bei neuer/geänderter Software,"
+,,,"Verantwortlichkeiten bei fehlerhafter Bearbeitung,"
+,,,"Verantwortlichkeiten bei Terminverzögerungen,"
+,,,"Verfügungsrecht/Zugriffsrecht auf die Verfahrensdokumentation"
+,,,"Sicherstellung der Vertraulichkeit im Umgang mit überlassenen Daten,"
+,,,"Einhaltung der GoB"
+"8.4","Welche Unterlagen wurden vom Auftragsgeber dem Auftragsnehmer zur Durchführung der Arbeiten zur Verfügung gestellt, um den gleichen Qualitätsstandard wie bei Inhouse-Verarbeitung zu erreichen?",,
+"8.5","Sind die getroffenen Regelungen zwischen Auftraggeber und Auftragsnehmer mit den Grundsätzen ordnungsmäßiger Buchführung vereinbar? Hierzu zählen auch",,"die Einbindung des Buchführungspflichtigen in die Freigabe neuer bzw. geänderter Software"
+,,,"das Verfügungsrecht des Auftragsgebers über die Dokumentation auch über die Vertragsdauer hinaus etc."
+"8.6","Wie häufig werden Abstimmgespräche zwischen den Vertragsparteien geführt?",,
+"8.7","Soweit die Tätigkeiten des Outsourcing-Partners wesentlich für die Beurteilung der Sicherheit und Ordnungsmäßigkeit der Rechnungslegung sind, hat eine Beurteilung der Kontrollrisiken beim Outsourcing-Partner zu erfolgen.",,"Eventuell vorliegende Bescheinigungen zur ordnungsmäßigen Durchführung der “Outsourcing-Verarbeitung“ sind zu Ihren Unterlagen zu nehmen. ( Wurde der Auftragsnehmer bereits durch einen Sachverständigen Dritten geprüft?)"
+,,,"Gehen aus den Bescheinigungen Art und Umfang der Prüfungshandlungen sowie Ergebnisse und Empfehlungen hervor und vermitteln diese Unterlagen einen hinreichenden Überblick über das beim Outsourcing-Partner bestehende Kontrollrisiko? Beurteilen Sie die beruflichen Qualifikation und Fachkompetenz des sachverständigen Dritten sowie dessen Unparteilichkeit."
+"8.8","Gibt es eine IT-Revision beim Auftragsgeber, die in regelmäßigen Abständen eine Prüfung des Auftragsnehmers durchgeführt?
+
+Besteht ein Zugriff auf die Prüfungsberichte der internen Revision und vermitteln diese Unterlagen einen hinreichenden Überblick über das beim Outsourcing-Partner bestehende Kontrollrisiko?",,
+"8.9","Soweit die Tätigkeit des Outsourcing-Partners wesentlich für die Beurteilung der Sicherheit und Ordnungsmäßigkeit der Rechnungslegung ist, ist abzuwägen, ob eine Beurteilung der Kontrollrisiken anhand der vorliegenden Bescheinigungen möglich ist, oder ob ggf. Prüfungshandlungen beim Outsourcing-Partner notwendig werden.",,
+"9.","Besonderheiten der Internetnutzung",,
+"9.1","Erheben Sie, welche Internet-Aktivitäten vom Unternehmen genutzt bzw. durchgeführt werden:",,"Verfügt das Unternehmen über eine eigene Website? In welcher Weise werden E-Mails verwendet?"
+,,,"Wird eine eigene oder eine gehostete Website betrieben, mittels derer auch (verbindliche) Geschäftsdaten über das öffentliche Internet mit Geschäftspartnern bzw. Kunden ausgetauscht werden?"
+,,,"Werden neben den üblichen Internet-Diensten (bspw. E-Mail, WWW) auch andere, ggf. selbstentwickelte Dienste benutzt?"
+,,,"Werden im Rahmen von E-Business-Aktivitäten Geschäftsprozesse im Internet abgewickelt?"
+"9.2","Gibt es ein Sicherheitskonzept oder anderslautende Richtlinien, die das Sicherheitsbedürfnis des Unternehmens beschreiben?",,
+"9.3","Beinhalten diese Richtlinien u.a. angemessene Regelungen hinsichtlich",,"der Architektur der Übergänge von Unternehmensnetzwerk in fremde bzw. unsichere Netzwerke,"
+,,,"der Protokollierungs- und Überwachungsanforderungen zur rechtzeitigen Erkennung von sicherheitsrelevanten Ereignissen"
+,,,"der Systematik bei Änderungen der IT-Infrastruktur oder sicherheitsrelevanter IT-Komponenten (Change Management)"
+,,,"der Herstellung der geforderten Verfügbarkeit der Internet-Systeme sowie"
+,,,"der Sicherheit der Internet-Nutzung insbesondere bei der Verwendung von E-Mail-Systemen und Web-Browsern?"
+"9.4","Wie wird die Einhaltung des Sicherheitskonzepts bzw. anderer verbindlich geltender Richtlinien bzgl. der Administration der sicherheitsrelevanten E-Commerce-Komponenten und der E-Commerce-Infrastruktur kontrolliert?",,
+"9.5","Halten die Benutzer die Regelungen hinsichtlich der im Unternehmen sowie in öffentlichen Netzwerken angebotenen IT-Diensten ein? Wie wird das kontrolliert? Wird dabei den datenschutzrechtlichen Bestimmungen Genüge getan?",,
+"9.6","Ist die Architektur der E-Commerce-Infrastruktur den Sicherheitsanforderungen des Unternehmens angemessen (bspw. Unterteilung in Sicherheitsbereiche)?",,
+"9.7","Werden alle vorhandenen Übergänge in fremde und unsichere Netzwerke durch geeignete Schutzmaßnahmen angemessen abgesichert, wie bspw.",,"eigene oder fremd administrierte Firewall,"
+,,,"Virenscanner?"
+"9.8","Ist sichergestellt, dass keine weiteren ggf. unkontrollierten Übergänge in unsichere Netzwerke existieren?",,
+"9.9","Ist ein sicherer Betrieb der Firewall bei eigenen Netzzugängen gewährleistet, z.B. durch",,"regelmäßige Sicherheitsüberprüfung der E-Commerce-Infrastruktur, insbesondere nach Änderungen an sicherheitsrelevanten E-Commerce-Komponenten,"
+,,,"regelmäßige Kontrolle neu geschaffener Zugänge"
+,,,"regelmäßige Analyse der Firewallsysteme (u.a. Test der Filterregeln)"
+,,,"permanente Kontrolle evtl. Angriffe aus fremden Netzwerken (bspw. mittels Intrusion Detection Systemen)"
+,,,"regelmäßige Prüfung des Verhaltens der Firewall bei Systemabstürzen"
+"9.10","Werden Änderungen an den Inhalten der angebotenen Web-Seiten kontrolliert durchgeführt?",,
+"9.11","Werden IT-Dienstleister in Anspruch genommen, die sicherheitsrelevante E-Commerce-Komponenten betreiben? Sind angemessene Verträge abgeschlossen, die u.a. die in diesem Abschnitt genannten Anforderungen beinhalten?",,
