@@ -24,6 +24,8 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.iso27k.rcp.ISMViewLabelProvider;
+
 /**
  * An item has a name and a description
  * and optionally a collection of child items
@@ -38,6 +40,8 @@ import org.apache.log4j.Logger;
 public class Item implements IItem {
 	
 	private transient Logger log = Logger.getLogger(Item.class);
+	
+	public static final String NUMBER_REGEX_PATTERN = "\\d+(\\.\\d+)*(\\.)?";
 	
 	public Logger getLog() {
 		if(log==null) {
@@ -86,7 +90,7 @@ public class Item implements IItem {
 	 * @param name name of the item
 	 */
 	public Item(String name, String typeId) {
-		this.name = name;
+		this.name = ItemControlTransformer.addLineBreaks(name, 40);
 		if(typeId!=null && typeId.length()>0) {
 			this.typeId = Integer.valueOf(typeId);
 		}
