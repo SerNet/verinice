@@ -25,8 +25,6 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadNotes;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 
 /**
  * Tree structured collections of items.
@@ -89,7 +87,7 @@ public class Catalog extends Item implements ICatalog {
 	 */
 	public void bufferItem(Item catalogItem) {
 		String numberString = catalogItem.getNumberString();
-		if(!Pattern.matches("\\d+(\\.\\d+)*",numberString)) {
+		if(!Pattern.matches(Item.NUMBER_REGEX_PATTERN,numberString)) {
 			getLog().error("Incorrect number: " + numberString);
 			throw new IllegalArgumentException("Incorrect number: " + numberString);
 		}
