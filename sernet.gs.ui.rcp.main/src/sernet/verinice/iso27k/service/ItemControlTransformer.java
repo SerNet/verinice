@@ -40,7 +40,9 @@ public class ItemControlTransformer {
 	public static Control transform(IItem item) {
 		Control control = new Control();
 		control.setAbbreviation(item.getNumberString());
-		control.setTitel(item.getName());
+		if(item.getName()!=null) {
+			control.setTitel(item.getName().replaceAll("\\s", " "));
+		}
 		control.setDescription(item.getDescription());
 		return control;
 	}
@@ -53,8 +55,50 @@ public class ItemControlTransformer {
 	 */
 	public static ControlGroup transformToGroup(IItem item) {
 		ControlGroup controlGroup = new ControlGroup();
-		controlGroup.setTitel(item.getName());
+		StringBuilder sb = new StringBuilder();
+		if(item.getNumberString()!=null) {
+			sb.append(item.getNumberString());
+		}
+		if(item.getName()!=null) {
+			if(sb.length()>0) {
+				sb.append(" ");
+			}
+			sb.append(item.getName().replaceAll("\\s", " "));
+			controlGroup.setTitel(sb.toString());
+		}
 		return controlGroup;
+	}
+	
+	/**
+	 * @param name2
+	 * @return
+	 */
+	public static String addLineBreaks(String text, int maxWidth) {
+		StringBuilder sbAll = new StringBuilder();
+		if(text!=null && text.length()>maxWidth) {
+			String[] wordArray = text.split("\\s");
+			StringBuilder sbLine = new StringBuilder();
+			for (String word : wordArray) {
+				if((sbLine.length() + word.length())>maxWidth) {
+					// new line
+					if(sbAll.length()>0) {
+						sbAll.append("\n");
+					}
+					sbAll.append(sbLine.toString());
+					sbLine = new StringBuilder();				
+				}
+				if(sbLine.length()>0) {
+					sbLine.append(" ");
+				}
+				sbLine.append(word);
+			}
+			if(sbLine.length()>0) {
+				sbAll.append("\n").append(sbLine.toString());
+			}
+		} else {
+			sbAll.append(text);
+		}
+		return sbAll.toString();
 	}
 
 }
