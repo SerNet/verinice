@@ -17,31 +17,19 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.filter.AuditDurchFilter;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.verinice.iso27k.model.Asset;
-import sernet.verinice.iso27k.model.Audit;
 import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.Document;
-import sernet.verinice.iso27k.model.Evidence;
-import sernet.verinice.iso27k.model.Exception;
-import sernet.verinice.iso27k.model.Finding;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.IISO27kElement;
-import sernet.verinice.iso27k.model.IISO27kGroup;
-import sernet.verinice.iso27k.model.Incident;
-import sernet.verinice.iso27k.model.IncidentScenario;
-import sernet.verinice.iso27k.model.Interview;
-import sernet.verinice.iso27k.model.Organization;
-import sernet.verinice.iso27k.model.PersonIso;
-import sernet.verinice.iso27k.model.Requirement;
-import sernet.verinice.iso27k.model.Threat;
-import sernet.verinice.iso27k.model.Vulnerability;
+import sernet.verinice.iso27k.service.Item;
+import sernet.verinice.iso27k.service.ItemControlTransformer;
 
 /**
  * Label provider for ISO 27000 model elements.
@@ -98,7 +86,15 @@ public class ISMViewLabelProvider extends LabelProvider {
 				obj = cachedObject;
 			}
 			if (obj instanceof CnATreeElement) {
-				title = ((CnATreeElement)obj).getTitle();
+				CnATreeElement element = (CnATreeElement) obj;
+				title = ItemControlTransformer.addLineBreaks(element.getTitle(),40);
+				if(element instanceof Control) {
+					String abbreviation = ((Control)element).getAbbreviation();
+					if(Pattern.matches(Item.NUMBER_REGEX_PATTERN,abbreviation) 
+							&& (title==null || !title.startsWith(abbreviation))) {
+						title = new StringBuilder(abbreviation).append(" ").append(title).toString();
+					}
+				}
 			}
 		}
 		return title;
