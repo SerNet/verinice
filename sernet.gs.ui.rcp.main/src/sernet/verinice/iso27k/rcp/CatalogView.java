@@ -175,6 +175,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		parent.setLayout(gl);
 		
 		Composite compForm = new Composite(parent,SWT.NONE);
+		compForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		GridLayout glForm = new GridLayout(2, false);
 		compForm.setLayout(glForm);
 		labelCatalog = new Label(compForm,SWT.NONE);
