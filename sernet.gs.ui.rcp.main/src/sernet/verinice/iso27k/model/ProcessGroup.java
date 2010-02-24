@@ -26,7 +26,7 @@ import sernet.hui.common.connect.Entity;
  * @author Daniel Murygin <dm@sernet.de>
  */
 @SuppressWarnings("serial")
-public class ProcessGroup extends Group<Asset> {
+public class ProcessGroup extends Group<Process> {
 
 	public static final String TYPE_ID = "process_group"; //$NON-NLS-1$
 	public static final String TITLE_DEFAULT = "Processes"; //$NON-NLS-1$
