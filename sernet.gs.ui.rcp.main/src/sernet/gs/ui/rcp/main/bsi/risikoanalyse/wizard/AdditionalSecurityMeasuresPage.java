@@ -24,7 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -34,6 +33,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -87,11 +87,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	protected AdditionalSecurityMeasuresPage() {
 		super("Zusätzliche IT-Sicherheitsmaßnahmen");
 		setTitle("Zusätzliche IT-Sicherheitsmaßnahmen");
-		setDescription("Fügen Sie den Gefährdungen weitere"
-				+ " IT-Sicherheitsmaßnahmen hinzu. Legen Sie ggf."
-				+ " zusätzlich eigene Maßnahmen an. Per Drag'n'Drop können Sie die gewünschten " +
-						"Maßnahmen von rechts nach links " +
-						"ziehen und den Gefährdungen zuordnen!");
+		setDescription("Fügen Sie den Gefährdungen weitere IT-Sicherheitsmaßnahmen hinzu. Legen Sie ggf. zusätzlich eigene Maßnahmen an. Per Drag'n'Drop können Sie die gewünschten Maßnahmen von rechts nach links ziehen und den Gefährdungen zuordnen!");
 	}
 
 	/**
@@ -118,8 +114,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		viewerGefaehrdung.getTree().setLayoutData(gridViewerGefaehrdung);
 
 		/* TableViewer: Massnahmen */
-		viewerMassnahme = new TableViewer(composite, SWT.BORDER | SWT.SINGLE
-				| SWT.FULL_SELECTION);
+		viewerMassnahme = new TableViewer(composite, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
 		final Table tableMassnahme = viewerMassnahme.getTable();
 		GridData gridTableMassnahme = new GridData();
 		gridTableMassnahme.grabExcessHorizontalSpace = true;
@@ -163,8 +158,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		});
 
 		/* add drag and drop support */
-		CnATreeElement cnaElement = ((RiskAnalysisWizard) getWizard())
-				.getFinishedRiskAnalysis();
+		CnATreeElement cnaElement = ((RiskAnalysisWizard) getWizard()).getFinishedRiskAnalysis();
 		/*
 		 * note: this Transfer is not used for data transfer, but for fulfilling
 		 * parameter needs of addDropSupport and addDragSupport. The actual data
@@ -172,20 +166,15 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		 * RisikoMassnahmenUmsetzungDragListener and
 		 * RisikoMassnahmenUmsetzungDropListener
 		 */
-		Transfer[] types = new Transfer[] { RisikoMassnahmenUmsetzungTransfer
-				.getInstance() };
+		Transfer[] types = new Transfer[] { RisikoMassnahmenUmsetzungTransfer.getInstance() };
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-	
-		viewerGefaehrdung.addDropSupport(operations, types,
-				new RisikoMassnahmenUmsetzungDropListener(viewerGefaehrdung));
-		
-		viewerMassnahme.addDragSupport(operations, types,
-				new RisikoMassnahmenUmsetzungDragListener(viewerMassnahme,
-						cnaElement));
+
+		viewerGefaehrdung.addDropSupport(operations, types, new RisikoMassnahmenUmsetzungDropListener(viewerGefaehrdung));
+
+		viewerMassnahme.addDragSupport(operations, types, new RisikoMassnahmenUmsetzungDragListener(viewerMassnahme, cnaElement));
 
 		/* group the buttons for viewerGefaehrdung with group */
-		Group groupButtonsGefaehrdung = new Group(composite,
-				SWT.SHADOW_ETCHED_OUT);
+		Group groupButtonsGefaehrdung = new Group(composite, SWT.SHADOW_ETCHED_OUT);
 		groupButtonsGefaehrdung.setText("Maßnahmen");
 		GridLayout gridLayoutButtonsGefaehrdung = new GridLayout();
 		gridLayoutButtonsGefaehrdung.numColumns = 3;
@@ -197,8 +186,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		groupButtonsGefaehrdung.setLayoutData(gridGroupButtonsGefaehrdung);
 
 		/* delete button for viewerGefaehrdung */
-		Button buttonDeleteGefaehrdung = new Button(groupButtonsGefaehrdung,
-				SWT.PUSH);
+		Button buttonDeleteGefaehrdung = new Button(groupButtonsGefaehrdung, SWT.PUSH);
 		buttonDeleteGefaehrdung.setText("Löschen");
 		GridData gridDeleteGefaehrdung = new GridData();
 		buttonDeleteGefaehrdung.setLayoutData(gridDeleteGefaehrdung);
@@ -212,18 +200,13 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 			 * @param event
 			 *            event containing information about the selection
 			 */
+			@Override
 			public void widgetSelected(SelectionEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) viewerGefaehrdung
-						.getSelection();
-				RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) selection
-						.getFirstElement();
+				IStructuredSelection selection = (IStructuredSelection) viewerGefaehrdung.getSelection();
+				RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) selection.getFirstElement();
 
 				/* ask user to confirm */
-				boolean confirmed = MessageDialog.openQuestion(composite
-						.getShell(), "Bestätigung",
-						"Wollen Sie die Massnahme mit dem Titel \""
-								+ selectedRisikoMassnahmenUmsetzung.getTitle()
-								+ "\" wirklich löschen?");
+				boolean confirmed = MessageDialog.openQuestion(composite.getShell(), "Bestätigung", "Wollen Sie die Massnahme mit dem Titel \"" + selectedRisikoMassnahmenUmsetzung.getTitle() + "\" wirklich löschen?");
 				if (confirmed) {
 					deleteTreeViewerRisikoMassnahmenUmsetzung(selectedRisikoMassnahmenUmsetzung);
 					viewerGefaehrdung.refresh();
@@ -232,8 +215,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		});
 
 		/* group the buttons for viewerMassnahme with group */
-		Group groupButtonsMassnahme = new Group(composite,
-				SWT.SHADOW_ETCHED_OUT);
+		Group groupButtonsMassnahme = new Group(composite, SWT.SHADOW_ETCHED_OUT);
 		groupButtonsMassnahme.setText("eigene Maßnahmen");
 		GridLayout gridLayoutButtonsMassnahme = new GridLayout();
 		gridLayoutButtonsMassnahme.numColumns = 3;
@@ -270,18 +252,16 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 			 * @param event
 			 *            event containing information about the selection
 			 */
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 
 				/* create new RisikoMassnahmenUmsetzung */
-				final NewRisikoMassnahmeDialog dialog = new NewRisikoMassnahmeDialog(
-						composite.getShell());
+				final NewRisikoMassnahmeDialog dialog = new NewRisikoMassnahmeDialog(composite.getShell());
 				int result = dialog.open();
 
-				if (result == Dialog.OK) {
+				if (result == Window.OK) {
 					/* add new RisikoMassnahmenUmsetzung to List and viewer */
-					((RiskAnalysisWizard) getWizard())
-							.addRisikoMassnahmeUmsetzung(dialog
-									.getNewRisikoMassnahme());
+					((RiskAnalysisWizard) getWizard()).addRisikoMassnahmeUmsetzung(dialog.getNewRisikoMassnahme());
 					viewerMassnahme.refresh();
 					packAllMassnahmeColumns();
 				}
@@ -289,8 +269,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		});
 
 		/* delete button */
-		Button buttonDeleteMassnahme = new Button(groupButtonsMassnahme,
-				SWT.PUSH);
+		Button buttonDeleteMassnahme = new Button(groupButtonsMassnahme, SWT.PUSH);
 		buttonDeleteMassnahme.setText("löschen");
 		GridData gridButtonMassnahmeDelete = new GridData();
 		buttonDeleteMassnahme.setLayoutData(gridButtonMassnahmeDelete);
@@ -304,22 +283,17 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 			 * @param event
 			 *            event containing information about the selection
 			 */
+			@Override
 			public void widgetSelected(SelectionEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) viewerMassnahme
-						.getSelection();
-				MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection
-						.getFirstElement();
+				IStructuredSelection selection = (IStructuredSelection) viewerMassnahme.getSelection();
+				MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection.getFirstElement();
 
 				/* only RisikoMassnahmenUmsetzungen can be deleted */
 				if (selectedMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) {
 					RisikoMassnahmenUmsetzung rsUmsetzung = (RisikoMassnahmenUmsetzung) selectedMassnahmenUmsetzung;
 
 					/* ask user to confirm */
-					boolean confirmed = MessageDialog.openQuestion(composite
-							.getShell(), "Bestätigung",
-							"Wollen Sie die Massnahme mit dem Titel \""
-									+ selectedMassnahmenUmsetzung.getTitle()
-									+ "\" wirklich löschen?");
+					boolean confirmed = MessageDialog.openQuestion(composite.getShell(), "Bestätigung", "Wollen Sie die Massnahme mit dem Titel \"" + selectedMassnahmenUmsetzung.getTitle() + "\" wirklich löschen?");
 					/* delete */
 					if (confirmed) {
 						deleteRisikoMassnahmenUmsetzung(rsUmsetzung);
@@ -338,6 +312,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		/* listener opens edit Dialog for the selected Massnahme */
 		buttonEditMassnahme.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				editMassnahme();
 			}
@@ -355,8 +330,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		compositeFilter.setLayoutData(gridCompositeFilter);
 
 		/* filter button - RisikoMassnahmenUmsetzungen only */
-		Button buttonFilterOwnMassnahmen = new Button(compositeFilter,
-				SWT.CHECK);
+		Button buttonFilterOwnMassnahmen = new Button(compositeFilter, SWT.CHECK);
 		buttonFilterOwnMassnahmen.setText("nur eigene Maßnahmen anzeigen");
 		GridData gridButtonFilterMassnahmen = new GridData();
 		gridButtonFilterMassnahmen.horizontalSpan = 2;
@@ -375,25 +349,23 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 			 * @param event
 			 *            event containing information about the selection
 			 */
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 
 				Button thisButton = (Button) event.widget;
 
 				if (thisButton.getSelection()) {
-					viewerMassnahme
-							.addFilter(risikoMassnahmenUmsetzungenFilter);
+					viewerMassnahme.addFilter(risikoMassnahmenUmsetzungenFilter);
 					viewerMassnahme.refresh();
 				} else {
-					viewerMassnahme
-							.removeFilter(risikoMassnahmenUmsetzungenFilter);
+					viewerMassnahme.removeFilter(risikoMassnahmenUmsetzungenFilter);
 					viewerMassnahme.refresh();
 				}
 			}
 		});
 
 		/* filter button - MassnahmenUmsetzungen only */
-		Button buttonFilterBSIMassnahmen = new Button(compositeFilter,
-				SWT.CHECK);
+		Button buttonFilterBSIMassnahmen = new Button(compositeFilter, SWT.CHECK);
 		buttonFilterBSIMassnahmen.setText("nur BSI Maßnahmen anzeigen");
 		GridData gridButtonFilterBSIMassnahmen = new GridData();
 		gridButtonFilterBSIMassnahmen.horizontalSpan = 2;
@@ -412,6 +384,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 			 * @param event
 			 *            event containing information about the selection
 			 */
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 
 				Button thisButton = (Button) event.widget;
@@ -428,8 +401,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 		/* filter button - search */
 		new Label(compositeFilter, SWT.NULL).setText("suche:");
-		Text textFilterSearch = new Text(compositeFilter, SWT.SINGLE
-				| SWT.BORDER);
+		Text textFilterSearch = new Text(compositeFilter, SWT.SINGLE | SWT.BORDER);
 		GridData gridTextFilterSearch = new GridData();
 		gridTextFilterSearch.horizontalAlignment = SWT.FILL;
 		textFilterSearch.setLayoutData(gridTextFilterSearch);
@@ -500,33 +472,26 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 */
 	private void initContents() {
 
-		List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = ((RiskAnalysisWizard) getWizard())
-				.getNotOKGefaehrdungsUmsetzungen();
+		List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = ((RiskAnalysisWizard) getWizard()).getNotOKGefaehrdungsUmsetzungen();
 
 		/* root of TreeViewer */
-		IGefaehrdungsBaumElement baum = new GefaehrdungsBaumRoot(
-				arrListGefaehrdungsUmsetzungen);
+		IGefaehrdungsBaumElement baum = new GefaehrdungsBaumRoot(arrListGefaehrdungsUmsetzungen);
 
-		viewerGefaehrdung
-				.setLabelProvider(new GefaehrdungTreeViewerLabelProvider());
-		viewerGefaehrdung
-				.setContentProvider(new GefaehrdungTreeViewerContentProvider());
+		viewerGefaehrdung.setLabelProvider(new GefaehrdungTreeViewerLabelProvider());
+		viewerGefaehrdung.setContentProvider(new GefaehrdungTreeViewerContentProvider());
 		viewerGefaehrdung.setInput(baum);
 		viewerGefaehrdung.expandAll();
 
-		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = ((RiskAnalysisWizard) getWizard())
-				.getAllMassnahmenUmsetzungen();
+		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = ((RiskAnalysisWizard) getWizard()).getAllMassnahmenUmsetzungen();
 
 		/* map a domain model object into multiple images and text labels */
-		viewerMassnahme
-				.setLabelProvider(new MassnahmeTableViewerLabelProvider());
+		viewerMassnahme.setLabelProvider(new MassnahmeTableViewerLabelProvider());
 		/* map domain model into array */
 		viewerMassnahme.setContentProvider(new ArrayContentProvider());
 		/* associate domain model with viewer */
 		viewerMassnahme.setInput(arrListMassnahmenUmsetzungen);
 		viewerMassnahme.setSorter(new MassnahmenSorter());
 		packAllMassnahmeColumns();
-
 
 		((RiskAnalysisWizard) getWizard()).setCanFinish(true);
 	}
@@ -547,21 +512,15 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 * @param massnahme
 	 *            the Massnahme to delete
 	 */
-	private void deleteTreeViewerRisikoMassnahmenUmsetzung(
-			RisikoMassnahmenUmsetzung massnahme) {
+	private void deleteTreeViewerRisikoMassnahmenUmsetzung(RisikoMassnahmenUmsetzung massnahme) {
 
 		try {
-			GefaehrdungsUmsetzung parent = (GefaehrdungsUmsetzung) massnahme
-					.getParent();
+			GefaehrdungsUmsetzung parent = (GefaehrdungsUmsetzung) massnahme.getParent();
 
-			if (massnahme != null
-					&& massnahme instanceof RisikoMassnahmenUmsetzung
-					&& parent != null
-					&& parent instanceof GefaehrdungsUmsetzung) {
-				
+			if (massnahme != null && massnahme instanceof RisikoMassnahmenUmsetzung && parent != null && parent instanceof GefaehrdungsUmsetzung) {
+
 				RemoveMassnahmeFromGefaherdung command = new RemoveMassnahmeFromGefaherdung(parent, massnahme);
-				command = ServiceFactory.lookupCommandService().executeCommand(
-						command);
+				command = ServiceFactory.lookupCommandService().executeCommand(command);
 				parent.setChildren(command.getParent().getChildren());
 
 				/* refresh viewer */
@@ -578,19 +537,15 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 * @param massnahme
 	 *            the Massnahme to delete
 	 */
-	private void deleteRisikoMassnahmenUmsetzung(
-			RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung) {
+	private void deleteRisikoMassnahmenUmsetzung(RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung) {
 
-		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = ((RiskAnalysisWizard) getWizard())
-				.getAllMassnahmenUmsetzungen();
+		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = ((RiskAnalysisWizard) getWizard()).getAllMassnahmenUmsetzungen();
 
 		try {
 			/* delete from List of MassnahmenUmsetzungen */
-			if (arrListMassnahmenUmsetzungen
-					.contains(risikoMassnahmenUmsetzung)) {
+			if (arrListMassnahmenUmsetzungen.contains(risikoMassnahmenUmsetzung)) {
 				arrListMassnahmenUmsetzungen.remove(risikoMassnahmenUmsetzung);
-				RisikoMassnahmeHome.getInstance().remove(
-						risikoMassnahmenUmsetzung.getRisikoMassnahme());
+				RisikoMassnahmeHome.getInstance().remove(risikoMassnahmenUmsetzung.getRisikoMassnahme());
 			}
 
 			// TODO an dieser Stelle müssten eigentlich auch die
@@ -599,20 +554,16 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 			// TreeViewer
 			// gelangt sind, geloescht werden..
 		} catch (Exception e) {
-			ExceptionUtil.log(e,
-					"RisikoMassnahmenUmsetzung konnte nicht gelöscht werden.");
+			ExceptionUtil.log(e, "RisikoMassnahmenUmsetzung konnte nicht gelöscht werden.");
 		}
 	}
 
 	protected void editMassnahme() {
-		IStructuredSelection selection = (IStructuredSelection) viewerMassnahme
-				.getSelection();
-		MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection
-				.getFirstElement();
+		IStructuredSelection selection = (IStructuredSelection) viewerMassnahme.getSelection();
+		MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection.getFirstElement();
 		if (selectedMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) {
 			RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) selectedMassnahmenUmsetzung;
-			final EditRisikoMassnahmenUmsetzungDialog dialog = new EditRisikoMassnahmenUmsetzungDialog(
-					composite.getShell(), selectedRisikoMassnahmenUmsetzung);
+			final EditRisikoMassnahmenUmsetzungDialog dialog = new EditRisikoMassnahmenUmsetzungDialog(composite.getShell(), selectedRisikoMassnahmenUmsetzung);
 			dialog.open();
 			viewerMassnahme.refresh();
 			packAllMassnahmeColumns();
@@ -638,8 +589,8 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		 *            given element
 		 * @return true if element passes test, false else
 		 */
-		public boolean select(Viewer viewer, Object parentElement,
-				Object element) {
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof RisikoMassnahmenUmsetzung) {
 				return true;
 			} else {
@@ -667,8 +618,8 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		 *            given element
 		 * @return true if element passes test, false else
 		 */
-		public boolean select(Viewer viewer, Object parentElement,
-				Object element) {
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (!(element instanceof RisikoMassnahmenUmsetzung)) {
 				return true;
 			} else {
@@ -693,7 +644,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		 *            the String to search for
 		 */
 		void setPattern(String searchString) {
-			
+
 			pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
 		}
 
@@ -709,8 +660,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		 * @return true if element passes test, false else
 		 */
 		@Override
-		public boolean select(Viewer viewer, Object parentElement,
-				Object element) {
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
 
 			MassnahmenUmsetzung massnahmeUmsetzung = (MassnahmenUmsetzung) element;
 			String title = massnahmeUmsetzung.getTitle();
