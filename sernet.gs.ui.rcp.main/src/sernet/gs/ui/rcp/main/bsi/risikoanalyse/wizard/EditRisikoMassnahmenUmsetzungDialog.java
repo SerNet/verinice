@@ -47,11 +47,12 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	/**
 	 * Constructor.
 	 * 
-	 * @param parentShell shell of parent Composite
-	 * @param newRisikoMassnahmenUmsetzung the RisikoMassnahmenUmsetzung to edit
+	 * @param parentShell
+	 *            shell of parent Composite
+	 * @param newRisikoMassnahmenUmsetzung
+	 *            the RisikoMassnahmenUmsetzung to edit
 	 */
-	public EditRisikoMassnahmenUmsetzungDialog(Shell parentShell,
-			RisikoMassnahmenUmsetzung newRisikoMassnahmenUmsetzung) {
+	public EditRisikoMassnahmenUmsetzungDialog(Shell parentShell, RisikoMassnahmenUmsetzung newRisikoMassnahmenUmsetzung) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		risikoMassnahmenUmsetzung = newRisikoMassnahmenUmsetzung;
@@ -60,7 +61,8 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	/**
 	 * Creates the content area of the Dialog.
 	 * 
-	 * @param parent the parent Composite
+	 * @param parent
+	 *            the parent Composite
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
@@ -112,8 +114,7 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 		labelDescription.setLayoutData(gridLabelDescription);
 
 		/* text description */
-		textDescription = new Text(container, SWT.BORDER | SWT.V_SCROLL
-				| SWT.MULTI | SWT.WRAP);
+		textDescription = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.WRAP);
 		GridData gridTextDescription = new GridData();
 		gridTextDescription.horizontalAlignment = SWT.FILL;
 		gridTextDescription.verticalAlignment = SWT.FILL;
@@ -122,8 +123,7 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 		gridTextDescription.widthHint = 400;
 		gridTextDescription.heightHint = 200;
 		textDescription.setLayoutData(gridTextDescription);
-		textDescription.setText(notNull(risikoMassnahmenUmsetzung
-				.getDescription()));
+		textDescription.setText(notNull(risikoMassnahmenUmsetzung.getDescription()));
 
 		return container;
 	}
@@ -131,7 +131,8 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	/**
 	 * Returns true if given String is not null.
 	 * 
-	 * @param string the String to test
+	 * @param string
+	 *            the String to test
 	 * @return true if given String is not null, false else
 	 */
 	private String notNull(String string) {
@@ -139,21 +140,18 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	}
 
 	/**
-	 * Saves the RisikoMassnahmenUmsetzung in the database, if okay button
-	 * is pressed.
+	 * Saves the RisikoMassnahmenUmsetzung in the database, if okay button is
+	 * pressed.
 	 */
 	@Override
 	protected void okPressed() {
-		
-		risikoMassnahmenUmsetzung.getRisikoMassnahme()
-				.setNumber(textNumber.getText());
+
+		risikoMassnahmenUmsetzung.getRisikoMassnahme().setNumber(textNumber.getText());
 		risikoMassnahmenUmsetzung.getRisikoMassnahme().setName(textName.getText());
-		risikoMassnahmenUmsetzung.getRisikoMassnahme().setDescription(
-				textDescription.getText());
+		risikoMassnahmenUmsetzung.getRisikoMassnahme().setDescription(textDescription.getText());
 
 		try {
-			RisikoMassnahmeHome.getInstance().save(
-					risikoMassnahmenUmsetzung.getRisikoMassnahme());
+			RisikoMassnahmeHome.getInstance().save(risikoMassnahmenUmsetzung.getRisikoMassnahme());
 		} catch (Exception e) {
 			ExceptionUtil.log(e, "Änderung konnte nicht gespeichert werden.");
 		}
