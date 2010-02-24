@@ -42,6 +42,14 @@ public class Control extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_TAG = "control_tag"; //$NON-NLS-1$
 	public static final String PROP_DESC = "control_desc"; //$NON-NLS-1$
 	
+	public static final String PROP_IMPLEMENTED = "control_implemented";
+	public static final String PROP_IMPLEMENTED_NOTEDITED = "control_implemented_notedited";
+	public static final String PROP_IMPLEMENTED_NO = "control_implemented_no";
+	public static final String PROP_IMPLEMENTED_YES = "control_implemented_yes";
+	public static final String PROP_IMPLEMENTED_PARTLY = "control_implemented_partly";
+	public static final String PROP_IMPLEMENTED_NA = "control_implemented_na";
+
+	// this is another way to meassure control implementation: (currently disabled in SNCA.xml)
 	public static final String PROP_MATURITY = "control_maturity"; //$NON-NLS-1$
 	public static final String PROP_MATURITY_0 = "control_maturity_0"; //$NON-NLS-1$
 	public static final String PROP_MATURITY_1 = "control_maturity_1"; //$NON-NLS-1$
@@ -50,7 +58,7 @@ public class Control extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_MATURITY_4 = "control_maturity_4"; //$NON-NLS-1$
 	public static final String PROP_MATURITY_5 = "control_maturity_5"; //$NON-NLS-1$
 	private static final int SUFFICIENT_MATURITY = 2;
-	
+
 	/**
 	 * Creates an empty asset
 	 */
@@ -65,6 +73,19 @@ public class Control extends CnATreeElement implements IISO27kElement {
 		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME), "New Control");
 	}
 	
+	public String getImplemented() {
+		PropertyList properties = getEntity().getProperties(PROP_IMPLEMENTED);
+		if (properties == null || properties.getProperties() == null
+				|| properties.getProperties().size() < 1)
+			return PROP_IMPLEMENTED_NOTEDITED;
+
+		Property property = properties.getProperty(0);
+		if (property != null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
+			return property.getPropertyValue();
+		return PROP_IMPLEMENTED_NOTEDITED;
+	}
+	
+	@Deprecated
 	public int getMaturity() {
 		String maturity = null;
 		PropertyList properties = getEntity().getProperties(PROP_MATURITY);
@@ -134,7 +155,11 @@ public class Control extends CnATreeElement implements IISO27kElement {
 	}
 
 	/**
+	 * This would be another way to measure control implementation.
+	 * Currently replaced by  yes / no / maybe choice.
+	 * 
 	 * @param control
+	 * @deprecated
 	 * @return
 	 */
 	public static boolean isSufficientlyMature(Control control) {

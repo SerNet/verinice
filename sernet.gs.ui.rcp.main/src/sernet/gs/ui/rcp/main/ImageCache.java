@@ -364,5 +364,24 @@ public class ImageCache {
 		}
 		imageMap.clear();
 	}
+
+	/**
+	 * @param implemented
+	 * @return
+	 */
+	public Image getControlImplementationImage(String implemented) {
+		if (implemented.equals(Control.PROP_IMPLEMENTED_NOTEDITED))
+			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
+		if (implemented.equals(Control.PROP_IMPLEMENTED_NA))
+			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+		if (implemented.equals(Control.PROP_IMPLEMENTED_NO))
+			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
+		if (implemented.equals(Control.PROP_IMPLEMENTED_PARTLY))
+			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+		if (implemented.equals(Control.PROP_IMPLEMENTED_YES))
+			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+		// else simply return notedited:
+		return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
+	}
 	
 }

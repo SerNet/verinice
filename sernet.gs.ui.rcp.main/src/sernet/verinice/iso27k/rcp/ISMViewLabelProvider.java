@@ -25,9 +25,24 @@ import org.eclipse.swt.graphics.Image;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.iso27k.model.Asset;
+import sernet.verinice.iso27k.model.Audit;
 import sernet.verinice.iso27k.model.Control;
+import sernet.verinice.iso27k.model.Document;
+import sernet.verinice.iso27k.model.Evidence;
+import sernet.verinice.iso27k.model.Exception;
+import sernet.verinice.iso27k.model.Finding;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.IISO27kElement;
+import sernet.verinice.iso27k.model.IISO27kGroup;
+import sernet.verinice.iso27k.model.Incident;
+import sernet.verinice.iso27k.model.IncidentScenario;
+import sernet.verinice.iso27k.model.Interview;
+import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.iso27k.model.PersonIso;
+import sernet.verinice.iso27k.model.Requirement;
+import sernet.verinice.iso27k.model.Threat;
+import sernet.verinice.iso27k.model.Vulnerability;
 import sernet.verinice.iso27k.service.Item;
 import sernet.verinice.iso27k.service.ItemControlTransformer;
 
@@ -61,10 +76,11 @@ public class ISMViewLabelProvider extends LabelProvider {
 
 		else if (obj instanceof Control) {
 			Control control = (Control) obj;
-			if (Control.isSufficientlyMature(control))
-				image = ImageCache.getInstance().getImage(ImageCache.ISO27K_CONTROL_YES);
-			else
-				image = ImageCache.getInstance().getImage(ImageCache.ISO27K_CONTROL_NO);
+//			if (Control.isSufficientlyMature(control))
+//				image = ImageCache.getInstance().getImage(ImageCache.ISO27K_CONTROL_YES);
+//			else
+//				image = ImageCache.getInstance().getImage(ImageCache.ISO27K_CONTROL_NO);
+			image = ImageCache.getInstance().getControlImplementationImage(control.getImplemented());
 		}
 		else {
 			// else return type icon:

@@ -2774,7 +2774,10 @@ Template:
         />
         
     </huientity>
-    <!-- ISO27000 Elements -->
+    
+    
+    <!-- ISO27000 Elements ==================================================================================================================== -->
+    
     <huientity
         name="Organization"
         id="org" >
@@ -2788,7 +2791,27 @@ Template:
             id="org_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+			name="Scope Summary" id="org_description" inputtype="text" >
+			<defaultRule class="SimpleValue"> <!-- ??? insert scope example -->
+                	<param>The scope definition schould answer these questions: who? what? where?</param>
+                </defaultRule>
+		</huiproperty>
+		<huipropertygroup name="Risk Acceptance" id="org_riskgroup">
+			<huiproperty 
+				name="Acceptable Risk Level" id="org_riskaccept" inputtype="singleoption">
+				<option name="1" id="org_riskaccept_1" />       	
+				<option name="2" id="org_riskaccept_2" />       	
+				<option name="3" id="org_riskaccept_3" />       	
+				<option name="4" id="org_riskaccept_4" />       	
+				<option name="5" id="org_riskaccept_5" />       	
+				<option name="6" id="org_riskaccept_6" />       	
+			</huiproperty>
+			<huiproperty
+				name="Explanation" id="org_riskaccept_expl" inputtype="text" />
+		</huipropertygroup>
     </huientity>
+    
     <huientity
         name="Asset-Group"
         id="assetgroup" >
@@ -2803,12 +2826,17 @@ Template:
         
         <huirelation to="asset" id="rel_asset_asset" 
         	name="depends on" reversename="necessary for" tooltip="One asset may depend on other assets, i.e. an application depending on its server."/>
+
         <huirelation to="person-iso" id="asset-person-owner" 
-        	name="owner" reversename="is owner of" tooltip="Person is owner of this asset as defined in ISO 27001."/>
-        <huirelation to="person-iso" id="asset-person-delegated" 
-        	name="responsibility delegated to" reversename="is responsible for" tooltip="Operational responsibility is delegated to this person."/>
-        
-        
+        	name="owner" reversename="is owner of" tooltip="Person is owner of this asset. He / she is affected by damage to this asset."/>
+        <huirelation to="person-iso" id="rel_asset_person_respo"
+        	name="responsible" reversename="responsible for" tooltip="Operational responsibility is delegated to this person. He / she has to ensure that controls are in place."/> />
+        <huirelation to="person-iso" id="rel_asset_person_accou"
+        	name="accountable" reversename="accountable for" tooltip="" />
+        <huirelation to="person-iso" id="rel_asset_person_consu"
+        	name="consulted" reversename="consulted for" tooltip="" />
+        <huirelation to="person-iso" id="rel_asset_person_info"
+        	name="informed" reversename="informed for" tooltip="" />
         
         <huiproperty
             name="Title"
@@ -2820,112 +2848,149 @@ Template:
             id="asset_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
-
-	<huiproperty
-		name="Type of Asset"
-		id="asset_type"
-		inputtype="singleoption">
-		<option
-			name="Information"
-			id="asset_type_inf" />
-		<option
-			name="Software"
-			id="asset_type_software" />
-		<option
-			name="Physical"
-			id="asset_type_phys" />
-		<option
-			name="Service"
-			id="asset_type_service" />
-		<option
-			name="People"
-			id="asset_type_people" />
-		<option
-			name="Intangible"
-			id="asset_type_intangible" />
-	</huiproperty>
+		<huiproperty
+			name="Description" id="asset_description" inputtype="text" />
+		
+		<huiproperty
+			name="Type of Asset"
+			id="asset_type"
+			inputtype="singleoption">
+			<option
+				name="Information"
+				id="asset_type_inf" />
+			<option
+				name="Software"
+				id="asset_type_software" />
+			<option
+				name="Physical"
+				id="asset_type_phys" />
+			<option
+				name="Service"
+				id="asset_type_service" />
+			<option
+				name="People"
+				id="asset_type_people" />
+			<option
+				name="Intangible"
+				id="asset_type_intangible" />
+		</huiproperty>
+		
+		<huipropertygroup id="asset_value_group" name="Asset Value">
+		<huiproperty
+					id="asset_value_confidentiality"
+					name="Confidentiality"
+					inputtype="singleoption">
+					<option
+						id="asset_value_confidentiality_normal"
+						name="Low" />
+					<option
+						id="asset_value_confidentiality_hoch"
+						name="Medium" />
+					<option
+						id="asset_value_confidentiality_sehrhoch"
+						name="High" />
+				</huiproperty>
+				<huiproperty
+					id="asset_value_availability"
+					name="Availability"
+					inputtype="singleoption">
+					<option
+						id="asset_value_availability_normal"
+						name="Low" />
+					<option
+						id="asset_value_availability_hoch"
+						name="Medium" />
+					<option
+						id="asset_value_availability_sehrhoch"
+						name="High" />
+				</huiproperty>
+				<huiproperty
+					id="asset_value_integrity"
+					name="Integrity"
+					inputtype="singleoption">
+					<option
+						id="asset_value_integrity_normal"
+						name="Low" />
+					<option
+						id="asset_value_integrity_hoch"
+						name="Medium" />
+					<option
+						id="asset_value_integrity_sehrhoch"
+						name="High" />
+				</huiproperty>
+				<huiproperty
+					name="Explanation"
+					inputtype="text"
+					id="asset_value_comment" />
+		</huipropertygroup>
+		
+		<huipropertygroup id="asset_impact_group" name="Business Impact">
+				<huiproperty
+					id="asset_impact_auto"
+					name="Method"
+					inputtype="singleoption"
+					>
+					<option
+						id="asset_impact_auto_yes"
+						name="Calculate" />
+					<option
+						id="asset_impact_auto_no"
+						name="Manual" />
+				</huiproperty>
+				
+				<huiproperty
+					name="Calculated Impact" id="asset_impact_autovalue" editable="false">
+					<defaultRule class="SimpleValue">
+                		<param>- not calculated -</param>
+                	</defaultRule>
+				</huiproperty>
+				
+				<huiproperty
+					id="asset_impact_manualvalue"
+					name="Business Impact"
+					inputtype="singleoption"
+					>
+		 			<depends option="asset_impact_auto_no" /> 
+					<option
+						id="asset_impact_manual_low"
+						name="Low" />
+					<option
+						id="asset_impact_manual_medium"
+						name="Medium" />
+					<option
+						id="asset_impact_manual_high"
+						name="High" />
+				</huiproperty>
+				<huiproperty
+					name="Explanation" id="asset_impactexpl" inputtype="text">
+					  <depends option="asset_impact_auto_no" /> 
+				</huiproperty>
+		</huipropertygroup>
 	
-	<huipropertygroup id="asset_value_group" name="Asset Value">
-	<huiproperty
-				id="asset_value_confidentiality"
-				name="Confidentiality"
-				inputtype="singleoption">
-				<option
-					id="asset_value_confidentiality_normal"
-					name="Low" />
-				<option
-					id="asset_value_confidentiality_hoch"
-					name="Medium" />
-				<option
-					id="asset_value_confidentiality_sehrhoch"
-					name="High" />
+		<huipropertygroup name="Risk Management" id="asset_riskgroup">
+			<huiproperty
+				name="Risk value" id="asset_riskvalue" editable="false">
+				<defaultRule class="SimpleValue">
+                	<param>- not calculated -</param>
+                </defaultRule>
+            </huiproperty>
+			<huiproperty
+				name="Risk after controls" id="asset_riskwcontrolvalue" editable="false">
+				<defaultRule class="SimpleValue">
+                	<param>- not calculated -</param>
+                </defaultRule>
+			</huiproperty>
+			<huiproperty 
+				name="Risk Treatment" id="asset_risktreat" inputtype="singleoption">
+				<option name="Reduction" id="asset_risktreat_reduct" />       	
+				<option name="Retention" id="asset_risktreat_retent" />       	
+				<option name="Avoidance" id="asset_risktreat_avoid" />       	
+				<option name="Transfer" id="asset_risktreat_transf" />       	
+				<option name="Acceptance" id="asset_risktreat_accept" />       	
 			</huiproperty>
 			<huiproperty
-				id="asset_value_availability"
-				name="Availability"
-				inputtype="singleoption">
-				<option
-					id="asset_value_availability_normal"
-					name="Low" />
-				<option
-					id="asset_value_availability_hoch"
-					name="Medium" />
-				<option
-					id="asset_value_availability_sehrhoch"
-					name="High" />
-			</huiproperty>
-			<huiproperty
-				id="asset_value_integrity"
-				name="Integrity"
-				inputtype="singleoption">
-				<option
-					id="asset_value_integrity_normal"
-					name="Low" />
-				<option
-					id="asset_value_integrity_hoch"
-					name="Medium" />
-				<option
-					id="asset_value_integrity_sehrhoch"
-					name="High" />
-			</huiproperty>
-			<huiproperty
-				name="Explanation"
-				inputtype="text"
-				id="asset_value_comment" />
-	</huipropertygroup>
-	
-	<huipropertygroup id="asset_impact_group" name="Business Impact">
-			<huiproperty
-				id="asset_impact_auto"
-				name="Method"
-				inputtype="singleoption"
-				>
-				<option
-					id="asset_impact_auto_yes"
-					name="Calculate" />
-				<option
-					id="asset_impact_auto_no"
-					name="Manual" />
-			</huiproperty>
-			
-			<huiproperty
-				id="asset_impact_manual"
-				name="Business Impact"
-				inputtype="singleoption"
-				>
-				<option
-					id="asset_impact_manual_low"
-					name="Low" />
-				<option
-					id="asset_impact_manual_medium"
-					name="Medium" />
-				<option
-					id="asset_impact_manual_high"
-					name="High" />
-			</huiproperty>
-			
-	</huipropertygroup>
-	
+				name="Explanation" id="asset_risktreatexpl" inputtype="text" />
+		</huipropertygroup>
     </huientity>
     
     <huientity
@@ -2935,12 +3000,12 @@ Template:
             name="Title"
             id="persongroup_name" />
     </huientity>
+    
     <huientity
         name="Person"
         id="person-iso" >
-        <huiproperty
-            name="Title"
-            id="person_name" />
+        
+        <!-- roles, int. auditor etc. -->
         <huiproperty
             name="Abbreviation"
             id="person_abbr" />
@@ -2948,7 +3013,211 @@ Template:
             id="person-iso_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+
+		<huiproperty
+			name="Anrede"
+			id="person-iso_anrede"
+            inputtype="singleoption">
+				<option
+					id="person-iso_anrede_none"
+					name="" />
+				<option
+					id="person-iso_anrede_frau"
+					name="Mrs" />
+				<option
+					id="person-iso_anrede_herr"
+					name="Mr" />
+
+		</huiproperty>
+		<huiproperty
+			name="Surname"
+			id="person-iso_surname">
+		</huiproperty>
+		<huiproperty
+			name="Name"
+			id="person-iso_name" />
+
+		<huiproperty
+			name="Phone"
+			id="person-iso_telefon" />
+		<huiproperty
+			name="Email"
+			id="person-iso_email" />
+		<huiproperty
+			name="Org.-Unit"
+			id="person-iso_orgeinheit" />
+		<huiproperty
+			name="Explanation"
+			id="person-iso_erlaeuterung" />
+		<huiproperty
+			name="Roles"
+			id="person-iso_rollen"
+			tooltip="Roles of this employee."
+			required="false"
+			inputtype="multioption">
+			
+			<!-- Start: "offizielle" GS-Kataloge Rollen, verwendet fuer automatische Zuordnung von Massnahmen  ??? use english terms from safeguards-->
+			<option
+				id="person-iso_0"
+				name="Administrator" />
+			<option
+				id="person-iso_2"
+				name="Anwendungsentwickler" />
+			<option
+				id="person-iso_3"
+				name="Archivverwalter" />
+			<option
+				id="person-iso_4"
+				name="Bauleiter" />
+			<option
+				id="person-iso_5"
+				name="Behörden-/Unternehmensleitung" />
+			<option
+				id="person-iso_6"
+				name="Benutzer" />
+			<option
+				id="person-iso_7"
+				name="Beschaffer" />
+			<option
+				id="person-iso_8"
+				name="Brandschutzbeauftragter" />
+			<option
+				id="person-iso_9"
+				name="Datenschutzbeauftragter" />
+			<option
+				id="person-iso_43"
+				name="Entwickler" />
+			<option
+				id="person-iso_10"
+				name="Errichterfirma" />
+			<option
+				id="person-iso_11"
+				name="Fachabteilung" />
+			<option
+				id="person-iso_42"
+				name="Fachverantwortliche" />
+			<option
+				id="person-iso_12"
+				name="Fax-Poststelle" />
+			<option
+				id="person-iso_13"
+				name="Fax-Verantwortlicher" />
+			<option
+				id="person-iso_14"
+				name="Haustechnik" />
+			<option
+				id="person-iso_16"
+				name="Innerer Dienst" />	
+			<option
+				id="person-iso_17"
+				name="IT-Benutzer" />
+			<option
+				id="person-iso_18"
+				name="IT-Sicherheitsbeauftragter" />
+			<option
+				id="person-iso_19"
+				name="IT-Sicherheitsmanagement" />
+			<option
+				id="person-iso_20"
+				name="IT-Verfahrensverantwortlicher" />	
+			<option
+				id="person-iso_46"
+				name="Leiter Beschaffung" />	
+			<option
+				id="person-iso_44"
+				name="Leiter Entwicklung" />
+			<option
+				id="person-iso_47"
+				name="Leiter Fachabteilung" />
+			<option
+				id="person-iso_48"
+				name="Leiter Haustechnik" />	
+			<option
+				id="person-iso_49"
+				name="Leiter Innerer Dienst" />	
+			<option
+				id="person-iso_45"
+				name="Leiter IT" />	
+			<option
+				id="person-iso_50"
+				name="Leiter Organisation" />
+			<option
+				id="person-iso_51"
+				name="Leiter Personal" />	
+			<option
+				id="person-iso_22"
+				name="Mitarbeiter" />
+			<option
+				id="person-iso_24"
+				name="Notfall-Verantwortliche" />
+			<option
+				id="person-iso_25"
+				name="Personalabteilung" />
+			<option
+				id="person-iso_26"
+				name="Personalrat/Betriebsrat" />
+			<option
+				id="person-iso_1"
+				name="Planer" />
+			<option
+				id="person-iso_27"
+				name="Poststelle" />
+			<option
+				id="person-iso_40"
+				name="Pressestelle" />
+			<option
+				id="person-iso_28"
+				name="Revisor" />
+			<option
+				id="person-iso_29"
+				name="Telearbeiter" />
+			<option
+				id="person-iso_35"
+				name="Tester" />
+			<option
+				id="person-iso_30"
+				name="TK-Anlagen-Verantwortlicher" />	
+			<option
+				id="person-iso_32"
+				name="Verantwortliche der einzelnen IT-Anwendungen" />
+			<option
+				id="person-iso_33"
+				name="Verantwortliche für die Datensicherung" />	
+			<option
+				id="person-iso_34"
+				name="Vorgesetzte" />
+			<!-- ENDE: "offizielle" GS-Kataloge Rollen, verwendet fuer automatische Zuordnung von Massnahmen -->
+			
+			<option
+				id="person-iso_39"
+				name="Fax-Absender" />
+			<option
+				id="person-iso_38"
+				name="Fax-Empfänger" />
+			<option
+				id="person-iso_36"
+				name="IT Helpdesk" />
+			<option
+				id="person-iso_37"
+				name="Hersteller" />
+			<option
+				id="person-iso_15"
+				name="Hausverwaltung" />
+			<option
+				id="person-iso_21"
+				name="Leitung" />
+			<option
+				id="person-iso_23"
+				name="Netzplaner" />
+			<option
+				id="person-iso_31"
+				name="Unternehmensleitung" />
+			<option
+				id="person-iso_41"
+				name="Vertretung" />
+		</huiproperty>
     </huientity>
+    
     <huientity
         name="Audit-Group"
         id="auditgroup" >
@@ -2956,9 +3225,22 @@ Template:
             name="Title"
             id="auditgroup_name" />
     </huientity>
+    
     <huientity
         name="Audit"
         id="audit" >
+        
+        <huirelation to="person-iso" id="rel_audit_person_auditor"
+        	name="Auditor" reversename="Auditor in" tooltip="" />
+        <huirelation to="person-iso" id="rel_audit_person_auditee"
+        	name="Auditee" reversename="Auditee in" tooltip="" />
+        <huirelation to="person-iso" id="rel_audit_person_guide"
+        	name="Guide" reversename="Guide in" tooltip="" />
+        <huirelation to="person-iso" id="rel_audit_person_leadauditor"
+        	name="Lead Auditor" reversename="Lead Auditor in" tooltip="" />
+        <huirelation to="person-iso" id="rel_audit_person_mgmtrep"
+        	name="Management Representative" reversename="Management Representative in" tooltip="" />
+        
         <huiproperty
             name="Title"
             id="audit_name" />
@@ -2969,7 +3251,29 @@ Template:
             id="audit_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty 
+       		name="Type" id="audit_type" inputtype="singleoption">
+			<option name="1st Party" id="audit_type_1st" />       	
+			<option name="2nd Party" id="audit_type_2nd" />       	
+			<option name="3rd Party" id="audit_type_3rd" />       	
+			<option name="Certification" id="audit_type_cert" />       	
+			<option name="Surveillance" id="audit_type_surv" />       	
+			<option name="Re-Certification" id="audit_type_recert" />       	
+		</huiproperty>
+		<huiproperty 
+			name="From"
+			id="audit_startdate"
+			inputtype="date">
+            <defaultRule class="Today" />
+		</huiproperty>
+		<huiproperty 
+			name="Until"
+			id="audit_enddate"
+			inputtype="date">
+            <defaultRule class="Today" />
+		</huiproperty>
     </huientity>
+
     <huientity
         name="Control-Group"
         id="controlgroup" >
@@ -2977,11 +3281,23 @@ Template:
             name="Title"
             id="controlgroup_name" />
     </huientity>
+
     <huientity
         name="Control"
         id="control" >
+        
         <huirelation to="asset" id="rel_control_asset" 
-        	name="protects" reversename="protected by" tooltip=""/>
+        	name="reduces impact of" reversename="impact reduced by" tooltip=""/>
+        <huirelation to="incident_scenario" id="rel_control_incscen" 
+        	name="reduces likelihood of" reversename="likelihood reduced by" tooltip=""/>
+		<huirelation to="control" id="rel_control_control"
+        	name="concretizes" reversename="is conretized by" tooltip="" />
+        	
+		<!-- allow this relation as well for risk analysis? 
+        <huirelation to="threat" id="rel_control_threat" 
+        	name="reduces" reversename="reduced by" tooltip=""/>
+		 -->        
+        
         	
         <huiproperty
             name="Title"
@@ -2989,8 +3305,7 @@ Template:
             inputtype="text"/>
         <huiproperty
             name="Abbreviation"
-            id="control_abbr"
-            visible="false" />
+            id="control_abbr" />
         <huiproperty
             id="control_tag"
             name="Tags"
@@ -2999,58 +3314,101 @@ Template:
             name="Description"
             id="control_desc"
             visible="false"/>
-        <huipropertygroup id="control_maturitygroup" name="Maturity">
-        <huiproperty
-			id="control_maturity"
-			name="Maturity"
-               focus="true"
-               required="true"
-			inputtype="singleoption">
-			<option
-				id="control_maturity_0"
-				name="Level 0: Incomplete" />
-			<option
-				id="control_maturity_1"
-				name="Level 1: Performed" />
-			<option
-				id="control_maturity_2"
-				name="Level 2: Managed" />
-			<option
-				id="control_maturity_3"
-				name="Level 3: Established" />
-			<option
-				id="control_maturity_4"
-				name="Level 4: Predictable" />
-			<option
-				id="control_maturity_5"
-				name="Level 5: Optimizing" />
-		</huiproperty>
-		<huiproperty
-			id="control_maturity_comment"
-			name="Explanation"
-			inputtype="text" />
-		<huiproperty
-				id="control_maturity_duedate"
-				name="Due Date"
-				inputtype="date">
-                <defaultRule class="Today">
-                    <param>MONTH</param>
-                    <param>2</param>
-                </defaultRule>
-            </huiproperty>
-		<huiproperty
-			id="control_maturityassessor_link"
-			name="Assessor"
-			inputtype="reference" 
-			required="true">
-			<references entitytype="person"/>
-		</huiproperty>
-		<huiproperty
-            name="Document"
-            id="control_dokument"
-            isURL="true" />
+     	
+     
+     	<huipropertygroup id="control_implementedgroup" name="Implementation">
+     		<!-- see below for explanation of this <depends> element 
+     		<depends option="control_evaltype_implement" />
+     		-->
+     		<huiproperty name="Implemented" id="control_implemented" inputtype="singleoption">
+     			<option name="Yes" id="control_implemented_yes"/>
+     			<option name="No" id="control_implemented_no"/>
+     			<option name="Partly" id="control_implemented_partly"/>
+     			<option name="N.a." id="control_implemented_na"/>
+     		</huiproperty>
+     		<huiproperty 
+     			name="Explanation" 
+     			id="control_implemented_explanation" 
+     			inputtype="text" />
+     	</huipropertygroup>
+
+     <!-- It is possible to support different evaluation methods with a <depends> element. HitroUI will only display the group when the correct method was set
+     	before opening the editor: 
+     
+     	<huiproperty name="Method of evaluation" id="control_evaltype" visible="false" inputtype="singleoption" >
+     		<option name="Implementation" id="control_evaltype_implement"/>
+     		<option name="Maturity" id="control_evaltype_maturity"/>
+     	</huiproperty>
+
+        <huipropertygroup id="control_maturitygroup" name="Maturity" >
+     		<depends option="control_evaltype_maturity"/>
+        
+	        <huiproperty
+				id="control_maturity"
+				name="Maturity"
+	               focus="true"
+	               required="true"
+				inputtype="singleoption" >
+				
+				<option 
+					id="control_maturity_0"
+					name="Level 0: Incomplete"/>
+				<option
+					id="control_maturity_1"
+					name="Level 1: Performed" />
+				<option
+					id="control_maturity_2"
+					name="Level 2: Managed" />
+				<option
+					id="control_maturity_3"
+					name="Level 3: Established" />
+				<option
+					id="control_maturity_4"
+					name="Level 4: Predictable" />
+				<option
+					id="control_maturity_5"
+					name="Level 5: Optimizing" />
+			</huiproperty>
+			<huiproperty
+				id="control_maturity_comment"
+				name="Explanation"
+				inputtype="text" />
+			<huiproperty
+					id="control_maturity_duedate"
+					name="Due Date"
+					inputtype="date">
+	                <defaultRule class="Today">
+	                    <param>MONTH</param>
+	                    <param>2</param>
+	                </defaultRule>
+	            </huiproperty>
+			<huiproperty
+				id="control_maturityassessor_link"
+				name="Assessor"
+				inputtype="reference" 
+				required="true">
+				<references entitytype="person"/>
+			</huiproperty>
         </huipropertygroup>
+        -->
+        
+       	<huipropertygroup name="Effectiveness" id="control_effectivenessgroup">
+	        <huiproperty name="Effectiveness" id="control_effectiveness" inputtype="singleoption">
+		        <option name="1" id="control_effectiveness_1" />
+		        <option name="2" id="control_effectiveness_2" />
+		        <option name="3" id="control_effectiveness_3" />
+		        <option name="4" id="control_effectiveness_4" />
+		        <option name="5" id="control_effectiveness_5" />
+	        </huiproperty>
+	        <huiproperty name="Explanation" id="control_effectiveness_explanation" inputtype="text"/>
+     	</huipropertygroup>
+     	
+     	<huipropertygroup name="Monitoring Results" id="control_auditgroup" >
+     		<!-- ??? measured effectiveness, notes, date... -->
+     	</huipropertygroup>
+    
     </huientity>
+    
     <huientity
         name="Exception-Group"
         id="exceptiongroup" >
@@ -3058,9 +3416,23 @@ Template:
             name="Title"
             id="exceptiongroup_name" />
     </huientity>
+    
     <huientity
         name="Exception"
         id="exception" >
+        
+        <huirelation to="document" id="rel_exception_document" 
+        	name="exception from" reversename="approved exception" tooltip=""/>
+        <huirelation to="control" id="rel_exception_control" 
+        	name="exception from" reversename="approved exception" tooltip=""/>
+        <huirelation to="requirement" id="rel_exception_requirement" 
+        	name="exception from" reversename="approved exception" tooltip=""/>
+    
+        <huirelation to="person-iso" id="rel_exception_person_requested" 
+        	name="requested by" reversename="requested exception" tooltip=""/>
+        <huirelation to="person-iso" id="rel_exception_person_approved" 
+        	name="approved by" reversename="approved exception" tooltip=""/>
+       	
         <huiproperty
             name="Title"
             id="exception_name" />
@@ -3071,7 +3443,28 @@ Template:
             id="exception_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty 
+        	name="Reason" id="exception_reason" inputtype="text"/>
+        <huiproperty
+        	name="Approved" id="exception_approved" inputtype="singleoption">
+			<option name="Yes" id="exception_approved_yes" />       	
+			<option name="No" id="exception_approved_no" />       	
+		</huiproperty>
+        <huiproperty 
+        	name="Explanation" id="exception_approvedexpl" inputtype="text"/>
+        <huiproperty 
+        	name="Conditions" id="exception_condition" inputtype="text"/>
+        <huiproperty 
+			name="Approved on"
+			id="exception_startdate"
+			inputtype="date">
+            <defaultRule class="Today" />
+		</huiproperty>
+        <huiproperty 
+        	name="Valid until" id="exception_enddate" inputtype="date"/>
+        
     </huientity>
+    
     <huientity
         name="Requirement-Group"
         id="requirementgroup" >
@@ -3079,6 +3472,7 @@ Template:
             name="Title"
             id="requirementgroup_name" />
     </huientity>
+    
     <huientity
         name="Requirement"
         id="requirement" >
@@ -3098,10 +3492,31 @@ Template:
             id="requirement_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+			name="Description" id="requirement_desc" inputtype="text"/>
+		<huiproperty 
+			name="Type" id="requirement_type" inputtype="singleoption">
+			<option name="Legal" id="requirement_type_legal" />       	
+			<option name="Contractual" id="requirement_type_contract" />       	
+			<option name="Regulatory" id="requirement_type_regulat" />       	
+			<option name="Business Objective" id="requirement_type_busobj" />       	
+			<option name="IS Objective" id="requirement_type_isobj" />       	
+		</huiproperty>
     </huientity>
+    
     <huientity
         name="Incident"
         id="incident" >
+        
+        <huirelation to="incident_scenario" id="rel_incident_incscen"
+        	name="predicted as" reversename="happened as" tooltip="" />
+        <huirelation to="asset" id="rel_incident_asset"
+        	name="affected" reversename="was affected by" tooltip="" />
+        <huirelation to="response" id="rel_incident_response"
+        	name="was responded by" reversename="response to" tooltip="" />
+        <huirelation to="control" id="rel_incident_control"
+        	name="in future prevented by" reversename="reaction to" tooltip="" />
+        
         <huiproperty
             name="Title"
             id="incident_name" />
@@ -3112,7 +3527,16 @@ Template:
             id="incident_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+			name="Event(s)" id="incident_desc" inputtype="text"/>
+		<huiproperty 
+			name="Date"
+			id="incident_date"
+			inputtype="date">
+            <defaultRule class="Today" />
+		</huiproperty>
     </huientity>
+    
     <huientity
         name="Incident-Group"
         id="incident_group" >
@@ -3120,9 +3544,18 @@ Template:
             name="Title"
             id="incident_group_name" />
     </huientity>
+    
     <huientity
         name="Incident-Scenario"
         id="incident_scenario" >
+        
+        <huirelation to="threat" id="rel_incscen_threat" 
+        	name="relevant threat" reversename="applies to" tooltip=""/>
+        <huirelation to="vulnerability" id="rel_incscen_vulnerability" 
+        	name="relevant vulnerability" reversename="applies to" tooltip=""/>
+        <huirelation to="asset" id="rel_incscen_asset" 
+        	name="affects" reversename="affected by" tooltip=""/>
+        
         <huiproperty
             name="Title"
             id="incident_scenario_name" />
@@ -3133,7 +3566,28 @@ Template:
             id="incident_scenario_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty 
+        	name="Explanation" id="incscen_explanation" inputtype="text"/>
+        <huipropertygroup name="Likelihood" id="incscen_likelihoodgroup">
+			<huiproperty
+				name="Method" id="incscen_likelihoodmethod" inputtype="singleoption">
+				<option name="Automatic" id="incscen_likelihoodmethod_automatic" />
+				<option name="Manual" id="incscen_likelihoodmethod_manual" />
+			</huiproperty>
+			<huiproperty
+				name="Likelihood" id="incscen_likelihood" inputtype="singleoption">
+				<option name="1" id="incscen_likelihood_1" />
+				<option name="2" id="incscen_likelihood_2" />
+				<option name="3" id="incscen_likelihood_3" />
+				<option name="4" id="incscen_likelihood_4" />
+				<option name="5" id="incscen_likelihood_5" />
+				<option name="6" id="incscen_likelihood_6" />
+			</huiproperty>
+			        	
+        </huipropertygroup>
+        
     </huientity>
+    
     <huientity
         name="Incident-Scenario-Group"
         id="incident_scenario_group" >
@@ -3141,6 +3595,7 @@ Template:
             name="Title"
             id="incident_scenario_group_name" />
     </huientity>
+    
     <huientity
         name="Response"
         id="response" >
@@ -3154,7 +3609,10 @@ Template:
             id="response_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+			name="Corrective Action" id="response_corract" inputtype="text" />
     </huientity>
+    
     <huientity
         name="Response-Group"
         id="response_group" >
@@ -3162,6 +3620,7 @@ Template:
             name="Title"
             id="response_group_name" />
     </huientity>
+    
     <huientity
         name="Threat"
         id="threat" >
@@ -3175,7 +3634,16 @@ Template:
             id="threat_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty 
+        	name="Description" id="threat_description" inputtype="text"/>
+       	<huiproperty 
+       		name="Level" id="threat_level" inputtype="singleoption">
+			<option name="Low"    id="threat_level_1" />       	
+			<option name="Medium" id="threat_level_2" />       	
+			<option name="High"   id="threat_level_3" />       	
+		</huiproperty>
     </huientity>
+    
     <huientity
         name="Threat-Group"
         id="threat_group" >
@@ -3183,6 +3651,7 @@ Template:
             name="Title"
             id="threat_group_name" />
     </huientity>
+    
     <huientity
         name="Vulnerability"
         id="vulnerability" >
@@ -3196,7 +3665,15 @@ Template:
             id="vulnerability_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+				name="Description" id="vulnerability_desc" />
+		<huiproperty name=""      id="vulnerability_level" inputtype="singleoption">
+			<option name="Low"    id="vulnerability_level_1" />       	
+			<option name="Medium" id="vulnerability_level_2" />       	
+			<option name="High"   id="vulnerability_level_3" />       	
+		</huiproperty>
     </huientity>
+    
     <huientity
         name="Vulnerability-Group"
         id="vulnerability_group" >
@@ -3204,6 +3681,7 @@ Template:
             name="Title"
             id="vulnerability_group_name" />
     </huientity>
+    
     <huientity
         name="Document"
         id="document" >
@@ -3238,7 +3716,17 @@ Template:
         	name="documents" reversename="related document" tooltip=""/>
         <huirelation to="finding" id="rel_document_finding" 
         	name="documents" reversename="related document" tooltip=""/>
-        	
+
+        <huirelation to="person-iso" id="rel_document_person_owner" 
+        	name="owner" reversename="is owner of" tooltip=""/>
+        <huirelation to="person-iso" id="rel_document_person_author" 
+        	name="author" reversename="is author of" tooltip=""/>
+        <huirelation to="person-iso" id="rel_document_person_approved" 
+        	name="approval" reversename="approved" tooltip=""/>
+        <huirelation to="person-iso" id="rel_document_person_distributed" 
+        	name="distributed to" reversename="receives" tooltip=""/>
+        <huirelation to="person-iso" id="rel_document_person_reads" 
+        	name="actually read by" reversename="actually reads" tooltip=""/>
         
         
         <huiproperty
@@ -3255,7 +3743,26 @@ Template:
             name="Ext. Link"
             id="document_link"
             isURL="true" />
+       	<huiproperty 
+       		name="Document Type" id="document_type" inputtype="singleoption">
+			<option name="Policy" id="document_type_policy" />       	
+			<option name="Documented Procedure" id="document_type_procedure" />       	
+			<option name="Contract" id="document_type_contract" />       	
+			<option name="Agreement" id="document_type_agreement" />       	
+			<option name="System documentation" id="document_type_sysdoc" />       	
+			<option name="Research information" id="document_type_research" />       	
+			<option name="Manual" id="document_type_manual" />       	
+			<option name="Training materials" id="document_type_training" />       	
+			<option name="Other" id="document_type_other" />       	
+		</huiproperty>
+        <huiproperty 
+       		id="document_classfc" name="Classification" inputtype="singleoption">
+	       <option name="Confidential" id="document_classfc_confidential"/>
+	       <option name="Internal Use" id="document_classfc_internal"/>
+	       <option name="Public" id="document_classfc_public"/>
+        </huiproperty>
     </huientity>
+    
     <huientity
         name="Document-Group"
         id="document_group" >
@@ -3263,6 +3770,7 @@ Template:
             name="Title"
             id="document_group_name" />
     </huientity>
+    
     <huientity
         name="Interview"
         id="interview" >
@@ -3277,6 +3785,7 @@ Template:
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
     </huientity>
+    
     <huientity
         name="Interview-Group"
         id="interview_group" >
@@ -3284,9 +3793,14 @@ Template:
             name="Title"
             id="interview_group_name" />
     </huientity>
+    
     <huientity
         name="Evidence"
         id="evidence" >
+
+		<huirelation to="finding" id="rel_evidence_finding"
+        	name="proves" reversename="proved by" tooltip="" />        
+        
         <huiproperty
             name="Title"
             id="evidence_name" />
@@ -3297,7 +3811,9 @@ Template:
             id="evidence_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+            <!-- ??? evidence types 19-9 -->
     </huientity>
+    
     <huientity
         name="Evidence-Group"
         id="evidence_group" >
@@ -3305,9 +3821,20 @@ Template:
             name="Title"
             id="evidence_group_name" />
     </huientity>
+    
     <huientity
         name="Finding"
         id="finding" >
+<!-- ??? more properties 20-7 -->
+		<huirelation to="response" id="rel_finding_response"
+        	name="corrective action" reversename="correction for" tooltip="" />
+		<huirelation to="audit" id="rel_finding_audit"
+        	name="noted in" reversename="improvement note" tooltip="" />
+		<huirelation to="control" id="rel_finding_control_nc"
+        	name="failure in" reversename="reprimanded by" tooltip="" />
+		<huirelation to="control" id="rel_finding_control_action"
+        	name="suggested control" reversename="suggested by" tooltip="" />
+
         <huiproperty
             name="Title"
             id="finding_name" />
@@ -3318,7 +3845,27 @@ Template:
             id="finding_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+			name="Description" id="finding_desc" inputtype="text"/>
+        <huiproperty
+			name="Root cause" id="finding_cause" inputtype="text"/>
+        <huiproperty id="finding_type" name="N.C. Level" inputtype="singleoption">
+        	<option id="finding_type_major" name="Major Non-Conformity"/>
+        	<option id="finding_type_minor" name="Minor Non-Conformity"/>
+        	<option id="finding_type_observation" name="Observation"/>
+        </huiproperty>
+        <huiproperty
+			name="N.C. Explanation" id="finding_expl" inputtype="text"/>
+		<huiproperty
+			name="Suggested response" id="finding_action" inputtype="text"/>
+		<huiproperty 
+			name="Noted on"
+			id="finding_date"
+			inputtype="date">
+            <defaultRule class="Today" />
+        </huiproperty>
     </huientity>
+    
     <huientity
         name="Finding-Group"
         id="finding_group" >
@@ -3378,6 +3925,7 @@ Template:
 			name="Text"
             inputtype="text" />
     </huientity>
+	
 	<huientity
         id="attachment"
         name="Attachment">        
@@ -3396,12 +3944,21 @@ Template:
             visible="false" />
 		<huiproperty id="attachment_version"
             name="Version" />
+        <huiproperty 
+        	name="Document State" id="attachment_approval" inputtype="singleoption">
+			<option name="N.A." id="attachment_approval_na" />       	
+			<option name="Draft" id="attachment_approval_draft" />       	
+			<option name="Approval requested" id="attachment_approval_request" />       	
+			<option name="Approved" id="attachment_approval_yes" />       	
+			<option name="Obsolete" id="attachment_approval_obsolete" />       	
+		</huiproperty>
         <huiproperty
         	id="attachment_publish"
         	name="Publish"
         	inputtype="singleoption">
-        	<option id="documet_publish_yes" name="Yes"/>
-        	<option id="documet_publish_no"  name="No"/>
+        	<depends option="attachment_approval_yes" />
+        	<option id="document_publish_yes" name="Yes"/>
+        	<option id="document_publish_no"  name="No"/>
        	</huiproperty>
         <huiproperty id="attachment_date"
 			name="Datum"

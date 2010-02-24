@@ -31,7 +31,8 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 
 	public static final String TYPE_ID = "person-iso"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "person_abbr"; //$NON-NLS-1$
-	public static final String PROP_NAME = "person_name"; //$NON-NLS-1$
+	public static final String PROP_SURNAME = "person-iso_surname"; //$NON-NLS-1$
+	public static final String PROP_NAME = "person-iso_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "person-iso_tag"; //$NON-NLS-1$
 	
 	/**
@@ -60,7 +61,11 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 	 */
 	@Override
 	public String getTitle() {
-		return getEntity().getSimpleValue(PROP_NAME);
+		StringBuilder sb = new StringBuilder();
+		sb.append(getEntity().getSimpleValue(PROP_SURNAME));
+		sb.append(" ");
+		sb.append(getEntity().getSimpleValue(PROP_NAME));
+		return sb.toString();
 	}
 	
 	public void setTitel(String name) {
