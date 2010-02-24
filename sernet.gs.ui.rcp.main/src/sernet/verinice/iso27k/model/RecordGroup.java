@@ -26,7 +26,7 @@ import sernet.hui.common.connect.Entity;
  * @author Daniel Murygin <dm@sernet.de>
  */
 @SuppressWarnings("serial")
-public class RecordGroup extends Group<Asset> {
+public class RecordGroup extends Group<Record> {
 
 	public static final String TYPE_ID = "record_group"; //$NON-NLS-1$
 	public static final String TITLE_DEFAULT = "Records"; //$NON-NLS-1$
