@@ -102,6 +102,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 		
 		Label label1 = new Label(this, SWT.NULL	);
 		label1.setText("Relations to: ");
+		label1.setVisible(false);
 
 		FormData formData = new FormData();
 		formData.top = new FormAttachment(0, 5);
@@ -114,6 +115,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 		formData2.top = new FormAttachment(0, 5);
 		formData2.left = new FormAttachment(label1, 5);
 		combo.setLayoutData(formData2);
+		combo.setVisible(false);
 		combo.pack();
 
 		viewer = new RelationTableViewer(this, this, SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);

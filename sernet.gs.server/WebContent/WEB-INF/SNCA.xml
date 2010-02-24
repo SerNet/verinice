@@ -2830,7 +2830,7 @@ Template:
         <huirelation to="person-iso" id="asset-person-owner" 
         	name="owner" reversename="is owner of" tooltip="Person is owner of this asset. He / she is affected by damage to this asset."/>
         <huirelation to="person-iso" id="rel_asset_person_respo"
-        	name="responsible" reversename="responsible for" tooltip="Operational responsibility is delegated to this person. He / she has to ensure that controls are in place."/> />
+        	name="responsible" reversename="responsible for" tooltip="Operational responsibility is delegated to this person. He / she has to ensure that controls are in place."/>
         <huirelation to="person-iso" id="rel_asset_person_accou"
         	name="accountable" reversename="accountable for" tooltip="" />
         <huirelation to="person-iso" id="rel_asset_person_consu"

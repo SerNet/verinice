@@ -27,6 +27,7 @@ import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
+import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
@@ -296,6 +297,7 @@ public class ImageCache {
 		BSI_ICON_MAP.put(PersonenKategorie.TYPE_ID, ImageCache.PERSON);
 		BSI_ICON_MAP.put(NKKategorie.TYPE_ID, ImageCache.NETWORK);
 		BSI_ICON_MAP.put(RaeumeKategorie.TYPE_ID, ImageCache.RAUM);
+		BSI_ICON_MAP.put(BausteinUmsetzung.TYPE_ID, ImageCache.BAUSTEIN_UMSETZUNG);
 	}
 	
 	private ImageCache() {
@@ -323,6 +325,13 @@ public class ImageCache {
 		if (typeId != null && ISO27K_ICON_MAP.get(typeId) != null) {
 			image = getImage(ISO27K_ICON_MAP.get(typeId));
 		}
+		return image;
+	}
+
+	public Image getObjectTypeImage(String typeId) {
+		Image image = getISO27kTypeImage(typeId);
+		if (image == getImage(ImageCache.UNKNOWN))
+			image = getBSITypeImage(typeId);
 		return image;
 	}
 	

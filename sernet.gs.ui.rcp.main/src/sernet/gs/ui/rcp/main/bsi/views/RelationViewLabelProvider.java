@@ -106,7 +106,7 @@ public class RelationViewLabelProvider extends LabelProvider implements
 	 * @return
 	 */
 	private Image getObjTypeImage(CnATreeElement elmt) {
-		return ImageCache.getInstance().getISO27kTypeImage(elmt.getTypeId());
+		return ImageCache.getInstance().getObjectTypeImage(elmt.getTypeId());
 	}
 
 }

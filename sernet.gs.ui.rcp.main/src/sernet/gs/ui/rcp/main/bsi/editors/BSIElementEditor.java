@@ -59,6 +59,7 @@ import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.IISO27kElement;
 import sernet.verinice.iso27k.model.IISO27kGroup;
+import sernet.verinice.iso27k.model.Organization;
 
 /**
  * Editor for all BSI elements with attached HUI entities.
@@ -229,7 +230,9 @@ public class BSIElementEditor extends EditorPart {
 	private void setIcon() {
 		Image icon = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
 		if(cnAElement!=null) {
-			if(cnAElement instanceof IISO27kGroup) {
+			if(cnAElement instanceof Organization) {
+				icon = ImageCache.getInstance().getISO27kTypeImage(Organization.TYPE_ID);
+			} else if(cnAElement instanceof IISO27kGroup) {
 				icon = ImageCache.getInstance().getISO27kTypeImage(((Group)cnAElement).getChildTypes()[0]);
 			} else if(cnAElement instanceof IISO27kElement) {
 				icon = ImageCache.getInstance().getISO27kTypeImage(cnAElement.getTypeId());

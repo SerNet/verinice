@@ -68,7 +68,7 @@ public class BSIModelViewDropPerformer implements DropPerformer {
 		if(isActive()) {
 			if (toDrop != null && toDrop instanceof Baustein) {
 				return dropBaustein((CnATreeElement) target, viewer);
-			} else if (toDrop != null && (toDrop instanceof IBSIStrukturElement || toDrop instanceof IISO27kElement)) {
+			} else if (toDrop != null && (toDrop instanceof IBSIStrukturElement || toDrop instanceof BausteinUmsetzung || toDrop instanceof IISO27kElement)) {
 				CnATreeElement element;
 				if (target instanceof LinkKategorie)
 					element = ((LinkKategorie) target).getParent();
@@ -168,6 +168,9 @@ public class BSIModelViewDropPerformer implements DropPerformer {
 				BausteinUmsetzung targetBst = (BausteinUmsetzung) target;
 				if (targetBst.getKapitel().equals(sourceBst.getKapitel()))
 					return isActive=true;
+			}
+			if (target instanceof IBSIStrukturElement) {
+				return isActive=true;
 			}
 			return isActive=false;
 		}
