@@ -43,7 +43,9 @@ import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
@@ -61,7 +63,7 @@ import sernet.snutils.DBException;
  */
 public class HUITypeFactory {
 	private static final Logger log = Logger.getLogger(HUITypeFactory.class);
-	
+
 	private static Document doc;
 
 	private Map<String, EntityType> allEntities = null;
@@ -71,23 +73,21 @@ public class HUITypeFactory {
 	// last-modified fields for local file or HTTP:
 	private static Date fileDate;
 	private static String lastModified;
-	
-	protected HUITypeFactory()
-	{
+
+	protected HUITypeFactory() {
 		// Intentionally do nothing (is for the Functionless subclass).
 	}
 
 	public static HUITypeFactory createInstance(URL xmlUrl) throws DBException {
 		return new HUITypeFactory(xmlUrl);
 	}
-	
-	public static HUITypeFactory getInstance()
-	{
-		return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+
+	public static HUITypeFactory getInstance() {
+		return (HUITypeFactory) VeriniceContext
+				.get(VeriniceContext.HUI_TYPE_FACTORY);
 	}
-	 
-	public HUITypeFactory(Resource resource) throws DBException, IOException
-	{
+
+	public HUITypeFactory(Resource resource) throws DBException, IOException {
 		this(resource.getURL());
 	}
 
@@ -104,55 +104,76 @@ public class HUITypeFactory {
 		if (xmlFile.getProtocol().equals("http")
 				|| xmlFile.getProtocol().equals("ftp"))
 			try {
-				xmlFile = new URL(xmlFile.toString() + "?nocache=" + Math.random());
+				xmlFile = new URL(xmlFile.toString() + "?nocache="
+						+ Math.random());
 			} catch (MalformedURLException e) {
 				throw new RuntimeException(e);
 			}
-		
+
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		factory.setValidating(true);
 		DocumentBuilder parser = null;
-		
+
 		// uncomment this to enable validating of the schema:
 		try {
 			factory.setFeature("http://xml.org/sax/features/validation", true);
 			factory.setFeature(
 					"http://apache.org/xml/features/validation/schema", true);
-			
-			factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+
+			factory.setAttribute(
+					"http://java.sun.com/xml/jaxp/properties/schemaLanguage",
 					"http://www.w3.org/2001/XMLSchema");
-			factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource",
+			factory.setAttribute(
+					"http://java.sun.com/xml/jaxp/properties/schemaSource",
 					getClass().getResource("/hitro.xsd").toString());
-			
+
 			parser = factory.newDocumentBuilder();
-					
+
 		} catch (ParserConfigurationException e) {
 			log.error("Unrecognized parser feature.", e);
 			throw new RuntimeException(e);
 		}
-		
+
 		try {
 			log.debug("Getting XML property definition from " + xmlFile);
+			parser.setErrorHandler(new ErrorHandler() {
+				public void error(SAXParseException exception)
+						throws SAXException {
+					throw new RuntimeException(exception);
+				}
+
+				public void fatalError(SAXParseException exception)
+						throws SAXException {
+					throw new RuntimeException(exception);
+				}
+
+				public void warning(SAXParseException exception)
+						throws SAXException {
+					Logger.getLogger(this.getClass()).debug("Parser warning: " + exception.getLocalizedMessage());
+				}				
+			});
 			doc = parser.parse(xmlFile.openStream());
 			readAllEntities();
-			
+
 		} catch (IOException ie) {
 			log.error(ie);
-			throw new DBException("Die XML Datei mit der Definition der Formularfelder konnte nicht " +
-							"geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile" +
-							" überprüfen.", ie);
+			throw new DBException(
+					"Die XML Datei mit der Definition der Formularfelder konnte nicht "
+							+ "geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile"
+							+ " überprüfen.", ie);
 		} catch (SAXException e) {
-			throw new DBException("Die XML Datei mit der Definition der Formularfelder " +
-					"ist defekt!", e);
+			throw new DBException(
+					"Die XML Datei mit der Definition der Formularfelder "
+							+ "ist defekt!", e);
 		}
 	}
 
 	private void readAllEntities() {
 		this.allEntities = new HashMap<String, EntityType>();
 		NodeList entities = doc.getElementsByTagName("huientity");
-		for(int i=0; i < entities.getLength(); ++i) {
-			
+		for (int i = 0; i < entities.getLength(); ++i) {
+
 			Element entityEl = (Element) entities.item(i);
 			EntityType entityObj = new EntityType();
 			entityObj.setId(entityEl.getAttribute("id"));
@@ -161,16 +182,16 @@ public class HUITypeFactory {
 			readChildElements(entityObj, null);
 		}
 	}
-	
+
 	public EntityType getEntityType(String id) {
 		return this.allEntities.get(id);
 	}
-	
+
 	public Collection<EntityType> getAllEntityTypes() {
 		return this.allEntities.values();
-		
+
 	}
-	
+
 	public List<PropertyType> getURLPropertyTypes() {
 		List<PropertyType> result = new ArrayList<PropertyType>();
 		Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
@@ -185,27 +206,30 @@ public class HUITypeFactory {
 	}
 
 	/**
-	 * Check if file has changed (or was never read). Timestamp for local files, for
-	 * remote files the server will only deliver the file if it has changed,
+	 * Check if file has changed (or was never read). Timestamp for local files,
+	 * for remote files the server will only deliver the file if it has changed,
 	 * because we set the modified-since property on the request.
 	 * 
-	 * @param xmlFile the URI of the xml file
+	 * @param xmlFile
+	 *            the URI of the xml file
 	 */
 	private static boolean fileChanged(String xmlFile) {
 		if (xmlFile.matches("^http.*")) {
 			try {
 				URL xml = new URL(xmlFile);
 				HttpURLConnection.setFollowRedirects(true);
-				HttpURLConnection connection = (HttpURLConnection) xml.openConnection();
+				HttpURLConnection connection = (HttpURLConnection) xml
+						.openConnection();
 				if (lastModified != null) {
-					  connection.addRequestProperty("If-Modified-Since",lastModified);
+					connection.addRequestProperty("If-Modified-Since",
+							lastModified);
 				}
 				connection.connect();
-				
+
 				if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
-					  connection.disconnect();
-					  log.debug("Remote PropertyType file not modified.");
-					  return false;
+					connection.disconnect();
+					log.debug("Remote PropertyType file not modified.");
+					return false;
 				}
 				lastModified = connection.getHeaderField("Last-Modified");
 				connection.disconnect();
@@ -229,27 +253,28 @@ public class HUITypeFactory {
 				log.debug("CHANGED: Local PropertyType file was modified.");
 				fileDate = fileNow;
 				return true;
-			}  
+			}
 			log.debug("Local PropertyType file was not modified.");
 			return false;
 		}
 		return true;
 	}
 
-	
-	private void readChildElements(EntityType entityType, PropertyGroup propGroup) {
+	private void readChildElements(EntityType entityType,
+			PropertyGroup propGroup) {
 		NodeList nodes = null;
 		if (propGroup != null) {
 			Element groupEl = doc.getElementById(propGroup.getId());
 			nodes = groupEl.getChildNodes();
-		}
-		else { 
+		} else {
 			Element entityEl = doc.getElementById(entityType.getId());
 			if (entityEl == null)
-				throw new RuntimeException("EntityType not found in XML definition: "+ entityType.getId());
+				throw new RuntimeException(
+						"EntityType not found in XML definition: "
+								+ entityType.getId());
 			nodes = entityEl.getChildNodes();
 		}
-		
+
 		allProperties: for (int i = 0; i < nodes.getLength(); ++i) {
 			if (!(nodes.item(i) instanceof Element))
 				continue allProperties;
@@ -260,20 +285,19 @@ public class HUITypeFactory {
 					propGroup.addPropertyType(type);
 				else
 					entityType.addPropertyType(type);
-			}
-			else if (child.getTagName().equals("huipropertygroup")) {
-				PropertyGroup group = readPropertyGroup(child.getAttribute("id"));
+			} else if (child.getTagName().equals("huipropertygroup")) {
+				PropertyGroup group = readPropertyGroup(child
+						.getAttribute("id"));
 				entityType.addPropertyGroup(group);
 				readChildElements(entityType, group);
-			}
-			else if (child.getTagName().equals("huirelation")) {
+			} else if (child.getTagName().equals("huirelation")) {
 				HuiRelation relation = new HuiRelation(child.getAttribute("id"));
 				readRelation(child, relation);
 				entityType.addRelation(relation);
 			}
 		}
 	}
-	
+
 	/**
 	 * @param child
 	 * @param relation
@@ -289,7 +313,7 @@ public class HUITypeFactory {
 		Element prop = doc.getElementById(id);
 		if (prop == null)
 			return null;
-			
+
 		PropertyType propObj = new PropertyType();
 		propObj.setId(id);
 		propObj.setName(prop.getAttribute("name"));
@@ -308,19 +332,17 @@ public class HUITypeFactory {
 		// the shortcut to set a "NotEmpty" validator:
 		if (prop.getAttribute("required").equals("true"))
 			propObj.addValidator(new NotEmpty());
-		
+
 		propObj.setDefaultRule(readDefaultRule(prop));
-		
+
 		return propObj;
 	}
-	
-	
 
 	private String readReferencedEntityId(Element prop) {
 		NodeList list = prop.getElementsByTagName("references");
-		for (int i=0; i < list.getLength(); ++i) {
+		for (int i = 0; i < list.getLength(); ++i) {
 			Element referencesElmt = (Element) list.item(i);
-			return referencesElmt.getAttribute("entitytype"); 
+			return referencesElmt.getAttribute("entitytype");
 		}
 		return "";
 	}
@@ -343,42 +365,44 @@ public class HUITypeFactory {
 	 */
 	private HashSet<String> readDependencies(Element prop) {
 		HashSet<String> depends = new HashSet<String>();
-		NodeList dependList = prop.getElementsByTagName("depends");
-		for (int i = 0; i < dependList.getLength(); ++i) {
-			Element depend = (Element) dependList.item(i);
-			depends.add(depend.getAttribute("option"));
+		NodeList nodes = prop.getChildNodes();
+		allChildren: for (int i = 0; i < nodes.getLength(); ++i) {
+		if (!(nodes.item(i) instanceof Element))
+			continue allChildren;
+		Element child = (Element) nodes.item(i);
+		if (child.getTagName().equals("depends"))
+			depends.add(child.getAttribute("option"));
 		}
 		this.allDependecies.addAll(depends);
 		return depends;
 	}
-	
+
 	private IFillRule readDefaultRule(Element prop) {
 		IFillRule rule = null;
 		NodeList list = prop.getElementsByTagName("defaultRule");
-		for (int i=0; i < list.getLength(); ++i) {
-			
+		for (int i = 0; i < list.getLength(); ++i) {
+
 			Element ruleElmt = (Element) list.item(i);
 			String className = ruleElmt.getAttribute("class");
 			rule = RuleFactory.getDefaultRule(className);
-			
+
 			if (rule != null) {
 				String[] params = readRuleParams(ruleElmt, rule);
 				rule.init(params);
-				
+
 			}
 		}
 		return rule;
 	}
-	
-	
+
 	private String[] readRuleParams(Element ruleElmt, IFillRule rule) {
 		NodeList nodes = ruleElmt.getElementsByTagName("param");
 		String[] params = new String[nodes.getLength()];
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Element e = (Element) nodes.item(i);
 			params[i] = nodes.item(i).getTextContent();
-			
-			//FIXME read rules from file
+
+			// FIXME read rules from file
 		}
 		return params;
 	}
@@ -410,7 +434,7 @@ public class HUITypeFactory {
 	public PropertyType getPropertyType(String entityTypeID, String id) {
 		return allEntities.get(entityTypeID).getPropertyType(id);
 	}
-	
+
 	/**
 	 * Get list of possible relations from one entity to another.
 	 * 
@@ -418,8 +442,10 @@ public class HUITypeFactory {
 	 * @param toEntityTypeID
 	 * @return
 	 */
-	public Set<HuiRelation> getPossibleRelations(String fromEntityTypeID, String toEntityTypeID) {
-		return getEntityType(fromEntityTypeID).getPossibleRelations(toEntityTypeID);
+	public Set<HuiRelation> getPossibleRelations(String fromEntityTypeID,
+			String toEntityTypeID) {
+		return getEntityType(fromEntityTypeID).getPossibleRelations(
+				toEntityTypeID);
 	}
 
 	public boolean isDependency(IMLPropertyOption opt) {
@@ -431,16 +457,18 @@ public class HUITypeFactory {
 	 */
 	public HuiRelation getRelation(String typeId) {
 		if (allEntities == null) {
-			Logger.getLogger(this.getClass()).debug("No entities in HUITypeFactory!! Instance: " + this);
+			Logger.getLogger(this.getClass()).debug(
+					"No entities in HUITypeFactory!! Instance: " + this);
 			return null;
 		}
-		
+
 		Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
 		for (Entry<String, EntityType> entry : entrySet) {
 			EntityType entityType = entry.getValue();
-		    HuiRelation possibleRelation = entityType.getPossibleRelation(typeId);
-		    if (possibleRelation != null)
-		    	return possibleRelation;
+			HuiRelation possibleRelation = entityType
+					.getPossibleRelation(typeId);
+			if (possibleRelation != null)
+				return possibleRelation;
 		}
 		return null;
 	}
