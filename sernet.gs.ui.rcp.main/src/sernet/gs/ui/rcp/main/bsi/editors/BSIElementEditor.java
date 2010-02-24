@@ -232,7 +232,7 @@ public class BSIElementEditor extends EditorPart {
 		if(cnAElement!=null) {
 			if(cnAElement instanceof Organization) {
 				icon = ImageCache.getInstance().getISO27kTypeImage(Organization.TYPE_ID);
-			} else if(cnAElement instanceof IISO27kGroup) {
+			} else if(cnAElement instanceof Group) {
 				icon = ImageCache.getInstance().getISO27kTypeImage(((Group)cnAElement).getChildTypes()[0]);
 			} else if(cnAElement instanceof IISO27kElement) {
 				icon = ImageCache.getInstance().getISO27kTypeImage(cnAElement.getTypeId());
