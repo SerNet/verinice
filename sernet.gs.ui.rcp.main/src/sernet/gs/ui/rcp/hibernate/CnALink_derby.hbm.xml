@@ -20,12 +20,13 @@
 			<key-property name="relationId" access="field">
 				<column name="TYPE_ID" default="''"/>
 			</key-property>
+				
 		</composite-id>
 		
 		<property name="linkType"/>
-		
+
 		<property name="comment"/> 
-		
+
 		<many-to-one name="dependant"
 			column="DEPENDANT_ID"
 			not-null="true"
@@ -38,6 +39,7 @@
 			insert="false"
 			update="false"
 			fetch="join"/>
+			
 		
 	</class>
 </hibernate-mapping>
