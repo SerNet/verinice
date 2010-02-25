@@ -18,9 +18,11 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
@@ -60,9 +62,19 @@ public class LoadElementForEditor<T extends CnATreeElement> extends GenericComma
 		}
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
 		RetrieveInfo ri = new RetrieveInfo();
-		ri.setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true);
+		ri.setLinksDown(true).setLinksUp(true);
 		element = (T) dao.retrieve(dbId, ri);
 		HydratorUtil.hydrateElement(dao, element, includeCollections);
+		Set<CnALink> linksDown = element.getLinksDown();
+		for (CnALink cnALink : linksDown) {
+			HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);
+			
+		}
+		Set<CnALink> linksUp = element.getLinksUp();
+		for (CnALink cnALink : linksUp) {
+			HydratorUtil.hydrateElement(dao, cnALink.getDependant(), false);
+			
+		}
 	}
 
 

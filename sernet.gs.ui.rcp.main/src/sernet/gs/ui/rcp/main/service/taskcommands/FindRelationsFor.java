@@ -18,8 +18,11 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
+import java.util.Set;
 
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
@@ -50,8 +53,18 @@ public class FindRelationsFor extends GenericCommand {
 	public void execute() {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
 		RetrieveInfo ri = new RetrieveInfo();
-		ri.setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true);
+		ri.setLinksDown(true).setLinksUp(true);
 		elmt = dao.retrieve(dbId, ri);
+		Set<CnALink> linksDown = elmt.getLinksDown();
+		for (CnALink cnALink : linksDown) {
+			HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);
+			
+		}
+		Set<CnALink> linksUp = elmt.getLinksUp();
+		for (CnALink cnALink : linksUp) {
+			HydratorUtil.hydrateElement(dao, cnALink.getDependant(), false);
+			
+		}
 	}
 
 	public CnATreeElement getElmt() {
