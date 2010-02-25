@@ -461,6 +461,11 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 	public ArrayList<MassnahmenUmsetzung> getAllMassnahmenUmsetzungen() {
 		return allMassnahmenUmsetzungen;
 	}
+	
+	public void replaceMassnahmenUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung) {
+		allMassnahmenUmsetzungen.remove(massnahmenUmsetzung);
+		allMassnahmenUmsetzungen.add(massnahmenUmsetzung);
+	}
 
 	/**
 	 * Saves the List of all Massnahmen of type MassnahmenUmsetzung.

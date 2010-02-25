@@ -37,7 +37,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	
 	private GefaehrdungsUmsetzung parent;
 	private RisikoMassnahme massnahme;
-	
+
 	protected RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
 			GefaehrdungsUmsetzung myParent, RisikoMassnahme massnahme) {
 		super(superParent);
@@ -171,5 +171,9 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 		}
 
 		return massnahme;
+	}
+	
+	public void setMassnahme(RisikoMassnahme massnahme) {
+		this.massnahme = massnahme;
 	}
 }

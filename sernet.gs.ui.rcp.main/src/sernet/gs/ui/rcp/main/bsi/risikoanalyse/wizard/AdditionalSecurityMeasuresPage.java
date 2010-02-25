@@ -521,9 +521,12 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 				RemoveMassnahmeFromGefaherdung command = new RemoveMassnahmeFromGefaherdung(parent, massnahme);
 				command = ServiceFactory.lookupCommandService().executeCommand(command);
-				parent.setChildren(command.getParent().getChildren());
+				parent = command.getParent();
 
+				parent.getChildren().remove(massnahme);
 				/* refresh viewer */
+				GefaehrdungsBaumRoot baumElement = (GefaehrdungsBaumRoot) viewerGefaehrdung.getInput();
+				baumElement.replaceChild(parent);
 				viewerGefaehrdung.refresh();
 			}
 		} catch (Exception e) {
@@ -564,9 +567,12 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		if (selectedMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) {
 			RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) selectedMassnahmenUmsetzung;
 			final EditRisikoMassnahmenUmsetzungDialog dialog = new EditRisikoMassnahmenUmsetzungDialog(composite.getShell(), selectedRisikoMassnahmenUmsetzung);
-			dialog.open();
-			viewerMassnahme.refresh();
-			packAllMassnahmeColumns();
+			int result = dialog.open();
+			if (result == Window.OK) {
+				((RiskAnalysisWizard) getWizard()).replaceMassnahmenUmsetzung(dialog.getRisikoMassnahmenUmsetzung());
+				viewerMassnahme.refresh();
+				packAllMassnahmeColumns();
+			}
 
 		}
 	}

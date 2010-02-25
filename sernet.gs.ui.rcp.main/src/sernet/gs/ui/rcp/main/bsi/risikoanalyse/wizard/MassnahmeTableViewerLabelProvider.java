@@ -70,7 +70,7 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 			case 1:
 				return massnahme.getNumber();
 			case 2:
-				return "[" + massnahme.getStufe() + "] " + massnahme.getTitle();
+				return "[" + massnahme.getStufe() + "] " + massnahme.getName();
 			case 3:
 				return shorten(massnahme.getDescription());
 			};

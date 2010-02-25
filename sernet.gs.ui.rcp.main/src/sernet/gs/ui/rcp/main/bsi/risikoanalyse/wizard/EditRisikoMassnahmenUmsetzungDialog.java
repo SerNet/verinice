@@ -18,6 +18,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -29,6 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 
@@ -39,6 +41,8 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
  */
 public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 
+	private static final Logger LOG = Logger.getLogger(EditRisikoMassnahmenUmsetzungDialog.class);
+	
 	private Text textNumber;
 	private Text textName;
 	private Text textDescription;
@@ -147,15 +151,23 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	protected void okPressed() {
 
 		risikoMassnahmenUmsetzung.getRisikoMassnahme().setNumber(textNumber.getText());
-		risikoMassnahmenUmsetzung.getRisikoMassnahme().setName(textName.getText());
+		risikoMassnahmenUmsetzung.setName(textName.getText());
 		risikoMassnahmenUmsetzung.getRisikoMassnahme().setDescription(textDescription.getText());
+		risikoMassnahmenUmsetzung.setNumber(textNumber.getText());
+		risikoMassnahmenUmsetzung.getRisikoMassnahme().setName(textName.getText());
 
 		try {
-			RisikoMassnahmeHome.getInstance().save(risikoMassnahmenUmsetzung.getRisikoMassnahme());
+			RisikoMassnahme rm = RisikoMassnahmeHome.getInstance().save(risikoMassnahmenUmsetzung.getRisikoMassnahme());
+			risikoMassnahmenUmsetzung.setMassnahme(rm);
 		} catch (Exception e) {
+			LOG.error("Error while saving massnahme", e);
 			ExceptionUtil.log(e, "Änderung konnte nicht gespeichert werden.");
 		}
 
 		super.okPressed();
+	}
+	
+	public RisikoMassnahmenUmsetzung getRisikoMassnahmenUmsetzung() {
+		return risikoMassnahmenUmsetzung;
 	}
 }

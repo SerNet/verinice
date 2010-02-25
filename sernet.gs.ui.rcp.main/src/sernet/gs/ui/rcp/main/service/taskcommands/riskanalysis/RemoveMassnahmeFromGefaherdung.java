@@ -22,6 +22,7 @@ import java.io.Serializable;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 /**
@@ -51,13 +52,18 @@ public class RemoveMassnahmeFromGefaherdung extends GenericCommand {
 	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
 	 */
 	public void execute() {
-		IBaseDao<Object, Serializable> childDao = getDaoFactory().getDAOForObject(child);
-		childDao.reload(child, child.getDbId());
-		getDaoFactory().getDAOForObject(parent).reload(parent, parent.getDbId());
+		IBaseDao<RisikoMassnahmenUmsetzung, Serializable> childDao = getDaoFactory().getDAO(RisikoMassnahmenUmsetzung.class);
+		child = childDao.retrieve(child.getDbId(),new RetrieveInfo());
+		if(child!=null) {
+			child.remove();
+			childDao.delete(child);
+			child=null;
+		}
+		IBaseDao<GefaehrdungsUmsetzung, Serializable> parentDao = getDaoFactory().getDAO(GefaehrdungsUmsetzung.class);
+		RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
+		ri.setChildrenProperties(true);
+		parent = parentDao.retrieve(parent.getDbId(),ri);
 		
-		child.remove();
-		childDao.delete(child);
-		child=null;
 	}
 
 	public GefaehrdungsUmsetzung getParent() {

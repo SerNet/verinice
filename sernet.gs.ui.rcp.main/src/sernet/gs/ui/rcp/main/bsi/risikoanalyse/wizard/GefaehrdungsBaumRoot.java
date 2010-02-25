@@ -88,4 +88,12 @@ public class GefaehrdungsBaumRoot implements IGefaehrdungsBaumElement {
 	public String getText() {
 		return "root";
 	}
+	
+	public void replaceChild(IGefaehrdungsBaumElement baumElement) {
+		// this code is not stupid!
+		// if two IGefaehrdungsBaumElementa are equal (UUID)
+		// they may have different children
+		children.remove(baumElement);
+		children.add(baumElement);
+	}
 }

@@ -55,4 +55,5 @@ public interface IGefaehrdungsBaumElement {
 	 * @return the title of the element
 	 */
 	public String getText();
+	
 }
