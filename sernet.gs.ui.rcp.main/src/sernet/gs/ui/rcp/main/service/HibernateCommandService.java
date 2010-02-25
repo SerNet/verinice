@@ -90,10 +90,10 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 //				"Service executing command: "
 //						+ command.getClass().getSimpleName() 
 //				+ " / user: " + getAuthService().getUsername());
+		if (log.isDebugEnabled()) {
+			log.debug("Service executing command: " + command.getClass().getSimpleName()); 
+		}
 		
-		Logger.getLogger(this.getClass()).debug(
-				"Service executing command: "
-				+ command.getClass().getSimpleName()); 
 		
 		try {
 			// inject service and database access:
@@ -167,8 +167,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	 * @param logEntry
 	 */
 	private void log(ChangeLogEntry logEntry, CnATreeElement referencedElement) {
-		Logger.getLogger(this.getClass()).debug("Logging change type '" + logEntry.getChangeDescription() 
-				+ "' for element of type " + logEntry.getElementClass() + " with ID " + logEntry.getElementId());
+		log.debug("Logging change type '" + logEntry.getChangeDescription() + "' for element of type " + logEntry.getElementClass() + " with ID " + logEntry.getElementId());
 		daoFactory.getDAO(ChangeLogEntry.class).saveOrUpdate(logEntry);
 	}
 
