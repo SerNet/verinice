@@ -19,6 +19,8 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
@@ -27,6 +29,15 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 public class LoadElementForEditor<T extends CnATreeElement> extends GenericCommand {
 
+	private transient Logger log = Logger.getLogger(LoadElementForEditor.class);
+	
+	public Logger getLog() {
+		if(log==null) {
+			log = Logger.getLogger(LoadElementForEditor.class);
+		}
+		return log;
+	}
+	
 	private T element;
 	private boolean includeCollections;
 	private Integer dbId;
@@ -44,10 +55,12 @@ public class LoadElementForEditor<T extends CnATreeElement> extends GenericComma
 	}
 	
 	public void execute() {
+		if (getLog().isDebugEnabled()) {
+			getLog().debug("execute, dbId: " + dbId);
+		}
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
 		RetrieveInfo ri = new RetrieveInfo();
-		ri.setChildren(false).setChildrenProperties(false).setProperties(true)
-			.setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true);
+		ri.setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true);
 		element = (T) dao.retrieve(dbId, ri);
 		HydratorUtil.hydrateElement(dao, element, includeCollections);
 	}
