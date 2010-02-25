@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
@@ -51,8 +50,7 @@ public class FindRelationsFor extends GenericCommand {
 	public void execute() {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
 		RetrieveInfo ri = new RetrieveInfo();
-		ri.setChildren(false).setChildrenProperties(false).setProperties(false)
-			.setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true);
+		ri.setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true);
 		elmt = dao.retrieve(dbId, ri);
 	}
 
