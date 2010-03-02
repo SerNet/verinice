@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Swtclient
 Bundle-SymbolicName: sernet.hui.swtclient
-Bundle-Version: 1.0.19
+Bundle-Version: 1.1.0
 Bundle-Localization: plugin
-Export-Package: sernet.hui.swt.dialogs,
- sernet.hui.swt.widgets,
- sernet.hui.swt.widgets.URL,
- sernet.hui.swt.widgets.multiselectionlist
+Export-Package: sernet.hui.swt.dialogs;version="1.1.0",
+ sernet.hui.swt.widgets;version="1.1.0",
+ sernet.hui.swt.widgets.URL;version="1.1.0",
+ sernet.hui.swt.widgets.multiselectionlist;version="1.1.0"
 Bundle-ClassPath: .,
  lib/swtcalendar.jar
 Import-Package: org.apache.log4j,
@@ -21,10 +21,10 @@ Import-Package: org.apache.log4j,
  org.eclipse.swt.widgets,
  org.eclipse.ui.forms.events,
  org.eclipse.ui.forms.widgets,
- sernet.hui.common.connect,
- sernet.hui.common.multiselectionlist,
- sernet.hui.common.rules,
- sernet.snutils
+ sernet.hui.common.connect;version="1.1.0",
+ sernet.hui.common.multiselectionlist;version="1.1.0",
+ sernet.hui.common.rules;version="1.1.0",
+ sernet.snutils;version="1.1.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: SerNet
 Require-Bundle: org.eclipse.jface

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Server
 Bundle-SymbolicName: sernet.hui.server
-Bundle-Version: 1.0.19
+Bundle-Version: 1.1.0
 Bundle-ClassPath: .,
  lib/xstream-1.2.1.jar,
  lib/jug.jar,
@@ -39,4 +39,4 @@ Import-Package: com.mchange.v2.c3p0,
  org.hibernate.proxy,
  org.springframework.beans.factory.xml,
  org.springframework.security.config,
- sernet.hui.common.connect
+ sernet.hui.common.connect;version="1.1.0"

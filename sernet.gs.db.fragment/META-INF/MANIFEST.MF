@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JDBC Driver Class Providing Fragment
 Bundle-SymbolicName: sernet.gs.db.fragment
-Bundle-Version: 1.0.17
+Bundle-Version: 1.1.0
 Fragment-Host: com.springsource.com.mchange.v2.c3p0
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .,
