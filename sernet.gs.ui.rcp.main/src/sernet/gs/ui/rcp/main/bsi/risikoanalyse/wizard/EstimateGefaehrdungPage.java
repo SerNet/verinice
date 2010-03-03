@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Anne Hanekop <ah@sernet.de>
+ * Copyright (c) 2009 Anne Hanekop <ah[at]sernet[dot]de>
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -8,13 +8,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty 
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU General Public 
+ *     You should have received a copy of the GNU Lesser General Public 
  * License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Anne Hanekop <ah@sernet.de> 	- initial API and implementation
- *     ak@sernet.de					- various fixes, adapted to command layer
+ *     Anne Hanekop <ah[at]sernet[dot]de> 	- initial API and implementation
+ *     ak[at]sernet[dot]de					- various fixes, adapted to command layer
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
@@ -56,7 +56,7 @@ import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.PositiveEstimateG
  * WizardPage lists all previously selected Gefaehrdungen for the user to decide
  * which Gefaehrdungen need further processing.
  * 
- * @author ahanekop@sernet.de
+ * @author ahanekop[at]sernet[dot]de
  * @author koderman
  * 
  */
@@ -378,7 +378,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	/**
 	 * Filter to extract all OwnGefaehrdungen in CheckboxTableViewer.
 	 * 
-	 * @author ahanekop@sernet.de
+	 * @author ahanekop[at]sernet[dot]de
 	 */
 	class OwnGefaehrdungenFilter extends ViewerFilter {
 
@@ -402,7 +402,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	/**
 	 * Filter to extract all Gefaehrdungen in CheckboxTableViewer.
 	 * 
-	 * @author ahanekop@sernet.de
+	 * @author ahanekop[at]sernet[dot]de
 	 */
 	class GefaehrdungenFilter extends ViewerFilter {
 
@@ -436,7 +436,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
 	/**
 	 * Filter to extract all (Own)Gefaehrdungen matching a given String.
 	 * 
-	 * @author ahanekop@sernet.de
+	 * @author ahanekop[at]sernet[dot]de
 	 */
 	class SearchFilter extends ViewerFilter {
 

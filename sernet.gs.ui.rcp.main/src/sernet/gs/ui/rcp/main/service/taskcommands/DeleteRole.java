@@ -8,7 +8,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty 
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU General Public 
+ *     You should have received a copy of the GNU Lesser General Public 
  * License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  * 
@@ -29,7 +29,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 /**
  * Deletes a role from the database, removing it from all Configuration objects.
  * 
- * @author koderman@sernet.de
+ * @author koderman[at]sernet[dot]de
  *
  */
 @SuppressWarnings("serial")

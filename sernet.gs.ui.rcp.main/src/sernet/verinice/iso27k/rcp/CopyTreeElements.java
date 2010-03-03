@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Daniel Murygin <dm@sernet.de>.
+ * Copyright (c) 2010 Daniel Murygin <dm[at]sernet[dot]de>.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -10,12 +10,12 @@
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public 
+ * You should have received a copy of the GNU Lesser General Public 
  * License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Daniel Murygin <dm@sernet.de> - initial API and implementation
+ *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
@@ -34,7 +34,7 @@ import sernet.verinice.rcp.IProgressRunnable;
  * 
  * Operation is executed as task in a {@link IProgressMonitor}
  * 
- * @author Daniel Murygin <dm@sernet.de>
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class CopyTreeElements implements IProgressRunnable {
 

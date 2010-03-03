@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Daniel Murygin <dm@sernet.de>.
+ * Copyright (c) 2010 Daniel Murygin <dm[at]sernet[dot]de>.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -10,12 +10,12 @@
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public 
+ * You should have received a copy of the GNU Lesser General Public 
  * License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Daniel Murygin <dm@sernet.de> - initial API and implementation
+ *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
@@ -34,7 +34,7 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 /**
  * Loads a single control and wraps it in a {@link TodoViewItem}.
  * 
- * @author Daniel Murygin <dm@sernet.de>
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
 public class FindMassnahmeById extends FindMassnahmenAbstract {

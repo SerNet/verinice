@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+ * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -8,13 +8,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty 
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU General Public 
+ *     You should have received a copy of the GNU Lesser General Public 
  * License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
- *     Daniel Murygin <dm@sernet.de> - modified for ISO 27000
+ *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
+ *     Daniel Murygin <dm[at]sernet[dot]de> - modified for ISO 27000
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
@@ -43,8 +43,8 @@ import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 /**
  * Content provider for BSI model elements.
  * 
- * @author koderman@sernet.de
- * @author Daniel Murygin <dm@sernet.de>
+ * @author koderman[at]sernet[dot]de
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ISMViewContentProvider implements ITreeContentProvider {
 

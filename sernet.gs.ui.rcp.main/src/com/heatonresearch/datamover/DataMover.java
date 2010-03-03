@@ -14,7 +14,7 @@
  * 
  * Contributors:
  *  Jeff Heaton (http://www.heatonresearch.com) - initial API and implementation
- *  akoderman@sernet.de 						- adapted for usage in verinice project
+ *  akoderman[at]sernet[dot]de 						- adapted for usage in verinice project
  * 
  */
 package com.heatonresearch.datamover;

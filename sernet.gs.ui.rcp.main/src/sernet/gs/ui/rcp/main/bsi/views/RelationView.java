@@ -79,7 +79,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 /**
  * This view displays all relations (links) for a slected element and allows the user to change the link type.
  * 
- * @author koderman@sernet.de
+ * @author koderman[at]sernet[dot]de
  * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$
  *
