@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak@sernet.de>.
+ * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -8,12 +8,12 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty 
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU General Public 
+ *     You should have received a copy of the GNU Lesser General Public 
  * License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  *     Robert Schuster <r.schuster@tarent.de> - load file from URL 
  ******************************************************************************/
 package sernet.gs.scraper;
@@ -48,7 +48,7 @@ import sernet.gs.service.GSServiceException;
  * Source that reads BSI GS catalogues from within
  * a ZIP file.
  * 
- * @author akoderman@sernet.de
+ * @author akoderman[at]sernet[dot]de
  *
  */
 public class ZIPGSSource implements IGSSource {
