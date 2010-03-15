@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="ISO 27001 mit verinice.">
+	<intro>
+		<description>
+			<b>Willkommen beim neuen Teil von verinice. - der ISO 27000-Perspektive </b>
+			<br/>
+			<br/>
+			Dieser Spickzettel zeigt Ihnen, wie Sie den nativen ISO27001-Standard 
+			in verinice verwenden k&#246;nnen. Hierzu ist eine v&#246;llig neue Perspektive 
+			geschaffen worden, die den Funktionsumfang von verinice quasi verdoppelt. 
+		</description>
+	</intro>
+	<item title="In die neue Perspektive wechseln">
+		<description>
+		Gehen Sie in der Men&#252;leiste auf "Ansicht > &#246;ffne Perspektive ... > ISO 27000". 
+		Dadurch werden nun andere Fensterinhalte angezeigt. 
+		<br/> 
+		<br/>
+		Sie sehen rechts nun das 
+		Katalogfenster, das analog zur Ansicht in der BSI IT-Grundschutz-Perspektive 
+		arbeitet. In der Mitte sehen Sie das Model zur Informationssicherheit, das prinzipiell 
+		dem GS-Modell entspricht. Rechts unten sehen Sie das aktive Relationen-Fenster. Das ist 
+		neu und l&#246;st die Darstellung der Abh&#228;ngigkeiten im GS-Modell ab. 
+		</description>
+	</item>
+	<item title="Kataloge einf&#252;gen">
+		<description>
+		Importieren Sie einen Katalog, indem Sie im Katalogfenster den Button 
+		"Katalog importieren..." dr&#252;cken. W&#228;hlen Sie in gewohnter Art die CSV-Datei, 
+		die den gew&#252;nschten Katalog enth&#228;lt. Best&#228;tigen Sie mit "OK".
+		<br/><br/>
+		Nun wird der Katalog im Katalogfenster angezeigt. Sie k&#246;nnen die Inhalte der Controls 
+		(entsprechen in etwa den Massnahmen des BSI IT-Grundschutztes)
+		im Browserfenster sehen, das Sie durch den Button "GS Browser" aktivieren k&#246;nnen. Wenn
+		Sie nun ein Control (oder analoges Objekt aus dem geladenen Katalog) anklicken, wird dessen 
+		Inhalt in Browserfenster angezeigt. 
+		<br/><br/>
+		Sie k&#246;nnen auch bereits einmal geladene Katologe ausw&#228;hlen, wenn Sie im Fenster 
+		"Catalogs" das Drop-Down-Men&#252; "Katalog" anklicken. Sollten Sie in vorherigen 
+		Sitzungen bereits einen Katalog importiert haben, so erscheint dieser hier in der 
+		angezeigten Liste. 
+		<br/><br/>
+		Wie Sie nun unter der ISO 27000-Ansicht arbeiten k&#246;nnen, erfahren Sie im nachfolgenden 
+		Tutorial.
+		</description>
+	</item>
+</cheatsheet>

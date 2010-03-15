@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Arbeiten mit dem ISO 27001-Modell unter verinice.">
+	<intro>
+		<description>
+			In dieser Einf&#252;hrung lernen Sie die grunds&#228;tzlichen Arbeitsvorg&#228;nge 
+			beim Umgang mit der ISO 27001-Ansicht unter verinice.
+			<br/>
+		</description>
+	</intro>
+	<item title="Abbilden der Infrastrukturen - Anlegen von Assets">
+		<description>
+		Im Fenster "Information Security Model" k&#246;nnen Sie nun Objekte und 
+		Objektgruppen anlegen. 
+		Die vorgegebenen Objektarten werden Ihnen angezeigt, wenn Sie ein neues Wurzelobjekt 
+		anlegen. Klicken Sie dazu 
+		auf den Button "add new organization", der sich oben rechts am Fensterrand befindet. Mit einer Organisaton ist ein Scope, 
+		eine Abteilung oder die gesamte Organisation genmeint und stellt immer ein Wurzelodbjekt dar.
+		Die Unterteilung Ihrer Infrastruktur in Organisationsobjekte 
+		obliegt ganz Ihren W&#252;nschen und Zielen. 
+		<br/>
+		<br/>
+		Legen Sie nun eine Gruppe von Assets an. Klicken Sie dazu die rechte Maustaste auf das 
+		Gruppenobjekt "Assets". Es erscheint ein Kontextmen&#252;, in dem Sie bitte "Add Asset 
+		Group..." ausw&#228;hlen. Nun haben Sie eine Gruppe von Assets angelegt. 
+		Dieses Objekt kann weitere
+		Assets oder weitere Asset-Gruppen enthalten. Sie k&#246;nnen die Objektgruppen und Objete 
+		also v&#246;llig individuell gestalten. 
+		<br/>
+		Benennen Sie die eben angelegte Asset-Gruppe, indem Sie im links erschienenen 
+		Formularfenster f&#252;r "Title" den Text "Client-PCs" eintragen. 
+		Speichern Sie durch Dr&#252;cken der Tastenkombination "Strg" + "S". 
+		<br/>
+		<br/>
+		Erstellen Sie nun in der Gruppe "Client-PCs" ein Asset durch Rechtsklick auf dieses 
+		Gruppenobjekt. W&#228;hlen Sie aus dem Kontextmen&#252; "Add Asset..." aus.
+		<br/>
+		Nun wird ein Asset-Objekt erstellt
+		und unter das vorher erstellte Gruppenobjekt angeh&#228;ngt. Das Formularfenster 
+		zum Eintragen der Daten f&#252;r das neue Asset erscheint automatisch. Tragen Sie hier
+		einige fiktive Daten ein und speichern Sie mit der Tastenkombination "Strg" + "S" oder aber 
+		durch Schliessen des Formularfensters. Beim Schliessen von nicht gespeicherten Fensterinhalten
+		werden Sie automatisch gefragt, ob Sie diese Speichern wollen.
+		</description>
+	</item>
+	<item title="Modellieren von Cotrols">
+		<description>
+		Um Controls ins "Information Security Model" einzubauen, brauchen Sie die gew&#252;nschten 
+		Controls per "Drag And Drop" lediglich aus dem Catalogs-Fenster unter die Gruppe Controls im 
+		Fenster "Information Security Model" hinzuziehen. Tun Sie dies mit dem Control 
+		"11.5 Responsibility for Assets". Durch doppelklicken des eingef&#252;gten 
+		Controls k&#246;nnen Sie nun im links erscheinenden Formularfenster Angaben 
+		des Control bearbeiten. Tragen Sie dort f&#252;r das Feld "Implemented" ein "Yes" ein, indem
+		Sie die Drop-Down-Box anklicken. 
+		</description>
+	</item>
+	<item title="Erstellen von Relationen">
+		<description>
+		In verinice sind vielf&#228;ltige Relationen zwischen den Objekten m&#246;glich. 
+		Um eine einfache Relation zu 
+		erstellen, verbinden Sie einfach das eben angelegte Asset-Objekt mit dem eben 
+		eingebauten Control per "Drag and Drop". Sie sehen, dass im unteren 
+		Relationsfenster die eben
+		erstellte Relation mit einem passenden Relationstyp sichtbar wird. 
+		Durch Doppelklicken auf das 
+		referenzierte Objekt im Relationsfenster, erscheint dessen Formularfenster. 
+		<br/> 
+		<br/>
+		Nun k&#246;nnen Sie selbstst&#228;ndig &#252;ben, weitere Objekte und deren Relationen anzulagen. 
+		Erforschen Sie, welche Relationstypen mieglich sind. Viel Freunde w&#252;nscht dabei Ihr 
+		verinice-Team. 
+		</description>
+	</item>
+</cheatsheet>
