@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.preferences;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
@@ -94,11 +95,9 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
 
 		if (visible) {
 			boolean standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
-			boolean dbOpen = CnAElementFactory.getInstance().isDbOpen();
 
 			// Do not show the fields when the remote server is in use
-			// or DB connection is open.
-			setEnabledFields(!dbOpen && standalone);
+			setEnabledFields(standalone);
 		}
 	}
 
@@ -113,7 +112,7 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
 		if (enable) {
 			setMessage(null);
 		} else {
-			setMessage("DB-Verbindung derzeit geöffnet oder verinice-Server konfiguriert.");
+			setMessage(Messages.getString("DatenbankPreferencePage.ConfigurationDisabled"));
 		}
 	}
 
@@ -188,8 +187,7 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
 	@Override
 	public boolean performOk() {
 		if (modified) {
-			log.debug("stopping internal server after change of db values");
-			Activator.getDefault().getInternalServer().stop();
+			MessageDialog.openInformation(this.getShell(), Messages.getString("DatenbankPreferencePage.RestartRequired"), Messages.getString("DatenbankPreferencePage.RestartRequiredText"));
 		}
 
 		return super.performOk();
