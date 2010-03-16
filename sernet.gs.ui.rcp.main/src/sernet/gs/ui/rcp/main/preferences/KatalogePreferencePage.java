@@ -55,8 +55,6 @@ public class KatalogePreferencePage
 
 	private FileFieldEditor zipfilePath;
 	private FileFieldEditor datenschutzZipPath;
-	private RadioGroupFieldEditor gsAccessMethod;
-	private DirectoryFieldEditor bsiUrl;
 	
 
 	public KatalogePreferencePage() {
@@ -78,26 +76,12 @@ public class KatalogePreferencePage
 	 * restore itself.
 	 */
 	public void createFieldEditors() {
-		gsAccessMethod = new RadioGroupFieldEditor(PreferenceConstants.GSACCESS,
-				Messages.getString("KatalogePreferencePage.5"), //$NON-NLS-1$
-				1,
-				new String[][] {
-					{Messages.getString("KatalogePreferencePage.6"), PreferenceConstants.GSACCESS_DIR},  //$NON-NLS-1$
-					{Messages.getString("KatalogePreferencePage.7"), PreferenceConstants.GSACCESS_ZIP} //$NON-NLS-1$
-				},
-				getFieldEditorParent());
-		addField(gsAccessMethod);
 		
 		zipfilePath = new FileFieldEditor(PreferenceConstants.BSIZIPFILE, 
 				Messages.getString("KatalogePreferencePage.8"), //$NON-NLS-1$
 				getFieldEditorParent());
 		zipfilePath.setFileExtensions(new String[] {"*.zip;*.ZIP", "*.*"});
 		addField(zipfilePath);
-
-		bsiUrl = new DirectoryFieldEditor(PreferenceConstants.BSIDIR,
-				Messages.getString("KatalogePreferencePage.9"), //$NON-NLS-1$
-				getFieldEditorParent());
-		addField(bsiUrl);
 
 		datenschutzZipPath = new FileFieldEditor(PreferenceConstants.DSZIPFILE, 
 				Messages.getString("KatalogePreferencePage.10"), //$NON-NLS-1$
@@ -149,15 +133,6 @@ public class KatalogePreferencePage
 					log.warn("GS catalog zip file path is an invalid URL.");
 				}
 			}
-			else if (event.getSource() == bsiUrl && accessMethod.equals(PreferenceConstants.GSACCESS_DIR))
-			{
-				try {
-					internalServer.setGSCatalogURL(
-							new File(bsiUrl.getStringValue()).toURI().toURL());
-				} catch (MalformedURLException e) {
-					log.warn("GS catalog directory path is an invalid URL.");
-				}
-			}
 			else if (event.getSource() == datenschutzZipPath)
 			{
 				try {
@@ -166,28 +141,6 @@ public class KatalogePreferencePage
 				} catch (MalformedURLException e) {
 					log.warn("DS catalog zip file path is an invalid URL.");
 				}
-			}
-			else if (event.getSource() == gsAccessMethod)
-			{
-				if (accessMethod.equals(PreferenceConstants.GSACCESS_DIR))
-				{
-					try {
-						internalServer.setGSCatalogURL(
-								new File(prefs.getString(PreferenceConstants.BSIDIR)).toURI().toURL());
-					} catch (MalformedURLException e) {
-						log.warn("GS catalog directory path is an invalid URL.");
-					}
-				}
-				else
-				{
-					try {
-						internalServer.setGSCatalogURL(
-								new File(prefs.getString(PreferenceConstants.BSIZIPFILE)).toURI().toURL());
-					} catch (MalformedURLException e) {
-						log.warn("GS catalog zip file path is an invalid URL.");
-					}
-				}
-				
 			}
 		}
 	}
@@ -219,9 +172,7 @@ public class KatalogePreferencePage
 	}
 	
 	private void setEnabledFields(boolean enable) {
-		bsiUrl.setEnabled(enable, getFieldEditorParent());
 		datenschutzZipPath.setEnabled(enable, getFieldEditorParent());
-		gsAccessMethod.setEnabled(enable, getFieldEditorParent());
 		zipfilePath.setEnabled(enable, getFieldEditorParent());
 		
 		if (enable) {

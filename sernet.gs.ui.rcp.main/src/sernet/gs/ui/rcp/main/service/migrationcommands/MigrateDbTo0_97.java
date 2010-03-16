@@ -20,8 +20,18 @@ package sernet.gs.ui.rcp.main.service.migrationcommands;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 
 /**
- *  Nothing to do hen updating to 0.97 except updating the version itself.
+ *  Nothing to do when updating to 0.97 except updating the version itself.
  * Everything else is done by Hibernate.
+ * 
+ * ATTENTION: 
+ * 
+ * Since DB version 0.97 the inheritance mapping for the CnaTreeelement class hierarchy
+ * is moved into a single table. The table BSIModel is no longer used. 
+ * If this table is still present from an older DB and still contains a DB version 
+ * number IT IS NOT BEING USED and can be removed.
+ * 
+ * To find out the current DB version you have to check the CnATreeElement table, i.e.:
+ * "select * from cnatreeelement where dbVersion is not null;"
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *  @version $Rev$ $LastChangedDate$ 

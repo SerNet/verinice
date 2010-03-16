@@ -43,7 +43,6 @@ import sernet.gs.ui.rcp.main.reports.MassnahmenumsetzungReport;
 import sernet.gs.ui.rcp.main.reports.ModellierungReport;
 import sernet.gs.ui.rcp.main.reports.SchutzbedarfsDefinitionReport;
 import sernet.gs.ui.rcp.main.reports.SchutzbedarfszuordnungReport;
-import sernet.gs.ui.rcp.main.reports.SelfAssessmentReport;
 import sernet.gs.ui.rcp.main.reports.StrukturanalyseReport;
 import sernet.gs.ui.rcp.main.reports.VerfahrensUebersichtReport;
 
@@ -159,11 +158,6 @@ public class ChooseReportPage extends WizardPage {
 		item.setText(0, report.getTitle());
 		item.setData(report);
 		
-		report = new SelfAssessmentReport();
-		item = new TableItem(reportsTable, SWT.NULL);
-		item.setText(0, report.getTitle());
-		item.setData(report);
-
 		nameColumn.pack();
 		this.reportsTable.layout(true);
 		

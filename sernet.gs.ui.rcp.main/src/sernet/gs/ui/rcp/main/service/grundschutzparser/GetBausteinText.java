@@ -31,6 +31,7 @@ public class GetBausteinText extends GenericCommand {
 	private String url;
 	private String stand;
 	private String bausteinText;
+	private String encoding;
 
 	public GetBausteinText(String url, String stand) {
 		this.url = url;
@@ -40,7 +41,8 @@ public class GetBausteinText extends GenericCommand {
 	public void execute() {
 		try {
 			InputStream in = GSScraperUtil.getInstance().getModel().getBaustein(url, stand);
-			bausteinText = InputUtil.streamToString(in,  "iso-8859-1");
+			this.encoding = GSScraperUtil.getInstance().getModel().getEncoding();
+			bausteinText = InputUtil.streamToString(in, encoding );
 		} catch (GSServiceException e) {
 			throw new RuntimeCommandException(e);
 		} catch (IOException e) {
@@ -50,6 +52,13 @@ public class GetBausteinText extends GenericCommand {
 
 	public String getBausteinText() {
 		return bausteinText;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getEncoding() {
+		return encoding;
 	}
 
 }

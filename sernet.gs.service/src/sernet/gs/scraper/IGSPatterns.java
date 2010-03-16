@@ -38,6 +38,8 @@ public interface IGSPatterns {
 	public abstract Pattern getSchichtPat();
 
 	public abstract String getMassnahmeVerantwortlichePattern();
+	
+	public abstract String getEncoding();
 
 
 }

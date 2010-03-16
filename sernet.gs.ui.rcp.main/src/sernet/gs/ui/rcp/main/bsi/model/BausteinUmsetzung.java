@@ -35,6 +35,8 @@ public class BausteinUmsetzung extends CnATreeElement {
 	public static final String P_NAME = "bstumsetzung_name"; //$NON-NLS-1$
 	public static final String P_NR = "bstumsetzung_nr"; //$NON-NLS-1$
 	public static final String P_URL = "bstumsetzung_url"; //$NON-NLS-1$
+	public static final String P_ENCODING = "bstumsetzung_encoding"; //$NON-NLS-1$
+	
 	@Deprecated
 	public static final String P_GESPRAECHSPARTNER_OLD= "bstumsetzung_gespraechspartner"; //$NON-NLS-1$
 	public static final String P_GESPRAECHSPARTNER_LINK= "bstumsetzung_gespraechspartner_link"; //$NON-NLS-1$
@@ -199,8 +201,16 @@ public class BausteinUmsetzung extends CnATreeElement {
 		return getEntity().getSimpleValue(P_URL);
 	}
 
+	public String getEncoding() {
+		return getEntity().getSimpleValue(P_ENCODING);
+	}
+
 	public void setUrl(String url2) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(P_URL), url2);
+	}
+
+	public void setEncoding(String enc) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(P_ENCODING), enc);
 	}
 
 	public MassnahmenUmsetzung getMassnahmenUmsetzung(String url) {

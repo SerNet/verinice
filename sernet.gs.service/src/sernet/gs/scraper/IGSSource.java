@@ -32,9 +32,14 @@ import sernet.gs.service.GSServiceException;
  */
 public interface IGSSource {
 	
+	public static final String VINTAGE_2006 = "vintage_2006";
+	public static final String VINTAGE_2009 = "vintage_2009";
+	
 	public Node parseBausteinDocument(String path) throws GSServiceException;
 	public Node parseMassnahmenDocument(String path) throws GSServiceException;
 	public InputStream getBausteinAsStream(String baustein) throws GSServiceException;
 	public InputStream getMassnahmeAsStream(String massnahme) throws GSServiceException;
 	public InputStream getGefaehrdungAsStream(String gefaehrdung) throws GSServiceException;
+	public String getVintage();
+	
 }

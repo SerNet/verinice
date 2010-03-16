@@ -1780,6 +1780,11 @@ Template:
             visible="false"
 			name="Url" />
 		<huiproperty
+			id="bstumsetzung_encoding"
+            editable="false"
+            visible="false"
+			name="Encoding" />
+		<huiproperty
 			id="bstumsetzung_stand"
             editable="false"
             visible="true"
@@ -3005,6 +3010,66 @@ Template:
         name="Person"
         id="person-iso" >
         
+        <huirelation to="org" id="rel_person_org_ceo"
+        	name="CEO of" reversename="CEO" tooltip="" />
+        <huirelation to="org" id="rel_person_org_cto"
+        	name="CTO of" reversename="CTO" tooltip="" />
+        <huirelation to="org" id="rel_person_org_ciso"
+        	name="CISO of" reversename="CISO" tooltip="" />
+
+       
+        <huirelation to="control" id="rel_person_control_imp"
+        	name="implements" reversename="implemented by" tooltip="" />
+        <huirelation to="control" id="rel_person_control_maint"
+        	name="maintains" reversename="maintained by" tooltip="" />
+        <huirelation to="control" id="rel_person_control_mon"
+        	name="monitors" reversename="monitored by" tooltip="" />
+        <huirelation to="control" id="rel_person_control_aud"
+        	name="audits" reversename="audited by" tooltip="" />
+       
+        <huirelation to="requirement" id="rel_person_requirement_responsible"
+        	name="responsible for" reversename="responsible" tooltip="" />
+       
+        <huirelation to="record" id="rel_person_record_maint"
+        	name="maintains" reversename="maintained by" tooltip="" />
+        
+        <huirelation to="process" id="rel_person_process_responsible"
+        	name="responsible for" reversename="responsible" tooltip="" />
+        <huirelation to="process" id="rel_person_process_accountable"
+        	name="accountable for" reversename="accountable" tooltip="" />
+        <huirelation to="process" id="rel_person_process_consulted"
+        	name="consulted about" reversename="consulted" tooltip="" />
+        <huirelation to="process" id="rel_person_process_informed"
+        	name="informed about" reversename="informed" tooltip="" />
+        	
+        <huirelation to="finding" id="rel_person_finding_aud"
+        	name="reported" reversename="reported by" tooltip="" />
+        <huirelation to="finding" id="rel_person_finding_ass"
+        	name="assigned to" reversename="assigned to" tooltip="" />
+
+        <huirelation to="evidence" id="rel_person_evidence_rep"
+        	name="reported" reversename="reported by" tooltip="" />
+        	
+        <huirelation to="interview" id="rel_person_interview_intvwer"
+        	name="conducted" reversename="conducted by" tooltip="" />
+        <huirelation to="interview" id="rel_person_interview_intvwee"
+        	name="interviewed in" reversename="interviewed person" tooltip="" />
+        
+        <huirelation to="vulnerability" id="rel_person_vulnerability_rep"
+        	name="reported" reversename="reported by" tooltip="" />
+       
+        <huirelation to="threat" id="rel_person_threat_rep"
+        	name="reported" reversename="reported by" tooltip="" />
+       
+        <huirelation to="response" id="rel_person_response_devis"
+        	name="decided on" reversename="decided by" tooltip="" />
+       
+        <huirelation to="incident_scenario" id="rel_person_incscen_modl"
+        	name="modelled" reversename="modelled by" tooltip="" />
+       
+        <huirelation to="incident" id="rel_person_incident_rep"
+        	name="reported" reversename="reported by" tooltip="" />
+        
         <!-- roles, int. auditor etc. -->
         <huiproperty
             name="Abbreviation"
@@ -3460,8 +3525,10 @@ Template:
 			inputtype="date">
             <defaultRule class="Today" />
 		</huiproperty>
-        <huiproperty 
-        	name="Valid until" id="exception_enddate" inputtype="date"/>
+        <huiproperty  
+        	name="Valid until" id="exception_enddate" inputtype="date">
+        	<defaultRule class="Today" />
+		</huiproperty>
         
     </huientity>
     
@@ -3667,7 +3734,7 @@ Template:
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
 				name="Description" id="vulnerability_desc" />
-		<huiproperty name=""      id="vulnerability_level" inputtype="singleoption">
+		<huiproperty name="Description"      id="vulnerability_level" inputtype="singleoption">
 			<option name="Low"    id="vulnerability_level_1" />       	
 			<option name="Medium" id="vulnerability_level_2" />       	
 			<option name="High"   id="vulnerability_level_3" />       	
@@ -3689,8 +3756,6 @@ Template:
         <huirelation to="org" id="rel_document_org" 
         	name="documents" reversename="related document" tooltip=""/>
         <huirelation to="asset" id="rel_document_asset" 
-        	name="documents" reversename="related document" tooltip=""/>
-        <huirelation to="person-iso" id="rel_document_person-iso" 
         	name="documents" reversename="related document" tooltip=""/>
         <huirelation to="audit" id="rel_document_audit" 
         	name="documents" reversename="related document" tooltip=""/>
@@ -3873,6 +3938,7 @@ Template:
             name="Title"
             id="finding_group_name" />
     </huientity>
+    
     <huientity
         name="Process"
         id="process" >
@@ -3887,6 +3953,7 @@ Template:
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
     </huientity>
+    
     <huientity
         name="Process-Group"
         id="process_group" >
@@ -3894,6 +3961,7 @@ Template:
             name="Title"
             id="process_group_name" />
     </huientity>
+    
     <huientity
         name="Record"
         id="record" >
@@ -3908,6 +3976,7 @@ Template:
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
     </huientity>
+    
     <huientity
         name="Record-Group"
         id="record_group" >

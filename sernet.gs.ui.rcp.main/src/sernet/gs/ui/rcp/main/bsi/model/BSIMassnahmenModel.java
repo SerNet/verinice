@@ -34,9 +34,11 @@ import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.scraper.GSScraper;
+import sernet.gs.scraper.IGSPatterns;
 import sernet.gs.scraper.IGSSource;
 import sernet.gs.scraper.PatternBfDI2008;
 import sernet.gs.scraper.PatternGSHB2005_2006;
+import sernet.gs.scraper.PatternGSHB2009;
 import sernet.gs.scraper.URLGSSource;
 import sernet.gs.scraper.ZIPGSSource;
 import sernet.gs.service.GSServiceException;
@@ -76,6 +78,8 @@ public class BSIMassnahmenModel {
 	
 	// not configured by Spring
 	private ILayoutConfig layoutConfig;
+
+	private String encoding = null;
 	
 	public BSIMassnahmenModel(IBSIConfig config)
 	{
@@ -123,7 +127,12 @@ public class BSIMassnahmenModel {
 				return null;
 			}
 
-			scrape = new GSScraper(gsSource, new PatternGSHB2005_2006());
+			if (gsSource.getVintage().equals(IGSSource.VINTAGE_2009))
+				scrape = new GSScraper(gsSource, new PatternGSHB2009());
+			else
+				scrape = new GSScraper(gsSource, new PatternGSHB2005_2006());
+				
+			
 			scrape.setCacheDir(cacheDir); //$NON-NLS-1$
 			
 			Logger.getLogger(BSIMassnahmenModel.class).debug("Setting GS-Cache to " + scrape.getCacheDir()); //$NON-NLS-1$
@@ -242,7 +251,7 @@ public class BSIMassnahmenModel {
 			command = ServiceFactory.lookupCommandService().executeCommand(
 					command);
 			String bausteinText = command.getBausteinText();
-			return stringToStream(bausteinText);
+			return stringToStream(bausteinText, command.getEncoding());
 		} catch (CommandException e) {
 			throw new GSServiceException(e.getCause());
 		} catch (UnsupportedEncodingException e) {
@@ -250,8 +259,8 @@ public class BSIMassnahmenModel {
 		}
 	}
 
-	private InputStream stringToStream(String text) throws UnsupportedEncodingException {
-		return new ByteArrayInputStream(text.getBytes("iso-8859-1"));
+	private InputStream stringToStream(String text, String encoding) throws UnsupportedEncodingException {
+		return new ByteArrayInputStream(text.getBytes(encoding));
 	}
 
 	public InputStream getMassnahme(String url, String stand) throws GSServiceException {
@@ -272,7 +281,7 @@ public class BSIMassnahmenModel {
 	
 	public String getMassnahmeHtml(String url, String stand) throws GSServiceException {
 		try {
-			InputStreamReader read = new InputStreamReader(getMassnahme(url, stand), "iso-8859-1"); //$NON-NLS-1$
+			InputStreamReader read = new InputStreamReader(getMassnahme(url, stand), encoding ); //$NON-NLS-1$
 			BufferedReader buffRead = new BufferedReader(read);
 			StringBuilder b = new StringBuilder();
 			String line;
@@ -283,7 +292,8 @@ public class BSIMassnahmenModel {
 				
 			while ((line = buffRead.readLine()) != null) {
 				if (!skipComplete) {
-					if (line.matches(".*div.*class=\"standort\".*")) //$NON-NLS-1$
+					if (line.matches(".*div.*id=\"menuoben\".*")
+							|| line.matches(".*div.*class=\"standort\".*")) //$NON-NLS-1$
 						skip = true;
 					else if (line.matches(".*div.*id=\"content\".*")) { //$NON-NLS-1$
 						skip = false;
@@ -293,6 +303,7 @@ public class BSIMassnahmenModel {
 	
 				// we strip away images et al to keep just the information we
 				// need:
+				line = line.replace("../../media/style/css/screen.css", cssFile); //$NON-NLS-1$
 				line = line.replace("../../../screen.css", cssFile); //$NON-NLS-1$
 				line = line.replace("../../screen.css", cssFile); //$NON-NLS-1$
 				line = line.replace("../screen.css", cssFile); //$NON-NLS-1$
@@ -318,7 +329,8 @@ public class BSIMassnahmenModel {
 			command = ServiceFactory.lookupCommandService().executeCommand(
 					command);
 			String text = command.getText();
-			return stringToStream(text);
+			encoding = command.getEncoding();
+			return stringToStream(text, getEncoding());
 		} catch (CommandException e) {
 			throw new GSServiceException(e.getCause());
 		} catch (UnsupportedEncodingException e) {
@@ -364,7 +376,8 @@ public class BSIMassnahmenModel {
 			command = ServiceFactory.lookupCommandService().executeCommand(
 					command);
 			String text = command.getText();
-			return stringToStream(text);
+			encoding = command.getEncoding();
+			return stringToStream(text, getEncoding());
 		} catch (CommandException e) {
 			throw new GSServiceException(e.getCause());
 		} catch (UnsupportedEncodingException e) {
@@ -412,5 +425,14 @@ public class BSIMassnahmenModel {
 	public void setLayoutConfig(ILayoutConfig layoutConfig) {
 		this.layoutConfig = layoutConfig;
 	}
-
+	
+	public String getEncoding() {
+		if (scrape != null )
+			return scrape.getPatterns().getEncoding();
+		if (this.encoding != null)
+			return encoding;
+		
+		return "iso-8859-1";
+	}
+	
 }

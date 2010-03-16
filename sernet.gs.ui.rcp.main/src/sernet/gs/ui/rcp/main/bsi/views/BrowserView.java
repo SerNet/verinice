@@ -113,12 +113,12 @@ public class BrowserView extends ViewPart {
 
 			if (element instanceof Baustein) {
 				Baustein bst = (Baustein) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()));
+				setUrl(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()), bst.getEncoding());
 			}
 
 			if (element instanceof Gefaehrdung) {
 				Gefaehrdung gef = (Gefaehrdung) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getGefaehrdung(gef.getUrl(), gef.getStand()));
+				setUrl(GSScraperUtil.getInstance().getModel().getGefaehrdung(gef.getUrl(), gef.getStand()), gef.getEncoding());
 			}
 
 			if (element instanceof GefaehrdungsUmsetzung) {
@@ -130,7 +130,7 @@ public class BrowserView extends ViewPart {
 					return;
 				}
 				
-				setUrl(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),gefUms.getStand()));
+				setUrl(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),gefUms.getStand()), "iso-8859-1");
 			}
 
 			if (element instanceof RisikoMassnahmenUmsetzung) {
@@ -154,20 +154,20 @@ public class BrowserView extends ViewPart {
 
 			if (element instanceof BausteinUmsetzung) {
 				BausteinUmsetzung bst = (BausteinUmsetzung) element;
-				setUrl(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()));
+				setUrl(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()), bst.getEncoding());
 			}
 			
 			if (element instanceof IItem) {
 				IItem item = (IItem) element;
 				StringBuilder sb = new StringBuilder();
-				writeHtml(sb, item.getName(), item.getDescription());
+				writeHtml(sb, item.getName(), item.getDescription(), "iso-8859-1");
 				setText(sb.toString());			
 			}
 			
 			if (element instanceof Control) {
 				Control item = (Control) element;
 				StringBuilder sb = new StringBuilder();
-				writeHtml(sb, item.getTitle(), item.getDescription());
+				writeHtml(sb, item.getTitle(), item.getDescription(), "iso-8859-1");
 				setText(sb.toString());			
 			}
 
@@ -182,16 +182,16 @@ public class BrowserView extends ViewPart {
 
 	private String toHtml(GefaehrdungsUmsetzung ums) {
 		StringBuilder buf = new StringBuilder();
-		writeHtml(buf, ums.getId() + " " + ums.getTitle(), ums.getDescription());
+		writeHtml(buf, ums.getId() + " " + ums.getTitle(), ums.getDescription(), "iso-8859-1");
 		return buf.toString();
 	}
 	
-	private void writeHtml(StringBuilder buf, String headline, String bodytext) {
+	private void writeHtml(StringBuilder buf, String headline, String bodytext, String encoding) {
 		String cssDir = CnAWorkspace.getInstance().getWorkdir()
 				+ File.separator + "html" + File.separator + "screen.css"; //$NON-NLS-1$ //$NON-NLS-2$
 		buf
 				.append("<html><head>"
-						+ "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=iso-8859-1\"/>\n"
+						+ "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=" + encoding + "\"/>\n"
 						+ "<link REL=\"stylesheet\" media=\"screen\" HREF=\""
 						+ cssDir + "\"/>"
 						+ "</head><body><div id=\"content\"><h1>");
@@ -204,7 +204,7 @@ public class BrowserView extends ViewPart {
 
 	private String toHtml(RisikoMassnahmenUmsetzung ums) {
 		StringBuilder buf = new StringBuilder();
-		writeHtml(buf, ums.getNumber() + " " + ums.getName(), ums.getDescription());
+		writeHtml(buf, ums.getNumber() + " " + ums.getName(), ums.getDescription(), "iso-8859-1");
 		return buf.toString();
 	}
 
@@ -218,9 +218,13 @@ public class BrowserView extends ViewPart {
 	 * @param is
 	 *            The HTML page to be displayed as an input stream
 	 */
-	public void setUrl(InputStream is) {
+	public void setUrl(InputStream is, String encoding) {
 		try {
-			InputStreamReader read = new InputStreamReader(is, "iso-8859-1"); //$NON-NLS-1$
+			if (! (encoding.equalsIgnoreCase("iso-8859-1") || encoding.equalsIgnoreCase("utf-8"))
+					)
+				encoding = "iso-8859-1";
+			
+			InputStreamReader read = new InputStreamReader(is, encoding); //$NON-NLS-1$
 			BufferedReader buffRead = new BufferedReader(read);
 			StringBuilder b = new StringBuilder();
 			String line;
@@ -231,7 +235,8 @@ public class BrowserView extends ViewPart {
 
 			while ((line = buffRead.readLine()) != null) {
 				if (!skipComplete) {
-					if (line.matches(".*div.*class=\"standort\".*")) //$NON-NLS-1$
+					if (line.matches(".*div.*id=\"menuoben\".*")
+							|| line.matches(".*div.*class=\"standort\".*")) //$NON-NLS-1$
 						skip = true;
 					else if (line.matches(".*div.*id=\"content\".*")) { //$NON-NLS-1$
 						skip = false;
@@ -243,6 +248,7 @@ public class BrowserView extends ViewPart {
 
 				// we strip away images et al to keep just the information we
 				// need:
+				line = line.replace("../../media/style/css/screen.css", cssDir); //$NON-NLS-1$
 				line = line.replace("../../../screen.css", cssDir); //$NON-NLS-1$
 				line = line.replace("../../screen.css", cssDir); //$NON-NLS-1$
 				line = line.replace("../screen.css", cssDir); //$NON-NLS-1$

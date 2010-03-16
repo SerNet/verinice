@@ -164,4 +164,11 @@ public class URLGSSource implements IGSSource {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.scraper.IGSSource#getVintage()
+	 */
+	public String getVintage() {
+		return IGSSource.VINTAGE_2006;
+	}
+	
 }

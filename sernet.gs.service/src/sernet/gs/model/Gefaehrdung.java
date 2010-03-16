@@ -34,8 +34,17 @@ public class Gefaehrdung implements IGSModel {
 	private String stand;
 	
 	private String uuid;
+	private String encoding;
 	
 	
+	public String getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
 	public static final int KAT_UNDEF 			= 0;
 	public static final int KAT_HOEHERE_GEWALT	= 1;
 	public static final int KAT_ORG_MANGEL		= 2;

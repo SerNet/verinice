@@ -29,6 +29,8 @@ import java.util.regex.Pattern;
  */
 public class PatternGSHB2005_2006 implements IGSPatterns {
 	
+	private final String ENCODING = "iso-8859-1";
+	
 	private final String gefName = 
 		"//html:a[contains(@href,'../g/g')]/../following-sibling::html:td/following-sibling::html:td";
 
@@ -117,6 +119,13 @@ public class PatternGSHB2005_2006 implements IGSPatterns {
 
 	public String getMassnahmeVerantwortlichePattern() {
 		return GET_VERANTWORTLICHE;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.scraper.IGSPatterns#getEncoding()
+	 */
+	public String getEncoding() {
+		return ENCODING;
 	}
 
 	

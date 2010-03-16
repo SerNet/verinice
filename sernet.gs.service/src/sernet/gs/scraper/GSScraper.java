@@ -62,6 +62,10 @@ public class GSScraper {
 
 	private IGSPatterns patterns;
 
+	public IGSPatterns getPatterns() {
+		return patterns;
+	}
+
 	private String stand;
 
 	private IGSSource source;
@@ -174,6 +178,7 @@ public class GSScraper {
 					break;
 				String found = baust.getStringValue();
 				found = found.replaceAll("\n", "");
+				found = found.replaceAll(".html", "");
 				found = found.replaceAll(".htm", "");
 
 				Matcher matcher = patterns.getBaustPat().matcher(found);
@@ -183,6 +188,7 @@ public class GSScraper {
 					b.setId(matcher.group(1));
 					b.setTitel(matcher.group(2));
 					b.setUrl(matcher.group(3));
+					b.setEncoding(getPatterns().getEncoding());
 
 					Matcher schichtMatcher = patterns.getSchichtPat().matcher(
 							matcher.group(1));
@@ -339,7 +345,9 @@ public class GSScraper {
 				String found = mnNode.getStringValue();
 				// clear up paths, remove relative paths (don't work in zipfile)
 				found = found.replaceAll("\n", "");
+				found = found.replaceAll(".html", "");
 				found = found.replaceAll(".htm", "");
+				found = found.replaceAll("\\.\\./\\.\\./m/m\\d\\d/", "");
 				found = found.replaceAll("\\.\\./m/", "");
 				found = found.replaceAll("\\.\\./\\.\\./", "");
 				// System.out.println(found);
@@ -546,7 +554,9 @@ public class GSScraper {
 					break;
 				String found = gfNode.getStringValue();
 				found = found.replaceAll("\n", "");
+				found = found.replaceAll(".html", "");
 				found = found.replaceAll(".htm", "");
+				found = found.replaceAll("\\.\\./\\.\\./g/g\\d\\d/", "");
 				found = found.replaceAll("../g/", "");
 				// System.out.println(found);
 
@@ -559,6 +569,7 @@ public class GSScraper {
 					gef.setId(matcher.group(2));
 					gef.setTitel(matcher.group(3));
 					gef.setUrl(matcher.group(4));
+					gef.setEncoding(getPatterns().getEncoding());
 
 					result.add(gef);
 				}

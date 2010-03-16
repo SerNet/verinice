@@ -73,6 +73,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	public void postWindowOpen() {
 		if (Activator.getDefault().getPluginPreferences()
 				.getBoolean(PreferenceConstants.FIRSTSTART)) {
+			Activator.getDefault().getPluginPreferences().setValue(PreferenceConstants.FIRSTSTART, false);
+
 			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Hinweis zum Datenschutz", 
 			"Langfassung:\nVerinice sucht bei jedem Start automatisch nach Updates und baut dafür eine einfache " +
 			"HTTP-Verbindung zum " +
@@ -119,6 +121,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 						if (part instanceof ViewIntroAdapterPart)
 							if (Activator.getDefault().getPluginPreferences()
 									.getBoolean(PreferenceConstants.FIRSTSTART)) {
+								Preferences prefs = Activator.getDefault().getPluginPreferences();
+								prefs.setValue(PreferenceConstants.FIRSTSTART, false);
+
 								ShowCheatSheetAction action = new ShowCheatSheetAction(true, "Erste Schritte");
 								action.run();
 							}

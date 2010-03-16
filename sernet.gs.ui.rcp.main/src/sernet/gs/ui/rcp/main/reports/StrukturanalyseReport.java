@@ -18,6 +18,8 @@
 package sernet.gs.ui.rcp.main.reports;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
@@ -109,7 +111,25 @@ public class StrukturanalyseReport extends BsiReport
 		
 		ITVerbund verbund = getItverbund();
 		getStrukturElements(verbund);
+		sortItems();
 		return items;
+	}
+
+	/**
+	 * 
+	 */
+	private void sortItems() {
+		Collections.sort(categories, new Comparator<CnATreeElement>() {
+			public int compare(CnATreeElement o1, CnATreeElement o2) {
+				return o1.getTitle().compareTo(o2.getTitle());
+			}
+		});
+
+		Collections.sort(items, new Comparator<CnATreeElement>() {
+			public int compare(CnATreeElement o1, CnATreeElement o2) {
+				return o1.getTitle().compareTo(o2.getTitle());
+			}
+		});
 	}
 
 	private ArrayList<CnATreeElement> getItems(CnATreeElement category) {

@@ -128,7 +128,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
-		viewer = new RelationTableViewer(this, parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer = new RelationTableViewer(this, parent, SWT.FULL_SELECTION);
 		contentProvider = new RelationViewContentProvider(this, viewer);
 		viewer.setContentProvider(contentProvider);
 		viewer.setLabelProvider(new RelationViewLabelProvider(this));

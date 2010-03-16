@@ -42,7 +42,16 @@ public class Baustein implements IGSModel{
 	private String url;
 	private List<Massnahme> massnahmen;
 	private List<Gefaehrdung> gefaehrdungen;
+	private String encoding;
 	
+	public String getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
 	private int schicht = 0;
 
 

@@ -31,6 +31,7 @@ public class GetMassnahmeText extends GenericCommand {
 	private String url;
 	private String stand;
 	private String text;
+	private String encoding;
 
 	public GetMassnahmeText(String url, String stand) {
 		this.url = url;
@@ -39,13 +40,18 @@ public class GetMassnahmeText extends GenericCommand {
 
 	public void execute() {
 		try {
+			encoding = GSScraperUtil.getInstance().getModel().getEncoding();
 			InputStream in = GSScraperUtil.getInstance().getModel().getMassnahme(url, stand);
-			text = InputUtil.streamToString(in,  "iso-8859-1");
+			text = InputUtil.streamToString(in,  encoding);
 		} catch (GSServiceException e) {
 			throw new RuntimeCommandException(e);
 		} catch (IOException e) {
 			throw new RuntimeCommandException(e);
 		}
+	}
+
+	public String getEncoding() {
+		return encoding;
 	}
 
 	public String getText() {

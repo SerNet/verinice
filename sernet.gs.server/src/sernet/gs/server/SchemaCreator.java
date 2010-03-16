@@ -70,8 +70,8 @@ public class SchemaCreator implements InitializingBean {
 
 		try {
 			if (dbVersion < 0.95D) {
-				log.error("Db version is: " + dbVersion + ". Can not upgrade from version below 0.95.");
-				throw new RuntimeException("Db version is: " + dbVersion + ". Can not upgrade from version below 0.95.");
+				log.error("Db version is: " + dbVersion + ". Can not upgrade from version below 0.95 directly. Use older version of verinice first (i.e. V 1.0.16) !");
+				throw new RuntimeException("Db version is: " + dbVersion + ". Can not upgrade from version below 0.95 directly. Use older version of verinice first (i.e. V 1.0.16) !");
 			}
 			if (dbVersion == 0.95D) {
 				updateDbVersion(SQL_Ver_095_096);

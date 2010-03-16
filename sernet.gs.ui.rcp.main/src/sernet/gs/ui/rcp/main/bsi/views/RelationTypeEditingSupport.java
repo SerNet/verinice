@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -73,7 +74,8 @@ public class RelationTypeEditingSupport extends EditingSupport {
 		CnALink link = (CnALink) element;
 
 		String[] currentLinkTypeNames = getPossibleLinkTypeNames(link);
-		ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(viewer.getTable(), currentLinkTypeNames);
+		ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(viewer.getTable(), 
+				currentLinkTypeNames, SWT.READ_ONLY);
 		choiceEditor
 				.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
 		return choiceEditor;
