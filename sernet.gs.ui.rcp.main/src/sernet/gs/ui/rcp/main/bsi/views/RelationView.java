@@ -64,7 +64,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 	
 	private TableViewer viewer;
 	private Action jumpToAction;
-	private Action action2;
+//	private Action action2;
 	private Action doubleClickAction;
 	private ISelectionListener selectionListener;
 	private CnATreeElement inputElmt;
@@ -128,7 +128,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
-		viewer = new RelationTableViewer(this, parent, SWT.FULL_SELECTION);
+		viewer = new RelationTableViewer(this, parent, SWT.FULL_SELECTION | SWT.MULTI);
 		contentProvider = new RelationViewContentProvider(this, viewer);
 		viewer.setContentProvider(contentProvider);
 		viewer.setLabelProvider(new RelationViewLabelProvider(this));
@@ -292,19 +292,19 @@ public class RelationView extends ViewPart implements IRelationTable {
 	private void fillLocalPullDown(IMenuManager manager) {
 		manager.add(jumpToAction);
 		manager.add(new Separator());
-		manager.add(action2);
+//		manager.add(action2);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(jumpToAction);
-		manager.add(action2);
+//		manager.add(action2);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(jumpToAction);
-		manager.add(action2);
+//		manager.add(action2);
 	}
 
 	private void makeActions() {
@@ -326,15 +326,15 @@ public class RelationView extends ViewPart implements IRelationTable {
 		jumpToAction.setToolTipText("Springe zum Ziel der markierten Relation");
 		jumpToAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
 		
-		action2 = new Action() {
-			public void run() {
-				showMessage("Action 2 executed");
-			}
-		};
-		action2.setText("Action 2");
-		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+//		action2 = new Action() {
+//			public void run() {
+//				showMessage("Action 2 executed");
+//			}
+//		};
+//		action2.setText("Action 2");
+//		action2.setToolTipText("Action 2 tooltip");
+//		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+//				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		
 		doubleClickAction = new Action() {
 			public void run() {

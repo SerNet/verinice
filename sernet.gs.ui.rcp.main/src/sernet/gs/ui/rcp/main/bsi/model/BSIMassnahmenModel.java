@@ -79,7 +79,7 @@ public class BSIMassnahmenModel {
 	// not configured by Spring
 	private ILayoutConfig layoutConfig;
 
-	private String encoding = null;
+	private String encoding = "utf-8";
 	
 	public BSIMassnahmenModel(IBSIConfig config)
 	{

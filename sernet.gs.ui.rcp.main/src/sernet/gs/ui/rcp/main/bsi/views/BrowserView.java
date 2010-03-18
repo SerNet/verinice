@@ -220,9 +220,9 @@ public class BrowserView extends ViewPart {
 	 */
 	public void setUrl(InputStream is, String encoding) {
 		try {
-			if (! (encoding.equalsIgnoreCase("iso-8859-1") || encoding.equalsIgnoreCase("utf-8"))
-					)
-				encoding = "iso-8859-1";
+			if ( !(encoding.equalsIgnoreCase("iso-8859-1") || encoding.equalsIgnoreCase("utf-8")) ) {
+				encoding = "utf-8";
+			}
 			
 			InputStreamReader read = new InputStreamReader(is, encoding); //$NON-NLS-1$
 			BufferedReader buffRead = new BufferedReader(read);

@@ -121,6 +121,16 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	private BSIModelViewFilterAction filterAction;
 
 	private BSIModelViewContentProvider contentProvider;
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+	 */
+	@Override
+	public void dispose() {
+		model.removeBSIModelListener(bsiModelListener);
+		CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+		super.dispose();
+	}
 
 	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
@@ -130,6 +140,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 			}
 		}
 	};
+	
+	
 
 	private Action expandAllAction;
 
@@ -152,6 +164,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	private MetaDropAdapter dropAdapter;
 	
 	private IModelLoadListener modelLoadListener;
+
+	private BSIModelViewUpdater bsiModelListener;
 
 	public void setNullModel() {
 		model = new NullModel();
@@ -453,8 +467,18 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	}
 
 	public void setModel(BSIModel model2) {
+
+		// create listener only once:
+		if (bsiModelListener == null) {
+			bsiModelListener = new BSIModelViewUpdater(viewer, cache);
+		}
+		if (model != null) {
+			// remove listener from old model:
+			model.removeBSIModelListener(bsiModelListener);
+		}
+		
 		this.model = model2;
-		model.addBSIModelListener(new BSIModelViewUpdater(viewer, cache));
+		model.addBSIModelListener(bsiModelListener);
 
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {

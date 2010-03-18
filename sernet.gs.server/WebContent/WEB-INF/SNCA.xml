@@ -173,6 +173,7 @@ Template:
                 	<param>R-</param>
                 </defaultRule>
         </huiproperty>
+       
         <huiproperty
             name="Name"
             id="raum_name" />
@@ -186,6 +187,7 @@ Template:
         <huiproperty
             name="Anzahl"
             id="raum_anzahl" />
+            
         <huiproperty
             name="Erläuterung"
             inputtype="text"
@@ -199,6 +201,7 @@ Template:
         <huipropertygroup
 			id="raum_group_schutzbedarf"
 			name="Schutzbedarf">
+		
 			<huiproperty
 				id="raum_vertraulichkeit"
 				name="Vertraulichkeit"
@@ -213,6 +216,7 @@ Template:
 					id="raum_vertraulichkeit_sehrhoch"
 					name="Sehr Hoch" />
 			</huiproperty>
+			
 			<huiproperty
 				id="raum_verfuegbarkeit"
 				name="Verfügbarkeit"
@@ -299,17 +303,15 @@ Template:
         id="server">
         
         <huirelation to="raum" id="server_raum_located" 
-        	name="located in" reversename="houses" tooltip="This asset is physically located here."/>
+        	name="befindet sich in" reversename="beinhaltet" />
         
-        <huirelation to="person" id="server_person_systemadmin" 
-        	name="system administered by" reversename="administers system" tooltip="This person is responsible for administration of this server."/>
-        	
-        <huirelation to="person" id="server_person_applicationadmin" 
-        	name="application administered by" reversename="administers application on" tooltip="This person is responsible for administration of applications on this server."/>
-
-        <huirelation to="person" id="server_person_networkadmin" 
-        	name="network administered by" reversename="administers network for" tooltip="This person is responsible for network connectivity of this server."/>
+        <huirelation to="server" id="server_server_dep" 
+        	name="hängt ab von" reversename="ist nötig für" />
         
+        <huirelation to="server" id="server_server_vm" 
+        	name="virtualisiert auf" reversename="VM-Host für" />
+        
+       
         <huiproperty
             name="Kürzel"
             id="server_kuerzel"
@@ -1451,6 +1453,9 @@ Template:
 				id="person_0"
 				name="Administrator" />
 			<option
+				id="person_52"
+				name="Änderungsmanager" />
+			<option
 				id="person_2"
 				name="Anwendungsentwickler" />
 			<option
@@ -1747,6 +1752,7 @@ Template:
 		 >
 	
 	     <!-- Bausteine (modules) can now be linked to objects -->	 
+		
 		 <huirelation  to="anwendung" id="rel_bstumsetzung_anwendung"
 		 	name="verknüpft mit" reversename="modelliert mit" />
 		 <huirelation  to="raum" id="rel_bstumsetzung_raum"
@@ -3793,7 +3799,19 @@ Template:
         <huirelation to="person-iso" id="rel_document_person_reads" 
         	name="actually read by" reversename="actually reads" tooltip=""/>
         
-        
+		<huirelation to="mnums" id="rel_mnums_doc"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />        
+		<huirelation to="bstumsetzung" id="rel_bstumsetzung"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
+		<huirelation to="server" id="rel_server"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
+		<huirelation to="raum" id="rel_raum"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
+		<huirelation to="gebaeude" id="rel_gebaeude"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
+        <huirelation to="anwendung" id="rel_anwendung"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
+		        
         <huiproperty
             name="Title"
             id="document_name" />

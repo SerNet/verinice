@@ -21,10 +21,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 
@@ -40,7 +44,6 @@ public class ModellierungReport extends BsiReport
 
 	public ModellierungReport(Properties reportProperties) {
 		super(reportProperties);
-		// TODO Auto-generated constructor stub
 	}
 
 
@@ -65,8 +68,18 @@ public class ModellierungReport extends BsiReport
 				zuordnungen.put(umsetzung.getKapitel(),zuordnung);
 				flatlist.add(umsetzung);
 			}
+			// add directly connected items:
+			Logger.getLogger(this.getClass()).debug("Adding direct: " + umsetzung.getTitle() + " - " + umsetzung.getParent().getTitle());
 			zuordnung.add(umsetzung.getParent());
 			flatlist.add(umsetzung.getParent());
+			
+			// add linked items:
+			Set<CnALink> linkedItems = umsetzung.getLinksDown();
+			for (CnALink cnALink : linkedItems) {
+				Logger.getLogger(this.getClass()).debug("Adding by link: " + umsetzung.getTitle() + " - " + cnALink.getDependency().getTitle());
+				zuordnung.add(cnALink.getDependency());
+				flatlist.add(cnALink.getDependency());
+			}
 		}
 		
 		public List<ZielobjektListe> getBausteineMitZielobjekten(int schicht) {

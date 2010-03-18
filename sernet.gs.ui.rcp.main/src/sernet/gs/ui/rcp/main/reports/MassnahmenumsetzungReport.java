@@ -31,7 +31,7 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
 
 /**
  * This report prints all safeguards grouped by modules and assets.
- * "Basis-SIcherheitscheck"
+ * "Basis-Sicherheitscheck"
  * 
  *   
  * @author koderman[at]sernet[dot]de

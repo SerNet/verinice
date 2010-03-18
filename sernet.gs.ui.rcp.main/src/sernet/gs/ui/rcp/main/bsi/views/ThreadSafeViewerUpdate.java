@@ -38,6 +38,9 @@ public class ThreadSafeViewerUpdate {
 	}
 	
 	public void add(final Object parent, final Object child) {
+		if (!viewer.getControl().isDisposed())
+			return;
+		
 		if (Display.getCurrent() != null) {
 			viewer.add(parent, child);
 		}
@@ -53,6 +56,9 @@ public class ThreadSafeViewerUpdate {
 	}
 	
 	public void refresh(final Object child) {
+		if (!viewer.getControl().isDisposed())
+			return;
+		
 		if (Display.getCurrent() != null) {
 			viewer.refresh(child);
 		}
@@ -67,6 +73,9 @@ public class ThreadSafeViewerUpdate {
 	}
 	
 	public void remove(final Object child) {
+		if (!viewer.getControl().isDisposed())
+			return;
+		
 		if (Display.getCurrent() != null) {
 			viewer.remove(child);
 		}
@@ -81,13 +90,14 @@ public class ThreadSafeViewerUpdate {
 	}	
 	
 	public void refresh() {
+		
 		if (Display.getCurrent() != null) {
-			viewer.refresh();
+				viewer.refresh();
 		}
 		else {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					if (viewer != null && !viewer.getControl().isDisposed())
+					if (viewer != null)
 						viewer.refresh();
 				}
 			});
@@ -95,6 +105,9 @@ public class ThreadSafeViewerUpdate {
 	}
 	
 	public void reveal(final Object child) {
+		if (!viewer.getControl().isDisposed())
+			return;
+		
 		if (Display.getCurrent() != null) {
 			if (!(child instanceof MassnahmenUmsetzung))
 				viewer.reveal(child);
@@ -109,6 +122,9 @@ public class ThreadSafeViewerUpdate {
 	}
 
 	public void setInput(final Object newModel) {
+		if (!viewer.getControl().isDisposed())
+			return;
+		
 		if (Display.getCurrent() != null) {
 			viewer.setInput(newModel);
 			return;
