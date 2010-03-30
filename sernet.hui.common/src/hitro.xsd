@@ -163,8 +163,8 @@ be displayed when one of the given options has been previously selected.
 	          <xs:attribute name="id" type="xs:ID" use="required"/>
 	          <xs:attribute name="name" type="xs:string" use="required"/>
 	      </xs:complexType>
-	  </xs:element>            
-        
+	  </xs:element>    
+	  
     </xs:sequence>
         
     <xs:attribute name="id" type="xs:ID" use="required"/>
@@ -196,6 +196,10 @@ be displayed when one of the given options has been previously selected.
 		If true, a listener must be registered to handle the button's actions.
 	-->
 	<xs:attribute name="crudButtons" type="xs:boolean" default="false"/> 
+
+	<!-- Value range for numeric option list -->
+	<xs:attribute name="min" type="xs:decimal"/> 
+	<xs:attribute name="max" type="xs:decimal"/> 
 </xs:complexType>
 
 <xs:simpleType name="inputtypes" >
@@ -206,6 +210,7 @@ be displayed when one of the given options has been previously selected.
 		<xs:enumeration value="text"/>
 		<xs:enumeration value="reference"/>
 		<xs:enumeration value="date"/>
+		<xs:enumeration value="numericoption"/>
 	</xs:restriction>
 </xs:simpleType>
 

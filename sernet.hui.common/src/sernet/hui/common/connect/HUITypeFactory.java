@@ -328,6 +328,11 @@ public class HUITypeFactory {
 		propObj.setReferencedEntityType(readReferencedEntityId(prop));
 		propObj.setPredefinedValues(this.getOptionsForPropertyType(id));
 		propObj.setDependencies(readDependencies(prop));
+		
+		if (propObj.isNumericSelect()) {
+			propObj.setNumericMin(prop.getAttribute("min"));
+			propObj.setNumericMax(prop.getAttribute("max"));
+		}
 
 		// the shortcut to set a "NotEmpty" validator:
 		if (prop.getAttribute("required").equals("true"))

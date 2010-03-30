@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.common.rules.IFillRule;
@@ -33,6 +35,14 @@ import sernet.hui.common.rules.NullRule;
  * @version $Id: PropertyType.java,v 1.6 2006/10/20 14:55:16 aprack Exp $
  */
 public class PropertyType implements IMLPropertyType, IEntityElement {
+	public int getMinValue() {
+		return minValue;
+	}
+
+	public int getMaxValue() {
+		return maxValue;
+	}
+
 	private String id;
 
 	private String name;
@@ -59,6 +69,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 
 	public static final byte INPUT_DATE = 6;
 
+	private static final byte INPUT_NUMERICOPTION = 7;
+
 	private List<IValidationRule> validators = new ArrayList<IValidationRule>();
 	
 	private IFillRule defaultRule = new NullRule();
@@ -83,6 +95,10 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	private IUrlResolver urlResolver;
 
 	private boolean crudButtons;
+
+	private int minValue = 0;
+
+	private int maxValue = 0;
 
 	public void addValidator(IValidationRule rule) {
 		if (!validators.contains(rule))
@@ -240,6 +256,10 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 		return inputtype == INPUT_SINGLEOPTION;
 	}
 	
+	public boolean isNumericSelect() {
+		return inputtype == INPUT_NUMERICOPTION;
+	}
+	
 	public boolean isBool() {
 		return inputtype == INPUT_CHECKBOX;
 	}
@@ -283,7 +303,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 			inputtype = INPUT_REFERENCE;
 		else if (attribute.equals("date"))
 			inputtype = INPUT_DATE;
-		
+		else if (attribute.equals("numericoption"))
+			inputtype = INPUT_NUMERICOPTION;
 	}
 
 	public void setInitialFocus(boolean b) {
@@ -379,6 +400,25 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 		if (referenceResolver != null)
 			return referenceResolver.getReferencedEntitesForType(referencedEntityTypeId, references);
 		return new ArrayList<IMLPropertyOption>();
+	}
+
+	/**
+	 * @param attribute
+	 */
+	public void setNumericMin(String minString) {
+		try {
+			this.minValue = Integer.parseInt(minString);
+		} catch (NumberFormatException e) {
+			Logger.getLogger(this.getClass()).debug("Not a valid number: " + minString);
+		}
+	}
+
+	public void setNumericMax(String maxString) {
+		try {
+			this.maxValue = Integer.parseInt(maxString);
+		} catch (NumberFormatException e) {
+			Logger.getLogger(this.getClass()).debug("Not a valid number: " + maxString);
+		}
 	}
 
 
