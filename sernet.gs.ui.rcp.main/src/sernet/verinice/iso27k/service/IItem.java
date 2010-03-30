@@ -53,4 +53,9 @@ public interface IItem extends Serializable {
 	void addItem(IItem item);
 	
 	Collection<IItem> getItems();
+
+	/**
+	 * @return
+	 */
+	boolean isMaturityLevelSupport();
 }

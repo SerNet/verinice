@@ -43,6 +43,9 @@ import au.com.bytecode.opencsv.CSVReader;
  * File content is read from the file and stored in an byte array by contructor.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * 
+ * Contributions:
+ * koderman[at]sernet[dot]de added support for maturity levels
  */
 @SuppressWarnings("serial")
 public class ImportCatalog extends GenericCommand implements ICatalogImporter {
@@ -90,7 +93,14 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 	 */
 	public void importCatalog() {
 		try {
-			CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvFile.getFileContent()), Charset.forName("UTF8"))),config.getSeperator(),'"',false);
+			CSVReader reader = new CSVReader(
+					new BufferedReader(
+							new InputStreamReader(
+									new ByteArrayInputStream(csvFile.getFileContent()), Charset.forName("UTF8")
+							)
+					),
+					config.getSeperator(),'"',false
+			);
 			String[] nextLine;
 			Item item = null;
 		    while ((nextLine = reader.readNext()) != null) {
@@ -101,6 +111,16 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 		        	getLog().debug("heading: " + nextLine[1]);
 		        	getLog().debug("type: " + nextLine[2]);
 		        	getLog().debug("text: " + nextLine[3]);
+		        	
+		        	// line can have optional weight and threshold levels:
+		        	if (hasMaturityLevels(nextLine)) {
+		        		getLog().debug("maturity: " + nextLine[4]);
+		        		getLog().debug("weight 1: " + nextLine[5]);
+		        		getLog().debug("weight 2: " + nextLine[6]);
+		        		getLog().debug("threshold 1: " + nextLine[7]);
+		        		getLog().debug("threshold 2: " + nextLine[8]);
+		        		
+		        	}
 				}	        
 		        if(nextLine[0]!=null && nextLine[0].length()>0) {
 		        	if(item!=null) {
@@ -110,9 +130,15 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 		        	// create a new one
 		        	item = new Item(nextLine[1],nextLine[2]);
 		        	item.setNumberString(nextLine[0].trim());
+		        	
 		        	StringBuilder sb = new StringBuilder();
 		        	sb.append("<p>").append(nextLine[3]).append("</p>");
 		        	item.setDescription(sb.toString());
+	
+		        	if (hasMaturityLevels(nextLine)) {
+		        		fillMaturityLevels(item, nextLine);
+		        	}
+		        	
 		        } else {
 		        	// add a new paragraph to the existing item
 		        	StringBuilder sb = new StringBuilder(item.getDescription());
@@ -135,6 +161,27 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 			getLog().error("Error while importing", e);
 			throw new RuntimeException("Error while importing", e);
 		}
+	}
+
+	/**
+	 * @param item
+	 * @param nextLine
+	 */
+	private void fillMaturityLevels(Item item, String[] nextLine) {
+		item.setMaturity(nextLine[4]);
+		item.setWeight1(nextLine[5]);
+		item.setWeight2(nextLine[6]);
+		item.setThreshold1(nextLine[7]);
+		item.setThreshold2(nextLine[8]);
+		item.setMaturityLevelSupport(true);
+	}
+
+	/**
+	 * @param nextLine
+	 * @return
+	 */
+	private boolean hasMaturityLevels(String[] nextLine) {
+		return nextLine.length == 9;
 	}
 
 	public void setCsvFile(CsvFile csvFile) {

@@ -33,10 +33,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -81,6 +84,10 @@ public class LinkMaker extends Composite implements IRelationTable {
 	private Combo combo;
 	private Action doubleClickAction;
 	private RelationViewContentProvider contentProvider;
+	private Button buttonLink;
+	private Button buttonCreateAndLink;
+	private Button buttonUnlink;
+	private SelectionListener linkAction;
 	
 	/**
 	 * @param parent
@@ -115,16 +122,43 @@ public class LinkMaker extends Composite implements IRelationTable {
 		formData2.top = new FormAttachment(0, 5);
 		formData2.left = new FormAttachment(label1, 5);
 		combo.setLayoutData(formData2);
-		combo.setVisible(false);
+		combo.setVisible(true);
 		combo.pack();
-
-		viewer = new RelationTableViewer(this, this, SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
+		
+		buttonLink = new Button(this, SWT.PUSH | SWT.BORDER);
 		FormData formData3 = new FormData();
-		formData3.top = new FormAttachment(combo, 1);
-		formData3.left = new FormAttachment(0, 1);
-		formData3.right = new FormAttachment(100, -1);
-		formData3.bottom = new FormAttachment(100, -1);
-		viewer.getTable().setLayoutData(formData3);
+		formData3.top = new FormAttachment(0, 5);
+		formData3.left = new FormAttachment(combo, 5);
+		buttonLink.setLayoutData(formData3);
+		buttonLink.setText("Verknüpfen...");
+		buttonLink.setVisible(true);
+		buttonLink.pack();
+		
+		buttonCreateAndLink = new Button(this, SWT.PUSH | SWT.BORDER);
+		FormData formData4 = new FormData();
+		formData4.top = new FormAttachment(0, 5);
+		formData4.left = new FormAttachment(buttonLink, 5);
+		buttonCreateAndLink.setLayoutData(formData4);
+		buttonCreateAndLink.setText("Anlegen & verknüpfen...");
+		buttonCreateAndLink.setVisible(true);
+		buttonCreateAndLink.pack();
+
+		buttonUnlink = new Button(this, SWT.PUSH | SWT.BORDER);
+		FormData formData5 = new FormData();
+		formData5.top = new FormAttachment(0, 5);
+		formData5.left = new FormAttachment(buttonCreateAndLink, 5);
+		buttonUnlink.setLayoutData(formData5);
+		buttonUnlink.setText("Verknüpfung lösen...");
+		buttonUnlink.setVisible(true);
+		buttonUnlink.pack();
+		
+		viewer = new RelationTableViewer(this, this, SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
+		FormData formData6 = new FormData();
+		formData6.top = new FormAttachment(combo, 1);
+		formData6.left = new FormAttachment(0, 1);
+		formData6.right = new FormAttachment(100, -1);
+		formData6.bottom = new FormAttachment(100, -1);
+		viewer.getTable().setLayoutData(formData6);
 		viewer.getTable().setEnabled(writeable);
 		
 		contentProvider = new RelationViewContentProvider(this, viewer);
@@ -137,8 +171,35 @@ public class LinkMaker extends Composite implements IRelationTable {
 		createDoubleClickAction();
 		hookDoubleClickAction();
 		
+		createButtonListeners();
+		hookButtonListeners();
+		
 	}
 	
+	/**
+	 * 
+	 */
+	private void hookButtonListeners() {
+		this.buttonLink.addSelectionListener(linkAction);
+	}
+
+
+	/**
+	 * 
+	 */
+	private void createButtonListeners() {
+		linkAction = new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				
+			}
+		};
+	}
+
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.widgets.Widget#dispose()
 	 */

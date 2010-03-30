@@ -815,6 +815,30 @@
               id="sernet.gs.ui.rcp.main.cheatSheets2"
               name="2_GSTOOL(tm) Import Tutorials">
         </category>
+        <category
+              id="sernet.gs.ui.rcp.main.cheatSheets3"
+              name="ISM Perspective Tutorials">
+        </category>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets3"
+              composite="false"
+              contentFile="cheatsheets/ISO27K-View_Intro.xml"
+              id="sernet.gs.ui.rcp.main.ism1"
+              name="Einführung in die ISM Perspektive">
+           <description>
+              Der ISM View erlaubt das Pflegen eines ISMS gem. ISO 27001 und bietet dazu generische Unterstützung bei der Anwendung beliebiger anderer IS-Standards. Dieses Tutorial bietet ein ersten Überblick über die entsprechenden Funktionen.
+           </description>
+        </cheatsheet>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets3"
+              composite="false"
+              contentFile="cheatsheets/Arbeiten_mit_ISO27K.xml"
+              id="sernet.gs.ui.rcp.main.ism2"
+              name="Arbeiten mit der ISM-Perspektive">
+           <description>
+              Dieses Tutorial beschreibt das Anlegen von Assets und Controls, den Import eigener Kataloge und andere Funktionen in der ISM Perspektive.
+           </description>
+        </cheatsheet>
    </extension>
    <extension
          point="org.eclipse.ui.intro">

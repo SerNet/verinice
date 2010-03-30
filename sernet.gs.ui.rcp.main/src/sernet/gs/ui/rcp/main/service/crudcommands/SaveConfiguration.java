@@ -81,7 +81,6 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 
 		// The roles may have been modified. As such the server needs to throw
 		// away its
-		
 		// cached role data.
 		getCommandService().discardRoleMap();
 	}
@@ -104,9 +103,21 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 				criteria.add(Restrictions.eq("propertyType", Configuration.PROP_USERNAME));
 				criteria.add(Restrictions.eq("propertyValue", username));
 				
-				List<T> resultList = getDao().findByCriteria(criteria);
+				List resultList = getDao().findByCriteria(criteria);
 				if(resultList!=null && !resultList.isEmpty()) {
-					throw new UsernameExistsRuntimeException(username,"Username already exists: " + username);
+					// save only if this is really the same user object:
+					boolean doubleUsername = false;
+					checkDoubles: for (Object t : resultList) {
+						Property foundProperty = (Property) t;
+						
+						if ( usernameProperty.getDbId() == null // current object was never saved, found name must be double
+								|| !usernameProperty.getDbId().equals(foundProperty.getDbId()) ) { // current dbId doesn't match found username, is double
+							doubleUsername = true;
+							break checkDoubles;
+						}
+					}
+					if (doubleUsername)
+						throw new UsernameExistsRuntimeException(username,"Username already exists: " + username);
 				}
 			}
 		}

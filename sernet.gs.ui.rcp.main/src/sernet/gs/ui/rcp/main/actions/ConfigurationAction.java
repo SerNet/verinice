@@ -152,19 +152,20 @@ public class ConfigurationAction implements IObjectActionDelegate {
 						}
 						Display.getDefault().syncExec(new Runnable() {
 							public void run() {
-								MessageDialog.openError(Display.getDefault().getActiveShell(), "Username is not available", "User settings could not be saved. Username '" + e.getUsername() + "' is not available. Choose a different username.");
+								MessageDialog.openError(Display.getDefault().getActiveShell(),
+										"Benutzername schon vergeben", "Der Account konnte nicht gespeichert werden. Benutzername '" + e.getUsername() + "' wird bereits verwendet. Wählen Sie einen anderen Benutzernamen.");
 							}
 						});	
 					} catch (Exception e) {
 						LOG.error("Error while saving configuration.", e);
-						ExceptionUtil.log(e, "Fehler beim Speichern der Konfiguration.");
+						ExceptionUtil.log(e, "Error saving account configuration.");
 					}
 				}
 
 			});
 		} catch (Exception e) {
 			LOG.error("Error while saving configuration.", e);
-			ExceptionUtil.log(e, "Fehler beim Speichern der Konfiguration.");
+			ExceptionUtil.log(e, "Error saving account configuration.");
 		} 
 	}
 

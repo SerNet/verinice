@@ -86,6 +86,8 @@ public class HitroUIView implements IEntityChangedListener   {
 
 	private boolean useRules;
 
+	private static final int TEXTBOX_NUM_LINES = 3;
+
 
 	/**
 	 * Create a new view for dynamic documentation.
@@ -277,7 +279,26 @@ public class HitroUIView implements IEntityChangedListener   {
 		else if (type.isDate())
 			createDateField(type, editableField, parent, type.isFocus());
 		else if (type.isText())
-			createTextField(type, editableField, parent, type.isFocus(), 3 /*three lines high*/);
+			createTextField(type, editableField, parent, type.isFocus(), TEXTBOX_NUM_LINES /*three lines high*/);
+		else if (type.isNumericSelect())
+			createNumericSelect(type, editableField, parent, type.isFocus());
+	}
+
+	/**
+	 * @param type
+	 * @param editableField
+	 * @param parent
+	 * @param focus
+	 */
+	private void createNumericSelect(PropertyType fieldType, boolean editableField,
+			Composite parent, boolean focus) {
+		NumericSelectionControl sglControl = new NumericSelectionControl(entity, fieldType,
+				parent, editable);
+		sglControl.create();
+		if (focus)
+			focusField = sglControl;
+		fields.put(fieldType.getId(), sglControl);
+		sglControl.validate();
 	}
 
 	private void createURLField(PropertyType type, boolean editableField,

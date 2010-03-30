@@ -2810,14 +2810,8 @@ Template:
 		</huiproperty>
 		<huipropertygroup name="Risk Acceptance" id="org_riskgroup">
 			<huiproperty 
-				name="Acceptable Risk Level" id="org_riskaccept" inputtype="singleoption">
-				<option name="1" id="org_riskaccept_1" />       	
-				<option name="2" id="org_riskaccept_2" />       	
-				<option name="3" id="org_riskaccept_3" />       	
-				<option name="4" id="org_riskaccept_4" />       	
-				<option name="5" id="org_riskaccept_5" />       	
-				<option name="6" id="org_riskaccept_6" />       	
-			</huiproperty>
+				name="Acceptable Risk Level" id="org_riskaccept" 
+				inputtype="numericoption" min="1" max="6" />
 			<huiproperty
 				name="Explanation" id="org_riskaccept_expl" inputtype="text" />
 		</huipropertygroup>
@@ -2959,18 +2953,9 @@ Template:
 				<huiproperty
 					id="asset_impact_manualvalue"
 					name="Business Impact"
-					inputtype="singleoption"
+					inputtype="numericoption" min="1" max="3"
 					>
 		 			<depends option="asset_impact_auto_no" /> 
-					<option
-						id="asset_impact_manual_low"
-						name="Low" />
-					<option
-						id="asset_impact_manual_medium"
-						name="Medium" />
-					<option
-						id="asset_impact_manual_high"
-						name="High" />
 				</huiproperty>
 				<huiproperty
 					name="Explanation" id="asset_impactexpl" inputtype="text">
@@ -3364,12 +3349,6 @@ Template:
 		<huirelation to="control" id="rel_control_control"
         	name="concretizes" reversename="is conretized by" tooltip="" />
         	
-		<!-- allow this relation as well for risk analysis? 
-        <huirelation to="threat" id="rel_control_threat" 
-        	name="reduces" reversename="reduced by" tooltip=""/>
-		 -->        
-        
-        	
         <huiproperty
             name="Title"
             id="control_name" 
@@ -3388,9 +3367,6 @@ Template:
      	
      
      	<huipropertygroup id="control_implementedgroup" name="Implementation">
-     		<!-- see below for explanation of this <depends> element 
-     		<depends option="control_evaltype_implement" />
-     		-->
      		<huiproperty name="Implemented" id="control_implemented" inputtype="singleoption">
      			<option name="Yes" id="control_implemented_yes"/>
      			<option name="No" id="control_implemented_no"/>
@@ -3401,76 +3377,150 @@ Template:
      			name="Explanation" 
      			id="control_implemented_explanation" 
      			inputtype="text" />
+     		<huiproperty
+				id="control_implby"
+				name="Implementation date"
+				inputtype="date">
+                <defaultRule class="Today">
+                    <param>MONTH</param>
+                    <param>2</param>
+                </defaultRule>
+            </huiproperty>
      	</huipropertygroup>
-
-     <!-- It is possible to support different evaluation methods with a <depends> element. HitroUI will only display the group when the correct method was set
-     	before opening the editor: 
-     
-     	<huiproperty name="Method of evaluation" id="control_evaltype" visible="false" inputtype="singleoption" >
-     		<option name="Implementation" id="control_evaltype_implement"/>
-     		<option name="Maturity" id="control_evaltype_maturity"/>
-     	</huiproperty>
-
-        <huipropertygroup id="control_maturitygroup" name="Maturity" >
-     		<depends option="control_evaltype_maturity"/>
+     	
+     	<huipropertygroup id="control_revisiongroup" name="Revision" >
+     		<huiproperty
+				id="control_lastrev"
+				name="Last revision"
+				inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+            </huiproperty>
+            <huiproperty 
+     			name="Notes" 
+     			id="control_revision_notes" 
+     			inputtype="text" />
+            <huiproperty
+				id="control_nextrev"
+				name="Next revision"
+				inputtype="date">
+                <defaultRule class="Today">
+                    <param>MONTH</param>
+                    <param>2</param>
+                </defaultRule>
+            </huiproperty>
+     	</huipropertygroup>
+     	
+     	<huipropertygroup id="control_maturitygroup" name="Maturity Level" >
+     	
+     	
         
 	        <huiproperty
 				id="control_maturity"
 				name="Maturity"
-	               focus="true"
-	               required="true"
-				inputtype="singleoption" >
+            	focus="false"
+               	required="false"
+				inputtype="numericoption" 
+				min="0" max="9">
 				
-				<option 
-					id="control_maturity_0"
-					name="Level 0: Incomplete"/>
-				<option
-					id="control_maturity_1"
-					name="Level 1: Performed" />
-				<option
-					id="control_maturity_2"
-					name="Level 2: Managed" />
-				<option
-					id="control_maturity_3"
-					name="Level 3: Established" />
-				<option
-					id="control_maturity_4"
-					name="Level 4: Predictable" />
-				<option
-					id="control_maturity_5"
-					name="Level 5: Optimizing" />
+			
 			</huiproperty>
+	        
+	        <huiproperty
+				id="control_weight"
+				name="Suggested weight"
+				editable="false" />
+	        
+	        <huiproperty
+				id="control_ownweight"
+				name="Used weight" 
+				editable="true"/>
+			
+			<huiproperty 
+				id="control_min1" name="Threshold 1" editable="false" />
+			
+			<huiproperty 
+				id="control_min2" name="Threshold 2" editable="false" />
+			
 			<huiproperty
 				id="control_maturity_comment"
-				name="Explanation"
+				name="Remarks"
 				inputtype="text" />
+			
 			<huiproperty
 					id="control_maturity_duedate"
-					name="Due Date"
+					name="Realize until"
 					inputtype="date">
 	                <defaultRule class="Today">
 	                    <param>MONTH</param>
 	                    <param>2</param>
 	                </defaultRule>
 	            </huiproperty>
-			<huiproperty
-				id="control_maturityassessor_link"
-				name="Assessor"
-				inputtype="reference" 
-				required="true">
-				<references entitytype="person"/>
-			</huiproperty>
         </huipropertygroup>
-        -->
+        
+
+        
+        <huipropertygroup
+			id="control_group_kosten"
+			name="Cost">
+            <huiproperty
+                id="control_kosten_ptfix"
+                name="Labor costs fixed EUR"/>
+            <huiproperty
+                id="control_kosten_ptvar"
+                name="Labor costs running EUR"/>
+            <huiproperty
+				id="control_kosten_ptperiod"
+				name="Time period"
+				inputtype="singleoption">
+				<option
+					id="control_kosten_ptperiod_tag"
+					name="Day" />
+				<option
+					id="control_kosten_ptperiod_woche"
+					name="Week" />
+				<option
+					id="control_kosten_ptperiod_monat"
+					name="Month" />
+				<option
+					id="control_kosten_ptperiod_quartal"
+					name="Quarter" />
+				<option
+					id="control_kosten_ptperiod_jahr"
+					name="Year" />
+			</huiproperty>
+            <huiproperty
+                id="control_kosten_sachfix"
+                name="Material costs fixed EUR"/>
+            <huiproperty
+                id="control_kosten_sachvar"
+                name="Material costs running EUR"/>
+            <huiproperty
+				id="control_kosten_sachperiod"
+				name="Time period"
+				inputtype="singleoption">
+				<option
+					id="control_kosten_sachperiod_tag"
+					name="Day" />
+				<option
+					id="control_kosten_sachperiod_woche"
+					name="Week" />
+				<option
+					id="control_kosten_sachperiod_monat"
+					name="Month" />
+				<option
+					id="control_kosten_sachperiod_quartal"
+					name="Quarter" />
+				<option
+					id="control_kosten_sachperiod_jahr"
+					name="Year" />
+			</huiproperty>
+		</huipropertygroup>
+		
         
        	<huipropertygroup name="Effectiveness" id="control_effectivenessgroup">
-	        <huiproperty name="Effectiveness" id="control_effectiveness" inputtype="singleoption">
-		        <option name="1" id="control_effectiveness_1" />
-		        <option name="2" id="control_effectiveness_2" />
-		        <option name="3" id="control_effectiveness_3" />
-		        <option name="4" id="control_effectiveness_4" />
-		        <option name="5" id="control_effectiveness_5" />
-	        </huiproperty>
+	        <huiproperty name="Effectiveness" id="control_effectiveness" 
+	        	inputtype="numericoption" min="1" max="5" />
 	        <huiproperty name="Explanation" id="control_effectiveness_explanation" inputtype="text"/>
      	</huipropertygroup>
      	
@@ -3648,14 +3698,8 @@ Template:
 				<option name="Manual" id="incscen_likelihoodmethod_manual" />
 			</huiproperty>
 			<huiproperty
-				name="Likelihood" id="incscen_likelihood" inputtype="singleoption">
-				<option name="1" id="incscen_likelihood_1" />
-				<option name="2" id="incscen_likelihood_2" />
-				<option name="3" id="incscen_likelihood_3" />
-				<option name="4" id="incscen_likelihood_4" />
-				<option name="5" id="incscen_likelihood_5" />
-				<option name="6" id="incscen_likelihood_6" />
-			</huiproperty>
+				name="Likelihood" id="incscen_likelihood" 
+					inputtype="numericoption" min="1" max="6" />
 			        	
         </huipropertygroup>
         

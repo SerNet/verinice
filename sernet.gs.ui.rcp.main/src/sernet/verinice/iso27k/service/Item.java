@@ -55,6 +55,13 @@ public class Item implements IItem {
 	protected String description;
 	
 	private String numberString;
+
+	// controls can be simple "yes/no" type or numeric maturity levels:
+	private String maturity; 			// imported maturity value from file
+	private String weight1;				// weight value for this control
+	private String weight2;				// possible second weight value
+	private String threshold1;			// first threshold, i.e. minimum maturity for "yellow" range
+	private String threshold2;			// second threshold, i.e. mi nimum maturity for "green" range
 	
 	private int typeId = CONTROL;
 
@@ -63,6 +70,8 @@ public class Item implements IItem {
 	 * key is the number of child in this item
 	 */
 	protected SortedMap<Integer, IItem> itemMap;
+
+	private boolean maturityLevelSupport = false;
 
 	/**
 	 * Creates an item without name
@@ -138,6 +147,46 @@ public class Item implements IItem {
 		}	
 	}
 	
+	public String getMaturity() {
+		return maturity;
+	}
+
+	public void setMaturity(String maturity) {
+		this.maturity = maturity;
+	}
+
+	public String getWeight1() {
+		return weight1;
+	}
+
+	public void setWeight1(String weight1) {
+		this.weight1 = weight1;
+	}
+
+	public String getWeight2() {
+		return weight2;
+	}
+
+	public void setWeight2(String weight2) {
+		this.weight2 = weight2;
+	}
+
+	public String getThreshold1() {
+		return threshold1;
+	}
+
+	public void setThreshold1(String threshold1) {
+		this.threshold1 = threshold1;
+	}
+
+	public String getThreshold2() {
+		return threshold2;
+	}
+
+	public void setThreshold2(String threshold2) {
+		this.threshold2 = threshold2;
+	}
+
 	public SortedMap<Integer, IItem> getItemMap() {
 		return itemMap;
 	}
@@ -237,6 +286,20 @@ public class Item implements IItem {
 		} else if (!numberString.equals(other.numberString))
 			return false;
 		return true;
+	}
+
+	/**
+	 * @param b
+	 */
+	public void setMaturityLevelSupport(boolean b) {
+		this.maturityLevelSupport = true;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.verinice.iso27k.service.IItem#isMaturityLevelSupport()
+	 */
+	public boolean isMaturityLevelSupport() {
+		return this.maturityLevelSupport;
 	}
 	
 	
