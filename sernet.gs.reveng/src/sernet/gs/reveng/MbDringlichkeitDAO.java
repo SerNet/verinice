@@ -2,8 +2,7 @@ package sernet.gs.reveng;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
 import org.hibernate.Query;
 import org.hibernate.criterion.Example;
@@ -21,7 +20,7 @@ import org.hibernate.criterion.Example;
  */
 
 public class MbDringlichkeitDAO extends BaseHibernateDAO {
-	private static final Log log = LogFactory.getLog(MbDringlichkeitDAO.class);
+	private static final Logger log = Logger.getLogger(MbDringlichkeitDAO.class);
 	// property constants
 	public static final String META_VERS = "metaVers";
 	public static final String OBSOLET_VERS = "obsoletVers";
