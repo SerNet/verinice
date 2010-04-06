@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Server
 Bundle-SymbolicName: sernet.hui.server
-Bundle-Version: 1.1.0
+Bundle-Version: 1.1.1
 Bundle-ClassPath: .,
  lib/xstream-1.2.1.jar,
  lib/jug.jar,
@@ -29,14 +29,7 @@ Export-Package: com.ccg.net.ethernet,
  com.thoughtworks.xstream.io.xml.xppdom,
  com.thoughtworks.xstream.mapper,
  com.thoughtworks.xstream.persistence
-Import-Package: com.mchange.v2.c3p0,
- junit.framework,
- net.sf.ehcache,
- org.hibernate,
- org.hibernate.cfg,
- org.hibernate.classic,
- org.hibernate.exception,
- org.hibernate.proxy,
- org.springframework.beans.factory.xml,
- org.springframework.security.config,
- sernet.hui.common.connect;version="1.1.0"
+Require-Bundle: sernet.hui.common;bundle-version="1.1.1",
+ com.springsource.org.apache.log4j;bundle-version="1.2.15",
+ com.springsource.org.hibernate;bundle-version="3.2.6"
+Import-Package: junit.framework;version="4.3.1"
