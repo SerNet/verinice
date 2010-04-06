@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GS Service
 Bundle-SymbolicName: sernet.gs.service
-Bundle-Version: 1.11.0
+Bundle-Version: 1.11.1
 Bundle-ClassPath: .,
  lib/tagsoup-1.1.3-ak.jar,
  lib/saxon9/saxon9-ant.jar,
@@ -17,10 +17,9 @@ Bundle-ClassPath: .,
  lib/saxon9/saxon9.jar
 Bundle-Localization: plugin
 Export-Package: org.ccil.cowan.tagsoup,
- sernet.gs.model;version="1.11.0",
- sernet.gs.scraper;version="1.11.0",
- sernet.gs.service;version="1.11.0"
-Import-Package: org.apache.commons.io,
- org.apache.log4j,
- org.hibernate.proxy
+ sernet.gs.model;version="1.11.1",
+ sernet.gs.scraper;version="1.11.1",
+ sernet.gs.service;version="1.11.1"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
+ com.springsource.org.apache.log4j;bundle-version="1.2.15"
