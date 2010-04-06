@@ -92,7 +92,7 @@ public class InternalServer implements IInternalServer {
 		} catch (ClassNotFoundException cnfe) {
 			throw new IllegalStateException(Messages.InternalServer_0 + driver);
 		} catch (SQLException sqle) {
-			log.error(Messages.InternalServer_1);
+			log.error("Could not connect to Database", sqle);
 			fail = true;
 		}
 
