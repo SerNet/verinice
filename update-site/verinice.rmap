@@ -7,7 +7,7 @@
 	xmlns:pp="http://www.eclipse.org/buckminster/PDEMapProvider-1.0">
 	<searchPath name="default">
 		<provider readerType="svn" componentTypes="osgi.bundle,eclipse.feature,buckminster" source="true">
-			<uri format="http://www.verinice.org/svnroot/BRANCHES/rcp-3.5/{0}">
+			<uri format="http://www.verinice.org/svnroot/TRUNK/{0}">
 				<bc:propertyRef key="buckminster.component" />
 			</uri>
 		</provider>
