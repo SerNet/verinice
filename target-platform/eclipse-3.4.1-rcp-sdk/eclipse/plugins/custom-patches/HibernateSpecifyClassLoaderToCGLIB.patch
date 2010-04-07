@@ -1,0 +1,12 @@
+Index: src/org/hibernate/proxy/pojo/cglib/CGLIBLazyInitializer.java
+===================================================================
+--- src/org/hibernate/proxy/pojo/cglib/CGLIBLazyInitializer.java	(revision 16434)
++++ src/org/hibernate/proxy/pojo/cglib/CGLIBLazyInitializer.java	(working copy)
+@@ -124,6 +124,7 @@
+   		e.setCallbackFilter(FINALIZE_FILTER);
+   		e.setUseFactory(false);
+ 		e.setInterceptDuringConstruction( false );
++		e.setClassLoader(persistentClass.getClassLoader());
+ 		return e.createClass();
+ 	}
+ 
