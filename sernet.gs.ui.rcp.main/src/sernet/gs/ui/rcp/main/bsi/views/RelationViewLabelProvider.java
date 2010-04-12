@@ -36,8 +36,7 @@ import sernet.hui.common.connect.HuiRelation;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class RelationViewLabelProvider extends LabelProvider implements
-		ITableLabelProvider {
+public class RelationViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 	private IRelationTable view;
 
 	/**
@@ -56,20 +55,18 @@ public class RelationViewLabelProvider extends LabelProvider implements
 		}
 
 		CnALink link = (CnALink) obj;
-		HuiRelation relation = HitroUtil.getInstance().getTypeFactory()
-				.getRelation(link.getRelationId());
+		HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(link.getRelationId());
 
 		switch (index) {
 		case 0:
-			return ""; //image only
+			return ""; // image only
 		case 1:
 			// if we can't find a real name for the relation, we just display
 			// "depends on" or "necessary for":
 			if (CnALink.isDownwardLink(view.getInputElmt(), link))
 				return (relation != null) ? relation.getName() : "hängt ab von";
 			else
-				return (relation != null) ? relation.getReversename()
-						: "ist nötig für";
+				return (relation != null) ? relation.getReversename() : "ist nötig für";
 		case 2:
 			return ""; // image only
 		case 3:
@@ -98,7 +95,7 @@ public class RelationViewLabelProvider extends LabelProvider implements
 		default:
 			return null;
 		}
-		
+
 	}
 
 	/**
