@@ -22,13 +22,26 @@
 			<param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
 		</layout>
 	</appender>
+
+	<!-- Logger for verinice -->
+	<logger name="sernet.gs.ui.rcp.main.service.taskcommands">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="sernet.gs.server.SchemaCreator">
+		<level value="INFO" />
+	</logger>
 	
-	<!-- Logging verinice Command-Service -->
+	<!-- Runtime Logger -->
 	<!--
-	<logger name="sernet.gs.ui.rcp.main.service">
+	<logger name="sernet.gs.server.RuntimeLogger">
 		<level value="DEBUG" />
 	</logger>
 	-->
+	
+	<!-- Logging verinice Command-Service -->
+	<logger name="sernet.gs.ui.rcp.main.service.HibernateCommandService">
+		<level value="DEBUG" />
+	</logger>
 	
 	<!-- Dao Logging -->
 	<!--
@@ -37,13 +50,18 @@
 	</logger>
 	-->
 	
-	<!-- Hibernate Logging -->
-	<!-- SQL -->
+	<!-- Control Import Logging -->
 	<!--
-	<logger name="org.hibernate.SQL">
+	<logger name="sernet.verinice.iso27k.service.commands.ImportCatalog">
 		<level value="DEBUG" />
 	</logger>
 	-->
+	
+	<!-- SQL -->
+	<logger name="org.hibernate.SQL">
+		<level value="DEBUG" />
+	</logger>
+	
 	<!-- SQL Parameter -->
 	<!--
 	<logger name="org.hibernate.type">
@@ -51,15 +69,15 @@
 	</logger>
 	-->
 	
-	<!-- Logger for verinice -->
-	<logger name="sernet">
-		<level value="INFO" />
+	<logger name="sernet.gs.ui.rcp.main.service.crudcommands.LoadElementForEditor">
+		<level value="DEBUG" />
 	</logger>
 
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</root>
 
 </log4j:configuration>

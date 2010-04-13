@@ -14,15 +14,12 @@
 		<div id="main">
 			<!--###main### begin -->
 			<div id="teaser" class="clearfix">
-				<div class="block1">Sie sind hier:&nbsp;verinice Anwendung&nbsp;|&nbsp;ToDo List</div>
 				<div class="langMenu">
 					<h:form id="langForma">
-						<img class="arrow" src="fileadmin/img/arrow.gif" width="7" height="10" alt="" />
 						<h:commandLink action="#{toDo.english}" style="margin-right:0.5em"><h:graphicImage value="/image/us.png" alt="#{msg['english']}"/></h:commandLink>
 						<h:commandLink action="#{toDo.german}" style="margin-right:0.5em"><h:graphicImage value="/image/de.png" alt="#{msg['german']}"/></h:commandLink>
 					</h:form>
 				</div>
-				<div class="selectFontSize"><script type="text/javascript">if (efa_fontSize) document.write(efa_fontSize.allLinks);</script></div>
 			</div>
 			<div id="messages" class="clearfix">
 				<div class="messages">
@@ -59,31 +56,31 @@
 								
 					  			<li>
 							  		<h:selectBooleanCheckbox id="executionNo" value="#{toDo.executionNo}">	  			
-							  			<a4j:support action="#{toDo.loadToDoList}" event="onchange" reRender="tablePanel,editPanel"/>
+							  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
 							  		</h:selectBooleanCheckbox>
 							  		<h:outputLabel for="executionNo" value="#{msg['todo.no']}"/>
 							  	</li>
 							  	<li>
 							  		<h:selectBooleanCheckbox id="executionYes" value="#{toDo.executionYes}">	  			
-							  			<a4j:support action="#{toDo.loadToDoList}" event="onchange" reRender="tablePanel,editPanel"/>
+							  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
 							  		</h:selectBooleanCheckbox>
 							  		<h:outputLabel for="executionYes" value="#{msg['todo.yes']}"/>
 							  	</li>
 							  	<li>
 							  		<h:selectBooleanCheckbox id="executionPartly" value="#{toDo.executionPartly}">	  			
-							  			<a4j:support action="#{toDo.loadToDoList}" event="onchange" reRender="tablePanel,editPanel"/>
+							  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
 							  		</h:selectBooleanCheckbox>
 							  		<h:outputLabel for="executionPartly" value="#{msg['todo.partly']}"/>
 							  	</li>
 							  	<li>
 							  		<h:selectBooleanCheckbox id="executionDispensable" value="#{toDo.executionDispensable}">	  			
-							  			<a4j:support action="#{toDo.loadToDoList}" event="onchange" reRender="tablePanel,editPanel"/>
+							  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
 							  		</h:selectBooleanCheckbox>
 								    <h:outputLabel for="executionDispensable" value="#{msg['todo.superfluous']}"/>
 							  	</li>
 							  	<li>
 							  		<h:selectBooleanCheckbox id="executionUntreated" value="#{toDo.executionUntreated}">	  			
-							  			<a4j:support action="#{toDo.loadToDoList}" event="onchange" reRender="tablePanel,editPanel"/>
+							  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
 							  		</h:selectBooleanCheckbox>
 							  		<h:outputLabel for="executionUntreated" value="#{msg['todo.untreated']}"/>					    
 							    </li>							    					    
@@ -115,25 +112,25 @@
 							<ul>
 					  			<li>
 							  		<h:selectBooleanCheckbox id="sealA" value="#{toDo.sealA}">	  			
-							  			<a4j:support action="#{toDo.loadToDoList}" event="onchange" reRender="tablePanel,editPanel"/>
+							  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
 							  		</h:selectBooleanCheckbox>
 							  		<h:outputLabel for="sealA" value="A"/>
 							  	</li>
 							  	<li>
 							  		<h:selectBooleanCheckbox id="sealB" value="#{toDo.sealB}">	  			
-							  			<a4j:support action="#{toDo.loadToDoList}" event="onchange" reRender="tablePanel,editPanel"/>
+							  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
 							  		</h:selectBooleanCheckbox>
 							  		<h:outputLabel for="sealB" value="B"/>
 							  	</li>
 							  	<li>
 							  		<h:selectBooleanCheckbox id="sealC" value="#{toDo.sealC}">	  			
-							  			<a4j:support action="#{toDo.loadToDoList}" event="onchange" reRender="tablePanel,editPanel"/>
+							  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
 							  		</h:selectBooleanCheckbox>
 							  		<h:outputLabel for="sealC" value="C"/>
 							  	</li>
 							  	<li>
 							  		<h:selectBooleanCheckbox id="sealZ" value="#{toDo.sealZ}">	  			
-							  			<a4j:support action="#{toDo.loadToDoList}" event="onchange" reRender="tablePanel,editPanel"/>
+							  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
 							  		</h:selectBooleanCheckbox>
 							  		<h:outputLabel for="sealZ" value="Z"/>
 							  	</li>
