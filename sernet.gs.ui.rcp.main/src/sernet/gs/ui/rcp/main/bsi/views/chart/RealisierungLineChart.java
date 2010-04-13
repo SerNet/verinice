@@ -55,7 +55,7 @@ public class RealisierungLineChart implements IChartGenerator, Serializable {
 		try {
 			return createProgressChart(createProgressDataset());
 		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff");
+			ExceptionUtil.log(e, Messages.RealisierungLineChart_0);
 		}
 		return null;
 	}
@@ -63,11 +63,11 @@ public class RealisierungLineChart implements IChartGenerator, Serializable {
 	private JFreeChart createProgressChart(Object dataset) {
 		XYDataset data1 = (XYDataset) dataset;
 		XYItemRenderer renderer1 = new StandardXYItemRenderer();
-		NumberAxis rangeAxis1 = new NumberAxis("Anzahl Maßnahmen");
+		NumberAxis rangeAxis1 = new NumberAxis(Messages.RealisierungLineChart_1);
 		XYPlot subplot1 = new XYPlot(data1, null, rangeAxis1, renderer1);
 		subplot1.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
 
-		CombinedDomainXYPlot plot = new CombinedDomainXYPlot(new DateAxis("fällig bis"));
+		CombinedDomainXYPlot plot = new CombinedDomainXYPlot(new DateAxis(Messages.RealisierungLineChart_2));
 		plot.setGap(10.0);
 
 		plot.add(subplot1, 1);
@@ -77,7 +77,7 @@ public class RealisierungLineChart implements IChartGenerator, Serializable {
 		try {
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
 		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff");
+			ExceptionUtil.log(e, Messages.RealisierungLineChart_3);
 		}
 		int totalNum = command.getTotalCount();
 
@@ -86,21 +86,21 @@ public class RealisierungLineChart implements IChartGenerator, Serializable {
 
 		ValueMarker bst = new ValueMarker(totalNum);
 		bst.setPaint(Color.GREEN);
-		bst.setLabel("    Maßnahmen insg.");
+		bst.setLabel(Messages.RealisierungLineChart_4);
 		bst.setLabelAnchor(RectangleAnchor.LEFT);
-		bst.setLabelFont(new Font("SansSerif", Font.ITALIC + Font.BOLD, 10));
+		bst.setLabelFont(new Font("SansSerif", Font.ITALIC + Font.BOLD, 10)); //$NON-NLS-1$
 		bst.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
 		subplot1.addRangeMarker(bst, Layer.BACKGROUND);
 
 		// return a new chart containing the overlaid plot...
-		JFreeChart chart = new JFreeChart("Realisierungsplan", JFreeChart.DEFAULT_TITLE_FONT, plot, true);
+		JFreeChart chart = new JFreeChart(Messages.RealisierungLineChart_6, JFreeChart.DEFAULT_TITLE_FONT, plot, true);
 		chart.setBackgroundPaint(Color.white);
 		return chart;
 	}
 
 	private Object createProgressDataset() throws CommandException {
-		TimeSeries ts1 = new TimeSeries("umgesetzt", Day.class);
-		TimeSeries ts2 = new TimeSeries("alle", Day.class);
+		TimeSeries ts1 = new TimeSeries(Messages.RealisierungLineChart_7, Day.class);
+		TimeSeries ts2 = new TimeSeries(Messages.RealisierungLineChart_8, Day.class);
 
 		RealisierungSummary command = new RealisierungSummary();
 		command = ServiceFactory.lookupCommandService().executeCommand(command);

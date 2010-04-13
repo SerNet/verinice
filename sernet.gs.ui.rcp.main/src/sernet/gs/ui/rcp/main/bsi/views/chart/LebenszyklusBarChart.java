@@ -48,7 +48,7 @@ public class LebenszyklusBarChart implements IChartGenerator {
 		try {
 			return createBarChart(createBarDataset());
 		} catch (CommandException e) {
-			ExceptionUtil.log(e, "");
+			ExceptionUtil.log(e, Messages.LebenszyklusBarChart_0);
 		}
 		return null;
 		// return createSpiderChart(createBarDataset());
@@ -59,7 +59,7 @@ public class LebenszyklusBarChart implements IChartGenerator {
 		plot.setStartAngle(54);
 		plot.setInteriorGap(0.40);
 		plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
-		JFreeChart chart = new JFreeChart("Lebenszyklus", TextTitle.DEFAULT_FONT, plot, false);
+		JFreeChart chart = new JFreeChart(Messages.LebenszyklusBarChart_1, TextTitle.DEFAULT_FONT, plot, false);
 		LegendTitle legend = new LegendTitle(plot);
 		legend.setPosition(RectangleEdge.BOTTOM);
 		chart.addSubtitle(legend);
@@ -67,7 +67,7 @@ public class LebenszyklusBarChart implements IChartGenerator {
 	}
 
 	protected JFreeChart createBarChart(Object dataset) {
-		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, "Lebenszyklus", "Maßnahmen", (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
+		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, Messages.LebenszyklusBarChart_2, Messages.LebenszyklusBarChart_3, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
 		chart.getPlot().setForegroundAlpha(0.6f);
 		chart.setBackgroundPaint(Color.white);
@@ -85,13 +85,13 @@ public class LebenszyklusBarChart implements IChartGenerator {
 		Map<String, Integer> items1 = dao.getNotCompletedZyklusSummary();
 		Set<Entry<String, Integer>> entrySet = items1.entrySet();
 		for (Entry<String, Integer> entry : entrySet) {
-			dataset.addValue(entry.getValue(), "Nicht umgesetzt", entry.getKey());
+			dataset.addValue(entry.getValue(), Messages.LebenszyklusBarChart_4, entry.getKey());
 		}
 
 		Map<String, Integer> completedItems = dao.getCompletedZyklusSummary();
 		Set<Entry<String, Integer>> entrySet2 = completedItems.entrySet();
 		for (Entry<String, Integer> entry : entrySet2) {
-			dataset.addValue(entry.getValue(), "Umgesetzt", entry.getKey());
+			dataset.addValue(entry.getValue(), Messages.LebenszyklusBarChart_5, entry.getKey());
 		}
 
 		return dataset;
@@ -100,7 +100,7 @@ public class LebenszyklusBarChart implements IChartGenerator {
 	private String getLabel(String key) {
 		PropertyType type = HUITypeFactory.getInstance().getPropertyType(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
 		if (type == null || type.getOption(key) == null) {
-			return "unbearbeitet";
+			return Messages.LebenszyklusBarChart_6;
 		}
 		return type.getOption(key).getName();
 	}

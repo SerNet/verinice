@@ -47,13 +47,13 @@ public class SchichtenBarChart implements IChartGenerator {
 		try {
 			return createSpiderChart(createBarDataset());
 		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+			ExceptionUtil.log(e, Messages.SchichtenBarChart_0);
 			return null;
 		}
 	}
 
 	protected JFreeChart createBarChart(Object dataset) {
-		JFreeChart chart = ChartFactory.createBarChart3D(null, "Umsetzung nach Schichten", "Maßnahmen", (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
+		JFreeChart chart = ChartFactory.createBarChart3D(null, Messages.SchichtenBarChart_1, Messages.SchichtenBarChart_2, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
 		chart.getPlot().setForegroundAlpha(0.6f);
 		chart.setBackgroundPaint(Color.white);
@@ -70,7 +70,7 @@ public class SchichtenBarChart implements IChartGenerator {
 		// plot.setInteriorGap(0.40);
 		plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
 
-		JFreeChart chart = new JFreeChart("Umsetzung nach Schichten", TextTitle.DEFAULT_FONT, plot, false);
+		JFreeChart chart = new JFreeChart(Messages.SchichtenBarChart_3, TextTitle.DEFAULT_FONT, plot, false);
 
 		LegendTitle legend = new LegendTitle(plot);
 		legend.setPosition(RectangleEdge.BOTTOM);
@@ -86,13 +86,13 @@ public class SchichtenBarChart implements IChartGenerator {
 		Map<String, Integer> items1 = dao.getSchichtenSummary();
 		Set<Entry<String, Integer>> entrySet = items1.entrySet();
 		for (Entry<String, Integer> entry : entrySet) {
-			dataset.addValue(entry.getValue(), "zugeordnet", getLabel(entry.getKey()));
+			dataset.addValue(entry.getValue(), Messages.SchichtenBarChart_4, getLabel(entry.getKey()));
 		}
 
 		Map<String, Integer> items2 = dao.getCompletedSchichtenSummary();
 		Set<Entry<String, Integer>> entrySet2 = items2.entrySet();
 		for (Entry<String, Integer> entry : entrySet2) {
-			dataset.addValue(entry.getValue(), "umgesetzt", getLabel(entry.getKey()));
+			dataset.addValue(entry.getValue(), Messages.SchichtenBarChart_5, getLabel(entry.getKey()));
 		}
 
 		return dataset;

@@ -43,13 +43,13 @@ public class StufenBarChart implements IChartGenerator {
 		try {
 			return createBarChart(createBarDataset());
 		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+			ExceptionUtil.log(e, Messages.StufenBarChart_0);
 			return null;
 		}
 	}
 
 	protected JFreeChart createBarChart(Object dataset) {
-		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, "Stufe", "Maßnahmen", (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
+		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, Messages.StufenBarChart_1, Messages.StufenBarChart_2, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
 		chart.getPlot().setForegroundAlpha(0.6f);
 		chart.setBackgroundPaint(Color.white);
@@ -67,13 +67,13 @@ public class StufenBarChart implements IChartGenerator {
 		Map<String, Integer> items1 = dao.getNotCompletedStufenSummary();
 		Set<Entry<String, Integer>> entrySet = items1.entrySet();
 		for (Entry<String, Integer> entry : entrySet) {
-			dataset.addValue(entry.getValue(), "Nicht umgesetzt", entry.getKey());
+			dataset.addValue(entry.getValue(), Messages.StufenBarChart_3, entry.getKey());
 		}
 
 		Map<String, Integer> completedItems = dao.getCompletedStufenSummary();
 		Set<Entry<String, Integer>> entrySet2 = completedItems.entrySet();
 		for (Entry<String, Integer> entry : entrySet2) {
-			dataset.addValue(entry.getValue(), "Umgesetzt", entry.getKey());
+			dataset.addValue(entry.getValue(), Messages.StufenBarChart_4, entry.getKey());
 		}
 
 		return dataset;
@@ -82,7 +82,7 @@ public class StufenBarChart implements IChartGenerator {
 	private String getLabel(String key) {
 		PropertyType type = HUITypeFactory.getInstance().getPropertyType(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
 		if (type == null || type.getOption(key) == null) {
-			return "unbearbeitet";
+			return Messages.StufenBarChart_5;
 		}
 		return type.getOption(key).getName();
 	}

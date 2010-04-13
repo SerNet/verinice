@@ -43,13 +43,13 @@ public class UmsetzungBarChart implements IChartGenerator {
 		try {
 			return createBarChart(createBarDataset());
 		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+			ExceptionUtil.log(e, Messages.UmsetzungBarChart_0);
 			return null;
 		}
 	}
 
 	protected JFreeChart createBarChart(Object dataset) {
-		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, "Umsetzung", "Maßnahmen", (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
+		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, Messages.UmsetzungBarChart_1, Messages.UmsetzungBarChart_2, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
 		chart.getPlot().setForegroundAlpha(0.6f);
 		chart.setBackgroundPaint(Color.white);
@@ -75,7 +75,7 @@ public class UmsetzungBarChart implements IChartGenerator {
 	private String getLabel(String key) {
 		PropertyType type = HUITypeFactory.getInstance().getPropertyType(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
 		if (type == null || type.getOption(key) == null) {
-			return "unbearbeitet";
+			return Messages.UmsetzungBarChart_3;
 		}
 		return type.getOption(key).getName();
 	}
