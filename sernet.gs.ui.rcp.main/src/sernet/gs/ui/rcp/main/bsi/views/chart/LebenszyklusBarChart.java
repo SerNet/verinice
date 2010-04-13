@@ -43,8 +43,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 
 public class LebenszyklusBarChart implements IChartGenerator {
-	
-	
 
 	public JFreeChart createChart() {
 		try {
@@ -53,33 +51,29 @@ public class LebenszyklusBarChart implements IChartGenerator {
 			ExceptionUtil.log(e, "");
 		}
 		return null;
-		//return createSpiderChart(createBarDataset());
+		// return createSpiderChart(createBarDataset());
 	}
 
 	protected JFreeChart createSpiderChart(Object dataset) {
-		 SpiderWebPlot plot = new SpiderWebPlot((CategoryDataset) dataset);
-	        plot.setStartAngle(54);
-	        plot.setInteriorGap(0.40);
-	        plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
-	        JFreeChart chart = new JFreeChart("Lebenszyklus",
-	                TextTitle.DEFAULT_FONT, plot, false);
-	        LegendTitle legend = new LegendTitle(plot);
-	        legend.setPosition(RectangleEdge.BOTTOM);
-	        chart.addSubtitle(legend);
-	        return chart;
+		SpiderWebPlot plot = new SpiderWebPlot((CategoryDataset) dataset);
+		plot.setStartAngle(54);
+		plot.setInteriorGap(0.40);
+		plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
+		JFreeChart chart = new JFreeChart("Lebenszyklus", TextTitle.DEFAULT_FONT, plot, false);
+		LegendTitle legend = new LegendTitle(plot);
+		legend.setPosition(RectangleEdge.BOTTOM);
+		chart.addSubtitle(legend);
+		return chart;
 	}
-	
+
 	protected JFreeChart createBarChart(Object dataset) {
-		JFreeChart chart = ChartFactory.createStackedBarChart3D(null,
-				"Lebenszyklus", "Maßnahmen", (CategoryDataset) dataset,
-				PlotOrientation.HORIZONTAL, false, true, false);
+		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, "Lebenszyklus", "Maßnahmen", (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
 		chart.getPlot().setForegroundAlpha(0.6f);
 		chart.setBackgroundPaint(Color.white);
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
 
-		plot.getDomainAxis().setCategoryLabelPositions(
-				CategoryLabelPositions.STANDARD);
+		plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
 		return chart;
 
 	}
@@ -87,35 +81,27 @@ public class LebenszyklusBarChart implements IChartGenerator {
 	protected Object createBarDataset() throws CommandException {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		MassnahmenSummaryHome dao = new MassnahmenSummaryHome();
-		
+
 		Map<String, Integer> items1 = dao.getNotCompletedZyklusSummary();
 		Set<Entry<String, Integer>> entrySet = items1.entrySet();
 		for (Entry<String, Integer> entry : entrySet) {
-			dataset.addValue(entry.getValue(), 
-					"Nicht umgesetzt",
-					entry.getKey()
-					);
+			dataset.addValue(entry.getValue(), "Nicht umgesetzt", entry.getKey());
 		}
 
 		Map<String, Integer> completedItems = dao.getCompletedZyklusSummary();
 		Set<Entry<String, Integer>> entrySet2 = completedItems.entrySet();
 		for (Entry<String, Integer> entry : entrySet2) {
-			dataset.addValue(entry.getValue(), 
-					"Umgesetzt",
-					entry.getKey()
-				);
+			dataset.addValue(entry.getValue(), "Umgesetzt", entry.getKey());
 		}
-		
-		
-		
+
 		return dataset;
 	}
-	
+
 	private String getLabel(String key) {
-		PropertyType type = HUITypeFactory.getInstance().getPropertyType(
-				MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
-		if (type == null || type.getOption(key) == null)
+		PropertyType type = HUITypeFactory.getInstance().getPropertyType(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
+		if (type == null || type.getOption(key) == null) {
 			return "unbearbeitet";
+		}
 		return type.getOption(key).getName();
 	}
 
