@@ -22,6 +22,13 @@ import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -42,8 +49,24 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
 	public ReportPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription(Messages.getString("ReportPreferencePage.0") + //$NON-NLS-1$
-				Messages.getString("ReportPreferencePage.1")); //$NON-NLS-1$
+		setDescription(Messages.getString("ReportPreferencePage.0")); //$NON-NLS-1$
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents (org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	protected Control createContents(Composite parent) {
+		final Link link = new Link(parent, SWT.NONE);
+		link.setText(Messages.getString("ReportPreferencePage.1")); //$NON-NLS-1$
+		link.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				Program.launch(event.text);
+			}
+		});
+		return super.createContents(parent);
 	}
 
 	/**

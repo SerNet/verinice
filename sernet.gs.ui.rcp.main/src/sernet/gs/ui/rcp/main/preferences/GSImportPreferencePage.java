@@ -36,15 +36,19 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.views.Messages;
 
 /**
  * GS Tool Import database settings
@@ -56,27 +60,40 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 
 	private static final Logger log = Logger.getLogger(GSImportRestorePreferencePage.class);
 
-	public static final String ID = "sernet.gs.ui.rcp.main.page5";
+	public static final String ID = "sernet.gs.ui.rcp.main.page5"; //$NON-NLS-1$
 
-	private RadioGroupFieldEditor dbDriver;
-	private StringFieldEditor dialect;
 	private StringFieldEditor url;
 	private StringFieldEditor user;
 	private StringFieldEditor pass;
 
-	private boolean showWindowsWarning = true;
-
-	private static final String TEST_QUERY = "select top 1 * from N_Zielobjekt";
+	private static final String TEST_QUERY = "select top 1 * from N_Zielobjekt"; //$NON-NLS-1$
 
 	public GSImportPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("\nHier können Sie eine bestehende GSTOOL\u2122-Datenbank importieren. " + "Verinice unterstützt drei Möglichkeiten für den Import: direkt aus der GSTOOL-Datenbank," + " aus einer exportierten .MDB Datei oder aus einer Datenbanksicherung (.MDF-Datei)."
-		// +
-		// " Eine genauere Anleitung finden Sie unter Hilfe -> Spickzettel -> GSTOOL-Import");
-		);
+		setDescription(Messages.getString("GSImportPreferencePage_9")); //$NON-NLS-1$
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.preference.FieldEditorPreferencePage#createContents
+	 * (org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	protected Control createContents(Composite parent) {
+		final Link link = new Link(parent, SWT.NONE);
+		link.setText(Messages.getString("GSImportPreferencePage_10")); //$NON-NLS-1$
+		link.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				Program.launch(event.text);
+			}
+
+		});
+		return super.createContents(parent);
+	}
+	
 	/**
 	 * Creates the field editors. Field editors are abstractions of the common
 	 * GUI blocks needed to manipulate various types of preferences. Each field
@@ -85,15 +102,15 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public void createFieldEditors() {
 
-		url = new StringFieldEditor(PreferenceConstants.GS_DB_URL, "GSTOOL DB JDBC URL", //$NON-NLS-1$
+		url = new StringFieldEditor(PreferenceConstants.GS_DB_URL, Messages.getString("GSImportPreferencePage.17"),  //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(url);
 
-		user = new StringFieldEditor(PreferenceConstants.GS_DB_USER, "GSTOOL DB User", //$NON-NLS-1$
+		user = new StringFieldEditor(PreferenceConstants.GS_DB_USER, Messages.getString("GSImportPreferencePage.18"),  //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(user);
 
-		pass = new StringFieldEditor(PreferenceConstants.GS_DB_PASS, "GSTOOL DB Passwort", //$NON-NLS-1$
+		pass = new StringFieldEditor(PreferenceConstants.GS_DB_PASS, Messages.getString("GSImportPreferencePage.19"),  //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(pass);
 
@@ -103,7 +120,7 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 
 	private void createTestButton() {
 		Button button = new Button((Composite) getControl(), SWT.PUSH);
-		button.setText(Messages.GSImportPreferencePage_0);
+		button.setText(Messages.getString("GSImportPreferencePage_0")); //$NON-NLS-1$
 		button.setLayoutData(new GridData(GridData.END, GridData.BEGINNING, true, true));
 		button.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -114,40 +131,40 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 				final String userString = user.getStringValue();
 				final String passString = pass.getStringValue();
 
-				WorkspaceJob job = new WorkspaceJob(Messages.GSImportPreferencePage_2) {
+				WorkspaceJob job = new WorkspaceJob(Messages.getString("GSImportPreferencePage_2")) { //$NON-NLS-1$
 
 					@Override
 					public IStatus runInWorkspace(final IProgressMonitor monitor) {
 
-						monitor.beginTask(Messages.GSImportPreferencePage_1, IProgressMonitor.UNKNOWN);
-						monitor.setTaskName(Messages.GSImportPreferencePage_1);
+						monitor.beginTask(Messages.getString("GSImportPreferencePage_1"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+						monitor.setTaskName(Messages.getString("GSImportPreferencePage_1")); //$NON-NLS-1$
 						try {
-							log.debug("Loading MSSQL JDBC driver.");
+							log.debug("Loading MSSQL JDBC driver."); //$NON-NLS-1$
 							Class.forName("net.sourceforge.jtds.jdbc.Driver"); //$NON-NLS-1$
-							log.debug("Establishing database connection");
+							log.debug("Establishing database connection"); //$NON-NLS-1$
 							Connection con = DriverManager.getConnection(urlString, userString, passString);
-							log.debug("Running test query.");
+							log.debug("Running test query."); //$NON-NLS-1$
 							Statement stmt = con.createStatement();
 							stmt.executeQuery(TEST_QUERY);
 							stmt.close();
 							con.close();
-							log.debug("Finished MSSQL connection test.");
+							log.debug("Finished MSSQL connection test."); //$NON-NLS-1$
 
 							// success:
 							Display.getDefault().syncExec(new Runnable() {
 								public void run() {
-									MessageDialog.openInformation(getShell(), Messages.GSImportPreferencePage_5, Messages.GSImportPreferencePage_6);
+									MessageDialog.openInformation(getShell(), Messages.getString("GSImportPreferencePage_5"), Messages.getString("GSImportPreferencePage_6")); //$NON-NLS-1$ //$NON-NLS-2$
 								}
 							});
 						} catch (Exception e1) {
-							if (e1.getMessage().indexOf("N_Zielobj") > -1) {
+							if (e1.getMessage().indexOf("N_Zielobj") > -1) { //$NON-NLS-1$
 								Display.getDefault().syncExec(new Runnable() {
 									public void run() {
-										MessageDialog.openInformation(getShell(), "Soweit so gut", "Die Verbindung wurde erfolgreich mit der Datenbank hergestellt. In dieser Datenbank wurden keine GSTOOL-Daten gefunden. Sie können eine der beiden Importfunktionen" + " nutzen, um Daten von externen Quellen zu importieren. Sie finden diese hier in den Einstellungen " + "wenn Sie den Knoten 'GSTool Import' aufklappen.");
+										MessageDialog.openInformation(getShell(), Messages.getString("GSImportPreferencePage_15"), Messages.getString("GSImportPreferencePage_16")); //$NON-NLS-1$ //$NON-NLS-2$
 									}
 								});
 							} else {
-								ExceptionUtil.log(e1, Messages.GSImportPreferencePage_7 + urlString);
+								ExceptionUtil.log(e1, Messages.getString("GSImportPreferencePage_7") + urlString); //$NON-NLS-1$
 							}
 							return Status.CANCEL_STATUS;
 						}

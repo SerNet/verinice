@@ -43,7 +43,7 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 	public ClientServerPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Umstellen zwischen Betrieb als Arbeitsplatzrechner (Standalone) mit direkter " + "Verbindung zu einer Datenbank oder Mehrbenutzerbetrieb unter Verwendung des Verinice-Servers. " + "Die Umstellung auf Mehrbenutzerbetrieb erfordert einen Neustart des Clients.");
+		setDescription(Messages.getString("ClientServerPreferencePage.0")); //$NON-NLS-1$
 		warningShown = false;
 	}
 
@@ -56,7 +56,7 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 	public void createFieldEditors() {
 		createRadioGroup();
 
-		serverURI = new StringFieldEditor(PreferenceConstants.VNSERVER_URI, "Verinice-Server", getFieldEditorParent());
+		serverURI = new StringFieldEditor(PreferenceConstants.VNSERVER_URI, Messages.getString("ClientServerPreferencePage.1"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(serverURI);
 
 	}
@@ -82,7 +82,7 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 
 				if (!warningShown) {
 					warningShown = true;
-					MessageDialog.openInformation(getShell(), "Neustart erforderlich", "Umschalten zwischen Standalone- und Server-Modus erfordert einen Neustart!\n" + "Bitte starten Sie Verinice nach dem Speichern Ihrer Einstellungen neu! Danke.");
+					MessageDialog.openInformation(getShell(), Messages.getString("ClientServerPreferencePage.2"), Messages.getString("ClientServerPreferencePage.3")); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
 			}
@@ -90,7 +90,7 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 	}
 
 	private void createRadioGroup() {
-		operationMode = new RadioGroupFieldEditor(PreferenceConstants.OPERATION_MODE, "Betriebsmodus", 1, new String[][] { { "Standalone", PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER }, { "Mehrbenutzer", PreferenceConstants.OPERATION_MODE_REMOTE_SERVER } }, getFieldEditorParent());
+		operationMode = new RadioGroupFieldEditor(PreferenceConstants.OPERATION_MODE, Messages.getString("ClientServerPreferencePage.4"), 1, new String[][] { { Messages.getString("ClientServerPreferencePage.5"), PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER }, { Messages.getString("ClientServerPreferencePage.6"), PreferenceConstants.OPERATION_MODE_REMOTE_SERVER } }, getFieldEditorParent()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		addField(operationMode);
 	}
 

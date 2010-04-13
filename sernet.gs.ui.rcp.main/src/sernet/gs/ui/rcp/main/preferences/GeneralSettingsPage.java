@@ -66,7 +66,7 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 				getFieldEditorParent());
 		addField(errorPopups);
 
-		inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, "Zeige Tooltip für Eingabehilfe (\"Hilfe: Pfeil-Runter-Taste\") für neu geöffnete Editoren", getFieldEditorParent());
+		inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, Messages.getString("GeneralSettingsPage.3"), getFieldEditorParent());
 		addField(inputHelperHints);
 
 		infoDialogTransformCatalogItems = new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_ADDED, Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$

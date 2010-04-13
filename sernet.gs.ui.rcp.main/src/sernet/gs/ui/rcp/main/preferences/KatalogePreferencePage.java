@@ -56,12 +56,25 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 		super(GRID);
 
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription(Messages.getString("KatalogePreferencePage.0") + //$NON-NLS-1$
-				Messages.getString("KatalogePreferencePage.1") + //$NON-NLS-1$
-				Messages.getString("KatalogePreferencePage.2") + //$NON-NLS-1$
-				Messages.getString("KatalogePreferencePage.3") + //$NON-NLS-1$
-				Messages.getString("KatalogePreferencePage.4")); //$NON-NLS-1$
-
+		setDescription(Messages.getString("KatalogePreferencePage.0")); //$NON-NLS-1$
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents (org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	protected Control createContents(Composite parent) {
+		final Link link = new Link(parent, SWT.NONE);
+		link.setText(Messages.getString("KatalogePreferencePage.11") + //$NON-NLS-1$
+				Messages.getString("KatalogePreferencePage.14")); //$NON-NLS-1$
+		link.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				Program.launch(event.text);
+			}
+		});
+		return super.createContents(parent);
 	}
 
 	/**
@@ -74,41 +87,13 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 
 		zipfilePath = new FileFieldEditor(PreferenceConstants.BSIZIPFILE, Messages.getString("KatalogePreferencePage.8"), //$NON-NLS-1$
 				getFieldEditorParent());
-		zipfilePath.setFileExtensions(new String[] { "*.zip;*.ZIP", "*.*" });
+		zipfilePath.setFileExtensions(new String[] { "*.zip;*.ZIP", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
 		addField(zipfilePath);
 
 		datenschutzZipPath = new FileFieldEditor(PreferenceConstants.DSZIPFILE, Messages.getString("KatalogePreferencePage.10"), //$NON-NLS-1$
 				getFieldEditorParent());
-		datenschutzZipPath.setFileExtensions(new String[] { "*.zip;*.ZIP", "*.*" });
+		datenschutzZipPath.setFileExtensions(new String[] { "*.zip;*.ZIP", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
 		addField(datenschutzZipPath);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.preference.FieldEditorPreferencePage#createContents
-	 * (org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	protected Control createContents(Composite parent) {
-
-		final Link link = new Link(parent, SWT.NONE);
-		link.setText(Messages.getString("KatalogePreferencePage.11") + //$NON-NLS-1$
-				Messages.getString("KatalogePreferencePage.12") + //$NON-NLS-1$
-				Messages.getString("KatalogePreferencePage.13") + //$NON-NLS-1$
-				Messages.getString("KatalogePreferencePage.14") + //$NON-NLS-1$
-				Messages.getString("KatalogePreferencePage.15")); //$NON-NLS-1$
-
-		link.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				Program.launch(event.text);
-			}
-
-		});
-
-		return super.createContents(parent);
 
 	}
 
@@ -125,13 +110,13 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 				try {
 					internalServer.setGSCatalogURL(new File(zipfilePath.getStringValue()).toURI().toURL());
 				} catch (MalformedURLException e) {
-					log.warn("GS catalog zip file path is an invalid URL.");
+					log.warn("GS catalog zip file path is an invalid URL."); //$NON-NLS-1$
 				}
 			} else if (event.getSource() == datenschutzZipPath) {
 				try {
 					internalServer.setDSCatalogURL(new File(datenschutzZipPath.getStringValue()).toURI().toURL());
 				} catch (MalformedURLException e) {
-					log.warn("DS catalog zip file path is an invalid URL.");
+					log.warn("DS catalog zip file path is an invalid URL."); //$NON-NLS-1$
 				}
 			}
 		}
@@ -176,7 +161,7 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 		if (enable) {
 			setMessage(null);
 		} else {
-			setMessage("Die Kataloge werden vom Server bezogen und müssen hier nicht konfiguriert werden.");
+			setMessage(Messages.getString("KatalogePreferencePage.22")); //$NON-NLS-1$
 		}
 	}
 

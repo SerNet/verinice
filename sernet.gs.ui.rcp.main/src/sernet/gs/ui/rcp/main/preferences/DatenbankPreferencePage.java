@@ -24,7 +24,13 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -52,13 +58,27 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
 	public DatenbankPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription(Messages.getString("DatenbankPreferencePage.0") + //$NON-NLS-1$
-				Messages.getString("DatenbankPreferencePage.1") + //$NON-NLS-1$
-				Messages.getString("DatenbankPreferencePage.2") + //$NON-NLS-1$
-				Messages.getString("DatenbankPreferencePage.3") + //$NON-NLS-1$
-				Messages.getString("DatenbankPreferencePage.4") + //$NON-NLS-1$
-				Messages.getString("DatenbankPreferencePage.5") + //$NON-NLS-1$
-				Messages.getString("DatenbankPreferencePage.6")); //$NON-NLS-1$
+		setDescription(Messages.getString("DatenbankPreferencePage.0"));//$NON-NLS-1$
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.preference.FieldEditorPreferencePage#createContents
+	 * (org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	protected Control createContents(Composite parent) {
+		final Link link = new Link(parent, SWT.NONE);
+		link.setText(Messages.getString("DatenbankPreferencePage.1")); //$NON-NLS-1$
+		link.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				Program.launch(event.text);
+			}
+
+		});
+		return super.createContents(parent);
 	}
 
 	/**
@@ -118,8 +138,8 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
 	private void createRadioGroup() {
 		dbDriver = new RadioGroupFieldEditor(PreferenceConstants.DB_DRIVER, Messages.getString("DatenbankPreferencePage.11"), //$NON-NLS-1$
 				1, new String[][] { { Messages.getString("DatenbankPreferencePage.12"), PreferenceConstants.DB_DRIVER_DERBY }, //$NON-NLS-1$
-						{ "Postgres", PreferenceConstants.DB_DRIVER_POSTGRES }, //$NON-NLS-1$
-						{ "MySQL", PreferenceConstants.DB_DRIVER_MYSQL } //$NON-NLS-1$
+						{ Messages.getString("DatenbankPreferencePage.13"), PreferenceConstants.DB_DRIVER_POSTGRES }, //$NON-NLS-1$
+						{ Messages.getString("DatenbankPreferencePage.14"), PreferenceConstants.DB_DRIVER_MYSQL } //$NON-NLS-1$
 				}, getFieldEditorParent());
 		addField(dbDriver);
 
