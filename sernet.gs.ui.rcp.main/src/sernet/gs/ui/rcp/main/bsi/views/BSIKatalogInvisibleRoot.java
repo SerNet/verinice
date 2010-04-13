@@ -40,7 +40,7 @@ public class BSIKatalogInvisibleRoot {
 	
 	private static final Logger log = Logger.getLogger(BSIKatalogInvisibleRoot.class); 
 
-	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)");
+	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)"); //$NON-NLS-1$
 
 	/**
 	 * Listen for preference changes and update model if necessary:
@@ -53,7 +53,7 @@ public class BSIKatalogInvisibleRoot {
 					|| event.getProperty()
 							.equals(PreferenceConstants.DSZIPFILE))
 			{
-				log.debug("Reloading catalogues since catalogue properties changed: " + event.getProperty());
+				log.debug("Reloading catalogues since catalogue properties changed: " + event.getProperty()); //$NON-NLS-1$
 				try {
 					// Load the catalogues using a configuration object which points
 					// to local files.
@@ -79,7 +79,7 @@ public class BSIKatalogInvisibleRoot {
 
 		@Override
 		public String toString() {
-			return "GS-Kataloge nicht geladen.";
+			return Messages.BSIKatalogInvisibleRoot_2;
 		}
 	}
 

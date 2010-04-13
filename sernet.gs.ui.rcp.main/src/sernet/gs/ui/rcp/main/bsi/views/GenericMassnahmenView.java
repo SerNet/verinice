@@ -86,7 +86,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 
 	private static final Logger log = Logger.getLogger(GenericMassnahmenView.class);
 
-	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." + "todoview"; //$NON-NLS-1$
+	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." + "todoview"; //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * Implementation of {@link ContributionItem} which allows choosing one of
@@ -137,7 +137,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 
 			combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
 			combo.setEnabled(false);
-			combo.add("-- kein Verbund --");
+			combo.add(Messages.GenericMassnahmenView_1);
 			combo.select(0);
 
 			combo.addSelectionListener(new SelectionListener() {
@@ -269,7 +269,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		 */
 		void setElements(List<ITVerbund> elements) {
 			combo.removeAll();
-			combo.add("-- kein Verbund --");
+			combo.add(Messages.GenericMassnahmenView_2);
 			combo.select(0);
 
 			this.elements = elements;
@@ -421,7 +421,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 					try {
 						loadCompounds(lastSelectedCompound);
 					} catch (RuntimeException e) {
-						ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+						ExceptionUtil.log(e, Messages.GenericMassnahmenView_3);
 					}
 				}
 			});
@@ -509,7 +509,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		try {
 			loadCompounds(null);
 		} catch (RuntimeException e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+			ExceptionUtil.log(e, Messages.GenericMassnahmenView_4);
 		}
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 
@@ -537,7 +537,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	 */
 	void resetTable(boolean choseMessage) {
 		if (choseMessage) {
-			viewer.setInput(new PlaceHolder("IT-Verbund wählen."));
+			viewer.setInput(new PlaceHolder(Messages.GenericMassnahmenView_5));
 		} else {
 			viewer.setInput(new ArrayList<Object>());
 		}
@@ -576,15 +576,15 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 			return;
 		}
 
-		viewer.setInput(new PlaceHolder("Lade IT-Verbunde..."));
+		viewer.setInput(new PlaceHolder(Messages.GenericMassnahmenView_6));
 
-		WorkspaceJob job = new WorkspaceJob("Lade IT-Verbunde...") {
+		WorkspaceJob job = new WorkspaceJob(Messages.GenericMassnahmenView_7) {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
 
 				try {
-					monitor.setTaskName("");
+					monitor.setTaskName(""); //$NON-NLS-1$
 					LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<ITVerbund>(ITVerbund.class);
 					compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
 					final List<ITVerbund> elements = compoundLoader.getElements();
@@ -615,13 +615,13 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 
 							// Place a message that asks the user to chose a
 							// compound.
-							viewer.setInput(new PlaceHolder("IT-Verbund wählen."));
+							viewer.setInput(new PlaceHolder(Messages.GenericMassnahmenView_9));
 						}
 
 					});
 
 				} catch (Exception e) {
-					ExceptionUtil.log(e, "Fehler beim Laden der IT-Verbunde");
+					ExceptionUtil.log(e, Messages.GenericMassnahmenView_10);
 				}
 				return Status.OK_STATUS;
 			}
@@ -642,7 +642,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	public final void reloadMeasures() {
 		ITVerbund compound = compoundChoser.getSelectedCompound();
 		if (compound == null) {
-			log.warn("No IT-Verbund was selected during reload.");
+			log.warn("No IT-Verbund was selected during reload."); //$NON-NLS-1$
 		} else {
 			loadMeasures(compound);
 		}
@@ -765,7 +765,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	}
 
 	public final void compoundAdded(final ITVerbund compound) {
-		log.debug("handling added compound: " + compound.getTitle());
+		log.debug("handling added compound: " + compound.getTitle()); //$NON-NLS-1$
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				compoundChoser.compoundAdded(compound);
@@ -774,7 +774,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	}
 
 	public final void compoundRemoved(final ITVerbund compound) {
-		log.debug("handling removed compound: " + compound.getTitle());
+		log.debug("handling removed compound: " + compound.getTitle()); //$NON-NLS-1$
 
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
@@ -784,7 +784,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	}
 
 	public final void compoundChanged(final ITVerbund compound) {
-		log.debug("handling changed compound: " + compound.getTitle());
+		log.debug("handling changed compound: " + compound.getTitle()); //$NON-NLS-1$
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				compoundChoser.compoundChanged(compound);

@@ -50,6 +50,8 @@ public class Messages extends NLS {
 
 	public static String BrowserView_5;
 
+	public static String BSIKatalogInvisibleRoot_2;
+
 	public static String BSIMassnahmenView_0;
 
 	public static String BSIMassnahmenView_1;
@@ -58,6 +60,12 @@ public class Messages extends NLS {
 	public static String BSIMassnahmenView_2;
 
 	public static String BSIMassnahmenView_3;
+
+	public static String BSIMassnahmenView_4;
+
+	public static String BSIMassnahmenView_5;
+
+	public static String BSIMassnahmenView_6;
 
 	public static String BsiModelView_0;
 
@@ -69,6 +77,14 @@ public class Messages extends NLS {
 
 	public static String BsiModelView_4;
 
+	public static String DocumentView_2;
+
+	public static String DocumentView_4;
+
+	public static String DocumentView_6;
+
+	public static String DSModelView_0;
+
 	public static String DSModelView_1;
 
 	public static String DSModelView_2;
@@ -78,6 +94,12 @@ public class Messages extends NLS {
 	public static String DSModelView_4;
 
 	public static String DSModelView_5;
+
+	public static String DSModelView_6;
+
+	public static String DSViewLabelProvider_0;
+
+	public static String DSViewLabelProvider_1;
 
 	public static String FileView_0;
 
@@ -119,19 +141,23 @@ public class Messages extends NLS {
 
 	public static String FileView_6;
 
-	public static String GSImportPreferencePage_0;
+	public static String GenericMassnahmenView_1;
 
-	public static String GSImportPreferencePage_1;
+	public static String GenericMassnahmenView_10;
 
-	public static String GSImportPreferencePage_2;
+	public static String GenericMassnahmenView_2;
 
-	public static String GSImportPreferencePage_3;
+	public static String GenericMassnahmenView_3;
 
-	public static String GSImportPreferencePage_5;
+	public static String GenericMassnahmenView_4;
 
-	public static String GSImportPreferencePage_6;
+	public static String GenericMassnahmenView_5;
 
-	public static String GSImportPreferencePage_7;
+	public static String GenericMassnahmenView_6;
+
+	public static String GenericMassnahmenView_7;
+
+	public static String GenericMassnahmenView_9;
 
 	public static String TodoView_10;
 

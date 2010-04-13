@@ -49,7 +49,7 @@ import sernet.hui.common.connect.PropertyType;
 
 public class DocumentView extends ViewPart {
 	
-	public static final String ID = "sernet.gs.ui.rcp.main.documentview";
+	public static final String ID = "sernet.gs.ui.rcp.main.documentview"; //$NON-NLS-1$
 
 	private TreeViewer viewer;
 
@@ -112,10 +112,10 @@ public class DocumentView extends ViewPart {
 			public String getText(Object element) {
 				if (element instanceof DocumentLink)
 					return ((DocumentLink)element).getName();
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 		});
-		column.getColumn().setText("Name");
+		column.getColumn().setText(Messages.DocumentView_2);
 
 		TreeViewerColumn column2 = new TreeViewerColumn(viewer,SWT.NONE);
 		column2.setLabelProvider(new ColumnLabelProvider() {
@@ -123,10 +123,10 @@ public class DocumentView extends ViewPart {
 			public String getText(Object element) {
 				if (element instanceof DocumentLink)
 					return ((DocumentLink)element).getHref();
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 		});
-		column2.getColumn().setText("Link");
+		column2.getColumn().setText(Messages.DocumentView_4);
 
 		TreeViewerColumn column3 = new TreeViewerColumn(viewer,SWT.NONE);
 		column3.setLabelProvider(new ColumnLabelProvider() {
@@ -136,10 +136,10 @@ public class DocumentView extends ViewPart {
 					DocumentReference docref = (DocumentReference) element;
 					return docref.getCnaTreeElement().getTitle();
 				}
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 		});
-		column3.getColumn().setText("Referenziert in");
+		column3.getColumn().setText(Messages.DocumentView_6);
 		
 		viewer.setContentProvider(new DocumentContentProvider(viewer));
 		viewer.setSorter(new ViewerSorter() {

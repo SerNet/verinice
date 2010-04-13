@@ -132,7 +132,7 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 	}
 
 	private void createActions() {
-		copyAction = new CopyBSIMassnahmenViewAction(this, "Kopieren");
+		copyAction = new CopyBSIMassnahmenViewAction(this, Messages.BSIMassnahmenView_4);
 
 		expandAllAction = new Action() {
 			@Override
@@ -140,7 +140,7 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 				viewer.expandAll();
 			}
 		};
-		expandAllAction.setText("Alle aufklappen");
+		expandAllAction.setText(Messages.BSIMassnahmenView_5);
 		expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
 		collapseAction = new Action() {
@@ -149,7 +149,7 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 				viewer.collapseAll();
 			}
 		};
-		collapseAction.setText("Alle zuklappen");
+		collapseAction.setText(Messages.BSIMassnahmenView_6);
 		collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 	}
 
@@ -345,7 +345,7 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 
 			if (obj instanceof Gefaehrdung) {
 				Gefaehrdung gef = (Gefaehrdung) obj;
-				return gef.getId() + " " + gef.getTitel() + " [" + gef.getKategorieAsString() + "]";
+				return gef.getId() + " " + gef.getTitel() + " [" + gef.getKategorieAsString() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 
 			return obj.toString();

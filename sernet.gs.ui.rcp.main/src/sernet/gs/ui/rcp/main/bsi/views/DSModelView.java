@@ -85,7 +85,7 @@ public class DSModelView extends ViewPart {
 					try {
 						setInput();
 					} catch (CommandException e) {
-						ExceptionUtil.log(e, "Kann Datenschutzmodell nicht anzeigen.");
+						ExceptionUtil.log(e, Messages.DSModelView_0);
 					}
 				}
 			});
@@ -209,7 +209,7 @@ public class DSModelView extends ViewPart {
 		try {
 			setInput();
 		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Kann Datenschutzmodell nicht anzeigen.");
+			ExceptionUtil.log(e, Messages.DSModelView_6);
 		}
 
 		CnAElementFactory.getInstance().addLoadListener(loadListener);

@@ -33,10 +33,10 @@ public class DSViewLabelProvider extends BSIModelViewLabelProvider implements
 	public String getText(Object obj) {
 		if (obj instanceof ITVerbund) {
 			String title = super.getText(obj);
-			return "Datenschutzkonzept: " + title;
+			return Messages.DSViewLabelProvider_0 + title;
 		}
 		else if (obj instanceof AnwendungenKategorie)
-			return "Verfahren";
+			return Messages.DSViewLabelProvider_1;
 		
 		// else return object title:
 		return super.getText(obj);
