@@ -1448,39 +1448,7 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.equinox.launcher.carbon.macosx.nl_de"
-         download-size="0"
-         install-size="0"
-         version="3.5.0.v20091121043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.cocoa.macosx.nl_de"
-         download-size="0"
-         install-size="0"
-         version="3.5.0.v20091121043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.gtk.linux.x86.nl_de"
-         download-size="0"
-         install-size="0"
-         version="3.5.0.v20091121043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.equinox.launcher.nl_de"
-         download-size="0"
-         install-size="0"
-         version="3.5.0.v20091121043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.wpf.win32.x86.nl_de"
          download-size="0"
          install-size="0"
          version="3.5.0.v20091121043401"
