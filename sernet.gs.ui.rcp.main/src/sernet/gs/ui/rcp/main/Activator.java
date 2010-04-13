@@ -219,12 +219,12 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public static void initDatabase(ISchedulingRule mutex, final StatusResult result) {
-		WorkspaceJob initDbJob = new WorkspaceJob(Messages.ISMView_InitDatabase) {
+		WorkspaceJob initDbJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitDatabase) {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
 				try {
-					monitor.beginTask(Messages.ISMView_InitDatabase, IProgressMonitor.UNKNOWN);
+					monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_InitDatabase, IProgressMonitor.UNKNOWN);
 					// If server could not be started for whatever reason do not
 					// try to
 					// load the model either.
@@ -252,7 +252,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public static void createModel(ISchedulingRule mutex, final StatusResult serverStartResult) {
-		WorkspaceJob job = new WorkspaceJob(Messages.ISMView_LoadModel) {
+		WorkspaceJob job = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_LoadModel) {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
@@ -264,8 +264,8 @@ public class Activator extends AbstractUIPlugin {
 						status = Status.CANCEL_STATUS;
 					}
 					Activator.inheritVeriniceContextState();
-					monitor.beginTask(Messages.ISMView_LoadModel, IProgressMonitor.UNKNOWN);
-					monitor.setTaskName(Messages.ISMView_LoadModel);
+					monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_LoadModel, IProgressMonitor.UNKNOWN);
+					monitor.setTaskName(sernet.verinice.iso27k.rcp.Messages.ISMView_LoadModel);
 					CnAElementFactory.getInstance().loadOrCreateModel(new ProgressAdapter(monitor));
 					CnAElementFactory.getInstance().getISO27kModel();
 				} catch (Exception e) {
