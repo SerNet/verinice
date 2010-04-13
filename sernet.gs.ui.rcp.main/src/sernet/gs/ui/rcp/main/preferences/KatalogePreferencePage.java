@@ -22,11 +22,9 @@ import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.program.Program;
@@ -45,66 +43,65 @@ import sernet.gs.ui.rcp.main.service.IInternalServer;
  * Main preference page for CnA Tool Settings.
  * 
  * @author akoderman[at]sernet[dot]de
- *
+ * 
  */
-public class KatalogePreferencePage
-	extends FieldEditorPreferencePage
-	implements IWorkbenchPreferencePage {
-	
+public class KatalogePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+
 	private static final Logger log = Logger.getLogger(KatalogePreferencePage.class);
 
 	private FileFieldEditor zipfilePath;
 	private FileFieldEditor datenschutzZipPath;
-	
 
 	public KatalogePreferencePage() {
 		super(GRID);
-		
+
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription(Messages.getString("KatalogePreferencePage.0") + //$NON-NLS-1$
 				Messages.getString("KatalogePreferencePage.1") + //$NON-NLS-1$
 				Messages.getString("KatalogePreferencePage.2") + //$NON-NLS-1$
 				Messages.getString("KatalogePreferencePage.3") + //$NON-NLS-1$
 				Messages.getString("KatalogePreferencePage.4")); //$NON-NLS-1$
-		
+
 	}
-	
+
 	/**
-	 * Creates the field editors. Field editors are abstractions of
-	 * the common GUI blocks needed to manipulate various types
-	 * of preferences. Each field editor knows how to save and
-	 * restore itself.
+	 * Creates the field editors. Field editors are abstractions of the common
+	 * GUI blocks needed to manipulate various types of preferences. Each field
+	 * editor knows how to save and restore itself.
 	 */
+	@Override
 	public void createFieldEditors() {
-		
-		zipfilePath = new FileFieldEditor(PreferenceConstants.BSIZIPFILE, 
-				Messages.getString("KatalogePreferencePage.8"), //$NON-NLS-1$
+
+		zipfilePath = new FileFieldEditor(PreferenceConstants.BSIZIPFILE, Messages.getString("KatalogePreferencePage.8"), //$NON-NLS-1$
 				getFieldEditorParent());
-		zipfilePath.setFileExtensions(new String[] {"*.zip;*.ZIP", "*.*"});
+		zipfilePath.setFileExtensions(new String[] { "*.zip;*.ZIP", "*.*" });
 		addField(zipfilePath);
 
-		datenschutzZipPath = new FileFieldEditor(PreferenceConstants.DSZIPFILE, 
-				Messages.getString("KatalogePreferencePage.10"), //$NON-NLS-1$
+		datenschutzZipPath = new FileFieldEditor(PreferenceConstants.DSZIPFILE, Messages.getString("KatalogePreferencePage.10"), //$NON-NLS-1$
 				getFieldEditorParent());
-		datenschutzZipPath.setFileExtensions(new String[] {"*.zip;*.ZIP", "*.*"});
+		datenschutzZipPath.setFileExtensions(new String[] { "*.zip;*.ZIP", "*.*" });
 		addField(datenschutzZipPath);
 
-		
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.preference.FieldEditorPreferencePage#createContents
+	 * (org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createContents(Composite parent) {
-		
+
 		final Link link = new Link(parent, SWT.NONE);
 		link.setText(Messages.getString("KatalogePreferencePage.11") + //$NON-NLS-1$
 				Messages.getString("KatalogePreferencePage.12") + //$NON-NLS-1$
 				Messages.getString("KatalogePreferencePage.13") + //$NON-NLS-1$
 				Messages.getString("KatalogePreferencePage.14") + //$NON-NLS-1$
 				Messages.getString("KatalogePreferencePage.15")); //$NON-NLS-1$
-		
-		link.addListener (SWT.Selection, new Listener () {
+
+		link.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				Program.launch(event.text);
 			}
@@ -112,9 +109,9 @@ public class KatalogePreferencePage
 		});
 
 		return super.createContents(parent);
-		
+
 	}
-	
+
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		super.propertyChange(event);
@@ -123,21 +120,16 @@ public class KatalogePreferencePage
 			IInternalServer internalServer = Activator.getDefault().getInternalServer();
 			Preferences prefs = Activator.getDefault().getPluginPreferences();
 			String accessMethod = prefs.getString(PreferenceConstants.GSACCESS);
-			
-			if (event.getSource() == zipfilePath && accessMethod.equals(PreferenceConstants.GSACCESS_ZIP))
-			{
+
+			if (event.getSource() == zipfilePath && accessMethod.equals(PreferenceConstants.GSACCESS_ZIP)) {
 				try {
-					internalServer.setGSCatalogURL(
-							new File(zipfilePath.getStringValue()).toURI().toURL());
+					internalServer.setGSCatalogURL(new File(zipfilePath.getStringValue()).toURI().toURL());
 				} catch (MalformedURLException e) {
 					log.warn("GS catalog zip file path is an invalid URL.");
 				}
-			}
-			else if (event.getSource() == datenschutzZipPath)
-			{
+			} else if (event.getSource() == datenschutzZipPath) {
 				try {
-					internalServer.setDSCatalogURL(
-							new File(datenschutzZipPath.getStringValue()).toURI().toURL());
+					internalServer.setDSCatalogURL(new File(datenschutzZipPath.getStringValue()).toURI().toURL());
 				} catch (MalformedURLException e) {
 					log.warn("DS catalog zip file path is an invalid URL.");
 				}
@@ -148,45 +140,50 @@ public class KatalogePreferencePage
 	@Override
 	protected void checkState() {
 		super.checkState();
-		if (!isValid())
+		if (!isValid()) {
 			return;
-		
+		}
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 	}
-	
+
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		// only editable when server is not used, client has direct access to GS catalogues
-		// otherwise server is used to access gs catalogue data to ensure that all clients are
+		// only editable when server is not used, client has direct access to GS
+		// catalogues
+		// otherwise server is used to access gs catalogue data to ensure that
+		// all clients are
 		// working on the same data
 		if (visible) {
 			String opmode = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE);
 			setEnabledFields(opmode.equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER));
 		}
 	}
-	
+
 	private void setEnabledFields(boolean enable) {
 		datenschutzZipPath.setEnabled(enable, getFieldEditorParent());
 		zipfilePath.setEnabled(enable, getFieldEditorParent());
-		
+
 		if (enable) {
 			setMessage(null);
-		}
-		else {
+		} else {
 			setMessage("Die Kataloge werden vom Server bezogen und müssen hier nicht konfiguriert werden.");
 		}
 	}
-	
+
 	@Override
 	public boolean isValid() {
 		// always allow user to navigate away from page:
 		return true;
 	}
-	
+
 }

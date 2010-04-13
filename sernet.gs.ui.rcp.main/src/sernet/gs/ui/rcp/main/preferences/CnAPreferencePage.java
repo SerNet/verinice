@@ -34,11 +34,9 @@ import sernet.gs.ui.rcp.main.ImageCache;
  * Main preference page for CnA Tool Settings.
  * 
  * @author akoderman[at]sernet[dot]de
- *
+ * 
  */
-public class CnAPreferencePage
-	extends FieldEditorPreferencePage
-	implements IWorkbenchPreferencePage {
+public class CnAPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	public CnAPreferencePage() {
 		super(GRID);
@@ -46,27 +44,32 @@ public class CnAPreferencePage
 
 		setDescription(""); //$NON-NLS-1$
 	}
-	
+
 	/**
-	 * Creates the field editors. Field editors are abstractions of
-	 * the common GUI blocks needed to manipulate various types
-	 * of preferences. Each field editor knows how to save and
-	 * restore itself.
+	 * Creates the field editors. Field editors are abstractions of the common
+	 * GUI blocks needed to manipulate various types of preferences. Each field
+	 * editor knows how to save and restore itself.
 	 */
-	public void createFieldEditors() {}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	@Override
+	public void createFieldEditors() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.preference.FieldEditorPreferencePage#createContents
+	 * (org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createContents(Composite parent) {
-		
+
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL 
-				| GridData.HORIZONTAL_ALIGN_FILL));
+		composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
 		composite.setFont(parent.getFont());
 
 		Label imageLabel = new Label(composite, SWT.NONE);
@@ -75,21 +78,23 @@ public class CnAPreferencePage
 		data.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
 		imageLabel.setLayoutData(data);
 		imageLabel.setImage(ImageCache.getInstance().getImage(ImageCache.PRODUCT_LG));
-		
 
 		return composite;
-		
+
 	}
-	
+
 	@Override
 	public boolean isValid() {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 	}
-	
+
 }

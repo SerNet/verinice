@@ -30,7 +30,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 
 /**
  * Main preference page for CnA Tool Settings.

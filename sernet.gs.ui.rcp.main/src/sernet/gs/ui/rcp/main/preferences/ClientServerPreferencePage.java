@@ -32,55 +32,45 @@ import sernet.gs.ui.rcp.main.Activator;
  * Preference page to switch between client / server settings.
  * 
  * @author akoderman[at]sernet[dot]de
- *
+ * 
  */
-public class ClientServerPreferencePage
-	extends FieldEditorPreferencePage
-	implements IWorkbenchPreferencePage {
+public class ClientServerPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	private RadioGroupFieldEditor operationMode;
 	private StringFieldEditor serverURI;
 	private boolean warningShown;
-	
 
 	public ClientServerPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Umstellen zwischen Betrieb als Arbeitsplatzrechner (Standalone) mit direkter " +
-				"Verbindung zu einer Datenbank oder Mehrbenutzerbetrieb unter Verwendung des Verinice-Servers. " +
-				"Die Umstellung auf Mehrbenutzerbetrieb erfordert einen Neustart des Clients.");
+		setDescription("Umstellen zwischen Betrieb als Arbeitsplatzrechner (Standalone) mit direkter " + "Verbindung zu einer Datenbank oder Mehrbenutzerbetrieb unter Verwendung des Verinice-Servers. " + "Die Umstellung auf Mehrbenutzerbetrieb erfordert einen Neustart des Clients.");
 		warningShown = false;
 	}
-	
+
 	/**
-	 * Creates the field editors. Field editors are abstractions of
-	 * the common GUI blocks needed to manipulate various types
-	 * of preferences. Each field editor knows how to save and
-	 * restore itself.
+	 * Creates the field editors. Field editors are abstractions of the common
+	 * GUI blocks needed to manipulate various types of preferences. Each field
+	 * editor knows how to save and restore itself.
 	 */
+	@Override
 	public void createFieldEditors() {
 		createRadioGroup();
-		
-		serverURI = new StringFieldEditor(PreferenceConstants.VNSERVER_URI, 
-				"Verinice-Server", 
-				getFieldEditorParent());
+
+		serverURI = new StringFieldEditor(PreferenceConstants.VNSERVER_URI, "Verinice-Server", getFieldEditorParent());
 		addField(serverURI);
-		
-		
+
 	}
-	
+
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible) {
-			boolean standalone 
-				= getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE)
-				.equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
-			
+			boolean standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+
 			serverURI.setEnabled(!standalone, getFieldEditorParent());
 		}
 	}
-	
+
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		super.propertyChange(event);
@@ -92,30 +82,25 @@ public class ClientServerPreferencePage
 
 				if (!warningShown) {
 					warningShown = true;
-					MessageDialog.openInformation(getShell(), "Neustart erforderlich", 
-							"Umschalten zwischen Standalone- und Server-Modus erfordert einen Neustart!\n" +
-					"Bitte starten Sie Verinice nach dem Speichern Ihrer Einstellungen neu! Danke.");
+					MessageDialog.openInformation(getShell(), "Neustart erforderlich", "Umschalten zwischen Standalone- und Server-Modus erfordert einen Neustart!\n" + "Bitte starten Sie Verinice nach dem Speichern Ihrer Einstellungen neu! Danke.");
 				}
-				
+
 			}
 		}
 	}
-	
+
 	private void createRadioGroup() {
-		operationMode = new RadioGroupFieldEditor(PreferenceConstants.OPERATION_MODE, 
-				"Betriebsmodus",
-				1,
-				new String[][] {
-					{"Standalone", PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER},
-					{"Mehrbenutzer", PreferenceConstants.OPERATION_MODE_REMOTE_SERVER}
-				}, getFieldEditorParent());
+		operationMode = new RadioGroupFieldEditor(PreferenceConstants.OPERATION_MODE, "Betriebsmodus", 1, new String[][] { { "Standalone", PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER }, { "Mehrbenutzer", PreferenceConstants.OPERATION_MODE_REMOTE_SERVER } }, getFieldEditorParent());
 		addField(operationMode);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 	}
-	
+
 }

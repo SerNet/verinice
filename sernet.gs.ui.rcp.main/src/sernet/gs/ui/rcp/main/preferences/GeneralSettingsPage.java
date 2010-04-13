@@ -17,11 +17,9 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -34,12 +32,9 @@ import sernet.verinice.iso27k.rcp.ISMView;
  * Main preference page for CnA Tool Settings.
  * 
  * @author akoderman[at]sernet[dot]de
- *
+ * 
  */
-public class GeneralSettingsPage
-	extends FieldEditorPreferencePage
-	implements IWorkbenchPreferencePage {
-
+public class GeneralSettingsPage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	private BooleanFieldEditor errorPopups;
 	private BooleanFieldEditor derbyWarning;
@@ -55,77 +50,71 @@ public class GeneralSettingsPage
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription(Messages.getString("GeneralSettingsPage.0")); //$NON-NLS-1$
 	}
-	
+
 	/**
-	 * Creates the field editors. Field editors are abstractions of
-	 * the common GUI blocks needed to manipulate various types
-	 * of preferences. Each field editor knows how to save and
-	 * restore itself.
+	 * Creates the field editors. Field editors are abstractions of the common
+	 * GUI blocks needed to manipulate various types of preferences. Each field
+	 * editor knows how to save and restore itself.
 	 */
+	@Override
 	public void createFieldEditors() {
-		derbyWarning = new BooleanFieldEditor(PreferenceConstants.FIRSTSTART,
-				Messages.getString("GeneralSettingsPage.1"), //$NON-NLS-1$
+		derbyWarning = new BooleanFieldEditor(PreferenceConstants.FIRSTSTART, Messages.getString("GeneralSettingsPage.1"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(derbyWarning);
-		
-		errorPopups = new BooleanFieldEditor(PreferenceConstants.ERRORPOPUPS, 
-				Messages.getString("GeneralSettingsPage.2"), //$NON-NLS-1$
+
+		errorPopups = new BooleanFieldEditor(PreferenceConstants.ERRORPOPUPS, Messages.getString("GeneralSettingsPage.2"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(errorPopups);
-		
-		inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, 
-				"Zeige Tooltip für Eingabehilfe (\"Hilfe: Pfeil-Runter-Taste\") für neu geöffnete Editoren",
-				getFieldEditorParent());
+
+		inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, "Zeige Tooltip für Eingabehilfe (\"Hilfe: Pfeil-Runter-Taste\") für neu geöffnete Editoren", getFieldEditorParent());
 		addField(inputHelperHints);
-		
-		infoDialogTransformCatalogItems =  new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_ADDED, 
-				Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
+
+		infoDialogTransformCatalogItems = new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_ADDED, Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(infoDialogTransformCatalogItems);
-		
-		infoDialogCopy =  new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_COPIED, 
-				Messages.getString("GeneralSettingsPage.InfoCopy"), //$NON-NLS-1$
+
+		infoDialogCopy = new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_COPIED, Messages.getString("GeneralSettingsPage.InfoCopy"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(infoDialogCopy);
-		
-		infoDialogCut =  new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_CUT, 
-				Messages.getString("GeneralSettingsPage.InfoCut"), //$NON-NLS-1$
+
+		infoDialogCut = new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_CUT, Messages.getString("GeneralSettingsPage.InfoCut"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(infoDialogCut);
-		
-		switchPerspectiveIsmView =  new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(ISMView.class), 
-				Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$
+
+		switchPerspectiveIsmView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(ISMView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(switchPerspectiveIsmView);
-		
-		switchPerspectiveCatalogView =  new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(CatalogView.class), 
-				Messages.getString("GeneralSettingsPage.SwitchPerspectiveCatalog"), //$NON-NLS-1$
+
+		switchPerspectiveCatalogView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(CatalogView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveCatalog"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(switchPerspectiveCatalogView);
-		
+
 	}
-	
-	
-	
+
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		super.propertyChange(event);
-		if (event.getProperty().equals(FieldEditor.VALUE))
+		if (event.getProperty().equals(FieldEditor.VALUE)) {
 			checkState();
+		}
 	}
 
 	@Override
 	protected void checkState() {
 		super.checkState();
-		if (!isValid())
+		if (!isValid()) {
 			return;
-		
+		}
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 	}
-	
+
 }
