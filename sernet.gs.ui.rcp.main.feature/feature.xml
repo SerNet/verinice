@@ -1475,14 +1475,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.equinox.util.nl_de"
-         download-size="0"
-         install-size="0"
-         version="3.5.0.v20091121043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.help.base.nl_de"
          download-size="0"
          install-size="0"
@@ -1620,14 +1612,6 @@ Library.
 
    <plugin
          id="org.eclipse.ui.intro.nl_de"
-         download-size="0"
-         install-size="0"
-         version="3.5.0.v20091121043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.net.nl_de"
          download-size="0"
          install-size="0"
          version="3.5.0.v20091121043401"
