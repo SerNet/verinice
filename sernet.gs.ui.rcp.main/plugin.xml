@@ -17,27 +17,27 @@
             class="sernet.gs.ui.rcp.main.Perspective"
             icon="icons/de.png"
             id="sernet.gs.ui.rcp.main.perspective"
-            name="BSI Grundschutz">
+            name="%perspective.name">
       </perspective>
       <perspective
             class="sernet.gs.ui.rcp.main.PerspectiveDS"
             icon="icons/sample.gif"
             id="sernet.gs.ui.rcp.main.dsperspective"
-            name="Datenschutz"/>
+            name="%perspective.name.0"/>
       <perspective
             class="sernet.verinice.iso27k.rcp.Iso27kPerspective"
             id="sernet.verinice.iso27k.rcp.Iso27kPerspective"
-            name="ISO 27000">
+            name="%perspective.name.1">
       </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <category
             id="sernet.verinice.iso27k.ui.views.relationview"
-            name="ISMS">
+            name="%category.name">
       </category>
       <view
-            name="Relationen"
+            name="%view.name"
             icon="icons/link.png"
             category="sernet.gs.ui.rcp.main.views"
             class="sernet.gs.ui.rcp.main.bsi.views.RelationView"
@@ -50,7 +50,7 @@
             class="sernet.gs.ui.rcp.main.bsi.views.BrowserView"
             icon="icons/tag.png"
             id="sernet.gs.ui.rcp.main.bsi.views.browserview"
-            name="Maßnahmen-Browser">
+            name="%view.name.0">
       </view>
       <view
             allowMultiple="false"
@@ -58,46 +58,46 @@
             class="sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView"
             icon="icons/de.png"
             id="sernet.gs.ui.rcp.main.views.bsimassnahmenview"
-            name="IT-Grundschutz">
+            name="%view.name.1">
       </view>
       <category
             id="sernet.gs.ui.rcp.main.views"
-            name="Grundschutz"/>
+            name="%category.name.0"/>
       <view
             allowMultiple="false"
             category="sernet.gs.ui.rcp.main.views"
             class="sernet.gs.ui.rcp.main.bsi.views.BsiModelView"
             icon="icons/tree_explorer.gif"
             id="sernet.gs.ui.rcp.main.views.bsimodelview"
-            name="GS Modell"/>
+            name="%view.name.2"/>
       <view
             allowMultiple="false"
             category="sernet.gs.ui.rcp.main.views"
             class="sernet.gs.ui.rcp.main.bsi.views.DSModelView"
             icon="icons/shield.png"
             id="sernet.gs.ui.rcp.main.views.dsmodelview"
-            name="Datenschutz"/>
+            name="%view.name.3"/>
       <view
             allowMultiple="false"
             category="sernet.gs.ui.rcp.main.views"
             class="sernet.gs.ui.rcp.main.bsi.views.TodoView"
             icon="icons/24-em-check.png"
             id="sernet.gs.ui.rcp.main.bsi.views.todoview"
-            name="Realisierungsplan"/>
+            name="%view.name.4"/>
       <view
             allowMultiple="false"
             category="sernet.gs.ui.rcp.main.views"
             class="sernet.gs.ui.rcp.main.bsi.views.AuditView"
             icon="icons/24-zoom.png"
             id="sernet.gs.ui.rcp.main.bsi.views.auditview"
-            name="Prüfplan"/>
+            name="%view.name.5"/>
       <view
             allowMultiple="true"
             category="sernet.gs.ui.rcp.main.views"
             class="sernet.gs.ui.rcp.main.bsi.views.chart.ChartView"
             icon="icons/chart_pie.png"
             id="sernet.gs.ui.rcp.main.chartview"
-            name="Charts">
+            name="%view.name.6">
       </view>
       <view
             allowMultiple="false"
@@ -105,7 +105,7 @@
             class="sernet.gs.ui.rcp.main.bsi.views.DocumentView"
             icon="icons/script.png"
             id="sernet.gs.ui.rcp.main.documentview"
-            name="Richtlinien">
+            name="%view.name.7">
       </view>
       <view
             allowMultiple="false"
@@ -113,7 +113,7 @@
             class="sernet.gs.ui.rcp.main.bsi.views.NoteView"
             icon="icons/note.png"
             id="sernet.gs.ui.rcp.main.bsi.views.NoteView"
-            name="Notizen"
+            name="%view.name.8"
             restorable="true">
       </view>
       <view
@@ -122,7 +122,7 @@
             class="sernet.gs.ui.rcp.main.bsi.views.FileView"
             icon="icons/attach.png"
             id="sernet.gs.ui.rcp.main.bsi.views.FileView"
-            name="Dateien"
+            name="%view.name.9"
             restorable="true">
       </view>
       <view
@@ -131,7 +131,7 @@
             class="sernet.verinice.iso27k.rcp.CatalogView"
             icon="icons/wrench.png"
             id="sernet.verinice.iso27k.rcp.CatalogView"
-            name="Catalogs"
+            name="%view.name.10"
             restorable="true">
       </view>
       <view
@@ -140,58 +140,58 @@
             class="sernet.verinice.iso27k.rcp.ISMView"
             icon="icons/sweetie-verinice/png/16-arrow-branch-bgr.png"
             id="sernet.verinice.iso27k.rcp.ISMView"
-            name="Information Security Model"
+            name="%view.name.11"
             restorable="true">
       </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
-            name="Open View"
+            name="%command.name"
             categoryId="sernet.gs.ui.rcp.commands"
             id="sernet.gs.ui.rcp.main.open">
       </command>
       <command
             categoryId="sernet.gs.ui.rcp.commands"
             id="sernet.gs.ui.rcp.main.editmassnahme"
-            name="sernet.gs.ui.rcp.main.editmassnahme"/>
+            name="%command.name.0"/>
       <category
             id="sernet.gs.ui.rcp.commands"
-            name="verinice"/>
+            name="%category.name.1"/>
       <command
             categoryId="sernet.gs.ui.rcp.commands"
-            description="Mehrere Elemente editieren"
+            description="%command.description"
             id="sernet.gs.ui.rcp.main.actions.showbulkeditaction"
-            name="Zeige Bulk Edit Dialog"/>
+            name="%command.name.1"/>
       <command
             categoryId="sernet.gs.ui.rcp.commands"
-            description="Zeige Vorschläge für Bausteine"
+            description="%command.description.0"
             id="sernet.gs.ui.rcp.main.bausteinzuordnungaction"
-            name="Zeige Vorschläge für Bausteine">
+            name="%command.name.2">
       </command>
       <command
             categoryId="sernet.gs.ui.rcp.commands"
-            description="Aktualisiert die Ansicht aus der Datenbank"
+            description="%command.description.1"
             id="sernet.gs.ui.rcp.main.reloadaction"
-            name="Aktualisieren">
+            name="%command.name.3">
       </command>
       <command
             categoryId="sernet.gs.ui.rcp.commands"
-            description="Zugriffsberechtigungen ändern"
+            description="%command.description.2"
             id="sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"
-            name="Zeige Zugriffsberechtigungsdialog">
+            name="%command.name.4">
       </command>
       <command
             categoryId="sernet.gs.ui.rcp.commands"
-            description="Copy an Element"
+            description="%command.description.3"
             id="sernet.verinice.iso27k.rcp.commands.copy"
-            name="Copy">
+            name="%command.name.5">
       </command>
       <command
             categoryId="sernet.gs.ui.rcp.commands"
-            description="Paste an Element"
+            description="%command.description.4"
             id="sernet.verinice.iso27k.rcp.commands.paste"
-            name="Paste">
+            name="%command.name.6">
       </command>
    </extension>
    <extension
@@ -226,7 +226,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="sernet.gs.ui.rcp.main.application"
-            name="verinice">
+            name="%product.name">
          <property
                name="aboutText"
                value="SerNet verinice&#x0A;&#x0A;(c) SerNet Service Network GmbH and others&#x0A;1996-2010&#x0A;&#x0A;&#x0A;Contact the authors:&#x0A;verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage:&#x0A;http://www.verinice.org&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&lt;ak@sernet.de&gt;&#x0A;Anne Hanekop 			&lt;ah@sernet.de&gt;&#x0A;Marek Seeger			&lt;ms@sernet.de&gt;&#x0A;Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;&#x0A;Robert Schuster			&lt;rschuster@tarent.de&gt;&#x0A;Daniel Murygin			&lt;dm@sernet.de&gt;&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details."/>
@@ -263,9 +263,9 @@
                    enablesFor="+"
                    icon="icons/16-em-cross.png"
                    id="sernet.gs.ui.rcp.main.bsi.deleteaction"
-                   label="Löschen"
+                   label="%action.label"
                    menubarPath="content"
-                   tooltip="Objekt löschen">
+                   tooltip="%action.tooltip">
                 <enablement>
                    <or>
                    	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement"/>
@@ -281,9 +281,9 @@
                    enablesFor="+"
                    icon="icons/edtsrclkup_co.gif"
                    id="sernet.gs.ui.rcp.main.bsi.actions.openaction"
-                   label="Öffnen"
+                   label="%action.label.0"
                    menubarPath="content"
-                   tooltip="Objekt öffnen">
+                   tooltip="%action.tooltip.0">
                    <enablement>
                    <or>
                    	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement"/>
@@ -305,9 +305,9 @@
                    enablesFor="+"
                    icon="icons/link_delete.png"
                    id="sernet.gs.ui.rcp.main.bsi.deletelinkaction"
-                   label="Verknüpfung entfernen"
+                   label="%action.label.1"
                    menubarPath="content"
-                   tooltip="Verknüpfung löschen">
+                   tooltip="%action.tooltip.1">
               
              </action>
             
@@ -319,7 +319,7 @@
             objectClass="sernet.gs.ui.rcp.main.common.model.CnATreeElement">
         <menu
                id="sernet.gs.ui.rcp.main.bsi.addsubmenu"
-               label="Neu..."
+               label="%menu.label"
                path="content">
             <groupMarker name="content"/>
             <separator name="additions"/>
@@ -336,10 +336,10 @@
                enablesFor="+"
                icon="icons/building.png"
                id="sernet.gs.ui.rcp.main.addgebaeude"
-               label="Neues Gebäude"
+               label="%action.label.2"
                menubarPath="content"
                style="push"
-               tooltip="Neues Gebäude dem IT Verbund hinzufügen"/>
+               tooltip="%action.tooltip.2"/>
         
       </objectContribution>
      
@@ -352,10 +352,10 @@
                enablesFor="+"
                icon="icons/user.png"
                id="sernet.gs.ui.rcp.main.addperson"
-               label="Neuer Mitarbeiter"
+               label="%action.label.3"
                menubarPath="content"
                style="push"
-               tooltip="Neue Person dem IT Verbund hinzufügen"/>
+               tooltip="%action.tooltip.3"/>
                </objectContribution>
       <objectContribution
             adaptable="false"
@@ -366,10 +366,10 @@
                enablesFor="+"
                icon="icons/application_osx.png"
                id="sernet.gs.ui.rcp.main.addanwendung"
-               label="Neue Anwendung"
+               label="%action.label.4"
                menubarPath="content"
                style="push"
-               tooltip="Neue Anwendung hinzufügen"/>
+               tooltip="%action.tooltip.4"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -380,10 +380,10 @@
                enablesFor="+"
                icon="icons/computer.png"
                id="sernet.gs.ui.rcp.main.addclient"
-               label="Neuer Client"
+               label="%action.label.5"
                menubarPath="content"
                style="push"
-               tooltip="Neuen Client hinzufügen (PC, Laptop...)"/>
+               tooltip="%action.tooltip.5"/>
       </objectContribution>
       
        <objectContribution
@@ -395,10 +395,10 @@
                enablesFor="+"
                icon="icons/sonstit.png"
                id="sernet.gs.ui.rcp.main.addsonstit"
-               label="Neues IT-System"
+               label="%action.label.6"
                menubarPath="content"
                style="push"
-               tooltip="Neues sonstiges IT-System hinzufügen (PDA, Netzwerkdrucker...)"/>
+               tooltip="%action.tooltip.6"/>
       </objectContribution>
       
       <objectContribution
@@ -410,10 +410,10 @@
                enablesFor="+"
                icon="icons/drive_network.png"
                id="sernet.gs.ui.rcp.main.addNk"
-               label="Neues Netz / neue Verbindung"
+               label="%action.label.7"
                menubarPath="content"
                style="push"
-               tooltip="Netze / Verbindungen hinzufügen"/>
+               tooltip="%action.tooltip.7"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -424,10 +424,10 @@
                enablesFor="+"
                icon="icons/phone.png"
                id="sernet.gs.ui.rcp.main.addTk"
-               label="Neue TK-Komponente"
+               label="%action.label.8"
                menubarPath="content"
                style="push"
-               tooltip="Neue Telekommunikations-Komponente"/>
+               tooltip="%action.tooltip.8"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -438,10 +438,10 @@
                enablesFor="+"
                icon="icons/server_database.png"
                id="sernet.gs.ui.rcp.main.addServer"
-               label="Neuer Server"
+               label="%action.label.9"
                menubarPath="content"
                style="push"
-               tooltip="Neuen Server hinzufügen"/>
+               tooltip="%action.tooltip.9"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -452,10 +452,10 @@
                enablesFor="+"
                icon="icons/door_open.png"
                id="sernet.gs.ui.rcp.main.addRaum"
-               label="Neuer Raum"
+               label="%action.label.10"
                menubarPath="content"
                style="push"
-               tooltip="Neuen Raum hinzufügen"/>
+               tooltip="%action.tooltip.10"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -466,10 +466,10 @@
                    enablesFor="*"
                    icon="icons/tree_explorer.gif"
                    id="sernet.gs.ui.rcp.main.additverbund"
-                   label="Neuer IT-Verbund"
+                   label="%action.label.11"
                    menubarPath="content"
                    style="push"
-                   tooltip="Neuen IT Verbund hinzufügen">
+                   tooltip="%action.tooltip.11">
              </action>
       </objectContribution>
       <objectContribution
@@ -481,10 +481,10 @@
                enablesFor="1"
                icon="icons/user_edit.png"
                id="sernet.gs.ui.rcp.main.personconfiguration"
-               label="Account-Einstellungen..."
+               label="%action.label.12"
                menubarPath="special"
                style="push"
-               tooltip="Username, Passwort, Mailadresse u.a. benutzerspezifische Einstellungen">
+               tooltip="%action.tooltip.12">
          </action>
       </objectContribution>
       <objectContribution
@@ -496,10 +496,10 @@
                enablesFor="1"
                icon="icons/note.png"
                id="sernet.gs.ui.rcp.main.bsi.actions.addnote"
-               label="Notiz hinzufügen..."
+               label="%action.label.13"
                menubarPath="special"
                style="push"
-               tooltip="Neue Notiz hinzufügen">
+               tooltip="%action.tooltip.13">
          </action>
       </objectContribution>
       <objectContribution
@@ -511,10 +511,10 @@
                enablesFor="1"
                icon="icons/attach.png"
                id="sernet.gs.ui.rcp.main.bsi.actions.addfile"
-               label="Datei anhängen..."
+               label="%action.label.14"
                menubarPath="special"
                style="push"
-               tooltip="Neue Datei anhängen...">
+               tooltip="%action.tooltip.14">
          </action>
       </objectContribution>
       <!-- ISO27000 actions -->
@@ -527,10 +527,10 @@
                enablesFor="1"
                icon="icons/generic_element_new.png"
                id="sernet.verinice.iso27k.rcp.action.AddElement"
-               label="New Element"
+               label="%action.label.15"
                menubarPath="content"
                style="push"
-               tooltip="add new element"/>
+               tooltip="%action.tooltip.15"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -541,10 +541,10 @@
                enablesFor="1"
                icon="icons/generic_elements_new.png"
                id="sernet.verinice.iso27k.rcp.action.AddGroup"
-               label="Add Group"
+               label="%action.label.16"
                menubarPath="content"
                style="push"
-               tooltip="add new group">
+               tooltip="%action.tooltip.16">
          </action>
       </objectContribution>
       <objectContribution
@@ -556,9 +556,9 @@
                enablesFor="1"
                icon="icons/16-message-warn.png"
                id="sernet.gs.ui.rcp.main.neueRisikoanalyse"
-               label="Risikoanalyse durchführen..."
+               label="%action.label.17"
                menubarPath="special"
-               tooltip="Risikoanalyse durchführen...">
+               tooltip="%action.tooltip.17">
             <enablement>
                <and>
                   <objectClass
@@ -585,37 +585,37 @@
                commandId="org.eclipse.ui.edit.cut"
                disabledIcon="icons/cut.png"
                icon="icons/cut.png"
-               label="Cut element(s)"/>
+               label="%command.label"/>
          <command
                commandId="org.eclipse.ui.edit.copy"
                disabledIcon="icons/copy.png"
                icon="icons/copy.png"
-               label="Copy element(s)"/>
+               label="%command.label.0"/>
          <command
                commandId="org.eclipse.ui.edit.paste"
                disabledIcon="icons/copy.png"
                icon="icons/paste.png"
-               label="Paste element(s)"/>
+               label="%command.label.1"/>
       </menuContribution>
    	  <menuContribution locationURI="popup:sernet.gs.ui.rcp.main.views.bsimodelview?after=additions">
          <command
                commandId="org.eclipse.ui.edit.cut"
                disabledIcon="icons/cut.png"
                icon="icons/cut.png"
-               label="Ausschneiden"
-               tooltip="Element(e) ausschneiden"/>
+               label="%command.label.2"
+               tooltip="%command.tooltip"/>
          <command
                commandId="org.eclipse.ui.edit.copy"
                disabledIcon="icons/copy.png"
                icon="icons/copy.png"
-               label="Kopieren"
-               tooltip="Element(e) kopieren"/>
+               label="%command.label.3"
+               tooltip="%command.tooltip.0"/>
          <command
                commandId="org.eclipse.ui.edit.paste"
                disabledIcon="icons/copy.png"
                icon="icons/paste.png"
-               label="Einfügen"
-               tooltip="Element(e) einfügen"/>
+               label="%command.label.4"
+               tooltip="%command.tooltip.1"/>
       </menuContribution>
    </extension>
    <extension
@@ -625,19 +625,19 @@
             default="false"
             icon="icons/24-tool-a.png"
             id="sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor"
-            name="BSI Objekteditor"/>
+            name="%editor.name"/>
       <editor
             class="sernet.gs.ui.rcp.main.bsi.editors.NoteEditor"
             default="false"
             icon="icons/note.png"
             id="sernet.gs.ui.rcp.main.bsi.editors.noteeditor"
-            name="Note Editor">
+            name="%editor.name.0">
       </editor>
       <editor
             class="sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor"
             default="false"
             id="sernet.gs.ui.rcp.main.bsi.editors.attachmenteditor"
-            name="File Editor">
+            name="%editor.name.1">
       </editor>
    </extension>
    <extension
@@ -645,40 +645,40 @@
       <page
             class="sernet.gs.ui.rcp.main.preferences.GeneralSettingsPage"
             id="sernet.gs.ui.rcp.main.page4"
-            name="Allgemeine Einstellungen"/>
+            name="%page.name"/>
       <page
             class="sernet.gs.ui.rcp.main.preferences.KatalogePreferencePage"
             id="sernet.gs.ui.rcp.main.preferences.CnAPreferencePage1"
-            name="BSI IT-Grundschutz"/>
+            name="%page.name.0"/>
       <page
             class="sernet.gs.ui.rcp.main.preferences.ClientServerPreferencePage"
             id="sernet.gs.ui.rcp.main.page6"
-            name="Betriebsmodus (Server / Standalone)">
+            name="%page.name.1">
       </page>
       <page
             class="sernet.gs.ui.rcp.main.preferences.DatenbankPreferencePage"
             id="sernet.gs.ui.rcp.main.page2"
-            name="Datenbank"/>
+            name="%page.name.2"/>
       <page
             class="sernet.gs.ui.rcp.main.preferences.ReportPreferencePage"
             id="sernet.gs.ui.rcp.main.page3"
-            name="Reporting / Export (OpenOffice)"/>
+            name="%page.name.3"/>
       <page
             class="sernet.gs.ui.rcp.main.preferences.GSImportPreferencePage"
             id="sernet.gs.ui.rcp.main.page5"
-            name="GSTool Import">
+            name="%page.name.4">
       </page>
       <page
             category="sernet.gs.ui.rcp.main.page5"
             class="sernet.gs.ui.rcp.main.preferences.GSImportRestorePreferencePage"
             id="sernet.gs.ui.rcp.main.preferences.gsimportrestorepreferencepage"
-            name="Sicherungsdatei wiederherstellen">
+            name="%page.name.5">
       </page>
       <page
             category="sernet.gs.ui.rcp.main.page5"
             class="sernet.gs.ui.rcp.main.preferences.GSImportAttachPreferencePage"
             id="sernet.gs.ui.rcp.main.page6"
-            name="Datenbank anhängen">
+            name="%page.name.6">
       </page>
    </extension>
    <extension
@@ -847,11 +847,11 @@
                class="sernet.verinice.iso27k.rcp.action.AddOrganisation"
                icon="icons/note-new.png"
                id="sernet.verinice.iso27k.rcp.action.AddOrganisation"
-               label="new organization..."
+               label="%action.label.18"
                state="true"
                style="push"
                toolbarPath="additions"
-               tooltip="add new organization">
+               tooltip="%action.tooltip.18">
          </action>
       </viewContribution>
    </extension>
