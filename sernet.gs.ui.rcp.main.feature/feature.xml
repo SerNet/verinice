@@ -1419,14 +1419,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.core.runtime.compatibility.nl_de"
-         download-size="0"
-         install-size="0"
-         version="3.5.0.v20091121043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.runtime.nl_de"
          download-size="0"
          install-size="0"
