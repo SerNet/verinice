@@ -1393,6 +1393,9 @@ Library.
 
    <plugin
          id="org.eclipse.core.net.win32.x86.nl_de"
+         os="win32"
+         nl="de"
+         arch="x86"
          download-size="0"
          install-size="0"
          version="3.5.0.v20091121043401"
