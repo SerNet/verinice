@@ -232,11 +232,11 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	 * 
 	 */
 	protected void startInitDataJob() {
-		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+		WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
 				try {
-					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+					monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
 					initData();
 				} catch (Exception e) {
 					LOG.error("Error while loading data.", e);

@@ -25,6 +25,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -93,7 +94,7 @@ public class NoteView extends ViewPart {
 			hookPageSelection();
 		} catch (Exception e) {
 			ExceptionUtil.log(e, Messages.BrowserView_3);
-			LOG.error("Error while creating control", e);
+			LOG.error("Error while creating control", e); //$NON-NLS-1$
 		}
 		
 		makeActions();
@@ -135,7 +136,7 @@ public class NoteView extends ViewPart {
 				addNoteAction.setEnabled(false);
 			}
 		} catch (Exception e) {
-			LOG.error("Error while loading notes", e);
+			LOG.error("Error while loading notes", e); //$NON-NLS-1$
 		}
 	}
 	
@@ -152,7 +153,7 @@ public class NoteView extends ViewPart {
 				Note note = new Note();
 				note.setCnATreeElementId(getCurrentCnaElement().getDbId());
 				note.setCnAElementTitel(getCurrentCnaElement().getTitle());
-				note.setTitel("neue Notiz");
+				note.setTitel(Messages.NoteView_2);
 				note.addListener(new Note.INoteChangedListener() {
 					public void noteChanged() {
 						clear();
@@ -162,7 +163,7 @@ public class NoteView extends ViewPart {
 				EditorFactory.getInstance().openEditor(note);			
 			}
 		};
-		addNoteAction.setText("Notiz hinzufügen...");
+		addNoteAction.setText(Messages.NoteView_3);
 		addNoteAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
 		addNoteAction.setEnabled(false);
 	}
@@ -204,7 +205,7 @@ public class NoteView extends ViewPart {
 					
 					Button editButton = new Button(composite,SWT.NONE);
 					editButton.setImage(ImageCache.getInstance().getImage(ImageCache.EDIT));
-					editButton.setToolTipText("Notiz bearbeiten");
+					editButton.setToolTipText(Messages.NoteView_4);
 					editButton.addSelectionListener(new SelectionListener(){
 						public void widgetDefaultSelected(SelectionEvent e) {				
 						}
@@ -215,12 +216,15 @@ public class NoteView extends ViewPart {
 					
 					Button deleteButton = new Button(composite,SWT.NONE);
 				    deleteButton.setImage(ImageCache.getInstance().getImage(ImageCache.DELETE));
-				    deleteButton.setToolTipText("Notiz löschen");
+				    deleteButton.setToolTipText(Messages.NoteView_5);
 				    deleteButton.addSelectionListener(new SelectionListener(){
 						public void widgetDefaultSelected(SelectionEvent e) {				
 						}
 						public void widgetSelected(SelectionEvent e) {
-							boolean b = MessageDialog.openQuestion(NoteView.this.getSite().getShell(), "Notiz löschen?", "Soll die Notiz \"" + note.getTitel() + "\" gelöscht werden?");
+							boolean b = MessageDialog.openQuestion(
+									NoteView.this.getSite().getShell(), 
+									Messages.NoteView_6,
+									NLS.bind(Messages.NoteView_7, note.getTitel()));
 							if(b) {
 								deleteNote(note);
 							}
@@ -237,8 +241,8 @@ public class NoteView extends ViewPart {
 				} // end for
 			}
 		} catch(Exception e) {
-			LOG.error("Error while loading notes", e);
-			ExceptionUtil.log(e, "Error while loading notes");
+			LOG.error("Error while loading notes", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, "Error while loading notes"); //$NON-NLS-1$
 		}
 	}
 	
@@ -251,8 +255,8 @@ public class NoteView extends ViewPart {
 		try {
 			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {
-			LOG.error("Error while saving note", e);
-			ExceptionUtil.log(e, "Fehler beim Speichern der Notiz.");
+			LOG.error("Error while saving note", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.NoteView_12);
 		}
 		clear();
 		loadNotes();

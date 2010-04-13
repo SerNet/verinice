@@ -58,37 +58,37 @@ public class RelationTableViewer extends TableViewer {
 		Table table = getTable();
 		
 		col1 = new TableColumn(table, SWT.LEFT);
-		col1.setText("");
+		col1.setText(""); //$NON-NLS-1$
 		col1.setWidth(25);
 		col1.setResizable(false);
 		
 		viewerCol2 = new TableViewerColumn(this, SWT.LEFT);
-		viewerCol2.getColumn().setText("Relation");
+		viewerCol2.getColumn().setText(Messages.RelationTableViewer_1);
 		viewerCol2.getColumn().setWidth(100);
 		
 		viewerCol2.setLabelProvider(new ColumnLabelProvider() {
 			public String getText(Object obj) {
 				if (!(obj instanceof CnALink))
-					return "";
+					return ""; //$NON-NLS-1$
 				
 				CnALink link = (CnALink) obj;
 				HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(link.getRelationId());
 
 				// if we can't find a real name for the relation, we just display "depends on" or "necessary for":
 					if (CnALink.isDownwardLink(view.getInputElmt(), link))
-						return (relation != null) ? relation.getName() : "hängt ab von";
+						return (relation != null) ? relation.getName() : Messages.RelationTableViewer_3;
 					else
-						return (relation != null) ? relation.getReversename() : "ist nötig für";
+						return (relation != null) ? relation.getReversename() : Messages.RelationTableViewer_4;
 			}
 		});
 		viewerCol2.setEditingSupport(new RelationTypeEditingSupport(view, this));
 
 		col3 = new TableColumn(table, SWT.LEFT);
-		col3.setText("");
+		col3.setText(""); //$NON-NLS-1$
 		col3.setWidth(20);
 		
 		col4 = new TableColumn(table, SWT.LEFT);
-		col4.setText("Titel");
+		col4.setText(Messages.RelationTableViewer_6);
 		col4.setWidth(250);
 		
 		setColumnProperties(new String[] {

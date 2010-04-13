@@ -88,14 +88,14 @@ public class RelationView extends ViewPart implements IRelationTable {
 			return;
 		}
 
-		viewer.setInput(new PlaceHolder("Lade Relationen..."));
+		viewer.setInput(new PlaceHolder(Messages.RelationView_0));
 
-		WorkspaceJob job = new WorkspaceJob("Lade Relationen...") {
+		WorkspaceJob job = new WorkspaceJob(Messages.RelationView_0) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
 
 				try {
-					monitor.setTaskName("Lade Relationen...");
+					monitor.setTaskName(Messages.RelationView_0);
 
 					FindRelationsFor command = new FindRelationsFor(elmt);
 					command = ServiceFactory.lookupCommandService()
@@ -110,11 +110,11 @@ public class RelationView extends ViewPart implements IRelationTable {
 				} catch (Exception e) {
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
-							viewer.setInput(new PlaceHolder("Fehler beim Laden."));
+							viewer.setInput(new PlaceHolder(Messages.RelationView_3));
 						}
 					});
 
-					ExceptionUtil.log(e, "Fehler beim Laden von Beziehungen.");
+					ExceptionUtil.log(e, Messages.RelationView_4);
 				}
 				return Status.OK_STATUS;
 			}
@@ -155,7 +155,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 				removeModelListeners();
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						viewer.setInput(new PlaceHolder(""));
+						viewer.setInput(new PlaceHolder("")); //$NON-NLS-1$
 					}
 				});
 			}
@@ -174,19 +174,19 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 * 
 	 */
 	protected void addModelListeners() {
-		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+		WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
 				try {
-					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+					monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
 					if (CnAElementFactory.isModelLoaded())
 						CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
 					
 					if (CnAElementFactory.isIsoModelLoaded())
 						CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
 				} catch (Exception e) {
-					LOG.error("Error while loading data.", e);
-					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+					LOG.error("Error while loading data.", e); //$NON-NLS-1$
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.RelationView_7,e); //$NON-NLS-1$
 				} finally {
 					monitor.done();
 				}
@@ -213,7 +213,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 	
 
 	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
+		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
@@ -282,7 +282,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 	private void setNewInput(CnATreeElement elmt) {
 		this.inputElmt = elmt;
 		loadLinks(elmt);
-		setViewTitle("Relationen für: " + elmt.getTitle());
+		setViewTitle(Messages.RelationView_9 + elmt.getTitle());
 	}
 
 	private void setViewTitle(String title) {
@@ -322,8 +322,8 @@ public class RelationView extends ViewPart implements IRelationTable {
 					setNewInput(link.getDependant());
 			}
 		};
-		jumpToAction.setText("Springe zu...");
-		jumpToAction.setToolTipText("Springe zum Ziel der markierten Relation");
+		jumpToAction.setText(Messages.RelationView_10);
+		jumpToAction.setToolTipText(Messages.RelationView_11);
 		jumpToAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
 		
 //		action2 = new Action() {
@@ -361,7 +361,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 	private void showMessage(String message) {
 		MessageDialog.openInformation(
 			viewer.getControl().getShell(),
-			"Relations",
+			Messages.RelationView_12,
 			message);
 	}
 

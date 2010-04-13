@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
 import sernet.gs.ui.rcp.main.service.commands.UsernameExistsRuntimeException;
 import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 
 /**
  * Save element of type T to the database using its class to lookup the DAO from
@@ -95,7 +96,8 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 	 */
 	private void checkUsername(T element) throws UsernameExistsRuntimeException {
 		if(element!=null && element.getEntity()!=null && element.getEntity().getProperties(Configuration.PROP_USERNAME)!=null) {
-			Property usernameProperty = element.getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0);
+			PropertyList usernamePropertyList = element.getEntity().getProperties(Configuration.PROP_USERNAME);
+			Property usernameProperty = usernamePropertyList.getProperty(0);
 			if(usernameProperty!=null && usernameProperty.getPropertyValue()!=null) {
 				String username = usernameProperty.getPropertyValue();
 				
@@ -110,8 +112,8 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 					checkDoubles: for (Object t : resultList) {
 						Property foundProperty = (Property) t;
 						
-						if ( usernameProperty.getDbId() == null // current object was never saved, found name must be double
-								|| !usernameProperty.getDbId().equals(foundProperty.getDbId()) ) { // current dbId doesn't match found username, is double
+						if ( usernamePropertyList.getDbId() == null // current object was never saved, found name must be double
+								|| !usernamePropertyList.getDbId().equals(foundProperty.getDbId()) ) { // current dbId doesn't match found username, is double
 							doubleUsername = true;
 							break checkDoubles;
 						}

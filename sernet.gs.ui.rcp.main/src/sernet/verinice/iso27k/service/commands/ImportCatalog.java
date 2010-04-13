@@ -121,7 +121,8 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 		        		getLog().debug("threshold 2: " + nextLine[8]);
 		        		
 		        	}
-				}	        
+				}	     
+		       
 		        if(nextLine[0]!=null && nextLine[0].length()>0) {
 		        	if(item!=null) {
 		        		// buffer the old item

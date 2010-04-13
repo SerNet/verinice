@@ -79,6 +79,46 @@ public class Messages extends NLS {
 
 	public static String DSModelView_5;
 
+	public static String FileView_0;
+
+	public static String FileView_13;
+
+	public static String FileView_14;
+
+	public static String FileView_16;
+
+	public static String FileView_17;
+
+	public static String FileView_18;
+
+	public static String FileView_19;
+
+	public static String FileView_2;
+
+	public static String FileView_20;
+
+	public static String FileView_22;
+
+	public static String FileView_23;
+
+	public static String FileView_24;
+
+	public static String FileView_27;
+
+	public static String FileView_29;
+
+	public static String FileView_3;
+
+	public static String FileView_30;
+
+	public static String FileView_34;
+
+	public static String FileView_4;
+
+	public static String FileView_5;
+
+	public static String FileView_6;
+
 	public static String GSImportPreferencePage_0;
 
 	public static String GSImportPreferencePage_1;
@@ -107,12 +147,50 @@ public class Messages extends NLS {
 
 	public static String TodoView_9;
 	
-	public static String ISMView_InitDatabase;
-	
-	public static String ISMView_InitData;
-	
-	public static String ISMView_LoadModel;
-	
+	public static String NoteView_12;
+
+	public static String NoteView_2;
+
+	public static String NoteView_3;
+
+	public static String NoteView_4;
+
+	public static String NoteView_5;
+
+	public static String NoteView_6;
+
+	public static String NoteView_7;
+
+	public static String NoteView_8;
+
+	public static String RelationTableViewer_1;
+
+	public static String RelationTableViewer_3;
+
+	public static String RelationTableViewer_4;
+
+	public static String RelationTableViewer_6;
+
+	public static String RelationView_0;
+
+	public static String RelationView_10;
+
+	public static String RelationView_11;
+
+	public static String RelationView_12;
+
+	public static String RelationView_3;
+
+	public static String RelationView_4;
+
+	public static String RelationView_7;
+
+	public static String RelationView_9;
+
+	public static String RelationViewLabelProvider_2;
+
+	public static String RelationViewLabelProvider_3;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

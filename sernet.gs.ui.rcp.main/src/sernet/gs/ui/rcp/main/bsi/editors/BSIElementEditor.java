@@ -20,13 +20,11 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -48,7 +46,6 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementForEditor;
-import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.IEntityChangedListener;
@@ -58,7 +55,6 @@ import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.IISO27kElement;
-import sernet.verinice.iso27k.model.IISO27kGroup;
 import sernet.verinice.iso27k.model.Organization;
 
 /**
@@ -71,7 +67,7 @@ import sernet.verinice.iso27k.model.Organization;
  * 
  */
 public class BSIElementEditor extends EditorPart {
-	public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor";
+	public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor"; //$NON-NLS-1$
 	private HitroUIComposite huiComposite;
 	private boolean isModelModified = false;
 	private Boolean isWriteAllowed = null;
@@ -97,7 +93,7 @@ public class BSIElementEditor extends EditorPart {
 	public void doSave(IProgressMonitor monitor) {
 		if (isModelModified) {
 
-			monitor.beginTask("Speichern", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
 			save(true);
 			monitor.done();
 
@@ -124,7 +120,7 @@ public class BSIElementEditor extends EditorPart {
 						}
 					}
 				} catch (PartInitException e) {
-					ExceptionUtil.log(e, "Fehler beim Schließen des Editors.");
+					ExceptionUtil.log(e, Messages.BSIElementEditor_2);
 				}
 			}
 
@@ -138,7 +134,7 @@ public class BSIElementEditor extends EditorPart {
 
 	private void save(boolean completeRefresh) {
 		if (!getIsWriteAllowed()) {
-			ExceptionUtil.log(new IllegalStateException(), "Keine Schreibrechte auf dem gegebenen Element.");
+			ExceptionUtil.log(new IllegalStateException(), Messages.BSIElementEditor_3);
 			return;
 		}
 		try {
@@ -159,9 +155,9 @@ public class BSIElementEditor extends EditorPart {
 
 		} catch (StaleObjectStateException se) {
 			// close editor, loosing changes:
-			ExceptionUtil.log(se, "Fehler beim Speichern.");
+			ExceptionUtil.log(se, Messages.BSIElementEditor_0);
 		} catch (Exception e) {
-			ExceptionUtil.log(e, "Fehler beim Speichern.");
+			ExceptionUtil.log(e, Messages.BSIElementEditor_5);
 		}
 	}
 
@@ -181,7 +177,7 @@ public class BSIElementEditor extends EditorPart {
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		if (!(input instanceof BSIElementEditorInput))
-			throw new PartInitException("invalid input");
+			throw new PartInitException("invalid input"); //$NON-NLS-1$
 		setSite(site);
 		setInput(input);
 		setPartName(input.getName());
@@ -206,7 +202,7 @@ public class BSIElementEditor extends EditorPart {
 				entity.addChangeListener(this.modelListener);
 			} else {
 				// do not add listener, user will never be offered to save this editor, modify title to show this:
-				setPartName(getPartName() + " (SCHREIBGESCHÜTZT)");
+				setPartName(getPartName() + Messages.BSIElementEditor_7);
 			}
 
 			// create view of all properties, read only or read/write:
@@ -218,7 +214,7 @@ public class BSIElementEditor extends EditorPart {
 			linkMaker.createPartControl(getIsWriteAllowed());
 			linkMaker.setInputElmt(cnAElement);
 		} catch (Exception e) {
-			ExceptionUtil.log(e, "Konnte BSI Element Editor nicht öffnen");
+			ExceptionUtil.log(e, Messages.BSIElementEditor_8);
 		}
 
 	}

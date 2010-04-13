@@ -226,7 +226,7 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 				item.setUmsetzungDurch(el.getUmsetzungDurch());
 				massnahmen.add(item);
 			} else {
-				unresolvedItems.add(new UnresolvedItem(item, el.getDbId()));
+				unresolvedItems.add(new UnresolvedItem(item, el));
 			}
 		}
 		return item;

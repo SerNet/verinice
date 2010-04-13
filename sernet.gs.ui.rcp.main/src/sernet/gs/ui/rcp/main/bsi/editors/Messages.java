@@ -22,6 +22,20 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.editors.messages"; //$NON-NLS-1$
 
+	public static String BSIElementEditor_0;
+
+	public static String BSIElementEditor_1;
+
+	public static String BSIElementEditor_2;
+
+	public static String BSIElementEditor_3;
+
+	public static String BSIElementEditor_5;
+
+	public static String BSIElementEditor_7;
+
+	public static String BSIElementEditor_8;
+
 	public static String InputHelperFactory_0;
 
 	public static String InputHelperFactory_2;

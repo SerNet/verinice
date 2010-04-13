@@ -63,7 +63,6 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.Attachment;
 import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ICommandService;
@@ -139,8 +138,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			initView(parent);
 			startInitDataJob();		
 		} catch (Exception e) {
-			LOG.error("Error while creating catalog view", e);
-			ExceptionUtil.log(e, "Error while opening Catalog-View.");
+			LOG.error("Error while creating catalog view", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, "Error while opening Catalog-View."); //$NON-NLS-1$
 		}	
 	}
 
@@ -157,8 +156,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
 					loadCatalogAttachmets();
 				} catch (Exception e) {
-					LOG.error("Error while loading data.", e);
-					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+					LOG.error("Error while loading data.", e); //$NON-NLS-1$
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$ //$NON-NLS-2$
 				} finally {
 					monitor.done();
 				}
@@ -179,7 +178,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		GridLayout glForm = new GridLayout(2, false);
 		compForm.setLayout(glForm);
 		labelCatalog = new Label(compForm,SWT.NONE);
-		labelCatalog.setText("Katalog");
+		labelCatalog.setText(Messages.CatalogView_4);
 		comboCatalog = new Combo(compForm, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboCatalog.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		comboCatalog.addSelectionListener(new SelectionAdapter() {
@@ -194,13 +193,13 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			public String getLabel(Attachment attachment) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(attachment.getFileName());
-				sb.append(" (").append(DATE_TIME_FORMAT_SHORT.format(attachment.getDate())).append(")");
+				sb.append(" (").append(DATE_TIME_FORMAT_SHORT.format(attachment.getDate())).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 				return sb.toString();
 			}		
 		});
 		
 		labelFilter = new Label(compForm,SWT.NONE);
-		labelFilter.setText("Filter");
+		labelFilter.setText(Messages.CatalogView_7);
 		filter = new Text(compForm, SWT.BORDER);
 		filter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		filter.addKeyListener(new KeyListener() {
@@ -265,8 +264,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			
 			
 		} catch(Exception e) {
-			LOG.error("Error while loading catalogs", e);
-			ExceptionUtil.log(e, "Error while loading catalogs");
+			LOG.error("Error while loading catalogs", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.CatalogView_0);
 		}
 	}
 	
@@ -286,7 +285,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			attachment.setDate(now);
 			attachment.setFilePath(csvFile.getFilePath());
 			attachment.setTitel(attachment.getFileName());
-			attachment.setText("Control / threat catalog imported at: " + DateFormat.getDateTimeInstance().format(now));
+			attachment.setText(Messages.CatalogView_10 + DateFormat.getDateTimeInstance().format(now));
 			SaveNote command = new SaveNote(attachment);	
 			command = getCommandService().executeCommand(command);
 			attachment = (Attachment) command.getAddition();
@@ -319,18 +318,18 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 				importCatalog();
 			}
 		};
-		addCatalogAction.setText("Katalog importieren...");
+		addCatalogAction.setText(Messages.CatalogView_11);
 		addCatalogAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
 		addCatalogAction.setEnabled(true);
 		
 		deleteCatalogAction = new Action() {
 			public void run() {
-				boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), "Wirklich löschen?", "Diesen Katalog wirklich löschen?");
+				boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), sernet.verinice.iso27k.rcp.Messages.CatalogView_12, sernet.verinice.iso27k.rcp.Messages.CatalogView_13);
 				if (confirm)
 					deleteCatalog();
 			}
 		};
-		deleteCatalogAction.setText("Katalog löschen...");
+		deleteCatalogAction.setText(Messages.CatalogView_14);
 		deleteCatalogAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
 		deleteCatalogAction.setEnabled(false);
 		
@@ -343,7 +342,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 				viewer.expandAll();
 			}
 		};
-		expandAllAction.setText("Expand All");
+		expandAllAction.setText(Messages.CatalogView_15);
 		expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
 		collapseAllAction = new Action() {
@@ -352,7 +351,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 				viewer.collapseAll();
 			}
 		};
-		collapseAllAction.setText("Collapse All");
+		collapseAllAction.setText(Messages.CatalogView_16);
 		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
 		
@@ -441,7 +440,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			StringBuilder sb = new StringBuilder();
 			// add the number to the titel
 			if(item.getName()==null || !item.getName().startsWith(item.getNumberString())) {
-				sb.append(item.getNumberString()).append(" ");
+				sb.append(item.getNumberString()).append(" "); //$NON-NLS-1$
 			}
 			return sb.append(item.getName()).toString();
 		}
@@ -452,7 +451,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			try {
 				bsiModel = CnAElementFactory.getLoadedModel();
 			} catch (Exception e) {
-				LOG.error("Error while creating BSI-Model", e);
+				LOG.error("Error while creating BSI-Model", e); //$NON-NLS-1$
 			}
 		}
 		return bsiModel;
@@ -467,7 +466,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		try {
 			loadBSIModel = getCommandService().executeCommand(loadBSIModel);
 		} catch (CommandException e) {
-			LOG.error("Error while loading BSI-Model.", e);
+			LOG.error("Error while loading BSI-Model.", e); //$NON-NLS-1$
 		}
 		bsiModel = loadBSIModel.getModel();
 		return bsiModel;
@@ -488,16 +487,16 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 				}
 			}
 		} catch(Exception e) {
-			LOG.error("Error while loading catalog", e);
-			ExceptionUtil.log(e, "Error while loading catalog");
+			LOG.error("Error while loading catalog", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.CatalogView_21);
 		}
 	}
 
 	private void importCatalog() {
 		FileDialog fd = new FileDialog(CatalogView.this.getSite().getShell());
-		fd.setText("Katalog auswählen...");
-		fd.setFilterPath("~");
-		fd.setFilterExtensions(new String[] { "*.csv" });
+		fd.setText(Messages.CatalogView_22);
+		fd.setFilterPath("~"); //$NON-NLS-1$
+		fd.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
 		String selected = fd.open();
 		if (selected != null && selected.length() > 0) {
 			try {
@@ -512,7 +511,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 				selectComboItem(attachment);
 			} catch (Exception e) {
 				LOG.error("Error while reading file data", e);
-				ExceptionUtil.log(e, "Fehler beim Lesen der Datei.");
+				ExceptionUtil.log(e, Messages.CatalogView_26);
 			}
 		}
 	}
@@ -543,8 +542,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 				viewer.setInput(new Item());
 			}
 		} catch(Exception e) {
-			LOG.error("Error while deleting catalog", e);
-			ExceptionUtil.log(e, "Fehler beim Löschen des Katalogs");
+			LOG.error("Error while deleting catalog", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.CatalogView_28);
 		}
 		
 	}

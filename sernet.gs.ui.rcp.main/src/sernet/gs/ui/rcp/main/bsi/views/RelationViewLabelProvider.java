@@ -49,7 +49,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	public String getColumnText(Object obj, int index) {
 		if (obj instanceof PlaceHolder) {
 			if (index != 1)
-				return "";
+				return ""; //$NON-NLS-1$
 			PlaceHolder pl = (PlaceHolder) obj;
 			return pl.getTitle();
 		}
@@ -59,20 +59,20 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 
 		switch (index) {
 		case 0:
-			return ""; // image only
+			return ""; // image only //$NON-NLS-1$
 		case 1:
 			// if we can't find a real name for the relation, we just display
 			// "depends on" or "necessary for":
 			if (CnALink.isDownwardLink(view.getInputElmt(), link))
-				return (relation != null) ? relation.getName() : "hängt ab von";
+				return (relation != null) ? relation.getName() : Messages.RelationViewLabelProvider_2;
 			else
-				return (relation != null) ? relation.getReversename() : "ist nötig für";
+				return (relation != null) ? relation.getReversename() : Messages.RelationViewLabelProvider_3;
 		case 2:
-			return ""; // image only
+			return ""; // image only //$NON-NLS-1$
 		case 3:
 			return CnALink.getRelationObjectTitle(view.getInputElmt(), link);
 		default:
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 

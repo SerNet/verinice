@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
 
+import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.hui.common.connect.PropertyList;
 
@@ -32,6 +33,7 @@ import sernet.hui.common.connect.PropertyList;
 public class UnresolvedItem implements Serializable {
 		private TodoViewItem item;
 		private Integer dbId;
+		private MassnahmenUmsetzung massnahmenUmsetzung;
 		private PropertyList revisionDurchLinks;
 		public PropertyList getRevisionDurchLinks() {
 			return revisionDurchLinks;
@@ -59,9 +61,21 @@ public class UnresolvedItem implements Serializable {
 			return dbId;
 		}
 
+		public MassnahmenUmsetzung getMassnahmenUmsetzung() {
+			return massnahmenUmsetzung;
+		}
+
 		UnresolvedItem(TodoViewItem item, Integer dbId) {
 			this.item = item;
 			this.dbId = dbId;
+		}
+		
+		UnresolvedItem(TodoViewItem item, MassnahmenUmsetzung massnahmenUmsetzung) {
+			this.item = item;
+			this.massnahmenUmsetzung = massnahmenUmsetzung;
+			if(massnahmenUmsetzung!=null) {
+				this.dbId = massnahmenUmsetzung.getDbId();
+			}
 		}
 
 		/**

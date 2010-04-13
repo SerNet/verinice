@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -186,10 +187,10 @@ public class FileView extends ViewPart {
 		    createTable(parent);		
 			getSite().setSelectionProvider(viewer);		
 			hookPageSelection();
-			viewer.setInput(new PlaceHolder("kein Element ausgewählt"));
+			viewer.setInput(new PlaceHolder(Messages.FileView_0));
 		} catch (Exception e) {
 			ExceptionUtil.log(e, Messages.BrowserView_3);
-			LOG.error("Error while creating control", e);
+			LOG.error("Error while creating control", e); //$NON-NLS-1$
 		}	
 		makeActions();
 		hookActions();
@@ -214,27 +215,27 @@ public class FileView extends ViewPart {
 		iconColumn.addSelectionListener(new SortSelectionAdapter(this,iconColumn,0));
 		
 		fileNameColumn = new TableColumn(table, SWT.LEFT);
-		fileNameColumn.setText("Name");
+		fileNameColumn.setText(Messages.FileView_2);
 		fileNameColumn.setWidth(120);
 		fileNameColumn.addSelectionListener(new SortSelectionAdapter(this,fileNameColumn,1));
 		
 		mimeTypeColumn = new TableColumn(table, SWT.LEFT);
-		mimeTypeColumn.setText("Typ");
+		mimeTypeColumn.setText(Messages.FileView_3);
 		mimeTypeColumn.setWidth(50);
 		mimeTypeColumn.addSelectionListener(new SortSelectionAdapter(this,mimeTypeColumn,2));
 		
 		textColumn = new TableColumn(table, SWT.LEFT);
-		textColumn.setText("Beschreibung");
+		textColumn.setText(Messages.FileView_4);
 		textColumn.setWidth(350);
 		textColumn.addSelectionListener(new SortSelectionAdapter(this,textColumn,3));
 		
 		dateColumn = new TableColumn(table, SWT.LEFT);
-		dateColumn.setText("Datum");
+		dateColumn.setText(Messages.FileView_5);
 		dateColumn.setWidth(120);
 		dateColumn.addSelectionListener(new SortSelectionAdapter(this,dateColumn,4));
 		
 		versionColumn = new TableColumn(table, SWT.LEFT);
-		versionColumn.setText("Version");
+		versionColumn.setText(Messages.FileView_6);
 		versionColumn.setWidth(60);
 		versionColumn.addSelectionListener(new SortSelectionAdapter(this,versionColumn,5));
 		
@@ -297,21 +298,21 @@ public class FileView extends ViewPart {
 			deleteFileAction.setEnabled(att!=null);
 			
 		} catch (Exception e) {
-			LOG.error("Error while loading notes", e);
+			LOG.error("Error while loading notes", e); //$NON-NLS-1$
 		}
 	}
 	
 	protected void startInitDataJob() {
-		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+		WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
 				try {
-					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+					monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
 					Activator.inheritVeriniceContextState();
 					loadFiles();
 				} catch (Exception e) {
-					LOG.error("Error while loading data.", e);
-					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+					LOG.error("Error while loading data.", e); //$NON-NLS-1$
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$ //$NON-NLS-2$
 				} finally {
 					monitor.done();
 				}
@@ -350,8 +351,8 @@ public class FileView extends ViewPart {
 			}
 		
 		} catch(Exception e) {
-			LOG.error("Error while loading attachment", e);
-			ExceptionUtil.log(e, "Error while attachment notes");
+			LOG.error("Error while loading attachment", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, "Error while attachment notes"); //$NON-NLS-1$
 		}
 	}
 	
@@ -364,8 +365,8 @@ public class FileView extends ViewPart {
 		try {
 			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {
-			LOG.error("Error while saving attachment", e);
-			ExceptionUtil.log(e, "Fehler beim Speichern der Datei.");
+			LOG.error("Error while saving attachment", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.FileView_13);
 		}
 		loadFiles();
 	}
@@ -391,8 +392,8 @@ public class FileView extends ViewPart {
 		addFileAction = new Action() {
 			public void run() {
 				FileDialog fd = new FileDialog(FileView.this.getSite().getShell());
-		        fd.setText("Anhang auswählen...");
-		        fd.setFilterPath(System.getProperty("user.home"));
+		        fd.setText(Messages.FileView_14);
+		        fd.setFilterPath(System.getProperty("user.home")); //$NON-NLS-1$
 		        String selected = fd.open();
 		        if(selected!=null && selected.length()>0) {
 		        	File file = new File(selected);
@@ -414,16 +415,19 @@ public class FileView extends ViewPart {
 		        }
 			}
 		};
-		addFileAction.setText("Datei hinzufügen...");
-		addFileAction.setToolTipText("Datei hinzufügen (oder einfach Dateien per DragnDrop in dieses Fenster ziehen)");
+		addFileAction.setText(Messages.FileView_16);
+		addFileAction.setToolTipText(Messages.FileView_17);
 		addFileAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
 		addFileAction.setEnabled(false);
 		
 		deleteFileAction = new Action() {
 			public void run() {
 				int count = ((IStructuredSelection) viewer.getSelection()).size();
-				boolean confirm = MessageDialog.openConfirm(getViewer().getControl().getShell(), "Wirklich löschen?", 
-						"Wollen Sie die markierten " + count + " Attachments wirklich löschen?");
+				boolean confirm = MessageDialog.openConfirm(getViewer().getControl().getShell(), 
+						Messages.FileView_18, 
+						NLS.bind(Messages.FileView_19, count));
+
+						//Messages.FileView_19 + count + Messages.FileView_20);
 				if (!confirm)
 					return;
 				
@@ -434,15 +438,15 @@ public class FileView extends ViewPart {
 					try {
 						command = getCommandService().executeCommand(command);
 					} catch (CommandException e) {
-						LOG.error("Error while saving note", e);
-						ExceptionUtil.log(e, "Fehler beim Löschen der Notiz.");
+						LOG.error("Error while saving note", e); //$NON-NLS-1$
+						ExceptionUtil.log(e, Messages.FileView_22);
 					}
 				}
 				
 				loadFiles();			
 			}
 		};
-		deleteFileAction.setText("Datei löschen...");
+		deleteFileAction.setText(Messages.FileView_23);
 		deleteFileAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
 		deleteFileAction.setEnabled(false);
 
@@ -472,7 +476,7 @@ public class FileView extends ViewPart {
 		openAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.VIEW));
 		openAction.setEnabled(false);
 		
-		toggleLinkAction = new Action("Link to elements", SWT.TOGGLE) {
+		toggleLinkAction = new Action(Messages.FileView_24, SWT.TOGGLE) {
 			public void run() {
 				linkToElements=!linkToElements;
 				toggleLinkAction.setChecked(linkToElements);
@@ -506,7 +510,7 @@ public class FileView extends ViewPart {
 				LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId());		
 				command = getCommandService().executeCommand(command);		
 				AttachmentFile attachmentFile = command.getAttachmentFile();
-				String tempDir = System.getProperty("java.io.tmpdir");
+				String tempDir = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
 				if(attachmentFile!=null && tempDir!=null) {
 					if(!tempDir.endsWith(String.valueOf(File.separatorChar))) {
 						tempDir = tempDir + File.separatorChar;
@@ -516,21 +520,21 @@ public class FileView extends ViewPart {
 						attachmentFile.writeFileData(path);
 						Program.launch(path);
 					} catch (IOException e) {
-						LOG.error("Error while saving temp file", e);
-						ExceptionUtil.log(e, "Fehler beim Öffnen der Datei.");
+						LOG.error("Error while saving temp file", e); //$NON-NLS-1$
+						ExceptionUtil.log(e, Messages.FileView_27);
 					}
 				}
 			} catch(Exception e) {
-				LOG.error("Error while loading attachment", e);
-				ExceptionUtil.log(e, "Error while attaching notes");
+				LOG.error("Error while loading attachment", e); //$NON-NLS-1$
+				ExceptionUtil.log(e, Messages.FileView_29);
 			}
 		}
 	}
 	
 	protected void saveCopy(Attachment attachment) {
 		FileDialog fd = new FileDialog(FileView.this.getSite().getShell(),SWT.SAVE);
-        fd.setText("Datei speichern...");
-        fd.setFilterPath("~");
+        fd.setText(Messages.FileView_30);
+        fd.setFilterPath("~"); //$NON-NLS-1$
         fd.setFileName(attachment.getFileName());
         String selected = fd.open();
         if(selected!=null) {
@@ -540,11 +544,11 @@ public class FileView extends ViewPart {
 				AttachmentFile attachmentFile = command.getAttachmentFile();
 				attachmentFile.writeFileData(selected);
 				if (LOG.isDebugEnabled()) {
-					LOG.debug("File saved: " + selected);
+					LOG.debug("File saved: " + selected); //$NON-NLS-1$
 				}
 			} catch (Exception e) {
-				LOG.error("Error while saving file", e);
-				ExceptionUtil.log(e, "Fehler beim Speichern der Datei.");
+				LOG.error("Error while saving file", e); //$NON-NLS-1$
+				ExceptionUtil.log(e, Messages.FileView_34);
 			}
         }
         
@@ -589,7 +593,7 @@ public class FileView extends ViewPart {
 			}
 			Attachment attachment = (Attachment) element;
 			if(columnIndex==0) {
-				String mimeType = (attachment.getMimeType()!=null) ? attachment.getMimeType().toLowerCase() : "";			
+				String mimeType = (attachment.getMimeType()!=null) ? attachment.getMimeType().toLowerCase() : "";			 //$NON-NLS-1$
 				return ImageCache.getInstance().getImageDescriptor(mimeImageMap.get(mimeType)).createImage();
 			}
 			return null;
@@ -602,7 +606,7 @@ public class FileView extends ViewPart {
 						PlaceHolder ph = (PlaceHolder) element;
 						return ph.getTitle();
 					}
-					return "";
+					return ""; //$NON-NLS-1$
 				}
 				DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 				Attachment attachment = (Attachment) element;
@@ -621,7 +625,7 @@ public class FileView extends ViewPart {
 					return null;
 				}
 			} catch (Exception e) {
-				LOG.error("Error while getting column text", e);
+				LOG.error("Error while getting column text", e); //$NON-NLS-1$
 				throw new RuntimeException(e);
 			}
 		}

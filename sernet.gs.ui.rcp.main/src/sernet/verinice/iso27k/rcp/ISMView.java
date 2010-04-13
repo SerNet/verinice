@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -25,7 +24,6 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -51,7 +49,6 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
@@ -60,7 +57,6 @@ import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -73,7 +69,6 @@ import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.iso27k.rcp.action.TagFilter;
 import sernet.verinice.rcp.IAttachedToPerspective;
-import sernet.verinice.rcp.StatusResult;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -83,7 +78,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 
 	private static final Logger LOG = Logger.getLogger(ISMView.class);
 	
-	public static final String ID = "sernet.verinice.iso27k.rcp.ISMView";
+	public static final String ID = "sernet.verinice.iso27k.rcp.ISMView"; //$NON-NLS-1$
 	
 	private static Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
 	private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
@@ -131,8 +126,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 			initView(parent);
 			startInitDataJob();
 		} catch (Exception e) {
-			LOG.error("Error while creating organization view", e);
-			ExceptionUtil.log(e, "Error while opening ISM-View.");
+			LOG.error("Error while creating organization view", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.ISMView_2);
 		}
 		
 	}
@@ -163,8 +158,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
 					initData();
 				} catch (Exception e) {
-					LOG.error("Error while loading data.", e);
-					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+					LOG.error("Error while loading data.", e); //$NON-NLS-1$
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ISMView_4,e); //$NON-NLS-1$
 				} finally {
 					monitor.done();
 				}
@@ -179,7 +174,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 			if (modelUpdateListener == null ) {
 				// modellistener should only be created once!
 				if (LOG.isDebugEnabled())
-					Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for ISMView.");
+					Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for ISMView."); //$NON-NLS-1$
 				modelUpdateListener = new ISO27KModelViewUpdate(viewer,cache);
 				CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
 				Display.getDefault().syncExec(new Runnable(){
@@ -239,14 +234,14 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 			}
 		};
 		
-		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), "Bulk Edit...");
+		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_6);
 	
 		expandAction = new ExpandAction(viewer, contentProvider);
-		expandAction.setText("Expand Children");
+		expandAction.setText(Messages.ISMView_7);
 		expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
 		collapseAction = new CollapseAction(viewer);
-		collapseAction.setText("Collapse Children");
+		collapseAction.setText(Messages.ISMView_8);
 		collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 	
 		expandAllAction = new Action() {
@@ -255,7 +250,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 				expandAll();
 			}
 		};
-		expandAllAction.setText("Expand All");
+		expandAllAction.setText(Messages.ISMView_9);
 		expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
 		collapseAllAction = new Action() {
@@ -264,11 +259,11 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 				viewer.collapseAll();
 			}
 		};
-		collapseAllAction.setText("Collapse All");
+		collapseAllAction.setText(Messages.ISMView_10);
 		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
 		filterAction = new ISMViewFilter(viewer,
-				Messages.BsiModelView_3,
+				Messages.ISMView_12,
 				new TagFilter(viewer));
 		
 		metaDropAdapter = new MetaDropAdapter(viewer);
@@ -277,7 +272,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		metaDropAdapter.addAdapter(controlDropAdapter);
 		metaDropAdapter.addAdapter(bsiDropAdapter);	
 		
-		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), "Access control...");
+		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
 	}
 	
 	private void fillToolBar() {
@@ -333,7 +328,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		manager.add(new Separator());
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(new Separator());
-		manager.add(new GroupMarker("special"));
+		manager.add(new GroupMarker("special")); //$NON-NLS-1$
 		manager.add(bulkEditAction);
 		manager.add(accessControlEditAction);
 		manager.add(new Separator());
