@@ -1377,6 +1377,9 @@ Library.
 
    <plugin
          id="org.eclipse.core.net.linux.x86.nl_de"
+         os="linux"
+         nl="de"
+         arch="x86"
          download-size="0"
          install-size="0"
          version="3.5.0.v20091121043401"
