@@ -38,8 +38,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 
 public class UmsetzungBarChart implements IChartGenerator {
-	
-	
 
 	public JFreeChart createChart() {
 		try {
@@ -49,18 +47,15 @@ public class UmsetzungBarChart implements IChartGenerator {
 			return null;
 		}
 	}
-	
+
 	protected JFreeChart createBarChart(Object dataset) {
-		JFreeChart chart = ChartFactory.createStackedBarChart3D(null,
-				"Umsetzung", "Maßnahmen", (CategoryDataset) dataset,
-				PlotOrientation.HORIZONTAL, false, true, false);
+		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, "Umsetzung", "Maßnahmen", (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
 		chart.getPlot().setForegroundAlpha(0.6f);
 		chart.setBackgroundPaint(Color.white);
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
 
-		plot.getDomainAxis().setCategoryLabelPositions(
-				CategoryLabelPositions.STANDARD);
+		plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
 		return chart;
 
 	}
@@ -72,17 +67,16 @@ public class UmsetzungBarChart implements IChartGenerator {
 		Map<String, Integer> items = dao.getUmsetzungenSummary();
 		Set<Entry<String, Integer>> entrySet = items.entrySet();
 		for (Entry<String, Integer> entry : entrySet) {
-			dataset.addValue(entry.getValue(), getLabel(entry.getKey()),
-					getLabel(entry.getKey()));
+			dataset.addValue(entry.getValue(), getLabel(entry.getKey()), getLabel(entry.getKey()));
 		}
 		return dataset;
 	}
-	
+
 	private String getLabel(String key) {
-		PropertyType type = HUITypeFactory.getInstance().getPropertyType(
-				MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
-		if (type == null || type.getOption(key) == null)
+		PropertyType type = HUITypeFactory.getInstance().getPropertyType(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
+		if (type == null || type.getOption(key) == null) {
 			return "unbearbeitet";
+		}
 		return type.getOption(key).getName();
 	}
 

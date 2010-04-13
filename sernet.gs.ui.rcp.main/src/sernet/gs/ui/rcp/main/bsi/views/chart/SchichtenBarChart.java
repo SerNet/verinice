@@ -53,34 +53,29 @@ public class SchichtenBarChart implements IChartGenerator {
 	}
 
 	protected JFreeChart createBarChart(Object dataset) {
-		JFreeChart chart = ChartFactory.createBarChart3D(null,
-				"Umsetzung nach Schichten", "Maßnahmen",
-				(CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false,
-				true, false);
+		JFreeChart chart = ChartFactory.createBarChart3D(null, "Umsetzung nach Schichten", "Maßnahmen", (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
 		chart.getPlot().setForegroundAlpha(0.6f);
 		chart.setBackgroundPaint(Color.white);
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
 
-		plot.getDomainAxis().setCategoryLabelPositions(
-				CategoryLabelPositions.STANDARD);
+		plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
 		return chart;
 
 	}
 
 	protected JFreeChart createSpiderChart(Object dataset) {
 		SpiderWebPlot plot = new SpiderWebPlot((CategoryDataset) dataset);
-		//plot.setStartAngle(54);
-		//plot.setInteriorGap(0.40);
+		// plot.setStartAngle(54);
+		// plot.setInteriorGap(0.40);
 		plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
-		
-		JFreeChart chart = new JFreeChart("Umsetzung nach Schichten",
-				TextTitle.DEFAULT_FONT, plot, false);
+
+		JFreeChart chart = new JFreeChart("Umsetzung nach Schichten", TextTitle.DEFAULT_FONT, plot, false);
 
 		LegendTitle legend = new LegendTitle(plot);
 		legend.setPosition(RectangleEdge.BOTTOM);
 		chart.addSubtitle(legend);
-		
+
 		return chart;
 	}
 
@@ -91,15 +86,13 @@ public class SchichtenBarChart implements IChartGenerator {
 		Map<String, Integer> items1 = dao.getSchichtenSummary();
 		Set<Entry<String, Integer>> entrySet = items1.entrySet();
 		for (Entry<String, Integer> entry : entrySet) {
-			dataset.addValue(entry.getValue(), "zugeordnet", getLabel(entry
-					.getKey()));
+			dataset.addValue(entry.getValue(), "zugeordnet", getLabel(entry.getKey()));
 		}
 
 		Map<String, Integer> items2 = dao.getCompletedSchichtenSummary();
 		Set<Entry<String, Integer>> entrySet2 = items2.entrySet();
 		for (Entry<String, Integer> entry : entrySet2) {
-			dataset.addValue(entry.getValue(), "umgesetzt", getLabel(entry
-					.getKey()));
+			dataset.addValue(entry.getValue(), "umgesetzt", getLabel(entry.getKey()));
 		}
 
 		return dataset;

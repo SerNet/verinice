@@ -38,8 +38,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 
 public class StufenBarChart implements IChartGenerator {
-	
-	
 
 	public JFreeChart createChart() {
 		try {
@@ -49,18 +47,15 @@ public class StufenBarChart implements IChartGenerator {
 			return null;
 		}
 	}
-	
+
 	protected JFreeChart createBarChart(Object dataset) {
-		JFreeChart chart = ChartFactory.createStackedBarChart3D(null,
-				"Stufe", "Maßnahmen", (CategoryDataset) dataset,
-				PlotOrientation.HORIZONTAL, false, true, false);
+		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, "Stufe", "Maßnahmen", (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
 		chart.getPlot().setForegroundAlpha(0.6f);
 		chart.setBackgroundPaint(Color.white);
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
 
-		plot.getDomainAxis().setCategoryLabelPositions(
-				CategoryLabelPositions.STANDARD);
+		plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
 		return chart;
 
 	}
@@ -68,35 +63,27 @@ public class StufenBarChart implements IChartGenerator {
 	protected Object createBarDataset() throws CommandException {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		MassnahmenSummaryHome dao = new MassnahmenSummaryHome();
-		
+
 		Map<String, Integer> items1 = dao.getNotCompletedStufenSummary();
 		Set<Entry<String, Integer>> entrySet = items1.entrySet();
 		for (Entry<String, Integer> entry : entrySet) {
-			dataset.addValue(entry.getValue(), 
-					"Nicht umgesetzt",
-					entry.getKey()
-					);
+			dataset.addValue(entry.getValue(), "Nicht umgesetzt", entry.getKey());
 		}
 
 		Map<String, Integer> completedItems = dao.getCompletedStufenSummary();
 		Set<Entry<String, Integer>> entrySet2 = completedItems.entrySet();
 		for (Entry<String, Integer> entry : entrySet2) {
-			dataset.addValue(entry.getValue(), 
-					"Umgesetzt",
-					entry.getKey()
-				);
+			dataset.addValue(entry.getValue(), "Umgesetzt", entry.getKey());
 		}
-		
-		
-		
+
 		return dataset;
 	}
-	
+
 	private String getLabel(String key) {
-		PropertyType type = HUITypeFactory.getInstance().getPropertyType(
-				MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
-		if (type == null || type.getOption(key) == null)
+		PropertyType type = HUITypeFactory.getInstance().getPropertyType(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
+		if (type == null || type.getOption(key) == null) {
 			return "unbearbeitet";
+		}
 		return type.getOption(key).getName();
 	}
 

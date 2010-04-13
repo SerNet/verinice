@@ -51,7 +51,7 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
  */
 public class ChartView extends ViewPart {
 
-	public static final String ID = "sernet.gs.ui.rcp.main.chartview";
+	public static final String ID = "sernet.gs.ui.rcp.main.chartview"; //$NON-NLS-1$
 
 	private IModelLoadListener loadListener;
 
@@ -110,29 +110,26 @@ public class ChartView extends ViewPart {
 	}
 
 	private void createMenus() {
-		IMenuManager menuManager = getViewSite().getActionBars()
-				.getMenuManager();
-		chooseBarDiagramAction = new Action("Umsetzungsstatus", SWT.CHECK) {
+		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
+		chooseBarDiagramAction = new Action(Messages.ChartView_1, SWT.CHECK) {
 			@Override
 			public void run() {
 				chartType = barChart;
 				drawChart();
 			}
 		};
-		chooseBarDiagramAction.setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.CHART_BAR));
+		chooseBarDiagramAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CHART_BAR));
 
-		chooseProgressDiagramAction = new Action("Realisierungsplan", SWT.CHECK) {
+		chooseProgressDiagramAction = new Action(Messages.ChartView_2, SWT.CHECK) {
 			@Override
 			public void run() {
 				chartType = progressChart;
 				drawChart();
 			}
 		};
-		chooseProgressDiagramAction.setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.CHART_CURVE));
+		chooseProgressDiagramAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CHART_CURVE));
 
-		chooseStufenDiagramAction = new Action("Siegelstufe", SWT.CHECK) {
+		chooseStufenDiagramAction = new Action(Messages.ChartView_3, SWT.CHECK) {
 			@Override
 			public void run() {
 				chartType = stufenChart;
@@ -140,7 +137,7 @@ public class ChartView extends ViewPart {
 			}
 		};
 
-		chooseZyklusDiagramAction = new Action("Lebenszyklus", SWT.CHECK) {
+		chooseZyklusDiagramAction = new Action(Messages.ChartView_4, SWT.CHECK) {
 			@Override
 			public void run() {
 				chartType = zyklusChart;
@@ -148,7 +145,7 @@ public class ChartView extends ViewPart {
 			}
 		};
 
-		chooseSchichtDiagramAction = new Action("Schichten", SWT.CHECK) {
+		chooseSchichtDiagramAction = new Action(Messages.ChartView_5, SWT.CHECK) {
 			@Override
 			public void run() {
 				chartType = schichtenChart;
@@ -172,10 +169,11 @@ public class ChartView extends ViewPart {
 	}
 
 	protected void drawChart() {
-		WorkspaceJob job = new WorkspaceJob("Generating chart...") {
+		WorkspaceJob job = new WorkspaceJob(Messages.ChartView_6) {
+			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
-				
+
 				if (parent != null && !parent.isDisposed()) {
 					final JFreeChart chart;
 					checkModel();
@@ -197,8 +195,9 @@ public class ChartView extends ViewPart {
 	}
 
 	protected void checkModel() {
-		if (CnAElementFactory.getLoadedModel() == null)
+		if (CnAElementFactory.getLoadedModel() == null) {
 			chartType = emptyChart;
+		}
 	}
 
 	private void createSelectionListeners() {
@@ -215,8 +214,7 @@ public class ChartView extends ViewPart {
 			public void loaded(final BSIModel model) {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						CnAElementFactory.getLoadedModel()
-								.addBSIModelListener(changeListener);
+						CnAElementFactory.getLoadedModel().addBSIModelListener(changeListener);
 						chartType = barChart;
 						drawChart();
 					}
@@ -230,61 +228,59 @@ public class ChartView extends ViewPart {
 				// do nothing
 			}
 
-			public void childChanged(CnATreeElement category,
-					CnATreeElement child) {
+			public void childChanged(CnATreeElement category, CnATreeElement child) {
 				// do nothing
 			}
 
-			public void childRemoved(CnATreeElement category,
-					CnATreeElement child) {
+			public void childRemoved(CnATreeElement category, CnATreeElement child) {
 				// do nothing
 			}
-			
+
 			public void linkChanged(CnALink old, CnALink link) {
 				// do nothing
 			}
-			
+
 			public void linkRemoved(CnALink link) {
 				// do nothing
-				
+
 			}
 
 			public void modelRefresh(Object source) {
 				drawChart();
 			}
-			
+
 			public void linkAdded(CnALink link) {
 				// do nothing
 			}
 
 			public void databaseChildAdded(CnATreeElement child) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			public void databaseChildChanged(CnATreeElement child) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			public void databaseChildRemoved(CnATreeElement child) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			public void modelRefresh() {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			public void modelReload(BSIModel newModel) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			public void databaseChildRemoved(ChangeLogEntry entry) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 		};
@@ -292,17 +288,17 @@ public class ChartView extends ViewPart {
 
 	private void hookSelectionListeners() {
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
-		if (CnAElementFactory.getLoadedModel() != null)
-			CnAElementFactory.getLoadedModel().addBSIModelListener(
-					changeListener);
+		if (CnAElementFactory.getLoadedModel() != null) {
+			CnAElementFactory.getLoadedModel().addBSIModelListener(changeListener);
+		}
 	}
 
 	@Override
 	public void dispose() {
 		CnAElementFactory.getInstance().removeLoadListener(loadListener);
-		if (CnAElementFactory.getLoadedModel() != null)
-			CnAElementFactory.getLoadedModel().removeBSIModelListener(
-				changeListener);
+		if (CnAElementFactory.getLoadedModel() != null) {
+			CnAElementFactory.getLoadedModel().removeBSIModelListener(changeListener);
+		}
 	}
 
 	@Override
