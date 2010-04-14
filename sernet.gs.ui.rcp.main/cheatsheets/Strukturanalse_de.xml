@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?> 
-<cheatsheet title="EN_Strukturanalyse">
+<cheatsheet title="Strukturanalyse">
 
-	<intro>
+	<intro 
+		>
 		<description>
-		EN_In diesem Tutorial lernen Sie, wie Sie ihren IT-Verbund mit Verinice erfassen.
+		In diesem Tutorial lernen Sie, wie Sie ihren IT-Verbund mit Verinice erfassen.
 		<br/><br/>
 		Welche Daten Sie eingeben müssen und wie Sie dabei am besten vorgehen,
 		beschreibt die BSI Norm 100-2.

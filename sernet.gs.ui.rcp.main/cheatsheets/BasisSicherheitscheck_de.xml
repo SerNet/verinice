@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?> 
-<cheatsheet title="EN_Basis-Sicherheitscheck">
+<cheatsheet title="Basis-Sicherheitscheck">
 
 	<intro 
 		>
 		<description>
-		EN_Im Rahmen des Basis-Sicherheitschecks bestimmen Sie, inwieweit Sie die Maßnahmen
+		Im Rahmen des Basis-Sicherheitschecks bestimmen Sie, inwieweit Sie die Maßnahmen
 		der BSI IT-Grundschutzkataloge bereits umgesetzt haben.
 		</description>
 	</intro>

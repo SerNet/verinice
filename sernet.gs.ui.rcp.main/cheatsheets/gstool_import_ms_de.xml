@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?> 
-<cheatsheet title="EN_Import der Datenbank-Daten aus dem GSTOOL 4.5">
+<cheatsheet title="Import der Datenbank-Daten aus dem GSTOOL 4.5">
 
 	<intro 
 		>
 		<description>
-			EN_In diesem Spickzettel ist der direkte Import aus dem GSTOOL beschrieben. Dazu müssen Sie das GSTOOL installiert haben.
+			In diesem Spickzettel ist der direkte Import aus dem GSTOOL beschrieben. Dazu m&#252;ssen Sie das GSTOOL installiert haben.
 		</description>
 	</intro>
 

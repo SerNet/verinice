@@ -689,132 +689,127 @@
          point="org.eclipse.ui.cheatsheets.cheatSheetContent">
       <category
             id="sernet.gs.ui.rcp.main.cheatSheets"
-            name="1_verinice Tutorials"/>
+            name="%cheatsheets.1"/>
       <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="cheatsheets/ErsteSchritte.xml"
+            contentFile="%cheatsheets.content.2"
             id="sernet.gs.ui.rcp.main.cheatsheet1"
-            name="1_Erste Schritte">
-         <description>
-         Dieser Spickzettel erklaert die ersten Schritte mit verinice.
-         </description>
+            name="%cheatsheets.2">
+         <description>%cheatsheets.description.2</description>
       </cheatsheet>
       <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="cheatsheets/Strukturanalse.xml"
+            contentFile="%cheatsheets.content.3"
             id="sernet.gs.ui.rcp.main.cheatsheet2"
-            name="2_Strukturanalyse">
-            <description>
-            So erfassen Sie mit verinice Ihren IT-Verbund.
-            </description>
+            name="%cheatsheets.3">
+            <description>%cheatsheets.description.3</description>
         </cheatsheet>
       <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="cheatsheets/Schutzbedarfsanalyse.xml"
+            contentFile="%cheatsheets.content.4"
             id="sernet.gs.ui.rcp.main.schutzbedarf"
-            name="3_Schutzbedarfsanalyse">
-            <description>
-            Schutzbedarf zuweisen und Objekte verknüpfen.
-            </description>
+            name="%cheatsheets.4">
+            <description>%cheatsheets.description.4</description>
         </cheatsheet>
       <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="cheatsheets/Modellierung.xml"
+            contentFile="%cheatsheets.content.5"
             id="sernet.gs.ui.rcp.main.modellierung"
-            name="4_Modellierung nach IT-Grundschutz">
-            <description>
-            Zuordnen von Bausteinen zu Zielobjekten.
-            </description>
+            name="%cheatsheets.5">
+            <description>%cheatsheets.description.5</description>
         </cheatsheet>
         <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="cheatsheets/BasisSicherheitscheck.xml"
+            contentFile="%cheatsheets.content.6"
             id="sernet.gs.ui.rcp.main.basischeck"
-            name="5_Basis-Sicherheitscheck">
-            <description>
-            Maßnahmen dokumentieren, einfach und mit Hilfsmitteln.
-            </description>
+            name="%cheatsheets.6">
+            <description>%cheatsheets.description.6</description>
         </cheatsheet>
         <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="cheatsheets/ErgaenzendeAnalyse.xml"
+            contentFile="%cheatsheets.content.7"
             id="sernet.gs.ui.rcp.main.ergaenzendeanalyse"
-            name="6_Ergänzende Sicherheitsanalyse">
-            <description>
-            So dokumentieren Sie die Durchführung der ergänzenden Sicherheitsanalyse.
-            </description>
+            name="%cheatsheets.7">
+            <description>%cheatsheets.description.7</description>
         </cheatsheet>
         <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="cheatsheets/Risikoanalyse.xml"
+            contentFile="%cheatsheets.content.8"
             id="sernet.gs.ui.rcp.main.risikoanalyse"
-            name="7_Risikoanalyse">
-            <description>
-            Risikoanalyse mit verinice.
-            </description>
+            name="%cheatsheets.8">
+            <description>%cheatsheets.description.8</description>
         </cheatsheet>
         <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="cheatsheets/Reports.xml"
+            contentFile="%cheatsheets.content.9"
             id="sernet.gs.ui.rcp.main.reports"
-            name="8_Erzeugen von Reports">
-            <description>
-            So erzeugen Sie die vom BSI geforderten Referenzdokumente und weitere Reports.
-            </description>
+            name="%cheatsheets.9">
+            <description>%cheatsheets.description.9</description>
         </cheatsheet>
         <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
-            contentFile="cheatsheets/Datenschutz.xml"
+            contentFile="%cheatsheets.content.10"
             id="sernet.gs.ui.rcp.main.datenschutz"
-            name="9_Datenschutz">
-            <description>
-               Verfahren für Datenschutz dokumentieren.
-            
-            </description>
-        </cheatsheet>
-        <cheatsheet
-              category="sernet.gs.ui.rcp.main.cheatSheets2"
-              composite="false"
-              contentFile="cheatsheets/gstool_import_ms.xml"
-              id="sernet.gs.ui.rcp.main.gstool1"
-              name="1_GSTOOL-Daten importieren">
-           <description>
-              Daten direkt aus dem GSTOOL(tm) des BSI importieren.
-           </description>
-        </cheatsheet>
-        <cheatsheet
-              category="sernet.gs.ui.rcp.main.cheatSheets2"
-              composite="false"
-              contentFile="cheatsheets/GSTOOL-BAK-Datei-Import.xml"
-              id="sernet.gs.ui.rcp.main.gstool2"
-              name="2_GSTOOL-Exportdatei (.BAK) importieren">
-           <description>
-              Daten importieren, die über den Menüpunkt &quot;Daten sichern&quot; aus dem GSTOOL exportiert wurden. Dies kann z.B. eine .BAK Datei sein, die Ihnen von einem Anwender des GSTOOL übermittelt wurde.
-           </description>
-        </cheatsheet>
-        <cheatsheet
-              category="sernet.gs.ui.rcp.main.cheatSheets2"
-              composite="false"
-              contentFile="cheatsheets/MDF-Datei-Import.xml"
-              id="sernet.gs.ui.rcp.main.gstool3"
-              name="3_GSTOOL-Daten aus Datei (.MDF) importieren">
-           <description>
-              Eine getrennte Datenbankdatei importieren. Dies kann eine Datei sein, die ein Anwender des GSTOOL über das mit dem GSTOOL ausgelieferte Datenbank-Werkzeug zunächst getrennt und dann kopiert hat. (Menüpunkt:&quot;Datenbank trennen&quot;)
-           </description>
+            name="%cheatsheets.10">
+            <description>%cheatsheets.description.10</description>
         </cheatsheet>
         <category
               id="sernet.gs.ui.rcp.main.cheatSheets2"
-              name="2_GSTOOL(tm) Import Tutorials">
+              name="%cheatsheets.14">
         </category>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets2"
+              composite="false"
+              contentFile="%cheatsheets.content.11"
+              id="sernet.gs.ui.rcp.main.gstool1"
+              name="%cheatsheets.11">
+           <description>%cheatsheets.description.11</description>
+        </cheatsheet>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets2"
+              composite="false"
+              contentFile="%cheatsheets.content.12"
+              id="sernet.gs.ui.rcp.main.gstool2"
+              name="%cheatsheets.12">
+           <description>%cheatsheets.description.12</description>
+        </cheatsheet>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets2"
+              composite="false"
+              contentFile="%cheatsheets.content.13"
+              id="sernet.gs.ui.rcp.main.gstool3"
+              name="%cheatsheets.13">
+           <description>%cheatsheets.description.13</description>
+        </cheatsheet>
+        <category
+              id="sernet.gs.ui.rcp.main.cheatSheets3"
+              name="%cheatsheets.15">
+        </category>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets3"
+              composite="false"
+              contentFile="%cheatsheets.content.16"
+              id="sernet.verinice.iso27k.cheatsheet1"
+              name="%cheatsheets.16">
+           <description>%cheatsheets.description.16</description>
+        </cheatsheet>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets3"
+              composite="false"
+              contentFile="%cheatsheets.content.17"
+              id="sernet.verinice.iso27k.cheatsheet2"
+              name="%cheatsheets.17">
+           <description>%cheatsheets.description.17</description>
+        </cheatsheet>
    </extension>
    <extension
          point="org.eclipse.ui.intro">
@@ -828,7 +823,7 @@
    <extension
          point="org.eclipse.ui.intro.config">
       <config
-            content="introContent.xml"
+            content="%intro.content"
             id="sernet.gs.ui.rcp.main.config1"
             introId="sernet.gs.ui.rcp.main.intro1">
          <presentation home-page-id="root">

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?> 
-<cheatsheet title="EN_Datenschutz">
+<cheatsheet title="Datenschutz">
 
 	<intro>
 		<description>
-			EN_Verfahren für Datenschutz dokumentieren.
+			Verfahren für Datenschutz dokumentieren.
 		</description>
 	</intro>
 
-	<item title="Einf?hrung">
+	<item title="Einführung">
 		<description>
-		Verinice hilft Ihnen auch dabei, datenschutzrechtliche Anforderungen zu erf?llen.
-		?ffnen Sie die Datenschutz-Ansicht ?ber "Ansicht", "Zeige View", "Datenschutz".
+		Verinice hilft Ihnen auch dabei, datenschutzrechtliche Anforderungen zu erfüllen.
+		öffnen Sie die Datenschutz-Ansicht über &quot;Ansicht&quot;, &quot;Zeige View&quot;, &quot;Datenschutz&quot;.
 		</description>
 	</item>
 	<item title="Ansicht Datenschutz">
@@ -22,27 +22,27 @@
 	</item>
 	<item title="Datenverarbeitung">
 		<description>
-		?ffnen Sie den Dokumentationsknoten "Datenverarbeitung" per Doppelklick. 
-		Tragen Sie Kategorie, Herkunft, Rehtsgrundlage und L?schfristen f?r die
-		verarbeiteten Daten ein. Speichern Sie die ?nderungen (Strg-S).
+		Öffnen Sie den Dokumentationsknoten &quot;Datenverarbeitung&quot; per Doppelklick. 
+		Tragen Sie Kategorie, Herkunft, Rehtsgrundlage und Löschfristen für die
+		verarbeiteten Daten ein. Speichern Sie die Änderungen (Strg-S).
 		</description>
 	</item>
 	<item title="Personengruppen">
 		<description>
-		Hier tragen Sie Betroffene und die Empf?nger der Datenverarbeitung ein.
+		Hier tragen Sie Betroffene und die Empfänger der Datenverarbeitung ein.
 		</description>
 	</item>
 	<item title="Stellungnahme DSB">
 		<description>
-		Lassen Sie diese Felder ihren Datenschutzbeauftragten ausf?llen.
+		Lassen Sie diese Felder ihren Datenschutzbeauftragten ausfüllen.
 		</description>
 	</item>
 	<item title="Verantwortliche Stelle">
 		<description>
-		Dokumentieren Sie, wer die Daten verarbeitet und wer fachlich und technisch f?r 
+		Dokumentieren Sie, wer die Daten verarbeitet und wer fachlich und technisch für 
 		die Verarbeitung verantwortlich ist. Alle Mitarbeiter und Abteilungen, die
 		die in der Strukturanalyse erfasst haben, werden Ihnen automatisch vorgeschlagen. 
-		Sie k?nnen Sie mit den Cursortasten ausw?hlen, oder eine eigene Eingabe machen.
+		Sie können Sie mit den Cursortasten auswählen, oder eine eigene Eingabe machen.
 		</description>
 	</item>
 	<item title="Verarbeitungsangaben">
@@ -50,20 +50,20 @@
 		Beschreiben Sie hier, wie die personenbezogenen Daten verarbeitet werden.
 		</description>
 	</item>
-	<item title="Verfahrens?bersicht">
+	<item title="Verfahrensübersicht">
 		<description>
-		Sie k?nnen aus den eingegebenen Daten eine Verfahrens?bersicht erstellen. W?hlen
-		Sie "Bearbeiten", "Report erstellen". W?hlen Sie aus den angebotenen Reports die 
-		Verfahrens?bersicht aus. W?hlen sie "weiter".
+		Sie k?nnen aus den eingegebenen Daten eine Verfahrensübersicht erstellen. Wählen
+		Sie &quot;Bearbeiten&quot;, &quot;Report erstellen&quot;. Wählen Sie aus den angebotenen Reports die 
+		Verfahrensübersicht aus. W?hlen sie &quot;weiter&quot;.
 		<br/><br/>
-		?berpr?fen Sie den Pfad zu ihrer OpenOffice Installation und w?hlen Sie "weiter".
-		Belassen Sie die Auswahl der Felder f?r den Report auf der Voreinstellung und 
-		w?hlen Sie "Fertig stellen".
+		überprüfen Sie den Pfad zu ihrer OpenOffice Installation und wählen Sie &quot;weiter&quot;.
+		Belassen Sie die Auswahl der Felder für den Report auf der Voreinstellung und 
+		wählen Sie &quot;Fertig stellen&quot;.
 		</description>
 	</item>
 	<item title="Fertig">
 		<description>
-		Die Verfahrens?bersicht wurde in OpenOffice erstellt. Sie k?nnen Sie editieren, 
+		Die Verfahrensübersicht wurde in OpenOffice erstellt. Sie können Sie editieren, 
 		speichern oder verwerfen.
 		</description>
 		<onCompletion>

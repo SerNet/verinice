@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?> 
-<cheatsheet title="EN_GSTOOL-MDF-Datei-Import">
+<cheatsheet title="GSTOOL-MDF-Datei-Import">
 	
 	<intro>
 		<description>
-			EN_In diesem Spickzettel wird beschrieben, wie Sie eine aus dem GSTOOL gesicherte Datenbank-Datei, die im MDF-Dateiformat vorliegt, in verinice importieren können. Dieser Prozess ist prinzipiell analog zum Importieren von Daten aus einer BAK-Datei, nur dass in dem Fall bereits eine MDF-Datei vorliegt.
+			In diesem Spickzettel wird beschrieben, wie Sie eine aus dem GSTOOL gesicherte Datenbank-Datei, die im MDF-Dateiformat vorliegt, in verinice importieren k&#246;nnen. Dieser Prozess ist prinzipiell analog zum Importieren von Daten aus einer BAK-Datei, nur dass in dem Fall bereits eine MDF-Datei vorliegt.
 		</description>
 	</intro>
 	<item title="Einstellungen f&#252;r den MDF-Datei-Import zum Anh&#228;ngen einer Datenbank">

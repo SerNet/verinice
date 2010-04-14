@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?> 
-<cheatsheet title="EN_ISO 27001 mit verinice.">
+<cheatsheet title="ISO 27001 mit verinice.">
 	<intro>
 		<description>
-			EN_<b>Willkommen beim neuen Teil von verinice. - der ISO 27000-Perspektive </b>
+			<b>Willkommen beim neuen Teil von verinice. - der ISO 27000-Perspektive </b>
 			<br/>
 			<br/>
-			Diese Anleitung zeigt Ihnen, wie Sie den nativen ISO27001-Standard 
+			Dieser Spickzettel zeigt Ihnen, wie Sie den nativen ISO27001-Standard 
 			in verinice verwenden können. Hierzu ist eine völlig neue Perspektive 
 			geschaffen worden. Sie können die neuen Ansichten jedoch auch in Kombination mit der Grundschutz-Perspektive sinnvoll nutzen. Dieser Spickzettel zeigt Ihnen wie! 
 		</description>

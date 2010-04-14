@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?> 
-<cheatsheet title="EN_GSTOOL-BAK-Datei-Import">
+<cheatsheet title="GSTOOL-BAK-Datei-Import">
 
 	<intro>
 		<description>
-		EN_In diesem Spickzettel wird beschrieben, wie Sie eine aus dem GSTOOL gesicherte Datenbank-Datei mit der Endung &quot;BAK&quot; in verinice importieren können. 
+		In diesem Spickzettel wird beschrieben, wie Sie eine aus dem GSTOOL gesicherte Datenbank-Datei mit der Endung "BAK" in verinice importieren k&#246;nnen. 
 		</description>
 	</intro>
 
