@@ -169,7 +169,7 @@ be displayed when one of the given options has been previously selected.
         
     <xs:attribute name="id" type="xs:ID" use="required"/>
     
-    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="optional"/>
 
 	<!-- Tooltip hint to display in GUI -->    
     <xs:attribute name="tooltip" type="xs:string"/>
