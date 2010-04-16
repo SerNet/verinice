@@ -51,12 +51,12 @@ public class Today implements IFillRule {
 	}
 
 	private void initFieldValues() {
-		calendarFields.put("YEAR", Calendar.YEAR);
-		calendarFields.put("HOUR", Calendar.HOUR);
-		calendarFields.put("MINUTE", Calendar.MINUTE);
-		calendarFields.put("SECOND", Calendar.SECOND);
-		calendarFields.put("MONTH", Calendar.MONTH);
-		calendarFields.put("DAY", Calendar.DAY_OF_MONTH);
+		calendarFields.put("YEAR", Calendar.YEAR); //$NON-NLS-1$
+		calendarFields.put("HOUR", Calendar.HOUR); //$NON-NLS-1$
+		calendarFields.put("MINUTE", Calendar.MINUTE); //$NON-NLS-1$
+		calendarFields.put("SECOND", Calendar.SECOND); //$NON-NLS-1$
+		calendarFields.put("MONTH", Calendar.MONTH); //$NON-NLS-1$
+		calendarFields.put("DAY", Calendar.DAY_OF_MONTH); //$NON-NLS-1$
 	}
 
 

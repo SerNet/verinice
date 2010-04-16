@@ -20,7 +20,7 @@ package sernet.hui.common.rules;
 public class NullRule implements IFillRule {
 
 	public String getValue() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public void init(String[] params) {

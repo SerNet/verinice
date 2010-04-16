@@ -26,7 +26,7 @@ public class SimpleValue implements IFillRule {
 	}
 
 	public void init(String[] params) {
-		value = params != null ? params[0] : "";
+		value = params != null ? params[0] : ""; //$NON-NLS-1$
 	}
 
 }
