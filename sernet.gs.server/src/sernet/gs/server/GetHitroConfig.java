@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,10 +27,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.SNCAMessages;
+
 /**
  * Servlet implementation class GetHitroConfig
  */
 public class GetHitroConfig extends HttpServlet {
+	private final Logger log = Logger.getLogger(GetHitroConfig.class);
+	
 	private static final long serialVersionUID = 1L;
 	
 	// copy binary data using 100K buffer:
@@ -49,19 +57,53 @@ public class GetHitroConfig extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		InputStream in = getServletContext().getResourceAsStream(getInitParameter("snca.xml.path"));
-		
-		OutputStream out = response.getOutputStream();
+		OutputStream out = null;
+		InputStream in = null;
 		try {
-			while (true) {
-				synchronized (buffer) {
-					int amountRead = in.read(buffer);
-					if (amountRead == -1) {
-						break;
+			String basePath = getInitParameter("snca.xml.path");
+			if(basePath==null) {
+				String message = "init parameter snca.xml.path is not set in web.xml";
+				response.getWriter().append(message);
+				throw new RuntimeException(message);
+			} else {
+				String fileName = HUITypeFactory.HUI_CONFIGURATION_FILE;
+				String resourceParameter = request.getParameter("resource");
+				if(resourceParameter!=null) {
+					// return a resource bundle
+					// security check
+					if(resourceParameter.indexOf("..")!=-1 
+					   || resourceParameter.indexOf(":")!=-1
+					   || !resourceParameter.startsWith(SNCAMessages.BUNDLE_NAME)
+					   || !resourceParameter.endsWith(SNCAMessages.BUNDLE_EXTENSION)) {
+						String message = "illegal parameter: " + resourceParameter;
+						response.getWriter().append(message);
+						throw new RuntimeException(message);
 					}
-					out.write(buffer, 0, amountRead);
+					fileName = resourceParameter;
+				} 
+				String path = new File(basePath,fileName).getPath();
+				if (log.isDebugEnabled()) {
+					log.debug("returning: " + path );
+				}
+				in = getServletContext().getResourceAsStream(path);
+				if(in==null) {
+					String message = "# resource not found";
+					response.getWriter().append(message);
+					throw new RuntimeException(message);
+				}
+				out = response.getOutputStream();
+				while (true) {
+					synchronized (buffer) {
+						int amountRead = in.read(buffer);
+						if (amountRead == -1) {
+							break;
+						}
+						out.write(buffer, 0, amountRead);
+					}
 				}
 			}
+		} catch (Exception e) {
+			log.error("Error while getting hitro config", e);
 		} finally {
 			if (in != null) {
 				in.close();

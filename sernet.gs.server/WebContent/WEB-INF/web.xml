@@ -127,7 +127,7 @@
     	<servlet-class>sernet.gs.server.GetHitroConfig</servlet-class>
         <init-param>
         	<param-name>snca.xml.path</param-name>
-        	<param-value>/WEB-INF/SNCA.xml</param-value>
+        	<param-value>/WEB-INF</param-value>
         </init-param>
 		<load-on-startup>3</load-on-startup>
     </servlet>

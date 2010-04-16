@@ -209,7 +209,7 @@ public class InternalServer implements IInternalServer {
 
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "GetHitroConfig"); //$NON-NLS-1$ //$NON-NLS-2$
-		dict.put("snca.xml.path", "/WebContent/WEB-INF/SNCA.xml"); //$NON-NLS-1$ //$NON-NLS-2$
+		dict.put("snca.xml.path", "/WebContent/WEB-INF/"); //$NON-NLS-1$ //$NON-NLS-2$
 		wc.registerServlet(new GetHitroConfig(), new String[] { "/GetHitroConfig" }, dict, ctx); //$NON-NLS-1$
 
 		dict = new Hashtable<String, String>();
