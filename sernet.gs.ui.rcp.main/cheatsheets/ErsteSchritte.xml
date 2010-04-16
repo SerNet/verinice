@@ -19,18 +19,22 @@
 			pluginId="sernet.gs.ui.rcp.main"
 			class="sernet.gs.ui.rcp.main.bsi.actions.DownloadBsiCataloguesAction"
 			confirm="true"/>
-	<description>
-		Zunächst müssen sie die aktuelle Version der Grundschutz-Kataloge
-		downloaden.
+		<description>
+			Zunächst müssen sie die aktuelle Version der Grundschutz-Kataloge
+			downloaden.
 			<br/>
 			<br/>
-		Gehen Sie auf die Webseite des BSI und ziehen Sie dort die
-		'HTML-Seiten IT-Grundschutz-Kataloge inclusive der Hilfsmittel' (ZIP ca. 42MB).
-		<br/>
-		<b>https://www.bsi.bund.de/cln_174/DE/Themen/weitereThemen/ITGrundschutzKataloge/Download/download_node.html</b>
-		<br/>
-		<br/>
-		Speichern Sie die ZIP-Datei auf ihrer lokalen Festplatte.
+			Gehen Sie auf die Webseite des BSI in den Bereich "IT-Grundschutz-Kataloge - Download".
+			<br/>
+			Adresse: <b>https://www.bsi.bund.de/cln_174/DE/Themen/weitereThemen/ITGrundschutzKataloge/Download/download_node.html</b>
+			<br/>
+			<br/>
+			Laden Sie folgende Datei herunter:
+			<br/>
+			<b>2009, 11. EL: HTML-Seiten IT-Grundschutz-Kataloge (ZIP ca. 11 MB)</b>
+			<br/>
+			<br/>
+			Speichern Sie die ZIP-Datei auf ihrer lokalen Festplatte.
 		</description>
 	</item>
 	
