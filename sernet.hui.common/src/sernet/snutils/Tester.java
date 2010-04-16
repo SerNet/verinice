@@ -29,7 +29,7 @@ public class Tester {
 
 	public static void assertTrue(String message, boolean statement) throws AssertException {
 		if (! statement) {
-			Logger.getLogger(Tester.class).error("Assertion failed:" + message);
+			Logger.getLogger(Tester.class).error("Assertion failed:" + message); //$NON-NLS-1$
 			throw new AssertException(message);
 		}
 	}
@@ -38,7 +38,7 @@ public class Tester {
 	throws AssertException {
 		if (! string1.equals(string2)) {
 			Logger.getLogger(Tester.class)
-			.error("Assertion failed, not equal: " + string1 + " : " + string2);
+			.error("Assertion failed, not equal: " + string1 + " : " + string2); //$NON-NLS-1$ //$NON-NLS-2$
 			throw new AssertException(message);
 		}
 	}
