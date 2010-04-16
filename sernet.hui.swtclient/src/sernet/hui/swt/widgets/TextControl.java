@@ -72,13 +72,13 @@ public class TextControl implements IHuiControl {
 	public void create() {
 		Label label = new Label(composite, SWT.NULL);
 		label.setText(fieldType.getName());
-
+		
 		PropertyList propList = entity.getProperties(fieldType.getId());
 		savedProp = propList != null ? propList.getProperty(0) : null;
 
 		if (savedProp == null) {
 			// create property in which to save entered value:
-			String defaultValue = "";
+			String defaultValue = "" ; //$NON-NLS-1$
 			if (useRule && fieldType.getDefaultRule() != null)
 				defaultValue = fieldType.getDefaultRule().getValue();
 			savedProp = entity.createNewProperty(fieldType, defaultValue);
