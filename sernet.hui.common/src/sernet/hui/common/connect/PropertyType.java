@@ -35,6 +35,9 @@ import sernet.hui.common.rules.NullRule;
  * @version $Id: PropertyType.java,v 1.6 2006/10/20 14:55:16 aprack Exp $
  */
 public class PropertyType implements IMLPropertyType, IEntityElement {
+
+	private final Logger log = Logger.getLogger(PropertyType.class);
+
 	public int getMinValue() {
 		return minValue;
 	}
@@ -72,7 +75,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	private static final byte INPUT_NUMERICOPTION = 7;
 
 	private List<IValidationRule> validators = new ArrayList<IValidationRule>();
-	
+
 	private IFillRule defaultRule = new NullRule();
 
 	private boolean required = false;
@@ -101,8 +104,9 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	private int maxValue = 0;
 
 	public void addValidator(IValidationRule rule) {
-		if (!validators.contains(rule))
+		if (!validators.contains(rule)) {
 			validators.add(rule);
+		}
 	}
 
 	public boolean isEditable() {
@@ -163,8 +167,9 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	public PropertyOption getOption(String id) {
 		for (Iterator iter = options.iterator(); iter.hasNext();) {
 			PropertyOption option = (PropertyOption) iter.next();
-			if (option.getId().equals(id))
+			if (option.getId().equals(id)) {
 				return option;
+			}
 		}
 		return null;
 	}
@@ -211,14 +216,16 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	 */
 	public boolean dependenciesFulfilled(Entity entity) {
 		// no deps defined:
-		if (dependencies.size() < 1)
+		if (dependencies.size() < 1) {
 			return true;
+		}
 
 		// if deps defined, at least one of them must be there:
 		for (Iterator iter = dependencies.iterator(); iter.hasNext();) {
 			String dep = (String) iter.next();
-			if (entity.isSelected(dep))
+			if (entity.isSelected(dep)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -234,9 +241,9 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	}
 
 	/**
-	 * Set the option that this property depends on.
-	 * It is only valid when one of the options given as
-	 * dependencies is selected in another property.
+	 * Set the option that this property depends on. It is only valid when one
+	 * of the options given as dependencies is selected in another property.
+	 * 
 	 * @param set
 	 */
 	public void setDependencies(HashSet set) {
@@ -246,71 +253,70 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see sernet.snkdb.guiswt.multiselectionlist.MLPropertyType#isMultiselect()
+	 * @see
+	 * sernet.snkdb.guiswt.multiselectionlist.MLPropertyType#isMultiselect()
 	 */
 	public boolean isMultiselect() {
 		return inputtype == INPUT_MULTIOPTION;
 	}
-	
+
 	public boolean isSingleSelect() {
 		return inputtype == INPUT_SINGLEOPTION;
 	}
-	
+
 	public boolean isNumericSelect() {
 		return inputtype == INPUT_NUMERICOPTION;
 	}
-	
+
 	public boolean isBool() {
 		return inputtype == INPUT_CHECKBOX;
 	}
-	
+
 	public boolean isEnum() {
-		return inputtype == INPUT_SINGLEOPTION 
-			|| inputtype == INPUT_MULTIOPTION;
+		return inputtype == INPUT_SINGLEOPTION || inputtype == INPUT_MULTIOPTION;
 	}
-	
+
 	public boolean isLine() {
 		return inputtype == INPUT_LINE;
 	}
-	
+
 	public boolean isReference() {
 		return inputtype == INPUT_REFERENCE;
 	}
-	
-	public boolean isText( ) {
+
+	public boolean isText() {
 		return inputtype == INPUT_TEXT;
 	}
-	
+
 	public boolean isDate() {
 		return inputtype == INPUT_DATE;
 	}
-
-	
 
 	/**
 	 * @param attribute
 	 */
 	public void setInputType(String attribute) {
-		if (attribute.equals("line"))
+		if (attribute.equals("line")) {
 			inputtype = INPUT_LINE;
-		else if (attribute.equals("singleoption"))
+		} else if (attribute.equals("singleoption")) {
 			inputtype = INPUT_SINGLEOPTION;
-		else if (attribute.equals("multioption"))
+		} else if (attribute.equals("multioption")) {
 			inputtype = INPUT_MULTIOPTION;
-		else if (attribute.equals("text"))
+		} else if (attribute.equals("text")) {
 			inputtype = INPUT_TEXT;
-		else if (attribute.equals("reference"))
+		} else if (attribute.equals("reference")) {
 			inputtype = INPUT_REFERENCE;
-		else if (attribute.equals("date"))
+		} else if (attribute.equals("date")) {
 			inputtype = INPUT_DATE;
-		else if (attribute.equals("numericoption"))
+		} else if (attribute.equals("numericoption")) {
 			inputtype = INPUT_NUMERICOPTION;
+		}
 	}
 
 	public void setInitialFocus(boolean b) {
 		this.initialfocus = b;
 	}
-	
+
 	public boolean isFocus() {
 		return this.initialfocus;
 	}
@@ -326,16 +332,17 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	public boolean validate(String text, String[] params) {
 		for (Iterator iter = validators.iterator(); iter.hasNext();) {
 			IValidationRule validator = (IValidationRule) iter.next();
-			if (!validator.validate(text, params))
+			if (!validator.validate(text, params)) {
 				return false;
+			}
 		}
 		return true;
 	}
 
 	public void setVisible(boolean b) {
-		this.visible=b;
+		this.visible = b;
 	}
-	
+
 	public boolean isVisible() {
 		return visible;
 	}
@@ -355,10 +362,11 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	public String getReferencedEntityTypeId() {
 		return referencedEntityTypeId;
 	}
-	
+
 	public List<IMLPropertyOption> getReferencedEntities() {
-		if (referenceResolver != null)
+		if (referenceResolver != null) {
 			return referenceResolver.getAllEntitesForType(referencedEntityTypeId);
+		}
 		return new ArrayList<IMLPropertyOption>();
 	}
 
@@ -371,8 +379,9 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	}
 
 	public List<HuiUrl> getResolvedUrls() {
-		if (this.urlResolver != null)
+		if (this.urlResolver != null) {
 			return urlResolver.resolve();
+		}
 		return new ArrayList<HuiUrl>();
 	}
 
@@ -395,10 +404,10 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	 * @param properties
 	 * @return
 	 */
-	public List<IMLPropertyOption> getReferencedEntities(
-			List<Property> references) {
-		if (referenceResolver != null)
+	public List<IMLPropertyOption> getReferencedEntities(List<Property> references) {
+		if (referenceResolver != null) {
 			return referenceResolver.getReferencedEntitesForType(referencedEntityTypeId, references);
+		}
 		return new ArrayList<IMLPropertyOption>();
 	}
 
@@ -409,7 +418,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 		try {
 			this.minValue = Integer.parseInt(minString);
 		} catch (NumberFormatException e) {
-			Logger.getLogger(this.getClass()).debug("Not a valid number: " + minString);
+			log.warn("Not a valid number: " + minString);
 		}
 	}
 
@@ -417,9 +426,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 		try {
 			this.maxValue = Integer.parseInt(maxString);
 		} catch (NumberFormatException e) {
-			Logger.getLogger(this.getClass()).debug("Not a valid number: " + maxString);
+			log.warn("Not a valid number: " + maxString);
 		}
 	}
-
 
 }
