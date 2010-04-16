@@ -64,6 +64,8 @@ import sernet.snutils.DBException;
 public class HUITypeFactory {
 	private static final Logger log = Logger.getLogger(HUITypeFactory.class);
 
+	public static String HUI_CONFIGURATION_FILE = "SNCA.xml";
+	
 	private static Document doc;
 
 	private Map<String, EntityType> allEntities = null;
@@ -74,6 +76,8 @@ public class HUITypeFactory {
 	private static Date fileDate;
 	private static String lastModified;
 
+	public SNCAMessages messages;
+	
 	protected HUITypeFactory() {
 		// Intentionally do nothing (is for the Functionless subclass).
 	}
@@ -97,19 +101,26 @@ public class HUITypeFactory {
 	 * @throws DBException
 	 */
 	private HUITypeFactory(URL xmlFile) throws DBException {
+		
 		if (xmlFile == null)
 			throw new DBException(
 					"Pfad für XML Systemdefinition nicht initialisiert. "
 							+ "Config File korrekt?");
+		
 		if (xmlFile.getProtocol().equals("http")
 				|| xmlFile.getProtocol().equals("ftp"))
 			try {
-				xmlFile = new URL(xmlFile.toString() + "?nocache="
-						+ Math.random());
+				xmlFile = new URL(xmlFile.toString() + "?nocache=" + Math.random());
 			} catch (MalformedURLException e) {
 				throw new RuntimeException(e);
 			}
 
+		messages = new SNCAMessages(xmlFile.toExternalForm());
+			
+		if (log.isDebugEnabled()) {
+			log.debug("Conf url: " + messages.getBaseUrl() + ", localized name of huientity role: " + messages.getString("role"));
+		}
+		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		factory.setValidating(true);
@@ -316,7 +327,22 @@ public class HUITypeFactory {
 
 		PropertyType propObj = new PropertyType();
 		propObj.setId(id);
-		propObj.setName(prop.getAttribute("name"));
+		
+		String name = getMessage(id);
+		if(name!=null) {
+			if (log.isDebugEnabled()) {
+				log.debug("returning translated name, id: " + id + ", name: " + name);
+			}
+		} else  {
+			name = prop.getAttribute("name");
+			if (log.isDebugEnabled()) {
+				log.debug("returning name from SNCA.XML, id: " + id + ", name: " + name);
+				// mark missing resource bundle entries
+				name = name + " (SNCA.xml)";
+			}
+		}
+		propObj.setName(name);
+		
 		propObj.setTooltiptext(prop.getAttribute("tooltip"));
 		propObj.setInputType(prop.getAttribute("inputtype"));
 		propObj.setCrudButtons(prop.getAttribute("crudButtons").equals("true"));
@@ -476,6 +502,10 @@ public class HUITypeFactory {
 				return possibleRelation;
 		}
 		return null;
+	}
+	
+	public String getMessage(String key) {
+		return messages.getString(key);
 	}
 
 }
