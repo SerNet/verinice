@@ -75,17 +75,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				.getBoolean(PreferenceConstants.FIRSTSTART)) {
 			Activator.getDefault().getPluginPreferences().setValue(PreferenceConstants.FIRSTSTART, false);
 
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Hinweis zum Datenschutz", 
-			"Langfassung:\nVerinice sucht bei jedem Start automatisch nach Updates und baut dafür eine einfache " +
-			"HTTP-Verbindung zum " +
-			"Webserver 'updates.verinice.org' auf. Falls dort Updates vorhanden sind, " +
-			"werden Sie gefragt, ob Sie diese installieren möchten.\n" +
-			"Die automatischen Updates können Sie in den Einstellungen deaktivieren, wir empfehlen jedoch, " +
-			"diese aktiviert zu lassen, damit Sie von Funktions- und Sicherheitsupdates " +
-			"profitieren.\n" +
-			"Verinice übermittelt keinerlei Daten über Ihren Rechner oder Ihre Konfiguration an den Update-Server " +
-			"und installiert nichts ohne Ihre ausdrückliche Zustimmung!\n\n" +
-			"Kurzfassung: \nVerinice telefoniert nicht nach Hause und installiert keinen Bundestrojaner. ;-)");
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), sernet.gs.ui.rcp.main.Messages.ApplicationWorkbenchWindowAdvisor_0, 
+			sernet.gs.ui.rcp.main.Messages.ApplicationWorkbenchWindowAdvisor_1);
 		}
 		
 		
@@ -95,7 +86,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	}
 
 	private void preloadDBMapper() {
-		WorkspaceJob job = new WorkspaceJob("Preloading Hibernate OR-Mapper...") {
+		WorkspaceJob job = new WorkspaceJob(sernet.gs.ui.rcp.main.Messages.ApplicationWorkbenchWindowAdvisor_2) {
 			public IStatus runInWorkspace(IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
 				CnAElementHome.getInstance().preload(CnAWorkspace.getInstance().getConfDir());
@@ -124,7 +115,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 								Preferences prefs = Activator.getDefault().getPluginPreferences();
 								prefs.setValue(PreferenceConstants.FIRSTSTART, false);
 
-								ShowCheatSheetAction action = new ShowCheatSheetAction(true, "Erste Schritte");
+								ShowCheatSheetAction action = new ShowCheatSheetAction(true, sernet.gs.ui.rcp.main.Messages.ApplicationWorkbenchWindowAdvisor_3);
 								action.run();
 							}
 					}
