@@ -54,8 +54,14 @@ public interface IItem extends Serializable {
 	
 	Collection<IItem> getItems();
 
-	/**
-	 * @return
-	 */
 	boolean isMaturityLevelSupport();
+	
+	public String getMaturity();
+
+	public String getWeight1();
+	public String getWeight2();
+
+	public String getThreshold1();
+	public String getThreshold2();
+
 }

@@ -28,6 +28,7 @@ import sernet.verinice.iso27k.rcp.CatalogView;
  * or {@link ControlGroup}s
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * @author koderman[at]sernet[dot]de
  */
 public class ItemControlTransformer {
 
@@ -47,7 +48,13 @@ public class ItemControlTransformer {
 		
 		if (item.isMaturityLevelSupport()) {
 			
+			control.setMaturity(item.getMaturity());
+			control.setWeight1(item.getWeight1());
+			control.setWeight2(item.getWeight2());
+			control.setThreshold1(item.getThreshold1());
+			control.setThreshold2(item.getThreshold2());
 		}
+		
 		return control;
 	}
 

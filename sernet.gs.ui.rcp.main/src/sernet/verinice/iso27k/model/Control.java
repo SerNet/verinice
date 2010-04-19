@@ -51,13 +51,10 @@ public class Control extends CnATreeElement implements IISO27kElement {
 
 	// this is another way to meassure control implementation: (currently disabled in SNCA.xml)
 	public static final String PROP_MATURITY = "control_maturity"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_0 = "control_maturity_0"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_1 = "control_maturity_1"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_2 = "control_maturity_2"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_3 = "control_maturity_3"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_4 = "control_maturity_4"; //$NON-NLS-1$
-	public static final String PROP_MATURITY_5 = "control_maturity_5"; //$NON-NLS-1$
-	private static final int SUFFICIENT_MATURITY = 2;
+	public static final String PROP_WEIGHT1 = "control_weight"; //$NON-NLS-1$
+	public static final String PROP_WEIGHT2 = "control_ownweight"; //$NON-NLS-1$
+	public static final String PROP_THRESHOLD1 = "control_min1"; //$NON-NLS-1$
+	public static final String PROP_THRESHOLD2 = "control_min2"; //$NON-NLS-1$
 
 	/**
 	 * Creates an empty asset
@@ -85,34 +82,7 @@ public class Control extends CnATreeElement implements IISO27kElement {
 		return PROP_IMPLEMENTED_NOTEDITED;
 	}
 	
-	@Deprecated
-	public int getMaturity() {
-		String maturity = null;
-		PropertyList properties = getEntity().getProperties(PROP_MATURITY);
-		if (properties == null || properties.getProperties() == null
-				|| properties.getProperties().size() < 1)
-			return -1;
-
-		Property property = properties.getProperty(0);
-		if (property != null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
-			maturity = property.getPropertyValue();
-		
-		if (maturity == null)
-			return -1;
-		if (maturity.equals(PROP_MATURITY_0))
-			return 0;
-		if (maturity.equals(PROP_MATURITY_1))
-			return 1;
-		if (maturity.equals(PROP_MATURITY_2))
-			return 2;
-		if (maturity.equals(PROP_MATURITY_3))
-			return 3;
-		if (maturity.equals(PROP_MATURITY_4))
-			return 4;
-		if (maturity.equals(PROP_MATURITY_5))
-			return 5;
-		return -1;
-	}
+	
 	
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
@@ -154,17 +124,28 @@ public class Control extends CnATreeElement implements IISO27kElement {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
 	}
 
-	/**
-	 * This would be another way to measure control implementation.
-	 * Currently replaced by  yes / no / maybe choice.
-	 * 
-	 * @param control
-	 * @deprecated
-	 * @return
-	 */
-	public static boolean isSufficientlyMature(Control control) {
-		Logger.getLogger(Control.class).debug("Control maturity: " + control.getMaturity());
-		return control.getMaturity() >= Control.SUFFICIENT_MATURITY;
+	public void setMaturity(String value) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_MATURITY), value);
+	}
+
+	public void setWeight1(String value) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_WEIGHT1), value);
+		
+	}
+
+	public void setWeight2(String value) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_WEIGHT2), value);
+		
+	}
+
+	public void setThreshold1(String value) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_THRESHOLD1), value);
+		
+	}
+
+	public void setThreshold2(String value) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_THRESHOLD2), value);
+		
 	}
 
 }
