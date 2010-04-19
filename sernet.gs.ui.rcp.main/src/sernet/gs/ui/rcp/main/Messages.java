@@ -27,6 +27,22 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.messages"; //$NON-NLS-1$
+	public static String Activator_0;
+	public static String Activator_1;
+	public static String Activator_10;
+	public static String Activator_11;
+	public static String Activator_2;
+	public static String Activator_3;
+	public static String Activator_6;
+	public static String Activator_7;
+	public static String Activator_8;
+	public static String Activator_9;
+	public static String Activator_26;
+	public static String Activator_27;
+	public static String Activator_29;
+	public static String Activator_31;
+	public static String Activator_InitDatabase;
+	public static String Activator_LoadModel;
 	public static String ApplicationActionBarAdvisor_0;
 	public static String ApplicationActionBarAdvisor_1;
 	public static String ApplicationActionBarAdvisor_10;
@@ -54,6 +70,18 @@ public class Messages extends NLS {
 	public static String ApplicationActionBarAdvisor_7;
 	public static String ApplicationActionBarAdvisor_8;
 	public static String ApplicationActionBarAdvisor_9;
+	public static String ApplicationWorkbenchWindowAdvisor_0;
+	public static String ApplicationWorkbenchWindowAdvisor_1;
+	public static String ApplicationWorkbenchWindowAdvisor_2;
+	public static String ApplicationWorkbenchWindowAdvisor_3;
+	public static String ApplicationWorkbenchWindowAdvisor_20;
+	public static String ApplicationWorkbenchWindowAdvisor_22;
+	public static String ExceptionUtil_0;
+	public static String ExceptionUtil_1;
+	public static String ExceptionUtil_2;
+	public static String ExceptionUtil_3;
+	public static String ExceptionUtil_4;
+	public static String ExceptionUtil_5;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

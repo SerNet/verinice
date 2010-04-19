@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
@@ -40,11 +41,16 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
  */
 public class ExceptionUtil {
 
+	private static final Logger LOG = Logger.getLogger(ExceptionUtil.class);
+	
 	public static void log(Throwable e, final String msg) {
+		// log the error with log4j
+		LOG.error("An error occured: " + msg, e);
+		
 		if (e instanceof StaleObjectStateException) {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(Display.getDefault().getActiveShell(), "Synchronisation", "Die Daten wurden zwischenzeitlich durch einen anderen Benutzer verändert und soeben " + "aktualisiert. Ihre Aktion wurde abgebrochen um zu verhindern, dass unbeabsichtigt " + "Daten überschrieben werden. Bitte überprüfen Sie die Änderungen und führen Sie ihre" + "Eingabe ggf. erneut aus.");
+					MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.ExceptionUtil_0, Messages.ExceptionUtil_1);
 				}
 			});
 			return;
@@ -53,7 +59,7 @@ public class ExceptionUtil {
 		if (e instanceof SecurityException) {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(Display.getDefault().getActiveShell(), "Aktion nicht erlaubt", "Sie haben nicht die Berechtigung, um diese Aktion auszuführen.");
+					MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.ExceptionUtil_2, Messages.ExceptionUtil_3);
 				}
 			});
 			return;
@@ -67,12 +73,10 @@ public class ExceptionUtil {
 			}
 		}
 
-		String text = e.getLocalizedMessage() != null ? e.getLocalizedMessage() : "siehe Details";
+		String text = e.getLocalizedMessage() != null ? e.getLocalizedMessage() : Messages.ExceptionUtil_4;
 
 		if (Activator.getDefault() == null) {
-			// RCP not initialized, skip dialog and just print to stdout:
-			System.err.println(msg);
-			e.printStackTrace();
+			// RCP not initialized
 			return;
 		}
 
@@ -97,7 +101,7 @@ public class ExceptionUtil {
 		if (Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.ERRORPOPUPS)) {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
-					ErrorDialog.openError(Display.getDefault().getActiveShell(), "Fehler", msg, errorStatus);
+					ErrorDialog.openError(Display.getDefault().getActiveShell(), Messages.ExceptionUtil_5, msg, errorStatus);
 				}
 			});
 		}
@@ -107,7 +111,7 @@ public class ExceptionUtil {
 		StringBuffer buf = new StringBuffer();
 		StackTraceElement[] stackTrace = e.getStackTrace();
 		for (StackTraceElement stackTraceElement : stackTrace) {
-			buf.append(stackTraceElement.toString() + "\n");
+			buf.append(stackTraceElement.toString() + "\n"); //$NON-NLS-1$
 		}
 		return buf.toString();
 	}
