@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.update.internal.core.UpdateCore;
 
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 
 /**
  * Prepare the workspace directory for the application. Created needed files
@@ -55,9 +54,9 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
  * 
  */
 public class CnAWorkspace {
-	
+
 	private static final Logger log = Logger.getLogger(CnAWorkspace.class);
-	
+
 	private static final String OFFICEDIR = "office";
 
 	public static final String LINE_SEP = System.getProperty("line.separator");
@@ -70,8 +69,8 @@ public class CnAWorkspace {
 	static final byte[] buffer = new byte[BUFF_SIZE];
 
 	/**
-	 * Version number to check against version file.
-	 * When changing this, also change version number in skeleton file "conf/configuration.version"
+	 * Version number to check against version file. When changing this, also
+	 * change version number in skeleton file "conf/configuration.version"
 	 */
 	public static final Object CONFIG_CURRENT_VERSION = "0.8.1";
 
@@ -84,69 +83,58 @@ public class CnAWorkspace {
 	private static final Object LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-1.0";
 
 	private static CnAWorkspace instance;
-	
 
 	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
 		private boolean modechangeWarning = true;
 
 		public void propertyChange(PropertyChangeEvent event) {
-			if ((event.getProperty().equals(PreferenceConstants.GS_DB_URL)
-					|| event.getProperty().equals(PreferenceConstants.GS_DB_USER) 
-					|| event.getProperty().equals(PreferenceConstants.GS_DB_PASS))) {
-				
+			if ((event.getProperty().equals(PreferenceConstants.GS_DB_URL) || event.getProperty().equals(PreferenceConstants.GS_DB_USER) || event.getProperty().equals(PreferenceConstants.GS_DB_PASS))) {
+
 				Preferences prefs = Activator.getDefault().getPluginPreferences();
 				try {
 					String dbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
-					
-					createGstoolImportDatabaseConfig(dbUrl,
-							prefs.getString(PreferenceConstants.GS_DB_USER), 
-							prefs.getString(PreferenceConstants.GS_DB_PASS));
-					
+
+					createGstoolImportDatabaseConfig(dbUrl, prefs.getString(PreferenceConstants.GS_DB_USER), prefs.getString(PreferenceConstants.GS_DB_PASS));
+
 				} catch (Exception e) {
 					ExceptionUtil.log(e, "Fehler beim Schreiben der Konfiguration für GSTool-Import.");
 				}
 			}
-			
-			if (event.getProperty().equals(PreferenceConstants.OPERATION_MODE)
-					|| event.getProperty().equals(PreferenceConstants.VNSERVER_URI)) {
+
+			if (event.getProperty().equals(PreferenceConstants.OPERATION_MODE) || event.getProperty().equals(PreferenceConstants.VNSERVER_URI)) {
 				try {
 					updatePolicyFile();
-					
-					if (!modechangeWarning ) {
+
+					if (!modechangeWarning) {
 						modechangeWarning = false;
-						MessageDialog.openWarning(Display.getCurrent().getActiveShell(), "Neustart erforderlich", 
-								"Wechsel des Betriebsmodus oder Änderungen an der Serververbindung erfordern " +
-								"einen Neustart. Sie müssen Verinice " +
-						"jetzt beenden und neu starten.");
+						MessageDialog.openWarning(Display.getCurrent().getActiveShell(), "Neustart erforderlich", "Wechsel des Betriebsmodus oder Änderungen an der Serververbindung erfordern einen Neustart. Sie müssen Verinice jetzt beenden und neu starten.");
 					}
 				} catch (Exception e) {
-					ExceptionUtil.log(e, "Fehler beim Schreiben der Konfiguration für " +
-							"Datenbankzugriff (Spring).");
+					ExceptionUtil.log(e, "Fehler beim Schreiben der Konfiguration für Datenbankzugriff (Spring).");
 				}
 			}
 		}
 	};
 
 	private File confDir;
-	
+
 	private CnAWorkspace() {
-		Activator.getDefault().getPluginPreferences()
-		.addPropertyChangeListener(this.prefChangeListener);
+		Activator.getDefault().getPluginPreferences().addPropertyChangeListener(this.prefChangeListener);
 	}
 
 	public String createTempImportDbUrl() {
-		String tmpDerbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s",
-				CnAWorkspace.getInstance().getWorkdir().replaceAll("\\\\", "/") );
+		String tmpDerbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s", CnAWorkspace.getInstance().getWorkdir().replaceAll("\\\\", "/"));
 		return tmpDerbyUrl.replace(VERINICEDB, TEMPIMPORTDB);
 	}
-	
+
 	public String getTempImportDbDirName() {
 		return CnAWorkspace.getInstance().getWorkdir() + File.separator + TEMPIMPORTDB;
 	}
 
 	public static CnAWorkspace getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new CnAWorkspace();
+		}
 		return instance;
 	}
 
@@ -159,9 +147,7 @@ public class CnAWorkspace {
 	public void prepare(boolean force) {
 		prepareWorkDir();
 
-		if (!force
-				&& confDir.exists() 
-				&& confDir.isDirectory()) {
+		if (!force && confDir.exists() && confDir.isDirectory()) {
 			File confFile = new File(confDir, "configuration.version");
 			if (confFile.exists()) {
 				Properties props = new Properties();
@@ -171,18 +157,16 @@ public class CnAWorkspace {
 					props.load(fis);
 
 					if (props.get("version").equals(CONFIG_CURRENT_VERSION)) {
-						Logger.getLogger(CnAWorkspace.class).debug(
-								"Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: "
-										+ confDir.getAbsolutePath());
+						log.debug("Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: " + confDir.getAbsolutePath());
 						return;
 					}
 				} catch (Exception e) {
-					Logger.getLogger(this.getClass()).debug(e);
+					log.debug(e);
 				}
 			}
 
 		}
-		
+
 		CnAWorkspace instance = new CnAWorkspace();
 		try {
 			instance.createConfDir();
@@ -191,63 +175,54 @@ public class CnAWorkspace {
 			instance.createDatabaseConfig();
 			instance.updatePolicyFile();
 		} catch (Exception e) {
-			ExceptionUtil.log(e,
-					"Fehler beim Anlegen des Arbeitsverzeichnisses: "
-					+ confDir.getAbsolutePath());
+			ExceptionUtil.log(e, "Fehler beim Anlegen des Arbeitsverzeichnisses: " + confDir.getAbsolutePath());
 		}
-
 
 	}
 
 	public void prepareWorkDir() {
 		URL url = Platform.getInstanceLocation().getURL();
 		String path = url.getPath().replaceAll("/", "\\" + File.separator);
-		workDir = (new File(path)).getAbsolutePath();		
+		workDir = (new File(path)).getAbsolutePath();
 		confDir = new File(url.getPath() + File.separator + "conf");
-		
+
 		// FIXME ak update site only on multiuser-server (not with internal one)
 		updatePolicyFile();
 	}
 
 	private void updatePolicyFile() {
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		
-		if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER))
-		{
+
+		if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER)) {
 			removePolicyFile();
-		}
-		else
-		{
+		} else {
 			try {
 				createPolicyFile(prefs);
 			} catch (MalformedURLException e) {
-				Logger.getLogger(this.getClass()).error("Konnte Update-Policy File nicht erzeugen.", e);
+				log.error("Konnte Update-Policy File nicht erzeugen.", e);
 			} catch (IOException e) {
-				Logger.getLogger(this.getClass()).error("Konnte Update-Policy File nicht erzeugen.", e);
+				log.error("Konnte Update-Policy File nicht erzeugen.", e);
 			}
 		}
 	}
 
 	private void removePolicyFile() {
-		// remove policy file / path to policy file. thereby setting update site to default:
+		// remove policy file / path to policy file. thereby setting update site
+		// to default:
 		removeFile(getConfDir(), "policy.xml");
-		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", "" );
+		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", "");
 	}
 
-	private void createPolicyFile(Preferences prefs) throws IOException,
-			MalformedURLException {
-		// create update policy file to set update site to local verinice server:
+	private void createPolicyFile(Preferences prefs) throws IOException, MalformedURLException {
+		// create update policy file to set update site to local verinice
+		// server:
 		HashMap<String, String> settings = new HashMap<String, String>(1);
 		settings.put("updatesiteurl", createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
-		createTextFile("conf" + File.separator + "skel_policy.xml",
-				getConfDir(), 
-				"policy.xml",
-				settings);
-		
+		createTextFile("conf" + File.separator + "skel_policy.xml", getConfDir(), "policy.xml", settings);
+
 		// set path to policy.xml with changed update site (on local server):
 		File policyFile = new File(getConfDir() + File.separator + "policy.xml");
-		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", 
-				policyFile.toURI().toURL().toString() );
+		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", policyFile.toURI().toURL().toString());
 	}
 
 	/**
@@ -257,10 +232,11 @@ public class CnAWorkspace {
 	private void removeFile(String dir, String name) {
 		File fileToDelete = new File(dir + File.separator + name);
 		boolean success = fileToDelete.delete();
-		if (success)
-			Logger.getLogger(this.getClass()).debug(name + " was successfully deleted.");
-		else
-			Logger.getLogger(this.getClass()).debug(name + " was NOT deleted.");
+		if (success) {
+			log.debug(name + " was successfully deleted.");
+		} else {
+			log.debug(name + " was NOT deleted.");
+		}
 	}
 
 	/**
@@ -288,10 +264,8 @@ public class CnAWorkspace {
 		confDir.mkdirs();
 
 		createTextFile("conf" + File.separator + "SNCA.xml", workDir);
-		createTextFile("conf" + File.separator + "reports.properties_skeleton",
-				workDir, "conf" + File.separator + "reports.properties");
-		createTextFile("conf" + File.separator + "configuration.version",
-				workDir);
+		createTextFile("conf" + File.separator + "reports.properties_skeleton", workDir, "conf" + File.separator + "reports.properties");
+		createTextFile("conf" + File.separator + "configuration.version", workDir);
 	}
 
 	private void createOfficeDir() throws NullPointerException, IOException {
@@ -322,14 +296,12 @@ public class CnAWorkspace {
 	 * @param toDir
 	 * @throws IOException
 	 */
-	private void createBinaryFile(String infile, String toDir)
-			throws IOException {
+	private void createBinaryFile(String infile, String toDir) throws IOException {
 
 		backupFile(toDir, infile);
 
 		String infileResource = infile.replace('\\', '/');
-		InputStream in = getClass().getClassLoader().getResourceAsStream(
-				infileResource);
+		InputStream in = getClass().getClassLoader().getResourceAsStream(infileResource);
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(toDir + File.separator + infile);
@@ -352,47 +324,39 @@ public class CnAWorkspace {
 		}
 	}
 
-	public void createGstoolImportDatabaseConfig(String url, String user,
-			String pass) throws NullPointerException, IOException {
+	public void createGstoolImportDatabaseConfig(String url, String user, String pass) throws NullPointerException, IOException {
 		HashMap<String, String> settings = new HashMap<String, String>(5);
 		settings.put("url", url.replace("\\", "\\\\"));
 		settings.put("user", user);
 		settings.put("pass", pass);
-		
-		// import from .mdb file over odbc bridge goes into temporary derby db first:
-		if (url.indexOf("odbc")>-1) {
+
+		// import from .mdb file over odbc bridge goes into temporary derby db
+		// first:
+		if (url.indexOf("odbc") > -1) {
 			// change db url to temporary DB when importing from mdb file
 			String dbUrl = createTempImportDbUrl();
 			settings.put("url", dbUrl);
 			settings.put("driver", PreferenceConstants.DB_DRIVER_DERBY);
 			settings.put("dialect", PreferenceConstants.DB_DIALECT_derby);
-		}
-		else {
+		} else {
 			// direct import from ms sql server or desktop engine:
 			settings.put("driver", PreferenceConstants.GS_DB_DRIVER_JTDS);
 			settings.put("dialect", PreferenceConstants.GS_DB_DIALECT_JTDS);
 		}
-		
-		createTextFile("conf" + File.separator
-				+ "skel_hibernate-vampire.cfg.xml", workDir, "conf"
-				+ File.separator + "hibernate-vampire.cfg.xml", settings);
-	}
-	
-	public void createGstoolImportDatabaseConfig() throws NullPointerException, IOException {
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		createGstoolImportDatabaseConfig(prefs
-				.getString(PreferenceConstants.GS_DB_URL), prefs
-				.getString(PreferenceConstants.GS_DB_USER), prefs
-				.getString(PreferenceConstants.GS_DB_PASS));
+
+		createTextFile("conf" + File.separator + "skel_hibernate-vampire.cfg.xml", workDir, "conf" + File.separator + "hibernate-vampire.cfg.xml", settings);
 	}
 
-	private void createTextFile(String infile, String toDir)
-			throws NullPointerException, IOException {
+	public void createGstoolImportDatabaseConfig() throws NullPointerException, IOException {
+		Preferences prefs = Activator.getDefault().getPluginPreferences();
+		createGstoolImportDatabaseConfig(prefs.getString(PreferenceConstants.GS_DB_URL), prefs.getString(PreferenceConstants.GS_DB_USER), prefs.getString(PreferenceConstants.GS_DB_PASS));
+	}
+
+	private void createTextFile(String infile, String toDir) throws NullPointerException, IOException {
 		createTextFile(infile, toDir, infile, null);
 	}
 
-	private void createTextFile(String infile, String toDir, String outfile)
-			throws NullPointerException, IOException {
+	private void createTextFile(String infile, String toDir, String outfile) throws NullPointerException, IOException {
 		createTextFile(infile, toDir, outfile, null);
 	}
 
@@ -410,13 +374,10 @@ public class CnAWorkspace {
 	 * @throws NullPointerException
 	 * @throws IOException
 	 */
-	private void createTextFile(String infile, String toDir, String outfile,
-			Map<String, String> variables) throws NullPointerException,
-			IOException {
+	private void createTextFile(String infile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
 
 		String infileResource = infile.replace('\\', '/');
-		InputStream is = getClass().getClassLoader().getResourceAsStream(
-				infileResource);
+		InputStream is = getClass().getClassLoader().getResourceAsStream(infileResource);
 		InputStreamReader inRead = new InputStreamReader(is);
 		BufferedReader bufRead = new BufferedReader(inRead);
 		StringBuffer skelFile = new StringBuffer();
@@ -440,8 +401,7 @@ public class CnAWorkspace {
 		is.close();
 
 		backupFile(toDir, outfile);
-		FileOutputStream fout = new FileOutputStream(toDir + File.separator
-				+ outfile, false);
+		FileOutputStream fout = new FileOutputStream(toDir + File.separator + outfile, false);
 		OutputStreamWriter outWrite = new OutputStreamWriter(fout);
 		outWrite.write(skelFile.toString());
 		outWrite.close();
@@ -456,22 +416,13 @@ public class CnAWorkspace {
 		}
 	}
 
-	public synchronized void createDatabaseConfig()
-			throws NullPointerException, IOException, IllegalStateException {
-		
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		
-		Activator.getDefault().getInternalServer().configure(prefs
-				.getString(PreferenceConstants.DB_URL), prefs
-				.getString(PreferenceConstants.DB_USER), prefs
-				.getString(PreferenceConstants.DB_PASS), prefs
-				.getString(PreferenceConstants.DB_DRIVER), prefs
-				.getString(PreferenceConstants.DB_DIALECT));
+	public synchronized void createDatabaseConfig() throws NullPointerException, IOException, IllegalStateException {
 
-		createGstoolImportDatabaseConfig(prefs
-				.getString(PreferenceConstants.GS_DB_URL), prefs
-				.getString(PreferenceConstants.GS_DB_USER), prefs
-				.getString(PreferenceConstants.GS_DB_PASS));
+		Preferences prefs = Activator.getDefault().getPluginPreferences();
+
+		Activator.getDefault().getInternalServer().configure(prefs.getString(PreferenceConstants.DB_URL), prefs.getString(PreferenceConstants.DB_USER), prefs.getString(PreferenceConstants.DB_PASS), prefs.getString(PreferenceConstants.DB_DRIVER), prefs.getString(PreferenceConstants.DB_DIALECT));
+
+		createGstoolImportDatabaseConfig(prefs.getString(PreferenceConstants.GS_DB_URL), prefs.getString(PreferenceConstants.GS_DB_USER), prefs.getString(PreferenceConstants.GS_DB_PASS));
 	}
 
 	public void prepare() {
