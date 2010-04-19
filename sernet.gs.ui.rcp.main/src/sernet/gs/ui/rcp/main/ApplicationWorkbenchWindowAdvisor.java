@@ -36,7 +36,6 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ViewIntroAdapterPart;
 
 import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
-import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.OpenCataloguesJob;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -75,8 +74,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				.getBoolean(PreferenceConstants.FIRSTSTART)) {
 			Activator.getDefault().getPluginPreferences().setValue(PreferenceConstants.FIRSTSTART, false);
 
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), sernet.gs.ui.rcp.main.Messages.ApplicationWorkbenchWindowAdvisor_0, 
-			sernet.gs.ui.rcp.main.Messages.ApplicationWorkbenchWindowAdvisor_1);
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.ApplicationWorkbenchWindowAdvisor_0, 
+			Messages.ApplicationWorkbenchWindowAdvisor_1);
 		}
 		
 		
@@ -86,7 +85,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	}
 
 	private void preloadDBMapper() {
-		WorkspaceJob job = new WorkspaceJob(sernet.gs.ui.rcp.main.Messages.ApplicationWorkbenchWindowAdvisor_2) {
+		WorkspaceJob job = new WorkspaceJob(Messages.ApplicationWorkbenchWindowAdvisor_2) {
 			public IStatus runInWorkspace(IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
 				CnAElementHome.getInstance().preload(CnAWorkspace.getInstance().getConfDir());
@@ -115,7 +114,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 								Preferences prefs = Activator.getDefault().getPluginPreferences();
 								prefs.setValue(PreferenceConstants.FIRSTSTART, false);
 
-								ShowCheatSheetAction action = new ShowCheatSheetAction(true, sernet.gs.ui.rcp.main.Messages.ApplicationWorkbenchWindowAdvisor_3);
+								ShowCheatSheetAction action = new ShowCheatSheetAction(true, Messages.ApplicationWorkbenchWindowAdvisor_3);
 								action.run();
 							}
 					}
@@ -132,12 +131,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	public void loadBsiCatalogues() {
 		try {
 			WorkspaceJob job = new OpenCataloguesJob(
-					Messages.BSIMassnahmenView_0);
+					Messages.ApplicationWorkbenchWindowAdvisor_20);
 			job.setUser(false);
 			job.schedule();
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass()).error(
-					Messages.BSIMassnahmenView_2, e);
+					Messages.ApplicationWorkbenchWindowAdvisor_22, e);
 		}
 	}
 

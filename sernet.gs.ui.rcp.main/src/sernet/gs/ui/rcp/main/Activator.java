@@ -40,7 +40,6 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
@@ -61,9 +60,9 @@ public class Activator extends AbstractUIPlugin {
 	private static final Logger LOG = Logger.getLogger(Activator.class);
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main";
+	public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main"; //$NON-NLS-1$
 
-	private static final String PAX_WEB_SYMBOLIC_NAME = "org.ops4j.pax.web.pax-web-bundle";
+	private static final String PAX_WEB_SYMBOLIC_NAME = "org.ops4j.pax.web.pax-web-bundle"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
@@ -113,26 +112,26 @@ public class Activator extends AbstractUIPlugin {
 
 		// Start server only when it is needed.
 		if (standalone) {
-			Bundle bundle = Platform.getBundle("sernet.gs.server");
+			Bundle bundle = Platform.getBundle("sernet.gs.server"); //$NON-NLS-1$
 			if (bundle == null)
-				LOG.warn("verinice server bundle is not available. Assuming it is started separately.");
+				LOG.warn("verinice server bundle is not available. Assuming it is started separately."); //$NON-NLS-1$
 			else if (bundle.getState() == Bundle.INSTALLED || bundle.getState() == Bundle.RESOLVED) {
-				LOG.debug("Manually starting GS Server");
+				LOG.debug("Manually starting GS Server"); //$NON-NLS-1$
 				bundle.start();
 			}
 
 			ServiceReference sr = context.getServiceReference(IInternalServer.class.getName());
 			if (sr == null)
-				throw new IllegalStateException("Cannot retrieve internal server service.");
+				throw new IllegalStateException("Cannot retrieve internal server service."); //$NON-NLS-1$
 
 			internalServer = (IInternalServer) context.getService(sr);
 			if (LOG.isInfoEnabled()) {
-				LOG.info("Preference " + PreferenceConstants.OPERATION_MODE + "=" + PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER + ": Using internal server.");
+				LOG.info("Preference " + PreferenceConstants.OPERATION_MODE + "=" + PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER + ": Using internal server."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		} else {
 			internalServer = new ServerDummy();
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Internal server is not used.");
+				LOG.debug("Internal server is not used."); //$NON-NLS-1$
 			}
 			// Pax Web Http Service (embedded jetty) is starting automatically after loading and starting
 			// the bundle PAX_WEB_SYMBOLIC_NAME which you can not prevent
@@ -143,7 +142,7 @@ public class Activator extends AbstractUIPlugin {
 					paxWebBundle.stop();
 				}
 			} catch (Exception e) {
-				LOG.error("Error while stopping pax-web http-service.", e);
+				LOG.error("Error while stopping pax-web http-service.", e); //$NON-NLS-1$
 			}
 		}
 
@@ -151,20 +150,20 @@ public class Activator extends AbstractUIPlugin {
 			try {
 				internalServer.setGSCatalogURL(new File(prefs.getString(PreferenceConstants.BSIDIR)).toURI().toURL());
 			} catch (MalformedURLException mfue) {
-				LOG.warn("Stored GS catalog dir is an invalid URL.");
+				LOG.warn("Stored GS catalog dir is an invalid URL."); //$NON-NLS-1$
 			}
 		} else {
 			try {
 				internalServer.setGSCatalogURL(new File(prefs.getString(PreferenceConstants.BSIZIPFILE)).toURI().toURL());
 			} catch (MalformedURLException mfue) {
-				LOG.warn("Stored GS catalog zip file path is an invalid URL.");
+				LOG.warn("Stored GS catalog zip file path is an invalid URL."); //$NON-NLS-1$
 			}
 
 		}
 		try {
 			internalServer.setDSCatalogURL(new File(prefs.getString(PreferenceConstants.DSZIPFILE)).toURI().toURL());
 		} catch (MalformedURLException mfue) {
-			LOG.warn("Stored DS catalog zip file path is an invalid URL.");
+			LOG.warn("Stored DS catalog zip file path is an invalid URL."); //$NON-NLS-1$
 		}
 
 		// Provide initial DB connection details to server.
@@ -177,7 +176,7 @@ public class Activator extends AbstractUIPlugin {
 			ServiceFactory.openCommandService();
 		} catch (Exception e) {
 			// if this fails, try rewriting config:
-			LOG.error("Exception while connection to command service, forcing recreation of " + "service factory configuration from preferences.", e);
+			LOG.error("Exception while connection to command service, forcing recreation of " + "service factory configuration from preferences.", e); //$NON-NLS-1$ //$NON-NLS-2$
 			CnAWorkspace.getInstance().prepare(true);
 		}
 
@@ -219,12 +218,12 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public static void initDatabase(ISchedulingRule mutex, final StatusResult result) {
-		WorkspaceJob initDbJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitDatabase) {
+		WorkspaceJob initDbJob = new WorkspaceJob(Messages.Activator_InitDatabase) {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
 				try {
-					monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_InitDatabase, IProgressMonitor.UNKNOWN);
+					monitor.beginTask(Messages.Activator_InitDatabase, IProgressMonitor.UNKNOWN);
 					// If server could not be started for whatever reason do not
 					// try to
 					// load the model either.
@@ -236,8 +235,8 @@ public class Activator extends AbstractUIPlugin {
 						Activator.checkDbVersion();
 					}
 				} catch (Exception e) {
-					LOG.error("Error while initializing database.", e);
-					status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", "Error while initializing database.", e); //$NON-NLS-1$
+					LOG.error("Error while initializing database.", e); //$NON-NLS-1$
+					status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.Activator_29, e); //$NON-NLS-1$
 				} finally {
 					monitor.done();
 				}
@@ -252,7 +251,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public static void createModel(ISchedulingRule mutex, final StatusResult serverStartResult) {
-		WorkspaceJob job = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_LoadModel) {
+		WorkspaceJob job = new WorkspaceJob(Messages.Activator_LoadModel) {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
@@ -264,13 +263,13 @@ public class Activator extends AbstractUIPlugin {
 						status = Status.CANCEL_STATUS;
 					}
 					Activator.inheritVeriniceContextState();
-					monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_LoadModel, IProgressMonitor.UNKNOWN);
-					monitor.setTaskName(sernet.verinice.iso27k.rcp.Messages.ISMView_LoadModel);
+					monitor.beginTask(Messages.Activator_LoadModel, IProgressMonitor.UNKNOWN);
+					monitor.setTaskName(Messages.Activator_LoadModel);
 					CnAElementFactory.getInstance().loadOrCreateModel(new ProgressAdapter(monitor));
 					CnAElementFactory.getInstance().getISO27kModel();
 				} catch (Exception e) {
-					LOG.error("Error while loading model.", e);
-					status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", "Error while loading BSI-Model.", e); //$NON-NLS-1$
+					LOG.error("Error while loading model.", e); //$NON-NLS-1$
+					status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.Activator_31, e); //$NON-NLS-1$
 				} finally {
 					monitor.done();
 				}
@@ -292,8 +291,7 @@ public class Activator extends AbstractUIPlugin {
 						sleep(1000);
 						long now = System.currentTimeMillis();
 						if (now - startTime > 30000) {
-							ExceptionUtil.log(new Exception("Das hier dauert und dauert..."), "Die Migration der Datenbank auf einen neue Version kann einige Zeit in Anspruch nehmen. Wenn diese Aktion länger als 5 " + "Minuten dauert, sollten Sie allerdings ihre Datenbank von Derby nach Postgres migrieren. Falls das " + "schon geschehen ist, sollten Sie ihre Postgres / MySQL-DB tunen. In der FAQ auf http://verinice.org/ finden "
-									+ "Sie weitere Hinweise. Ab einer gewissen Größe des IT-Verbundes wird der Einsatz des Verinice-Servers " + "unverzichtbar. Auch hierzu finden Sie weitere Informationen auf unserer Webseite.");
+							ExceptionUtil.log(new Exception(sernet.gs.ui.rcp.main.Messages.Activator_8), sernet.gs.ui.rcp.main.Messages.Activator_10);
 							return;
 						}
 					} catch (InterruptedException e) {
@@ -327,7 +325,7 @@ public class Activator extends AbstractUIPlugin {
 				if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER))
 					return;
 
-				MessageDialog.openInformation(new Shell(shell), "Datenbank nicht konfiguriert", "HINWEIS: Sie haben keine Datenbank konfiguriert. " + "Verinice verwendet die integrierte " + "Derby-Datenbank. Alternativ können Sie in den " + "Einstellungen eine externe Datenbank angeben (Postgres / MySQL).\n\n" + "Dieser Hinweis wird nicht erneut angezeigt.");
+				MessageDialog.openInformation(new Shell(shell), Messages.Activator_26, Messages.Activator_27);
 
 			}
 		}
@@ -348,19 +346,19 @@ public class Activator extends AbstractUIPlugin {
 	public static StatusResult startServer(ISchedulingRule mutex, final StatusResult result) {
 		final IInternalServer internalServer = getDefault().getInternalServer();
 		if (!internalServer.isRunning()) {
-			WorkspaceJob job = new WorkspaceJob(Messages.BsiModelView_4) {
+			WorkspaceJob job = new WorkspaceJob("") { //$NON-NLS-1$
 				@Override
 				public IStatus runInWorkspace(final IProgressMonitor monitor) {
 					inheritVeriniceContextState();
 					try {
 						if (!internalServer.isRunning()) {
-							monitor.beginTask("Starte internen Server ...", IProgressMonitor.UNKNOWN);
+							monitor.beginTask(Messages.Activator_1, IProgressMonitor.UNKNOWN);
 							internalServer.start();
 						}
 						result.status = Status.OK_STATUS;
 					} catch (Exception e) {
-						ExceptionUtil.log(e, "Konnte internen Server nicht starten.");
-						result.status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", "Error while starting internal server.", e);
+						ExceptionUtil.log(e, Messages.Activator_2);
+						result.status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.Activator_3, e); //$NON-NLS-1$
 					} finally {
 						monitor.done();
 					}

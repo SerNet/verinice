@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.update.internal.core.UpdateCore;
@@ -57,9 +58,9 @@ public class CnAWorkspace {
 
 	private static final Logger log = Logger.getLogger(CnAWorkspace.class);
 
-	private static final String OFFICEDIR = "office";
+	private static final String OFFICEDIR = "office"; //$NON-NLS-1$
 
-	public static final String LINE_SEP = System.getProperty("line.separator");
+	public static final String LINE_SEP = System.getProperty("line.separator"); //$NON-NLS-1$
 
 	private static String workDir;
 
@@ -72,15 +73,15 @@ public class CnAWorkspace {
 	 * Version number to check against version file. When changing this, also
 	 * change version number in skeleton file "conf/configuration.version"
 	 */
-	public static final Object CONFIG_CURRENT_VERSION = "0.8.1";
+	public static final Object CONFIG_CURRENT_VERSION = "0.8.1"; //$NON-NLS-1$
 
-	protected static final String VERINICEDB = "verinicedb";
+	protected static final String VERINICEDB = "verinicedb"; //$NON-NLS-1$
 
-	protected static final String TEMPIMPORTDB = "tempGstoolImportDb";
+	protected static final String TEMPIMPORTDB = "tempGstoolImportDb"; //$NON-NLS-1$
 
-	private static final String POLICY_FILE = "updatePolicyURL";
+	private static final String POLICY_FILE = "updatePolicyURL"; //$NON-NLS-1$
 
-	private static final Object LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-1.0";
+	private static final Object LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-1.0"; //$NON-NLS-1$
 
 	private static CnAWorkspace instance;
 
@@ -97,7 +98,7 @@ public class CnAWorkspace {
 					createGstoolImportDatabaseConfig(dbUrl, prefs.getString(PreferenceConstants.GS_DB_USER), prefs.getString(PreferenceConstants.GS_DB_PASS));
 
 				} catch (Exception e) {
-					ExceptionUtil.log(e, "Fehler beim Schreiben der Konfiguration für GSTool-Import.");
+					ExceptionUtil.log(e, Messages.CnAWorkspace_0);
 				}
 			}
 
@@ -107,10 +108,10 @@ public class CnAWorkspace {
 
 					if (!modechangeWarning) {
 						modechangeWarning = false;
-						MessageDialog.openWarning(Display.getCurrent().getActiveShell(), "Neustart erforderlich", "Wechsel des Betriebsmodus oder Änderungen an der Serververbindung erfordern einen Neustart. Sie müssen Verinice jetzt beenden und neu starten.");
+						MessageDialog.openWarning(Display.getCurrent().getActiveShell(), Messages.CnAWorkspace_1, Messages.CnAWorkspace_2);
 					}
 				} catch (Exception e) {
-					ExceptionUtil.log(e, "Fehler beim Schreiben der Konfiguration für Datenbankzugriff (Spring).");
+					ExceptionUtil.log(e, Messages.CnAWorkspace_3);
 				}
 			}
 		}
@@ -123,7 +124,7 @@ public class CnAWorkspace {
 	}
 
 	public String createTempImportDbUrl() {
-		String tmpDerbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s", CnAWorkspace.getInstance().getWorkdir().replaceAll("\\\\", "/"));
+		String tmpDerbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s", CnAWorkspace.getInstance().getWorkdir().replaceAll("\\\\", "/")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return tmpDerbyUrl.replace(VERINICEDB, TEMPIMPORTDB);
 	}
 
@@ -148,7 +149,7 @@ public class CnAWorkspace {
 		prepareWorkDir();
 
 		if (!force && confDir.exists() && confDir.isDirectory()) {
-			File confFile = new File(confDir, "configuration.version");
+			File confFile = new File(confDir, "configuration.version"); //$NON-NLS-1$
 			if (confFile.exists()) {
 				Properties props = new Properties();
 				FileInputStream fis;
@@ -156,8 +157,8 @@ public class CnAWorkspace {
 					fis = new FileInputStream(confFile);
 					props.load(fis);
 
-					if (props.get("version").equals(CONFIG_CURRENT_VERSION)) {
-						log.debug("Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: " + confDir.getAbsolutePath());
+					if (props.get("version").equals(CONFIG_CURRENT_VERSION)) { //$NON-NLS-1$
+						log.debug("Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: " + confDir.getAbsolutePath()); //$NON-NLS-1$
 						return;
 					}
 				} catch (Exception e) {
@@ -175,16 +176,16 @@ public class CnAWorkspace {
 			instance.createDatabaseConfig();
 			instance.updatePolicyFile();
 		} catch (Exception e) {
-			ExceptionUtil.log(e, "Fehler beim Anlegen des Arbeitsverzeichnisses: " + confDir.getAbsolutePath());
+			ExceptionUtil.log(e, NLS.bind(Messages.CnAWorkspace_4, confDir.getAbsolutePath()));
 		}
 
 	}
 
 	public void prepareWorkDir() {
 		URL url = Platform.getInstanceLocation().getURL();
-		String path = url.getPath().replaceAll("/", "\\" + File.separator);
+		String path = url.getPath().replaceAll("/", "\\" + File.separator); //$NON-NLS-1$ //$NON-NLS-2$
 		workDir = (new File(path)).getAbsolutePath();
-		confDir = new File(url.getPath() + File.separator + "conf");
+		confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
 
 		// FIXME ak update site only on multiuser-server (not with internal one)
 		updatePolicyFile();
@@ -199,9 +200,9 @@ public class CnAWorkspace {
 			try {
 				createPolicyFile(prefs);
 			} catch (MalformedURLException e) {
-				log.error("Konnte Update-Policy File nicht erzeugen.", e);
+				log.error("Konnte Update-Policy File nicht erzeugen.", e); //$NON-NLS-1$
 			} catch (IOException e) {
-				log.error("Konnte Update-Policy File nicht erzeugen.", e);
+				log.error("Konnte Update-Policy File nicht erzeugen.", e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -209,20 +210,20 @@ public class CnAWorkspace {
 	private void removePolicyFile() {
 		// remove policy file / path to policy file. thereby setting update site
 		// to default:
-		removeFile(getConfDir(), "policy.xml");
-		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", "");
+		removeFile(getConfDir(), "policy.xml"); //$NON-NLS-1$
+		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void createPolicyFile(Preferences prefs) throws IOException, MalformedURLException {
 		// create update policy file to set update site to local verinice
 		// server:
 		HashMap<String, String> settings = new HashMap<String, String>(1);
-		settings.put("updatesiteurl", createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
-		createTextFile("conf" + File.separator + "skel_policy.xml", getConfDir(), "policy.xml", settings);
+		settings.put("updatesiteurl", createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI))); //$NON-NLS-1$
+		createTextFile("conf" + File.separator + "skel_policy.xml", getConfDir(), "policy.xml", settings); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		// set path to policy.xml with changed update site (on local server):
-		File policyFile = new File(getConfDir() + File.separator + "policy.xml");
-		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", policyFile.toURI().toURL().toString());
+		File policyFile = new File(getConfDir() + File.separator + "policy.xml"); //$NON-NLS-1$
+		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", policyFile.toURI().toURL().toString()); //$NON-NLS-1$
 	}
 
 	/**
@@ -233,9 +234,9 @@ public class CnAWorkspace {
 		File fileToDelete = new File(dir + File.separator + name);
 		boolean success = fileToDelete.delete();
 		if (success) {
-			log.debug(name + " was successfully deleted.");
+			log.debug(name + " was successfully deleted."); //$NON-NLS-1$
 		} else {
-			log.debug(name + " was NOT deleted.");
+			log.debug(name + " was NOT deleted."); //$NON-NLS-1$
 		}
 	}
 
@@ -255,17 +256,17 @@ public class CnAWorkspace {
 	}
 
 	public String getConfDir() {
-		return workDir + File.separator + "conf";
+		return workDir + File.separator + "conf"; //$NON-NLS-1$
 	}
 
 	private void createConfDir() throws NullPointerException, IOException {
 		URL url = Platform.getInstanceLocation().getURL();
-		File confDir = new File(url.getPath() + File.separator + "conf");
+		File confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
 		confDir.mkdirs();
 
-		createTextFile("conf" + File.separator + "SNCA.xml", workDir);
-		createTextFile("conf" + File.separator + "reports.properties_skeleton", workDir, "conf" + File.separator + "reports.properties");
-		createTextFile("conf" + File.separator + "configuration.version", workDir);
+		createTextFile("conf" + File.separator + "SNCA.xml", workDir); //$NON-NLS-1$ //$NON-NLS-2$
+		createTextFile("conf" + File.separator + "reports.properties_skeleton", workDir, "conf" + File.separator + "reports.properties"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		createTextFile("conf" + File.separator + "configuration.version", workDir); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void createOfficeDir() throws NullPointerException, IOException {
@@ -273,20 +274,20 @@ public class CnAWorkspace {
 		File officeDir = new File(url.getPath() + File.separator + OFFICEDIR);
 		officeDir.mkdirs();
 
-		createBinaryFile(OFFICEDIR + File.separator + "report.ods", workDir);
-		createBinaryFile(OFFICEDIR + File.separator + "report.odt", workDir);
-		createBinaryFile(OFFICEDIR + File.separator + "sernet.png", workDir);
+		createBinaryFile(OFFICEDIR + File.separator + "report.ods", workDir); //$NON-NLS-1$
+		createBinaryFile(OFFICEDIR + File.separator + "report.odt", workDir); //$NON-NLS-1$
+		createBinaryFile(OFFICEDIR + File.separator + "sernet.png", workDir); //$NON-NLS-1$
 
 	}
 
 	private void createHtmlDir() throws NullPointerException, IOException {
 		URL url = Platform.getInstanceLocation().getURL();
-		File htmlDir = new File(url.getPath() + File.separator + "html");
+		File htmlDir = new File(url.getPath() + File.separator + "html"); //$NON-NLS-1$
 		htmlDir.mkdirs();
 
-		createTextFile("html" + File.separator + "screen.css", workDir);
-		createTextFile("html" + File.separator + "about.html", workDir);
-		createBinaryFile("splash.bmp", workDir + File.separator + "html");
+		createTextFile("html" + File.separator + "screen.css", workDir); //$NON-NLS-1$ //$NON-NLS-2$
+		createTextFile("html" + File.separator + "about.html", workDir); //$NON-NLS-1$ //$NON-NLS-2$
+		createBinaryFile("splash.bmp", workDir + File.separator + "html"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -326,25 +327,25 @@ public class CnAWorkspace {
 
 	public void createGstoolImportDatabaseConfig(String url, String user, String pass) throws NullPointerException, IOException {
 		HashMap<String, String> settings = new HashMap<String, String>(5);
-		settings.put("url", url.replace("\\", "\\\\"));
-		settings.put("user", user);
-		settings.put("pass", pass);
+		settings.put("url", url.replace("\\", "\\\\")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		settings.put("user", user); //$NON-NLS-1$
+		settings.put("pass", pass); //$NON-NLS-1$
 
 		// import from .mdb file over odbc bridge goes into temporary derby db
 		// first:
-		if (url.indexOf("odbc") > -1) {
+		if (url.indexOf("odbc") > -1) { //$NON-NLS-1$
 			// change db url to temporary DB when importing from mdb file
 			String dbUrl = createTempImportDbUrl();
-			settings.put("url", dbUrl);
-			settings.put("driver", PreferenceConstants.DB_DRIVER_DERBY);
-			settings.put("dialect", PreferenceConstants.DB_DIALECT_derby);
+			settings.put("url", dbUrl); //$NON-NLS-1$
+			settings.put("driver", PreferenceConstants.DB_DRIVER_DERBY); //$NON-NLS-1$
+			settings.put("dialect", PreferenceConstants.DB_DIALECT_derby); //$NON-NLS-1$
 		} else {
 			// direct import from ms sql server or desktop engine:
-			settings.put("driver", PreferenceConstants.GS_DB_DRIVER_JTDS);
-			settings.put("dialect", PreferenceConstants.GS_DB_DIALECT_JTDS);
+			settings.put("driver", PreferenceConstants.GS_DB_DRIVER_JTDS); //$NON-NLS-1$
+			settings.put("dialect", PreferenceConstants.GS_DB_DIALECT_JTDS); //$NON-NLS-1$
 		}
 
-		createTextFile("conf" + File.separator + "skel_hibernate-vampire.cfg.xml", workDir, "conf" + File.separator + "hibernate-vampire.cfg.xml", settings);
+		createTextFile("conf" + File.separator + "skel_hibernate-vampire.cfg.xml", workDir, "conf" + File.separator + "hibernate-vampire.cfg.xml", settings); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	public void createGstoolImportDatabaseConfig() throws NullPointerException, IOException {
@@ -385,9 +386,9 @@ public class CnAWorkspace {
 		// write from skel file, replacing newline characters to system
 		// specific:
 		String line;
-		Pattern var = Pattern.compile("\\{(.*)\\}");
+		Pattern var = Pattern.compile("\\{(.*)\\}"); //$NON-NLS-1$
 		while ((line = bufRead.readLine()) != null) {
-			line = line.replaceFirst("\n", LINE_SEP);
+			line = line.replaceFirst("\n", LINE_SEP); //$NON-NLS-1$
 			if (variables != null) {
 				Matcher match = var.matcher(line);
 				if (match.find()) {
@@ -411,7 +412,7 @@ public class CnAWorkspace {
 	private void backupFile(String dir, String filepath) throws IOException {
 		File file = new File(dir + File.separator + filepath);
 		if (file.exists()) {
-			File outfile = new File(dir + File.separator + filepath + ".bak");
+			File outfile = new File(dir + File.separator + filepath + ".bak"); //$NON-NLS-1$
 			FileUtils.copyFile(file, outfile);
 		}
 	}

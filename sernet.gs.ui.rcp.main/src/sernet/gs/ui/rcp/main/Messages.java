@@ -76,6 +76,11 @@ public class Messages extends NLS {
 	public static String ApplicationWorkbenchWindowAdvisor_3;
 	public static String ApplicationWorkbenchWindowAdvisor_20;
 	public static String ApplicationWorkbenchWindowAdvisor_22;
+	public static String CnAWorkspace_0;
+	public static String CnAWorkspace_1;
+	public static String CnAWorkspace_2;
+	public static String CnAWorkspace_3;
+	public static String CnAWorkspace_4;
 	public static String ExceptionUtil_0;
 	public static String ExceptionUtil_1;
 	public static String ExceptionUtil_2;
