@@ -23,9 +23,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -42,8 +42,7 @@ import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
-public class BausteinZuordnungAction extends Action implements
-		ISelectionListener {
+public class BausteinZuordnungAction extends Action implements ISelectionListener {
 
 	public static final String ID = "sernet.gs.ui.rcp.main.bausteinzuordnungaction";
 
@@ -54,48 +53,43 @@ public class BausteinZuordnungAction extends Action implements
 		setText("Bausteine automatisch zuordnen...");
 		setId(ID);
 		setActionDefinitionId(ID);
-		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(
-				ImageCache.AUTOBAUSTEIN));
+		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
 		window.getSelectionService().addSelectionListener(this);
 		setToolTipText("Ordnet den markierten Zielobjekten eine Vorauswahl typischer Bausteine zu.");
 	}
 
+	@Override
 	public void run() {
-		IStructuredSelection selection = (IStructuredSelection) window
-				.getSelectionService().getSelection(BsiModelView.ID);
-		if (selection == null)
+		IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
+		if (selection == null) {
 			return;
+		}
 
 		final List<IBSIStrukturElement> selectedElements = new ArrayList<IBSIStrukturElement>();
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object o = iter.next();
-			if (o instanceof IBSIStrukturElement)
+			if (o instanceof IBSIStrukturElement) {
 				selectedElements.add((IBSIStrukturElement) o);
+			}
 		}
 
-		final AutoBausteinDialog dialog = new AutoBausteinDialog(window
-				.getShell());
-		if (dialog.open() != InputDialog.OK
-				|| dialog.getSelectedSubtype() == null)
+		final AutoBausteinDialog dialog = new AutoBausteinDialog(window.getShell());
+		if (dialog.open() != Window.OK || dialog.getSelectedSubtype() == null) {
 			return;
+		}
 
 		try {
-			String[] bausteine = dialog.getSelectedSubtype()
-					.getSplitBausteine();
+			String[] bausteine = dialog.getSelectedSubtype().getSplitBausteine();
 			for (String bst : bausteine) {
-				Baustein baustein = BSIKatalogInvisibleRoot.getInstance()
-						.getBausteinByKapitel(bst);
+				Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
 				if (baustein == null) {
-					Logger.getLogger(this.getClass()).debug("Kein Baustein gefunden fuer Nr " + bst);
-				}
-				else {
+					Logger.getLogger(this.getClass()).debug("Kein Baustein gefunden fuer Nr.: " + bst);
+				} else {
 					// assign baustein to every selected target object:
 					for (IBSIStrukturElement target : selectedElements) {
 						if (target instanceof CnATreeElement) {
 							CnATreeElement targetElement = (CnATreeElement) target;
-							CnAElementFactory.getInstance().saveNew(targetElement,
-									BausteinUmsetzung.TYPE_ID,
-									new BuildInput<Baustein>(baustein));
+							CnAElementFactory.getInstance().saveNew(targetElement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
 						}
 					}
 				}
