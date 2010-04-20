@@ -61,18 +61,13 @@ public class GSImportDialog extends Dialog {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		container.setLayout(layout);
-		
-		
-			String importDb = Activator.getDefault().getPluginPreferences()
-			.getString(PreferenceConstants.GS_DB_URL);
-			
-			Label intro = new Label(container, SWT.NONE);
-			intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER,
-					false, false, 1, 1));
-			intro
-			.setText("Der Import wird aus folgender GSTOOL-Datenbank durchgeführt: \n"
-					+ importDb);
-			
+
+		String importDb = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.GS_DB_URL);
+
+		Label intro = new Label(container, SWT.NONE);
+		intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+		intro.setText("Der Import wird aus folgender GSTOOL-Datenbank durchgeführt: \n" + importDb);
+
 		Link prefLink = new Link(container, SWT.NONE);
 		prefLink.setText("<a>Ändern...</a>");
 		prefLink.addSelectionListener(new SelectionAdapter() {
@@ -84,15 +79,11 @@ public class GSImportDialog extends Dialog {
 				action.run();
 			}
 		});
-		
+
 		Label intro2 = new Label(container, SWT.NONE);
-		intro2.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER,
-				false, false, 1, 1));
-		intro2
-		.setText("\n\nEs wird dafür ein neuer IT-Verbund angelegt. "
-				+ "Es werden keine Daten überschrieben. \n\n" +
-						"Importiere: ");
-		
+		intro2.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+		intro2.setText("\n\nEs wird dafür ein neuer IT-Verbund angelegt. Es werden keine Daten überschrieben. \n\nImportiere: ");
+
 		final Button button4 = new Button(parent, SWT.CHECK);
 		button4.setText("Zielobjekte");
 		button4.setEnabled(false);
@@ -109,7 +100,7 @@ public class GSImportDialog extends Dialog {
 			}
 		});
 		button5.pack();
-		
+
 		final Button button6 = new Button(parent, SWT.CHECK);
 		button6.setSelection(true);
 		button6.setText("Zugeordnete Rollen der Mitarbeiter");
@@ -120,7 +111,7 @@ public class GSImportDialog extends Dialog {
 			}
 		});
 		button6.pack();
-		
+
 		final Button button9 = new Button(parent, SWT.CHECK);
 		button9.setSelection(true);
 		button9.setText("Interviewer und befragte Personen für Bausteine");
@@ -132,7 +123,6 @@ public class GSImportDialog extends Dialog {
 		});
 		button9.pack();
 
-		
 		final Button button = new Button(parent, SWT.CHECK);
 		button.setSelection(true);
 		button.setText("Verantwortliche Personen für Maßnahmenumsetzung");
@@ -143,7 +133,7 @@ public class GSImportDialog extends Dialog {
 			}
 		});
 		button.pack();
-		
+
 		final Button button7 = new Button(parent, SWT.CHECK);
 		button7.setSelection(true);
 		button7.setText("Kosten für Maßnahmenumsetzung");
@@ -154,7 +144,7 @@ public class GSImportDialog extends Dialog {
 			}
 		});
 		button7.pack();
-		
+
 		final Button button8 = new Button(parent, SWT.CHECK);
 		button8.setSelection(true);
 		button8.setText("Umsetzungsstatus und -erläuterung der Maßnahmen");
@@ -176,7 +166,7 @@ public class GSImportDialog extends Dialog {
 			}
 		});
 		button2.pack();
-		
+
 		final Button button3 = new Button(parent, SWT.CHECK);
 		button3.setSelection(true);
 		button3.setText("Schutzbedarfszuordnung von Zielobjekten");
@@ -188,10 +178,8 @@ public class GSImportDialog extends Dialog {
 		});
 		button3.pack();
 
-		
-		
 		return container;
-						
+
 	}
 
 	@Override
