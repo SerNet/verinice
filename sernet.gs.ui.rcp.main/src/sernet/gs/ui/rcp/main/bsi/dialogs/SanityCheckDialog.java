@@ -23,17 +23,14 @@ import org.eclipse.swt.widgets.Shell;
 
 public class SanityCheckDialog {
 
-	public static boolean checkLayer(Shell shell, int schicht, int targetSchicht) {
-		if (schicht != targetSchicht) {
-			if (MessageDialog.openQuestion(
-					shell,
-					Messages.SanityCheckDialog_1,
-					NLS.bind(Messages.SanityCheckDialog_2, "schicht","targetSchicht"))) {
-				return true;
-			}
-			return false;
-		}
-		return true;
-	}
+    public static boolean checkLayer(Shell shell, int schicht, int targetSchicht) {
+        if (schicht != targetSchicht) {
+            if (MessageDialog.openQuestion(shell, Messages.SanityCheckDialog_1, NLS.bind(Messages.SanityCheckDialog_2, "schicht", "targetSchicht"))) {
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
 
 }

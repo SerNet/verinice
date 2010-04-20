@@ -44,66 +44,66 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
  */
 public class KonsolidatorDialog extends Dialog {
 
-	private List<BausteinUmsetzung> selection;
+    private List<BausteinUmsetzung> selection;
 
-	private BausteinUmsetzung source = null;
+    private BausteinUmsetzung source = null;
 
-	public KonsolidatorDialog(Shell shell, List<BausteinUmsetzung> selectedElements) {
-		super(shell);
-		this.selection = selectedElements;
-	}
+    public KonsolidatorDialog(Shell shell, List<BausteinUmsetzung> selectedElements) {
+        super(shell);
+        this.selection = selectedElements;
+    }
 
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		Composite container = (Composite) super.createDialogArea(parent);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		container.setLayout(layout);
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        Composite container = (Composite) super.createDialogArea(parent);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 1;
+        container.setLayout(layout);
 
-		Label intro = new Label(container, SWT.NONE);
-		intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
-		intro.setText(Messages.KonsolidatorDialog_0);
+        Label intro = new Label(container, SWT.NONE);
+        intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+        intro.setText(Messages.KonsolidatorDialog_0);
 
-		final ListViewer viewer = new ListViewer(container, SWT.CHECK | SWT.BORDER);
-		viewer.getList().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
+        final ListViewer viewer = new ListViewer(container, SWT.CHECK | SWT.BORDER);
+        viewer.getList().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 
-		viewer.setLabelProvider(new LabelProvider() {
-			@Override
-			public String getText(Object element) {
-				BausteinUmsetzung bst = (BausteinUmsetzung) element;
-				return bst.getKapitel() + ": " + bst.getParent().getTitle(); //$NON-NLS-1$
-			}
-		});
+        viewer.setLabelProvider(new LabelProvider() {
+            @Override
+            public String getText(Object element) {
+                BausteinUmsetzung bst = (BausteinUmsetzung) element;
+                return bst.getKapitel() + ": " + bst.getParent().getTitle(); //$NON-NLS-1$
+            }
+        });
 
-		viewer.setContentProvider(new ArrayContentProvider());
-		viewer.setInput(selection);
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection sel = ((IStructuredSelection) viewer.getSelection());
-				if (sel.size() == 1) {
-					source = (BausteinUmsetzung) sel.getFirstElement();
-				}
-			}
-		});
+        viewer.setContentProvider(new ArrayContentProvider());
+        viewer.setInput(selection);
+        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+            public void selectionChanged(SelectionChangedEvent event) {
+                IStructuredSelection sel = ((IStructuredSelection) viewer.getSelection());
+                if (sel.size() == 1) {
+                    source = (BausteinUmsetzung) sel.getFirstElement();
+                }
+            }
+        });
 
-		return container;
-	}
+        return container;
+    }
 
-	public static boolean askConsolidate(Shell shell) {
-		if (!MessageDialog.openQuestion(shell, Messages.KonsolidatorDialog_2, Messages.KonsolidatorDialog_3)) {
-			return false;
-		}
-		return true;
-	}
+    public static boolean askConsolidate(Shell shell) {
+        if (!MessageDialog.openQuestion(shell, Messages.KonsolidatorDialog_2, Messages.KonsolidatorDialog_3)) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	protected void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setText(Messages.KonsolidatorDialog_4);
-	}
+    @Override
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText(Messages.KonsolidatorDialog_4);
+    }
 
-	public BausteinUmsetzung getSource() {
-		return source;
-	}
+    public BausteinUmsetzung getSource() {
+        return source;
+    }
 
 }

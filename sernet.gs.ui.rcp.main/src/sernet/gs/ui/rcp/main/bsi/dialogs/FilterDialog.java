@@ -45,181 +45,181 @@ import sernet.hui.common.connect.PropertyType;
  */
 public abstract class FilterDialog extends Dialog {
 
-	protected HashMap<String, Button> typeFieldsUmsetzung;
-	protected HashMap<String, Button> typeFieldsSiegel;
-	protected HashMap<String, Button> typeFieldsSchicht;
+    protected HashMap<String, Button> typeFieldsUmsetzung;
+    protected HashMap<String, Button> typeFieldsSiegel;
+    protected HashMap<String, Button> typeFieldsSchicht;
 
-	protected HashSet<String> selectedUmsetzungTypes;
-	protected HashSet<String> selectedSiegelTypes;
-	protected HashSet<String> selectedSchichtTypes;
+    protected HashSet<String> selectedUmsetzungTypes;
+    protected HashSet<String> selectedSiegelTypes;
+    protected HashSet<String> selectedSchichtTypes;
 
-	public FilterDialog(Shell parent, String[] umsetzung, String[] siegel, String[] schicht) {
-		super(parent);
-		this.selectedUmsetzungTypes = new HashSet<String>();
-		this.selectedSiegelTypes = new HashSet<String>();
-		this.selectedSchichtTypes = new HashSet<String>();
+    public FilterDialog(Shell parent, String[] umsetzung, String[] siegel, String[] schicht) {
+        super(parent);
+        this.selectedUmsetzungTypes = new HashSet<String>();
+        this.selectedSiegelTypes = new HashSet<String>();
+        this.selectedSchichtTypes = new HashSet<String>();
 
-		if (umsetzung != null) {
-			for (String type : umsetzung) {
-				this.selectedUmsetzungTypes.add(type);
-			}
-		}
+        if (umsetzung != null) {
+            for (String type : umsetzung) {
+                this.selectedUmsetzungTypes.add(type);
+            }
+        }
 
-		if (siegel != null) {
-			for (String type : siegel) {
-				this.selectedSiegelTypes.add(type);
-			}
-		}
+        if (siegel != null) {
+            for (String type : siegel) {
+                this.selectedSiegelTypes.add(type);
+            }
+        }
 
-		if (schicht != null) {
-			for (String type : schicht) {
-				this.selectedSchichtTypes.add(type);
-			}
-		}
-	}
+        if (schicht != null) {
+            for (String type : schicht) {
+                this.selectedSchichtTypes.add(type);
+            }
+        }
+    }
 
-	public String[] getUmsetzungSelection() {
-		return this.selectedUmsetzungTypes.toArray(new String[this.selectedUmsetzungTypes.size()]);
-	}
+    public String[] getUmsetzungSelection() {
+        return this.selectedUmsetzungTypes.toArray(new String[this.selectedUmsetzungTypes.size()]);
+    }
 
-	public String[] getSiegelSelection() {
-		return this.selectedSiegelTypes.toArray(new String[this.selectedSiegelTypes.size()]);
-	}
+    public String[] getSiegelSelection() {
+        return this.selectedSiegelTypes.toArray(new String[this.selectedSiegelTypes.size()]);
+    }
 
-	public String[] getSchichtSelection() {
-		return this.selectedSchichtTypes.toArray(new String[this.selectedSchichtTypes.size()]);
-	}
+    public String[] getSchichtSelection() {
+        return this.selectedSchichtTypes.toArray(new String[this.selectedSchichtTypes.size()]);
+    }
 
-	protected void createUmsetzungCheckboxes(Composite parent) {
-		typeFieldsUmsetzung = new HashMap<String, Button>();
-		String[] umsetzungStati = MassnahmenUmsetzung.getUmsetzungStati();
-		PropertyType propertyType = HUITypeFactory.getInstance().getEntityType(MassnahmenUmsetzung.TYPE_ID).getPropertyType(MassnahmenUmsetzung.P_UMSETZUNG);
+    protected void createUmsetzungCheckboxes(Composite parent) {
+        typeFieldsUmsetzung = new HashMap<String, Button>();
+        String[] umsetzungStati = MassnahmenUmsetzung.getUmsetzungStati();
+        PropertyType propertyType = HUITypeFactory.getInstance().getEntityType(MassnahmenUmsetzung.TYPE_ID).getPropertyType(MassnahmenUmsetzung.P_UMSETZUNG);
 
-		for (final String status : umsetzungStati) {
-			final Button button = new Button(parent, SWT.CHECK);
-			if (status.equals(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET)) {
-				// "not edited" is not really a status, but rather the lack of
-				// one:
-				button.setText(Messages.FilterDialog_0);
-			} else {
-				button.setText(propertyType.getOption(status).getName());
-			}
-			typeFieldsUmsetzung.put(status, button);
-			button.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					if (button.getSelection()) {
-						selectedUmsetzungTypes.add(status);
-					} else {
-						selectedUmsetzungTypes.remove(status);
-					}
-				}
-			});
-		}
-	}
+        for (final String status : umsetzungStati) {
+            final Button button = new Button(parent, SWT.CHECK);
+            if (status.equals(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET)) {
+                // "not edited" is not really a status, but rather the lack of
+                // one:
+                button.setText(Messages.FilterDialog_0);
+            } else {
+                button.setText(propertyType.getOption(status).getName());
+            }
+            typeFieldsUmsetzung.put(status, button);
+            button.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent arg0) {
+                    if (button.getSelection()) {
+                        selectedUmsetzungTypes.add(status);
+                    } else {
+                        selectedUmsetzungTypes.remove(status);
+                    }
+                }
+            });
+        }
+    }
 
-	protected void createSiegelCheckboxes(Composite parent) {
-		typeFieldsSiegel = new HashMap<String, Button>();
-		String[] siegelStufen = MassnahmenUmsetzung.getStufen();
+    protected void createSiegelCheckboxes(Composite parent) {
+        typeFieldsSiegel = new HashMap<String, Button>();
+        String[] siegelStufen = MassnahmenUmsetzung.getStufen();
 
-		for (final String stufe : siegelStufen) {
-			final Button button = new Button(parent, SWT.CHECK);
-			button.setText(stufe);
-			typeFieldsSiegel.put(stufe, button);
-			button.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					if (button.getSelection()) {
-						selectedSiegelTypes.add(stufe);
-					} else {
-						selectedSiegelTypes.remove(stufe);
-					}
-				}
-			});
-		}
-	}
+        for (final String stufe : siegelStufen) {
+            final Button button = new Button(parent, SWT.CHECK);
+            button.setText(stufe);
+            typeFieldsSiegel.put(stufe, button);
+            button.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent arg0) {
+                    if (button.getSelection()) {
+                        selectedSiegelTypes.add(stufe);
+                    } else {
+                        selectedSiegelTypes.remove(stufe);
+                    }
+                }
+            });
+        }
+    }
 
-	protected void createSchichtCheckboxes(Composite parent) {
-		typeFieldsSchicht = new HashMap<String, Button>();
-		String[] schichten = BausteinUmsetzung.getSchichten();
-		String[] bezeichnung = BausteinUmsetzung.getSchichtenBezeichnung();
+    protected void createSchichtCheckboxes(Composite parent) {
+        typeFieldsSchicht = new HashMap<String, Button>();
+        String[] schichten = BausteinUmsetzung.getSchichten();
+        String[] bezeichnung = BausteinUmsetzung.getSchichtenBezeichnung();
 
-		int i = 0;
-		for (final String schicht : schichten) {
-			final Button button = new Button(parent, SWT.CHECK);
-			button.setText(bezeichnung[i++]);
-			typeFieldsSchicht.put(schicht, button);
-			button.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					if (button.getSelection()) {
-						selectedSchichtTypes.add(schicht);
-					} else {
-						selectedSchichtTypes.remove(schicht);
-					}
-				}
-			});
-		}
-	}
+        int i = 0;
+        for (final String schicht : schichten) {
+            final Button button = new Button(parent, SWT.CHECK);
+            button.setText(bezeichnung[i++]);
+            typeFieldsSchicht.put(schicht, button);
+            button.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent arg0) {
+                    if (button.getSelection()) {
+                        selectedSchichtTypes.add(schicht);
+                    } else {
+                        selectedSchichtTypes.remove(schicht);
+                    }
+                }
+            });
+        }
+    }
 
-	protected void initContent() {
-		if (typeFieldsUmsetzung != null) {
-			String[] umsetzungStati = MassnahmenUmsetzung.getUmsetzungStati();
-			for (String umsetzung : umsetzungStati) {
-				Button button = typeFieldsUmsetzung.get(umsetzung);
-				button.setSelection(selectedUmsetzungTypes.contains(umsetzung));
-			}
-		}
+    protected void initContent() {
+        if (typeFieldsUmsetzung != null) {
+            String[] umsetzungStati = MassnahmenUmsetzung.getUmsetzungStati();
+            for (String umsetzung : umsetzungStati) {
+                Button button = typeFieldsUmsetzung.get(umsetzung);
+                button.setSelection(selectedUmsetzungTypes.contains(umsetzung));
+            }
+        }
 
-		if (typeFieldsSiegel != null) {
-			String[] siegelStati = MassnahmenUmsetzung.getStufen();
-			for (String stufe : siegelStati) {
-				Button button = typeFieldsSiegel.get(stufe);
-				button.setSelection(selectedSiegelTypes.contains(stufe));
-			}
-		}
+        if (typeFieldsSiegel != null) {
+            String[] siegelStati = MassnahmenUmsetzung.getStufen();
+            for (String stufe : siegelStati) {
+                Button button = typeFieldsSiegel.get(stufe);
+                button.setSelection(selectedSiegelTypes.contains(stufe));
+            }
+        }
 
-		if (typeFieldsSchicht != null) {
-			String[] schichten = BausteinUmsetzung.getSchichten();
-			for (String schicht : schichten) {
-				Button button = typeFieldsSchicht.get(schicht);
-				button.setSelection(selectedSchichtTypes.contains(schicht));
-			}
-		}
+        if (typeFieldsSchicht != null) {
+            String[] schichten = BausteinUmsetzung.getSchichten();
+            for (String schicht : schichten) {
+                Button button = typeFieldsSchicht.get(schicht);
+                button.setSelection(selectedSchichtTypes.contains(schicht));
+            }
+        }
 
-	}
+    }
 
-	protected Group createSiegelGroup(Composite parent) {
-		Group boxesComposite2 = new Group(parent, SWT.BORDER);
-		boxesComposite2.setText(Messages.FilterDialog_1);
-		GridData gridData2 = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
-		boxesComposite2.setLayoutData(gridData2);
-		GridLayout layout3 = new GridLayout();
-		layout3.numColumns = 4;
-		boxesComposite2.setLayout(layout3);
-		return boxesComposite2;
-	}
+    protected Group createSiegelGroup(Composite parent) {
+        Group boxesComposite2 = new Group(parent, SWT.BORDER);
+        boxesComposite2.setText(Messages.FilterDialog_1);
+        GridData gridData2 = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
+        boxesComposite2.setLayoutData(gridData2);
+        GridLayout layout3 = new GridLayout();
+        layout3.numColumns = 4;
+        boxesComposite2.setLayout(layout3);
+        return boxesComposite2;
+    }
 
-	protected Group createUmsetzungGroup(Composite parent) {
-		Group boxesComposite = new Group(parent, SWT.BORDER);
-		boxesComposite.setText(Messages.FilterDialog_2);
-		GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
-		boxesComposite.setLayoutData(gridData);
-		GridLayout layout2 = new GridLayout();
-		layout2.numColumns = 5;
-		boxesComposite.setLayout(layout2);
-		return boxesComposite;
-	}
+    protected Group createUmsetzungGroup(Composite parent) {
+        Group boxesComposite = new Group(parent, SWT.BORDER);
+        boxesComposite.setText(Messages.FilterDialog_2);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
+        boxesComposite.setLayoutData(gridData);
+        GridLayout layout2 = new GridLayout();
+        layout2.numColumns = 5;
+        boxesComposite.setLayout(layout2);
+        return boxesComposite;
+    }
 
-	protected Group createSchichtenGroup(Composite parent) {
-		Group boxesComposite = new Group(parent, SWT.BORDER);
-		boxesComposite.setText(Messages.FilterDialog_3);
-		GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
-		boxesComposite.setLayoutData(gridData);
-		GridLayout layout2 = new GridLayout();
-		layout2.numColumns = 5;
-		boxesComposite.setLayout(layout2);
-		return boxesComposite;
-	}
+    protected Group createSchichtenGroup(Composite parent) {
+        Group boxesComposite = new Group(parent, SWT.BORDER);
+        boxesComposite.setText(Messages.FilterDialog_3);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
+        boxesComposite.setLayoutData(gridData);
+        GridLayout layout2 = new GridLayout();
+        layout2.numColumns = 5;
+        boxesComposite.setLayout(layout2);
+        return boxesComposite;
+    }
 
 }

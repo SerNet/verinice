@@ -36,99 +36,98 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
  */
 public class EditBausteinVorgabeDialog extends Dialog {
 
-	private Text textName;
-	private Text textBausteine;
-	private BausteinVorschlag vorschlag;
-	private String bausteine;
-	private String name;
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param parentShell shell of parent Composite
-	 * @param newOwnGefaehrdung the OwnGefaehrdung to edit
-	 */
-	public EditBausteinVorgabeDialog(Shell parentShell, BausteinVorschlag vorschlag) {
-		super(parentShell);
-		this.vorschlag = vorschlag;
-		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.TITLE);
-	}
-	
-	@Override
-	protected void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setText(Messages.EditBausteinVorgabeDialog_0);
-	}
+    private Text textName;
+    private Text textBausteine;
+    private BausteinVorschlag vorschlag;
+    private String bausteine;
+    private String name;
 
-	/**
-	 * Creates the content area of the Dialog.
-	 * 
-	 * @param parent the parent Composite
-	 */
-	protected Control createDialogArea(Composite parent) {
-		Composite composite = (Composite) super.createDialogArea(parent);
-		final GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		composite.setLayout(gridLayout);
-		
-		final Label labelTitle = new Label(composite, SWT.NONE);
-		GridData gridLabelTitle = new GridData();
-		gridLabelTitle.horizontalAlignment = SWT.FILL;
-	    gridLabelTitle.horizontalSpan=2;
-	    labelTitle.setText(Messages.EditBausteinVorgabeDialog_1);
-		labelTitle.setLayoutData(gridLabelTitle);
-		
-		
-		final Label labelNumber = new Label(composite, SWT.NONE);
-		GridData gridLabelNumber = new GridData();
-		gridLabelNumber.horizontalAlignment = SWT.LEFT;
-	    gridLabelNumber.verticalAlignment = SWT.CENTER;
-	    labelNumber.setText(Messages.EditBausteinVorgabeDialog_2);
-		labelNumber.setLayoutData(gridLabelNumber);
-		
-		textName = new Text(composite, SWT.BORDER );
-		GridData gridTextDescription = new GridData();
-		gridTextDescription.horizontalAlignment = SWT.FILL;
-	    gridTextDescription.grabExcessHorizontalSpace = true;
-	    gridTextDescription.widthHint = 400;
-		textName.setLayoutData(gridTextDescription);
-		textName.setText(vorschlag.getName());
-		
-		
-		final Label labelName = new Label(composite, SWT.NONE);
-		GridData gridLabelName = new GridData();
-		gridLabelName.horizontalAlignment = SWT.LEFT;
-	    gridLabelName.verticalAlignment = SWT.CENTER;
-	    labelName.setText(Messages.EditBausteinVorgabeDialog_3);
-		labelName.setLayoutData(gridLabelName);
-		
-		textBausteine = new Text(composite, SWT.BORDER );
-		GridData gridTextDescription2 = new GridData();
-		gridTextDescription2.horizontalAlignment = SWT.FILL;
-	    gridTextDescription2.grabExcessHorizontalSpace = true;
-	    gridTextDescription2.widthHint = 400;
-	    textBausteine.setLayoutData(gridTextDescription2);
-	    textBausteine.setText(vorschlag.getBausteine());
-		
-		return composite;
-	}
-	
-	@Override
-	protected void okPressed() {
-		name = textName.getText();
-		bausteine = textBausteine.getText();
-		super.okPressed();
-	}
+    /**
+     * Constructor.
+     * 
+     * @param parentShell
+     *            shell of parent Composite
+     * @param newOwnGefaehrdung
+     *            the OwnGefaehrdung to edit
+     */
+    public EditBausteinVorgabeDialog(Shell parentShell, BausteinVorschlag vorschlag) {
+        super(parentShell);
+        this.vorschlag = vorschlag;
+        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.TITLE);
+    }
 
-	public String getName() {
-		return name;
-	}
+    @Override
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText(Messages.EditBausteinVorgabeDialog_0);
+    }
 
-	public String getBausteine() {
-		return bausteine;
-	}
-	
-	
-	
-	
+    /**
+     * Creates the content area of the Dialog.
+     * 
+     * @param parent
+     *            the parent Composite
+     */
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        Composite composite = (Composite) super.createDialogArea(parent);
+        final GridLayout gridLayout = new GridLayout();
+        gridLayout.numColumns = 2;
+        composite.setLayout(gridLayout);
+
+        final Label labelTitle = new Label(composite, SWT.NONE);
+        GridData gridLabelTitle = new GridData();
+        gridLabelTitle.horizontalAlignment = SWT.FILL;
+        gridLabelTitle.horizontalSpan = 2;
+        labelTitle.setText(Messages.EditBausteinVorgabeDialog_1);
+        labelTitle.setLayoutData(gridLabelTitle);
+
+        final Label labelNumber = new Label(composite, SWT.NONE);
+        GridData gridLabelNumber = new GridData();
+        gridLabelNumber.horizontalAlignment = SWT.LEFT;
+        gridLabelNumber.verticalAlignment = SWT.CENTER;
+        labelNumber.setText(Messages.EditBausteinVorgabeDialog_2);
+        labelNumber.setLayoutData(gridLabelNumber);
+
+        textName = new Text(composite, SWT.BORDER);
+        GridData gridTextDescription = new GridData();
+        gridTextDescription.horizontalAlignment = SWT.FILL;
+        gridTextDescription.grabExcessHorizontalSpace = true;
+        gridTextDescription.widthHint = 400;
+        textName.setLayoutData(gridTextDescription);
+        textName.setText(vorschlag.getName());
+
+        final Label labelName = new Label(composite, SWT.NONE);
+        GridData gridLabelName = new GridData();
+        gridLabelName.horizontalAlignment = SWT.LEFT;
+        gridLabelName.verticalAlignment = SWT.CENTER;
+        labelName.setText(Messages.EditBausteinVorgabeDialog_3);
+        labelName.setLayoutData(gridLabelName);
+
+        textBausteine = new Text(composite, SWT.BORDER);
+        GridData gridTextDescription2 = new GridData();
+        gridTextDescription2.horizontalAlignment = SWT.FILL;
+        gridTextDescription2.grabExcessHorizontalSpace = true;
+        gridTextDescription2.widthHint = 400;
+        textBausteine.setLayoutData(gridTextDescription2);
+        textBausteine.setText(vorschlag.getBausteine());
+
+        return composite;
+    }
+
+    @Override
+    protected void okPressed() {
+        name = textName.getText();
+        bausteine = textBausteine.getText();
+        super.okPressed();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getBausteine() {
+        return bausteine;
+    }
+
 }
