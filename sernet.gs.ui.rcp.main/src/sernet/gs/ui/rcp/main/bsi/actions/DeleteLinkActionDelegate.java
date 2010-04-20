@@ -37,10 +37,9 @@ import sernet.gs.ui.rcp.main.common.model.CnALink;
  * Delete items on user request.
  * 
  * @author akoderman[at]sernet[dot]de
- *
+ * 
  */
 public class DeleteLinkActionDelegate implements IObjectActionDelegate {
-
 
 	private IWorkbenchPart targetPart;
 
@@ -49,31 +48,24 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate {
 	}
 
 	public void run(IAction action) {
-		
-		if (! MessageDialog.openQuestion(
-				(Shell)targetPart.getAdapter(Shell.class),
-				"Wirklich entfernen?",
-				"Alle markierten Verknüpfungen werden entfernt. Die referenzierten" +
-				" Objekte bleiben erhalten.\n\n"+ 
-		"Wirklich entfernen?")) {
+
+		if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), "Wirklich entfernen?", "Alle markierten Verknüpfungen werden entfernt. Die referenzierten Objekte bleiben erhalten. \n\nWirklich entfernen?")) {
 			return;
 		}
-		
-		// close editors first:
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-		.getActivePage().closeAllEditors(true /* ask save */);
 
-		IStructuredSelection selection = ((IStructuredSelection)targetPart.getSite()
-				.getSelectionProvider().getSelection());
-		
+		// close editors first:
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /*ask save */);
+
+		IStructuredSelection selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection());
+
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
-			Object sel = (Object) iter.next();
-		
+			Object sel = iter.next();
+
 			if (sel instanceof CnALink) {
 				CnALink link = (CnALink) sel;
 				try {
-					CnAElementHome.getInstance().remove(link);				
-					if(CnAElementFactory.isModelLoaded()) {
+					CnAElementHome.getInstance().remove(link);
+					if (CnAElementFactory.isModelLoaded()) {
 						CnAElementFactory.getLoadedModel().linkRemoved(link);
 					}
 					CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
@@ -81,25 +73,21 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate {
 					ExceptionUtil.log(e, "Fehler beim Löschen von Verknüpfung.");
 				}
 			}
-			
 		}
-	
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		// Realizes that the action to create a new element is greyed out,
-		// when there is no right to do so. 
+		// when there is no right to do so.
 		Object sel = ((IStructuredSelection) selection).getFirstElement();
-		if (sel instanceof CnALink)
-		{
-			boolean b = CnAElementHome
-				.getInstance()
-				.isDeleteAllowed(((CnALink) sel));
-			
+		if (sel instanceof CnALink) {
+			boolean b = CnAElementHome.getInstance().isDeleteAllowed(((CnALink) sel));
+
 			// Only change state when it is enabled, since we do not want to
 			// trash the enablement settings of plugin.xml
-			if (action.isEnabled())
+			if (action.isEnabled()) {
 				action.setEnabled(b);
+			}
 		}
 
 	}
