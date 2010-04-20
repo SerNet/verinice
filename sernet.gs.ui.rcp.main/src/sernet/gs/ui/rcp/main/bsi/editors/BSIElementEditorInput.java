@@ -71,7 +71,7 @@ public class BSIElementEditorInput implements IEditorInput {
 	}
 
 	public String getToolTipText() {
-		return "BSI Element";
+		return element.getTitle();
 	}
 
 	public Object getAdapter(Class adapter) {
