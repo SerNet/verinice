@@ -121,7 +121,7 @@ public class EditorFactory {
 				
 				// may be null, i.e. if we don't have permission to open the object:
 				if (newElement == null)
-					throw new Exception("Öffnen wurde verweigert. Leseberechtigung überprüfen.");
+					throw new Exception(Messages.EditorFactory_0);
 				
 				BSIElementEditorInput input = new BSIElementEditorInput(newElement);
 
@@ -193,10 +193,8 @@ public class EditorFactory {
 		typedFactories.put(ProcessGroup.class, bsiEditorFactory);
 		typedFactories.put(Record.class, bsiEditorFactory);
 		typedFactories.put(RecordGroup.class, bsiEditorFactory);
-
-		
+	
 		IEditorTypeFactory todoItemEditorFactory = new IEditorTypeFactory() {
-
 			public void openEditorFor(Object o) throws Exception {
 				IEditorPart editor;
 
@@ -264,8 +262,6 @@ public class EditorFactory {
 			
 		};
 		typedFactories.put(Note.class, noteEditorFactory);
-		
-		// TODO register more editor-factories here
 	}
 
 	public static EditorFactory getInstance() {
@@ -285,12 +281,9 @@ public class EditorFactory {
 		if ((fact = typedFactories.get(sel.getClass())) != null) {
 			try {
 				fact.openEditorFor(sel);
-			} catch (HibernateException e) {
-				log.error("Hibernate error while opening editor.", e);
-				MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error", "Der Editor kann nicht geöffnet werden.");
 			} catch (Exception e) {
-				log.error("Error while opening editor.", e);
-				ExceptionUtil.log(e, "Konnte Editor nicht öffnen.");
+				log.error("Error while opening editor.", e); //$NON-NLS-1$
+				ExceptionUtil.log(e, Messages.EditorFactory_2);
 			}
 		}
 	}

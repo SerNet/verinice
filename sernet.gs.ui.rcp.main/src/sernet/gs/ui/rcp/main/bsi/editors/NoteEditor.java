@@ -51,7 +51,7 @@ public class NoteEditor extends EditorPart {
 
 	private static final Logger LOG = Logger.getLogger(NoteEditor.class);
 	
-	public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.noteeditor";
+	public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.noteeditor"; //$NON-NLS-1$
 	
 	Note note;
 	
@@ -90,14 +90,14 @@ public class NoteEditor extends EditorPart {
 	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		monitor.beginTask("Speichern", IProgressMonitor.UNKNOWN);
+		monitor.beginTask(Messages.NoteEditor_0, IProgressMonitor.UNKNOWN);
 		Set<INoteChangedListener> listener = note.getListener(); 
 		SaveNote command = new SaveNote(note);		
 		try {
 			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {
-			LOG.error("Error while saving note", e);
-			ExceptionUtil.log(e, "Fehler beim Speichern der Notiz.");
+			LOG.error("Error while saving note", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.NoteEditor_1);
 		}
 		monitor.done();
 		note = (Note) command.getAddition();
@@ -118,7 +118,7 @@ public class NoteEditor extends EditorPart {
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		if (! (input instanceof NoteEditorInput)) {
-			throw new PartInitException("invalid input");
+			throw new PartInitException(Messages.NoteEditor_2);
 		}
 		NoteEditorInput noteEditorInput = (NoteEditorInput) input;
 		note=noteEditorInput.getInput();
@@ -159,11 +159,11 @@ public class NoteEditor extends EditorPart {
 		gdElement.horizontalAlignment = GridData.FILL;
 		gdElement.horizontalSpan=2;
 		Label labelElement = new Label(contentComp,SWT.TOP );
-		labelElement.setText("Element: " + note.getCnAElementTitel());
+		labelElement.setText(Messages.NoteEditor_3 + note.getCnAElementTitel());
 		labelElement.setLayoutData(gdElement);
 		
 		Label labelTitle = new Label(contentComp,SWT.TOP );
-		labelTitle.setText("Überschrift");
+		labelTitle.setText(Messages.NoteEditor_4);
 		
 		GridData gdTitel= new GridData();
 		gdTitel.grabExcessHorizontalSpace = true;
@@ -181,7 +181,7 @@ public class NoteEditor extends EditorPart {
 		});
 		
 		Label labelNote = new Label(contentComp,SWT.TOP);
-		labelNote.setText("Notiz");	
+		labelNote.setText(Messages.NoteEditor_5);	
 		
 		GridData gdText = new GridData();
 		gdText.grabExcessHorizontalSpace = true;

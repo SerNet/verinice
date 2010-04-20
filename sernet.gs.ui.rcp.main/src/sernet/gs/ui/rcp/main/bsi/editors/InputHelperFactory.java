@@ -42,96 +42,84 @@ import sernet.hui.swt.widgets.IInputHelper;
 
 public class InputHelperFactory {
 
-	private static IInputHelper schutzbedarfHelper;
-	private static IInputHelper tagHelper;
-	private static IInputHelper personHelper;
+    private static IInputHelper schutzbedarfHelper;
+    private static IInputHelper tagHelper;
+    private static IInputHelper personHelper;
 
-	public static void setInputHelpers(EntityType entityType,
-				HitroUIComposite huiComposite2) {
-//
-		if (personHelper == null) {
-			personHelper = new IInputHelper() {
-				public String[] getSuggestions() {
-					List<Person> personen;
-					try {
-						personen = CnAElementHome.getInstance().getPersonen();
-						String[] titles = new String[personen.size()];
-						int i=0;
-						for (Person person : personen) {
-							titles[i++] = person.getTitle();
-						}
-						return titles.length > 0 
-						? titles
-								: new String[] {Messages.InputHelperFactory_0};
-					} catch (CommandException e) {
-						ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
-						return new String[] {Messages.InputHelperFactory_0};
-					}
-				}
-			};
-		}
-		
-		if (tagHelper == null) {
-			tagHelper = new IInputHelper() {
-				public String[] getSuggestions() {
-					List<String> tags;
-					try {
-						tags = CnAElementHome.getInstance().getTags();
-						String[] tagArray = (String[]) tags.toArray(new String[tags.size()]);
-						for (int i = 0; i < tagArray.length; i++) {
-							tagArray[i] = tagArray[i] + " ";
-						}
-						return tagArray.length > 0 
-						? tagArray
-								: new String[] {};
-					} catch (CommandException e) {
-						ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
-						return new String[] {};
-					}
-				}
-			};
-		}
-		
-		if (schutzbedarfHelper == null) {
-			schutzbedarfHelper = new IInputHelper() {
-				public String[] getSuggestions() {
-					return new String[] {
-							Schutzbedarf.MAXIMUM,
-							Messages.InputHelperFactory_2,
-							Messages.InputHelperFactory_3
-					};
-				}
-			};
-		}
-		
-		boolean showHint = Activator.getDefault().getPluginPreferences().getBoolean(
-				PreferenceConstants.INPUTHINTS);
-		
-		// Tag Helpers:
-		huiComposite2.setInputHelper(Anwendung.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-		huiComposite2.setInputHelper(Client.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-		huiComposite2.setInputHelper(Gebaeude.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-		huiComposite2.setInputHelper(NetzKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-		huiComposite2.setInputHelper(Person.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-		huiComposite2.setInputHelper(Raum.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-		huiComposite2.setInputHelper(Server.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-		huiComposite2.setInputHelper(SonstIT.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-		huiComposite2.setInputHelper(TelefonKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-		
-		setSchutzbedarfHelpers(entityType, huiComposite2, showHint);
+    public static void setInputHelpers(EntityType entityType, HitroUIComposite huiComposite2) {
+        //
+        if (personHelper == null) {
+            personHelper = new IInputHelper() {
+                public String[] getSuggestions() {
+                    List<Person> personen;
+                    try {
+                        personen = CnAElementHome.getInstance().getPersonen();
+                        String[] titles = new String[personen.size()];
+                        int i = 0;
+                        for (Person person : personen) {
+                            titles[i++] = person.getTitle();
+                        }
+                        return titles.length > 0 ? titles : new String[] { Messages.InputHelperFactory_0 };
+                    } catch (CommandException e) {
+                        ExceptionUtil.log(e, Messages.InputHelperFactory_1);
+                        return new String[] { Messages.InputHelperFactory_0 };
+                    }
+                }
+            };
+        }
 
-	}
+        if (tagHelper == null) {
+            tagHelper = new IInputHelper() {
+                public String[] getSuggestions() {
+                    List<String> tags;
+                    try {
+                        tags = CnAElementHome.getInstance().getTags();
+                        String[] tagArray = tags.toArray(new String[tags.size()]);
+                        for (int i = 0; i < tagArray.length; i++) {
+                            tagArray[i] = tagArray[i] + " "; //$NON-NLS-1$
+                        }
+                        return tagArray.length > 0 ? tagArray : new String[] {};
+                    } catch (CommandException e) {
+                        ExceptionUtil.log(e, Messages.InputHelperFactory_5);
+                        return new String[] {};
+                    }
+                }
+            };
+        }
 
-	private static void setSchutzbedarfHelpers(EntityType entityType, HitroUIComposite huiComposite2, boolean showHint) {
-		for (PropertyGroup group : entityType.getPropertyGroups()) {
-			for (PropertyType type : group.getPropertyTypes()) {
-				if (Schutzbedarf.isIntegritaetBegruendung(type.getId())
-						|| Schutzbedarf.isVerfuegbarkeitBegruendung(type.getId())
-						|| Schutzbedarf.isVertraulichkeitBegruendung(type.getId())) {
-					huiComposite2.setInputHelper(type.getId(), schutzbedarfHelper, IInputHelper.TYPE_REPLACE, showHint);
-				}
-			}
-		}
-		
-	}
+        if (schutzbedarfHelper == null) {
+            schutzbedarfHelper = new IInputHelper() {
+                public String[] getSuggestions() {
+                    return new String[] { Schutzbedarf.MAXIMUM, Messages.InputHelperFactory_2, Messages.InputHelperFactory_3 };
+                }
+            };
+        }
+
+        boolean showHint = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.INPUTHINTS);
+
+        // Tag Helpers:
+        huiComposite2.setInputHelper(Anwendung.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Client.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Gebaeude.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(NetzKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Person.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Raum.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Server.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(SonstIT.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(TelefonKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+
+        setSchutzbedarfHelpers(entityType, huiComposite2, showHint);
+
+    }
+
+    private static void setSchutzbedarfHelpers(EntityType entityType, HitroUIComposite huiComposite2, boolean showHint) {
+        for (PropertyGroup group : entityType.getPropertyGroups()) {
+            for (PropertyType type : group.getPropertyTypes()) {
+                if (Schutzbedarf.isIntegritaetBegruendung(type.getId()) || Schutzbedarf.isVerfuegbarkeitBegruendung(type.getId()) || Schutzbedarf.isVertraulichkeitBegruendung(type.getId())) {
+                    huiComposite2.setInputHelper(type.getId(), schutzbedarfHelper, IInputHelper.TYPE_REPLACE, showHint);
+                }
+            }
+        }
+
+    }
 }

@@ -22,7 +22,13 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.editors.messages"; //$NON-NLS-1$
 
-	public static String BSIElementEditor_0;
+	public static String AttachmentEditor_1;
+
+    public static String AttachmentEditor_3;
+
+    public static String AttachmentEditor_4;
+
+    public static String BSIElementEditor_0;
 
 	public static String BSIElementEditor_1;
 
@@ -36,11 +42,31 @@ public class Messages extends NLS {
 
 	public static String BSIElementEditor_8;
 
+    public static String EditorFactory_0;
+
+    public static String EditorFactory_2;
+
 	public static String InputHelperFactory_0;
+
+    public static String InputHelperFactory_1;
 
 	public static String InputHelperFactory_2;
 
 	public static String InputHelperFactory_3;
+
+    public static String InputHelperFactory_5;
+
+    public static String NoteEditor_0;
+
+    public static String NoteEditor_1;
+
+    public static String NoteEditor_2;
+
+    public static String NoteEditor_3;
+
+    public static String NoteEditor_4;
+
+    public static String NoteEditor_5;
 
 	static {
 		// initialize resource bundle

@@ -17,26 +17,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -51,11 +39,8 @@ import sernet.gs.ui.rcp.main.bsi.model.Addition.INoteChangedListener;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
-import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.IEntityChangedListener;
 import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
@@ -65,157 +50,158 @@ import sernet.snutils.DBException;
 
 public class AttachmentEditor extends EditorPart {
 
-	private static final Logger LOG = Logger.getLogger(AttachmentEditor.class);
-	
-	public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.attachmenteditor";
-	
-	private static final DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
-	
-	Attachment attachment;
-	
-	Composite parent;
-	
-	HitroUIComposite huiComposite;
-	
-	Composite contentComp;
-	
-	FileDialog fd;
-	
-	Text fileName;
-	
-	Text textNote;
-	
-	Label date;
-	
-	private ICommandService	commandService;
+    private static final Logger LOG = Logger.getLogger(AttachmentEditor.class);
 
-	private boolean isModelModified = false;
-	
-	private IEntityChangedListener modelListener = new IEntityChangedListener() {
-		public void dependencyChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
-			// not relevant
-		}	
-		public void selectionChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
-			modelChanged();
-		}
-		public void propertyChanged(PropertyChangedEvent evt) {
-			modelChanged();
-		}
-	};
-	
-	void modelChanged() {
-		boolean wasDirty = isDirty();
-		isModelModified = true;
-		
-		if (!wasDirty)
-			firePropertyChange(IEditorPart.PROP_DIRTY);
-	}
-	
-	@Override
-	public boolean isDirty() {
-		return isModelModified;
-	}
-	
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		monitor.beginTask("Speichern", IProgressMonitor.UNKNOWN);
-		boolean isNew = attachment.getDbId()==null;
-		Set<INoteChangedListener> listener = attachment.getListener();
-		SaveNote command = new SaveNote(attachment);	
-		try {		
-			command = getCommandService().executeCommand(command);
-			attachment = (Attachment) command.getAddition();
-			huiComposite.dispose();
-			huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
-			huiComposite.createView(attachment.getEntity(), true, true);
-			parent.layout();
-			// file-data is immutable, just save new file-data
-			if(isNew) {
-				AttachmentFile attachmentFile = new AttachmentFile();
-				attachmentFile.readFileData(attachment.getFilePath());	
-				SaveAttachment saveFileCommand = new SaveAttachment(attachmentFile);
-				attachmentFile.setDbId(attachment.getDbId());
-				saveFileCommand = getCommandService().executeCommand(saveFileCommand);
-				saveFileCommand.clear();
-			}
-		} catch (Exception e) {
-			LOG.error("Error while saving file", e);
-			ExceptionUtil.log(e, "Fehler beim Speichern des Attachments.");
-		}
-		monitor.done();
-		attachment.getListener().addAll(listener);
-		isModelModified = false;
-		firePropertyChange(IEditorPart.PROP_DIRTY);
-		attachment.getEntity().addChangeListener(this.modelListener);
-		setPartName(attachment.getTitel());
-		attachment.fireChange();
-	}
+    public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.attachmenteditor"; //$NON-NLS-1$
 
-	@Override
-	public void doSaveAs() {
-		// TODO Auto-generated method stub
+    Attachment attachment;
 
-	}
+    Composite parent;
 
-	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		if (! (input instanceof AttachmentEditorInput)) {
-			throw new PartInitException("invalid input");
-		}
-		AttachmentEditorInput noteEditorInput = (AttachmentEditorInput) input;
-		attachment=noteEditorInput.getInput();
-		setSite(site);
-		setInput(noteEditorInput);
-		setPartName(noteEditorInput.getName());
-		// add listener to mark editor as dirty on changes:
-		noteEditorInput.getInput().getEntity().addChangeListener(this.modelListener);
-	}
+    HitroUIComposite huiComposite;
 
-	@Override
-	public boolean isSaveAsAllowed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    Composite contentComp;
 
-	@Override
-	public void createPartControl(Composite parent) {
-		this.parent = parent;
-		huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
-		try {
-			huiComposite.createView(attachment.getEntity(), true, true);
-		} catch (DBException e) {
-			LOG.error("Error while creating editor", e);
-		}
-		InputHelperFactory.setInputHelpers(HitroUtil.getInstance().getTypeFactory().getEntityType(attachment.getEntity().getEntityType()), huiComposite);
-	}
+    FileDialog fd;
 
-	@Override
-	public void setFocus() {
-	}
-	
-	@Override
-	public void dispose() {
-		EditorRegistry.getInstance().closeEditor(String.valueOf(((NoteEditorInput)getEditorInput()).getId()));
-		super.dispose();
-	}
-	
-	public Attachment getAttachment() {
-		return attachment;
-	}
+    Text fileName;
 
-	public void setAttachment(Attachment attachment) {
-		this.attachment = attachment;
-	}
+    Text textNote;
 
-	public ICommandService getCommandService() {
-		if(commandService==null) {
-			commandService = createCommandServive();
-		}
-		return commandService;
-	}
+    Label date;
 
-	private ICommandService createCommandServive() {
-		return ServiceFactory.lookupCommandService();
-	}
+    private ICommandService commandService;
+
+    private boolean isModelModified = false;
+
+    private IEntityChangedListener modelListener = new IEntityChangedListener() {
+        public void dependencyChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
+            // not relevant
+        }
+
+        public void selectionChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
+            modelChanged();
+        }
+
+        public void propertyChanged(PropertyChangedEvent evt) {
+            modelChanged();
+        }
+    };
+
+    void modelChanged() {
+        boolean wasDirty = isDirty();
+        isModelModified = true;
+
+        if (!wasDirty) {
+            firePropertyChange(IEditorPart.PROP_DIRTY);
+        }
+    }
+
+    @Override
+    public boolean isDirty() {
+        return isModelModified;
+    }
+
+    @Override
+    public void doSave(IProgressMonitor monitor) {
+        monitor.beginTask(Messages.AttachmentEditor_1, IProgressMonitor.UNKNOWN);
+        boolean isNew = attachment.getDbId() == null;
+        Set<INoteChangedListener> listener = attachment.getListener();
+        SaveNote command = new SaveNote(attachment);
+        try {
+            command = getCommandService().executeCommand(command);
+            attachment = (Attachment) command.getAddition();
+            huiComposite.dispose();
+            huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
+            huiComposite.createView(attachment.getEntity(), true, true);
+            parent.layout();
+            // file-data is immutable, just save new file-data
+            if (isNew) {
+                AttachmentFile attachmentFile = new AttachmentFile();
+                attachmentFile.readFileData(attachment.getFilePath());
+                SaveAttachment saveFileCommand = new SaveAttachment(attachmentFile);
+                attachmentFile.setDbId(attachment.getDbId());
+                saveFileCommand = getCommandService().executeCommand(saveFileCommand);
+                saveFileCommand.clear();
+            }
+        } catch (Exception e) {
+            LOG.error("Error while saving file", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.AttachmentEditor_3);
+        }
+        monitor.done();
+        attachment.getListener().addAll(listener);
+        isModelModified = false;
+        firePropertyChange(IEditorPart.PROP_DIRTY);
+        attachment.getEntity().addChangeListener(this.modelListener);
+        setPartName(attachment.getTitel());
+        attachment.fireChange();
+    }
+
+    @Override
+    public void doSaveAs() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+        if (!(input instanceof AttachmentEditorInput)) {
+            throw new PartInitException(Messages.AttachmentEditor_4);
+        }
+        AttachmentEditorInput noteEditorInput = (AttachmentEditorInput) input;
+        attachment = noteEditorInput.getInput();
+        setSite(site);
+        setInput(noteEditorInput);
+        setPartName(noteEditorInput.getName());
+        // add listener to mark editor as dirty on changes:
+        noteEditorInput.getInput().getEntity().addChangeListener(this.modelListener);
+    }
+
+    @Override
+    public boolean isSaveAsAllowed() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void createPartControl(Composite parent) {
+        this.parent = parent;
+        huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
+        try {
+            huiComposite.createView(attachment.getEntity(), true, true);
+        } catch (DBException e) {
+            LOG.error("Error while creating editor", e); //$NON-NLS-1$
+        }
+        InputHelperFactory.setInputHelpers(HitroUtil.getInstance().getTypeFactory().getEntityType(attachment.getEntity().getEntityType()), huiComposite);
+    }
+
+    @Override
+    public void setFocus() {
+    }
+
+    @Override
+    public void dispose() {
+        EditorRegistry.getInstance().closeEditor(String.valueOf(((NoteEditorInput) getEditorInput()).getId()));
+        super.dispose();
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
+
+    public ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = createCommandServive();
+        }
+        return commandService;
+    }
+
+    private ICommandService createCommandServive() {
+        return ServiceFactory.lookupCommandService();
+    }
 
 }
