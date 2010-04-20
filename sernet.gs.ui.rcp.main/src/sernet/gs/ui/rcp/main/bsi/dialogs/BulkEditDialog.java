@@ -37,14 +37,13 @@ public class BulkEditDialog extends Dialog {
 	private Entity entity = null;
 	private boolean useRules = false;
 	private String title = "Bulk Edit";
-	
-	public BulkEditDialog(Shell parent,
-			EntityType entType) {
+
+	public BulkEditDialog(Shell parent, EntityType entType) {
 		super(parent);
 		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
 		this.entType = entType;
 	}
-	
+
 	public BulkEditDialog(Shell shell, EntityType entType2, boolean b, String title, Entity entity) {
 		this(shell, entType2);
 		useRules = true;
@@ -58,26 +57,26 @@ public class BulkEditDialog extends Dialog {
 		newShell.setText(title);
 		newShell.setSize(400, 800);
 	}
-	
+
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		try {
 			Composite container = (Composite) super.createDialogArea(parent);
 			container.setLayout(new FillLayout());
-			
-			HitroUIComposite huiComposite 
-				= new HitroUIComposite(container, SWT.NULL, false);
-			
+
+			HitroUIComposite huiComposite = new HitroUIComposite(container, SWT.NULL, false);
+
 			try {
-				if (this.entity == null)
+				if (this.entity == null) {
 					entity = new Entity(entType.getId());
+				}
 				huiComposite.createView(entity, true, useRules);
 				InputHelperFactory.setInputHelpers(entType, huiComposite);
 				return huiComposite;
 			} catch (DBException e) {
 				ExceptionUtil.log(e, "Fehler beim Anzeigen des Bulk Edit Dialogs.");
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -87,5 +86,5 @@ public class BulkEditDialog extends Dialog {
 	public Entity getEntity() {
 		return entity;
 	}
-		
+
 }
