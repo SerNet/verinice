@@ -44,89 +44,91 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class BausteinZuordnungAction extends Action implements ISelectionListener {
 
-	public static final String ID = "sernet.gs.ui.rcp.main.bausteinzuordnungaction";
+    private static final Logger LOG = Logger.getLogger(BausteinZuordnungAction.class);
 
-	private final IWorkbenchWindow window;
+    public static final String ID = "sernet.gs.ui.rcp.main.bausteinzuordnungaction"; //$NON-NLS-1$
 
-	public BausteinZuordnungAction(IWorkbenchWindow window) {
-		this.window = window;
-		setText("Bausteine automatisch zuordnen...");
-		setId(ID);
-		setActionDefinitionId(ID);
-		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
-		window.getSelectionService().addSelectionListener(this);
-		setToolTipText("Ordnet den markierten Zielobjekten eine Vorauswahl typischer Bausteine zu.");
-	}
+    private final IWorkbenchWindow window;
 
-	@Override
-	public void run() {
-		IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
-		if (selection == null) {
-			return;
-		}
+    public BausteinZuordnungAction(IWorkbenchWindow window) {
+        this.window = window;
+        setText(Messages.BausteinZuordnungAction_1);
+        setId(ID);
+        setActionDefinitionId(ID);
+        setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
+        window.getSelectionService().addSelectionListener(this);
+        setToolTipText(Messages.BausteinZuordnungAction_2);
+    }
 
-		final List<IBSIStrukturElement> selectedElements = new ArrayList<IBSIStrukturElement>();
-		for (Iterator iter = selection.iterator(); iter.hasNext();) {
-			Object o = iter.next();
-			if (o instanceof IBSIStrukturElement) {
-				selectedElements.add((IBSIStrukturElement) o);
-			}
-		}
+    @Override
+    public void run() {
+        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
+        if (selection == null) {
+            return;
+        }
 
-		final AutoBausteinDialog dialog = new AutoBausteinDialog(window.getShell());
-		if (dialog.open() != Window.OK || dialog.getSelectedSubtype() == null) {
-			return;
-		}
+        final List<IBSIStrukturElement> selectedElements = new ArrayList<IBSIStrukturElement>();
+        for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            Object o = iter.next();
+            if (o instanceof IBSIStrukturElement) {
+                selectedElements.add((IBSIStrukturElement) o);
+            }
+        }
 
-		try {
-			String[] bausteine = dialog.getSelectedSubtype().getSplitBausteine();
-			for (String bst : bausteine) {
-				Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
-				if (baustein == null) {
-					Logger.getLogger(this.getClass()).debug("Kein Baustein gefunden fuer Nr.: " + bst);
-				} else {
-					// assign baustein to every selected target object:
-					for (IBSIStrukturElement target : selectedElements) {
-						if (target instanceof CnATreeElement) {
-							CnATreeElement targetElement = (CnATreeElement) target;
-							CnAElementFactory.getInstance().saveNew(targetElement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Fehler beim Zuordnen von Baustein.");
-		}
-	}
+        final AutoBausteinDialog dialog = new AutoBausteinDialog(window.getShell());
+        if (dialog.open() != Window.OK || dialog.getSelectedSubtype() == null) {
+            return;
+        }
 
-	private void dispose() {
-		window.getSelectionService().removeSelectionListener(this);
-	}
+        try {
+            String[] bausteine = dialog.getSelectedSubtype().getSplitBausteine();
+            for (String bst : bausteine) {
+                Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
+                if (baustein == null) {
+                    LOG.debug("Kein Baustein gefunden fuer Nr.: " + bst); //$NON-NLS-1$
+                } else {
+                    // assign baustein to every selected target object:
+                    for (IBSIStrukturElement target : selectedElements) {
+                        if (target instanceof CnATreeElement) {
+                            CnATreeElement targetElement = (CnATreeElement) target;
+                            CnAElementFactory.getInstance().saveNew(targetElement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.BausteinZuordnungAction_4);
+        }
+    }
 
-	public void selectionChanged(IWorkbenchPart part, ISelection input) {
+    private void dispose() {
+        window.getSelectionService().removeSelectionListener(this);
+    }
 
-		if (input instanceof IStructuredSelection) {
-			IStructuredSelection selection = (IStructuredSelection) input;
+    public void selectionChanged(IWorkbenchPart part, ISelection input) {
 
-			if (selection.size() < 1) {
-				setEnabled(false);
-				return;
-			}
+        if (input instanceof IStructuredSelection) {
+            IStructuredSelection selection = (IStructuredSelection) input;
 
-			String kapitel = null;
-			for (Iterator iter = selection.iterator(); iter.hasNext();) {
-				Object o = iter.next();
-				if (!(o instanceof IBSIStrukturElement)) {
-					setEnabled(false);
-					return;
-				}
-			}
-			setEnabled(true);
-			return;
-		}
-		// no structured selection:
-		setEnabled(false);
+            if (selection.size() < 1) {
+                setEnabled(false);
+                return;
+            }
 
-	}
+            String kapitel = null;
+            for (Iterator iter = selection.iterator(); iter.hasNext();) {
+                Object o = iter.next();
+                if (!(o instanceof IBSIStrukturElement)) {
+                    setEnabled(false);
+                    return;
+                }
+            }
+            setEnabled(true);
+            return;
+        }
+        // no structured selection:
+        setEnabled(false);
+
+    }
 
 }

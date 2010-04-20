@@ -26,7 +26,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
@@ -38,56 +37,74 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class AddFileActionDelegate implements IObjectActionDelegate {
 
-	private IWorkbenchPart targetPart;
-	
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
+    private IWorkbenchPart targetPart;
 
-	public void run(IAction action) {
-		
-		try {
-			Object sel = ((IStructuredSelection)targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
-			if(sel instanceof CnATreeElement) {
-				CnATreeElement element = (CnATreeElement) sel;
-				FileDialog fd = new FileDialog(targetPart.getSite().getShell());
-		        fd.setText("Anhang auswählen...");
-		        fd.setFilterPath(System.getProperty("user.home"));
-		        String selected = fd.open();
-		        if(selected!=null && selected.length()>0) {
-		        	File file = new File(selected);
-		    		if (file.isDirectory())
-		    			return;
-		    		
-					Attachment attachment = new Attachment();
-					attachment.setCnATreeElementId(element.getDbId());
-					attachment.setCnAElementTitel(element.getTitle());
-					attachment.setTitel(file.getName());
-					attachment.setDate(Calendar.getInstance().getTime());
-					attachment.setFilePath(selected);
-					
-					attachment.addListener(new Attachment.INoteChangedListener() {
-						public void noteChanged() {
-							IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(FileView.ID);
-							if(page!=null) {
-								((FileView)page).loadFiles();
-							}
-							
-						}
-					});
-					
-					EditorFactory.getInstance().openEditor(attachment);	
-		        }
-			}
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Fehler");
-		}
-	
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
+     * action.IAction, org.eclipse.ui.IWorkbenchPart)
+     */
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        this.targetPart = targetPart;
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
-		
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+     */
+    public void run(IAction action) {
+        try {
+            Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+            if (sel instanceof CnATreeElement) {
+                CnATreeElement element = (CnATreeElement) sel;
+                FileDialog fd = new FileDialog(targetPart.getSite().getShell());
+                fd.setText(Messages.AddFileActionDelegate_0);
+                fd.setFilterPath(System.getProperty("user.home")); //$NON-NLS-1$
+                String selected = fd.open();
+                if (selected != null && selected.length() > 0) {
+                    File file = new File(selected);
+                    if (file.isDirectory()) {
+                        return;
+                    }
+
+                    Attachment attachment = new Attachment();
+                    attachment.setCnATreeElementId(element.getDbId());
+                    attachment.setCnAElementTitel(element.getTitle());
+                    attachment.setTitel(file.getName());
+                    attachment.setDate(Calendar.getInstance().getTime());
+                    attachment.setFilePath(selected);
+
+                    attachment.addListener(new Attachment.INoteChangedListener() {
+                        public void noteChanged() {
+                            IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(FileView.ID);
+                            if (page != null) {
+                                ((FileView) page).loadFiles();
+                            }
+
+                        }
+                    });
+
+                    EditorFactory.getInstance().openEditor(attachment);
+                }
+            }
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.AddFileActionDelegate_2);
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
+     * .IAction, org.eclipse.jface.viewers.ISelection)
+     */
+    public void selectionChanged(IAction action, ISelection selection) {
+        // nothing to do
+    }
 
 }

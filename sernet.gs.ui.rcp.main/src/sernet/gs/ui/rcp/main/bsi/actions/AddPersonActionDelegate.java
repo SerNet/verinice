@@ -30,30 +30,29 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class AddPersonActionDelegate extends AbstractAddCnATreeElementActionDelegate {
 
-private IWorkbenchPart targetPart;
-	
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
+    private IWorkbenchPart targetPart;
 
-	public void run(IAction action) {
-		try {
-			Object sel = ((IStructuredSelection)targetPart.getSite()
-					.getSelectionProvider().getSelection()).getFirstElement();
-			
-			CnATreeElement newElement=null;
-			if (sel instanceof PersonenKategorie) {
-				PersonenKategorie kat = (PersonenKategorie) sel;
-				newElement = CnAElementFactory.getInstance().saveNew(kat, Person.TYPE_ID, null);
-			}
-			
-			if (newElement != null)
-				EditorFactory.getInstance().openEditor(newElement);
-		}
-		catch (Exception e) {
-			ExceptionUtil.log(e, "Konnte Person nicht hinzufügen.");
-		}
-	
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        this.targetPart = targetPart;
+    }
+
+    public void run(IAction action) {
+        try {
+            Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+
+            CnATreeElement newElement = null;
+            if (sel instanceof PersonenKategorie) {
+                PersonenKategorie kat = (PersonenKategorie) sel;
+                newElement = CnAElementFactory.getInstance().saveNew(kat, Person.TYPE_ID, null);
+            }
+
+            if (newElement != null) {
+                EditorFactory.getInstance().openEditor(newElement);
+            }
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.AddPersonActionDelegate_0);
+        }
+
+    }
 
 }

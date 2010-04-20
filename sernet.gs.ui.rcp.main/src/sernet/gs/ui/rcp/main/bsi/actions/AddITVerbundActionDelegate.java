@@ -26,27 +26,32 @@ import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
-
 public class AddITVerbundActionDelegate extends AbstractAddCnATreeElementActionDelegate {
-	private IWorkbenchPart targetPart;
-	
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
 
-	public void run(IAction action) {
-		
-		try {
-			CnATreeElement newElement=null;
-			
-			newElement = CnAElementFactory.getInstance()
-					.saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
+     * action.IAction, org.eclipse.ui.IWorkbenchPart)
+     */
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+    }
 
-			if (newElement != null)
-				EditorFactory.getInstance().openEditor(newElement);
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Konnte IT-Verbund nicht hinzufügen.");
-		}
-	
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+     */
+    public void run(IAction action) {
+        try {
+            CnATreeElement newElement = null;
+            newElement = CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null);
+            if (newElement != null) {
+                EditorFactory.getInstance().openEditor(newElement);
+            }
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.AddITVerbundActionDelegate_0);
+        }
+    }
 }

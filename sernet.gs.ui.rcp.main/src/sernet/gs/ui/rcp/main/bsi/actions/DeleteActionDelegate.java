@@ -27,6 +27,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
@@ -53,112 +54,113 @@ import sernet.verinice.iso27k.model.IISO27kRoot;
  */
 public class DeleteActionDelegate implements IObjectActionDelegate {
 
-	private IWorkbenchPart targetPart;
+    private IWorkbenchPart targetPart;
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        this.targetPart = targetPart;
+    }
 
-	public void run(IAction action) {
-		Activator.inheritVeriniceContextState();
+    @SuppressWarnings("unchecked")
+    public void run(IAction action) {
+        Activator.inheritVeriniceContextState();
 
-		final IStructuredSelection selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection());
+        final IStructuredSelection selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection());
 
-		if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), "Wirklich löschen?", "Alle " + selection.size() + " markierten Elemente werden entfernt. Vorsicht: diese Operation kann nicht rückgängig gemacht werden! \n\nWirklich löschen?")) {
-			return;
-		}
+        if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), Messages.DeleteActionDelegate_0, "Alle " + selection.size() + " markierten Elemente werden entfernt. Vorsicht: diese Operation kann nicht rückgängig gemacht werden! \n\nWirklich löschen?")) {
+            return;
+        }
 
-		// ask twice if IT verbund
-		boolean goahead = true;
-		Iterator iterator = selection.iterator();
-		Object object;
-		while (iterator.hasNext()) {
-			object = iterator.next();
-			if (object instanceof ITVerbund || object instanceof IISO27kRoot) {
-				if (!goahead) {
-					return;
-				}
+        // ask twice if IT verbund
+        boolean goahead = true;
+        Iterator iterator = selection.iterator();
+        Object object;
+        while (iterator.hasNext()) {
+            object = iterator.next();
+            if (object instanceof ITVerbund || object instanceof IISO27kRoot) {
+                if (!goahead) {
+                    return;
+                }
 
-				String title = "Objekt wirklich löschen";
-				String message = "Sool das Objekt wirklich gelöscht werden?";
-				if (object instanceof ITVerbund) {
-					title = "IT-Verbund wirklich löschen?";
-					message = "Sie haben den IT-Verbund " + ((ITVerbund) object).getTitle() + " zum Löschen markiert. Das wird alle darin enthaltenen Objekte entfernen (Server, Clients, Personen...) \n\nWollen Sie den Verbunf wirklich löschen?";
-				}
-				if (object instanceof IISO27kRoot) {
-					title = "Really Delete Organization?";
-					message = "Organization " + ((IISO27kRoot) object).getTitle() + " is maked for deletion. All elements in this organization will bew deleted. Do you really want't to delete organization and all it's elements?";
-				}
+                String title = Messages.DeleteActionDelegate_3;
+                String message = Messages.DeleteActionDelegate_4;
+                if (object instanceof ITVerbund) {
+                    title = Messages.DeleteActionDelegate_5;
+                    message = NLS.bind(Messages.DeleteActionDelegate_6, ((ITVerbund) object).getTitle());
+                }
+                if (object instanceof IISO27kRoot) {
+                    title = Messages.DeleteActionDelegate_8;
+                    message = NLS.bind(Messages.DeleteActionDelegate_9, ((IISO27kRoot) object).getTitle());
+                }
 
-				if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), title, message)) {
-					goahead = false;
-					return;
-				}
-			}
-		}
+                if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), title, message)) {
+                    goahead = false;
+                    return;
+                }
+            }
+        }
 
-		try {
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					Activator.inheritVeriniceContextState();
-					monitor.beginTask("Lösche Objekte", selection.size());
+        try {
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    Activator.inheritVeriniceContextState();
+                    monitor.beginTask(Messages.DeleteActionDelegate_11, selection.size());
 
-					for (Iterator iter = selection.iterator(); iter.hasNext();) {
-						Object sel = iter.next();
+                    for (Iterator iter = selection.iterator(); iter.hasNext();) {
+                        Object sel = iter.next();
 
-						if (sel instanceof IBSIStrukturElement || sel instanceof BausteinUmsetzung || sel instanceof FinishedRiskAnalysis || sel instanceof GefaehrdungsUmsetzung || sel instanceof ITVerbund || sel instanceof IISO27kRoot || sel instanceof IISO27kElement) {
+                        if (sel instanceof IBSIStrukturElement || sel instanceof BausteinUmsetzung || sel instanceof FinishedRiskAnalysis || sel instanceof GefaehrdungsUmsetzung || sel instanceof ITVerbund || sel instanceof IISO27kRoot || sel instanceof IISO27kElement) {
 
-							// do not delete last ITVerbund:
-							try {
-								if (sel instanceof ITVerbund && CnAElementHome.getInstance().getItverbuende().size() < 2) {
-									ExceptionUtil.log(new Exception("Letzter IT-Verbund kann nicht gelöscht werden."), "Sie haben versucht, den letzten IT-Verbund zu löschen. Es muss immer ein IT-Verbund in der Datenbank verbleiben. Wenn Sie diesen IT-Verbund löschen möchten, legen Sie zunächst einen neuen, leeren IT-Verbund an.");
-									return;
-								}
-							} catch (Exception e) {
-								Logger.getLogger(this.getClass()).debug(e);
-							}
+                            // do not delete last ITVerbund:
+                            try {
+                                if (sel instanceof ITVerbund && CnAElementHome.getInstance().getItverbuende().size() < 2) {
+                                    ExceptionUtil.log(new Exception(Messages.DeleteActionDelegate_12), Messages.DeleteActionDelegate_13);
+                                    return;
+                                }
+                            } catch (Exception e) {
+                                Logger.getLogger(this.getClass()).debug(e);
+                            }
 
-							CnATreeElement el = (CnATreeElement) sel;
+                            CnATreeElement el = (CnATreeElement) sel;
 
-							try {
-								monitor.setTaskName("Lösche: " + el.getTitle());
-								el.getParent().removeChild(el);
-								CnAElementHome.getInstance().remove(el);
-								monitor.worked(1);
+                            try {
+                                monitor.setTaskName(NLS.bind(Messages.DeleteActionDelegate_14, el.getTitle()));
+                                el.getParent().removeChild(el);
+                                CnAElementHome.getInstance().remove(el);
+                                monitor.worked(1);
 
-							} catch (Exception e) {
-								ExceptionUtil.log(e, "Fehler beim Löschen von Element.");
-							}
+                            } catch (Exception e) {
+                                ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
+                            }
 
-						}
-					}
+                        }
+                    }
 
-					// notify all listeners:
-					CnATreeElement child = (CnATreeElement) selection.iterator().next();
-					CnAElementFactory.getModel(child).databaseChildRemoved(child);
-				}
-			});
-		} catch (InvocationTargetException e) {
-			ExceptionUtil.log(e.getCause(), "Error while deleting object.");
-		} catch (InterruptedException e) {
-			ExceptionUtil.log(e, "Interrupted: Delete objects.");
-		}
+                    // notify all listeners:
+                    CnATreeElement child = (CnATreeElement) selection.iterator().next();
+                    CnAElementFactory.getModel(child).databaseChildRemoved(child);
+                }
+            });
+        } catch (InvocationTargetException e) {
+            ExceptionUtil.log(e.getCause(), Messages.DeleteActionDelegate_16);
+        } catch (InterruptedException e) {
+            ExceptionUtil.log(e, Messages.DeleteActionDelegate_17);
+        }
 
-	}
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		// Realizes that the action to delete an element is greyed out,
-		// when there is no right to do so.
-		Object sel = ((IStructuredSelection) selection).getFirstElement();
-		if (sel instanceof CnATreeElement) {
-			boolean b = CnAElementHome.getInstance().isDeleteAllowed((CnATreeElement) sel);
+    public void selectionChanged(IAction action, ISelection selection) {
+        // Realizes that the action to delete an element is greyed out,
+        // when there is no right to do so.
+        Object sel = ((IStructuredSelection) selection).getFirstElement();
+        if (sel instanceof CnATreeElement) {
+            boolean b = CnAElementHome.getInstance().isDeleteAllowed((CnATreeElement) sel);
 
-			// Only change state when it is enabled, since we do not want to
-			// trash the enablement settings of plugin.xml
-			if (action.isEnabled()) {
-				action.setEnabled(b);
-			}
-		}
-	}
+            // Only change state when it is enabled, since we do not want to
+            // trash the enablement settings of plugin.xml
+            if (action.isEnabled()) {
+                action.setEnabled(b);
+            }
+        }
+    }
 
 }

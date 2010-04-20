@@ -29,29 +29,28 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class AddClientActionDelegate extends AbstractAddCnATreeElementActionDelegate {
-	private IWorkbenchPart targetPart;
-	
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
+    private IWorkbenchPart targetPart;
 
-	public void run(IAction action) {
-		
-		try {
-			Object sel = ((IStructuredSelection)targetPart.getSite()
-					.getSelectionProvider().getSelection()).getFirstElement();
-			CnATreeElement newElement=null;
-			if (sel instanceof ClientsKategorie) {
-				CnATreeElement cont = (CnATreeElement) sel;
-				newElement = CnAElementFactory.getInstance()
-					.saveNew(cont, Client.TYPE_ID, null);
-			}
-			if (newElement != null)
-				EditorFactory.getInstance().openEditor(newElement);
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Konnte Objekt nicht hinzufügen.");
-		}
-	
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        this.targetPart = targetPart;
+    }
+
+    public void run(IAction action) {
+
+        try {
+            Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+            CnATreeElement newElement = null;
+            if (sel instanceof ClientsKategorie) {
+                CnATreeElement cont = (CnATreeElement) sel;
+                newElement = CnAElementFactory.getInstance().saveNew(cont, Client.TYPE_ID, null);
+            }
+            if (newElement != null) {
+                EditorFactory.getInstance().openEditor(newElement);
+            }
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.AddClientActionDelegate_0);
+        }
+
+    }
 
 }

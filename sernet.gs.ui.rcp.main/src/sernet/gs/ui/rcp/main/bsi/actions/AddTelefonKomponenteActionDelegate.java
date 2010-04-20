@@ -29,28 +29,27 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class AddTelefonKomponenteActionDelegate extends AbstractAddCnATreeElementActionDelegate {
-	private IWorkbenchPart targetPart;
-	
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
+    private IWorkbenchPart targetPart;
 
-	public void run(IAction action) {
-		
-		try {
-			Object sel = ((IStructuredSelection)targetPart.getSite()
-					.getSelectionProvider().getSelection()).getFirstElement();
-			CnATreeElement newElement=null;
-			if (sel instanceof TKKategorie) {
-				CnATreeElement cont = (CnATreeElement) sel;
-				newElement = CnAElementFactory.getInstance()
-					.saveNew(cont, TelefonKomponente.TYPE_ID, null);
-			}
-			if (newElement != null)
-				EditorFactory.getInstance().openEditor(newElement);
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Konnte Telefonkomponente nicht hinzufügen.");
-		}
-	
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        this.targetPart = targetPart;
+    }
+
+    public void run(IAction action) {
+
+        try {
+            Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+            CnATreeElement newElement = null;
+            if (sel instanceof TKKategorie) {
+                CnATreeElement cont = (CnATreeElement) sel;
+                newElement = CnAElementFactory.getInstance().saveNew(cont, TelefonKomponente.TYPE_ID, null);
+            }
+            if (newElement != null) {
+                EditorFactory.getInstance().openEditor(newElement);
+            }
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.AddTelefonKomponenteActionDelegate_0);
+        }
+
+    }
 }

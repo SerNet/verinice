@@ -30,32 +30,36 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
 public class AddNoteActionDelegate implements IObjectActionDelegate {
 
-	private IWorkbenchPart targetPart;
-	
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
+    private IWorkbenchPart targetPart;
 
-	public void run(IAction action) {
-		
-		try {
-			Object sel = ((IStructuredSelection)targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
-			if(sel instanceof CnATreeElement) {
-				Note note = new Note();
-				note.setCnATreeElementId(((CnATreeElement)sel).getDbId());
-				note.setCnAElementTitel(((CnATreeElement)sel).getTitle());
-				note.setTitel("neue Notiz");
-				EditorFactory.getInstance().openEditor(note);
-			}
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Konnte Notiz-Edotor nicht öffnen.");
-		}
-	
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        this.targetPart = targetPart;
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void run(IAction action) {
+        try {
+            Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+            if (sel instanceof CnATreeElement) {
+                Note note = new Note();
+                note.setCnATreeElementId(((CnATreeElement) sel).getDbId());
+                note.setCnAElementTitel(((CnATreeElement) sel).getTitle());
+                note.setTitel(Messages.AddNoteActionDelegate_0);
+                EditorFactory.getInstance().openEditor(note);
+            }
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.AddNoteActionDelegate_1);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
+     * .IAction, org.eclipse.jface.viewers.ISelection)
+     */
+    public void selectionChanged(IAction action, ISelection selection) {
+        // nothing to do
+    }
 
 }

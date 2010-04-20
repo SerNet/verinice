@@ -41,55 +41,58 @@ import sernet.gs.ui.rcp.main.common.model.CnALink;
  */
 public class DeleteLinkActionDelegate implements IObjectActionDelegate {
 
-	private IWorkbenchPart targetPart;
+    private IWorkbenchPart targetPart;
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        this.targetPart = targetPart;
+    }
 
-	public void run(IAction action) {
+    public void run(IAction action) {
 
-		if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), "Wirklich entfernen?", "Alle markierten Verknüpfungen werden entfernt. Die referenzierten Objekte bleiben erhalten. \n\nWirklich entfernen?")) {
-			return;
-		}
+        if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), Messages.DeleteLinkActionDelegate_0, Messages.DeleteLinkActionDelegate_1)) {
+            return;
+        }
 
-		// close editors first:
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /*ask save */);
+        // close editors first:
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /*
+                                                                                                   * ask
+                                                                                                   * save
+                                                                                                   */);
 
-		IStructuredSelection selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection());
+        IStructuredSelection selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection());
 
-		for (Iterator iter = selection.iterator(); iter.hasNext();) {
-			Object sel = iter.next();
+        for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            Object sel = iter.next();
 
-			if (sel instanceof CnALink) {
-				CnALink link = (CnALink) sel;
-				try {
-					CnAElementHome.getInstance().remove(link);
-					if (CnAElementFactory.isModelLoaded()) {
-						CnAElementFactory.getLoadedModel().linkRemoved(link);
-					}
-					CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
-				} catch (Exception e) {
-					ExceptionUtil.log(e, "Fehler beim Löschen von Verknüpfung.");
-				}
-			}
-		}
-	}
+            if (sel instanceof CnALink) {
+                CnALink link = (CnALink) sel;
+                try {
+                    CnAElementHome.getInstance().remove(link);
+                    if (CnAElementFactory.isModelLoaded()) {
+                        CnAElementFactory.getLoadedModel().linkRemoved(link);
+                    }
+                    CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
+                } catch (Exception e) {
+                    ExceptionUtil.log(e, Messages.DeleteLinkActionDelegate_2);
+                }
+            }
+        }
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		// Realizes that the action to create a new element is greyed out,
-		// when there is no right to do so.
-		Object sel = ((IStructuredSelection) selection).getFirstElement();
-		if (sel instanceof CnALink) {
-			boolean b = CnAElementHome.getInstance().isDeleteAllowed(((CnALink) sel));
+    public void selectionChanged(IAction action, ISelection selection) {
+        // Realizes that the action to create a new element is greyed out,
+        // when there is no right to do so.
+        Object sel = ((IStructuredSelection) selection).getFirstElement();
+        if (sel instanceof CnALink) {
+            boolean b = CnAElementHome.getInstance().isDeleteAllowed(((CnALink) sel));
 
-			// Only change state when it is enabled, since we do not want to
-			// trash the enablement settings of plugin.xml
-			if (action.isEnabled()) {
-				action.setEnabled(b);
-			}
-		}
+            // Only change state when it is enabled, since we do not want to
+            // trash the enablement settings of plugin.xml
+            if (action.isEnabled()) {
+                action.setEnabled(b);
+            }
+        }
 
-	}
+    }
 
 }
