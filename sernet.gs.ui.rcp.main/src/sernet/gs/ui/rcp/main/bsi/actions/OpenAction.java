@@ -29,25 +29,32 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
  * Open-Action for BSI objects
  * 
  * @author koderman[at]sernet[dot]de
- *
+ * 
  */
 public class OpenAction implements IObjectActionDelegate {
-	private IWorkbenchPart targetPart;
+    private IWorkbenchPart targetPart;
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+     */
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        this.targetPart = targetPart;
+    }
 
-	public void run(IAction action) {
-		
-		Object sel = ((IStructuredSelection)targetPart.getSite()
-				.getSelectionProvider().getSelection()).getFirstElement();
-		EditorFactory.getInstance().updateAndOpenObject(sel);
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+     */
+    public void run(IAction action) {
 
-	
-	public void selectionChanged(IAction action, ISelection selection) {
-		// do nothing
-	}
+        Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+        EditorFactory.getInstance().updateAndOpenObject(sel);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+     */
+    public void selectionChanged(IAction action, ISelection selection) {
+        // do nothing
+    }
 
 }
