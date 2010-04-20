@@ -48,8 +48,7 @@ public class KonsolidatorDialog extends Dialog {
 
 	private BausteinUmsetzung source = null;
 
-	public KonsolidatorDialog(Shell shell,
-			List<BausteinUmsetzung> selectedElements) {
+	public KonsolidatorDialog(Shell shell, List<BausteinUmsetzung> selectedElements) {
 		super(shell);
 		this.selection = selectedElements;
 	}
@@ -62,15 +61,11 @@ public class KonsolidatorDialog extends Dialog {
 		container.setLayout(layout);
 
 		Label intro = new Label(container, SWT.NONE);
-		intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER,
-				false, false, 1, 1));
-		intro
-				.setText("Wählen Sie den Baustein, der als Vorlage für die anderen verwendet"
-						+ " werden soll:");
+		intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+		intro.setText("Wählen Sie den Baustein, der als Vorlage für die anderen verwendet" + " werden soll:");
 
 		final ListViewer viewer = new ListViewer(container, SWT.CHECK | SWT.BORDER);
-		viewer.getList().setLayoutData(new GridData(GridData.FILL, GridData.FILL,
-				true, true, 1, 1));
+		viewer.getList().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 
 		viewer.setLabelProvider(new LabelProvider() {
 			@Override
@@ -85,24 +80,19 @@ public class KonsolidatorDialog extends Dialog {
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection sel = ((IStructuredSelection) viewer.getSelection());
-				if (sel.size() ==1)
+				if (sel.size() == 1) {
 					source = (BausteinUmsetzung) sel.getFirstElement();
+				}
 			}
 		});
 
 		return container;
 	}
-	
+
 	public static boolean askConsolidate(Shell shell) {
-		if (!MessageDialog.openQuestion(
-				shell,
-				"Bausteine konsolidieren",
-				"Wenn Sie fortfahren, werden alle Werte (inkl. Maßnahmen) der " +
-				"Zielbausteine mit denen der gewählten Vorlage überschrieben.\n\n" +
-				"Felder, die in der Vorlage leer sind, werden ignoriert.\n\n" +
-				"Fortfahren?")) {
-					return false;
-				}
+		if (!MessageDialog.openQuestion(shell, "Bausteine konsolidieren", "Wenn Sie fortfahren, werden alle Werte (inkl. Maßnahmen) der " + "Zielbausteine mit denen der gewählten Vorlage überschrieben.\n\n" + "Felder, die in der Vorlage leer sind, werden ignoriert.\n\n" + "Fortfahren?")) {
+			return false;
+		}
 		return true;
 	}
 
