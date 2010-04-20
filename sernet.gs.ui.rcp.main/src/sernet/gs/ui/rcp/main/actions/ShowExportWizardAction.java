@@ -35,58 +35,58 @@ import sernet.gs.ui.rcp.main.bsi.wizards.ExportWizard;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 
-
 public class ShowExportWizardAction extends Action {
-	
-	public static final String ID = "sernet.gs.ui.rcp.main.showexportwizardaction";
-	private final IWorkbenchWindow window;
-	
-	public ShowExportWizardAction(IWorkbenchWindow window, String label) {
-		this.window = window;
+
+    public static final String ID = "sernet.gs.ui.rcp.main.showexportwizardaction"; //$NON-NLS-1$
+    private final IWorkbenchWindow window;
+
+    public ShowExportWizardAction(IWorkbenchWindow window, String label) {
+        this.window = window;
         setText(label);
-		setId(ID);
-		setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.REPORT));
-		setEnabled(false);
-		
-		CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
+        setId(ID);
+        setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.REPORT));
+        setEnabled(false);
 
-			public void closed(BSIModel model) {
-				setEnabled(false);
-			}
+        CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
 
-			public void loaded(BSIModel model) {
-				setEnabled(true);
-			}
-			
-		});
-	}
-	
-	
-	public void run() {
-		Activator.inheritVeriniceContextState();
+            public void closed(BSIModel model) {
+                setEnabled(false);
+            }
 
-		try {
-			PlatformUI.getWorkbench().getProgressService().
-			busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Öffne OpenOffice Export...", IProgressMonitor.UNKNOWN);
-					
-					ExportWizard wizard = new ExportWizard();
-					wizard.init(window.getWorkbench(), null);
-					final WizardDialog dialog = new WizardDialog(window.getShell(), wizard);
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							dialog.open();		
-						}
-					});
-				}
-			});
-		} catch (InvocationTargetException e) {
-			ExceptionUtil.log(e, "Öffnen von OO Export fehlgeschlagen.");
-		} catch (InterruptedException e) {
-			ExceptionUtil.log(e, "Öffnen von OO Export fehlgeschlagen.");
-		}
-	}
-	
+            public void loaded(BSIModel model) {
+                setEnabled(true);
+            }
+
+        });
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        Activator.inheritVeriniceContextState();
+
+        try {
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    monitor.beginTask(Messages.ShowExportWizardAction_1, IProgressMonitor.UNKNOWN);
+
+                    ExportWizard wizard = new ExportWizard();
+                    wizard.init(window.getWorkbench(), null);
+                    final WizardDialog dialog = new WizardDialog(window.getShell(), wizard);
+                    Display.getDefault().asyncExec(new Runnable() {
+                        public void run() {
+                            dialog.open();
+                        }
+                    });
+                }
+            });
+        } catch (InterruptedException e) {
+            ExceptionUtil.log(e, Messages.ShowExportWizardAction_2);
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.ShowExportWizardAction_3);
+        }
+    }
+
 }

@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -45,53 +44,53 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
  */
 public class ShowAccessControlEditAction extends Action implements ISelectionListener {
 
-	public static final String ID = "sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction";
-	private final IWorkbenchWindow window;
+    public static final String ID = "sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"; //$NON-NLS-1$
+    private final IWorkbenchWindow window;
 
-	public ShowAccessControlEditAction(IWorkbenchWindow window, String label) {
-		this.window = window;
-		setText(label);
-		setId(ID);
-		setActionDefinitionId(ID);
-		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
-		setToolTipText("Zugriffsrechte editieren.");
+    public ShowAccessControlEditAction(IWorkbenchWindow window, String label) {
+        this.window = window;
+        setText(label);
+        setId(ID);
+        setActionDefinitionId(ID);
+        setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
+        setToolTipText(Messages.ShowAccessControlEditAction_1);
+        window.getSelectionService().addSelectionListener(BsiModelView.ID, this);
+    }
 
-		window.getSelectionService().addSelectionListener(BsiModelView.ID, this);
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        Activator.inheritVeriniceContextState();
+        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
+        if (selection == null || selection.size() < 1) {
+            return;
+        }
+        final AccessControlEditDialog dialog = new AccessControlEditDialog(window.getShell(), selection);
+        if (dialog.open() != Window.OK) {
+            return;
+        }
+    }
 
-	@Override
-	public void run() {
-		Activator.inheritVeriniceContextState();
+    public void dispose() {
+        window.getSelectionService().removeSelectionListener(BsiModelView.ID, this);
+    }
 
-		IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
-		if (selection == null || selection.size() < 1) {
-			return;
-		}
-
-		final AccessControlEditDialog dialog = new AccessControlEditDialog(window.getShell(), selection);
-
-		if (dialog.open() != Window.OK) {
-			return;
-		}
-
-	}
-
-	public void dispose() {
-		window.getSelectionService().removeSelectionListener(BsiModelView.ID, this);
-	}
-
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		// Conditions for availability of this action:
-		// - Database connection must be open (Implicitly assumes that login
-		// credentials have
-		// been transferred and that the server can be queried. This is
-		// neccessary since this
-		// method will be called before the server connection is enabled.)
-		// - permission handling is needed by IAuthService implementation
-		// - user has administrator privileges
-		boolean b = ((IStructuredSelection) selection).getFirstElement() instanceof CnATreeElement && CnAElementHome.getInstance().isOpen() && ServiceFactory.isPermissionHandlingNeeded() && AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
-
-		setEnabled(b);
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+     */
+    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+        // Conditions for availability of this action:
+        // - Database connection must be open (Implicitly assumes that login
+        // credentials have
+        // been transferred and that the server can be queried. This is
+        // neccessary since this
+        // method will be called before the server connection is enabled.)
+        // - permission handling is needed by IAuthService implementation
+        // - user has administrator privileges
+        boolean b = ((IStructuredSelection) selection).getFirstElement() instanceof CnATreeElement && CnAElementHome.getInstance().isOpen() && ServiceFactory.isPermissionHandlingNeeded() && AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
+        setEnabled(b);
+    }
 
 }

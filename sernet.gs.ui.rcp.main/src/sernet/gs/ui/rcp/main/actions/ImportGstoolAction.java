@@ -21,8 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -36,84 +36,84 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 
-
 public class ImportGstoolAction extends Action {
-	
-	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolaction";
-	private final IWorkbenchWindow window;
-	
-	private IModelLoadListener loadListener = new IModelLoadListener() {
-		public void closed(BSIModel model) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					setEnabled(false);
-				}
-			});
-		}
-		
-		public void loaded(final BSIModel model) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					setEnabled(true);
-				}
-			});
-		}
-	};
-	
-	public ImportGstoolAction(IWorkbenchWindow window, String label) {
-		this.window = window;
+
+    public static final String ID = "sernet.gs.ui.rcp.main.importgstoolaction"; //$NON-NLS-1$
+
+    private IModelLoadListener loadListener = new IModelLoadListener() {
+        
+        /* (non-Javadoc)
+         * @see sernet.gs.ui.rcp.main.common.model.IModelLoadListener#closed(sernet.gs.ui.rcp.main.bsi.model.BSIModel)
+         */
+        public void closed(BSIModel model) {
+            Display.getDefault().asyncExec(new Runnable() {
+                public void run() {
+                    setEnabled(false);
+                }
+            });
+        }
+
+        /* (non-Javadoc)
+         * @see sernet.gs.ui.rcp.main.common.model.IModelLoadListener#loaded(sernet.gs.ui.rcp.main.bsi.model.BSIModel)
+         */
+        public void loaded(final BSIModel model) {
+            Display.getDefault().asyncExec(new Runnable() {
+                public void run() {
+                    setEnabled(true);
+                }
+            });
+        }
+    };
+
+    public ImportGstoolAction(IWorkbenchWindow window, String label) {
         setText(label);
-		setId(ID);
-		setEnabled(false);
-		CnAElementFactory.getInstance().addLoadListener(loadListener);
-	}
-	
-	
-	public void run() {
-		try {
-			final GSImportDialog dialog = new GSImportDialog(Display.getCurrent().getActiveShell());
-			if (dialog.open() != InputDialog.OK)
-				return;
-			
-			PlatformUI.getWorkbench().getProgressService().
-			busyCursorWhile(new IRunnableWithProgress() {
-				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					Activator.inheritVeriniceContextState();
-					
-					ImportTask importTask = new ImportTask(
-							dialog.isBausteine(),
-							dialog.isMassnahmenPersonen(),
-							dialog.isZielObjekteZielobjekte(),
-							dialog.isSchutzbedarf(),
-							dialog.isRollen(),
-							dialog.isKosten(),
-							dialog.isUmsetzung(),
-							dialog.isBausteinPersonen());
-					try {
-						importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
-							public void done() {
-								monitor.done();
-							}
-							public void worked(int work) {
-								monitor.worked(work);
-							}
-							public void beginTask(String name, int totalWork) {
-								monitor.beginTask(name, totalWork);
-							}
-							public void subTask(String name) {
-								monitor.subTask(name);
-							}
-						});
-					} catch (Exception e) {
-						ExceptionUtil.log(e, "Fehler beim Importieren.");
-					}
-				}
-			});
-		} catch (InvocationTargetException e) {
-			ExceptionUtil.log(e.getCause(), "Import aus dem Gstool fehlgeschlagen.");
-		} catch (InterruptedException e) {
-			ExceptionUtil.log(e, "Import aus dem Gstool fehlgeschlagen.");
-		}
-	}
-	
+        setId(ID);
+        setEnabled(false);
+        CnAElementFactory.getInstance().addLoadListener(loadListener);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        try {
+            final GSImportDialog dialog = new GSImportDialog(Display.getCurrent().getActiveShell());
+            if (dialog.open() != Window.OK) {
+                return;
+            }
+
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    Activator.inheritVeriniceContextState();
+
+                    ImportTask importTask = new ImportTask(dialog.isBausteine(), dialog.isMassnahmenPersonen(), dialog.isZielObjekteZielobjekte(), dialog.isSchutzbedarf(), dialog.isRollen(), dialog.isKosten(), dialog.isUmsetzung(), dialog.isBausteinPersonen());
+                    try {
+                        importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
+                            public void done() {
+                                monitor.done();
+                            }
+
+                            public void worked(int work) {
+                                monitor.worked(work);
+                            }
+
+                            public void beginTask(String name, int totalWork) {
+                                monitor.beginTask(name, totalWork);
+                            }
+
+                            public void subTask(String name) {
+                                monitor.subTask(name);
+                            }
+                        });
+                    } catch (Exception e) {
+                        ExceptionUtil.log(e, Messages.ImportGstoolAction_1);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            ExceptionUtil.log(e.getCause(), Messages.ImportGstoolAction_2);
+        }
+    }
+
 }

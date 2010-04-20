@@ -32,53 +32,45 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 
-
 public class ReloadAction extends Action {
-	
-	public static final String ID = "sernet.gs.ui.rcp.main.reloadaction";
-	private final IWorkbenchWindow window;
-	
-	public ReloadAction(IWorkbenchWindow window, String label) {
-		this.window = window;
+
+    public static final String ID = "sernet.gs.ui.rcp.main.reloadaction"; //$NON-NLS-1$
+
+    public ReloadAction(IWorkbenchWindow window, String label) {
         setText(label);
-		setId(ID);
-		setActionDefinitionId(ID);
-		setImageDescriptor(ImageCache.getInstance()
-				.getImageDescriptor(ImageCache.RELOAD));
-		setEnabled(false);
-		
-		CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
+        setId(ID);
+        setActionDefinitionId(ID);
+        setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
+        setEnabled(false);
+        CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
+            public void closed(BSIModel model) {
+                setEnabled(false);
+            }
+            public void loaded(BSIModel model) {
+                setEnabled(true);
+            }
+        });
+    }
 
-			public void closed(BSIModel model) {
-				setEnabled(false);
-			}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        Activator.inheritVeriniceContextState();
+        try {
+            // close editors:
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */);
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    CnAElementFactory.getInstance().reloadModelFromDatabase();
+                }
+            });
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.ReloadAction_1);
+        }
+    }
 
-			public void loaded(BSIModel model) {
-				setEnabled(true);
-			}
-			
-		});
-	}
-	
-	
-	public void run() {
-		Activator.inheritVeriniceContextState();
-
-		try {
-			// close editors:
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */);
-
-			PlatformUI.getWorkbench().getProgressService().
-			busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					CnAElementFactory.getInstance().reloadModelFromDatabase();
-				}
-			});
-		} catch (InvocationTargetException e) {
-			ExceptionUtil.log(e, "Reload aus Datenbank fehlgeschlagen.");
-		} catch (InterruptedException e) {
-			ExceptionUtil.log(e, "Reload aus Datenbank fehlgeschlagen.");
-		}
-	}
-	
 }

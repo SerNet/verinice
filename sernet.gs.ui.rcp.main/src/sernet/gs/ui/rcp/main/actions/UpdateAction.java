@@ -25,23 +25,25 @@ import org.eclipse.update.ui.UpdateJob;
 import org.eclipse.update.ui.UpdateManagerUI;
 
 public class UpdateAction extends Action implements IAction {
-	private IWorkbenchWindow window;
-	
-	public UpdateAction(IWorkbenchWindow window) {
-		this.window = window;
-		setId("sernet.gs.ui.rcp.main.actions.updateaction");
-		setText("Suche nach neuen &Updates...");
-		setToolTipText("Suche nach neuen Updates für Verinice");
-		
-	}
-	
-	@Override
-	public void run() {
-		BusyIndicator.showWhile(window.getShell().getDisplay(), new Runnable() {
-			public void run() {
-				UpdateJob job = new UpdateJob("Suche Verinice-Updates", false, false);
-				UpdateManagerUI.openInstaller(window.getShell(), job);
-			}
-		});
-	}
+    private IWorkbenchWindow window;
+
+    public UpdateAction(IWorkbenchWindow window) {
+        this.window = window;
+        setId("sernet.gs.ui.rcp.main.actions.updateaction"); //$NON-NLS-1$
+        setText(Messages.UpdateAction_1);
+        setToolTipText(Messages.UpdateAction_2);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        BusyIndicator.showWhile(window.getShell().getDisplay(), new Runnable() {
+            public void run() {
+                UpdateJob job = new UpdateJob(Messages.UpdateAction_3, false, false);
+                UpdateManagerUI.openInstaller(window.getShell(), job);
+            }
+        });
+    }
 }

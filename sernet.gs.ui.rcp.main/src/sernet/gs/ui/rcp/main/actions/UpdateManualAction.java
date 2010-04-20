@@ -21,26 +21,28 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.update.ui.UpdateJob;
 import org.eclipse.update.ui.UpdateManagerUI;
 
 public class UpdateManualAction extends Action implements IAction {
-	private IWorkbenchWindow window;
-	
-	public UpdateManualAction(IWorkbenchWindow window) {
-		this.window = window;
-		setId("sernet.gs.ui.rcp.main.actions.updateaction");
-		setText("Hinzufügen neuer Plugins...");
-		setToolTipText("Suche nach neuen Updates und hinzufügen neuer Plugins für verinice");
-		
-	}
-	
-	@Override
-	public void run() {
-		BusyIndicator.showWhile(window.getShell().getDisplay(), new Runnable() {
-			public void run() {
-				UpdateManagerUI.openInstaller(window.getShell());
-			}
-		});
-	}
+    private IWorkbenchWindow window;
+
+    public UpdateManualAction(IWorkbenchWindow window) {
+        this.window = window;
+        setId("sernet.gs.ui.rcp.main.actions.updateaction"); //$NON-NLS-1$
+        setText(Messages.UpdateManualAction_1);
+        setToolTipText(Messages.UpdateManualAction_2);
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        BusyIndicator.showWhile(window.getShell().getDisplay(), new Runnable() {
+            public void run() {
+                UpdateManagerUI.openInstaller(window.getShell());
+            }
+        });
+    }
 }

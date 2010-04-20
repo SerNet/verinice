@@ -24,23 +24,24 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.update.ui.UpdateManagerUI;
 
 public class ManageUpdatesAction extends Action implements IAction {
-	private IWorkbenchWindow window;
-	
-	public ManageUpdatesAction(IWorkbenchWindow window) {
-		this.window = window;
-		setId("sernet.gs.ui.rcp.main.actions.manageupdatesaction");
-		setText("Installierte Updates anzeigen...");
-		setToolTipText("Anzeigen / Bearbeiten installierter Programmbestandteile");
-		
-	}
-	
-	@Override
-	public void run() {
-		BusyIndicator.showWhile(window.getShell().getDisplay(), new Runnable() {
-			public void run() {
-				UpdateManagerUI.openConfigurationManager(window.getShell());
-				
-			}
-		});
-	}
+    private IWorkbenchWindow window;
+
+    public ManageUpdatesAction(IWorkbenchWindow window) {
+        this.window = window;
+        setId("sernet.gs.ui.rcp.main.actions.manageupdatesaction"); //$NON-NLS-1$
+        setText(Messages.ManageUpdatesAction_1);
+        setToolTipText(Messages.ManageUpdatesAction_2);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        BusyIndicator.showWhile(window.getShell().getDisplay(), new Runnable() {
+            public void run() {
+                UpdateManagerUI.openConfigurationManager(window.getShell());
+            }
+        });
+    }
 }

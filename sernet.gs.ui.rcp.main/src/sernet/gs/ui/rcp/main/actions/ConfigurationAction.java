@@ -166,7 +166,7 @@ public class ConfigurationAction implements IObjectActionDelegate {
 			});
 		} catch (Exception e) {
 			LOG.error("Error while saving configuration.", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, Messages.ConfigurationAction_6);
+			ExceptionUtil.log(e, Messages.ConfigurationAction_5);
 		} 
 	}
 
