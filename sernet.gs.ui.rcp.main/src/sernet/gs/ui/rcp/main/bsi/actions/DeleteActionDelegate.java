@@ -64,39 +64,35 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
 		final IStructuredSelection selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection());
 
-		if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), "Wirklich löschen?", "Alle " + selection.size() + " markierten Elemente werden entfernt. Vorsicht: diese Operation " + "kann nicht rückgängig gemacht werden! Stellen Sie sicher, dass Sie über " + "Backups der Datenbank verfügen.\n\n" + "Wirklich löschen?")) {
+		if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), "Wirklich löschen?", "Alle " + selection.size() + " markierten Elemente werden entfernt. Vorsicht: diese Operation kann nicht rückgängig gemacht werden! \n\nWirklich löschen?")) {
 			return;
 		}
 
 		// ask twice if IT verbund
 		boolean goahead = true;
-		boolean skipQuestion = false;
 		Iterator iterator = selection.iterator();
 		Object object;
 		while (iterator.hasNext()) {
 			object = iterator.next();
 			if (object instanceof ITVerbund || object instanceof IISO27kRoot) {
-				if (!goahead)
+				if (!goahead) {
 					return;
+				}
 
-				String title="Objekt wirklich löschen";
+				String title = "Objekt wirklich löschen";
 				String message = "Sool das Objekt wirklich gelöscht werden?";
-				if(object instanceof ITVerbund) {
+				if (object instanceof ITVerbund) {
 					title = "IT-Verbund wirklich löschen?";
-					message = "Sie haben den IT-Verbund " + ((ITVerbund) object).getTitle() + " zum Löschen markiert. " + "Das wird alle darin enthaltenen Objekte entfernen " + "(Server, Clients, Personen...)\n\n" + "Wirklich wirklich löschen, wirklich?";
+					message = "Sie haben den IT-Verbund " + ((ITVerbund) object).getTitle() + " zum Löschen markiert. Das wird alle darin enthaltenen Objekte entfernen (Server, Clients, Personen...) \n\nWollen Sie den Verbunf wirklich löschen?";
 				}
-				if(object instanceof IISO27kRoot) {
+				if (object instanceof IISO27kRoot) {
 					title = "Really Delete Organization?";
-					message = "Organization " + ((IISO27kRoot) object).getTitle() + " is maked for deletion. All elements i8n this organization will bew deleted. Do you really want't to delete organization and all it's elements?";
+					message = "Organization " + ((IISO27kRoot) object).getTitle() + " is maked for deletion. All elements in this organization will bew deleted. Do you really want't to delete organization and all it's elements?";
 				}
-				
-				
-				if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class),title, message )) {
-					skipQuestion = true;
+
+				if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), title, message)) {
 					goahead = false;
 					return;
-				} else {
-					skipQuestion = true;
 				}
 			}
 		}
@@ -108,20 +104,14 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 					monitor.beginTask("Lösche Objekte", selection.size());
 
 					for (Iterator iter = selection.iterator(); iter.hasNext();) {
-						Object sel = (Object) iter.next();
+						Object sel = iter.next();
 
-						if (sel instanceof IBSIStrukturElement 
-							|| sel instanceof BausteinUmsetzung 
-							|| sel instanceof FinishedRiskAnalysis 
-							|| sel instanceof GefaehrdungsUmsetzung 
-							|| sel instanceof ITVerbund
-							|| sel instanceof IISO27kRoot
-							|| sel instanceof IISO27kElement) {
+						if (sel instanceof IBSIStrukturElement || sel instanceof BausteinUmsetzung || sel instanceof FinishedRiskAnalysis || sel instanceof GefaehrdungsUmsetzung || sel instanceof ITVerbund || sel instanceof IISO27kRoot || sel instanceof IISO27kElement) {
 
 							// do not delete last ITVerbund:
 							try {
 								if (sel instanceof ITVerbund && CnAElementHome.getInstance().getItverbuende().size() < 2) {
-									ExceptionUtil.log(new Exception("Letzter IT-Verbund kann nicht gelöscht werden."), "Sie haben versucht, den letzten IT-Verbund zu löschen. " + "Es muss immer ein IT-Verbund in der Datenbank verbleiben. " + "Wenn Sie diesen IT-Verbund löschen möchten, legen Sie zunächst einen neuen, leeren " + "IT-Verbund an.");
+									ExceptionUtil.log(new Exception("Letzter IT-Verbund kann nicht gelöscht werden."), "Sie haben versucht, den letzten IT-Verbund zu löschen. Es muss immer ein IT-Verbund in der Datenbank verbleiben. Wenn Sie diesen IT-Verbund löschen möchten, legen Sie zunächst einen neuen, leeren IT-Verbund an.");
 									return;
 								}
 							} catch (Exception e) {
@@ -131,7 +121,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 							CnATreeElement el = (CnATreeElement) sel;
 
 							try {
-								monitor.setTaskName("Lösche: " + el.getTitle() );
+								monitor.setTaskName("Lösche: " + el.getTitle());
 								el.getParent().removeChild(el);
 								CnAElementHome.getInstance().remove(el);
 								monitor.worked(1);
@@ -165,8 +155,9 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
 			// Only change state when it is enabled, since we do not want to
 			// trash the enablement settings of plugin.xml
-			if (action.isEnabled())
+			if (action.isEnabled()) {
 				action.setEnabled(b);
+			}
 		}
 	}
 
