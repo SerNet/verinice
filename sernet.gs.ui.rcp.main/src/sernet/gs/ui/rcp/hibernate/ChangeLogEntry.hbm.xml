@@ -8,7 +8,7 @@
 	@author koderman@sernet.de
  -->
 <hibernate-mapping package="sernet.gs.ui.rcp.main.common.model">
-	<class name="ChangeLogEntry"
+	<class name="ChangeLogEntry"  table="changelogentry"
 		mutable="false">
 		
 		<id name="dbId" 

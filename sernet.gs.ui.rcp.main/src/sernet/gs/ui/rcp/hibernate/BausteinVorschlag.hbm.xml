@@ -7,7 +7,7 @@
 	@author koderman@sernet.de
  -->
 <hibernate-mapping package="sernet.gs.ui.rcp.main.bsi.model">
-	<class name="BausteinVorschlag">
+	<class name="BausteinVorschlag" table="bausteinvorschlag">
 		
 		<id name="dbId" 
 			type="java.lang.Integer" 

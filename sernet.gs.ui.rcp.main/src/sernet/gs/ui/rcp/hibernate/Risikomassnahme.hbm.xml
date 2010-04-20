@@ -8,7 +8,7 @@
  -->
  
 <hibernate-mapping package="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model">
-	<class name="RisikoMassnahme">
+	<class name="RisikoMassnahme" table="risikomassnahme">
 		
 		<id name="dbId" 
 			type="java.lang.Integer" 

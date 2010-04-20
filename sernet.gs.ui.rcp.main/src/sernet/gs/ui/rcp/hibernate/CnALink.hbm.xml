@@ -7,7 +7,7 @@
 	@author koderman@sernet.de
  -->
 <hibernate-mapping package="sernet.gs.ui.rcp.main.common.model">
-	<class name="CnALink"
+	<class name="CnALink" table="cnalink"
 		mutable="false">
 		
 		<cache usage="read-write" />

@@ -5,7 +5,7 @@
 
 <hibernate-mapping package="sernet.gs.ui.rcp.main.common.model">
 
-	<class name="CnATreeElement" 
+	<class name="CnATreeElement" table="cnatreeelement"
 		batch-size="10"
 		abstract="true">
 		<id name="dbId" 

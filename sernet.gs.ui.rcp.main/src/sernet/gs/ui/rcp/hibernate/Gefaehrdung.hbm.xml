@@ -8,7 +8,7 @@
  -->
  
 <hibernate-mapping package="sernet.gs.model">
-	<class name="Gefaehrdung">
+	<class name="Gefaehrdung" table="gefaehrdung">
 		
 		<id name="dbId" 
 			type="java.lang.Integer" 
@@ -34,7 +34,8 @@
 		
 		<joined-subclass
 			name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung"
-			extends="Gefaehrdung">
+			extends="Gefaehrdung"
+			table="owngefaehrdung">
 			
 			<key column="dbId"/>
 			

@@ -7,7 +7,7 @@
 	@author Robert Schuster <r.schuster@tarent.de>
  -->
 <hibernate-mapping package="sernet.gs.ui.rcp.main.common.model">
-	<class name="Permission">
+	<class name="Permission" table="permission">
 		
 		<id name="dbId" 
 			type="java.lang.Integer" 

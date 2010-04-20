@@ -7,7 +7,7 @@
 	@author koderman@sernet.de
  -->
 <hibernate-mapping package="sernet.gs.ui.rcp.main.common.model.configuration">
-	<class name="Configuration">
+	<class name="Configuration" table="configuration">
 		
 		<id name="dbId" 
 			type="java.lang.Integer" 
