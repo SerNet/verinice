@@ -37,7 +37,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.Permission;
@@ -84,24 +83,24 @@ public class AccessControlEditDialog extends Dialog {
 		super.configureShell(newShell);
 
 		// TODO rschuster: Translate me.
-		newShell.setText("Rechtevergabe");
+		newShell.setText(Messages.AccessControlEditDialog_6);
 		newShell.setSize(400, 800);
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
-		MigLayout ml = new MigLayout("wrap 3", "[grow, fill][left][left]", "[]");
+		MigLayout ml = new MigLayout("wrap 3", "[grow, fill][left][left]", "[]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		container.setLayout(ml);
 
 		Label l = new Label(container, SWT.NONE);
-		l.setText("Rolle");
+		l.setText(Messages.AccessControlEditDialog_3);
 
 		l = new Label(container, SWT.NONE);
-		l.setText("lesen");
+		l.setText(Messages.AccessControlEditDialog_4);
 
 		l = new Label(container, SWT.NONE);
-		l.setText("schreiben");
+		l.setText(Messages.AccessControlEditDialog_5);
 
 		// Note: The permissions should always be loaded right from the database
 		// instead of relying on the data that is currently in the
@@ -149,7 +148,7 @@ public class AccessControlEditDialog extends Dialog {
 		// user can use for new permissions. Ideally we want an 'add'
 		// button that dynamically creates a new row for us.
 		t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
-		t.setText("");
+		t.setText(""); //$NON-NLS-1$
 		t.setItems(allRoles);
 		r = new Button(container, SWT.CHECK | SWT.BORDER);
 		r.setSelection(false);
@@ -158,7 +157,7 @@ public class AccessControlEditDialog extends Dialog {
 		rawPermissions.add(new RawPermission(t, r, w));
 
 		t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
-		t.setText("");
+		t.setText(""); //$NON-NLS-1$
 		t.setItems(allRoles);
 		r = new Button(container, SWT.CHECK | SWT.BORDER);
 		r.setSelection(false);
@@ -167,7 +166,7 @@ public class AccessControlEditDialog extends Dialog {
 		rawPermissions.add(new RawPermission(t, r, w));
 
 		t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
-		t.setText("");
+		t.setText(""); //$NON-NLS-1$
 		t.setItems(allRoles);
 		r = new Button(container, SWT.CHECK | SWT.BORDER);
 		r.setSelection(false);
@@ -176,9 +175,9 @@ public class AccessControlEditDialog extends Dialog {
 		rawPermissions.add(new RawPermission(t, r, w));
 
 		inheritButton = new Button(container, SWT.CHECK);
-		inheritButton.setLayoutData("spanx 3, grow");
+		inheritButton.setLayoutData("spanx 3, grow"); //$NON-NLS-1$
 		inheritButton.setSelection(false);
-		inheritButton.setText("Rechte auf alle Kindelemente anwenden");
+		inheritButton.setText(Messages.AccessControlEditDialog_1);
 
 		return container;
 	}
@@ -198,7 +197,7 @@ public class AccessControlEditDialog extends Dialog {
 
 	protected void okPressed() {
 		if (this.inheritButton.getSelection()) {
-			boolean openConfirm = MessageDialog.openConfirm(getParentShell(), "Bestätigen", "Neue Rechte wirklich auf alle untergeordneten Elemente anwenden? VORSICHT: existierende Berechtigungen werden dabei unterschrieben!");
+			boolean openConfirm = MessageDialog.openConfirm(getParentShell(), Messages.AccessControlEditDialog_0, Messages.AccessControlEditDialog_2);
 			if (!openConfirm)
 				return;
 		}
@@ -220,7 +219,7 @@ public class AccessControlEditDialog extends Dialog {
 				try {
 					ServiceFactory.lookupCommandService().executeCommand(up);
 				} catch (CommandException e) {
-					log.error("Error while updating permissions", e);
+					log.error("Error while updating permissions", e); //$NON-NLS-1$
 					throw new RuntimeException(e);
 				}
 			}

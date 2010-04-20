@@ -36,7 +36,7 @@ public class BulkEditDialog extends Dialog {
 	private EntityType entType;
 	private Entity entity = null;
 	private boolean useRules = false;
-	private String title = "Bulk Edit";
+	private String title = Messages.BulkEditDialog_0;
 
 	public BulkEditDialog(Shell parent, EntityType entType) {
 		super(parent);
@@ -74,7 +74,7 @@ public class BulkEditDialog extends Dialog {
 				InputHelperFactory.setInputHelpers(entType, huiComposite);
 				return huiComposite;
 			} catch (DBException e) {
-				ExceptionUtil.log(e, "Fehler beim Anzeigen des Bulk Edit Dialogs.");
+				ExceptionUtil.log(e, Messages.BulkEditDialog_1);
 			}
 
 		} catch (Exception e) {

@@ -65,11 +65,11 @@ public class BSIModelFilterDialog extends FilterDialog {
 
 	private static final Logger log = Logger.getLogger(BSIModelFilterDialog.class);
 
-	private String lebenszyklus = "";
+	private String lebenszyklus = ""; //$NON-NLS-1$
 	private Combo combo;
 	private Set<Class<?>> filteredClasses;
 	private Combo comboObjektLZ;
-	private String objektLebenszyklus = "";
+	private String objektLebenszyklus = ""; //$NON-NLS-1$
 	private CheckboxTableViewer viewer;
 	private String[] tagPattern;
 	private Composite container;
@@ -83,32 +83,32 @@ public class BSIModelFilterDialog extends FilterDialog {
 		// is the label of the button that allows switching the filter.
 		// Note: If the labels change. This part must be adjusted as well. The best idea
 		// is to use the i18n and use the same string for the button and this code.
-		possibleFilters.put("Bausteinzuordnungen", BausteinUmsetzung.class);
-		possibleFilters.put("Maßnahmenumsetzungen", MassnahmenUmsetzung.class);
+		possibleFilters.put(Messages.BSIModelFilterDialog_2, BausteinUmsetzung.class);
+		possibleFilters.put(Messages.BSIModelFilterDialog_3, MassnahmenUmsetzung.class);
 		//possibleFilters.put("Verknüpfungen", LinkKategorie.class); 
 	}
 	
 	private static final String[] LZ_ITEMS = new String[] {
-		"<alle>",
-		"Planung",
-		"Beschaffung",
-		"Umsetzung",
-		"Betrieb",
-		"Aussonderung",
-		"Notfallvorsorge"
+		Messages.BSIModelFilterDialog_4,
+		Messages.BSIModelFilterDialog_5,
+		Messages.BSIModelFilterDialog_6,
+		Messages.BSIModelFilterDialog_7,
+		Messages.BSIModelFilterDialog_8,
+		Messages.BSIModelFilterDialog_9,
+		Messages.BSIModelFilterDialog_10
 	};
 	
 	private static final String[] LZ_ZIELOBJEKTE_ITEMS = new String[] {
-		"<alle>",
-         "Betrieb",
-         "Planung" ,
-         "Grundinstallation", 
-         "Konfiguration" ,
-         "Test" ,
-         "Auslieferung", 
-         "Reparatur",
-         "Standby",
-         "Reserve"
+		Messages.BSIModelFilterDialog_11,
+         Messages.BSIModelFilterDialog_12,
+         Messages.BSIModelFilterDialog_13 ,
+         Messages.BSIModelFilterDialog_14, 
+         Messages.BSIModelFilterDialog_15 ,
+         Messages.BSIModelFilterDialog_16 ,
+         Messages.BSIModelFilterDialog_17, 
+         Messages.BSIModelFilterDialog_18,
+         Messages.BSIModelFilterDialog_19,
+         Messages.BSIModelFilterDialog_20
 	};
 	private String[] checkedElements;
 
@@ -142,7 +142,7 @@ public class BSIModelFilterDialog extends FilterDialog {
 		Label intro = new Label(container, SWT.NONE);
 		intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER,
 				false, false, 2, 1));
-		intro.setText("Filtern nach folgenden Kriterien:");
+		intro.setText(Messages.BSIModelFilterDialog_21);
 		
 		Group boxesComposite = createUmsetzungGroup(container);
 		Group boxesComposite2 = createSiegelGroup(container);
@@ -165,7 +165,7 @@ public class BSIModelFilterDialog extends FilterDialog {
 	
 	private Group createTagfilterGroup(Composite parent) {
 		Group groupComposite = new Group(parent, SWT.BORDER);
-		groupComposite.setText("Nach Tag selektieren");
+		groupComposite.setText(Messages.BSIModelFilterDialog_22);
 		GridData gridData = new GridData(GridData.FILL, GridData.CENTER,
 				true, false, 2, 1);
 		groupComposite.setLayoutData(gridData);
@@ -186,11 +186,11 @@ public class BSIModelFilterDialog extends FilterDialog {
 		comp.setMinSize(100,100);
 
 		TableColumn checkboxColumn = new TableColumn(table, SWT.LEFT);
-		checkboxColumn.setText("");
+		checkboxColumn.setText(""); //$NON-NLS-1$
 		checkboxColumn.setWidth(35);
 
 		TableColumn imageColumn = new TableColumn(table, SWT.LEFT);
-		imageColumn.setText("Tag");
+		imageColumn.setText(Messages.BSIModelFilterDialog_24);
 		imageColumn.setWidth(100);
 		
 		viewer.setContentProvider(new ArrayContentProvider());
@@ -231,7 +231,7 @@ public class BSIModelFilterDialog extends FilterDialog {
 
 	private Group createAusblendenGroup(Composite parent) {
 		Group boxesComposite = new Group(parent, SWT.BORDER);
-		boxesComposite.setText("Ausblenden");
+		boxesComposite.setText(Messages.BSIModelFilterDialog_25);
 		GridData gridData = new GridData(GridData.FILL, GridData.CENTER,
 				true, false, 2, 1);
 		boxesComposite.setLayoutData(gridData);
@@ -268,12 +268,12 @@ public class BSIModelFilterDialog extends FilterDialog {
 private void createAusblendenCheckboxes(Group parent) {
 		
 		final Button button1 = new Button(parent, SWT.CHECK);
-		button1.setText("Bausteinzuordnungen");
+		button1.setText(Messages.BSIModelFilterDialog_26);
 		button1.setSelection(getFilterSelectionForButton(button1));
 		button1.addSelectionListener(new SelectionHelper(button1));
 		
 		final Button button2 = new Button(parent, SWT.CHECK);
-		button2.setText("Maßnahmenumsetzungen");
+		button2.setText(Messages.BSIModelFilterDialog_27);
 		button2.setSelection(getFilterSelectionForButton(button2));
 		button2.addSelectionListener(new SelectionHelper(button2));
 		
@@ -286,12 +286,12 @@ private void createAusblendenCheckboxes(Group parent) {
 
 	private void createLebenszyklusDropDown(Composite container) {
 		Label label = new Label(container, SWT.None);
-		label.setText("Maßnahmen für Lebenszyklus");
+		label.setText(Messages.BSIModelFilterDialog_28);
 		label.pack();
 		
 		combo = new Combo(container, SWT.NONE);
 		combo.setItems(LZ_ITEMS);
-		combo.setText(lebenszyklus==null ? "" : lebenszyklus);
+		combo.setText(lebenszyklus==null ? "" : lebenszyklus); //$NON-NLS-1$
 		combo.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				setLZ();
@@ -304,12 +304,12 @@ private void createAusblendenCheckboxes(Group parent) {
 
 	private void createObjektLebenszyklusDropDown(Composite container) {
 		Label label = new Label(container, SWT.None);
-		label.setText("Objekte in Lebenszyklus");
+		label.setText(Messages.BSIModelFilterDialog_30);
 		label.pack();
 		
 		comboObjektLZ = new Combo(container, SWT.NONE);
 		comboObjektLZ.setItems(LZ_ZIELOBJEKTE_ITEMS);
-		comboObjektLZ.setText(objektLebenszyklus==null ? "" : objektLebenszyklus);
+		comboObjektLZ.setText(objektLebenszyklus==null ? "" : objektLebenszyklus); //$NON-NLS-1$
 		comboObjektLZ.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				setObjektLZ();
@@ -322,14 +322,14 @@ private void createAusblendenCheckboxes(Group parent) {
 
 	private void setLZ() {
 		if (combo.getSelectionIndex() == 0)
-			lebenszyklus = "";
+			lebenszyklus = ""; //$NON-NLS-1$
 		else 
 			this.lebenszyklus = LZ_ITEMS[combo.getSelectionIndex()];
 	}
 
 	private void setObjektLZ() {
 		if (comboObjektLZ.getSelectionIndex() == 0)
-			objektLebenszyklus = "";
+			objektLebenszyklus = ""; //$NON-NLS-1$
 		else 
 			objektLebenszyklus = LZ_ZIELOBJEKTE_ITEMS[comboObjektLZ.getSelectionIndex()];
 	}
@@ -348,7 +348,7 @@ private void createAusblendenCheckboxes(Group parent) {
 				tags.add(0, TagFilter.NO_TAG);
 				viewer.setInput(tags);
 			} catch (CommandException e) {
-				ExceptionUtil.log(e, "Konnte Tags für Filter nicht laden.");
+				ExceptionUtil.log(e, Messages.BSIModelFilterDialog_34);
 			}
 			
 			// workaround to prevent tableviewer size from exceeding shell size:
@@ -372,7 +372,7 @@ private void createAusblendenCheckboxes(Group parent) {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Filter Einstellungen");
+		newShell.setText(Messages.BSIModelFilterDialog_35);
 		
 		// workaround to prevent tableviewer size from exceeding shell size:
 		newShell.setSize(400,500);

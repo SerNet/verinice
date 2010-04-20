@@ -57,7 +57,7 @@ public class EditBausteinVorgabeDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Vorauswahl anpassen");
+		newShell.setText(Messages.EditBausteinVorgabeDialog_0);
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class EditBausteinVorgabeDialog extends Dialog {
 		GridData gridLabelTitle = new GridData();
 		gridLabelTitle.horizontalAlignment = SWT.FILL;
 	    gridLabelTitle.horizontalSpan=2;
-	    labelTitle.setText("Geben Sie einen Namen und eine kommaseparierte Liste von Bausteinen für diese Vorauswahl ein:");
+	    labelTitle.setText(Messages.EditBausteinVorgabeDialog_1);
 		labelTitle.setLayoutData(gridLabelTitle);
 		
 		
@@ -83,7 +83,7 @@ public class EditBausteinVorgabeDialog extends Dialog {
 		GridData gridLabelNumber = new GridData();
 		gridLabelNumber.horizontalAlignment = SWT.LEFT;
 	    gridLabelNumber.verticalAlignment = SWT.CENTER;
-	    labelNumber.setText("Name:");
+	    labelNumber.setText(Messages.EditBausteinVorgabeDialog_2);
 		labelNumber.setLayoutData(gridLabelNumber);
 		
 		textName = new Text(composite, SWT.BORDER );
@@ -99,7 +99,7 @@ public class EditBausteinVorgabeDialog extends Dialog {
 		GridData gridLabelName = new GridData();
 		gridLabelName.horizontalAlignment = SWT.LEFT;
 	    gridLabelName.verticalAlignment = SWT.CENTER;
-	    labelName.setText("Bausteine:");
+	    labelName.setText(Messages.EditBausteinVorgabeDialog_3);
 		labelName.setLayoutData(gridLabelName);
 		
 		textBausteine = new Text(composite, SWT.BORDER );

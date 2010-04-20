@@ -100,7 +100,7 @@ public abstract class FilterDialog extends Dialog {
 			if (status.equals(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET)) {
 				// "not edited" is not really a status, but rather the lack of
 				// one:
-				button.setText("unbearbeitet");
+				button.setText(Messages.FilterDialog_0);
 			} else {
 				button.setText(propertyType.getOption(status).getName());
 			}
@@ -191,7 +191,7 @@ public abstract class FilterDialog extends Dialog {
 
 	protected Group createSiegelGroup(Composite parent) {
 		Group boxesComposite2 = new Group(parent, SWT.BORDER);
-		boxesComposite2.setText("Siegelstufe");
+		boxesComposite2.setText(Messages.FilterDialog_1);
 		GridData gridData2 = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
 		boxesComposite2.setLayoutData(gridData2);
 		GridLayout layout3 = new GridLayout();
@@ -202,7 +202,7 @@ public abstract class FilterDialog extends Dialog {
 
 	protected Group createUmsetzungGroup(Composite parent) {
 		Group boxesComposite = new Group(parent, SWT.BORDER);
-		boxesComposite.setText("Umsetzung");
+		boxesComposite.setText(Messages.FilterDialog_2);
 		GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
 		boxesComposite.setLayoutData(gridData);
 		GridLayout layout2 = new GridLayout();
@@ -213,7 +213,7 @@ public abstract class FilterDialog extends Dialog {
 
 	protected Group createSchichtenGroup(Composite parent) {
 		Group boxesComposite = new Group(parent, SWT.BORDER);
-		boxesComposite.setText("Schicht");
+		boxesComposite.setText(Messages.FilterDialog_3);
 		GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
 		boxesComposite.setLayoutData(gridData);
 		GridLayout layout2 = new GridLayout();

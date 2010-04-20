@@ -62,7 +62,7 @@ public class KonsolidatorDialog extends Dialog {
 
 		Label intro = new Label(container, SWT.NONE);
 		intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
-		intro.setText("Wählen Sie den Baustein, der als Vorlage für die anderen verwendet" + " werden soll:");
+		intro.setText(Messages.KonsolidatorDialog_0);
 
 		final ListViewer viewer = new ListViewer(container, SWT.CHECK | SWT.BORDER);
 		viewer.getList().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
@@ -71,7 +71,7 @@ public class KonsolidatorDialog extends Dialog {
 			@Override
 			public String getText(Object element) {
 				BausteinUmsetzung bst = (BausteinUmsetzung) element;
-				return bst.getKapitel() + ": " + bst.getParent().getTitle();
+				return bst.getKapitel() + ": " + bst.getParent().getTitle(); //$NON-NLS-1$
 			}
 		});
 
@@ -90,7 +90,7 @@ public class KonsolidatorDialog extends Dialog {
 	}
 
 	public static boolean askConsolidate(Shell shell) {
-		if (!MessageDialog.openQuestion(shell, "Bausteine konsolidieren", "Wenn Sie fortfahren, werden alle Werte (inkl. Maßnahmen) der " + "Zielbausteine mit denen der gewählten Vorlage überschrieben.\n\n" + "Felder, die in der Vorlage leer sind, werden ignoriert.\n\n" + "Fortfahren?")) {
+		if (!MessageDialog.openQuestion(shell, Messages.KonsolidatorDialog_2, Messages.KonsolidatorDialog_3)) {
 			return false;
 		}
 		return true;
@@ -99,7 +99,7 @@ public class KonsolidatorDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Konsolidator");
+		newShell.setText(Messages.KonsolidatorDialog_4);
 	}
 
 	public BausteinUmsetzung getSource() {

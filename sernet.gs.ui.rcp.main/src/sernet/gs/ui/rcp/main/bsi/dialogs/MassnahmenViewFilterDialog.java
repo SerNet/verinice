@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -39,17 +38,13 @@ public class MassnahmenViewFilterDialog extends FilterDialog {
 	private String suche;
 	private boolean[] filterGefMn;
 
-	public MassnahmenViewFilterDialog(Shell parent,
-			String[] siegel,
-			String suche, 
-			String[] schicht,
-			boolean[] filterGefMn) {
+	public MassnahmenViewFilterDialog(Shell parent, String[] siegel, String suche, String[] schicht, boolean[] filterGefMn) {
 		super(parent, null, siegel, schicht);
 		this.suche = suche;
 		this.filterGefMn = filterGefMn;
-		if (this.filterGefMn == null)
-			this.filterGefMn = new boolean[] {false, false};
-		
+		if (this.filterGefMn == null) {
+			this.filterGefMn = new boolean[] { false, false };
+		}
 	}
 
 	@Override
@@ -58,26 +53,22 @@ public class MassnahmenViewFilterDialog extends FilterDialog {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		container.setLayout(layout);
-		
+
 		Label intro = new Label(container, SWT.NONE);
-		intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER,
-				false, false, 2, 1));
-		intro.setText("Wählen Sie aus, nach welchen Kriterien die Elemente der " +
-				"Grundschutz Kataloge " +
-				"gefiltert werden.");
-		
+		intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 2, 1));
+		intro.setText(Messages.MassnahmenViewFilterDialog_0);
+
 		Label label1 = new Label(container, SWT.NONE);
-		label1.setText("Suchbegriff");
-		
+		label1.setText(Messages.MassnahmenViewFilterDialog_1);
+
 		text1 = new Text(container, SWT.BORDER);
-		text1.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
-				true, false, 1, 1));
+		text1.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
 		text1.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent arg0) {
 				suche = text1.getText();
 			}
 		});
-		
+
 		Group boxesComposite2 = createSiegelGroup(parent);
 		createSiegelCheckboxes(boxesComposite2);
 
@@ -86,66 +77,67 @@ public class MassnahmenViewFilterDialog extends FilterDialog {
 
 		Group boxesComposite4 = createGefMnFilterGroup(parent);
 		createGefMnCheckboxes(boxesComposite4);
-		
+
 		initContent();
-		
+
 		return container;
 	}
 
 	private void createGefMnCheckboxes(Group parent) {
-		
+
 		final Button button1 = new Button(parent, SWT.CHECK);
-		button1.setText("Gefährdungen");
+		button1.setText(Messages.MassnahmenViewFilterDialog_2);
 		button1.setSelection(filterGefMn[0]);
 		button1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (button1.getSelection())
+				if (button1.getSelection()) {
 					filterGefMn[0] = true;
-				else
+				} else {
 					filterGefMn[0] = false;
+				}
 			}
 		});
-		
+
 		final Button button2 = new Button(parent, SWT.CHECK);
-		button2.setText("Maßnahmen");
+		button2.setText(Messages.MassnahmenViewFilterDialog_3);
 		button2.setSelection(filterGefMn[1]);
 		button2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (button2.getSelection())
+				if (button2.getSelection()) {
 					filterGefMn[1] = true;
-				else
+				} else {
 					filterGefMn[1] = false;
+				}
 			}
 		});
-		
-			
+
 	}
 
 	private Group createGefMnFilterGroup(Composite parent) {
 		Group boxesComposite = new Group(parent, SWT.BORDER);
-		boxesComposite.setText("Ausblenden");
-		GridData gridData = new GridData(GridData.FILL, GridData.CENTER,
-				true, false, 2, 1);
+		boxesComposite.setText(Messages.MassnahmenViewFilterDialog_4);
+		GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
 		boxesComposite.setLayoutData(gridData);
 		GridLayout layout2 = new GridLayout();
 		layout2.numColumns = 2;
 		boxesComposite.setLayout(layout2);
 		return boxesComposite;
-	
+
 	}
 
+	@Override
 	protected void initContent() {
 		super.initContent();
-		text1.setText(suche != null ? suche : "");
+		text1.setText(suche != null ? suche : ""); //$NON-NLS-1$
 		text1.setSelection(0, text1.getText().length());
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Filter Einstellungen");
+		newShell.setText(Messages.MassnahmenViewFilterDialog_6);
 	}
 
 	public String getSuche() {
@@ -153,9 +145,11 @@ public class MassnahmenViewFilterDialog extends FilterDialog {
 	}
 
 	public boolean[] getGefFilterSelection() {
-		if (filterGefMn[0] || filterGefMn[1])
+		if (filterGefMn[0] || filterGefMn[1]) {
 			return this.filterGefMn;
-		else return null;
+		} else {
+			return null;
+		}
 	}
-	
+
 }

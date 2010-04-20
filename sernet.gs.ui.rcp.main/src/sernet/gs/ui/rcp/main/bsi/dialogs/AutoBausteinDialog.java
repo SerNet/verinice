@@ -72,7 +72,7 @@ public class AutoBausteinDialog extends Dialog {
 	
 	protected void createListGroup(Composite parent) {
 		Group groupComposite = new Group(parent, SWT.BORDER);
-		groupComposite.setText("Vorauswahl für");
+		groupComposite.setText(Messages.AutoBausteinDialog_0);
 		GridData gridData = new GridData(GridData.FILL, GridData.FILL,
 				true, true, 1, 1);
 		groupComposite.setLayoutData(gridData);
@@ -92,7 +92,7 @@ public class AutoBausteinDialog extends Dialog {
 			command = ServiceFactory.lookupCommandService().executeCommand(
 					command);
 		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Laden der Bausteinvorschläge.");
+			ExceptionUtil.log(e, Messages.AutoBausteinDialog_1);
 		}
 		elements = command.getElements();
 
@@ -157,7 +157,7 @@ public class AutoBausteinDialog extends Dialog {
 
 	private void createButtonGroup(Composite parent) {
 		Group container = new Group(parent, SWT.BORDER);
-		container.setText("Ändern");
+		container.setText(Messages.AutoBausteinDialog_2);
 		GridData gridData = new GridData(GridData.FILL_BOTH);
 		container.setLayoutData(gridData);
 		
@@ -167,13 +167,13 @@ public class AutoBausteinDialog extends Dialog {
 
 
 		Button buttonNew = new Button(container, SWT.PUSH);
-		buttonNew.setText("Neu...");
+		buttonNew.setText(Messages.AutoBausteinDialog_3);
 		GridData gridNew = new GridData(GridData.FILL_HORIZONTAL);
 		buttonNew.setLayoutData(gridNew);
 		buttonNew.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
-				BausteinVorschlag neuerVorschlag = new BausteinVorschlag("Neue Vorauswahl", "");
+				BausteinVorschlag neuerVorschlag = new BausteinVorschlag(Messages.AutoBausteinDialog_4, ""); //$NON-NLS-2$
 				neuerVorschlag = showEditDialog(neuerVorschlag);
 				if (neuerVorschlag != null) {
 					elements.add(neuerVorschlag);
@@ -183,7 +183,7 @@ public class AutoBausteinDialog extends Dialog {
 		});
 
 		Button buttonEdit = new Button(container, SWT.PUSH);
-		buttonEdit.setText("Ändern...");
+		buttonEdit.setText(Messages.AutoBausteinDialog_6);
 		GridData grid2 = new GridData(GridData.FILL_HORIZONTAL);
 		buttonEdit.setLayoutData(grid2);
 		buttonEdit.addSelectionListener(new SelectionAdapter() {
@@ -199,12 +199,12 @@ public class AutoBausteinDialog extends Dialog {
 		});
 		
 		Button buttonDel = new Button(container, SWT.PUSH);
-		buttonDel.setText("Löschen...");
+		buttonDel.setText(Messages.AutoBausteinDialog_7);
 		GridData grid3 = new GridData(GridData.FILL_HORIZONTAL);
 		buttonDel.setLayoutData(grid3);
 		buttonDel.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				if (MessageDialog.openConfirm(getParentShell(), "Bestätigen", "Dieses Element wirklich löschen?")) {
+				if (MessageDialog.openConfirm(getParentShell(), Messages.AutoBausteinDialog_8, Messages.AutoBausteinDialog_9)) {
 					IStructuredSelection sel = ((IStructuredSelection) viewer
 							.getSelection());
 					if (sel.size() == 1) {
@@ -217,7 +217,7 @@ public class AutoBausteinDialog extends Dialog {
 							elements.remove(selection);
 							viewer.remove(selection);
 						} catch (CommandException e1) {
-							ExceptionUtil.log(e1, "Konnte Element nicht löschen.");
+							ExceptionUtil.log(e1, Messages.AutoBausteinDialog_10);
 						}
 					}
 				}
@@ -239,7 +239,7 @@ public class AutoBausteinDialog extends Dialog {
 				vorschlag = command.getElement();
 				return vorschlag;
 			} catch (CommandException e1) {
-				ExceptionUtil.log(e1, "Konnte Wert nicht speichern.");
+				ExceptionUtil.log(e1, Messages.AutoBausteinDialog_11);
 			}
 		}	
 		return null;
@@ -248,7 +248,7 @@ public class AutoBausteinDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Vorauswahl");
+		newShell.setText(Messages.AutoBausteinDialog_12);
 		newShell.setSize(640, 480);
 	}
 

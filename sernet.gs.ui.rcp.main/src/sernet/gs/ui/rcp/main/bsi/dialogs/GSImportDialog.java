@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -66,10 +67,9 @@ public class GSImportDialog extends Dialog {
 
 		Label intro = new Label(container, SWT.NONE);
 		intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
-		intro.setText("Der Import wird aus folgender GSTOOL-Datenbank durchgeführt: \n" + importDb);
-
+		intro.setText(NLS.bind(Messages.GSImportDialog_13, importDb));
 		Link prefLink = new Link(container, SWT.NONE);
-		prefLink.setText("<a>Ändern...</a>");
+		prefLink.setText(Messages.GSImportDialog_1);
 		prefLink.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -82,17 +82,17 @@ public class GSImportDialog extends Dialog {
 
 		Label intro2 = new Label(container, SWT.NONE);
 		intro2.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
-		intro2.setText("\n\nEs wird dafür ein neuer IT-Verbund angelegt. Es werden keine Daten überschrieben. \n\nImportiere: ");
+		intro2.setText(Messages.GSImportDialog_2);
 
 		final Button button4 = new Button(parent, SWT.CHECK);
-		button4.setText("Zielobjekte");
+		button4.setText(Messages.GSImportDialog_3);
 		button4.setEnabled(false);
 		button4.setSelection(true);
 		button4.pack();
 
 		final Button button5 = new Button(parent, SWT.CHECK);
 		button5.setSelection(true);
-		button5.setText("Zugeordnete Standard-Bausteine und -Maßnahmen");
+		button5.setText(Messages.GSImportDialog_4);
 		button5.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -103,7 +103,7 @@ public class GSImportDialog extends Dialog {
 
 		final Button button6 = new Button(parent, SWT.CHECK);
 		button6.setSelection(true);
-		button6.setText("Zugeordnete Rollen der Mitarbeiter");
+		button6.setText(Messages.GSImportDialog_5);
 		button6.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -114,7 +114,7 @@ public class GSImportDialog extends Dialog {
 
 		final Button button9 = new Button(parent, SWT.CHECK);
 		button9.setSelection(true);
-		button9.setText("Interviewer und befragte Personen für Bausteine");
+		button9.setText(Messages.GSImportDialog_6);
 		button9.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -125,7 +125,7 @@ public class GSImportDialog extends Dialog {
 
 		final Button button = new Button(parent, SWT.CHECK);
 		button.setSelection(true);
-		button.setText("Verantwortliche Personen für Maßnahmenumsetzung");
+		button.setText(Messages.GSImportDialog_7);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -136,7 +136,7 @@ public class GSImportDialog extends Dialog {
 
 		final Button button7 = new Button(parent, SWT.CHECK);
 		button7.setSelection(true);
-		button7.setText("Kosten für Maßnahmenumsetzung");
+		button7.setText(Messages.GSImportDialog_8);
 		button7.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -147,7 +147,7 @@ public class GSImportDialog extends Dialog {
 
 		final Button button8 = new Button(parent, SWT.CHECK);
 		button8.setSelection(true);
-		button8.setText("Umsetzungsstatus und -erläuterung der Maßnahmen");
+		button8.setText(Messages.GSImportDialog_9);
 		button8.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -158,7 +158,7 @@ public class GSImportDialog extends Dialog {
 
 		final Button button2 = new Button(parent, SWT.CHECK);
 		button2.setSelection(true);
-		button2.setText("Verknüpfungen von Zielobjekten untereinander");
+		button2.setText(Messages.GSImportDialog_10);
 		button2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -169,7 +169,7 @@ public class GSImportDialog extends Dialog {
 
 		final Button button3 = new Button(parent, SWT.CHECK);
 		button3.setSelection(true);
-		button3.setText("Schutzbedarfszuordnung von Zielobjekten");
+		button3.setText(Messages.GSImportDialog_11);
 		button3.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -185,7 +185,7 @@ public class GSImportDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("GSTOOL™ Import");
+		newShell.setText(Messages.GSImportDialog_12);
 	}
 
 	public boolean isMassnahmenPersonen() {

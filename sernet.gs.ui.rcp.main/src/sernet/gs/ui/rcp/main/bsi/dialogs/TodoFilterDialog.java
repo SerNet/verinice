@@ -52,10 +52,10 @@ public class TodoFilterDialog extends FilterDialog {
 
 		Label intro = new Label(container, SWT.NONE);
 		intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 2, 1));
-		intro.setText("Wählen Sie aus, nach welchen Kriterien die Liste der Maßnahmen gefiltert wird.");
+		intro.setText(Messages.TodoFilterDialog_0);
 
 		Label label1 = new Label(container, SWT.NONE);
-		label1.setText("Verantwortlich ");
+		label1.setText(Messages.TodoFilterDialog_1);
 
 		text1 = new Text(container, SWT.BORDER);
 		text1.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
@@ -66,7 +66,7 @@ public class TodoFilterDialog extends FilterDialog {
 		});
 
 		Label label2 = new Label(container, SWT.NONE);
-		label2.setText("Zielobjekt");
+		label2.setText(Messages.TodoFilterDialog_2);
 
 		text2 = new Text(container, SWT.BORDER);
 		text2.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
@@ -88,14 +88,14 @@ public class TodoFilterDialog extends FilterDialog {
 	@Override
 	protected void initContent() {
 		super.initContent();
-		text1.setText(umsetzungDurch != null ? umsetzungDurch : "");
-		text2.setText(zielobjekt != null ? zielobjekt : "");
+		text1.setText(umsetzungDurch != null ? umsetzungDurch : ""); //$NON-NLS-1$
+		text2.setText(zielobjekt != null ? zielobjekt : ""); //$NON-NLS-1$
 	}
 
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Maßnahmen Filter Einstellungen");
+		newShell.setText(Messages.TodoFilterDialog_5);
 	}
 
 	public String getUmsetzungDurch() {
