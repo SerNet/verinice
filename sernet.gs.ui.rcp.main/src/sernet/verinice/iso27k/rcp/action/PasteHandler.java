@@ -27,16 +27,13 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.CopyBausteine;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -72,8 +69,8 @@ public class PasteHandler extends AbstractHandler {
 				}
 			}
 		} catch(Exception e) {
-			LOG.error("Error while pasting", e);
-			ExceptionUtil.log(e, "Could not paste elements.");
+			LOG.error("Error while pasting", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.getString("PasteHandler.1")); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -85,9 +82,9 @@ public class PasteHandler extends AbstractHandler {
 				IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 				progressService.run(true, true, operation);
 				InfoDialogWithShowToggle.openInformation(
-						"Status Information", 
-						operation.getNumberOfElements() + " elements copied. ",
-						"Don't show this message again (You can change this in the preferences)",
+						Messages.getString("PasteHandler.2"),  //$NON-NLS-1$
+						NLS.bind(Messages.getString("PasteHandler.3"), operation.getNumberOfElements()), //$NON-NLS-1$
+                        Messages.getString("PasteHandler.0"), //$NON-NLS-1$
 						PreferenceConstants.INFO_ELEMENTS_COPIED);
 			}
 		}
@@ -107,8 +104,8 @@ public class PasteHandler extends AbstractHandler {
 				} else if( sel.size()>1 ) {
 					MessageDialog.openWarning( 
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-							"Information", 
-							"More than one element is selected. Select one element to paste.");
+							Messages.getString("PasteHandler.5"),  //$NON-NLS-1$
+							Messages.getString("PasteHandler.6")); //$NON-NLS-1$
 				}			
 			}
 			if(copyList.get(0) instanceof Baustein) {
@@ -127,9 +124,9 @@ public class PasteHandler extends AbstractHandler {
 			IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 			progressService.run(true, true, operation);
 			InfoDialogWithShowToggle.openInformation(
-					"Status Information", 
-					operation.getNumberOfElements() + " elements moved to group " + target.getTitle(),
-					"Don't show this message again (You can change this in the preferences)",
+					Messages.getString("PasteHandler.7"),  //$NON-NLS-1$
+					NLS.bind(Messages.getString("PasteHandler.8"), operation.getNumberOfElements(), target.getTitle()), //$NON-NLS-1$
+					Messages.getString("PasteHandler.9"), //$NON-NLS-1$
 					PreferenceConstants.INFO_ELEMENTS_CUT);
 		}
 		
