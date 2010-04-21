@@ -38,87 +38,90 @@ import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.AddMassnahmeToGef
  */
 public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 
-	private GefaehrdungsUmsetzung parent;
-	private RisikoMassnahmenUmsetzung child;
-	private TreeViewer viewer;
+    private GefaehrdungsUmsetzung parent;
+    private RisikoMassnahmenUmsetzung child;
+    private TreeViewer viewer;
 
-	/**
-	 * Constructor sets the needed data.
-	 * 
-	 * @param newViewer the viewer to add the dropped element to
-	 */
-	public RisikoMassnahmenUmsetzungDropListener(TreeViewer newViewer) {
-		super(newViewer);
-		viewer = newViewer;
-	}
+    /**
+     * Constructor sets the needed data.
+     * 
+     * @param newViewer
+     *            the viewer to add the dropped element to
+     */
+    public RisikoMassnahmenUmsetzungDropListener(TreeViewer newViewer) {
+        super(newViewer);
+        viewer = newViewer;
+    }
 
-	/**
-	 * Adds a RiskoMassnahmenUmsetzung to the RiskoGefaehrdungsMassnahme
-	 * is is dropped onto.
-	 * 
-	 * @param data the data to drop (not used - DNDItems instead)
-	 * @return true if RiskoMassnahmenUmsetzung has been added successfully
-	 *			to the GefaehrdungsUmsetzung, false else
-	 */
-	@Override
-	public boolean performDrop(Object data) {
-		
-		/* get the target object */
-		Object receiver = getCurrentTarget();
+    /**
+     * Adds a RiskoMassnahmenUmsetzung to the RiskoGefaehrdungsMassnahme is is
+     * dropped onto.
+     * 
+     * @param data
+     *            the data to drop (not used - DNDItems instead)
+     * @return true if RiskoMassnahmenUmsetzung has been added successfully to
+     *         the GefaehrdungsUmsetzung, false else
+     */
+    @Override
+    public boolean performDrop(Object data) {
 
-		/* get dropped elements*/
-		for (Object toDrop : DNDItems.getItems()) {
-			try {
-				// class has already been validated at this point:
-				parent = (GefaehrdungsUmsetzung) receiver;
-				child = (RisikoMassnahmenUmsetzung) toDrop;
+        /* get the target object */
+        Object receiver = getCurrentTarget();
 
-				List<IGefaehrdungsBaumElement> children = parent
-						.getGefaehrdungsBaumChildren();
+        /* get dropped elements */
+        for (Object toDrop : DNDItems.getItems()) {
+            try {
+                // class has already been validated at this point:
+                parent = (GefaehrdungsUmsetzung) receiver;
+                child = (RisikoMassnahmenUmsetzung) toDrop;
 
-				if (child != null && child instanceof RisikoMassnahmenUmsetzung
-						&& parent != null
-						&& parent instanceof GefaehrdungsUmsetzung
-						&& !(children.contains(child))) {
-					
-					AddMassnahmeToGefaherdung command = new AddMassnahmeToGefaherdung(parent, child);
-					command = ServiceFactory.lookupCommandService()
-							.executeCommand(command);
-					child = command.getChild();
+                List<IGefaehrdungsBaumElement> children = parent.getGefaehrdungsBaumChildren();
 
-					// add for viewer:
-					parent.addChild(child);
-					viewer.refresh();
-					viewer.setExpandedState(parent, true);
-					return true;
-					
-				} else {
-					return false;
-				}
-			} catch (Exception e) {
-				ExceptionUtil.log(e, "Konnte Maßnahme nicht zuordnen, Fehler beim Speichern.");
-				return false;
-			}
-		}
-		return false;
-	}
+                if (child != null 
+                        && child instanceof RisikoMassnahmenUmsetzung 
+                        && parent != null 
+                        && parent instanceof GefaehrdungsUmsetzung 
+                        && !(children.contains(child))) {
 
-	/**
-	 * Returns true, if drop is allowed (which is only the case if the
-	 * target is a GefaehrdungsUmsetzung).
-	 * 
-	 * @param target the target object
-	 * @param operation the current drag operation (copy, move, etc.)
-	 * @param transferType the current transfer type
-	 * @return true if target is a GefaehrdungsUmsetzung, false else
-	 */
-	@Override
-	public boolean validateDrop(Object target, int operation,
-			TransferData transferType) {
-		if (target == null || !(target instanceof GefaehrdungsUmsetzung)) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+                    AddMassnahmeToGefaherdung command = new AddMassnahmeToGefaherdung(parent, child);
+                    command = ServiceFactory.lookupCommandService().executeCommand(command);
+                    child = command.getChild();
+
+                    // add for viewer:
+                    parent.addChild(child);
+                    viewer.refresh();
+                    viewer.setExpandedState(parent, true);
+                    return true;
+
+                } else {
+                    return false;
+                }
+            } catch (Exception e) {
+                ExceptionUtil.log(e, Messages.RisikoMassnahmenUmsetzungDropListener_0);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true, if drop is allowed (which is only the case if the target is
+     * a GefaehrdungsUmsetzung).
+     * 
+     * @param target
+     *            the target object
+     * @param operation
+     *            the current drag operation (copy, move, etc.)
+     * @param transferType
+     *            the current transfer type
+     * @return true if target is a GefaehrdungsUmsetzung, false else
+     */
+    @Override
+    public boolean validateDrop(Object target, int operation, TransferData transferType) {
+        if (target == null || !(target instanceof GefaehrdungsUmsetzung)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

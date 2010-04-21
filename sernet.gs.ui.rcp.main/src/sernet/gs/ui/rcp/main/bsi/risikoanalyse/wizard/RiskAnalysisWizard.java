@@ -63,481 +63,448 @@ import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.StartNewRiskAnaly
  */
 public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
-	private boolean canFinish = false;
-	private CnATreeElement cnaElement;
-	private ChooseGefaehrdungPage chooseGefaehrdungPage;
-	private EstimateGefaehrdungPage estimateGefaehrdungPage;
-	private RiskHandlingPage riskHandlingPage;
-	private AdditionalSecurityMeasuresPage additionalSecurityMeasuresPage;
+    private boolean canFinish = false;
+    private CnATreeElement cnaElement;
+    private ChooseGefaehrdungPage chooseGefaehrdungPage;
+    private EstimateGefaehrdungPage estimateGefaehrdungPage;
+    private RiskHandlingPage riskHandlingPage;
+    private AdditionalSecurityMeasuresPage additionalSecurityMeasuresPage;
 
-	/**
-	 * Element to save all relevant data in DB on completion of wizard. Also
-	 * parent for all GefährdungsUmsetzung objects.
-	 */
-	private FinishedRiskAnalysis finishedRiskAnalysis = null;
+    /**
+     * Element to save all relevant data in DB on completion of wizard. Also
+     * parent for all GefährdungsUmsetzung objects.
+     */
+    private FinishedRiskAnalysis finishedRiskAnalysis = null;
 
-	/* list of all Gefaehrdungen - ChooseGefaehrungPage_OK */
-	private ArrayList<Gefaehrdung> allGefaehrdungen = new ArrayList<Gefaehrdung>();
+    /* list of all Gefaehrdungen - ChooseGefaehrungPage_OK */
+    private ArrayList<Gefaehrdung> allGefaehrdungen = new ArrayList<Gefaehrdung>();
 
-	/*
-	 * list of all own Gefaehrdungen of type OwnGefaehrdung -
-	 * ChooseGefaehrungPage_OK
-	 */
-	private List<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<OwnGefaehrdung>();
+    /*
+     * list of all own Gefaehrdungen of type OwnGefaehrdung -
+     * ChooseGefaehrungPage_OK
+     */
+    private List<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<OwnGefaehrdung>();
 
-	/* list of all MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
-	private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
+    /* list of all MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
+    private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
 
-	// Are we editing a previous Risk Analysis?
-	private boolean previousAnalysis = false;
-	private FinishedRiskAnalysisLists finishedRiskLists;
+    // Are we editing a previous Risk Analysis?
+    private boolean previousAnalysis = false;
+    private FinishedRiskAnalysisLists finishedRiskLists;
 
-	public RiskAnalysisWizard(CnATreeElement treeElement) {
-		cnaElement = treeElement;
-	}
+    public RiskAnalysisWizard(CnATreeElement treeElement) {
+        cnaElement = treeElement;
+    }
 
-	public RiskAnalysisWizard(CnATreeElement parent,
-			FinishedRiskAnalysis analysis) {
-		this(parent);
+    public RiskAnalysisWizard(CnATreeElement parent, FinishedRiskAnalysis analysis) {
+        this(parent);
 
-		try {
-			LoadChildrenForExpansion command = new LoadChildrenForExpansion(
-					analysis);
-			command = ServiceFactory.lookupCommandService().executeCommand(
-					command);
-			finishedRiskAnalysis = (FinishedRiskAnalysis) command
-					.getElementWithChildren();
-		} catch (CommandException e) {
-			ExceptionUtil.log(e,
-					"Konnte gespeicherte Risikoanalyse nicht neu laden.");
-		}
-	}
+        try {
+            LoadChildrenForExpansion command = new LoadChildrenForExpansion(analysis);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            finishedRiskAnalysis = (FinishedRiskAnalysis) command.getElementWithChildren();
+        } catch (CommandException e) {
+            ExceptionUtil.log(e, Messages.RiskAnalysisWizard_0);
+        }
+    }
 
-	/**
-	 * Cause update to risk analysis object in loaded model.
-	 * 
-	 * @return always true
-	 */
-	@Override
-	public boolean performFinish() {
-		// all has been saved by now, so no need to do anything except refresh the view:
-		
-		// FIXME server: just reload risk analysis instead of complete model.
+    /**
+     * Cause update to risk analysis object in loaded model.
+     * 
+     * @return always true
+     */
+    @Override
+    public boolean performFinish() {
+        // all has been saved by now, so no need to do anything except refresh
+        // the view:
 
-		CnAElementFactory.getInstance().reloadModelFromDatabase();
+        // FIXME server: just reload risk analysis instead of complete model.
 
-		return true;
-	}
+        CnAElementFactory.getInstance().reloadModelFromDatabase();
 
-	/**
-	 * Cause update to risk analysis object in loaded model.
-	 * 
-	 * @return always true
-	 */
-	@Override
-	public boolean performCancel() {
-		// FIXME server: just reload risk analysis instead of complete model.
-		CnAElementFactory.getInstance().reloadModelFromDatabase();
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Needs to be implemented because of IExportWizard/IWorkbenchWizard. Entry
-	 * point.
-	 * 
-	 * @param workbench
-	 *            the current workbench
-	 * @param selection
-	 *            the current object selection
-	 */
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		try {
-			if (finishedRiskAnalysis == null) {
-				StartNewRiskAnalysis command = new StartNewRiskAnalysis(
-						cnaElement);
-				command = ServiceFactory.lookupCommandService().executeCommand(
-						command);
-				finishedRiskAnalysis = command.getFinishedRiskAnalysis();
-				finishedRiskLists = command.getFinishedRiskLists();
-			} else {
-				finishedRiskLists = FinishedRiskAnalysisListsHome.getInstance()
-						.loadById(finishedRiskAnalysis.getDbId());
-				previousAnalysis = true;
-			}
-		} catch (CommandException e) {
-			ExceptionUtil
-					.log(e,
-							"Datenzugriffsfehler beim Erzeugen / Laden der Risikoanalyse.");
-		}
+    /**
+     * Cause update to risk analysis object in loaded model.
+     * 
+     * @return always true
+     */
+    @Override
+    public boolean performCancel() {
+        // FIXME server: just reload risk analysis instead of complete model.
+        CnAElementFactory.getInstance().reloadModelFromDatabase();
+        return true;
+    }
 
-		loadAllGefaehrdungen();
-		loadAllMassnahmen();
-		loadAssociatedGefaehrdungen();
+    /**
+     * Needs to be implemented because of IExportWizard/IWorkbenchWizard. Entry
+     * point.
+     * 
+     * @param workbench
+     *            the current workbench
+     * @param selection
+     *            the current object selection
+     */
+    public void init(IWorkbench workbench, IStructuredSelection selection) {
+        try {
+            if (finishedRiskAnalysis == null) {
+                StartNewRiskAnalysis command = new StartNewRiskAnalysis(cnaElement);
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                finishedRiskAnalysis = command.getFinishedRiskAnalysis();
+                finishedRiskLists = command.getFinishedRiskLists();
+            } else {
+                finishedRiskLists = FinishedRiskAnalysisListsHome.getInstance().loadById(finishedRiskAnalysis.getDbId());
+                previousAnalysis = true;
+            }
+        } catch (CommandException e) {
+            ExceptionUtil.log(e, Messages.RiskAnalysisWizard_1);
+        }
 
-		loadOwnGefaehrdungen();
-		addOwnGefaehrdungen();
+        loadAllGefaehrdungen();
+        loadAllMassnahmen();
+        loadAssociatedGefaehrdungen();
 
-		addRisikoMassnahmenUmsetzungen(loadRisikomassnahmen());
+        loadOwnGefaehrdungen();
+        addOwnGefaehrdungen();
 
-	}
+        addRisikoMassnahmenUmsetzungen(loadRisikomassnahmen());
 
-	private List<RisikoMassnahme> loadRisikomassnahmen() {
-		try {
-			return RisikoMassnahmeHome.getInstance().loadAll();
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
-			return null;
-		}
-	}
+    }
 
-	/**
-	 * Adds extra pages to the Wizard.
-	 */
-	public void addPages() {
-		setWindowTitle("Risikoanalyse auf Basis von IT-Grundschutz");
+    private List<RisikoMassnahme> loadRisikomassnahmen() {
+        try {
+            return RisikoMassnahmeHome.getInstance().loadAll();
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.RiskAnalysisWizard_2);
+            return null;
+        }
+    }
 
-		chooseGefaehrdungPage = new ChooseGefaehrdungPage();
-		addPage(chooseGefaehrdungPage);
+    /**
+     * Adds extra pages to the Wizard.
+     */
+    @Override
+    public void addPages() {
+        setWindowTitle(Messages.RiskAnalysisWizard_3);
 
-		estimateGefaehrdungPage = new EstimateGefaehrdungPage();
-		addPage(estimateGefaehrdungPage);
+        chooseGefaehrdungPage = new ChooseGefaehrdungPage();
+        addPage(chooseGefaehrdungPage);
 
-		riskHandlingPage = new RiskHandlingPage();
-		addPage(riskHandlingPage);
+        estimateGefaehrdungPage = new EstimateGefaehrdungPage();
+        addPage(estimateGefaehrdungPage);
 
-		additionalSecurityMeasuresPage = new AdditionalSecurityMeasuresPage();
-		addPage(additionalSecurityMeasuresPage);
-	}
+        riskHandlingPage = new RiskHandlingPage();
+        addPage(riskHandlingPage);
 
-	/**
-	 * Sets the List of Gefaehrdungen associated to the chosen IT-system.
-	 * 
-	 * @param newAssociatedGefaehrdungen
-	 *            ArrayList of Gefaehrdungen
-	 */
-	public void setAssociatedGefaehrdungen(
-			ArrayList<GefaehrdungsUmsetzung> newAssociatedGefaehrdungen) {
-		finishedRiskLists
-				.setAssociatedGefaehrdungen(newAssociatedGefaehrdungen);
-	}
+        additionalSecurityMeasuresPage = new AdditionalSecurityMeasuresPage();
+        addPage(additionalSecurityMeasuresPage);
+    }
 
-	/**
-	 * Returns the current List of Gefaehrdungen associated to the chosen
-	 * IT-system.
-	 * 
-	 * @return ArrayList of currently associated Gefaehrdungen
-	 */
-	public List<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
-		return finishedRiskLists.getAssociatedGefaehrdungen();
-	}
+    /**
+     * Sets the List of Gefaehrdungen associated to the chosen IT-system.
+     * 
+     * @param newAssociatedGefaehrdungen
+     *            ArrayList of Gefaehrdungen
+     */
+    public void setAssociatedGefaehrdungen(ArrayList<GefaehrdungsUmsetzung> newAssociatedGefaehrdungen) {
+        finishedRiskLists.setAssociatedGefaehrdungen(newAssociatedGefaehrdungen);
+    }
 
-	/**
-	 * Saves all Gefaehrdungen availiable from BSI IT-Grundschutz-Kataloge.
-	 */
-	private void loadAllGefaehrdungen() {
-		List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance()
-				.getBausteine();
-		alleBausteine: for (Baustein baustein : bausteine) {
-			if (baustein.getGefaehrdungen() == null)
-				continue;
-			alleGefaehrdungen: for (Gefaehrdung gefaehrdung : baustein
-					.getGefaehrdungen()) {
-				Boolean duplicate = false;
-				alleTitel: for (IGSModel element : allGefaehrdungen) {
-					if (element.getId().equals(gefaehrdung.getId())) {
-						duplicate = true;
-						break alleTitel;
-					}
-				}
-				if (!duplicate) {
-					allGefaehrdungen.add(gefaehrdung);
-				}
-			}
-		}
-	}
+    /**
+     * Returns the current List of Gefaehrdungen associated to the chosen
+     * IT-system.
+     * 
+     * @return ArrayList of currently associated Gefaehrdungen
+     */
+    public List<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
+        return finishedRiskLists.getAssociatedGefaehrdungen();
+    }
 
-	/**
-	 * Saves all Massnahmen for the chosen IT-system in a List.
-	 */
-	private void loadAllMassnahmen() {
-		List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance()
-				.getBausteine();
+    /**
+     * Saves all Gefaehrdungen availiable from BSI IT-Grundschutz-Kataloge.
+     */
+    private void loadAllGefaehrdungen() {
+        List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance().getBausteine();
+        alleBausteine: for (Baustein baustein : bausteine) {
+            if (baustein.getGefaehrdungen() == null) {
+                continue;
+            }
+            alleGefaehrdungen: for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
+                Boolean duplicate = false;
+                alleTitel: for (IGSModel element : allGefaehrdungen) {
+                    if (element.getId().equals(gefaehrdung.getId())) {
+                        duplicate = true;
+                        break alleTitel;
+                    }
+                }
+                if (!duplicate) {
+                    allGefaehrdungen.add(gefaehrdung);
+                }
+            }
+        }
+    }
 
-		NullModel nullModel = new NullModel() {
-			@Override
-			public boolean canContain(Object obj) {
-				return true;
-			}
-		};
+    /**
+     * Saves all Massnahmen for the chosen IT-system in a List.
+     */
+    private void loadAllMassnahmen() {
+        List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance().getBausteine();
 
-		MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
-		alleBausteine: for (Baustein baustein : bausteine) {
-			alleMassnahmen: for (Massnahme massnahme : baustein.getMassnahmen()) {
-				Boolean duplicate = false;
-				alleTitel: for (MassnahmenUmsetzung vorhandeneMassnahmenumsetzung : allMassnahmenUmsetzungen) {
-					if (vorhandeneMassnahmenumsetzung.getName().equals(
-							massnahme.getTitel())) {
-						duplicate = true;
-						break alleTitel;
-					}
-				}
-				if (!duplicate) {
-					MassnahmenUmsetzung massnahmeUmsetzung;
-					try {
-						massnahmeUmsetzung = massnahmenFactory
-								.createMassnahmenUmsetzung(massnahme);
-						allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
-					} catch (Exception e) {
-						Logger
-								.getLogger(this.getClass())
-								.error(
-										"Fehler beim Erstellen der Massnahmenumsetzung: ",
-										e);
-					}
+        NullModel nullModel = new NullModel() {
+            @Override
+            public boolean canContain(Object obj) {
+                return true;
+            }
+        };
 
-				}
-			}
-		}
-	}
+        MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
+        alleBausteine: for (Baustein baustein : bausteine) {
+            alleMassnahmen: for (Massnahme massnahme : baustein.getMassnahmen()) {
+                Boolean duplicate = false;
+                alleTitel: for (MassnahmenUmsetzung vorhandeneMassnahmenumsetzung : allMassnahmenUmsetzungen) {
+                    if (vorhandeneMassnahmenumsetzung.getName().equals(massnahme.getTitel())) {
+                        duplicate = true;
+                        break alleTitel;
+                    }
+                }
+                if (!duplicate) {
+                    MassnahmenUmsetzung massnahmeUmsetzung;
+                    try {
+                        massnahmeUmsetzung = massnahmenFactory.createMassnahmenUmsetzung(massnahme);
+                        allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
+                    } catch (Exception e) {
+                        Logger.getLogger(this.getClass()).error(Messages.RiskAnalysisWizard_4, e);
+                    }
 
-	/**
-	 * Saves all Gefaehrdungen associated to the chosen IT-system in a List.
-	 * 
-	 * @throws CommandException
-	 */
-	private void loadAssociatedGefaehrdungen() {
-		try {
-			LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(
-					cnaElement);
-			command = ServiceFactory.lookupCommandService().executeCommand(
-					command);
-			this.finishedRiskLists.getAssociatedGefaehrdungen().addAll(
-					command.getAssociatedGefaehrdungen());
-		} catch (CommandException e) {
-			ExceptionUtil.log(e,
-					"Fehler beim Laden der zugeordneten Gefährdungen.");
-		}
+                }
+            }
+        }
+    }
 
-	}
+    /**
+     * Saves all Gefaehrdungen associated to the chosen IT-system in a List.
+     * 
+     * @throws CommandException
+     */
+    private void loadAssociatedGefaehrdungen() {
+        try {
+            LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(cnaElement);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            this.finishedRiskLists.getAssociatedGefaehrdungen().addAll(command.getAssociatedGefaehrdungen());
+        } catch (CommandException e) {
+            ExceptionUtil.log(e, Messages.RiskAnalysisWizard_5);
+        }
 
-	/**
-	 * Saves all own Gefaehrdungen in a List.
-	 */
-	private void loadOwnGefaehrdungen() {
-		try {
-			allOwnGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
-		}
-	}
+    }
 
-	/**
-	 * Sets the List of all Gefaehrdungen.
-	 * 
-	 * @param newAllGefaehrdungen
-	 *            ArrayList of all Gefaehrdungen
-	 */
-	public void setAllGefaehrdungen(ArrayList<Gefaehrdung> newAllGefaehrdungen) {
-		allGefaehrdungen = newAllGefaehrdungen;
-	}
+    /**
+     * Saves all own Gefaehrdungen in a List.
+     */
+    private void loadOwnGefaehrdungen() {
+        try {
+            allOwnGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.RiskAnalysisWizard_6);
+        }
+    }
 
-	/**
-	 * Returns the List of all Gefaehrdungen availiable from BSI
-	 * IT-Grundschutz-Kataloge plus the own Gefaehrdungen.
-	 * 
-	 * @return ArrayList of all Gefaehrdungen
-	 */
-	public ArrayList<Gefaehrdung> getAllGefaehrdungen() {
-		return allGefaehrdungen;
-	}
+    /**
+     * Sets the List of all Gefaehrdungen.
+     * 
+     * @param newAllGefaehrdungen
+     *            ArrayList of all Gefaehrdungen
+     */
+    public void setAllGefaehrdungen(ArrayList<Gefaehrdung> newAllGefaehrdungen) {
+        allGefaehrdungen = newAllGefaehrdungen;
+    }
 
-	/**
-	 * Sets the List of all own Gefaehrdungen.
-	 * 
-	 * @param newAllOwnGefaehrdungen
-	 *            List of own Gefaehrdungen
-	 */
-	public void setAllOwnGefaehrdungen(
-			ArrayList<OwnGefaehrdung> newAllOwnGefaehrdungen) {
-		allOwnGefaehrdungen = newAllOwnGefaehrdungen;
-	}
+    /**
+     * Returns the List of all Gefaehrdungen availiable from BSI
+     * IT-Grundschutz-Kataloge plus the own Gefaehrdungen.
+     * 
+     * @return ArrayList of all Gefaehrdungen
+     */
+    public ArrayList<Gefaehrdung> getAllGefaehrdungen() {
+        return allGefaehrdungen;
+    }
 
-	/**
-	 * Returns the List of all own Gefaehrdungen.
-	 * 
-	 * @return ArrayList of all own Gefaehrdungen
-	 */
-	public List<OwnGefaehrdung> getAllOwnGefaehrdungen() {
-		return allOwnGefaehrdungen;
-	}
+    /**
+     * Sets the List of all own Gefaehrdungen.
+     * 
+     * @param newAllOwnGefaehrdungen
+     *            List of own Gefaehrdungen
+     */
+    public void setAllOwnGefaehrdungen(ArrayList<OwnGefaehrdung> newAllOwnGefaehrdungen) {
+        allOwnGefaehrdungen = newAllOwnGefaehrdungen;
+    }
 
-	/**
-	 * Returns the List of all Gefaehrdungen of type GefaehrdungsUmsetzung.
-	 * 
-	 * @return ArrayList of GefaehrdungsUmsetzung
-	 */
-	public List<GefaehrdungsUmsetzung> getAllGefaehrdungsUmsetzungen() {
-		return finishedRiskLists.getAllGefaehrdungsUmsetzungen();
-	}
+    /**
+     * Returns the List of all own Gefaehrdungen.
+     * 
+     * @return ArrayList of all own Gefaehrdungen
+     */
+    public List<OwnGefaehrdung> getAllOwnGefaehrdungen() {
+        return allOwnGefaehrdungen;
+    }
 
-	public FinishedRiskAnalysisLists getFinishedRiskAnalysisLists() {
-		return this.finishedRiskLists;
-	}
+    /**
+     * Returns the List of all Gefaehrdungen of type GefaehrdungsUmsetzung.
+     * 
+     * @return ArrayList of GefaehrdungsUmsetzung
+     */
+    public List<GefaehrdungsUmsetzung> getAllGefaehrdungsUmsetzungen() {
+        return finishedRiskLists.getAllGefaehrdungsUmsetzungen();
+    }
 
-	/**
-	 * Allows repeating the Wizard with result from a previous anaylsis.
-	 * 
-	 * @param oldAnalysis
-	 *            old analysis to repeat all steps.
-	 */
-	public void setOldAnalysis(FinishedRiskAnalysis oldAnalysis) {
-		this.finishedRiskAnalysis = oldAnalysis;
-	}
+    public FinishedRiskAnalysisLists getFinishedRiskAnalysisLists() {
+        return this.finishedRiskLists;
+    }
 
-	/**
-	 * Returns the chosen IT-system to make the risk-analysis for.
-	 * 
-	 * @return the IT-system to make the risk-analysis for
-	 */
-	public CnATreeElement getCnaElement() {
-		return cnaElement;
-	}
+    /**
+     * Allows repeating the Wizard with result from a previous anaylsis.
+     * 
+     * @param oldAnalysis
+     *            old analysis to repeat all steps.
+     */
+    public void setOldAnalysis(FinishedRiskAnalysis oldAnalysis) {
+        this.finishedRiskAnalysis = oldAnalysis;
+    }
 
-	/**
-	 * Adds the own Gefaehrdungen to the List of all Gefaehrdungen from BSI
-	 * IT-Grundschutz-Kataloge.
-	 */
-	public void addOwnGefaehrdungen() {
-		for (OwnGefaehrdung element : allOwnGefaehrdungen) {
-			/* add to list of all Gefaehrdungen */
-			if (!(allGefaehrdungen.contains(element))) {
-				allGefaehrdungen.add(element);
-			}
-		}
-	}
+    /**
+     * Returns the chosen IT-system to make the risk-analysis for.
+     * 
+     * @return the IT-system to make the risk-analysis for
+     */
+    public CnATreeElement getCnaElement() {
+        return cnaElement;
+    }
 
-	/**
-	 * Adds the own Massnahmen to the List of all Massnahmen from BSI
-	 * IT-Grundschutz-Kataloge.
-	 */
-	public void addRisikoMassnahmenUmsetzungen(
-			List<RisikoMassnahme> allRisikoMassnahmen) {
-		for (RisikoMassnahme massnahme : allRisikoMassnahmen) {
-			addRisikoMassnahmeUmsetzung(massnahme);
+    /**
+     * Adds the own Gefaehrdungen to the List of all Gefaehrdungen from BSI
+     * IT-Grundschutz-Kataloge.
+     */
+    public void addOwnGefaehrdungen() {
+        for (OwnGefaehrdung element : allOwnGefaehrdungen) {
+            /* add to list of all Gefaehrdungen */
+            if (!(allGefaehrdungen.contains(element))) {
+                allGefaehrdungen.add(element);
+            }
+        }
+    }
 
-		}
-	}
+    /**
+     * Adds the own Massnahmen to the List of all Massnahmen from BSI
+     * IT-Grundschutz-Kataloge.
+     */
+    public void addRisikoMassnahmenUmsetzungen(List<RisikoMassnahme> allRisikoMassnahmen) {
+        for (RisikoMassnahme massnahme : allRisikoMassnahmen) {
+            addRisikoMassnahmeUmsetzung(massnahme);
 
-	public void addRisikoMassnahmeUmsetzung(RisikoMassnahme massnahme) {
-		try {
-			RisikoMassnahmenUmsetzung massnahmeUmsetzung = RisikoMassnahmenUmsetzungFactory
-					.buildFromRisikomassnahme(massnahme, null, null);
+        }
+    }
 
-			/* add to list of all MassnahmenUmsetzungen */
-			if (!(allMassnahmenUmsetzungen.contains(massnahmeUmsetzung))) {
-				allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
-			}
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(
-					"Fehler beim Erstellen der Massnahmenumsetzung: ", e);
-		}
-	}
+    public void addRisikoMassnahmeUmsetzung(RisikoMassnahme massnahme) {
+        try {
+            RisikoMassnahmenUmsetzung massnahmeUmsetzung = RisikoMassnahmenUmsetzungFactory.buildFromRisikomassnahme(massnahme, null, null);
 
-	/**
-	 * Returns the List of Gefaehrdungen which need additional security
-	 * measures.
-	 * 
-	 * @return the List of Gefaehrdungen of type GefaehrdungsUmsetzung
-	 */
-	public List<GefaehrdungsUmsetzung> getNotOKGefaehrdungsUmsetzungen() {
-		return finishedRiskLists.getNotOKGefaehrdungsUmsetzungen();
-	}
+            /* add to list of all MassnahmenUmsetzungen */
+            if (!(allMassnahmenUmsetzungen.contains(massnahmeUmsetzung))) {
+                allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass()).error("Fehler beim Erstellen der Massnahmenumsetzung: ", e); //$NON-NLS-1$
+        }
+    }
 
-	/**
-	 * Returns the List of all Massnahmen of type MassnahmenUmsetzung.
-	 * 
-	 * @return ArrayList of all Massnahmen of type MassnahmenUmsetzung
-	 */
-	public ArrayList<MassnahmenUmsetzung> getAllMassnahmenUmsetzungen() {
-		return allMassnahmenUmsetzungen;
-	}
-	
-	public void replaceMassnahmenUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung) {
-		allMassnahmenUmsetzungen.remove(massnahmenUmsetzung);
-		allMassnahmenUmsetzungen.add(massnahmenUmsetzung);
-	}
+    /**
+     * Returns the List of Gefaehrdungen which need additional security
+     * measures.
+     * 
+     * @return the List of Gefaehrdungen of type GefaehrdungsUmsetzung
+     */
+    public List<GefaehrdungsUmsetzung> getNotOKGefaehrdungsUmsetzungen() {
+        return finishedRiskLists.getNotOKGefaehrdungsUmsetzungen();
+    }
 
-	/**
-	 * Saves the List of all Massnahmen of type MassnahmenUmsetzung.
-	 * 
-	 * @param newAllMassnahmenUmsetzungen
-	 *            the allMassnahmenUmsetzungen to set
-	 */
-	public void setAllMassnahmenUmsetzungen(
-			ArrayList<MassnahmenUmsetzung> newAllMassnahmenUmsetzungen) {
-		allMassnahmenUmsetzungen = newAllMassnahmenUmsetzungen;
-	}
+    /**
+     * Returns the List of all Massnahmen of type MassnahmenUmsetzung.
+     * 
+     * @return ArrayList of all Massnahmen of type MassnahmenUmsetzung
+     */
+    public ArrayList<MassnahmenUmsetzung> getAllMassnahmenUmsetzungen() {
+        return allMassnahmenUmsetzungen;
+    }
 
-	/**
-	 * Returns whether this wizard could be finished without further user
-	 * interaction.
-	 * 
-	 * @return true, if wizard can be finished, false else
-	 */
-	@Override
-	public boolean canFinish() {
-		return canFinish;
-	}
+    public void replaceMassnahmenUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung) {
+        allMassnahmenUmsetzungen.remove(massnahmenUmsetzung);
+        allMassnahmenUmsetzungen.add(massnahmenUmsetzung);
+    }
 
-	/**
-	 * Saves a new state of canFinish.
-	 * 
-	 * @param newCanFinish
-	 *            set true, if wizard can be finished at this point, false else
-	 */
-	public void setCanFinish(boolean newCanFinish) {
-		canFinish = newCanFinish;
-	}
+    /**
+     * Saves the List of all Massnahmen of type MassnahmenUmsetzung.
+     * 
+     * @param newAllMassnahmenUmsetzungen
+     *            the allMassnahmenUmsetzungen to set
+     */
+    public void setAllMassnahmenUmsetzungen(ArrayList<MassnahmenUmsetzung> newAllMassnahmenUmsetzungen) {
+        allMassnahmenUmsetzungen = newAllMassnahmenUmsetzungen;
+    }
 
-	/**
-	 * Returns the parent Element of .
-	 * 
-	 * @return the parent Element
-	 */
-	public CnATreeElement getFinishedRiskAnalysis() {
-		return this.finishedRiskAnalysis;
-	}
+    /**
+     * Returns whether this wizard could be finished without further user
+     * interaction.
+     * 
+     * @return true, if wizard can be finished, false else
+     */
+    @Override
+    public boolean canFinish() {
+        return canFinish;
+    }
 
-	public void addAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) {
+    /**
+     * Saves a new state of canFinish.
+     * 
+     * @param newCanFinish
+     *            set true, if wizard can be finished at this point, false else
+     */
+    public void setCanFinish(boolean newCanFinish) {
+        canFinish = newCanFinish;
+    }
 
-		try {
-			if (!GefaehrdungsUtil.listContainsById(finishedRiskLists
-					.getAssociatedGefaehrdungen(), currentGefaehrdung)) {
-				/* Add to List of Associated Gefaehrdungen */
-				AssociateGefaehrdungsUmsetzung command = new AssociateGefaehrdungsUmsetzung(
-						finishedRiskLists.getDbId(), currentGefaehrdung, this.finishedRiskAnalysis.getDbId());
-				command = ServiceFactory.lookupCommandService().executeCommand(
-						command);
+    /**
+     * Returns the parent Element of .
+     * 
+     * @return the parent Element
+     */
+    public CnATreeElement getFinishedRiskAnalysis() {
+        return this.finishedRiskAnalysis;
+    }
 
-				finishedRiskLists = command.getFinishedRiskLists();
-			}
-		} catch (CommandException e) {
-			ExceptionUtil.log(e, "");
-		}
-	}
+    public void addAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) {
 
-	public void removeAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung)
-			throws Exception {
-		/* remove from List of Associated Gefaehrdungen */
-		DisassociateGefaehrdungsUmsetzung command = new DisassociateGefaehrdungsUmsetzung(
-				finishedRiskAnalysis, finishedRiskLists.getDbId(),
-				currentGefaehrdung);
-		command = ServiceFactory.lookupCommandService().executeCommand(command);
-		finishedRiskLists = command.getFinishedRiskLists();
-		finishedRiskAnalysis = command.getFinishedRiskAnalysis();
-	}
+        try {
+            if (!GefaehrdungsUtil.listContainsById(finishedRiskLists.getAssociatedGefaehrdungen(), currentGefaehrdung)) {
+                /* Add to List of Associated Gefaehrdungen */
+                AssociateGefaehrdungsUmsetzung command = new AssociateGefaehrdungsUmsetzung(finishedRiskLists.getDbId(), currentGefaehrdung, this.finishedRiskAnalysis.getDbId());
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
 
-	public void setFinishedRiskLists(FinishedRiskAnalysisLists finishedRiskLists) {
-		this.finishedRiskLists = finishedRiskLists;
-	}
+                finishedRiskLists = command.getFinishedRiskLists();
+            }
+        } catch (CommandException e) {
+            ExceptionUtil.log(e, ""); //$NON-NLS-1$
+        }
+    }
+
+    public void removeAssociatedGefaehrdung(Gefaehrdung currentGefaehrdung) throws Exception {
+        /* remove from List of Associated Gefaehrdungen */
+        DisassociateGefaehrdungsUmsetzung command = new DisassociateGefaehrdungsUmsetzung(finishedRiskAnalysis, finishedRiskLists.getDbId(), currentGefaehrdung);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        finishedRiskLists = command.getFinishedRiskLists();
+        finishedRiskAnalysis = command.getFinishedRiskAnalysis();
+    }
+
+    public void setFinishedRiskLists(FinishedRiskAnalysisLists finishedRiskLists) {
+        this.finishedRiskLists = finishedRiskLists;
+    }
 }

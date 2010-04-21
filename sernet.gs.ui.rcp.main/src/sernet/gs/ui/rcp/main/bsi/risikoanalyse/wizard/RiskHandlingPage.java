@@ -57,19 +57,18 @@ public class RiskHandlingPage extends WizardPage {
 	private TableColumn choiceColumn;
 	private TableViewer viewer;
 	private SearchFilter searchFilter = new SearchFilter();
-	public static final String IMG_COLUMN_ID = "image";
-	public static final String NUMBER_COLUMN_ID = "number";
-	public static final String NAME_COLUMN_ID = "name";
-	public static final String CHOICE_COLUMN_ID = "choice";
+	public static final String IMG_COLUMN_ID = "image"; //$NON-NLS-1$
+	public static final String NUMBER_COLUMN_ID = "number"; //$NON-NLS-1$
+	public static final String NAME_COLUMN_ID = "name"; //$NON-NLS-1$
+	public static final String CHOICE_COLUMN_ID = "choice"; //$NON-NLS-1$
 
 	/**
 	 * Constructor sets title an description of WizardPage.
 	 */
 	protected RiskHandlingPage() {
-		super("Risikobehandlung");
-		setTitle("Risikobehandlung");
-		setDescription("Entscheiden Sie, wie mit den Gefährdungen umgegangen werden soll. Wählen Sie in der " +
-				"Spalte 'Risikoalternative' eine Methode für jede Gefährdung aus!");
+		super(Messages.RiskHandlingPage_4);
+		setTitle(Messages.RiskHandlingPage_5);
+		setDescription(Messages.RiskHandlingPage_6);
 	}
 	
 	/**
@@ -99,19 +98,19 @@ public class RiskHandlingPage extends WizardPage {
 		table.setLinesVisible(true);
 	    
 		imgColumn = new TableColumn(table, SWT.LEFT);
-		imgColumn.setText("");
+		imgColumn.setText(""); //$NON-NLS-1$
 		imgColumn.setWidth(35);
 		
 		numberColumn = new TableColumn(table, SWT.LEFT);
-		numberColumn.setText("Nummer");
+		numberColumn.setText(Messages.RiskHandlingPage_8);
 		numberColumn.setWidth(100);
 		
 		nameColumn = new TableColumn(table, SWT.LEFT);
-		nameColumn.setText("Name");
+		nameColumn.setText(Messages.RiskHandlingPage_9);
 		nameColumn.setWidth(100);
 		
 		choiceColumn = new TableColumn(table, SWT.LEFT);
-		choiceColumn.setText("Risikoalternative");
+		choiceColumn.setText(Messages.RiskHandlingPage_10);
 		choiceColumn.setWidth(200);
 		
 		/* needed for PropertiesComboBoxCellModifier */
@@ -142,7 +141,7 @@ public class RiskHandlingPage extends WizardPage {
 	    compositeFilter.setLayoutData(gridCompositeFilter);
 	    
 	    /* filter button - search */
-	    new Label(compositeFilter, SWT.NULL).setText("suche:");
+	    new Label(compositeFilter, SWT.NULL).setText(Messages.RiskHandlingPage_11);
 	    Text search = new Text(compositeFilter, SWT.SINGLE | SWT.BORDER);
 	    GridData gridSearch = new GridData();
 	    gridSearch.horizontalAlignment = SWT.FILL;
@@ -249,7 +248,7 @@ public class RiskHandlingPage extends WizardPage {
 		
 		/* setPageComplete(false) if no GefaehrdungsUmsetzung is of alternative "A" */
 		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : arrListAllGefaehrdungsUmsetzungen) {
-			if (gefaehrdungsUmsetzung.getAlternative().equals("A")) {
+			if (gefaehrdungsUmsetzung.getAlternative().equals("A")) { //$NON-NLS-1$
 				complete = true;
 				break;
 			}

@@ -36,8 +36,7 @@ public class GefaehrdungsElementImageProvider {
 		}
 
 		else if (element instanceof RisikoMassnahmenUmsetzung ) {
-			return ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
-			
+			return ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);	
 		}
 		
 		return ImageCache.getInstance().getImage(

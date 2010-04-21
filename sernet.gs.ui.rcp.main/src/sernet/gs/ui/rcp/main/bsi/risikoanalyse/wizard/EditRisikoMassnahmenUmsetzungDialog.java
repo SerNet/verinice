@@ -80,7 +80,7 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 		GridData gridLabelNumber = new GridData();
 		gridLabelNumber.horizontalAlignment = SWT.LEFT;
 		gridLabelNumber.verticalAlignment = SWT.CENTER;
-		labelNumber.setText("Nummer:");
+		labelNumber.setText(Messages.EditRisikoMassnahmenUmsetzungDialog_0);
 		labelNumber.setLayoutData(gridLabelNumber);
 
 		/* text number */
@@ -97,7 +97,7 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 		GridData gridLabelName = new GridData();
 		gridLabelName.horizontalAlignment = SWT.LEFT;
 		gridLabelName.verticalAlignment = SWT.CENTER;
-		labelName.setText("Name:");
+		labelName.setText(Messages.EditRisikoMassnahmenUmsetzungDialog_1);
 		labelName.setLayoutData(gridLabelName);
 
 		/* text name */
@@ -114,7 +114,7 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 		GridData gridLabelDescription = new GridData();
 		gridLabelDescription.horizontalAlignment = SWT.LEFT;
 		gridLabelDescription.verticalAlignment = SWT.CENTER;
-		labelDescription.setText("Beschreibung:");
+		labelDescription.setText(Messages.EditRisikoMassnahmenUmsetzungDialog_2);
 		labelDescription.setLayoutData(gridLabelDescription);
 
 		/* text description */
@@ -140,7 +140,7 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	 * @return true if given String is not null, false else
 	 */
 	private String notNull(String string) {
-		return string != null ? string : "";
+		return string != null ? string : ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -160,8 +160,8 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 			RisikoMassnahme rm = RisikoMassnahmeHome.getInstance().save(risikoMassnahmenUmsetzung.getRisikoMassnahme());
 			risikoMassnahmenUmsetzung.setMassnahme(rm);
 		} catch (Exception e) {
-			LOG.error("Error while saving massnahme", e);
-			ExceptionUtil.log(e, "Änderung konnte nicht gespeichert werden.");
+			LOG.error("Error while saving massnahme", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.EditRisikoMassnahmenUmsetzungDialog_5);
 		}
 
 		super.okPressed();

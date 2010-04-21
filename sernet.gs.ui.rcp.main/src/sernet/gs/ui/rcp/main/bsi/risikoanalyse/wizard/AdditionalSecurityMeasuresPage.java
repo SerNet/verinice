@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -85,9 +86,9 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 * Constructor sets title an description of WizardPage.
 	 */
 	protected AdditionalSecurityMeasuresPage() {
-		super("Zusätzliche IT-Sicherheitsmaßnahmen");
-		setTitle("Zusätzliche IT-Sicherheitsmaßnahmen");
-		setDescription("Fügen Sie den Gefährdungen weitere IT-Sicherheitsmaßnahmen hinzu. Legen Sie ggf. zusätzlich eigene Maßnahmen an. Per Drag'n'Drop können Sie die gewünschten Maßnahmen von rechts nach links ziehen und den Gefährdungen zuordnen!");
+		super(Messages.AdditionalSecurityMeasuresPage_0);
+		setTitle(Messages.AdditionalSecurityMeasuresPage_1);
+		setDescription(Messages.AdditionalSecurityMeasuresPage_2);
 	}
 
 	/**
@@ -127,19 +128,19 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		tableMassnahme.setLinesVisible(true);
 
 		imageColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
-		imageColumnMassnahme.setText("");
+		imageColumnMassnahme.setText(""); //$NON-NLS-1$
 		imageColumnMassnahme.setWidth(35);
 
 		numberColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
-		numberColumnMassnahme.setText("Nummer");
+		numberColumnMassnahme.setText(Messages.AdditionalSecurityMeasuresPage_4);
 		numberColumnMassnahme.setWidth(100);
 
 		nameColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
-		nameColumnMassnahme.setText("Name");
+		nameColumnMassnahme.setText(Messages.AdditionalSecurityMeasuresPage_5);
 		nameColumnMassnahme.setWidth(100);
 
 		descriptionColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
-		descriptionColumnMassnahme.setText("Beschreibung");
+		descriptionColumnMassnahme.setText(Messages.AdditionalSecurityMeasuresPage_6);
 		descriptionColumnMassnahme.setWidth(200);
 
 		/* listener opens edit Dialog for selected Massnahme */
@@ -175,7 +176,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 		/* group the buttons for viewerGefaehrdung with group */
 		Group groupButtonsGefaehrdung = new Group(composite, SWT.SHADOW_ETCHED_OUT);
-		groupButtonsGefaehrdung.setText("Maßnahmen");
+		groupButtonsGefaehrdung.setText(Messages.AdditionalSecurityMeasuresPage_7);
 		GridLayout gridLayoutButtonsGefaehrdung = new GridLayout();
 		gridLayoutButtonsGefaehrdung.numColumns = 3;
 		groupButtonsGefaehrdung.setLayout(gridLayoutButtonsGefaehrdung);
@@ -187,7 +188,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 		/* delete button for viewerGefaehrdung */
 		Button buttonDeleteGefaehrdung = new Button(groupButtonsGefaehrdung, SWT.PUSH);
-		buttonDeleteGefaehrdung.setText("Löschen");
+		buttonDeleteGefaehrdung.setText(Messages.AdditionalSecurityMeasuresPage_8);
 		GridData gridDeleteGefaehrdung = new GridData();
 		buttonDeleteGefaehrdung.setLayoutData(gridDeleteGefaehrdung);
 
@@ -206,7 +207,9 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 				RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) selection.getFirstElement();
 
 				/* ask user to confirm */
-				boolean confirmed = MessageDialog.openQuestion(composite.getShell(), "Bestätigung", "Wollen Sie die Massnahme mit dem Titel \"" + selectedRisikoMassnahmenUmsetzung.getTitle() + "\" wirklich löschen?");
+				boolean confirmed = MessageDialog.openQuestion(composite.getShell(), 
+				        Messages.AdditionalSecurityMeasuresPage_9, 
+				        NLS.bind(Messages.AdditionalSecurityMeasuresPage_10, selectedRisikoMassnahmenUmsetzung.getTitle()));
 				if (confirmed) {
 					deleteTreeViewerRisikoMassnahmenUmsetzung(selectedRisikoMassnahmenUmsetzung);
 					viewerGefaehrdung.refresh();
@@ -216,7 +219,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 		/* group the buttons for viewerMassnahme with group */
 		Group groupButtonsMassnahme = new Group(composite, SWT.SHADOW_ETCHED_OUT);
-		groupButtonsMassnahme.setText("eigene Maßnahmen");
+		groupButtonsMassnahme.setText(Messages.AdditionalSecurityMeasuresPage_12);
 		GridLayout gridLayoutButtonsMassnahme = new GridLayout();
 		gridLayoutButtonsMassnahme.numColumns = 3;
 		groupButtonsMassnahme.setLayout(gridLayoutButtonsMassnahme);
@@ -237,7 +240,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 		/* new button */
 		Button buttonNewMassnahme = new Button(groupButtonsMassnahme, SWT.PUSH);
-		buttonNewMassnahme.setText("neu");
+		buttonNewMassnahme.setText(Messages.AdditionalSecurityMeasuresPage_13);
 		GridData gridButtonMassnahmeNew = new GridData();
 		buttonNewMassnahme.setLayoutData(gridButtonMassnahmeNew);
 
@@ -270,7 +273,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 		/* delete button */
 		Button buttonDeleteMassnahme = new Button(groupButtonsMassnahme, SWT.PUSH);
-		buttonDeleteMassnahme.setText("löschen");
+		buttonDeleteMassnahme.setText(Messages.AdditionalSecurityMeasuresPage_14);
 		GridData gridButtonMassnahmeDelete = new GridData();
 		buttonDeleteMassnahme.setLayoutData(gridButtonMassnahmeDelete);
 
@@ -293,7 +296,9 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 					RisikoMassnahmenUmsetzung rsUmsetzung = (RisikoMassnahmenUmsetzung) selectedMassnahmenUmsetzung;
 
 					/* ask user to confirm */
-					boolean confirmed = MessageDialog.openQuestion(composite.getShell(), "Bestätigung", "Wollen Sie die Massnahme mit dem Titel \"" + selectedMassnahmenUmsetzung.getTitle() + "\" wirklich löschen?");
+					boolean confirmed = MessageDialog.openQuestion(composite.getShell(), 
+					        Messages.AdditionalSecurityMeasuresPage_15,
+					        NLS.bind(Messages.AdditionalSecurityMeasuresPage_10, selectedMassnahmenUmsetzung.getTitle()));
 					/* delete */
 					if (confirmed) {
 						deleteRisikoMassnahmenUmsetzung(rsUmsetzung);
@@ -305,7 +310,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 		/* edit button */
 		Button buttonEditMassnahme = new Button(groupButtonsMassnahme, SWT.PUSH);
-		buttonEditMassnahme.setText("bearbeiten");
+		buttonEditMassnahme.setText(Messages.AdditionalSecurityMeasuresPage_18);
 		GridData gridButtonEditMassnahme = new GridData();
 		buttonEditMassnahme.setLayoutData(gridButtonEditMassnahme);
 
@@ -331,7 +336,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 		/* filter button - RisikoMassnahmenUmsetzungen only */
 		Button buttonFilterOwnMassnahmen = new Button(compositeFilter, SWT.CHECK);
-		buttonFilterOwnMassnahmen.setText("nur eigene Maßnahmen anzeigen");
+		buttonFilterOwnMassnahmen.setText(Messages.AdditionalSecurityMeasuresPage_19);
 		GridData gridButtonFilterMassnahmen = new GridData();
 		gridButtonFilterMassnahmen.horizontalSpan = 2;
 		buttonFilterOwnMassnahmen.setLayoutData(gridButtonFilterMassnahmen);
@@ -366,7 +371,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 		/* filter button - MassnahmenUmsetzungen only */
 		Button buttonFilterBSIMassnahmen = new Button(compositeFilter, SWT.CHECK);
-		buttonFilterBSIMassnahmen.setText("nur BSI Maßnahmen anzeigen");
+		buttonFilterBSIMassnahmen.setText(Messages.AdditionalSecurityMeasuresPage_20);
 		GridData gridButtonFilterBSIMassnahmen = new GridData();
 		gridButtonFilterBSIMassnahmen.horizontalSpan = 2;
 		buttonFilterBSIMassnahmen.setLayoutData(gridButtonFilterBSIMassnahmen);
@@ -400,7 +405,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		});
 
 		/* filter button - search */
-		new Label(compositeFilter, SWT.NULL).setText("suche:");
+		new Label(compositeFilter, SWT.NULL).setText(Messages.AdditionalSecurityMeasuresPage_21);
 		Text textFilterSearch = new Text(compositeFilter, SWT.SINGLE | SWT.BORDER);
 		GridData gridTextFilterSearch = new GridData();
 		gridTextFilterSearch.horizontalAlignment = SWT.FILL;
@@ -557,7 +562,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 			// TreeViewer
 			// gelangt sind, geloescht werden..
 		} catch (Exception e) {
-			ExceptionUtil.log(e, "RisikoMassnahmenUmsetzung konnte nicht gelöscht werden.");
+			ExceptionUtil.log(e, Messages.AdditionalSecurityMeasuresPage_22);
 		}
 	}
 
