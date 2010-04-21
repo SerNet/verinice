@@ -82,12 +82,9 @@ public class CutService {
 		try {	
 			Activator.inheritVeriniceContextState();
 			this.numberOfElements = 0;
-			List<CnATreeElement> elementList = createInsertList(elements);
-			StringBuilder sb = new StringBuilder();
-			sb.append("Moving ").append(numberOfElements).append(" elements.");
-			progressObserver.beginTask(sb.toString(), numberOfElements);
-			numberProcessed = 0;
-			
+			List<CnATreeElement> elementList = createInsertList(elements);		
+			progressObserver.beginTask(Messages.getString("CutService.1",numberOfElements), numberOfElements);
+			numberProcessed = 0;		
 			for (CnATreeElement element : elementList) {
 				CnATreeElement elementCopy = move(progressObserver, selectedGroup, element);
 				CnAElementFactory.getModel(elementCopy).childAdded(selectedGroup, elementCopy);
@@ -179,10 +176,7 @@ public class CutService {
 	 * @param title
 	 */
 	private String getText(int n, int i, String title) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(i).append(" of ").append(n).append(" elements moved.");
-		sb.append(" Moving element: ").append(title);
-		return sb.toString();
+		return Messages.getString("CutService.2", i, n, title);
 	}
 
 

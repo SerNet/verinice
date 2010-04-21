@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.osgi.util.NLS;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
@@ -52,7 +54,7 @@ public class CopyService {
 	public static List<String> BLACKLIST;
 	
 	static {
-		BLACKLIST = Arrays.asList("riskanalysis","bstumsetzung","mnums");
+		BLACKLIST = Arrays.asList("riskanalysis","bstumsetzung","mnums"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	private ICommandService commandService;
@@ -92,20 +94,17 @@ public class CopyService {
 		try {	
 			Activator.inheritVeriniceContextState();
 			this.numberOfElements = 0;
-			List<CnATreeElement> elementList = createInsertList(elements);
-			StringBuilder sb = new StringBuilder();
-			sb.append("Copying ").append(numberOfElements).append(" elements.");
-			progressObserver.beginTask(sb.toString(), numberOfElements);
+			List<CnATreeElement> elementList = createInsertList(elements);	
+			progressObserver.beginTask(Messages.getString("CopyService.1",numberOfElements), numberOfElements);		
 			numberProcessed = 0;
-			
 			for (CnATreeElement element : elementList) {			
 				CnATreeElement elementCopy = insertCopy(progressObserver, selectedGroup, element);
 				CnAElementFactory.getModel(elementCopy).childAdded(selectedGroup, elementCopy);
 				CnAElementFactory.getModel(elementCopy).databaseChildAdded(elementCopy);
 			}		
 		} catch (Exception e) {
-			log.error("Error while copying element", e);
-			throw new RuntimeException("Error while copying element", e);
+			log.error("Error while copying element", e); //$NON-NLS-1$
+			throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$
 		} finally {
 			progressObserver.done();
 		}
@@ -120,7 +119,7 @@ public class CopyService {
 	@SuppressWarnings("unchecked")
 	private CnATreeElement insertCopy(IProgressObserver monitor, CnATreeElement group, CnATreeElement element) throws Exception {
 		if(monitor.isCanceled()) {
-			log.warn("Copying canceled. " + numberProcessed + " of " + numberOfElements + " elements copied.");
+			log.warn("Copying canceled. " + numberProcessed + " of " + numberOfElements + " elements copied."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return null;
 		}
 		CnATreeElement elementCopy = element;
@@ -139,7 +138,7 @@ public class CopyService {
 				}
 			}
 		} else {
-			log.warn("Can not copy element with pk: " + element.getDbId() + " to group with pk: " + selectedGroup.getDbId());
+			log.warn("Can not copy element with pk: " + element.getDbId() + " to group with pk: " + selectedGroup.getDbId()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return elementCopy;
 	}
@@ -162,7 +161,7 @@ public class CopyService {
 		newElement = (CnATreeElement) saveCommand.getElement();
 		newElement.setParent(toGroup);
 		if (log.isDebugEnabled()) {
-			log.debug("Copy created: " + newElement.getTitle());
+			log.debug("Copy created: " + newElement.getTitle()); //$NON-NLS-1$
 		}
 		// notify all views of change:
 		CnAElementFactory.getModel(newElement).childChanged(toGroup, newElement);
@@ -190,7 +189,7 @@ public class CopyService {
 	
 	private String getCopyTitle(String title, int n) {
 		StringBuilder sb = new StringBuilder();
-		return sb.append(title).append(" (Copy ").append(n).append(")").toString();
+		return sb.append(title).append(" ").append(Messages.getString("CopyService.3", n)).toString();
 	}
 
 	private List<CnATreeElement> createInsertList(List<CnATreeElement> elementDragList) {
@@ -230,10 +229,7 @@ public class CopyService {
 	 * @param title
 	 */
 	private String getText(int n, int i, String title) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(i).append(" of ").append(n).append(" elements copied.");
-		sb.append(" Copying element: ").append(title);
-		return sb.toString();
+        return Messages.getString("CopyService.2", i, n, title);
 	}
 
 

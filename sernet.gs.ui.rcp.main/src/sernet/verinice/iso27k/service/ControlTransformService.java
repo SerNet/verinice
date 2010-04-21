@@ -72,15 +72,13 @@ public class ControlTransformService {
 			Activator.inheritVeriniceContextState();
 			this.numberOfControls = 0;
 			List<IItem> itemList = createInsertList(DNDItems.getItems());
-			StringBuilder sb = new StringBuilder();
-			sb.append("Transforming ").append(numberOfControls).append(" catalog items to controls.");
-			progressObserver.beginTask(sb.toString(), numberOfControls);
+			progressObserver.beginTask(Messages.getString("ControlTransformService.1", numberOfControls), numberOfControls); //$NON-NLS-1$
 			numberProcessed = 0;
 			for (IItem item : itemList) {				
 				insertItem(progressObserver, selectedGroup, item);
 			}		
 		} catch (Exception e) {
-			log.error("Error while transforming to control", e);
+			log.error("Error while transforming to control", e); //$NON-NLS-1$
 		} finally {
 			progressObserver.done();
 		}
@@ -94,7 +92,7 @@ public class ControlTransformService {
 	@SuppressWarnings("unchecked")
 	private void insertItem(IProgressObserver monitor, Group group, IItem item) {
 		if(monitor.isCanceled()) {
-			log.warn("Transforming canceled. " + numberProcessed + " of " + numberOfControls + " items transformed.");
+			log.warn("Transforming canceled. " + numberProcessed + " of " + numberOfControls + " items transformed."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return;
 		}
 		SaveElement command = null;
@@ -119,8 +117,8 @@ public class ControlTransformService {
 		try {
 			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {
-			log.error("Error while inserting control", e);
-			throw new RuntimeException("Error while inserting control", e);
+			log.error("Error while inserting control", e); //$NON-NLS-1$
+			throw new RuntimeException("Error while inserting control", e); //$NON-NLS-1$
 		}
 		
 		
@@ -173,10 +171,7 @@ public class ControlTransformService {
 	 * @param title
 	 */
 	private String getText(int n, int i, String title) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(i).append(" of ").append(n).append(" items transformed. ");
-		sb.append("Transforming item: ").append(title);
-		return sb.toString();
+		return Messages.getString("ControlTransformService.2", i, n, title); //$NON-NLS-1$
 	}
 
 
