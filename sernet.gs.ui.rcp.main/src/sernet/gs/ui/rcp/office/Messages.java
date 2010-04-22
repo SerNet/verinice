@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
+package sernet.gs.ui.rcp.office;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
  *
  */
 public class Messages {
-    private static final String BUNDLE_NAME = "sernet.verinice.iso27k.service.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.office.messages"; //$NON-NLS-1$
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
@@ -51,4 +51,5 @@ public class Messages {
             return '!' + key + '!';
         }
     }
+    
 }

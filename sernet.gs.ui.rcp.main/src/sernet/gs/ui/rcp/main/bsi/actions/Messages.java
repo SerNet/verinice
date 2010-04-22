@@ -45,6 +45,7 @@ public class Messages extends NLS {
 	public static String BausteinZuordnungAction_2;
 	public static String BausteinZuordnungAction_4;
 	public static String DeleteActionDelegate_0;
+    public static String DeleteActionDelegate_1;
 	public static String DeleteActionDelegate_3;
 	public static String DeleteActionDelegate_4;
 	public static String DeleteActionDelegate_5;

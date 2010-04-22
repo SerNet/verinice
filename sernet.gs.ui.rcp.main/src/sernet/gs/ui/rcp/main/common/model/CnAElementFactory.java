@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
@@ -758,7 +757,7 @@ public class CnAElementFactory {
 			
 			fireLoad();
 		} catch (Exception e) {
-			ExceptionUtil.log(e, "Konnte Modell nicht aus der Datenbank erneuern..");
+		    log.error("Could not reload model from database", e);
 		}
 	}
 	

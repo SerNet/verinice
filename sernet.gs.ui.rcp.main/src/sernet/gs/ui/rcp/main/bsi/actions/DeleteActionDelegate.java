@@ -66,7 +66,9 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
         final IStructuredSelection selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection());
 
-        if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), Messages.DeleteActionDelegate_0, "Alle " + selection.size() + " markierten Elemente werden entfernt. Vorsicht: diese Operation kann nicht rückgängig gemacht werden! \n\nWirklich löschen?")) {
+        if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), 
+                Messages.DeleteActionDelegate_0, 
+                NLS.bind(Messages.DeleteActionDelegate_1, selection.size()))) {
             return;
         }
 

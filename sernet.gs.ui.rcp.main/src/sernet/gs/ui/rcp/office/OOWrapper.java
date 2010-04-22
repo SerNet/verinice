@@ -16,7 +16,6 @@
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 
-
 package sernet.gs.ui.rcp.office;
 
 import java.io.File;
@@ -47,7 +46,6 @@ import ag.ion.bion.officelayer.text.ITextFieldService;
 import ag.ion.bion.officelayer.text.ITextTable;
 import ag.ion.bion.officelayer.text.ITextTableCellRange;
 import ag.ion.bion.officelayer.text.TextException;
-import ag.ion.noa.NOAException;
 
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.container.XEnumeration;
@@ -69,517 +67,466 @@ import com.sun.star.util.XRefreshable;
  * High level wrapper for common OpenOffice tasks.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev: 37 $ $LastChangedDate: 2007-10-01 17:51:01 +0200 (Mo, 01 Okt 2007) $ 
- * $LastChangedBy: koderman $
+ * @version $Rev: 37 $ $LastChangedDate: 2007-10-01 17:51:01 +0200 (Mo, 01 Okt
+ *          2007) $ $LastChangedBy: koderman $
  * 
  */
 public class OOWrapper {
 
-	private static final String USERFIELD = "com.sun.star.text.FieldMaster.User.";
+    private static final Logger LOG = Logger.getLogger(OOWrapper.class);
 
-	private static final int SKIP_FIRST_ROWS = 9;
+    private static final String USERFIELD = "com.sun.star.text.FieldMaster.User."; //$NON-NLS-1$
 
-	private static final String MARKER_TITEL = "{titel}";
+    private static final int SKIP_FIRST_ROWS = 9;
 
-	private String ooPath;
+    private static final String MARKER_TITEL = "{titel}"; //$NON-NLS-1$
 
-	private IOfficeApplication officeApplication;
+    private String ooPath;
 
-	private ITextDocument textDocument;
+    private IOfficeApplication officeApplication;
 
-	private String oldPath;
+    private ITextDocument textDocument;
 
-	private ISpreadsheetDocument spreadsheetDocument;
+    private String oldPath;
 
-	public OOWrapper(String ooPath) {
-		this.ooPath = ooPath;
-		oldPath = System.getProperty("java.library.path");
-		String newPath = oldPath + ":" + ooPath + File.separator + "program";
-		try {
-			setLibraryPath(newPath);
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Fehler beim Initialisieren von OpenOffice.");
-		}
-	}
+    private ISpreadsheetDocument spreadsheetDocument;
 
-	private class OOCloseListener implements ICloseListener {
+    public OOWrapper(String ooPath) {
+        this.ooPath = ooPath;
+        oldPath = System.getProperty("java.library.path"); //$NON-NLS-1$
+        String newPath = oldPath + ":" + ooPath + File.separator + "program"; //$NON-NLS-1$ //$NON-NLS-2$
+        try {
+            setLibraryPath(newPath);
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.getString("OOWrapper.5")); //$NON-NLS-1$
+        }
+    }
 
-		public void notifyClosing(ICloseEvent arg0) {
-			disconnect();
-		}
+    private class OOCloseListener implements ICloseListener {
 
-		public void queryClosing(ICloseEvent arg0, boolean arg1) {
-		}
+        public void notifyClosing(ICloseEvent arg0) {
+            disconnect();
+        }
 
-		public void disposing(IEvent arg0) {
-		}
-	}
+        public void queryClosing(ICloseEvent arg0, boolean arg1) {
+        }
 
-	@SuppressWarnings("unchecked")
-	private void connect() throws OfficeApplicationException {
-		if (officeApplication == null) {
-			HashMap configuration = new HashMap();
-			configuration.put(IOfficeApplication.APPLICATION_HOME_KEY, ooPath);
-			configuration.put(IOfficeApplication.APPLICATION_TYPE_KEY,
-					IOfficeApplication.LOCAL_APPLICATION);
-			officeApplication = OfficeApplicationRuntime
-					.getApplication(configuration);
-			officeApplication.activate();
-		}
-	}
+        public void disposing(IEvent arg0) {
+        }
+    }
 
-	private void disconnect() {
-		try {
-			setLibraryPath(oldPath);
-		} catch (OfficeApplicationException e) {
-			ExceptionUtil.log(e, "Fehler beim Trennen von OpenOffice.");
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Fehler beim Trennen von OpenOffice.");
-		}
-	}
+    @SuppressWarnings("unchecked")
+    private void connect() throws OfficeApplicationException {
+        if (officeApplication == null) {
+            HashMap configuration = new HashMap();
+            configuration.put(IOfficeApplication.APPLICATION_HOME_KEY, ooPath);
+            configuration.put(IOfficeApplication.APPLICATION_TYPE_KEY, IOfficeApplication.LOCAL_APPLICATION);
+            officeApplication = OfficeApplicationRuntime.getApplication(configuration);
+            officeApplication.activate();
+        }
+    }
 
-	public void testConnection() {
-		try {
-			connect();
-			IDocumentService documentService = officeApplication
-					.getDocumentService();
-			IDocument document = documentService.constructNewDocument(
-					IDocument.WRITER, DocumentDescriptor.DEFAULT);
-			ITextDocument textDocument = (ITextDocument) document;
-			StringBuffer buff = new StringBuffer();
-			buff.append("Verbindung hergestellt.\n");
-			buff.append("Mem free: " + Runtime.getRuntime().freeMemory()
-					+ " / " + Runtime.getRuntime().totalMemory() + "\n");
-			buff.append((new GregorianCalendar()).getTime() + "\n");
-			buff.append("Application Type: "
-					+ officeApplication.getApplicationType() + "\n");
-			textDocument.getTextService().getText().setText(buff.toString());
-		} catch (RuntimeException e) {
-			ExceptionUtil.log(e, "Fehler beim Initialisieren von OpenOffice.");
-		} catch (OfficeApplicationException e) {
-			ExceptionUtil.log(e, "Fehler beim Initialisieren von OpenOffice.");
-		} catch (NOAException e) {
-			ExceptionUtil.log(e, "Fehler beim Initialisieren von OpenOffice.");
-		} finally {
-			disconnect();
-		}
-	}
+    private void disconnect() {
+        try {
+            setLibraryPath(oldPath);
+        } catch (OfficeApplicationException e) {
+            ExceptionUtil.log(e, Messages.getString("OOWrapper.6")); //$NON-NLS-1$
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.getString("OOWrapper.7")); //$NON-NLS-1$
+        }
+    }
 
-	/**
-	 * Fill new or existing spreadsheet document.
-	 * 
-	 * @param daten
-	 * @param mon
-	 * @throws Exception
-	 */
-	public void fillSpreadsheet(String title, ArrayList<IOOTableRow> daten,
-			IProgressMonitor mon) throws Exception {
-		connect();
-		try {
-			if (spreadsheetDocument == null) {
-				IDocumentService documentService = officeApplication
-						.getDocumentService();
-				IDocument document = documentService.constructNewDocument(
-						IDocument.CALC, DocumentDescriptor.DEFAULT);
-				spreadsheetDocument = (ISpreadsheetDocument) document;
-			}
+    public void testConnection() {
+        try {
+            connect();
+            IDocumentService documentService = officeApplication.getDocumentService();
+            IDocument document = documentService.constructNewDocument(IDocument.WRITER, DocumentDescriptor.DEFAULT);
+            ITextDocument textDocument = (ITextDocument) document;
+            StringBuffer buff = new StringBuffer();
+            buff.append("Verbindung hergestellt.\n"); //$NON-NLS-1$
+            buff.append("Mem free: " + Runtime.getRuntime().freeMemory() + " / " + Runtime.getRuntime().totalMemory() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            buff.append((new GregorianCalendar()).getTime() + "\n"); //$NON-NLS-1$
+            buff.append("Application Type: " + officeApplication.getApplicationType() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            textDocument.getTextService().getText().setText(buff.toString());
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.getString("OOWrapper.15")); //$NON-NLS-1$
+        } finally {
+            disconnect();
+        }
+    }
 
-			XSpreadsheets sheets = spreadsheetDocument.getSpreadsheetDocument()
-					.getSheets();
-			XIndexAccess sheets_xindexaccess = cast(XIndexAccess.class, sheets);
+    /**
+     * Fill new or existing spreadsheet document.
+     * 
+     * @param daten
+     * @param mon
+     * @throws Exception
+     */
+    public void fillSpreadsheet(String title, ArrayList<IOOTableRow> daten, IProgressMonitor mon) throws Exception {
+        connect();
+        try {
+            if (spreadsheetDocument == null) {
+                IDocumentService documentService = officeApplication.getDocumentService();
+                IDocument document = documentService.constructNewDocument(IDocument.CALC, DocumentDescriptor.DEFAULT);
+                spreadsheetDocument = (ISpreadsheetDocument) document;
+            }
 
-			Object sheet = sheets_xindexaccess.getByIndex(0);
-			XSpreadsheet sheet_xspreadsheet = cast(XSpreadsheet.class, sheet);
+            XSpreadsheets sheets = spreadsheetDocument.getSpreadsheetDocument().getSheets();
+            XIndexAccess sheets_xindexaccess = cast(XIndexAccess.class, sheets);
 
-			// for (IOOTableRow row : daten) {
-			// fillSpreadsheetRow(sheet_xspreadsheet, SKIP_FIRST_ROWS, row);
-			// mon.worked(1);
-			// ++rowIdx;
-			// }
+            Object sheet = sheets_xindexaccess.getByIndex(0);
+            XSpreadsheet sheet_xspreadsheet = cast(XSpreadsheet.class, sheet);
 
-			setTitle(sheet_xspreadsheet, title);
-			fillSpreadsheetArea(sheet_xspreadsheet, daten, SKIP_FIRST_ROWS);
+            // for (IOOTableRow row : daten) {
+            // fillSpreadsheetRow(sheet_xspreadsheet, SKIP_FIRST_ROWS, row);
+            // mon.worked(1);
+            // ++rowIdx;
+            // }
 
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error("Fehler beim Export.", e);
-			throw new Exception(e);
-		} finally {
-			disconnect();
-		}
-	}
+            setTitle(sheet_xspreadsheet, title);
+            fillSpreadsheetArea(sheet_xspreadsheet, daten, SKIP_FIRST_ROWS);
 
-	/**
-	 * Fill multiple rows from a 2-dimensional array, which is the fast way to
-	 * do it.
-	 * 
-	 * @param sheet
-	 * @param daten
-	 * @param skip
-	 * @throws Exception
-	 */
-	private void fillSpreadsheetArea(XSpreadsheet sheet,
-			ArrayList<IOOTableRow> daten, int skip) throws Exception {
-		int rows = daten.size();
-		int columns = maxColumns(daten);
-		XCellRange cellRange = sheet.getCellRangeByPosition(0, skip,
-				columns - 1, skip + rows - 1);
-		XCellRangeData rangeData = cast(XCellRangeData.class, cellRange);
-		rangeData.setDataArray(toArray(daten, rows, columns));
+        } catch (Exception e) {
+            LOG.error("Fehler beim Export.", e); //$NON-NLS-1$
+            throw new Exception(e);
+        } finally {
+            disconnect();
+        }
+    }
 
-		applyStyles(cellRange, daten);
-		setOptimalColumnWidth(cellRange);
+    /**
+     * Fill multiple rows from a 2-dimensional array, which is the fast way to
+     * do it.
+     * 
+     * @param sheet
+     * @param daten
+     * @param skip
+     * @throws Exception
+     */
+    private void fillSpreadsheetArea(XSpreadsheet sheet, ArrayList<IOOTableRow> daten, int skip) throws Exception {
+        int rows = daten.size();
+        int columns = maxColumns(daten);
+        XCellRange cellRange = sheet.getCellRangeByPosition(0, skip, columns - 1, skip + rows - 1);
+        XCellRangeData rangeData = cast(XCellRangeData.class, cellRange);
+        rangeData.setDataArray(toArray(daten, rows, columns));
 
-	}
-	
-	private void applyTextTableStyles(ITextTable xTable, 
-			ArrayList<IOOTableRow> daten, int cols) 
-	throws Exception {
-		ITextTableCellRange cellRange = xTable.getCellRange(0, 0, cols - 1, daten.size() - 1);
-		XPropertySet xPropSet = cast(XPropertySet.class, cellRange);
-		XColumnRowRange xColRowRange = cast(XColumnRowRange.class, cellRange);
-		XEnumerationAccess xRowEnumAccess = cast(XEnumerationAccess.class,
-				xColRowRange.getRows());
-		XEnumeration xRowEnum = xRowEnumAccess.createEnumeration();
-		Object tableRowService;
-		int idx = 0;
-		while (xRowEnum.hasMoreElements()) {
-			tableRowService = xRowEnum.nextElement();
-			xPropSet = (XPropertySet) UnoRuntime.queryInterface(
-					XPropertySet.class, tableRowService);
-			xPropSet.setPropertyValue("CellStyle", daten.get(idx).getRowStyle());
-			idx++;
-		}
-	}
+        applyStyles(cellRange, daten);
+        setOptimalColumnWidth(cellRange);
 
-	private void applyStyles(XCellRange cellRange, ArrayList<IOOTableRow> daten)
-			throws Exception {
-		XPropertySet xPropSet = cast(XPropertySet.class, cellRange);
-		XColumnRowRange xColRowRange = cast(XColumnRowRange.class, cellRange);
-		XEnumerationAccess xRowEnumAccess = cast(XEnumerationAccess.class,
-				xColRowRange.getRows());
-		XEnumeration xRowEnum = xRowEnumAccess.createEnumeration();
-		Object tableRowService;
-		int idx = 0;
-		while (xRowEnum.hasMoreElements()) {
-			tableRowService = xRowEnum.nextElement();
-			// only apply style to headers and subheaders:
-			if (!daten.get(idx).getRowStyle().equals(IOOTableRow.ROW_STYLE_ELEMENT)) {
-				xPropSet = (XPropertySet) UnoRuntime.queryInterface(
-						XPropertySet.class, tableRowService);
-				xPropSet.setPropertyValue("CellStyle", daten.get(idx).getRowStyle());
-			}
-			idx++;
-		}
-	}
+    }
 
-	private void setOptimalColumnWidth(XCellRange cellRange) throws Exception {
+    private void applyTextTableStyles(ITextTable xTable, ArrayList<IOOTableRow> daten, int cols) throws Exception {
+        ITextTableCellRange cellRange = xTable.getCellRange(0, 0, cols - 1, daten.size() - 1);
+        XPropertySet xPropSet = cast(XPropertySet.class, cellRange);
+        XColumnRowRange xColRowRange = cast(XColumnRowRange.class, cellRange);
+        XEnumerationAccess xRowEnumAccess = cast(XEnumerationAccess.class, xColRowRange.getRows());
+        XEnumeration xRowEnum = xRowEnumAccess.createEnumeration();
+        Object tableRowService;
+        int idx = 0;
+        while (xRowEnum.hasMoreElements()) {
+            tableRowService = xRowEnum.nextElement();
+            xPropSet = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tableRowService);
+            xPropSet.setPropertyValue("CellStyle", daten.get(idx).getRowStyle()); //$NON-NLS-1$
+            idx++;
+        }
+    }
 
-		XPropertySet xPropSet = cast(XPropertySet.class, cellRange);
-		XColumnRowRange xColRowRange = cast(XColumnRowRange.class, cellRange);
-		XEnumerationAccess xColEnumAccess = cast(XEnumerationAccess.class,
-				xColRowRange.getColumns());
-		XEnumeration xColEnum = xColEnumAccess.createEnumeration();
-		Object tableColumnService;
-		while (xColEnum.hasMoreElements()) {
-			tableColumnService = xColEnum.nextElement();
-			xPropSet = (XPropertySet) UnoRuntime.queryInterface(
-					XPropertySet.class, tableColumnService);
-			xPropSet.setPropertyValue("OptimalWidth", new Boolean(true));
-		}
+    private void applyStyles(XCellRange cellRange, ArrayList<IOOTableRow> daten) throws Exception {
+        XPropertySet xPropSet = cast(XPropertySet.class, cellRange);
+        XColumnRowRange xColRowRange = cast(XColumnRowRange.class, cellRange);
+        XEnumerationAccess xRowEnumAccess = cast(XEnumerationAccess.class, xColRowRange.getRows());
+        XEnumeration xRowEnum = xRowEnumAccess.createEnumeration();
+        Object tableRowService;
+        int idx = 0;
+        while (xRowEnum.hasMoreElements()) {
+            tableRowService = xRowEnum.nextElement();
+            // only apply style to headers and subheaders:
+            if (!daten.get(idx).getRowStyle().equals(IOOTableRow.ROW_STYLE_ELEMENT)) {
+                xPropSet = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tableRowService);
+                xPropSet.setPropertyValue("CellStyle", daten.get(idx).getRowStyle()); //$NON-NLS-1$
+            }
+            idx++;
+        }
+    }
 
-	}
+    private void setOptimalColumnWidth(XCellRange cellRange) throws Exception {
 
-	private int maxColumns(ArrayList<IOOTableRow> daten) {
-		int max = 0;
-		for (IOOTableRow row : daten) {
-			if (row.getNumColumns() > max)
-				max = row.getNumColumns();
-		}
-		return max;
-	}
+        XPropertySet xPropSet = cast(XPropertySet.class, cellRange);
+        XColumnRowRange xColRowRange = cast(XColumnRowRange.class, cellRange);
+        XEnumerationAccess xColEnumAccess = cast(XEnumerationAccess.class, xColRowRange.getColumns());
+        XEnumeration xColEnum = xColEnumAccess.createEnumeration();
+        Object tableColumnService;
+        while (xColEnum.hasMoreElements()) {
+            tableColumnService = xColEnum.nextElement();
+            xPropSet = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tableColumnService);
+            xPropSet.setPropertyValue("OptimalWidth", new Boolean(true)); //$NON-NLS-1$
+        }
 
-	private Object[][] toArray(ArrayList<IOOTableRow> daten, int rows,
-			int columns) {
-		Object[][] result = new Object[rows][];
+    }
 
-		int rowIdx = 0;
-		for (Iterator iter = daten.iterator(); iter.hasNext(); rowIdx++) {
-			IOOTableRow row = (IOOTableRow) iter.next();
-			result[rowIdx] = new Object[columns];
-			for (int colIdx = 0; colIdx < row.getNumColumns(); colIdx++) {
-				result[rowIdx][colIdx] = getCellByType(row, colIdx);
-			}
-		}
+    private int maxColumns(ArrayList<IOOTableRow> daten) {
+        int max = 0;
+        for (IOOTableRow row : daten) {
+            if (row.getNumColumns() > max) {
+                max = row.getNumColumns();
+            }
+        }
+        return max;
+    }
 
-		// replace null cells:
-		for (rowIdx = 0; rowIdx < result.length; rowIdx++) {
-			for (int colIdx = 0; colIdx < result[rowIdx].length; colIdx++) {
-				if (result[rowIdx][colIdx] == null)
-					result[rowIdx][colIdx] = "";
-			}
-		}
-		return result;
-	}
+    private Object[][] toArray(ArrayList<IOOTableRow> daten, int rows, int columns) {
+        Object[][] result = new Object[rows][];
 
-	private Object getCellByType(IOOTableRow row, int col) {
-		if (row.getCellType(col) == IOOTableRow.CELL_TYPE_STRING) {
-			// Logger.getLogger(this.getClass())
-			// .debug("Cell<String>: " + row.getCellAsString(col));
-			return row.getCellAsString(col);
-		}
-		return "";
-	}
+        int rowIdx = 0;
+        for (Iterator iter = daten.iterator(); iter.hasNext(); rowIdx++) {
+            IOOTableRow row = (IOOTableRow) iter.next();
+            result[rowIdx] = new Object[columns];
+            for (int colIdx = 0; colIdx < row.getNumColumns(); colIdx++) {
+                result[rowIdx][colIdx] = getCellByType(row, colIdx);
+            }
+        }
 
-	/**
-	 * This works, but is slow. Use only for updating single rows.
-	 * 
-	 * @param sheet
-	 * @param rowIdx
-	 * @param row
-	 * @throws Exception
-	 */
-	private void fillSpreadsheetRow(XSpreadsheet sheet, int rowIdx,
-			IOOTableRow row) throws Exception {
-		for (int colIdx = 0; colIdx < row.getNumColumns(); ++colIdx) {
-			if (row.getCellType(colIdx) == IOOTableRow.CELL_TYPE_STRING) {
-				XCell cell = sheet.getCellByPosition(colIdx, rowIdx);
-				XText xCellText = cast(XText.class, cell);
-				xCellText.setString(row.getCellAsString(colIdx));
-			}
-		}
-	}
+        // replace null cells:
+        for (rowIdx = 0; rowIdx < result.length; rowIdx++) {
+            for (int colIdx = 0; colIdx < result[rowIdx].length; colIdx++) {
+                if (result[rowIdx][colIdx] == null) {
+                    result[rowIdx][colIdx] = ""; //$NON-NLS-1$
+                }
+            }
+        }
+        return result;
+    }
 
-	private void setTitle(XSpreadsheet sheet, String title) {
-		try {
-			XText text = findCellByString(sheet, MARKER_TITEL);
-			if (text != null) {
-				text.setString(title);
-			}
-		} catch (IndexOutOfBoundsException e) {
-			Logger.getLogger(this.getClass()).error(
-					"Konnte Report-Titel nicht setzen.", e);
-		}
-	}
+    private Object getCellByType(IOOTableRow row, int col) {
+        if (row.getCellType(col) == IOOTableRow.CELL_TYPE_STRING) {
+            // Logger.getLogger(this.getClass())
+            // .debug("Cell<String>: " + row.getCellAsString(col));
+            return row.getCellAsString(col);
+        }
+        return ""; //$NON-NLS-1$
+    }
 
-	private XText findCellByString(XSpreadsheet sheet, String term)
-			throws IndexOutOfBoundsException {
+    /**
+     * This works, but is slow. Use only for updating single rows.
+     * 
+     * @param sheet
+     * @param rowIdx
+     * @param row
+     * @throws Exception
+     */
+    private void fillSpreadsheetRow(XSpreadsheet sheet, int rowIdx, IOOTableRow row) throws Exception {
+        for (int colIdx = 0; colIdx < row.getNumColumns(); ++colIdx) {
+            if (row.getCellType(colIdx) == IOOTableRow.CELL_TYPE_STRING) {
+                XCell cell = sheet.getCellByPosition(colIdx, rowIdx);
+                XText xCellText = cast(XText.class, cell);
+                xCellText.setString(row.getCellAsString(colIdx));
+            }
+        }
+    }
 
-		for (int rows = 0; rows < 10; ++rows) {
-			for (int cols = 0; cols < 20; ++cols) {
-				XCell cell = sheet.getCellByPosition(cols, rows);
-				XText xCellText = cast(XText.class, cell);
-				if (xCellText.getString().indexOf(term) > -1)
-					return xCellText;
-			}
-		}
-		return null;
-	}
+    private void setTitle(XSpreadsheet sheet, String title) {
+        try {
+            XText text = findCellByString(sheet, MARKER_TITEL);
+            if (text != null) {
+                text.setString(title);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            Logger.getLogger(this.getClass()).error("Konnte Report-Titel nicht setzen.", e); //$NON-NLS-1$
+        }
+    }
 
-	public void createTextReport(String titel, ArrayList<IOOTableRow> rows, int cols,
-			IProgressMonitor mon) throws Exception  {
-		
-		try {
-			connect();
-			IDocumentService documentService = officeApplication
-					.getDocumentService();
-			if (this.textDocument == null) {
-				IDocument document = documentService.constructNewDocument(
-						IDocument.WRITER, DocumentDescriptor.DEFAULT);
-				textDocument = (ITextDocument) document;
-			}
-			ITextFieldService textFieldService = textDocument.getTextFieldService();
-			setUserField(textFieldService, "titel", titel);
-			refreshTextFields();
-			constructAndFillTextTable(rows, cols, mon);
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			disconnect();
-		}
-	}
+    private XText findCellByString(XSpreadsheet sheet, String term) throws IndexOutOfBoundsException {
 
-	private void constructAndFillTextTable(ArrayList daten, int cols,
-			IProgressMonitor mon) throws Exception {
-		// create the table
-		ITextTable textTable = textDocument.getTextTableService()
-				.constructTextTable(daten.size(), cols);
-		textDocument.getTextService().getTextContentService()
-				.insertTextContent(textTable);
+        for (int rows = 0; rows < 10; ++rows) {
+            for (int cols = 0; cols < 20; ++cols) {
+                XCell cell = sheet.getCellByPosition(cols, rows);
+                XText xCellText = cast(XText.class, cell);
+                if (xCellText.getString().indexOf(term) > -1) {
+                    return xCellText;
+                }
+            }
+        }
+        return null;
+    }
 
-		ITextTableCellRange cellRange = textTable.getCellRange(0, 0, cols - 1,
-				daten.size() - 1);
-		cellRange.setData(toArray(daten, daten.size(), cols));
+    public void createTextReport(String titel, ArrayList<IOOTableRow> rows, int cols, IProgressMonitor mon) throws Exception {
 
-		int rowIdx = 0;
-		for (Iterator iter = daten.iterator(); iter.hasNext();) {
-			IOOTableRow row = (IOOTableRow) iter.next();
-			fillTextTableRow(textTable, rowIdx, row);
-			mon.worked(1);
-			++rowIdx;
-		}
-		applyTextTableStyles(textTable, daten, cols);
-	}
+        try {
+            connect();
+            IDocumentService documentService = officeApplication.getDocumentService();
+            if (this.textDocument == null) {
+                IDocument document = documentService.constructNewDocument(IDocument.WRITER, DocumentDescriptor.DEFAULT);
+                textDocument = (ITextDocument) document;
+            }
+            ITextFieldService textFieldService = textDocument.getTextFieldService();
+            setUserField(textFieldService, "titel", titel); //$NON-NLS-1$
+            refreshTextFields();
+            constructAndFillTextTable(rows, cols, mon);
+        } catch (Exception e) {
+            LOG.error("Error while creating report text", e); //$NON-NLS-1$
+            throw e;
+        } finally {
+            disconnect();
+        }
+    }
 
-	private void fillTextTableRow(ITextTable textTable, int rowIdx,
-			IOOTableRow row) throws TextException {
-		for (int colIdx = 0; colIdx < row.getNumColumns(); ++colIdx) {
-			if (row.getCellType(colIdx) == IOOTableRow.CELL_TYPE_STRING) {
-				textTable.getCell(colIdx, rowIdx).getTextService().getText()
-						.setText(row.getCellAsString(colIdx));
-			} else if (row.getCellType(colIdx) == IOOTableRow.CELL_TYPE_DOUBLE) {
-				textTable.getCell(colIdx, rowIdx).setValue(
-						row.getCellAsDouble(colIdx));
-			}
-		}
-	}
+    private void constructAndFillTextTable(ArrayList daten, int cols, IProgressMonitor mon) throws Exception {
+        // create the table
+        ITextTable textTable = textDocument.getTextTableService().constructTextTable(daten.size(), cols);
+        textDocument.getTextService().getTextContentService().insertTextContent(textTable);
 
-	public void openDocument(String url) {
-		try {
-			connect();
-			IDocumentService documentService = officeApplication
-					.getDocumentService();
-			IDocument document = documentService.loadDocument(url);
-			textDocument = (ITextDocument) document;
-			textDocument.addCloseListener(new OOCloseListener());
-		} catch (OfficeApplicationException e) {
-			ExceptionUtil
-					.log(e, "Fehler beim Öffnen des OpenOffice Dokuments.");
-		} catch (DocumentException e) {
-			ExceptionUtil
-					.log(e, "Fehler beim Öffnen des OpenOffice Dokuments.");
-		}
-	}
+        ITextTableCellRange cellRange = textTable.getCellRange(0, 0, cols - 1, daten.size() - 1);
+        cellRange.setData(toArray(daten, daten.size(), cols));
 
-	public void openSpreadhseet(String url) {
-		try {
-			connect();
-			IDocumentService documentService = officeApplication
-					.getDocumentService();
-			IDocument document = documentService.loadDocument(url);
-			spreadsheetDocument = (ISpreadsheetDocument) document;
-			spreadsheetDocument.addCloseListener(new OOCloseListener());
-		} catch (OfficeApplicationException e) {
-			ExceptionUtil
-					.log(e, "Fehler beim Öffnen des OpenOffice Dokuments.");
-		} catch (DocumentException e) {
-			ExceptionUtil
-					.log(e, "Fehler beim Öffnen des OpenOffice Dokuments.");
-		}
-	}
+        int rowIdx = 0;
+        for (Iterator iter = daten.iterator(); iter.hasNext();) {
+            IOOTableRow row = (IOOTableRow) iter.next();
+            fillTextTableRow(textTable, rowIdx, row);
+            mon.worked(1);
+            ++rowIdx;
+        }
+        applyTextTableStyles(textTable, daten, cols);
+    }
 
-	public void fillLetters(ArrayList apRows, IProgressMonitor mon,
-			String toPath, String prefix) {
-		mon.beginTask("Erstelle Briefe...", apRows.size());
-		try {
-			ITextFieldService textFieldService = textDocument
-					.getTextFieldService();
+    private void fillTextTableRow(ITextTable textTable, int rowIdx, IOOTableRow row) throws TextException {
+        for (int colIdx = 0; colIdx < row.getNumColumns(); ++colIdx) {
+            if (row.getCellType(colIdx) == IOOTableRow.CELL_TYPE_STRING) {
+                textTable.getCell(colIdx, rowIdx).getTextService().getText().setText(row.getCellAsString(colIdx));
+            } else if (row.getCellType(colIdx) == IOOTableRow.CELL_TYPE_DOUBLE) {
+                textTable.getCell(colIdx, rowIdx).setValue(row.getCellAsDouble(colIdx));
+            }
+        }
+    }
 
-			// get field names as column headers:
-			IOOTableRow header = (IOOTableRow) apRows.get(0);
+    public void openDocument(String url) {
+        try {
+            connect();
+            IDocumentService documentService = officeApplication.getDocumentService();
+            IDocument document = documentService.loadDocument(url);
+            textDocument = (ITextDocument) document;
+            textDocument.addCloseListener(new OOCloseListener());
+        } catch (OfficeApplicationException e) {
+            ExceptionUtil.log(e, Messages.getString("OOWrapper.25")); //$NON-NLS-1$
+        } catch (DocumentException e) {
+            ExceptionUtil.log(e, Messages.getString("OOWrapper.26")); //$NON-NLS-1$
+        }
+    }
 
-			// for all rows:
-			int i = 0;
-			for (Iterator iter = apRows.iterator(); iter.hasNext();) {
-				IOOTableRow row = (IOOTableRow) iter.next();
-				mon.subTask(row.getCellAsString(0));
-				fillLetter(textFieldService, header, row);
-				textDocument.getPersistenceService().store(
-						toPath + File.separator + prefix + ++i + ".odt");
-				mon.worked(1);
-			}
-		} catch (TextException e) {
-			ExceptionUtil.log(e,
-					"Fehler beim Erstellen der OpenOffice Dokumente.");
-		} catch (DocumentException e) {
-			ExceptionUtil.log(e,
-					"Fehler beim Erstellen der OpenOffice Dokumente.");
-		} finally {
-			mon.done();
-		}
-	}
+    public void openSpreadhseet(String url) {
+        try {
+            connect();
+            IDocumentService documentService = officeApplication.getDocumentService();
+            IDocument document = documentService.loadDocument(url);
+            spreadsheetDocument = (ISpreadsheetDocument) document;
+            spreadsheetDocument.addCloseListener(new OOCloseListener());
+        } catch (OfficeApplicationException e) {
+            ExceptionUtil.log(e, Messages.getString("OOWrapper.27")); //$NON-NLS-1$
+        } catch (DocumentException e) {
+            ExceptionUtil.log(e, Messages.getString("OOWrapper.28")); //$NON-NLS-1$
+        }
+    }
 
-	/**
-	 * Fill single form letter from template and save.
-	 * 
-	 * @param textFieldService
-	 * @param header
-	 * @param row
-	 * @throws TextException
-	 */
-	private void fillLetter(ITextFieldService textFieldService,
-			IOOTableRow header, IOOTableRow row) throws TextException {
+    public void fillLetters(ArrayList apRows, IProgressMonitor mon, String toPath, String prefix) {
+        mon.beginTask(Messages.getString("OOWrapper.29"), apRows.size()); //$NON-NLS-1$
+        try {
+            ITextFieldService textFieldService = textDocument.getTextFieldService();
 
-		// ITextField[] userTextFields = textFieldService.getUserTextFields();
-		// for (int i = 0; i < userTextFields.length; i++) {
-		// String name = userTextFields[i].getTextFieldMaster().getName();
-		// System.out.println(name);
-		// }
-		//		
-		// fill columns:
-		for (int colIdx = 0; colIdx < header.getNumColumns(); ++colIdx) {
-			setUserField(textFieldService, header.getCellAsString(colIdx), row
-					.getCellAsString(colIdx));
-		}
-		refreshTextFields();
-	}
+            // get field names as column headers:
+            IOOTableRow header = (IOOTableRow) apRows.get(0);
 
-	private void setUserField(ITextFieldService textFieldService, String field,
-			String text) throws TextException {
-		ITextFieldMaster master = textFieldService
-				.getUserTextFieldMaster(field);
-		if (master == null) {
-			ExceptionUtil.log(new Exception("OO Vorlage fehlerhaft"),
-					"Feld im OO Dokument nicht gefunden: " + field);
-		} else
-			master.setContent(text);
-	}
+            // for all rows:
+            int i = 0;
+            for (Iterator iter = apRows.iterator(); iter.hasNext();) {
+                IOOTableRow row = (IOOTableRow) iter.next();
+                mon.subTask(row.getCellAsString(0));
+                fillLetter(textFieldService, header, row);
+                textDocument.getPersistenceService().store(toPath + File.separator + prefix + ++i + ".odt"); //$NON-NLS-1$
+                mon.worked(1);
+            }
+        } catch (TextException e) {
+            ExceptionUtil.log(e, Messages.getString("OOWrapper.31")); //$NON-NLS-1$
+        } catch (DocumentException e) {
+            ExceptionUtil.log(e, Messages.getString("OOWrapper.32")); //$NON-NLS-1$
+        } finally {
+            mon.done();
+        }
+    }
 
-	/**
-	 * Refresh user defined fields in document.
-	 * 
-	 */
-	private void refreshTextFields() {
-		XTextFieldsSupplier textFieldsSupplier = cast(
-				XTextFieldsSupplier.class, textDocument.getXTextDocument());
-		XRefreshable refreshable = cast(XRefreshable.class, textFieldsSupplier
-				.getTextFields());
-		refreshable.refresh();
-	}
+    /**
+     * Fill single form letter from template and save.
+     * 
+     * @param textFieldService
+     * @param header
+     * @param row
+     * @throws TextException
+     */
+    private void fillLetter(ITextFieldService textFieldService, IOOTableRow header, IOOTableRow row) throws TextException {
 
-	/**
-	 * A hack so we do not have to set java-library-path on startup. This way we
-	 * can choose the office version and directory whenever we want during
-	 * runtime. Which rocks.
-	 * 
-	 * @author koderman[at]sernet[dot]de
-	 * @param path
-	 * @throws Exception
-	 */
-	private void setLibraryPath(String newPath) throws Exception {
-		Class clazz = ClassLoader.class;
-		Field field;
-		try {
-			field = clazz.getDeclaredField("sys_paths");
-			field.setAccessible(true);
-			// Reset it to null so that whenever "System.loadLibrary" is called,
-			// it will be reconstructed with the changed value.
-			field.set(clazz, null);
-			System.setProperty("java.library.path", newPath);
-			Logger.getLogger(this.getClass())
-					.debug(
-							"Setting old VM library path:\n" + oldPath + " to:\n "
-									+ newPath);
-		} catch (SecurityException e) {
-			Logger.getLogger(this.getClass()).error(e);
-			throw new Exception("Konnte OO-Library Pfad nicht setzen", e);
-		} catch (NoSuchFieldException e) {
-			Logger.getLogger(this.getClass()).error(e);
-			throw new Exception("Konnte OO-Library Pfad nicht setzen", e);
-		}
-	}
+        // ITextField[] userTextFields = textFieldService.getUserTextFields();
+        // for (int i = 0; i < userTextFields.length; i++) {
+        // String name = userTextFields[i].getTextFieldMaster().getName();
+        // System.out.println(name);
+        // }
+        //		
+        // fill columns:
+        for (int colIdx = 0; colIdx < header.getNumColumns(); ++colIdx) {
+            setUserField(textFieldService, header.getCellAsString(colIdx), row.getCellAsString(colIdx));
+        }
+        refreshTextFields();
+    }
 
-	@SuppressWarnings("unchecked")
-	static <T> T cast(Class<T> c, Object o) {
-		return (T) UnoRuntime.queryInterface(c, o);
-	}
+    private void setUserField(ITextFieldService textFieldService, String field, String text) throws TextException {
+        ITextFieldMaster master = textFieldService.getUserTextFieldMaster(field);
+        if (master == null) {
+            ExceptionUtil.log(new Exception(
+                    Messages.getString("OOWrapper.33")), //$NON-NLS-1$
+                    Messages.getString("OOWrapper.34",field)); //$NON-NLS-1$ 
+        } else {
+            master.setContent(text);
+        }
+    }
+
+    /**
+     * Refresh user defined fields in document.
+     * 
+     */
+    private void refreshTextFields() {
+        XTextFieldsSupplier textFieldsSupplier = cast(XTextFieldsSupplier.class, textDocument.getXTextDocument());
+        XRefreshable refreshable = cast(XRefreshable.class, textFieldsSupplier.getTextFields());
+        refreshable.refresh();
+    }
+
+    /**
+     * A hack so we do not have to set java-library-path on startup. This way we
+     * can choose the office version and directory whenever we want during
+     * runtime. Which rocks.
+     * 
+     * @author koderman[at]sernet[dot]de
+     * @param path
+     * @throws Exception
+     */
+    private void setLibraryPath(String newPath) throws Exception {
+        Class clazz = ClassLoader.class;
+        Field field;
+        try {
+            field = clazz.getDeclaredField("sys_paths"); //$NON-NLS-1$
+            field.setAccessible(true);
+            // Reset it to null so that whenever "System.loadLibrary" is called,
+            // it will be reconstructed with the changed value.
+            field.set(clazz, null);
+            System.setProperty("java.library.path", newPath); //$NON-NLS-1$
+            LOG.debug("Setting old VM library path:\n" + oldPath + " to:\n " + newPath); //$NON-NLS-1$ //$NON-NLS-2$
+        } catch (SecurityException e) {
+            LOG.error(e);
+            throw new Exception("Konnte OO-Library Pfad nicht setzen", e); //$NON-NLS-1$
+        } catch (NoSuchFieldException e) {
+            LOG.error(e);
+            throw new Exception("Konnte OO-Library Pfad nicht setzen", e); //$NON-NLS-1$
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    static <T> T cast(Class<T> c, Object o) {
+        return (T) UnoRuntime.queryInterface(c, o);
+    }
 }
