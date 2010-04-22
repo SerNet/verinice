@@ -24,18 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-
-import com.sun.star.beans.GetPropertyTolerantResult;
+import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
@@ -46,9 +35,7 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.FastLoadCnAElementsByIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsByIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
-import sernet.gs.ui.rcp.main.service.taskcommands.DeleteRole;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindHuiUrls;
 import sernet.hui.common.connect.Entity;
@@ -61,7 +48,6 @@ import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
-import sernet.hui.common.multiselectionlist.IContextMenuListener;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 
 /**
@@ -80,214 +66,202 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
  */
 public class EntityResolverFactory {
 
-	private static IReferenceResolver roleResolver;
-	private static IReferenceResolver personResolver;
-	private static IUrlResolver urlresolver;
+    private static final Logger LOG = Logger.getLogger(EntityResolverFactory.class);
+    
+    private static IReferenceResolver roleResolver;
+    private static IReferenceResolver personResolver;
+    private static IUrlResolver urlresolver;
 
-	public static void createResolvers(HUITypeFactory typeFactory) {
-		createPersonResolver();
-		createRoleResolver();
+    public static void createResolvers(HUITypeFactory typeFactory) {
+        createPersonResolver();
+        createRoleResolver();
 
-		// set person resolver for all properties that reference persons:
-		Collection<EntityType> allEntityTypes = typeFactory.getAllEntityTypes();
-		for (EntityType entityType : allEntityTypes) {
-			List<PropertyType> propertyTypes = entityType.getPropertyTypes();
+        // set person resolver for all properties that reference persons:
+        Collection<EntityType> allEntityTypes = typeFactory.getAllEntityTypes();
+        for (EntityType entityType : allEntityTypes) {
+            List<PropertyType> propertyTypes = entityType.getPropertyTypes();
 
-			addPersonResolverToTypes(typeFactory, entityType, propertyTypes);
-			addRoleResolverToTypes(typeFactory, entityType, propertyTypes);
+            addPersonResolverToTypes(typeFactory, entityType, propertyTypes);
+            addRoleResolverToTypes(typeFactory, entityType, propertyTypes);
 
-			List<PropertyGroup> groups = entityType.getPropertyGroups();
-			for (PropertyGroup group : groups) {
-				List<PropertyType> typesInGroup = group.getPropertyTypes();
-				addPersonResolverToTypes(typeFactory, entityType, typesInGroup);
-				addRoleResolverToTypes(typeFactory, entityType, typesInGroup);
-			}
-		}
+            List<PropertyGroup> groups = entityType.getPropertyGroups();
+            for (PropertyGroup group : groups) {
+                List<PropertyType> typesInGroup = group.getPropertyTypes();
+                addPersonResolverToTypes(typeFactory, entityType, typesInGroup);
+                addRoleResolverToTypes(typeFactory, entityType, typesInGroup);
+            }
+        }
 
-		createUrlResolver(typeFactory);
+        createUrlResolver(typeFactory);
 
-		// set url resolver for all URL fields:
-		List<PropertyType> types = typeFactory.getURLPropertyTypes();
-		for (PropertyType type : types) {
-			type.setUrlResolver(urlresolver);
-		}
-	}
+        // set url resolver for all URL fields:
+        List<PropertyType> types = typeFactory.getURLPropertyTypes();
+        for (PropertyType type : types) {
+            type.setUrlResolver(urlresolver);
+        }
+    }
 
-	private static void addPersonResolverToTypes(HUITypeFactory typeFactory,
-			EntityType entityType, List<PropertyType> propertyTypes) {
-		for (PropertyType propertyType : propertyTypes) {
-			if (propertyType.isReference()) {
-				if (propertyType.getReferencedEntityTypeId().equals(
-						Person.TYPE_ID)) {
-					typeFactory.getPropertyType(entityType.getId(),
-							propertyType.getId()).setReferenceResolver(
-							personResolver);
-				}
-			}
-		}
-	}
+    private static void addPersonResolverToTypes(HUITypeFactory typeFactory, EntityType entityType, List<PropertyType> propertyTypes) {
+        for (PropertyType propertyType : propertyTypes) {
+            if (propertyType.isReference()) {
+                if (propertyType.getReferencedEntityTypeId().equals(Person.TYPE_ID)) {
+                    typeFactory.getPropertyType(entityType.getId(), propertyType.getId()).setReferenceResolver(personResolver);
+                }
+            }
+        }
+    }
 
-	private static void addRoleResolverToTypes(HUITypeFactory typeFactory,
-			EntityType entityType, List<PropertyType> propertyTypes) {
-		for (PropertyType propertyType : propertyTypes) {
-			if (propertyType.isReference()) {
-				if (propertyType.getReferencedEntityTypeId().equals(
-						Configuration.ROLE_TYPE_ID)) {
-					typeFactory.getPropertyType(entityType.getId(),
-							propertyType.getId()).setReferenceResolver(
-							roleResolver);
-				}
-			}
-		}
-	}
+    private static void addRoleResolverToTypes(HUITypeFactory typeFactory, EntityType entityType, List<PropertyType> propertyTypes) {
+        for (PropertyType propertyType : propertyTypes) {
+            if (propertyType.isReference()) {
+                if (propertyType.getReferencedEntityTypeId().equals(Configuration.ROLE_TYPE_ID)) {
+                    typeFactory.getPropertyType(entityType.getId(), propertyType.getId()).setReferenceResolver(roleResolver);
+                }
+            }
+        }
+    }
 
-	private static void createUrlResolver(HUITypeFactory typeFactory) {
-		// create list of all fields containing urls:
-		final Set<String> allIDs = new HashSet<String>();
-		try {
-			List<PropertyType> types;
-			types = typeFactory.getURLPropertyTypes();
-			for (PropertyType type : types) {
-				allIDs.add(type.getId());
-			}
-		} catch (Exception e) {
-			return;
-		}
+    private static void createUrlResolver(HUITypeFactory typeFactory) {
+        // create list of all fields containing urls:
+        final Set<String> allIDs = new HashSet<String>();
+        try {
+            List<PropertyType> types;
+            types = typeFactory.getURLPropertyTypes();
+            for (PropertyType type : types) {
+                allIDs.add(type.getId());
+            }
+        } catch (Exception e) {
+            return;
+        }
 
-		// get urls out of these fields:
-		urlresolver = new IUrlResolver() {
-			public List<HuiUrl> resolve() {
-				List<HuiUrl> result = Collections.emptyList();
+        // get urls out of these fields:
+        urlresolver = new IUrlResolver() {
+            public List<HuiUrl> resolve() {
+                List<HuiUrl> result = Collections.emptyList();
 
-				try {
-					FindHuiUrls command = new FindHuiUrls(allIDs);
+                try {
+                    FindHuiUrls command = new FindHuiUrls(allIDs);
 
-					command = ServiceFactory.lookupCommandService()
-							.executeCommand(command);
+                    command = ServiceFactory.lookupCommandService().executeCommand(command);
 
-					result = command.getList();
+                    result = command.getList();
 
-				} catch (Exception e) {
-					ExceptionUtil.log(e, "Fehler beim Datenzugriff."); //$NON-NLS-1$
-				}
+                } catch (Exception e) {
+                    LOG.error("Error while loading data", e); //$NON-NLS-1$
+                }
 
-				return result;
-			}
-		};
-	}
+                return result;
+            }
+        };
+    }
 
-	private static void createPersonResolver() {
-		if (personResolver == null) {
-			personResolver = new IReferenceResolver() {
+    private static void createPersonResolver() {
+        if (personResolver == null) {
+            personResolver = new IReferenceResolver() {
 
-				public List<IMLPropertyOption> getAllEntitesForType(
-						String entityTypeID) {
+                public List<IMLPropertyOption> getAllEntitesForType(String entityTypeID) {
 
-					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
+                    List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
 
-					LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(
-							Person.class);
+                    LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
 
-					try {
-						command = ServiceFactory.lookupCommandService()
-								.executeCommand(command);
+                    try {
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
 
-						List<Person> personen = command.getElements();
+                        List<Person> personen = command.getElements();
 
-						for (Person person : personen) {
-							result.add(new PersonEntityOptionWrapper(person.getEntity()));
-						}
+                        for (Person person : personen) {
+                            result.add(new PersonEntityOptionWrapper(person.getEntity()));
+                        }
 
-					} catch (Exception e) {
-						throw new RuntimeCommandException(
-								"Fehler beim Datenzugriff.", e);
-					}
-					return result;
-				}
+                    } catch (Exception e) {
+                        throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
+                    }
+                    return result;
+                }
 
-				public void addNewEntity(Entity parentEntity, String name) {
-					// not supported, do nothing
-				}
+                public void addNewEntity(Entity parentEntity, String name) {
+                    // not supported, do nothing
+                }
 
-				public List<IMLPropertyOption> getReferencedEntitesForType(
-						String referencedEntityTypeId, List<Property> references) {
+                public List<IMLPropertyOption> getReferencedEntitesForType(String referencedEntityTypeId, List<Property> references) {
 
-					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
+                    List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
 
-					List<Integer> dbIds = new ArrayList<Integer>();
-					for (Property prop : references) {
-						dbIds.add( Integer.parseInt(prop.getPropertyValue()) );
-					}
-					FastLoadCnAElementsByIds command = new FastLoadCnAElementsByIds(dbIds);
-					
+                    List<Integer> dbIds = new ArrayList<Integer>();
+                    for (Property prop : references) {
+                        dbIds.add(Integer.parseInt(prop.getPropertyValue()));
+                    }
+                    FastLoadCnAElementsByIds command = new FastLoadCnAElementsByIds(dbIds);
 
-					try {
-						command = ServiceFactory.lookupCommandService()
-								.executeCommand(command);
+                    try {
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
 
-						List<Entity> personen = command.getFoundItems();
+                        List<Entity> personen = command.getFoundItems();
 
-						for (Entity person : personen) {
-							result.add(new PersonEntityOptionWrapper(person));
-						}
+                        for (Entity person : personen) {
+                            result.add(new PersonEntityOptionWrapper(person));
+                        }
 
-					} catch (Exception e) {
-						throw new RuntimeCommandException(
-								"Fehler beim Datenzugriff.", e);
-					}
-					return result;
-				
-				}
-			};
-		}
-	}
+                    } catch (Exception e) {
+                        throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
+                    }
+                    return result;
 
-	private static void createRoleResolver() {
-		if (roleResolver == null) {
-			roleResolver = new IReferenceResolver() {
+                }
+            };
+        }
+    }
 
-				public List<IMLPropertyOption> getAllEntitesForType(
-						String entityTypeID) {
-					List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
-					
-					try {
-						FindAllRoles far = new FindAllRoles(false /* filter out user roles, should not be selectable by end user*/);
-						far = ServiceFactory.lookupCommandService()
-							.executeCommand(far);
-						
-						for (String role : far.getRoles())
-						{
-							// Empty roles may happen for non-initialized Configuration instances. 
-							if (role.length() > 0)
-								
-								result.add(new PropertyOption(role, role));
-						}
-						
-					} catch (Exception e) {
-						throw new RuntimeCommandException("Fehler beim Datenzugriff.", e);
-					}
-					return result;
-				}
+    private static void createRoleResolver() {
+        if (roleResolver == null) {
+            roleResolver = new IReferenceResolver() {
 
-				public void addNewEntity(Entity parentEntity, String newName) {
-					try {
-						PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, Configuration.PROP_ROLES);
-						parentEntity.createNewProperty(type, newName);
+                public List<IMLPropertyOption> getAllEntitesForType(String entityTypeID) {
+                    List<IMLPropertyOption> result = new ArrayList<IMLPropertyOption>();
 
-						SaveElement<Entity>command = new SaveElement<Entity>(parentEntity);
-						command = ServiceFactory.lookupCommandService()
-								.executeCommand(command);
-					} catch (CommandException e) {
-						throw new RuntimeCommandException("Fehler beim Datenzugriff.", e);
-					}
-				}
+                    try {
+                        FindAllRoles far = new FindAllRoles(false /*
+                                                                   * filter out
+                                                                   * user roles,
+                                                                   * should not
+                                                                   * be
+                                                                   * selectable
+                                                                   * by end user
+                                                                   */);
+                        far = ServiceFactory.lookupCommandService().executeCommand(far);
 
-				public List<IMLPropertyOption> getReferencedEntitesForType(
-						String referencedEntityTypeId, List<Property> references) {
-					return null;
-				}
-			};
-		}
-		
-	}
+                        for (String role : far.getRoles()) {
+                            // Empty roles may happen for non-initialized
+                            // Configuration instances.
+                            if (role.length() > 0) {
+                                result.add(new PropertyOption(role, role));
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
+                    }
+                    return result;
+                }
+
+                public void addNewEntity(Entity parentEntity, String newName) {
+                    try {
+                        PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, Configuration.PROP_ROLES);
+                        parentEntity.createNewProperty(type, newName);
+
+                        SaveElement<Entity> command = new SaveElement<Entity>(parentEntity);
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                    } catch (CommandException e) {
+                        throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
+                    }
+                }
+
+                public List<IMLPropertyOption> getReferencedEntitesForType(String referencedEntityTypeId, List<Property> references) {
+                    return null;
+                }
+            };
+        }
+
+    }
 }
