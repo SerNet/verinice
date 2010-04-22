@@ -71,11 +71,33 @@ public class Messages extends NLS {
 
 	public static String BsiModelView_1;
 
+    public static String BsiModelView_11;
+
+    public static String BsiModelView_12;
+
+    public static String BsiModelView_13;
+
+    public static String BsiModelView_14;
+
+    public static String BsiModelView_15;
+
+    public static String BsiModelView_16;
+
+    public static String BsiModelView_17;
+
+    public static String BsiModelView_18;
+
 	public static String BsiModelView_2;
 
 	public static String BsiModelView_3;
 
 	public static String BsiModelView_4;
+	
+	public static String BsiModelView_5;
+
+    public static String BsiModelView_7;
+
+    public static String BsiModelView_9;
 
 	public static String DocumentView_2;
 

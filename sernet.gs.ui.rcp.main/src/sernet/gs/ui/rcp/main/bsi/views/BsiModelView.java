@@ -203,8 +203,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 			initView(parent);
 			startInitDataJob();
 		} catch (Exception e) {
-			LOG.error("Error while creating organization view", e);
-			ExceptionUtil.log(e, "Error while opening ISM-View.");
+			LOG.error("Error while creating organization view", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.BsiModelView_7);
 		}
 	}
 
@@ -232,15 +232,15 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	 * 
 	 */
 	protected void startInitDataJob() {
-		WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
+		WorkspaceJob initDataJob = new WorkspaceJob(Messages.BsiModelView_5) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
 				try {
-					monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+					monitor.beginTask(Messages.BsiModelView_5, IProgressMonitor.UNKNOWN);
 					initData();
 				} catch (Exception e) {
-					LOG.error("Error while loading data.", e);
-					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$
+					LOG.error("Error while loading data.", e); //$NON-NLS-1$
+					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.BsiModelView_9,e); //$NON-NLS-1$
 				} finally {
 					monitor.done();
 				}
@@ -363,14 +363,14 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 							}
 						}
 					} catch (CommandException e) {
-						ExceptionUtil.log(e, "");
+						ExceptionUtil.log(e, ""); //$NON-NLS-1$
 					}
 
 					viewer.setSelection(new StructuredSelection(newsel));
 				}
 			}
 		};
-		selectEqualsAction.setText("Gleiche Bausteine selektieren");
+		selectEqualsAction.setText(Messages.BsiModelView_11);
 
 		selectLinksAction = new Action() {
 			@Override
@@ -385,13 +385,13 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 				}
 			}
 		};
-		selectLinksAction.setText("Alle Verknüpfungen zu diesem Objekt markieren");
+		selectLinksAction.setText(Messages.BsiModelView_12);
 
-		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), "Bulk Edit...");
+		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_13);
 
-		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), "Zugriffsrechte...");
+		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_14);
 
-		konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(), "Konsolidator...");
+		konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_15);
 
 		bausteinZuordnungAction = new BausteinZuordnungAction(getViewSite().getWorkbenchWindow());
 
@@ -427,7 +427,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 				expandAll();
 			}
 		};
-		expandAllAction.setText("Alle aufklappen");
+		expandAllAction.setText(Messages.BsiModelView_16);
 		expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
 		collapseAction = new Action() {
@@ -436,7 +436,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 				viewer.collapseAll();
 			}
 		};
-		collapseAction.setText("Alle zuklappen");
+		collapseAction.setText(Messages.BsiModelView_17);
 		collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
 		dropAdapter = new MetaDropAdapter(viewer);
@@ -486,7 +486,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 					viewer.setInput(model);
 					viewer.refresh();
 				} catch (Exception e) {
-					ExceptionUtil.log(e, "Konnte Modell nicht laden.");
+					ExceptionUtil.log(e, Messages.BsiModelView_18);
 				}
 			}
 		});
