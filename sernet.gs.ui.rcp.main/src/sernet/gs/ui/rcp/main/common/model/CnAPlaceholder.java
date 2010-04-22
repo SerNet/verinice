@@ -25,7 +25,7 @@ public class CnAPlaceholder extends CnATreeElement {
 
 	@Override
 	public String getTitle() {
-		return "DB-Verbindung: geschlossen";
+		return Messages.getString("CnAPlaceholder.0"); //$NON-NLS-1$
 	}
 
 	@Override
