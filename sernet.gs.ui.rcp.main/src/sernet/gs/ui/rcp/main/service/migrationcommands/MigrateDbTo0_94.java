@@ -32,7 +32,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 
@@ -47,8 +46,15 @@ import sernet.gs.ui.rcp.main.connect.IBaseDao;
 @SuppressWarnings("serial")
 public class MigrateDbTo0_94 extends DbMigration {
 	
-	private static final Logger log = Logger.getLogger(MigrateDbTo0_94.class);
+	private static transient Logger log = Logger.getLogger(MigrateDbTo0_94.class);
 
+    public static Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(MigrateDbTo0_94.class);
+        }
+        return log;
+    }
+	
 	private String[] tables = {
 			"cnatreeelement",
 			"finishedriskanalysislists",
@@ -79,7 +85,7 @@ public class MigrateDbTo0_94 extends DbMigration {
 			dao.executeCallback(new CreateUuidCallback(table, idIterator));
 			} catch (HibernateException he)
 			{
-				ExceptionUtil.log(he.getCause(), "Error during database migration.");
+				getLog().error("Error during database migration.", he);
 			}
 		}
 		
@@ -103,7 +109,7 @@ public class MigrateDbTo0_94 extends DbMigration {
 						"select t.dbid as dbid from " + table +  " t")
 						.addScalar("dbid");
 				
-				log.debug("generated query: " + query.getQueryString());
+				getLog().debug("generated query: " + query.getQueryString());
 
 			return query.list();
 		}

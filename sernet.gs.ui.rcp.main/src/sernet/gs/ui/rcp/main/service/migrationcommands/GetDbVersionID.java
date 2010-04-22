@@ -21,17 +21,15 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.hui.common.connect.Entity;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -40,53 +38,56 @@ import sernet.hui.common.connect.Entity;
  */
 public class GetDbVersionID extends GenericCommand {
 
-	private Double version = null;
+    private transient Logger log = Logger.getLogger(GetDbVersionID.class);
 
-	public Double getVersion() {
-		return version;
-	}
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(GetDbVersionID.class);
+        }
+        return log;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
-	 */
-	public void execute() {
+    private Double version = null;
 
-		IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(
-				BSIModel.class);
+    public Double getVersion() {
+        return version;
+    }
 
-		try {
-			List<Double> idIterator = (List<Double>) dao
-					.findByCallback(new FindVersionCallback());
-			if (idIterator == null) {
-				return;
-			}
-			
-			for (Double double1 : idIterator) {
-				version = double1;
-			}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+     */
+    public void execute() {
 
-		} catch (HibernateException he) {
-			ExceptionUtil
-					.log(he.getCause(), "Error during database migration.");
-		}
-	}
+        IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 
-	private static class FindVersionCallback implements HibernateCallback,
-			Serializable {
+        try {
+            List<Double> idIterator = dao.findByCallback(new FindVersionCallback());
+            if (idIterator == null) {
+                return;
+            }
 
-		public Object doInHibernate(Session session) throws HibernateException,
-				SQLException {
-			try {
-				Query query = session
-				.createSQLQuery("select elmt.dbversion from bsimodel elmt where elmt.dbversion is not null");
-				return query.list();
-			} catch (Exception e) {
-				return null;
-			}
-		}
+            for (Double double1 : idIterator) {
+                version = double1;
+            }
 
-	}
+        } catch (HibernateException he) {
+            getLog().error("Error during database migration.", he);
+        }
+    }
+
+    private static class FindVersionCallback implements HibernateCallback, Serializable {
+
+        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+            try {
+                Query query = session.createSQLQuery("select elmt.dbversion from bsimodel elmt where elmt.dbversion is not null");
+                return query.list();
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+    }
 
 }
