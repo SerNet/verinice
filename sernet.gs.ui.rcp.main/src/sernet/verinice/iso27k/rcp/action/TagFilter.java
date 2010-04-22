@@ -21,64 +21,65 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.verinice.iso27k.model.IISO27kElement;
 import sernet.verinice.iso27k.model.IISO27kGroup;
 
 public class TagFilter extends ViewerFilter {
-	
-	public static final String NO_TAG = "[keine Tags]";
 
-	String[] pattern;
-	private StructuredViewer viewer;
-	
-	public TagFilter(StructuredViewer viewer) {
-		this.viewer = viewer;
-	}
-	
-	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object o) {
-		boolean result = true;
-		if ((o instanceof IISO27kElement && !(o instanceof IISO27kGroup)) ) {
-			result = false;
-			IISO27kElement element = (IISO27kElement) o;
-			for (String tag : pattern) {
-				if (tag.equals(NO_TAG)) {
-					if (element.getTags().size()<1)
-						result =  true;
-				}
-				for (String zielTag : element.getTags()) {
-					if (zielTag.equals(tag))
-						result =  true;
-				}
-			}
-		}
-		return result;
-	}
+    public static final String NO_TAG = Messages.getString("TagFilter.0"); //$NON-NLS-1$
 
-	public String[] getPattern() {
-		return pattern;
-	}
+    String[] pattern;
+    private StructuredViewer viewer;
 
-	public void setPattern(String[] newPattern) {
-		boolean active = pattern != null;
-		if (newPattern != null && newPattern.length > 0) {
-			pattern = newPattern;
-			if (active)
-				viewer.refresh();
-			else {
-				viewer.addFilter(this);
-				active = true;
-			}
-			return;
-		}
-		
-		// else deactivate:
-		pattern = null;
-		if (active)
-			viewer.removeFilter(this);
-		
-	}
+    public TagFilter(StructuredViewer viewer) {
+        this.viewer = viewer;
+    }
+
+    @Override
+    public boolean select(Viewer viewer, Object parentElement, Object o) {
+        boolean result = true;
+        if ((o instanceof IISO27kElement && !(o instanceof IISO27kGroup))) {
+            result = false;
+            IISO27kElement element = (IISO27kElement) o;
+            for (String tag : pattern) {
+                if (tag.equals(NO_TAG)) {
+                    if (element.getTags().size() < 1) {
+                        result = true;
+                    }
+                }
+                for (String zielTag : element.getTags()) {
+                    if (zielTag.equals(tag)) {
+                        result = true;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public String[] getPattern() {
+        return pattern;
+    }
+
+    public void setPattern(String[] newPattern) {
+        boolean active = pattern != null;
+        if (newPattern != null && newPattern.length > 0) {
+            pattern = newPattern;
+            if (active) {
+                viewer.refresh();
+            } else {
+                viewer.addFilter(this);
+                active = true;
+            }
+            return;
+        }
+
+        // else deactivate:
+        pattern = null;
+        if (active) {
+            viewer.removeFilter(this);
+        }
+
+    }
 
 }

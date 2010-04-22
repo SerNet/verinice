@@ -54,6 +54,11 @@ public class Messages extends NLS {
 	public static String ISMView_InitDatabase;
 	public static String ISMView_InitData;
 	public static String ISMView_LoadModel;
+    public static String ISMViewFilterDialog_0;
+    public static String ISMViewFilterDialog_1;
+    public static String ISMViewFilterDialog_3;
+    public static String ISMViewFilterDialog_4;
+    public static String ISMViewFilterDialog_5;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
