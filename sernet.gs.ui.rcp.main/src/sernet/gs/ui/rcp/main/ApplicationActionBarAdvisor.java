@@ -77,415 +77,383 @@ import sernet.verinice.iso27k.rcp.Iso27kPerspective;
  */
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
-	// Actions - important to allocate these only in makeActions, and then use
-	// them
-	// in the fill methods. This ensures that the actions aren't recreated
-	// when fillActionBars is called with FILL_PROXY.
-	private IWorkbenchAction exitAction;
+    // Actions - important to allocate these only in makeActions, and then use
+    // them
+    // in the fill methods. This ensures that the actions aren't recreated
+    // when fillActionBars is called with FILL_PROXY.
+    private IWorkbenchAction exitAction;
 
-	private IWorkbenchAction aboutAction;
+    private IWorkbenchAction aboutAction;
 
-	private IWorkbenchAction newWindowAction;
+    private IWorkbenchAction newWindowAction;
 
-	private OpenViewAction openBSIViewAction;
+    private OpenViewAction openBSIViewAction;
 
-	private IWorkbenchAction saveAction;
+    private IWorkbenchAction saveAction;
 
-	private IWorkbenchAction closeAction;
+    private IWorkbenchAction closeAction;
 
-	private IWorkbenchAction closeAllAction;
+    private IWorkbenchAction closeAllAction;
 
-	private IWorkbenchAction closeOthersAction;
+    private IWorkbenchAction closeOthersAction;
 
-	private OpenViewAction openDSViewAction;
+    private OpenViewAction openDSViewAction;
 
-	private OpenViewAction openBSIModelViewAction;
-	
-	private OpenViewAction openISMViewAction;
+    private OpenViewAction openBSIModelViewAction;
 
-	private OpenViewAction openTodoViewAction;
+    private OpenViewAction openISMViewAction;
 
-	private OpenViewAction openAuditViewAction;
+    private OpenViewAction openTodoViewAction;
 
-	private ShowExportWizardAction showWizardAction;
-	
-	private ReloadAction reloadAction;
+    private OpenViewAction openAuditViewAction;
 
-	private ShowPreferencesAction showPreferencesAction;
+    private ShowExportWizardAction showWizardAction;
 
-	private OpenViewAction openBSIBrowserAction;
+    private ReloadAction reloadAction;
 
-	private OpenViewAction openNoteAction;
-	
-	private OpenViewAction openFileAction;
+    private ShowPreferencesAction showPreferencesAction;
 
-	private OpenViewAction openRelationViewAction;
-	
-	private OpenMultipleViewAction openCatalogAction;
-	
-	private OpenPerspectiveAction openIsoPerspective;
-	
-	private IWorkbenchAction copyAction;
+    private OpenViewAction openBSIBrowserAction;
 
-	private IWorkbenchAction pasteAction;
+    private OpenViewAction openNoteAction;
 
-	private ShowBulkEditAction bulkEditAction;
-	
-	private ShowAccessControlEditAction accessControlEditAction;
+    private OpenViewAction openFileAction;
 
-	private ShowCheatSheetAction showCheatSheetAction;
+    private OpenViewAction openRelationViewAction;
 
-	private IWorkbenchAction introAction;
+    private OpenMultipleViewAction openCatalogAction;
 
-	private ShowKonsolidatorAction konsolidatorAction;
+    private OpenPerspectiveAction openIsoPerspective;
 
-	private CheatSheetCategoryBasedSelectionAction showCheatSheetListAction;
+    private IWorkbenchAction copyAction;
 
-	private OpenMultipleViewAction openChartViewAction;
+    private IWorkbenchAction pasteAction;
 
-	private ImportGstoolAction importGstoolAction;
+    private ShowBulkEditAction bulkEditAction;
 
-	private OpenViewAction openDocumentViewAction;
+    private ShowAccessControlEditAction accessControlEditAction;
 
-	private UpdateAction updateAction;
+    private ShowCheatSheetAction showCheatSheetAction;
 
-	private UpdateManualAction manualUpdate;
-	
-	private ManageUpdatesAction manageUpdatesAction;
+    private IWorkbenchAction introAction;
 
-	private BausteinZuordnungAction bausteinZuordnungAction;
+    private ShowKonsolidatorAction konsolidatorAction;
 
-	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
-		super(configurer);
-		removeExtraneousActions();
-	}
+    private CheatSheetCategoryBasedSelectionAction showCheatSheetListAction;
 
-	protected void makeActions(final IWorkbenchWindow window) {
-		// Creates the actions and registers them.
-		// Registering is needed to ensure that key bindings work.
-		// The corresponding commands keybindings are defined in the plugin.xml
-		// file.
-		// Registering also provides automatic disposal of the actions when
-		// the window is closed.
+    private OpenMultipleViewAction openChartViewAction;
 
-		exitAction = ActionFactory.QUIT.create(window);
-		register(exitAction);
+    private ImportGstoolAction importGstoolAction;
 
-		copyAction = ActionFactory.COPY.create(window);
-		register(copyAction);
+    private OpenViewAction openDocumentViewAction;
 
-		pasteAction = ActionFactory.PASTE.create(window);
-		register(pasteAction);
-
-		aboutAction = ActionFactory.ABOUT.create(window);
-		register(aboutAction);
-
-		newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
-		register(newWindowAction);
-
-		saveAction = ActionFactory.SAVE.create(window);
-		register(saveAction);
-
-		closeAction = ActionFactory.CLOSE.create(window);
-		register(closeAction);
-
-		closeAllAction = ActionFactory.CLOSE_ALL.create(window);
-		register(closeAllAction);
-
-		closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
-		register(closeOthersAction);
-
-		openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0,
-				BrowserView.ID, ImageCache.VIEW_BROWSER);
-		register(openBSIBrowserAction);
-		
-		openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1,
-				NoteView.ID, ImageCache.VIEW_NOTE);
-		register(openNoteAction);
-		
-		openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2,
-				FileView.ID, ImageCache.ATTACH);
-		register(openFileAction);
-		
-		openCatalogAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_3,
-				CatalogView.ID, ImageCache.WRENCH);
-		register(openCatalogAction);
-
-		openRelationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_4,
-				RelationView.ID, ImageCache.LINKS);
-		register(openRelationViewAction);
-
-		openBSIViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_5,
-				BSIMassnahmenView.ID, ImageCache.VIEW_MASSNAHMEN);
-		register(openBSIViewAction);
-
-		openBSIModelViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_6,
-				BsiModelView.ID, ImageCache.VIEW_BSIMODEL);
-		register(openBSIModelViewAction);
-		
-		openISMViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_7,
-				ISMView.ID, ImageCache.VIEW_ISMVIEW);
-		register(openISMViewAction);
-
-		openDSViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_8,
-				DSModelView.ID, ImageCache.VIEW_DSMODEL);
-		register(openDSViewAction);
-
-		openTodoViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_9,
-				TodoView.ID, ImageCache.VIEW_TODO);
-		register(openTodoViewAction);
-		
-		openDocumentViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_10,
-				DocumentView.ID, ImageCache.VIEW_DOCUMENT);
-		register(openDocumentViewAction);
-
-		openChartViewAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_11,
-				ChartView.ID, ImageCache.CHART_PIE);
-		register(openChartViewAction);
-
-		openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12,
-				AuditView.ID, ImageCache.VIEW_AUDIT);
-		register(openAuditViewAction);
-
-		showWizardAction = new ShowExportWizardAction(window,
-				Messages.ApplicationActionBarAdvisor_13);
-		register(showWizardAction);
-		
-		reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
-		register(reloadAction);
-		
-		importGstoolAction = new ImportGstoolAction(window,
-		Messages.ApplicationActionBarAdvisor_15);
-		register(importGstoolAction);
-
-		showPreferencesAction = new ShowPreferencesAction();
-//		showPreferencesAction = ActionFactory.PREFERENCES.create(window);
-		register(showPreferencesAction);
-		
-		bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16);
-		register(bulkEditAction);
-		
-		accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17);
-		register(accessControlEditAction);
-		
-		konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18);
-		register(konsolidatorAction);
-		
-		bausteinZuordnungAction = new BausteinZuordnungAction(window);
-		register(bausteinZuordnungAction);
-		
-		showCheatSheetAction = new ShowCheatSheetAction(true, Messages.ApplicationActionBarAdvisor_19);
-		
-		showCheatSheetListAction = 
-			new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
-		
-		introAction = ActionFactory.INTRO.create(window);
-		register(introAction);
-		
-		updateAction = new UpdateAction(window);
-		manageUpdatesAction = new ManageUpdatesAction(window);
-		manualUpdate = new UpdateManualAction(window);
-		
-	}
-
-	protected void fillMenuBar(IMenuManager menuBar) {
-		IActionBarConfigurer configurer = getActionBarConfigurer();
-		IWorkbenchWindow window = configurer.getWindowConfigurer().getWindow();
-
-		
-		menuBar.add(createFileMenu(window));
-		menuBar.add(createEditMenu(window));
-		menuBar.add(createWindowMenu(window));
-		menuBar.add(createHelpMenu());
-	}
-
-	private IContributionItem createHelpMenu() {
-		MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_21);
-		helpMenu.add(introAction);
-		helpMenu.add(showCheatSheetAction);
-		helpMenu.add(showCheatSheetListAction);
-		helpMenu.add(aboutAction);
-		helpMenu.add(new Separator());
-		helpMenu.add(updateAction);
-		helpMenu.add(manageUpdatesAction);
-		helpMenu.add(manualUpdate);
-		return helpMenu;
-	}
-
-	private IContributionItem createEditMenu(IWorkbenchWindow window) {
-		MenuManager editMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_22,
-				IWorkbenchActionConstants.M_EDIT);
-
-		editMenu.add(bulkEditAction);
-		editMenu.add(accessControlEditAction);
-		editMenu.add(konsolidatorAction);
-		editMenu.add(showWizardAction);
-		editMenu.add(new Separator());
-		editMenu.add(copyAction);
-		editMenu.add(pasteAction);
-		editMenu.add(new Separator());
-		editMenu.add(showPreferencesAction);
-		return editMenu;
-	}
-
-	private IContributionItem createFileMenu(IWorkbenchWindow window) {
-		MenuManager fileMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_23,
-				IWorkbenchActionConstants.M_FILE);
-
-		// MenuManager neuMenu = new MenuManager("Neu...");
-		// IContributionItem wizardList =
-		// ContributionItemFactory.NEW_WIZARD_SHORTLIST.
-		// create(window);
-		// neuMenu.add(wizardList);
-
-		// fileMenu.add(neuMenu);
-		fileMenu.add(saveAction);
-		fileMenu.add(closeAction);
-		fileMenu.add(closeAllAction);
-		fileMenu.add(closeOthersAction);
-		
-		fileMenu.add(new Separator());
-		fileMenu.add(importGstoolAction);
-
-		
-		fileMenu.add(new Separator());
-		fileMenu.add(exitAction);
-		return fileMenu;
-	}
-
-	private IContributionItem createWindowMenu(IWorkbenchWindow window) {
-		// View:
-		MenuManager windowMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_24,
-				IWorkbenchActionConstants.M_WINDOW);
-
-		MenuManager viewsMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_25);
-		// IContributionItem viewList = ContributionItemFactory.VIEWS_SHORTLIST
-		// .create(window);
-
-		viewsMenu.add(openBSIModelViewAction);
-		viewsMenu.add(openISMViewAction);
-		viewsMenu.add(openBSIBrowserAction);
-		viewsMenu.add(openBSIViewAction);
-		viewsMenu.add(openTodoViewAction);
-		viewsMenu.add(openAuditViewAction);
-		viewsMenu.add(openDSViewAction);
-		viewsMenu.add(openChartViewAction);
-		viewsMenu.add(openDocumentViewAction);
-		viewsMenu.add(openNoteAction);
-		viewsMenu.add(openFileAction);
-		viewsMenu.add(openRelationViewAction);
-		viewsMenu.add(openCatalogAction);
-		// viewsMenu.add(viewList);
-		MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26);
-		addPerspectiveMenu(window,perspectivesMenu,Iso27kPerspective.ID);
-		addPerspectiveMenu(window,perspectivesMenu,Perspective.ID);
-
-		windowMenu.add(newWindowAction);
-		windowMenu.add(reloadAction);
-		windowMenu.add(new Separator());
-		windowMenu.add(perspectivesMenu);
-		windowMenu.add(viewsMenu);
-		return windowMenu;
-	}
-
-
-	/**
-	 * @param window
-	 * @param perspectivesMenu
-	 * @param id
-	 */
-	private void addPerspectiveMenu(IWorkbenchWindow window, MenuManager perspectivesMenu, String perspectiveId) {
-		perspectivesMenu.add(new OpenPerspectiveAction(
-				window, 
-				window.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId(perspectiveId),
-				new ChangeToPerspectiveMenu(window,perspectiveId)));	
-	}
-
-	protected void fillCoolBar(ICoolBarManager coolBar) {
-		// TODO akoderman make less evil
-		IToolBarManager myToolbar = new ToolBarManager(coolBar.getStyle());
-		coolBar.add(new ToolBarContributionItem(myToolbar));
-		myToolbar.add(saveAction);
-		myToolbar.add(showWizardAction);
-		myToolbar.add(bulkEditAction);
-		myToolbar.add(accessControlEditAction);
-		myToolbar.add(konsolidatorAction);
-
-		myToolbar.add(reloadAction);
-		
-		myToolbar.add(new Separator());
-		// Grundschutz items
-		myToolbar.add(openBSIViewAction);
-		myToolbar.add(openBSIModelViewAction);
-		myToolbar.add(openTodoViewAction);
-		myToolbar.add(openAuditViewAction);
-		myToolbar.add(openDSViewAction);
-		myToolbar.add(openChartViewAction);
-		myToolbar.add(openDocumentViewAction);
-		
-		myToolbar.add(new Separator());
-		// ISO 27k items
-		myToolbar.add(openISMViewAction);
-		myToolbar.add(openCatalogAction);
-		
-		myToolbar.add(new Separator());
-		// common items
-		myToolbar.add(openBSIBrowserAction);
-		myToolbar.add(openNoteAction);
-		myToolbar.add(openFileAction);
-		myToolbar.add(openRelationViewAction);
-	}
-	
-	
-
-	/**
-	 * This removes some actions that we inherit from org.eclipse.ui.ide
-	 * which we don't want.
-	 *
-	 */
-	private void removeExtraneousActions() {
-		ActionSetRegistry reg = WorkbenchPlugin.getDefault()
-				.getActionSetRegistry();
-
-		// removing gotoLastPosition message
-		removeStandardAction(reg,
-				"org.eclipse.ui.edit.text.actionSet.navigation"); //$NON-NLS-1$
-		
-		removeStandardAction(reg,
-				"org.eclipse.ui.NavigateActionSet"); //$NON-NLS-1$
-
-		// "Open File..." in 3.2.1:
-		removeStandardAction(reg,
-				"org.eclipse.ui.edit.text.actionSet.openExternalFile"); //$NON-NLS-1$
-
-		// "Open File" in 3.4M4:
-		removeStandardAction(reg,
-			"org.eclipse.ui.actionSet.openFiles"); //$NON-NLS-1$
-
-		//removeStandardAction(reg,
-			//	"org.eclipse.ui.preferencePages.Workbench");
-
-		removeStandardAction(reg,
-				"org.eclipse.ui.edit.text.actionSet.annotationNavigation"); //$NON-NLS-1$
-
-		// Removing “Convert Line Delimiters To” menu
-		removeStandardAction(reg,
-				"org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"); //$NON-NLS-1$
-		
-		// remove working sets
-		removeStandardAction(reg, 
-				"org.eclipse.ui.WorkingSetActionSet"); //$NON-NLS-1$
-	}
-
-	private void removeStandardAction(ActionSetRegistry reg, String actionSetId) {
-		IActionSetDescriptor[] actionSets = reg.getActionSets();
-		for (int i = 0; i < actionSets.length; i++) {
-			if (!actionSets[i].getId().equals(actionSetId))
-				continue;
-			IExtension ext = actionSets[i].getConfigurationElement()
-					.getDeclaringExtension();
-			reg.removeExtension(ext, new Object[] { actionSets[i] });
-		}
-	}
+    private UpdateAction updateAction;
+
+    private UpdateManualAction manualUpdate;
+
+    private ManageUpdatesAction manageUpdatesAction;
+
+    private BausteinZuordnungAction bausteinZuordnungAction;
+
+    public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
+        super(configurer);
+        removeExtraneousActions();
+    }
+
+    @Override
+    protected void makeActions(final IWorkbenchWindow window) {
+        // Creates the actions and registers them.
+        // Registering is needed to ensure that key bindings work.
+        // The corresponding commands keybindings are defined in the plugin.xml
+        // file.
+        // Registering also provides automatic disposal of the actions when
+        // the window is closed.
+
+        exitAction = ActionFactory.QUIT.create(window);
+        register(exitAction);
+
+        copyAction = ActionFactory.COPY.create(window);
+        register(copyAction);
+
+        pasteAction = ActionFactory.PASTE.create(window);
+        register(pasteAction);
+
+        aboutAction = ActionFactory.ABOUT.create(window);
+        register(aboutAction);
+
+        newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
+        register(newWindowAction);
+
+        saveAction = ActionFactory.SAVE.create(window);
+        register(saveAction);
+
+        closeAction = ActionFactory.CLOSE.create(window);
+        register(closeAction);
+
+        closeAllAction = ActionFactory.CLOSE_ALL.create(window);
+        register(closeAllAction);
+
+        closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
+        register(closeOthersAction);
+
+        openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER);
+        register(openBSIBrowserAction);
+
+        openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE);
+        register(openNoteAction);
+
+        openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH);
+        register(openFileAction);
+
+        openCatalogAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_3, CatalogView.ID, ImageCache.WRENCH);
+        register(openCatalogAction);
+
+        openRelationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_4, RelationView.ID, ImageCache.LINKS);
+        register(openRelationViewAction);
+
+        openBSIViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_5, BSIMassnahmenView.ID, ImageCache.VIEW_MASSNAHMEN);
+        register(openBSIViewAction);
+
+        openBSIModelViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_6, BsiModelView.ID, ImageCache.VIEW_BSIMODEL);
+        register(openBSIModelViewAction);
+
+        openISMViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_7, ISMView.ID, ImageCache.VIEW_ISMVIEW);
+        register(openISMViewAction);
+
+        openDSViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_8, DSModelView.ID, ImageCache.VIEW_DSMODEL);
+        register(openDSViewAction);
+
+        openTodoViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_9, TodoView.ID, ImageCache.VIEW_TODO);
+        register(openTodoViewAction);
+
+        openDocumentViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_10, DocumentView.ID, ImageCache.VIEW_DOCUMENT);
+        register(openDocumentViewAction);
+
+        openChartViewAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_11, ChartView.ID, ImageCache.CHART_PIE);
+        register(openChartViewAction);
+
+        openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT);
+        register(openAuditViewAction);
+
+        showWizardAction = new ShowExportWizardAction(window, Messages.ApplicationActionBarAdvisor_13);
+        register(showWizardAction);
+
+        reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
+        register(reloadAction);
+
+        importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
+        register(importGstoolAction);
+
+        showPreferencesAction = new ShowPreferencesAction();
+        // showPreferencesAction = ActionFactory.PREFERENCES.create(window);
+        register(showPreferencesAction);
+
+        bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16);
+        register(bulkEditAction);
+
+        accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17);
+        register(accessControlEditAction);
+
+        konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18);
+        register(konsolidatorAction);
+
+        bausteinZuordnungAction = new BausteinZuordnungAction(window);
+        register(bausteinZuordnungAction);
+
+        showCheatSheetAction = new ShowCheatSheetAction(true, Messages.ApplicationActionBarAdvisor_19);
+
+        showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
+
+        introAction = ActionFactory.INTRO.create(window);
+        register(introAction);
+
+        updateAction = new UpdateAction(window);
+        manageUpdatesAction = new ManageUpdatesAction(window);
+        manualUpdate = new UpdateManualAction(window);
+
+    }
+
+    @Override
+    protected void fillMenuBar(IMenuManager menuBar) {
+        IActionBarConfigurer configurer = getActionBarConfigurer();
+        IWorkbenchWindow window = configurer.getWindowConfigurer().getWindow();
+
+        menuBar.add(createFileMenu(window));
+        menuBar.add(createEditMenu(window));
+        menuBar.add(createWindowMenu(window));
+        menuBar.add(createHelpMenu());
+    }
+
+    private IContributionItem createHelpMenu() {
+        MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_21);
+        helpMenu.add(introAction);
+        helpMenu.add(showCheatSheetAction);
+        helpMenu.add(showCheatSheetListAction);
+        helpMenu.add(aboutAction);
+        helpMenu.add(new Separator());
+        helpMenu.add(updateAction);
+        helpMenu.add(manageUpdatesAction);
+        helpMenu.add(manualUpdate);
+        return helpMenu;
+    }
+
+    private IContributionItem createEditMenu(IWorkbenchWindow window) {
+        MenuManager editMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_22, IWorkbenchActionConstants.M_EDIT);
+
+        editMenu.add(bulkEditAction);
+        editMenu.add(accessControlEditAction);
+        editMenu.add(konsolidatorAction);
+        editMenu.add(showWizardAction);
+        editMenu.add(new Separator());
+        editMenu.add(copyAction);
+        editMenu.add(pasteAction);
+        editMenu.add(new Separator());
+        editMenu.add(showPreferencesAction);
+        return editMenu;
+    }
+
+    private IContributionItem createFileMenu(IWorkbenchWindow window) {
+        MenuManager fileMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_23, IWorkbenchActionConstants.M_FILE);
+
+        // MenuManager neuMenu = new MenuManager("Neu...");
+        // IContributionItem wizardList =
+        // ContributionItemFactory.NEW_WIZARD_SHORTLIST.
+        // create(window);
+        // neuMenu.add(wizardList);
+
+        // fileMenu.add(neuMenu);
+        fileMenu.add(saveAction);
+        fileMenu.add(closeAction);
+        fileMenu.add(closeAllAction);
+        fileMenu.add(closeOthersAction);
+
+        fileMenu.add(new Separator());
+        fileMenu.add(importGstoolAction);
+
+        fileMenu.add(new Separator());
+        fileMenu.add(exitAction);
+        return fileMenu;
+    }
+
+    private IContributionItem createWindowMenu(IWorkbenchWindow window) {
+        // View:
+        MenuManager windowMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_24, IWorkbenchActionConstants.M_WINDOW);
+
+        MenuManager viewsMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_25);
+        // IContributionItem viewList = ContributionItemFactory.VIEWS_SHORTLIST
+        // .create(window);
+
+        viewsMenu.add(openBSIModelViewAction);
+        viewsMenu.add(openISMViewAction);
+        viewsMenu.add(openBSIBrowserAction);
+        viewsMenu.add(openBSIViewAction);
+        viewsMenu.add(openTodoViewAction);
+        viewsMenu.add(openAuditViewAction);
+        viewsMenu.add(openDSViewAction);
+        viewsMenu.add(openChartViewAction);
+        viewsMenu.add(openDocumentViewAction);
+        viewsMenu.add(openNoteAction);
+        viewsMenu.add(openFileAction);
+        viewsMenu.add(openRelationViewAction);
+        viewsMenu.add(openCatalogAction);
+        // viewsMenu.add(viewList);
+        MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26);
+        addPerspectiveMenu(window, perspectivesMenu, Iso27kPerspective.ID);
+        addPerspectiveMenu(window, perspectivesMenu, Perspective.ID);
+
+        windowMenu.add(newWindowAction);
+        windowMenu.add(reloadAction);
+        windowMenu.add(new Separator());
+        windowMenu.add(perspectivesMenu);
+        windowMenu.add(viewsMenu);
+        return windowMenu;
+    }
+
+    /**
+     * @param window
+     * @param perspectivesMenu
+     * @param id
+     */
+    private void addPerspectiveMenu(IWorkbenchWindow window, MenuManager perspectivesMenu, String perspectiveId) {
+        perspectivesMenu.add(new OpenPerspectiveAction(window, window.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId(perspectiveId), new ChangeToPerspectiveMenu(window, perspectiveId)));
+    }
+
+    @Override
+    protected void fillCoolBar(ICoolBarManager coolBar) {
+        // TODO akoderman make less evil
+        IToolBarManager myToolbar = new ToolBarManager(coolBar.getStyle());
+        coolBar.add(new ToolBarContributionItem(myToolbar));
+        myToolbar.add(saveAction);
+        myToolbar.add(showWizardAction);
+        myToolbar.add(bulkEditAction);
+        myToolbar.add(accessControlEditAction);
+        myToolbar.add(konsolidatorAction);
+
+        myToolbar.add(reloadAction);
+
+        myToolbar.add(new Separator());
+        // Grundschutz items
+        myToolbar.add(openBSIViewAction);
+        myToolbar.add(openBSIModelViewAction);
+        myToolbar.add(openTodoViewAction);
+        myToolbar.add(openAuditViewAction);
+        myToolbar.add(openDSViewAction);
+        myToolbar.add(openChartViewAction);
+        myToolbar.add(openDocumentViewAction);
+
+        myToolbar.add(new Separator());
+        // ISO 27k items
+        myToolbar.add(openISMViewAction);
+        myToolbar.add(openCatalogAction);
+
+        myToolbar.add(new Separator());
+        // common items
+        myToolbar.add(openBSIBrowserAction);
+        myToolbar.add(openNoteAction);
+        myToolbar.add(openFileAction);
+        myToolbar.add(openRelationViewAction);
+    }
+
+    /**
+     * This removes some actions that we inherit from org.eclipse.ui.ide which
+     * we don't want.
+     * 
+     */
+    private void removeExtraneousActions() {
+        ActionSetRegistry reg = WorkbenchPlugin.getDefault().getActionSetRegistry();
+
+        // removing gotoLastPosition message
+        removeStandardAction(reg, "org.eclipse.ui.edit.text.actionSet.navigation"); //$NON-NLS-1$
+
+        removeStandardAction(reg, "org.eclipse.ui.NavigateActionSet"); //$NON-NLS-1$
+
+        // "Open File..." in 3.2.1:
+        removeStandardAction(reg, "org.eclipse.ui.edit.text.actionSet.openExternalFile"); //$NON-NLS-1$
+
+        // "Open File" in 3.4M4:
+        removeStandardAction(reg, "org.eclipse.ui.actionSet.openFiles"); //$NON-NLS-1$
+
+        // removeStandardAction(reg,
+        // "org.eclipse.ui.preferencePages.Workbench");
+
+        removeStandardAction(reg, "org.eclipse.ui.edit.text.actionSet.annotationNavigation"); //$NON-NLS-1$
+
+        // Removing “Convert Line Delimiters To” menu
+        removeStandardAction(reg, "org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"); //$NON-NLS-1$
+
+        // remove working sets
+        removeStandardAction(reg, "org.eclipse.ui.WorkingSetActionSet"); //$NON-NLS-1$
+    }
+
+    private void removeStandardAction(ActionSetRegistry reg, String actionSetId) {
+        IActionSetDescriptor[] actionSets = reg.getActionSets();
+        for (int i = 0; i < actionSets.length; i++) {
+            if (!actionSets[i].getId().equals(actionSetId)) {
+                continue;
+            }
+            IExtension ext = actionSets[i].getConfigurationElement().getDeclaringExtension();
+            reg.removeExtension(ext, new Object[] { actionSets[i] });
+        }
+    }
 
 }
