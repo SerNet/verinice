@@ -67,23 +67,23 @@ public class AddGroup implements IObjectActionDelegate {
 	
 	static {
 		TITLE_FOR_TYPE = new HashMap<String, String>();
-		TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, "Add Asset Group...");
-		TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, "Add Audit Group...");
-		TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, "Add Control Group...");
-		TITLE_FOR_TYPE.put(DocumentGroup.TYPE_ID, "Add Document Group...");
-		TITLE_FOR_TYPE.put(EvidenceGroup.TYPE_ID, "Add Evidence Group...");
-		TITLE_FOR_TYPE.put(ExceptionGroup.TYPE_ID, "Add Exception Group...");
-		TITLE_FOR_TYPE.put(FindingGroup.TYPE_ID, "Add Improvement Note Group...");
-		TITLE_FOR_TYPE.put(IncidentGroup.TYPE_ID, "Add Incident Group...");
-		TITLE_FOR_TYPE.put(IncidentScenarioGroup.TYPE_ID, "Add Incident Scenario Group...");
-		TITLE_FOR_TYPE.put(InterviewGroup.TYPE_ID, "Add Interview Group...");
-		TITLE_FOR_TYPE.put(PersonGroup.TYPE_ID, "Add Person Group...");
-		TITLE_FOR_TYPE.put(ProcessGroup.TYPE_ID, "Add Process Group...");
-		TITLE_FOR_TYPE.put(RecordGroup.TYPE_ID, "Add Record Group...");
-		TITLE_FOR_TYPE.put(RequirementGroup.TYPE_ID, "Add Requirement Group...");
-		TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, "Add Response Group...");
-		TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, "Add Threat Group...");
-		TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, "Add Vulnerability Group...");
+		TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, Messages.getString("AddGroup.0")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, Messages.getString("AddGroup.1")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, Messages.getString("AddGroup.2")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(DocumentGroup.TYPE_ID, Messages.getString("AddGroup.3")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(EvidenceGroup.TYPE_ID, Messages.getString("AddGroup.4")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(ExceptionGroup.TYPE_ID, Messages.getString("AddGroup.5")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(FindingGroup.TYPE_ID, Messages.getString("AddGroup.6")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(IncidentGroup.TYPE_ID, Messages.getString("AddGroup.7")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(IncidentScenarioGroup.TYPE_ID, Messages.getString("AddGroup.8")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(InterviewGroup.TYPE_ID, Messages.getString("AddGroup.9")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(PersonGroup.TYPE_ID, Messages.getString("AddGroup.10")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(ProcessGroup.TYPE_ID, Messages.getString("AddGroup.11")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(RecordGroup.TYPE_ID, Messages.getString("AddGroup.12")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(RequirementGroup.TYPE_ID, Messages.getString("AddGroup.13")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, Messages.getString("AddGroup.14")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, Messages.getString("AddGroup.15")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, Messages.getString("AddGroup.16")); //$NON-NLS-1$
 	}
 	
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -105,8 +105,8 @@ public class AddGroup implements IObjectActionDelegate {
 				EditorFactory.getInstance().openEditor(newElement);
 			}
 		} catch (Exception e) {
-			LOG.error("Could not add asset", e);
-			ExceptionUtil.log(e, "Could not add asset");
+			LOG.error("Could not add element group", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.getString("AddGroup.18")); //$NON-NLS-1$
 		}
 
 	}
@@ -121,7 +121,7 @@ public class AddGroup implements IObjectActionDelegate {
 			if(sel instanceof Group) {
 				Group group = (Group) sel;
 				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0])));	
-				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : "New Object" );
+				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
 			}		
 		}
 	}

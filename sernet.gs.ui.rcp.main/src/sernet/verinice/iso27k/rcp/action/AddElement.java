@@ -67,23 +67,23 @@ public class AddElement implements IObjectActionDelegate {
 	
 	static {
 		TITLE_FOR_TYPE = new HashMap<String, String>();
-		TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, "Add Asset...");
-		TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, "Add Audit...");
-		TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, "Add Control...");
-		TITLE_FOR_TYPE.put(DocumentGroup.TYPE_ID, "Add Document...");
-		TITLE_FOR_TYPE.put(EvidenceGroup.TYPE_ID, "Add Evidence...");
-		TITLE_FOR_TYPE.put(ExceptionGroup.TYPE_ID, "Add Exception...");
-		TITLE_FOR_TYPE.put(FindingGroup.TYPE_ID, "Add Improvement Note...");
-		TITLE_FOR_TYPE.put(IncidentGroup.TYPE_ID, "Add Incident...");
-		TITLE_FOR_TYPE.put(IncidentScenarioGroup.TYPE_ID, "Add Incident Scenario...");
-		TITLE_FOR_TYPE.put(InterviewGroup.TYPE_ID, "Add Interview...");
-		TITLE_FOR_TYPE.put(PersonGroup.TYPE_ID, "Add Person...");
-		TITLE_FOR_TYPE.put(ProcessGroup.TYPE_ID, "Add Process...");
-		TITLE_FOR_TYPE.put(RecordGroup.TYPE_ID, "Add Record...");
-		TITLE_FOR_TYPE.put(RequirementGroup.TYPE_ID, "Add Requirement...");
-		TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, "Add Response...");
-		TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, "Add Threat...");
-		TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, "Add Vulnerability...");
+		TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, Messages.getString("AddElement.0")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, Messages.getString("AddElement.1")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, Messages.getString("AddElement.2")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(DocumentGroup.TYPE_ID, Messages.getString("AddElement.3")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(EvidenceGroup.TYPE_ID, Messages.getString("AddElement.4")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(ExceptionGroup.TYPE_ID, Messages.getString("AddElement.5")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(FindingGroup.TYPE_ID, Messages.getString("AddElement.6")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(IncidentGroup.TYPE_ID, Messages.getString("AddElement.7")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(IncidentScenarioGroup.TYPE_ID, Messages.getString("AddElement.8")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(InterviewGroup.TYPE_ID, Messages.getString("AddElement.9")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(PersonGroup.TYPE_ID, Messages.getString("AddElement.10")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(ProcessGroup.TYPE_ID, Messages.getString("AddElement.11")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(RecordGroup.TYPE_ID, Messages.getString("AddElement.12")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(RequirementGroup.TYPE_ID, Messages.getString("AddElement.13")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, Messages.getString("AddElement.14")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, Messages.getString("AddElement.15")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, Messages.getString("AddElement.16")); //$NON-NLS-1$
 	}
 	
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -102,15 +102,15 @@ public class AddElement implements IObjectActionDelegate {
 					// TODO: Fix this for group.getChildTypes().length > 1
 					newElement = CnAElementFactory.getInstance().saveNew(group, group.getChildTypes()[0], null);
 				} else {
-					LOG.error("Can not determine child type");
+					LOG.error(Messages.getString("AddElement.17")); //$NON-NLS-1$
 				}			
 			}
 			if (newElement != null) {
 				EditorFactory.getInstance().openEditor(newElement);
 			}
 		} catch (Exception e) {
-			LOG.error("Could not add asset", e);
-			ExceptionUtil.log(e, "Could not add asset");
+			LOG.error("Could not add element", e); //$NON-NLS-1$
+			ExceptionUtil.log(e, Messages.getString("AddElement.19")); //$NON-NLS-1$
 		}
 
 	}
@@ -125,7 +125,7 @@ public class AddElement implements IObjectActionDelegate {
 			if(sel instanceof Group) {
 				Group group = (Group) sel;
 				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0])));	
-				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : "New Object" );
+				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddElement.20") ); //$NON-NLS-1$
 			}
 			
 		}
