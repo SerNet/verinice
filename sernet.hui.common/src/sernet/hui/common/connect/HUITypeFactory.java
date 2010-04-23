@@ -76,6 +76,7 @@ public class HUITypeFactory {
 	private static Date fileDate;
 	private static String lastModified;
 
+	// loads labels for HUI entities from resource bundles
 	public SNCAMessages messages;
 	
 	protected HUITypeFactory() {
@@ -328,6 +329,7 @@ public class HUITypeFactory {
 		PropertyType propObj = new PropertyType();
 		propObj.setId(id);
 		
+		// labels for HUI entities are loaded from resource bundles.
 		String name = getMessage(id);
 		if(name!=null) {
 			if (log.isDebugEnabled()) {
