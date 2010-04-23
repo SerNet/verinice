@@ -28,12 +28,13 @@ import org.apache.log4j.Logger;
 /**
  * SNCAMessages loads labels for HUI entities from resource bundles.
  * SNCAMessages can access resource bundles remotely by http urls
- * or local by jndi urls.
+ * or from a local file by jndi urls.
  * 
- * Remote access is done by a {@link ResourceBundle} which cantains a 
+ * Remote access is done by a ordinary {@link ResourceBundle} which contains a 
  * {@link SNCAResourceBundleLoader}. SNCAResourceBundleLoader created the
  * ResourceBundle by loading it by http or jndi URL.
  * 
+ * @see SNCAResourceBundleLoader
  * @author Daniel Murygin <dm@sernet.de>
  */
 public class SNCAMessages {
