@@ -52,6 +52,8 @@ import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.verinice.iso27k.model.Asset;
 import sernet.verinice.iso27k.model.IISO27kGroup;
 import sernet.verinice.iso27k.model.Organization;
 
@@ -143,11 +145,45 @@ public class CnAElementHome {
         return saveCommand.getElement();
     }
 
+    /**
+     * Creates a new instance of class clazz as a child of container.
+     * The new instance is saved in the database.
+     * 
+     * A localized title of the instance is set on the server 
+     * which locale may differ from the clients locale.
+     * 
+     * @param container The parent of the new instance
+     * @param clazz Class of the new instance
+     * @return the new instance which is saved in the database
+     */
     public <T extends CnATreeElement> T save(CnATreeElement container, Class<T> clazz) throws Exception {
-        if (log.isDebugEnabled()) {
-            log.debug("Creating new element in " + container);
+        return save(container, clazz, null);
+    }
+    
+    /**
+     * Creates a new instance of class clazz as a child of container.
+     * The new instance is saved in the database.
+     * 
+     * If you pass a typeId (HUI-Type-id) a localized title of the 
+     * instance is set on the cliant via HUITypeFactory from message bundle.
+     * If typeId is null a localized title of the instance is set on the server 
+     * which locale may differ from the clients locale.
+     * 
+     * @param container The parent of the new instance
+     * @param clazz Class of the new instance
+     * @param typeId HUI-Type-Id or null
+     * @return the new instance which is saved in the database
+     */
+    public <T extends CnATreeElement> T save(CnATreeElement container, Class<T> clazz, String typeId) throws Exception {
+        String title = null;
+        if(typeId!=null) {
+            // load the localized title via HUITypeFactory from message bundle
+            title = getTypeFactory().getMessage(typeId);
         }
-        CreateElement<T> saveCommand = new CreateElement<T>(container, clazz);
+        if (log.isDebugEnabled()) {
+            log.debug("Creating new instance of " + clazz.getName() + " in " + container + " with title: " + title);
+        }
+        CreateElement<T> saveCommand = new CreateElement<T>(container, clazz, title);
         saveCommand = getCommandService().executeCommand(saveCommand);
         return saveCommand.getNewElement();
     }
@@ -163,7 +199,6 @@ public class CnAElementHome {
         log.debug("Saving new link from " + dropTarget + " to " + dragged);
         CreateLink command = new CreateLink(dropTarget, dragged);
         command = getCommandService().executeCommand(command);
-
         return command.getLink();
     }
 
@@ -380,6 +415,10 @@ public class CnAElementHome {
         }
 
         return false;
+    }
+
+    protected HUITypeFactory getTypeFactory() {
+        return HitroUtil.getInstance().getTypeFactory();
     }
 
 }

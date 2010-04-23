@@ -90,8 +90,9 @@ public class Anwendung extends CnATreeElement
 	public Anwendung(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME),"Neue Anwendung");
-	}
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(TYPE_ID));
+    }
 
 	protected Anwendung() {
 

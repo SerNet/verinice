@@ -41,9 +41,9 @@ public class ITVerbund extends CnATreeElement
 	public ITVerbund(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME),
-				"Neuer IT-Verbund");
-	}
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(TYPE_ID));
+    }
 	
 	public int getSchicht() {
 		return 1;

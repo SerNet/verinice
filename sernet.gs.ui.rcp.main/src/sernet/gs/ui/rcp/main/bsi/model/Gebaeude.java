@@ -51,9 +51,9 @@ implements IBSIStrukturElement {
 	public Gebaeude(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME),
-				"Neues Gebäude");
-	}
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(TYPE_ID));
+    }
 	
 	public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);

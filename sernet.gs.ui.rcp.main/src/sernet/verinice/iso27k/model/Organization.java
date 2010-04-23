@@ -56,8 +56,9 @@ public class Organization extends CnATreeElement implements IISO27kGroup {
 	public Organization(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME), "New Organization");
-		addChild(new AssetGroup(this));
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(TYPE_ID));
+        addChild(new AssetGroup(this));
 		addChild(new ControlGroup(this));
 		addChild(new AuditGroup(this));
 		addChild(new ExceptionGroup(this));
@@ -89,16 +90,27 @@ public class Organization extends CnATreeElement implements IISO27kGroup {
 		return TYPE_ID;
 	}
 	
+	
 	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
+	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitle()
 	 */
-	@Override
 	public String getTitle() {
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
+	
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#setTitel(java.lang.String)
+     */
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
+	
+	/**
+	 * @param name
+	 */
 	public void setTitle(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+	    setTitel(name);
 	}
 	
 	public String getAbbreviation() {

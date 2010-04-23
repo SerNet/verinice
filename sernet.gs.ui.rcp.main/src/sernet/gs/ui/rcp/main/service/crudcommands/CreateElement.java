@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
+import java.awt.image.TileObserver;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,7 +37,7 @@ import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 
 /**
- * Create and save new element of type type to the database using its class to lookup
+ * Create and save new element of clazz clazz to the database using its class to lookup
  * the DAO from the factory.
  * 
  * @author koderman[at]sernet[dot]de
@@ -52,7 +53,9 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
 	transient private Logger log = Logger.getLogger(CreateElement.class);
 	
 	private CnATreeElement container;
-	private Class<T> type;
+	private Class<T> clazz;
+	// may be null
+	private String title;
 	protected T child;
 	private String stationId;
 	
@@ -60,21 +63,35 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
 
 	public CreateElement(CnATreeElement container, Class<T> type) {
 		this.container = container;
-		this.type = type;
+		this.clazz = type;
 		this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
-	public void execute() {
-		IBaseDao<T, Serializable> dao 
-			= (IBaseDao<T, Serializable>) getDaoFactory().getDAO(type);
+	/**
+     * @param container2
+     * @param clazz
+     * @param typeId
+     */
+    public CreateElement(CnATreeElement container, Class<T> clazz, String title) {
+        this.container = container;
+        this.clazz = clazz;
+        this.title = title;
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
+
+    public void execute() {
+		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(clazz);
 		IBaseDao<Object, Serializable> containerDAO = getDaoFactory().getDAOForObject(container);
 		
 		try {
 			containerDAO.reload(container, container.getDbId());
 			
 			// get constructor with parent-parameter and create new object:
-			child = type.getConstructor(CnATreeElement.class).newInstance(container);
-
+			child = clazz.getConstructor(CnATreeElement.class).newInstance(container);
+			if(title!=null) {
+			    child.setTitel(title);
+			}
+			
 			if (authService.isPermissionHandlingNeeded())
 			{
 				// By default, inherit permissions from parent element but ITVerbund

@@ -29,7 +29,6 @@ import sernet.hui.common.connect.Entity;
 public class FindingGroup extends Group<Asset> {
 
 	public static final String TYPE_ID = "finding_group"; //$NON-NLS-1$
-	public static final String TITLE_DEFAULT = "Audit: Improvement Notes"; //$NON-NLS-1$
 	public static final String PROP_NAME = "finding_group_name"; //$NON-NLS-1$
 	
 	public static final String[] CHILD_TYPES = new String[] {Finding.TYPE_ID};
@@ -42,8 +41,9 @@ public class FindingGroup extends Group<Asset> {
 	public FindingGroup(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME), TITLE_DEFAULT);
-	}
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(TYPE_ID));
+    }
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()

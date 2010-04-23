@@ -29,7 +29,6 @@ import sernet.hui.common.connect.Entity;
 public class AuditGroup extends Group<Audit> {
 
 	public static final String TYPE_ID = "auditgroup"; //$NON-NLS-1$
-	public static final String TITLE_DEFAULT = "Audits"; //$NON-NLS-1$
 	public static final String PROP_NAME = "auditgroup_name"; //$NON-NLS-1$
 	
 	public static final String[] CHILD_TYPES = new String[] {Audit.TYPE_ID};
@@ -41,8 +40,9 @@ public class AuditGroup extends Group<Audit> {
 	public AuditGroup(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
-		getEntity().createNewProperty(getEntityType().getPropertyType(PROP_NAME), TITLE_DEFAULT);
-	}
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(TYPE_ID));
+    }
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()

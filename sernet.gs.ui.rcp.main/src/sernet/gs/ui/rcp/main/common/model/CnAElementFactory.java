@@ -126,6 +126,13 @@ public class CnAElementFactory {
 	private interface IElementBuilder<T extends CnATreeElement, U> {
 		public T build(CnATreeElement container, BuildInput<U> input) throws Exception;
 	}
+	
+	private abstract class ElementBuilder implements IElementBuilder{
+	    protected void init( CnATreeElement container,CnATreeElement child ) {
+	        container.addChild(child);
+            child.setParent(container);
+	    }
+	}
 
 	public void addLoadListener(IModelLoadListener listener) {
 		if (!listeners.contains(listener))
@@ -141,79 +148,71 @@ public class CnAElementFactory {
 	private CnAElementFactory() {
 		dbHome = CnAElementHome.getInstance();
 
-		elementbuilders.put(Gebaeude.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Gebaeude.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Gebaeude child = dbHome.save(container, Gebaeude.class);
-				container.addChild(child);
-				child.setParent(container);
+				Gebaeude child = dbHome.save(container, Gebaeude.class, Gebaeude.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 
-		elementbuilders.put(Client.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Client.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Client child = dbHome.save(container, Client.class);
-				container.addChild(child);
-				child.setParent(container);
+				Client child = dbHome.save(container, Client.class, Client.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 
-		elementbuilders.put(SonstIT.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(SonstIT.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				SonstIT child = dbHome.save(container, SonstIT.class);
-				container.addChild(child);
-				child.setParent(container);
+				SonstIT child = dbHome.save(container, SonstIT.class, SonstIT.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 
-		elementbuilders.put(Server.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Server.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Server child = dbHome.save(container, Server.class);
-				container.addChild(child);
-				child.setParent(container);
+				Server child = dbHome.save(container, Server.class, Server.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 
-		elementbuilders.put(TelefonKomponente.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(TelefonKomponente.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				TelefonKomponente child = dbHome.save(container, TelefonKomponente.class);
-				container.addChild(child);
-				child.setParent(container);
+				TelefonKomponente child = dbHome.save(container, TelefonKomponente.class, TelefonKomponente.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 
-		elementbuilders.put(Raum.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Raum.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Raum child = dbHome.save(container, Raum.class);
-				container.addChild(child);
-				child.setParent(container);
+				Raum child = dbHome.save(container, Raum.class, Raum.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 
-		elementbuilders.put(NetzKomponente.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(NetzKomponente.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				NetzKomponente child = dbHome.save(container, NetzKomponente.class);
-				container.addChild(child);
-				child.setParent(container);
+				NetzKomponente child = dbHome.save(container, NetzKomponente.class, NetzKomponente.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 
-		elementbuilders.put(Person.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Person.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Person child = dbHome.save(container, Person.class);
-				container.addChild(child);
-				child.setParent(container);
+				Person child = dbHome.save(container, Person.class, Person.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 
-		elementbuilders.put(Anwendung.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Anwendung.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 
 				log.debug("Creating new Anwendung in " + container);
@@ -221,8 +220,7 @@ public class CnAElementFactory {
 				saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
 				Anwendung child = saveCommand.getNewElement();
 
-				container.addChild(child);
-				child.setParent(container);
+				init(container, child);
 
 				return child;
 			}
@@ -241,7 +239,7 @@ public class CnAElementFactory {
 			}
 		});
 
-		elementbuilders.put(ITVerbund.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(ITVerbund.TYPE_ID, new ElementBuilder() {
 			public ITVerbund build(CnATreeElement container, BuildInput input) throws Exception {
 
 				log.debug("Creating new ITVerbund in " + container);
@@ -255,300 +253,265 @@ public class CnAElementFactory {
 		});
 
 		// ISO 27000 builders
-		elementbuilders.put(Organization.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Organization.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Organization child = dbHome.save(container, Organization.class);
-				container.addChild(child);
-				child.setParent(container);
+				Organization child = dbHome.save(container, Organization.class, Organization.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 		
-		elementbuilders.put(AssetGroup.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(AssetGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				AssetGroup child = dbHome.save(container, AssetGroup.class);
-				container.addChild(child);
-				child.setParent(container);
+				AssetGroup child = dbHome.save(container, AssetGroup.class, AssetGroup.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
-		elementbuilders.put(Asset.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Asset.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Asset child = dbHome.save(container, Asset.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		
-		elementbuilders.put(PersonGroup.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				PersonGroup child = dbHome.save(container, PersonGroup.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		elementbuilders.put(sernet.verinice.iso27k.model.PersonIso.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				sernet.verinice.iso27k.model.PersonIso child = dbHome.save(container, sernet.verinice.iso27k.model.PersonIso.class);
-				container.addChild(child);
-				child.setParent(container);
+				Asset child = dbHome.save(container, Asset.class, Asset.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 		
-		elementbuilders.put(AuditGroup.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(PersonGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				AuditGroup child = dbHome.save(container, AuditGroup.class);
-				container.addChild(child);
-				child.setParent(container);
+				PersonGroup child = dbHome.save(container, PersonGroup.class, PersonGroup.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
-		elementbuilders.put(Audit.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(sernet.verinice.iso27k.model.PersonIso.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Audit child = dbHome.save(container, Audit.class);
-				container.addChild(child);
-				child.setParent(container);
+				sernet.verinice.iso27k.model.PersonIso child = dbHome.save(container, sernet.verinice.iso27k.model.PersonIso.class, sernet.verinice.iso27k.model.PersonIso.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		
+		elementbuilders.put(AuditGroup.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				AuditGroup child = dbHome.save(container, AuditGroup.class, AuditGroup.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		elementbuilders.put(Audit.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				Audit child = dbHome.save(container, Audit.class, Audit.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 			
-		elementbuilders.put(ControlGroup.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(ControlGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				ControlGroup child = dbHome.save(container, ControlGroup.class);
-				container.addChild(child);
-				child.setParent(container);
+				ControlGroup child = dbHome.save(container, ControlGroup.class, ControlGroup.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
-		elementbuilders.put(Control.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Control.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Control child = dbHome.save(container, Control.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		
-		elementbuilders.put(ExceptionGroup.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				ExceptionGroup child = dbHome.save(container, ExceptionGroup.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		elementbuilders.put(sernet.verinice.iso27k.model.Exception.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				sernet.verinice.iso27k.model.Exception child = dbHome.save(container, sernet.verinice.iso27k.model.Exception.class);
-				container.addChild(child);
-				child.setParent(container);
+				Control child = dbHome.save(container, Control.class, Control.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 		
-		elementbuilders.put(RequirementGroup.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(ExceptionGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				RequirementGroup child = dbHome.save(container, RequirementGroup.class);
-				container.addChild(child);
-				child.setParent(container);
+				ExceptionGroup child = dbHome.save(container, ExceptionGroup.class, ExceptionGroup.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
-		elementbuilders.put(Requirement.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(sernet.verinice.iso27k.model.Exception.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Requirement child = dbHome.save(container, Requirement.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		
-		elementbuilders.put(Incident.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Incident child = dbHome.save(container, Incident.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		elementbuilders.put(IncidentGroup.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				IncidentGroup child = dbHome.save(container, IncidentGroup.class);
-				container.addChild(child);
-				child.setParent(container);
+				sernet.verinice.iso27k.model.Exception child = dbHome.save(container, sernet.verinice.iso27k.model.Exception.class, sernet.verinice.iso27k.model.Exception.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 		
-		elementbuilders.put(IncidentScenario.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(RequirementGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				IncidentScenario child = dbHome.save(container, IncidentScenario.class);
-				container.addChild(child);
-				child.setParent(container);
+				RequirementGroup child = dbHome.save(container, RequirementGroup.class, RequirementGroup.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
-		elementbuilders.put(IncidentScenarioGroup.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Requirement.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				IncidentScenarioGroup child = dbHome.save(container, IncidentScenarioGroup.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		
-		elementbuilders.put(Response.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Response child = dbHome.save(container, Response.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		elementbuilders.put(ResponseGroup.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				ResponseGroup child = dbHome.save(container, ResponseGroup.class);
-				container.addChild(child);
-				child.setParent(container);
+				Requirement child = dbHome.save(container, Requirement.class, Requirement.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 		
-		elementbuilders.put(Threat.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Incident.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Threat child = dbHome.save(container, Threat.class);
-				container.addChild(child);
-				child.setParent(container);
+				Incident child = dbHome.save(container, Incident.class, Incident.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
-		elementbuilders.put(ThreatGroup.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(IncidentGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				ThreatGroup child = dbHome.save(container, ThreatGroup.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		
-		elementbuilders.put(Vulnerability.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Vulnerability child = dbHome.save(container, Vulnerability.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		elementbuilders.put(VulnerabilityGroup.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				VulnerabilityGroup child = dbHome.save(container, VulnerabilityGroup.class);
-				container.addChild(child);
-				child.setParent(container);
+				IncidentGroup child = dbHome.save(container, IncidentGroup.class, IncidentGroup.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 		
-		elementbuilders.put(DocumentGroup.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(IncidentScenario.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				DocumentGroup child = dbHome.save(container, DocumentGroup.class);
-				container.addChild(child);
-				child.setParent(container);
+				IncidentScenario child = dbHome.save(container, IncidentScenario.class, IncidentScenario.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
-		elementbuilders.put(Document.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(IncidentScenarioGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Document child = dbHome.save(container, Document.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		
-		elementbuilders.put(InterviewGroup.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				InterviewGroup child = dbHome.save(container, InterviewGroup.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		elementbuilders.put(Interview.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Interview child = dbHome.save(container, Interview.class);
-				container.addChild(child);
-				child.setParent(container);
+				IncidentScenarioGroup child = dbHome.save(container, IncidentScenarioGroup.class, IncidentScenarioGroup.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 		
-		elementbuilders.put(FindingGroup.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Response.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				FindingGroup child = dbHome.save(container, FindingGroup.class);
-				container.addChild(child);
-				child.setParent(container);
+				Response child = dbHome.save(container, Response.class, Response.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
-		elementbuilders.put(Finding.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(ResponseGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Finding child = dbHome.save(container, Finding.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		
-		elementbuilders.put(EvidenceGroup.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				EvidenceGroup child = dbHome.save(container, EvidenceGroup.class);
-				container.addChild(child);
-				child.setParent(container);
-				return child;
-			}
-		});
-		elementbuilders.put(Evidence.TYPE_ID, new IElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Evidence child = dbHome.save(container, Evidence.class);
-				container.addChild(child);
-				child.setParent(container);
+				ResponseGroup child = dbHome.save(container, ResponseGroup.class, ResponseGroup.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 		
-		elementbuilders.put(ProcessGroup.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Threat.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				ProcessGroup child = dbHome.save(container, ProcessGroup.class);
-				container.addChild(child);
-				child.setParent(container);
+				Threat child = dbHome.save(container, Threat.class, Threat.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
-		elementbuilders.put(Process.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(ThreatGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Process child = dbHome.save(container, Process.class);
-				container.addChild(child);
-				child.setParent(container);
+				ThreatGroup child = dbHome.save(container, ThreatGroup.class, ThreatGroup.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		
+		elementbuilders.put(Vulnerability.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				Vulnerability child = dbHome.save(container, Vulnerability.class, Vulnerability.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		elementbuilders.put(VulnerabilityGroup.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				VulnerabilityGroup child = dbHome.save(container, VulnerabilityGroup.class, VulnerabilityGroup.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		
+		elementbuilders.put(DocumentGroup.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				DocumentGroup child = dbHome.save(container, DocumentGroup.class, DocumentGroup.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		elementbuilders.put(Document.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				Document child = dbHome.save(container, Document.class, Document.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		
+		elementbuilders.put(InterviewGroup.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				InterviewGroup child = dbHome.save(container, InterviewGroup.class, InterviewGroup.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		elementbuilders.put(Interview.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				Interview child = dbHome.save(container, Interview.class, Interview.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		
+		elementbuilders.put(FindingGroup.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				FindingGroup child = dbHome.save(container, FindingGroup.class, FindingGroup.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		elementbuilders.put(Finding.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				Finding child = dbHome.save(container, Finding.class, Finding.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		
+		elementbuilders.put(EvidenceGroup.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				EvidenceGroup child = dbHome.save(container, EvidenceGroup.class, EvidenceGroup.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		elementbuilders.put(Evidence.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				Evidence child = dbHome.save(container, Evidence.class, Evidence.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		
+		elementbuilders.put(ProcessGroup.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				ProcessGroup child = dbHome.save(container, ProcessGroup.class, ProcessGroup.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		elementbuilders.put(Process.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				Process child = dbHome.save(container, Process.class, Process.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
 
-		elementbuilders.put(RecordGroup.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(RecordGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				RecordGroup child = dbHome.save(container, RecordGroup.class);
-				container.addChild(child);
-				child.setParent(container);
+				RecordGroup child = dbHome.save(container, RecordGroup.class, RecordGroup.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
-		elementbuilders.put(Record.TYPE_ID, new IElementBuilder() {
+		elementbuilders.put(Record.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				Record child = dbHome.save(container, Record.class);
-				container.addChild(child);
-				child.setParent(container);
+				Record child = dbHome.save(container, Record.class, Record.TYPE_ID);
+				init(container, child);
 				return child;
 			}
 		});
