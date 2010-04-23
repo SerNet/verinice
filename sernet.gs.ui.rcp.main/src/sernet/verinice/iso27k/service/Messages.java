@@ -45,8 +45,7 @@ public class Messages {
     
     public static String getString(String key, Object... params  ) {
         try {
-            String pattern = RESOURCE_BUNDLE.getString(key);
-            return MessageFormat.format(pattern, params);
+            return MessageFormat.format(RESOURCE_BUNDLE.getString(key), params);
         } catch (MissingResourceException e) {
             return '!' + key + '!';
         }
