@@ -151,13 +151,13 @@ public class HitroUtil {
 		
 		private static final Logger log = Logger.getLogger(DelegatingHUITypeFactory.class);
 		
+		// dont't use typeFactory directly, use getTypeFactory() instead !
 		private HUITypeFactory typeFactory;
 		
 		private URL url;
 		
 		DelegatingHUITypeFactory(URL url) {
 			super();
-			
 			this.url = url;
 		}
 		
@@ -180,39 +180,43 @@ public class HitroUtil {
 			}
 		}
 		
+		private HUITypeFactory getTypeFactory() {
+		    if(typeFactory==null) {
+		        initDelegate();
+		    }
+		    return typeFactory;
+		}
+		
 		public EntityType getEntityType(String id) {
-			initDelegate();
-			
-			return typeFactory.getEntityType(id);
+			return getTypeFactory().getEntityType(id);
 		}
 		
 		public Collection<EntityType> getAllEntityTypes() {
-			initDelegate();
-			
-			return typeFactory.getAllEntityTypes();
+			return getTypeFactory().getAllEntityTypes();
 		}
 		
 		public List<PropertyType> getURLPropertyTypes() {
-			initDelegate();
-			
-			return typeFactory.getURLPropertyTypes();
+			return getTypeFactory().getURLPropertyTypes();
 		}
 
 		public PropertyType getPropertyType(String entityTypeID, String id) {
-			initDelegate();
-			
-			return typeFactory.getPropertyType(entityTypeID, id);
+			return getTypeFactory().getPropertyType(entityTypeID, id);
 		}
 
 		public boolean isDependency(IMLPropertyOption opt) {
-			initDelegate();
-			
-			return typeFactory.isDependency(opt);
+			return getTypeFactory().isDependency(opt);
 		}
 		
 		public HuiRelation getRelation(String typeId) {
-			initDelegate();
-			return typeFactory.getRelation(typeId);
+			return getTypeFactory().getRelation(typeId);
+		}
+		
+		/* (non-Javadoc)
+		 * @see sernet.hui.common.connect.HUITypeFactory#getMessage(java.lang.String)
+		 */
+		@Override
+		public String getMessage(String key) {
+		    return getTypeFactory().getMessage(key);
 		}
 	}
 
