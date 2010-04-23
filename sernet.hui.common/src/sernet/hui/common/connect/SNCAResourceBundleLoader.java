@@ -36,8 +36,9 @@ import org.apache.log4j.Logger;
 
 /**
  * SNCAResourceBundleLoader creates a resource bundle
- * by loading it via HTTP or JNDI Url.
+ * by loading it remotely via HTTP or from a local file by JNDI Url.
  * 
+ * @see SNCAMessages
  * @author Daniel Murygin <dm@sernet.de>
  */
 public class SNCAResourceBundleLoader extends ResourceBundle.Control {
