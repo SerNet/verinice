@@ -76,7 +76,7 @@ public class HUITypeFactory {
     private static Date fileDate;
     private static String lastModified;
 
-    // loads labels for HUI entities from resource bundles
+    // loads translated messages for HUI entities from resource bundles
     public SNCAMessages messages;
 
     protected HUITypeFactory() {
@@ -103,7 +103,7 @@ public class HUITypeFactory {
     private HUITypeFactory(URL xmlFile) throws DBException {
 
         if (xmlFile == null) {
-            throw new DBException("Pfad für XML Systemdefinition nicht initialisiert. " + "Config File korrekt?");
+            throw new DBException("Pfad für XML Systemdefinition nicht initialisiert. Config File korrekt?");
         }
 
         if (xmlFile.getProtocol().equals("http") || xmlFile.getProtocol().equals("ftp")) {
@@ -160,9 +160,9 @@ public class HUITypeFactory {
 
         } catch (IOException ie) {
             log.error(ie);
-            throw new DBException("Die XML Datei mit der Definition der Formularfelder konnte nicht " + "geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile" + " überprüfen.", ie);
+            throw new DBException("Die XML Datei mit der Definition der Formularfelder konnte nicht geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile überprüfen.", ie);
         } catch (SAXException e) {
-            throw new DBException("Die XML Datei mit der Definition der Formularfelder " + "ist defekt!", e);
+            throw new DBException("Die XML Datei mit der Definition der Formularfelder ist defekt!", e);
         }
     }
 
@@ -173,10 +173,11 @@ public class HUITypeFactory {
 
             Element entityEl = (Element) entities.item(i);
             EntityType entityObj = new EntityType();
-            entityObj.setId(entityEl.getAttribute("id"));
+            String id = entityEl.getAttribute("id");
+            entityObj.setId(id);
 
-            // TODO: read this from snca-messages.properties
-            entityObj.setName(entityEl.getAttribute("name"));
+            // labels are loaded from SNCAMessages (resource bundles)
+            entityObj.setName(getMessage(id, entityEl.getAttribute("name")));
 
             this.allEntities.put(entityEl.getAttribute("id"), entityObj);
             readChildElements(entityObj, null);
@@ -301,14 +302,27 @@ public class HUITypeFactory {
      * @param relation
      */
     private void readRelation(Element child, HuiRelation relation) {
-
-        // TODO: read this from snca-messages.properties
-        relation.setName(child.getAttribute("name"));
-        // TODO: read this from snca-messages.properties
-        relation.setReversename(child.getAttribute("reversename"));
-
+        final String id = child.getAttribute("id");
+        // name, reversename and tooltip are loaded from SNCAMessages (resource bundles)
+        // key is: [id]_name, [id]_reversename, [id]_tooltip 
+        relation.setName(getMessage(getKey(id,"name"), child.getAttribute("name"), false));
+        relation.setReversename(getMessage(getKey(id,"reversename"), child.getAttribute("reversename"), false));
+        relation.setTooltip(getMessage(getKey(id,"tooltip"), child.getAttribute("tooltip"), true));
+        
         relation.setTo(child.getAttribute("to"));
-        relation.setTooltip(child.getAttribute("tooltip"));
+    }
+
+    /**
+     * Returns the key of a resource bundle property for a given id and attibute name.
+     * 
+     * @param id
+     *            the id of an hui element
+     * @param attribute
+     *            an attribute name
+     * @return the key of a resource bundle property
+     */
+    private String getKey(String id, String attribute) {
+        return (new StringBuilder(id)).append("_").append(attribute).toString();
     }
 
     private PropertyType readPropertyType(String id) {
@@ -320,24 +334,10 @@ public class HUITypeFactory {
         PropertyType propObj = new PropertyType();
         propObj.setId(id);
 
-        // labels for HUI entities are loaded from resource bundles.
-        String name = getMessage(id);
-        if (name != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("returning translated name, id: " + id + ", name: " + name);
-            }
-        } else {
-            name = prop.getAttribute("name");
-            if (log.isDebugEnabled()) {
-                log.debug("returning name from SNCA.XML, id: " + id + ", name: " + name);
-                // mark missing resource bundle entries
-                name = name + " (SNCA.xml)";
-            }
-        }
-        propObj.setName(name);
-
-        // TODO: read this from snca-messages.properties
-        propObj.setTooltiptext(prop.getAttribute("tooltip"));
+        // name and tooltip are loaded from SNCAMessages (resource bundles)
+        // key is: [id]_name, [id]_tooltip 
+        propObj.setName(getMessage(id, prop.getAttribute("name")));
+        propObj.setTooltiptext(getMessage(getKey(id, "tooltip"), prop.getAttribute("tooltip"), true));
 
         propObj.setInputType(prop.getAttribute("inputtype"));
         propObj.setCrudButtons(prop.getAttribute("crudButtons").equals("true"));
@@ -347,6 +347,7 @@ public class HUITypeFactory {
         propObj.setVisible(prop.getAttribute("visible").equals("true"));
         propObj.setURL(prop.getAttribute("isURL").equals("true"));
         propObj.setReferencedEntityType(readReferencedEntityId(prop));
+        // read options for property
         propObj.setPredefinedValues(this.getOptionsForPropertyType(id));
         propObj.setDependencies(readDependencies(prop));
 
@@ -444,8 +445,10 @@ public class HUITypeFactory {
         for (int i = 0; i < values.getLength(); ++i) {
             Element value = (Element) values.item(i);
             PropertyOption dv = new PropertyOption();
-            dv.setId(value.getAttribute("id"));
-            dv.setName(value.getAttribute("name"));
+            final String idOption = value.getAttribute("id");
+            dv.setId(idOption);
+            // name is loaded from SNCAMessages (resource bundles)
+            dv.setName(getMessage(idOption, value.getAttribute("name")));
             possibleValues.add(dv);
         }
         return possibleValues;
@@ -500,9 +503,97 @@ public class HUITypeFactory {
         }
         return null;
     }
-
+    
+    /**
+     * Returns a translated message for a key
+     * if no translated message is found, "[key] (!)"
+     * is returned
+     * 
+     * Translated messages are read from  {@link SNCAMessages}
+     * which are special resource bundles.
+     * 
+     * @param key key of the message
+     * @return a translated message or (if not found) "[key] (!)"
+     */
     public String getMessage(String key) {
-        return messages.getString(key);
+        return getMessage(key, null, false);
+    }
+    
+    /**
+     * Returns a translated message for a key
+     * or a default message if no translated message is found
+     * or "[key] (!)" if a default message is not found 
+     * 
+     * Translated messages are read from  {@link SNCAMessages}
+     * which are special resource bundles.
+     * 
+     * @param key 
+     *      key of the message
+     * @param defaultMessage 
+     *      default message
+     * @return 
+     *      a translated message 
+     *      or a default message if not found
+     *      or "[key] (!)" if a default message is not found
+     */
+    public String getMessage(String key, String defaultMessage) {
+        return getMessage(key, defaultMessage, false);
+    }
+
+    /**
+     * Returns a translated message for a key
+     * or a default message if no translated message
+     * is found
+     * or "[key] (!)" if a default message is not found and emptyIfNotFound is false
+     * or "" if a default message is not found and emptyIfNotFound is true
+     * 
+     * Translated messages are read from  {@link SNCAMessages}
+     * which are special resource bundles.
+     * 
+     * @param key 
+     *      key of the message
+     * @param defaultMessage 
+     *      default message
+     * @param emptyIfNotFound 
+     *      return an empty string if translated message is not found 
+     *      and defaultMessage null or empty
+     * @return 
+     *      a translated message 
+     *      or a default message if not found
+     *      or "[key] (!)" if a default message is not found
+     *      or "" if a default message is not found and emptyIfNotFound is true
+     */
+    public String getMessage(String key, String defaultMessage, boolean emptyIfNotFound) {
+        //treat an empty string as null
+        if(defaultMessage!=null && defaultMessage.isEmpty()) {
+            defaultMessage=null;
+        }
+        String message = messages.getString(key);
+        if (message != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("returning translated message: " + message + ", key: " + key);
+            }
+        } else {
+            message = defaultMessage;
+            if (log.isDebugEnabled() && message!=null) {
+                log.debug("returning message from SNCA.XML: " + message + ", key: " + key);
+                // mark missing resource bundle entries
+                message = message + " (SNCA.xml)";
+            }
+            if(message==null) {
+                if(emptyIfNotFound) {
+                    // message is optional may be empty
+                    if (log.isDebugEnabled()) {
+                        log.debug("SNCA message not found, key is: " + key);
+                    }
+                    message = "";
+                } else {
+                    log.error("SNCA message not found, key is: " + key);
+                    message = key + " (!)";
+                }
+            }
+        }
+        return message;
     }
 
 }
