@@ -160,19 +160,36 @@ be displayed when one of the given options has been previously selected.
         /-->
 	  <xs:element name="option" minOccurs="0" maxOccurs="unbounded">
 	      <xs:complexType>
-	          <xs:attribute name="id" type="xs:ID" use="required"/>
-	          <xs:attribute name="name" type="xs:string" use="required"/>
+	          <xs:attribute 
+	          	name="id" 
+	          	type="xs:ID" 
+	          	use="required"/>
+	          <!-- the name is read from resource bundle properties, key is: [id] -->
+    		  <!-- attribute name is a default value if no property is found-->  
+	          <xs:attribute 
+		        name="name" 
+		        type="xs:string" 
+		        use="optional"/>
 	      </xs:complexType>
 	  </xs:element>    
 	  
     </xs:sequence>
         
     <xs:attribute name="id" type="xs:ID" use="required"/>
-    
-    <xs:attribute name="name" type="xs:string" use="optional"/>
+    <!-- the name is read from resource bundle properties, key is: [id] -->
+    <!-- attribute name is a default value if no property is found-->
+    <xs:attribute 
+    	use="optional"
+    	name="name" 
+    	type="xs:string"/>
 
-	<!-- Tooltip hint to display in GUI -->    
-    <xs:attribute name="tooltip" type="xs:string"/>
+	<!-- Tooltip hint to display in GUI --> 
+	<!-- the tooltip is read from resource bundle properties, key is: [id]_tooltip -->
+    <!-- attribute tooltip is a default value if no property is found-->  
+    <xs:attribute
+    	use="optional"
+    	name="tooltip" 
+    	type="xs:string"/>
     
     <!-- How to edit this property: -->
    	<xs:attribute name="inputtype" type="hitro:inputtypes" default="line"/>
@@ -221,19 +238,29 @@ be displayed when one of the given options has been previously selected.
     		type="xs:ID"
     		use="required">
     	</xs:attribute>
+    	<!-- the name is read from resource bundle properties, key is: [id]_name -->
+    	<!-- attribute name is a default value if no property is found-->
     	<xs:attribute
-    		use="required"
+    		use="optional"
     		name="name"
     		type="xs:string">
     	</xs:attribute>
-        <xs:attribute name="reversename" type="xs:string">
+    	<!-- the reversename is read from resource bundle properties, key is: [id]_reversename -->
+    	<!-- attribute reversename is a default value if no property is found-->
+        <xs:attribute
+        	use="optional"
+        	name="reversename" 
+        	type="xs:string">
     	</xs:attribute>
         <xs:attribute
     		name="to"
     		type="xs:IDREF"
     		use="required">
     	</xs:attribute>
+    	<!-- the tooltip is read from resource bundle properties, key is: [id]_tooltip -->
+    	<!-- attribute tooltip is a default value if no property is found-->
     	<xs:attribute
+        	use="optional"
     		name="tooltip"
     		type="xs:string">
     	</xs:attribute>
