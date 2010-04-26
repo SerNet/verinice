@@ -62,452 +62,447 @@ import sernet.snutils.DBException;
  * 
  */
 public class HUITypeFactory {
-	private static final Logger log = Logger.getLogger(HUITypeFactory.class);
+    private static final Logger log = Logger.getLogger(HUITypeFactory.class);
 
-	public static String HUI_CONFIGURATION_FILE = "SNCA.xml";
-	
-	private static Document doc;
+    public static String HUI_CONFIGURATION_FILE = "SNCA.xml";
 
-	private Map<String, EntityType> allEntities = null;
+    private static Document doc;
 
-	private Set<String> allDependecies = new HashSet<String>();
+    private Map<String, EntityType> allEntities = null;
 
-	// last-modified fields for local file or HTTP:
-	private static Date fileDate;
-	private static String lastModified;
+    private Set<String> allDependecies = new HashSet<String>();
 
-	// loads labels for HUI entities from resource bundles
-	public SNCAMessages messages;
-	
-	protected HUITypeFactory() {
-		// Intentionally do nothing (is for the Functionless subclass).
-	}
+    // last-modified fields for local file or HTTP:
+    private static Date fileDate;
+    private static String lastModified;
 
-	public static HUITypeFactory createInstance(URL xmlUrl) throws DBException {
-		return new HUITypeFactory(xmlUrl);
-	}
+    // loads labels for HUI entities from resource bundles
+    public SNCAMessages messages;
 
-	public static HUITypeFactory getInstance() {
-		return (HUITypeFactory) VeriniceContext
-				.get(VeriniceContext.HUI_TYPE_FACTORY);
-	}
+    protected HUITypeFactory() {
+        // Intentionally do nothing (is for the Functionless subclass).
+    }
 
-	public HUITypeFactory(Resource resource) throws DBException, IOException {
-		this(resource.getURL());
-	}
+    public static HUITypeFactory createInstance(URL xmlUrl) throws DBException {
+        return new HUITypeFactory(xmlUrl);
+    }
 
-	/**
-	 * Create new validating parser with schema support.
-	 * 
-	 * @throws DBException
-	 */
-	private HUITypeFactory(URL xmlFile) throws DBException {
-		
-		if (xmlFile == null)
-			throw new DBException(
-					"Pfad für XML Systemdefinition nicht initialisiert. "
-							+ "Config File korrekt?");
-		
-		if (xmlFile.getProtocol().equals("http")
-				|| xmlFile.getProtocol().equals("ftp"))
-			try {
-				xmlFile = new URL(xmlFile.toString() + "?nocache=" + Math.random());
-			} catch (MalformedURLException e) {
-				throw new RuntimeException(e);
-			}
+    public static HUITypeFactory getInstance() {
+        return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+    }
 
-		messages = new SNCAMessages(xmlFile.toExternalForm());
-			
-		if (log.isDebugEnabled()) {
-			log.debug("Conf url: " + messages.getBaseUrl() + ", localized name of huientity role: " + messages.getString("role"));
-		}
-		
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setNamespaceAware(true);
-		factory.setValidating(true);
-		DocumentBuilder parser = null;
+    public HUITypeFactory(Resource resource) throws DBException, IOException {
+        this(resource.getURL());
+    }
 
-		// uncomment this to enable validating of the schema:
-		try {
-			factory.setFeature("http://xml.org/sax/features/validation", true);
-			factory.setFeature(
-					"http://apache.org/xml/features/validation/schema", true);
+    /**
+     * Create new validating parser with schema support.
+     * 
+     * @throws DBException
+     */
+    private HUITypeFactory(URL xmlFile) throws DBException {
 
-			factory.setAttribute(
-					"http://java.sun.com/xml/jaxp/properties/schemaLanguage",
-					"http://www.w3.org/2001/XMLSchema");
-			factory.setAttribute(
-					"http://java.sun.com/xml/jaxp/properties/schemaSource",
-					getClass().getResource("/hitro.xsd").toString());
+        if (xmlFile == null) {
+            throw new DBException("Pfad für XML Systemdefinition nicht initialisiert. " + "Config File korrekt?");
+        }
 
-			parser = factory.newDocumentBuilder();
+        if (xmlFile.getProtocol().equals("http") || xmlFile.getProtocol().equals("ftp")) {
+            try {
+                xmlFile = new URL(xmlFile.toString() + "?nocache=" + Math.random());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-		} catch (ParserConfigurationException e) {
-			log.error("Unrecognized parser feature.", e);
-			throw new RuntimeException(e);
-		}
+        messages = new SNCAMessages(xmlFile.toExternalForm());
 
-		try {
-			log.debug("Getting XML property definition from " + xmlFile);
-			parser.setErrorHandler(new ErrorHandler() {
-				public void error(SAXParseException exception)
-						throws SAXException {
-					throw new RuntimeException(exception);
-				}
+        if (log.isDebugEnabled()) {
+            log.debug("Conf url: " + messages.getBaseUrl() + ", localized name of huientity role: " + messages.getString("role"));
+        }
 
-				public void fatalError(SAXParseException exception)
-						throws SAXException {
-					throw new RuntimeException(exception);
-				}
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        factory.setValidating(true);
+        DocumentBuilder parser = null;
 
-				public void warning(SAXParseException exception)
-						throws SAXException {
-					Logger.getLogger(this.getClass()).debug("Parser warning: " + exception.getLocalizedMessage());
-				}				
-			});
-			doc = parser.parse(xmlFile.openStream());
-			readAllEntities();
+        // uncomment this to enable validating of the schema:
+        try {
+            factory.setFeature("http://xml.org/sax/features/validation", true);
+            factory.setFeature("http://apache.org/xml/features/validation/schema", true);
 
-		} catch (IOException ie) {
-			log.error(ie);
-			throw new DBException(
-					"Die XML Datei mit der Definition der Formularfelder konnte nicht "
-							+ "geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile"
-							+ " überprüfen.", ie);
-		} catch (SAXException e) {
-			throw new DBException(
-					"Die XML Datei mit der Definition der Formularfelder "
-							+ "ist defekt!", e);
-		}
-	}
+            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
+            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", getClass().getResource("/hitro.xsd").toString());
 
-	private void readAllEntities() {
-		this.allEntities = new HashMap<String, EntityType>();
-		NodeList entities = doc.getElementsByTagName("huientity");
-		for (int i = 0; i < entities.getLength(); ++i) {
+            parser = factory.newDocumentBuilder();
 
-			Element entityEl = (Element) entities.item(i);
-			EntityType entityObj = new EntityType();
-			entityObj.setId(entityEl.getAttribute("id"));
-			entityObj.setName(entityEl.getAttribute("name"));
-			this.allEntities.put(entityEl.getAttribute("id"), entityObj);
-			readChildElements(entityObj, null);
-		}
-	}
+        } catch (ParserConfigurationException e) {
+            log.error("Unrecognized parser feature.", e);
+            throw new RuntimeException(e);
+        }
 
-	public EntityType getEntityType(String id) {
-		return this.allEntities.get(id);
-	}
+        try {
+            log.debug("Getting XML property definition from " + xmlFile);
+            parser.setErrorHandler(new ErrorHandler() {
+                public void error(SAXParseException exception) throws SAXException {
+                    throw new RuntimeException(exception);
+                }
 
-	public Collection<EntityType> getAllEntityTypes() {
-		return this.allEntities.values();
+                public void fatalError(SAXParseException exception) throws SAXException {
+                    throw new RuntimeException(exception);
+                }
 
-	}
+                public void warning(SAXParseException exception) throws SAXException {
+                    Logger.getLogger(this.getClass()).debug("Parser warning: " + exception.getLocalizedMessage());
+                }
+            });
+            doc = parser.parse(xmlFile.openStream());
+            readAllEntities();
 
-	public List<PropertyType> getURLPropertyTypes() {
-		List<PropertyType> result = new ArrayList<PropertyType>();
-		Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
-		for (Entry<String, EntityType> entry : entrySet) {
-			List<PropertyType> types = entry.getValue().getPropertyTypes();
-			for (PropertyType propertyType : types) {
-				if (propertyType.isURL())
-					result.add(propertyType);
-			}
-		}
-		return result;
-	}
+        } catch (IOException ie) {
+            log.error(ie);
+            throw new DBException("Die XML Datei mit der Definition der Formularfelder konnte nicht " + "geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile" + " überprüfen.", ie);
+        } catch (SAXException e) {
+            throw new DBException("Die XML Datei mit der Definition der Formularfelder " + "ist defekt!", e);
+        }
+    }
 
-	/**
-	 * Check if file has changed (or was never read). Timestamp for local files,
-	 * for remote files the server will only deliver the file if it has changed,
-	 * because we set the modified-since property on the request.
-	 * 
-	 * @param xmlFile
-	 *            the URI of the xml file
-	 */
-	private static boolean fileChanged(String xmlFile) {
-		if (xmlFile.matches("^http.*")) {
-			try {
-				URL xml = new URL(xmlFile);
-				HttpURLConnection.setFollowRedirects(true);
-				HttpURLConnection connection = (HttpURLConnection) xml
-						.openConnection();
-				if (lastModified != null) {
-					connection.addRequestProperty("If-Modified-Since",
-							lastModified);
-				}
-				connection.connect();
+    private void readAllEntities() {
+        this.allEntities = new HashMap<String, EntityType>();
+        NodeList entities = doc.getElementsByTagName("huientity");
+        for (int i = 0; i < entities.getLength(); ++i) {
 
-				if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
-					connection.disconnect();
-					log.debug("Remote PropertyType file not modified.");
-					return false;
-				}
-				lastModified = connection.getHeaderField("Last-Modified");
-				connection.disconnect();
-				log.debug("CHANGED: Remote PropertyType file modified.");
-				return true;
-			} catch (MalformedURLException e) {
-				log.error(e);
-				log.error(e);
-			} catch (ProtocolException e) {
-				log.error(e);
-			} catch (UnsupportedEncodingException e) {
-				log.error(e);
-			} catch (IOException e) {
-				log.error(e);
-			}
-		} else {
-			// check local :
-			File xml = new File(xmlFile);
-			Date fileNow = new Date(xml.lastModified());
-			if (fileDate == null || fileNow.after(fileDate)) {
-				log.debug("CHANGED: Local PropertyType file was modified.");
-				fileDate = fileNow;
-				return true;
-			}
-			log.debug("Local PropertyType file was not modified.");
-			return false;
-		}
-		return true;
-	}
+            Element entityEl = (Element) entities.item(i);
+            EntityType entityObj = new EntityType();
+            entityObj.setId(entityEl.getAttribute("id"));
 
-	private void readChildElements(EntityType entityType,
-			PropertyGroup propGroup) {
-		NodeList nodes = null;
-		if (propGroup != null) {
-			Element groupEl = doc.getElementById(propGroup.getId());
-			nodes = groupEl.getChildNodes();
-		} else {
-			Element entityEl = doc.getElementById(entityType.getId());
-			if (entityEl == null)
-				throw new RuntimeException(
-						"EntityType not found in XML definition: "
-								+ entityType.getId());
-			nodes = entityEl.getChildNodes();
-		}
+            // TODO: read this from snca-messages.properties
+            entityObj.setName(entityEl.getAttribute("name"));
 
-		allProperties: for (int i = 0; i < nodes.getLength(); ++i) {
-			if (!(nodes.item(i) instanceof Element))
-				continue allProperties;
-			Element child = (Element) nodes.item(i);
-			if (child.getTagName().equals("huiproperty")) {
-				PropertyType type = readPropertyType(child.getAttribute("id"));
-				if (propGroup != null)
-					propGroup.addPropertyType(type);
-				else
-					entityType.addPropertyType(type);
-			} else if (child.getTagName().equals("huipropertygroup")) {
-				PropertyGroup group = readPropertyGroup(child
-						.getAttribute("id"));
-				entityType.addPropertyGroup(group);
-				readChildElements(entityType, group);
-			} else if (child.getTagName().equals("huirelation")) {
-				HuiRelation relation = new HuiRelation(child.getAttribute("id"));
-				readRelation(child, relation);
-				entityType.addRelation(relation);
-			}
-		}
-	}
+            this.allEntities.put(entityEl.getAttribute("id"), entityObj);
+            readChildElements(entityObj, null);
+        }
+    }
 
-	/**
-	 * @param child
-	 * @param relation
-	 */
-	private void readRelation(Element child, HuiRelation relation) {
-		relation.setName(child.getAttribute("name"));
-		relation.setReversename(child.getAttribute("reversename"));
-		relation.setTo(child.getAttribute("to"));
-		relation.setTooltip(child.getAttribute("tooltip"));
-	}
+    public EntityType getEntityType(String id) {
+        return this.allEntities.get(id);
+    }
 
-	private PropertyType readPropertyType(String id) {
-		Element prop = doc.getElementById(id);
-		if (prop == null)
-			return null;
+    public Collection<EntityType> getAllEntityTypes() {
+        return this.allEntities.values();
 
-		PropertyType propObj = new PropertyType();
-		propObj.setId(id);
-		
-		// labels for HUI entities are loaded from resource bundles.
-		String name = getMessage(id);
-		if(name!=null) {
-			if (log.isDebugEnabled()) {
-				log.debug("returning translated name, id: " + id + ", name: " + name);
-			}
-		} else  {
-			name = prop.getAttribute("name");
-			if (log.isDebugEnabled()) {
-				log.debug("returning name from SNCA.XML, id: " + id + ", name: " + name);
-				// mark missing resource bundle entries
-				name = name + " (SNCA.xml)";
-			}
-		}
-		propObj.setName(name);
-		
-		propObj.setTooltiptext(prop.getAttribute("tooltip"));
-		propObj.setInputType(prop.getAttribute("inputtype"));
-		propObj.setCrudButtons(prop.getAttribute("crudButtons").equals("true"));
-		propObj.setRequired(prop.getAttribute("required").equals("true"));
-		propObj.setInitialFocus(prop.getAttribute("focus").equals("true"));
-		propObj.setEditable(prop.getAttribute("editable").equals("true"));
-		propObj.setVisible(prop.getAttribute("visible").equals("true"));
-		propObj.setURL(prop.getAttribute("isURL").equals("true"));
-		propObj.setReferencedEntityType(readReferencedEntityId(prop));
-		propObj.setPredefinedValues(this.getOptionsForPropertyType(id));
-		propObj.setDependencies(readDependencies(prop));
-		
-		if (propObj.isNumericSelect()) {
-			propObj.setNumericMin(prop.getAttribute("min"));
-			propObj.setNumericMax(prop.getAttribute("max"));
-		}
+    }
 
-		// the shortcut to set a "NotEmpty" validator:
-		if (prop.getAttribute("required").equals("true"))
-			propObj.addValidator(new NotEmpty());
+    public List<PropertyType> getURLPropertyTypes() {
+        List<PropertyType> result = new ArrayList<PropertyType>();
+        Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
+        for (Entry<String, EntityType> entry : entrySet) {
+            List<PropertyType> types = entry.getValue().getPropertyTypes();
+            for (PropertyType propertyType : types) {
+                if (propertyType.isURL()) {
+                    result.add(propertyType);
+                }
+            }
+        }
+        return result;
+    }
 
-		propObj.setDefaultRule(readDefaultRule(prop));
+    /**
+     * Check if file has changed (or was never read). Timestamp for local files,
+     * for remote files the server will only deliver the file if it has changed,
+     * because we set the modified-since property on the request.
+     * 
+     * @param xmlFile
+     *            the URI of the xml file
+     */
+    private static boolean fileChanged(String xmlFile) {
+        if (xmlFile.matches("^http.*")) {
+            try {
+                URL xml = new URL(xmlFile);
+                HttpURLConnection.setFollowRedirects(true);
+                HttpURLConnection connection = (HttpURLConnection) xml.openConnection();
+                if (lastModified != null) {
+                    connection.addRequestProperty("If-Modified-Since", lastModified);
+                }
+                connection.connect();
 
-		return propObj;
-	}
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
+                    connection.disconnect();
+                    log.debug("Remote PropertyType file not modified.");
+                    return false;
+                }
+                lastModified = connection.getHeaderField("Last-Modified");
+                connection.disconnect();
+                log.debug("CHANGED: Remote PropertyType file modified.");
+                return true;
+            } catch (MalformedURLException e) {
+                log.error(e);
+                log.error(e);
+            } catch (ProtocolException e) {
+                log.error(e);
+            } catch (UnsupportedEncodingException e) {
+                log.error(e);
+            } catch (IOException e) {
+                log.error(e);
+            }
+        } else {
+            // check local :
+            File xml = new File(xmlFile);
+            Date fileNow = new Date(xml.lastModified());
+            if (fileDate == null || fileNow.after(fileDate)) {
+                log.debug("CHANGED: Local PropertyType file was modified.");
+                fileDate = fileNow;
+                return true;
+            }
+            log.debug("Local PropertyType file was not modified.");
+            return false;
+        }
+        return true;
+    }
 
-	private String readReferencedEntityId(Element prop) {
-		NodeList list = prop.getElementsByTagName("references");
-		for (int i = 0; i < list.getLength(); ++i) {
-			Element referencesElmt = (Element) list.item(i);
-			return referencesElmt.getAttribute("entitytype");
-		}
-		return "";
-	}
+    private void readChildElements(EntityType entityType, PropertyGroup propGroup) {
+        NodeList nodes = null;
+        if (propGroup != null) {
+            Element groupEl = doc.getElementById(propGroup.getId());
+            nodes = groupEl.getChildNodes();
+        } else {
+            Element entityEl = doc.getElementById(entityType.getId());
+            if (entityEl == null) {
+                throw new RuntimeException("EntityType not found in XML definition: " + entityType.getId());
+            }
+            nodes = entityEl.getChildNodes();
+        }
 
-	private PropertyGroup readPropertyGroup(String id) {
-		Element group = doc.getElementById(id);
-		if (group == null)
-			return null;
+        allProperties: for (int i = 0; i < nodes.getLength(); ++i) {
+            if (!(nodes.item(i) instanceof Element)) {
+                continue allProperties;
+            }
+            Element child = (Element) nodes.item(i);
+            if (child.getTagName().equals("huiproperty")) {
+                PropertyType type = readPropertyType(child.getAttribute("id"));
+                if (propGroup != null) {
+                    propGroup.addPropertyType(type);
+                } else {
+                    entityType.addPropertyType(type);
+                }
+            } else if (child.getTagName().equals("huipropertygroup")) {
+                PropertyGroup group = readPropertyGroup(child.getAttribute("id"));
+                entityType.addPropertyGroup(group);
+                readChildElements(entityType, group);
+            } else if (child.getTagName().equals("huirelation")) {
+                HuiRelation relation = new HuiRelation(child.getAttribute("id"));
+                readRelation(child, relation);
+                entityType.addRelation(relation);
+            }
+        }
+    }
 
-		PropertyGroup groupObj = new PropertyGroup();
-		groupObj.setId(group.getAttribute("id"));
-		groupObj.setName(group.getAttribute("name"));
-		groupObj.setDependencies(readDependencies(group));
-		return groupObj;
-	}
+    /**
+     * @param child
+     * @param relation
+     */
+    private void readRelation(Element child, HuiRelation relation) {
 
-	/**
-	 * @param prop
-	 * @return
-	 */
-	private HashSet<String> readDependencies(Element prop) {
-		HashSet<String> depends = new HashSet<String>();
-		NodeList nodes = prop.getChildNodes();
-		allChildren: for (int i = 0; i < nodes.getLength(); ++i) {
-		if (!(nodes.item(i) instanceof Element))
-			continue allChildren;
-		Element child = (Element) nodes.item(i);
-		if (child.getTagName().equals("depends"))
-			depends.add(child.getAttribute("option"));
-		}
-		this.allDependecies.addAll(depends);
-		return depends;
-	}
+        // TODO: read this from snca-messages.properties
+        relation.setName(child.getAttribute("name"));
+        // TODO: read this from snca-messages.properties
+        relation.setReversename(child.getAttribute("reversename"));
 
-	private IFillRule readDefaultRule(Element prop) {
-		IFillRule rule = null;
-		NodeList list = prop.getElementsByTagName("defaultRule");
-		for (int i = 0; i < list.getLength(); ++i) {
+        relation.setTo(child.getAttribute("to"));
+        relation.setTooltip(child.getAttribute("tooltip"));
+    }
 
-			Element ruleElmt = (Element) list.item(i);
-			String className = ruleElmt.getAttribute("class");
-			rule = RuleFactory.getDefaultRule(className);
+    private PropertyType readPropertyType(String id) {
+        Element prop = doc.getElementById(id);
+        if (prop == null) {
+            return null;
+        }
 
-			if (rule != null) {
-				String[] params = readRuleParams(ruleElmt, rule);
-				rule.init(params);
+        PropertyType propObj = new PropertyType();
+        propObj.setId(id);
 
-			}
-		}
-		return rule;
-	}
+        // labels for HUI entities are loaded from resource bundles.
+        String name = getMessage(id);
+        if (name != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("returning translated name, id: " + id + ", name: " + name);
+            }
+        } else {
+            name = prop.getAttribute("name");
+            if (log.isDebugEnabled()) {
+                log.debug("returning name from SNCA.XML, id: " + id + ", name: " + name);
+                // mark missing resource bundle entries
+                name = name + " (SNCA.xml)";
+            }
+        }
+        propObj.setName(name);
 
-	private String[] readRuleParams(Element ruleElmt, IFillRule rule) {
-		NodeList nodes = ruleElmt.getElementsByTagName("param");
-		String[] params = new String[nodes.getLength()];
-		for (int i = 0; i < nodes.getLength(); i++) {
-			Element e = (Element) nodes.item(i);
-			params[i] = nodes.item(i).getTextContent();
+        // TODO: read this from snca-messages.properties
+        propObj.setTooltiptext(prop.getAttribute("tooltip"));
 
-			// FIXME read rules from file
-		}
-		return params;
-	}
+        propObj.setInputType(prop.getAttribute("inputtype"));
+        propObj.setCrudButtons(prop.getAttribute("crudButtons").equals("true"));
+        propObj.setRequired(prop.getAttribute("required").equals("true"));
+        propObj.setInitialFocus(prop.getAttribute("focus").equals("true"));
+        propObj.setEditable(prop.getAttribute("editable").equals("true"));
+        propObj.setVisible(prop.getAttribute("visible").equals("true"));
+        propObj.setURL(prop.getAttribute("isURL").equals("true"));
+        propObj.setReferencedEntityType(readReferencedEntityId(prop));
+        propObj.setPredefinedValues(this.getOptionsForPropertyType(id));
+        propObj.setDependencies(readDependencies(prop));
 
-	private ArrayList getOptionsForPropertyType(String id) {
-		Element prop = doc.getElementById(id);
-		NodeList values = prop.getElementsByTagName("option");
-		ArrayList possibleValues = new ArrayList(values.getLength());
-		for (int i = 0; i < values.getLength(); ++i) {
-			Element value = (Element) values.item(i);
-			PropertyOption dv = new PropertyOption();
-			dv.setId(value.getAttribute("id"));
-			dv.setName(value.getAttribute("name"));
-			possibleValues.add(dv);
-		}
-		return possibleValues;
-	}
+        if (propObj.isNumericSelect()) {
+            propObj.setNumericMin(prop.getAttribute("min"));
+            propObj.setNumericMax(prop.getAttribute("max"));
+        }
 
-	private PropertyOption getOptionById(String valueId) {
-		Element value = doc.getElementById(valueId);
-		if (value == null)
-			return null;
-		PropertyOption dv = new PropertyOption();
-		dv.setId(value.getAttribute("id"));
-		dv.setName(value.getAttribute("name"));
-		return dv;
-	}
+        // the shortcut to set a "NotEmpty" validator:
+        if (prop.getAttribute("required").equals("true")) {
+            propObj.addValidator(new NotEmpty());
+        }
 
-	public PropertyType getPropertyType(String entityTypeID, String id) {
-		return allEntities.get(entityTypeID).getPropertyType(id);
-	}
+        propObj.setDefaultRule(readDefaultRule(prop));
 
-	/**
-	 * Get list of possible relations from one entity to another.
-	 * 
-	 * @param fromEntityTypeID
-	 * @param toEntityTypeID
-	 * @return
-	 */
-	public Set<HuiRelation> getPossibleRelations(String fromEntityTypeID,
-			String toEntityTypeID) {
-		return getEntityType(fromEntityTypeID).getPossibleRelations(
-				toEntityTypeID);
-	}
+        return propObj;
+    }
 
-	public boolean isDependency(IMLPropertyOption opt) {
-		return allDependecies.contains(opt.getId());
-	}
+    private String readReferencedEntityId(Element prop) {
+        NodeList list = prop.getElementsByTagName("references");
+        for (int i = 0; i < list.getLength(); ++i) {
+            Element referencesElmt = (Element) list.item(i);
+            return referencesElmt.getAttribute("entitytype");
+        }
+        return "";
+    }
 
-	/**
-	 * @param typeId
-	 */
-	public HuiRelation getRelation(String typeId) {
-		if (allEntities == null) {
-			Logger.getLogger(this.getClass()).debug(
-					"No entities in HUITypeFactory!! Instance: " + this);
-			return null;
-		}
+    private PropertyGroup readPropertyGroup(String id) {
+        Element group = doc.getElementById(id);
+        if (group == null) {
+            return null;
+        }
 
-		Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
-		for (Entry<String, EntityType> entry : entrySet) {
-			EntityType entityType = entry.getValue();
-			HuiRelation possibleRelation = entityType
-					.getPossibleRelation(typeId);
-			if (possibleRelation != null)
-				return possibleRelation;
-		}
-		return null;
-	}
-	
-	public String getMessage(String key) {
-		return messages.getString(key);
-	}
+        PropertyGroup groupObj = new PropertyGroup();
+        groupObj.setId(group.getAttribute("id"));
+        groupObj.setName(group.getAttribute("name"));
+        groupObj.setDependencies(readDependencies(group));
+        return groupObj;
+    }
+
+    /**
+     * @param prop
+     * @return
+     */
+    private HashSet<String> readDependencies(Element prop) {
+        HashSet<String> depends = new HashSet<String>();
+        NodeList nodes = prop.getChildNodes();
+        allChildren: for (int i = 0; i < nodes.getLength(); ++i) {
+            if (!(nodes.item(i) instanceof Element)) {
+                continue allChildren;
+            }
+            Element child = (Element) nodes.item(i);
+            if (child.getTagName().equals("depends")) {
+                depends.add(child.getAttribute("option"));
+            }
+        }
+        this.allDependecies.addAll(depends);
+        return depends;
+    }
+
+    private IFillRule readDefaultRule(Element prop) {
+        IFillRule rule = null;
+        NodeList list = prop.getElementsByTagName("defaultRule");
+        for (int i = 0; i < list.getLength(); ++i) {
+
+            Element ruleElmt = (Element) list.item(i);
+            String className = ruleElmt.getAttribute("class");
+            rule = RuleFactory.getDefaultRule(className);
+
+            if (rule != null) {
+                String[] params = readRuleParams(ruleElmt, rule);
+                rule.init(params);
+
+            }
+        }
+        return rule;
+    }
+
+    private String[] readRuleParams(Element ruleElmt, IFillRule rule) {
+        NodeList nodes = ruleElmt.getElementsByTagName("param");
+        String[] params = new String[nodes.getLength()];
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Element e = (Element) nodes.item(i);
+            params[i] = nodes.item(i).getTextContent();
+
+            // FIXME read rules from file
+        }
+        return params;
+    }
+
+    private ArrayList getOptionsForPropertyType(String id) {
+        Element prop = doc.getElementById(id);
+        NodeList values = prop.getElementsByTagName("option");
+        ArrayList possibleValues = new ArrayList(values.getLength());
+        for (int i = 0; i < values.getLength(); ++i) {
+            Element value = (Element) values.item(i);
+            PropertyOption dv = new PropertyOption();
+            dv.setId(value.getAttribute("id"));
+            dv.setName(value.getAttribute("name"));
+            possibleValues.add(dv);
+        }
+        return possibleValues;
+    }
+
+    private PropertyOption getOptionById(String valueId) {
+        Element value = doc.getElementById(valueId);
+        if (value == null) {
+            return null;
+        }
+        PropertyOption dv = new PropertyOption();
+        dv.setId(value.getAttribute("id"));
+        dv.setName(value.getAttribute("name"));
+        return dv;
+    }
+
+    public PropertyType getPropertyType(String entityTypeID, String id) {
+        return allEntities.get(entityTypeID).getPropertyType(id);
+    }
+
+    /**
+     * Get list of possible relations from one entity to another.
+     * 
+     * @param fromEntityTypeID
+     * @param toEntityTypeID
+     * @return
+     */
+    public Set<HuiRelation> getPossibleRelations(String fromEntityTypeID, String toEntityTypeID) {
+        return getEntityType(fromEntityTypeID).getPossibleRelations(toEntityTypeID);
+    }
+
+    public boolean isDependency(IMLPropertyOption opt) {
+        return allDependecies.contains(opt.getId());
+    }
+
+    /**
+     * @param typeId
+     */
+    public HuiRelation getRelation(String typeId) {
+        if (allEntities == null) {
+            Logger.getLogger(this.getClass()).debug("No entities in HUITypeFactory!! Instance: " + this);
+            return null;
+        }
+
+        Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
+        for (Entry<String, EntityType> entry : entrySet) {
+            EntityType entityType = entry.getValue();
+            HuiRelation possibleRelation = entityType.getPossibleRelation(typeId);
+            if (possibleRelation != null) {
+                return possibleRelation;
+            }
+        }
+        return null;
+    }
+
+    public String getMessage(String key) {
+        return messages.getString(key);
+    }
 
 }
