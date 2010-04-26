@@ -60,14 +60,16 @@ public class SNCAMessages {
 				resource = bundle.getString(key);
 			}
 		} catch (MissingResourceException e) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("missing resource: ").append(key);
-			sb.append(", baseUrl: ").append(baseUrl);
-			sb.append(", bundle-name: ").append(BUNDLE_NAME);
-			LOG.warn(sb.toString());
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("stacktrace: ", e);
-			}
+		    if (LOG.isInfoEnabled()) {        
+    			StringBuilder sb = new StringBuilder();
+    			sb.append("missing resource: ").append(key);
+    			sb.append(", baseUrl: ").append(baseUrl);
+    			sb.append(", bundle-name: ").append(BUNDLE_NAME);
+    			LOG.info(sb.toString());
+    			if (LOG.isDebugEnabled()) {
+    				LOG.debug("stacktrace: ", e);
+    			}
+		    }
 			return null;
 		}
 		return resource;
@@ -76,11 +78,11 @@ public class SNCAMessages {
 	private ResourceBundle getResourceBundle() {
 		if(resourceBundle==null) {
 			if(getBaseUrl()==null) {
-				LOG.warn("Can not load resource bundle. Base url is null");
+				LOG.error("Can not load resource bundle. Base url is null");
 			} else {
 				String protocol = SNCAResourceBundleLoader.getProtocol(getBaseUrl());
 				if(protocol==null || !SNCAResourceBundleLoader.PROTOCOL_LIST.contains(protocol)) {
-					LOG.warn("Can not load resource bundle. Protocol is not supported: " + protocol);
+					LOG.error("Can not load resource bundle. Protocol is not supported: " + protocol);
 				} else {
 					resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME,new SNCAResourceBundleLoader(getBaseUrl()));
 				}
