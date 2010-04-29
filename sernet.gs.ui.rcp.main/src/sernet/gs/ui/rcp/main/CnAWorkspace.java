@@ -264,7 +264,6 @@ public class CnAWorkspace {
 		File confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
 		confDir.mkdirs();
 
-		createTextFile("conf" + File.separator + "SNCA.xml", workDir); //$NON-NLS-1$ //$NON-NLS-2$
 		createTextFile("conf" + File.separator + "reports.properties_skeleton", workDir, "conf" + File.separator + "reports.properties"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		createTextFile("conf" + File.separator + "configuration.version", workDir); //$NON-NLS-1$ //$NON-NLS-2$
 	}
