@@ -119,8 +119,7 @@ public class CnAWorkspace {
 
 	private File confDir;
 
-	private CnAWorkspace() {
-		Activator.getDefault().getPluginPreferences().addPropertyChangeListener(this.prefChangeListener);
+	protected CnAWorkspace() {
 	}
 
 	public String createTempImportDbUrl() {
@@ -135,6 +134,7 @@ public class CnAWorkspace {
 	public static CnAWorkspace getInstance() {
 		if (instance == null) {
 			instance = new CnAWorkspace();
+			Activator.getDefault().getPluginPreferences().addPropertyChangeListener(instance.prefChangeListener);
 		}
 		return instance;
 	}
@@ -147,7 +147,8 @@ public class CnAWorkspace {
 	 */
 	public void prepare(boolean force) {
 		prepareWorkDir();
-
+		updatePolicyFile();
+		
 		if (!force && confDir.exists() && confDir.isDirectory()) {
 			File confFile = new File(confDir, "configuration.version"); //$NON-NLS-1$
 			if (confFile.exists()) {
@@ -186,12 +187,9 @@ public class CnAWorkspace {
 		String path = url.getPath().replaceAll("/", "\\" + File.separator); //$NON-NLS-1$ //$NON-NLS-2$
 		workDir = (new File(path)).getAbsolutePath();
 		confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
-
-		// FIXME ak update site only on multiuser-server (not with internal one)
-		updatePolicyFile();
 	}
 
-	private void updatePolicyFile() {
+	public void updatePolicyFile() {
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 
 		if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER)) {
@@ -255,6 +253,13 @@ public class CnAWorkspace {
 		return workDir;
 	}
 
+	/**
+	 * Returns the full path to configuration dir of the client:
+	 * usually: <verinice_install_dir>/workspace/conf
+	 * e.g.: /home/fifi/verinice-1.1.0/workspace/conf
+	 * 
+	 * @return the full path to configuration dir of the client
+	 */
 	public String getConfDir() {
 		return workDir + File.separator + "conf"; //$NON-NLS-1$
 	}
@@ -264,7 +269,9 @@ public class CnAWorkspace {
 		File confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
 		confDir.mkdirs();
 
-		createTextFile("conf" + File.separator + "reports.properties_skeleton", workDir, "conf" + File.separator + "reports.properties"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		createTextFile("conf" + File.separator + "reports.properties_skeleton", 
+		               workDir, 
+		               "conf" + File.separator + "reports.properties"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		createTextFile("conf" + File.separator + "configuration.version", workDir); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -344,7 +351,11 @@ public class CnAWorkspace {
 			settings.put("dialect", PreferenceConstants.GS_DB_DIALECT_JTDS); //$NON-NLS-1$
 		}
 
-		createTextFile("conf" + File.separator + "skel_hibernate-vampire.cfg.xml", workDir, "conf" + File.separator + "hibernate-vampire.cfg.xml", settings); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		createTextFile(
+		        "conf" + File.separator + "skel_hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
+		        workDir, 
+		        "conf" + File.separator + "hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
+		        settings);  
 	}
 
 	public void createGstoolImportDatabaseConfig() throws NullPointerException, IOException {
@@ -367,14 +378,14 @@ public class CnAWorkspace {
 	 * Adapt line-feeds to local settings and optionally replace variables with
 	 * values given in a hashmap.
 	 * 
-	 * @param infile
-	 * @param toDir
-	 * @param outfile
-	 * @param variables
+	 * @param infile relative path to a file accessed by a class loader 
+	 * @param toDir path to directory of the created file
+	 * @param outfile name of created file
+	 * @param variables property added to the file, may be null
 	 * @throws NullPointerException
 	 * @throws IOException
 	 */
-	private void createTextFile(String infile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
+	protected void createTextFile(String infile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
 
 		String infileResource = infile.replace('\\', '/');
 		InputStream is = getClass().getClassLoader().getResourceAsStream(infileResource);

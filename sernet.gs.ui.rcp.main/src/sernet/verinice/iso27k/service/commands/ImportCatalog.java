@@ -20,7 +20,9 @@ package sernet.verinice.iso27k.service.commands;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
@@ -67,8 +69,19 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 	
 	public ImportCatalog(String filePath) throws IOException {
 		super();
+		// TODO: read encoding from preferences !!!
 		csvFile = new CsvFile(filePath);
 	}
+	
+	public ImportCatalog(URL url) throws IOException {
+        super();
+        csvFile = new CsvFile(url);
+    }
+	
+	public ImportCatalog(InputStream is) throws IOException {
+        super();
+        csvFile = new CsvFile(is);
+    }
 	
 	public ImportCatalog(byte[] fileContent) throws IOException {
 		super();
@@ -132,9 +145,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 		        	item = new Item(nextLine[1],nextLine[2]);
 		        	item.setNumberString(nextLine[0].trim());
 		        	
-		        	StringBuilder sb = new StringBuilder();
-		        	sb.append("<p>").append(nextLine[3]).append("</p>");
-		        	item.setDescription(sb.toString());
+		        	item.setDescription(nextLine[3]);
 	
 		        	if (hasMaturityLevels(nextLine)) {
 		        		fillMaturityLevels(item, nextLine);

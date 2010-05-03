@@ -65,6 +65,7 @@ import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
+import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.iso27k.rcp.action.TagFilter;
@@ -83,7 +84,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	private static Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
 	private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
 
-	private TreeViewer viewer;
+	protected TreeViewer viewer;
 	
 	TreeViewerCache cache = new TreeViewerCache();
 	
@@ -104,6 +105,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	private Action collapseAllAction;
 	
 	private ISMViewFilter filterAction;
+	
+	protected HideEmptyFilter hideEmptyFilter;
 	
 	private MetaDropAdapter metaDropAdapter;
 
@@ -132,7 +135,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		
 	}
 
-	private void initView(Composite parent) {
+	protected void initView(Composite parent) {
 		contentProvider = new ISMViewContentProvider(cache);
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		drillDownAdapter = new DrillDownAdapter(viewer);
@@ -169,7 +172,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		JobScheduler.scheduleInitJob(initDataJob);		
 	}
 
-	private void initData() {	
+	protected void initData() {	
 		if(CnAElementFactory.isIsoModelLoaded()) {
 			if (modelUpdateListener == null ) {
 				// modellistener should only be created once!
@@ -261,10 +264,12 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		};
 		collapseAllAction.setText(Messages.ISMView_10);
 		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-
+		
+		hideEmptyFilter = createHideEmptyFilter();
 		filterAction = new ISMViewFilter(viewer,
 				Messages.ISMView_12,
-				new TagFilter(viewer));
+				new TagFilter(viewer),
+				hideEmptyFilter);
 		
 		metaDropAdapter = new MetaDropAdapter(viewer);
 		controlDropAdapter = new ControlDropPerformer(this);
@@ -274,8 +279,18 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		
 		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
 	}
+
+    /**
+     * Override this in subclasses to hide empty groups
+     * on startup.
+     * 
+     * @return a HideEmptyFilter
+     */
+    protected HideEmptyFilter createHideEmptyFilter() {
+        return new HideEmptyFilter(viewer);
+    }
 	
-	private void fillToolBar() {
+	protected void fillToolBar() {
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager manager = bars.getToolBarManager();
 		manager.add(expandAllAction);
@@ -305,7 +320,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		
 	}
 	
-	private void expandAll() {
+	protected void expandAll() {
 		// TODO: do this a new thread and show user a progress bar
 		viewer.expandAll();
 	}

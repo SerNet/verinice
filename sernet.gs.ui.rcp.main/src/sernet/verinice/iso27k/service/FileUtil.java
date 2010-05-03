@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -57,6 +58,17 @@ public class FileUtil {
 	    // Close the input stream and return bytes
 	    is.close();
 	    return bytes;
+	}
+	
+	public static byte[] getBytesFromInputstream(InputStream is) throws IOException {
+	    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+	    int nRead;
+	    byte[] data = new byte[16384];
+	    while ((nRead = is.read(data, 0, data.length)) != -1) {
+	      buffer.write(data, 0, nRead);
+	    }
+	    buffer.flush();
+	    return buffer.toByteArray();
 	}
 
 }

@@ -26,31 +26,42 @@ import org.eclipse.swt.widgets.Shell;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.iso27k.rcp.ISMViewFilterDialog;
 
-
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ISMViewFilter extends Action {
-	private Shell shell;
-	private TagFilter tagFilter;
-	
+    private Shell shell;
+    private TagFilter tagFilter;
+    private HideEmptyFilter hideEmptyFilter;
 
-	public ISMViewFilter(StructuredViewer viewer,
-			String title,
-			TagFilter tagFilter) {
-		super(title,SWT.TOGGLE);
-		shell = new Shell();
-		this.tagFilter = tagFilter;
-		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
-	}
-	
-	
-	@Override
-	public void run() {
-		ISMViewFilterDialog dialog = new ISMViewFilterDialog(shell,tagFilter.getPattern());
-		if (dialog.open() == InputDialog.OK) {
-			tagFilter.setPattern(dialog.getCheckedElements());
-		}
-		this.setChecked(tagFilter.getPattern()!=null && tagFilter.getPattern().length>0);
-	}
+    public ISMViewFilter(StructuredViewer viewer, String title, TagFilter tagFilter, HideEmptyFilter hideEmptyFilter) {
+        super(title, SWT.TOGGLE);
+        shell = new Shell();
+        this.tagFilter = tagFilter;
+        this.hideEmptyFilter = hideEmptyFilter;
+        setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
+        setUpCheckStatus();
+    }
+    
+    public void setUpCheckStatus() {
+        this.setChecked(tagFilter.isActive() || hideEmptyFilter.isActive());
+    }
+
+    @Override
+    public void run() {
+        ISMViewFilterDialog dialog = new ISMViewFilterDialog(shell, this);
+        if (dialog.open() == InputDialog.OK) {
+            tagFilter.setPattern(dialog.getCheckedElements());
+            hideEmptyFilter.setHideEmpty(dialog.getHideEmpty());
+        }
+        setUpCheckStatus();
+    }
+
+    public TagFilter getTagFilter() {
+        return tagFilter;
+    }
+
+    public HideEmptyFilter getHideEmptyFilter() {
+        return hideEmptyFilter;
+    }
 }

@@ -32,6 +32,7 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -44,6 +45,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 
 /**
  * 
@@ -54,18 +56,22 @@ public class ISMViewFilterDialog extends Dialog {
 
     private static final Logger log = Logger.getLogger(ISMViewFilterDialog.class);
 
+    private Composite container;
+
     private String[] tagPattern;
     private Group tagGroup;
     private CheckboxTableViewer viewer;
-    private Composite container;
-
     private String[] checkedElements;
 
-    public ISMViewFilterDialog(Shell parent, String[] tags) {
+    private Group hideEmptyGroup;
+    private Button hideEmptyCheckbox;
+    private boolean hideEmpty;
+
+    public ISMViewFilterDialog(Shell parent, ISMViewFilter ismViewFilter) {
         super(parent);
         setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
-
-        this.tagPattern = tags;
+        this.tagPattern = ismViewFilter.getTagFilter().getPattern();
+        this.hideEmpty = ismViewFilter.getHideEmptyFilter().isHideEmpty();
     }
 
     @Override
@@ -80,6 +86,7 @@ public class ISMViewFilterDialog extends Dialog {
         intro.setText(Messages.ISMViewFilterDialog_0);
 
         tagGroup = createTagfilterGroup(container);
+        hideEmptyGroup = createHideEmptyGroup(container);
 
         initContent();
         container.layout();
@@ -147,8 +154,30 @@ public class ISMViewFilterDialog extends Dialog {
         return groupComposite;
     }
 
+    /**
+     * @param container2
+     * @return
+     */
+    private Group createHideEmptyGroup(Composite parent) {
+        Group groupComposite = new Group(parent, SWT.BORDER);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
+        groupComposite.setLayoutData(gridData);
+        groupComposite.setLayout(new GridLayout(1, false));
+        hideEmptyCheckbox = new Button(groupComposite, SWT.CHECK);
+        hideEmptyCheckbox.setText("Hide empty groups");
+        return groupComposite;
+    }
+
     public String[] getCheckedElements() {
         return checkedElements;
+    }
+
+    public boolean getHideEmpty() {
+        return hideEmpty;
+    }
+
+    public boolean isHideEmpty() {
+        return getHideEmpty();
     }
 
     protected void initContent() {
@@ -168,6 +197,8 @@ public class ISMViewFilterDialog extends Dialog {
             viewer.setCheckedElements(tagPattern);
         }
         tagGroup.getParent().layout(true);
+        
+        hideEmptyCheckbox.setSelection(getHideEmpty());
     }
 
     @Override
@@ -175,6 +206,7 @@ public class ISMViewFilterDialog extends Dialog {
         // get checked objects, cast to string:
         List<Object> tagList = Arrays.asList(viewer.getCheckedElements());
         this.checkedElements = tagList.toArray(new String[tagList.size()]);
+        this.hideEmpty = hideEmptyCheckbox.getSelection();
         return super.close();
     }
 

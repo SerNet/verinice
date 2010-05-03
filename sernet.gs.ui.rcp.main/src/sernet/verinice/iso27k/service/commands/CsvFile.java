@@ -19,7 +19,10 @@ package sernet.verinice.iso27k.service.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import sernet.verinice.iso27k.service.FileUtil;
 
@@ -33,11 +36,31 @@ public class CsvFile implements Serializable{
 	
 	byte[] fileContent;
 	
+	public CsvFile(InputStream is) throws IOException {
+        super();
+        this.filePath = "unknown";
+        setFileContent(FileUtil.getBytesFromInputstream(is));
+    }
+	
 	public CsvFile(String filePath) throws IOException {
 		super();
 		this.filePath = filePath;
 		readFile();
 	}
+	
+	public CsvFile(URL url) throws IOException  {
+	    super();
+	    // url to file: http://weblogs.java.net/blog/2007/04/25/how-convert-javaneturl-javaiofile
+    	File f;
+    	try {
+    	  f = new File(url.toURI());
+    	} catch(Exception e) {
+    	  f = new File(url.getPath());
+    	}
+    	this.filePath = f.getAbsolutePath();
+    	readFile();
+	}
+
 	
 	public CsvFile(byte[] fileContent) throws IOException {
 		super();

@@ -82,4 +82,8 @@ public class TagFilter extends ViewerFilter {
 
     }
 
+    public boolean isActive() {
+        return getPattern() != null && getPattern().length > 0;
+    }
+
 }

@@ -103,6 +103,7 @@ public class Activator extends AbstractUIPlugin {
 
 		// set workdir preference:
 		CnAWorkspace.getInstance().prepareWorkDir();
+		CnAWorkspace.getInstance().updatePolicyFile();
 
 		Preferences prefs = getPluginPreferences();
 

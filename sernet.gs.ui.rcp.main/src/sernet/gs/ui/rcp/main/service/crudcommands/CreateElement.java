@@ -35,6 +35,7 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.verinice.iso27k.model.Organization;
 
 /**
  * Create and save new element of clazz clazz to the database using its class to lookup
@@ -89,6 +90,7 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
 			// get constructor with parent-parameter and create new object:
 			child = clazz.getConstructor(CnATreeElement.class).newInstance(container);
 			if(title!=null) {
+			    // override the default title
 			    child.setTitel(title);
 			}
 			
@@ -99,7 +101,7 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
 				// and has no permissions. Therefore we use the name of the currently
 				// logged in user as a role which has read and write permissions for
 				// the new ITVerbund.
-				if (child instanceof ITVerbund)
+				if (child instanceof ITVerbund || child instanceof Organization)
 				{
 					HashSet<Permission> newperms = new HashSet<Permission>();
 					newperms.add(Permission.createPermission(

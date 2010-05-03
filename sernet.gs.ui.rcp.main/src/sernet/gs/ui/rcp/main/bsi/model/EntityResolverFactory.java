@@ -26,7 +26,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;

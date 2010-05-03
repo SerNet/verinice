@@ -29,6 +29,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.actions.OpenPerspectiveAction;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
@@ -360,6 +361,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26);
         addPerspectiveMenu(window, perspectivesMenu, Iso27kPerspective.ID);
         addPerspectiveMenu(window, perspectivesMenu, Perspective.ID);
+        
+        IContributionItem perspectiveList = ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);
+        perspectivesMenu.add(perspectiveList);
 
         windowMenu.add(newWindowAction);
         windowMenu.add(reloadAction);

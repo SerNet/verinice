@@ -24,9 +24,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -47,6 +44,10 @@ public class ControlTransformService {
 	
 	private IProgressObserver progressObserver;
 	
+	private IModelUpdater modelUpdater;
+	
+	private List itemList;
+	
 	@SuppressWarnings("unchecked")
 	private Group selectedGroup;
 	
@@ -62,16 +63,26 @@ public class ControlTransformService {
 	 * @param progressObserver
 	 * @param selectedGroup
 	 */
-	public ControlTransformService(IProgressObserver progressObserver, Group selectedGroup) {
+	public ControlTransformService(IProgressObserver progressObserver, IModelUpdater modelUpdater, Group selectedGroup) {
 		this.progressObserver = progressObserver;
+		this.modelUpdater = modelUpdater;
 		this.selectedGroup = selectedGroup;
 	}
 
-	public void run()  {
+	/**
+     * @param progressObserver2
+     * @param selectedGroup2
+     * @param items
+     */
+    public ControlTransformService(IProgressObserver progressObserver, IModelUpdater modelUpdater, Group selectedGroup, List items) {
+        this(progressObserver, modelUpdater, selectedGroup);
+        this.itemList = items;
+    }
+
+    public void run()  {
 		try {	
-			Activator.inheritVeriniceContextState();
 			this.numberOfControls = 0;
-			List<IItem> itemList = createInsertList(DNDItems.getItems());
+			List<IItem> itemList = createInsertList(getItemList());
 			progressObserver.beginTask(Messages.getString("ControlTransformService.1", numberOfControls), numberOfControls); //$NON-NLS-1$
 			numberProcessed = 0;
 			for (IItem item : itemList) {				
@@ -104,7 +115,9 @@ public class ControlTransformService {
 			group.addChild(element);
 			element.setParent(group);
 			command = new SaveElement<ControlGroup>((ControlGroup) element);
-			
+			if (log.isDebugEnabled()) {
+                log.debug("Creating control group,  UUID: " + element.getUuid() + ", title: " + element.getTitle());
+            }	
 		} else {
 			// create a control
 			element = ItemControlTransformer.transform(item);
@@ -112,6 +125,9 @@ public class ControlTransformService {
 			group.addChild(element);
 			element.setParent(group);
 			command = new SaveElement<Control>((Control) element);
+			if (log.isDebugEnabled()) {
+			    log.debug("Creating control,  UUID: " + element.getUuid() + ", title: " + element.getTitle());   
+            }
 		}
 
 		try {
@@ -124,8 +140,7 @@ public class ControlTransformService {
 		
 		element = (CnATreeElement) command.getElement();
 		element.setParent(group);
-		CnAElementFactory.getModel(element).childAdded(group, element);
-		CnAElementFactory.getModel(element).databaseChildAdded(element);
+		modelUpdater.childAdded(group, element);
 		monitor.processed(1);
 		numberProcessed++;
 		if(item.getItems()!=null) {
@@ -135,6 +150,12 @@ public class ControlTransformService {
 		}
 	}
 
+	/**
+	 * createInsertList removes redundant items from itemDragList
+	 * 
+	 * @param itemDragList i list with items
+	 * @return A list with all non redundant items from itemDragList
+	 */
 	private List<IItem> createInsertList(List<IItem> itemDragList) {
 		List<IItem> tempList = new ArrayList<IItem>();
 		List<IItem> insertList = new ArrayList<IItem>();
@@ -147,6 +168,15 @@ public class ControlTransformService {
 		return insertList;
 	}
 
+	/**
+	 * Recursive helper method for createInsertList
+	 * 
+	 * @param item
+	 * @param tempList
+	 * @param insertList
+	 * @param depth
+	 * @param removed
+	 */
 	private void createInsertList(final IItem item, List<IItem> tempList, List<IItem> insertList, int depth, int removed) {
 		if(!tempList.contains(item)) {
 			tempList.add(item);
@@ -175,7 +205,15 @@ public class ControlTransformService {
 	}
 
 
-	public ICommandService getCommandService() {
+	private List getItemList() {
+        return itemList;
+    }
+
+    private void setItemList(List itemList) {
+        this.itemList = itemList;
+    }
+
+    public ICommandService getCommandService() {
 		if (commandService == null) {
 			commandService = createCommandServive();
 		}

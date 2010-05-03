@@ -160,7 +160,7 @@ public class BrowserView extends ViewPart {
 			if (element instanceof IItem) {
 				IItem item = (IItem) element;
 				StringBuilder sb = new StringBuilder();
-				writeHtml(sb, item.getName(), item.getDescription(), "iso-8859-1");
+				writeHtml(sb, item.getName(), item.getDescription(), "utf-8");
 				setText(sb.toString());			
 			}
 			
