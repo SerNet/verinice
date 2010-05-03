@@ -9,9 +9,9 @@ that you are using Eclipse and are familiar with this IDE.
 
 Software requirements:
   - Subversion client
-  - Eclipse IDE (3.4.2 and higher recommended)
+  - Eclipse IDE (3.5.2 and higher recommended)
   - Subversion Eclipse Plugin (SVN support, http://www.eclipse.org/subversive )
-  - Apache Tomcat 5.5.x
+  - Apache Tomcat 6.0.x
   - PostgreSQL (8.3/8.4 is ok, optional but strongly recommended)
 
 Subversion setup:
@@ -21,9 +21,9 @@ Subversion setup:
 
 Apache Tomcat:
 --------------
-  - get a recent release of Apache Tomcat 5.5 and unpack the tar.gz file
+  - get a recent release of Apache Tomcat 6.0 and unpack the tar.gz file
     somewhere (note where this is, we need it at a later point)
-  - Tomcat 5.5 is available from: http://tomcat.apache.org/download-55.cgi
+  - Tomcat 6.0 is available from: http://tomcat.apache.org/
 
 PostgreSQL:
 -----------
@@ -32,17 +32,12 @@ PostgreSQL:
 
 Eclipse IDE:
 ------------
-  - install the Subversive plugin (Subversive SVN Team provider) and the
+  - install the a Subversion Eclipse plugin (Subversive/Subclipse) and the
     appropriate connector
-    - NOTE: Even if you use Eclipse Ganymede (3.4.x) use the *latest* release
-      of the Subversion plugin. If the website does not tell otherwise add
-      these update sites:
-      * http://download.eclipse.org/technology/subversive/0.7/update-site/
-      * http://www.polarion.org/projects/subversive/download/eclipse/2.0/update-site/
-  - install the Java Plugin Developer Tools and Java EE Developer Tools
+  - install the Java Plugin Developer Tools and Eclipse Java EE Developer Tools
     (if not already part of your Eclipse installation)
   - Eclipse 3.5: additionally install 'JST Server Adapters'
-  - go to Window/Preferences/Server/Runtime Environment and add a Tomcat 5.5
+  - go to Window/Preferences/Server/Runtime Environment and add a Tomcat 6.0
     environment by pointing at the directory where you unpacked Apache Tomcat
   - use the svn repository explorer and add the repository
     http://www.verinice.org/svnroot
@@ -69,25 +64,14 @@ Eclipse IDE:
 	sernet.hui.server
 	sernet.hui.swtclient
 	sernet.springclient
+	target-platform/eclipse-3.5.2-rcp-sdk
 
   - close all projects (important)
-  - create a directory and unpack the files
-	etc/TargetEnvironment-0.7.0/eclipse-3.4.1-rcp-sdk.tar.bz2
-	etc/TargetEnvironment-0.7.0/additional.tar.bz2
-     which can be found inside the gs.ui.rcp.main project
-  - Eclipse 3.4:
-    - go to Window/Preferences/Plug-In Development/Target Platform/Plug-Ins
-    - click on browse and chose 'eclipse-3.4.1-rcp-sdk/eclipse/plugins'
-      inside the directory where you unpacked the eclipse-3.4.1-rcp-sdk
-      tarball
-    - click on 'Add' and add the 'additional' directory
   - Eclipse 3.5:
-    - add a new target platform
-    - specify 'eclipse-3.4.1-rcp-sdk/eclipse/plugins' and 'additional' as
-      directories to look for plugins
-    - (the additional folder seems to make the PDE builder unstable, so instead
-      you can just copy the contents of the "additional" folder into the
-      rcp-sdk folder!
+    - go to Window/Preferences/Plug-In Development/Target Platform/
+    - click 'Add' and 'Nothing: Start with an empty target definition'
+    - click on 'Add' and choose directory 'target-platform/eclipse-3.5.2-rcp-sdk' as location
+    - activate new target platform
   - open all projects, do a refresh on all projects
   - if eclipse mentions problems with the compiler level, follow the quick
     fix to set the version to 1.5
