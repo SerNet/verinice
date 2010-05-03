@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Self Assessment"
+            id="org.verinice.samt.rcp">
+      </category>
+      <view
+            name="Self Assessment View"
+            icon="icons/sample.gif"
+            category="org.verinice.samt.rcp"
+            class="org.verinice.samt.rcp.SamtView"
+            id="org.verinice.samt.rcp.views.SamtView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.verinice.samt.rcp.SamtPerspective"
+            id="org.verinice.samt.rcp.SamtPerspective"
+            name="Self Assessment Perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            id="org.verinice.samt.addSelfAssessment"
+            targetID="org.verinice.samt.rcp.views.SamtView">
+         <action
+               class="org.verinice.samt.rcp.AddSelfAssessment"
+               icon="icons/new.png"
+               id="org.verinice.samt.rcp.AddSelfAssessment"
+               label="Add Nwe Self Assessment"
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Creates a New Self Assessment">
+         </action>
+      </viewContribution>
+   </extension>
+
+</plugin>
