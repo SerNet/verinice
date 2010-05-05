@@ -1,6 +1,8 @@
 package sernet.gs.reveng.importData;
 
-public class BackupFileLocation {
+import java.io.Serializable;
+
+public class BackupFileLocation implements Serializable {
 	private String mdfLogicalName;
 	private String mdfFileName;
 	private String ldfLogicalName;

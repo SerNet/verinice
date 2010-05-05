@@ -1,8 +1,10 @@
 package sernet.gs.reveng.importData;
 
+import java.io.Serializable;
+
 import sernet.gs.reveng.NZielobjekt;
 
-public class ZielobjektTypeResult {
+public class ZielobjektTypeResult implements Serializable {
 	public NZielobjekt zielobjekt;
 	public String type;
 	public String subtype;

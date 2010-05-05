@@ -1,5 +1,8 @@
 package sernet.gs.reveng.importData;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,6 +14,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.rtf.RTFEditorKit;
+
+import org.hibernate.Hibernate;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
 
@@ -19,6 +28,7 @@ import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MSchutzbedarfkategTxtDAO;
 import sernet.gs.reveng.MUmsetzStatTxt;
 import sernet.gs.reveng.MbBaust;
+import sernet.gs.reveng.MbDringlichkeitDAO;
 import sernet.gs.reveng.MbDringlichkeitTxt;
 import sernet.gs.reveng.MbDringlichkeitTxtDAO;
 import sernet.gs.reveng.MbMassn;
@@ -29,12 +39,16 @@ import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstId;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.ModZobjBstMassId;
+import sernet.gs.reveng.ModZobjBstMassMitarb;
 import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.NZielobjektDAO;
 import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.NZobSbDAO;
+import sernet.gs.reveng.NmbNotiz;
 
 public class GSVampire {
+    
+    
 
 	List<MSchutzbedarfkategTxt> allSchutzbedarf;
 
@@ -73,6 +87,29 @@ public class GSVampire {
 			+ "and zo_bst.id.bauId = bst.id.bauId "
 			+ "and obm.loeschDatum = null ";
 
+	private static final String QUERY_NOTIZEN_FOR_ZIELOBJEKT_NAME = "select bst, mn, umstxt, zo_bst, obm, notiz "
+		+ "from ModZobjBstMass obm, "
+		+ "	MUmsetzStatTxt umstxt, "
+		+ "	NZielobjekt zo, "
+		+ "	MbBaust bst, "
+		+ "	MbMassn mn, "
+		+ " ModZobjBst zo_bst, " 
+		+ " NmbNotiz notiz "
+		+ "where zo.name = :name "
+		+ "and zo.id.zobImpId = 1 "
+		+ "and umstxt.id.sprId = 1 "
+		+ "and obm.ustId = umstxt.id.ustId "
+		+ "and obm.id.zobImpId = zo.id.zobImpId "
+		+ "and obm.id.zobId 	= zo.id.zobId "
+		+ "and obm.id.bauId 	= bst.id.bauId "
+		+ "and obm.id.bauImpId = bst.id.bauImpId "
+		+ "and obm.id.masId 	= mn.id.masId "
+		+ "and obm.id.masImpId = mn.id.masImpId "
+		+ "and zo_bst.id.zobId = zo.id.zobId "
+		+ "and zo_bst.id.bauId = bst.id.bauId " +
+		  "and obm.notizId = notiz.id.notizId "
+		+ "and obm.loeschDatum = null ";
+	
 	private static final String QUERY_MITARBEITER_FOR_MASSNAHME = "select mitarbeiter "
 			+ "from ModZobjBstMassMitarb obmm, "
 			+ "NZielobjekt mitarbeiter "
@@ -130,8 +167,14 @@ public class GSVampire {
 		Transaction transaction = dao.getSession().beginTransaction();
 		Query query = dao.getSession().createQuery(QUERY_ZIELOBJEKT_TYP);
 		Iterator iterate = query.iterate();
-		while (iterate.hasNext()) {
+	
+		loop: while (iterate.hasNext()) {
 			Object[] next = (Object[]) iterate.next();
+			
+			// skip deleted objects:
+			if ( ((NZielobjekt)next[0]).getLoeschDatum() != null )
+				continue loop;
+			
 			result.add(new ZielobjektTypeResult((NZielobjekt) next[0],
 					(String) next[1], (String) next[2]));
 		}
@@ -140,6 +183,34 @@ public class GSVampire {
 		return result;
 	}
 
+	/**
+	 * Finds notes that are attached to "massnahmen" by target object.
+	 * @param name Name of the target object 
+	 * 
+	 * @return
+	 */
+	public List<NotizenMassnahmeResult> findNotizenForZielobjekt(String name) {
+
+		List<NotizenMassnahmeResult> result = new ArrayList<NotizenMassnahmeResult>();
+		NZielobjektDAO dao = new NZielobjektDAO();
+		Transaction transaction = dao.getSession().beginTransaction();
+		Query query = dao.getSession().createQuery(
+				QUERY_NOTIZEN_FOR_ZIELOBJEKT_NAME);
+		query.setParameter("name", name, Hibernate.STRING);
+		Iterator iterate = query.iterate();
+		while (iterate.hasNext()) {
+				Object[] next = (Object[]) iterate.next();
+				result.add(new NotizenMassnahmeResult((MbBaust) next[0],
+						(MbMassn) next[1], (MUmsetzStatTxt) next[2],
+						(ModZobjBst) next[3], (ModZobjBstMass) next[4], (NmbNotiz) next[5])
+				);
+		}
+		transaction.commit();
+		dao.getSession().close();
+		return result;
+	
+	}
+	
 	public List<MbZeiteinheitenTxt> findZeiteinheitenTxtAll() {
 		MbZeiteinheitenTxtDAO dao = new MbZeiteinheitenTxtDAO();
 		Transaction transaction = dao.getSession().beginTransaction();
@@ -183,6 +254,8 @@ public class GSVampire {
 		dao.getSession().close();
 		return result;
 	}
+	
+	
 	
 	public void attachFile(String databaseName, String fileName, String url, String user, String pass) throws SQLException, ClassNotFoundException {
 		Class.forName("net.sourceforge.jtds.jdbc.Driver"); //$NON-NLS-1$
