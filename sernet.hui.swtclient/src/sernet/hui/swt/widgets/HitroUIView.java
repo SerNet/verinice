@@ -83,6 +83,7 @@ public class HitroUIView implements IEntityChangedListener   {
 	private boolean editable;
 
 	private IHuiControl focusField;
+	private IHuiControl firstField;
 
 	private boolean useRules;
 
@@ -299,6 +300,7 @@ public class HitroUIView implements IEntityChangedListener   {
 			focusField = sglControl;
 		fields.put(fieldType.getId(), sglControl);
 		sglControl.validate();
+		setFirstField(sglControl);
 	}
 
 	private void createURLField(PropertyType type, boolean editableField,
@@ -307,6 +309,7 @@ public class HitroUIView implements IEntityChangedListener   {
 		urlControl.create();
 		fields.put(type.getId(), urlControl);
 		urlControl.validate();
+		setFirstField(urlControl);
 	}
 
 	public void resizeContainer() {
@@ -333,9 +336,19 @@ public class HitroUIView implements IEntityChangedListener   {
 			focusField = textControl;
 		fields.put(type.getId(), textControl);
 		textControl.validate();
+		setFirstField(textControl);
+		setFirstField(textControl);
 	}
 
 	/**
+     * @param textControl
+     */
+    private void setFirstField(IHuiControl control) {
+        if (this.firstField == null)
+            firstField = control;
+    }
+
+    /**
 	 * Create a selection list for the given property with all defined options.
 	 * @param crudButtons 
 	 * 
@@ -351,6 +364,7 @@ public class HitroUIView implements IEntityChangedListener   {
 			focusField = mlControl;
 		fields.put(type.getId(), mlControl);
 		mlControl.validate();
+		setFirstField(mlControl);
 	}
 	
 	private void createSingleOptionField(PropertyType fieldType, boolean editable, 
@@ -362,11 +376,15 @@ public class HitroUIView implements IEntityChangedListener   {
 			focusField = sglControl;
 		fields.put(fieldType.getId(), sglControl);
 		sglControl.validate();
+		setFirstField(sglControl);
 	}
 	
 	public void setInitialFocus() {
 		if (focusField != null)
 			focusField.setFocus();
+		else if (firstField != null)
+		    firstField.setFocus();
+		    
 	}
 	
 	private void createDateField(PropertyType fieldType, boolean editable, Composite parent,
@@ -378,6 +396,7 @@ public class HitroUIView implements IEntityChangedListener   {
 			focusField = dateCtl;
 		fields.put(fieldType.getId(), dateCtl);
 		dateCtl.validate();
+		setFirstField(dateCtl);
 	}
 	
 	/**
