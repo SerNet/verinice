@@ -3365,6 +3365,60 @@ Template:
             id="control_desc"
             visible="false"/>
      	
+     	<huipropertygroup id="control_maturitygroup" name="Maturity Level" >
+     	
+     	
+        
+	        <huiproperty
+				id="control_maturity"
+				name="Maturity"
+            	focus="false"
+               	required="false"
+				inputtype="numericoption" 
+				min="0" max="9">
+			</huiproperty>
+	        
+	        <huiproperty
+				id="control_weight"
+				name="Suggested weight"
+				editable="false" />
+	        
+	        <huiproperty
+				id="control_ownweight"
+				name="Used weight" 
+				editable="true"/>
+			
+			<huiproperty 
+				id="control_min1" name="Threshold 1" editable="false" />
+			
+			<huiproperty 
+				id="control_min2" name="Threshold 2" editable="false" />
+			
+			<huiproperty
+				id="control_maturity_comment"
+				name="Remarks"
+				inputtype="text" />
+			
+			<huiproperty
+					id="control_maturity_duedate"
+					name="Realize until"
+					inputtype="date">
+	                <defaultRule class="Today">
+	                    <param>MONTH</param>
+	                    <param>2</param>
+	                </defaultRule>
+	            </huiproperty>
+        </huipropertygroup>
+        
+     	<huipropertygroup name="Effectiveness" id="control_effectivenessgroup">
+	        <huiproperty name="Effectiveness" id="control_effectiveness" 
+	        	inputtype="numericoption" min="1" max="5" />
+	        <huiproperty name="Explanation" id="control_effectiveness_explanation" inputtype="text"/>
+     	</huipropertygroup>
+     	
+     	<huipropertygroup name="Monitoring Results" id="control_auditgroup" >
+     		<!-- ??? measured effectiveness, notes, date... -->
+     	</huipropertygroup>
      
      	<huipropertygroup id="control_implementedgroup" name="Implementation">
      		<huiproperty name="Implemented" id="control_implemented" inputtype="singleoption">
@@ -3411,54 +3465,7 @@ Template:
             </huiproperty>
      	</huipropertygroup>
      	
-     	<huipropertygroup id="control_maturitygroup" name="Maturity Level" >
      	
-     	
-        
-	        <huiproperty
-				id="control_maturity"
-				name="Maturity"
-            	focus="false"
-               	required="false"
-				inputtype="numericoption" 
-				min="0" max="9">
-				
-			
-			</huiproperty>
-	        
-	        <huiproperty
-				id="control_weight"
-				name="Suggested weight"
-				editable="false" />
-	        
-	        <huiproperty
-				id="control_ownweight"
-				name="Used weight" 
-				editable="true"/>
-			
-			<huiproperty 
-				id="control_min1" name="Threshold 1" editable="false" />
-			
-			<huiproperty 
-				id="control_min2" name="Threshold 2" editable="false" />
-			
-			<huiproperty
-				id="control_maturity_comment"
-				name="Remarks"
-				inputtype="text" />
-			
-			<huiproperty
-					id="control_maturity_duedate"
-					name="Realize until"
-					inputtype="date">
-	                <defaultRule class="Today">
-	                    <param>MONTH</param>
-	                    <param>2</param>
-	                </defaultRule>
-	            </huiproperty>
-        </huipropertygroup>
-        
-
         
         <huipropertygroup
 			id="control_group_kosten"
@@ -3518,16 +3525,6 @@ Template:
 		</huipropertygroup>
 		
         
-       	<huipropertygroup name="Effectiveness" id="control_effectivenessgroup">
-	        <huiproperty name="Effectiveness" id="control_effectiveness" 
-	        	inputtype="numericoption" min="1" max="5" />
-	        <huiproperty name="Explanation" id="control_effectiveness_explanation" inputtype="text"/>
-     	</huipropertygroup>
-     	
-     	<huipropertygroup name="Monitoring Results" id="control_auditgroup" >
-     		<!-- ??? measured effectiveness, notes, date... -->
-     	</huipropertygroup>
-    
     </huientity>
     
     <huientity
