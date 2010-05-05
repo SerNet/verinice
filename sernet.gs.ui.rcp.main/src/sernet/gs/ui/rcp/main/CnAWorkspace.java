@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -82,6 +83,11 @@ public class CnAWorkspace {
 	private static final String POLICY_FILE = "updatePolicyURL"; //$NON-NLS-1$
 
 	private static final Object LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-1.0"; //$NON-NLS-1$
+
+    public final static Charset CHARSET_UTF_8 = Charset.forName("UTF-8");
+    public final static Charset CHARSET_ISO_8859_15 = Charset.forName("ISO-8859-15");
+    public final static Charset CHARSET_WINDOWS_1252 = Charset.forName("windows-1252");
+    public final static Charset CHARSET_DEFAULT = CHARSET_UTF_8;
 
 	private static CnAWorkspace instance;
 
@@ -370,6 +376,24 @@ public class CnAWorkspace {
 	private void createTextFile(String infile, String toDir, String outfile) throws NullPointerException, IOException {
 		createTextFile(infile, toDir, outfile, null);
 	}
+	
+	/**
+     * Create a text file in the local file system from a resource (i.e. inside
+     * a JAR file distributed with the application).
+     * 
+     * Adapt line-feeds to local settings and optionally replace variables with
+     * values given in a hashmap.
+     * 
+     * @param infile relative path to a file accessed by a class loader 
+     * @param toDir path to directory of the created file
+     * @param outfile name of created file
+     * @param variables property added to the file, may be null
+     * @throws NullPointerException
+     * @throws IOException
+     */
+    protected void createTextFile(String infile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
+        createTextFile(infile, CHARSET_DEFAULT, toDir, outfile, variables);
+    }
 
 	/**
 	 * Create a text file in the local file system from a resource (i.e. inside
@@ -378,18 +402,29 @@ public class CnAWorkspace {
 	 * Adapt line-feeds to local settings and optionally replace variables with
 	 * values given in a hashmap.
 	 * 
-	 * @param infile relative path to a file accessed by a class loader 
-	 * @param toDir path to directory of the created file
-	 * @param outfile name of created file
-	 * @param variables property added to the file, may be null
-	 * @throws NullPointerException
-	 * @throws IOException
+	 * Files are converted from charsetInfile to CHARSET_DEFAULT.
+	 * 
+	 * @param 
+	 *     infile relative path to a file accessed by a class loader 
+	 * @param 
+	 *     charsetInfile charset of input file 
+	 *     Files are converted from charsetInfile to CHARSET_DEFAULT
+	 * @param 
+	 *     toDir path to directory of the created file
+	 * @param 
+	 *     outfile name of created file
+	 * @param 
+	 *     variables property added to the file, may be null
+	 * @throws 
+	 *     NullPointerException
+	 * @throws
+	 *     IOException
 	 */
-	protected void createTextFile(String infile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
+	protected void createTextFile(String infile, Charset charsetInfile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
 
 		String infileResource = infile.replace('\\', '/');
 		InputStream is = getClass().getClassLoader().getResourceAsStream(infileResource);
-		InputStreamReader inRead = new InputStreamReader(is);
+		InputStreamReader inRead = new InputStreamReader(is,charsetInfile);
 		BufferedReader bufRead = new BufferedReader(inRead);
 		StringBuffer skelFile = new StringBuffer();
 
@@ -413,7 +448,7 @@ public class CnAWorkspace {
 
 		backupFile(toDir, outfile);
 		FileOutputStream fout = new FileOutputStream(toDir + File.separator + outfile, false);
-		OutputStreamWriter outWrite = new OutputStreamWriter(fout);
+		OutputStreamWriter outWrite = new OutputStreamWriter(fout,CHARSET_DEFAULT);
 		outWrite.write(skelFile.toString());
 		outWrite.close();
 		fout.close();

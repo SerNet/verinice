@@ -27,6 +27,7 @@ import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.verinice.iso27k.service.Catalog;
@@ -68,14 +69,11 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 	Catalog catalog = new Catalog();
 	
 	public ImportCatalog(String filePath) throws IOException {
-		super();
-		// TODO: read encoding from preferences !!!
-		csvFile = new CsvFile(filePath);
+		this(filePath, CnAWorkspace.CHARSET_DEFAULT);
 	}
-	
-	public ImportCatalog(URL url) throws IOException {
+	public ImportCatalog(String filePath,Charset charset) throws IOException {
         super();
-        csvFile = new CsvFile(url);
+        csvFile = new CsvFile(filePath,charset);
     }
 	
 	public ImportCatalog(InputStream is) throws IOException {
@@ -107,57 +105,57 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 	public void importCatalog() {
 		try {
 			CSVReader reader = new CSVReader(
-					new BufferedReader(
-							new InputStreamReader(
-									new ByteArrayInputStream(csvFile.getFileContent()), Charset.forName("UTF8")
-							)
-					),
-					config.getSeperator(),'"',false
+					new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvFile.getFileContent()), Charset.forName("UTF-8"))),
+					config.getSeperator(),
+					'"',
+					false
 			);
 			String[] nextLine;
 			Item item = null;
 		    while ((nextLine = reader.readNext()) != null) {
 		        // nextLine[] is an array of values from the line	
-		    	
-		        if (getLog().isDebugEnabled()) {
-		        	getLog().debug("#: " + nextLine[0]);
-		        	getLog().debug("heading: " + nextLine[1]);
-		        	getLog().debug("type: " + nextLine[2]);
-		        	getLog().debug("text: " + nextLine[3]);
-		        	
-		        	// line can have optional weight and threshold levels:
-		        	if (hasMaturityLevels(nextLine)) {
-		        		getLog().debug("maturity: " + nextLine[4]);
-		        		getLog().debug("weight 1: " + nextLine[5]);
-		        		getLog().debug("weight 2: " + nextLine[6]);
-		        		getLog().debug("threshold 1: " + nextLine[7]);
-		        		getLog().debug("threshold 2: " + nextLine[8]);
-		        		
-		        	}
-				}	     
-		       
-		        if(nextLine[0]!=null && nextLine[0].length()>0) {
-		        	if(item!=null) {
-		        		// buffer the old item
-		        		catalog.bufferItem(item);
-		        	}
-		        	// create a new one
-		        	item = new Item(nextLine[1],nextLine[2]);
-		        	item.setNumberString(nextLine[0].trim());
-		        	
-		        	item.setDescription(nextLine[3]);
-	
-		        	if (hasMaturityLevels(nextLine)) {
-		        		fillMaturityLevels(item, nextLine);
-		        	}
-		        	
-		        } else {
-		        	// add a new paragraph to the existing item
-		        	StringBuilder sb = new StringBuilder(item.getDescription());
-		        	sb.append("<p>").append(nextLine[3]).append("</p>");
-		        	item.setDescription(sb.toString());
-		        }
-		        
+		    	if(nextLine.length>=3) {
+    		        if(isNewTopic(nextLine)) {
+        		        if (getLog().isDebugEnabled()) {
+        		        	getLog().debug("#: " + nextLine[0]);
+        		        	getLog().debug("heading: " + nextLine[1]);
+        		        	getLog().debug("type: " + nextLine[2]);
+        		        	getLog().debug("text: " + nextLine[3]);
+        		        	
+        		        	// line can have optional weight and threshold levels:
+        		        	if (hasMaturityLevels(nextLine)) {
+        		        		getLog().debug("maturity: " + nextLine[4]);
+        		        		getLog().debug("weight 1: " + nextLine[5]);
+        		        		getLog().debug("weight 2: " + nextLine[6]);
+        		        		getLog().debug("threshold 1: " + nextLine[7]);
+        		        		getLog().debug("threshold 2: " + nextLine[8]);
+        		        		
+        		        	}
+        				}	     
+    		       
+    		        	if(item!=null) {
+    		        		// buffer the old item
+    		        		catalog.bufferItem(item);
+    		        	}
+    		        	// create a new one
+    		        	item = new Item(nextLine[1],nextLine[2]);
+    		        	item.setNumberString(nextLine[0].trim());
+    		        	
+    		        	item.setDescription(nextLine[3]);
+    	
+    		        	if (hasMaturityLevels(nextLine)) {
+    		        		fillMaturityLevels(item, nextLine);
+    		        	}
+    		        	
+    		        } else {
+    		        	// add a new paragraph to the existing item
+    		        	StringBuilder sb = new StringBuilder(item.getDescription());
+    		        	sb.append("<p>").append(nextLine[3]).append("</p>");
+    		        	item.setDescription(sb.toString());
+    		        }
+		    	} else {
+		    	    log.warn("Invalid line in CSV file.");
+		    	}
 		    }
 		    // buffer the last item
 		    catalog.bufferItem(item);
@@ -176,6 +174,14 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 	}
 
 	/**
+     * @param nextLine
+     * @return
+     */
+    private boolean isNewTopic(String[] nextLine) {
+        return nextLine[0]!=null && nextLine[0].length()>0;
+    }
+
+    /**
 	 * @param item
 	 * @param nextLine
 	 */

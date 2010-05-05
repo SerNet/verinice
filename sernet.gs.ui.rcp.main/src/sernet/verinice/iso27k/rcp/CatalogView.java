@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -58,6 +59,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.Attachment;
@@ -65,6 +67,7 @@ import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -77,6 +80,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 import sernet.verinice.iso27k.rcp.action.ControlDragListener;
 import sernet.verinice.iso27k.service.IItem;
 import sernet.verinice.iso27k.service.Item;
+import sernet.verinice.iso27k.service.ItemControlTransformer;
 import sernet.verinice.iso27k.service.commands.CsvFile;
 import sernet.verinice.iso27k.service.commands.ImportCatalog;
 import sernet.verinice.rcp.IAttachedToPerspective;
@@ -97,7 +101,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	
 	private Action deleteCatalogAction;
 	
-	private Action filterAction;
+	@SuppressWarnings("unused")
+    private Action filterAction;
 	
 	private Action expandAllAction;
 
@@ -437,12 +442,11 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 
 		public String getText(Object obj) {
 			IItem item = ((IItem)obj);
-			StringBuilder sb = new StringBuilder();
-			// add the number to the titel
-			if(item.getName()==null || !item.getName().startsWith(item.getNumberString())) {
-				sb.append(item.getNumberString()).append(" "); //$NON-NLS-1$
+			String label = "";
+			if(item!=null) {
+			    label = ItemControlTransformer.truncate(item.getName(), 40);
 			}
-			return sb.append(item.getName()).toString();
+			return label;
 		}
 	}
 
@@ -476,10 +480,12 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		try {
 			Attachment selected = comboModel.getSelectedObject();
 			if(selected!=null) {
+			    // load attachment/file from database
 				LoadAttachmentFile loadAttachmentFile = new LoadAttachmentFile(selected.getDbId());
 				loadAttachmentFile = getCommandService().executeCommand(loadAttachmentFile);
 				if(loadAttachmentFile!=null && loadAttachmentFile.getAttachmentFile()!=null && loadAttachmentFile.getAttachmentFile().getFileData()!=null) {
-					ImportCatalog importCatalog = new ImportCatalog(loadAttachmentFile.getAttachmentFile().getFileData());
+					// import the file
+				    ImportCatalog importCatalog = new ImportCatalog(loadAttachmentFile.getAttachmentFile().getFileData());
 					importCatalog = getCommandService().executeCommand(importCatalog);
 					if(importCatalog.getCatalog()!=null) {
 						viewer.setInput(importCatalog.getCatalog().getRoot());
@@ -500,7 +506,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		String selected = fd.open();
 		if (selected != null && selected.length() > 0) {
 			try {
-				ImportCatalog importCatalog = new ImportCatalog(selected);
+			    
+				ImportCatalog importCatalog = new ImportCatalog(selected,getCharset());
 				importCatalog = getCommandService().executeCommand(importCatalog);
 				Attachment attachment = saveFile(importCatalog);
 				if(importCatalog.getCatalog()!=null) {
@@ -514,6 +521,17 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 				ExceptionUtil.log(e, Messages.CatalogView_26);
 			}
 		}
+	}
+	
+	private Charset getCharset() {
+	    // read the charset from preference store
+	    // charset value is set in CharsetHandler
+	    String charsetName = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.CHARSET_CATALOG);
+	    Charset charset = CnAWorkspace.CHARSET_DEFAULT;
+	    if(charsetName!=null && !charsetName.isEmpty()) {
+	        charset = Charset.forName(charsetName);
+	    }
+	    return charset;
 	}
 	
 	/**

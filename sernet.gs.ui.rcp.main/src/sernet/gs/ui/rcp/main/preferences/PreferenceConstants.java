@@ -98,9 +98,14 @@ public class PreferenceConstants {
 	public static final String VNSERVER_USER = "gs_cna_serveruser";
 	public static final String VNSERVER_PASS = "gs_cna_serverpass";
 	
+	// additional gui preferences
 	public static final String SWITCH_PERSPECTIVE = "switch_perspective";
 	public static final String DONT_ASK_BEFORE_SWITCH_PERSPECTIVE = "switch_perspective_dont_ask";
 	
+	
+	// catalog import preferences
+	public static final String CHARSET_CATALOG = "org.verinice.iso27k.rcp.charset";
+    
 	/**
 	 * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view class.
 	 * 

@@ -40,21 +40,17 @@ public class ItemControlTransformer {
 	 */
 	public static Control transform(IItem item) {
 		Control control = new Control();
-		control.setAbbreviation(item.getNumberString());
 		if(item.getName()!=null) {
 			control.setTitel(item.getName().replaceAll("\\s", " "));
 		}
 		control.setDescription(item.getDescription());
-		
-		if (item.isMaturityLevelSupport()) {
-			
+		if (item.isMaturityLevelSupport()) {		
 			control.setMaturity(item.getMaturity());
 			control.setWeight1(item.getWeight1());
 			control.setWeight2(item.getWeight2());
 			control.setThreshold1(item.getThreshold1());
 			control.setThreshold2(item.getThreshold2());
-		}
-		
+		}	
 		return control;
 	}
 
@@ -66,23 +62,40 @@ public class ItemControlTransformer {
 	 */
 	public static ControlGroup transformToGroup(IItem item) {
 		ControlGroup controlGroup = new ControlGroup();
-		StringBuilder sb = new StringBuilder();
-		if(item.getNumberString()!=null) {
-			sb.append(item.getNumberString());
-		}
 		if(item.getName()!=null) {
-			if(sb.length()>0) {
-				sb.append(" ");
-			}
-			sb.append(item.getName().replaceAll("\\s", " "));
-			controlGroup.setTitel(sb.toString());
+			// replace all whitespace with " "
+			controlGroup.setTitel(item.getName().replaceAll("\\s", " "));
 		}
 		return controlGroup;
 	}
 	
 	/**
-	 * @param name2
-	 * @return
+	 * Truncates a text if it is longer than maxWidth.
+	 * If text is truncated three dots ("...") are added in the end.
+	 * 
+	 * @param text
+	 * @param maxWidth
+	 * @return truncated text (if text is longer than maxWidth) and three dots ("...") 
+	 */
+	public static String truncate(String text, int maxWidth) {
+	    String truncatedText = text;
+	    if(text!=null && text.length()>maxWidth) {
+	        truncatedText = new StringBuilder(text.substring(0, (maxWidth-3))).append("...").toString();
+	    }
+	    return truncatedText;
+	}
+	
+	/**
+	 * Teilt einen String in mehrere Zeilen, wenn er laenger als
+	 * maxWidth ist.
+	 * 
+	 * Zeilenumbrueche werden nur nach Leerzeichen eingefuegt.
+	 * Wenn der String keine Leerzeichen enthaelt, wird kein Umbruch
+	 * eingefuegt, auch wenn er laenger als maxLength ist.
+	 * 
+	 * @param text 
+     * @param maxWidth
+	 * @return text splitted in more than one line if longer than maxWidth
 	 */
 	public static String addLineBreaks(String text, int maxWidth) {
 		StringBuilder sbAll = new StringBuilder();

@@ -21,9 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.charset.Charset;
 
+import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.verinice.iso27k.service.FileUtil;
 
 /**
@@ -32,33 +32,34 @@ import sernet.verinice.iso27k.service.FileUtil;
  */
 public class CsvFile implements Serializable{
 	
-	String filePath;
+    public final static Charset CHARSET_DEFAULT = CnAWorkspace.CHARSET_UTF_8;
+	
+    String filePath;
 	
 	byte[] fileContent;
 	
 	public CsvFile(InputStream is) throws IOException {
+	    this(is,CHARSET_DEFAULT);
+	}
+	
+	public CsvFile(InputStream is, Charset charset) throws IOException {
         super();
         this.filePath = "unknown";
-        setFileContent(FileUtil.getBytesFromInputstream(is));
+        byte[] content = FileUtil.getBytesFromInputstream(is);
+        if(!CnAWorkspace.CHARSET_UTF_8.equals(charset)) {
+            content = FileUtil.changeEncoding(content, charset, CnAWorkspace.CHARSET_UTF_8);
+        }
+        setFileContent(content);
     }
 	
 	public CsvFile(String filePath) throws IOException {
+        this(filePath,CHARSET_DEFAULT);
+    }
+	
+	public CsvFile(String filePath, Charset charset) throws IOException {
 		super();
 		this.filePath = filePath;
-		readFile();
-	}
-	
-	public CsvFile(URL url) throws IOException  {
-	    super();
-	    // url to file: http://weblogs.java.net/blog/2007/04/25/how-convert-javaneturl-javaiofile
-    	File f;
-    	try {
-    	  f = new File(url.toURI());
-    	} catch(Exception e) {
-    	  f = new File(url.getPath());
-    	}
-    	this.filePath = f.getAbsolutePath();
-    	readFile();
+		readFile(charset);
 	}
 
 	
@@ -67,10 +68,14 @@ public class CsvFile implements Serializable{
 		setFileContent(fileContent);
 	}
 
-	public void readFile() throws IOException {
+	public void readFile(Charset charset) throws IOException {
 		if( getFilePath()!=null) {
 			File file = new File(getFilePath());
-			setFileContent(FileUtil.getBytesFromFile(file));
+			byte[] content = FileUtil.getBytesFromFile(file);
+			if(!CnAWorkspace.CHARSET_UTF_8.equals(charset)) {
+			    content = FileUtil.changeEncoding(content, charset, CnAWorkspace.CHARSET_UTF_8);
+			}
+			setFileContent(content);
 		}
 	}
 	

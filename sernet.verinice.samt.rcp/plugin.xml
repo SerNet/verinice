@@ -33,7 +33,7 @@
                class="org.verinice.samt.rcp.AddSelfAssessment"
                icon="icons/new.png"
                id="org.verinice.samt.rcp.AddSelfAssessment"
-               label="Add Nwe Self Assessment"
+               label="Add New Self Assessment"
                state="true"
                style="push"
                toolbarPath="additions"
@@ -41,5 +41,12 @@
          </action>
       </viewContribution>
    </extension>
-
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.verinice.samt.rcp.SamtPreferencePage"
+            id="org.verinice.samt.rcp.SamtPreferencePage"
+            name="Self Assessment Prefernces">
+      </page>
+   </extension>
 </plugin>

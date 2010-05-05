@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.StringBufferInputStream;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
@@ -55,7 +56,7 @@ import sernet.verinice.iso27k.model.Control;
 import sernet.verinice.iso27k.service.IItem;
 
 public class BrowserView extends ViewPart {
-
+    
 	private static final Logger LOG = Logger.getLogger(BrowserView.class);
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.browserview"; //$NON-NLS-1$
@@ -161,13 +162,13 @@ public class BrowserView extends ViewPart {
 				IItem item = (IItem) element;
 				StringBuilder sb = new StringBuilder();
 				writeHtml(sb, item.getName(), item.getDescription(), "utf-8");
-				setText(sb.toString());			
+				setText(sb.toString());	
 			}
 			
 			if (element instanceof Control) {
 				Control item = (Control) element;
 				StringBuilder sb = new StringBuilder();
-				writeHtml(sb, item.getTitle(), item.getDescription(), "iso-8859-1");
+				writeHtml(sb, item.getTitle(), item.getDescription(), CnAWorkspace.CHARSET_UTF_8.name());
 				setText(sb.toString());			
 			}
 
@@ -187,14 +188,11 @@ public class BrowserView extends ViewPart {
 	}
 	
 	private void writeHtml(StringBuilder buf, String headline, String bodytext, String encoding) {
-		String cssDir = CnAWorkspace.getInstance().getWorkdir()
-				+ File.separator + "html" + File.separator + "screen.css"; //$NON-NLS-1$ //$NON-NLS-2$
-		buf
-				.append("<html><head>"
-						+ "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=" + encoding + "\"/>\n"
-						+ "<link REL=\"stylesheet\" media=\"screen\" HREF=\""
-						+ cssDir + "\"/>"
-						+ "</head><body><div id=\"content\"><h1>");
+		String cssDir = CnAWorkspace.getInstance().getWorkdir()+ File.separator + "html" + File.separator + "screen.css"; //$NON-NLS-1$ //$NON-NLS-2$
+		buf.append("<html><head>");
+		buf.append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=").append(encoding).append("\"/>\n");
+		buf.append("<link REL=\"stylesheet\" media=\"screen\" HREF=\"").append(cssDir).append("\"/>");
+		buf.append("</head><body><div id=\"content\"><h1>");
 		buf.append(headline);
 		buf.append("</h1><p>");
 		buf.append("");

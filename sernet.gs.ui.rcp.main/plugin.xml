@@ -193,6 +193,21 @@
             id="sernet.verinice.iso27k.rcp.commands.paste"
             name="%command.name.6">
       </command>
+      <command
+      		categoryId="sernet.gs.ui.rcp.commands"
+      		defaultHandler="org.eclipse.ui.category.help"
+      		id="sernet.verinice.iso27k.rcp.commands.charset"
+      		name="%command.name.7">
+				<commandParameter
+					id="org.eclipse.ui.commands.radioStateParameter"
+					name="%command.parameter.name.1"
+					optional="false">
+				</commandParameter>
+				<state
+					class="org.eclipse.ui.handlers.RadioState:Moe"
+					id="org.eclipse.ui.commands.radioState">
+				</state>
+	   </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -617,6 +632,39 @@
                label="%command.label.4"
                tooltip="%command.tooltip.1"/>
       </menuContribution>
+      <menuContribution
+        locationURI="menu:sernet.verinice.iso27k.rcp.CatalogView?after=additions">
+		    <command
+		            commandId="sernet.verinice.iso27k.rcp.commands.charset"
+		            id="sernet.verinice.iso27k.rcp.commands.charset.utf-8"
+		            label="%command.label.5"
+		            style="radio">
+		        <parameter
+		            name="org.eclipse.ui.commands.radioStateParameter"
+		            value="UTF-8">
+		        </parameter>
+		    </command>
+		    <command
+		            commandId="sernet.verinice.iso27k.rcp.commands.charset"
+		            id="sernet.verinice.iso27k.rcp.commands.charset.iso-8859-1"
+		            label="%command.label.6"
+		            style="radio">
+		        <parameter
+		            name="org.eclipse.ui.commands.radioStateParameter"
+		            value="ISO-8859-15">
+		        </parameter>
+		    </command>
+		    <command
+		            commandId="sernet.verinice.iso27k.rcp.commands.charset"
+		            id="sernet.verinice.iso27k.rcp.commands.charset.windows-1252"
+		            label="%command.label.7"
+		            style="radio">
+		        <parameter
+		            name="org.eclipse.ui.commands.radioStateParameter"
+		            value="WINDOWS-1252">
+		        </parameter>
+		    </command>
+		</menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -894,6 +942,15 @@
 	                </iterate>
             	</with>
 		 </enabledWhen>
+      </handler>
+      <handler
+            class="sernet.verinice.iso27k.rcp.action.CharsetHandler"
+            commandId="sernet.verinice.iso27k.rcp.commands.charset">
+      	 <activeWhen>
+     		<with variable="activePartId">
+     			<equals value="sernet.verinice.iso27k.rcp.CatalogView" />
+    		</with>
+         </activeWhen>
       </handler>
    </extension>
    <extension point="org.eclipse.core.expressions.propertyTesters">

@@ -21,6 +21,7 @@ package org.verinice.samt.rcp;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
@@ -40,17 +41,15 @@ import sernet.verinice.iso27k.service.commands.CsvFile;
 import sernet.verinice.iso27k.service.commands.LoadModel;
 
 /**
- * @author Daniel Murygin <dm@sernet.de> // TODO: Externalize Strings
+ * @author Daniel Murygin <dm@sernet.de>
  */
 public class AddSelfAssessment implements IViewActionDelegate {
 
     private static final Logger LOG = Logger.getLogger(AddSelfAssessment.class);
 
-    public static final String TITEL = "Self Assessment";
+    public static final String TITEL = Messages.AddSelfAssessment_0;
 
     private ICommandService commandService;
-
-    private CsvFile csvFile;
 
     /*
      * (non-Javadoc)
@@ -71,9 +70,11 @@ public class AddSelfAssessment implements IViewActionDelegate {
     @Override
     public void run(IAction action) {
         try {
+            // load iso-model
             LoadModel loadModel = new LoadModel();
             loadModel = getCommandService().executeCommand(loadModel);
             ISO27KModel model = loadModel.getModel();
+            // create self-assessment 
             CreateSelfAssessment command = new CreateSelfAssessment(model, TITEL);
             command.setCsvFile(getCsvFile());
             command = getCommandService().executeCommand(command);
@@ -84,34 +85,48 @@ public class AddSelfAssessment implements IViewActionDelegate {
                 EditorFactory.getInstance().openEditor(organization);
             }
         } catch (Exception e) {
-            LOG.error("Could not create self-assessment", e);
-            ExceptionUtil.log(e, "Could not create self-assessment.");
+            LOG.error("Could not create self-assessment", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.AddSelfAssessment_2);
         }
 
     }
 
     /**
-     * @return
-     * @throws IOException
+     * Load the self assessment CSV-File:
+     * SamtWorkspace.SAMT_CATALOG_FILE_NAME
+     * from the file system.
+     * 
+     * File is saved in verinice workspace in folder:
+     * SamtWorkspace.getInstance().getConfDir().
+     * 
+     * @return the self assessment CSV-File
+     * @throws IOException if file can not be found
      */
     private CsvFile getCsvFile() throws IOException {
-        if (csvFile == null) {
-            final String fullSamtCatalogPath = getFullSamtCatalogPath();
-            try {
-                csvFile = new CsvFile(fullSamtCatalogPath);
-            } catch (RuntimeException e) {
-                LOG.error("Error while reading samt catalog file from path: " + fullSamtCatalogPath, e);
-                throw e;
-            } catch (IOException e) {
-                LOG.error("Error while reading samt catalog file from path: " + fullSamtCatalogPath, e);
-                throw e;
-            } catch (Exception e) {
-                final String message = "Error while reading samt catalog file from path: " + fullSamtCatalogPath;
-                LOG.error(message, e);
-                throw new RuntimeException(message, e);
-            }
+        CsvFile csvFile = null;    
+        final String fullSamtCatalogPath = getFullSamtCatalogPath();
+        try {
+            csvFile = new CsvFile(fullSamtCatalogPath,getCharset());
+        } catch (RuntimeException e) {
+            LOG.error("Error while reading samt catalog file from path: " + fullSamtCatalogPath, e); //$NON-NLS-1$
+            throw e;
+        } catch (IOException e) {
+            LOG.error("Error while reading samt catalog file from path: " + fullSamtCatalogPath, e); //$NON-NLS-1$
+            throw e;
+        } catch (Exception e) {
+            final String message = "Error while reading samt catalog file from path: " + fullSamtCatalogPath; //$NON-NLS-1$
+            LOG.error(message, e);
+            throw new RuntimeException(message, e);
         }
         return csvFile;
+    }
+
+    private Charset getCharset() {
+        String charsetName = Activator.getDefault().getPreferenceStore().getString(SamtPreferencePage.CHARSET_SAMT);
+        if(charsetName==null || charsetName.equals("")) { //$NON-NLS-1$
+            charsetName = Activator.getDefault().getPreferenceStore().getDefaultString(SamtPreferencePage.CHARSET_SAMT); 
+        }
+        return Charset.forName(charsetName);
     }
 
     private String getFullSamtCatalogPath() {

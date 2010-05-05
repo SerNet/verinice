@@ -93,7 +93,7 @@ public class ISMViewLabelProvider extends LabelProvider {
 
 	@Override
 	public String getText(Object obj) {
-		String title = "unknown";
+		String text = "unknown";
 		if (obj != null) {	
 			Object cachedObject = cache.getCachedObject(obj);
 			if (cachedObject == null) {
@@ -103,17 +103,23 @@ public class ISMViewLabelProvider extends LabelProvider {
 			}
 			if (obj instanceof CnATreeElement) {
 				CnATreeElement element = (CnATreeElement) obj;
-				title = ItemControlTransformer.addLineBreaks(element.getTitle(),40);
+				StringBuilder sb = new StringBuilder();
 				if(element instanceof Control) {
 					String abbreviation = ((Control)element).getAbbreviation();
-					if(Pattern.matches(Item.NUMBER_REGEX_PATTERN,abbreviation) 
-							&& (title==null || !title.startsWith(abbreviation))) {
-						title = new StringBuilder(abbreviation).append(" ").append(title).toString();
+					if(abbreviation!=null && !abbreviation.isEmpty()) {
+					    sb.append(abbreviation).append(" ");
 					}
 				}
+				String title = element.getTitle();
+                if(title!=null && !title.isEmpty()) {
+                    sb.append(title);
+                }
+                if(sb.length()>0) {
+                    text = ItemControlTransformer.truncate(sb.toString(),40) ;
+                }
 			}
 		}
-		return title;
+		return text;
 	}
 
 }

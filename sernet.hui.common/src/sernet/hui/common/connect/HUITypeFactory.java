@@ -431,6 +431,7 @@ public class HUITypeFactory {
         String[] params = new String[nodes.getLength()];
         for (int i = 0; i < nodes.getLength(); i++) {
             Element e = (Element) nodes.item(i);
+            // TODO dm, bug 142, multi language 
             params[i] = nodes.item(i).getTextContent();
 
             // FIXME read rules from file

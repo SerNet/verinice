@@ -22,6 +22,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>
@@ -69,6 +72,25 @@ public class FileUtil {
 	    }
 	    buffer.flush();
 	    return buffer.toByteArray();
+	}
+	
+	/**
+	 * Usage:
+	 * Charset charsetFrom = Charset.forName("UTF-8");
+     * Charset charsetTo = Charset.forName("ISO-8859-15");
+	 * 
+	 * 
+	 * @param charsetFrom
+	 * @param charsetTo
+	 * @return
+	 */
+	public static byte[] changeEncoding(byte[] byteArray, Charset charsetFrom, Charset charsetTo) {
+	    ByteBuffer inputBuffer = ByteBuffer.wrap(byteArray);
+	    // decode charsetFrom
+	    CharBuffer data = charsetFrom.decode(inputBuffer);
+	    // encode charsetTo
+	    ByteBuffer outputBuffer = charsetTo.encode(data);
+	    return outputBuffer.array();
 	}
 
 }

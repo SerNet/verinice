@@ -99,7 +99,10 @@ public class Item implements IItem {
 	 * @param name name of the item
 	 */
 	public Item(String name, String typeId) {
-		this.name = ItemControlTransformer.addLineBreaks(name, 40);
+	    if(name!=null) {
+	        // replace all whitespace (e.g.: line breaks) with " "
+            this.name = name.replaceAll("\\s", " ");
+	    }
 		if(typeId!=null && typeId.length()>0) {
 			this.typeId = Integer.valueOf(typeId);
 		}
