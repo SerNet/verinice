@@ -35,8 +35,8 @@ import java.util.Collection;
 public interface IItem extends Serializable {
 	
 	static final int CONTROL = 0;
-	
 	static final int THREAT = 1;
+	static final int VULNERABILITY = 2;
 	
 	String getNumberString();
 	

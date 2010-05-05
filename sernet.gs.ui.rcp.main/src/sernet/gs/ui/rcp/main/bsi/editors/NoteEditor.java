@@ -169,7 +169,7 @@ public class NoteEditor extends EditorPart {
 		gdTitel.grabExcessHorizontalSpace = true;
 		gdTitel.grabExcessVerticalSpace = false;
 		gdTitel.horizontalAlignment = GridData.FILL;
-		gdTitel.verticalAlignment = GridData.CENTER;
+		gdTitel.verticalAlignment = GridData.BEGINNING;
 		Text title = new Text(contentComp,SWT.BORDER | SWT.NULL);	
 		
 		title.setLayoutData(gdTitel);
@@ -188,8 +188,8 @@ public class NoteEditor extends EditorPart {
 		gdText.grabExcessVerticalSpace = false;
 		gdText.horizontalAlignment = GridData.FILL;
 		gdText.verticalAlignment = GridData.CENTER;
-		gdText.heightHint=80;
-		textNote = new Text(contentComp,SWT.BORDER | SWT.MULTI);
+		gdText.heightHint=200;
+		textNote = new Text(contentComp,SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textNote.setLayoutData(gdText);
 		textNote.addListener(SWT.Modify, new Listener() {
 			public void handleEvent(Event e) {

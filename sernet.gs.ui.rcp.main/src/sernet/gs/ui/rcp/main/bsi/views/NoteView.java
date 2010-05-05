@@ -195,9 +195,9 @@ public class NoteView extends ViewPart {
 					gdText.grabExcessVerticalSpace = false;
 					gdText.horizontalAlignment = GridData.FILL;
 					gdText.verticalAlignment = GridData.CENTER;
-					gdText.heightHint=60;
+					gdText.heightHint=100;
 					gdText.verticalSpan=2;
-				    Text text = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY);
+				    Text text = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
 				    text.setLayoutData(gdText);
 				    if(note.getText()!=null) {
 				    	text.setText(note.getText());

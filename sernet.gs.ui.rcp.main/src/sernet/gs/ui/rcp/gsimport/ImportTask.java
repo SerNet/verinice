@@ -77,7 +77,7 @@ public class ImportTask {
 	public static final int TYPE_SQLSERVER = 1;
 	public static final int TYPE_MDB = 2;
 
-		private IProgress monitor;
+	private IProgress monitor;
 	private GSVampire vampire;
 	private TransferData transferData;
 
@@ -141,7 +141,8 @@ public class ImportTask {
 		// a classloader from a Hibernate class. This classloader is able to resolve
 		// Hibernate classes and can be used successfully by Antlr to access.
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader(Hibernate.class.getClassLoader());
+		ClassLoader classLoader = Hibernate.class.getClassLoader();
+		Thread.currentThread().setContextClassLoader(classLoader);
 		
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
@@ -298,7 +299,9 @@ public class ImportTask {
 		monitor.done();
 	}
 
-	private void importSchutzbedarf() throws Exception {
+	
+
+    private void importSchutzbedarf() throws Exception {
 		if (!schutzbedarf)
 			return;
 
@@ -521,17 +524,7 @@ public class ImportTask {
 		List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = vampire
 				.findBausteinMassnahmenByZielobjekt(zielobjekt);
 
-		// convert list to map: of bausteine and corresponding massnahmen:
-		Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = new HashMap<MbBaust, List<BausteineMassnahmenResult>>();
-		for (BausteineMassnahmenResult result : findBausteinMassnahmenByZielobjekt) {
-			List<BausteineMassnahmenResult> list = bausteineMassnahmenMap
-					.get(result.baustein);
-			if (list == null) {
-				list = new ArrayList<BausteineMassnahmenResult>();
-				bausteineMassnahmenMap.put(result.baustein, list);
-			}
-			list.add(result);
-		}
+		Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
 
 		this.monitor.subTask("Erstelle " + zielobjekt.getName() 
 				+ " mit " + bausteineMassnahmenMap.keySet().size() + " Bausteinen und "

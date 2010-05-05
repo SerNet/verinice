@@ -41,6 +41,7 @@ import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
 import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
+import sernet.gs.ui.rcp.main.actions.ImportGstoolNotesAction;
 import sernet.gs.ui.rcp.main.actions.ManageUpdatesAction;
 import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
@@ -156,12 +157,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private BausteinZuordnungAction bausteinZuordnungAction;
 
+	private ImportGstoolNotesAction importGSNotesAction;
+
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
         removeExtraneousActions();
     }
 
-    @Override
     protected void makeActions(final IWorkbenchWindow window) {
         // Creates the actions and registers them.
         // Registering is needed to ensure that key bindings work.
@@ -244,6 +246,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         register(importGstoolAction);
+
+		importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27);
+		register(importGSNotesAction);
 
         showPreferencesAction = new ShowPreferencesAction();
         // showPreferencesAction = ActionFactory.PREFERENCES.create(window);
@@ -330,6 +335,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         fileMenu.add(new Separator());
         fileMenu.add(importGstoolAction);
+		fileMenu.add(importGSNotesAction);
 
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);

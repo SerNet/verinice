@@ -29,20 +29,24 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
+import sernet.verinice.iso27k.model.Control;
+import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.iso27k.service.ControlMaturityService;
 import sernet.verinice.iso27k.service.Retriever;
 
 /**
  * Returns the given properties as columns for OpenOffice export.
+ * Adds three calculated columns for maturity level, weight and average by control group.
  * 
  * @author koderman[at]sernet[dot]de
  *
  */
-public class PropertiesRow implements IOOTableRow, ICnaItemRow {
+public class ControlGroupMaturityRow implements IOOTableRow, ICnaItemRow {
 
-	private CnATreeElement item;
+	private ControlGroup control;
 	private List<String> properties;
 	
-	private Pattern numbersOnly = Pattern.compile("\\d+");
+	private Pattern numbersOnly = Pattern.compile("^\\d+[\\.,]*\\d*$");
 
 	protected List<String> getProperties() {
 		return properties;
@@ -53,14 +57,16 @@ public class PropertiesRow implements IOOTableRow, ICnaItemRow {
 	}
 
 	private String style;
+    private int maxColumns;
 	
 
-	public PropertiesRow(CnATreeElement item, List<String> properties, String style) {
-		this.item = item;
+	public ControlGroupMaturityRow(ControlGroup item, List<String> properties, String style, int maxColumns) {
+		this.control = item;
 		this.properties = properties;
 		this.style = style;
+		this.maxColumns = properties.size() > maxColumns ? properties.size() : maxColumns;
 	}
-	
+
 	public double getCellAsDouble(int column) {
 	    double double1 = 0;
 	    try {
@@ -72,10 +78,28 @@ public class PropertiesRow implements IOOTableRow, ICnaItemRow {
 	}
 	
 	public String getCellAsString(int column) {
-		return item.getEntity().getSimpleValue(properties.get(column));
+	    ControlMaturityService maturityService = new ControlMaturityService();
+	    // we start at index 0, so this is one column after the last property:
+	    if (column == maxColumns) {
+	        return Integer.toString(maturityService.getWeightedMaturity(control));
+	    }
+	    // two columns after the last property:
+	    if (column == maxColumns+1) {
+            return Integer.toString(maturityService.getWeights(control));
+        }
+	    // three columns after the last property:
+	    if (column == maxColumns+2) {
+	        return Double.toString(maturityService.getMaturityByWeight(control));
+	    }
+	    if (column > properties.size()-1)
+	        return "";
+	    else
+	        return control.getEntity().getSimpleValue(properties.get(column));
 	}
 
-	public int getCellType(int column) {
+	
+
+    public int getCellType(int column) {
 	    Matcher match = numbersOnly.matcher(getCellAsString(column));
 	    if (match.matches())
 	        return IOOTableRow.CELL_TYPE_DOUBLE;
@@ -84,9 +108,7 @@ public class PropertiesRow implements IOOTableRow, ICnaItemRow {
 	}
 
 	public int getNumColumns() {
-		if (properties == null)
-			return 0;
-		return properties.size();
+	    return maxColumns+3;
 	}
 	
 	public String getRowStyle() {
@@ -94,7 +116,7 @@ public class PropertiesRow implements IOOTableRow, ICnaItemRow {
 	}
 
 	public CnATreeElement getItem() {
-		return item;
+		return control;
 	}
 	
 }

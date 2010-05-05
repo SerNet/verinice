@@ -17,32 +17,40 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.reports;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.hibernate.LazyInitializationException;
 
+import sernet.gs.ui.rcp.main.bsi.views.chart.MaturitySpiderChart;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
+import sernet.verinice.iso27k.model.Control;
+import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.iso27k.service.ControlMaturityService;
 import sernet.verinice.iso27k.service.Retriever;
 
 /**
  * Returns the given properties as columns for OpenOffice export.
+ * Adds three calculated columns for maturity level, weight and average by control group.
  * 
  * @author koderman[at]sernet[dot]de
  *
  */
-public class PropertiesRow implements IOOTableRow, ICnaItemRow {
+public class ControlMaturityRow implements IOOTableRow, ICnaItemRow {
 
 	private CnATreeElement item;
 	private List<String> properties;
 	
-	private Pattern numbersOnly = Pattern.compile("\\d+");
+	private Pattern numbersOnly = Pattern.compile("^\\d+[\\.,]*\\d*$");
 
 	protected List<String> getProperties() {
 		return properties;
@@ -55,12 +63,12 @@ public class PropertiesRow implements IOOTableRow, ICnaItemRow {
 	private String style;
 	
 
-	public PropertiesRow(CnATreeElement item, List<String> properties, String style) {
+	public ControlMaturityRow(Control item, List<String> properties, String style) {
 		this.item = item;
 		this.properties = properties;
 		this.style = style;
 	}
-	
+
 	public double getCellAsDouble(int column) {
 	    double double1 = 0;
 	    try {
@@ -72,10 +80,52 @@ public class PropertiesRow implements IOOTableRow, ICnaItemRow {
 	}
 	
 	public String getCellAsString(int column) {
+	    // we start at index 0, so this is one column after the last property:
+	    if (column == properties.size()) {
+	        return Integer.toString(calculateWeightedMaturity());
+	    }
+	    // two columns after the last property:
+	    if (column == properties.size()+1) {
+	        return "";
+        }
+	    // three columns after the last property:
+	    if (column == properties.size()+2) {
+	        return Double.toString(calculateWeightedMaturityByWeight());
+	    }
 		return item.getEntity().getSimpleValue(properties.get(column));
 	}
 
-	public int getCellType(int column) {
+	/**
+     * @return
+     */
+    private Double calculateWeightedMaturityByWeight() {
+        ControlMaturityService maturityService = new ControlMaturityService();
+        if (item.getEntityType().getId().equals(ControlGroup.TYPE_ID)) {
+            ControlGroup control = (ControlGroup) item;
+            return maturityService.getMaturityByWeight(control);
+        } else if (item.getEntityType().getId().equals(Control.TYPE_ID)) {
+            Control control = (Control) item;
+            return maturityService.getMaturityByWeight(control);
+        }
+        return 0.0;
+    }
+
+    /**
+     * @return
+     */
+    private Integer calculateWeightedMaturity() {
+        ControlMaturityService maturityService = new ControlMaturityService();
+        if (item.getEntityType().getId().equals(ControlGroup.TYPE_ID)) {
+            ControlGroup control = (ControlGroup) item;
+            return maturityService.getWeightedMaturity(control);
+        } else if (item.getEntityType().getId().equals(Control.TYPE_ID)) {
+            Control control = (Control) item;
+            return maturityService.getWeightedMaturity(control);
+        }
+        return 0;
+    }
+
+    public int getCellType(int column) {
 	    Matcher match = numbersOnly.matcher(getCellAsString(column));
 	    if (match.matches())
 	        return IOOTableRow.CELL_TYPE_DOUBLE;
@@ -86,7 +136,8 @@ public class PropertiesRow implements IOOTableRow, ICnaItemRow {
 	public int getNumColumns() {
 		if (properties == null)
 			return 0;
-		return properties.size();
+		// add two calculated columns:
+		return properties.size()+3;
 	}
 	
 	public String getRowStyle() {

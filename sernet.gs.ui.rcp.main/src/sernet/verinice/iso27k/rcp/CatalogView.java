@@ -101,8 +101,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	
 	private Action deleteCatalogAction;
 	
-	@SuppressWarnings("unused")
-    private Action filterAction;
+	private Action filterAction;
 	
 	private Action expandAllAction;
 
@@ -435,7 +434,10 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 				image = ImageCache.STUFE_NONE;
 			}
 			else if(item.getDescription()!=null && item.getTypeId()==IItem.THREAT) {
-				image = ImageCache.GEFAEHRDUNG;
+				image = ImageCache.ISO27K_THREAT;
+			}
+			else if(item.getDescription()!=null && item.getTypeId()==IItem.VULNERABILITY) {
+			    image = ImageCache.ISO27K_VULNERABILITY;
 			}
 			return ImageCache.getInstance().getImage(image);	
 		}
@@ -485,7 +487,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 				loadAttachmentFile = getCommandService().executeCommand(loadAttachmentFile);
 				if(loadAttachmentFile!=null && loadAttachmentFile.getAttachmentFile()!=null && loadAttachmentFile.getAttachmentFile().getFileData()!=null) {
 					// import the file
-				    ImportCatalog importCatalog = new ImportCatalog(loadAttachmentFile.getAttachmentFile().getFileData());
+					ImportCatalog importCatalog = new ImportCatalog(loadAttachmentFile.getAttachmentFile().getFileData());
 					importCatalog = getCommandService().executeCommand(importCatalog);
 					if(importCatalog.getCatalog()!=null) {
 						viewer.setInput(importCatalog.getCatalog().getRoot());

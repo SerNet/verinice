@@ -51,7 +51,7 @@ public class PropertyHeadersRow implements IOOTableRow, ICnaItemRow {
 		PropertyType type = HUITypeFactory.getInstance().getPropertyType(
 				item.getEntity().getEntityType(),
 				properties.get(column));
-		return type.getName();
+		return type != null ? type.getName() : "";
 	}
 
 	public int getCellType(int column) {

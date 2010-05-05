@@ -38,6 +38,8 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.reports.AllItemsReport;
 import sernet.gs.ui.rcp.main.reports.ErgaenzendeAnalyseReport;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
+import sernet.gs.ui.rcp.main.reports.ISMReport;
+import sernet.gs.ui.rcp.main.reports.ISMTypedItemReport;
 import sernet.gs.ui.rcp.main.reports.MassnahmenTodoReport;
 import sernet.gs.ui.rcp.main.reports.MassnahmenumsetzungReport;
 import sernet.gs.ui.rcp.main.reports.ModellierungReport;
@@ -159,6 +161,11 @@ public class ChooseReportPage extends WizardPage {
         item.setText(0, report.getTitle());
         item.setData(report);
 
+		report = new ISMTypedItemReport(reportProperties);
+		item = new TableItem(reportsTable, SWT.NULL);
+		item.setText(0, report.getTitle());
+		item.setData(report);
+		
         nameColumn.pack();
         this.reportsTable.layout(true);
 

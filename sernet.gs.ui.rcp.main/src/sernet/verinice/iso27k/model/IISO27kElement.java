@@ -32,4 +32,6 @@ public interface IISO27kElement {
 	public String getTitle();
 	
 	public Collection<? extends String> getTags();
+	
+	public String getAbbreviation();
 }

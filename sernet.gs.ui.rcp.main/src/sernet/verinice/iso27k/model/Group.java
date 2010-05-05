@@ -37,6 +37,10 @@ public abstract class Group<T> extends CnATreeElement implements IISO27kGroup {
 		super();
 	}
 	
+	public String getAbbreviation() {
+	    return "";
+	}
+	
 	/**
 	 * @param parent
 	 */

@@ -173,14 +173,14 @@ public class GSImportRestorePreferencePage extends FieldEditorPreferencePage imp
 									}
 								});
 							} catch (SQLException e) {
-								ExceptionUtil.log(e, Messages.getString("GSImportRestorePreferencePage.22") + fileName); //$NON-NLS-1$
+								ExceptionUtil.log(e, Messages.getString("GSImportRestorePreferencePage.22") + fileName + ", " +  e.getLocalizedMessage()); //$NON-NLS-1$
 							} catch (ClassNotFoundException e) {
 								ExceptionUtil.log(e, "Konnte Datenbankdatei nicht anhängen " + fileName); //$NON-NLS-1$
 							}
 						}
 					});
 				} catch (InvocationTargetException e1) {
-					ExceptionUtil.log(e1, "Fehler beim Wiederherstellen der Datenbank");
+					ExceptionUtil.log(e1, Messages.getString("GSImportRestorePreferencePage.4")); //$NON-NLS-1$
 				} catch (InterruptedException e1) {
 					ExceptionUtil.log(e1, Messages.getString("GSImportRestorePreferencePage.25")); //$NON-NLS-1$
 				}

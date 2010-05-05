@@ -27,12 +27,18 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.views.chart.messages"; //$NON-NLS-1$
+	public static String ChartView_0;
 	public static String ChartView_1;
+	public static String ChartView_10;
+	public static String ChartView_11;
 	public static String ChartView_2;
 	public static String ChartView_3;
 	public static String ChartView_4;
 	public static String ChartView_5;
 	public static String ChartView_6;
+	public static String ChartView_7;
+	public static String ChartView_8;
+	public static String ChartView_9;
 	public static String LebenszyklusBarChart_0;
 	public static String LebenszyklusBarChart_1;
 	public static String LebenszyklusBarChart_2;

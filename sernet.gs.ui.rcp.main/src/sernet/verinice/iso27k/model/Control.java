@@ -49,7 +49,7 @@ public class Control extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_IMPLEMENTED_PARTLY = "control_implemented_partly";
 	public static final String PROP_IMPLEMENTED_NA = "control_implemented_na";
 
-	// this is another way to meassure control implementation: (currently disabled in SNCA.xml)
+	// this is another way to meassure control implementation:
 	public static final String PROP_MATURITY = "control_maturity"; //$NON-NLS-1$
 	public static final String PROP_WEIGHT1 = "control_weight"; //$NON-NLS-1$
 	public static final String PROP_WEIGHT2 = "control_ownweight"; //$NON-NLS-1$
@@ -125,15 +125,56 @@ public class Control extends CnATreeElement implements IISO27kElement {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
 	}
 
+	
+
+
+
+		
+	
+	
+	
+
 	public void setMaturity(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_MATURITY), value);
 	}
+	
+	public int getMaturity() {
+	    String simpleValue = getEntity().getSimpleValue(PROP_MATURITY);
+	    return Integer.parseInt(simpleValue);
+	}
 
+	/**
+	 * Returns the used weight.
+	 * @return
+	 */
+	public int getWeight2() {
+	    String simpleValue = getEntity().getSimpleValue(PROP_WEIGHT2);
+	    return Integer.parseInt(simpleValue);
+	}
+	
+	public int getThreshold1() {
+        String simpleValue = getEntity().getSimpleValue(PROP_THRESHOLD1);
+        return Integer.parseInt(simpleValue);
+    }
+
+	public int getThreshold2() {
+	    String simpleValue = getEntity().getSimpleValue(PROP_THRESHOLD2);
+	    return Integer.parseInt(simpleValue);
+	}
+
+	/**
+	 * Sets the suggested weight for maturity calculation.
+	 * @param value
+	 */
 	public void setWeight1(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_WEIGHT1), value);
 		
 	}
-
+	
+	/**
+	 * Sets the actually used weight for maturity calculation.
+	 * @param value
+	 */
 	public void setWeight2(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_WEIGHT2), value);
 		

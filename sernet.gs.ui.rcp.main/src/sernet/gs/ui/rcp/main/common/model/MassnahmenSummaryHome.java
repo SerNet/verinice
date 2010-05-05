@@ -27,7 +27,9 @@ import sernet.gs.ui.rcp.main.service.statscommands.CompletedZyklusSummary;
 import sernet.gs.ui.rcp.main.service.statscommands.IncompleteStepsSummary;
 import sernet.gs.ui.rcp.main.service.statscommands.IncompleteZyklusSummary;
 import sernet.gs.ui.rcp.main.service.statscommands.LayerSummary;
+import sernet.gs.ui.rcp.main.service.statscommands.MaturitySummary;
 import sernet.gs.ui.rcp.main.service.statscommands.UmsetzungSummary;
+import sernet.verinice.iso27k.model.ControlGroup;
 
 public class MassnahmenSummaryHome {
 
@@ -72,5 +74,47 @@ public class MassnahmenSummaryHome {
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		return command.getSummary();
 	}
+
+    /**
+     * @param elmt 
+     * @param level 
+     * @return
+     * @throws CommandException 
+     */
+    public Map<String, Double> getControlGroups(ControlGroup elmt) throws CommandException {
+        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), elmt.getEntity().getDbId(), MaturitySummary.TYPE_IMPLEMENTATION);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        return command.getSummary();
+    }
+
+    public Map<String, Double> getControlMaxGroups(ControlGroup elmt) throws CommandException {
+        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), elmt.getEntity().getDbId(), MaturitySummary.TYPE_MAX);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        return command.getSummary();
+    }
+
+    /**
+     * @param elmt
+     * @return
+     * @throws CommandException 
+     */
+    public Map<String, Double> getControlGoal1Groups(ControlGroup elmt) throws CommandException {
+        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), elmt.getEntity().getDbId(), MaturitySummary.TYPE_THRESHOLD1);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        return command.getSummary();
+
+    }
+
+    /**
+     * @param elmt
+     * @return
+     * @throws CommandException 
+     */
+    public Map<String, Double> getControlGoal2Groups(ControlGroup elmt) throws CommandException {
+        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), elmt.getEntity().getDbId(), MaturitySummary.TYPE_THRESHOLD2);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        return command.getSummary();
+        
+    }
 
 }

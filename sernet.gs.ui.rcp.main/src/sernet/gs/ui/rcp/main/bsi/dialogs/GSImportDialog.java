@@ -51,6 +51,7 @@ public class GSImportDialog extends Dialog {
     protected boolean kosten = true;
     protected boolean umsetzung = true;
     protected boolean bausteinPersonen = true;
+    private boolean notizen = true;
 
     public GSImportDialog(Shell shell) {
         super(shell);
@@ -89,6 +90,7 @@ public class GSImportDialog extends Dialog {
         button4.setEnabled(false);
         button4.setSelection(true);
         button4.pack();
+	
 
         final Button button5 = new Button(parent, SWT.CHECK);
         button5.setSelection(true);
@@ -144,6 +146,17 @@ public class GSImportDialog extends Dialog {
             }
         });
         button7.pack();
+		
+		final Button button10 = new Button(parent, SWT.CHECK);
+		button10.setSelection(true);
+		button10.setText("Notizen");
+		button10.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent arg0) {
+                notizen = button10.getSelection();
+            }
+        });
+		button10.pack();
 
         final Button button8 = new Button(parent, SWT.CHECK);
         button8.setSelection(true);
@@ -218,6 +231,13 @@ public class GSImportDialog extends Dialog {
 
     public boolean isBausteinPersonen() {
         return bausteinPersonen;
+    }
+
+    /**
+     * @return
+     */
+    public boolean isNotizen() {
+        return notizen;
     }
 
 }

@@ -102,7 +102,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 	/* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.service.ICatalogImporter#importCatalog()
 	 */
-	public void importCatalog() {
+	public void importCatalog() { 
 		try {
 			CSVReader reader = new CSVReader(
 					new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvFile.getFileContent()), Charset.forName("UTF-8"))),
@@ -116,43 +116,43 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 		        // nextLine[] is an array of values from the line	
 		    	if(nextLine.length>=3) {
     		        if(isNewTopic(nextLine)) {
-        		        if (getLog().isDebugEnabled()) {
-        		        	getLog().debug("#: " + nextLine[0]);
-        		        	getLog().debug("heading: " + nextLine[1]);
-        		        	getLog().debug("type: " + nextLine[2]);
-        		        	getLog().debug("text: " + nextLine[3]);
-        		        	
-        		        	// line can have optional weight and threshold levels:
-        		        	if (hasMaturityLevels(nextLine)) {
-        		        		getLog().debug("maturity: " + nextLine[4]);
-        		        		getLog().debug("weight 1: " + nextLine[5]);
-        		        		getLog().debug("weight 2: " + nextLine[6]);
-        		        		getLog().debug("threshold 1: " + nextLine[7]);
-        		        		getLog().debug("threshold 2: " + nextLine[8]);
-        		        		
-        		        	}
-        				}	     
-    		       
-    		        	if(item!=null) {
-    		        		// buffer the old item
-    		        		catalog.bufferItem(item);
-    		        	}
-    		        	// create a new one
-    		        	item = new Item(nextLine[1],nextLine[2]);
-    		        	item.setNumberString(nextLine[0].trim());
-    		        	
-    		        	item.setDescription(nextLine[3]);
-    	
-    		        	if (hasMaturityLevels(nextLine)) {
-    		        		fillMaturityLevels(item, nextLine);
-    		        	}
-    		        	
-    		        } else {
-    		        	// add a new paragraph to the existing item
-    		        	StringBuilder sb = new StringBuilder(item.getDescription());
-    		        	sb.append("<p>").append(nextLine[3]).append("</p>");
-    		        	item.setDescription(sb.toString());
-    		        }
+		        if (getLog().isDebugEnabled()) {
+		        	getLog().debug("#: " + nextLine[0]);
+		        	getLog().debug("heading: " + nextLine[1]);
+		        	getLog().debug("type: " + nextLine[2]);
+		        	getLog().debug("text: " + nextLine[3]);
+		        	
+		        	// line can have optional weight and threshold levels:
+		        	if (hasMaturityLevels(nextLine)) {
+		        		getLog().debug("maturity: " + nextLine[4]);
+		        		getLog().debug("weight 1: " + nextLine[5]);
+		        		getLog().debug("weight 2: " + nextLine[6]);
+		        		getLog().debug("threshold 1: " + nextLine[7]);
+		        		getLog().debug("threshold 2: " + nextLine[8]);
+		        		
+		        	}
+				}	     
+		       
+		        	if(item!=null) {
+		        		// buffer the old item
+		        		catalog.bufferItem(item);
+		        	}
+		        	// create a new one
+		        	item = new Item(nextLine[1],nextLine[2]);
+		        	item.setNumberString(nextLine[0].trim());
+		        	
+		        	item.setDescription(nextLine[3]);
+	
+		        	if (hasMaturityLevels(nextLine)) {
+		        		fillMaturityLevels(item, nextLine);
+		        	}
+		        	
+		        } else {
+		        	// add a new paragraph to the existing item
+		        	StringBuilder sb = new StringBuilder(item.getDescription());
+		        	sb.append("<p>").append(nextLine[3]).append("</p>");
+		        	item.setDescription(sb.toString());
+		        }
 		    	} else {
 		    	    log.warn("Invalid line in CSV file.");
 		    	}
@@ -186,9 +186,9 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 	 * @param nextLine
 	 */
 	private void fillMaturityLevels(Item item, String[] nextLine) {
-		item.setMaturity(nextLine[4]);
-		item.setWeight1(nextLine[5]);
-		item.setWeight2(nextLine[6]);
+	    item.setWeight1(nextLine[4]);
+	    item.setWeight2(nextLine[5]);
+		item.setMaturity(nextLine[6]);
 		item.setThreshold1(nextLine[7]);
 		item.setThreshold2(nextLine[8]);
 		item.setMaturityLevelSupport(true);

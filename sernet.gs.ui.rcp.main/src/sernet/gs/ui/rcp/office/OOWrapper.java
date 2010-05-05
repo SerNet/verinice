@@ -298,12 +298,12 @@ public class OOWrapper {
     }
 
     private Object getCellByType(IOOTableRow row, int col) {
-        if (row.getCellType(col) == IOOTableRow.CELL_TYPE_STRING) {
-            // Logger.getLogger(this.getClass())
-            // .debug("Cell<String>: " + row.getCellAsString(col));
-            return row.getCellAsString(col);
-        }
-        return ""; //$NON-NLS-1$
+    	if (row.getCellType(col) == IOOTableRow.CELL_TYPE_STRING)
+			return row.getCellAsString(col);
+		if (row.getCellType(col) == IOOTableRow.CELL_TYPE_DOUBLE)
+		    return row.getCellAsDouble(col);
+		
+		return "";
     }
 
     /**

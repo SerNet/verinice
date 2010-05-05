@@ -17,22 +17,36 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.gsimport;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.rtf.RTFEditorKit;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.MbDringlichkeit;
 import sernet.gs.reveng.MbDringlichkeitId;
 import sernet.gs.reveng.MbDringlichkeitTxt;
 import sernet.gs.reveng.MbRolleTxt;
 import sernet.gs.reveng.NZielobjekt;
+import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.reveng.importData.GSVampire;
+import sernet.gs.reveng.importData.NotizenMassnahmeResult;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
 import sernet.gs.ui.rcp.main.bsi.model.Client;
 import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Raum;
@@ -43,6 +57,14 @@ import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 
+/**
+ * Utility class to convert result sets (from gstool databases) to verinice-objects.
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public class TransferData {
 	
 	
@@ -222,5 +244,94 @@ public class TransferData {
 			return Schutzbedarf.SEHRHOCH;
 		return Schutzbedarf.UNDEF;
 	}
+
+	/**
+	 * @param importTask TODO
+	 * @param searchResult
+	 * @return
+	 */
+	public Map<MbBaust, List<BausteineMassnahmenResult>> convertBausteinMap( List<BausteineMassnahmenResult> searchResult) {
+		// convert list to map: of bausteine and corresponding massnahmen:
+		Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = new HashMap<MbBaust, List<BausteineMassnahmenResult>>();
+		for (BausteineMassnahmenResult result : searchResult) {
+			List<BausteineMassnahmenResult> list = bausteineMassnahmenMap
+					.get(result.baustein);
+			if (list == null) {
+				list = new ArrayList<BausteineMassnahmenResult>();
+				bausteineMassnahmenMap.put(result.baustein, list);
+			}
+			list.add(result);
+		}
+		return bausteineMassnahmenMap;
+	}
+
+	/**
+	 * Convert searchResult to map of baustein : list of massnahmen with notes
+	 * @param notesResults
+	 */
+	public Map<MbBaust, List<NotizenMassnahmeResult>> convertZielobjektNotizenMap(List<NotizenMassnahmeResult> searchResult) {
+		Map<MbBaust, List<NotizenMassnahmeResult>> bausteineMassnahmenMap = new HashMap<MbBaust, List<NotizenMassnahmeResult>>();
+		for (NotizenMassnahmeResult result : searchResult) {
+			List<NotizenMassnahmeResult> list = bausteineMassnahmenMap
+					.get(result.baustein);
+			if (list == null) {
+				list = new ArrayList<NotizenMassnahmeResult>();
+				bausteineMassnahmenMap.put(result.baustein, list);
+			}
+			list.add(result);
+		}
+		return bausteineMassnahmenMap;
+	}
+	
+	public static String getId(MbBaust mbBaust) {
+        Pattern pattern = Pattern.compile("(\\d+)\\.0*(\\d+)");
+
+        Matcher match = pattern.matcher(mbBaust.getNr());
+        if (match.matches())
+            return "B " + match.group(1) + "."
+                    + Integer.parseInt(match.group(2));
+        return "";
+    }
+	
+	public static BausteineMassnahmenResult findMassnahmenVorlage(
+            MassnahmenUmsetzung massnahmenUmsetzung,
+            List<BausteineMassnahmenResult> list) {
+        for (BausteineMassnahmenResult result : list) {
+            if (massnahmenUmsetzung.getKapitelValue()[0] == result.massnahme
+                    .getMskId()
+                    && massnahmenUmsetzung.getKapitelValue()[1] == result.massnahme
+                            .getNr()) {
+                return result;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param mnums
+     * @param massnahmenNotizen
+     */
+    public static NotizenMassnahmeResult findMassnahmenVorlage(MassnahmenUmsetzung massnahmenUmsetzung, List<NotizenMassnahmeResult> list) {
+        for (NotizenMassnahmeResult result : list) {
+            if (massnahmenUmsetzung.getKapitelValue()[0] == result.massnahme
+                    .getMskId()
+                    && massnahmenUmsetzung.getKapitelValue()[1] == result.massnahme
+                            .getNr()) {
+                return result;
+            }
+        }
+        return null;
+    
+    }
+    
+    public static String convertRtf(String notizText) throws IOException, BadLocationException {
+        StringReader reader = new StringReader(notizText);
+        RTFEditorKit kit = new RTFEditorKit();
+        Document document = kit.createDefaultDocument();
+        kit.read(reader, document, 0);
+
+        String plainText = document.getText(0, document.getLength());
+        return plainText;
+    }
 
 }

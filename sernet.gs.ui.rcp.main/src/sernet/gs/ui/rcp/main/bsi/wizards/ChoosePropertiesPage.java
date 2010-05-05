@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -35,10 +36,12 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.reports.BsiReport;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
+import sernet.gs.ui.rcp.main.reports.ISMReport;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.ReportGetItemsCommand;
 import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.IEntityElement;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
@@ -142,6 +145,50 @@ public class ChoosePropertiesPage extends WizardPage {
         shownEntityTypes = new HashSet<EntityType>();
         getExportWizard().resetShownPropertyTypes();
 
+		if (getExportWizard().getReport() instanceof ISMReport)
+		    initIsmItems();
+		else
+		    initBsiItems();
+	}
+
+    /**
+     * 
+     */
+    private void initIsmItems() {
+        // iterate over shown items and add each found type of item to the list:
+        ISMReport report = (ISMReport) getExportWizard().getReport();
+        report.setOrganization(getExportWizard().getOrganization());
+        ReportGetItemsCommand command = new ReportGetItemsCommand((BsiReport)report);
+        
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            ArrayList<CnATreeElement> items = command.getItems(); 
+            
+            
+            for (CnATreeElement item : items) {
+                if (item.getEntity() == null)
+                    continue;
+                
+                EntityType entityType = HitroUtil.getInstance().getTypeFactory()
+                .getEntityType(item.getEntity()
+                        .getEntityType());
+                
+                if (! shownEntityTypes.contains(entityType))
+                    shownEntityTypes.add(entityType);
+            }
+            viewer.setInput(shownEntityTypes);
+            viewer.refresh();
+            checkDefaults();
+        } catch (CommandException e) {
+            ExceptionUtil.log(e, "Fehler beim Vorbereiten des Reports.");
+        }
+    
+    }
+
+    /**
+     * 
+     */
+    private void initBsiItems() {
         // iterate over shown items and add each found type of item to the list:
         BsiReport report = (BsiReport) getExportWizard().getReport();
         report.setItverbund(getExportWizard().getITVerbund());
@@ -175,8 +222,7 @@ public class ChoosePropertiesPage extends WizardPage {
         if (report == null) {
             return;
         }
-        IBSIReport bsiReport = report;
-        ;
+		IBSIReport bsiReport = (IBSIReport) report;;
 
         for (Object element : shownEntityTypes) {
 

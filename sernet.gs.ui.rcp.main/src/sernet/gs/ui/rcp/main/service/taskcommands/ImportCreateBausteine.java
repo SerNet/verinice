@@ -33,6 +33,7 @@ import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.ui.rcp.gsimport.ImportKostenUtil;
+import sernet.gs.ui.rcp.gsimport.TransferData;
 import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
@@ -117,7 +118,7 @@ public class ImportCreateBausteine extends GenericCommand {
 	private BausteinUmsetzung createBaustein(CnATreeElement element,
 			MbBaust mbBaust, List<BausteineMassnahmenResult> list)
 			throws Exception {
-		Baustein baustein = findBausteinForId(getId(mbBaust));
+		Baustein baustein = findBausteinForId(TransferData.getId(mbBaust));
 		
 		if (baustein != null) {
 			CreateBaustein command = new CreateBaustein(element, baustein);
@@ -167,20 +168,6 @@ public class ImportCreateBausteine extends GenericCommand {
 		return "";
 	}
 	
-	private BausteineMassnahmenResult findVorlage(
-			MassnahmenUmsetzung massnahmenUmsetzung,
-			List<BausteineMassnahmenResult> list) {
-		for (BausteineMassnahmenResult result : list) {
-			if (massnahmenUmsetzung.getKapitelValue()[0] == result.massnahme
-					.getMskId()
-					&& massnahmenUmsetzung.getKapitelValue()[1] == result.massnahme
-							.getNr()) {
-				return result;
-			}
-		}
-		return null;
-	}
-	
 	private void setUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung,
 			String gst_status) {
 		for (int i = 0; i < UMSETZUNG_STATI_GST.length; i++) {
@@ -197,7 +184,7 @@ public class ImportCreateBausteine extends GenericCommand {
 		List<MassnahmenUmsetzung> massnahmenUmsetzungen = bausteinUmsetzung
 				.getMassnahmenUmsetzungen();
 		for (MassnahmenUmsetzung massnahmenUmsetzung : massnahmenUmsetzungen) {
-			BausteineMassnahmenResult vorlage = findVorlage(
+			BausteineMassnahmenResult vorlage = TransferData.findMassnahmenVorlage(
 					massnahmenUmsetzung, list);
 			if (vorlage != null) {
 
@@ -258,15 +245,7 @@ public class ImportCreateBausteine extends GenericCommand {
 	}
 	
 
-	private String getId(MbBaust mbBaust) {
-		Pattern pattern = Pattern.compile("(\\d+)\\.0*(\\d+)");
-
-		Matcher match = pattern.matcher(mbBaust.getNr());
-		if (match.matches())
-			return "B " + match.group(1) + "."
-					+ Integer.parseInt(match.group(2));
-		return "";
-	}
+	
 
 	public HashMap<MbBaust, BausteinUmsetzung> getAlleBausteineToBausteinUmsetzungMap() {
 		return alleBausteineToBausteinUmsetzungMap;

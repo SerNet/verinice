@@ -28,50 +28,87 @@ import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.BsiReport;
+import sernet.gs.ui.rcp.main.reports.ISMReport;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
+import sernet.verinice.iso27k.model.Organization;
 
 public class ReportGetItemsCommand extends GenericCommand {
 
-	private BsiReport report;
-	private ArrayList<CnATreeElement> items;
-	private Integer itverbundDbId;
+    private BsiReport report;
+    private ArrayList<CnATreeElement> items;
+    private Integer itverbundDbId;
+    private Integer scopeDbId;
 
-	public ReportGetItemsCommand(BsiReport report) {
-		this.report = report;
-		itverbundDbId = report.getItverbund().getDbId();
-		
-	}
-	
-	public void execute() {
-		try {
+    public ReportGetItemsCommand(BsiReport report) {
+        this.report = report;
+        if (report instanceof ISMReport) {
+            ISMReport ismReport = (ISMReport) report;
+            scopeDbId = ismReport.getOrganization().getDbId();
+        } else
+            itverbundDbId = report.getItverbund().getDbId();
+    }
 
-			LoadCnAElementById command = new LoadCnAElementById(ITVerbund.class, itverbundDbId);
-			command = getCommandService().executeCommand(command);
-			ITVerbund itverbund = (ITVerbund) command.getFound();
-			
-			// replace report's itverbund with the DB-connected instance: 
-			((BsiReport)report).setItverbund(itverbund);
-			
-			IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(ITVerbund.class);
-			
-			items = ((IBSIReport)report).getItems();
-			HydratorUtil.hydrateElements(dao, items, false);
-			
-		} catch (CommandException e) {
-			throw new RuntimeCommandException(e);
-		}
-		
-		report = null;
-	}
+    public void execute() {
+        try {
 
+            if (itverbundDbId != null) {
+                getBsiItems();
+            } else {
+                getISMItems();
+            }
+            
+            
 
-	public ArrayList<CnATreeElement> getItems() {
-		return items;
-	}
+        } catch (CommandException e) {
+            throw new RuntimeCommandException(e);
+        }
+
+        report = null;
+    }
+
+    /**
+     * @throws CommandException 
+     * 
+     */
+    private void getISMItems() throws CommandException {
+        LoadCnAElementById command = new LoadCnAElementById(Organization.class, scopeDbId);
+        command = getCommandService().executeCommand(command);
+        Organization org = (Organization) command.getFound();
+
+        // replace report's itverbund with the DB-connected instance:
+        ((ISMReport) report).setOrganization(org);
+
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(Organization.class);
+
+        items = ((IBSIReport) report).getItems();
+        HydratorUtil.hydrateElements(dao, items, false);
+    
+    }
+
+    /**
+     * @throws CommandException
+     */
+    private void getBsiItems() throws CommandException {
+        LoadCnAElementById command = new LoadCnAElementById(ITVerbund.class, itverbundDbId);
+        command = getCommandService().executeCommand(command);
+        ITVerbund itverbund = (ITVerbund) command.getFound();
+
+        // replace report's itverbund with the DB-connected instance:
+        ((BsiReport) report).setItverbund(itverbund);
+
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(ITVerbund.class);
+
+        items = ((IBSIReport) report).getItems();
+        HydratorUtil.hydrateElements(dao, items, false);
+    }
+
+    public ArrayList<CnATreeElement> getItems() {
+        return items;
+    }
 
 }

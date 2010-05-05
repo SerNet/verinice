@@ -31,6 +31,7 @@ import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
@@ -39,6 +40,9 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.ReportGetRowsCommand;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.gs.ui.rcp.office.OOWrapper;
+
+import sernet.snutils.ExceptionHandlerFactory;
+import sernet.verinice.iso27k.model.Organization;
 
 /**
  * Wizard to create different kinds of reports using OpenOffice as backend.
@@ -59,7 +63,9 @@ public class ExportWizard extends Wizard implements IExportWizard {
 
     private PropertySelection shownPropertyTypes;
     private String textTemplatePath;
-    private ChooseITVerbundPage chooseITverbundPage;
+	private ChooseRootObjectPage chooseITverbundPage;
+
+	private ChooseElementTypePage chooseElementTypePage;
 
     public void resetShownPropertyTypes() {
         this.shownPropertyTypes = null;
@@ -97,9 +103,12 @@ public class ExportWizard extends Wizard implements IExportWizard {
         chooseReportPage = new ChooseReportPage();
         addPage(chooseReportPage);
 
-        chooseITverbundPage = new ChooseITVerbundPage();
+		chooseITverbundPage = new ChooseRootObjectPage();
         addPage(chooseITverbundPage);
 
+		chooseElementTypePage = new ChooseElementTypePage();
+		addPage(chooseElementTypePage);
+		
         chooseExportMethodPage = new ChooseExportMethodPage();
         addPage(chooseExportMethodPage);
 
@@ -145,9 +154,10 @@ public class ExportWizard extends Wizard implements IExportWizard {
 
             ArrayList<IOOTableRow> rows = null;
             if (report != null) {
-                IBSIReport bsiReport = report;
+				IBSIReport bsiReport = (IBSIReport) report;
                 ReportGetRowsCommand command = new ReportGetRowsCommand(bsiReport, shownPropertyTypes);
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
+				command = ServiceFactory.lookupCommandService().executeCommand(
+						command);
                 rows = command.getRows();
             }
 
@@ -214,6 +224,13 @@ public class ExportWizard extends Wizard implements IExportWizard {
      */
     public ITVerbund getITVerbund() {
         return chooseITverbundPage.getSelectedITVerbund();
+    }
+
+    /**
+     * @return
+     */
+    public Organization getOrganization() {
+        return chooseITverbundPage.getSelectedOrganization();
     }
 
 }
