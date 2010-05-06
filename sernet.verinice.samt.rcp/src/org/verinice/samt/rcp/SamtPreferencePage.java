@@ -25,6 +25,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import sernet.gs.ui.rcp.main.VeriniceCharset;
+
 /**
  * 
  * @author Daniel Murygin <dm@sernet.de>
@@ -37,9 +39,9 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
     private ComboFieldEditor encodingFieldEditor;
     
     private static final String[][] encodingComboValues = new String[][]{
-            new String[]{SamtWorkspace.CHARSET_UTF_8.displayName(),SamtWorkspace.CHARSET_UTF_8.name()},
-            new String[]{SamtWorkspace.CHARSET_ISO_8859_15.displayName(),SamtWorkspace.CHARSET_ISO_8859_15.name()},
-            new String[]{SamtWorkspace.CHARSET_WINDOWS_1252.displayName(),SamtWorkspace.CHARSET_WINDOWS_1252.name()}
+            new String[]{VeriniceCharset.CHARSET_UTF_8.displayName(),VeriniceCharset.CHARSET_UTF_8.name()},
+            new String[]{VeriniceCharset.CHARSET_ISO_8859_15.displayName(),VeriniceCharset.CHARSET_ISO_8859_15.name()},
+            new String[]{VeriniceCharset.CHARSET_WINDOWS_1252.displayName(),VeriniceCharset.CHARSET_WINDOWS_1252.name()}
             
     };
     
@@ -49,7 +51,7 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
      */
     public static void setDefaults() {
         // set default charset for self assessment catalog
-        Activator.getDefault().getPreferenceStore().setDefault(CHARSET_SAMT,SamtWorkspace.CHARSET_ISO_8859_15.name());
+        Activator.getDefault().getPreferenceStore().setDefault(CHARSET_SAMT,VeriniceCharset.CHARSET_ISO_8859_15.name());
     }
     
     

@@ -84,12 +84,7 @@ public class CnAWorkspace {
 
 	private static final Object LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-1.0"; //$NON-NLS-1$
 
-    public final static Charset CHARSET_UTF_8 = Charset.forName("UTF-8");
-    public final static Charset CHARSET_ISO_8859_15 = Charset.forName("ISO-8859-15");
-    public final static Charset CHARSET_WINDOWS_1252 = Charset.forName("windows-1252");
-    public final static Charset CHARSET_DEFAULT = CHARSET_UTF_8;
-
-	private static CnAWorkspace instance;
+    private static CnAWorkspace instance;
 
 	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
 		private boolean modechangeWarning = true;
@@ -392,7 +387,7 @@ public class CnAWorkspace {
      * @throws IOException
      */
     protected void createTextFile(String infile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
-        createTextFile(infile, CHARSET_DEFAULT, toDir, outfile, variables);
+        createTextFile(infile, VeriniceCharset.CHARSET_DEFAULT, toDir, outfile, variables);
     }
 
 	/**
@@ -448,7 +443,7 @@ public class CnAWorkspace {
 
 		backupFile(toDir, outfile);
 		FileOutputStream fout = new FileOutputStream(toDir + File.separator + outfile, false);
-		OutputStreamWriter outWrite = new OutputStreamWriter(fout,CHARSET_DEFAULT);
+		OutputStreamWriter outWrite = new OutputStreamWriter(fout,VeriniceCharset.CHARSET_DEFAULT);
 		outWrite.write(skelFile.toString());
 		outWrite.close();
 		fout.close();

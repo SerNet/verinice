@@ -25,6 +25,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.VeriniceCharset;
 
 /**
  * @author Daniel Murygin <dm@sernet.de> 
@@ -69,7 +70,7 @@ public class SamtWorkspace extends CnAWorkspace {
         final String ouputPath = CONF_PATH + File.separatorChar + SAMT_CATALOG_FILE_NAME;
 
         try {
-            createTextFile(inputPath, CnAWorkspace.CHARSET_ISO_8859_15, getWorkdir(), ouputPath, null);
+            createTextFile(inputPath, VeriniceCharset.CHARSET_ISO_8859_15, getWorkdir(), ouputPath, null);
         } catch (RuntimeException e) {
             LOG.error("Error while saving samt catalog file in conf dir. Input path: " + inputPath + ", output path: " + ouputPath, e);
             throw e;

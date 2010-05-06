@@ -59,9 +59,9 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.VeriniceCharset;
 import sernet.gs.ui.rcp.main.bsi.model.Attachment;
 import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
@@ -529,7 +529,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	    // read the charset from preference store
 	    // charset value is set in CharsetHandler
 	    String charsetName = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.CHARSET_CATALOG);
-	    Charset charset = CnAWorkspace.CHARSET_DEFAULT;
+	    Charset charset = VeriniceCharset.CHARSET_DEFAULT;
 	    if(charsetName!=null && !charsetName.isEmpty()) {
 	        charset = Charset.forName(charsetName);
 	    }

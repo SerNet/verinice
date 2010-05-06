@@ -87,8 +87,9 @@ public class GetHitroConfig extends HttpServlet {
 				}
 				in = getServletContext().getResourceAsStream(path);
 				if(in==null) {
-					String message = "Resource not found " + path;
+					String message = "Resource not found: " + path;
 					response.getWriter().append(message);
+					// TODO this can be critical (missing snca.xml) or harmless (missing de_de.properties). Should be logged accordingly.
 					throw new RuntimeException(message);
 				}
 				out = response.getOutputStream();

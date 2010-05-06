@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 
-import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.VeriniceCharset;
 import sernet.verinice.iso27k.service.FileUtil;
 
 /**
@@ -32,7 +32,7 @@ import sernet.verinice.iso27k.service.FileUtil;
  */
 public class CsvFile implements Serializable{
 	
-    public final static Charset CHARSET_DEFAULT = CnAWorkspace.CHARSET_UTF_8;
+    public final static Charset CHARSET_DEFAULT = VeriniceCharset.CHARSET_UTF_8;
 	
     String filePath;
 	
@@ -46,8 +46,8 @@ public class CsvFile implements Serializable{
         super();
         this.filePath = "unknown";
         byte[] content = FileUtil.getBytesFromInputstream(is);
-        if(!CnAWorkspace.CHARSET_UTF_8.equals(charset)) {
-            content = FileUtil.changeEncoding(content, charset, CnAWorkspace.CHARSET_UTF_8);
+        if(!VeriniceCharset.CHARSET_UTF_8.equals(charset)) {
+            content = FileUtil.changeEncoding(content, charset, VeriniceCharset.CHARSET_UTF_8);
         }
         setFileContent(content);
     }
@@ -72,8 +72,8 @@ public class CsvFile implements Serializable{
 		if( getFilePath()!=null) {
 			File file = new File(getFilePath());
 			byte[] content = FileUtil.getBytesFromFile(file);
-			if(!CnAWorkspace.CHARSET_UTF_8.equals(charset)) {
-			    content = FileUtil.changeEncoding(content, charset, CnAWorkspace.CHARSET_UTF_8);
+			if(!VeriniceCharset.CHARSET_UTF_8.equals(charset)) {
+			    content = FileUtil.changeEncoding(content, charset, VeriniceCharset.CHARSET_UTF_8);
 			}
 			setFileContent(content);
 		}

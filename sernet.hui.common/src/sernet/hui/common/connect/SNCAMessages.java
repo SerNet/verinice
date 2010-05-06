@@ -66,9 +66,6 @@ public class SNCAMessages {
     			sb.append(", baseUrl: ").append(baseUrl);
     			sb.append(", bundle-name: ").append(BUNDLE_NAME);
     			LOG.info(sb.toString());
-    			if (LOG.isDebugEnabled()) {
-    				LOG.debug("stacktrace: ", e);
-    			}
 		    }
 			return null;
 		}

@@ -27,7 +27,7 @@ import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.VeriniceCharset;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.verinice.iso27k.service.Catalog;
@@ -69,7 +69,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 	Catalog catalog = new Catalog();
 	
 	public ImportCatalog(String filePath) throws IOException {
-		this(filePath, CnAWorkspace.CHARSET_DEFAULT);
+		this(filePath, VeriniceCharset.CHARSET_DEFAULT);
 	}
 	public ImportCatalog(String filePath,Charset charset) throws IOException {
         super();
