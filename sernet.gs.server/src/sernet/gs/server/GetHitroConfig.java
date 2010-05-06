@@ -87,7 +87,7 @@ public class GetHitroConfig extends HttpServlet {
 				}
 				in = getServletContext().getResourceAsStream(path);
 				if(in==null) {
-					String message = "# resource not found";
+					String message = "Resource not found " + path;
 					response.getWriter().append(message);
 					throw new RuntimeException(message);
 				}
@@ -103,7 +103,7 @@ public class GetHitroConfig extends HttpServlet {
 				}
 			}
 		} catch (Exception e) {
-			log.error("Error while getting hitro config", e);
+			log.error("Error while getting hitro config or resource bundle.", e);
 		} finally {
 			if (in != null) {
 				in.close();
