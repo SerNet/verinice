@@ -26,4 +26,11 @@ public class NullRule implements IFillRule {
 	public void init(String[] params) {
 	}
 
+    /* (non-Javadoc)
+     * @see sernet.hui.common.rules.IFillRule#isMultiLanguage()
+     */
+    public boolean isMultiLanguage() {
+        return false;
+    }
+
 }

@@ -116,7 +116,7 @@ Template:
 				name="Terminwarnung: bei Ablauf in X Tagen" 
 				id="configuration_mailing_expiredays">
 				 <defaultRule class="SimpleValue">
-                	<param>14</param>
+                	<param id="configuration_mailing_expiredays_default">14</param>
                 </defaultRule>
 			</huiproperty>
 			
@@ -154,7 +154,7 @@ Template:
 				name="Terminwarnung: bei Ablauf in X Tagen" 
 				id="configuration_auditmailing_expiredays">
 				 <defaultRule class="SimpleValue">
-	               	<param>14</param>
+	               	<param id="configuration_auditmailing_expiredays_default">14</param>
 	               </defaultRule>
 			</huiproperty>
 			
@@ -170,7 +170,7 @@ Template:
             id="raum_kuerzel"
             focus="true" >
              <defaultRule class="SimpleValue">
-                	<param>R-</param>
+                	<param id="raum_kuerzel_default">R-</param>
                 </defaultRule>
         </huiproperty>
        
@@ -317,7 +317,7 @@ Template:
             id="server_kuerzel"
             focus="true" >
              <defaultRule class="SimpleValue">
-                	<param>S-</param>
+                	<param id="server_kuerzel_default">S-</param>
                 </defaultRule>
         </huiproperty>
         <huiproperty
@@ -504,7 +504,7 @@ Template:
             id="tkkomponente_kuerzel"
             focus="true" >
              <defaultRule class="SimpleValue">
-                	<param>TK-</param>
+                	<param id="tkkomponente_kuerzel_default">TK-</param>
                 </defaultRule>
         </huiproperty>
         <huiproperty
@@ -692,7 +692,7 @@ Template:
             id="netzkomponente_kuerzel"
             focus="true" >
              <defaultRule class="SimpleValue">
-                	<param>N-</param>
+                	<param id="netzkomponente_kuerzel_default">N-</param>
                 </defaultRule>
         </huiproperty>
         <huiproperty
@@ -820,7 +820,7 @@ Template:
 				name="Gesetze / Vorschriften / Verträge"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Verstöße gegen Vorschriften und Gesetze mit geringfügigen Konsequenzen. Geringfügige Vertragsverletzungen mit maximal geringen Konventionalstrafen</param>
+                	<param id="itverbund_normal_gesetze_default">Verstöße gegen Vorschriften und Gesetze mit geringfügigen Konsequenzen. Geringfügige Vertragsverletzungen mit maximal geringen Konventionalstrafen</param>
                 </defaultRule>
             </huiproperty>
             <huiproperty
@@ -828,14 +828,14 @@ Template:
 				name="Selbstbestimmungsrecht"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Eine Beeinträchtigung des informationellen Selbstbestimmungsrechts würde durch den Einzelnen als tolerabel eingeschätzt werden.  Ein möglicher Mißbrauch personenbezogener Daten hat nur geringfügige Auswirkungen auf die gesellschaftliche Stellung oder die wirtschaftlichen Verhältnisse des Betroffenen.</param> </defaultRule>
+                	<param id="itverbund_normal_datenschutz_default">Eine Beeinträchtigung des informationellen Selbstbestimmungsrechts würde durch den Einzelnen als tolerabel eingeschätzt werden.  Ein möglicher Mißbrauch personenbezogener Daten hat nur geringfügige Auswirkungen auf die gesellschaftliche Stellung oder die wirtschaftlichen Verhältnisse des Betroffenen.</param> </defaultRule>
             </huiproperty>
             <huiproperty
 				id="itverbund_normal_leib"
 				name="Unversehrtheit"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Eine Beeinträchtigung erscheint nicht möglich. </param>
+                	<param id="itverbund_normal_leib_default">Eine Beeinträchtigung erscheint nicht möglich. </param>
                 </defaultRule>
             </huiproperty>
             <huiproperty
@@ -843,14 +843,14 @@ Template:
 				name="Aufgabenerfüllung"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Die Beeinträchtigung würde von den Betroffenen als tolerabel eingeschätzt werden.  Die maximal tolerierbare Ausfallzeit des IT- Systems ist größer als ??? Stunden.  </param> </defaultRule>
+                	<param id="itverbund_normal_aufgaben_default">Die Beeinträchtigung würde von den Betroffenen als tolerabel eingeschätzt werden.  Die maximal tolerierbare Ausfallzeit des IT- Systems ist größer als ??? Stunden.  </param> </defaultRule>
             </huiproperty>
             <huiproperty
 				id="itverbund_normal_wirkung"
 				name="Innen- / Außenwirkung"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Eine geringe bzw. nur interne Ansehens- oder Vertrauensbeeinträchtigung ist zu erwarten.  </param>
+                	<param id="itverbund_normal_wirkung_default">Eine geringe bzw. nur interne Ansehens- oder Vertrauensbeeinträchtigung ist zu erwarten.  </param>
                 </defaultRule>
             </huiproperty>
             <huiproperty
@@ -858,7 +858,7 @@ Template:
 				name="Finanzielle Auswirkungen"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Der finanzieller Schaden ist kleiner als ???,- EUR. </param>
+                	<param id="itverbund_normal_finanzen_default">Der finanzieller Schaden ist kleiner als ???,- EUR. </param>
                 </defaultRule>
             </huiproperty>
         </huipropertygroup>
@@ -870,7 +870,7 @@ Template:
 				name="Gesetze / Vorschriften / Verträge"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Verstöße gegen Vorschriften und Gesetze mit erheblichen Konsequenzen Vertragsverletzungen mit hohen Konventionalstrafen </param>
+                	<param id="itverbund_hoch_gesetze_default">Verstöße gegen Vorschriften und Gesetze mit erheblichen Konsequenzen Vertragsverletzungen mit hohen Konventionalstrafen </param>
                 </defaultRule>
             </huiproperty>
             <huiproperty
@@ -878,7 +878,7 @@ Template:
 				name="Selbstbestimmungsrecht"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Eine erhebliche Beeinträchtigung des informationellen Selbstbestimmungsrechts des Einzelnen erscheint möglich.  Ein möglicher Mißbrauch personenbezogener Daten hat erhebliche Auswirkungen auf die gesellschaftliche Stellung oder die wirtschaftlichen Verhältnisse des Betroffenen. </param>
+                	<param id="itverbund_hoch_datenschutz_default">Eine erhebliche Beeinträchtigung des informationellen Selbstbestimmungsrechts des Einzelnen erscheint möglich.  Ein möglicher Mißbrauch personenbezogener Daten hat erhebliche Auswirkungen auf die gesellschaftliche Stellung oder die wirtschaftlichen Verhältnisse des Betroffenen. </param>
                 </defaultRule>
             </huiproperty>
             <huiproperty
@@ -886,7 +886,7 @@ Template:
 				name="Unversehrtheit"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Eine Beeinträchtigung der persönlichen Unversehrtheit kann nicht absolut ausgeschlossen werden.  </param>
+                	<param id="itverbund_hoch_leib_default">Eine Beeinträchtigung der persönlichen Unversehrtheit kann nicht absolut ausgeschlossen werden.  </param>
                 </defaultRule>
             </huiproperty>
             
@@ -895,7 +895,7 @@ Template:
 				name="Aufgabenerfüllung"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Die Beeinträchtigung würde von einzelnen Betroffenen als nicht tolerabel eingeschätzt. Ein IT-Systemausfall ist nur zwischen ??? und ??? Stunden tolerabel.  </param>
+                	<param id="itverbund_hoch_aufgaben_default_default">Die Beeinträchtigung würde von einzelnen Betroffenen als nicht tolerabel eingeschätzt. Ein IT-Systemausfall ist nur zwischen ??? und ??? Stunden tolerabel.  </param>
                 </defaultRule>
             </huiproperty>
             <huiproperty
@@ -903,7 +903,7 @@ Template:
 				name="Innen- / Außenwirkung"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Eine breite Ansehens- oder Vertrauensbeeinträchtigung ist erwarten. </param>
+                	<param id="itverbund_hoch_wirkung_default">Eine breite Ansehens- oder Vertrauensbeeinträchtigung ist erwarten. </param>
                 </defaultRule>
             </huiproperty>
             <huiproperty
@@ -911,7 +911,7 @@ Template:
 				name="Finanzielle Auswirkungen"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Der finanzielle Schaden liegt zwischen ???,- EUR und ???,-EUR. </param>
+                	<param id="itverbund_hoch_finanzen_default">Der finanzielle Schaden liegt zwischen ???,- EUR und ???,-EUR. </param>
                 </defaultRule>
             </huiproperty>
          </huipropertygroup>
@@ -923,7 +923,7 @@ Template:
 				name="Gesetze / Vorschriften / Verträge"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Fundamentaler Verstoß gegen Vorschriften und Gesetze Vertragsverletzungen, deren Haftungsschäden ruinös sind </param>
+                	<param id="itverbund_sehrhoch_gesetze_default">Fundamentaler Verstoß gegen Vorschriften und Gesetze Vertragsverletzungen, deren Haftungsschäden ruinös sind </param>
                 </defaultRule>
             </huiproperty>
             <huiproperty
@@ -931,7 +931,7 @@ Template:
 				name="Selbstbestimmungsrecht"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Eine besonders bedeutende Beeinträchtigung des informationellen Selbstbestimmungsrechts des Einzelnen erscheint möglich.  Ein möglicher Mißbrauch personenbezogener Daten würde für den Betroffenen den gesellschaftlichen oder wirtschaftlichen Ruin bedeuten.  </param>
+                	<param id="itverbund_sehrhoch_datenschutz_default">Eine besonders bedeutende Beeinträchtigung des informationellen Selbstbestimmungsrechts des Einzelnen erscheint möglich.  Ein möglicher Mißbrauch personenbezogener Daten würde für den Betroffenen den gesellschaftlichen oder wirtschaftlichen Ruin bedeuten.  </param>
                 </defaultRule>
             </huiproperty>
             <huiproperty
@@ -939,7 +939,7 @@ Template:
 				name="Unversehrtheit"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Gravierende Beeinträchtigungen der persönlichen Unversehrtheit sind möglich. Gefahr für Leib und Leben </param>
+                	<param id="itverbund_sehrhoch_leib_default">Gravierende Beeinträchtigungen der persönlichen Unversehrtheit sind möglich. Gefahr für Leib und Leben </param>
                 </defaultRule>
             </huiproperty>
             
@@ -948,7 +948,7 @@ Template:
 				name="Aufgabenerfüllung"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Die Beeinträchtigung würde von allen Betroffenen als nicht tolerabel eingeschätzt werden. Ein IT-Systemausfall ist nur bis zu ??? Stunden tolerabel.  </param>
+                	<param id="itverbund_sehrhoch_aufgaben_default">Die Beeinträchtigung würde von allen Betroffenen als nicht tolerabel eingeschätzt werden. Ein IT-Systemausfall ist nur bis zu ??? Stunden tolerabel.  </param>
                 </defaultRule>
             </huiproperty>
             <huiproperty
@@ -956,7 +956,7 @@ Template:
 				name="Innen- / Außenwirkung"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Ein weitreichende Ansehens- oder Vertrauensbeeinträchtigung, evtl. sogar existenzgefährdender Art, ist denkbar.  </param>
+                	<param id="itverbund_sehrhoch_wirkung_default">Ein weitreichende Ansehens- oder Vertrauensbeeinträchtigung, evtl. sogar existenzgefährdender Art, ist denkbar.  </param>
                 </defaultRule>
             </huiproperty>
             <huiproperty
@@ -964,7 +964,7 @@ Template:
 				name="Finanzielle Auswirkungen"
                 inputtype="text">
                 <defaultRule class="SimpleValue">
-                	<param>Der finanzielle Schaden ist größer als ???,- EUR. </param>
+                	<param id="itverbund_sehrhoch_finanzen_default">Der finanzielle Schaden ist größer als ???,- EUR. </param>
                 </defaultRule>
             </huiproperty>
          </huipropertygroup>
@@ -978,7 +978,7 @@ Template:
             id="client_kuerzel"
             focus="true" >
              <defaultRule class="SimpleValue">
-                	<param>C-</param>
+                	<param id="client_kuerzel_default">C-</param>
                 </defaultRule>
         </huiproperty>
         <huiproperty
@@ -1186,7 +1186,7 @@ Template:
             id="sonstit_kuerzel"
             focus="true" >
              <defaultRule class="SimpleValue">
-                	<param>ITS-</param>
+                	<param id="sonstit_kuerzel_default">ITS-</param>
                 </defaultRule>
         </huiproperty>
         <huiproperty
@@ -1393,7 +1393,7 @@ Template:
 			id="person_kuerzel"
 			focus="true">
                 <defaultRule class="SimpleValue">
-                	<param>M-</param>
+                	<param id="person_kuerzel_default">M-</param>
                 </defaultRule>
         </huiproperty>
 		<huiproperty
@@ -1625,7 +1625,7 @@ Template:
 			id="gebaeude_kuerzel"
 			focus="true">
 			 <defaultRule class="SimpleValue">
-                	<param>G-</param>
+                	<param id="gebaeude_kuerzel_default">G-</param>
                 </defaultRule>
 		</huiproperty>
 		<huiproperty
@@ -1959,8 +1959,8 @@ Template:
 				name="Umsetzung bis"
 				inputtype="date">
                 <defaultRule class="Today">
-                    <param>MONTH</param>
-                    <param>2</param>
+                    <param id="mnums_umsetzungbis_changeField">MONTH</param>
+                    <param id="mnums_umsetzungbis_timeDifference">2</param>
                 </defaultRule>
             </huiproperty>
 			<huiproperty
@@ -2073,8 +2073,8 @@ Template:
 				name="Nächste Revision am"
 				inputtype="date" >
                 <defaultRule class="Today">
-                    <param>YEAR</param>
-                    <param>2</param>
+                    <param id="mnums_naechsterevisionam_changeField">YEAR</param>
+                    <param id="mnums_naechsterevisionam_timeDifference">2</param>
                 </defaultRule>
             </huiproperty>
 		</huipropertygroup>
@@ -2105,7 +2105,7 @@ Template:
 			id="anwendung_kuerzel"
 			focus ="true">
 			 <defaultRule class="SimpleValue">
-                	<param>A-</param>
+                	<param id="anwendung_kuerzel_default">A-</param>
                 </defaultRule>
 		</huiproperty>
         
@@ -2805,7 +2805,7 @@ Template:
         <huiproperty
 			name="Scope Summary" id="org_description" inputtype="text" >
 			<defaultRule class="SimpleValue"> <!-- ??? insert scope example -->
-                	<param>The scope definition schould answer these questions: who? what? where?</param>
+                	<param id="org_description_default">The scope definition schould answer these questions: who? what? where?</param>
                 </defaultRule>
 		</huiproperty>
 		<huipropertygroup name="Risk Acceptance" id="org_riskgroup">
@@ -2946,7 +2946,7 @@ Template:
 				<huiproperty
 					name="Calculated Impact" id="asset_impact_autovalue" editable="false">
 					<defaultRule class="SimpleValue">
-                		<param>- not calculated -</param>
+                		<param id="asset_impact_autovalue_default">- not calculated -</param>
                 	</defaultRule>
 				</huiproperty>
 				
@@ -2967,13 +2967,13 @@ Template:
 			<huiproperty
 				name="Risk value" id="asset_riskvalue" editable="false">
 				<defaultRule class="SimpleValue">
-                	<param>- not calculated -</param>
+                	<param id="asset_riskvalue_default">- not calculated -</param>
                 </defaultRule>
             </huiproperty>
 			<huiproperty
 				name="Risk after controls" id="asset_riskwcontrolvalue" editable="false">
 				<defaultRule class="SimpleValue">
-                	<param>- not calculated -</param>
+                	<param id="asset_riskwcontrolvalue_default">- not calculated -</param>
                 </defaultRule>
 			</huiproperty>
 			<huiproperty 
@@ -3404,8 +3404,8 @@ Template:
 					name="Realize until"
 					inputtype="date">
 	                <defaultRule class="Today">
-	                    <param>MONTH</param>
-	                    <param>2</param>
+	                    <param id="control_maturity_duedate_changeField">MONTH</param>
+	                    <param id="control_maturity_duedate_timeDifference">2</param>
 	                </defaultRule>
 	            </huiproperty>
         </huipropertygroup>
@@ -3436,8 +3436,8 @@ Template:
 				name="Implementation date"
 				inputtype="date">
                 <defaultRule class="Today">
-                    <param>MONTH</param>
-                    <param>2</param>
+                    <param id="control_implby_changeField">MONTH</param>
+                    <param id="control_implby_timeDifference">2</param>
                 </defaultRule>
             </huiproperty>
      	</huipropertygroup>
@@ -3459,8 +3459,8 @@ Template:
 				name="Next revision"
 				inputtype="date">
                 <defaultRule class="Today">
-                    <param>MONTH</param>
-                    <param>2</param>
+                    <param id="control_nextrev_changeField">MONTH</param>
+                    <param id="control_nextrev_timeDifference">2</param>
                 </defaultRule>
             </huiproperty>
      	</huipropertygroup>

@@ -427,14 +427,15 @@ public class HUITypeFactory {
     }
 
     private String[] readRuleParams(Element ruleElmt, IFillRule rule) {
-        NodeList nodes = ruleElmt.getElementsByTagName("param");
-        String[] params = new String[nodes.getLength()];
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Element e = (Element) nodes.item(i);
-            // TODO dm, bug 142, multi language 
-            params[i] = nodes.item(i).getTextContent();
-
-            // FIXME read rules from file
+        NodeList paramNodeList = ruleElmt.getElementsByTagName("param");
+        String[] params = new String[paramNodeList.getLength()];
+        for (int i = 0; i < paramNodeList.getLength(); i++) {
+            Element paramNode = (Element) paramNodeList.item(i);
+            params[i] = paramNode.getTextContent();
+            if(rule.isMultiLanguage()) {
+                params[i] = getMessage(paramNode.getAttribute("id"), params[i]);
+            }
+            // TODO read rules from file
         }
         return params;
     }
@@ -556,8 +557,10 @@ public class HUITypeFactory {
      * @param defaultMessage 
      *      default message
      * @param emptyIfNotFound 
-     *      return an empty string if translated message is not found 
-     *      and defaultMessage null or empty
+     *      true: an empty string is returned if translated message is not found 
+     *      and defaultMessage is null or empty
+     *      false: null is returned if translated message is not found 
+     *      and defaultMessage is null or empty
      * @return 
      *      a translated message 
      *      or a default message if not found

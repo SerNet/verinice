@@ -29,4 +29,11 @@ public class SimpleValue implements IFillRule {
 		value = params != null ? params[0] : ""; //$NON-NLS-1$
 	}
 
+    /* (non-Javadoc)
+     * @see sernet.hui.common.rules.IFillRule#isMultiLanguage()
+     */
+    public boolean isMultiLanguage() {
+        return true;
+    }
+
 }

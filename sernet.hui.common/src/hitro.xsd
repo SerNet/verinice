@@ -132,19 +132,23 @@ be displayed when one of the given options has been previously selected.
         		    
         <xs:element name="defaultRule" minOccurs="0" maxOccurs="1">
         	<xs:complexType>
-        	<xs:sequence>
-        		<xs:element name="param" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-        	</xs:sequence>
-        	  <xs:attribute name="class" type="xs:string" use="required"/>
+	        	<xs:sequence>
+	        		<xs:element name="param" minOccurs="0" maxOccurs="unbounded">
+	        			<xs:complexType mixed="true">
+	        				<xs:attribute name="id" type="xs:ID" use="required"/>
+	        			</xs:complexType>
+	        		</xs:element>
+	        	</xs:sequence>
+	        	<xs:attribute name="class" type="xs:string" use="required"/>
         	</xs:complexType>
         </xs:element>
 
         <xs:element name="validationRule" minOccurs="0" maxOccurs="unbounded">
         	<xs:complexType>
-        	<xs:sequence>
-        		<xs:element name="param" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-        	</xs:sequence>
-        	  <xs:attribute name="class" type="xs:string" use="required"/>
+	        	<xs:sequence>
+	        		<xs:element name="param" minOccurs="0" maxOccurs="unbounded"/>
+	        	</xs:sequence>
+        	  	<xs:attribute name="class" type="xs:string" use="required"/>
         	</xs:complexType>
         </xs:element>
 

@@ -59,5 +59,12 @@ public class Today implements IFillRule {
 		calendarFields.put("DAY", Calendar.DAY_OF_MONTH); //$NON-NLS-1$
 	}
 
+    /* (non-Javadoc)
+     * @see sernet.hui.common.rules.IFillRule#isMultiLanguage()
+     */
+    public boolean isMultiLanguage() {
+        return false;
+    }
+
 
 }
