@@ -39,6 +39,7 @@
 			  <include name="sernet.gs.ui.rcp.main*.*/jar/sernet.gs.ui.rcp.main*.jar"/>
 			  <include name="sernet.gs.service*.*/jar/sernet.gs.service*.jar"/>
 			  <include name="sernet.gs.reveng*.*/jar/sernet.gs.reveng*.jar"/>
+			  <include name="sernet.verinice.samt.service*.*/jar/sernet.verinice.samt.service*.jar"/>
 			  <!-- excludes -->	  
 			  <exclude name="sernet.gs.ui.rcp.main.feature*.*/jar/sernet.gs.ui.rcp.main.feature*.jar"/>
 			</fileset>
