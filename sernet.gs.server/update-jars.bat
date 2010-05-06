@@ -7,5 +7,6 @@
  jar cf %webinflib%\sernet.gs.ui.rcp.main.jar -C ..\sernet.gs.ui.rcp.main\bin . 
  jar cf %webinflib%\sernet.gs.service.jar -C ..\sernet.gs.service\bin .
  jar cf %webinflib%\sernet.gs.reveng.jar -C ..\sernet.gs.reveng\bin .
+ jar cf %webinflib%\sernet.verinice.samt.service.jar -C ..\sernet.verinice.samt.service\bin .
 
 
