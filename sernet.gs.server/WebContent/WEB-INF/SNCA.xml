@@ -12,20 +12,54 @@
 	database.
 	
     Authors:  akoderman,
-    		  rschuster
+    		  rschuster,
+    		  dmurygin
 -->
 
 <!--
 Template:
+(see hitro.xsd for full grammar and documentation)
 
 <huientity
     name=""
     id="">
+    
+    <huirelation id=""
+    	name="" reversename="" tooltip=""/>
+    
     <huiproperty
         name=""
         id=""/>
 </huientity>
+-->
 
+<!-- 
+NOTE on Translation:
+====================
+Attributes and values in this file will be translated using the resource bundles "snca-messages*.properties" for each language.
+The names used in SNCA.xml will be the default when no translation exists for a locale or in the default locale (English: snca-messages.properties).
+
+When you add properties or relations here, do not forget to add the keys to snca-messages.properties for translation!
+
+The following keys will be taken from SNCA.xml and searched in the properties files for translation:
+
+huientity: id
+"name" will be used directly if no string is found for the key 
+
+huiproperty: id, tooltip
+"name" and "tooltip" will be used directly if no string is found for the key
+"tooltip" is searched as "[id]_tooltip", i.e. "person_name_tooltip=This is the persons name."
+
+option: id
+"name" will be used directly if no string is found for the key "id"
+
+huirelation: name, reversename, tooltip
+name, reversename and tooltip will be used directly if no string is found for the key 
+the keys are created follwing a naming convention of [id]_name, [id]_reversename and [id]_tooltip, 
+i.e. "rel_person_document_name=is author of"
+
+defaultRule param: id
+the value between <param></param> will be used directly if no string is found for the key
 -->
 
 <huientities
@@ -1868,6 +1902,33 @@ Template:
 			<option	id="gefaehrdungsumsetzung_okay_no"
 					name="Nein" />
 		</huiproperty>
+		 <huiproperty
+				id="gefaehrdungsumsetzung_vollstaendigkeit"
+				inputtype="singleoption"
+				name="Vollständigkeit" >
+				<option	id="gefaehrdungsumsetzung_vollstaendigkeit_ja"
+					name="Ausreichend" />
+				<option	id="gefaehrdungsumsetzung_vollstaendigkeit_nein"
+					name="Nicht ausreichend" />
+		</huiproperty>
+		<huiproperty
+				id="gefaehrdungsumsetzung_mechanismenstaerke"
+				inputtype="singleoption"
+				name="Mechanismensstärke" >
+				<option	id="gefaehrdungsumsetzung_mechanismenstaerke_ja"
+					name="Ausreichend" />
+				<option	id="gefaehrdungsumsetzung_mechanismenstaerke_nein"
+					name="Nicht ausreichend" />
+		</huiproperty>
+		<huiproperty
+				id="gefaehrdungsumsetzung_zuverlaessigkeit"
+				inputtype="singleoption"
+				name="Zuverlässigkeit" >
+				<option	id="gefaehrdungsumsetzung_zuverlaessigkeit_ja"
+					name="Ausreichend" />
+				<option	id="gefaehrdungsumsetzung_zuverlaessigkeit_nein"
+					name="Nicht ausreichend" />
+		</huiproperty>
 		<huiproperty
 				id="gefaehrdungsumsetzung_alternative"
                 editable="false"
@@ -1880,6 +1941,8 @@ Template:
             name="Dokument"
             id="gefaehrdungsumsetzung_dokument"
             isURL="true" />
+      
+            
 	</huientity>
 
 
