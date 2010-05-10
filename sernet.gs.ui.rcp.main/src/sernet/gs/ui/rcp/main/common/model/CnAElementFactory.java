@@ -215,7 +215,7 @@ public class CnAElementFactory {
 		elementbuilders.put(Anwendung.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 
-				log.debug("Creating new Anwendung in " + container);
+				log.debug("Creating new Anwendung in " + container); //$NON-NLS-1$
 				CreateAnwendung saveCommand = new CreateAnwendung(container, Anwendung.class);
 				saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
 				Anwendung child = saveCommand.getNewElement();
@@ -242,7 +242,7 @@ public class CnAElementFactory {
 		elementbuilders.put(ITVerbund.TYPE_ID, new ElementBuilder() {
 			public ITVerbund build(CnATreeElement container, BuildInput input) throws Exception {
 
-				log.debug("Creating new ITVerbund in " + container);
+				log.debug("Creating new ITVerbund in " + container); //$NON-NLS-1$
 				CreateITVerbund saveCommand = new CreateITVerbund(container, ITVerbund.class);
 				saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
 				ITVerbund verbund = saveCommand.getNewElement();
@@ -536,7 +536,7 @@ public class CnAElementFactory {
 	public CnATreeElement saveNew(CnATreeElement container, String buildableTypeId, BuildInput input, boolean fireUpdates) throws Exception {
 		IElementBuilder builder = elementbuilders.get(buildableTypeId);
 		if (builder == null) {
-			throw new Exception("Konnte Element nicht erzeugen, type-id: " + buildableTypeId);
+			throw new Exception(Messages.getString("CnAElementFactory.0") + buildableTypeId); //$NON-NLS-1$
 		}
 		CnATreeElement child = builder.build(container, input);
 
@@ -630,7 +630,7 @@ public class CnAElementFactory {
 				fireLoad();
 			}
 		} catch(Exception e) {
-			log.error("Error while loading ISO27KModel", e);
+			log.error(Messages.getString("CnAElementFactory.1"), e); //$NON-NLS-1$
 		}
 		return model;
 	}
@@ -645,13 +645,13 @@ public class CnAElementFactory {
 			saveCommand = getCommandService().executeCommand(saveCommand);
 			isoModel = saveCommand.getElement();
 			if (log.isInfoEnabled()) {
-				log.info("ISO27KModel created");
+				log.info("ISO27KModel created"); //$NON-NLS-1$
 			}
 			if(isoModel!=null) {
 				fireLoad();
 			}
 		} catch(Exception e) {
-			log.error("Error while creating ISO27KModel", e);
+			log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
 		}
 		return isoModel;
 	}
@@ -661,7 +661,7 @@ public class CnAElementFactory {
 			dbHome.open(monitor);
 		}
 
-		monitor.setTaskName("Überprüfe / Aktualisiere DB-Version.");
+		monitor.setTaskName(Messages.getString("CnAElementFactory.3")); //$NON-NLS-1$
 		Activator.checkDbVersion();
 
 		loadedModel = dbHome.loadModel(monitor);
@@ -672,8 +672,8 @@ public class CnAElementFactory {
 		}
 
 		// none found, create new model:
-		log.debug("Creating new model in DB.");
-		monitor.setTaskName("Erzeuge neues Modell...");
+		log.debug("Creating new model in DB."); //$NON-NLS-1$
+		monitor.setTaskName(Messages.getString("CnAElementFactory.4")); //$NON-NLS-1$
 		loadedModel = new BSIModel();
 
 		ITVerbund verbund = new ITVerbund(loadedModel);
@@ -712,7 +712,7 @@ public class CnAElementFactory {
 			if(isIsoModelLoaded()) {
 				ISO27KModel newModel = loadIsoModel();
 				if (log.isDebugEnabled()) {
-					log.debug("reloadModelFromDatabase, ISO-model loaded");
+					log.debug("reloadModelFromDatabase, ISO-model loaded"); //$NON-NLS-1$
 				}
 				isoModel.modelReload(newModel);
 				isoModel = newModel;
@@ -720,7 +720,7 @@ public class CnAElementFactory {
 			
 			fireLoad();
 		} catch (Exception e) {
-		    log.error("Could not reload model from database", e);
+		    log.error(Messages.getString("CnAElementFactory.5"), e); //$NON-NLS-1$
 		}
 	}
 	
@@ -735,8 +735,8 @@ public class CnAElementFactory {
 		try {
 			ServiceFactory.openCommandService();
 		} catch (MalformedURLException e) {
-			log.error("Error while opening command service", e);
-			throw new RuntimeException("Error while opening command service", e);
+			log.error(Messages.getString("CnAElementFactory.6"), e); //$NON-NLS-1$
+			throw new RuntimeException(Messages.getString("CnAElementFactory.7"), e); //$NON-NLS-1$
 		}
 		commandService = ServiceFactory.lookupCommandService();
 		return commandService;

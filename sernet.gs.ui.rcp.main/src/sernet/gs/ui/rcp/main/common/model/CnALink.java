@@ -69,7 +69,7 @@ public class CnALink implements Serializable {
 		HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(link.getRelationId());
 		String name;
 		if (relation == null) {
-			name = isDownwardLink(fromElement, link) ? "" : "";
+			name = isDownwardLink(fromElement, link) ? "" : ""; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else {
 			name = isDownwardLink(fromElement, link) ? relation.getName() : relation.getReversename();
@@ -101,7 +101,7 @@ public class CnALink implements Serializable {
 		public Id() {}
 		
 		public Id(Integer dependantId, Integer dependencyId) {
-			this(dependantId, dependencyId, "");
+			this(dependantId, dependencyId, ""); //$NON-NLS-1$
 		}
 
 		public Id(Integer dependantId, Integer dependencyId, String relationId) {;
@@ -235,13 +235,13 @@ public class CnALink implements Serializable {
 	private String typeTitle() {
 		switch (linkType) {
 		case DEPENDANT_ON:
-			return "abhängig von: ";
+			return Messages.getString("CnALink.0"); //$NON-NLS-1$
 		case ADMINISTRATED_BY:
-			return "zuständig: ";
+			return Messages.getString("CnALink.4"); //$NON-NLS-1$
 //		case USED_BY:
 //			return Messages.CnALink_used;
 		case LOCATED_IN:
-			return "Standort: "; //$NON-NLS-1$
+			return Messages.getString("CnALink.1"); //$NON-NLS-1$
 		}
 		return ""; //$NON-NLS-1$
 	}

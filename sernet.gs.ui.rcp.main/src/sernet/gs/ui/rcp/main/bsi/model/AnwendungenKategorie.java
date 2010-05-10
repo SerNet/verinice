@@ -36,7 +36,7 @@ public class AnwendungenKategorie extends CnATreeElement
 	
 	@Override
 	public String getTitle() {
-		return "Anwendungen";
+		return Messages.AnwendungenKategorie_0;
 	}
 	
 	@Override

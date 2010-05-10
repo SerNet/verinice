@@ -103,7 +103,7 @@ public class DateSelectionControl implements IHuiControl {
 		container.setLayoutData(containerLData);
 
 		
-		dateTime = new DateTime(container, SWT.CALENDAR);
+		dateTime = new DateTime(container, SWT.CALENDAR | SWT.MEDIUM | SWT.DROP_DOWN);
 
 		GridData label36LData = new GridData();
 		label36LData.verticalAlignment = GridData.CENTER;

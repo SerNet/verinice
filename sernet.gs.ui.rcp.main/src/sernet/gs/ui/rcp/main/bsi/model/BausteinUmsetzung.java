@@ -56,11 +56,11 @@ public class BausteinUmsetzung extends CnATreeElement {
 	};
 	
 	private final static String[] schichtenBezeichnung = new String[] {
-		"Übergeordnete Aspekte",
-		"Infrastruktur",
-		"IT-Systeme",
-		"Netze",
-		"Anwendungen"
+		Messages.BausteinUmsetzung_0,
+		Messages.BausteinUmsetzung_1,
+		Messages.BausteinUmsetzung_2,
+		Messages.BausteinUmsetzung_3,
+		Messages.BausteinUmsetzung_4
 	};
 
 	
@@ -105,7 +105,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 				kapitel[1] = Integer.parseInt(m.group(2));
 			} catch (NumberFormatException e) {
 				Logger.getLogger(this.getClass())
-					.error("Kapitelnummer des Bausteins ungültig.", e);
+					.error(Messages.BausteinUmsetzung_5, e);
 			}
 		}
 		return kapitel;

@@ -79,7 +79,7 @@ public class BSIMassnahmenModel {
 	// not configured by Spring
 	private ILayoutConfig layoutConfig;
 
-	private String encoding = "utf-8";
+	private String encoding = "utf-8"; //$NON-NLS-1$
 	
 	public BSIMassnahmenModel(IBSIConfig config)
 	{
@@ -96,7 +96,7 @@ public class BSIMassnahmenModel {
 	public synchronized List<Baustein> loadBausteine(IProgress mon)
 			throws GSServiceException, IOException {
 		if (config instanceof BSIConfigurationRemoteSource) {
-			log.debug("Lade Kataloge von Verinice-Server...");
+			log.debug(Messages.BSIMassnahmenModel_0);
 			return loadBausteineRemote();
 		}
 
@@ -106,7 +106,7 @@ public class BSIMassnahmenModel {
 		IGSSource gsSource = null;
 		String cacheDir = config.getCacheDir();
 
-		log.debug("Lesen der GS-Kataloge: " + gsPath);
+		log.debug(Messages.BSIMassnahmenModel_1 + gsPath);
 
 		// did user really change the path to file?
 		if (! (previouslyReadFile.equals(gsPath) && previouslyReadFileDS.equals(dsPath))
@@ -120,9 +120,9 @@ public class BSIMassnahmenModel {
 				else
 					gsSource = new URLGSSource(gsPath);
 			} catch (IOException e) {
-				LOG.error("GS-Kataloge nicht gefunden: " + gsPath + " Download unter: https://www.bsi.bund.de"); //$NON-NLS-1$
+				LOG.error(Messages.BSIMassnahmenModel_9 + gsPath + Messages.BSIMassnahmenModel_2); 
 				if (LOG.isDebugEnabled()) {
-					LOG.debug("stacktrace: ", e);
+					LOG.debug("stacktrace: ", e); //$NON-NLS-1$
 				}
 				return null;
 			}
@@ -136,7 +136,7 @@ public class BSIMassnahmenModel {
 			scrape.setCacheDir(cacheDir); //$NON-NLS-1$
 			
 			Logger.getLogger(BSIMassnahmenModel.class).debug("Setting GS-Cache to " + scrape.getCacheDir()); //$NON-NLS-1$
-			mon.beginTask("Laden und Zwischenspeichern der GS-Kataloge...", 5);
+			mon.beginTask(Messages.BSIMassnahmenModel_3, 5);
 			List<Baustein> alleBst = new ArrayList<Baustein>();
 
 			mon.subTask(BausteinUmsetzung.getSchichtenBezeichnung()[0]);
@@ -184,7 +184,7 @@ public class BSIMassnahmenModel {
 			cache = alleBst;
 			mon.done();
 			Logger.getLogger(BSIMassnahmenModel.class).debug(
-					"GS-Kataloge loaded.");
+					Messages.BSIMassnahmenModel_4);
 
 		}
 		return cache;
@@ -197,11 +197,11 @@ public class BSIMassnahmenModel {
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			return command.getBausteine();
 		} catch (CommandException e) {
-			log.warn("execution of command failed: " + e.getLocalizedMessage());;
+			log.warn(Messages.BSIMassnahmenModel_5 + e.getLocalizedMessage());;
 			throw new GSServiceException(e.getCause());
 		} catch(RemoteConnectFailureException re)
 		{
-			log.error("error connecting to server: " + re.getLocalizedMessage());
+			log.error(Messages.BSIMassnahmenModel_6 + re.getLocalizedMessage());
 			
 			// TODO rschuster: Display a nice error dialog and asking the user to
 			// check whether the server URL is valid (or the server is down?)
@@ -215,7 +215,7 @@ public class BSIMassnahmenModel {
     	Baustein b = new Baustein();
     	b.setStand(DS_2008);
     	b.setId(DS_B_1_5);
-    	b.setTitel("Datenschutz BfDI"); //$NON-NLS-1$
+    	b.setTitel(Messages.BSIMassnahmenModel_10); 
     	b.setUrl(DS_B01005_BFDI);
     	b.setSchicht(1);
     	
@@ -292,7 +292,7 @@ public class BSIMassnahmenModel {
 				
 			while ((line = buffRead.readLine()) != null) {
 				if (!skipComplete) {
-					if (line.matches(".*div.*id=\"menuoben\".*")
+					if (line.matches(".*div.*id=\"menuoben\".*") //$NON-NLS-1$
 							|| line.matches(".*div.*class=\"standort\".*")) //$NON-NLS-1$
 						skip = true;
 					else if (line.matches(".*div.*id=\"content\".*")) { //$NON-NLS-1$
@@ -318,8 +318,8 @@ public class BSIMassnahmenModel {
 			}
 			return b.toString();
 		} catch(Exception e) {
-			log.error("Error in getMassnahmeHtml", e);
-			throw new GSServiceException("Error in getMassnahmeHtml", e);
+			log.error(Messages.BSIMassnahmenModel_7, e);
+			throw new GSServiceException(Messages.BSIMassnahmenModel_8, e);
 		}
 	}
 
@@ -432,7 +432,7 @@ public class BSIMassnahmenModel {
 		if (this.encoding != null)
 			return encoding;
 		
-		return "iso-8859-1";
+		return "iso-8859-1"; //$NON-NLS-1$
 	}
 	
 }

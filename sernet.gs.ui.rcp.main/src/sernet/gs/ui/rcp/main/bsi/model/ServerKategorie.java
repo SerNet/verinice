@@ -33,7 +33,7 @@ public class ServerKategorie extends CnATreeElement implements IBSIStrukturKateg
 	
 	@Override
 	public String getTitle() {
-		return "IT-Systeme: Server";
+		return Messages.ServerKategorie_0;
 	}
 	
 	@Override

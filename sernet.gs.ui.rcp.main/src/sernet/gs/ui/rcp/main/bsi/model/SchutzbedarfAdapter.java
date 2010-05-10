@@ -170,7 +170,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 			
 		} catch (TransactionAbortedException tae) {
 			Logger.getLogger(this.getClass()).debug(
-					"Verfügbarkeitsänderung abgebrochen.");
+					"Verfügbarkeitsänderung abgebrochen."); //$NON-NLS-1$
 		} catch (Exception e) {
 			ta.abort();
 		}
@@ -194,7 +194,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 			
 		} catch (TransactionAbortedException tae) {
 			Logger.getLogger(this.getClass()).debug(
-					"Vertraulichkeitsänderung abgebrochen.");
+					"Vertraulichkeitsänderung abgebrochen."); //$NON-NLS-1$
 		} catch (Exception e) {
 			ta.abort();
 		}
@@ -218,7 +218,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 			
 		} catch (TransactionAbortedException tae) {
 			Logger.getLogger(this.getClass()).debug(
-					"Integritätsänderung abgebrochen.");
+					"Integritätsänderung abgebrochen."); //$NON-NLS-1$
 		} catch (Exception e) {
 			ta.abort();
 		}
@@ -237,7 +237,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 		try {
 			downwardsTA.enter(downwardElement);
 		} catch (TransactionAbortedException e) {
-			Logger.getLogger(this.getClass()).error("Aborted while determining bottom node for protection requirements on object: " + downwardElement.getTitle(), e);
+			Logger.getLogger(this.getClass()).error(Messages.SchutzbedarfAdapter_3 + downwardElement.getTitle(), e);
 			return;
 		}
 

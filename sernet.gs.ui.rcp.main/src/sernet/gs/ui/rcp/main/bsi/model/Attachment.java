@@ -52,27 +52,27 @@ public class Attachment extends Addition implements Serializable{
 	
 	public static final String TYPE_ID = "attachment"; //$NON-NLS-1$
 	
-	public static String[] DOCUMENT_MIME_TYPES = new String[] {"doc","odt","docx"};
+	public static String[] DOCUMENT_MIME_TYPES = new String[] {"doc","odt","docx"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
-	public static String[] PDF_MIME_TYPES = new String[] {"pdf"};
+	public static String[] PDF_MIME_TYPES = new String[] {"pdf"}; //$NON-NLS-1$
 	
-	public static String[] IMAGE_MIME_TYPES = new String[] {"gif","jpg","jpeg","png","tif","tiff","bmp","svg","psd"};
+	public static String[] IMAGE_MIME_TYPES = new String[] {"gif","jpg","jpeg","png","tif","tiff","bmp","svg","psd"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 	
-	public static String[] SPREADSHEET_MIME_TYPES = new String[] {"xls","ods","xlsx","csv"};
+	public static String[] SPREADSHEET_MIME_TYPES = new String[] {"xls","ods","xlsx","csv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	
-	public static String[] PRESENTATION_MIME_TYPES = new String[] {"ppt","odp","pptx"};
+	public static String[] PRESENTATION_MIME_TYPES = new String[] {"ppt","odp","pptx"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
-	public static String[] HTML_MIME_TYPES = new String[] {"htm","html","php"};
+	public static String[] HTML_MIME_TYPES = new String[] {"htm","html","php"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
-	public static String[] XML_MIME_TYPES = new String[] {"xml","xsd"};
+	public static String[] XML_MIME_TYPES = new String[] {"xml","xsd"}; //$NON-NLS-1$ //$NON-NLS-2$
 	
-	public static String[] AUDIO_MIME_TYPES = new String[] {"mp3","mp2","mp4","ogg","wav","fla","wma"};
+	public static String[] AUDIO_MIME_TYPES = new String[] {"mp3","mp2","mp4","ogg","wav","fla","wma"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 	
-	public static String[] VIDEO_MIME_TYPES = new String[] {"xvid","divx","ogv","flv","avi","vob","mpeg"};
+	public static String[] VIDEO_MIME_TYPES = new String[] {"xvid","divx","ogv","flv","avi","vob","mpeg"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 	
-	public static String[] ARCHIVE_MIME_TYPES = new String[] {"zip","rar","tar","gz","gzip","arj"};
+	public static String[] ARCHIVE_MIME_TYPES = new String[] {"zip","rar","tar","gz","gzip","arj"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	
-	public static String[] TEXT_MIME_TYPES = new String[] {"txt","log","readme"};
+	public static String[] TEXT_MIME_TYPES = new String[] {"txt","log","readme"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
 	private transient EntityType subEntityType;
 	

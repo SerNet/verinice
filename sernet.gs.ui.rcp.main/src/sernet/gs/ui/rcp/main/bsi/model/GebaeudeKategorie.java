@@ -34,7 +34,7 @@ public class GebaeudeKategorie extends CnATreeElement implements IBSIStrukturKat
 	
 	@Override
 	public String getTitle() {
-		return "Gebäude";
+		return Messages.GebaeudeKategorie_0;
 	}
 	@Override
 	public String getTypeId() {

@@ -161,7 +161,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		String assignedPerson = getEntity().getSimpleValue(field);
 		if (assignedPerson != null && assignedPerson.length() > 0)
 			return assignedPerson;
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 	
 	public String getInitiierungDurch() {
@@ -213,7 +213,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 				kapitel[1] = Integer.parseInt(m.group(2));
 			} catch (NumberFormatException e) {
 				Logger.getLogger(this.getClass()).error(
-						"Konnte Massnahmen-Nummer nicht lesen.", e);
+						Messages.MassnahmenUmsetzung_1, e);
 			}
 		}
 		return kapitel;

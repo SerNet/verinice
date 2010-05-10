@@ -34,7 +34,7 @@ public class SubtypenZielobjekte {
 	
 		private Properties properties;
 		
-		private static final String SUBTYP_MAPPING_FILE = "subtyp-baustein.properties";
+		private static final String SUBTYP_MAPPING_FILE = "subtyp-baustein.properties"; //$NON-NLS-1$
 
 		public SubtypenZielobjekte() {
 			properties = new Properties();
@@ -43,7 +43,7 @@ public class SubtypenZielobjekte {
 				properties.load(stream);
 			} catch (IOException e) {
 				Logger.getLogger(this.getClass())
-					.error("Fehler beim Laden der Zuordnung von Zielobjekt-Typen zu Bausteinen", e);
+					.error(Messages.SubtypenZielobjekte_1, e);
 			}
 
 			// TODO server test if this works

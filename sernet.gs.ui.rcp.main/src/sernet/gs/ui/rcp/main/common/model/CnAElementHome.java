@@ -72,9 +72,9 @@ public class CnAElementHome {
 
     private static CnAElementHome instance;
 
-    private static final String QUERY_FIND_BY_ID = "from " + CnATreeElement.class.getName() + " as element " + "where element.dbId = ?";
+    private static final String QUERY_FIND_BY_ID = "from " + CnATreeElement.class.getName() + " as element " + "where element.dbId = ?"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    private static final String QUERY_FIND_CHANGES_SINCE = "from " + ChangeLogEntry.class.getName() + " as change " + "where change.changetime > ? " + "and not change.stationId = ? " + "order by changetime";
+    private static final String QUERY_FIND_CHANGES_SINCE = "from " + ChangeLogEntry.class.getName() + " as change " + "where change.changetime > ? " + "and not change.stationId = ? " + "order by changetime"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     private ICommandService commandService;
 
@@ -83,7 +83,7 @@ public class CnAElementHome {
             try {
                 open();
             } catch (Exception e) {
-                log.error("Error while opening command service", e);
+                log.error("Error while opening command service", e); //$NON-NLS-1$
             }
         }
         return commandService;
@@ -113,7 +113,7 @@ public class CnAElementHome {
     }
 
     public void open(String confDir, IProgress monitor) throws Exception {
-        monitor.beginTask("Initialisiere Service-Layer...", IProgress.UNKNOWN_WORK);
+        monitor.beginTask(Messages.getString("CnAElementHome.0"), IProgress.UNKNOWN_WORK); //$NON-NLS-1$
         ServiceFactory.openCommandService();
         commandService = ServiceFactory.lookupCommandService();
     }
@@ -138,7 +138,7 @@ public class CnAElementHome {
 
     public <T extends CnATreeElement> T save(T element) throws Exception {
         if (log.isDebugEnabled()) {
-            log.debug("Saving new element: " + element);
+            log.debug("Saving new element: " + element); //$NON-NLS-1$
         }
         SaveElement<T> saveCommand = new SaveElement<T>(element);
         saveCommand = getCommandService().executeCommand(saveCommand);
@@ -181,7 +181,7 @@ public class CnAElementHome {
             title = getTypeFactory().getMessage(typeId);
         }
         if (log.isDebugEnabled()) {
-            log.debug("Creating new instance of " + clazz.getName() + " in " + container + " with title: " + title);
+            log.debug("Creating new instance of " + clazz.getName() + " in " + container + " with title: " + title); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         CreateElement<T> saveCommand = new CreateElement<T>(container, clazz, title);
         saveCommand = getCommandService().executeCommand(saveCommand);
@@ -189,21 +189,21 @@ public class CnAElementHome {
     }
 
     public BausteinUmsetzung save(CnATreeElement container, Baustein baustein) throws Exception {
-        log.debug("Creating new element in " + container);
+        log.debug("Creating new element in " + container); //$NON-NLS-1$
         CreateBaustein saveCommand = new CreateBaustein(container, baustein);
         saveCommand = getCommandService().executeCommand(saveCommand);
         return saveCommand.getNewElement();
     }
 
     public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged) throws CommandException {
-        log.debug("Saving new link from " + dropTarget + " to " + dragged);
+        log.debug("Saving new link from " + dropTarget + " to " + dragged); //$NON-NLS-1$ //$NON-NLS-2$
         CreateLink command = new CreateLink(dropTarget, dragged);
         command = getCommandService().executeCommand(command);
         return command.getLink();
     }
 
     public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged, String typeId, String comment) throws CommandException {
-        log.debug("Saving new link from " + dropTarget + " to " + dragged + "of type " + typeId);
+        log.debug("Saving new link from " + dropTarget + " to " + dragged + "of type " + typeId); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         CreateLink command = new CreateLink(dropTarget, dragged, typeId, comment);
         command = getCommandService().executeCommand(command);
 
@@ -211,7 +211,7 @@ public class CnAElementHome {
     }
 
     public void remove(CnATreeElement element) throws Exception {
-        log.debug("Deleting " + element.getTitle());
+        log.debug("Deleting " + element.getTitle()); //$NON-NLS-1$
         RemoveElement command = new RemoveElement(element);
         command = getCommandService().executeCommand(command);
     }
@@ -263,9 +263,9 @@ public class CnAElementHome {
      * @throws Exception
      */
     public BSIModel loadModel(IProgress nullMonitor) throws Exception {
-        log.debug("Loading model instance");
+        log.debug("Loading model instance"); //$NON-NLS-1$
 
-        nullMonitor.setTaskName("Lade Grundschutz Modell...");
+        nullMonitor.setTaskName(Messages.getString("CnAElementHome.1")); //$NON-NLS-1$
 
         LoadBSIModelForTreeView command = new LoadBSIModelForTreeView();
         command = getCommandService().executeCommand(command);
@@ -393,7 +393,7 @@ public class CnAElementHome {
             try {
                 lcuc = getCommandService().executeCommand(lcuc);
             } catch (CommandException e) {
-                ExceptionUtil.log(e, "Fehler bei Abfrage der Schreibrechte.");
+                ExceptionUtil.log(e, Messages.getString("CnAElementHome.2")); //$NON-NLS-1$
                 return false;
             }
 

@@ -33,7 +33,7 @@ public class RaeumeKategorie extends CnATreeElement implements IBSIStrukturKateg
 	
 	@Override
 	public String getTitle() {
-		return "Räume";
+		return Messages.RaeumeKategorie_0;
 	}
 	
 	@Override
