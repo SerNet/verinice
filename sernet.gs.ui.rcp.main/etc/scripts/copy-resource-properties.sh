@@ -15,7 +15,10 @@ read
 
 
 find ./ ! -path '*classes*' ! -path '*.metadata*' ! -path '*bin*' \
--iname '*messages*.properties' -or -iname 'plugin*.properties' |\
+-iname '*messages*.properties' \
+-or -iname 'plugin*.properties' \
+-or -iname 'root*xhtml' \
+-or -path '*/cheatsheets/*.xml' |\
 rsync -av --files-from=- . ./temptranslate/
 
 

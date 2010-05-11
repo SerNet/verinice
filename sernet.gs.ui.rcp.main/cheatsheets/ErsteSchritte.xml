@@ -1,74 +1,69 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?> 
-<cheatsheet title="EN_Erste Schritte">
+<cheatsheet title="Getting started">
 
 	<intro 
 		>
 		<description>
-			EN_<b>Willkommen bei verinice.</b>
+			<b>Welcome to verinice!</b>
 			<br/>
 			<br/>
-			Dieser Spickzettel erleichtert es Ihnen, 
-			das Tool einzurichten und sich gleich darin zurecht zu finden.
+			This tutorial will help you to configure verinice and guide you along the first few steps.
 		</description>
 	</intro>
+	
+	<item title="Switch to ISM perspective">
+	<description>
+	Since you're reading this in English, we assume that you wish to use the ISM perspective. 
+	This perspective allows you to model requirements and controls, to calculate risk and generate reports. 
+		<br/>
+		<br/>
+		Open the ISM perspective now by clicking on the menu "View, Open Perspective, ISM Perspective".
+	</description>
+	</item>
 
 	<item
-		title="Grundschutz Kataloge downloaden">
+		title="Download control catalog">
 
-	<action 
-			pluginId="sernet.gs.ui.rcp.main"
-			class="sernet.gs.ui.rcp.main.bsi.actions.DownloadBsiCataloguesAction"
-			confirm="true"/>
 		<description>
-			Zunächst müssen sie die aktuelle Version der Grundschutz-Kataloge
-			downloaden.
+			First you need to download a control catalog. Some free catalogs are available from the verinice website.
+			You can also create your own catalogs using Excel or StarCalc and import them into verinice.
 			<br/>
 			<br/>
-			Gehen Sie auf die Webseite des BSI in den Bereich "IT-Grundschutz-Kataloge - Download".
+			Use your web browser to go to
 			<br/>
-			Adresse: <b>https://www.bsi.bund.de/cln_174/DE/Themen/weitereThemen/ITGrundschutzKataloge/Download/download_node.html</b>
-			<br/>
-			<br/>
-			Laden Sie folgende Datei herunter:
-			<br/>
-			<b>2009, 11. EL: HTML-Seiten IT-Grundschutz-Kataloge (ZIP ca. 11 MB)</b>
+			Adresse: <b>http://www.verinice.org/Downloads.48.0.html</b>
 			<br/>
 			<br/>
-			Speichern Sie die ZIP-Datei auf ihrer lokalen Festplatte.
+			Download the catalog "Free ISO 27001 implementation guidance".
+			<br/>
+			<br/>
+			Save the file on your hard drive.
 		</description>
 	</item>
 	
-	<item title="Einstellungen öffnen">
-	<!-- 
-	<action 
-			pluginId="sernet.gs.ui.rcp.main"
-			class="sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction"/>
-			 -->
+	<item title="Import control catalog">
 	<description>
-		Nun müssen Sie einstellen, wo sich der gespeicherte Download der
-		Grundschutz Kataloge befindet.
+		Now you have to import the catalog file. On the lefthand side of the verinice worbench you will find the "Catalog" view.
+		Click on the leftmost button ("Import catalog...").
 		<br/>
 		<br/>
-		Öffnen Sie die Einstellungen über das Menü "Bearbeiten" -> "Einstellungen".
-		<br/>
-		<br/>
-		Öffnen Sie die Seite mit dem Namen "BSI IT-Grundschutz". Stellen Sie dort die Datenquelle auf "ZIP-Datei" und setzen Sie den korrekten Pfad zur heruntergeladenen Datei.
-		<br/>
-		<br/>
-		Schließen Sie dann die Einstellungen mit "Okay".
+		Choose your downloaded catalog file and click "OK".
 	</description>
 	</item>
 
-	<item title="Kataloge werden geladen">
+	<item title="Create a scope">
 	<description>
-	Die Grundschutz Kataloge wurden nun aus der ZIP-Datei geladen. Sobald der
-	Parser mit seiner Arbeit fertig ist, erscheinen alle Bausteine im Fenster
-	"IT-Grundschutz".
+	The catalog is now being loaded. When the parser has finished, you will see the contents in the catalog view.
 	<br/><br/>
-	 Wenn Sie nun einen Baustein oder eine Maßnahme anklicken, können Sie den Inhalt im Browserfenster nachlesen.
+	Open the browser view ("View, Open view, Control Browser"). Click on a control to show its contents in the browser view.
+	<br/><br/>
+	To actually work with the imported controls, you have to create your organization in the database. Go to the view "Information Security Model".
+	It should be displayed in the middle of the verinice workbench. Click on the rightmost button ("Create new organization"). 
+	Drag some controls from the catalog view to the "Controls" group underneath your new organization. The controls will be created. 
+	Double-click on them to open the editor for each control.
 	</description>
 	<onCompletion>
-	Sehr gut! Wenn Sie weitermachen möchten, finden Sie weitere Spickzettel im Hilfemenü.
+	Excellent! If you want to continue, you'll find more tutorials in the Help menu.
 	</onCompletion>
 	
 	</item>

@@ -37,7 +37,6 @@ public class Messages extends NLS {
 	public static String CatalogView_16;
 	public static String CatalogView_21;
 	public static String CatalogView_22;
-	public static String CatalogView_25;
 	public static String CatalogView_26;
 	public static String CatalogView_28;
 	public static String CatalogView_4;
