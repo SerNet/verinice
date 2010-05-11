@@ -18,24 +18,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.statscommands;
 
-import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate3.HibernateCallback;
-
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
@@ -43,9 +31,10 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityId;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
+//import sernet.verinice.iso27k.model.Control;
 import sernet.verinice.iso27k.model.Control;
 import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.iso27k.model.IControl;
 import sernet.verinice.iso27k.service.ControlMaturityService;
 
 @SuppressWarnings("serial")
@@ -100,37 +89,37 @@ public class MaturitySummary extends GenericCommand {
     }
 
     /**
-     * @param child
+     * @param group
      */
-    private void getSummary(ControlGroup child) {
+    private void getSummary(ControlGroup group) {
         ControlMaturityService maturityService = new ControlMaturityService();
         if (type == TYPE_MAX)
-            maturity.put(child.getTitle(), getMaxMaturityValue());
+            maturity.put(group.getTitle(), maturityService.getMaxMaturityValue(group));
         else if (type == TYPE_IMPLEMENTATION)
-            maturity.put(child.getTitle(), maturityService.getMaturityByWeight(child));
+            maturity.put(group.getTitle(), maturityService.getMaturityByWeight(group));
         else if (type == TYPE_THRESHOLD1)
-            maturity.put(child.getTitle(), getThreshold(child, TYPE_THRESHOLD1));
+            maturity.put(group.getTitle(), getThreshold(group, TYPE_THRESHOLD1));
         else if (type == TYPE_THRESHOLD2)
-            maturity.put(child.getTitle(), getThreshold(child, TYPE_THRESHOLD2));
+            maturity.put(group.getTitle(), getThreshold(group, TYPE_THRESHOLD2));
     }
 
     /**
-     * @param child
+     * @param controlGroup
      * @param type_threshold22 
      * @return
      */
-    private Double getThreshold(ControlGroup child, int type_threshold) {
-        Set<CnATreeElement> children = child.getChildren();
+    private Double getThreshold(ControlGroup controlGroup, int typeThreshold) {
+        Set<CnATreeElement> children = controlGroup.getChildren();
         for (Iterator iterator = children.iterator(); iterator.hasNext();) {
             CnATreeElement cnATreeElement = (CnATreeElement) iterator.next();
-            if (cnATreeElement instanceof Control) {
-                Control control = (Control) cnATreeElement;
-                if (type_threshold == TYPE_THRESHOLD1)
+            if (cnATreeElement instanceof IControl) {
+                IControl control = (IControl) cnATreeElement;
+                if (typeThreshold == TYPE_THRESHOLD1)
                     return (double)control.getThreshold1();
                 else 
                     return (double)control.getThreshold2();
             } else if (cnATreeElement instanceof ControlGroup) {
-               return getThreshold((ControlGroup) cnATreeElement, type_threshold);
+               return getThreshold((ControlGroup) cnATreeElement, typeThreshold);
             }
         }
         return (double)0;

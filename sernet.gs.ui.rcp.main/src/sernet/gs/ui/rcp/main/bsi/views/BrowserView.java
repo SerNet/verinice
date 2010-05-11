@@ -54,6 +54,7 @@ import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.verinice.iso27k.model.Control;
+import sernet.verinice.iso27k.model.IControl;
 import sernet.verinice.iso27k.service.IItem;
 
 public class BrowserView extends ViewPart {
@@ -162,14 +163,14 @@ public class BrowserView extends ViewPart {
 			if (element instanceof IItem) {
 				IItem item = (IItem) element;
 				StringBuilder sb = new StringBuilder();
-				writeHtml(sb, item.getName(), item.getDescription(), "utf-8");
+				writeHtml(sb, item.getName(), item.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
 				setText(sb.toString());	
 			}
 			
-			if (element instanceof Control) {
-				Control item = (Control) element;
+			if (element instanceof IControl) {
+			    IControl control = (IControl) element;
 				StringBuilder sb = new StringBuilder();
-				writeHtml(sb, item.getTitle(), item.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
+				writeHtml(sb, control.getTitle(), control.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
 				setText(sb.toString());			
 			}
 

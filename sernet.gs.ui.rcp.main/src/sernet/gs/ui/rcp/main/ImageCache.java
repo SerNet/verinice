@@ -51,6 +51,7 @@ import sernet.verinice.iso27k.model.Document;
 import sernet.verinice.iso27k.model.Evidence;
 import sernet.verinice.iso27k.model.Exception;
 import sernet.verinice.iso27k.model.Finding;
+import sernet.verinice.iso27k.model.IControl;
 import sernet.verinice.iso27k.model.IISO27kGroup;
 import sernet.verinice.iso27k.model.Incident;
 import sernet.verinice.iso27k.model.IncidentScenario;
@@ -379,16 +380,21 @@ public class ImageCache {
 	 * @return
 	 */
 	public Image getControlImplementationImage(String implemented) {
-		if (implemented.equals(Control.PROP_IMPLEMENTED_NOTEDITED))
+		if (IControl.IMPLEMENTED_NOT_EDITED.equals(implemented))
 			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
-		if (implemented.equals(Control.PROP_IMPLEMENTED_NA))
+		
+		if (IControl.IMPLEMENTED_NA.equals(implemented))
 			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
-		if (implemented.equals(Control.PROP_IMPLEMENTED_NO))
+		
+		if (IControl.IMPLEMENTED_NO.equals(implemented))
 			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
-		if (implemented.equals(Control.PROP_IMPLEMENTED_PARTLY))
+		
+		if (IControl.IMPLEMENTED_PARTLY.equals(implemented))
 			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
-		if (implemented.equals(Control.PROP_IMPLEMENTED_YES))
+		
+		if (IControl.IMPLEMENTED_YES.equals(implemented))
 			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+		
 		// else simply return notedited:
 		return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
 	}

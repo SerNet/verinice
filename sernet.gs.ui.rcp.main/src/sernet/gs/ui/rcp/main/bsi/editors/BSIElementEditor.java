@@ -229,6 +229,7 @@ public class BSIElementEditor extends EditorPart {
 			if(cnAElement instanceof Organization) {
 				icon = ImageCache.getInstance().getISO27kTypeImage(Organization.TYPE_ID);
 			} else if(cnAElement instanceof Group) {
+			    // TODO - getChildTypes()[0] might be a problem for more than one type
 				icon = ImageCache.getInstance().getISO27kTypeImage(((Group)cnAElement).getChildTypes()[0]);
 			} else if(cnAElement instanceof IISO27kElement) {
 				icon = ImageCache.getInstance().getISO27kTypeImage(cnAElement.getTypeId());

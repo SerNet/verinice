@@ -270,7 +270,7 @@ public class ChartView extends ViewPart {
 	}
 
 	protected void checkModel() {
-		if (CnAElementFactory.getLoadedModel() == null) {
+		if (!CnAElementFactory.isModelLoaded() && !CnAElementFactory.isIsoModelLoaded()) {
 			chartType = emptyChart;
 		}
 	}

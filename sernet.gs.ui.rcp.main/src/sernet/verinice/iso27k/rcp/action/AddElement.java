@@ -100,6 +100,7 @@ public class AddElement implements IObjectActionDelegate {
 				Group group = (Group) sel;
 				if(group.getChildTypes()!=null && group.getChildTypes().length>0) {
 					// TODO: Fix this for group.getChildTypes().length > 1
+				    // TODO - getChildTypes()[0] problem for more than one type
 					newElement = CnAElementFactory.getInstance().saveNew(group, group.getChildTypes()[0], null);
 				} else {
 					LOG.error(Messages.getString("AddElement.17")); //$NON-NLS-1$
@@ -124,6 +125,7 @@ public class AddElement implements IObjectActionDelegate {
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
 			if(sel instanceof Group) {
 				Group group = (Group) sel;
+				// TODO - getChildTypes()[0] might be a problem for more than one type
 				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0])));	
 				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddElement.20") ); //$NON-NLS-1$
 			}

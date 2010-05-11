@@ -120,6 +120,7 @@ public class AddGroup implements IObjectActionDelegate {
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
 			if(sel instanceof Group) {
 				Group group = (Group) sel;
+				// TODO - getChildTypes()[0] might be a problem for more than one type
 				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0])));	
 				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
 			}		

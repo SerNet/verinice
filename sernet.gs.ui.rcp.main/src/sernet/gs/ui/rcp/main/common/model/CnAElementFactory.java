@@ -84,6 +84,7 @@ import sernet.verinice.iso27k.model.ThreatGroup;
 import sernet.verinice.iso27k.model.Vulnerability;
 import sernet.verinice.iso27k.model.VulnerabilityGroup;
 import sernet.verinice.iso27k.service.commands.LoadModel;
+import sernet.verinice.samt.model.SamtTopic;
 
 /**
  * Factory for all model elements. Contains typed factories for sub-elements.
@@ -515,6 +516,16 @@ public class CnAElementFactory {
 				return child;
 			}
 		});
+		
+		// Self Assessment (SAMT) builders
+		
+		elementbuilders.put(SamtTopic.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                SamtTopic child = dbHome.save(container, SamtTopic.class, SamtTopic.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
 		
 	}
 

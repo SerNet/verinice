@@ -107,6 +107,7 @@ import sernet.verinice.iso27k.model.Threat;
 import sernet.verinice.iso27k.model.ThreatGroup;
 import sernet.verinice.iso27k.model.Vulnerability;
 import sernet.verinice.iso27k.model.VulnerabilityGroup;
+import sernet.verinice.samt.model.SamtTopic;
 
 /**
  * Registry for DAOs for different types of objects. DAOs are managed by and injected by the Spring framework. 
@@ -415,6 +416,8 @@ public class DAOFactory {
     	daos.put(AttachmentFile.class, daoToSet);
     }
     
+    /* ISO27000 Daos */
+    
     public void setISO27KModelDAO(IBaseDao<ISO27KModel, Integer> daoToSet) {
     	daos.put(ISO27KModel.class, daoToSet);
     }
@@ -479,7 +482,6 @@ public class DAOFactory {
     	daos.put(IncidentScenario.class, daoToSet);
     }
   
-
     public void setResponseGroupDAO(IBaseDao<ResponseGroup, Integer> daoToSet) {
     	daos.put(ResponseGroup.class, daoToSet);
     }
@@ -541,6 +543,12 @@ public class DAOFactory {
     }
     public void setRecordDAO(IBaseDao<Record, Integer> daoToSet) {
     	daos.put(Record.class, daoToSet);
+    }
+    
+    /* Self Assessment (SAMT) Daos */
+    
+    public void setSamtTopicDAO(IBaseDao<SamtTopic, Integer> daoToSet) {
+        daos.put(SamtTopic.class, daoToSet);
     }
     
 	@SuppressWarnings("unchecked")

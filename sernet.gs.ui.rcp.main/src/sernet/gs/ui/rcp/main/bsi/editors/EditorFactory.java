@@ -84,6 +84,7 @@ import sernet.verinice.iso27k.model.Threat;
 import sernet.verinice.iso27k.model.ThreatGroup;
 import sernet.verinice.iso27k.model.Vulnerability;
 import sernet.verinice.iso27k.model.VulnerabilityGroup;
+import sernet.verinice.samt.model.SamtTopic;
 
 /**
  * This class maps editors for different ressources and either opens a new
@@ -193,7 +194,11 @@ public class EditorFactory {
 		typedFactories.put(ProcessGroup.class, bsiEditorFactory);
 		typedFactories.put(Record.class, bsiEditorFactory);
 		typedFactories.put(RecordGroup.class, bsiEditorFactory);
+		
+		// Self Assessment (SAMT) elements
 	
+        typedFactories.put(SamtTopic.class, bsiEditorFactory);
+		
 		IEditorTypeFactory todoItemEditorFactory = new IEditorTypeFactory() {
 			public void openEditorFor(Object o) throws Exception {
 				IEditorPart editor;

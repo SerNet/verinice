@@ -35,6 +35,7 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.iso27k.model.IISO27kElement;
 
 /**
  * This is the base class for all model classes of this application.

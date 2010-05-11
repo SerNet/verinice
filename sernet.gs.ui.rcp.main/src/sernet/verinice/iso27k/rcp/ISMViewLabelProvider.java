@@ -33,6 +33,7 @@ import sernet.verinice.iso27k.model.Evidence;
 import sernet.verinice.iso27k.model.Exception;
 import sernet.verinice.iso27k.model.Finding;
 import sernet.verinice.iso27k.model.Group;
+import sernet.verinice.iso27k.model.IControl;
 import sernet.verinice.iso27k.model.IISO27kElement;
 import sernet.verinice.iso27k.model.IISO27kGroup;
 import sernet.verinice.iso27k.model.Incident;
@@ -61,7 +62,8 @@ public class ISMViewLabelProvider extends LabelProvider {
 
 	private TreeViewerCache cache;
 
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
 	public Image getImage(Object obj) {
 		Image image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
 		
@@ -70,17 +72,14 @@ public class ISMViewLabelProvider extends LabelProvider {
 		
 		else if (obj instanceof Group) {
 			Group group = (Group) obj;
+			// TODO - getChildTypes()[0] might be a problem for more than one type
             image = ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0]);
 			return image;
 		}
 
-		else if (obj instanceof Control) {
-			Control control = (Control) obj;
-//			if (Control.isSufficientlyMature(control))
-//				image = ImageCache.getInstance().getImage(ImageCache.ISO27K_CONTROL_YES);
-//			else
-//				image = ImageCache.getInstance().getImage(ImageCache.ISO27K_CONTROL_NO);
-			image = ImageCache.getInstance().getControlImplementationImage(control.getImplemented());
+		else if (obj instanceof IControl) {
+		    IControl control = (IControl) obj;
+			image = ImageCache.getInstance().getControlImplementationImage(control.getImplementStatus());
 		}
 		else {
 			// else return type icon:
