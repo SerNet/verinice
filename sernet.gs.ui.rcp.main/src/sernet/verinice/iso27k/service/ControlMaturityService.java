@@ -17,13 +17,14 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
-import java.io.Serializable;
-
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.verinice.iso27k.model.Control;
+import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.iso27k.model.IControl;
 
 /**
  * 
@@ -44,8 +45,8 @@ public class ControlMaturityService {
     public Integer getWeightedMaturity(ControlGroup cg) {
         int maturity = 0;
         for (CnATreeElement child : cg.getChildren()) {
-            if (child instanceof Control) {
-                Control control = (Control) child;
+            if (child instanceof IControl) {
+                IControl control = (IControl) child;
                 maturity += getWeightedMaturity(control);
             }
             if (child instanceof ControlGroup) {
@@ -70,8 +71,8 @@ public class ControlMaturityService {
     public Integer getWeights(ControlGroup cg) {
         int weight = 0;
         for (CnATreeElement child : cg.getChildren()) {
-            if (child instanceof Control) {
-                Control control = (Control) child;
+            if (child instanceof IControl) {
+                IControl control = (IControl) child;
                 weight += control.getWeight2();
             }
             if (child instanceof ControlGroup) {
@@ -85,14 +86,43 @@ public class ControlMaturityService {
     /**
      * @return
      */
-    public Integer getWeightedMaturity(Control contr) {
+    public Integer getWeightedMaturity(IControl contr) {
         int value = contr.getMaturity() * contr.getWeight2();
         return value;
     }
     
-    public Double getMaturityByWeight(Control contr) {
+    public Double getMaturityByWeight(IControl contr) {
         double result = ((double)getWeightedMaturity(contr)) / ((double)contr.getWeight2());
         return result;
+    }
+
+    /**
+     * @param group
+     * @return
+     */
+    public Double getMaxMaturityValue(ControlGroup group) {
+        Double result = 0.0;
+        for (CnATreeElement child : group.getChildren()) {
+            if (child instanceof IControl) {
+                Double maturity = getMaxMaturityValue((IControl) child);
+                if(maturity > result) {
+                    result = maturity;
+                }
+            }
+            if (child instanceof ControlGroup) {
+                Double maturity = getMaxMaturityValue((ControlGroup) child);
+                if(maturity > result) {
+                    result = maturity;
+                }
+            }
+        }
+        return result;
+    }
+    
+    private Double getMaxMaturityValue(IControl control) {
+        HUITypeFactory hui = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+        PropertyType propertyType = hui.getPropertyType(control.getTypeId(), control.getMaturityPropertyId());
+        return Double.valueOf(propertyType.getMaxValue());
     }
 }
 

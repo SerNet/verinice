@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.samt.model.SamtTopic;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -38,7 +39,7 @@ public class ControlGroup extends Group<Control> {
 	public static final String TYPE_ID = "controlgroup"; //$NON-NLS-1$
 	public static final String PROP_NAME = "controlgroup_name"; //$NON-NLS-1$
 	
-	public static final String[] CHILD_TYPES = new String[] {Control.TYPE_ID};
+	public static final String[] CHILD_TYPES = new String[] {Control.TYPE_ID,SamtTopic.TYPE_ID};
 	
 	public ControlGroup() {
 		super();
@@ -62,11 +63,17 @@ public class ControlGroup extends Group<Control> {
 		return TYPE_ID;
 	}
 
-	@Override
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitle()
+	 */
 	public String getTitle() {
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#setTitel(java.lang.String)
+	 */
 	public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}

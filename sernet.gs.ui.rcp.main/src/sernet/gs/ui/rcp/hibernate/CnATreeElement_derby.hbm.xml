@@ -396,7 +396,13 @@
 		name="sernet.verinice.iso27k.model.Record"
 		extends="CnATreeElement"
 		discriminator-value="record" />
+		
+	<!-- Self Assessment (SAMT) Elements -->
 	
-
+	<subclass 
+		name="sernet.verinice.samt.model.SamtTopic"
+		extends="CnATreeElement"
+		discriminator-value="samt_topic" />
+	
 	</class>
 </hibernate-mapping>

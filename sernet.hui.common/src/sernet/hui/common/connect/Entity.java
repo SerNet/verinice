@@ -200,6 +200,23 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 	}
 	
 	/**
+	 * Returns the int value of a property or throws 
+	 * a {@link NumberFormatException} if property value is not a parsable integer 
+	 * 
+	 * @param propertyType
+	 * @throws NumberFormatException if property value is not a parsable integer 
+	 * @return the int value of a property
+	 */
+	public int getInt(String propertyType) {
+	    int result = 0;
+        String simpleValue = getSimpleValue(propertyType);
+        if(simpleValue!=null && !simpleValue.isEmpty()) {
+            result = Integer.parseInt(simpleValue);
+        }
+        return result;
+	}
+	
+	/**
 	 * Copy all property values from given entity to this one.
 	 * @param source
 	 */

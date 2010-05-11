@@ -417,6 +417,13 @@
 		extends="CnATreeElement"
 		discriminator-value="record" />
 
+	<!-- Self Assessment (SAMT) Elements -->
+	
+	<subclass 
+		name="sernet.verinice.samt.model.SamtTopic"
+		extends="CnATreeElement"
+		discriminator-value="samt_topic" />
+
 	<!-- This filter implements the access check (read access) for CnATreeElement instances (and subclasses).
 	
 	When activated and given a list of roles (parameterRoles) all retrievals of CnATreeElements will be restricted

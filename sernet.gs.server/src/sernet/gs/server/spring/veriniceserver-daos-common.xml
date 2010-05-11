@@ -550,6 +550,14 @@
 		</constructor-arg>
 	</bean>
 
+    <!-- Self Assessment (SAMT) Daos ==================================================================== -->
+    
+    <bean id="samtTopicDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.samt.model.SamtTopic</value>
+        </constructor-arg>
+    </bean>
+    
 	<!-- END dao definitions ============================================================================ -->
 
 </beans>

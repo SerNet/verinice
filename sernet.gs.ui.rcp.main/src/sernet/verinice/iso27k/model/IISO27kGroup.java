@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.model;
 
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
@@ -26,4 +28,6 @@ package sernet.verinice.iso27k.model;
 public interface IISO27kGroup extends IISO27kElement {
 
 	boolean canContain(Object obj);
+	
+	public void addChild(CnATreeElement child);
 }

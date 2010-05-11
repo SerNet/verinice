@@ -4150,11 +4150,49 @@ the value between <param></param> will be used directly if no string is found fo
         	<depends option="attachment_approval_yes" />
         	<option id="document_publish_yes" name="Yes"/>
         	<option id="document_publish_no"  name="No"/>
-       	</huiproperty>
+        </huiproperty>
         <huiproperty id="attachment_date"
 			name="Datum"
 			inputtype="date"
             editable="false" />
+      </huientity>
+      
+      <!-- Self Assessment (SAMT) Elements ==================================================================================== -->
+    
+      <huientity id="samt_topic" >	
+          <huiproperty 
+            id="samt_topic_name" 
+            inputtype="text"/>
+          <huiproperty 
+            id="samt_topic_desc"
+            inputtype="text"/>
+          <huiproperty 
+            id="samt_topic_abbr" />
+          <huiproperty 
+            id="samt_topic_tag" />
+            
+          <huiproperty  
+            id="samt_topic_implemented" 
+            inputtype="singleoption">
+                <option id="samt_topic_implemented_yes"/>
+                <option id="samt_topic_implemented_no"/>
+                <option id="samt_topic_implemented_partly"/>
+                <option id="samt_topic_implemented_na"/>
+          </huiproperty>
+
+          <huiproperty 
+            id="samt_topic_maturity"      
+            inputtype="numericoption" 
+            min="0" 
+            max="9" />
+          <huiproperty 
+            id="samt_topic_weight" />
+          <huiproperty 
+            id="samt_topic_ownweight" />
+          <huiproperty 
+            id="samt_topic_min1" />
+          <huiproperty 
+            id="samt_topic_min2"/>
       </huientity>
     
 </huientities>

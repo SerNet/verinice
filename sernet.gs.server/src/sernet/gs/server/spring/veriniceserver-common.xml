@@ -189,6 +189,8 @@ This variant:
 		<property name="processDAO" ref="processDAO" />
 		<property name="recordGroupDAO" ref="recordGroupDAO" />
 		<property name="recordDAO" ref="recordDAO" />
+        <!-- Self Assessment (SAMT) Daos -->
+        <property name="samtTopicDAO" ref="samtTopicDAO" />   
 	</bean>
 
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">

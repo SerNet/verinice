@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Daniel Murygin <dm[at]sernet[dot]de>.
+ * Copyright (c) 2010 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -10,42 +10,26 @@
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.model;
+package sernet.verinice.iso27k.service;
 
-import java.util.Collection;
+import sernet.verinice.iso27k.model.IControl;
 
 /**
- * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public interface IISO27kElement {
+public interface IControlFactory {
 
-	public String getTypeId();
-	
-	/**
-	 * 
-	 * REeturns the title of this element
-	 * @return
-	 */
-	public String getTitle();
-	
-	/**
-     * Sets the title of of this element
-     * 
-     * FIXME: change method name to "setTit>>>le<<<"
-     * 
-     * @param name 
+    /**
+     * @return
      */
-    public void setTitel(String name);
-	
-	public Collection<? extends String> getTags();
-	
-	public String getAbbreviation();
+    IControl createControl();
+
 }

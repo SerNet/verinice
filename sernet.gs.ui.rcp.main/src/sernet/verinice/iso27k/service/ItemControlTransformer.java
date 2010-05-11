@@ -19,9 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.verinice.iso27k.model.Control;
 import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.iso27k.model.IControl;
+import sernet.verinice.iso27k.model.IISO27kGroup;
 import sernet.verinice.iso27k.rcp.CatalogView;
+import sernet.verinice.samt.model.SamtTopic;
 
 /**
  * Transforms {@link IItem} from {@link CatalogView} to ISO 27k {@link Control}s
@@ -33,13 +37,13 @@ import sernet.verinice.iso27k.rcp.CatalogView;
 public class ItemControlTransformer {
 
 	/**
-	 * Transforms a catalog item to a control.
+	 * Transforms a catalog item to a IControl.
+	 * IControl instances will be created by an IControlFactory
 	 * 
 	 * @param item an item from a control catalog
 	 * @return an ISO 27k control
 	 */
-	public static Control transform(IItem item) {
-		Control control = new Control();
+	public static <T extends IControl> T transformVoodoo(IItem item, T control) {
 		if(item.getName()!=null) {
 			control.setTitel(item.getName().replaceAll("\\s", " "));
 		}
@@ -53,6 +57,28 @@ public class ItemControlTransformer {
 		}	
 		return control;
 	}
+	
+	/**
+     * Transforms a catalog item to a control.
+     * 
+     * @param item an item from a control catalog
+     * @return an ISO 27k control
+     */
+    public static Control transform(IItem item) {
+        Control control = new Control();
+        if(item.getName()!=null) {
+            control.setTitel(item.getName().replaceAll("\\s", " "));
+        }
+        control.setDescription(item.getDescription());
+        if (item.isMaturityLevelSupport()) {        
+            control.setMaturity(item.getMaturity());
+            control.setWeight1(item.getWeight1());
+            control.setWeight2(item.getWeight2());
+            control.setThreshold1(item.getThreshold1());
+            control.setThreshold2(item.getThreshold2());
+        }   
+        return control;
+    }
 
 	/**
 	 * Transforms a catalog item to a control group.
@@ -124,5 +150,18 @@ public class ItemControlTransformer {
 		}
 		return sbAll.toString();
 	}
+
+    /**
+     * @param item
+     * @param iso27kGroup
+     * @return
+     */
+    public static <T extends IISO27kGroup> T transformToGroup(IItem item, T iso27kGroup) {
+        if(item.getName()!=null) {
+            // replace all whitespace with " "
+            iso27kGroup.setTitel(item.getName().replaceAll("\\s", " "));
+        }
+        return iso27kGroup;
+    }
 
 }
