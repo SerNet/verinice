@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package org.verinice.samt.service;
+package sernet.verinice.samt.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,12 +43,15 @@ import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.iso27k.model.IControl;
 import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.iso27k.service.IControlFactory;
 import sernet.verinice.iso27k.service.IItem;
 import sernet.verinice.iso27k.service.ItemControlTransformer;
 import sernet.verinice.iso27k.service.commands.CsvFile;
 import sernet.verinice.iso27k.service.commands.ImportCatalog;
+import sernet.verinice.samt.model.SamtTopic;
 
 /**
  * @author Daniel Murygin <dm@sernet.de> // TODO dm: Externalize Strings
@@ -100,9 +103,11 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
             newperms.add(Permission.createPermission(selfAssessment, authService.getUsername(), true, true));
             selfAssessment.setPermissions(newperms);
 
-            // read the control items from a the csv file
+            // read the control items from the csv file
             Collection<IItem> itemCollection = getItemCollection();
             ControlGroup controlGroup = getControlGroup(selfAssessment);
+            
+            // convert catalog items to self assessment topics (class: SamtTopic)
             importCatalogItems(controlGroup, itemCollection);
 
             IBaseDao<Organization, Serializable> dao = getDaoFactory().getDAO(Organization.class);
@@ -119,11 +124,11 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
             CnATreeElement element = null;
             if (item.getItems() != null && item.getItems().size() > 0) {
                 // create a group
-                element = ItemControlTransformer.transformToGroup(item);
+                element = ItemControlTransformer.transformToGroup(item, new ControlGroup());
                 importCatalogItems(element, item.getItems());
             } else {
                 // create an element
-                element = ItemControlTransformer.transform(item);
+                element = ItemControlTransformer.transformVoodoo(item, new SamtTopic());
             }
             group.addChild(element);
             element.setParent(group);

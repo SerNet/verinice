@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package org.verinice.samt.rcp;
+package sernet.verinice.samt.rcp;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +28,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.verinice.samt.service.CreateSelfAssessment;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -39,6 +38,7 @@ import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.service.commands.CsvFile;
 import sernet.verinice.iso27k.service.commands.LoadModel;
+import sernet.verinice.samt.service.CreateSelfAssessment;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>

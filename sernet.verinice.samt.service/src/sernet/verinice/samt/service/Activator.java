@@ -1,4 +1,4 @@
-package org.verinice.samt.service;
+package sernet.verinice.samt.service;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends Plugin {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.verinice.samt.service";
+    public static final String PLUGIN_ID = "sernet.verinice.samt.service";
 
     // The shared instance
     private static Activator plugin;

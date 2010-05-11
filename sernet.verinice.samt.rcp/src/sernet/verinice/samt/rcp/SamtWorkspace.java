@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package org.verinice.samt.rcp;
+package sernet.verinice.samt.rcp;
 
 import java.io.File;
 import java.io.IOException;

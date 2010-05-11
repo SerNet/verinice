@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package org.verinice.samt.rcp;
+package sernet.verinice.samt.rcp;
 
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -34,7 +34,7 @@ import sernet.gs.ui.rcp.main.VeriniceCharset;
  */
 public class SamtPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    public static final String CHARSET_SAMT = "org.verinice.samt.rcp.charset";
+    public static final String CHARSET_SAMT = "sernet.verinice.samt.rcp.charset";
     
     private ComboFieldEditor encodingFieldEditor;
     

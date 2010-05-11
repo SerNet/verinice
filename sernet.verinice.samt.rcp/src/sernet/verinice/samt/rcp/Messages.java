@@ -17,30 +17,23 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package org.verinice.samt.rcp;
+package sernet.verinice.samt.rcp;
 
-import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.osgi.util.NLS;
 
 /**
- * @author Daniel Murygin <dm@sernet.de> // TODO dm: Externalize Strings
+ * @author Daniel Murygin <dm@sernet.de>
+ *
  */
-public class SamtPerspective implements IPerspectiveFactory {
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui
-     * .IPageLayout)
-     */
-    @Override
-    public void createInitialLayout(IPageLayout layout) {
-        String editorArea = layout.getEditorArea();
-        layout.setEditorAreaVisible(true);
-        layout.addView(SamtView.ID, IPageLayout.LEFT, 0.3f, editorArea);
-        layout.getViewLayout(SamtView.ID).setCloseable(false);
-
+public class Messages extends NLS {
+    private static final String BUNDLE_NAME = "sernet.verinice.samt.rcp.messages"; //$NON-NLS-1$
+    public static String AddSelfAssessment_0;
+    public static String AddSelfAssessment_2;
+    static {
+        // initialize resource bundle
+        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
 
+    private Messages() {
+    }
 }

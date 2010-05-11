@@ -15,7 +15,7 @@
  * Contributors:
  *     Daniel <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package org.verinice.samt.rcp;
+package sernet.verinice.samt.rcp;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -40,7 +40,7 @@ public class SamtView extends ISMView {
     /**
      * The ID of the view as specified by the extension.
      */
-    public static final String ID = "org.verinice.samt.rcp.views.SamtView";
+    public static final String ID = "sernet.verinice.samt.rcp.views.SamtView";
 
     /**
      * The constructor.

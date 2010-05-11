@@ -1,4 +1,4 @@
-package org.verinice.samt.rcp;
+package sernet.verinice.samt.rcp;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -10,7 +10,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.verinice.samt.rcp";
+    public static final String PLUGIN_ID = "sernet.verinice.samt.rcp";
 
     // The shared instance
     private static Activator plugin;

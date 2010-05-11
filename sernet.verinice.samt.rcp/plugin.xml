@@ -6,33 +6,33 @@
          point="org.eclipse.ui.views">
       <category
             name="Self Assessment"
-            id="org.verinice.samt.rcp">
+            id="sernet.verinice.samt.rcp">
       </category>
       <view
             name="Self Assessment View"
             icon="icons/sample.gif"
-            category="org.verinice.samt.rcp"
-            class="org.verinice.samt.rcp.SamtView"
-            id="org.verinice.samt.rcp.views.SamtView">
+            category="sernet.verinice.samt.rcp"
+            class="sernet.verinice.samt.rcp.SamtView"
+            id="sernet.verinice.samt.rcp.views.SamtView">
       </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.verinice.samt.rcp.SamtPerspective"
-            id="org.verinice.samt.rcp.SamtPerspective"
+            class="sernet.verinice.samt.rcp.SamtPerspective"
+            id="sernet.verinice.samt.rcp.SamtPerspective"
             name="Self Assessment Perspective">
       </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.viewActions">
       <viewContribution
-            id="org.verinice.samt.addSelfAssessment"
-            targetID="org.verinice.samt.rcp.views.SamtView">
+            id="sernet.verinice.samt.addSelfAssessment"
+            targetID="sernet.verinice.samt.rcp.views.SamtView">
          <action
-               class="org.verinice.samt.rcp.AddSelfAssessment"
+               class="sernet.verinice.samt.rcp.AddSelfAssessment"
                icon="icons/new.png"
-               id="org.verinice.samt.rcp.AddSelfAssessment"
+               id="sernet.verinice.samt.rcp.AddSelfAssessment"
                label="Add New Self Assessment"
                state="true"
                style="push"
@@ -44,8 +44,8 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="org.verinice.samt.rcp.SamtPreferencePage"
-            id="org.verinice.samt.rcp.SamtPreferencePage"
+            class="sernet.verinice.samt.rcp.SamtPreferencePage"
+            id="sernet.verinice.samt.rcp.SamtPreferencePage"
             name="Self Assessment Prefernces">
       </page>
    </extension>
