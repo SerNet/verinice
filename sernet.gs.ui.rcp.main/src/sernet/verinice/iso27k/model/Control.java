@@ -173,15 +173,15 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	 * @return
 	 */
 	public int getWeight2() {
-	    return getEntity().getInt(SamtTopic.PROP_WEIGHT2);
+	    return getEntity().getInt(PROP_WEIGHT2);
 	}
 	
 	public int getThreshold1() {
-	    return getEntity().getInt(SamtTopic.PROP_THRESHOLD1);
+	    return getEntity().getInt(PROP_THRESHOLD1);
     }
 
 	public int getThreshold2() {
-	    return getEntity().getInt(SamtTopic.PROP_THRESHOLD2);
+	    return getEntity().getInt(PROP_THRESHOLD2);
 	}
 
 	
@@ -190,7 +190,7 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
      * @return
      */
     public int getWeight1() {
-        return getEntity().getInt(SamtTopic.PROP_WEIGHT1);
+        return getEntity().getInt(PROP_WEIGHT1);
     }
 	
 	/**
