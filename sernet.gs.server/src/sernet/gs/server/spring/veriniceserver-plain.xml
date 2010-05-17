@@ -11,8 +11,12 @@
  -->
 
 <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<property name="ignoreResourceNotFound" value="true"/>
     <property name="locations">
-        <value>/WEB-INF/veriniceserver-plain.properties</value>
+    	<list>
+        	<value>/WEB-INF/veriniceserver-plain.properties</value>
+        	<value>/WEB-INF/veriniceserver-plain.properties.local</value>
+        </list>
     </property>
 </bean>
 
