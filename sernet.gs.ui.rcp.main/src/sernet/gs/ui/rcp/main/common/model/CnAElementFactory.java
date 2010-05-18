@@ -586,12 +586,31 @@ public class CnAElementFactory {
 			listener.closed(loadedModel);
 		}
 	}
-
+	
+	
+	
+	/**
+     * Method is called to inform listener when an {@link BSIModel} is loaded or created 
+     */
 	private void fireLoad() {
 		for (IModelLoadListener listener : listeners) {
 			listener.loaded(loadedModel);
 		}
 	}
+	
+	/**
+	 * Method is called to inform listener when an ISO27KModel is loaded
+	 * or created
+	 * 
+	 * If an {@link BSIModel} is created method fireLoad() is called
+	 * 
+     * @param model a new loaded or created {@link ISO27KModel}
+     */
+    private void fireLoad(ISO27KModel model) {
+        for (IModelLoadListener listener : listeners) {
+            listener.loaded(model);
+        }
+    }
 
 	/**
 	 * Returns whether there is an active database connection.
@@ -638,15 +657,15 @@ public class CnAElementFactory {
 			loadModel = getCommandService().executeCommand(loadModel);
 			model = loadModel.getModel();
 			if(model!=null) {
-				fireLoad();
+				fireLoad(model);
 			}
 		} catch(Exception e) {
 			log.error(Messages.getString("CnAElementFactory.1"), e); //$NON-NLS-1$
 		}
 		return model;
 	}
-	
-	/**
+
+    /**
 	 * @return
 	 */
 	private ISO27KModel createIsoModel() {
@@ -659,7 +678,7 @@ public class CnAElementFactory {
 				log.info("ISO27KModel created"); //$NON-NLS-1$
 			}
 			if(isoModel!=null) {
-				fireLoad();
+				fireLoad(isoModel);
 			}
 		} catch(Exception e) {
 			log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
@@ -713,12 +732,12 @@ public class CnAElementFactory {
 
 	public void reloadModelFromDatabase() {
 		try {
-			fireClosed();
-			
+			fireClosed();		
 			if(isModelLoaded()) {
 				BSIModel newModel = dbHome.loadModel(new NullMonitor());
 				loadedModel.modelReload(newModel);
 				loadedModel = newModel;
+				fireLoad();
 			}
 			if(isIsoModelLoaded()) {
 				ISO27KModel newModel = loadIsoModel();
@@ -727,9 +746,8 @@ public class CnAElementFactory {
 				}
 				isoModel.modelReload(newModel);
 				isoModel = newModel;
-			}
-			
-			fireLoad();
+				fireLoad(isoModel);
+			}		
 		} catch (Exception e) {
 		    log.error(Messages.getString("CnAElementFactory.5"), e); //$NON-NLS-1$
 		}

@@ -46,6 +46,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindURLs;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.iso27k.model.ISO27KModel;
 
 public class DocumentView extends ViewPart {
 	
@@ -76,6 +77,11 @@ public class DocumentView extends ViewPart {
 				
 			});
 		}
+
+        @Override
+        public void loaded(ISO27KModel model) {
+            // work is done in loaded(BSIModel model)       
+        }
 	};
 
 	public DocumentView() {

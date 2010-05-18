@@ -195,10 +195,15 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 				}
 
 				public void loaded(BSIModel model) {
-					synchronized (modelLoadListener) {
-						startInitDataJob();
-					}
+				    // nothing to do
 				}
+
+                @Override
+                public void loaded(ISO27KModel model) {
+                    synchronized (modelLoadListener) {
+                        startInitDataJob();
+                    }
+                }
 				
 			};
 			CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
@@ -321,8 +326,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	}
 	
 	protected void expandAll() {
-		// TODO: do this a new thread and show user a progress bar
-		viewer.expandAll();
+		viewer.expandToLevel(3);
 	}
 	
 	private void addActions() {

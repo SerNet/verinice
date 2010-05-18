@@ -25,22 +25,25 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.verinice.iso27k.rcp.ISMView;
+import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
+import sernet.verinice.rcp.IAttachedToPerspective;
 
 /**
  * 
  * 
- * @author Daniel Murygin <dm[at]sernet[dot]de> // TODO dm: Externalize Strings
+ * @author Daniel Murygin <dm[at]sernet[dot]de> 
+ * // TODO dm: Externalize Strings
  */
-public class SamtView extends ISMView {
+public class SamtView extends ISMView implements IAttachedToPerspective  {
 
     private static final Logger LOG = Logger.getLogger(SamtView.class);
 
     /**
      * The ID of the view as specified by the extension.
      */
-    public static final String ID = "sernet.verinice.samt.rcp.views.SamtView";
+    public static final String ID = "sernet.verinice.samt.rcp.views.SamtView"; //$NON-NLS-1$
 
     /**
      * The constructor.
@@ -57,12 +60,12 @@ public class SamtView extends ISMView {
     @Override
     protected void initData() {
         super.initData();
-        WorkspaceJob initDataJob = new WorkspaceJob("Expanding Self Assessment Tree") {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.SamtView_1) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
-                    monitor.beginTask("Expanding Self Assessment Tree", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(Messages.SamtView_2, IProgressMonitor.UNKNOWN);
                     Display.getDefault().syncExec(new Runnable() {
                         public void run() {
                             expandAll();
@@ -70,7 +73,7 @@ public class SamtView extends ISMView {
                     });
                 } catch (Exception e) {
                     LOG.error("Error while expanding tree", e); //$NON-NLS-1$
-                    status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", "Error while expanding tree", e);
+                    status = new Status(IStatus.ERROR, "sernet.verinice.samt.rcp", Messages.SamtView_4, e); //$NON-NLS-1$
                 } finally {
                     monitor.done();
                 }
@@ -90,6 +93,13 @@ public class SamtView extends ISMView {
         HideEmptyFilter filter = new HideEmptyFilter(viewer);
         filter.setHideEmpty(true);
         return filter;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
+     */
+    public String getPerspectiveId() {
+        return SamtPerspective.ID;
     }
 
 }

@@ -46,6 +46,12 @@ public class Messages extends NLS {
 	public static String LebenszyklusBarChart_4;
 	public static String LebenszyklusBarChart_5;
 	public static String LebenszyklusBarChart_6;
+    public static String MaturitySpiderChart_0;
+    public static String MaturitySpiderChart_1;
+    public static String MaturitySpiderChart_2;
+    public static String MaturitySpiderChart_3;
+    public static String MaturitySpiderChart_4;
+    public static String MaturitySpiderChart_5;
 	public static String RealisierungLineChart_0;
 	public static String RealisierungLineChart_1;
 	public static String RealisierungLineChart_2;

@@ -553,5 +553,13 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 	public void refreshAllListeners(Object source) {
 		// override this in model classes
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+	    return new StringBuilder("uuid: ").append(uuid).toString();
+	}
 
 }

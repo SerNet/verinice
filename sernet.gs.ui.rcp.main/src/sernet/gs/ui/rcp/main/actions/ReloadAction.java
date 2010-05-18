@@ -31,6 +31,7 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.verinice.iso27k.model.ISO27KModel;
 
 public class ReloadAction extends Action {
 
@@ -48,6 +49,9 @@ public class ReloadAction extends Action {
             }
             public void loaded(BSIModel model) {
                 setEnabled(true);
+            }
+            public void loaded(ISO27KModel model) {
+                setEnabled(true);               
             }
         });
     }

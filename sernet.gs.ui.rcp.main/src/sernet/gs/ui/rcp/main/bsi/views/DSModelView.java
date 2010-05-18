@@ -53,6 +53,7 @@ import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
+import sernet.verinice.iso27k.model.ISO27KModel;
 
 /**
  * View that allows editing of applications' privacy ("Datenschutz") properties.
@@ -90,6 +91,10 @@ public class DSModelView extends ViewPart {
 				}
 			});
 		}
+
+        public void loaded(ISO27KModel model) {
+            // work is done in loaded( BSIModel model)    
+        }
 	};
 
 	/**

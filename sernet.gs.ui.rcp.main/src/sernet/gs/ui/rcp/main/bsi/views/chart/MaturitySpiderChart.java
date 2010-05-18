@@ -18,22 +18,16 @@
 package sernet.gs.ui.rcp.main.bsi.views.chart;
 
 import java.awt.Color;
-import java.awt.Paint;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.SpiderWebPlot;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
@@ -42,7 +36,6 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RectangleEdge;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
@@ -64,7 +57,7 @@ public class MaturitySpiderChart implements ISelectionChartGenerator {
         plot.setSeriesPaint(3, new Color(0f, 0f, 0f, 1f)); // grey
 
         plot.setWebFilled(true);
-        JFreeChart chart = new JFreeChart("Reifegrad der Controls", TextTitle.DEFAULT_FONT, plot, false);
+        JFreeChart chart = new JFreeChart(Messages.MaturitySpiderChart_0, TextTitle.DEFAULT_FONT, plot, false);
 
         LegendTitle legend = new LegendTitle(plot);
         legend.setPosition(RectangleEdge.BOTTOM);
@@ -80,26 +73,26 @@ public class MaturitySpiderChart implements ISelectionChartGenerator {
         Map<String, Double> items2 = dao.getControlMaxGroups(elmt);
         Set<Entry<String, Double>> entrySet2 = items2.entrySet();
         for (Entry<String, Double> entry : sort(entrySet2)) {
-            dataset.addValue(entry.getValue(), "Vollständig umgesetzt", entry.getKey());
+            dataset.addValue(entry.getValue(), Messages.MaturitySpiderChart_1, entry.getKey());
         }
 
         Map<String, Double> items4 = dao.getControlGoal2Groups(elmt);
         Set<Entry<String, Double>> entrySet4 = items4.entrySet();
         for (Entry<String, Double> entry : sort(entrySet4)) {
-            dataset.addValue(entry.getValue(), "Teilweise umgesetzt", entry.getKey());
+            dataset.addValue(entry.getValue(), Messages.MaturitySpiderChart_2, entry.getKey());
         }
 
         Map<String, Double> items3 = dao.getControlGoal1Groups(elmt);
         Set<Entry<String, Double>> entrySet3 = items3.entrySet();
         for (Entry<String, Double> entry : sort(entrySet3)) {
-            dataset.addValue(entry.getValue(), "Nicht umgesetzt", entry.getKey());
+            dataset.addValue(entry.getValue(), Messages.MaturitySpiderChart_3, entry.getKey());
         }
 
         Map<String, Double> items1 = dao.getControlGroups(elmt);
         Set<Entry<String, Double>> entrySet = items1.entrySet();
        
         for (Entry<String, Double> entry : sort(entrySet)) {
-            dataset.addValue(entry.getValue(), "Resultat", entry.getKey());
+            dataset.addValue(entry.getValue(), Messages.MaturitySpiderChart_4, entry.getKey());
         }
         
       
@@ -137,7 +130,7 @@ public class MaturitySpiderChart implements ISelectionChartGenerator {
         try {
             return createSpiderChart(createSpiderDataset());
         } catch (CommandException e) {
-            ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+            ExceptionUtil.log(e, Messages.MaturitySpiderChart_5);
             return null;
         }
 

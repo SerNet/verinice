@@ -77,6 +77,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachments;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
+import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.rcp.action.ControlDragListener;
 import sernet.verinice.iso27k.service.IItem;
 import sernet.verinice.iso27k.service.Item;
@@ -259,8 +260,13 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 					}
 
 					public void loaded(BSIModel model) {
-						startInitDataJob();
+                        // work is done in loaded(ISO27KModel model)
 					}
+
+                    @Override
+                    public void loaded(ISO27KModel model) {
+                        startInitDataJob();
+                    }
 					
 				};
 				CnAElementFactory.getInstance().addLoadListener(modelLoadListener);

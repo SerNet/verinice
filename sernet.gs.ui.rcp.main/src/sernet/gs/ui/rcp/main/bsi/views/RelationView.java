@@ -43,6 +43,7 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
+import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 
@@ -135,8 +136,9 @@ public class RelationView extends ViewPart implements IRelationTable {
 		viewer.setSorter(new RelationByNameSorter(COLUMN_TITLE, this));
 
 		// try to add listeners once on startup, and register for model changes:
-		addModelListeners();
-		hookModelLoadListener();
+		addBSIModelListeners();
+		addISO27KModelListeners();
+        hookModelLoadListener();
 		
 		makeActions();
 		hookContextMenu();
@@ -162,28 +164,57 @@ public class RelationView extends ViewPart implements IRelationTable {
 
 			public void loaded(BSIModel model) {
 				synchronized (loadListener) {
-					addModelListeners();
+					addBSIModelListeners();
 				}
 			}
+
+            @Override
+            public void loaded(ISO27KModel model) {
+                synchronized (loadListener) {
+                    addISO27KModelListeners();   
+                }
+            }
 			
 		};
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 	}
+	
+	   /**
+     * 
+     */
+    protected void addBSIModelListeners() {
+        WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+                    if (CnAElementFactory.isModelLoaded()) {
+                        CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
+                    }
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.RelationView_7,e); //$NON-NLS-1$
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
+        JobScheduler.scheduleInitJob(initDataJob);      
+    }
 
 	/**
 	 * 
 	 */
-	protected void addModelListeners() {
+	protected void addISO27KModelListeners() {
 		WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
 				try {
 					monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-					if (CnAElementFactory.isModelLoaded())
-						CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
-					
-					if (CnAElementFactory.isIsoModelLoaded())
+					if (CnAElementFactory.isIsoModelLoaded()) {
 						CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
+					}
 				} catch (Exception e) {
 					LOG.error("Error while loading data.", e); //$NON-NLS-1$
 					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.RelationView_7,e); //$NON-NLS-1$
@@ -193,8 +224,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 				return status;
 			}
 		};
-		JobScheduler.scheduleInitJob(initDataJob);		
-		
+		JobScheduler.scheduleInitJob(initDataJob);			
 	}
 
 	/**

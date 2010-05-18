@@ -51,7 +51,7 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
      */
     public static void setDefaults() {
         // set default charset for self assessment catalog
-        Activator.getDefault().getPreferenceStore().setDefault(CHARSET_SAMT,VeriniceCharset.CHARSET_ISO_8859_15.name());
+        Activator.getDefault().getPreferenceStore().setDefault(CHARSET_SAMT,VeriniceCharset.CHARSET_UTF_8.name());
     }
     
     

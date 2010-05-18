@@ -82,6 +82,7 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachmentFile;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachments;
+import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.StatusResult;
 
@@ -493,6 +494,11 @@ public class FileView extends ViewPart {
 						public void loaded(BSIModel model) {
 							startInitDataJob();
 						}
+
+                        @Override
+                        public void loaded(ISO27KModel model) {
+                            // work is done in loaded(BSIModel model)                        
+                        }
 						
 					};
 					CnAElementFactory.getInstance().addLoadListener(modelLoadListener);

@@ -271,6 +271,7 @@ Export-Package: au.com.bytecode.opencsv,
    org.apache.log4j,
    sernet.gs.ui.rcp.main.common.model,
    sernet.verinice.iso27k.service",
+ sernet.verinice.rcp;version="1.1.1",
  sernet.verinice.samt.model;version="1.1.1";uses:="sernet.verinice.iso27k.model,sernet.gs.ui.rcp.main.common.model"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate

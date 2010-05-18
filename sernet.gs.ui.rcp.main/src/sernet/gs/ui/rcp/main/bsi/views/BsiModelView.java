@@ -91,6 +91,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.rcp.IAttachedToPerspective;
@@ -261,7 +262,11 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 				}
 				public void loaded(BSIModel model) {
 					startInitDataJob();
-				}		
+				}
+				
+                public void loaded(ISO27KModel model) {
+                    // nothing to do            
+                }		
 			};
 			CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
 		}

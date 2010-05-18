@@ -4165,7 +4165,8 @@ the value between <param></param> will be used directly if no string is found fo
             inputtype="text"/>
           <huiproperty 
             id="samt_topic_desc"
-            inputtype="text"/>
+            inputtype="text"
+            visible="false"/>
           <huiproperty 
             id="samt_topic_abbr" />
           <huiproperty 

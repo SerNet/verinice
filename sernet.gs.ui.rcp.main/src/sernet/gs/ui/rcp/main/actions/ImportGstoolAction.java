@@ -37,6 +37,7 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.GSImportDialog;
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.verinice.iso27k.model.ISO27KModel;
 
 public class ImportGstoolAction extends Action {
 
@@ -65,6 +66,12 @@ public class ImportGstoolAction extends Action {
                     setEnabled(true);
                 }
             });
+        }
+
+        @Override
+        public void loaded(ISO27KModel model) {
+            // nothing to do
+            
         }
     };
 

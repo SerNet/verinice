@@ -16,21 +16,13 @@
 		<!-- <param name="Threshold" value="INFO" /> -->
 		<param name="File" value="${catalina.home}/logs/verinice-server.log" />
 		<param name="Append" value="true" />
-		<param name="MaxFileSize" value="10000KB" />
-		<param name="MaxBackupIndex" value="5" />
+		<param name="MaxFileSize" value="5000KB" />
+		<param name="MaxBackupIndex" value="10" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
 		</layout>
 	</appender>
 
-	<!-- Logger for verinice -->
-	<logger name="sernet.gs.ui.rcp.main.service.taskcommands">
-		<level value="DEBUG" />
-	</logger>
-	<logger name="sernet.gs.server.SchemaCreator">
-		<level value="INFO" />
-	</logger>
-	
 	<!-- Runtime Logger -->
 	<!--
 	<logger name="sernet.gs.server.RuntimeLogger">
@@ -39,9 +31,11 @@
 	-->
 	
 	<!-- Logging verinice Command-Service -->
+	<!--
 	<logger name="sernet.gs.ui.rcp.main.service.HibernateCommandService">
 		<level value="DEBUG" />
 	</logger>
+	-->
 	
 	<!-- Dao Logging -->
 	<!--
@@ -58,9 +52,11 @@
 	-->
 	
 	<!-- SQL -->
+	<!--
 	<logger name="org.hibernate.SQL">
 		<level value="DEBUG" />
 	</logger>
+	-->
 	
 	<!-- SQL Parameter -->
 	<!--
@@ -68,11 +64,11 @@
 		<level value="TRACE" />
 	</logger>
 	-->
-	
-	<logger name="sernet.gs.ui.rcp.main.service.crudcommands.LoadElementForEditor">
-		<level value="DEBUG" />
-	</logger>
-
+    
+    <logger name="sernet.verinice.samt">
+        <level value="DEBUG" />
+    </logger>
+    
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />

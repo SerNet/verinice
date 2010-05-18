@@ -18,8 +18,30 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.verinice.iso27k.model.ISO27KModel;
 
 public interface IModelLoadListener {
-	void loaded(BSIModel model);
+	
+    /**
+     * Method is called when an BSIModel is loaded or created
+     * 
+     * @param model a new loaded or created {@link BSIModel}
+     */
+    void loaded(BSIModel model);
+	
+	
+	/**
+	 * Method is called when an ISO27KModel is loaded or created
+	 * 
+	 * @param model a new loaded or created {@link ISO27KModel}
+	 */
+	void loaded(ISO27KModel model);
+
+	
+	/**
+	 * Method is called when an BSIModel is closed
+	 * 
+	 * @param model a BSIModel before it is closed
+	 */
 	void closed(BSIModel model);
 }

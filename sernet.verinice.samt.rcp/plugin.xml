@@ -10,10 +10,18 @@
       </category>
       <view
             name="Self Assessment View"
-            icon="icons/sample.gif"
+            icon="icons/self-assessment.png"
             category="sernet.verinice.samt.rcp"
             class="sernet.verinice.samt.rcp.SamtView"
             id="sernet.verinice.samt.rcp.views.SamtView">
+      </view>
+      <view
+            category="sernet.verinice.samt.rcp"
+            class="sernet.verinice.samt.rcp.SpiderChartView"
+            icon="icons/chart.png"
+            id="sernet.verinice.samt.rcp.SpiderChartView"
+            name="SpiderChartView"
+            restorable="true">
       </view>
    </extension>
    <extension

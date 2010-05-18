@@ -68,6 +68,7 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
+import sernet.verinice.iso27k.model.ISO27KModel;
 
 /**
  * Base class for a view that shows instances of {@link MassnahmenUmsetzung} as
@@ -426,6 +427,10 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 				}
 			});
 		}
+
+        public void loaded(ISO27KModel model) {
+            // work is done in loaded(BSIModel model)            
+        }
 	};
 
 	protected TableViewer viewer;
