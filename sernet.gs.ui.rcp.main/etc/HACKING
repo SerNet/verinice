@@ -16,7 +16,7 @@ Software requirements:
 Subversion setup:
 -----------------
  - install a terminal-based subversion client through your distribution's
-   package manager
+   package manager 
 
 Apache Tomcat:
 --------------
