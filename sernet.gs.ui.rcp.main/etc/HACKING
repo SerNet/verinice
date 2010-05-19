@@ -73,6 +73,8 @@ Eclipse IDE:
 	sernet.hui.server
 	sernet.hui.swtclient
 	sernet.springclient
+	sernet.verinice.oda.driver
+	sernet.verinice.oda.driver.designer
 	sernet.verinice.samt.rcp
 	sernet.verinice.samt.service
 	target-platform/eclipse-3.5.2-rcp-sdk
