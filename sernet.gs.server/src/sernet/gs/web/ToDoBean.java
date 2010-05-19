@@ -251,7 +251,7 @@ public class ToDoBean {
 		if(getMassnahmeUmsetzung()!=null) {
 			// causes NoClassDefFoundError: org/eclipse/ui/plugin/AbstractUIPlugin
 			// TODO: fix this dependency to eclipse related classes.
-			enabled = CnAElementHome.getInstance().isWriteAllowed(getMassnahmeUmsetzung());
+			//enabled = CnAElementHome.getInstance().isWriteAllowed(getMassnahmeUmsetzung());
 		}
 		
 // TODO remove this
