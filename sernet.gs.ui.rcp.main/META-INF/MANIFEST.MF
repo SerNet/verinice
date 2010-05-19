@@ -274,7 +274,7 @@ Export-Package: au.com.bytecode.opencsv,
  sernet.verinice.rcp;version="1.1.1",
  sernet.verinice.samt.model;version="1.1.1";uses:="sernet.verinice.iso27k.model,sernet.gs.ui.rcp.main.common.model"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
+Eclipse-RegisterBuddy: sernet.verinice.oda.driver,sernet.springclient,com.springsource.org.hibernate
 Require-Bundle: org.eclipse.equinox.app;bundle-version="1.2.1",
  org.eclipse.equinox.common;bundle-version="3.5.1",
  org.eclipse.equinox.preferences;bundle-version="3.2.301",
@@ -312,7 +312,8 @@ Require-Bundle: org.eclipse.equinox.app;bundle-version="1.2.1",
  sernet.springclient;bundle-version="1.2.1",
  sernet.gs.reveng;bundle-version="1.1.1",
  sernet.gs.service;bundle-version="1.11.1",
- org.eclipse.ui.net;bundle-version="1.2.1"
+ org.eclipse.ui.net;bundle-version="1.2.1",
+ sernet.verinice.oda.driver;bundle-version="1.0.0"
 Import-Package: org.eclipse.core.runtime;version="3.4.0",
  org.eclipse.osgi.service.datalocation;version="1.2.0",
  org.eclipse.osgi.util;version="1.1.0",

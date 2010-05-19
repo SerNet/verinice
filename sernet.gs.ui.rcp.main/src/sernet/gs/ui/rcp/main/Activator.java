@@ -50,6 +50,7 @@ import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
 import sernet.verinice.rcp.StatusResult;
 
 /**
@@ -63,6 +64,8 @@ public class Activator extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main"; //$NON-NLS-1$
 
 	private static final String PAX_WEB_SYMBOLIC_NAME = "org.ops4j.pax.web.pax-web-bundle"; //$NON-NLS-1$
+
+	private static final String VERINICE_ODA_DRIVER_SYMBOLIC_NAME = "sernet.verinice.oda.driver"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
@@ -100,6 +103,35 @@ public class Activator extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		Bundle bundle = Platform.getBundle(VERINICE_ODA_DRIVER_SYMBOLIC_NAME);
+		if (bundle == null)
+		{
+			String msg = "verinice ODA driver not available. Giving up!"; //$NON-NLS-1$
+			LOG.error(msg);
+			throw new IllegalStateException(msg);
+		}
+		else
+		{
+			// Try to access a verinice ODA driver service instance. If one is available
+			// we can assume that we are in designer mode and should not start the whole
+			// verinice application (workspace and stuff).
+			BundleContext ctx = bundle.getBundleContext();
+			ServiceReference sr = ctx.getServiceReference(IVeriniceOdaDriver.class.getName());
+			if (sr != null)
+			{
+				// Driver is available. Retrieve the the URI for the server from it and let
+				// the verinice data model communication with it.
+				IVeriniceOdaDriver odaDriver = (IVeriniceOdaDriver) ctx.getService(sr);
+				ClientPropertyPlaceholderConfigurer.setRemoteServerMode(odaDriver.getServerURI());
+				ServiceFactory.openCommandService();
+				VeriniceContext.setState(state = ServiceFactory.getClientWorkObjects());
+				
+				// Skip anything that is related to the actual client application as we are
+				// only interested in accessing data for the reports.
+				return;
+			}
+		}
 
 		// set workdir preference:
 		CnAWorkspace.getInstance().prepareWorkDir();
@@ -113,7 +145,7 @@ public class Activator extends AbstractUIPlugin {
 
 		// Start server only when it is needed.
 		if (standalone) {
-			Bundle bundle = Platform.getBundle("sernet.gs.server"); //$NON-NLS-1$
+			bundle = Platform.getBundle("sernet.gs.server"); //$NON-NLS-1$
 			if (bundle == null)
 				LOG.warn("verinice server bundle is not available. Assuming it is started separately."); //$NON-NLS-1$
 			else if (bundle.getState() == Bundle.INSTALLED || bundle.getState() == Bundle.RESOLVED) {
