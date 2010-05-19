@@ -48,7 +48,7 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
 	public void execute() {
 		associatedGefaehrdungen = new ArrayList<GefaehrdungsUmsetzung>();
 		
-		IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOForObject(cnaElement);
+		IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOforTypedElement(cnaElement);
 		dao.reload(cnaElement, cnaElement.getDbId());
 		
 		Set<CnATreeElement> children = cnaElement.getChildren();

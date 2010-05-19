@@ -27,6 +27,7 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
 
@@ -41,7 +42,7 @@ import sernet.hui.common.connect.PropertyType;
  *
  */
 @SuppressWarnings("serial")
-public class Configuration implements Serializable {
+public class Configuration implements Serializable, ITypedElement {
 
 	private Entity entity;
 	
@@ -326,4 +327,11 @@ public class Configuration implements Serializable {
 			return false;
 		}
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 }

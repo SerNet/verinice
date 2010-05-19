@@ -29,7 +29,7 @@ import java.util.UUID;
  * @author koderman[at]sernet[dot]de
  *
  */
-public class PropertyList implements Serializable  {
+public class PropertyList implements Serializable, ITypedElement  {
 	private List<Property> properties;
 	
 	private Integer dbId;
@@ -37,7 +37,15 @@ public class PropertyList implements Serializable  {
 	private Integer entityId;
 	
 	private String uuid;
+
+    public static final String TYPE_ID = "huipropertylist";
 	
+    /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 	
 	public Integer getDbId() {
 		return dbId;

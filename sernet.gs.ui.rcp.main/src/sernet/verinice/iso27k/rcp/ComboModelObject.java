@@ -66,6 +66,7 @@ public class ComboModelObject<T> {
 			return true;
 		if (obj == null)
 			return false;
+		// FIXME ak this will not work when comparing proxies: 
 		if (getClass() != obj.getClass())
 			return false;
 		ComboModelObject other = (ComboModelObject) obj;

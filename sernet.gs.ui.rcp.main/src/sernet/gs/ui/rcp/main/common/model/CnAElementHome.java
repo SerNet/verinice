@@ -45,7 +45,6 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCurrentUserConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.RefreshMultipleElements;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveLink;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
@@ -121,7 +120,7 @@ public class CnAElementHome {
     public void open() throws Exception {
         // causes NoClassDefFoundError: org/eclipse/ui/plugin/AbstractUIPlugin
         // in web environment
-        // TODO: fix this dependency to eclipse related classes.
+        // TODO: this class should only be used on the RCP client!!!
         ServiceFactory.openCommandService();
         commandService = createCommandService();
     }
@@ -178,7 +177,7 @@ public class CnAElementHome {
         String title = null;
         if(typeId!=null) {
             // load the localized title via HUITypeFactory from message bundle
-            title = getTypeFactory().getMessage(typeId);
+            title = HitroUtil.getInstance().getTypeFactory().getMessage(typeId);
         }
         if (log.isDebugEnabled()) {
             log.debug("Creating new instance of " + clazz.getName() + " in " + container + " with title: " + title); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -232,10 +231,7 @@ public class CnAElementHome {
         command = getCommandService().executeCommand(command);
     }
 
-    public void refresh(List<? extends CnATreeElement> elements) throws CommandException {
-        RefreshMultipleElements command = new RefreshMultipleElements(elements);
-        command = getCommandService().executeCommand(command);
-    }
+   
 
     /**
      * Load object with given ID for given class.
@@ -246,8 +242,8 @@ public class CnAElementHome {
      * @throws CommandException
      */
     @SuppressWarnings("unchecked")
-    public CnATreeElement loadById(Class<? extends CnATreeElement> clazz, int id) throws CommandException {
-        LoadCnAElementById command = new LoadCnAElementById(clazz, id);
+	public CnATreeElement loadById(String typeId, int id) throws CommandException {
+		LoadCnAElementById command = new LoadCnAElementById(typeId, id);
         command = getCommandService().executeCommand(command);
         return command.getFound();
     }
@@ -417,8 +413,6 @@ public class CnAElementHome {
         return false;
     }
 
-    protected HUITypeFactory getTypeFactory() {
-        return HitroUtil.getInstance().getTypeFactory();
-    }
+   
 
 }

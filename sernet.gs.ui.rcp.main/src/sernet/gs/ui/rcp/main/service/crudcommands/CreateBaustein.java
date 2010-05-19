@@ -49,6 +49,7 @@ import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
  *
  * @param <T>
  */
+@SuppressWarnings("serial")
 public class CreateBaustein extends GenericCommand implements IChangeLoggingCommand, 
 	IAuthAwareCommand {
 
@@ -65,13 +66,13 @@ public class CreateBaustein extends GenericCommand implements IChangeLoggingComm
 	private Baustein baustein;
 	private String stationId;
 	private Integer dbId;
-	private Class<? extends CnATreeElement> clazz;
 	private transient IAuthService authService;
+    private String typeId;
 
 	public CreateBaustein(CnATreeElement container, Baustein baustein) {
 		
 		dbId = container.getDbId();
-		clazz = container.getClass();
+		typeId = container.getTypeId();
 		
 		this.baustein = baustein;
 		stationId = ChangeLogEntry.STATION_ID;
@@ -83,7 +84,7 @@ public class CreateBaustein extends GenericCommand implements IChangeLoggingComm
 			= getDaoFactory().getDAO(BausteinUmsetzung.class);
 		
 		try {
-			IBaseDao<? extends CnATreeElement, Serializable> containerDao = getDaoFactory().getDAO(clazz);
+			IBaseDao<CnATreeElement, Integer> containerDao = getDaoFactory().getDAO(typeId);
 			CnATreeElement container = containerDao.findById(dbId);
 			
 			if (container.containsBausteinUmsetzung(baustein.getId()))

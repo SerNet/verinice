@@ -64,6 +64,8 @@ public class Gefaehrdung implements IGSModel {
 	public static final String KAT_STRING_MENSCH 			= "Menschliche Fehlhandlungen";
 	public static final String KAT_STRING_TECHNIK 			= "Technisches Versagen";
 	public static final String KAT_STRING_VORSATZ 			= "Vorsätzliche Handlungen";
+
+    public static final String TYPE_ID = "gefaehrdung";
 	
 	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)");
 

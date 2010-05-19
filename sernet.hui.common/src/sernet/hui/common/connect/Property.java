@@ -25,12 +25,14 @@ import java.io.Serializable;
  * @author prack
  * @version $Id: Property.java,v 1.4 2006/06/15 15:47:07 aprack Exp $
  */
-public class Property implements Serializable {
+public class Property implements Serializable, ITypedElement {
 
 	private Integer dbId;
 	private String propertyType;
 	private String propertyValue;
 	private Entity parent;
+    public static final String TYPE_ID = "huiproperty";
+    private static final int UNDEF = Integer.MIN_VALUE;
 
 	public Property(Entity ent) {
 		parent = ent;
@@ -46,6 +48,25 @@ public class Property implements Serializable {
 	public String getPropertyValue() {
 		return propertyValue;
 	}
+	
+	/**
+	 * Returns the value as an integer.
+	 * @return
+	 */
+	public int getNumericPropertyValue() {
+	    try {
+	        return Integer.parseInt(propertyValue);
+        } catch (NumberFormatException e) {
+            return UNDEF;
+        }
+	}
+	
+	 /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 	
 	public void setPropertyValue(String propertyValue, boolean fireChange, Object source) {
 		this.propertyValue = propertyValue;

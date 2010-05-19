@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -25,6 +26,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.VeriniceCharset;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
 
@@ -44,6 +46,14 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 	private BooleanFieldEditor infoDialogCut;
 	private BooleanFieldEditor switchPerspectiveIsmView;
 	private BooleanFieldEditor switchPerspectiveCatalogView;
+	
+	private ComboFieldEditor encodingFieldEditor;
+	private static final String[][] encodingComboValues = new String[][]{
+        new String[]{VeriniceCharset.CHARSET_UTF_8.displayName(),VeriniceCharset.CHARSET_UTF_8.name()},
+        new String[]{VeriniceCharset.CHARSET_ISO_8859_15.displayName(),VeriniceCharset.CHARSET_ISO_8859_15.name()},
+        new String[]{VeriniceCharset.CHARSET_WINDOWS_1252.displayName(),VeriniceCharset.CHARSET_WINDOWS_1252.name()}
+        
+	};
 
 	public GeneralSettingsPage() {
 		super(GRID);
@@ -89,6 +99,12 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 				getFieldEditorParent());
 		addField(switchPerspectiveCatalogView);
 
+		encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
+				"Zeichencodierung (Encoding) neuer Control Kataloge", 
+				encodingComboValues, 
+				getFieldEditorParent());
+        addField(encodingFieldEditor);
+		
 	}
 
 	@Override

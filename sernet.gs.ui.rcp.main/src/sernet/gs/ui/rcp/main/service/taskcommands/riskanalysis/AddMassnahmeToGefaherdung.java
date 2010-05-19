@@ -17,12 +17,17 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
+import java.io.Serializable;
+
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.Permission;
+import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.IAuthService;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
+import sernet.hui.common.connect.ITypedElement;
 
 /**
  * Assign a control instance to a threat instance.
@@ -63,8 +68,9 @@ public class AddMassnahmeToGefaherdung extends GenericCommand implements IAuthAw
 	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
 	 */
 	public void execute() {
-		child = (RisikoMassnahmenUmsetzung) getDaoFactory().getDAOForObject(child).merge(child);
-		getDaoFactory().getDAOForObject(parent).reload(parent, parent.getDbId());
+	    IBaseDao dao = getDaoFactory().getDAOforTypedElement(child);
+		child = (RisikoMassnahmenUmsetzung) dao.merge(child);
+		getDaoFactory().getDAOforTypedElement(parent).reload(parent, parent.getDbId());
 		
 
 		if (authService.isPermissionHandlingNeeded())

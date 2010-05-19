@@ -118,7 +118,8 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 		return null;
 	}
 
-	public void linkChanged(CnALink old, CnALink link) {
+	public void linkChanged(CnALink old, CnALink link, Object source) {
+	    // do nothing
 	}
 	
 	public void linkAdded(CnALink link) {

@@ -64,7 +64,7 @@ public class StartNewRiskAnalysis extends GenericCommand implements IAuthAwareCo
 	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
 	 */
 	public void execute() {
-		getDaoFactory().getDAOForObject(cnaElement).reload(cnaElement, cnaElement.getDbId());
+		getDaoFactory().getDAOforTypedElement(cnaElement).reload(cnaElement, cnaElement.getDbId());
 		finishedRiskAnalysis = new FinishedRiskAnalysis(cnaElement);
 		getDaoFactory().getDAO(FinishedRiskAnalysis.class).saveOrUpdate(finishedRiskAnalysis);
 		cnaElement.addChild(finishedRiskAnalysis);

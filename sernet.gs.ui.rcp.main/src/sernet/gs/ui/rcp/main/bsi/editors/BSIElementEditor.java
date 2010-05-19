@@ -289,6 +289,12 @@ public class BSIElementEditor extends EditorPart {
 		
 		initContent();
 		setIcon();
+		
+//		// register model change listener:
+//		changeListener = new EditorModelChangelistener();
+//		  CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
+//	        CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
+		
 		// if opened the first time, save initialized entity:
 		if (isDirty())
 			save(false);
@@ -311,6 +317,10 @@ public class BSIElementEditor extends EditorPart {
 		huiComposite.closeView();
 		cnAElement.getEntity().removeListener(modelListener);
 		EditorRegistry.getInstance().closeEditor(((BSIElementEditorInput) getEditorInput()).getId());
+		
+//		CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(contentProvider);
+//        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
+        
 		super.dispose();
 	}
 

@@ -41,7 +41,7 @@ public class OwnGefaehrdungHome {
 	}
 	
 	public void save(OwnGefaehrdung gef) throws Exception {
-		SaveElement<OwnGefaehrdung> command = new SaveElement<OwnGefaehrdung>(gef);
+		SaveElement command = new SaveElement(gef);
 		command = commandService.executeCommand(command);
 	}
 	

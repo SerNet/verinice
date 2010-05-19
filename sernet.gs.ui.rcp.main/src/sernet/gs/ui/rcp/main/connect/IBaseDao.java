@@ -55,8 +55,6 @@ public interface IBaseDao<T, ID extends Serializable> {
 
 	public int updateByQuery(String hqlQuery, Object[] values);
 
-	public void refresh(T element);
-
 	public void reload(T element, Serializable id);
 
 	public void initialize(Object collection);

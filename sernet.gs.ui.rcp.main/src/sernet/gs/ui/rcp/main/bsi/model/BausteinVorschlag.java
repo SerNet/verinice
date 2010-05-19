@@ -19,12 +19,16 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.io.Serializable;
 
-public class BausteinVorschlag implements Serializable {
+import sernet.hui.common.connect.ITypedElement;
+
+public class BausteinVorschlag implements Serializable, ITypedElement {
 
 	private Integer dbId;
 	
 	private String bausteine;
 	private String name;
+
+    public static final String TYPE_ID = "bst_vorschlag";
 	
 	protected BausteinVorschlag() {
 		// hibernate constructor
@@ -62,6 +66,13 @@ public class BausteinVorschlag implements Serializable {
 	public void setBausteine(String bausteine) {
 		this.bausteine = bausteine;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 
 
 

@@ -76,7 +76,7 @@ public class ReportGetItemsCommand extends GenericCommand {
      * 
      */
     private void getISMItems() throws CommandException {
-        LoadCnAElementById command = new LoadCnAElementById(Organization.class, scopeDbId);
+        LoadCnAElementById command = new LoadCnAElementById(Organization.TYPE_ID, scopeDbId);
         command = getCommandService().executeCommand(command);
         Organization org = (Organization) command.getFound();
 
@@ -94,7 +94,7 @@ public class ReportGetItemsCommand extends GenericCommand {
      * @throws CommandException
      */
     private void getBsiItems() throws CommandException {
-        LoadCnAElementById command = new LoadCnAElementById(ITVerbund.class, itverbundDbId);
+        LoadCnAElementById command = new LoadCnAElementById(ITVerbund.TYPE_ID, itverbundDbId);
         command = getCommandService().executeCommand(command);
         ITVerbund itverbund = (ITVerbund) command.getFound();
 

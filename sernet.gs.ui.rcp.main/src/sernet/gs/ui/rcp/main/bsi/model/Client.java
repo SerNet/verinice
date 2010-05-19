@@ -43,8 +43,10 @@ public class Client extends CnATreeElement
 	= new SchutzbedarfAdapter(this);
 
 
-private final ILinkChangeListener linkChangeListener
+	private final ILinkChangeListener linkChangeListener
 	= new MaximumSchutzbedarfListener(this);
+	
+	
 	/**
 	 * Create new BSIElement.
 	 * @param parent

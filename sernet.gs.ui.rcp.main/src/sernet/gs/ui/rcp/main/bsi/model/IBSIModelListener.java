@@ -48,7 +48,7 @@ public interface IBSIModelListener {
 	 */
 	void modelRefresh(Object source);
 	
-	void linkChanged(CnALink oldLink, CnALink newLink);
+	void linkChanged(CnALink oldLink, CnALink newLink, Object source);
 	
 	void linkRemoved(CnALink link);
 	

@@ -118,7 +118,7 @@ public class EditorFactory {
 
 				// replace element with new instance from DB:
 				CnATreeElement cnaElement = (CnATreeElement) o;
-				CnATreeElement newElement = CnAElementHome.getInstance().loadById(cnaElement.getClass(), cnaElement.getDbId());
+				CnATreeElement newElement = CnAElementHome.getInstance().loadById(cnaElement.getTypeId(), cnaElement.getDbId());
 				
 				// may be null, i.e. if we don't have permission to open the object:
 				if (newElement == null)
@@ -205,7 +205,7 @@ public class EditorFactory {
 
 				// replace element with new instance from DB:
 				TodoViewItem selection = (TodoViewItem) o;
-				CnATreeElement newElement = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.class, selection.getdbId());
+				CnATreeElement newElement = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID, selection.getdbId());
 				BSIElementEditorInput input = new BSIElementEditorInput(newElement);
 
 				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {

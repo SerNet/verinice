@@ -21,9 +21,10 @@ import java.io.Serializable;
 
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.hui.common.connect.ITypedElement;
 
 @SuppressWarnings("serial")
-public class RemoveGenericElement<T> extends GenericCommand {
+public class RemoveGenericElement<T extends ITypedElement> extends GenericCommand {
 
 	private T element;
 
@@ -32,7 +33,7 @@ public class RemoveGenericElement<T> extends GenericCommand {
 	}
 	
 	public void execute() {
-		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
+		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getTypeId());
 		dao.delete(element);
 	}
 

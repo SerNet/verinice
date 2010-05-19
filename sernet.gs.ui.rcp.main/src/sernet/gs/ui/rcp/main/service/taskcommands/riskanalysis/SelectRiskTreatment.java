@@ -62,10 +62,10 @@ public class SelectRiskTreatment extends GenericCommand {
 		finishedRiskLists = getDaoFactory().getDAO(FinishedRiskAnalysisLists.class)
 			.findById(listsDbId);
 	
-		gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) getDaoFactory().getDAOForObject(gefaehrdungsUmsetzung)
+		gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) getDaoFactory().getDAOforTypedElement(gefaehrdungsUmsetzung)
 			.merge(gefaehrdungsUmsetzung);
 		
-		getDaoFactory().getDAOForObject(riskAnalysis).reload(riskAnalysis, riskAnalysis.getDbId());
+		getDaoFactory().getDAOforTypedElement(riskAnalysis).reload(riskAnalysis, riskAnalysis.getDbId());
 		
 		gefaehrdungsUmsetzung.setAlternative(this.gefaehrdungAlternative);
 		

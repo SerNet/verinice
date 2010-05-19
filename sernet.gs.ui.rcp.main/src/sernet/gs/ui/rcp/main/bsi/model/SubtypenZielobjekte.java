@@ -46,7 +46,6 @@ public class SubtypenZielobjekte {
 					.error(Messages.SubtypenZielobjekte_1, e);
 			}
 
-			// TODO server test if this works
 			Set<Entry<Object, Object>> entrySet = properties.entrySet();
 			for (Entry<Object, Object> entry : entrySet) {
 				String name = entry.getKey().toString();

@@ -44,7 +44,7 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
 
 	private static final Logger log = Logger.getLogger(UpdatePermissions.class);
 	
-	private Class<? extends CnATreeElement> clazz;
+	private String typeId;
 
 	private Serializable id;
 	
@@ -57,7 +57,7 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
 	private List<CnATreeElement> changedElements = new ArrayList<CnATreeElement>();
 
 	public UpdatePermissions(CnATreeElement cte, Set<Permission> perms, boolean updateChildren) {
-		this.clazz = cte.getClass();
+		this.typeId = cte.getTypeId();
 		this.id = cte.getDbId();
 		this.perms = perms;
 		this.updateChildren = updateChildren;
@@ -65,12 +65,12 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
 	}
 
 	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
 		
 		CnATreeElement cte = dao.findById(id);
 		IBaseDao<Permission, Serializable> pdao = getDaoFactory().getDAO(Permission.class);
 		
-		IBaseDao<CnATreeElement, Serializable> odao = getDaoFactory().getDAOForObject(cte);
+		IBaseDao<CnATreeElement, Serializable> odao = getDaoFactory().getDAOforTypedElement(cte);
 		
 		updateElement(odao, pdao, cte);
 		

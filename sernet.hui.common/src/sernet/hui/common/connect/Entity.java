@@ -49,7 +49,7 @@ import sernet.snutils.Tester;
  * @author koderman[at]sernet[dot]de
  *
  */
-public class Entity implements ISelectOptionHandler, Serializable  {
+public class Entity implements ISelectOptionHandler, ITypedElement, Serializable  {
 	
 	// map of "propertyTypeId : List of Properties"
     private Map<String, PropertyList> typedPropertyLists 
@@ -63,6 +63,8 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 	private Integer dbId;
 	
 	private String uuid;
+
+    public static final String TYPE_ID = "huientity";
 	
 	public Integer getDbId() {
 		return dbId;
@@ -408,4 +410,13 @@ public class Entity implements ISelectOptionHandler, Serializable  {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
+
+   
 }

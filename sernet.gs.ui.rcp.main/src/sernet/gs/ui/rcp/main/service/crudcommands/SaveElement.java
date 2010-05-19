@@ -26,6 +26,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
+import sernet.hui.common.connect.ITypedElement;
 
 /**
  * Save element of type T to the database using its class to lookup
@@ -37,7 +38,7 @@ import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
  *
  * @param <T>
  */
-public class SaveElement<T> extends GenericCommand implements IChangeLoggingCommand {
+public class SaveElement<T extends ITypedElement> extends GenericCommand implements IChangeLoggingCommand {
 
 	protected T element;
 	private String stationId;
@@ -49,7 +50,7 @@ public class SaveElement<T> extends GenericCommand implements IChangeLoggingComm
 	
 	public void execute() {
 		IBaseDao<T, Serializable> dao 
-			= (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
+			= (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getTypeId());
 		//dao.saveOrUpdate(element);
 		element = dao.merge(element);
 	}

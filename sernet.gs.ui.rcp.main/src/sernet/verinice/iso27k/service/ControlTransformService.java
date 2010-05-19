@@ -24,6 +24,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -110,23 +113,30 @@ public class ControlTransformService {
 		CnATreeElement element = null;
 		if(item.getItems()!=null && item.getItems().size()>0) {
 			// create a group
-			element = ItemControlTransformer.transformToGroup(item);
+			element = GenericItemTransformer.transformToGroup(item);
 			monitor.setTaskName(getText(numberOfControls,numberProcessed,element.getTitle()));
-			group.addChild(element);
-			element.setParent(group);
-			command = new SaveElement<ControlGroup>((ControlGroup) element);
-			if (log.isDebugEnabled()) {
-                log.debug("Creating control group,  UUID: " + element.getUuid() + ", title: " + element.getTitle());
-            }	
+			if (group.canContain(element)) {
+				group.addChild(element);
+				element.setParent(group);
+				command = new SaveElement( element);
+				if (log.isDebugEnabled()) {
+               	 log.debug("Creating control group,  UUID: " + element.getUuid() + ", title: " + element.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+           	 	}	
+			    
+			}
 		} else {
 			// create a control
-			element = ItemControlTransformer.transform(item);
+			element = GenericItemTransformer.transform(item);
 			monitor.setTaskName(getText(numberOfControls,numberProcessed,element.getTitle()));
-			group.addChild(element);
-			element.setParent(group);
-			command = new SaveElement<Control>((Control) element);
-			if (log.isDebugEnabled()) {
-			    log.debug("Creating control,  UUID: " + element.getUuid() + ", title: " + element.getTitle());   
+			
+			if (group.canContain(element)) {
+				group.addChild(element);
+				element.setParent(group);
+				command = new SaveElement( element);
+				if (log.isDebugEnabled()) {
+			    	log.debug("Creating control,  UUID: " + element.getUuid() + ", title: " + element.getTitle());    //$NON-NLS-1$ //$NON-NLS-2$
+			
+				}
             }
 		}
 

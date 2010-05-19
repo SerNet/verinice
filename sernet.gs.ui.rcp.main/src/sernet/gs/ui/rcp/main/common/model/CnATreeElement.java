@@ -31,9 +31,11 @@ import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider;
 import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Schutzbedarf;
+import sernet.gs.ui.rcp.main.bsi.views.IRelationTable;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.iso27k.model.IISO27kElement;
 
@@ -51,7 +53,7 @@ import sernet.verinice.iso27k.model.IISO27kElement;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class CnATreeElement implements Serializable, IBSIModelListener {
+public abstract class CnATreeElement implements Serializable, IBSIModelListener, ITypedElement {
 
 	public static final String PERSON = "person";
 	public static final String BAUSTEIN_UMSETZUNG = "baustein-umsetzung";
@@ -339,8 +341,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener 
 		linksDown.add(link);
 	}
 	
-	public void linkChanged(CnALink old, CnALink link) {
-		getModelChangeListener().linkChanged(old, link);
+	public void linkChanged(CnALink old, CnALink link, Object source) {
+		getModelChangeListener().linkChanged(old, link, source);
 	}
 	
 	public void linkRemoved(CnALink link) {

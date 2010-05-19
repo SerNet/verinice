@@ -26,17 +26,17 @@ import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 
 public class LoadCnAElementById extends GenericCommand {
 
-	private Class<? extends CnATreeElement> clazz;
 	private int id;
 	private CnATreeElement found;
+    private String typeId;
 
-	public LoadCnAElementById(Class<? extends CnATreeElement> clazz, int id) {
-		this.clazz= clazz;
+	public LoadCnAElementById(String typeId, int id) {
+		this.typeId= typeId;
 		this.id = id;
 	}
 
 	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
 		found = dao.findById(id);
 		HydratorUtil.hydrateElement(dao, found, false);
 	}

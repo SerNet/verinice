@@ -19,8 +19,12 @@ package sernet.verinice.iso27k.model;
 
 import java.util.Collection;
 
+import sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider;
+import sernet.gs.ui.rcp.main.bsi.model.MaximumSchutzbedarfListener;
+import sernet.gs.ui.rcp.main.bsi.model.SchutzbedarfAdapter;
 import sernet.gs.ui.rcp.main.bsi.model.TagHelper;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.ILinkChangeListener;
 import sernet.hui.common.connect.Entity;
 
 /**
@@ -34,6 +38,18 @@ public class Asset extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_NAME = "asset_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "asset_tag"; //$NON-NLS-1$
 	
+    private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
+    private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
+
+    @Override
+    public ILinkChangeListener getLinkChangeListener() {
+        return linkChangeListener;
+    }
+    @Override
+    public ISchutzbedarfProvider getSchutzbedarfProvider() {
+        return schutzbedarfProvider;
+    }
+
 	/**
 	 * Creates an empty asset
 	 */

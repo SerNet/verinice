@@ -24,6 +24,7 @@ import sernet.gs.ui.rcp.main.bsi.model.LinkKategorie;
 import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.gs.ui.rcp.main.bsi.model.Raum;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.hui.common.connect.ITypedElement;
 
 /**
  * Association class for links between items.
@@ -34,12 +35,14 @@ import sernet.hui.common.connect.HuiRelation;
  *
  */
 @SuppressWarnings("serial")
-public class CnALink implements Serializable {
+public class CnALink implements Serializable, ITypedElement {
 
 	public static final int DEPENDANT_ON      	= 1;
 	public static final int ADMINISTRATED_BY 	= 2;
 //	public static final int USED_BY 			= 3;
 	public static final int LOCATED_IN 		= 4;
+	
+	public static final String TYPE_ID = "cnalink";
 	
 	// user entered comment:
 	private String comment;
@@ -246,9 +249,12 @@ public class CnALink implements Serializable {
 		return ""; //$NON-NLS-1$
 	}
 
-//	public LinkKategorie getParent() {
-//		return dependant.getLinks();
-//	}
+    /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 
 	
 }

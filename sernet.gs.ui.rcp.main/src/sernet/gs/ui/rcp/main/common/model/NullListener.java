@@ -44,7 +44,7 @@ public class NullListener implements IBSIModelListener {
 
 	}
 
-	public void linkChanged(CnALink old, CnALink link) {
+	public void linkChanged(CnALink old, CnALink link, Object source) {
 		// do nothing
 
 	}

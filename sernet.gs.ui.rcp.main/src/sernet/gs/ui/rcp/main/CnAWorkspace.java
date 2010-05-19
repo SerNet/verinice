@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.update.internal.core.UpdateCore;
 
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 
 /**
  * Prepare the workspace directory for the application. Created needed files

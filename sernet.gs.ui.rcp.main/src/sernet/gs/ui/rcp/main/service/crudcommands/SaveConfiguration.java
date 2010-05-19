@@ -154,7 +154,7 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 	}
 
 	private IBaseDao<T, Serializable> createDao() {
-		return (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getClass());
+		return (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getTypeId());
 	}
 
 

@@ -22,8 +22,10 @@ import java.security.Permissions;
 import java.util.HashSet;
 import java.util.Set;
 
+import sernet.hui.common.connect.ITypedElement;
+
 @SuppressWarnings("serial")
-public class Permission implements Serializable {
+public class Permission implements Serializable, ITypedElement {
 
 	private Integer dbId;
 	
@@ -34,10 +36,19 @@ public class Permission implements Serializable {
 	private boolean readAllowed;
 	
 	private boolean writeAllowed;
+
+    public static final String TYPE_ID = "permission";
 	
 	protected Permission() {
 		// Constructor for Hibernate - does intentionally nothing.
 	}
+	
+	 /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 	
 	public Integer getDbId() {
 		return dbId;

@@ -55,6 +55,8 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.verinice.iso27k.model.Control;
 import sernet.verinice.iso27k.model.IControl;
+import sernet.verinice.iso27k.model.Threat;
+import sernet.verinice.iso27k.model.Vulnerability;
 import sernet.verinice.iso27k.service.IItem;
 
 public class BrowserView extends ViewPart {
@@ -173,6 +175,21 @@ public class BrowserView extends ViewPart {
 				writeHtml(sb, control.getTitle(), control.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
 				setText(sb.toString());			
 			}
+			
+			if (element instanceof Threat) {
+			    Threat item = (Threat) element;
+                StringBuilder sb = new StringBuilder();
+                writeHtml(sb, item.getTitle(), item.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
+                setText(sb.toString());         
+            }
+
+			if (element instanceof Vulnerability) {
+			    Vulnerability item = (Vulnerability) element;
+			    StringBuilder sb = new StringBuilder();
+			    writeHtml(sb, item.getTitle(), item.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
+			    setText(sb.toString());         
+			}
+			
 
 		} catch (GSServiceException e) {
 			StatusLine.setErrorMessage(e.getMessage());

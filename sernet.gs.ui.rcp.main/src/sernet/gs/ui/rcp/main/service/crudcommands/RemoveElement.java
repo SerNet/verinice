@@ -47,12 +47,12 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 
 	private T element;
 	private String stationId;
-	private Class<? extends CnATreeElement> elementClass;
 	private Integer elementId;
+    private String typeId;
 
 	public RemoveElement(T element) {
 		// only transfer id of element to keep footprint small:
-		elementClass = element.getClass();
+		typeId = element.getTypeId();
 		elementId = element.getDbId();
 		
 		this.stationId = ChangeLogEntry.STATION_ID;
@@ -61,7 +61,7 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 	public void execute() {
 			try {
 				// load element from DB:
-				this.element = (T) getDaoFactory().getDAO(elementClass).findById(elementId);
+				this.element = (T) getDaoFactory().getDAO(typeId).findById(elementId);
 				
 				if (element instanceof Person)
 					removeConfiguration((Person) element);
@@ -71,7 +71,7 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 					listsDbId = element.getParent().getDbId();
 				}
 				
-				IBaseDao dao = getDaoFactory().getDAOForObject(element);
+				IBaseDao dao = getDaoFactory().getDAOforTypedElement(element);
 				element = (T) dao.findById(element.getDbId());
 
 				if (element instanceof ITVerbund) {
@@ -121,14 +121,6 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 				throw new RuntimeCommandException(e);
 			}
 			
-		
-// FIXME server: create bulk delete to speed up deletion of objects, also have another look into hibernate option on-delete="cascade"
-//		String query = "delete from CnATreeElement as elmt where elmt.dbId = ?";
-//		Integer dbId = element.getDbId();
-//		int rows = dao.updateByQuery(
-//				query, 
-//				new Object[] { dbId } );
-//		Logger.getLogger(this.getClass()).debug("Deleted rows: " + rows);
 	}
 	
 	/* (non-Javadoc)

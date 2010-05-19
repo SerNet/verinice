@@ -60,6 +60,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.Permission;
 import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
@@ -70,6 +71,7 @@ import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
 import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
 import sernet.gs.ui.rcp.main.ds.model.Zweckbestimmung;
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.iso27k.model.Asset;
@@ -123,38 +125,45 @@ public class DAOFactory {
 	
 	// injected by spring
 	@SuppressWarnings("unchecked")
-	private HashMap<Class, IBaseDao> daos = new HashMap<Class, IBaseDao>(); 
+	private HashMap<Class, IBaseDao> daosByClass = new HashMap<Class, IBaseDao>(); 
+	
+	private HashMap<String, IBaseDao> daosByTypeID = new HashMap<String, IBaseDao>(); 
 	
 	/**
 	 * Setter method used by spring to inject DAO.
 	 */
 	public void setEntityDao(IBaseDao<Entity, Integer> entityDao) {
-		daos.put(Entity.class, entityDao);
+		daosByClass.put(Entity.class, entityDao);
+		daosByTypeID.put(Entity.TYPE_ID, entityDao);
 	}
 	
 	/**
 	 * Setter method used by spring to inject DAO.
 	 */
 	public void setGefaehrdungDao(IBaseDao<Gefaehrdung, Integer> dao) {
-		daos.put(Gefaehrdung.class, dao);
+		daosByClass.put(Gefaehrdung.class, dao);
+		daosByTypeID.put(Gefaehrdung.TYPE_ID, dao);
 	}
 	
 	/**
 	 * Setter method used by spring to inject DAO.
 	 */
 	public void setBausteinVorschlagDao(IBaseDao<BausteinVorschlag, Integer> dao) {
-		daos.put(BausteinVorschlag.class, dao);
+		daosByClass.put(BausteinVorschlag.class, dao);
+		daosByTypeID.put(BausteinVorschlag.TYPE_ID, dao);
 	}
 	
 	/**
 	 * Setter method used by spring to inject DAO.
 	 */
 	public void setConfigurationDao(IBaseDao<Gefaehrdung, Integer> dao) {
-		daos.put(Configuration.class, dao);
+		daosByClass.put(Configuration.class, dao);
+		daosByTypeID.put(Configuration.TYPE_ID, dao);
 	}
 
 	public void setchangeLogEntryDAO(IBaseDao<ChangeLogEntry, Integer> dao) {
-		daos.put(ChangeLogEntry.class, dao);
+		daosByClass.put(ChangeLogEntry.class, dao);
+		daosByTypeID.put(ChangeLogEntry.TYPE_ID, dao);
 	}
 	
 	
@@ -163,423 +172,508 @@ public class DAOFactory {
 	 * Setter method used by spring to inject DAO.
 	 */
 	public void setOwnGefaehrdungDao(IBaseDao<OwnGefaehrdung, Integer> dao) {
-		daos.put(OwnGefaehrdung.class, dao);
+		daosByClass.put(OwnGefaehrdung.class, dao);
+		daosByTypeID.put(OwnGefaehrdung.TYPE_ID, dao);
 	}
 	
 	/**
 	 * Setter method used by spring to inject DAO.
 	 */
 	public void setPropertyListDao(IBaseDao<PropertyList, Integer> propertyListDao) {
-		daos.put(PropertyList.class, propertyListDao);
+		daosByClass.put(PropertyList.class, propertyListDao);
+		daosByTypeID.put(PropertyList.TYPE_ID, propertyListDao);
 	}
 	
 	/**
 	 * Setter method used by spring to inject DAO.
 	 */
 	public void setPropertyDao(IBaseDao<Property, Integer> propertyDao) {
-		daos.put(Property.class, propertyDao);
+		daosByClass.put(Property.class, propertyDao);
+		daosByTypeID.put(Property.TYPE_ID, propertyDao);
 	}
 
 	/**
 	 * Setter method used by spring to inject DAO.
 	 */
 	public void setCnaLinkDao(IBaseDao<CnALink, Integer> dao) {
-		daos.put(CnALink.class, dao);
+		daosByClass.put(CnALink.class, dao);
+		daosByTypeID.put(CnALink.TYPE_ID, dao);
 	}
 	
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setAnwendungDAO(IBaseDao<Anwendung, Integer> daoToSet) {
-        daos.put(Anwendung.class, daoToSet);
+        daosByClass.put(Anwendung.class, daoToSet);
+        daosByTypeID.put(Anwendung.TYPE_ID, daoToSet);
     }
+    
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setAnwendungenKategorieDAO(IBaseDao<AnwendungenKategorie, Integer> daoToSet) {
-    	daos.put(AnwendungenKategorie.class, daoToSet);
+    	daosByClass.put(AnwendungenKategorie.class, daoToSet);
+    	daosByTypeID.put(AnwendungenKategorie.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setBausteinUmsetzungDAO(IBaseDao<BausteinUmsetzung, Integer> daoToSet) {
-        daos.put(BausteinUmsetzung.class, daoToSet);
+        daosByClass.put(BausteinUmsetzung.class, daoToSet);
+        daosByTypeID.put(BausteinUmsetzung.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setBSIModelDAO(IBaseDao<BSIModel, Integer> daoToSet) {
-        daos.put(BSIModel.class, daoToSet);
+        daosByClass.put(BSIModel.class, daoToSet);
+        daosByTypeID.put(BSIModel.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setClientDAO(IBaseDao<Client, Integer> daoToSet) {
-        daos.put(Client.class, daoToSet);
+        daosByClass.put(Client.class, daoToSet);
+        daosByTypeID.put(Client.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setClientsKategorieDAO(IBaseDao<ClientsKategorie, Integer> daoToSet) {
-        daos.put(ClientsKategorie.class, daoToSet);
+        daosByClass.put(ClientsKategorie.class, daoToSet);
+        daosByTypeID.put(ClientsKategorie.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setDatenverarbeitungDAO(IBaseDao<Datenverarbeitung, Integer> daoToSet) {
-        daos.put(Datenverarbeitung.class, daoToSet);
+        daosByClass.put(Datenverarbeitung.class, daoToSet);
+        daosByTypeID.put(Datenverarbeitung.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setFinishedRiskAnalysisDAO(IBaseDao<FinishedRiskAnalysis, Integer> daoToSet) {
-        daos.put(FinishedRiskAnalysis.class, daoToSet);
+        daosByClass.put(FinishedRiskAnalysis.class, daoToSet);
+        daosByTypeID.put(FinishedRiskAnalysis.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setGebaeudeDAO(IBaseDao<Gebaeude, Integer> daoToSet) {
-        daos.put(Gebaeude.class, daoToSet);
+        daosByClass.put(Gebaeude.class, daoToSet);
+        daosByTypeID.put(Gebaeude.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setGebaeudeKategorieDAO(IBaseDao<GebaeudeKategorie, Integer> daoToSet) {
-        daos.put(GebaeudeKategorie.class, daoToSet);
+        daosByClass.put(GebaeudeKategorie.class, daoToSet);
+        daosByTypeID.put(GebaeudeKategorie.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setGefaehrdungsUmsetzungDAO(IBaseDao<GefaehrdungsUmsetzung, Integer> daoToSet) {
-        daos.put(GefaehrdungsUmsetzung.class, daoToSet);
+        daosByClass.put(GefaehrdungsUmsetzung.class, daoToSet);
+        daosByTypeID.put(GefaehrdungsUmsetzung.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setITVerbundDAO(IBaseDao<ITVerbund, Integer> daoToSet) {
-        daos.put(ITVerbund.class, daoToSet);
+        daosByClass.put(ITVerbund.class, daoToSet);
+        daosByTypeID.put(ITVerbund.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setMassnahmenUmsetzungDAO(IBaseDao<MassnahmenUmsetzung, Integer> daoToSet) {
-        daos.put(MassnahmenUmsetzung.class, daoToSet);
+        daosByClass.put(MassnahmenUmsetzung.class, daoToSet);
+        daosByTypeID.put(MassnahmenUmsetzung.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setNetzKomponenteDAO(IBaseDao<NetzKomponente, Integer> daoToSet) {
-        daos.put(NetzKomponente.class, daoToSet);
+        daosByClass.put(NetzKomponente.class, daoToSet);
+        daosByTypeID.put(NetzKomponente.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setNKKategorieDAO(IBaseDao<NKKategorie, Integer> daoToSet) {
-        daos.put(NKKategorie.class, daoToSet);
+        daosByClass.put(NKKategorie.class, daoToSet);
+        daosByTypeID.put(NKKategorie.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setPermissionDAO(IBaseDao<Permission, Integer> daoToSet) {
-        daos.put(Permission.class, daoToSet);
+        daosByClass.put(Permission.class, daoToSet);
+        daosByTypeID.put(Permission.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setPersonDAO(IBaseDao<Person, Integer> daoToSet) {
-        daos.put(Person.class, daoToSet);
+        daosByClass.put(Person.class, daoToSet);
+        daosByTypeID.put(Person.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setPersonengruppenDAO(IBaseDao<Personengruppen, Integer> daoToSet) {
-        daos.put(Personengruppen.class, daoToSet);
+        daosByClass.put(Personengruppen.class, daoToSet);
+        daosByTypeID.put(Personengruppen.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setPersonenKategorieDAO(IBaseDao<PersonenKategorie, Integer> daoToSet) {
-        daos.put(PersonenKategorie.class, daoToSet);
+        daosByClass.put(PersonenKategorie.class, daoToSet);
+        daosByTypeID.put(PersonenKategorie.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setRaeumeKategorieDAO(IBaseDao<RaeumeKategorie, Integer> daoToSet) {
-        daos.put(RaeumeKategorie.class, daoToSet);
+        daosByClass.put(RaeumeKategorie.class, daoToSet);
+        daosByTypeID.put(RaeumeKategorie.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setRaumDAO(IBaseDao<Raum, Integer> daoToSet) {
-        daos.put(Raum.class, daoToSet);
+        daosByClass.put(Raum.class, daoToSet);
+        daosByTypeID.put(Raum.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setServerDAO(IBaseDao<Server, Integer> daoToSet) {
-        daos.put(Server.class, daoToSet);
+        daosByClass.put(Server.class, daoToSet);
+        daosByTypeID.put(Server.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setServerKategorieDAO(IBaseDao<ServerKategorie, Integer> daoToSet) {
-        daos.put(ServerKategorie.class, daoToSet);
+        daosByClass.put(ServerKategorie.class, daoToSet);
+        daosByTypeID.put(ServerKategorie.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setSonstigeITKategorieDAO(IBaseDao<SonstigeITKategorie, Integer> daoToSet) {
-        daos.put(SonstigeITKategorie.class, daoToSet);
+        daosByClass.put(SonstigeITKategorie.class, daoToSet);
+        daosByTypeID.put(SonstigeITKategorie.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setSonstITDAO(IBaseDao<SonstIT, Integer> daoToSet) {
-        daos.put(SonstIT.class, daoToSet);
+        daosByClass.put(SonstIT.class, daoToSet);
+        daosByTypeID.put(SonstIT.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setStellungnahmeDSBDAO(IBaseDao<StellungnahmeDSB, Integer> daoToSet) {
-        daos.put(StellungnahmeDSB.class, daoToSet);
+        daosByClass.put(StellungnahmeDSB.class, daoToSet);
+        daosByTypeID.put(StellungnahmeDSB.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setTelefonKomponenteDAO(IBaseDao<TelefonKomponente, Integer> daoToSet) {
-        daos.put(TelefonKomponente.class, daoToSet);
+        daosByClass.put(TelefonKomponente.class, daoToSet);
+        daosByTypeID.put(TelefonKomponente.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setTKKategorieDAO(IBaseDao<TKKategorie, Integer> daoToSet) {
-        daos.put(TKKategorie.class, daoToSet);
+        daosByClass.put(TKKategorie.class, daoToSet);
+        daosByTypeID.put(TKKategorie.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setVerantwortlicheStelleDAO(IBaseDao<VerantwortlicheStelle, Integer> daoToSet) {
-        daos.put(VerantwortlicheStelle.class, daoToSet);
+        daosByClass.put(VerantwortlicheStelle.class, daoToSet);
+        daosByTypeID.put(VerantwortlicheStelle.TYPE_ID, daoToSet);
     }
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setVerarbeitungsangabenDAO(IBaseDao<Verarbeitungsangaben, Integer> daoToSet) {
-        daos.put(Verarbeitungsangaben.class, daoToSet);
+        daosByClass.put(Verarbeitungsangaben.class, daoToSet);
+        daosByTypeID.put(Verarbeitungsangaben.TYPE_ID, daoToSet);
     }
 
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setZweckbestimmungDAO(IBaseDao<Zweckbestimmung, Integer> daoToSet) {
-        daos.put(Zweckbestimmung.class, daoToSet);
+        daosByClass.put(Zweckbestimmung.class, daoToSet);
+        daosByTypeID.put(Zweckbestimmung.TYPE_ID, daoToSet);
     }
 	
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setRisikoMassnahmeDAO(IBaseDao<RisikoMassnahme, Integer> daoToSet) {
-        daos.put(RisikoMassnahme.class, daoToSet);
+        daosByClass.put(RisikoMassnahme.class, daoToSet);
+        daosByTypeID.put(RisikoMassnahme.TYPE_ID, daoToSet);
     }
 
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setOwnGefaehrdungDAO(IBaseDao<OwnGefaehrdung, Integer> daoToSet) {
-    	daos.put(OwnGefaehrdung.class, daoToSet);
+    	daosByClass.put(OwnGefaehrdung.class, daoToSet);
+    	daosByTypeID.put(OwnGefaehrdung.TYPE_ID, daoToSet);
     }
     
     /** 
      * Setter method used by spring to inject DAO.
      */
     public void setFinishedRiskAnalysisListsDAO(IBaseDao<FinishedRiskAnalysisLists, Integer> daoToSet) {
-    	daos.put(FinishedRiskAnalysisLists.class, daoToSet);
+    	daosByClass.put(FinishedRiskAnalysisLists.class, daoToSet);
+    	daosByTypeID.put(FinishedRiskAnalysisLists.TYPE_ID, daoToSet);
     }
 
     public void setRisikoMassnahmeUmsetzungDAO(IBaseDao<RisikoMassnahmenUmsetzung, Integer> daoToSet) {
-    	daos.put(RisikoMassnahmenUmsetzung.class, daoToSet);
+    	daosByClass.put(RisikoMassnahmenUmsetzung.class, daoToSet);
+    	daosByTypeID.put(RisikoMassnahmenUmsetzung.TYPE_ID, daoToSet);
     }
     
     public void setNoteDAO(IBaseDao<Note, Integer> daoToSet) {
-    	daos.put(Note.class, daoToSet);
+    	daosByClass.put(Note.class, daoToSet);
+    	daosByTypeID.put(Note.TYPE_ID, daoToSet);
     }
     
     public void setAttachmentDAO(IBaseDao<Attachment, Integer> daoToSet) {
-    	daos.put(Attachment.class, daoToSet);
+    	daosByClass.put(Attachment.class, daoToSet);
+    	daosByTypeID.put(Attachment.TYPE_ID, daoToSet);
     }
     
     public void setAdditionDAO(IBaseDao<Addition, Integer> daoToSet) {
-    	daos.put(Addition.class, daoToSet);
+    	daosByClass.put(Addition.class, daoToSet);
+    	daosByTypeID.put(Addition.TYPE_ID, daoToSet);
     }
     
     public void setAttachmentFileDAO(IBaseDao<AttachmentFile, Integer> daoToSet) {
-    	daos.put(AttachmentFile.class, daoToSet);
+    	daosByClass.put(AttachmentFile.class, daoToSet);
+    	daosByTypeID.put(AttachmentFile.TYPE_ID, daoToSet);
     }
     
     /* ISO27000 Daos */
     
     public void setISO27KModelDAO(IBaseDao<ISO27KModel, Integer> daoToSet) {
-    	daos.put(ISO27KModel.class, daoToSet);
+    	daosByClass.put(ISO27KModel.class, daoToSet);
+    	daosByTypeID.put(ISO27KModel.TYPE_ID, daoToSet);
     }
     
     public void setOrganizationDAO(IBaseDao<Organization, Integer> daoToSet) {
-    	daos.put(Organization.class, daoToSet);
+    	daosByClass.put(Organization.class, daoToSet);
+    	daosByTypeID.put(Organization.TYPE_ID, daoToSet);
     }
     
     public void setAssetGroupDAO(IBaseDao<AssetGroup, Integer> daoToSet) {
-    	daos.put(AssetGroup.class, daoToSet);
+    	daosByClass.put(AssetGroup.class, daoToSet);
+    	daosByTypeID.put(AssetGroup.TYPE_ID, daoToSet);
     }
     public void setAssetDAO(IBaseDao<Asset, Integer> daoToSet) {
-    	daos.put(Asset.class, daoToSet);
+    	daosByClass.put(Asset.class, daoToSet);
+    	daosByTypeID.put(Asset.TYPE_ID, daoToSet);
     }
     
     public void setControlGroupDAO(IBaseDao<ControlGroup, Integer> daoToSet) {
-    	daos.put(ControlGroup.class, daoToSet);
+    	daosByClass.put(ControlGroup.class, daoToSet);
+    	daosByTypeID.put(ControlGroup.TYPE_ID, daoToSet);
     }
     public void setControlDAO(IBaseDao<Control, Integer> daoToSet) {
-    	daos.put(Control.class, daoToSet);
+    	daosByClass.put(Control.class, daoToSet);
+    	daosByTypeID.put(Control.TYPE_ID, daoToSet);
     }
     
     public void setAuditGroupDAO(IBaseDao<AuditGroup, Integer> daoToSet) {
-    	daos.put(AuditGroup.class, daoToSet);
+    	daosByClass.put(AuditGroup.class, daoToSet);
+    	daosByTypeID.put(AuditGroup.TYPE_ID, daoToSet);
     }
     public void setAuditDAO(IBaseDao<Audit, Integer> daoToSet) {
-    	daos.put(Audit.class, daoToSet);
+    	daosByClass.put(Audit.class, daoToSet);
+    	daosByTypeID.put(Audit.TYPE_ID, daoToSet);
     }
     
     public void setExceptionGroupDAO(IBaseDao<ExceptionGroup, Integer> daoToSet) {
-    	daos.put(ExceptionGroup.class, daoToSet);
+    	daosByClass.put(ExceptionGroup.class, daoToSet);
+    	daosByTypeID.put(ExceptionGroup.TYPE_ID, daoToSet);
     }
     public void setExceptionDAO(IBaseDao<Exception, Integer> daoToSet) {
-    	daos.put(Exception.class, daoToSet);
+    	daosByClass.put(Exception.class, daoToSet);
+    	daosByTypeID.put(Exception.TYPE_ID, daoToSet);
     }
     
     public void setPersonGroupDAO(IBaseDao<PersonGroup, Integer> daoToSet) {
-    	daos.put(PersonGroup.class, daoToSet);
+    	daosByClass.put(PersonGroup.class, daoToSet);
+    	daosByTypeID.put(PersonGroup.TYPE_ID, daoToSet);
     }
     public void setPersonIsoDAO(IBaseDao<PersonIso, Integer> daoToSet) {
-    	daos.put(PersonIso.class, daoToSet);
+    	daosByClass.put(PersonIso.class, daoToSet);
+    	daosByTypeID.put(PersonIso.TYPE_ID, daoToSet);
     }
     
     public void setRequirementGroupDAO(IBaseDao<RequirementGroup, Integer> daoToSet) {
-    	daos.put(RequirementGroup.class, daoToSet);
+    	daosByClass.put(RequirementGroup.class, daoToSet);
+    	daosByTypeID.put(RequirementGroup.TYPE_ID, daoToSet);
     }
     public void setRequirementDAO(IBaseDao<Requirement, Integer> daoToSet) {
-    	daos.put(Requirement.class, daoToSet);
+    	daosByClass.put(Requirement.class, daoToSet);
+    	daosByTypeID.put(Requirement.TYPE_ID, daoToSet);
     }
     
     public void setIncidentGroupDAO(IBaseDao<IncidentGroup, Integer> daoToSet) {
-    	daos.put(IncidentGroup.class, daoToSet);
+    	daosByClass.put(IncidentGroup.class, daoToSet);
+    	daosByTypeID.put(IncidentGroup.TYPE_ID, daoToSet);
     }
     public void setIncidentDAO(IBaseDao<Incident, Integer> daoToSet) {
-    	daos.put(Incident.class, daoToSet);
+    	daosByClass.put(Incident.class, daoToSet);
+    	daosByTypeID.put(Incident.TYPE_ID, daoToSet);
     }
     
     public void setIncidentScenarioGroupDAO(IBaseDao<IncidentScenarioGroup, Integer> daoToSet) {
-    	daos.put(IncidentScenarioGroup.class, daoToSet);
+    	daosByClass.put(IncidentScenarioGroup.class, daoToSet);
+    	daosByTypeID.put(IncidentScenarioGroup.TYPE_ID, daoToSet);
     }
     public void setIncidentScenarioDAO(IBaseDao<IncidentScenario, Integer> daoToSet) {
-    	daos.put(IncidentScenario.class, daoToSet);
+    	daosByClass.put(IncidentScenario.class, daoToSet);
+    	daosByTypeID.put(IncidentScenario.TYPE_ID, daoToSet);
     }
   
     public void setResponseGroupDAO(IBaseDao<ResponseGroup, Integer> daoToSet) {
-    	daos.put(ResponseGroup.class, daoToSet);
+    	daosByClass.put(ResponseGroup.class, daoToSet);
+    	daosByTypeID.put(ResponseGroup.TYPE_ID, daoToSet);
     }
     public void setResponseDAO(IBaseDao<Response, Integer> daoToSet) {
-    	daos.put(Response.class, daoToSet);
+    	daosByClass.put(Response.class, daoToSet);
+    	daosByTypeID.put(Response.TYPE_ID, daoToSet);
     }
     
     public void setThreatGroupDAO(IBaseDao<ThreatGroup, Integer> daoToSet) {
-    	daos.put(ThreatGroup.class, daoToSet);
+    	daosByClass.put(ThreatGroup.class, daoToSet);
+    	daosByTypeID.put(ThreatGroup.TYPE_ID, daoToSet);
     }
     public void setThreatDAO(IBaseDao<Threat, Integer> daoToSet) {
-    	daos.put(Threat.class, daoToSet);
+    	daosByClass.put(Threat.class, daoToSet);
+    	daosByTypeID.put(Threat.TYPE_ID, daoToSet);
     }
     
     public void setVulnerabilityGroupDAO(IBaseDao<VulnerabilityGroup, Integer> daoToSet) {
-    	daos.put(VulnerabilityGroup.class, daoToSet);
+    	daosByClass.put(VulnerabilityGroup.class, daoToSet);
+    	daosByTypeID.put(VulnerabilityGroup.TYPE_ID, daoToSet);
     }
     public void setVulnerabilityDAO(IBaseDao<Vulnerability, Integer> daoToSet) {
-    	daos.put(Vulnerability.class, daoToSet);
+    	daosByClass.put(Vulnerability.class, daoToSet);
+    	daosByTypeID.put(Vulnerability.TYPE_ID, daoToSet);
     }
     
     public void setDocumentGroupDAO(IBaseDao<DocumentGroup, Integer> daoToSet) {
-    	daos.put(DocumentGroup.class, daoToSet);
+    	daosByClass.put(DocumentGroup.class, daoToSet);
+    	daosByTypeID.put(DocumentGroup.TYPE_ID, daoToSet);
     }
     public void setDocumentDAO(IBaseDao<Document, Integer> daoToSet) {
-    	daos.put(Document.class, daoToSet);
+    	daosByClass.put(Document.class, daoToSet);
+    	daosByTypeID.put(Document.TYPE_ID, daoToSet);
     }
     
     public void setEvidenceGroupDAO(IBaseDao<EvidenceGroup, Integer> daoToSet) {
-    	daos.put(EvidenceGroup.class, daoToSet);
+    	daosByClass.put(EvidenceGroup.class, daoToSet);
+    	daosByTypeID.put(EvidenceGroup.TYPE_ID, daoToSet);
     }
     public void setEvidenceDAO(IBaseDao<Evidence, Integer> daoToSet) {
-    	daos.put(Evidence.class, daoToSet);
+    	daosByClass.put(Evidence.class, daoToSet);
+    	daosByTypeID.put(Evidence.TYPE_ID, daoToSet);
     }
     
     public void setInterviewGroupDAO(IBaseDao<InterviewGroup, Integer> daoToSet) {
-    	daos.put(InterviewGroup.class, daoToSet);
+    	daosByClass.put(InterviewGroup.class, daoToSet);
+    	daosByTypeID.put(InterviewGroup.TYPE_ID, daoToSet);
     }
     public void setInterviewDAO(IBaseDao<Interview, Integer> daoToSet) {
-    	daos.put(Interview.class, daoToSet);
+    	daosByClass.put(Interview.class, daoToSet);
+    	daosByTypeID.put(Interview.TYPE_ID, daoToSet);
     }
     
     public void setFindingGroupDAO(IBaseDao<FindingGroup, Integer> daoToSet) {
-    	daos.put(FindingGroup.class, daoToSet);
+    	daosByClass.put(FindingGroup.class, daoToSet);
+    	daosByTypeID.put(FindingGroup.TYPE_ID, daoToSet);
     }
     public void setFindingDAO(IBaseDao<Finding, Integer> daoToSet) {
-    	daos.put(Finding.class, daoToSet);
+    	daosByClass.put(Finding.class, daoToSet);
+    	daosByTypeID.put(Finding.TYPE_ID, daoToSet);
     }
     
     public void setProcessGroupDAO(IBaseDao<ProcessGroup, Integer> daoToSet) {
-    	daos.put(ProcessGroup.class, daoToSet);
+    	daosByClass.put(ProcessGroup.class, daoToSet);
+    	daosByTypeID.put(ProcessGroup.TYPE_ID, daoToSet);
     }
     public void setProcessDAO(IBaseDao<sernet.verinice.iso27k.model.Process, Integer> daoToSet) {
-    	daos.put(sernet.verinice.iso27k.model.Process.class, daoToSet);
+    	daosByClass.put(sernet.verinice.iso27k.model.Process.class, daoToSet);
+    	daosByTypeID.put(sernet.verinice.iso27k.model.Process.TYPE_ID, daoToSet);
     }
     
     public void setRecordGroupDAO(IBaseDao<RecordGroup, Integer> daoToSet) {
-    	daos.put(RecordGroup.class, daoToSet);
+    	daosByClass.put(RecordGroup.class, daoToSet);
+    	daosByTypeID.put(RecordGroup.TYPE_ID, daoToSet);
     }
     public void setRecordDAO(IBaseDao<Record, Integer> daoToSet) {
-    	daos.put(Record.class, daoToSet);
+    	daosByClass.put(Record.class, daoToSet);
+    	daosByTypeID.put(Record.TYPE_ID, daoToSet);
     }
     
     /* Self Assessment (SAMT) Daos */
     
     public void setSamtTopicDAO(IBaseDao<SamtTopic, Integer> daoToSet) {
-        daos.put(SamtTopic.class, daoToSet);
+        daosByClass.put(SamtTopic.class, daoToSet);
+        daosByTypeID.put(SamtTopic.TYPE_ID, daoToSet);
     }
     
 	@SuppressWarnings("unchecked")
 	public <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype) {
-		IBaseDao dao = daos.get(daotype);
+		IBaseDao dao = daosByClass.get(daotype);
 		if (dao != null)
 			return dao;
 		
 		// we might have been passed a proxy (class enhanced by cglib), so try to find
 		// a DAO that works:
 		// FIXME akoderman this doesn't work, we still need a better solution for this, you often get a NullPointerException because no DAO was found for a CGLib enhanced obect
-		for (Class clazz : daos.keySet()) {
+		for (Class clazz : daosByClass.keySet()) {
 			if (clazz.isAssignableFrom(daotype))
-				return daos.get(clazz);
+				return daosByClass.get(clazz);
 		}
+		
 		if(daotype!=null) {
-			log.warn("No dao found for class: " + daotype.getName());
+			log.error("No dao found for class: " + daotype.getName());
 		} else {
 			log.warn("dao-type-class is null, could not return dao");
 		}
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <T> IBaseDao<T, Serializable> getDAOForObject(Object o) {
-		Set<Entry<Class, IBaseDao>> entrySet = daos.entrySet();
-		for (Entry<Class, IBaseDao> entry : entrySet) {
-			if (entry.getKey().isInstance(o)) {
-				return  entry.getValue();
-			}
-		}
-		return null;
+
+	
+	public IBaseDao getDAOforTypedElement(ITypedElement object) {
+	    return daosByTypeID.get(object.getTypeId());
 	}
+
+    /**
+     * @param typeId
+     * @return
+     */
+    public IBaseDao getDAO(String typeId) {
+        return daosByTypeID.get(typeId);
+    }
 }

@@ -33,15 +33,20 @@ public class RelationByNameSorter extends ViewerSorter {
 	
 	private String sorterProperty;
 	private IRelationTable view;
+    private String[] sorterProperties;
 
-	public RelationByNameSorter(String sorterProperty, IRelationTable view) {
+	public RelationByNameSorter(IRelationTable view, String... sorterProperties) {
 		this.view = view;
-		this.sorterProperty = sorterProperty;
+		this.sorterProperties = sorterProperties;
 	}
 	
 
 		public boolean isSorterProperty(Object arg0, String arg1) {
-			return arg1.equals(sorterProperty); //$NON-NLS-1$
+		    for (String prop : sorterProperties) {
+                if (arg1.equals(prop))
+                    return true;
+            }
+		    return false;
 		}
 		
 		public int compare(Viewer viewer, Object o1, Object o2) {
@@ -50,6 +55,27 @@ public class RelationByNameSorter extends ViewerSorter {
 			CnALink link1 = (CnALink) o1;
 			CnALink link2 = (CnALink) o2;
 			
+			String link1UpId   = link1.getDependant().getTypeId();
+			String link1DownId = link1.getDependency().getTypeId();
+			String link2UpId   = link2.getDependant().getTypeId();
+			String link2DownId = link2.getDependency().getTypeId();
+
+			// if we have the same element on one side...
+			if (link1UpId.equals(link2UpId)) {
+			    // compare if we have a different category on the other side and sort by category first:
+			    int compare = link1DownId.compareTo(link2DownId);
+			    if (compare != 0)
+			        return compare;
+			}
+
+			// the same but for reversed sides (since we don't know if were displaying the upward / downward direction:
+			if (link1DownId.equals(link2DownId)) {
+			    int compare = link1UpId.compareTo(link2UpId);
+			    if (compare != 0)
+			        return compare;
+			}
+
+			// categories are the same, so we sort by name within the category:
 			String title1 = CnALink.getRelationObjectTitle(view.getInputElmt(), link1);
 			String title2 = CnALink.getRelationObjectTitle(view.getInputElmt(), link2);
 

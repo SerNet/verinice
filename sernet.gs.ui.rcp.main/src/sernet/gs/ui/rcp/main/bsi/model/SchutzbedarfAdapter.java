@@ -274,4 +274,27 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 		fireVertraulichkeitChanged(ta);
 	}
 
+   
+
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#isCalculatedAvailability()
+     */
+    public boolean isCalculatedAvailability() {
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#isCalculatedConfidentiality()
+     */
+    public boolean isCalculatedConfidentiality() {
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#isCalculatedIntegrity()
+     */
+    public boolean isCalculatedIntegrity() {
+        return false;
+    }
+
 }

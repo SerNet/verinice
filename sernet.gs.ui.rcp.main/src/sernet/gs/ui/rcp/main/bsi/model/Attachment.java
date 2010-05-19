@@ -210,6 +210,7 @@ public class Attachment extends Addition implements Serializable{
 			return true;
 		if (!super.equals(obj))
 			return false;
+		// FIXME ak this will not work when comparing proxies: 
 		if (getClass() != obj.getClass())
 			return false;
 		Attachment other = (Attachment) obj;

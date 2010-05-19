@@ -44,13 +44,13 @@ public class RisikoMassnahmeHome {
 	
 	
 	public RisikoMassnahme save(RisikoMassnahme mn) throws Exception {
-		SaveElement<RisikoMassnahme> command = new SaveElement<RisikoMassnahme>(mn);
+		SaveElement command = new SaveElement(mn);
 		command = commandService.executeCommand(command);
-		return command.getElement();
+		return (RisikoMassnahme) command.getElement();
 	}
 	
 	public void remove(RisikoMassnahme mn) throws Exception {
-		RemoveGenericElement<RisikoMassnahme> command = new RemoveGenericElement<RisikoMassnahme>(mn);
+		RemoveGenericElement command = new RemoveGenericElement(mn);
 		command = commandService.executeCommand(command);
 	}
 	

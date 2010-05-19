@@ -115,9 +115,9 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 		} else if(el instanceof Organization) {
 			command = RetrieveCnATreeElement.getOrganizationISMViewInstance(el.getDbId());
 		} else if( el instanceof Group) {
-			command = RetrieveCnATreeElement.getGroupISMViewInstance(el.getDbId(), (Class<Group>) el.getClass());
+			command = RetrieveCnATreeElement.getGroupISMViewInstance(el.getDbId(), el.getTypeId());
 		} else if( el instanceof CnATreeElement) {
-			command = RetrieveCnATreeElement.getElementISMViewInstance(el.getDbId(), el.getClass());
+			command = RetrieveCnATreeElement.getElementISMViewInstance(el.getDbId(), el.getTypeId());
 		}
 
 		command = ServiceFactory.lookupCommandService().executeCommand(command);

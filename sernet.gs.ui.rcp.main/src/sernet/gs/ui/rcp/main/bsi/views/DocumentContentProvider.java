@@ -108,7 +108,7 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 		modelRefresh(null);
 	}
 	
-	public void linkChanged(CnALink old, CnALink link) {
+	public void linkChanged(CnALink old, CnALink link, Object source) {
 		// do nothing
 	}
 	

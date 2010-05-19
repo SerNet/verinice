@@ -24,6 +24,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.ITypedElement;
 
 
 /**
@@ -34,7 +35,7 @@ import sernet.hui.common.connect.HUITypeFactory;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class Addition implements Serializable{
+public class Addition implements Serializable, ITypedElement {
 	
 	private transient CopyOnWriteArraySet<INoteChangedListener>  listeners;
 	
@@ -46,9 +47,18 @@ public class Addition implements Serializable{
 	
 	Entity entity;
 
+    public static final String TYPE_ID = "addition";
+
 	public Addition() {
 		super();
 	}
+	
+	 /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 	
 	public Integer getDbId() {
 		return dbId;
@@ -100,6 +110,7 @@ public class Addition implements Serializable{
 			return true;
 		if (obj == null)
 			return false;
+		// FIXME ak this will not work when comparing proxies: 
 		if (getClass() != obj.getClass())
 			return false;
 		Addition other = (Addition) obj;

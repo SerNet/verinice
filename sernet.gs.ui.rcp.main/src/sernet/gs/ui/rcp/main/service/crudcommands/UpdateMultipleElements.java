@@ -26,9 +26,10 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
+import sernet.hui.common.connect.ITypedElement;
 
 @SuppressWarnings("serial")
-public class UpdateMultipleElements<T> extends GenericCommand implements IChangeLoggingCommand {
+public class UpdateMultipleElements<T extends ITypedElement> extends GenericCommand implements IChangeLoggingCommand {
 
 	private List<T> elements;
 	private String stationId;
@@ -48,7 +49,7 @@ public class UpdateMultipleElements<T> extends GenericCommand implements IChange
 		ArrayList<T> mergedElements = new ArrayList<T>(elements.size());
 		if (elements != null && elements.size()>0) {
 			IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory()
-				.getDAO(elements.get(0).getClass());
+				.getDAO(elements.get(0).getTypeId());
 			for (T element : elements) {
 				T mergedElement = dao.merge(element, true);
 				mergedElements.add(mergedElement);

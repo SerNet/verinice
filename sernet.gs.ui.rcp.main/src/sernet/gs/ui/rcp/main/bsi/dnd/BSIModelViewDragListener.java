@@ -55,17 +55,6 @@ public class BSIModelViewDragListener implements DragSourceListener {
 		}
 		List selectionList = new ArrayList(selection.size());
 		
-		if (selection.size() != 1) {
-			// check if only structure elements are selected:
-			Iterator iterator = selection.iterator();
-			while (iterator.hasNext()) {
-				if (! (iterator.next() instanceof IBSIStrukturElement)) {
-					event.doit = false;
-					return;
-				}
-			}
-		}
-			
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object o = iter.next();
 			selectionList.add(o);

@@ -32,6 +32,10 @@ public interface ISchutzbedarfProvider {
 	public String getVertraulichkeitDescription();
 	public String getIntegritaetDescription();
 	public String getVerfuegbarkeitDescription();
+	
+	public boolean isCalculatedConfidentiality();
+	public boolean isCalculatedIntegrity();
+	public boolean isCalculatedAvailability();
 
 	public void setVertraulichkeitDescription(String text);
 	public void setIntegritaetDescription(String text);

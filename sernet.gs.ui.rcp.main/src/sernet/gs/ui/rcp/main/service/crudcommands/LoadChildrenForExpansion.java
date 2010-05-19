@@ -40,9 +40,10 @@ public class LoadChildrenForExpansion extends GenericCommand {
 
 	private CnATreeElement parent;
 	private Integer dbId;
-	private Class<? extends CnATreeElement> clazz;
 	
 	private Set<Class<?>> filteredClasses;
+
+    private String typeId;
 
 	public LoadChildrenForExpansion(CnATreeElement parent) {
 		this(parent, new HashSet<Class<?>>());
@@ -51,13 +52,13 @@ public class LoadChildrenForExpansion extends GenericCommand {
 	public LoadChildrenForExpansion(CnATreeElement parent, Set<Class<?>> filteredClasses) {
 		// slim down for transfer:
 		dbId = parent.getDbId();
-		clazz = parent.getClass();
+		typeId = parent.getTypeId();
 		this.parent = null;
 		this.filteredClasses = filteredClasses;
 	}
 	
 	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
 		
 		RetrieveInfo ri = new RetrieveInfo();
 		ri.setChildren(true).setChildrenProperties(true).setProperties(true).setLinksDown(false).setLinksUp(false);
@@ -80,7 +81,6 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		if (element == null)
 			return;
 		
-		//log.debug("Hydrate element of type: " + element.getClass().getSimpleName());
 		
 		if (element instanceof MassnahmenUmsetzung) {
 			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
@@ -99,7 +99,7 @@ public class LoadChildrenForExpansion extends GenericCommand {
 			ri.setChildrenProperties(true).setInnerJoin(true);
 		}
 		
-		HydratorUtil.hydrateElement(getDaoFactory().getDAO(element.getClass()), element, ri);
+		HydratorUtil.hydrateElement(getDaoFactory().getDAO(element.getTypeId()), element, ri);
 		
 		// initialize all children:
 		if (element instanceof FinishedRiskAnalysis

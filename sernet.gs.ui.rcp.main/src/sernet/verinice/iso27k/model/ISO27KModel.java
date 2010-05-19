@@ -79,7 +79,7 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 		if (child == null)
 			return;
 		
-		Logger.getLogger(this.getClass()).debug("Added child in database: " + child.getTitle());
+		Logger.getLogger(this.getClass()).debug("Added child in database: " + child.getTitle()); //$NON-NLS-1$
 		for (IISO27KModelListener listener : getListeners()) {
 			listener.databaseChildAdded(child);
 		}
@@ -128,9 +128,9 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 	}
 	
 	@Override
-	public void linkChanged(CnALink old, CnALink link) {
+	public void linkChanged(CnALink old, CnALink link, Object source) {
 		for (IISO27KModelListener listener : getListeners()) {
-			listener.linkChanged(old, link);
+			listener.linkChanged(old, link, source);
 		}
 	}
 	
@@ -151,7 +151,7 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 		for (IISO27KModelListener listener : getListeners()) {
 			listener.modelReload(newModel);
 			if (getLog().isDebugEnabled()) {
-				getLog().debug("modelReload, listener: " + listener);
+				getLog().debug("modelReload, listener: " + listener); //$NON-NLS-1$
 			}
 		}
 	}
@@ -174,7 +174,7 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 	
 	@Override
 	public void refreshAllListeners(Object source) {
-		Logger.getLogger(this.getClass()).debug("Model refresh to all listeners.");
+		Logger.getLogger(this.getClass()).debug("Model refresh to all listeners."); //$NON-NLS-1$
 		for (IISO27KModelListener listener : getListeners()) {
 			listener.modelRefresh(source);
 		}

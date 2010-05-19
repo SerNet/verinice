@@ -429,5 +429,20 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 			log.warn("Not a valid number: " + maxString);
 		}
 	}
+	 /**
+     * Get a name to show instead of a numeric value if one is defined.
+     * 
+     * @param i
+     * @return
+     */
+    public String getNameForValue(int i) {
+        for (Iterator iterator = options.iterator(); iterator.hasNext();) {
+            PropertyOption option = (PropertyOption) iterator.next();
+            if (option.getValue() != null && option.getValue() == i) {
+                return option.getName();
+            }
+        }
+        return Integer.toString(i);
+    }
 
 }

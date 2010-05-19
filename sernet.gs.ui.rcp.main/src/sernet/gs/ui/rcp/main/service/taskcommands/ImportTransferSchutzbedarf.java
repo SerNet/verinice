@@ -52,7 +52,7 @@ public class ImportTransferSchutzbedarf extends GenericCommand {
 	}
 
 	public void execute() {
-		IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOForObject(
+		IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOforTypedElement(
 				element);
 		dao.reload(element, element.getDbId());
 		transferSchutzbedarf();

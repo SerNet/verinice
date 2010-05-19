@@ -34,7 +34,7 @@ public class LoadBSIModelComplete extends GenericCommand {
 		if (element == null)
 			return;
 		
-		HydratorUtil.hydrateElement(getDaoFactory().getDAOForObject(element), 
+		HydratorUtil.hydrateElement(getDaoFactory().getDAOforTypedElement(element), 
 				element, true);
 		
 		Set<CnATreeElement> children = element.getChildren();

@@ -85,17 +85,25 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 */
 	public void loadLinks(final CnATreeElement elmt) {
 
-		if (!CnAElementHome.getInstance().isOpen()) {
+		if (!CnAElementHome.getInstance().isOpen()
+		        || inputElmt == null) {
 			return;
 		}
 
-		viewer.setInput(new PlaceHolder(Messages.RelationView_0));
+
 
 		WorkspaceJob job = new WorkspaceJob(Messages.RelationView_0) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
 
 				try {
+				
+				 Display.getDefault().asyncExec(new Runnable() {
+                        public void run() {
+                            viewer.setInput(new PlaceHolder("Lade Relationen..."));
+                        }
+                    });
+                    
 					monitor.setTaskName(Messages.RelationView_0);
 
 					FindRelationsFor command = new FindRelationsFor(elmt);
@@ -133,7 +141,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 		contentProvider = new RelationViewContentProvider(this, viewer);
 		viewer.setContentProvider(contentProvider);
 		viewer.setLabelProvider(new RelationViewLabelProvider(this));
-		viewer.setSorter(new RelationByNameSorter(COLUMN_TITLE, this));
+		viewer.setSorter(new RelationByNameSorter(this, COLUMN_TITLE, COLUMN_TYPE_IMG));
 
 		// try to add listeners once on startup, and register for model changes:
 		addBSIModelListeners();

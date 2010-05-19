@@ -65,6 +65,10 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
 			return new Object[] { obj };
 		}
 
+		if (view == null || view.getInputElmt() == null) {
+		    return new Object[] {};
+		}
+		
 		HashSet<CnALink> result = new HashSet<CnALink>();
 		result.addAll(view.getInputElmt().getLinksDown());
 		result.addAll(view.getInputElmt().getLinksUp());
@@ -75,56 +79,49 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childAdded(sernet.gs.ui.rcp.main.common.model.CnATreeElement, sernet.gs.ui.rcp.main.common.model.CnATreeElement)
 	 */
 	public void childAdded(CnATreeElement category, CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
+		// only react to link changes
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childChanged(sernet.gs.ui.rcp.main.common.model.CnATreeElement, sernet.gs.ui.rcp.main.common.model.CnATreeElement)
 	 */
 	public void childChanged(CnATreeElement category, CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
+	 // only react to link changes
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childRemoved(sernet.gs.ui.rcp.main.common.model.CnATreeElement, sernet.gs.ui.rcp.main.common.model.CnATreeElement)
 	 */
 	public void childRemoved(CnATreeElement category, CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
+	 // only react to link changes
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildAdded(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
 	 */
 	public void databaseChildAdded(CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
+	 // only react to link changes
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildChanged(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
 	 */
 	public void databaseChildChanged(CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
+	 // only react to link changes
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
 	 */
 	public void databaseChildRemoved(CnATreeElement child) {
-		// TODO Auto-generated method stub
-		
+	 // only react to link changes
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
 	 */
 	public void databaseChildRemoved(ChangeLogEntry entry) {
-		// TODO Auto-generated method stub
-		
+	 // only react to link changes
 	}
 
 	/* (non-Javadoc)
@@ -137,8 +134,12 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkChanged(sernet.gs.ui.rcp.main.common.model.CnALink)
 	 */
-	public void linkChanged(CnALink old, CnALink link) {
-		view.reload(old, link);
+	public void linkChanged(CnALink old, CnALink link, Object source) {
+	    if (view.equals(source)) {
+	        view.reload(old, link);
+	    } else {
+	        view.reloadAll();
+	    }
 	}
 
 	/* (non-Javadoc)
@@ -152,31 +153,27 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelRefresh()
 	 */
 	public void modelRefresh() {
-		// TODO Auto-generated method stub
-		
+	 // only react to link changes
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelRefresh(java.lang.Object)
 	 */
 	public void modelRefresh(Object source) {
-		// TODO Auto-generated method stub
-		
+	    view.reloadAll();
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelReload(sernet.gs.ui.rcp.main.bsi.model.BSIModel)
 	 */
 	public void modelReload(BSIModel newModel) {
-		// TODO Auto-generated method stub
-		
+	    view.reloadAll();
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.model.IISO27KModelListener#modelReload(sernet.verinice.iso27k.model.ISO27KModel)
 	 */
 	public void modelReload(ISO27KModel newModel) {
-		// TODO Auto-generated method stub
-		
+	    view.reloadAll();
 	}
 }

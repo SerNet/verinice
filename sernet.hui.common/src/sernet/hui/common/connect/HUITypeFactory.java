@@ -451,6 +451,21 @@ public class HUITypeFactory {
             dv.setId(idOption);
             // name is loaded from SNCAMessages (resource bundles)
             dv.setName(getMessage(idOption, value.getAttribute("name")));
+            
+            if (value.getAttribute("value") != null && value.getAttribute("value").length()>0) {
+			    try {
+			        dv.setValue( Integer.parseInt(value.getAttribute("value")) );
+			    } catch (Exception e) {
+			        if (log.isDebugEnabled()) {
+			            log.debug("Not a valid number for option " + value.getAttribute("value"));
+			        }
+			        dv.setValue(null);
+			    }
+			}
+			else {
+			    dv.setValue(null);
+			}
+			
             possibleValues.add(dv);
         }
         return possibleValues;

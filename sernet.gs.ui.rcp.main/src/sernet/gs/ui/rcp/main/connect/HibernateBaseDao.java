@@ -127,7 +127,11 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			}
 			
 			DetachedCriteria criteria = DetachedCriteria.forClass(type);
-			criteria.add(Restrictions.eq("dbId", id));
+			if (CnALink.class.isAssignableFrom(type)) {
+			    criteria.add(Restrictions.eq("id", id));
+			} else {
+			    criteria.add(Restrictions.eq("dbId", id));
+			}
 			configureCriteria(criteria, ri);
 			
 			return loadByCriteria(criteria);
@@ -264,11 +268,10 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			return merge(entity, false);
 		}
 		
-		public void refresh(T element) {
-			getHibernateTemplate().refresh(element);
-		}
+		
 		
 		public void reload(T element, Serializable id) {
+		    // FIXME ak we need to get rid of load() becuase it does not check read access!
 			getHibernateTemplate().load(element, id);
 		}
 

@@ -225,7 +225,7 @@ public class ToDoBean {
 			ICommandService service = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 			if(getSelectedItem()!=null) {
 				massnahmeId = getSelectedItem().getdbId();
-				LoadCnAElementById command = new LoadCnAElementById(MassnahmenUmsetzung.class,massnahmeId);
+				LoadCnAElementById command = new LoadCnAElementById(MassnahmenUmsetzung.TYPE_ID, massnahmeId);
 				
 					service.executeCommand(command);
 					MassnahmenUmsetzung result = (MassnahmenUmsetzung) command.getFound();
@@ -250,7 +250,7 @@ public class ToDoBean {
 		boolean enabled = false;
 		if(getMassnahmeUmsetzung()!=null) {
 			// causes NoClassDefFoundError: org/eclipse/ui/plugin/AbstractUIPlugin
-			// TODO: fix this dependency to eclipse related classes.
+			// FIXME: fix this dependency to eclipse related classes.
 			//enabled = CnAElementHome.getInstance().isWriteAllowed(getMassnahmeUmsetzung());
 		}
 		

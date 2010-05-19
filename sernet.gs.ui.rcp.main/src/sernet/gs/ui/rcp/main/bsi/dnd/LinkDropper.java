@@ -26,10 +26,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -37,10 +39,17 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnALink;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.taskcommands.CreateScenario;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.iso27k.model.IISO27kElement;
+import sernet.verinice.iso27k.model.IncidentScenario;
+import sernet.verinice.iso27k.model.IncidentScenarioGroup;
+import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.iso27k.model.Threat;
+import sernet.verinice.iso27k.model.Vulnerability;
 
 public class LinkDropper {
 
@@ -97,6 +106,23 @@ public class LinkDropper {
 					try {
 						// ISO 27k elements are only linked using XML-defined relations:
 						if (dropTarget instanceof IISO27kElement && dragged instanceof IISO27kElement) {
+
+						    // special case: threats and vulnerabilities can create a new scenario when dropped:
+						    if (dropTarget instanceof Threat && dragged instanceof Vulnerability) {
+						        Threat threat;
+						        Vulnerability vuln;
+						        threat = (Threat) dropTarget;
+						        vuln = (Vulnerability) dragged;
+						        createScenario(threat, vuln);
+						    } 
+						    else if (dropTarget instanceof Vulnerability && dragged instanceof Threat) {
+						        Threat threat;
+						        Vulnerability vuln;
+						        vuln = (Vulnerability) dropTarget;
+						        threat = (Threat) dragged;
+						        createScenario(threat, vuln);
+						    }
+						    
 							Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory()
 								.getPossibleRelations(dropTarget.getEntityType().getId(), dragged.getEntityType().getId());
 							// try to link from target to dragged elements first:
@@ -166,6 +192,29 @@ public class LinkDropper {
 	}
 
 	/**
+     * @param threat
+     * @param vuln
+     */
+    protected void createScenario(Threat threat, Vulnerability vuln) {
+        boolean confirm = MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
+                "Create new scenario?", "Threats and vulnerabilities cannot be connected with each other directly. " +
+                		"Do you wish to create a new scenario for the connected threat and vulnerability?");
+        if (!confirm)
+            return;
+        
+        try {
+            CreateScenario command = new CreateScenario(threat, vuln);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            IncidentScenario newElement = command.getNewElement();
+            CnAElementFactory.getInstance().getISO27kModel().childAdded(newElement.getParent(), newElement);
+        } catch (CommandException e) {
+            ExceptionUtil.log(e, "Error while creating the new scenario.");
+        }
+    }
+
+
+
+    /**
 	 * @param newLinks
 	 * @param dropTarget
 	 * @param dragged

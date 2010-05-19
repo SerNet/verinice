@@ -128,7 +128,7 @@ public class DSModelView extends ViewPart {
 			updater.refresh();
 		}
 
-		public void linkChanged(CnALink old, CnALink link) {
+		public void linkChanged(CnALink old, CnALink link, Object source) {
 			// do nothing
 		}
 		

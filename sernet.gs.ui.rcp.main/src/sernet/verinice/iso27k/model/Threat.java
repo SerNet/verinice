@@ -33,12 +33,14 @@ public class Threat extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_ABBR = "threat_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "threat_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "threat_tag"; //$NON-NLS-1$
+	public static final String PROP_DESCRIPTION = "threat_description"; //$NON-NLS-1$
 	
 	/**
 	 * Creates an empty asset
 	 */
 	public Threat() {
 		super();
+		setEntity(new Entity(TYPE_ID));
 	}
 	
 	public Threat(CnATreeElement parent) {
@@ -75,9 +77,20 @@ public class Threat extends CnATreeElement implements IISO27kElement {
 	public void setAbbreviation(String abbreviation) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
 	}
+
+	public void setDescription(String desc) {
+	    getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESCRIPTION), desc);
+	}
 	
 	public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
+
+    /**
+     * @return
+     */
+    public String getDescription() {
+        return getEntity().getSimpleValue(PROP_DESCRIPTION);
+    }
 
 }

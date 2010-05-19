@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 
+import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.iso27k.service.FileUtil;
 
 /**
@@ -30,12 +31,15 @@ import sernet.verinice.iso27k.service.FileUtil;
  * @author Daniel <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class AttachmentFile implements Serializable{
+public class AttachmentFile implements Serializable, ITypedElement {
 
 	Integer dbId;
 	
 
 	private byte[] fileData;
+
+
+    public static final String TYPE_ID = "attachmentfile";
 	
 	public AttachmentFile() {
 		super();
@@ -71,5 +75,12 @@ public class AttachmentFile implements Serializable{
 			setFileData(FileUtil.getBytesFromFile(file));
 		}
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 	
 }

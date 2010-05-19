@@ -23,8 +23,9 @@ import java.util.List;
 import java.util.UUID;
 
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.GefaehrdungsUtil;
+import sernet.hui.common.connect.ITypedElement;
 
-public class FinishedRiskAnalysisLists implements Serializable {
+public class FinishedRiskAnalysisLists implements Serializable, ITypedElement {
 	
 	private Integer dbId;
 	private int finishedRiskAnalysisId;
@@ -47,6 +48,7 @@ public class FinishedRiskAnalysisLists implements Serializable {
 	 * 
 	 */
 	private List<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen = new ArrayList<GefaehrdungsUmsetzung>();
+    public static final String TYPE_ID = "finished_ra_lists";
 
 	public FinishedRiskAnalysisLists() {
 		if (this.uuid == null) {
@@ -54,6 +56,13 @@ public class FinishedRiskAnalysisLists implements Serializable {
 			uuid = randomUUID.toString();
 		}
 	}
+	
+	 /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 	
 	@Override
 	public boolean equals(Object obj) {

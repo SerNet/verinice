@@ -83,7 +83,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 				todoView.compoundAdded((ITVerbund) child);
 		}
 		
-		public void linkChanged(CnALink old, CnALink link) {
+		public void linkChanged(CnALink old, CnALink link, Object source) {
 			if (link.getDependency() instanceof Person)
 				updateViewer(REFRESH, null);
 		}

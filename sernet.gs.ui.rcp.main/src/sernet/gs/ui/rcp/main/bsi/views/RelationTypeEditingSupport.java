@@ -148,7 +148,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
 			ExceptionUtil.log(e, "Fehler beim Ändern der Relation.");
 		}
 		
-		CnAElementFactory.getModel(link.getDependant()).linkChanged(link, newLink);
+		CnAElementFactory.getModel(link.getDependant()).linkChanged(link, newLink, view);
 	}
 
 	/**

@@ -66,7 +66,8 @@ public class NumericSelectionControl implements IHuiControl {
 
 	private int max;
 
-	private String[] items;
+	private String[] shownItems;
+	private String[] numericItems;
 
 	public Control getControl() {
 		return combo;
@@ -109,8 +110,9 @@ public class NumericSelectionControl implements IHuiControl {
 			combo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 			fgColor = combo.getForeground();
 			bgColor = combo.getBackground();
-			this.items = createNumericItems();
-			combo.setItems(items);
+			this.numericItems = createNumericItems();
+			this.shownItems = createNumericItemsWithDisplayString();
+			combo.setItems(shownItems);
 			if (savedProp == null) {
 				// create property in which to save entered value:
 				savedProp = entity.createNewProperty(fieldType, "");
@@ -131,7 +133,7 @@ public class NumericSelectionControl implements IHuiControl {
 
 			combo.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent evt) {
-					savedProp.setPropertyValue(combo.getItem(combo.getSelectionIndex()), true, combo);
+					savedProp.setPropertyValue(numericItems[combo.getSelectionIndex()], true, combo);
 					validate();
 				}
 			});
@@ -149,13 +151,27 @@ public class NumericSelectionControl implements IHuiControl {
 		String[] items = new String[max-min+1];
 		int j=0;
 		for(int i = min; i <= max; i++) {
-			items[j] = Integer.toString(i); 
+			items[j] = Integer.toString(i);
 			j++;
 		}
 		return items;
 	}
+	
+	/**
+     * @return
+     */
+    private String[] createNumericItemsWithDisplayString() {
+        String[] items = new String[max-min+1];
+        int j=0;
+        for(int i = min; i <= max; i++) {
+            items[j] = fieldType.getNameForValue(i); 
+            j++;
+        }
+        return items;
+    }
 
-	public void setFocus() {
+
+    public void setFocus() {
 		this.combo.setFocus();
 	}
 
@@ -199,7 +215,7 @@ public class NumericSelectionControl implements IHuiControl {
 	 */
 	private int indexForOption(Property savedProp) {
 		int i = 0;
-		for (String item : items) {
+		for (String item : numericItems) {
 			if ( item.equals(savedProp.getPropertyValue()) ) {
 				return i;
 			}

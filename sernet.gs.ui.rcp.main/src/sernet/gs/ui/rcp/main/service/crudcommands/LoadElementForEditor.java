@@ -43,12 +43,12 @@ public class LoadElementForEditor<T extends CnATreeElement> extends GenericComma
 	private T element;
 	private boolean includeCollections;
 	private Integer dbId;
-	private Class<? extends CnATreeElement> clazz;
+    private String typeId;
 
 	public LoadElementForEditor(T element, boolean includeCollections) {
 		// slim down for transfer:
 		dbId = element.getDbId();
-		clazz =  element.getClass();
+		typeId = element.getTypeId();
 		this.includeCollections = includeCollections;
 	}
 	
@@ -60,7 +60,7 @@ public class LoadElementForEditor<T extends CnATreeElement> extends GenericComma
 		if (getLog().isDebugEnabled()) {
 			getLog().debug("execute, dbId: " + dbId);
 		}
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
 		RetrieveInfo ri = new RetrieveInfo();
 		ri.setLinksDown(true).setLinksUp(true);
 		element = (T) dao.retrieve(dbId, ri);

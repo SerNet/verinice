@@ -75,7 +75,7 @@ public class LoadLinksDown extends GenericCommand {
 			throw new RuntimeException("Can not execute command, dbif of parent is null");
 		}
 		
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(this.parent.getClass());
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(this.parent.getTypeId());
 		
 		RetrieveInfo ri = new RetrieveInfo();
 		ri.setLinksDown(true).setLinksDownProperties(true);

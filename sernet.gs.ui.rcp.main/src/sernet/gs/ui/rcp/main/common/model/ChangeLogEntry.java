@@ -23,6 +23,8 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
+import sernet.hui.common.connect.ITypedElement;
+
 /**
  * Transaction log to log modifications to database items.
  * 
@@ -31,7 +33,7 @@ import org.apache.log4j.Logger;
  * 
  */
 @SuppressWarnings("serial")
-public class ChangeLogEntry implements Serializable {
+public class ChangeLogEntry implements Serializable, ITypedElement {
 
 	public static final int TYPE_UPDATE = 0;
 	public static final int TYPE_INSERT = 1;
@@ -53,6 +55,7 @@ public class ChangeLogEntry implements Serializable {
 	 * are transferred to the server.
 	 */
 	public final static String STATION_ID = UUID.randomUUID().toString();
+    public static final String TYPE_ID = "changelogentry";
 
 	public String getStationId() {
 		return stationId;
@@ -61,6 +64,13 @@ public class ChangeLogEntry implements Serializable {
 	ChangeLogEntry() {
 		// default constructor for hibernate
 	}
+	
+	 /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 
 	/**
 	 * Change log entry.

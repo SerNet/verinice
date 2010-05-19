@@ -27,10 +27,11 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.GefaehrdungsBaumRoot;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.ITypedElement;
 
 @SuppressWarnings("serial")
 public class GefaehrdungsUmsetzung extends CnATreeElement
-	implements IGefaehrdungsBaumElement {
+	implements IGefaehrdungsBaumElement, ITypedElement {
 
 	private IGefaehrdungsBaumElement gefaehrdungsParent;
 	

@@ -79,7 +79,7 @@ public interface IISO27KModelListener {
 	/**
 	 * @param link
 	 */
-	void linkChanged(CnALink old, CnALink link);
+	void linkChanged(CnALink old, CnALink link, Object source);
 
 	/**
 	 * @param link

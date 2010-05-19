@@ -96,7 +96,7 @@ public class ImportCreateBausteine extends GenericCommand {
 
 	public void execute() {
 		try {
-			IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOForObject(element);
+			IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
 			dao.reload(element, element.getDbId());
 			
 			LoadBausteine command = new LoadBausteine();

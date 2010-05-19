@@ -61,10 +61,10 @@ public class PositiveEstimateGefaehrdung extends GenericCommand {
 		finishedRiskLists = getDaoFactory().getDAO(FinishedRiskAnalysisLists.class)
 			.findById(listsDbId);
 	
-		getDaoFactory().getDAOForObject(finishedRiskAnalysis)
+		getDaoFactory().getDAOforTypedElement(finishedRiskAnalysis)
 			.reload(finishedRiskAnalysis, finishedRiskAnalysis.getDbId());
 		
-		gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) getDaoFactory().getDAOForObject(gefaehrdungsUmsetzung)
+		gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) getDaoFactory().getDAOforTypedElement(gefaehrdungsUmsetzung)
 			.merge(gefaehrdungsUmsetzung);
 		
 		gefaehrdungsUmsetzung.setOkay(true);

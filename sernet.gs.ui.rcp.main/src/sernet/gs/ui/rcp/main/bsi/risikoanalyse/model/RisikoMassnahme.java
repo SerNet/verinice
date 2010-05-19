@@ -23,13 +23,14 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 import java.util.UUID;
 
 import sernet.gs.model.Massnahme;
+import sernet.hui.common.connect.ITypedElement;
 
 
 /**
  * @author ahanekop[at]sernet[dot]de
  *
  */
-public class RisikoMassnahme extends Massnahme {
+public class RisikoMassnahme extends Massnahme implements ITypedElement {
 	
 	private int dbId;
 	private String number;
@@ -39,11 +40,19 @@ public class RisikoMassnahme extends Massnahme {
 	private String uuid;
 	
 	public static final String SIEGEL = "Z";
+    public static final String TYPE_ID = "risikomassnahme";
 	
 	
 	public RisikoMassnahme() {
 		uuid = UUID.randomUUID().toString();
 	}
+	
+	 /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 	
 	@Override
 	public boolean equals(Object obj) {

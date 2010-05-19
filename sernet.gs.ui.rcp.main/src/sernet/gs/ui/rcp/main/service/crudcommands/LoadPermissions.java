@@ -41,7 +41,7 @@ public class LoadPermissions extends GenericCommand {
 	}
 
 	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(cte.getClass());
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(cte.getTypeId());
 		
 		cte = dao.findById(cte.getDbId());
 		

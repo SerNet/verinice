@@ -174,9 +174,9 @@ be displayed when one of the given options has been previously selected.
 		        name="name" 
 		        type="xs:string" 
 		        use="optional"/>
+	          <xs:attribute name="value" type="xs:decimal" use="optional"/>
 	      </xs:complexType>
 	  </xs:element>    
-	  
     </xs:sequence>
         
     <xs:attribute name="id" type="xs:ID" use="required"/>

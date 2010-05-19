@@ -18,11 +18,14 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
 import sernet.gs.model.Gefaehrdung;
+import sernet.hui.common.connect.ITypedElement;
 
-public class OwnGefaehrdung extends Gefaehrdung {
+public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
 	
 	private String beschreibung;
 	private String ownkategorie;
+	
+	public static final String TYPE_ID = "owngefaehrdung";
 
 	
 	
@@ -64,6 +67,14 @@ public class OwnGefaehrdung extends Gefaehrdung {
 	public void setOwnkategorie(String ownkategorie) {
 		this.ownkategorie = ownkategorie;
 	}
+
+
+    /* (non-Javadoc)
+     * @see sernet.hui.common.connect.ITypedElement#getTypeId()
+     */
+    public String getTypeId() {
+        return TYPE_ID;
+    }
 
 	
 }

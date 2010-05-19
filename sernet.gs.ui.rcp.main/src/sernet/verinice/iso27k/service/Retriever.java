@@ -115,7 +115,7 @@ public class Retriever {
 	
 	public static CnATreeElement retrieveElement(CnATreeElement element, RetrieveInfo ri)  {
 		RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(
-				element.getClass(), 
+				element.getTypeId(), 
 				element.getDbId(),
 				ri);
 		try {

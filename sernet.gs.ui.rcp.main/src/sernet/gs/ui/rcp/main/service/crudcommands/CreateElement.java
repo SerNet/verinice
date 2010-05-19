@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.awt.image.TileObserver;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -62,30 +62,40 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
 	
 	private transient IAuthService authService;
 
-	public CreateElement(CnATreeElement container, Class<T> type) {
-		this.container = container;
-		this.clazz = type;
-		this.stationId = ChangeLogEntry.STATION_ID;
-	}
-	
+    private boolean skipReload;
+
 	/**
      * @param container2
      * @param clazz
      * @param typeId
      */
-    public CreateElement(CnATreeElement container, Class<T> clazz, String title) {
+    public CreateElement(CnATreeElement container, Class<T> clazz, String title, boolean skipReload) {
         this.container = container;
         this.clazz = clazz;
         this.title = title;
         this.stationId = ChangeLogEntry.STATION_ID;
+		this.skipReload = skipReload;
+	}
+	
+	public CreateElement(CnATreeElement container, Class<T> type, String title) {
+	    this(container, type, title, false);
+    }
+	
+	public CreateElement(CnATreeElement container, Class<T> type) {
+        this(container, type, null, false);
+    }
+	
+	public CreateElement(CnATreeElement container, Class<T> type, boolean skipReload) {
+        this(container, type, null, skipReload);
     }
 
     public void execute() {
 		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(clazz);
-		IBaseDao<Object, Serializable> containerDAO = getDaoFactory().getDAOForObject(container);
+		IBaseDao<Object, Serializable> containerDAO = getDaoFactory().getDAOforTypedElement(container);
 		
 		try {
-			containerDAO.reload(container, container.getDbId());
+		    if (!skipReload)
+		        containerDAO.reload(container, container.getDbId());
 			
 			// get constructor with parent-parameter and create new object:
 			child = clazz.getConstructor(CnATreeElement.class).newInstance(container);

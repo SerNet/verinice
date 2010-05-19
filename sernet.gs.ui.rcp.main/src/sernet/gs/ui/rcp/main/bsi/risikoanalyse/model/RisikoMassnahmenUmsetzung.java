@@ -27,16 +27,20 @@ import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.IGefaehrdungsBaumElement;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.hui.common.connect.ITypedElement;
 
 
 /**
  * @author ahanekop[at]sernet[dot]de
  *
  */
-public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IGefaehrdungsBaumElement {
+@SuppressWarnings("serial")
+public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IGefaehrdungsBaumElement, ITypedElement {
 	
 	private GefaehrdungsUmsetzung parent;
 	private RisikoMassnahme massnahme;
+	
+	public static final String TYPE_ID = "ra_mnums";
 
 	protected RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
 			GefaehrdungsUmsetzung myParent, RisikoMassnahme massnahme) {
@@ -54,6 +58,14 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	
 	 RisikoMassnahmenUmsetzung() {
 		// hibernate constructor
+	}
+	 
+	 /* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung#getTypeId()
+	 */
+	@Override
+	public String getTypeId() {
+	    return TYPE_ID;
 	}
 
 	/**

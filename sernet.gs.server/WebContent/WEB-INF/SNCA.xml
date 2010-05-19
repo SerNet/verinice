@@ -2943,88 +2943,86 @@ the value between <param></param> will be used directly if no string is found fo
 				id="asset_type_intangible" />
 		</huiproperty>
 		
-		<huipropertygroup id="asset_value_group" name="Asset Value">
+		<huipropertygroup id="asset_value_group" name="Business Impact">
+		<huiproperty
+					id="asset_value_method_confidentiality"
+					name="Determine Confidentiality"
+					inputtype="numericoption" min="0" max="1" >
+					<option id="asset_value_method_confidentiality_manual" name="Manual" value="0" />
+					<option id="asset_value_method_confidentiality_auto" name="Calculated"  value="1" />
+				</huiproperty>	
+		<huiproperty
+					id="asset_value_method_integrity"
+					name="Determine Integrity"
+					inputtype="numericoption" min="0" max="1" >
+					<option id="asset_value_method_integrity_manual" name="Manual" value="0" />
+					<option id="asset_value_method_integrity_auto" name="Calculated"  value="1" />
+				</huiproperty>	
+		<huiproperty
+					id="asset_value_method_availability"
+					name="Determine Availability"
+					inputtype="numericoption" min="0" max="1" >
+					<option id="asset_value_method_availability_manual" name="Manual" value="0" />
+					<option id="asset_value_method_availability_auto" name="Calculated"  value="1" />
+		</huiproperty>	
+	
 		<huiproperty
 					id="asset_value_confidentiality"
 					name="Confidentiality"
-					inputtype="singleoption">
+					inputtype="numericoption" min="0" max="2">
 					<option
 						id="asset_value_confidentiality_normal"
-						name="Low" />
+						name="Low" 
+						value="0" />
 					<option
 						id="asset_value_confidentiality_hoch"
-						name="Medium" />
+						name="Medium" 
+						value ="1" />
 					<option
 						id="asset_value_confidentiality_sehrhoch"
-						name="High" />
+						name="High"
+						value="2" />
 				</huiproperty>
-				<huiproperty
-					id="asset_value_availability"
-					name="Availability"
-					inputtype="singleoption">
-					<option
-						id="asset_value_availability_normal"
-						name="Low" />
-					<option
-						id="asset_value_availability_hoch"
-						name="Medium" />
-					<option
-						id="asset_value_availability_sehrhoch"
-						name="High" />
-				</huiproperty>
+				
 				<huiproperty
 					id="asset_value_integrity"
 					name="Integrity"
-					inputtype="singleoption">
+					inputtype="numericoption"  min="0" max="2" >
 					<option
 						id="asset_value_integrity_normal"
-						name="Low" />
+						name="Low" value="0"  />
 					<option
 						id="asset_value_integrity_hoch"
-						name="Medium" />
+						name="Medium" value="1"  />
 					<option
 						id="asset_value_integrity_sehrhoch"
-						name="High" />
+						name="High" value="2" />
 				</huiproperty>
+				
+				<huiproperty
+					id="asset_value_availability"
+					name="Availability"
+					inputtype="numericoption"  min="0" max="2" >
+					<option
+						id="asset_value_availability_normal"
+						name="Low" value="0" />
+					<option
+						id="asset_value_availability_hoch"
+						name="Medium" value="1" />
+					<option
+						id="asset_value_availability_sehrhoch"
+						name="High" value="2" />
+				</huiproperty>
+				
+				
+				
+				
 				<huiproperty
 					name="Explanation"
 					inputtype="text"
 					id="asset_value_comment" />
 		</huipropertygroup>
 		
-		<huipropertygroup id="asset_impact_group" name="Business Impact">
-				<huiproperty
-					id="asset_impact_auto"
-					name="Method"
-					inputtype="singleoption"
-					>
-					<option
-						id="asset_impact_auto_yes"
-						name="Calculate" />
-					<option
-						id="asset_impact_auto_no"
-						name="Manual" />
-				</huiproperty>
-				
-				<huiproperty
-					name="Calculated Impact" id="asset_impact_autovalue" editable="false">
-					<defaultRule class="SimpleValue">
-                		<param id="asset_impact_autovalue_default">- not calculated -</param>
-                	</defaultRule>
-				</huiproperty>
-				
-				<huiproperty
-					id="asset_impact_manualvalue"
-					name="Business Impact"
-					inputtype="numericoption" min="1" max="3"
-					>
-		 			<depends option="asset_impact_auto_no" /> 
-				</huiproperty>
-				<huiproperty
-					name="Explanation" id="asset_impactexpl" inputtype="text">
-					  <depends option="asset_impact_auto_no" /> 
-				</huiproperty>
-		</huipropertygroup>
 	
 		<huipropertygroup name="Risk Management" id="asset_riskgroup">
 			<huiproperty
@@ -3426,7 +3424,8 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Description"
             id="control_desc"
-            visible="false"/>
+            visible="false"
+            />
      	
      	<huipropertygroup id="control_maturitygroup" name="Maturity Level" >
      	
@@ -3473,9 +3472,16 @@ the value between <param></param> will be used directly if no string is found fo
 	            </huiproperty>
         </huipropertygroup>
         
-     	<huipropertygroup name="Effectiveness" id="control_effectivenessgroup">
-	        <huiproperty name="Effectiveness" id="control_effectiveness" 
-	        	inputtype="numericoption" min="1" max="5" />
+     
+	        	
+	<huipropertygroup name="Control Effectiveness" id="control_effectivenessgroup">
+	        <huiproperty name="Effectiveness Confidentiality" id="control_effectiveness_confidentiality" 
+	        	inputtype="numericoption" min="0" max="5" />
+	        <huiproperty name="Effectiveness Integrity" id="control_effectiveness_integrity" 
+	        	inputtype="numericoption" min="0" max="5" />
+	        <huiproperty name="Effectiveness Availability" id="control_effectiveness_availability" 
+	        	inputtype="numericoption" min="0" max="5" />
+	        	
 	        <huiproperty name="Explanation" id="control_effectiveness_explanation" inputtype="text"/>
      	</huipropertygroup>
      	
@@ -3759,7 +3765,7 @@ the value between <param></param> will be used directly if no string is found fo
 			</huiproperty>
 			<huiproperty
 				name="Likelihood" id="incscen_likelihood" 
-					inputtype="numericoption" min="1" max="6" />
+					inputtype="numericoption" min="0" max="5" />
 			        	
         </huipropertygroup>
         
@@ -3812,12 +3818,9 @@ the value between <param></param> will be used directly if no string is found fo
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty 
-        	name="Description" id="threat_description" inputtype="text"/>
+        	name="Description" id="threat_description" visible="false"/>
        	<huiproperty 
-       		name="Level" id="threat_level" inputtype="singleoption">
-			<option name="Low"    id="threat_level_1" />       	
-			<option name="Medium" id="threat_level_2" />       	
-			<option name="High"   id="threat_level_3" />       	
+       		name="Level" id="threat_level" inputtype="numericoption" min="0" max="2">
 		</huiproperty>
     </huientity>
     
@@ -3843,11 +3846,9 @@ the value between <param></param> will be used directly if no string is found fo
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
-				name="Description" id="vulnerability_desc" />
-		<huiproperty name="Description"      id="vulnerability_level" inputtype="singleoption">
-			<option name="Low"    id="vulnerability_level_1" />       	
-			<option name="Medium" id="vulnerability_level_2" />       	
-			<option name="High"   id="vulnerability_level_3" />       	
+				name="Description" id="vulnerability_desc"  visible="false" />
+		<huiproperty name="Level" id="vulnerability_level" inputtype="numericoption"
+			min="0" max="2">
 		</huiproperty>
     </huientity>
     
@@ -4064,6 +4065,10 @@ the value between <param></param> will be used directly if no string is found fo
     <huientity
         name="Process"
         id="process" >
+
+  	<huirelation to="asset" id="rel_process_asset"
+        	name="depends on" reversename="necessary for" tooltip="This process needs this asset to function." />
+
         <huiproperty
             name="Title"
             id="process_name" />
@@ -4074,6 +4079,85 @@ the value between <param></param> will be used directly if no string is found fo
             id="process_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+            
+            
+        <huipropertygroup id="process_value_group" name="Asset Value">
+	
+		<huiproperty
+					id="process_value_method_confidentiality"
+					name="Determine Confidentiality"
+					inputtype="numericoption" min="0" max="1" >
+					<option id="process_value_method_confidentiality_manual" name="Manual" value="0" />
+					<option id="process_value_method_confidentiality_auto" name="Calculated"  value="1" />
+				</huiproperty>	
+		<huiproperty
+					id="process_value_method_integrity"
+					name="Determine Integrity"
+					inputtype="numericoption" min="0" max="1" >
+					<option id="process_value_method_integrity_manual" name="Manual" value="0" />
+					<option id="process_value_method_integrity_auto" name="Calculated"  value="1" />
+				</huiproperty>	
+		<huiproperty
+					id="process_value_method_availability"
+					name="Determine Availability"
+					inputtype="numericoption" min="0" max="1" >
+					<option id="process_value_method_availability_manual" name="Manual" value="0" />
+					<option id="process_value_method_availability_auto" name="Calculated"  value="1" />
+		</huiproperty>	
+	
+		<huiproperty
+					id="process_value_confidentiality"
+					name="Confidentiality"
+					inputtype="numericoption" min="0" max="2">
+					<option
+						id="process_value_confidentiality_normal"
+						name="Low" 
+						value="0" />
+					<option
+						id="process_value_confidentiality_hoch"
+						name="Medium" 
+						value ="1" />
+					<option
+						id="process_value_confidentiality_sehrhoch"
+						name="High"
+						value="2" />
+				</huiproperty>
+				
+				<huiproperty
+					id="process_value_integrity"
+					name="Integrity"
+					inputtype="numericoption"  min="0" max="2" >
+					<option
+						id="process_value_integrity_normal"
+						name="Low" value="0"  />
+					<option
+						id="process_value_integrity_hoch"
+						name="Medium" value="1"  />
+					<option
+						id="process_value_integrity_sehrhoch"
+						name="High" value="2" />
+				</huiproperty>
+				
+				<huiproperty
+					id="process_value_availability"
+					name="Availability"
+					inputtype="numericoption"  min="0" max="2" >
+					<option
+						id="process_value_availability_normal"
+						name="Low" value="0" />
+					<option
+						id="process_value_availability_hoch"
+						name="Medium" value="1" />
+					<option
+						id="process_value_availability_sehrhoch"
+						name="High" value="2" />
+				</huiproperty>
+				
+				<huiproperty
+					name="Explanation"
+					inputtype="text"
+					id="process_value_comment" />
+		</huipropertygroup>
     </huientity>
     
     <huientity

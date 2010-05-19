@@ -25,8 +25,9 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
+import sernet.hui.common.connect.ITypedElement;
 
-public class UpdateElement<T> extends GenericCommand implements IChangeLoggingCommand {
+public class UpdateElement<T extends ITypedElement> extends GenericCommand implements IChangeLoggingCommand {
 
 	private T element;
 	private boolean fireupdates;
@@ -40,7 +41,7 @@ public class UpdateElement<T> extends GenericCommand implements IChangeLoggingCo
 	}
 
 	public void execute() {
-		IBaseDao dao =  getDaoFactory().getDAOForObject(element);
+		IBaseDao dao =  getDaoFactory().getDAOforTypedElement(element);
 		element = (T) dao.merge(element, fireupdates);
 	}
 

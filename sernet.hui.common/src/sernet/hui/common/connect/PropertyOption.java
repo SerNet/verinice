@@ -34,6 +34,7 @@ public class PropertyOption implements IMLPropertyOption {
 	private String id;
 	private String name;
 	private ICheckBoxHandler checkboxHandler;
+    private Integer numericValue;
 	
 	public ICheckBoxHandler getCheckboxHandler() {
 		return checkboxHandler;
@@ -84,5 +85,19 @@ public class PropertyOption implements IMLPropertyOption {
 	public void setCheckboxHandler(ICheckBoxHandler checkBoxHandler) {
 		this.checkboxHandler = checkBoxHandler;
 	}
+
+    /**
+     * @param attribute
+     */
+    public void setValue(Integer attribute) {
+        this.numericValue = attribute;
+    }
+
+    /**
+     * @return
+     */
+    public Integer getValue() {
+        return numericValue;
+    }
 	
 }
