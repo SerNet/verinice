@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Robert Schuster <r.schuster@tarent.de>.
+ * Copyright (c) 2009,2010 Robert Schuster <r.schuster@tarent.de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -46,18 +46,19 @@ public class ClientPropertyPlaceholderConfigurer extends
 	
 	private static final Logger log = Logger.getLogger(ClientPropertyPlaceholderConfigurer.class);
 	
+	private static ServerModeAccessor serverModeAccessor = new RCPServerModeAccessor();
+	
 	protected String resolvePlaceholder(String placeholder, Properties props) {
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		
 		// When verinice.serverURL is requested, return the string from the application's
 		// preferences or the internal server's URL. 
 		if (placeholder.equals("verinice.serverURL"))
 		{
 			String server = null;
-			if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER))
+			if (isInternalServerMode())
 				server = PreferenceConstants.VNSERVER_URI_INTERNAL;
 			else
-				server = correctServerURI(prefs.getString(PreferenceConstants.VNSERVER_URI));
+				server = correctServerURI(getServerURI());
 			
 			return server;
 		}
@@ -65,7 +66,7 @@ public class ClientPropertyPlaceholderConfigurer extends
 		{
 			String configurationClass;
 			
-			if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER))
+			if (isInternalServerMode())
 			{
 				// When the internal server is in use, the catalogues should be
 				// read from the local filesystem.
@@ -85,6 +86,18 @@ public class ClientPropertyPlaceholderConfigurer extends
 		
 		return props.getProperty(placeholder);
 	}
+	
+	private boolean isInternalServerMode()
+	{
+		return serverModeAccessor.isInternalServerMode();
+	}
+	
+	private String getServerURI()
+	{
+		return serverModeAccessor.getServerURI();
+	}
+	
+	
 
 	/**
 	 * Takes a server URI and removes unwanted characters like trailing slashes
@@ -106,6 +119,71 @@ public class ClientPropertyPlaceholderConfigurer extends
 		
 		return uri;
 	}
+	
+	/**
+	 * Call this method to set the URI of the verinice server that should
+	 * be connected to.
+	 * 
+	 * <p>This method must be called before the Spring IoC container that uses
+	 * instances of this class is being initialized. Otherwise calling this method
+	 * has no effect.</p>
+	 * 
+	 * <p>After calling this method the verinice workobjects are initialized
+	 * as if a remote server is in use. Regardless of what any user-set property
+	 * setting may say.</p>
+	 *  
+	 * @param serverURI
+	 */
+	public static void setRemoteServerMode(final String serverURI)
+	{
+		serverModeAccessor = new ServerModeAccessor()
+		{
+			public boolean isInternalServerMode()
+			{
+				return false;
+			}
+			
+			public String getServerURI()
+			{
+				return serverURI;
+			}
+		};
+	}
 
-
+	/** Little helper interface to abstract accessing server configuration properties. 
+	 * 
+	 * @author Robert Schuster <r.schuster@tarent.de> 
+	 */
+	private interface ServerModeAccessor
+	{
+		boolean isInternalServerMode();
+		
+		String getServerURI();
+	}
+	
+	/**
+	 * Default implementation which configures the server according to what was
+	 * set in the client application's property windows.
+	 * 
+	 * <p>Note: Do not use this class when it is not about running the whole
+	 * client RCP application.</p>
+	 *
+	 * @author Robert Schuster <r.schuster@tarent.de> 
+	 *
+	 */
+	private static class RCPServerModeAccessor implements ServerModeAccessor
+	{
+		Preferences prefs = Activator.getDefault().getPluginPreferences();
+		
+		public boolean isInternalServerMode()
+		{
+			return prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+		}
+		
+		public String getServerURI()
+		{
+			return prefs.getString(PreferenceConstants.VNSERVER_URI);
+		}
+	}
+	
 }
