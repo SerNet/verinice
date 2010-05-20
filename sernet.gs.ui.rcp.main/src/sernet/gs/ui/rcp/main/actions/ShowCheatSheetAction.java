@@ -28,18 +28,18 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 
 public class ShowCheatSheetAction extends Action {
 
-    private boolean tutorial;
-    private static final String ID1 = "sernet.gs.ui.rcp.main.showcheatsheetaction"; //$NON-NLS-1$
-    private static final String ID2 = "sernet.gs.ui.rcp.main.showcheatsheetlistaction"; //$NON-NLS-1$
-
-    public ShowCheatSheetAction(boolean tutorial, String title) {
+    private static final String ID = "sernet.gs.ui.rcp.main.showcheatsheetaction"; //$NON-NLS-1$
+    private String cheatSheetId;
+    private static final String CHEATSHEET_DEFAULT_ID = "sernet.gs.ui.rcp.main.cheatsheet1"; //$NON-NLS-1$
+    
+    public ShowCheatSheetAction(String title) {
+        this(title,CHEATSHEET_DEFAULT_ID);
+    }
+    
+    public ShowCheatSheetAction(String title, String cheatSheetId) {
         setText(title);
-        if (tutorial) {
-            setId(ID1);
-        } else {
-            setId(ID2);
-        }
-        this.tutorial = tutorial;
+        setId(ID);
+        this.cheatSheetId = cheatSheetId;
     }
 
     /* (non-Javadoc)
@@ -52,9 +52,9 @@ public class ShowCheatSheetAction extends Action {
             try {
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0].showView("org.eclipse.ui.cheatsheets.views.CheatSheetView"); //$NON-NLS-1$
                 IViewPart part = window.getActivePage().findView("org.eclipse.ui.cheatsheets.views.CheatSheetView"); //$NON-NLS-1$
-                if (part != null && tutorial) {
+                if (part != null) {
                     CheatSheetView view = (CheatSheetView) part;
-                    view.setInput("sernet.gs.ui.rcp.main.cheatsheet1"); //$NON-NLS-1$
+                    view.setInput(cheatSheetId);
                 }
             } catch (PartInitException e) {
                 ExceptionUtil.log(e, Messages.ShowCheatSheetAction_5);

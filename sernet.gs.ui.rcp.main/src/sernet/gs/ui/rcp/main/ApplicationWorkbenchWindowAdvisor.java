@@ -108,7 +108,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                         Preferences prefs = Activator.getDefault().getPluginPreferences();
                         prefs.setValue(PreferenceConstants.FIRSTSTART, false);
 
-                        ShowCheatSheetAction action = new ShowCheatSheetAction(true, Messages.ApplicationWorkbenchWindowAdvisor_3);
+                        ShowCheatSheetAction action = new ShowCheatSheetAction(Messages.ApplicationWorkbenchWindowAdvisor_3);
                         action.run();
                     }
                 }

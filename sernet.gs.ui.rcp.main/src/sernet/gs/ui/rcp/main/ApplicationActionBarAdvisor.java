@@ -266,7 +266,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         bausteinZuordnungAction = new BausteinZuordnungAction(window);
         register(bausteinZuordnungAction);
 
-        showCheatSheetAction = new ShowCheatSheetAction(true, Messages.ApplicationActionBarAdvisor_19);
+        showCheatSheetAction = new ShowCheatSheetAction(Messages.ApplicationActionBarAdvisor_19);
 
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
 
