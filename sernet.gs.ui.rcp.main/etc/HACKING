@@ -102,6 +102,10 @@ Eclipse IDE:
 
  - if spurious classpath errors occur you just right-click on a project and chose 
    'PDE Tools/Update classpath ...'.
+   
+ - if you can't get rid of "missing packages" errors and are sure that you have everything in your own plugins or target platform, 
+   go to the broken bundle's manifest.mf and remove one of the required bundles, then add it again. This will
+   cause a rebuild that sometimes fixes the problem. 
  
  - open the 'Servers' view (Window/Show View/Others...)
     - do a right-click and chose 'New/Server'
