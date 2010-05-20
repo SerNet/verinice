@@ -3,5 +3,5 @@
 	resourceMap="http://www.verinice.org/svnroot/TRUNK/sernet.verinice.samt.service/verinice.rmap" >
 	<cq:rootRequest name="sernet.verinice.samt.service" 
     	componentType="osgi.bundle" 
-    	versionDesignator="[1.1.1,1.1.1]"/>
+    	versionDesignator="[0.1.0,0.1.0]"/>
 </cq:componentQuery>
