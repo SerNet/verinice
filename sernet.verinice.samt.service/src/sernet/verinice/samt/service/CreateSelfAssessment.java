@@ -54,7 +54,15 @@ import sernet.verinice.iso27k.service.commands.ImportCatalog;
 import sernet.verinice.samt.model.SamtTopic;
 
 /**
- * @author Daniel Murygin <dm@sernet.de> // TODO dm: Externalize Strings
+ * Creates a new self-assessment (SAMT).
+ * A SAMT is an ISO-27000 organization with controls  
+ * divided into several groups.
+ * 
+ * Controls are imported from a CSV-file while creating the SAMT.
+ * See wiki for more information about the CSV file:
+ * http://www.verinice.org/priv/mediawiki-1.6.12/index.php/Control_Import
+ * 
+ * @author Daniel Murygin <dm@sernet.de>
  */
 public class CreateSelfAssessment extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand {
 
@@ -113,8 +121,8 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
             IBaseDao<Organization, Serializable> dao = getDaoFactory().getDAO(Organization.class);
             dao.saveOrUpdate(selfAssessment);
         } catch (Exception e) {
-            getLog().error("Error while creating self assesment", e);
-            throw new RuntimeCommandException("Error while creating self assesment: " + e.getMessage());
+            getLog().error("Error while creating self assesment", e); //$NON-NLS-1$
+            throw new RuntimeCommandException("Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
         }
     }
 
@@ -150,10 +158,10 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
         // if csvFile was not passed to this command as parameter, read it here
         if (csvFile == null) {
             // read the CSV file which contains the self assessment controls
-            String relativePath = "resources/add/real/path/to/samt-catalog.csv";
+            String relativePath = "resources/add/real/path/to/samt-catalog.csv"; //$NON-NLS-1$
             InputStream is = this.getClass().getClassLoader().getResourceAsStream(relativePath);
             if (is == null) {
-                throw new FileNotFoundException("Relative path: " + relativePath + " not found by ..getClassLoader().getResource(..)");
+                throw new FileNotFoundException("Relative path: " + relativePath + " not found by ..getClassLoader().getResource(..)"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             csvFile = new CsvFile(is);
         }

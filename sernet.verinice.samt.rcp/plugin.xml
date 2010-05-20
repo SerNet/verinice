@@ -5,11 +5,11 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Self Assessment"
+            name="%category.name"
             id="sernet.verinice.samt.rcp">
       </category>
       <view
-            name="Self Assessment View"
+            name="%view.name"
             icon="icons/self-assessment.png"
             category="sernet.verinice.samt.rcp"
             class="sernet.verinice.samt.rcp.SamtView"
@@ -20,7 +20,7 @@
             class="sernet.verinice.samt.rcp.SpiderChartView"
             icon="icons/chart.png"
             id="sernet.verinice.samt.rcp.SpiderChartView"
-            name="SpiderChartView"
+            name="%view.name.0"
             restorable="true">
       </view>
    </extension>
@@ -29,7 +29,7 @@
       <perspective
             class="sernet.verinice.samt.rcp.SamtPerspective"
             id="sernet.verinice.samt.rcp.SamtPerspective"
-            name="Self Assessment Perspective">
+            name="%perspective.name">
       </perspective>
    </extension>
    <extension
@@ -41,11 +41,11 @@
                class="sernet.verinice.samt.rcp.AddSelfAssessment"
                icon="icons/new.png"
                id="sernet.verinice.samt.rcp.AddSelfAssessment"
-               label="Add New Self Assessment"
+               label="%action.label"
                state="true"
                style="push"
                toolbarPath="additions"
-               tooltip="Creates a New Self Assessment">
+               tooltip="%action.tooltip">
          </action>
       </viewContribution>
    </extension>
@@ -54,7 +54,21 @@
       <page
             class="sernet.verinice.samt.rcp.SamtPreferencePage"
             id="sernet.verinice.samt.rcp.SamtPreferencePage"
-            name="Self Assessment Prefernces">
+            name="%page.name">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.cheatsheets.cheatSheetContent">
+      <category
+            id="sernet.verinice.samt.rcp.cheatSheets"
+            name="%cheatsheets.category.1"/>
+      <cheatsheet
+            category="sernet.verinice.samt.rcp.cheatSheets"
+            composite="false"
+            contentFile="%cheatsheets.content.1"
+            id="sernet.verinice.samt.rcp.cheatSheets.GettingStarted"
+            name="%cheatsheets.1">
+         <description>%cheatsheets.description.1</description>
+      </cheatsheet>
+    </extension>
 </plugin>

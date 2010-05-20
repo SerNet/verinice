@@ -37,14 +37,15 @@ import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.samt.model.SamtTopic;
 
 /**
- * Executes a search to find one {@link ControlGroup}
- * which contains {@link SamtTopic}s. 
+ * Returns a self-assessment {@link ControlGroup}.
  * 
  * German (use: http://translate.google.com/ to translate):
  * 
- * Gesucht wird nur nach den Gruppen, deren parent eine {@link Organization} ist.
- * Die gefunden Gruppe kann SamtTopics entweder direkt enthalten oder indirekt
- * in einer Untergruppe.
+ * Eine self-assessment group ist eine {@link ControlGroup}, 
+ * deren parent eine {@link Organization} ist.
+ * Die Gruppe darf nur SamtTopics oder ControlGroups enthalten. 
+ * Wenn ControlGroups enthalten sind duerfen diese wieder nur nur SamtTopics oder ControlGroups
+ * enthalten.
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
@@ -90,7 +91,7 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
         // check if parent if Organization and children are SamtTopics
         List<ControlGroup> resultList = new ArrayList<ControlGroup>();
         for (ControlGroup controlGroup : controlGroupList) {
-            if(isOrganization(controlGroup.getParent()) && isSamtTopicSet(controlGroup.getChildren())) {
+            if(isOrganization(controlGroup.getParent()) && isSamtTopicCollection(controlGroup.getChildren())) {
                 resultList.add(controlGroup);
             }
         }
@@ -115,17 +116,27 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
     }
     
     /**
-     * @param children
-     * @return
+     * Returns true if collection is a self-assessment collection.
+     * 
+     * A collection is a self-assessment collection if
+     * all elements of a collection are 
+     * a: {@link SamtTopic} or
+     * b: a {@link ControlGroup}
+     * 
+     * If a ControlGroup is found isSamtTopicSet
+     * is called recursively on all children of the group.
+     * 
+     * @param collection a collection of {@link CnATreeElement}
+     * @return true if collection is a self-assessment collection
      */
-    private boolean isSamtTopicSet(Collection<CnATreeElement> children) {
+    private boolean isSamtTopicCollection(Collection<CnATreeElement> collection) {
         boolean isSamtTopicSet = true;
-        for (CnATreeElement child : children) {
-            if(child!=null) {
-                if(ControlGroup.TYPE_ID.equals(child.getTypeId())) {
-                    isSamtTopicSet=isSamtTopicSet(child.getChildren());
+        for (CnATreeElement element : collection) {
+            if(element!=null) {
+                if(ControlGroup.TYPE_ID.equals(element.getTypeId())) {
+                    isSamtTopicSet = isSamtTopicCollection(element.getChildren());
                 } else {
-                    isSamtTopicSet = SamtTopic.TYPE_ID.equals(child.getTypeId());
+                    isSamtTopicSet = SamtTopic.TYPE_ID.equals(element.getTypeId());
                 }
                 if(!isSamtTopicSet) {
                     break;

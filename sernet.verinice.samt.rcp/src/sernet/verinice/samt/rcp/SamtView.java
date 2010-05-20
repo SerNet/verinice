@@ -31,11 +31,14 @@ import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.rcp.IAttachedToPerspective;
 
 /**
+ * Main view for Self-Assessments (SAMT)
  * 
+ * This is a extended version of the {@link ISMView} which reduces 
+ * the functionality of it's bas class.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de> 
- * // TODO dm: Externalize Strings
  */
+@SuppressWarnings("restriction")
 public class SamtView extends ISMView implements IAttachedToPerspective  {
 
     private static final Logger LOG = Logger.getLogger(SamtView.class);
@@ -68,7 +71,7 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
                     monitor.beginTask(Messages.SamtView_2, IProgressMonitor.UNKNOWN);
                     Display.getDefault().syncExec(new Runnable() {
                         public void run() {
-                            expandAll();
+                            expand();
                         }
                     });
                 } catch (Exception e) {
@@ -81,6 +84,10 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
             }
         };
         JobScheduler.scheduleInitJob(initDataJob);
+    }
+    
+    protected void expand() {
+        viewer.expandToLevel(3);
     }
 
     /*

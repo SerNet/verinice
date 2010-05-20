@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<cheatsheet title="Getting started with self assessments">
+    <intro>
+        <description>
+            <b>Welcome to verinice self assessments!</b>
+            <br />
+            <br />
+            This tutorial will help you to configure verinice for self assessments.
+        </description>
+    </intro>
+
+    <item title="Create a new self assessment">
+        <description>
+            <br />
+            Open the <b>Self Assessment View</b>:
+            <ul>
+                <li>Menu -> View -> Open Perspective... -> Other</li>
+                <li>Select <i>Self Assessment Perspective</i>, Click <i>OK</i></li>
+            </ul>
+            You find the <b>Self Assessment View</b> on left side of the Window.
+            <br/>
+            <br/>
+            Click the <b>new button</b> in the toolbar of the view.
+        </description>
+        <onCompletion>
+            Excellent! If you want to continue, read one of the next chapters.
+        </onCompletion>
+    </item>
+    <item title="Browse the self assessment">
+        <description>
+            To browse the self assessment use the topic tree in the <b>Self Assessment View</b>.
+            A <b>single click</b> on one of topic opens the topic in the Control Browser.
+            You can now read all details of the topic.
+        </description>
+        <onCompletion>
+            Excellent! If you want to continue, read the next chapter.
+        </onCompletion>
+    </item>
+    <item title="Edit the self assessment">
+        <description>
+            To edit the self assessment use the topic tree in the <b>Self Assessment View</b>.
+            A <b>double click</b> on one of topic opens the topic in the editor.
+            You can now edit the state of the topic.
+        </description>
+        <onCompletion>
+            Excellent! If you want to continue, read the next chapter.
+        </onCompletion>
+    </item>
+</cheatsheet>

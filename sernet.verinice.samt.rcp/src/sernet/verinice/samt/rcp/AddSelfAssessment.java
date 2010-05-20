@@ -26,6 +26,7 @@ import java.nio.charset.Charset;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
@@ -43,6 +44,7 @@ import sernet.verinice.samt.service.CreateSelfAssessment;
 /**
  * @author Daniel Murygin <dm@sernet.de>
  */
+@SuppressWarnings("restriction")
 public class AddSelfAssessment implements IViewActionDelegate {
 
     private static final Logger LOG = Logger.getLogger(AddSelfAssessment.class);
@@ -51,6 +53,8 @@ public class AddSelfAssessment implements IViewActionDelegate {
 
     private ICommandService commandService;
 
+    private SamtView samtView = null;
+    
     /*
      * (non-Javadoc)
      * 
@@ -58,8 +62,9 @@ public class AddSelfAssessment implements IViewActionDelegate {
      */
     @Override
     public void init(IViewPart view) {
-        // TODO Auto-generated method stub
-
+        if(view instanceof SamtView) {
+            samtView = (SamtView) view;
+        }
     }
 
     /*
@@ -82,7 +87,13 @@ public class AddSelfAssessment implements IViewActionDelegate {
             if (organization != null) {
                 CnAElementFactory.getModel(organization).childAdded(model, organization);
                 CnAElementFactory.getModel(organization).databaseChildAdded(organization);
-                EditorFactory.getInstance().openEditor(organization);
+            }
+            if(samtView!=null) {
+                Display.getDefault().syncExec(new Runnable() {
+                    public void run() {
+                        samtView.expand();
+                    }
+                });
             }
         } catch (Exception e) {
             LOG.error("Could not create self-assessment", e); //$NON-NLS-1$

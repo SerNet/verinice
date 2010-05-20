@@ -326,7 +326,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	}
 	
 	protected void expandAll() {
-		viewer.expandToLevel(3);
+		viewer.expandAll();
 	}
 	
 	private void addActions() {

@@ -25,7 +25,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 
 /**
- * @author Daniel Murygin <dm@sernet.de> // TODO dm: Externalize Strings
+ * @author Daniel Murygin <dm@sernet.de>
  */
 @SuppressWarnings("restriction")
 public class SamtPerspective implements IPerspectiveFactory {

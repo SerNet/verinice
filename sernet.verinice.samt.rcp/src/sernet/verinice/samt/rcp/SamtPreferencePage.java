@@ -28,13 +28,13 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import sernet.gs.ui.rcp.main.VeriniceCharset;
 
 /**
+ * Preference page to edit self-assessment (SAMT) preferences
  * 
  * @author Daniel Murygin <dm@sernet.de>
- * TODO dm, Externalize Strings
  */
 public class SamtPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    public static final String CHARSET_SAMT = "sernet.verinice.samt.rcp.charset";
+    public static final String CHARSET_SAMT = "sernet.verinice.samt.rcp.charset"; //$NON-NLS-1$
     
     private ComboFieldEditor encodingFieldEditor;
     
@@ -58,7 +58,7 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
     public SamtPreferencePage() {
         super(FieldEditorPreferencePage.GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
-        setDescription("Preferences of self assessments"); 
+        setDescription(Messages.SamtPreferencePage_1); 
     }
 
 
@@ -67,7 +67,7 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
      */
     @Override
     protected void createFieldEditors() {
-        encodingFieldEditor = new ComboFieldEditor(CHARSET_SAMT, "Encoding of Self Assessment CSV File", encodingComboValues, getFieldEditorParent());
+        encodingFieldEditor = new ComboFieldEditor(CHARSET_SAMT, Messages.SamtPreferencePage_2, encodingComboValues, getFieldEditorParent());
         addField(encodingFieldEditor);
     }
 
