@@ -12,7 +12,7 @@ Bundle-ClassPath: .,
  lib/richfaces-ui-3.3.2.SR1.jar
 Bundle-Activator: sernet.gs.server.Activator
 Export-Package: sernet.gs.server
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.apache.commons.httpclient;bundle-version="3.1.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.springframework.beans;bundle-version="2.5.6",
