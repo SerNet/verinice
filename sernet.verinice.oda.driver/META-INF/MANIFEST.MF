@@ -14,7 +14,7 @@ Export-Package: sernet.verinice.oda.driver.impl;
    org.eclipse.datatools.connectivity.oda.spec,
    org.eclipse.datatools.connectivity.oda"
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.datatools.connectivity.oda;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.datatools.connectivity.oda;bundle-version="[3.2.2,4.0.0)",
  org.eclipse.datatools.connectivity.oda.profile;bundle-version="[3.2.0,4.0.0)",
  sernet.hui.common;bundle-version="1.1.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
