@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Verinice Anwendung
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sernet.gs.ui.rcp.main;singleton:=true
 Bundle-Version: 1.1.1
 Bundle-ClassPath: .,
@@ -27,7 +27,7 @@ Bundle-ClassPath: .,
  lib/opencsv-2.1.jar,
  lib/miglayout/miglayout-3.7.1-swt.jar
 Bundle-Activator: sernet.gs.ui.rcp.main.Activator
-Bundle-Vendor: SerNet
+Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
 Export-Package: au.com.bytecode.opencsv,
  au.com.bytecode.opencsv.bean;uses:="au.com.bytecode.opencsv",

@@ -63,6 +63,7 @@ import sernet.verinice.iso27k.model.Requirement;
 import sernet.verinice.iso27k.model.Response;
 import sernet.verinice.iso27k.model.Threat;
 import sernet.verinice.iso27k.model.Vulnerability;
+import sernet.verinice.samt.model.SamtTopic;
 
 /**
  * URLs and ImageDescriptors for all images used by the application.
@@ -276,6 +277,7 @@ public class ImageCache {
 		ISO27K_ICON_MAP.put(Response.TYPE_ID,   ImageCache.ISO27K_RESPONSE);
 		ISO27K_ICON_MAP.put(sernet.verinice.iso27k.model.Process.TYPE_ID,   ImageCache.ISO27K_PROCESS);
 		ISO27K_ICON_MAP.put(Record.TYPE_ID,   ImageCache.ISO27K_RECORD);
+		ISO27K_ICON_MAP.put(SamtTopic.TYPE_ID,   ImageCache.ISO27K_CONTROL);
 		
 		BSI_ICON_MAP = new HashMap<String, String>();
 		

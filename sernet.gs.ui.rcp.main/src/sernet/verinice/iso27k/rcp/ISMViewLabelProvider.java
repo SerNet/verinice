@@ -19,6 +19,7 @@ package sernet.verinice.iso27k.rcp;
 
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -53,7 +54,7 @@ import sernet.verinice.iso27k.service.ItemControlTransformer;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-public class ISMViewLabelProvider extends LabelProvider {
+public class ISMViewLabelProvider extends LabelProvider  {
 
 	public ISMViewLabelProvider(TreeViewerCache cache) {
 		super();
@@ -61,6 +62,8 @@ public class ISMViewLabelProvider extends LabelProvider {
 	}
 
 	private TreeViewerCache cache;
+	
+	
 
 	@SuppressWarnings("unchecked")
     @Override
@@ -120,5 +123,7 @@ public class ISMViewLabelProvider extends LabelProvider {
 		}
 		return text;
 	}
+
+   
 
 }

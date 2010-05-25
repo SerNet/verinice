@@ -967,4 +967,23 @@
       <startup class="sernet.verinice.rcp.PerspectiveSwitcher" />
       <startup class="sernet.verinice.iso27k.rcp.action.Initializer" />
    </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            adaptable="true"
+            icon="icons/folder_decorator.png"
+            id="sernet.gs.ui.rcp.main.groupdecorator"
+            label="%decorator.label"
+            lightweight="true"
+            location="BOTTOM_RIGHT"
+            state="true">
+         <enablement>
+         <and>
+            <objectClass
+                  name="sernet.verinice.iso27k.model.IISO27kGroup">
+            </objectClass>
+         </and>
+         </enablement>
+      </decorator>
+   </extension>
 </plugin>
