@@ -96,7 +96,9 @@ Eclipse IDE:
  - if eclipse mentions 'This projects needs to update WTP data' you simply do 
     right click on 'sernet.hui.server' and chose validate
 
- - if you cannot add the tomcat server, check the eclipse error log for problems with parsing config files (sometimes you have a typo in a tomcat config file) or delete some preferences files as described here: http://stackoverflow.com/questions/93900/cant-add-server-to-a-moved-workspace
+ - if you cannot add the tomcat server, check the eclipse error log for problems with parsing config files 
+   (sometimes you have a typo in a tomcat config file) or delete some preferences files as described 
+   here: http://stackoverflow.com/questions/93900/cant-add-server-to-a-moved-workspace
 
  - if you get "access restricted" error, go to preferences, java, compiler, restricted api and switch from "error" to "warning"
 
