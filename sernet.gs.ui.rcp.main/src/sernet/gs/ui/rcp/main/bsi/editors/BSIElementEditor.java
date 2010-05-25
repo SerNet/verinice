@@ -30,6 +30,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
@@ -56,6 +57,7 @@ import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.model.IISO27kElement;
 import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.samt.model.SamtTopic;
 
 /**
  * Editor for all BSI elements with attached HUI entities.
@@ -71,6 +73,9 @@ public class BSIElementEditor extends EditorPart {
 	private HitroUIComposite huiComposite;
 	private boolean isModelModified = false;
 	private Boolean isWriteAllowed = null;
+	
+	// TODO the editor needs another way to determine whether or not to show the linkmaker so we can remove this reference to the SAMT bundle:
+	 public static final String SAMT_PERSPECTIVE_ID = "sernet.verinice.samt.rcp.SamtPerspective";
 	
 	private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
@@ -210,9 +215,12 @@ public class BSIElementEditor extends EditorPart {
 			InputHelperFactory.setInputHelpers(entityType, huiComposite);
 			huiComposite.resetInitialFocus();
 			
-			// create in place editor for links to other objects:
-			linkMaker.createPartControl(getIsWriteAllowed());
-			linkMaker.setInputElmt(cnAElement);
+			// create in place editor for links to other objects
+			// but not for simplified view:
+			if (linkMaker != null) {
+			    linkMaker.createPartControl(getIsWriteAllowed());
+			    linkMaker.setInputElmt(cnAElement);
+			}
 		} catch (Exception e) {
 			ExceptionUtil.log(e, Messages.BSIElementEditor_8);
 		}
@@ -276,16 +284,22 @@ public class BSIElementEditor extends EditorPart {
 		formData.top = new FormAttachment(0, 1);
 		formData.left = new FormAttachment(0, 1);
 		formData.right = new FormAttachment(100, -1);
-		formData.bottom = new FormAttachment(66, -1);
+		if (showLinkMaker() ) {
+		    formData.bottom = new FormAttachment(66, -1);
+		} else {
+		    formData.bottom = new FormAttachment(100, -1);
+		}
 		huiComposite.setLayoutData(formData);
 		
-		linkMaker = new LinkMaker(parent);
-		FormData formData2 = new FormData();
-		formData2.top = new FormAttachment(66, 1);
-		formData2.left = new FormAttachment(0,1);
-		formData2.right = new FormAttachment(100, -1);
-		formData2.bottom = new FormAttachment(100, -1);
-		linkMaker.setLayoutData(formData2);
+		if (showLinkMaker()) {
+		    linkMaker = new LinkMaker(parent);
+		    FormData formData2 = new FormData();
+		    formData2.top = new FormAttachment(66, 1);
+		    formData2.left = new FormAttachment(0,1);
+		    formData2.right = new FormAttachment(100, -1);
+		    formData2.bottom = new FormAttachment(100, -1);
+		    linkMaker.setLayoutData(formData2);
+		}
 		
 		initContent();
 		setIcon();
@@ -301,7 +315,16 @@ public class BSIElementEditor extends EditorPart {
 
 	}
 
-	public boolean isNotAskAndSave() {
+	/**
+     * @return
+     */
+    private boolean showLinkMaker() {
+        IPerspectiveDescriptor perspective = getSite().getWorkbenchWindow().getActivePage().getPerspective();
+        // do not show linkmaker in SAMT perspective:
+        return !perspective.getId().equals(SAMT_PERSPECTIVE_ID);
+    }
+
+    public boolean isNotAskAndSave() {
 		return true;
 	}
 
@@ -313,7 +336,9 @@ public class BSIElementEditor extends EditorPart {
 
 	@Override
 	public void dispose() {
-		linkMaker.dispose();
+	    if (linkMaker != null) {
+	        linkMaker.dispose();
+	    }
 		huiComposite.closeView();
 		cnAElement.getEntity().removeListener(modelListener);
 		EditorRegistry.getInstance().closeEditor(((BSIElementEditorInput) getEditorInput()).getId());
