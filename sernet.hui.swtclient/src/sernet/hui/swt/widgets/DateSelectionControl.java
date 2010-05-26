@@ -81,6 +81,13 @@ public class DateSelectionControl implements IHuiControl {
 		this.editable = edit;
 		this.useRule = rules;
 	}
+	
+	public static boolean isWindows(){
+        String os = System.getProperty("os.name").toLowerCase();
+        //windows
+        return (os.indexOf( "win" ) >= 0); 
+    }
+
 
 	/**
 	 * @throws AssertException
@@ -102,8 +109,11 @@ public class DateSelectionControl implements IHuiControl {
 		containerLData.grabExcessHorizontalSpace = true;
 		container.setLayoutData(containerLData);
 
-		
-		dateTime = new DateTime(container, SWT.CALENDAR | SWT.MEDIUM | SWT.DROP_DOWN);
+		if (isWindows()) {
+		    dateTime = new DateTime(container, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN);
+		} else {
+		    dateTime = new DateTime(container, SWT.CALENDAR | SWT.MEDIUM | SWT.DROP_DOWN);
+		}
 
 		GridData label36LData = new GridData();
 		label36LData.verticalAlignment = GridData.CENTER;
