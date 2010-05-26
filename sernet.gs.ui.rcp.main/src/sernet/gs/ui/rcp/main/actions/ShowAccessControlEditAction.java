@@ -34,6 +34,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.iso27k.rcp.ISMView;
 
 /**
  * {@link Action} that creates a dialog to modify the access rights of a
@@ -54,7 +55,7 @@ public class ShowAccessControlEditAction extends Action implements ISelectionLis
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
         setToolTipText(Messages.ShowAccessControlEditAction_1);
-        window.getSelectionService().addSelectionListener(BsiModelView.ID, this);
+        window.getSelectionService().addSelectionListener(this);
     }
 
     /* (non-Javadoc)
@@ -74,7 +75,7 @@ public class ShowAccessControlEditAction extends Action implements ISelectionLis
     }
 
     public void dispose() {
-        window.getSelectionService().removeSelectionListener(BsiModelView.ID, this);
+        window.getSelectionService().removeSelectionListener(this);
     }
 
     /* (non-Javadoc)
