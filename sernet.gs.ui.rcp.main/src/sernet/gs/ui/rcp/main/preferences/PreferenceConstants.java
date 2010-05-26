@@ -28,6 +28,8 @@ public class PreferenceConstants {
 	public static final String GSACCESS_DIR = "cna_gsaccess_url"; //$NON-NLS-1$
 	public static final String GSACCESS_ZIP = "cna_gsaccess_zip"; //$NON-NLS-1$
 	
+
+	
 	// locatio of ZIP-file or URL:
 	public static final String BSIZIPFILE = "cna_bsizipfile"; //$NON-NLS-1$
 	public static final String DSZIPFILE = "cna_dszipfile"; //$NON-NLS-1$
