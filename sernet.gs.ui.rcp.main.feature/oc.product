@@ -4,7 +4,7 @@
 <product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.1.1" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/sernet.gs.ui.rcp.main.feature/icons/product_lg.gif"/>
+      <image path="/sernet.gs.ui.rcp.main/icons/product_lg.gif"/>
       <text>
          SerNet verinice
 
@@ -27,6 +27,7 @@ Marek Seeger			&lt;ms@sernet.de&gt;
 Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;
 Robert Schuster			&lt;rschuster@tarent.de&gt;
 Daniel Murygin			&lt;dm@sernet.de&gt;
+Joseph North			&lt;north@sublink.ca&gt;
 
 
 This program comes with ABSOLUTELY NO WARRANTY.
@@ -43,16 +44,16 @@ See the LICENSE.txt contained in the program folder, the verinice Plugin-Details
       <vmArgs>-Xms64m -Xmx512m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost</vmArgs>
    </launcherArgs>
 
-   <windowImages i16="/sernet.gs.ui.rcp.main.feature/icons/window16.gif" i32="/sernet.gs.ui.rcp.main.feature/icons/window32.gif"/>
+   <windowImages i16="/sernet.gs.ui.rcp.main/icons/window16.gif" i32="/sernet.gs.ui.rcp.main/icons/window32.gif"/>
 
    <splash
       location="sernet.gs.ui.rcp.main" />
    <launcher name="verinice">
-      <linux icon="/sernet.gs.ui.rcp.main.feature/wxcas.xpm"/>
-      <macosx icon="/sernet.gs.ui.rcp.main.feature/icons/v_logo_mac.icns"/>
+      <linux icon="/sernet.gs.ui.rcp.main/wxcas.xpm"/>
+      <macosx icon="/sernet.gs.ui.rcp.main/icons/v_logo_mac.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/sernet.gs.ui.rcp.main.feature/icons/v_48.ico"/>
+         <ico path="/sernet.gs.ui.rcp.main/icons/v_48.ico"/>
          <bmp/>
       </win>
    </launcher>
@@ -60,6 +61,7 @@ See the LICENSE.txt contained in the program folder, the verinice Plugin-Details
    <intro introId="sernet.gs.ui.rcp.main.intro1"/>
 
    <vm>
+      <linux>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/OSGi%Minimum-1.0</linux>
    </vm>
 
    <plugins>
