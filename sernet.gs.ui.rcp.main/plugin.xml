@@ -26,6 +26,7 @@
             name="%perspective.name.0"/>
       <perspective
             class="sernet.verinice.iso27k.rcp.Iso27kPerspective"
+            icon="icons/sweetie-verinice/png/16-arrow-branch-bgr.png"
             id="sernet.verinice.iso27k.rcp.Iso27kPerspective"
             name="%perspective.name.1">
       </perspective>
@@ -247,10 +248,10 @@
                value="SerNet verinice&#x0A;&#x0A;(c) SerNet Service Network GmbH and others&#x0A;1996-2010&#x0A;&#x0A;&#x0A;Contact the authors:&#x0A;verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage:&#x0A;http://www.verinice.org&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&lt;ak@sernet.de&gt;&#x0A;Anne Hanekop 			&lt;ah@sernet.de&gt;&#x0A;Marek Seeger			&lt;ms@sernet.de&gt;&#x0A;Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;&#x0A;Robert Schuster			&lt;rschuster@tarent.de&gt;&#x0A;Daniel Murygin			&lt;dm@sernet.de&gt;&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details."/>
          <property
                name="windowImages"
-               value="platform:/plugin/sernet.gs.ui.rcp.main.feature/icons/window16.gif,platform:/plugin/sernet.gs.ui.rcp.main.feature/icons/window32.gif"/>
+               value="icons/window16.gif,icons/window32.gif"/>
          <property
                name="aboutImage"
-               value="platform:/plugin/sernet.gs.ui.rcp.main.feature/icons/product_lg.gif"/>
+               value="icons/product_lg.gif"/>
          <property
                name="appName"
                value="verinice">
@@ -971,18 +972,16 @@
          point="org.eclipse.ui.decorators">
       <decorator
             adaptable="true"
-            icon="icons/folder_decorator.png"
+            icon="icons/overlays/folder_decorator.png"
             id="sernet.gs.ui.rcp.main.groupdecorator"
             label="%decorator.label"
             lightweight="true"
             location="BOTTOM_RIGHT"
             state="true">
          <enablement>
-         <and>
             <objectClass
                   name="sernet.verinice.iso27k.model.IISO27kGroup">
             </objectClass>
-         </and>
          </enablement>
       </decorator>
    </extension>
