@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<cheatsheet title="Getting started with self assessments">
+<cheatsheet title="Getting started with TOP20 self assessments">
     <intro>
         <description>
-            <b>Welcome to verinice self assessments!</b>
-            <br />
-            <br />
-            This tutorial will help you to configure verinice for self assessments.
+            <b>Welcome to verinice TOP20 self assessments!</b>
+            <br/>
+            <br/>
+            This tutorial will help you to conduct your first TOP20 self assessment!
         </description>
     </intro>
 
     <item title="Create a new self assessment">
         <description>
-            <br />
-            Open the <b>Self Assessment View</b>:
-            <ul>
-                <li>Menu -> View -> Open Perspective... -> Other</li>
-                <li>Select <i>Self Assessment Perspective</i>, Click <i>OK</i></li>
-            </ul>
-            You find the <b>Self Assessment View</b> on left side of the Window.
+            <br/>
+First you have to create a new self assessment. You should be in the self assessment perspective. 
+If not, you can go there by clicking on:
+            &lt;ul&gt;
+                &lt;li&gt;Menu -&gt; View -&gt; Open Perspective... -&gt; Other&lt;/li&gt;
+                &lt;li&gt;Select &lt;i&gt;Self Assessment Perspective&lt;/i&gt;, Click &lt;i&gt;OK&lt;/i&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+            You will find the <b>Self Assessment View</b> on left side of the Window.
             <br/>
             <br/>
-            Click the <b>new button</b> in the toolbar of the view.
+            Click on the <b>new</b> button in the toolbar of the view.
         </description>
         <onCompletion>
             Excellent! If you want to continue, read one of the next chapters.

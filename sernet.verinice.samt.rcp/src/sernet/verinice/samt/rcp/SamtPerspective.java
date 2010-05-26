@@ -42,9 +42,9 @@ public class SamtPerspective implements IPerspectiveFactory {
     @Override
     public void createInitialLayout(IPageLayout layout) {
         String editorArea = layout.getEditorArea();
-        layout.setEditorAreaVisible(false);
+        layout.setEditorAreaVisible(true);
         layout.addView(SamtView.ID, IPageLayout.LEFT, 0.3f, editorArea);
-        layout.addView(BrowserView.ID, IPageLayout.TOP, 0.76f, editorArea);
+        layout.addView(BrowserView.ID, IPageLayout.TOP, 0.6f, editorArea);
         layout.addView(SpiderChartView.ID, IPageLayout.BOTTOM, 0.6f, SamtView.ID);
     }
 
