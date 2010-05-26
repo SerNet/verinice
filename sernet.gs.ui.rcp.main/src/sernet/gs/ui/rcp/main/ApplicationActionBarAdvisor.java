@@ -65,6 +65,7 @@ import sernet.gs.ui.rcp.main.bsi.views.NoteView;
 import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
@@ -269,7 +270,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         showCheatSheetAction = new ShowCheatSheetAction(Messages.ApplicationActionBarAdvisor_19);
 
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
+        
+        register(openDocumentViewAction);
 
+        // FIXME externalize strings
+        
         introAction = ActionFactory.INTRO.create(window);
         register(introAction);
 
@@ -333,6 +338,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(closeAllAction);
         fileMenu.add(closeOthersAction);
 
+        fileMenu.add(new Separator(VeriniceActionConstants.MENU_FILE));
         fileMenu.add(new Separator());
         fileMenu.add(importGstoolAction);
 		fileMenu.add(importGSNotesAction);
@@ -346,27 +352,35 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // View:
         MenuManager windowMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_24, IWorkbenchActionConstants.M_WINDOW);
 
-        MenuManager viewsMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_25);
+        MenuManager viewsMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_25, VeriniceActionConstants.MENU_VIEWS);
         // IContributionItem viewList = ContributionItemFactory.VIEWS_SHORTLIST
         // .create(window);
 
-        viewsMenu.add(openBSIModelViewAction);
-        viewsMenu.add(openISMViewAction);
-        viewsMenu.add(openBSIBrowserAction);
         viewsMenu.add(openBSIViewAction);
+        viewsMenu.add(openBSIModelViewAction);
         viewsMenu.add(openTodoViewAction);
         viewsMenu.add(openAuditViewAction);
         viewsMenu.add(openDSViewAction);
         viewsMenu.add(openChartViewAction);
         viewsMenu.add(openDocumentViewAction);
+        viewsMenu.add(new Separator());
+        
+        viewsMenu.add(openISMViewAction);
+        viewsMenu.add(openCatalogAction);
+        viewsMenu.add(new Separator());
+
+        viewsMenu.add(openBSIBrowserAction);
         viewsMenu.add(openNoteAction);
         viewsMenu.add(openFileAction);
         viewsMenu.add(openRelationViewAction);
-        viewsMenu.add(openCatalogAction);
+        
+        viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+        
         // viewsMenu.add(viewList);
-        MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26);
+        MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26, VeriniceActionConstants.MENU_PERSPECTIVES);
         addPerspectiveMenu(window, perspectivesMenu, Iso27kPerspective.ID);
         addPerspectiveMenu(window, perspectivesMenu, Perspective.ID);
+        perspectivesMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         
         IContributionItem perspectiveList = ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);
         perspectivesMenu.add(perspectiveList);

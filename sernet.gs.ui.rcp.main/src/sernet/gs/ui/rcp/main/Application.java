@@ -28,7 +28,7 @@ import org.osgi.framework.Bundle;
  * This class controls all aspects of the application's execution
  */
 public class Application implements IApplication {
-
+    
 	public Object start(IApplicationContext context) throws Exception {
 		Bundle bundle = context.getBrandingBundle();
 		if (bundle.getState() == Bundle.INSTALLED
