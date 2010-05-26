@@ -25,6 +25,7 @@ package sernet.verinice.iso27k.model;
  */
 public interface IControl {
 
+    // constants for different implementation  states of controls:
     public static final String IMPLEMENTED_NOT_EDITED = "implemented_not_edited";
     public static final String IMPLEMENTED_NO = "implemented_no";
     public static final String IMPLEMENTED_YES = "implemented_yes";
@@ -82,10 +83,6 @@ public interface IControl {
      */
     public void setWeight2(String value);
     
-    public String getImplemented();
-    
-    public String getImplementStatus();
-
     /**
      * @return the type-id of the implementation of {@link IControl} in SNCA.xml
      */

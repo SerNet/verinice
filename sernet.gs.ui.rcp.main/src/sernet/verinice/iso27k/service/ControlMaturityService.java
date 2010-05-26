@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.iso27k.model.ControlGroup;
 import sernet.verinice.iso27k.model.IControl;
@@ -65,7 +66,7 @@ public class ControlMaturityService {
     }
 
     /**
-     * Retunr sum of all weights of all controls contained in this group and subgroups.
+     * Return sum of all weights of all controls contained in this group and subgroups.
      * @return combined weight
      */
     public Integer getWeights(ControlGroup cg) {
@@ -123,6 +124,27 @@ public class ControlMaturityService {
         HUITypeFactory hui = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
         PropertyType propertyType = hui.getPropertyType(control.getTypeId(), control.getMaturityPropertyId());
         return Double.valueOf(propertyType.getMaxValue());
+    }
+    
+    /**
+     * Returns the correct implementaiton state based on the maturity level of the <code>IControl.</code>
+     * 
+     * @param control
+     * @return the implementation state as definied in the <code>IControl.IMPLEMENTED</code> constants.
+     */
+    public String getImplementationState(IControl control) {
+        
+        if (control.getMaturity() == Property.UNDEF) {
+            return IControl.IMPLEMENTED_NOT_EDITED;
+        }
+        
+        if (control.getMaturity() >= control.getThreshold2()) {
+            return IControl.IMPLEMENTED_YES;
+        }
+        if (control.getMaturity() >= control.getThreshold1()) {
+            return IControl.IMPLEMENTED_PARTLY;
+        }
+        return IControl.IMPLEMENTED_PARTLY;
     }
 }
 

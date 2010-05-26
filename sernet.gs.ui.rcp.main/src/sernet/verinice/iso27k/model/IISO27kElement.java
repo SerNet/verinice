@@ -39,7 +39,7 @@ public interface IISO27kElement {
 	/**
      * Sets the title of of this element
      * 
-     * FIXME: change method name to "setTit>>>le<<<"
+     * TODO: change method name to "setTit>>>le<<<"
      * 
      * @param name 
      */

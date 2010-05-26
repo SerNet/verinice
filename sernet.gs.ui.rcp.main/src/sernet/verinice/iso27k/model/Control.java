@@ -45,36 +45,15 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	public static final String PROP_TAG = "control_tag"; //$NON-NLS-1$
 	public static final String PROP_DESC = "control_desc"; //$NON-NLS-1$
 	
-	public static final String PROP_IMPLEMENTED = "control_implemented";
-	public static final String PROP_IMPLEMENTED_NO = "control_implemented_no";
-	public static final String PROP_IMPLEMENTED_YES = "control_implemented_yes";
-	public static final String PROP_IMPLEMENTED_PARTLY = "control_implemented_partly";
-	public static final String PROP_IMPLEMENTED_NA = "control_implemented_na";
-
-	// this is another way to meassure control implementation:
+	// this is another way to measure control implementation:
 	public static final String PROP_MATURITY = "control_maturity"; //$NON-NLS-1$
 	public static final String PROP_WEIGHT1 = "control_weight"; //$NON-NLS-1$
 	public static final String PROP_WEIGHT2 = "control_ownweight"; //$NON-NLS-1$
 	public static final String PROP_THRESHOLD1 = "control_min1"; //$NON-NLS-1$
 	public static final String PROP_THRESHOLD2 = "control_min2"; //$NON-NLS-1$
 	
-	/**
-     * Maps the implement status of this IControl implementation to a generic
-     * {@link IControl} implement status.
-     * 
-     * @see {@link IControl.getImplementStatus()}
-     */
-    public static final Map<String, String> IMPLEMENT_STATUS_MAP;
-    
-    static {
-        IMPLEMENT_STATUS_MAP = new Hashtable<String, String>();
-        IMPLEMENT_STATUS_MAP.put(PROP_IMPLEMENTED_NOTEDITED, IControl.IMPLEMENTED_NOT_EDITED);
-        IMPLEMENT_STATUS_MAP.put(PROP_IMPLEMENTED_NA, IControl.IMPLEMENTED_NA);
-        IMPLEMENT_STATUS_MAP.put(PROP_IMPLEMENTED_YES, IControl.IMPLEMENTED_YES);
-        IMPLEMENT_STATUS_MAP.put(PROP_IMPLEMENTED_PARTLY, IControl.IMPLEMENTED_PARTLY);
-        IMPLEMENT_STATUS_MAP.put(PROP_IMPLEMENTED_NO, IControl.IMPLEMENTED_NO);
-    }
-
+	
+   
 	/**
 	 * Creates an empty asset
 	 */
@@ -90,25 +69,9 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
 	
-    public String getImplemented() {
-        String result = IControl.PROP_IMPLEMENTED_NOTEDITED;
-        PropertyList properties = getEntity().getProperties(PROP_IMPLEMENTED);
-        if (properties != null && properties.getProperties() != null && !properties.getProperties().isEmpty()) {       
-            Property property = properties.getProperty(0);
-            if (property != null && !property.getPropertyValue().isEmpty()) { //$NON-NLS-1$
-                result = property.getPropertyValue();
-            }
-        }
-        return result;
-    }
+   
 	
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.model.IControl#getImplementStatus()
-     */
-    @Override
-    public String getImplementStatus() {
-        return IMPLEMENT_STATUS_MAP.get(getImplemented());
-    }
+   
 	
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
@@ -164,8 +127,7 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	}
 	
 	public int getMaturity() {
-	    String simpleValue = getEntity().getSimpleValue(PROP_MATURITY);
-	    return Integer.parseInt(simpleValue);
+	    return getEntity().getInt(PROP_MATURITY);
 	}
 
 	/**

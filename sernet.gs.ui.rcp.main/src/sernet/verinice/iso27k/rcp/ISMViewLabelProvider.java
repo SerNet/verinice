@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.hibernate.dialect.function.CastFunction;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
@@ -29,6 +30,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.verinice.iso27k.model.Asset;
 import sernet.verinice.iso27k.model.Audit;
 import sernet.verinice.iso27k.model.Control;
+import sernet.verinice.iso27k.model.ControlGroup;
 import sernet.verinice.iso27k.model.Document;
 import sernet.verinice.iso27k.model.Evidence;
 import sernet.verinice.iso27k.model.Exception;
@@ -45,6 +47,7 @@ import sernet.verinice.iso27k.model.PersonIso;
 import sernet.verinice.iso27k.model.Requirement;
 import sernet.verinice.iso27k.model.Threat;
 import sernet.verinice.iso27k.model.Vulnerability;
+import sernet.verinice.iso27k.service.ControlMaturityService;
 import sernet.verinice.iso27k.service.Item;
 import sernet.verinice.iso27k.service.ItemControlTransformer;
 
@@ -63,6 +66,8 @@ public class ISMViewLabelProvider extends LabelProvider  {
 
 	private TreeViewerCache cache;
 	
+	private ControlMaturityService maturityService = new ControlMaturityService();
+	
 	
 
 	@SuppressWarnings("unchecked")
@@ -73,6 +78,11 @@ public class ISMViewLabelProvider extends LabelProvider  {
 		if (!(obj instanceof IISO27kElement))
 			return image;
 		
+//		else if (obj instanceof ControlGroup) {
+//		    ControlGroup controlgroup = (ControlGroup) obj;
+//		    maturityService.getImplementationState(controlgroup);
+//		}
+		
 		else if (obj instanceof Group) {
 			Group group = (Group) obj;
 			// TODO - getChildTypes()[0] might be a problem for more than one type
@@ -82,7 +92,7 @@ public class ISMViewLabelProvider extends LabelProvider  {
 
 		else if (obj instanceof IControl) {
 		    IControl control = (IControl) obj;
-			image = ImageCache.getInstance().getControlImplementationImage(control.getImplementStatus());
+			image = ImageCache.getInstance().getControlImplementationImage(maturityService.getImplementationState(control));
 		}
 		else {
 			// else return type icon:
