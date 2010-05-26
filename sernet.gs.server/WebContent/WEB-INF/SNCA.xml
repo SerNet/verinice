@@ -4246,38 +4246,46 @@ the value between <param></param> will be used directly if no string is found fo
       <huientity id="samt_topic" >	
           <huiproperty 
             id="samt_topic_name" 
-            inputtype="text"/>
+            inputtype="text"
+            editable="false" />
           <huiproperty 
             id="samt_topic_desc"
             inputtype="text"
             visible="false"/>
           <huiproperty 
-            id="samt_topic_abbr" />
+            id="samt_topic_abbr" 
+             visible="false"/>
           <huiproperty 
-            id="samt_topic_tag" />
+            id="samt_topic_tag" 
+             visible="false"/>
             
-          <huiproperty  
-            id="samt_topic_implemented" 
-            inputtype="singleoption">
-                <option id="samt_topic_implemented_yes"/>
-                <option id="samt_topic_implemented_no"/>
-                <option id="samt_topic_implemented_partly"/>
-                <option id="samt_topic_implemented_na"/>
-          </huiproperty>
-
           <huiproperty 
             id="samt_topic_maturity"      
             inputtype="numericoption" 
             min="0" 
             max="9" />
           <huiproperty 
-            id="samt_topic_weight" />
+            id="samt_topic_weight"  visible="true" />
           <huiproperty 
-            id="samt_topic_ownweight" />
+            id="samt_topic_ownweight" visible="true" />
           <huiproperty 
-            id="samt_topic_min1" />
+            id="samt_topic_min1"  visible="true"/>
           <huiproperty 
-            id="samt_topic_min2"/>
+            id="samt_topic_min2"  visible="true"/>
+            
+          <huiproperty 
+            id="samt_topic_applicable" 
+            />
+          <huiproperty 
+            id="samt_topic_externalnote" 
+            inputtype="text"/>
+          <huiproperty 
+            id="samt_topic_internalnote" 
+            inputtype="text"
+            report="false" />
+      
       </huientity>
+      
+      
     
 </huientities>
