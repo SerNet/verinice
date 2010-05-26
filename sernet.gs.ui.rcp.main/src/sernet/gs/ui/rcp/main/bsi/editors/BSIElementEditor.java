@@ -266,6 +266,13 @@ public class BSIElementEditor extends EditorPart {
 		if(isWriteAllowed==null) {		
 			isWriteAllowed = createIsWriteAllowed();
 		}
+
+		// in samt perspective, edit only samttopics:
+		if (isSamtPerspective()) {
+		    if (!cnAElement.getTypeId().equals(SamtTopic.TYPE_ID)) {
+		        return false;
+		    }
+		}
 		return isWriteAllowed;	
 	}
 	
@@ -284,14 +291,14 @@ public class BSIElementEditor extends EditorPart {
 		formData.top = new FormAttachment(0, 1);
 		formData.left = new FormAttachment(0, 1);
 		formData.right = new FormAttachment(100, -1);
-		if (showLinkMaker() ) {
+		if (isSamtPerspective() ) {
 		    formData.bottom = new FormAttachment(66, -1);
 		} else {
 		    formData.bottom = new FormAttachment(100, -1);
 		}
 		huiComposite.setLayoutData(formData);
 		
-		if (showLinkMaker()) {
+		if (isSamtPerspective()) {
 		    linkMaker = new LinkMaker(parent);
 		    FormData formData2 = new FormData();
 		    formData2.top = new FormAttachment(66, 1);
@@ -312,13 +319,12 @@ public class BSIElementEditor extends EditorPart {
 		// if opened the first time, save initialized entity:
 		if (isDirty())
 			save(false);
-
 	}
 
 	/**
      * @return
      */
-    private boolean showLinkMaker() {
+    private boolean isSamtPerspective() {
         IPerspectiveDescriptor perspective = getSite().getWorkbenchWindow().getActivePage().getPerspective();
         // do not show linkmaker in SAMT perspective:
         return !perspective.getId().equals(SAMT_PERSPECTIVE_ID);

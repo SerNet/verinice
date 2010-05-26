@@ -63,7 +63,11 @@ public class BSIElementEditorInput implements IEditorInput {
 	}
 
 	public String getName() {
-		return element.getTitle();
+		return element.getTitle().substring(0, 
+		            element.getTitle().length() < 21 
+		            ? element.getTitle().length() 
+		            : 20  
+		       );
 	}
 
 	public IPersistableElement getPersistable() {
