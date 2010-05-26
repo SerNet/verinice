@@ -71,4 +71,36 @@
          <description>%cheatsheets.description.1</description>
       </cheatsheet>
     </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="sernet.verinice.samt.rcp.actionSet1"
+            label="%actionSet.label"
+            visible="true">
+         <action
+               class="sernet.verinice.samt.rcp.ShowSamtViewAction"
+               icon="icons/self-assessment.png"
+               id="sernet.verinice.samt.rcp.ShowSamtViewAction"
+               label="%action.label.0"
+               menubarPath="window/vn_menu_views/additions"
+               style="push">
+         </action>
+         <action
+               class="sernet.verinice.samt.rcp.ShowSpiderChartACtion"
+               icon="icons/chart.png"
+               id="sernet.verinice.samt.rcp.ShowMaturitySummaryAction"
+               label="%action.label.1"
+               menubarPath="window/vn_menu_views/additions"
+               style="push">
+         </action>
+         <action
+               class="sernet.verinice.samt.rcp.ShowSamtPerspectiveAction"
+               icon="icons/self-assessment.png"
+               id="sernet.verinice.samt.rcp.ShowSamtPerspectiveAction"
+               label="Self Assessment Perspective"
+               menubarPath="window/vn_menu_perspectives/additions"
+               style="push">
+         </action>
+      </actionSet>
+   </extension>
 </plugin>
