@@ -202,23 +202,6 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	}
 	
 	/**
-	 * Returns the int value of a property or throws 
-	 * a {@link NumberFormatException} if property value is not a parsable integer 
-	 * 
-	 * @param propertyType
-	 * @throws NumberFormatException if property value is not a parsable integer 
-	 * @return the int value of a property
-	 */
-	public int getInt(String propertyType) {
-	    int result = 0;
-        String simpleValue = getSimpleValue(propertyType);
-        if(simpleValue!=null && !simpleValue.isEmpty()) {
-            result = Integer.parseInt(simpleValue);
-        }
-        return result;
-	}
-	
-	/**
 	 * Copy all property values from given entity to this one.
 	 * @param source
 	 */
@@ -416,6 +399,27 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      */
     public String getTypeId() {
         return TYPE_ID;
+    }
+
+    /**
+     * @param propWeight2
+     * @return
+     */
+    public int getInt(String propertyType) {
+        PropertyList propertyList = typedPropertyLists.get(propertyType);
+        if (propertyList == null || propertyList.getProperties().size() == 0)
+            return Property.UNDEF;
+
+        PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, 
+                propertyType);
+        for (Iterator iter = propertyList.getProperties().iterator(); iter.hasNext();) {
+            Property prop = (Property) iter.next();
+            if (type.isNumericSelect()) {
+                return prop.getNumericPropertyValue(); 
+            }
+        }
+        return Property.UNDEF;
+        
     }
 
    

@@ -103,7 +103,16 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 
 	private int maxValue = 0;
 
-	public void addValidator(IValidationRule rule) {
+    private boolean reportable;
+
+	/**
+     * @return the reportable
+     */
+    public boolean isReportable() {
+        return reportable;
+    }
+
+    public void addValidator(IValidationRule rule) {
 		if (!validators.contains(rule)) {
 			validators.add(rule);
 		}
@@ -444,5 +453,12 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
         }
         return Integer.toString(i);
     }
+
+    /**
+     * @param equals
+     */
+    public void setReportable(boolean value) {
+        this.reportable = value;
+    }   
 
 }

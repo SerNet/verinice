@@ -31,8 +31,9 @@ public class Property implements Serializable, ITypedElement {
 	private String propertyType;
 	private String propertyValue;
 	private Entity parent;
+	
     public static final String TYPE_ID = "huiproperty";
-    private static final int UNDEF = Integer.MIN_VALUE;
+    public static final int UNDEF = 0;
 
 	public Property(Entity ent) {
 		parent = ent;
