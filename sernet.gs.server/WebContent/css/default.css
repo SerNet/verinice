@@ -87,7 +87,7 @@ h1+a:visited {
 	right: 50px;
 	color: #fff;
 	background: transparent;
-	text-align: right; /* Erforderlich, damit im Opera 6 wirklich rechts plaziert ! */
+	text-align: right; 
 }
 
 #messages {

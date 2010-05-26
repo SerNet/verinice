@@ -8,7 +8,7 @@ body {
 .externlink {background:  url(img/extern.gif) no-repeat right center;
         padding-right: 16px;}
 
-/*Sprungmarke für Sprachbrowser um direkt zu den einzelnen Bereichen zu gelangen*/
+/*Sprungmarke fï¿½r Sprachbrowser um direkt zu den einzelnen Bereichen zu gelangen*/
 .sprungmarke {	position: absolute; left: -2000px;  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.7em;}
 
 a:link, a:visited, a:hover {
@@ -35,7 +35,7 @@ a.sprungmarke:focus, a.sprungmarke:hover {
 /* wo befinde ich mich in der Navigation*/
 .standort {	left: -2600px; position: absolute; 	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.7em;}
 .trenner {	left: -2400px; position: absolute; 	font-family: Verdana, Arial, Helvetica, sans-serif; }
-/* der Contentbereich für die Startseite */
+/* der Contentbereich fï¿½r die Startseite */
 
 #indexmeldunglinks {
 	float: left;
@@ -45,7 +45,7 @@ a.sprungmarke:focus, a.sprungmarke:hover {
 	margin-right: 6px;
 	background-color: #FFFFFF;
 }
-html *>b\ody #indexmeldunglinks { margin-left: 20px; } /* für Opera 6 */
+html *>b\ody #indexmeldunglinks { margin-left: 20px; } /* fï¿½r Opera 6 */
 
 #indexmeldunglinks h1 { font-weight: bold; 
  margin-bottom: -0.80em; margin-top: -0.1em; font-size:0.9em; display: block; padding: 2px 4px 8px 0px}
@@ -90,7 +90,7 @@ html *>b\ody #indexmeldunglinks { margin-left: 20px; } /* für Opera 6 */
 #indexmeldungrechts a:hover {text-decoration: underline; color: #003366;}
 #indexmeldungrechts a:active {text-decoration: underline; color: #003366;}
 .meldungstrenner {border-top: 1px dashed #cccccc; margin-top: -0px; margin-bottom: 8px; margin-right: 200px}
-/* Ende Contentbereich für die Startseite */
+/* Ende Contentbereich fï¿½r die Startseite */
 
 /* hier beginnt der Inhaltsbereich */
 #content {
@@ -104,7 +104,7 @@ html *>b\ody #indexmeldunglinks { margin-left: 20px; } /* für Opera 6 */
 * html body #content {width: 86%}
 @media print
 { #content { margin-left: 1.0cm }}
-/* die vorhergehende Angabe ist für die IE erforderlich, da er aus verschiedenen Dateien die Druckinformationen bezieht */
+/* die vorhergehende Angabe ist fï¿½r die IE erforderlich, da er aus verschiedenen Dateien die Druckinformationen bezieht */
 
 
 /* die Elemente aus dem Contentbereich */
@@ -131,7 +131,7 @@ tt { font-family: "Courier New", Courier, Tahoma, mono; font-size: 0.72em; font-
 
 h1, h2, h3, h4 { margin: 0px; padding: 0px; text-align: left; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold; 
 color:#003366; }
-h1 { font-size:1.0em; margin-top: 1.8em;}
+h1 { font-size:0.8em; margin-top: 1.8em;}
 h2 { font-size:0.90em; margin-top: 1.6em}
 h3 { font-size:0.75em; margin-top: 1.4em}
 h3 > sup { font-size: 0.65em; font-style: normal; font-weight: normal; color: #003366;}
@@ -152,17 +152,17 @@ HR { background-color: #999999; color: #999999; border: #999999; height: 1px}
 /*HR vor Copyright siehe dort*/
 /*Listenelemente*/
 #content ol {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.7em; margin-left: 2.4em}
-	/*Listenelemente für nummerierte Liste in einer nummerierten Liste um die Vererbung auszuschließen*/
+	/*Listenelemente fï¿½r nummerierte Liste in einer nummerierten Liste um die Vererbung auszuschlieï¿½en*/
 	#content ol ol { font-size: 1.0em;}
-	/*Listenelemente für unnummerierte Liste in einer nummerierten Liste um die Vererbung auszuschließen*/
+	/*Listenelemente fï¿½r unnummerierte Liste in einer nummerierten Liste um die Vererbung auszuschlieï¿½en*/
 	#content ol ul { font-size: 1.0em;}
 	#content ol li { padding-top: 5px;}
 	#content ol.olohne {list-style-type: none}
 #content ul { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.7em; margin-left: 2.2em}
-	/*Listenelemente für unnnummerierte Liste in einer unnnummerierten Liste um die Vererbung auszuschließen*/
+	/*Listenelemente fï¿½r unnnummerierte Liste in einer unnnummerierten Liste um die Vererbung auszuschlieï¿½en*/
 	#content ul ul { font-size: 1.0em;}
 	#content ul li {padding-top: 2px;}
-	/*Listenelemente für nummerierte Liste in einer unnnummerierten Liste um die Vererbung auszuschließen*/
+	/*Listenelemente fï¿½r nummerierte Liste in einer unnnummerierten Liste um die Vererbung auszuschlieï¿½en*/
 	#content ul ol { font-size: 1.0em;}
 	#content ul.ulohne {list-style-type: none}
 #content LI.ligruen { list-style-image: url(img/pfeilrg.gif);}
@@ -226,7 +226,7 @@ normal; font-weight: bold; color: #003366; padding-top: 1.0em; }
 	font-size: 0.84em; color: #003366; letter-spacing: 3px; background-color: #F3F3F3;
 	padding: 0px 4px 2px 4px;} 
 
-/*Bilder, deren Abstände und einiges zu float*/
+/*Bilder, deren Abstï¿½nde und einiges zu float*/
 .bildunterschrift {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 0.8em;
@@ -247,7 +247,7 @@ normal; font-weight: bold; color: #003366; padding-top: 1.0em; }
 .doctitle {font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: normal; 
 color:#333;}
 
-/*besondere Schriftfarben, Größen und Abstände*/
+/*besondere Schriftfarben, Grï¿½ï¿½en und Abstï¿½nde*/
 .blaukursiv {  font-family: Verdana, Arial, Helvetica, sans-serif; font-style: italic; color: #0066CC; font-weight: bold}
 .hinweisrot { color:#FF0000 }
 .hinweisrot b { color:#FF0000 }
@@ -281,14 +281,14 @@ color:#333;}
 input {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1em;}
 select {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1em;}
 
-/* für die Navigation von Seite vor, zurück, nach oben, Kapitelanfang*/
+/* fï¿½r die Navigation von Seite vor, zurï¿½ck, nach oben, Kapitelanfang*/
 #content a.seitevorzurueck:link {font-family: Verdana, Arial, Helvetica, sans-serif;  text-decoration: none;} 
 #content a.seitevorzurueck:visited {font-family: Verdana, Arial, Helvetica, sans-serif;  text-decoration: none;} 
 #content a.seitevorzurueck:active {font-family: Verdana, Arial, Helvetica, sans-serif; text-decoration: none;} 
 #content a.seitevorzurueck:hover {font-family: Verdana, Arial, Helvetica, sans-serif; background-color: #cccccc} 
 #content a.seitevorzurueck:focus {font-family: Verdana, Arial, Helvetica, sans-serif; background-color: #cccccc} 
 
-/*für die Beschreibungen von Computer-Viren unter Verbreitungsart E-Mail */
+/*fï¿½r die Beschreibungen von Computer-Viren unter Verbreitungsart E-Mail */
 #avmail {padding: 10px 4px 4px 4px; border: solid 1px; border-color: #ccc #333 #333 #ccc; background-color: #fff; width: 100%}
 .avmailteile {padding: 1px; border: solid 1px; border-color: #ccc #333 #333 #ccc; background-color: #ccc}
 /*Ende CV*/
@@ -296,11 +296,11 @@ select {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1em;}
 .copyright { margin-left: 220px; color: #333333; text-align: left; font-size: 0.7em; margin-top: 10px; 	font-family: Verdana, Arial, Helvetica, sans-serif;}
 @media print
 { .copyright { margin-left: 1.0cm }}
-/* die vorhergehende Angabe ist für die IE erforderlich, da er aus verschiedenen Dateien die Druckinformationen bezieht */
+/* die vorhergehende Angabe ist fï¿½r die IE erforderlich, da er aus verschiedenen Dateien die Druckinformationen bezieht */
 .linievorcopy { margin-left: 220px; margin-top: 10px; text-align: left;background-color: #999999; clear: both; color: #999999; border: #999999; height: 1px}
 @media print
 { .linievorcopy { margin-left: 1.0cm }}
-/* die vorhergehende Angabe ist für die IE erforderlich, da er aus verschiedenen Dateien die Druckinformationen bezieht */
+/* die vorhergehende Angabe ist fï¿½r die IE erforderlich, da er aus verschiedenen Dateien die Druckinformationen bezieht */
 
 /*nur fuer den Newsletter*/
 .newsletterliste { font-family: Verdana, Arial, Helvetica, sans-serif; list-style-image:  url(img/kreuz.gif); left: 
@@ -316,7 +316,7 @@ A.newslink:hover, A.newslink:focus { font-family: Verdana, Arial, Helvetica, san
 A.newslink:active { font-family: Verdana, Arial, Helvetica, sans-serif; color: #333333; background-color : #E6E6E6; padding : 0px; text-decoration: 
 none; }
 
-/*Extra für GSHB Massnahme*/
+/*Extra fï¿½r GSHB Massnahme*/
 p.gshbmassverantwortlich {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 0.70em;
@@ -326,13 +326,13 @@ p.gshbmassverantwortlich {
 p.gshbmassverantwortlich + p.gshbmassverantwortlich {margin-top: 0.1em}
 p.gshbmassverantwortlich + p.gshbmassverantwortlich > .gshbmassverantwortlichist {font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: normal; color: #333333; padding-left: 0.64em}
 
-/* BEGINN: Weitere Tags, über deren Einsatz nachzudenken wäre */
+/* BEGINN: Weitere Tags, ï¿½ber deren Einsatz nachzudenken wï¿½re */
 samp {font-size: 0.8em;  margin-bottom: 2.0em;}	 /* zeichnet einen Text aus mit der Bedeutung "Dies ist ein Beispiel" */
 kbd {font-size: 1em;   font-family: "Courier New", Courier, Tahoma, mono; color: #000000;}
 p kbd {font-size: 1.2em;  font-family: "Courier New", Courier, Tahoma, mono; color: #000000;}    /* zeichnet einen Text aus mit der Bedeutung "dies stellt eine Tastatureingabe dar" */
 dfn {font-size: 0.74em;	margin-bottom: 2.0em; font-style: italic; font-family:  Verdana, Arial, Helvetica, sans-serif;}
 dfn > strong {font-style: italic;}	/* zeichnet einen Text aus mit der Bedeutung "dies ist eine Definition" */
 var {font-size: 1em;   font-family: "Courier New", Courier, Tahoma, mono; color: #000000;font-weight: bold;} /*zeichnet einen Text aus als "Variable" */
-/* ENDE: Weitere Tags, über deren Einsatz nachzudenken wäre */
+/* ENDE: Weitere Tags, ï¿½ber deren Einsatz nachzudenken wï¿½re */
 
 
