@@ -221,6 +221,9 @@ be displayed when one of the given options has been previously selected.
 	<!-- Value range for numeric option list -->
 	<xs:attribute name="min" type="xs:decimal"/> 
 	<xs:attribute name="max" type="xs:decimal"/> 
+
+	<!-- Should this property be included in reports? -->
+	<xs:attribute name="report" type="xs:boolean" default="true"/> 
 </xs:complexType>
 
 <xs:simpleType name="inputtypes" >
