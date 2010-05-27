@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<cheatsheet title="Getting started with self assessments">
+<cheatsheet title="Erste Schritte für TOP20 Self Assessments">
     <intro>
         <description>
-            <b>Welcome to verinice self assessments!</b>
+            <b>Willkommen bei TOP20 Self Assessments in verinice.</b>
             <br />
             <br />
-            This tutorial will help you to configure verinice for self assessments.
+            Dieses Tutorial wird Ihnen dabei helfen, Ihr erstes TOP20 Self Assessment mit verinice durchzuführen.
         </description>
     </intro>
 
-    <item title="Create a new self assessment">
+    <item title="Neues Self Assessment beginnen">
         <description>
             <br />
-            Open the <b>Self Assessment View</b>:
+            Öffnen Sie den <b>Self Assessment View</b>:
             <ul>
                 <li>Menu -> View -> Open Perspective... -> Other</li>
                 <li>Select <i>Self Assessment Perspective</i>, Click <i>OK</i></li>
