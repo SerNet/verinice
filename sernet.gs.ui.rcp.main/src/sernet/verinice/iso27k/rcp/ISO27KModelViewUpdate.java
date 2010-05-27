@@ -22,7 +22,6 @@ package sernet.verinice.iso27k.rcp;
 import org.eclipse.jface.viewers.TreeViewer;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.bsi.views.ThreadSafeViewerUpdate;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
@@ -32,6 +31,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.verinice.iso27k.model.IISO27KModelListener;
 import sernet.verinice.iso27k.model.ISO27KModel;
+import sernet.verinice.iso27k.model.Organization;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
