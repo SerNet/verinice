@@ -97,8 +97,16 @@
                class="sernet.verinice.samt.rcp.ShowSamtPerspectiveAction"
                icon="icons/self-assessment.png"
                id="sernet.verinice.samt.rcp.ShowSamtPerspectiveAction"
-               label="Self Assessment Perspective"
+               label="%action.label.2"
                menubarPath="window/vn_menu_perspectives/additions"
+               style="push">
+         </action>
+         <action
+               class="sernet.verinice.samt.rcp.AddSelfAssessmentMenuAction"
+               icon="icons/new.png"
+               id="sernet.verinice.samt.rcp.AddSelfAssessmentMenuAction"
+               label="%action.label.3"
+               menubarPath="file/vn_menu_file"
                style="push">
          </action>
       </actionSet>

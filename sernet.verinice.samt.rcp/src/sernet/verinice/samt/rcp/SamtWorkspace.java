@@ -55,8 +55,9 @@ public class SamtWorkspace extends CnAWorkspace {
 
     /**
      * File name of the self-assessment CSV catalog
+     * Is externalized to ressource bundle so that the right file is used for each locale
      */
-    public static final String SAMT_CATALOG_FILE_NAME = "samt-catalog.csv"; //$NON-NLS-1$
+    public static final String SAMT_CATALOG_FILE_NAME = Messages.SamtWorkspace_0; 
 
     private SamtWorkspace() {
         // use getInstance

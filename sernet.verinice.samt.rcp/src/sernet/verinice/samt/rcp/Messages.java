@@ -34,6 +34,7 @@ public class Messages extends NLS {
     public static String SamtView_1;
     public static String SamtView_2;
     public static String SamtView_4;
+    public static String SamtWorkspace_0;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

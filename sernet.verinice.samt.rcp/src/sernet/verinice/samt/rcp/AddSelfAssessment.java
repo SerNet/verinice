@@ -32,14 +32,9 @@ import org.eclipse.ui.IViewPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.iso27k.model.ISO27KModel;
-import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.service.commands.CsvFile;
-import sernet.verinice.iso27k.service.commands.LoadModel;
-import sernet.verinice.samt.service.CreateSelfAssessment;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -51,9 +46,11 @@ public class AddSelfAssessment implements IViewActionDelegate {
 
     public static final String TITEL = Messages.AddSelfAssessment_0;
 
-    private ICommandService commandService;
+  
 
     private SamtView samtView = null;
+    
+    private CreateNewSelfAssessmentService samtService = new CreateNewSelfAssessmentService();
     
     /*
      * (non-Javadoc)
@@ -75,19 +72,7 @@ public class AddSelfAssessment implements IViewActionDelegate {
     @Override
     public void run(IAction action) {
         try {
-            // load iso-model
-            LoadModel loadModel = new LoadModel();
-            loadModel = getCommandService().executeCommand(loadModel);
-            ISO27KModel model = loadModel.getModel();
-            // create self-assessment 
-            CreateSelfAssessment command = new CreateSelfAssessment(model, TITEL);
-            command.setCsvFile(getCsvFile());
-            command = getCommandService().executeCommand(command);
-            Organization organization = command.getSelfAssessment();
-            if (organization != null) {
-                CnAElementFactory.getModel(organization).childAdded(model, organization);
-                CnAElementFactory.getModel(organization).databaseChildAdded(organization);
-            }
+            samtService.createSelfAssessment();
             if(samtView!=null) {
                 Display.getDefault().syncExec(new Runnable() {
                     public void run() {
@@ -102,47 +87,7 @@ public class AddSelfAssessment implements IViewActionDelegate {
 
     }
 
-    /**
-     * Load the self assessment CSV-File:
-     * SamtWorkspace.SAMT_CATALOG_FILE_NAME
-     * from the file system.
-     * 
-     * File is saved in verinice workspace in folder:
-     * SamtWorkspace.getInstance().getConfDir().
-     * 
-     * @return the self assessment CSV-File
-     * @throws IOException if file can not be found
-     */
-    private CsvFile getCsvFile() throws IOException {
-        CsvFile csvFile = null;    
-        final String fullSamtCatalogPath = getFullSamtCatalogPath();
-        try {
-            csvFile = new CsvFile(fullSamtCatalogPath,getCharset());
-        } catch (RuntimeException e) {
-            LOG.error("Error while reading samt catalog file from path: " + fullSamtCatalogPath, e); //$NON-NLS-1$
-            throw e;
-        } catch (IOException e) {
-            LOG.error("Error while reading samt catalog file from path: " + fullSamtCatalogPath, e); //$NON-NLS-1$
-            throw e;
-        } catch (Exception e) {
-            final String message = "Error while reading samt catalog file from path: " + fullSamtCatalogPath; //$NON-NLS-1$
-            LOG.error(message, e);
-            throw new RuntimeException(message, e);
-        }
-        return csvFile;
-    }
-
-    private Charset getCharset() {
-        String charsetName = Activator.getDefault().getPreferenceStore().getString(SamtPreferencePage.CHARSET_SAMT);
-        if(charsetName==null || charsetName.equals("")) { //$NON-NLS-1$
-            charsetName = Activator.getDefault().getPreferenceStore().getDefaultString(SamtPreferencePage.CHARSET_SAMT); 
-        }
-        return Charset.forName(charsetName);
-    }
-
-    private String getFullSamtCatalogPath() {
-        return new StringBuffer(SamtWorkspace.getInstance().getConfDir()).append(File.separatorChar).append(SamtWorkspace.SAMT_CATALOG_FILE_NAME).toString();
-    }
+   
 
     /*
      * (non-Javadoc)
@@ -157,15 +102,6 @@ public class AddSelfAssessment implements IViewActionDelegate {
 
     }
 
-    public ICommandService getCommandService() {
-        if (commandService == null) {
-            commandService = createCommandServive();
-        }
-        return commandService;
-    }
-
-    private ICommandService createCommandServive() {
-        return ServiceFactory.lookupCommandService();
-    }
+   
 
 }
