@@ -295,7 +295,7 @@ public class CnAWorkspace {
 
 		createTextFile("html" + File.separator + "screen.css", workDir); //$NON-NLS-1$ //$NON-NLS-2$
 		createTextFile("html" + File.separator + "about.html", workDir); //$NON-NLS-1$ //$NON-NLS-2$
-		createBinaryFile("splash.bmp", workDir + File.separator + "html"); //$NON-NLS-1$ //$NON-NLS-2$
+		createBinaryFile("browserdefault.png", workDir + File.separator + "html"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
