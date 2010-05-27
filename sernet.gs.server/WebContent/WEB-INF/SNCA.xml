@@ -4263,15 +4263,17 @@ the value between <param></param> will be used directly if no string is found fo
             id="samt_topic_maturity"      
             inputtype="numericoption" 
             min="0" 
-            max="9" />
+            max="9" 
+            focus="true"/>
+            
           <huiproperty 
-            id="samt_topic_weight"  visible="true" />
+            id="samt_topic_weight"  visible="false" inputtype="numericoption" />
           <huiproperty 
-            id="samt_topic_ownweight" visible="true" />
+            id="samt_topic_ownweight" visible="false" inputtype="numericoption"  />
           <huiproperty 
-            id="samt_topic_min1"  visible="true"/>
+            id="samt_topic_min1"  visible="false" inputtype="numericoption" />
           <huiproperty 
-            id="samt_topic_min2"  visible="true"/>
+            id="samt_topic_min2"  visible="false" inputtype="numericoption" />
             
           <huiproperty 
             id="samt_topic_applicable" 
