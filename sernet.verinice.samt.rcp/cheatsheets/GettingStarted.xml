@@ -13,38 +13,50 @@
         <description>
             <br/>
 First you have to create a new self assessment. You should be in the self assessment perspective. 
-If not, you can go there by clicking on:
-            &lt;ul&gt;
-                &lt;li&gt;Menu -&gt; View -&gt; Open Perspective... -&gt; Other&lt;/li&gt;
-                &lt;li&gt;Select &lt;i&gt;Self Assessment Perspective&lt;/i&gt;, Click &lt;i&gt;OK&lt;/i&gt;&lt;/li&gt;
-            &lt;/ul&gt;
-            You will find the <b>Self Assessment View</b> on left side of the Window.
-            <br/>
-            <br/>
-            Click on the <b>new</b> button in the toolbar of the view.
+If not, you can go there by choosing from the menu:
+            <b>View -> Show Perspective... -> Self-Assessment Perspective</b>.
+            
+            You will find the <b>Self-Assessment</b> view on left side of the Window.
         </description>
-        <onCompletion>
-            Excellent! If you want to continue, read one of the next chapters.
-        </onCompletion>
     </item>
-    <item title="Browse the self assessment">
+
+    <item title="Create a new self-assessment">
         <description>
-            To browse the self assessment use the topic tree in the <b>Self Assessment View</b>.
-            A <b>single click</b> on one of topic opens the topic in the Control Browser.
-            You can now read all details of the topic.
+        Click the <b>NEW</b> button in the self-assessment view or choose from
+        the menu: <b>File -> Add new Self-Assessment</b>
+        <br/>
+        The new self-assessment will appear in the view. Double-click on it
+        to change the name from "My Company" to your actual company's name.
         </description>
-        <onCompletion>
-            Excellent! If you want to continue, read the next chapter.
-        </onCompletion>
     </item>
-    <item title="Edit the self assessment">
+    
+    <item title="Open the first category">
         <description>
-            To edit the self assessment use the topic tree in the <b>Self Assessment View</b>.
-            A <b>double click</b> on one of topic opens the topic in the editor.
-            You can now edit the state of the topic.
+        Now it's time to start the self-assessment. The top node should already
+        be expanded. If it isn't please do so now. You should be able to see a
+        number of categories from "Security Policy" to "Access Control". These
+        categories contain questions that will help you to evaluate your current
+        information security level for the most important topics.
+        <br/>
+        Expand the first category by clicking the expand-icon to the left of
+        it.
         </description>
-        <onCompletion>
-            Excellent! If you want to continue, read the next chapter.
-        </onCompletion>
+    </item>
+    
+    <item title="Answering questions">
+
+    </item>
+    
+    <item title="">
+    </item>
+    
+    <item title="">
+    </item>
+    
+    <item title="">
+    </item>
+    <item title="">
+    </item>
+    <item title="">
     </item>
 </cheatsheet>

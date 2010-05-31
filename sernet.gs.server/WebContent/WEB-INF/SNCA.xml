@@ -2857,7 +2857,8 @@ the value between <param></param> will be used directly if no string is found fo
         id="org" >
         <huiproperty
             name="Title"
-            id="org_name" />
+            id="org_name" 
+            focus="true" />
         <huiproperty
             name="Abbreviation"
             id="org_abbr" />
@@ -2866,11 +2867,7 @@ the value between <param></param> will be used directly if no string is found fo
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
-			name="Scope Summary" id="org_description" inputtype="text" >
-			<defaultRule class="SimpleValue"> <!-- ??? insert scope example -->
-                	<param id="org_description_default">The scope definition schould answer these questions: who? what? where?</param>
-                </defaultRule>
-		</huiproperty>
+			name="Scope Summary" id="org_description" inputtype="text" />
 		<huipropertygroup name="Risk Acceptance" id="org_riskgroup">
 			<huiproperty 
 				name="Acceptable Risk Level" id="org_riskaccept" 

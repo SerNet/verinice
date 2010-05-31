@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.samt.service.FindSamtGroup;
 
@@ -113,8 +114,8 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         if (LOG.isDebugEnabled()) {
             LOG.debug("Selection changed, selected element: " + selectedElement); //$NON-NLS-1$
         }
-
-        if(showChartForSelection(firstSelection)) {
+        
+        if(showChartForSelection(selectedElement)) {
             if (this.element != null && selectedElement == this.element) {
                 return;
             }
@@ -124,13 +125,29 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
     }
 
     /**
+     * @param selectedElement
+     * @return
+     */
+    private CnATreeElement findControlGroup(CnATreeElement selectedElement) {
+        CnATreeElement result = selectedElement;
+        Set<CnATreeElement> children = selectedElement.getChildren();
+        for (CnATreeElement cnATreeElement : children) {
+            if (cnATreeElement.getTypeId().equals(ControlGroup.TYPE_ID)) {
+                return cnATreeElement;
+            }
+        }
+        
+        return result;
+    }
+
+    /**
      * Returns true if selection is a ControlGroup
      * and if at least one of its children is a ControlGroup too.
      * 
      * @param selection a RCP-GUI selection from {@link ISelectionListener}
      * @return true if a chart should be displayed for this selection
      */
-    private boolean showChartForSelection(Object selection) {
+    private boolean showChartForSelection(CnATreeElement selection) {
         boolean showIt = false;
         if(selection!=null && selection instanceof ControlGroup) {
             ControlGroup group = (ControlGroup) selection;
