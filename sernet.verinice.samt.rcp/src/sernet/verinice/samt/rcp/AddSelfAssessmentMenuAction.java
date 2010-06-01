@@ -15,7 +15,7 @@ import sernet.verinice.samt.service.CreateSelfAssessment;
 
 public class AddSelfAssessmentMenuAction implements IWorkbenchWindowActionDelegate {
 
-    public static final String ID = "sernet.verinice.samt.rcp.AddSelfAssessmentMenuAction";
+    public static final String ID = "sernet.verinice.samt.rcp.AddSelfAssessmentMenuAction"; //$NON-NLS-1$
     
     @Override
     public void dispose() {
@@ -27,17 +27,15 @@ public class AddSelfAssessmentMenuAction implements IWorkbenchWindowActionDelega
         // do nothing
     }
 
-    // FIXME externalize strings
-    
     @Override
     public void run(IAction action) {
         CreateNewSelfAssessmentService createSamtService = new CreateNewSelfAssessmentService();
         try {
             createSamtService.createSelfAssessment();
         } catch (CommandException e) {
-            ExceptionUtil.log(e, "Could not create salf assessment.");
+            ExceptionUtil.log(e, Messages.AddSelfAssessmentMenuAction_1);
         } catch (IOException e) {
-            ExceptionUtil.log(e, "Could not read catalog file for new self assessment.");
+            ExceptionUtil.log(e, Messages.AddSelfAssessmentMenuAction_2);
         }
     }
 

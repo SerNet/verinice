@@ -11,12 +11,12 @@
 
     <item title="Create a new self assessment">
         <description>
-            <br/>
+            <br/><br/>
 First you have to create a new self assessment. You should be in the self assessment perspective. 
 If not, you can go there by choosing from the menu:
             <b>View -> Show Perspective... -> Self-Assessment Perspective</b>.
             
-            You will find the <b>Self-Assessment</b> view on left side of the Window.
+            You will find the Self-Assessment view on left side of the Window.
         </description>
     </item>
 
@@ -24,39 +24,76 @@ If not, you can go there by choosing from the menu:
         <description>
         Click the <b>NEW</b> button in the self-assessment view or choose from
         the menu: <b>File -> Add new Self-Assessment</b>
-        <br/>
+        <br/><br/>
         The new self-assessment will appear in the view. Double-click on it
-        to change the name from "My Company" to your actual company's name.
+        to bring up the editor view. Change the name from "My Company" to your actual company's name.
+        <br/><br/>
+        Save by clicking on <b>File -> Save</b> or by pressing the keys <b>Ctrl-S</b>.
         </description>
     </item>
     
     <item title="Open the first category">
         <description>
-        Now it's time to start the self-assessment. The top node should already
-        be expanded. If it isn't please do so now. You should be able to see a
+        Expand the self assessment 
+        by clicking the small arrow to the left of the node's icon. Expand "Controls" and then the first category by clicking the small arrow on the left.
+        <br/><br/>
+        You should be able to see a
         number of categories from "Security Policy" to "Access Control". These
         categories contain questions that will help you to evaluate your current
         information security level for the most important topics.
-        <br/>
-        Expand the first category by clicking the expand-icon to the left of
-        it.
+        
         </description>
     </item>
     
     <item title="Answering questions">
-
+    <description>
+        Double-click on the first question to open the editor.
+        Simultaneously, the Control Browser will show you the question and a selection of maturity levels.
+        <br/><br/>
+        Read the descriptions to decide which maturity level you have reached in your organization. You may have to consult 
+        other employees or do some internal research to answer the question correctly. 
+        <br/>
+        Choose the correct maturity level in the editor below the browser view. You can also add a public comment. This comment
+        will be included in a database export. You can also add a private comment just for yourself. The private comment 
+        will always stay in your local database.
+        <br/><br/>
+        Save cour changes by pressing <b>Strg-S</b> or by choosing <b>File -> Save</b>.
+        </description>
     </item>
     
-    <item title="">
+    <item title="Generate a report">
+      <description>
+        Continue in the same way with the next question. As you go along, you will notice
+        that the spider chart in the bottom left corner of the screen begins to reflect your answers. When you have answered all questions honestly, you
+        will have a good overview about your current information security situation.
+        <br/><br/>
+        When you are done answering all questions, you may want to generate a report for management or another party. You can do so by choosing
+        <b>File -> Self-Assessment -> Generate Report...</b>.
+        <br/><br/>
+        Choose the type of report and a filename under which the report should be saved, then click OK.
+         </description>
     </item>
     
-    <item title="">
+    <item title="Export results">
+      <description>
+        When you are done answering all questions, you can export your results to send them to another party.
+        You can do so by choosing <b>File -> Self-Assessment -> Export to file...</b>
+        <br/><br/>
+        You have to choose a filename under which the report will be saved. The exported file is always encrypted, so you also
+        have to choose a password or a certificate for encryption. Once you're done, press OK. 
+         </description>
     </item>
     
-    <item title="">
-    </item>
-    <item title="">
-    </item>
-    <item title="">
+    <item title="Finished">
+      <description>
+    Congratulations on conducting your first self-assessment of your information security status. If you wish to 
+    go further and are thinking about actually establishing an information security management system (ISMS) in your
+    company, you can go back to the welcome screen by choosing <b>Help -> Welcome</b>.
+    <br/><br/>
+    This time, select the option "Establish an ISMS". You will be directed to the ISM Perspective with another tutorial to guide you. 
+     </description>
+    <onCompletion>
+        This concludes this tutorial. Don't forget to go to <a href="http://verinice.org">verinice.org</a> for more information and news!
+    </onCompletion>
     </item>
 </cheatsheet>

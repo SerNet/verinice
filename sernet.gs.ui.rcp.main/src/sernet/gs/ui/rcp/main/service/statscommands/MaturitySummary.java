@@ -69,6 +69,9 @@ public class MaturitySummary extends GenericCommand {
         try {
             LoadCnAElementByEntityId command = new LoadCnAElementByEntityId(dbId);
             command = getCommandService().executeCommand(command);
+            if (command.getElements().size()==0) {
+                return;
+            }
             CnATreeElement cnATreeElement = command.getElements().get(0);
             getItems((ControlGroup)cnATreeElement);
         } catch (CommandException e) {

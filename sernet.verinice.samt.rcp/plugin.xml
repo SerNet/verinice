@@ -109,6 +109,28 @@
                menubarPath="file/vn_menu_file"
                style="push">
          </action>
+         <menu
+               icon="icons/self-assessment.png"
+               id="sernet.verinice.samt.rcp.menu1"
+               label="Self-Assessment"
+               path="file/vn_menu_file">
+            <groupMarker
+                  name="slot1">
+            </groupMarker>
+         </menu>
+         <action
+               class="sernet.verinice.samt.rcp.GenerateReportAction"
+               id="sernet.verinice.samt.rcp.generatereport"
+               label="Generate Report"
+               menubarPath="file/sernet.verinice.samt.rcp.menu1/slot1"
+               style="push">
+         </action>
+         <action
+               id="sernet.verinice.samt.rcp.exporttofile"
+               label="Export to file"
+               menubarPath="file/sernet.verinice.samt.rcp.menu1/slot1"
+               style="push">
+         </action>
       </actionSet>
    </extension>
 </plugin>

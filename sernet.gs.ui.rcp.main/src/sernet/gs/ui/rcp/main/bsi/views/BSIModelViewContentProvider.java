@@ -119,8 +119,6 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 		cache.clear(el);
 		cache.addObject(newElement);
 
-		// TODO ak synchronization problem?
-
 		return newElement;
 	}
 
@@ -160,6 +158,7 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		cache.clear();
+		cache.addObject(newInput);
 	}
 
 	void setModelElementFilter(BSIModelElementFilter modelFilter) {

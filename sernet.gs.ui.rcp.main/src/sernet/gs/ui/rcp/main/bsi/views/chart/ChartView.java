@@ -299,12 +299,6 @@ public class ChartView extends ViewPart {
         return job;
     }
 
-// TODO akoderman: not sure what this was for, can it be removed?    
-//	protected void checkModel_DONT_USE_THIS_MOETHOD() {
-//		if (!CnAElementFactory.isModelLoaded() && !CnAElementFactory.isIsoModelLoaded()) {
-//			currentChartGenerator = emptyChart;
-//		}
-//	}
 
 	private void createSelectionListeners() {
 		loadListener = new IModelLoadListener() {

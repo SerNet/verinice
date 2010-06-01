@@ -2868,6 +2868,11 @@ the value between <param></param> will be used directly if no string is found fo
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
 			name="Scope Summary" id="org_description" inputtype="text" />
+         <huiproperty 
+            id="org_created"
+            inputtype="date">
+            <defaultRule class="Today" />
+        </huiproperty>
 		<huipropertygroup name="Risk Acceptance" id="org_riskgroup">
 			<huiproperty 
 				name="Acceptable Risk Level" id="org_riskaccept" 
@@ -2875,6 +2880,7 @@ the value between <param></param> will be used directly if no string is found fo
 			<huiproperty
 				name="Explanation" id="org_riskaccept_expl" inputtype="text" />
 		</huipropertygroup>
+       
     </huientity>
     
     <huientity
@@ -4264,13 +4270,13 @@ the value between <param></param> will be used directly if no string is found fo
             focus="true"/>
             
           <huiproperty 
-            id="samt_topic_weight"  visible="false" inputtype="numericoption" />
+            id="samt_topic_weight"  visible="false" inputtype="numericoption" min="0" max="10" />
           <huiproperty 
-            id="samt_topic_ownweight" visible="false" inputtype="numericoption"  />
+            id="samt_topic_ownweight" visible="false" inputtype="numericoption" min="0" max="10" />
           <huiproperty 
-            id="samt_topic_min1"  visible="false" inputtype="numericoption" />
+            id="samt_topic_min1"  visible="false" inputtype="numericoption" min="0" max="10" />
           <huiproperty 
-            id="samt_topic_min2"  visible="false" inputtype="numericoption" />
+            id="samt_topic_min2"  visible="false" inputtype="numericoption" min="0" max="10" />
             
           <huiproperty 
             id="samt_topic_applicable" 

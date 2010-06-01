@@ -186,6 +186,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 	
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		cache.clear();
+		cache.addObject(newInput);
 	}
 	
 	class ElementComparator implements Comparator<CnATreeElement> {

@@ -136,7 +136,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private ShowAccessControlEditAction accessControlEditAction;
 
-    private ShowCheatSheetAction showCheatSheetAction;
 
     private IWorkbenchAction introAction;
 
@@ -267,14 +266,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         bausteinZuordnungAction = new BausteinZuordnungAction(window);
         register(bausteinZuordnungAction);
 
-        showCheatSheetAction = new ShowCheatSheetAction(Messages.ApplicationActionBarAdvisor_19);
-
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
         
         register(openDocumentViewAction);
 
-        // FIXME externalize strings
-        
         introAction = ActionFactory.INTRO.create(window);
         register(introAction);
 
@@ -298,7 +293,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IContributionItem createHelpMenu() {
         MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_21);
         helpMenu.add(introAction);
-        helpMenu.add(showCheatSheetAction);
         helpMenu.add(showCheatSheetListAction);
         helpMenu.add(aboutAction);
         helpMenu.add(new Separator());
@@ -404,7 +398,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     @Override
     protected void fillCoolBar(ICoolBarManager coolBar) {
-        // TODO akoderman make less evil
         IToolBarManager myToolbar = new ToolBarManager(coolBar.getStyle());
         coolBar.add(new ToolBarContributionItem(myToolbar));
         myToolbar.add(saveAction);
