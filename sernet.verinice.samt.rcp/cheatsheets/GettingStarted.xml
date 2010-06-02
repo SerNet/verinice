@@ -9,7 +9,7 @@
         </description>
     </intro>
 
-    <item title="Create a new self assessment">
+    <item title="Switch to the self-assessment perspective">
         <description>
             <br/><br/>
 First you have to create a new self assessment. You should be in the self assessment perspective. 
@@ -26,7 +26,7 @@ If not, you can go there by choosing from the menu:
         the menu: <b>File -> Add new Self-Assessment</b>
         <br/><br/>
         The new self-assessment will appear in the view. Double-click on it
-        to bring up the editor view. Change the name from "My Company" to your actual company's name.
+        to bring up the editor view. Change the name from "[My Company]" to your actual company's name.
         <br/><br/>
         Save by clicking on <b>File -> Save</b> or by pressing the keys <b>Ctrl-S</b>.
         </description>
@@ -57,7 +57,7 @@ If not, you can go there by choosing from the menu:
         will be included in a database export. You can also add a private comment just for yourself. The private comment 
         will always stay in your local database.
         <br/><br/>
-        Save cour changes by pressing <b>Strg-S</b> or by choosing <b>File -> Save</b>.
+        Save cour changes by pressing <b>Ctrl-S</b> or by choosing <b>File -> Save</b>.
         </description>
     </item>
     
@@ -67,7 +67,9 @@ If not, you can go there by choosing from the menu:
         that the spider chart in the bottom left corner of the screen begins to reflect your answers. When you have answered all questions honestly, you
         will have a good overview about your current information security situation.
         <br/><br/>
-        When you are done answering all questions, you may want to generate a report for management or another party. You can do so by choosing
+        When you are done answering all questions, you may want to generate a report for management or another party, which you can then send them by e-mail 
+        or other means.
+        You can do so by choosing
         <b>File -> Self-Assessment -> Generate Report...</b>.
         <br/><br/>
         Choose the type of report and a filename under which the report should be saved, then click OK.
@@ -93,7 +95,7 @@ If not, you can go there by choosing from the menu:
     This time, select the option "Establish an ISMS". You will be directed to the ISM Perspective with another tutorial to guide you. 
      </description>
     <onCompletion>
-        This concludes this tutorial. Don't forget to go to <a href="http://verinice.org">verinice.org</a> for more information and news!
+        This concludes this tutorial. Don't forget to go to <b>http://verinice.org</b> for more information and news!
     </onCompletion>
     </item>
 </cheatsheet>

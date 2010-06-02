@@ -9,41 +9,95 @@
         </description>
     </intro>
 
-    <item title="Neues Self Assessment beginnen">
+    <item title="Wechseln zur Self-Assessment Perspektive">
         <description>
-            <br />
-            Öffnen Sie den <b>Self Assessment View</b>:
-            <ul>
-                <li>Menu -> View -> Open Perspective... -> Other</li>
-                <li>Select <i>Self Assessment Perspective</i>, Click <i>OK</i></li>
-            </ul>
-            You find the <b>Self Assessment View</b> on left side of the Window.
-            <br/>
-            <br/>
-            Click the <b>new button</b> in the toolbar of the view.
+            <br/><br/>
+Zuerst müssen Sie ein neues Self-Assessment anlegen. Sie sollten bereits in der Self-Assessment Perspektive sein.
+Falls nicht, gehen Sie dorthin indem Sie aus dem Anwendungsmenü auswählen:
+            <b>Ansicht -> Zeige Perspektive -> Self-Assessment Perspektive</b>.
+            
+            Auf der linken Seite des Bildschirms sehen Sie nun den Self-Assessment View.
         </description>
-        <onCompletion>
-            Excellent! If you want to continue, read one of the next chapters.
-        </onCompletion>
+      
     </item>
-    <item title="Browse the self assessment">
+
+    <item title="Neues Self-Assessment anlegen" vnicon="icons/new.png">
         <description>
-            To browse the self assessment use the topic tree in the <b>Self Assessment View</b>.
-            A <b>single click</b> on one of topic opens the topic in the Control Browser.
-            You can now read all details of the topic.
+       Klicken Sie auf die Schaltfläche <b>Neu</b> im Self-Assessment View oder wählen Sie aus dem Menü:
+       <b>Datei -> Neues Self-Assessment </b>
+        <br/><br/>
+      Das neue Self-Assessment erscheint im View. Doppelklicken Sie darauf um den Editor anzuzeigen.
+      Ändern Sie den Namen <b>[Mein Unternehmen]</b> in ihren tatsächlichen Firmennamen.
+        <br/><br/>
+        Speichern Sie mit der Tastenkombination <b>Strg-S</b> oder indem Sie aus dem Menü wählen:
+        <b>Datei -> Speichern.</b>
         </description>
-        <onCompletion>
-            Excellent! If you want to continue, read the next chapter.
-        </onCompletion>
     </item>
-    <item title="Edit the self assessment">
+    
+    <item title="Die erste Kategorie öffnen">
         <description>
-            To edit the self assessment use the topic tree in the <b>Self Assessment View</b>.
-            A <b>double click</b> on one of topic opens the topic in the editor.
-            You can now edit the state of the topic.
+       Klappen Sie das Self-Assessment auf, indem Sie den kleinen Pfeil links daneben anklicken.
+       Expandieren Sie auf dieselbe Weise die Gruppe "Controls" und dann die erste Kategorie darunter.
+        <br/><br/>
+       Sie sollten nun eine Reihe von Kategorien sehen, von "Security Policy" bis hin zu "Access Control".
+       Diese Kategorien enthalten Fragen, die Ihnen dabei helfen Ihren aktuellen Status der
+       Informationssicherheit in den wichtigsten Bereichen festzustellen.
         </description>
-        <onCompletion>
-            Excellent! If you want to continue, read the next chapter.
-        </onCompletion>
+    </item>
+    
+    <item title="Fragen beantworten">
+    <description>
+       Doppelklicken Sie die erste Frage um den Editor zu öffnen.
+       Gleichzeitig zeigt Ihnen der Maßnahmenbrowser die Frage und eine Auswahl von Reifegraden an. 
+        <br/><br/>
+        Lesen Sie die Beschreibungen um zu entscheiden, welchen Reifegrad Sie in ihrer Organisation erreicht haben.
+        Um die Frage korrekt zu beantworten, müssen Sie evtl. andere Mitarbeiter befragen oder interne Recherchen anstellen.
+        <br/>
+        Wählen Sie den korrekten Reifegrad im Editor unterhalb des Maßnahmenbrowsers aus. Sie können auch ein öffentliches Kommentar
+        hinzufügen. Dieses Kommentar wird in Exporten und Reports enthalten sein. Sie können auch ein privates Kommentar nur für sich selbst eingeben.
+        Das private Kommentar wird ausschließlich in Ihrer lokalen Datenbank verbleiben.
+        <br/><br/>
+        Speichern Sie Ihre Änderungen mit der Tastenkombination <b>Strg-S</b> oder im Menü unter <b>Datei -> Speichern</b>.
+        </description>
+    </item>
+    
+    <item title="Report erzeugen">
+      <description>
+       Fahren Sie wie beschrieben mit den übrigen Fragen fort. Während Sie dies tun, werden Sie bemerken wie sich das Spinnennetzdiagramm
+       imj linken unteren Bildschirmbereich ändert. Wenn Sie alle Fragen ehrlich beantwortet haben, erhalten Sie dadurch einen guten
+       Überblick über den Stand der Informationssicherheit in Ihrem Unternehmen.
+        <br/><br/>
+        Wenn Sie alle Fragen abschließend beantwortet haben, können Sie einen Report für das Management oder beteiligte Parteien erzeugen.
+        Dies tun Sie durch Auswahl des Menüpunktes
+        <b>Datei -> Self-Assessment -> Report erzeugen</b>.
+        <br/><br/>
+        Wählen Sie den gewünschten Report-Typ und geben Sie einen Dateinamen an, unter dem der Report gespeichert werden soll. Klicken Sie auf OK.
+         </description>
+    </item>
+    
+    <item title="Ergebnis exportieren">
+      <description>
+        Wenn Sie alle Fragen beantowrtet haben, können Sie das Self-Assessment exportieren um es einem beteiligtem Dritte zu schicken, 
+        z.B. per E-Mail oder auf anderem Wege.
+        Dafür wählen Sie <b>Datei -> Self-Assessment -> Export in Datei</b>
+        <br/><br/>
+        Sie müssen einen Dateinamen angeben, unter dem der Export gespeichert werden soll. Der Datenbankexport wird grundsätzlich nur verschlüsselt
+        gespeichert, daher müssen Sie ein Passwort oder ein Zertifikat für die Verschlüsselung angeben. 
+        Klicken Sie dann auf OK.
+         </description>
+    </item>
+    
+    <item title="Fertig">
+      <description>
+   Herzlichen Glückwunsch, Sie haben Ihr erstes Self-Assessment mit verinice durchgeführt. Wenn Sie weitermachen möchten 
+   oder darüber nachdenken, ein vollständiges Managementsystem für Informationssicherheit (ISMS) in Ihrem Unternehmen zu etablieren,
+   gehen Sie zur Einstigsseite zurück, indem Sie aus dem Menü wählen <b>Hilfe -> Willkommen</b>
+    <br/><br/>
+    Wählen Sie diesmal die Option "Ein ISMS etablieren". Sie werden zur ISM Perspektive weitergeleitet, in der Sie ein weiteres Tutorial erwartet.
+     </description>
+    <onCompletion>
+        Dies beendet das Tutorial. Besuchen Sie unsere Webseite für mehr Informationen und Neuigkeiten: <b>http://verinice.org</b>
+    </onCompletion>
+   
     </item>
 </cheatsheet>

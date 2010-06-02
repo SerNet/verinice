@@ -112,7 +112,7 @@
          <menu
                icon="icons/self-assessment.png"
                id="sernet.verinice.samt.rcp.menu1"
-               label="Self-Assessment"
+               label="%menu.label"
                path="file/vn_menu_file">
             <groupMarker
                   name="slot1">
@@ -121,16 +121,23 @@
          <action
                class="sernet.verinice.samt.rcp.GenerateReportAction"
                id="sernet.verinice.samt.rcp.generatereport"
-               label="Generate Report"
+               label="%action.label.4"
                menubarPath="file/sernet.verinice.samt.rcp.menu1/slot1"
                style="push">
          </action>
          <action
                id="sernet.verinice.samt.rcp.exporttofile"
-               label="Export to file"
+               label="%action.label.5"
                menubarPath="file/sernet.verinice.samt.rcp.menu1/slot1"
                style="push">
          </action>
       </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.cheatsheets.cheatSheetItemExtension">
+		 <itemExtension
+		   itemAttribute="vnicon"
+		   class="none">
+		 </itemExtension>
    </extension>
 </plugin>
