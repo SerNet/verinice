@@ -102,7 +102,7 @@ public class ControlMaturityService {
      * @return
      */
     public Double getMaxMaturityValue(ControlGroup group) {
-        Double result = 0.0;
+        Double result = Double.valueOf(0);
         for (CnATreeElement child : group.getChildren()) {
             if (child instanceof IControl) {
                 Double maturity = getMaxMaturityValue((IControl) child);
