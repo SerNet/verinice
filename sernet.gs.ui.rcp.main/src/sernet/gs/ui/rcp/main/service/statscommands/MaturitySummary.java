@@ -106,26 +106,43 @@ public class MaturitySummary extends GenericCommand {
             maturity.put(group.getTitle(), getThreshold(group, TYPE_THRESHOLD2));
     }
 
+    
     /**
+     * Gibt den maximalen Schwellenwert (threshold)
+     * 
      * @param controlGroup
-     * @param type_threshold22 
+     * @param typeThreshold
      * @return
      */
     private Double getThreshold(ControlGroup controlGroup, int typeThreshold) {
+        Double result = Double.valueOf(0);
         Set<CnATreeElement> children = controlGroup.getChildren();
-        for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-            CnATreeElement cnATreeElement = (CnATreeElement) iterator.next();
+        for (Iterator<CnATreeElement> iterator = children.iterator(); iterator.hasNext();) {
+            CnATreeElement cnATreeElement = iterator.next();
             if (cnATreeElement instanceof IControl) {
                 IControl control = (IControl) cnATreeElement;
-                if (typeThreshold == TYPE_THRESHOLD1)
-                    return (double)control.getThreshold1();
-                else 
-                    return (double)control.getThreshold2();
+                switch (typeThreshold) {
+                case TYPE_THRESHOLD1:
+                    if (control.getThreshold1()>result) {
+                        result = (double)control.getThreshold1(); 
+                    }
+                    break;
+                case TYPE_THRESHOLD2:
+                    if (control.getThreshold2()>result) {
+                        result = (double)control.getThreshold2(); 
+                    }
+                    break;
+                default:
+                    break;
+                }
             } else if (cnATreeElement instanceof ControlGroup) {
-               return getThreshold((ControlGroup) cnATreeElement, typeThreshold);
+                Double recursiveResult = getThreshold((ControlGroup) cnATreeElement, typeThreshold);
+                if(recursiveResult>result) {
+                    result = recursiveResult;
+                }
             }
         }
-        return (double)0;
+        return result;
     }
 
     /**
