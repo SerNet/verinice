@@ -28,21 +28,33 @@
 		<level value="ERROR" />
 	</logger>
 	
+	<logger name="sernet.hui.common.connect.HUITypeFactory">
+		<level value="WARN" />
+	</logger>
 
 	<!-- Logger for verinice -->
 	<!--
-	<logger name="sernet">
+	<logger name="sernet.verinice">
 		<level value="DEBUG" />
 	</logger>
 	-->
 
 	<!-- Logger for RemoteCalls -->
-	<!--
+    <!--
 	<logger name="org.springframework.remoting.httpinvoker">
 		<level value="DEBUG" />
 	</logger>
-	-->
-
+    -->
+    
+    <logger name="org.hibernate.SQL">
+        <level value="DEBUG" />
+    </logger>
+    
+    <logger name="sernet.verinice.samt">
+        <level value="DEBUG" />
+    </logger>
+    
+	
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />

@@ -20,6 +20,6 @@ Export-Package: org.ccil.cowan.tagsoup,
  sernet.gs.model;version="1.11.1",
  sernet.gs.scraper;version="1.11.1",
  sernet.gs.service;version="1.11.1"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15"

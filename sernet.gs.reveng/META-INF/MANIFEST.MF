@@ -5,7 +5,7 @@ Bundle-SymbolicName: sernet.gs.reveng
 Bundle-Version: 1.1.1
 Export-Package: sernet.gs.reveng;version="1.1.1";uses:="org.hibernate",
  sernet.gs.reveng.importData;version="1.1.1";uses:="sernet.gs.reveng"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
 Require-Bundle: com.springsource.org.hibernate;bundle-version="3.2.6",
  org.springframework.core;bundle-version="2.5.6",
