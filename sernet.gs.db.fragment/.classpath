@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="lib/derby/derby.jar" sourcepath="sernet.gs.db.fragmentsrc.zip"/>
@@ -10,5 +9,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/derby/derbytools.jar" sourcepath="sernet.gs.db.fragmentsrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/mysql/mysql-connector-java-5.0.7-bin.jar" sourcepath="sernet.gs.db.fragmentsrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/postgres/postgresql-8.2-504.jdbc3.jar" sourcepath="sernet.gs.db.fragmentsrc.zip"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
