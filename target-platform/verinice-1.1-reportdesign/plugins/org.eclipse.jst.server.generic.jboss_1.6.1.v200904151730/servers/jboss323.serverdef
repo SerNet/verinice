@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:ServerRuntime
+	xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
+	name="JBOSS 3.2.3" version="v3.2.3">
+<property id="serverRootDirectory"
+	label="%ApplicationServerDirectory"
+	type="directory"
+	context="runtime"
+	default="/your_server_root/appservers/jboss-3.2.3" />
+<property id="serverAddress"
+	label="%serverAddress"
+	type="string"
+	context="server"
+	default="127.0.0.1" />
+<property id="port"
+	label="%serverPort"
+	type="string"
+	context="server"
+	default="8080" />
+<property id="jndiPort"
+	label="%jndiPort"
+	type="string"
+	context="server"
+	default="1099" />	
+
+<property id="serverConfig"
+	label="%jboss323serverConfig"
+	type="select"
+	context="server"
+	default="default,all,minimal" />
+
+
+	<port>
+		<no>${port}</no>
+		<name>Http</name>
+		<protocol>http</protocol>
+	</port>
+
+	<module>
+		<type>jst.web</type>
+		<publishDir>${serverRootDirectory}/server/${serverConfig}/deploy</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+	<module>
+		<type>jst.ejb</type>
+		<publishDir>${serverRootDirectory}/server/${serverConfig}/deploy</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+	<module>
+		<type>jst.ear</type>
+		<publishDir>${serverRootDirectory}/server/${serverConfig}/deploy</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+
+	<project>
+		<classpathReference>jboss.project</classpathReference>
+	</project>
+	
+	<start>
+		<mainClass>org.jboss.Main</mainClass>
+		<workingDirectory>${serverRootDirectory}/bin</workingDirectory>
+		<programArguments>-c ${serverConfig}</programArguments>
+		<vmParameters></vmParameters>
+		<classpathReference>jboss</classpathReference>
+	</start>
+
+	<stop>
+		<mainClass>org.jboss.Shutdown</mainClass>
+		<workingDirectory>${serverRootDirectory}/bin</workingDirectory>
+		<programArguments>-S</programArguments>
+		<vmParameters></vmParameters>
+		<classpathReference>jboss</classpathReference>
+	</stop>
+	<publisher id="org.eclipse.jst.server.generic.antpublisher">
+		<publisherdata>
+			<dataname>build.file</dataname>
+			<datavalue>/buildfiles/jboss323.xml</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.web</dataname>
+			<datavalue>deploy.j2ee.web</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.ejb</dataname>
+			<datavalue>deploy.j2ee.ejb</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.web</dataname>
+			<datavalue>undeploy.j2ee.web</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.ejb</dataname>
+			<datavalue>undeploy.j2ee.ejb</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.ear</dataname>
+			<datavalue>deploy.j2ee.ear</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.ear</dataname>
+			<datavalue>undeploy.j2ee.ear</datavalue>
+		</publisherdata>				
+	</publisher>
+
+	<classpath id="jboss" >
+		<archive path="${serverRootDirectory}/bin/run.jar" />
+		<archive path="${serverRootDirectory}/bin/shutdown.jar" />
+		<archive path="${serverRootDirectory}/client/jboss-j2ee.jar" />
+		<archive path="${serverRootDirectory}/server/default/lib/javax.servlet.jar" />
+		<archive path="${serverRootDirectory}/lib/jboss-boot.jar" />
+		<archive path="${serverRootDirectory}/lib/jboss-system.jar" />
+		<archive path="${serverRootDirectory}/lib/jboss-jmx.jar" />
+		<archive path="${serverRootDirectory}/lib/jboss-common.jar" />
+		<archive path="${serverRootDirectory}/lib/concurrent.jar" />
+		<archive path="${serverRootDirectory}/server/default/lib/jboss.jar" />
+		<archive path="${serverRootDirectory}/server/default/lib/jnpserver.jar" />
+		<archive path="${serverRootDirectory}/server/default/lib/jpl-pattern.jar" />
+		<archive path="${serverRootDirectory}/server/default/lib/jpl-util.jar" />
+		<archive path="${serverRootDirectory}/server/default/lib/jboss-transaction.jar" />
+		<archive path="${serverRootDirectory}/server/default/lib/bcel.jar" />
+		<archive path="${serverRootDirectory}/lib/jdom.jar" />
+		<archive path="${serverRootDirectory}/lib/xercesImpl.jar" />
+		<archive path="${serverRootDirectory}/lib/xml-apis.jar" />
+		<archive path="${serverRootDirectory}/lib/gnu-regexp.jar" />
+		<archive path="${serverRootDirectory}/lib/getopt.jar" />
+	</classpath>
+
+	<classpath id="jboss.project" >
+		<archive path="${serverRootDirectory}/client/jboss-j2ee.jar" />
+		<archive path="${serverRootDirectory}/server/default/lib/javax.servlet.jar" />
+		<archive path="${serverRootDirectory}/server/default/lib/activation.jar" />
+		<archive path="${serverRootDirectory}/server/default/lib/mail.jar" />
+	</classpath>
+	<jndiConnection>
+		<providerUrl>jnp://${serverAddress}:${jndiPort}</providerUrl>
+		<initialContextFactory>org.jnp.interfaces.NamingContextFactory</initialContextFactory>
+		<jndiProperty>
+			<name></name>
+			<value></value>
+		</jndiProperty>
+	</jndiConnection>
+</tns:ServerRuntime>

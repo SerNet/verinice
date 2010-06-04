@@ -1,0 +1,38 @@
+Signature-Version: 1.0
+SHA1-Digest-Manifest: 3GxhwUVEivHRctwfgj3T6rb7sLY=
+Created-By: 1.6.0 (IBM Corporation)
+SHA1-Digest-Manifest-Main-Attributes: 2eCJiTaj2Vxt5qiiqgZTcclKGNc=
+
+Name: servers/jboss323.serverdef
+SHA1-Digest: Aa6CgRKgY0ZGx60SLoZclyQQXG8=
+
+Name: servers/jboss5.serverdef
+SHA1-Digest: +C0zkDM/jVn3hPkKOkbGi4GUFQs=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: SAqY+5ITAL0mkdYeijlSRhyIaZk=
+
+Name: icons/obj16/jboss.gif
+SHA1-Digest: maPPuRj5u9Yy4dyclh+HX4sUK7c=
+
+Name: servers/jboss42.serverdef
+SHA1-Digest: CX52nwLRSE1c9flcbqZb3Frn81A=
+
+Name: about.html
+SHA1-Digest: uiJRfz9x0SZWELI8a5uHYToQRw4=
+
+Name: buildfiles/jboss323.xml
+SHA1-Digest: 3AphEzOrfPDV9HGk26/Y+cXiero=
+
+Name: plugin.xml
+SHA1-Digest: J7ClLG4EXuXympUNXOg1HQ/yaRE=
+
+Name: servers/jboss.serverdef
+SHA1-Digest: T5cgK7YB2NhTKspk1RWlln8F9Ks=
+
+Name: genericjboss.jar
+SHA1-Digest: vZ2X2DYKrVlu+T4/muUQYJjHooc=
+
+Name: plugin.properties
+SHA1-Digest: WOtEGDvHHqdJml9ARVMgY3tpHDo=
+

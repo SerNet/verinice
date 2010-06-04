@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:ServerRuntime
+	xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
+	name="IBM WebSphere 6" version="v6.0">
+	<property id="wasHome"
+		label="%wasHome"
+		type="directory"
+		context="runtime"
+		default="/your_server_root/was-6.0" />
+
+	<property id="port"
+		label="%port"
+		type="string"
+		context="server"
+		default="9080" />
+
+	<property id="wasProfile"
+		label="%wasProfile"
+		type="directory"
+		context="server"
+		default="/your_server_root/was-6.0/profiles/default" />
+
+	<property id="wasCell"
+		label="%wasCell"
+		type="string"
+		context="server"
+		default="[cell]" />
+
+	<property id="wasNode"
+		label="%wasNode"
+		type="string"
+		context="server"
+		default="[Node]" />
+	<property id="wasServer"
+		label="%wasServer"
+		type="string"
+		context="server"
+		default="server1" />
+
+	<port>
+		<no>${port}</no>
+		<name>Http</name>
+		<protocol>http</protocol>
+	</port>
+
+	<module>
+		<type>jst.web</type>
+		<publishDir>${wasHome}</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
+	</module>
+	<module>
+		<type>jst.ejb</type>
+		<publishDir>${wasHome}</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
+	</module>
+	<module>
+		<type>jst.ear</type>
+		<publishDir>${wasHome}</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
+	</module>
+	<module>
+		<type>jst.connector</type>
+		<publishDir>${wasHome}</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
+	</module>
+	<project>
+		<classpathReference>was.project</classpathReference>
+	</project>
+	
+	<start>
+		<mainClass>com.ibm.ws.bootstrap.WSLauncher</mainClass>
+		<workingDirectory>${wasProfile}</workingDirectory>
+		<programArguments>com.ibm.ws.runtime.WsServer "${wasProfile}/config" "${wasCell}" "${wasNode}" "${wasServer}"</programArguments>
+		<vmParameters>"-Duser.install.root=${wasProfile}"  "-Dserver.root=${wasProfile}"  "-Dwas.install.root=${wasHome}" "-Dcom.ibm.itp.location=${wasHome}/bin" "-Dws.ext.dirs=${wasHome}/java/lib${pathChar}${wasProfile}/classes${pathChar}${wasHome}/classes${pathChar}${wasHome}/lib${pathChar}${wasHome}/installedChannels${pathChar}${wasHome}/lib/ext${pathChar}${wasHome}/web/help${pathChar}${wasHome}/deploytool/itp/plugins/com.ibm.etools.ejbdeploy/runtime"  -Xbootclasspath/p:${wasHome}/java/jre/lib/ext/ibmorb.jar${pathChar}${wasHome}/java/jre/lib/ext/ibmext.jar -Xms50m -Xmx256m "-Dcom.ibm.CORBA.ConfigURL=file:${wasProfile}/properties/sas.client.props" "-Dcom.ibm.SOAP.ConfigURL=file:${wasProfile}/properties/soap.client.props"   "-Djava.util.logging.manager=com.ibm.ws.bootstrap.WsLogManager" "-Djava.util.logging.configureByServer=true" "-Dibm.websphere.preload.classes=true"  "-Djava.library.path=${wasHome}/java/bin${pathChar}${wasHome}/bin${pathChar}${wasHome}/java/bin${pathChar}${wasHome}/java/jre/bin"</vmParameters>
+		<classpathReference>was</classpathReference>
+	</start>
+
+	<stop>
+		<mainClass>com.ibm.ws.bootstrap.WSLauncher</mainClass>
+		<workingDirectory>${wasHome}</workingDirectory>
+		<programArguments>com.ibm.ws.management.tools.WsServerStop "${wasProfile}/config" "${wasCell}" "${wasNode}" "${wasServer}"</programArguments>
+		<vmParameters>"-Duser.install.root=${wasProfile}"  "-Dserver.root=${wasProfile}"  "-Dwas.install.root=${wasHome}" "-Dws.ext.dirs=${wasHome}/java/lib${pathChar}${wasHome}/classes${pathChar}${wasHome}/lib${pathChar}${wasHome}/installedChannels${pathChar}${wasHome}/lib/ext${pathChar}${wasHome}/web/help${pathChar}${wasHome}/deploytool/itp/plugins/com.ibm.etools.ejbdeploy/runtime"   "-Xbootclasspath/p:${wasHome}/java/jre/lib/ext/ibmorb.jar${pathChar}${wasHome}/java/jre/lib/ext/ibmext.jar" -Xms50m -Xmx256m "-Dcom.ibm.CORBA.ConfigURL=file:${wasProfile}/properties/sas.client.props" "-Dcom.ibm.SOAP.ConfigURL=file:${wasProfile}/properties/soap.client.props"   "-Djava.util.logging.manager=com.ibm.ws.bootstrap.WsLogManager" "-Djava.util.logging.configureByServer=true" "-Dibm.websphere.preload.classes=true"  "-Djava.library.path=${wasHome}/java/bin${pathChar}${wasHome}/bin${pathChar}${wasHome}/java/bin${pathChar}${wasHome}/java/jre/bin"</vmParameters>
+		<classpathReference>was</classpathReference>
+	</stop>
+	
+	<publisher id="org.eclipse.jst.server.generic.antpublisher">
+		<publisherdata>
+			<dataname>build.file</dataname>
+			<datavalue>/serverdef/scripts/websphere.6.x.xml</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.web</dataname>
+			<datavalue>deploy.j2ee.web</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.ejb</dataname>
+			<datavalue>deploy.j2ee.ejb</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.web</dataname>
+			<datavalue>undeploy.j2ee.web</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.ejb</dataname>
+			<datavalue>undeploy.j2ee.ejb</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.ear</dataname>
+			<datavalue>deploy.j2ee.ear</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.ear</dataname>
+			<datavalue>undeploy.j2ee.ear</datavalue>
+		</publisherdata>		
+	</publisher>
+
+	<classpath id="was" >
+	    <archive path="${wasHome}/properties" />
+	    <archive path="${wasHome}/lib/bootstrap.jar" />
+        <archive path="${wasHome}/lib/j2ee.jar" />
+        <archive path="${wasHome}/lib/lmproxy.jar" />
+        <archive path="${wasHome}/lib/urlprotocols.jar" />
+	</classpath>
+
+	<classpath id="was.project">
+	    <archive path="${wasHome}/lib/activitySession.jar" />
+        <archive path="${wasHome}/lib/acwa.jar" />
+		<archive path="${wasHome}/lib/admin.jar" />        
+		<archive path="${wasHome}/lib/appprofile.jar" />        
+		<archive path="${wasHome}/lib/asynchbeans.jar" />   
+		<archive path="${wasHome}/lib/bootstrap.jar" />		     
+		<archive path="${wasHome}/lib/bsf.jar" />        
+		<archive path="${wasHome}/lib/channelfw.jar" />        
+		<archive path="${wasHome}/lib/cluster.jar" />        
+		<archive path="${wasHome}/lib/clusteradapter.jar" />        
+		<archive path="${wasHome}/lib/commonj-twm.jar" />        
+		<archive path="${wasHome}/lib/commons-discovery.jar" />        
+		<archive path="${wasHome}/lib/commons-logging-api.jar" />        
+		<archive path="${wasHome}/lib/distexcep.jar" />        
+		<archive path="${wasHome}/lib/dwlmclient.jar" />        
+		<archive path="${wasHome}/lib/dynacache.jar" />        
+		<archive path="${wasHome}/lib/ecutils.jar" />        
+		<archive path="${wasHome}/lib/ejbcontainer.jar" />        
+		<archive path="${wasHome}/lib/ejbcontainerImpl.jar" />        
+		<archive path="${wasHome}/lib/ejbportable.jar" />        
+		<archive path="${wasHome}/lib/emf.jar" />      
+		<archive path="${wasHome}/lib/ffdc.jar" />        
+		<archive path="${wasHome}/lib/i18nctx.jar" />        
+		<archive path="${wasHome}/installedChannels/channel.http.jar" />        
+		<archive path="${wasHome}/installedChannels/channel.ssl.jar" />        
+		<archive path="${wasHome}/installedChannels/channel.tcp.jar" />        
+		<archive path="${wasHome}/lib/ivjejb35.jar" />        
+		<archive path="${wasHome}/lib/j2cIntf.jar" />        
+		<archive path="${wasHome}/lib/j2ee.jar" />        
+		<archive path="${wasHome}/lib/jdbcmediator.jar" />       
+		<archive path="${wasHome}/lib/jsf-api.jar" />       
+		<archive path="${wasHome}/lib/jstl.jar" />       
+		<archive path="${wasHome}/lib/management.jar"/>
+		<archive path="${wasHome}/lib/marshall.jar"/>
+		<archive path="${wasHome}/lib/objectpool.jar"/>
+		<archive path="${wasHome}/lib/odc.jar"/>
+		<archive path="${wasHome}/lib/pm.jar"/>
+		<archive path="${wasHome}/lib/pmimpl.jar"/>
+		<archive path="${wasHome}/lib/processintf.jar"/>
+		<archive path="${wasHome}/lib/qryclient.jar"/>
+		<archive path="${wasHome}/lib/query.jar"/>
+		<archive path="${wasHome}/lib/querymd.jar"/> 
+		<archive path="${wasHome}/lib/queryws.jar"/>
+		<archive path="${wasHome}/lib/ras.jar"/>
+		<archive path="${wasHome}/lib/rsadaptercci.jar"/>
+		<archive path="${wasHome}/lib/rsadapterspi.jar"/>
+		<archive path="${wasHome}/lib/rsaexternal.jar"/>
+		<archive path="${wasHome}/lib/runtime.jar"/>
+		<archive path="${wasHome}/lib/runtimefw.jar"/>
+		<archive path="${wasHome}/lib/sas.jar"/>
+		<archive path="${wasHome}/lib/scheduler-client.jar"/>
+		<archive path="${wasHome}/lib/scheduler-service.jar"/>
+		<archive path="${wasHome}/lib/security.jar"/>
+		<archive path="${wasHome}/lib/securityimpl.jar"/>
+		<archive path="${wasHome}/lib/servletevent.jar"/>
+		<archive path="${wasHome}/lib/sib.common.jar"/>
+		<archive path="${wasHome}/lib/sib.server.jar"/>
+		<archive path="${wasHome}/lib/soap.jar"/>
+		<archive path="${wasHome}/lib/soap-sec.jar"/>
+		<archive path="${wasHome}/lib/standard.jar"/>
+		<archive path="${wasHome}/lib/startupbean.jar"/>
+		<archive path="${wasHome}/lib/tx.jar"/>
+		<archive path="${wasHome}/lib/uddi4jv2.jar"/>
+		<archive path="${wasHome}/lib/utils.jar"/>
+		<archive path="${wasHome}/lib/vaprt.jar"/>
+		<archive path="${wasHome}/lib/wccm_base.jar"/>
+		<archive path="${wasHome}/lib/webcontainer.jar"/>
+		<archive path="${wasHome}/lib/webservices.jar"/>
+		<archive path="${wasHome}/lib/wsatlib.jar"/>
+		<archive path="${wasHome}/lib/ws-commons-logging.jar"/>
+		<archive path="${wasHome}/lib/wsdl4j.jar"/>
+		<archive path="${wasHome}/lib/wsexception.jar"/>
+		<archive path="${wasHome}/lib/wsif.jar"/>
+		<archive path="${wasHome}/lib/wsif-j2c.jar"/>
+		<archive path="${wasHome}/lib/ws-jsf.jar"/>
+		<archive path="${wasHome}/lib/wssec.jar"/>
+	</classpath>
+	<jndiConnection>
+		<providerUrl>iiop://${serverAddress}:2001</providerUrl>
+		<initialContextFactory>org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory</initialContextFactory>
+		<jndiProperty>
+			<name></name>
+			<value></value>
+		</jndiProperty>
+	</jndiConnection>
+</tns:ServerRuntime>

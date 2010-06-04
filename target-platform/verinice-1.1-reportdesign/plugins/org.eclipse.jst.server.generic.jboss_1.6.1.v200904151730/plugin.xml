@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension point="org.eclipse.wst.server.core.runtimeTypes">
+	    <runtimeType
+	       id="org.eclipse.jst.server.generic.runtime.jboss323"
+	       name="%jboss323runtimeTypeName"
+	       description="%jboss323runtimeTypeDescription"
+	       vendor="%jbossCategory"
+	       version="3.2.3"
+	       class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+	       <moduleType
+	         types="jst.web"
+	         versions="2.2, 2.3"/>
+	      <moduleType
+	         types="jst.ejb"
+	         versions="1.1, 2.0"/>
+	      <moduleType
+	         types="jst.ear"
+	         versions="1.2, 1.3"/>
+	      <moduleType
+	         types="jst.connector"
+	         versions="1.0"/>
+	       <moduleType
+	         types="jst.utility"
+	         versions="1.0"/>
+	    </runtimeType>
+	    
+	    <runtimeType
+	       id="org.eclipse.jst.server.generic.runtime.jboss4"
+	       name="%jboss4runtimeTypeName"
+	       description="%jboss4runtimeTypeDescription"
+	       vendor="%jbossCategory"
+	       version="4.0"
+	       class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+	       <moduleType
+	         types="jst.web"
+	         versions="2.2, 2.3, 2.4"/>
+	      <moduleType
+	         types="jst.ejb"
+	         versions="1.1, 2.0, 2.1"/>
+	      <moduleType
+	         types="jst.ear"
+	         versions="1.2, 1.3, 1.4"/>
+	      <moduleType
+	         types="jst.connector"
+	         versions="1.0, 1.5"/>
+	       <moduleType
+	         types="jst.utility"
+	         versions="1.0"/>
+	    </runtimeType>
+
+	    <runtimeType
+	       id="org.eclipse.jst.server.generic.runtime.jboss42"
+	       name="%jboss42runtimeTypeName"
+	       description="%jboss42runtimeTypeDescription"
+	       vendor="%jbossCategory"
+	       version="4.2"
+	       class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+	       <moduleType
+	         types="jst.web"
+	         versions="2.2, 2.3, 2.4, 2.5"/>
+	      <moduleType
+	         types="jst.ejb"
+	         versions="1.1, 2.0, 2.1, 3.0"/>
+	      <moduleType
+	         types="jst.ear"
+	         versions="1.2, 1.3, 1.4, 5.0"/>
+	      <moduleType
+	         types="jst.connector"
+	         versions="1.0, 1.5"/>
+	       <moduleType
+	         types="jst.utility"
+	         versions="1.0"/>
+	    </runtimeType>
+	    
+	    <runtimeType
+	       id="org.eclipse.jst.server.generic.runtime.jboss5"
+	       name="%jboss5runtimeTypeName"
+	       description="%jboss5runtimeTypeDescription"
+	       vendor="%jbossCategory"
+	       version="5.0"
+	       class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+	       <moduleType
+	         types="jst.web"
+	         versions="2.2, 2.3, 2.4, 2.5"/>
+	      <moduleType
+	         types="jst.ejb"
+	         versions="1.1, 2.0, 2.1, 3.0"/>
+	      <moduleType
+	         types="jst.ear"
+	         versions="1.2, 1.3, 1.4, 5.0"/>
+	      <moduleType
+	         types="jst.connector"
+	         versions="1.0, 1.5"/>
+	       <moduleType
+	         types="jst.utility"
+	         versions="1.0"/>
+	    </runtimeType>
+
+	</extension>
+
+	<extension point="org.eclipse.wst.server.core.serverTypes">
+	     <serverType
+	           runtime="true"
+	           class="org.eclipse.jst.server.generic.core.internal.GenericServer"
+	           id="org.eclipse.jst.server.generic.jboss323"
+	           initialState="stopped"
+	           supportsRemoteHosts="false"
+	           runtimeTypeId="org.eclipse.jst.server.generic.runtime.jboss323"
+	           description="%jboss323serverTypeDescription"
+	           launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
+	           behaviourClass="org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour"
+	           name="%jboss323serverTypeName"
+	           startTimeout="50000"
+		       stopTimeout="15000"
+	           hasConfiguration="false"
+	           launchModes="run,debug,profile">
+	          
+	     </serverType>
+	     <serverType
+	           runtime="true"
+	           class="org.eclipse.jst.server.generic.core.internal.GenericServer"
+	           id="org.eclipse.jst.server.generic.jboss4"
+	           initialState="stopped"
+	           supportsRemoteHosts="false"
+	           runtimeTypeId="org.eclipse.jst.server.generic.runtime.jboss4"
+	           description="%jboss4serverTypeDescription"
+	           launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
+	           behaviourClass="org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour"
+	           name="%jboss4serverTypeName"
+	           startTimeout="50000"
+		       stopTimeout="15000"
+	           hasConfiguration="false"
+	           launchModes="run,debug,profile">        
+	     </serverType>
+	     <serverType
+	           runtime="true"
+	           class="org.eclipse.jst.server.generic.core.internal.GenericServer"
+	           id="org.eclipse.jst.server.generic.jboss42"
+	           initialState="stopped"
+	           supportsRemoteHosts="false"
+	           runtimeTypeId="org.eclipse.jst.server.generic.runtime.jboss42"
+	           description="%jboss42serverTypeDescription"
+	           launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
+	           behaviourClass="org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour"
+	           name="%jboss42serverTypeName"
+	           startTimeout="50000"
+		       stopTimeout="15000"
+	           hasConfiguration="false"
+	           launchModes="run,debug,profile">        
+	     </serverType>
+	     <serverType
+	           runtime="true"
+	           class="org.eclipse.jst.server.generic.core.internal.GenericServer"
+	           id="org.eclipse.jst.server.generic.jboss5"
+	           initialState="stopped"
+	           supportsRemoteHosts="false"
+	           runtimeTypeId="org.eclipse.jst.server.generic.runtime.jboss5"
+	           description="%jboss5serverTypeDescription"
+	           launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
+	           behaviourClass="org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour"
+	           name="%jboss5serverTypeName"
+	           startTimeout="50000"
+		       stopTimeout="15000"
+	           hasConfiguration="false"
+	           launchModes="run,debug,profile">        
+	     </serverType>
+	     
+	</extension>
+    <extension point="org.eclipse.wst.server.ui.wizardFragments">
+	     <fragment
+	        id="org.eclipse.jst.server.generic.runtime"
+	        typeIds="org.eclipse.jst.server.generic.runtime.jboss323"
+	        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+	     <fragment
+	        id="org.eclipse.jst.server.generic.server"
+	        typeIds="org.eclipse.jst.server.generic.jboss323"
+	        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>   
+	     <fragment
+	        id="org.eclipse.jst.server.generic.runtime"
+	        typeIds="org.eclipse.jst.server.generic.runtime.jboss4"
+	        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+	     <fragment
+	        id="org.eclipse.jst.server.generic.server"
+	        typeIds="org.eclipse.jst.server.generic.jboss4"
+	        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>   
+	     <fragment
+	        id="org.eclipse.jst.server.generic.runtime"
+	        typeIds="org.eclipse.jst.server.generic.runtime.jboss42"
+	        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+	     <fragment
+	        id="org.eclipse.jst.server.generic.server"
+	        typeIds="org.eclipse.jst.server.generic.jboss42"
+	        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>   
+	     <fragment
+	        id="org.eclipse.jst.server.generic.runtime"
+	        typeIds="org.eclipse.jst.server.generic.runtime.jboss5"
+	        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+	     <fragment
+	        id="org.eclipse.jst.server.generic.server"
+	        typeIds="org.eclipse.jst.server.generic.jboss5"
+	        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>   
+	</extension>´
+	
+	<extension point="org.eclipse.wst.server.ui.serverImages">
+		 <image
+	         id="org.eclipse.jst.server.generic.image"
+	         icon="icons/obj16/jboss.gif"
+	         typeIds="org.eclipse.jst.server.generic.runtime.jboss323"/>
+	     <image
+	         id="org.eclipse.jst.server.generic.image"
+	         icon="icons/obj16/jboss.gif"
+	         typeIds="org.eclipse.jst.server.generic.jboss323"/>
+	     <image
+	         id="org.eclipse.jst.server.generic.image"
+	         icon="icons/obj16/jboss.gif"
+	         typeIds="org.eclipse.jst.server.generic.runtime.jboss4"/>
+	     <image
+	         id="org.eclipse.jst.server.generic.image"
+	         icon="icons/obj16/jboss.gif"
+	         typeIds="org.eclipse.jst.server.generic.jboss4"/>
+	     <image
+	         id="org.eclipse.jst.server.generic.image"
+	         icon="icons/obj16/jboss.gif"
+	         typeIds="org.eclipse.jst.server.generic.runtime.jboss42"/>
+	     <image
+	         id="org.eclipse.jst.server.generic.image"
+	         icon="icons/obj16/jboss.gif"
+	         typeIds="org.eclipse.jst.server.generic.jboss42"/>
+	     <image
+	         id="org.eclipse.jst.server.generic.image"
+	         icon="icons/obj16/jboss.gif"
+	         typeIds="org.eclipse.jst.server.generic.runtime.jboss5"/>
+	     <image
+	         id="org.eclipse.jst.server.generic.image"
+	         icon="icons/obj16/jboss.gif"
+	         typeIds="org.eclipse.jst.server.generic.jboss5"/>
+	</extension>
+	
+   <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
+     <runtimeClasspathProvider
+        id="org.eclipse.jst.server.generic.runtimeTarget"
+        runtimeTypeIds="org.eclipse.jst.server.generic.runtime.jboss*"
+        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>
+	</extension>
+	
+   <extension point="org.eclipse.jst.server.generic.core.serverdefinition">
+		<serverdefinition id="org.eclipse.jst.server.generic.runtime.jboss323" definitionfile="/servers/jboss323.serverdef">
+		</serverdefinition>
+		<serverdefinition id="org.eclipse.jst.server.generic.runtime.jboss4" definitionfile="/servers/jboss.serverdef">
+		</serverdefinition>   
+		<serverdefinition id="org.eclipse.jst.server.generic.runtime.jboss42" definitionfile="/servers/jboss42.serverdef">
+		</serverdefinition>   
+		<serverdefinition id="org.eclipse.jst.server.generic.runtime.jboss5" definitionfile="/servers/jboss5.serverdef">
+		</serverdefinition>   
+   </extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+     <runtime-component-type
+       id="org.eclipse.jst.server.generic.runtime.jboss"/>
+
+    <runtime-component-version
+       type="org.eclipse.jst.server.generic.runtime.jboss"
+       version="3.2.3"/>
+    <runtime-component-version
+       type="org.eclipse.jst.server.generic.runtime.jboss"
+       version="4.0"/>
+    <runtime-component-version
+       type="org.eclipse.jst.server.generic.runtime.jboss"
+       version="4.2"/>
+    <runtime-component-version
+       type="org.eclipse.jst.server.generic.runtime.jboss"
+       version="5.0"/>
+
+    <adapter>
+      <runtime-component
+         id="org.eclipse.jst.server.generic.runtime.jboss"/>
+      <factory
+         class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
+      <type
+         class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
+    </adapter>
+
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.generic.runtime.jboss"
+         version="3.2.3"/>
+      <facet
+         id="jst.web"
+         version="2.2,2.3"/>
+      <facet
+         id="jst.ejb"
+         version="1.1,2.0"/>
+      <facet
+         id="jst.ear"
+         version="1.2,1.3"/>
+      <facet
+         id="jst.connector"
+         version="1.0"/>
+      <facet
+         id="jst.appclient"
+         version="1.2,1.3"/>
+      <facet
+         id="jst.utility"
+         version="1.0"/>
+    </supported>
+
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.generic.runtime.jboss"
+         version="4.0"/>
+      <facet
+         id="jst.web"
+         version="2.2,2.3,2.4"/>
+      <facet
+         id="jst.ejb"
+         version="1.1,2.0,2.1"/>
+      <facet
+         id="jst.ear"
+         version="1.2,1.3,1.4"/>
+      <facet
+         id="jst.connector"
+         version="1.0,1.5"/>
+      <facet
+         id="jst.appclient"
+         version="1.2,1.3,1.4"/>
+      <facet
+         id="jst.utility"
+         version="1.0"/>
+    </supported>
+    
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.generic.runtime.jboss"
+         version="4.2"/>
+      <facet
+         id="jst.web"
+         version="2.2,2.3,2.4,2.5"/>
+      <facet
+         id="jst.ejb"
+         version="1.1,2.0,2.1,3.0"/>
+      <facet
+         id="jst.ear"
+         version="1.2,1.3,1.4,5.0"/>
+      <facet
+         id="jst.connector"
+         version="1.0,1.5"/>
+      <facet
+         id="jst.appclient"
+         version="1.2,1.3,1.4,5.0"/>
+      <facet
+         id="jst.utility"
+         version="1.0"/>
+    </supported>
+    
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.generic.runtime.jboss"
+         version="5.0"/>
+      <facet
+         id="jst.web"
+         version="2.2,2.3,2.4,2.5"/>
+      <facet
+         id="jst.ejb"
+         version="1.1,2.0,2.1,3.0"/>
+      <facet
+         id="jst.ear"
+         version="1.2,1.3,1.4,5.0"/>
+      <facet
+         id="jst.connector"
+         version="1.0,1.5"/>
+      <facet
+         id="jst.appclient"
+         version="1.2,1.3,1.4,5.0"/>
+      <facet
+         id="jst.utility"
+         version="1.0"/>
+    </supported>
+   
+  </extension>
+  
+  <extension point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+    <default-facets>
+      <runtime-component id="org.eclipse.jst.server.generic.runtime.jboss"/>
+      <facet id="wst.jsdt.web" version="1.0"/>
+    </default-facets>
+  </extension>
+  
+  <extension point="org.eclipse.wst.common.project.facet.ui.images">
+    <image runtime-component-type="org.eclipse.jst.server.generic.runtime.jboss"
+      path="icons/obj16/jboss.gif"/>  
+  </extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimes">  
+    <adapter>
+      <runtime-component id="org.eclipse.jst.server.generic.runtime.jboss"/>
+      <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
+      <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
+    </adapter>
+  </extension>
+
+  <extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.generic.runtime.jboss323"
+      runtime-component="org.eclipse.jst.server.generic.runtime.jboss"
+      version="3.2.3"/>
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.generic.runtime.jboss4"
+      runtime-component="org.eclipse.jst.server.generic.runtime.jboss"
+      version="4.0"/>
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.generic.runtime.jboss42"
+      runtime-component="org.eclipse.jst.server.generic.runtime.jboss"
+      version="4.2"/>
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.generic.runtime.jboss5"
+      runtime-component="org.eclipse.jst.server.generic.runtime.jboss"
+      version="5.0"/>
+  </extension>
+
+</plugin>

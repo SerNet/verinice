@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:ServerRuntime
+	xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
+	name="JOnAS 4.x" version="v4.x">
+	<property id="jonasRoot"
+		label="%jonasRoot"
+		type="directory"
+		context="runtime"
+		default="/your_server_root/JOnAS-4.x" />
+	<property id="jonasBase"
+		label="%jonasBase"
+		type="directory"
+		context="runtime"
+		default="/your_server_root/JOnAS-4.x" />
+	<property id="serverAddress"
+		label="%serverAddress"
+		type="string"
+		context="server"
+		default="127.0.0.1" />
+	<property id="port"
+		label="%serverPort"
+		type="string"
+		context="server"
+		default="9000" />
+	<property id="protocols"
+		label="%jonasEjbProtocols"
+		type="string"
+		context="server"
+		default="jrmp" />
+	<property id="mappernames"
+		label="%jonasmappernames"
+		type="string"
+		context="server"
+		default="" />
+
+	<port>
+		<no>${port}</no>
+		<name>Http</name>
+		<protocol>http</protocol>
+	</port>
+
+	<module>
+		<type>jst.web</type>
+		<publishDir>${jonasBase}/webapps/autoload</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+
+	<module>
+		<type>jst.ejb</type>
+		<publishDir>${jonasBase}/ejbjars/autoload</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+	<module>
+		<type>jst.ear</type>
+		<publishDir>${jonasBase}/apps/autoload</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+
+	<project>
+		<classpathReference>jonas.project</classpathReference>
+	</project>
+	
+	<start>
+		<mainClass>org.objectweb.jonas.server.Bootstrap</mainClass>
+		<workingDirectory>${jonasRoot}</workingDirectory>
+		<programArguments>org.objectweb.jonas.server.Server</programArguments>
+		<vmParameters>-Dinstall.root="${jonasRoot}" -Djonas.base="${jonasBase}" -Djava.security.policy="${jonasRoot}/conf/java.policy" -Djonas.classpath= -Djonas.default.classloader=true -Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate -Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory -Djava.security.auth.login.config="${jonasRoot}/conf/jaas.config"  -Djava.endorsed.dirs="${jonasRoot}/lib/endorsed" -Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi</vmParameters>
+		<classpathReference>jonas</classpathReference>
+	</start>
+
+	<stop>
+		<mainClass>org.objectweb.jonas.server.Bootstrap</mainClass>
+		<workingDirectory>${jonasRoot}</workingDirectory>
+		<programArguments>org.objectweb.jonas.adm.JonasAdmin -s</programArguments>
+		<vmParameters>-Dinstall.root=${jonasRoot} -Djonas.base=${jonasBase} -Djava.security.policy=${jonasRoot}/conf/java.policy -Djonas.classpath= -Djonas.default.classloader=true -Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate -Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory -Djava.security.auth.login.config=${jonasRoot}/conf/jaas.config  -Djava.endorsed.dirs=${jonasRoot}/lib/endorsed -Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi</vmParameters>
+		<classpathReference>jonas</classpathReference>
+	</stop>
+	<publisher id="org.eclipse.jst.server.generic.antpublisher">
+		<publisherdata>
+			<dataname>build.file</dataname>
+			<datavalue>/buildfiles/jonas.xml</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.web</dataname>
+			<datavalue>deploy.j2ee.web</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.ejb</dataname>
+			<datavalue>deploy.j2ee.ejb</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.web</dataname>
+			<datavalue>undeploy.j2ee.web</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.ejb</dataname>
+			<datavalue>undeploy.j2ee.ejb</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.ear</dataname>
+			<datavalue>deploy.j2ee.ear</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.ear</dataname>
+			<datavalue>undeploy.j2ee.ear</datavalue>
+		</publisherdata>			
+	</publisher>
+
+	<classpath id="jonas">
+		<archive path="${jonasRoot}/lib/common/ow_jonas_bootstrap.jar" />
+		<archive path="${jonasRoot}/conf" />
+	</classpath>
+
+	<classpath id="jonas.project">
+		<archive path="${jonasRoot}/lib/common/ow_jonas_bootstrap.jar" />
+		<archive path="${jonasRoot}/lib/commons/j2ee/ejb-2_1-api.jar" />
+		<archive path="${jonasRoot}/lib/commons/j2ee/servlet-2_4.jar" />
+		<archive path="${jonasRoot}/lib/commons/j2ee/jms.jar" />
+	</classpath>
+	<jndiConnection>
+		<providerUrl>iiop://${serverAddress}:2001</providerUrl>
+		<initialContextFactory>org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory</initialContextFactory>
+		<jndiProperty>
+			<name></name>
+			<value></value>
+		</jndiProperty>
+	</jndiConnection>
+</tns:ServerRuntime>

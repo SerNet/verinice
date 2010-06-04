@@ -1,0 +1,48 @@
+Manifest-Version: 1.0
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-SymbolicName: org.eclipse.jst.server.websphere.core; singleton:
+ =true
+Bundle-Activator: org.eclipse.jst.server.websphere.core.CorePlugin
+Require-Bundle: org.eclipse.debug.core;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.wst.server.core;bundle-version="[1.0.304,2.0.0)",org.ecli
+ pse.jst.server.core;bundle-version="[1.0.305,2.0.0)",org.eclipse.jst.
+ server.ui;bundle-version="[1.0.303,2.0.0)",org.eclipse.jst.server.gen
+ eric.core;bundle-version="[1.0.205,2.0.0)",org.eclipse.jst.server.gen
+ eric.ui;bundle-version="[1.0.205,2.0.0)",org.eclipse.wst.common.core;
+ bundle-version="[1.1.101,2.0.0)",org.eclipse.wst.common.project.facet
+ .core;bundle-version="[1.3.0,2.0.0)",org.eclipse.jst.common.project.f
+ acet.core;bundle-version="[1.3.0,2.0.0)",org.eclipse.wst.common.proje
+ ct.facet.ui;bundle-version="[1.3.0,2.0.0)"
+Export-Package: org.eclipse.jst.server.websphere.core
+Bundle-Version: 1.0.302.v20080620
+Bundle-ClassPath: webspherecore.jar
+Bundle-Vendor: %providerName
+Bundle-ActivationPolicy: lazy
+Bundle-Name: %pluginName
+Bundle-ManifestVersion: 2
+
+Name: serverdef/websphere.6.serverdef
+SHA1-Digest: 4tZTIYrkeoDyVKViO4SJAl7g4to=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: KyT9FF7C7t86NoBoa2kZT3ZJBfw=
+
+Name: serverdef/scripts/websphere.6.x.xml
+SHA1-Digest: XapvoQX/Myo/8hHxqYANcud2e4w=
+
+Name: plugin.xml
+SHA1-Digest: btCQWwOGtCdvC7QgDIdXoWmbtAI=
+
+Name: about.html
+SHA1-Digest: mUOvxSYxCUot6WW9T8TxmOQUrws=
+
+Name: webspherecore.jar
+SHA1-Digest: WcMvfSb48ioWTuki9gmLhvD3I+s=
+
+Name: plugin.properties
+SHA1-Digest: +iarp5yzUrh+2UbkjJ6rMpjUEv8=
+
+Name: icons/obj16/websphere.gif
+SHA1-Digest: lwe8d6GTus0aY/ZbxptV1kA4eNU=
+

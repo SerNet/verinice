@@ -1,0 +1,53 @@
+Manifest-Version: 1.0
+Bundle-ClassPath: genericoc4j.jar
+Bundle-Vendor: %providerName
+Bundle-ActivationPolicy: lazy
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.jst.server.generic.oc4j;singleton:=tr
+ ue
+Require-Bundle: org.eclipse.jst.server.generic.core;bundle-version="[1
+ .0.102,2.0.0)",org.eclipse.jst.server.generic.ui;bundle-version="[1.0
+ .102,2.0.0)",org.eclipse.jst.server.core;bundle-version="[1.0.102,2.0
+ .0)",org.eclipse.jst.server.ui;bundle-version="[1.0.102,2.0.0)",org.e
+ clipse.jst.common.project.facet.core;bundle-version="[1.1.0,2.0.0)",o
+ rg.eclipse.wst.common.project.facet.core;bundle-version="[1.1.0,2.0.0
+ )",org.eclipse.wst.common.project.facet.ui;bundle-version="[1.1.0,2.0
+ .0)"
+Bundle-Version: 1.5.206.v20090812
+Bundle-ManifestVersion: 2
+
+Name: buildfiles/oracle/ant-oracle.1013dp4.xml
+SHA1-Digest: 4egUXZpSyt/5OReKRiKmeB50feo=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: KyT9FF7C7t86NoBoa2kZT3ZJBfw=
+
+Name: buildfiles/oracle/ant-oracle.xml
+SHA1-Digest: qEOTeH2mLpr7AuIKglN/GI68Jh0=
+
+Name: buildfiles/oracle.10.1.3.xml
+SHA1-Digest: 1uraKeMFaYfhThpg7eKmlsB/UVE=
+
+Name: servers/oracle.10.1.3.serverdef
+SHA1-Digest: lYDw3k1OazJgUi90eWqVetU9LPY=
+
+Name: plugin.xml
+SHA1-Digest: NDlh+pxm/XEd7K+aIJiQRkl8D40=
+
+Name: icons/obj16/oracle.gif
+SHA1-Digest: lwe8d6GTus0aY/ZbxptV1kA4eNU=
+
+Name: about.html
+SHA1-Digest: mUOvxSYxCUot6WW9T8TxmOQUrws=
+
+Name: plugin.properties
+SHA1-Digest: wcFh7/MG73ANrCtivCnAPC8okfM=
+
+Name: genericoc4j.jar
+SHA1-Digest: 0va6RKwEBNLYNITyiHxXjl5BNxM=
+
+Name: servers/oracle.10.1.3.1.serverdef
+SHA1-Digest: DrlBKYFmTT1vFVa7D/dYVPmpq+g=
+

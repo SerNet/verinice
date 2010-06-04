@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:ServerRuntime
+	xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
+	name="JBOSS 4.2" version="v4.2">
+<property id="serverRootDirectory"
+	label="%ApplicationServerDirectory"
+	type="directory"
+	context="runtime"
+	default="/your_server_root/appservers/jboss" />
+<property id="serverAddress"
+	label="%serverAddress"
+	type="string"
+	context="server"
+	default="127.0.0.1" />
+<property id="port"
+	label="%serverPort"
+	type="string"
+	context="server"
+	default="8080" />
+<property id="jndiPort"
+	label="%jndiPort"
+	type="string"
+	context="server"
+	default="1099" />	
+<property id="serverConfig"
+	label="%jboss323serverConfig"
+	type="combo"
+	context="server"
+	default="default,all,minimal,other - type your own here" />
+
+	<port>
+		<no>${port}</no>
+		<name>Http</name>
+		<protocol>http</protocol>
+	</port>
+
+	<module>
+		<type>jst.web</type>
+		<publishDir>${serverRootDirectory}/server/${serverConfig}/deploy</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+	<module>
+		<type>jst.ejb</type>
+		<publishDir>${serverRootDirectory}/server/${serverConfig}/deploy</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+	<module>
+		<type>jst.ear</type>
+		<publishDir>${serverRootDirectory}/server/${serverConfig}/deploy</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+
+
+	<project>
+		<classpathReference>jboss.project</classpathReference>
+	</project>
+	
+	<start>
+		<mainClass>org.jboss.Main</mainClass>
+		<workingDirectory>${serverRootDirectory}/bin</workingDirectory>
+		<programArguments>-c ${serverConfig}</programArguments>
+		<vmParameters>-Dprogram.name=run.bat -Djava.endorsed.dirs="${serverRootDirectory}/bin/../lib/endorsed" -Xms128m -Xmx512m</vmParameters>
+		<classpathReference>jboss</classpathReference>
+	</start>
+
+	<stop>
+		<mainClass>org.jboss.Shutdown</mainClass>
+		<workingDirectory>${serverRootDirectory}/bin</workingDirectory>
+		<programArguments>-S</programArguments>
+		<vmParameters>-Djboss.boot.loader.name=shutdown.bat</vmParameters>
+		<classpathReference>jboss.shutdown</classpathReference>
+	</stop>
+	<publisher id="org.eclipse.jst.server.generic.antpublisher">
+		<publisherdata>
+			<dataname>build.file</dataname>
+			<datavalue>/buildfiles/jboss323.xml</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.web</dataname>
+			<datavalue>deploy.j2ee.web</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.ejb</dataname>
+			<datavalue>deploy.j2ee.ejb</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.web</dataname>
+			<datavalue>undeploy.j2ee.web</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.ejb</dataname>
+			<datavalue>undeploy.j2ee.ejb</datavalue>
+		</publisherdata>		
+		<publisherdata>
+			<dataname>target.publish.jst.ear</dataname>
+			<datavalue>deploy.j2ee.ear</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.ear</dataname>
+			<datavalue>undeploy.j2ee.ear</datavalue>
+		</publisherdata>				
+	</publisher>
+
+	<classpath id="jboss" >
+		<archive path="${serverRootDirectory}/bin/run.jar" />
+	</classpath>
+	<classpath id="jboss.shutdown" >
+		<archive path="${serverRootDirectory}/bin/shutdown.jar" />
+	</classpath>
+
+	<classpath id="jboss.project" >
+		
+			
+	    <fileset dir="${serverRootDirectory}">
+	       <include name="client/*.jar" />
+	       <include name="server/default/lib/*.jar" />
+
+	       <!-- JSF Libraries -->
+	       <include name="server/default/deploy/jboss-web.deployer/jsf-libs/*.jar" />
+	       
+	       <!-- This will be ignored if EJB3 is not there 4.0.x 4.2 -->
+	       <include name="server/default/deploy/jboss-aop-jdk50.deployer/*.jar" />
+		   <include name="server/default/deploy/ejb3.deployer/*.jar" />
+
+	       <!-- This will be ignored if EJB3 is not there 5.0 -->
+	       <include name="lib/*.jar" />
+	       <include name="server/default/deployers/jbossweb.deployer/*.jar" />
+	       <include name="server/default/deployers/jbossweb.deployer/jsf-libs/*.jar" />
+	       <include name="server/default/deployers/jboss-aop-jboss5.deployer/*.jar" />
+		   <include name="server/default/deployers/ejb3.deployer/jboss-annotations-ejb3.jar" />
+	       	       
+	       <!-- for validation to work this library is defined as an archive -->
+	       <exclude name="server/default/lib/mail.jar" />
+	    </fileset>
+	    
+	    <!-- leave one generic jar as an archive so that validation works -->
+		<archive path="${serverRootDirectory}/server/default/lib/mail.jar" />
+   
+	</classpath>
+	<jndiConnection>
+		<providerUrl>jnp://${serverAddress}:${jndiPort}</providerUrl>
+		<initialContextFactory>org.jnp.interfaces.NamingContextFactory</initialContextFactory>
+		<jndiProperty>
+			<name></name>
+			<value></value>
+		</jndiProperty>
+	</jndiConnection>
+</tns:ServerRuntime>

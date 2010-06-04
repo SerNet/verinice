@@ -1,0 +1,214 @@
+<project name="deployextension"  default="deploy.j2ee.web"  basedir=".">
+
+	<property name="jonas.root" value="${jonasRoot}"/>
+	<property name="jonas.base" value="${jonasBase}"/>
+	<property name="pause" value="10"/>
+	
+	<path id="base.classpath">
+	    <!-- CLASSPATH is added for runtest target -->
+	    <fileset dir="${jonas.root}/lib">
+	      <include name="**/*.jar"/>
+	      <exclude name="**/ow_jonas_bootstrap.jar"/>
+	    </fileset>
+	</path>				
+	<path id="toolpath">
+		<pathelement path="${jonas.base}/conf;${jonas.root}/lib/common/ow_jonas_bootstrap.jar" />
+	</path>
+
+	<target name="deploy.j2ee.web">
+		<antcall target="jonas-web-undeploy" />
+		<jar destfile="${project.working.dir}/${module.name}.war"> 
+			<zipfileset dir="${module.dir}">
+				<include name="**/*.*"/>
+				<exclude name="**/*.war"/>
+			</zipfileset>
+		</jar>
+		<move file="${project.working.dir}/${module.name}.war" todir="${server.publish.dir}"/>
+		<antcall target="jonas-web-deploy" />
+	</target>
+	
+	<target name="deploy.j2ee.ejb">
+		<antcall target="jonas-ejb-undeploy" />
+		<jar destfile="${project.working.dir}/${module.name}.jar"> 
+			<zipfileset dir="${module.dir}">
+	        	<include name="**/*.*"/>
+	       		<exclude name="**/*.java"/>
+			</zipfileset>
+		</jar>
+  		<move file="${project.working.dir}/${module.name}.jar" todir="${server.publish.dir}"/>
+		<antcall target="jonas-ejb-deploy" />
+	</target>
+	
+	
+	
+	<target name="undeploy.j2ee.web">
+		<delete file="${server.publish.dir}/${module.name}.war"> </delete>
+	</target>
+	<target name="undeploy.j2ee.ejb">
+		<delete file="${server.publish.dir}/${module.name}.jar"> </delete>
+	</target>	
+
+	<target name="jonas-ejb-deploy" depends="jonas-jar">
+		<java classname="org.objectweb.jonas.server.Bootstrap" failonerror="false" fork="true" classpathref="toolpath">
+			<arg value="org.objectweb.jonas.adm.JonasAdmin" />
+			<arg value="-a" />
+			<arg value="${server.publish.dir}/${module.name}.jar" />
+			<jvmarg value="-Dinstall.root=${jonas.root}" />
+			<jvmarg value="-Djonas.base=${jonas.base}" />
+			<jvmarg value="-Djava.security.policy=${jonas.base}/conf/java.policy" />
+			<jvmarg value="-Djonas.classpath=" />
+			<jvmarg value="-Djonas.default.classloader=true" />
+			<jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+			<jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+			<jvmarg value="-Djava.security.auth.login.config=${jonas.base}/conf/jaas.config" />
+			<jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />
+		</java>
+	</target>
+	<target name="jonas-ejb-undeploy">
+		<java classname="org.objectweb.jonas.server.Bootstrap" fork="true" failonerror="false" classpathref="toolpath">
+			<arg value="org.objectweb.jonas.adm.JonasAdmin" />
+			<arg value="-r" />
+			<arg value="${server.publish.dir}/${module.name}.jar" />
+			<jvmarg value="-Dinstall.root=${jonas.root}" />
+			<jvmarg value="-Djonas.base=${jonas.base}" />
+			<jvmarg value="-Djava.security.policy=${jonas.base}/conf/java.policy" />
+			<jvmarg value="-Djonas.classpath=" />
+			<jvmarg value="-Djonas.default.classloader=true" />
+			<jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+			<jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+			<jvmarg value="-Djava.security.auth.login.config=${jonas.base}/conf/jaas.config" />
+			<jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />
+		</java>
+	</target>
+
+	<target name="jonas-web-deploy">
+
+		<java classname="org.objectweb.jonas.server.Bootstrap" fork="true" failonerror="false" classpathref="toolpath">
+			<arg value="org.objectweb.jonas.adm.JonasAdmin" />
+			<arg value="-a" />
+			<arg value="${server.publish.dir}/${module.name}.war" />
+			<jvmarg value="-Dinstall.root=${jonas.root}" />
+			<jvmarg value="-Djonas.base=${jonas.base}" />
+			<jvmarg value="-Djava.security.policy=${jonas.base}/conf/java.policy" />
+			<jvmarg value="-Djonas.classpath=" />
+			<jvmarg value="-Djonas.default.classloader=true" />
+			<jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+			<jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+			<jvmarg value="-Djava.security.auth.login.config=${jonas.base}/conf/jaas.config" />
+			<jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />
+		</java>
+	</target>
+	<target name="jonas-web-undeploy">
+		<java classname="org.objectweb.jonas.server.Bootstrap" fork="true" failonerror="false" classpathref="toolpath">
+			<arg value="org.objectweb.jonas.adm.JonasAdmin" />
+			<arg value="-r" />
+			<arg value="${server.publish.dir}/${module.name}.war" />
+			<jvmarg value="-Dinstall.root=${jonas.root}" />
+			<jvmarg value="-Djonas.base=${jonas.base}" />
+			<jvmarg value="-Djava.security.policy=${jonas.base}/conf/java.policy" />
+			<jvmarg value="-Djonas.classpath=" />
+			<jvmarg value="-Djonas.default.classloader=true" />
+			<jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+			<jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+			<jvmarg value="-Djava.security.auth.login.config=${jonas.base}/conf/jaas.config" />
+			<jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />
+		</java>
+	</target>
+	
+	<target name="jonas-ear-deploy">
+		<java classname="org.objectweb.jonas.server.Bootstrap" fork="true" failonerror="false" classpathref="toolpath">
+			<arg value="org.objectweb.jonas.adm.JonasAdmin" />
+			<arg value="-a" />
+			<arg value="${server.publish.dir}/${module.name}.ear" />
+			<jvmarg value="-Dinstall.root=${jonas.root}" />
+			<jvmarg value="-Djonas.base=${jonas.base}" />
+			<jvmarg value="-Djava.security.policy=${jonas.base}/conf/java.policy" />
+			<jvmarg value="-Djonas.classpath=" />
+			<jvmarg value="-Djonas.default.classloader=true" />
+			<jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+			<jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+			<jvmarg value="-Djava.security.auth.login.config=${jonas.base}/conf/jaas.config" />
+			<jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />
+		</java>
+	</target>
+
+	<target name="jonas-ear-undeploy">
+		<java classname="org.objectweb.jonas.server.Bootstrap" fork="true" failonerror="false" classpathref="toolpath">
+			<arg value="org.objectweb.jonas.adm.JonasAdmin" />
+			<arg value="-r" />
+			<arg value="${server.publish.dir}/${module.name}.ear" />
+			<jvmarg value="-Dinstall.root=${jonas.root}" />
+			<jvmarg value="-Djonas.base=${jonas.base}" />
+			<jvmarg value="-Djava.security.policy=${jonas.base}/conf/java.policy" />
+			<jvmarg value="-Djonas.classpath=" />
+			<jvmarg value="-Djonas.default.classloader=true" />
+			<jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+			<jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+			<jvmarg value="-Djava.security.auth.login.config=${jonas.base}/conf/jaas.config" />
+			<jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />
+		</java>
+	</target>
+	
+	
+	
+	<target name="undeploy.j2ee.ear">
+		<delete file="${server.publish.dir}/${module.name}.ear"> </delete>
+	</target>	
+	
+	<target name="deploy.j2ee.ear" depends="-checkJ2EEDeploy" unless="notNeeded">
+		<antcall target="jonas-ear-undeploy" />
+		<jar destfile="${project.working.dir}/${module.name}.ear"> 
+			<zipfileset dir="${module.dir}">
+	        	<include name="**/*.*"/>
+	       		<exclude name="**/*.java"/>
+			</zipfileset>
+		</jar>
+  		<move file="${project.working.dir}/${module.name}.ear" todir="${server.publish.dir}"/>
+		<antcall target="jonas-ear-deploy" />
+		<sleep seconds="${pause}"/>
+	</target>
+	
+	<target name="-checkJ2EEDeploy">
+		<uptodate property="notNeeded" targetfile="${server.publish.dir}/${module.name}.ear">
+			<srcfiles dir="${module.dir}">
+				<include name="**/*.*"/>
+		   		<exclude name="**/*.java"/>
+			</srcfiles>
+		</uptodate>
+	</target>
+	
+	
+	  <target name="jonas-jar"  >
+		<delete dir="${server.publish.dir}/${module.name}_jonas" failonerror="false" />
+	     
+		<unjar src="${server.publish.dir}/${module.name}.jar" dest="${server.publish.dir}/${module.name}_jonas"/> 
+		<delete file="${server.publish.dir}/${module.name}.jar" failonerror="false"  />
+
+		 <taskdef name="jonasEjbJjar"
+		    classname="org.objectweb.jonas.ant.EjbJar"
+		    classpathref="base.classpath" />
+
+	  	<jonasEjbJjar basejarname="${module.name}"
+		    srcdir="${server.publish.dir}/${module.name}_jonas"
+		    descriptordir="${server.publish.dir}/${module.name}_jonas/META-INF" 
+		    dependency="full" >
+	      <include name="**/ejb-jar.xml"/>
+	      <dtd publicId="-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN"
+		   location="${jonas.root}/xml/ejb-jar_2_0.dtd" />
+	      <support dir="${server.publish.dir}/${module.name}_jonas">
+		  	<include name="**/*.*"/>
+		  	<exclude name="**/MANIFEST.MF"/>
+		  	<exclude name="**/ejb-jar.xml"/>
+		  	<exclude name="**/jonas-ejb-jar.xml"/>
+	      </support>
+	      <jonas destdir="${server.publish.dir}"
+	         classpath="${base.classpath}:${server.publish.dir}/${module.name}_jonas" 
+		     jonasRoot="${jonas.root}" 
+		     mappernames=""
+	         protocols="jrmp,jeremie,iiop"
+		     keepgenerated="false" />
+	    </jonasEjbJjar>
+		<delete dir="${server.publish.dir}/${module.name}_jonas" failonerror="false" /> 
+	 </target>
+
+</project>

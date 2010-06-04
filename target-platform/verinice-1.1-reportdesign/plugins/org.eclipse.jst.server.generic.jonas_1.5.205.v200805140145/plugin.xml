@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension point="org.eclipse.wst.server.core.runtimeTypes">
+   
+    <runtimeType
+       id="org.eclipse.jst.server.generic.runtime.jonas4"
+       name="%jonas4runtimeTypeName"
+       description="%jonas4runtimeTypeDescription"
+       vendor="%jonasCategory"
+       version="4"
+       class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime"
+       >
+       <moduleType
+         types="jst.web"
+         versions="2.2, 2.3, 2.4"/>
+      <moduleType
+         types="jst.ejb"
+         versions="1.1, 2.0, 2.1"/>
+      <moduleType
+         types="jst.ear"
+         versions="1.2, 1.3, 1.4"/>
+      <moduleType
+         types="jst.connector"
+         versions="1.0, 1.5"/>
+       <moduleType
+         types="jst.utility"
+         versions="1.0"/>
+    </runtimeType>
+    
+	</extension>
+
+<extension point="org.eclipse.wst.server.core.serverTypes">
+     <serverType
+           behaviourClass="org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour"
+           class="org.eclipse.jst.server.generic.core.internal.GenericServer"
+           description="%jonas4serverTypeDescription"
+           hasConfiguration="false"
+           id="org.eclipse.jst.server.generic.jonas4"
+           initialState="stopped"
+           launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
+           launchModes="run,debug,profile"
+           name="%jonas4serverTypeName"
+           runtime="true"
+           runtimeTypeId="org.eclipse.jst.server.generic.runtime.jonas4"
+           startBeforePublish="true"
+           startTimeout="50000"
+           stopTimeout="15000"
+           supportsRemoteHosts="false">
+     </serverType>    
+    
+	</extension>
+<!-- UI Components-->
+    <extension point="org.eclipse.wst.server.ui.wizardFragments">
+	 <fragment
+        id="org.eclipse.jst.server.generic.runtime"
+        typeIds="org.eclipse.jst.server.generic.runtime.jonas4"
+        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+     <fragment
+        id="org.eclipse.jst.server.generic.server"
+        typeIds="org.eclipse.jst.server.generic.jonas4"
+        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>   
+  </extension>
+    <extension point="org.eclipse.wst.server.ui.serverImages">
+     <image
+         id="org.eclipse.jst.server.generic.image"
+         icon="icons/obj16/jonas.gif"
+         typeIds="org.eclipse.jst.server.generic.runtime.jonas4"/>
+     <image
+         id="org.eclipse.jst.server.generic.image"
+         icon="icons/obj16/jonas.gif"
+         typeIds="org.eclipse.jst.server.generic.jonas4"/>
+	</extension>
+
+<!-- Define Classpath provider for all generics -->   
+   <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
+     <runtimeClasspathProvider
+        id="org.eclipse.jst.server.generic.runtimeTarget"
+        runtimeTypeIds="org.eclipse.jst.server.generic.runtime.*"
+        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>
+	</extension>
+
+<!-- Server type definitions -->
+   <extension point="org.eclipse.jst.server.generic.core.serverdefinition">
+		<serverdefinition id="org.eclipse.jst.server.generic.runtime.jonas4" definitionfile="/servers/jonas.serverdef">
+		</serverdefinition>
+  </extension>
+
+
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimes">    
+    <runtime-component-type
+       id="org.eclipse.jst.server.generic.runtime.jonas"/>
+
+    <runtime-component-version
+       type="org.eclipse.jst.server.generic.runtime.jonas"
+       version="4.0"/>
+
+    <adapter>
+      <runtime-component
+         id="org.eclipse.jst.server.generic.runtime.jonas"/>
+      <factory
+         class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
+      <type
+         class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
+    </adapter>
+
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.generic.runtime.jonas"
+         version="4.0"/>
+      <facet
+         id="jst.web"
+         version="2.2,2.3,2.4"/>
+      <facet
+         id="jst.ejb"
+         version="1.1,2.0,2.1"/>
+      <facet
+         id="jst.ear"
+         version="1.2,1.3,1.4"/>
+      <facet
+         id="jst.connector"
+         version="1.0,1.5"/>
+      <facet
+         id="jst.appclient"
+         version="1.2,1.3,1.4"/>
+      <facet
+         id="jst.utility"
+         version="1.0"/>
+    </supported>
+
+  </extension>
+  
+  <extension point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+    <default-facets>
+      <runtime-component id="org.eclipse.jst.server.generic.runtime.jonas"/>
+      <facet id="wst.jsdt.web" version="1.0"/>
+    </default-facets>
+  </extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.ui.images">
+    <image runtime-component-type="org.eclipse.jst.server.generic.runtime.jonas"
+      path="icons/obj16/jonas.gif"/>
+  </extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+    <adapter>
+      <runtime-component id="org.eclipse.jst.server.generic.runtime.jonas"/>
+      <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
+      <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
+    </adapter>
+  </extension>
+  
+  <extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.generic.runtime.jonas"
+      runtime-component="org.eclipse.jst.server.generic.runtime.jonas"
+      version="4.0"/>
+  </extension>
+  
+</plugin>

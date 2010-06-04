@@ -1,0 +1,29 @@
+Signature-Version: 1.0
+SHA1-Digest-Manifest: 8emXKXw+kwFvWOP4z19tAa4LZH8=
+Created-By: 1.6.0 (IBM Corporation)
+SHA1-Digest-Manifest-Main-Attributes: F9yUZhMroImHqKMfH7T8+9wLhes=
+
+Name: serverdef/websphere.6.serverdef
+SHA1-Digest: 4ejRaYMFs+uAtLc2ZHXUEgoa+Wg=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: SAqY+5ITAL0mkdYeijlSRhyIaZk=
+
+Name: serverdef/scripts/websphere.6.x.xml
+SHA1-Digest: uzBveUNQgEhLANLLS72L1hNcGgU=
+
+Name: about.html
+SHA1-Digest: uiJRfz9x0SZWELI8a5uHYToQRw4=
+
+Name: plugin.xml
+SHA1-Digest: 58itQS+t9Jw+O8TtiApemZxL31U=
+
+Name: webspherecore.jar
+SHA1-Digest: 9XY3wZqFdYaJIj8q5mFToDdqfvo=
+
+Name: plugin.properties
+SHA1-Digest: k6Zd0MM2T1P9mmVuzvq7yEGmyVc=
+
+Name: icons/obj16/websphere.gif
+SHA1-Digest: qkJz7dMXZhgE1+eiwxv6MjeehOc=
+

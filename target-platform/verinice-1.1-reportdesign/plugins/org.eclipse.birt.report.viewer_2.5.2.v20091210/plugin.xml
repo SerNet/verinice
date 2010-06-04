@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="browser" name="Web Browser" schema="schema/browser.exsd"/>
+   <extension
+         point="org.eclipse.birt.report.viewer.browser">
+      <browser
+            factoryclass="org.eclipse.birt.report.viewer.browsers.system.SystemBrowserFactory"
+            name="Default System Browser"
+            id="org.eclipse.birt.report.viewer.systembrowser">
+      </browser>
+      <browser
+            factoryclass="org.eclipse.birt.report.viewer.browsers.embedded.EmbeddedBrowserFactory"
+            name="Embedded Browser"
+            id="org.eclipse.birt.report.viewer.embeddedbrowser">
+      </browser>
+      <browser
+            factoryclass="org.eclipse.birt.report.viewer.browsers.custom.CustomBrowserFactory"
+            name="Custom Browser"
+            id="org.eclipse.birt.report.viewer.custombrowser">
+      </browser>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.httpcontexts">
+      <httpcontext
+            id="viewer">            
+         <resource-mapping
+               path="/birt">
+         </resource-mapping>
+      </httpcontext>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.resources">
+      <resource
+            alias="/"
+            base-name="/"
+            httpcontextId="viewer">
+      </resource>
+      <serviceSelector
+            filter="(other.info=org.eclipse.birt.report.viewer)">
+      </serviceSelector>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet 
+         	alias="/frameset" 
+         	class="org.eclipse.birt.report.servlet.ViewerServlet"
+         	httpcontextId="viewer"
+         	load-on-startup="false">         	
+      </servlet>
+      <servlet 
+         	alias="/run" 
+         	class="org.eclipse.birt.report.servlet.ViewerServlet"
+         	httpcontextId="viewer"
+         	load-on-startup="false">         	
+      </servlet>
+	  <servlet 
+			alias="/preview" 
+			class="org.eclipse.birt.report.servlet.BirtEngineServlet"
+			httpcontextId="viewer"
+			load-on-startup="false">         	
+	  </servlet>
+	  <servlet 
+			alias="/document" 
+			class="org.eclipse.birt.report.servlet.BirtEngineServlet"
+			httpcontextId="viewer"
+			load-on-startup="false">         	
+	  </servlet>
+	  <servlet 
+			alias="/output" 
+			class="org.eclipse.birt.report.servlet.BirtEngineServlet"
+			httpcontextId="viewer"
+			load-on-startup="false">         	
+	  </servlet>
+	  <servlet 
+			alias="/parameter" 
+			class="org.eclipse.birt.report.servlet.BirtEngineServlet"
+			httpcontextId="viewer"
+			load-on-startup="false">         	
+	  </servlet>
+	  <servlet 
+			alias="/download" 
+			class="org.eclipse.birt.report.servlet.BirtEngineServlet"
+			httpcontextId="viewer"
+			load-on-startup="false">         	
+	  </servlet>
+	  <servlet 
+			alias="/extract" 
+			class="org.eclipse.birt.report.servlet.BirtEngineServlet"
+			httpcontextId="viewer"
+			load-on-startup="false">         	
+	  </servlet>
+      <servlet
+            alias="/*.jsp"
+            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/"
+            httpcontextId="viewer">
+      </servlet>
+      <serviceSelector
+            filter="(other.info=org.eclipse.birt.report.viewer)">
+      </serviceSelector>
+   </extension>
+   
+   <extension id="ViewerProblemMarker" 
+              point="org.eclipse.core.resources.markers"
+              name="%birt.viewer.problem.marker"> 
+       <persistent value="false"/> 
+       <super type="org.eclipse.core.resources.problemmarker"/>
+       <super type="org.eclipse.core.resources.textmarker"/>  
+   </extension> 
+   
+   <extension-point
+   		id="appcontext" 
+   		name="%birt.viewer.extension.appcontext" 
+   		schema="schema/appcontext.exsd"/>
+</plugin>

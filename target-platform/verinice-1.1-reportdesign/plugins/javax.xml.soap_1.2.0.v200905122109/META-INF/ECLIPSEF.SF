@@ -1,0 +1,23 @@
+Signature-Version: 1.0
+SHA1-Digest-Manifest: UsXFVMl9zrQze7nRXyGxBFV2Cas=
+Created-By: 1.6.0 (IBM Corporation)
+SHA1-Digest-Manifest-Main-Attributes: C/aHnNTeiOpZudBUL5KFtGo7yyY=
+
+Name: about_files/NOTICE
+SHA1-Digest: bQKU15uYFhCgZyVDfjZqHmw4LLU=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: aM8odIt7KSTgo2Ap3NjnGa3gOAA=
+
+Name: about_files/LICENSE
+SHA1-Digest: ON1b1TTvuJt4uBN0fd1/HIk/Dws=
+
+Name: about.html
+SHA1-Digest: 3c1Le80YknS0F0fuIopcnpF3axk=
+
+Name: lib/saaj.jar
+SHA1-Digest: 0bQV4Il+NVofhhYLo9nB05as5Wo=
+
+Name: plugin.properties
+SHA1-Digest: H+btJhzCbDBpRQFiodq1Mpir9ic=
+

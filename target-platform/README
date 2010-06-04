@@ -1,0 +1,13 @@
+This file describes the various target platforms.
+
+eclipse-3.4.1-rcp-sdk:
+	* old Eclipse 3.4 based target environment for verinice 1.0.x
+
+eclipse-3.5.2-rcp-sdk:
+	* current Eclipse 3.5.2 based target environment for verinice 1.1.x
+
+verinice-1.1-reportdesign:
+	* current Eclipse 3.5.2 based target environment for verinice 1.1.x
+	and the BIRT report designer. Allows running as Eclipse application
+	with working verinice classes.
+ 

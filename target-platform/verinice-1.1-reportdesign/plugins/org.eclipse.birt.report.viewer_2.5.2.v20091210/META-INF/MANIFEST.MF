@@ -1,0 +1,556 @@
+Manifest-Version: 1.0
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-SymbolicName: org.eclipse.birt.report.viewer; singleton:=true
+Eclipse-LazyStart: true
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)
+ ",org.eclipse.core.resources;bundle-version="[3.2.0,4.0.0)",org.apach
+ e.axis;bundle-version="[1.3.0,2.0.0)",javax.xml.rpc;bundle-version="[
+ 1.1.0,2.0.0)",org.apache.jasper;bundle-version="5.5.17",org.eclipse.e
+ quinox.jsp.jasper.registry;bundle-version="[1.0.0,2.0.0)",org.eclipse
+ .equinox.http.registry;bundle-version="[1.0.0,2.0.0)",org.eclipse.bir
+ t.core;bundle-version="[2.1.0,3.0.0)",org.eclipse.birt.report.engine;
+ bundle-version="[2.1.0,3.0.0)",org.eclipse.help.base;bundle-version="
+ [3.2.0,4.0.0)",org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",org.ecli
+ pse.birt.report.model;bundle-version="[2.1.0,3.0.0)",org.eclipse.birt
+ .data;bundle-version="[2.1.0,3.0.0)",org.eclipse.birt.report.data.ada
+ pter;bundle-version="[2.1.0,3.0.0)",org.eclipse.birt.report.designer.
+ ui;bundle-version="2.5.1",org.eclipse.birt.chart.engine;bundle-versio
+ n="[2.2.0,3.0.0)";resolution:=optional,org.eclipse.birt.report.engine
+ .dataextraction;bundle-version="[2.3.0,3.0.0)",org.apache.xerces;bund
+ le-version="[2.8.0,3.0.0)";resolution:=optional,org.eclipse.birt.repo
+ rt.item.crosstab.core;bundle-version="[2.2.0,3.0.0)";resolution:=opti
+ onal
+Bundle-Activator: org.eclipse.birt.report.viewer.ViewerPlugin
+Export-Package: org.eclipse.birt.report.viewer,org.eclipse.birt.report
+ .viewer.api,org.eclipse.birt.report.viewer.browsers,org.eclipse.birt.
+ report.viewer.browsers.custom,org.eclipse.birt.report.viewer.browsers
+ .embedded,org.eclipse.birt.report.viewer.browsers.system,org.eclipse.
+ birt.report.viewer.utilities
+Bundle-Version: 2.5.2.v20091210
+Eclipse-BuddyPolicy: registered
+Bundle-ClassPath: ., viewer.jar,birt/WEB-INF/classes,birt/WEB-INF/lib/
+ viewservlets.jar
+Bundle-Vendor: Eclipse.org
+Bundle-Name: BIRT Web Viewer
+Import-Package: javax.servlet;version="2.4.0",javax.servlet.http;versi
+ on="2.4.0",javax.servlet.jsp;version="2.0.0",javax.servlet.jsp.tagext
+ ;version="2.0.0",org.apache.commons.codec.binary,org.apache.commons.l
+ ogging,org.eclipse.equinox.http.jetty,org.osgi.service.http;version="
+ 1.2.0"
+Bundle-ManifestVersion: 2
+
+Name: birt/webcontent/birt/ajax/ui/dialog/AbstractParameterDialog.js
+SHA1-Digest: 9gnbbkAdZLuWs/purwMVzKU9LUk=
+
+Name: birt/webcontent/birt/ajax/ui/dialog/AbstractBaseDialog.js
+SHA1-Digest: I6OEu7OQ5vChmP6wD3Rbt/dbM4A=
+
+Name: birt/webcontent/birt/pages/dialog/ExportDataDialogFragment.jsp
+SHA1-Digest: B2YGjzMz9iYyyQ2f64ED7dnTkoc=
+
+Name: birt/webcontent/birt/images/Toc.gif
+SHA1-Digest: pJYJkAGEVEEp/7iGArvrIfghwjQ=
+
+Name: birt/webcontent/birt/ajax/core/BirtEvent.js
+SHA1-Digest: A0VMkMYKYy1UzvgiEGtNPEEH0jU=
+
+Name: birt/webcontent/birt/images/Error.gif
+SHA1-Digest: E4n9+Qc/AIdbENq6C5rULylxTMA=
+
+Name: birt/webcontent/birt/images/dialog/common/ok-cancel-button-right
+ .gif
+SHA1-Digest: P5Baed8aMs+uNHa29gmcXk4v0nM=
+
+Name: birt/scriptlib/readme.txt
+SHA1-Digest: WxCfPEJFriP9UYLpg+vmyS3ZiR8=
+
+Name: birt/webcontent/birt/ajax/lib/prototype.js
+SHA1-Digest: hUS+EEHLWfW6yoFdg9cp/hgQsss=
+
+Name: birt/webcontent/birt/pages/layout/RequesterFragment.jsp
+SHA1-Digest: uMFDpbNGKDqe8U5vf+VcqHE+3PY=
+
+Name: birt/webcontent/birt/images/Add_rtl.gif
+SHA1-Digest: +7PJ0TgY8KBUiPk27EiGPCb5Sr8=
+
+Name: birt/webcontent/birt/images/Report_Parameters_disabled.gif
+SHA1-Digest: 8jShAF3428tJ+kMTN172X5KmxtM=
+
+Name: birt/webcontent/birt/images/PrintServer.gif
+SHA1-Digest: aoEEAkehIYatN1GVwZsgMXwwIyU=
+
+Name: birt/webcontent/birt/pages/control/TocFragment.jsp
+SHA1-Digest: M1jGkduHhEEwoCGpUGAw+qnFdls=
+
+Name: birt/webcontent/birt/ajax/utility/BirtPosition.js
+SHA1-Digest: 2obMeYMmPLpk1BJhzQ7+gVfILBk=
+
+Name: birt/webcontent/birt/images/Interactive_viewer.gif
+SHA1-Digest: ypC/ylaaXo+BqpjndlDyDIZaAwQ=
+
+Name: birt/webcontent/birt/ajax/ui/dialog/AbstractExceptionDialog.js
+SHA1-Digest: /bGkHH1ZKdBc09uoJgq4hQI3sa4=
+
+Name: birt/webcontent/birt/styles/index.css
+SHA1-Digest: 7mnVsvueZ9lFWrMQsIQxHl/tEck=
+
+Name: birt/webcontent/birt/ajax/ui/dialog/BirtSimpleExportDataDialog.j
+ s
+SHA1-Digest: hMPIj95216H2pirG0wGsjRpfJX0=
+
+Name: birt/CancelTask.jsp
+SHA1-Digest: jvSFaz3Bbk43VwDozYYvm7KAexY=
+
+Name: birt/webcontent/birt/images/Go_rtl.gif
+SHA1-Digest: VmVKvCCHPOGXWV0G6evH2v63cSQ=
+
+Name: birt/webcontent/birt/ajax/core/BirtSoapResponse.js
+SHA1-Digest: fEsFXGQfC6/rgGj5Zl3ckmhUGTk=
+
+Name: birt/WEB-INF/viewer.properties
+SHA1-Digest: icntrST82JUI4ltgAvXrpicUL94=
+
+Name: birt/webcontent/birt/pages/common/processing.jsp
+SHA1-Digest: wAa1IesB5fEjmy2M/FRkEgfidrM=
+
+Name: birt/webcontent/birt/images/dialog/common/ok-cancel-button-left.
+ gif
+SHA1-Digest: fjvViZbxqg84GuLxze4/HfupQss=
+
+Name: birt/webcontent/birt/ajax/taglib/SoapResponseHelper.js
+SHA1-Digest: COKwUZgMYrYqBxQ3epJVS/xU97c=
+
+Name: birt/webcontent/birt/images/Loading_rtl.gif
+SHA1-Digest: M3qwelUYaWSvjbuC91Q7gBCD6XI=
+
+Name: birt/webcontent/birt/ajax/ui/app/AbstractBaseToolbar.js
+SHA1-Digest: 8THyhNXtVn1RiaTgBlVKys4RBgY=
+
+Name: birt/webcontent/birt/ajax/utility/Printer.js
+SHA1-Digest: 313rTxJYFA19N+s2you9SdrXyT8=
+
+Name: birt/webcontent/birt/images/Print.gif
+SHA1-Digest: CEH9GSipnniIUSJCEmR4+5is2Aw=
+
+Name: birt/webcontent/birt/images/RemoveAll_disabled_rtl.gif
+SHA1-Digest: sl2G6wUZsL681tSB9QTi15gEr0c=
+
+Name: birt/webcontent/birt/ajax/core/BirtCommunicationManager.js
+SHA1-Digest: 7vEp3r1YYOuqMWGLV+qykjpGgBk=
+
+Name: birt/webcontent/birt/pages/layout/ReportFragment.jsp
+SHA1-Digest: AURGmd7/wHiRG0ueEy76Z90v4Cg=
+
+Name: birt/webcontent/birt/images/Remove_rtl.gif
+SHA1-Digest: DNaNVZ4Tu/rR+THkTSoFhru98sI=
+
+Name: birt/webcontent/birt/ajax/ui/app/BirtNavigationBar.js
+SHA1-Digest: lu2HWgslXzKsOqYDxAdFDxJ4q+4=
+
+Name: viewer.jar
+SHA1-Digest: nogmYIuDSjiHubLtZBu+f5sFsHU=
+
+Name: birt/WEB-INF/weblogic.xml
+SHA1-Digest: 4jbc5KGk6CgT4v91hiyBSs75LEE=
+
+Name: birt/webcontent/birt/ajax/utility/BirtUtility.js
+SHA1-Digest: nMOE0GiySjZw9h9zZ1IF1vnD2l8=
+
+Name: birt/webcontent/birt/pages/control/ToolbarFragment.jsp
+SHA1-Digest: jBO2hNnWlX/gVQAbq6JkmdVSHh8=
+
+Name: birt/webcontent/birt/pages/dialog/DialogContainerFragment.jsp
+SHA1-Digest: FkEzti/prkPsLB22GPpi11W8OzA=
+
+Name: birt/webcontent/birt/images/parameter_group.gif
+SHA1-Digest: wxr0rog14dQ+KcVBe/IUnb0EkNc=
+
+Name: birt/logs/readme.txt
+SHA1-Digest: g3DO8fY1OytsgZl+gn/lTR0pq1k=
+
+Name: birt/webcontent/birt/images/AddAll.gif
+SHA1-Digest: rnYY76QCD6qnNiTRdGndEGiS6jk=
+
+Name: birt/webcontent/birt/ajax/ui/app/AbstractUIComponent.js
+SHA1-Digest: vT1EDU2vXGbB09mivIiW94sy5nk=
+
+Name: birt/webcontent/birt/ajax/ui/dialog/BirtPrintReportDialog.js
+SHA1-Digest: pkDmdbIL+ocihEDCZSBwqApMMGg=
+
+Name: birt/webcontent/birt/images/Add_disabled_rtl.gif
+SHA1-Digest: Tt1SmKrH3zWOn1BWLI3lKRu0Ft0=
+
+Name: birt/webcontent/birt/images/ExportReport.gif
+SHA1-Digest: BhgxI1NVvMYlrGbejLNsnciCPHQ=
+
+Name: birt/webcontent/birt/ajax/utility/Debug.js
+SHA1-Digest: PV0c7XJsTLgHB1Cmf47/0AimJT8=
+
+Name: schema/appcontext.exsd
+SHA1-Digest: nW26Ac0MmpH+wLZv/6I7eZy61mQ=
+
+Name: birt/webcontent/birt/pages/layout/FramesetFragment.jsp
+SHA1-Digest: g0dCMiHwM5uZWQdAhHk12mTSPj0=
+
+Name: birt/webcontent/birt/ajax/ui/dialog/BirtConfirmationDialog.js
+SHA1-Digest: +TI4GjLgY/SVd2hhdX3bN7J8OrQ=
+
+Name: about_files/LICENSE.txt
+SHA1-Digest: 3bfq3rNatysiVI4ALVFujen4bGs=
+
+Name: birt/webcontent/birt/pages/dialog/SimpleExportDataDialogFragment
+ .jsp
+SHA1-Digest: HT2Yipjj6UnnVKt5jmNdOwQdQPY=
+
+Name: birt/webcontent/birt/images/AddAll_disabled.gif
+SHA1-Digest: sl2G6wUZsL681tSB9QTi15gEr0c=
+
+Name: birt/webcontent/birt/images/FirstPage.gif
+SHA1-Digest: dsRcmcPH4k6gaTKZTWBLVg0x64s=
+
+Name: birt/webcontent/birt/images/Up_disabled.gif
+SHA1-Digest: Fhmh1wzDWgsgJVPZtVJ9qXXMMX4=
+
+Name: birt/webcontent/birt/ajax/ui/app/BirtToolbar.js
+SHA1-Digest: aUKTWQCFyOG6ItYt6zBcmcRS3Dc=
+
+Name: birt/webcontent/birt/pages/parameter/ComboBoxParameterFragment.j
+ sp
+SHA1-Digest: O8UTWMFhXnF9BG7027a4mvgHaAo=
+
+Name: birt/WEB-INF/tlds/birt.tld
+SHA1-Digest: t8d6wGg5CjXPBgJBoa5dZtNA/OU=
+
+Name: birt/webcontent/birt/ajax/core/BirtEventDispatcher.js
+SHA1-Digest: LeFKKeMDjGNGTMuh7RnDyY2LBJI=
+
+Name: birt/webcontent/birt/ajax/ui/report/ReportComponentIdRegistry.js
+SHA1-Digest: 4TmU83JuZ3/uhJEsMZd2doAl0cM=
+
+Name: birt/index.jsp
+SHA1-Digest: eNEzzO8vjrNaB0cQP3yIS+FTI90=
+
+Name: birt/webcontent/birt/ajax/ui/dialog/BirtParameterDialog.js
+SHA1-Digest: VZIzyCj8T2JmjqIZP4Kk07BZMsc=
+
+Name: birt/webcontent/birt/ajax/ui/report/AbstractBaseReportDocument.j
+ s
+SHA1-Digest: XOfL1jbBZK/AGhkXixjx6E2CZDo=
+
+Name: about.html
+SHA1-Digest: W1Uhn0NDWaR9UcFCvTzkJX8xDEk=
+
+Name: birt/webcontent/birt/ajax/mh/BirtBaseResponseHandler.js
+SHA1-Digest: 2U5tUptzHB5qU2XM+8n7Z2FcQjw=
+
+Name: birt/webcontent/birt/pages/control/ProgressBarFragment.jsp
+SHA1-Digest: 9zZw8FUDdaRMZVv3kw1fmU26qDc=
+
+Name: birt/webcontent/birt/images/PreviousPage.gif
+SHA1-Digest: DjpNGemkGJBZYOd3UAxKGZMRe0U=
+
+Name: birt/webcontent/birt/pages/parameter/ParameterGroupFragment.jsp
+SHA1-Digest: K0qnKflxDg5UT+QMRWPPL54KH5U=
+
+Name: birt/webcontent/birt/ajax/ui/report/BirtReportDocument.js
+SHA1-Digest: soqTEqvqxJyuOf+VUE1UIlr+s3s=
+
+Name: birt/webcontent/birt/images/Go.gif
+SHA1-Digest: 52rpTlX7AQml0aqnaY5xZkLANC8=
+
+Name: birt/webcontent/birt/pages/parameter/HiddenParameterFragment.jsp
+SHA1-Digest: j6vTVWsHsXKnhNVYaxnijOs2SFk=
+
+Name: birt/webcontent/birt/ajax/core/BirtDndManager.js
+SHA1-Digest: PyKW/ZBI05UXgTwX8K88CYGsIJY=
+
+Name: birt/webcontent/birt/images/AddFilter.gif
+SHA1-Digest: VAdmkcxxIwP+qt793OSFbQnpCGQ=
+
+Name: birt/webcontent/birt/styles/style.css
+SHA1-Digest: bj0Cnmrhz4i0Nyy9aJJiPhgUb3o=
+
+Name: birt/webcontent/birt/images/Loading.gif
+SHA1-Digest: JwGKV7N4JR/1D3zMKOOkKQmxzg0=
+
+Name: birt/webcontent/birt/images/RemoveAll.gif
+SHA1-Digest: B1vBskXUZGj5Tukb5kK0d0rlAek=
+
+Name: birt/webcontent/birt/pages/dialog/ParameterDialogFragment.jsp
+SHA1-Digest: FafOYWhfu7RykMdMt5i/NvHXP08=
+
+Name: birt/webcontent/birt/pages/dialog/ConfirmationDialogFragment.jsp
+SHA1-Digest: ucBNSOe2eRNfWO6HGskhgpgTX28=
+
+Name: about_files/LICENSE-2.0.txt
+SHA1-Digest: K4uBUimqimHkg/tLoFiLi2xJGJA=
+
+Name: birt/webcontent/birt/ajax/ui/dialog/BirtExceptionDialog.js
+SHA1-Digest: znmH7aIGiJBPwV/guWnFzzglh74=
+
+Name: birt/webcontent/birt/pages/common/Attributes.jsp
+SHA1-Digest: fJnqsalULMNueGjk59FASO+eSU0=
+
+Name: birt/webcontent/birt/images/AddAll_disabled_rtl.gif
+SHA1-Digest: fgmMT4PMAwx7JcVWwshi+ztQO70=
+
+Name: birt/webcontent/birt/ajax/taglib/ProgressBar.js
+SHA1-Digest: 1D4zKlp5oXOWjsc4CX1rBXfaZ5A=
+
+Name: birt/webcontent/birt/pages/control/NavigationbarFragment.jsp
+SHA1-Digest: SlIz2EfYdBsPYm8MmPOSwNP3I04=
+
+Name: birt/webcontent/birt/images/RemoveAll_disabled.gif
+SHA1-Digest: fgmMT4PMAwx7JcVWwshi+ztQO70=
+
+Name: birt/WEB-INF/web-template.xml
+SHA1-Digest: Ggw1PY96EYSBZ+1FTnZ2xZgrcM4=
+
+Name: birt/webcontent/birt/pages/common/Locale.jsp
+SHA1-Digest: 1o9mECyOSMK7KTDghf8/8grNlII=
+
+Name: birt/webcontent/birt/ajax/taglib/ParameterGroup.js
+SHA1-Digest: vsjejaa4IJTqQYUvlzIseNcqm0g=
+
+Name: birt/webcontent/birt/ajax/mh/BirtGetUpdatedObjectsResponseHandle
+ r.js
+SHA1-Digest: SH3wLXkw+NkeG/o92luPinGJCyM=
+
+Name: birt/webcontent/birt/ajax/ui/dialog/BirtPrintReportServerDialog.
+ js
+SHA1-Digest: alFa1bxM9/raSC0vwIV1psujc84=
+
+Name: birt/webcontent/birt/images/Remove.gif
+SHA1-Digest: +7PJ0TgY8KBUiPk27EiGPCb5Sr8=
+
+Name: birt/webcontent/birt/images/LastPage.gif
+SHA1-Digest: GCOXW8OhKb5JujCLmQWspIdBRPw=
+
+Name: birt/webcontent/birt/ajax/taglib/ParameterDefinition.js
+SHA1-Digest: b1gXej9ZUOS+uyJCKeJaC7gsyXE=
+
+Name: birt/report/images/readme.txt
+SHA1-Digest: 1zb1lBCQG680FBXheqpWFPDEdZ4=
+
+Name: birt/webcontent/birt/pages/dialog/ExportReportDialogFragment.jsp
+SHA1-Digest: H8YJfVvvmMoTfLPH0VjX6gIip04=
+
+Name: birt/webcontent/birt/pages/dialog/PrintReportDialogFragment.jsp
+SHA1-Digest: hK8np2aw1XFh6c9t2nHlRNByziQ=
+
+Name: birt/webcontent/birt/images/Remove_disabled.gif
+SHA1-Digest: Tt1SmKrH3zWOn1BWLI3lKRu0Ft0=
+
+Name: birt/webcontent/birt/styles/dialogbase.css
+SHA1-Digest: cWfGrE3SbEQBhIJKbrk8537Rc7E=
+
+Name: birt/webcontent/birt/pages/layout/RunFragment.jsp
+SHA1-Digest: thB4ptJ81J/wC/hFo1UWZXR0oUk=
+
+Name: birt/webcontent/birt/pages/layout/DocumentFragment.jsp
+SHA1-Digest: J1uq6wnr/f5zb2G3RMy1nXJPyH0=
+
+Name: birt/webcontent/birt/images/dialog/common/ok-cancel-button-right
+ _disabled.gif
+SHA1-Digest: P5Baed8aMs+uNHa29gmcXk4v0nM=
+
+Name: birt/webcontent/birt/images/dialog/common/close.gif
+SHA1-Digest: ABdOEHQdNqpNoIIHAPrHSS8i84c=
+
+Name: birt/webcontent/birt/pages/layout/ReportDialogFragment.jsp
+SHA1-Digest: 5Oe9EB/AVV77GxQvvIJ2xnUwp0k=
+
+Name: birt/webcontent/birt/images/EclipseBannerPic.jpg
+SHA1-Digest: OJuoTyjPsk1kQ9XtPRuqeoyO++M=
+
+Name: birt/webcontent/birt/images/dialog/common/ok-cancel-button-left_
+ disabled.gif
+SHA1-Digest: fjvViZbxqg84GuLxze4/HfupQss=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: KyT9FF7C7t86NoBoa2kZT3ZJBfw=
+
+Name: birt/webcontent/birt/images/Add_disabled.gif
+SHA1-Digest: pATUL4dV4kt+QN0ApcjmANk9CBE=
+
+Name: birt/webcontent/birt/images/Expand.gif
+SHA1-Digest: ONFdtO1dcuiQahP2BzJIXG2Nmxw=
+
+Name: birt/webcontent/birt/pages/dialog/ExceptionDialogFragment.jsp
+SHA1-Digest: CuJr0GtYrIPDVluo6qJZbKQZPXw=
+
+Name: birt/webcontent/birt/images/Up.gif
+SHA1-Digest: 0HChUtVgJDUSIbczhFM9cGA69zs=
+
+Name: birt/webcontent/birt/ajax/core/Mask.js
+SHA1-Digest: /oFqgbS1nR9WqxH54slnlqhWVcI=
+
+Name: birt/WEB-INF/web_deploy.xml
+SHA1-Digest: VlbY7ovMiJawjnh9eq5YE0PcIf4=
+
+Name: birt/webcontent/birt/images/RemoveAll_rtl.gif
+SHA1-Digest: rnYY76QCD6qnNiTRdGndEGiS6jk=
+
+Name: birt/webcontent/birt/images/Leaf.gif
+SHA1-Digest: /eNawZ3klLAgmIYrjghQ2wqYLAQ=
+
+Name: birt/webcontent/birt/pages/common/Error.jsp
+SHA1-Digest: JMNIk4fRmH0QKzYY9cb3aakMuN8=
+
+Name: about_files/prototype-LICENSE.txt
+SHA1-Digest: bt5SIdCJW7E7lYZov70D+2jSS+g=
+
+Name: birt/webcontent/birt/images/dialog/common/ok-cancel-button-cente
+ r.gif
+SHA1-Digest: Sk6h2hKPcE8+a8tHDds1gagAapw=
+
+Name: birt/webcontent/birt/pages/layout/ReportContentFragment.jsp
+SHA1-Digest: aJeIO/DRxyeZ+MwVL4l2icaYN58=
+
+Name: birt/webcontent/birt/images/childicon.gif
+SHA1-Digest: lI9t1iZb+2QFpDucWo8uz54Z5N0=
+
+Name: birt/webcontent/birt/images/LastPage_disabled.gif
+SHA1-Digest: ZQSDMTWeO9oh6Q9dal9OEAroru8=
+
+Name: birt/webcontent/birt/pages/layout/ParameterFragment.jsp
+SHA1-Digest: bOGbeev+N/NYeL3O4Pah2JN1s38=
+
+Name: birt/webcontent/birt/pages/parameter/CheckboxParameterFragment.j
+ sp
+SHA1-Digest: pghulWVLzaSJEMWEqYnsSWWBchA=
+
+Name: birt/webcontent/birt/pages/common/blank.html
+SHA1-Digest: 2jmj7l5rSw0yVb/vlWAYkK/YBwk=
+
+Name: birt/webcontent/birt/ajax/ui/report/AbstractReportComponent.js
+SHA1-Digest: ifS3a9xtFs1qpaLtvpnTjthDCdE=
+
+Name: birt/webcontent/birt/ajax/ui/app/AbstractBaseToc.js
+SHA1-Digest: jo0Z3S+mwdmCBT1PL1V7wG1mwv4=
+
+Name: birt/webcontent/birt/images/Export.gif
+SHA1-Digest: JRa+HF25REvBIbVkXV4JZQBO2nw=
+
+Name: birt/webcontent/birt/images/Remove_disabled_rtl.gif
+SHA1-Digest: pATUL4dV4kt+QN0ApcjmANk9CBE=
+
+Name: birt/webcontent/birt/ajax/utility/BrowserUtility.js
+SHA1-Digest: qAsbUPp2pKnsALVTy+BqAvqYJSU=
+
+Name: birt/webcontent/birt/styles/dialogbase_rtl.css
+SHA1-Digest: +ptAU7SbYFdlgbLvratntX2t6ms=
+
+Name: birt/webcontent/birt/pages/parameter/TextBoxParameterFragment.js
+ p
+SHA1-Digest: n2ifizMMlTXcE7eGvVjNTyvGYCc=
+
+Name: birt/webcontent/birt/images/parameter.gif
+SHA1-Digest: A5AN5xyeHehzLrQ5Dxk395pbN0Y=
+
+Name: birt/WEB-INF/server-config.wsdd
+SHA1-Digest: lZGD83u9s4Y4Av/EsAZKDSajUco=
+
+Name: plugin.properties
+SHA1-Digest: UBSVxYFkZgmCM3X2APFbV3l9Br8=
+
+Name: birt/webcontent/birt/images/DeleteFilter.gif
+SHA1-Digest: ORJe0sG1BDPf20zkd9DI+HUjfk8=
+
+Name: birt/WEB-INF/web.xml
+SHA1-Digest: IKpNvsfDfOpiwHrYHTMrP0Lx/2M=
+
+Name: birt/webcontent/birt/images/dialog/common/ok-cancel-button-cente
+ r_disabled.gif
+SHA1-Digest: Sk6h2hKPcE8+a8tHDds1gagAapw=
+
+Name: birt/webcontent/birt/images/Report_parameters.gif
+SHA1-Digest: J4EDetVAeLcwc2ClE2SxY8ula3s=
+
+Name: birt/webcontent/birt/ajax/ui/app/BirtProgressBar.js
+SHA1-Digest: oL6GwxC6qHhFFuOHs0FojAkBK8s=
+
+Name: birt/webcontent/birt/ajax/utility/Constants.js
+SHA1-Digest: W1Bz97ZQdWofmzjLj56V7EFs6CM=
+
+Name: plugin.xml
+SHA1-Digest: ksGCwyPo9FztuXCFnQ3NzfBLCak=
+
+Name: about_files/cpl-v10.html
+SHA1-Digest: o0b19ceZ+HQHVX0Ops751AQVdwM=
+
+Name: birt/test.rptdesign
+SHA1-Digest: whZnji0582eEdmxI80A/8J3u+ns=
+
+Name: birt/webcontent/birt/ajax/core/BirtSoapRequest.js
+SHA1-Digest: 0eTzM0engzVZ4K4mFu24YTSiZ7w=
+
+Name: birt/webcontent/birt/images/Idea.jpg
+SHA1-Digest: PcZMQGjryL3/ltXVmAwr6TCbFW0=
+
+Name: birt/webcontent/birt/images/Add.gif
+SHA1-Digest: DNaNVZ4Tu/rR+THkTSoFhru98sI=
+
+Name: birt/webcontent/birt/ajax/ui/dialog/BirtExportReportDialog.js
+SHA1-Digest: Ks4cHlX/y4VNYADk1+QLqJ1GVxg=
+
+Name: birt/webcontent/birt/images/FirstPage_disabled.gif
+SHA1-Digest: wvahpE6vNfRvMsiqiCZY8n6RsfU=
+
+Name: birt/webcontent/birt/ajax/taglib/CascadingParameter.js
+SHA1-Digest: VgWNJwxqZ6PzVHUrDd2SRhwe2Eo=
+
+Name: birt/webcontent/birt/ajax/ui/dialog/BirtTabedDialogBase.js
+SHA1-Digest: CD0NqARuCSHrShHheCeKaF8/2qU=
+
+Name: birt/webcontent/birt/pages/layout/SidebarFragment.jsp
+SHA1-Digest: ax+XrXDLMeSIkqpeGS8t/ylT2zg=
+
+Name: birt/webcontent/birt/images/Down.gif
+SHA1-Digest: smDgtYp56mZQoWGazfu4D0hJh90=
+
+Name: birt/webcontent/birt/images/NextPage.gif
+SHA1-Digest: UTL0KnlAnEypg38Aw6h6BPsGQGk=
+
+Name: birt/webcontent/birt/ajax/ui/app/BirtToc.js
+SHA1-Digest: gofj/nLyWR71aQyNfzyRfvJldkE=
+
+Name: birt/webcontent/birt/images/PreviousPage_disabled.gif
+SHA1-Digest: dJiRe0vTfXekOU4nIbf3QBtot6U=
+
+Name: birt/webcontent/birt/images/AddAll_rtl.gif
+SHA1-Digest: B1vBskXUZGj5Tukb5kK0d0rlAek=
+
+Name: birt/WEB-INF/lib/viewservlets.jar
+SHA1-Digest: jx/qokdS/5ATYu0R9Y8BKF/9HBA=
+
+Name: schema/browser.exsd
+SHA1-Digest: w6uA7NOEeSyumX893+pbOn2eHrM=
+
+Name: birt/webcontent/birt/pages/parameter/RadioButtonParameterFragmen
+ t.jsp
+SHA1-Digest: WJ5swJ240s4YtN2gcEq78y+NnT0=
+
+Name: birt/webcontent/birt/images/gradient.jpg
+SHA1-Digest: F8mqdDU8G1c7RBdA/fZOpD3Q1e4=
+
+Name: birt/webcontent/birt/images/Collapse.gif
+SHA1-Digest: fbHHLKs7nXXE39ec5MhWSLhVXRw=
+
+Name: birt/webcontent/birt/images/Close.gif
+SHA1-Digest: tec/1R+mK6LWAdIm2BMU0zG7GZE=
+
+Name: birt/webcontent/birt/images/Down_disabled.gif
+SHA1-Digest: naueVYDQDhffvO9tDZZA/HJ8MyI=
+
+Name: birt/webcontent/birt/images/NextPage_disabled.gif
+SHA1-Digest: pMFzzTakkxtlOpvlzth69i3xuEs=
+
+Name: birt/webcontent/birt/pages/dialog/PrintReportServerDialogFragmen
+ t.jsp
+SHA1-Digest: s/kx9XjQxF7mauHwrwAmpAb8Gao=
+
+Name: birt/WEB-INF/jrun.web.xml
+SHA1-Digest: /4INqO4xXAvj94jtXlE7QnYqvJs=
+

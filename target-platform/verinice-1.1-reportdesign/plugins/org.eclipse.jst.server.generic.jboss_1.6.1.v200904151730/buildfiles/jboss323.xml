@@ -1,0 +1,50 @@
+<project name="deployextension"  default="deploy.j2ee.web"  basedir=".">
+	<property name="pause.deploy" value="10"/>
+	<property name="pause.undeploy" value="5"/>
+
+	<target name="deploy.j2ee.web">
+		<jar compress="false" destfile="${project.working.dir}/${module.name}.war"> 
+			<zipfileset dir="${module.dir}">
+	        	<include name="**/*.*"/>
+				<exclude name="**/*.war"/>
+			</zipfileset>
+		</jar>
+  		<move file="${project.working.dir}/${module.name}.war" todir="${server.publish.dir}"/>
+		<sleep seconds="${pause.deploy}"/>
+	</target>
+	
+	<target name="deploy.j2ee.ejb">
+		<jar compress="false" destfile="${project.working.dir}/${module.name}.jar"> 
+			<zipfileset dir="${module.dir}">
+	        	<include name="**/*.*"/>
+	       		<exclude name="**/*.java"/>
+			</zipfileset>
+		</jar>
+  		<move file="${project.working.dir}/${module.name}.jar" todir="${server.publish.dir}"/>
+		<sleep seconds="${pause.deploy}"/>
+	</target>
+	<target name="deploy.j2ee.ear">
+		<jar compress="false" destfile="${project.working.dir}/${module.name}.ear"> 
+			<zipfileset dir="${module.dir}">
+	        	<include name="**/*.*"/>
+	       		<exclude name="**/*.java"/>
+			</zipfileset>
+		</jar>
+  		<move file="${project.working.dir}/${module.name}.ear" todir="${server.publish.dir}"/>
+		<sleep seconds="${pause.deploy}"/>
+	</target>
+	
+	<target name="undeploy.j2ee.web">
+		<delete file="${server.publish.dir}/${module.name}.war" failonerror="false"> </delete>
+		<sleep seconds="${pause.undeploy}"/>
+	</target>
+	<target name="undeploy.j2ee.ejb">
+		<delete file="${server.publish.dir}/${module.name}.jar" failonerror="false"> </delete>
+		<sleep seconds="${pause.undeploy}"/>
+	</target>
+	<target name="undeploy.j2ee.ear">
+		<delete file="${server.publish.dir}/${module.name}.ear" failonerror="false"> </delete>
+		<sleep seconds="${pause.undeploy}"/>
+	</target>	
+	
+</project>
