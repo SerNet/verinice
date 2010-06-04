@@ -17,19 +17,30 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver;
 
+import java.util.Hashtable;
+
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.url.URLConstants;
+import org.osgi.service.url.URLStreamHandlerService;
+
+import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
 
 /**
  * The activator class controls the plug-in life cycle
  */
 public class Activator extends Plugin {
+	
+	private static Logger log = Logger.getLogger(Activator.class);
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.verinice.oda.driver";
 
 	// The shared instance
 	private static Activator plugin;
+	
+	private VeriniceURLStreamHandlerService urlStreamHandlerService = new VeriniceURLStreamHandlerService();
 	
 	/**
 	 * The constructor
@@ -44,6 +55,14 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		Hashtable<String, String[]> properties = new Hashtable<String, String[]>();
+		properties.put( URLConstants.URL_HANDLER_PROTOCOL,
+		   new String[] { "verinice" } );
+		
+		context.registerService(
+				URLStreamHandlerService.class.getName(),
+				urlStreamHandlerService, properties );
 	}
 
 	/*
@@ -64,4 +83,8 @@ public class Activator extends Plugin {
 		return plugin;
 	}
 
+	public VeriniceURLStreamHandlerService getURLStreamHandlerService()
+	{
+		return urlStreamHandlerService;
+	}
 }

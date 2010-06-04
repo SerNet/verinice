@@ -17,18 +17,33 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.impl;
 
+import java.io.InputStream;
+
 class VeriniceOdaDriver implements IVeriniceOdaDriver {
 
 	private String serverURI;
 	
-	VeriniceOdaDriver(String serverURI)
+	private VeriniceURLStreamHandlerService urlStreamHandlerFactory;
+	
+	VeriniceOdaDriver(String serverURI, VeriniceURLStreamHandlerService urlStreamHandlerFactory)
 	{
 		this.serverURI = serverURI;
+		this.urlStreamHandlerFactory = urlStreamHandlerFactory;
 	}
 	
 	@Override
 	public String getServerURI() {
 		return serverURI;
+	}
+	
+	public void setImageProvider(String name, IImageProvider imageProvider)
+	{
+		urlStreamHandlerFactory.setImageProvider(name, imageProvider);
+	}
+	
+	void remove(String name)
+	{
+		urlStreamHandlerFactory.remove(name);
 	}
 
 }
