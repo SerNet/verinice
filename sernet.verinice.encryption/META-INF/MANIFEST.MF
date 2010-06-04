@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: sernet.verinice.encryption
+Bundle-SymbolicName: sernet.verinice.encryption
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sernet.verinice.encryption.Activator
+Require-Bundle: org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: ., bin, lib/bouncycastle/bcmail-jdk16-145.jar,
+ lib/bouncycastle/bcprov-jdk16-145.jar,
+ lib/javamail/javamail-1.4.3.jar
+Export-Package: sernet.verinice.encryption
