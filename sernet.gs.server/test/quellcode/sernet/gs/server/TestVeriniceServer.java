@@ -93,7 +93,7 @@ public class TestVeriniceServer extends TestCase {
 		List<MassnahmenUmsetzung> elements = command.getElements();
 		assertNotNull(elements);
 		for (MassnahmenUmsetzung elmt : elements) {
-			System.out.println(elmt.getTitel());
+			System.out.println(elmt.getTitle());
 		}
 		System.out.println(elements.size());
 	}
@@ -104,7 +104,7 @@ public class TestVeriniceServer extends TestCase {
 		List<MassnahmenUmsetzung> elements = command.getElements();
 		assertNotNull(elements);
 		for (MassnahmenUmsetzung elmt : elements) {
-			System.out.println(elmt.getTitel());
+			System.out.println(elmt.getTitle());
 		}
 		System.out.println(elements.size());
 	}
