@@ -634,28 +634,40 @@ Library.
          id="org.eclipse.datatools.connectivity.oda"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="3.2.2.v201001270833"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.datatools.connectivity.oda.profile"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="3.2.2.v201001210350"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.datatools.connectivity"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.1.3.v201001230803"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.datatools.connectivity.oda.consumer"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="3.2.2.v201001261113"
          unpack="false"/>
+
+   <plugin
+         id="jsf-api"
+         download-size="0"
+         install-size="0"
+         version="1.2.12"/>
+
+   <plugin
+         id="richfaces"
+         download-size="0"
+         install-size="0"
+         version="3.3.2.SR1"/>
 
 </feature>
