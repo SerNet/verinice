@@ -123,13 +123,19 @@ public class Activator extends AbstractUIPlugin {
 				// Driver is available. Retrieve the the URI for the server from it and let
 				// the verinice data model communication with it.
 				IVeriniceOdaDriver odaDriver = (IVeriniceOdaDriver) ctx.getService(sr);
-				ClientPropertyPlaceholderConfigurer.setRemoteServerMode(odaDriver.getServerURI());
-				ServiceFactory.openCommandService();
-				VeriniceContext.setState(state = ServiceFactory.getClientWorkObjects());
 				
-				// Skip anything that is related to the actual client application as we are
-				// only interested in accessing data for the reports.
-				return;
+				String uri = odaDriver.getServerURI();
+				// If an URI is put into the ODA driver we assume that we are running in designer mode.
+				if (uri != null)
+				{
+					ClientPropertyPlaceholderConfigurer.setRemoteServerMode(uri);
+					ServiceFactory.openCommandService();
+					VeriniceContext.setState(state = ServiceFactory.getClientWorkObjects());
+					
+					// Skip anything that is related to the actual client application as we are
+					// only interested in accessing data for the reports.
+					return;
+				}
 			}
 		}
 
