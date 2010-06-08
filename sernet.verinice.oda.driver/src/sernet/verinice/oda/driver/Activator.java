@@ -25,6 +25,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.url.URLConstants;
 import org.osgi.service.url.URLStreamHandlerService;
 
+import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
+import sernet.verinice.oda.driver.impl.VeriniceOdaDriver;
 import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
 
 /**
@@ -41,6 +43,8 @@ public class Activator extends Plugin {
 	private static Activator plugin;
 	
 	private VeriniceURLStreamHandlerService urlStreamHandlerService = new VeriniceURLStreamHandlerService();
+	
+	private VeriniceOdaDriver odaDriver;
 	
 	/**
 	 * The constructor
@@ -63,6 +67,13 @@ public class Activator extends Plugin {
 		context.registerService(
 				URLStreamHandlerService.class.getName(),
 				urlStreamHandlerService, properties );
+		
+		odaDriver = new VeriniceOdaDriver(urlStreamHandlerService);
+		
+		context.registerService(
+				IVeriniceOdaDriver.class.getName(),
+				odaDriver, null);
+
 	}
 
 	/*
@@ -86,5 +97,9 @@ public class Activator extends Plugin {
 	public VeriniceURLStreamHandlerService getURLStreamHandlerService()
 	{
 		return urlStreamHandlerService;
+	}
+
+	public VeriniceOdaDriver getOdaDriver() {
+		return odaDriver;
 	}
 }

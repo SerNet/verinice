@@ -17,17 +17,19 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.impl;
 
-import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
-class VeriniceOdaDriver implements IVeriniceOdaDriver {
+public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 
 	private String serverURI;
 	
 	private VeriniceURLStreamHandlerService urlStreamHandlerFactory;
 	
-	VeriniceOdaDriver(String serverURI, VeriniceURLStreamHandlerService urlStreamHandlerFactory)
+	private Map<String, Object> vars = new HashMap<String, Object>();
+	
+	public VeriniceOdaDriver(VeriniceURLStreamHandlerService urlStreamHandlerFactory)
 	{
-		this.serverURI = serverURI;
 		this.urlStreamHandlerFactory = urlStreamHandlerFactory;
 	}
 	
@@ -36,14 +38,30 @@ class VeriniceOdaDriver implements IVeriniceOdaDriver {
 		return serverURI;
 	}
 	
+	void setServerURI(String uri) {
+		serverURI = uri;
+	}
+	
+	@Override
 	public void setImageProvider(String name, IImageProvider imageProvider)
 	{
 		urlStreamHandlerFactory.setImageProvider(name, imageProvider);
 	}
 	
-	void remove(String name)
+	@Override
+	public void removeImageProvider(String name)
 	{
 		urlStreamHandlerFactory.remove(name);
+	}
+	
+	@Override
+	public void setScriptVariables(Map<String, Object> vars)
+	{
+		this.vars = vars;
+	}
+
+	public Map<String, Object> getScriptVariables() {
+		return vars;
 	}
 
 }

@@ -63,17 +63,17 @@ public class Connection implements IConnection {
 				// then.
 				if (mainBundle.getState() == Bundle.INSTALLED
 						|| mainBundle.getState() == Bundle.RESOLVED) {
-					BundleContext ctx = Activator.getDefault().getBundle()
-							.getBundleContext();
 					String uri = connProperties.getProperty("serverURI");
 
-					VeriniceURLStreamHandlerService ushf = Activator
-							.getDefault().getURLStreamHandlerService();
-					ctx.registerService(IVeriniceOdaDriver.class.getName(),
-							new VeriniceOdaDriver(uri, ushf), null);
+					Activator.getDefault().getOdaDriver().setServerURI(uri);
+					
+					mainBundle.start();
+				} else if (mainBundle.getState() == Bundle.ACTIVE)
+				{
+					// Main bundle runs already. We can assume that we are being used to generate reports
+					// now.
 				}
 
-				mainBundle.start();
 			}
 		} catch (BundleException e) {
 			throw (OdaException) new OdaException("Could not start")

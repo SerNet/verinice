@@ -17,7 +17,16 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.impl;
 
+import java.util.Map;
+
 public interface IVeriniceOdaDriver {
 
 	String getServerURI();
+
+	void setImageProvider(String name, IImageProvider imageProvider);
+
+	void removeImageProvider(String name);
+
+	void setScriptVariables(Map<String, Object> Map);
+
 }

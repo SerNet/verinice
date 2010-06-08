@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.datatools.connectivity.oda.IParameterMetaData;
 import org.eclipse.datatools.connectivity.oda.IQuery;
@@ -39,6 +40,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.oda.driver.Activator;
 import bsh.EvalError;
 import bsh.Interpreter;
 
@@ -59,14 +61,23 @@ public class Query implements IQuery
     
     Query(HUITypeFactory huiTypeFactory)
     {
+    	VeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
+    	
     	try {
     		interpreter = new Interpreter();
+			interpreter.set("_vars", odaDriver.getScriptVariables());
+			interpreter.eval(
+					"vars(s) {" +
+					" v = _vars.get(s);" +
+					" return (v == null) ? s + \" does not exist.\" : v;" +
+					"}");
     		interpreter.set("helper", this);
     		interpreter.eval("gpt(entityType) { return helper.getAllPropertyTypes(entityType); }");
     		interpreter.set("htf", huiTypeFactory);
 			interpreter.set("properties", properties);
 			interpreter.set("__columns", null);
 			interpreter.eval("columns(c) { __columns = c; }");
+
 		} catch (EvalError e) {
 			new RuntimeException("Unable to set BSH variable 'properties'.", e);
 		}
