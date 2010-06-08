@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ClassPath: junit.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.junit4
 Require-Bundle: org.hamcrest.core;bundle-version="1.1.0";visibility:=r
