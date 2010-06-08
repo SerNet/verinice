@@ -50,7 +50,7 @@ See the LICENSE.txt contained in the program folder, the verinice Plugin-Details
       location="sernet.gs.ui.rcp.main"
       startupProgressRect="5,5,400,15" />
    <launcher name="verinice">
-      <linux icon="/sernet.gs.ui.rcp.main/wxcas.xpm"/>
+      <linux icon="/sernet.gs.ui.rcp.main.feature/wxcas.xpm"/>
       <macosx icon="/sernet.gs.ui.rcp.main/icons/v_logo_mac.icns"/>
       <solaris/>
       <win useIco="true">
