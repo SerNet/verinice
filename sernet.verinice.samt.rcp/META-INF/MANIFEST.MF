@@ -12,10 +12,13 @@ Require-Bundle: sernet.gs.ui.rcp.main;bundle-version="1.1.1",
  org.eclipse.core.resources;bundle-version="3.5.2",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.ui.intro;bundle-version="3.3.2",
- org.eclipse.ui.cheatsheets
+ org.eclipse.ui.cheatsheets,
+ sernet.verinice.report.service;bundle-version="1.0.0",
+ sernet.verinice.oda.driver;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %Bundle-Vendor
 Import-Package: org.eclipse.core.runtime,
  org.eclipse.core.runtime.jobs,
- org.eclipse.osgi.util
+ org.eclipse.osgi.util,
+ org.osgi.framework
