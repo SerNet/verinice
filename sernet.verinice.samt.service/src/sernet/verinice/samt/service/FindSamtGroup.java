@@ -64,6 +64,18 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
     
     private ControlGroup selfAssessmentGroup = null;
     
+    private boolean hydrateParent;
+    
+    public FindSamtGroup()
+    {
+    	this(false);
+    }
+    
+    public FindSamtGroup(boolean hydrateParent)
+    {
+    	this.hydrateParent = hydrateParent;
+    }
+    
     /* (non-Javadoc)
      * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
      */
@@ -151,7 +163,10 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
      * @param selfAssessmentGroup2
      */
     private void hydrate(ControlGroup selfAssessmentGroup) {
-        selfAssessmentGroup.getTitle();       
+        selfAssessmentGroup.getTitle();
+        
+        if (hydrateParent)
+        	selfAssessmentGroup.getParent().getTitle();
     }
 
 
