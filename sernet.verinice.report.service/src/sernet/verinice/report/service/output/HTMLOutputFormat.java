@@ -8,7 +8,7 @@ import sernet.verinice.report.service.impl.IOutputFormat;
 public class HTMLOutputFormat implements IOutputFormat {
 
 	public String getFileSuffix() {
-		return ".html";
+		return "html";
 	}
 
 	public String getId() {

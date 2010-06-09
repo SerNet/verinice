@@ -9,7 +9,7 @@ import sernet.verinice.report.service.impl.IOutputFormat;
 public class PDFOutputFormat implements IOutputFormat {
 
 	public String getFileSuffix() {
-		return ".pdf";
+		return "pdf";
 	}
 
 	public String getId() {

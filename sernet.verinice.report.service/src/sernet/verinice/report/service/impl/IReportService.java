@@ -6,6 +6,7 @@ public interface IReportService {
 
 	void runTestReportGeneration();
 
-	void runSamtReportGeneration(Map<String, Object> variables);
+	void runSamtReportGeneration(Map<String, Object> variables, IReportOptions reportOptions);
 	
+	IReportType[] getReportTypes();
 }

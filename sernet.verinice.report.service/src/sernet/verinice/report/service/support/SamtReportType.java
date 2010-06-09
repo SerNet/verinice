@@ -8,6 +8,7 @@ import sernet.verinice.report.service.impl.BIRTReportService;
 import sernet.verinice.report.service.impl.IOutputFormat;
 import sernet.verinice.report.service.impl.IReportOptions;
 import sernet.verinice.report.service.impl.IReportType;
+import sernet.verinice.report.service.output.HTMLOutputFormat;
 import sernet.verinice.report.service.output.PDFOutputFormat;
 
 public class SamtReportType implements IReportType {
@@ -25,7 +26,7 @@ public class SamtReportType implements IReportType {
 	}
 
 	public IOutputFormat[] getOutputFormats() {
-		return new IOutputFormat[] { new PDFOutputFormat() };
+		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat() };
 	}
 
 	public void createReport(IReportOptions reportOptions) {

@@ -27,29 +27,19 @@ public class ReportService implements IReportService {
 	}
 
 	@Override
-	public void runSamtReportGeneration(Map<String, Object> variables) {
+	public void runSamtReportGeneration(Map<String, Object> variables, IReportOptions reportOptions) {
 		IReportType rt = new SamtReportType();
-		
-		IReportOptions ro = new IReportOptions() {
-			public boolean isToBeEncrypted() { return false; }
-			public boolean isToBeCompressed() { return false; }
-			public IOutputFormat getOutputFormat() { return new PDFOutputFormat(); } 
-			public File getOutputFile() { return new File("/tmp/samt-report.pdf"); }
-		};
 		
 		IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
 		
 		odaDriver.setScriptVariables(variables);
 		
-		rt.createReport(ro);
-		
-		ro = new IReportOptions() {
-			public boolean isToBeEncrypted() { return false; }
-			public boolean isToBeCompressed() { return false; }
-			public IOutputFormat getOutputFormat() { return new HTMLOutputFormat(); } 
-			public File getOutputFile() { return new File("/tmp/samt-report.html"); }
-		};
-		rt.createReport(ro);
+		rt.createReport(reportOptions);
+	}
+
+	@Override
+	public IReportType[] getReportTypes() {
+		return new IReportType[] { new SamtReportType() };
 	}
 	
 }
