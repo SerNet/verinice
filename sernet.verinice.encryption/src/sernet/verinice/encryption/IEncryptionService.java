@@ -1,8 +1,11 @@
 package sernet.verinice.encryption;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.cert.CertificateException;
 
 import sernet.verinice.encryption.impl.EncryptionException;
 
@@ -55,7 +58,7 @@ public interface IEncryptionService {
 	 */
 	OutputStream encrypt(OutputStream unencryptedDataStream, char[] password)
 			throws EncryptionException, IOException;
-	
+
 	/**
 	 * Decrypts data received from the given InputStream using the AES algorithm.
 	 * 
@@ -70,6 +73,27 @@ public interface IEncryptionService {
 	 *             when there was a problem reading from the InputStream
 	 */
 	InputStream decrypt(InputStream encryptedInputStream, char[] password)
-		throws EncryptionException, IOException;
+			throws EncryptionException, IOException;
+
+	// ##### S/MIME Encryption #####
+
+	/**
+	 * Encrypts the given byte data with the given X.509 certificate file.
+	 * 
+	 * @param unencryptedByteData
+	 *            the data to encrypt
+	 * @param x509CertificateFile
+	 *            X.509 certificate file used to encrypt the data
+	 * @return the encrypted data as array of bytes
+	 * @throws FileNotFoundException
+	 *             if the given certificate file could not be found
+	 * @throws CertificateException
+	 *             if the given certificate was not in expected format or if it was not or not yet
+	 *             valid
+	 * @throws EncryptionException
+	 *             when a problem occured during the encryption process
+	 */
+	byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile)
+			throws FileNotFoundException, CertificateException, EncryptionException;
 
 }

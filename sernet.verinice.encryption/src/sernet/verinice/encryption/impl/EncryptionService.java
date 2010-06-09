@@ -1,9 +1,12 @@
 package sernet.verinice.encryption.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Security;
+import java.security.cert.CertificateException;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -57,6 +60,12 @@ public class EncryptionService implements IEncryptionService {
 	public InputStream decrypt(InputStream encryptedInputStream, char[] password)
 			throws EncryptionException, IOException {
 		return PasswordBasedEncryption.decrypt(encryptedInputStream, password);
+	}
+
+	@Override
+	public byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile)
+			throws FileNotFoundException, CertificateException, EncryptionException {
+		return SMIMEBasedEncryption.encrypt(unencryptedByteData, x509CertificateFile);
 	}
 
 }

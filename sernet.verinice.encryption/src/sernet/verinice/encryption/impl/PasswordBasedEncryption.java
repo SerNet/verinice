@@ -14,11 +14,11 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 /**
- * Abstract class providing static methods for Password Based Encryption (PBE).
+ * Abstract utility class providing static methods for Password Based Encryption (PBE).
  * 
  * <p>
  * Information on Password Based Encryption can be found in <a
- * href="http://www.ietf.org/rfc/rfc2898.txt">RFC2898</a>.
+ * href="http://tools.ietf.org/html/rfc2898">RFC2898</a>.
  * </p>
  * 
  * @author sengel <s.engel.@tarent.de>
