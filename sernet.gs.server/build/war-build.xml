@@ -37,6 +37,7 @@
 			  <include name="sernet.hui.swtclient*.*/jar/sernet.hui.swtclient*.jar"/>
 			  <include name="sernet.hui.server*.*/jar/sernet.hui.server*.jar"/>
 			  <include name="sernet.gs.ui.rcp.main*.*/jar/sernet.gs.ui.rcp.main*.jar"/>
+			  <include name="sernet.gs.server*.*/jar/sernet.gs.server*.jar"/>
 			  <include name="sernet.gs.service*.*/jar/sernet.gs.service*.jar"/>
 			  <include name="sernet.gs.reveng*.*/jar/sernet.gs.reveng*.jar"/>
 			  <include name="sernet.verinice.samt.service*.*/jar/sernet.verinice.samt.service*.jar"/>
