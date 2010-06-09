@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: verinice Report Service
+Bundle-SymbolicName: sernet.verinice.report.service
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sernet.verinice.report.service.Activator
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.birt.core;bundle-version="2.5.2",
+ org.eclipse.birt.report.engine;bundle-version="2.5.2",
+ org.eclipse.birt.chart.engine;bundle-version="2.5.2",
+ org.eclipse.birt.report.engine.emitter.html;bundle-version="2.5.2",
+ org.eclipse.birt.report.engine.emitter.html.config;bundle-version="2.5.2",
+ org.eclipse.birt.chart.device.pdf;bundle-version="2.5.2",
+ org.eclipse.birt.report.engine.emitter.pdf;bundle-version="2.5.2",
+ org.eclipse.birt.report.engine.emitter.pdf.config;bundle-version="2.5.2",
+ org.eclipse.birt.report.engine.script.javascript;bundle-version="2.5.2",
+ sernet.verinice.oda.driver;bundle-version="1.0.0"
+Bundle-Vendor: SerNet
+Export-Package: sernet.verinice.report.service.impl
