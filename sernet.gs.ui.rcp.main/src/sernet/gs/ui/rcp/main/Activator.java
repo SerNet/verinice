@@ -73,6 +73,8 @@ public class Activator extends AbstractUIPlugin {
 	private static VeriniceContext.State state;
 
 	private IInternalServer internalServer;
+	
+	private IVeriniceOdaDriver odaDriver;
 
 	/**
 	 * The constructor
@@ -122,7 +124,7 @@ public class Activator extends AbstractUIPlugin {
 			{
 				// Driver is available. Retrieve the the URI for the server from it and let
 				// the verinice data model communication with it.
-				IVeriniceOdaDriver odaDriver = (IVeriniceOdaDriver) ctx.getService(sr);
+				odaDriver = (IVeriniceOdaDriver) ctx.getService(sr);
 				
 				String uri = odaDriver.getServerURI();
 				// If an URI is put into the ODA driver we assume that we are running in designer mode.
@@ -250,6 +252,10 @@ public class Activator extends AbstractUIPlugin {
 
 	public IInternalServer getInternalServer() {
 		return internalServer;
+	}
+	
+	public IVeriniceOdaDriver getOdaDriver() {
+		return odaDriver;
 	}
 
 	public static void initDatabase() {

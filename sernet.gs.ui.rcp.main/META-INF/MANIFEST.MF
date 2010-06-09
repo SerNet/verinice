@@ -33,6 +33,7 @@ Export-Package: au.com.bytecode.opencsv,
  au.com.bytecode.opencsv.bean;uses:="au.com.bytecode.opencsv",
  com.heatonresearch.datamover;uses:="com.heatonresearch.datamover.db",
  com.heatonresearch.datamover.db,
+ org.jfree.chart,
  sernet.gs.common;version="1.1.1",
  sernet.gs.ui.rcp.gsimport;version="1.1.1";
   uses:="sernet.gs.reveng,
