@@ -1773,4 +1773,11 @@ Library.
          version="2.5.2.v20100127"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.birt.data"
+         download-size="0"
+         install-size="0"
+         version="2.5.2.v20100209"
+         unpack="false"/>
+
 </feature>
