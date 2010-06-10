@@ -1806,4 +1806,11 @@ Library.
          install-size="0"
          version="1.7.1.v20090521"/>
 
+   <plugin
+         id="org.eclipse.emf.ecore.xmi"
+         download-size="0"
+         install-size="0"
+         version="2.5.0.v200906151043"
+         unpack="false"/>
+
 </feature>
