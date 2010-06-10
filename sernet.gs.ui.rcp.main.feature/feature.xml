@@ -1876,4 +1876,32 @@ Library.
          version="1.6.0.v200805290154"
          unpack="false"/>
 
+   <plugin
+         id="org.apache.batik.css"
+         download-size="0"
+         install-size="0"
+         version="1.6.0.v200805290154"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.batik.parser"
+         download-size="0"
+         install-size="0"
+         version="1.6.0.v200805290154"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.batik.util.gui"
+         download-size="0"
+         install-size="0"
+         version="1.6.0.v200805290154"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.batik.xml"
+         download-size="0"
+         install-size="0"
+         version="1.6.0.v200805290154"
+         unpack="false"/>
+
 </feature>
