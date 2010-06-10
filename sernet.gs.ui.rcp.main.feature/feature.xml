@@ -1787,4 +1787,11 @@ Library.
          version="2.5.0.v200906151043"
          unpack="false"/>
 
+   <plugin
+         id="org.w3c.css.sac"
+         download-size="0"
+         install-size="0"
+         version="1.3.0.v200805290154"
+         unpack="false"/>
+
 </feature>
