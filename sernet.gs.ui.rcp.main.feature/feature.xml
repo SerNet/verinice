@@ -1780,4 +1780,11 @@ Library.
          version="2.5.2.v20100209"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.emf.ecore"
+         download-size="0"
+         install-size="0"
+         version="2.5.0.v200906151043"
+         unpack="false"/>
+
 </feature>
