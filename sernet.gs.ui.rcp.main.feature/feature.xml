@@ -1946,4 +1946,39 @@ Library.
          version="2.7.1.v200902170519"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.birt.chart.device.svg"
+         download-size="0"
+         install-size="0"
+         version="2.5.2.v20100204"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.codec"
+         download-size="0"
+         install-size="0"
+         version="1.3.0.v20080530-1600"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.chart.device.extension"
+         download-size="0"
+         install-size="0"
+         version="2.5.2.v20100204"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecore.change"
+         download-size="0"
+         install-size="0"
+         version="2.5.0.v200906151043"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.common"
+         download-size="0"
+         install-size="0"
+         version="2.5.0.v200906151043"
+         unpack="false"/>
+
 </feature>
