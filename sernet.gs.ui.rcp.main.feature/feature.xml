@@ -1702,68 +1702,68 @@ Library.
          install-size="0"
          version="1.0.0.qualifier"
          unpack="false"/>
-       
+
    <plugin
          id="org.eclipse.birt.core"
          download-size="0"
          install-size="0"
-         version="2.5.2"
+         version="2.5.2.v20100208"
          unpack="false"/>
-       
+
    <plugin
          id="org.eclipse.birt.report.engine"
          download-size="0"
          install-size="0"
-         version="2.5.2"
+         version="2.5.2.v20100210"
          unpack="false"/>
-       
+
    <plugin
          id="org.eclipse.birt.chart.engine"
          download-size="0"
          install-size="0"
-         version="2.5.2"
+         version="2.5.2.v20100209"
          unpack="false"/>
-       
+
    <plugin
          id="org.eclipse.birt.report.engine.emitter.html"
          download-size="0"
          install-size="0"
-         version="2.5.2"
+         version="2.5.2.v20100208"
          unpack="false"/>
-       
+
    <plugin
          id="org.eclipse.birt.report.engine.emitter.html.config"
          download-size="0"
          install-size="0"
-         version="2.5.2"
+         version="2.5.2.v20100208"
          unpack="false"/>
-       
+
    <plugin
          id="org.eclipse.birt.chart.device.pdf"
          download-size="0"
          install-size="0"
-         version="2.5.2"
+         version="2.5.2.v20091022"
          unpack="false"/>
-       
+
    <plugin
          id="org.eclipse.birt.report.engine.emitter.pdf"
          download-size="0"
          install-size="0"
-         version="2.5.2"
+         version="2.5.2.v20100129"
          unpack="false"/>
-       
+
    <plugin
          id="org.eclipse.birt.report.engine.emitter.pdf.config"
          download-size="0"
          install-size="0"
-         version="2.5.2"
+         version="2.5.2.v20100208"
          unpack="false"/>
-       
+
    <plugin
          id="org.eclipse.birt.report.engine.script.javascript"
          download-size="0"
          install-size="0"
-         version="2.5.2"
+         version="2.5.2.v20091224"
          unpack="false"/>
-       
+
 </feature>
