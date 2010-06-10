@@ -2001,4 +2001,11 @@ Library.
          install-size="0"
          version="1.5.4.v20090305"/>
 
+   <plugin
+         id="org.eclipse.birt.report.engine.fonts"
+         download-size="0"
+         install-size="0"
+         version="2.5.2.v20091224"
+         unpack="false"/>
+
 </feature>
