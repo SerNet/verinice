@@ -1904,4 +1904,25 @@ Library.
          version="1.6.0.v200805290154"
          unpack="false"/>
 
+   <plugin
+         id="org.w3c.dom.smil"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v200806040011"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.xerces"
+         download-size="0"
+         install-size="0"
+         version="2.9.0.v200909240008"
+         unpack="false"/>
+
+   <plugin
+         id="org.w3c.dom.svg"
+         download-size="0"
+         install-size="0"
+         version="1.1.0.v200806040011"
+         unpack="false"/>
+
 </feature>
