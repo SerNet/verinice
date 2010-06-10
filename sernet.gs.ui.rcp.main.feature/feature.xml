@@ -1981,4 +1981,11 @@ Library.
          version="2.5.0.v200906151043"
          unpack="false"/>
 
+   <plugin
+         id="org.apache.batik.pdf"
+         download-size="0"
+         install-size="0"
+         version="1.6.0.v200806031500"
+         unpack="false"/>
+
 </feature>
