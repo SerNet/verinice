@@ -1800,4 +1800,10 @@ Library.
          install-size="0"
          version="1.3.0.v20070710"/>
 
+   <plugin
+         id="org.mozilla.rhino"
+         download-size="0"
+         install-size="0"
+         version="1.7.1.v20090521"/>
+
 </feature>
