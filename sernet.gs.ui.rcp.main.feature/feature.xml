@@ -1988,4 +1988,17 @@ Library.
          version="1.6.0.v200806031500"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.birt.report.engine.emitter.config"
+         download-size="0"
+         install-size="0"
+         version="2.5.2.v20100208"
+         unpack="false"/>
+
+   <plugin
+         id="com.lowagie.itext"
+         download-size="0"
+         install-size="0"
+         version="1.5.4.v20090305"/>
+
 </feature>
