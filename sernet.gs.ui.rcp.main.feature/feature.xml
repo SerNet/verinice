@@ -1766,4 +1766,11 @@ Library.
          version="2.5.2.v20091224"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.birt.report.model"
+         download-size="0"
+         install-size="0"
+         version="2.5.2.v20100127"
+         unpack="false"/>
+
 </feature>
