@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -24,10 +25,14 @@ import sernet.gs.ui.rcp.main.bsi.views.chart.MaturitySpiderChart;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
+import sernet.verinice.iso27k.model.ControlGroup;
 import sernet.verinice.oda.driver.impl.IImageProvider;
 import sernet.verinice.report.service.impl.IOutputFormat;
 import sernet.verinice.report.service.impl.IReportOptions;
+import sernet.verinice.samt.model.SamtTopic;
 import sernet.verinice.samt.service.FindSamtGroup;
+import sernet.verinice.samt.service.LoadAllSamtTopics;
 
 public class GenerateReportAction extends ActionDelegate implements
 		IWorkbenchWindowActionDelegate {
@@ -68,7 +73,7 @@ public class GenerateReportAction extends ActionDelegate implements
 		 */
 
 		if (dialog.open() == Dialog.OK) {
-			CnATreeElement samtGroup = getSamtGroup();
+			ControlGroup samtGroup = getSamtGroup();
 			JFreeChart chart = new MaturitySpiderChart().createChart(samtGroup);
 			final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			try {
@@ -86,11 +91,14 @@ public class GenerateReportAction extends ActionDelegate implements
 						}
 
 					});
+			
+			List<SamtTopic> samtTopics = getAllSamtTopics(samtGroup);
 
 			Map<String, Object> variables = new HashMap<String, Object>();
 			variables.put("companyName", samtGroup.getParent().getTitle());
 			variables.put("date", new Date());
 			variables.put("totalSecurityFigure", 23);
+			variables.put("samtTopics", samtTopics);
 			
 			IReportOptions ro = new IReportOptions() {
 				public boolean isToBeEncrypted() { return false; }
@@ -112,7 +120,7 @@ public class GenerateReportAction extends ActionDelegate implements
 		return commandService;
 	}
 
-	private CnATreeElement getSamtGroup() {
+	private ControlGroup getSamtGroup() {
 		FindSamtGroup command = new FindSamtGroup(true);
 		try {
 			command = getCommandService().executeCommand(command);
@@ -125,5 +133,21 @@ public class GenerateReportAction extends ActionDelegate implements
 			throw new RuntimeException(message, e);
 		}
 		return command.getSelfAssessmentGroup();
+	}
+	
+	private List<SamtTopic> getAllSamtTopics(ControlGroup cg)
+	{
+		LoadAllSamtTopics command = new LoadAllSamtTopics(cg);
+		try {
+			command = getCommandService().executeCommand(command);
+		} catch (RuntimeException e) {
+			LOG.error("Error while executing FindSamtGroup command", e); //$NON-NLS-1$
+			throw e;
+		} catch (Exception e) {
+			final String message = "Error while executing FindSamtGroup command"; //$NON-NLS-1$
+			LOG.error(message, e);
+			throw new RuntimeException(message, e);
+		}
+		return command.getAllSamtTopics();
 	}
 }
