@@ -81,7 +81,8 @@ public class GetHitroConfig extends HttpServlet {
 					}
 					fileName = resourceParameter;
 				} 
-				String path = new File(basePath,fileName).getPath();
+				//String path = new File(basePath,fileName).getPath();
+				String path = basePath + "/" + fileName;
 				if (log.isDebugEnabled()) {
 					log.debug("returning: " + path );
 				}
