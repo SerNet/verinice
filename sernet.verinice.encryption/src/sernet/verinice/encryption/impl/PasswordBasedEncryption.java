@@ -13,6 +13,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 /**
  * Abstract utility class providing static methods for Password Based Encryption (PBE).
  * 
@@ -182,12 +184,13 @@ public abstract class PasswordBasedEncryption {
 		PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
 
 		try {
-			SecretKeyFactory secretKeyFactory = 
-				SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, "BC");
+			SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(
+					ENCRYPTION_ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
 			SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
 
 			// Generate and initialize a PBE cipher
-			Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, "BC");
+			Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, 
+					BouncyCastleProvider.PROVIDER_NAME);
 			cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParameterSpec);
 
 			decryptedInputStream = new CipherInputStream(encryptedInputStream, cipher);
