@@ -4265,9 +4265,17 @@ the value between <param></param> will be used directly if no string is found fo
           <huiproperty 
             id="samt_topic_maturity"      
             inputtype="numericoption" 
-            min="0" 
-            max="9" 
-            focus="true"/>
+            min="-1" 
+            max="5" 
+            focus="true">
+                <option id="samt_topic_maturity_na"  value="-1" />
+                <option id="samt_topic_maturity_0"  value="0" />
+                <option id="samt_topic_maturity_1"  value="1" />
+                <option id="samt_topic_maturity_2"  value="2" />
+                <option id="samt_topic_maturity_3"  value="3" />
+                <option id="samt_topic_maturity_4"  value="4" />
+                <option id="samt_topic_maturity_5"  value="5" />
+          </huiproperty>
             
           <huiproperty 
             id="samt_topic_weight"  visible="false" inputtype="numericoption" min="0" max="10" />
@@ -4278,9 +4286,6 @@ the value between <param></param> will be used directly if no string is found fo
           <huiproperty 
             id="samt_topic_min2"  visible="false" inputtype="numericoption" min="0" max="10" />
             
-          <huiproperty 
-            id="samt_topic_applicable" 
-            />
           <huiproperty 
             id="samt_topic_externalnote" 
             inputtype="text"/>
