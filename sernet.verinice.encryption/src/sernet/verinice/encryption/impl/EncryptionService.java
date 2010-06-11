@@ -1,12 +1,13 @@
 package sernet.verinice.encryption.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Security;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -35,7 +36,7 @@ public class EncryptionService implements IEncryptionService {
 	public EncryptionService() {
 		// If not already available, add the BounceCastle security provider,
 		// since JSE doesn't provide password based encryption with AES.
-		if (Security.getProvider("BC") == null) {
+		if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
 			Security.addProvider(new BouncyCastleProvider());
 		}
 	}
@@ -63,8 +64,9 @@ public class EncryptionService implements IEncryptionService {
 	}
 
 	@Override
-	public byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile)
-			throws FileNotFoundException, CertificateException, EncryptionException {
+	public byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile) 
+		throws CertificateNotYetValidException, CertificateExpiredException, 
+		CertificateException, EncryptionException, IOException {
 		return SMIMEBasedEncryption.encrypt(unencryptedByteData, x509CertificateFile);
 	}
 

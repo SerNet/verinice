@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 
 import sernet.verinice.encryption.impl.EncryptionException;
 
@@ -94,6 +96,6 @@ public interface IEncryptionService {
 	 *             when a problem occured during the encryption process
 	 */
 	byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile)
-			throws FileNotFoundException, CertificateException, EncryptionException;
-
+		throws CertificateNotYetValidException, CertificateExpiredException, 
+		CertificateException, EncryptionException, IOException;
 }
