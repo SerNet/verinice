@@ -4,4 +4,5 @@
 	<cq:rootRequest name="sernet.hui.common" 
     	componentType="osgi.bundle" 
     	versionDesignator="[1.1.1.qualifier,1.1.1.qualifier]"/>
+   	<cq:property key="qualifier.replacement.*" value="generator:lastRevision"/>
 </cq:componentQuery>
