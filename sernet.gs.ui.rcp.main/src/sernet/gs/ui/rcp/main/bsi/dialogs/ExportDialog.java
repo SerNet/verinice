@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Andreas Becker <andreas@becker.name>.
+ * Copyright (c) 2010 Andreas Becker <andreas[at]becker[dot]name>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -13,7 +13,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Andreas Becker <andreas@becker.name> - initial API and implementation
+ *     Andreas Becker <andreas[at]becker[dot]name> - initial API and implementation
  ******************************************************************************/
 
 package sernet.gs.ui.rcp.main.bsi.dialogs;
