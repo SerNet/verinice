@@ -40,6 +40,7 @@ import org.eclipse.ui.internal.cheatsheets.actions.CheatSheetCategoryBasedSelect
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
+import sernet.gs.ui.rcp.main.actions.ExportAction;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolNotesAction;
 import sernet.gs.ui.rcp.main.actions.ManageUpdatesAction;
@@ -146,6 +147,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenMultipleViewAction openChartViewAction;
 
     private ImportGstoolAction importGstoolAction;
+    
+    private ExportAction exportAction;
 
     private OpenViewAction openDocumentViewAction;
 
@@ -246,6 +249,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         register(importGstoolAction);
+        
+        exportAction = new ExportAction(window, Messages.ApplicationActionBarAdvisor_28);
+        register(exportAction);
 
 		importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27);
 		register(importGSNotesAction);
@@ -336,6 +342,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(new Separator());
         fileMenu.add(importGstoolAction);
 		fileMenu.add(importGSNotesAction);
+		fileMenu.add(exportAction);
 
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);
