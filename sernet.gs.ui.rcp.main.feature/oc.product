@@ -41,7 +41,7 @@ See the LICENSE.txt contained in the program folder, the verinice Plugin-Details
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Xms64m -Xmx512m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost</vmArgs>
+      <vmArgs>-Xms64m -Xmx512m -XX:MaxPermSize=128m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost</vmArgs>
    </launcherArgs>
 
    <windowImages i16="/sernet.gs.ui.rcp.main/icons/window16.gif" i32="/sernet.gs.ui.rcp.main/icons/window32.gif"/>
