@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" 
 	resourceMap="http://www.verinice.org/svnroot/TRUNK/sernet.hui.common/verinice.rmap" 
-	properties="buckminster.properties">
+	properties="http://www.verinice.org/svnroot/TRUNK/sernet.hui.common/buckminster.properties">
 	<cq:rootRequest name="sernet.hui.common" 
     	componentType="osgi.bundle"/>
 </cq:componentQuery>
