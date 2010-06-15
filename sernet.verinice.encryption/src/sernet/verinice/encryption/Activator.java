@@ -3,8 +3,12 @@ package sernet.verinice.encryption;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
+import sernet.verinice.encryption.impl.EncryptionService;
+
 /**
  * The activator class controls the plug-in life cycle
+ * 
+ * @author Sebastian Engel <s.engel@tarent.de>
  */
 public class Activator extends Plugin {
 
@@ -27,6 +31,8 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		context.registerService(IEncryptionService.class.getName(), new EncryptionService(), null);
 	}
 
 	/*
