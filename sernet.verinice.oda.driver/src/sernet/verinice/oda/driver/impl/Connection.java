@@ -25,9 +25,7 @@ import org.eclipse.datatools.connectivity.oda.IDataSetMetaData;
 import org.eclipse.datatools.connectivity.oda.IQuery;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.ServiceReference;
 
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.oda.driver.Activator;
@@ -53,25 +51,28 @@ public class Connection implements IConnection {
 	 */
 	public void open(Properties connProperties) throws OdaException {
 		try {
-			mainBundle = Platform.getBundle(MAIN_SYMBOLIC_NAME);
+			Bundle bundle = Platform.getBundle(MAIN_SYMBOLIC_NAME);
 
-			if (mainBundle != null) {
+			if (bundle != null) {
 				// When running the driver from inside the designer we expect
 				// that the main bundle is not running yet and only in that case
 				// we
 				// publish a service that can be accessed from the main bundle
 				// then.
-				if (mainBundle.getState() == Bundle.INSTALLED
-						|| mainBundle.getState() == Bundle.RESOLVED) {
+				if (bundle.getState() == Bundle.INSTALLED
+						|| bundle.getState() == Bundle.RESOLVED) {
 					String uri = connProperties.getProperty("serverURI");
 
 					Activator.getDefault().getOdaDriver().setServerURI(uri);
 					
-					mainBundle.start();
-				} else if (mainBundle.getState() == Bundle.ACTIVE)
+					bundle.start();
+					
+					// Allow shutting down the main application.
+					mainBundle = bundle;
+				} else if (bundle.getState() == Bundle.ACTIVE)
 				{
-					// Main bundle runs already. We can assume that we are being used to generate reports
-					// now.
+					// Main bundle runs already. We assume that it is the application that uses
+					// the ODA driver to generate reports. To prevent accidentally 
 				}
 
 			}
