@@ -17,7 +17,7 @@
                 <attribute name="site.p2" />
             </prerequisites>
             <products alias="destination" base="${buckminster.output}">
-                <path path="verinice.${target.ws}.${target.os}.${target.arch}/" />
+                <path path="verinice-${target.ws}-${target.os}-${target.arch}-${BUILD_ID}/" />
             </products>
         </public>
         <public name="create.product.zip" actor="ant">
@@ -29,7 +29,7 @@
                 <attribute name="create.product" />
             </prerequisites>
             <products alias="action.output" base="${buckminster.output}">
-                <path path="verinice.${target.ws}.${target.os}.${target.arch}.zip" />
+                <path path="verinice-${target.ws}-${target.os}-${target.arch}-${BUILD_ID}.zip" />
             </products>
         </public>
     </actions>
