@@ -49,6 +49,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.encryption.IEncryptionService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
 import sernet.verinice.rcp.StatusResult;
@@ -75,6 +76,8 @@ public class Activator extends AbstractUIPlugin {
 	private IInternalServer internalServer;
 	
 	private IVeriniceOdaDriver odaDriver;
+	
+	private IEncryptionService encryptionService;
 
 	/**
 	 * The constructor
@@ -102,6 +105,7 @@ public class Activator extends AbstractUIPlugin {
 	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
 	 * )
 	 */
+	@SuppressWarnings("restriction")
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -139,6 +143,9 @@ public class Activator extends AbstractUIPlugin {
 					return;
 				}
 			}
+			
+			ServiceReference service = ctx.getServiceReference(IEncryptionService.class.getName());
+			encryptionService = (IEncryptionService) ctx.getService(service);
 		}
 
 		// set workdir preference:
@@ -256,6 +263,10 @@ public class Activator extends AbstractUIPlugin {
 	
 	public IVeriniceOdaDriver getOdaDriver() {
 		return odaDriver;
+	}
+	
+	public IEncryptionService getEncryptionService() {
+		return encryptionService;
 	}
 
 	public static void initDatabase() {
