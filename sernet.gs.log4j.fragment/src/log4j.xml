@@ -27,38 +27,25 @@
 	<logger name="org.ops4j.pax.web.service.internal.ConfigurationImpl">
 		<level value="ERROR" />
 	</logger>
-	
-	<logger name="sernet.hui.common.connect.HUITypeFactory">
-		<level value="WARN" />
-	</logger>
 
 	<!-- Logger for verinice -->
 	<!--
-	<logger name="sernet.verinice">
+	<logger name="sernet">
 		<level value="DEBUG" />
 	</logger>
 	-->
 
 	<!-- Logger for RemoteCalls -->
-    <!--
+	<!--
 	<logger name="org.springframework.remoting.httpinvoker">
 		<level value="DEBUG" />
 	</logger>
-    -->
-    
-    <logger name="org.hibernate.SQL">
-        <level value="DEBUG" />
-    </logger>
-    
-    <logger name="sernet.verinice.samt">
-        <level value="DEBUG" />
-    </logger>
-    
-	
+	-->
+
+
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
-		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 	</root>
 
