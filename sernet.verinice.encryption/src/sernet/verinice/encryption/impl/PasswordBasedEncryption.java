@@ -23,7 +23,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  * href="http://tools.ietf.org/html/rfc2898">RFC2898</a>.
  * </p>
  * 
- * @author sengel <s.engel.@tarent.de>
+ * @author Sebastian Engel <s.engel@tarent.de>
  *
  */
 public abstract class PasswordBasedEncryption {

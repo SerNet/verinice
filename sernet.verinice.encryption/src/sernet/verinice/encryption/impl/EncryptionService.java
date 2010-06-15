@@ -15,8 +15,8 @@ import sernet.verinice.encryption.IEncryptionService;
 
 /**
  * <p>
- * Service class providing methods for password based and certificate based 
- * encryption and decryption of data.
+ * Service class providing methods for password based and certificate based encryption and
+ * decryption of data.
  * </p>
  * <p>
  * For en- and decryption this class uses the AES algorithm. Since this algorithm is not supported
@@ -25,7 +25,7 @@ import sernet.verinice.encryption.IEncryptionService;
  * More information on BouncyCastle can be found on <a
  * href="http://www.bouncycastle.org">http://www.bouncycastle.org</a>.
  * 
- * @author sengel <s.engel.@tarent.de>
+ * @author Sebastian Engel <s.engel@tarent.de>
  * 
  */
 public class EncryptionService implements IEncryptionService {
@@ -64,10 +64,17 @@ public class EncryptionService implements IEncryptionService {
 	}
 
 	@Override
-	public byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile) 
-		throws CertificateNotYetValidException, CertificateExpiredException, 
-		CertificateException, EncryptionException, IOException {
+	public byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile)
+			throws CertificateNotYetValidException, CertificateExpiredException,
+			CertificateException, EncryptionException, IOException {
 		return SMIMEBasedEncryption.encrypt(unencryptedByteData, x509CertificateFile);
 	}
 
+	@Override
+	public byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile)
+			throws IOException, CertificateNotYetValidException, CertificateExpiredException,
+			CertificateException, EncryptionException {
+		return SMIMEBasedEncryption.decrypt(encryptedByteData, x509CertificateFile,
+				privateKeyPemFile);
+	}
 }
