@@ -15,6 +15,8 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import sernet.verinice.encryption.EncryptionException;
+
 /**
  * Abstract utility class providing static methods for Password Based Encryption (PBE).
  * 
@@ -24,10 +26,10 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  * </p>
  * 
  * @author Sebastian Engel <s.engel@tarent.de>
- *
+ * 
  */
 public abstract class PasswordBasedEncryption {
-	
+
 	/**
 	 * The salt used for Password Based En- and decryption. This should be at least 64 bit long ...
 	 */
@@ -45,7 +47,7 @@ public abstract class PasswordBasedEncryption {
 	 * library.
 	 */
 	private static final String ENCRYPTION_ALGORITHM = "PBEWITHSHA256AND256BITAES-CBC-BC";
-	
+
 	/**
 	 * Encrypts the given byte data with the given password using the AES algorithm.
 	 * 
@@ -57,7 +59,8 @@ public abstract class PasswordBasedEncryption {
 	 * @throws EncryptionException
 	 *             when a problem occured during the encryption process
 	 */
-	static byte[] encrypt(byte[] unencryptedByteData, char[] password) throws EncryptionException {
+	public static byte[] encrypt(byte[] unencryptedByteData, char[] password)
+			throws EncryptionException {
 
 		byte[] decryptedData = new byte[] {};
 
@@ -65,8 +68,8 @@ public abstract class PasswordBasedEncryption {
 		PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
 
 		try {
-			SecretKeyFactory secretKeyFactory = 
-				SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, "BC");
+			SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM,
+					"BC");
 			SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
 
 			// Generate and initialize a PBE cipher
@@ -77,13 +80,12 @@ public abstract class PasswordBasedEncryption {
 			decryptedData = cipher.doFinal(unencryptedByteData);
 
 		} catch (GeneralSecurityException e) {
-			throw new EncryptionException(
-					"There was a problem during the encryption process. "
-							+ "See the stacktrace for details.", e);
+			throw new EncryptionException("There was a problem during the encryption process. "
+					+ "See the stacktrace for details.", e);
 		}
 		return decryptedData;
 	}
-	
+
 	/**
 	 * Decrypts the given byte data with the given password using the AES algorithm.
 	 * 
@@ -95,7 +97,8 @@ public abstract class PasswordBasedEncryption {
 	 * @throws EncryptionException
 	 *             when a problem occured during the decryption process
 	 */
-	static byte[] decrypt(byte[] encryptedByteData, char[] password) throws EncryptionException {
+	public static byte[] decrypt(byte[] encryptedByteData, char[] password)
+			throws EncryptionException {
 
 		byte[] decryptedData = new byte[] {};
 
@@ -103,8 +106,8 @@ public abstract class PasswordBasedEncryption {
 		PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
 
 		try {
-			SecretKeyFactory secretKeyFactory = 
-				SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, "BC");
+			SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM,
+					"BC");
 			SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
 
 			// Generate and initialize a PBE cipher
@@ -115,13 +118,12 @@ public abstract class PasswordBasedEncryption {
 			decryptedData = cipher.doFinal(encryptedByteData);
 
 		} catch (GeneralSecurityException e) {
-			throw new EncryptionException(
-					"There was a problem during the decryption process. "
-							+ "See the stacktrace for details.", e);
+			throw new EncryptionException("There was a problem during the decryption process. "
+					+ "See the stacktrace for details.", e);
 		}
 		return decryptedData;
 	}
-	
+
 	/**
 	 * Encrypts data received from the given OutputStream using the AES algorithm.
 	 * 
@@ -135,8 +137,8 @@ public abstract class PasswordBasedEncryption {
 	 * @throws IOException
 	 *             when there was a problem reading from the InputStream
 	 */
-	static OutputStream encrypt(OutputStream unencryptedOutputStream, char[] password)
-		throws EncryptionException, IOException {
+	public static OutputStream encrypt(OutputStream unencryptedOutputStream, char[] password)
+			throws EncryptionException, IOException {
 
 		OutputStream encryptedOutputStream = null;
 
@@ -144,8 +146,8 @@ public abstract class PasswordBasedEncryption {
 		PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
 
 		try {
-			SecretKeyFactory secretKeyFactory = 
-				SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, "BC");
+			SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM,
+					"BC");
 			SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
 
 			// Generate and initialize a PBE cipher
@@ -155,13 +157,12 @@ public abstract class PasswordBasedEncryption {
 			encryptedOutputStream = new CipherOutputStream(unencryptedOutputStream, cipher);
 
 		} catch (GeneralSecurityException e) {
-			throw new EncryptionException(
-					"There was a problem during the encryption process. "
-							+ "See the stacktrace for details.", e);
+			throw new EncryptionException("There was a problem during the encryption process. "
+					+ "See the stacktrace for details.", e);
 		}
 		return encryptedOutputStream;
 	}
-	
+
 	/**
 	 * Decrypts data received from the given InputStream using the AES algorithm.
 	 * 
@@ -175,8 +176,8 @@ public abstract class PasswordBasedEncryption {
 	 * @throws IOException
 	 *             when there was a problem reading from the InputStream
 	 */
-	static InputStream decrypt(InputStream encryptedInputStream, char[] password)
-		throws EncryptionException, IOException {
+	public static InputStream decrypt(InputStream encryptedInputStream, char[] password)
+			throws EncryptionException, IOException {
 
 		InputStream decryptedInputStream = null;
 
@@ -184,21 +185,20 @@ public abstract class PasswordBasedEncryption {
 		PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
 
 		try {
-			SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(
-					ENCRYPTION_ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
+			SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM,
+					BouncyCastleProvider.PROVIDER_NAME);
 			SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
 
 			// Generate and initialize a PBE cipher
-			Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, 
+			Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM,
 					BouncyCastleProvider.PROVIDER_NAME);
 			cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParameterSpec);
 
 			decryptedInputStream = new CipherInputStream(encryptedInputStream, cipher);
 
 		} catch (GeneralSecurityException e) {
-			throw new EncryptionException(
-					"There was a problem during the decryption process. "
-							+ "See the stacktrace for details.", e);
+			throw new EncryptionException("There was a problem during the decryption process. "
+					+ "See the stacktrace for details.", e);
 		}
 		return decryptedInputStream;
 	}

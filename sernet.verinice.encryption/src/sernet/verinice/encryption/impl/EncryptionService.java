@@ -11,6 +11,7 @@ import java.security.cert.CertificateNotYetValidException;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import sernet.verinice.encryption.EncryptionException;
 import sernet.verinice.encryption.IEncryptionService;
 
 /**

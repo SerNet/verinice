@@ -8,7 +8,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 
-import sernet.verinice.encryption.impl.EncryptionException;
 
 /**
  * Interface declaring the contract of the EncryptionService.

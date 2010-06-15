@@ -28,6 +28,7 @@ import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMEUtil;
 import org.bouncycastle.openssl.PEMReader;
 
+import sernet.verinice.encryption.EncryptionException;
 import sernet.verinice.encryption.impl.util.CertificateUtils;
 
 /**
