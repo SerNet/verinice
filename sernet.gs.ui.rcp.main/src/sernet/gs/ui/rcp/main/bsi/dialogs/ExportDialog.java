@@ -18,9 +18,17 @@
 
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -41,11 +49,15 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.w3c.dom.Document;
 
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 
@@ -63,6 +75,11 @@ public class ExportDialog extends TitleAreaDialog
 
 	private String exportPath = null; 
 
+
+	ITVerbund selectedITNetwork;
+	private Text txtSourceId;
+	private Text txtLocation;
+	
 	public ExportDialog(Shell parentShell)
 	{
 		super(parentShell);
@@ -84,11 +101,11 @@ public class ExportDialog extends TitleAreaDialog
 		compositeSourceId.setLayout(new RowLayout());
 		final Label lblSourceId = new Label(compositeSourceId, SWT.NONE);
 		lblSourceId.setText(Messages.ExportDialog_7);
-		final Text txtSourceId = new Text(compositeSourceId, SWT.SINGLE | SWT.BORDER);
+		txtSourceId = new Text(compositeSourceId, SWT.SINGLE | SWT.BORDER);
 		
 		// Radio Buttons for selection of an IT network:
-		final Label lblITVerbund = new Label(composite, SWT.NONE);
-		lblITVerbund.setText(Messages.ExportDialog_2);
+		final Label lblITNetwork = new Label(composite, SWT.NONE);
+		lblITNetwork.setText(Messages.ExportDialog_2);
 		
 		LoadCnAElementByType<ITVerbund> cmdLoadVerbuende = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
 		
@@ -103,15 +120,46 @@ public class ExportDialog extends TitleAreaDialog
 			return null;
 		}
 		
-		List<ITVerbund> verbuende = cmdLoadVerbuende.getElements();
-		Iterator<ITVerbund> verbuendeIter = verbuende.iterator();
+		final Group groupITNetworks = new Group(composite, SWT.NONE);
+		GridLayout groupITNetworksLayout = new GridLayout(1, true);
+		GridData groupITNetworksLayoutData = new GridData();
+		groupITNetworksLayoutData.verticalIndent = 10;
+		groupITNetworksLayoutData.horizontalIndent = 20;
+		groupITNetworks.setLayoutData(groupITNetworksLayoutData);
+		groupITNetworks.setLayout(groupITNetworksLayout);
+		List<ITVerbund> itNetworks = cmdLoadVerbuende.getElements();
+		Iterator<ITVerbund> itNetworksIter = itNetworks.iterator();
 		
-		while( verbuendeIter.hasNext() )
+		SelectionListener itNetworksListener = new SelectionAdapter()
 		{
-			final Button radioITVerbund = new Button(composite,SWT.RADIO);
-			ITVerbund itVerbund = verbuendeIter.next();
-			radioITVerbund.setText(itVerbund.getTitle()); //$NON-NLS-1$
-			radioITVerbund.setData(itVerbund.getId() );
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				selectedITNetwork = (ITVerbund) ( (Button) e.getSource() ).getData();
+				super.widgetSelected(e);
+			}
+		};
+		
+		while( itNetworksIter.hasNext() )
+		{
+			final Button radioITNetwork = new Button(groupITNetworks,SWT.RADIO);
+			ITVerbund itNetwork = itNetworksIter.next();
+			radioITNetwork.setText(itNetwork.getTitle()); //$NON-NLS-1$
+			radioITNetwork.setData(itNetwork );
+			radioITNetwork.addSelectionListener(itNetworksListener);
+			
+			LoadChildrenForExpansion cmdLoadChildren = new LoadChildrenForExpansion(itNetwork);
+			try
+			{
+				cmdLoadChildren = ServiceFactory.lookupCommandService().executeCommand(cmdLoadChildren);
+				itNetwork = (ITVerbund) cmdLoadChildren.getElementWithChildren();
+			}
+			catch (CommandException ex)
+			{
+//				ex.printStackTrace();
+				setMessage(Messages.ExportDialog_8, IMessageProvider.ERROR);
+				return null;
+			}
 		}
 		
 		// Checkboxes for restriction to certain object types:
@@ -192,7 +240,7 @@ public class ExportDialog extends TitleAreaDialog
 		((RowLayout) compositeSaveLocation.getLayout()).marginTop = 15;
 		final Label labelLocation = new Label(compositeSaveLocation, SWT.NONE);
 		labelLocation.setText(Messages.ExportDialog_5);
-		final Text txtLocation = new Text(compositeSaveLocation, SWT.SINGLE | SWT.BORDER);
+		txtLocation = new Text(compositeSaveLocation, SWT.SINGLE | SWT.BORDER);
 		short textLocationWidth = 300;
 		txtLocation.setSize(textLocationWidth, 30);
 		final RowData textLocationData = new RowData();
@@ -222,6 +270,52 @@ public class ExportDialog extends TitleAreaDialog
 			}
 		});
 		return composite;
+	}
+	
+	/**
+	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+	 */
+	@Override
+	public void okPressed()
+	{	
+		LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
+		exportElements.add(selectedITNetwork);
+		ExportCommand exportCommand = new ExportCommand(exportElements, txtSourceId.getText());
+		
+		try
+		{
+			exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
+		}
+		catch(CommandException ex)
+		{
+			ex.printStackTrace();
+			setMessage("Could not obtain children for IT network", IMessageProvider.ERROR);
+		}
+		
+		Document doc = exportCommand.getExportDocument();
+		
+		if( txtLocation.getText() != null )
+		{
+			writeDocumentToFile(doc, txtLocation.getText());
+		}
+		
+		super.okPressed();
+	}
+	
+	public static void writeDocumentToFile( Document doc, String uri )
+	{
+		try
+		{
+			OutputStream os = new FileOutputStream( uri );
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer trans = tf.newTransformer();
+			trans.transform( new DOMSource( doc ), new StreamResult( os ) );
+		}
+		catch( Exception ex )
+		{
+			ex.printStackTrace();
+			return;
+		}
 	}
 	
 	/**
