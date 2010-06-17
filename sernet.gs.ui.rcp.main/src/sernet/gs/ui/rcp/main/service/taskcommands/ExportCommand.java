@@ -98,12 +98,14 @@ public class ExportCommand extends GenericCommand
 		
 		List<Element> syncObjects = new LinkedList<Element>();
 		
+		String timestamp = Long.toString(Calendar.getInstance().getTimeInMillis());
+		
 		/*+++++
 		 * Process all CnATreeElements:
 		 *+++++++++++++++++++++++++++++*/
 		for( CnATreeElement element : elements )
 		{
-			syncObjects.addAll( export(element) );
+			syncObjects.addAll(export(element, timestamp));
 		}
 		
 		ListIterator<Element> iter = syncObjects.listIterator();
@@ -124,7 +126,7 @@ public class ExportCommand extends GenericCommand
 	 * @param cnATreeElement
 	 * @return List<Element>
 	 */
-	private List<Element> export( CnATreeElement cnATreeElement )
+	private List<Element> export( CnATreeElement cnATreeElement, String timestamp )
 	{
 		// Blacklist of object types that should not be exported as an object:
 		HashMap<String, Object> blacklist = new HashMap<String,Object>();
@@ -148,7 +150,7 @@ public class ExportCommand extends GenericCommand
 			Element syncObject = exportDocument.createElementNS(syncNamespaces.get("data"), "syncObject");
 			syncObject.setAttribute("extId", cnATreeElement.getId());
 			syncObject.setAttribute("extObjectType", cnATreeElement.getObjectType());
-			syncObject.setAttribute("timestamp", Long.toString(Calendar.getInstance().getTimeInMillis()));
+			syncObject.setAttribute("timestamp", timestamp);
 
 			/*+++++
 			 * Retrieve all properties from the entity:
@@ -180,7 +182,7 @@ public class ExportCommand extends GenericCommand
 		
 		for( CnATreeElement child : children )
 		{
-			syncObjects.addAll( export(child) );
+			syncObjects.addAll( export(child, timestamp) );
 		}
 		
 		return syncObjects;
