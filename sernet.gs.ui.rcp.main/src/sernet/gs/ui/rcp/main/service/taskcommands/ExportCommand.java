@@ -18,10 +18,12 @@
 
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,10 +32,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.connect.PropertyList;
 
 /**
  * Creates an XML representation of the given list of
@@ -45,6 +48,8 @@ import sernet.hui.common.connect.PropertyType;
  */
 public class ExportCommand extends GenericCommand
 {
+	private static final long serialVersionUID = 821504393526786830L;
+	
 	// TODO: Use NamespaceUtil, when available!
 	public static HashMap<String, String> syncNamespaces = new HashMap<String, String>();
 	
@@ -55,20 +60,19 @@ public class ExportCommand extends GenericCommand
 		syncNamespaces.put("map", "http://www.sernet.de/sync/mapping");
 	}
 	
-	private Set<CnATreeElement> elements;
+	private List<CnATreeElement> elements;
 	private String sourceId;
 	private Document exportDocument;
 
 	/**
 	 * @param elements
 	 */
-	public ExportCommand( Set<CnATreeElement> elements, String sourceId )
+	public ExportCommand( List<CnATreeElement> elements, String sourceId )
 	{
 		this.elements = elements;
 		this.sourceId = sourceId;
 	}
 	
-	@Override
 	public void execute()
 	{
 		/*+++++
@@ -89,6 +93,8 @@ public class ExportCommand extends GenericCommand
 		Element syncMapping = exportDocument.createElementNS(syncNamespaces.get("map"), "syncMapping");
 		syncRequest.appendChild(syncData);
 		syncRequest.appendChild(syncMapping);
+		
+		exportDocument.appendChild(syncRequest);
 		
 		List<Element> syncObjects = new LinkedList<Element>();
 		
@@ -120,34 +126,52 @@ public class ExportCommand extends GenericCommand
 	 */
 	private List<Element> export( CnATreeElement cnATreeElement )
 	{
+		// Blacklist of object types that should not be exported as an object:
+		HashMap<String, Object> blacklist = new HashMap<String,Object>();
+		blacklist.put("it-verbund", new Object());
+		blacklist.put("raeume-kategorie", new Object());
+		blacklist.put("nk-kategorie", new Object());
+		blacklist.put("server-kategorie", new Object());
+		blacklist.put("personen-kategorie", new Object());
+		blacklist.put("gebaeude-kategorie", new Object());
+		blacklist.put("clients-kategorie", new Object());
+		blacklist.put("anwendungen-kategorie", new Object());
+		blacklist.put("nk-kategorie", new Object());
+		blacklist.put("sonstige-it-kategorie", new Object());
+		blacklist.put("tk-kategorie", new Object());
+		
+		hydrate( cnATreeElement );
 		List<Element> syncObjects = new LinkedList<Element>();
 		
-		Element syncObject = exportDocument.createElementNS(syncNamespaces.get("data"), "syncObject");
-		syncObject.setAttribute("extId", cnATreeElement.getId());
-		syncObject.setAttribute("extObjectType", cnATreeElement.getObjectType());
-		
-		/*+++++
-		 * Retrieve all properties from the entity:
-		 *+++++++++++++++++++++++++++++++++++++++++*/
-		List<PropertyType> possibleProperties = HUITypeFactory.getInstance().getEntityType(cnATreeElement.getObjectType()).getPropertyTypes();
-		ListIterator<PropertyType> iter = possibleProperties.listIterator();
-		
-		while(iter.hasNext())
+		if( blacklist.get( cnATreeElement.getObjectType() ) == null )
 		{
-			PropertyType propertyType = iter.next();
-			String propertyValue = cnATreeElement.getEntity().getSimpleValue(propertyType.getId());
+			Element syncObject = exportDocument.createElementNS(syncNamespaces.get("data"), "syncObject");
+			syncObject.setAttribute("extId", cnATreeElement.getId());
+			syncObject.setAttribute("extObjectType", cnATreeElement.getObjectType());
+			syncObject.setAttribute("timestamp", Long.toString(Calendar.getInstance().getTimeInMillis()));
+
+			/*+++++
+			 * Retrieve all properties from the entity:
+			 *+++++++++++++++++++++++++++++++++++++++++*/
 			
-			if( propertyValue != null )
+			Map<String, PropertyList> properties = cnATreeElement.getEntity().getTypedPropertyLists();
+
+			for( String s : properties.keySet() )
 			{
-				// Add <syncAttribute> to this <syncObject>:
-				Element syncAttribute = exportDocument.createElementNS(syncNamespaces.get("data"), "syncAttribute");
-				syncAttribute.setAttribute("name", propertyType.getId());
-				syncAttribute.setAttribute("value", propertyValue);
-				syncObject.appendChild(syncAttribute);
+				String propertyValue = cnATreeElement.getEntity().getSimpleValue(s);
+
+				if( propertyValue != null )
+				{
+					// Add <syncAttribute> to this <syncObject>:
+					Element syncAttribute = exportDocument.createElementNS(syncNamespaces.get("data"), "syncAttribute");
+					syncAttribute.setAttribute("name", s);
+					syncAttribute.setAttribute("value", propertyValue);
+					syncObject.appendChild(syncAttribute);
+				}			
 			}
+
+			syncObjects.add( syncObject );
 		}
-		
-		syncObjects.add( syncObject );
 		
 		/*++++
 		 * Handle children recursively:
@@ -160,6 +184,33 @@ public class ExportCommand extends GenericCommand
 		}
 		
 		return syncObjects;
+	}
+	
+	/*************************************************
+	 * Hydrate {@code element}, including all of its
+	 * successor elements and properties.
+	 * 
+	 * @param element
+	 *************************************************/
+	private void hydrate(CnATreeElement element)
+	{
+		if (element == null)
+			return;
+		
+		HydratorUtil.hydrateElement( getDaoFactory().getDAOforTypedElement(element), element, true);
+		HydratorUtil.hydrateEntity( getDaoFactory().getDAOforTypedElement(element), element);
+		
+		Set<CnATreeElement> children = element.getChildren();
+		for (CnATreeElement child : children)
+		{
+			if (child instanceof BausteinUmsetzung)
+			{
+				// next element:
+				continue;
+			}
+			
+			hydrate(child);
+		}
 	}
 	
 	/* Getters and Setters: */
