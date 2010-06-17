@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.NoSuchProviderException;
@@ -30,6 +31,7 @@ import org.bouncycastle.openssl.PEMReader;
 
 import sernet.verinice.encryption.EncryptionException;
 import sernet.verinice.encryption.impl.util.CertificateUtils;
+import sernet.verinice.encryption.impl.util.SMIMEOutputStream;
 
 /**
  * Abstract utility class providing static methods for S/MIME based encryption.
@@ -224,6 +226,38 @@ public class SMIMEBasedEncryption {
 							+ "See the stacktrace for details.", e);
 		}
 		return decryptedByteData;
+	}
+	
+	/**
+	 * Encrypts the given OutputStream using the given X.509 certificate file.
+	 * 
+	 * @param unencryptedDataStream
+	 * @param x509CertificateFile
+	 *            X.509 certificate file used to encrypt the data. The file is expected to be in DER
+	 *            or PEM format
+	 * @return the encrypted OutputStream
+	 * @throws IOException
+	 *             <ul>
+	 *             <li>if any of the given files does not exist</li>
+	 *             <li>if any of the given files cannot be read</li>
+	 *             </ul>
+	 * @throws CertificateNotYetValidException
+	 *             if the certificate is not yet valid
+	 * @throws CertificateExpiredException
+	 *             if the certificate is not valid anymore
+	 * @throws CertificateException
+	 *             <ul>
+	 *             <li>if the given certificate file does not contain a certificate</li>
+	 *             <li>if the certificate contained in the given file is not a X.509 certificate</li>
+	 *             </ul>
+	 * @throws EncryptionException
+	 *             if a problem occured during the encryption process
+	 */
+	public static OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile)
+			throws IOException, CertificateNotYetValidException, CertificateExpiredException,
+			CertificateException, EncryptionException  {
+
+		return new SMIMEOutputStream(unencryptedDataStream, x509CertificateFile);
 	}
 
 }

@@ -145,4 +145,33 @@ public interface IEncryptionService {
 	byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile)
 		throws IOException, CertificateNotYetValidException, CertificateExpiredException, 
 		CertificateException, EncryptionException;
+	
+	/**
+	 * Encrypts the given OutputStream using the given X.509 certificate file.
+	 * 
+	 * @param unencryptedDataStream
+	 * @param x509CertificateFile
+	 *            X.509 certificate file used to encrypt the data. The file is expected to be in DER
+	 *            or PEM format
+	 * @return the encrypted OutputStream
+	 * @throws IOException
+	 *             <ul>
+	 *             <li>if any of the given files does not exist</li>
+	 *             <li>if any of the given files cannot be read</li>
+	 *             </ul>
+	 * @throws CertificateNotYetValidException
+	 *             if the certificate is not yet valid
+	 * @throws CertificateExpiredException
+	 *             if the certificate is not valid anymore
+	 * @throws CertificateException
+	 *             <ul>
+	 *             <li>if the given certificate file does not contain a certificate</li>
+	 *             <li>if the certificate contained in the given file is not a X.509 certificate</li>
+	 *             </ul>
+	 * @throws EncryptionException
+	 *             if a problem occured during the encryption process
+	 */
+	OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile)
+		throws IOException, CertificateNotYetValidException, CertificateExpiredException, 
+		CertificateException, EncryptionException;
 }
