@@ -25,6 +25,7 @@ import java.util.List;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -54,7 +55,14 @@ import sernet.hui.common.connect.HUITypeFactory;
  * @author Andreas Becker
  */
 public class ExportDialog extends TitleAreaDialog
-{
+{	
+	/**
+	 * Indicates if the output should be encrypted.
+	 */
+	private boolean encryptOutput = false;
+
+	private String exportPath = null; 
+
 	public ExportDialog(Shell parentShell)
 	{
 		super(parentShell);
@@ -159,6 +167,25 @@ public class ExportDialog extends TitleAreaDialog
 			}
 		});
 		
+		// Encryption option
+		final Composite encryptionOptionComposite = new Composite(composite, SWT.NONE);
+		encryptionOptionComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
+		((RowLayout) encryptionOptionComposite.getLayout()).marginTop = 15;
+		
+		final Button encryptionCheckbox = new Button(encryptionOptionComposite, SWT.CHECK);
+		encryptionCheckbox.setText("Encrypt output");
+		encryptionCheckbox.setSelection(encryptOutput);
+		encryptionCheckbox.setEnabled(true);
+		encryptionCheckbox.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Button checkBox = (Button) e.getSource();
+				encryptOutput = checkBox.getSelection();
+			}
+		});
+		encryptionOptionComposite.pack();
+
 		// Text field + button to browse for storage location:
 		final Composite compositeSaveLocation = new Composite(composite,SWT.NONE);
 		compositeSaveLocation.setLayout(new RowLayout(SWT.HORIZONTAL));
@@ -175,8 +202,7 @@ public class ExportDialog extends TitleAreaDialog
 		final Button buttonBrowseLocations = new Button(compositeSaveLocation, SWT.NONE);
 		buttonBrowseLocations.setText(Messages.ExportDialog_6);
 		
-		buttonBrowseLocations.addSelectionListener(new SelectionListener()
-		{
+		buttonBrowseLocations.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e)
@@ -186,6 +212,7 @@ public class ExportDialog extends TitleAreaDialog
 				String exportPath = dialog.open();
 				if( exportPath != null )
 				{
+					ExportDialog.this.exportPath = exportPath;
 					txtLocation.setText(exportPath);
 				}
 				else
@@ -193,14 +220,23 @@ public class ExportDialog extends TitleAreaDialog
 					txtLocation.setText(""); //$NON-NLS-1$
 				}
 			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e)
-			{
-				
-			}
 		});
-		
 		return composite;
+	}
+	
+	/**
+	 * Indicates if the user selected to encrypt the exported output.
+	 * 
+	 * @return true, if the exported output shall be encrypted, false otherwise
+	 */
+	public boolean getEncryptOutput() {
+		return encryptOutput;
+	}
+
+	/**
+	 * @return the path to the export target file.
+	 */
+	public String getExportPath() {
+		return exportPath;
 	}
 }
