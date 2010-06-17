@@ -53,6 +53,5 @@ public class ExportAction extends Action
 	{
 		TitleAreaDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell());
 		dialog.open();
-		// TODO: perform actual export to specified XML file!
 	}
 }
