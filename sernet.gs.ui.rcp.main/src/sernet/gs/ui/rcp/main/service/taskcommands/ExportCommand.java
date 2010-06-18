@@ -19,7 +19,9 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -36,13 +38,14 @@ import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyList;
+import sernet.hui.common.connect.PropertyType;
 
 /**
  * Creates an XML representation of the given list of
  * CnATreeElements.
- * 
- * NOTE: This has not been tested yet! Work in progress!
  * 
  * @author <andreas[at]becker[dot]name>
  */
@@ -101,8 +104,9 @@ public class ExportCommand extends GenericCommand
 		String timestamp = Long.toString(Calendar.getInstance().getTimeInMillis());
 		
 		/*+++++
-		 * Process all CnATreeElements:
-		 *+++++++++++++++++++++++++++++*/
+		 * Add one <syncObject> element for each
+		 * given CnATreeElement to <syncData>: 
+		 *+++++++++++++++++++++++++++++++++++++++*/
 		for( CnATreeElement element : elements )
 		{
 			syncObjects.addAll(export(element, timestamp));
@@ -113,6 +117,43 @@ public class ExportCommand extends GenericCommand
 		while( iter.hasNext() )
 		{
 			syncData.appendChild(iter.next());
+		}
+		
+		/*+++++
+		 * Add Sync Mapping, which in our case describes
+		 * the identity map, i.e. it maps every object type
+		 * and every attribute type to itself. 
+		 *+++++++++++++++++++++++++++++++++++++++++++++++++*/
+		
+		Collection<EntityType> entityTypes = HUITypeFactory.getInstance().getAllEntityTypes();
+		Iterator<EntityType> entityTypesIter = entityTypes.iterator();
+		
+		while( entityTypesIter.hasNext() )
+		{
+			EntityType entityType = entityTypesIter.next();
+			
+			if(!(entityType.getId().equals("itverbund"))) //$NON-NLS-1$
+			{
+				// Add <mapObjectType> element for this entity type to <syncMapping>:
+				Element mapObjectType = exportDocument.createElementNS(syncNamespaces.get("map"), "mapObjectType");
+				syncMapping.appendChild(mapObjectType);
+				mapObjectType.setAttribute("extId", entityType.getId());
+				mapObjectType.setAttribute("intId", entityType.getId());
+				
+				List<PropertyType> propertyTypes = entityType.getPropertyTypes();
+				Iterator<PropertyType> propertyTypesIter = propertyTypes.iterator();
+				
+				while( propertyTypesIter.hasNext() )
+				{
+					PropertyType propertyType = propertyTypesIter.next();
+					
+					// Add <mapAttributeType> for this property type to current <mapObjectType>:
+					Element mapAttributeType = exportDocument.createElementNS(syncNamespaces.get("map"), "mapAttributeType");
+					mapObjectType.appendChild(mapAttributeType);
+					mapAttributeType.setAttribute("extId", propertyType.getId());
+					mapAttributeType.setAttribute("intId", propertyType.getId());
+				}
+			}
 		}
 	}
 
