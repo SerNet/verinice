@@ -77,11 +77,6 @@ public class ExportDialog extends TitleAreaDialog
 	 */
 	private boolean encryptOutput = false;
 
-	/**
-	 * Path to the export target file.
-	 */
-	private String exportPath = "";
-
 	ITVerbund selectedITNetwork;
 	private Text txtSourceId;
 	private Text txtLocation;
@@ -266,7 +261,6 @@ public class ExportDialog extends TitleAreaDialog
 				String exportPath = dialog.open();
 				if( exportPath != null )
 				{
-					ExportDialog.this.exportPath = exportPath;
 					txtLocation.setText(exportPath);
 				}
 				else
@@ -338,21 +332,5 @@ public class ExportDialog extends TitleAreaDialog
 			ex.printStackTrace();
 			return;
 		}
-	}
-	
-	/**
-	 * Indicates if the user selected to encrypt the exported output.
-	 * 
-	 * @return true, if the exported output shall be encrypted, false otherwise
-	 */
-	public boolean getEncryptOutput() {
-		return encryptOutput;
-	}
-
-	/**
-	 * @return the path to the export target file.
-	 */
-	public String getExportPath() {
-		return exportPath;
 	}
 }
