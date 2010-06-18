@@ -27,7 +27,8 @@
 		
 		<property name="linkType"/>
 
-		<property name="comment"/> 
+		<property name="comment"
+            column='"comment"'/> 
 
 		<many-to-one name="dependant"
 			column="DEPENDANT_ID"

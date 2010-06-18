@@ -22,7 +22,8 @@
 			unique="true"
 		/>
 		
-		<property name="number"/>
+		<property name="number"
+            column='"number"'/>
 
 		<property name="name"/>
 		
