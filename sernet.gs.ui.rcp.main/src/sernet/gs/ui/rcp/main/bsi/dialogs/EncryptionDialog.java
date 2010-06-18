@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -112,7 +114,7 @@ public class EncryptionDialog extends TitleAreaDialog {
 		new Label(encryptionChoicePanel, SWT.NONE);
 		
 		// ==== Certificate Based Encryption controls
-		Button certificateEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
+		final Button certificateEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
 		certificateEncryptionRadio.setText("Encrypt with certificate:");
 		certificateEncryptionRadio.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -125,10 +127,17 @@ public class EncryptionDialog extends TitleAreaDialog {
 		data = new GridData();
 		data.widthHint = 280;
 		certificatePathField.setLayoutData(data);
+		certificatePathField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				passwordEncryptionRadio.setSelection(false);
+				certificateEncryptionRadio.setSelection(true);
+			}
+		});
 		
-		Button browseX509CertificateVutton = new Button(encryptionChoicePanel, SWT.NONE);
-		browseX509CertificateVutton.setText("Browse X.509 certificate");
-		browseX509CertificateVutton.addSelectionListener(new SelectionAdapter() {
+		Button browseX509CertificateButton = new Button(encryptionChoicePanel, SWT.NONE);
+		browseX509CertificateButton.setText("Browse X.509 certificate");
+		browseX509CertificateButton.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -141,9 +150,20 @@ public class EncryptionDialog extends TitleAreaDialog {
 				} else {
 					certificatePathField.setText("");
 				}
+				
+				passwordEncryptionRadio.setSelection(false);
+				certificateEncryptionRadio.setSelection(true);
 			}
 		});
 		
+		passwordField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				passwordEncryptionRadio.setSelection(true);
+				certificateEncryptionRadio.setSelection(false);
+			}
+		});
+
 		encryptionChoicePanel.pack();
 		composite.pack();
 		return composite;
