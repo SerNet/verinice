@@ -30,6 +30,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -51,6 +52,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.w3c.dom.Document;
 
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -60,6 +63,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.verinice.encryption.IEncryptionService;
 
 /**
  * Dialog class for the export dialog.
@@ -73,8 +77,10 @@ public class ExportDialog extends TitleAreaDialog
 	 */
 	private boolean encryptOutput = false;
 
-	private String exportPath = null; 
-
+	/**
+	 * Path to the export target file.
+	 */
+	private String exportPath = "";
 
 	ITVerbund selectedITNetwork;
 	private Text txtSourceId;
@@ -302,11 +308,27 @@ public class ExportDialog extends TitleAreaDialog
 		super.okPressed();
 	}
 	
-	public static void writeDocumentToFile( Document doc, String uri )
+	public void writeDocumentToFile( Document doc, String uri )
 	{
 		try
 		{
 			OutputStream os = new FileOutputStream( uri );
+			
+			if (encryptOutput) {
+				EncryptionDialog encDialog = new EncryptionDialog(getParentShell());
+				if (encDialog.open() == Dialog.OK) {
+					IEncryptionService service = Activator.getDefault().getEncryptionService();
+					
+					EncryptionMethod encMethod = encDialog.getSelectedEncryptionMethod();
+					if (encMethod == EncryptionMethod.PASSWORD) {
+						os = service.encrypt(os, encDialog.getEnteredPassword());
+					} else if (encMethod == EncryptionMethod.X509_CERTIFICATE) {
+						os = service.encrypt(os, encDialog.getSelectedX509CertificateFile());
+					}
+				}
+				
+			}
+			
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer trans = tf.newTransformer();
 			trans.transform( new DOMSource( doc ), new StreamResult( os ) );
