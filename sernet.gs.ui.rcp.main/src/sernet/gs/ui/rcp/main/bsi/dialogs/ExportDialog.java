@@ -18,22 +18,16 @@
 
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -50,20 +44,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.w3c.dom.Document;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
-import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.verinice.encryption.IEncryptionService;
 
 /**
  * Dialog class for the export dialog.
@@ -76,11 +64,12 @@ public class ExportDialog extends TitleAreaDialog
 	 * Indicates if the output should be encrypted.
 	 */
 	private boolean encryptOutput = false;
+	private ITVerbund selectedITNetwork;
+	private String sourceId;
+	private String storageLocation;
+	private boolean restrictedToEntityTypes = false;
+	private HashMap<String, String> entityTypesToBeExported = new HashMap<String, String>();
 
-	ITVerbund selectedITNetwork;
-	private Text txtSourceId;
-	private Text txtLocation;
-	
 	public ExportDialog(Shell parentShell)
 	{
 		super(parentShell);
@@ -89,7 +78,10 @@ public class ExportDialog extends TitleAreaDialog
 	@Override
 	protected Control createDialogArea(Composite parent)
 	{
-		// Dialog title, message and layout:
+		/*++++
+		 * Dialog title, message and layout:
+		 *++++++++++++++++++++++++++++++++++*/
+		
 		setTitle(Messages.ExportDialog_0);
 		setMessage(Messages.ExportDialog_1, IMessageProvider.INFORMATION);
 		
@@ -97,14 +89,28 @@ public class ExportDialog extends TitleAreaDialog
 		((GridLayout)composite.getLayout()).marginWidth = 10;
 		((GridLayout)composite.getLayout()).marginHeight = 10;
 		
-		// Text field for source ID:
+		/*++++
+		 * Widgets for source ID:
+		 *+++++++++++++++++++++++*/
+		
 		final Composite compositeSourceId = new Composite(composite, SWT.NONE);
 		compositeSourceId.setLayout(new RowLayout());
 		final Label lblSourceId = new Label(compositeSourceId, SWT.NONE);
 		lblSourceId.setText(Messages.ExportDialog_7);
-		txtSourceId = new Text(compositeSourceId, SWT.SINGLE | SWT.BORDER);
+		final Text txtSourceId = new Text(compositeSourceId, SWT.SINGLE | SWT.BORDER);
+		txtSourceId.addModifyListener(new ModifyListener()
+		{
+			@Override
+			public void modifyText(ModifyEvent e)
+			{
+				sourceId = ( (Text) e.getSource() ).getText();
+			}
+		});
 		
-		// Radio Buttons for selection of an IT network:
+		/*++++
+		 * Widgets for selection of an IT network:
+		 *++++++++++++++++++++++++++++++++++++++++*/
+		
 		final Label lblITNetwork = new Label(composite, SWT.NONE);
 		lblITNetwork.setText(Messages.ExportDialog_2);
 		
@@ -116,7 +122,6 @@ public class ExportDialog extends TitleAreaDialog
 		}
 		catch (CommandException ex)
 		{
-//			ex.printStackTrace();
 			setMessage(Messages.ExportDialog_8, IMessageProvider.ERROR);
 			return null;
 		}
@@ -157,13 +162,15 @@ public class ExportDialog extends TitleAreaDialog
 			}
 			catch (CommandException ex)
 			{
-//				ex.printStackTrace();
 				setMessage(Messages.ExportDialog_8, IMessageProvider.ERROR);
 				return null;
 			}
 		}
 		
-		// Checkboxes for restriction to certain object types:
+		/*++++
+		 * Widgets for restriction to certain object types:
+		 *+++++++++++++++++++++++++++++++++++++++++++++++++*/
+		
 		final Button checkboxRestrict = new Button(composite,SWT.CHECK);
 		checkboxRestrict.setText(Messages.ExportDialog_3);
 		GridData checkboxRestrictData = new GridData();
@@ -189,18 +196,42 @@ public class ExportDialog extends TitleAreaDialog
 			if(!(entityType.getId().equals("itverbund"))) //$NON-NLS-1$
 			{
 				final Button cbxEntityType = new Button(groupObjectTypes, SWT.CHECK);
-				cbxEntityType.setData(entityType.getId());
+				cbxEntityType.setData(entityType);
 				cbxEntityType.setText(entityType.getName());
 				cbxEntityType.setEnabled(false);
+				cbxEntityType.addSelectionListener(new SelectionAdapter()
+				{					
+					@Override
+					public void widgetSelected(SelectionEvent e)
+					{
+						/*+++
+						 * Based on selection, add/remove this entity type
+						 * from the list of entitytypes-to-be-exported:
+						 *++++++++++++++++++++++++++++++++++++++++++++++++*/
+						
+						EntityType entityType = (EntityType) ( (Button) e.getSource() ).getData();
+						boolean selected = ( (Button) e.getSource() ).getSelection();
+						
+						if( selected )
+						{
+							entityTypesToBeExported.put(entityType.getId(), "");
+						}
+						else
+						{
+							entityTypesToBeExported.remove(entityType);
+						}
+					}
+				});
 			}
 		}
 		
-		checkboxRestrict.addSelectionListener(new SelectionListener()
-		{
-			
+		checkboxRestrict.addSelectionListener(new SelectionAdapter()
+		{	
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
+				restrictedToEntityTypes = checkboxRestrict.getSelection();
+				
 				Control[] children = groupObjectTypes.getChildren();
 				for( int i=0; i<children.length; i++ )
 				{
@@ -208,15 +239,12 @@ public class ExportDialog extends TitleAreaDialog
 						( (Button) children[i] ).setEnabled(checkboxRestrict.getSelection() );
 				}
 			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e)
-			{
-				
-			}
 		});
 		
-		// Encryption option
+		/*++++
+		 * Widgets to enable/disable encryption:
+		 *++++++++++++++++++++++++++++++++++++++*/
+		
 		final Composite encryptionOptionComposite = new Composite(composite, SWT.NONE);
 		encryptionOptionComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
 		((RowLayout) encryptionOptionComposite.getLayout()).marginTop = 15;
@@ -235,13 +263,16 @@ public class ExportDialog extends TitleAreaDialog
 		});
 		encryptionOptionComposite.pack();
 
-		// Text field + button to browse for storage location:
+		/*+++++
+		 * Widgets to browse for storage location:
+		 *++++++++++++++++++++++++++++++++++++++++*/
+		
 		final Composite compositeSaveLocation = new Composite(composite,SWT.NONE);
 		compositeSaveLocation.setLayout(new RowLayout(SWT.HORIZONTAL));
 		((RowLayout) compositeSaveLocation.getLayout()).marginTop = 15;
 		final Label labelLocation = new Label(compositeSaveLocation, SWT.NONE);
 		labelLocation.setText(Messages.ExportDialog_5);
-		txtLocation = new Text(compositeSaveLocation, SWT.SINGLE | SWT.BORDER);
+		final Text txtLocation = new Text(compositeSaveLocation, SWT.SINGLE | SWT.BORDER);
 		short textLocationWidth = 300;
 		txtLocation.setSize(textLocationWidth, 30);
 		final RowData textLocationData = new RowData();
@@ -262,75 +293,47 @@ public class ExportDialog extends TitleAreaDialog
 				if( exportPath != null )
 				{
 					txtLocation.setText(exportPath);
+					storageLocation = exportPath;
 				}
 				else
 				{
 					txtLocation.setText(""); //$NON-NLS-1$
+					storageLocation = ""; //$NON-NLS-1$
 				}
 			}
 		});
 		return composite;
 	}
 	
-	/**
-	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-	 */
-	@Override
-	public void okPressed()
-	{	
-		LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
-		exportElements.add(selectedITNetwork);
-		ExportCommand exportCommand = new ExportCommand(exportElements, txtSourceId.getText());
-		
-		try
-		{
-			exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
-		}
-		catch(CommandException ex)
-		{
-			ex.printStackTrace();
-			setMessage("Could not obtain children for IT network", IMessageProvider.ERROR);
-		}
-		
-		Document doc = exportCommand.getExportDocument();
-		
-		if( txtLocation.getText() != null )
-		{
-			writeDocumentToFile(doc, txtLocation.getText());
-		}
-		
-		super.okPressed();
+	/* Getters and Setters: */
+	
+	public ITVerbund getSelectedITNetwork()
+	{
+		return selectedITNetwork;
+	}
+
+	public String getSourceId()
+	{
+		return sourceId;
+	}
+
+	public String getStorageLocation()
+	{
+		return storageLocation;
 	}
 	
-	public void writeDocumentToFile( Document doc, String uri )
+	public boolean getEncryptOutput()
 	{
-		try
-		{
-			OutputStream os = new FileOutputStream( uri );
-			
-			if (encryptOutput) {
-				EncryptionDialog encDialog = new EncryptionDialog(getParentShell());
-				if (encDialog.open() == Dialog.OK) {
-					IEncryptionService service = Activator.getDefault().getEncryptionService();
-					
-					EncryptionMethod encMethod = encDialog.getSelectedEncryptionMethod();
-					if (encMethod == EncryptionMethod.PASSWORD) {
-						os = service.encrypt(os, encDialog.getEnteredPassword());
-					} else if (encMethod == EncryptionMethod.X509_CERTIFICATE) {
-						os = service.encrypt(os, encDialog.getSelectedX509CertificateFile());
-					}
-				}
-				
-			}
-			
-			TransformerFactory tf = TransformerFactory.newInstance();
-			Transformer trans = tf.newTransformer();
-			trans.transform( new DOMSource( doc ), new StreamResult( os ) );
-		}
-		catch( Exception ex )
-		{
-			ex.printStackTrace();
-			return;
-		}
+		return encryptOutput;
+	}
+	
+	public boolean isRestrictedToEntityTypes()
+	{
+		return restrictedToEntityTypes;
+	}
+
+	public HashMap<String, String> getEntityTypesToBeExported()
+	{
+		return entityTypesToBeExported;
 	}
 }
