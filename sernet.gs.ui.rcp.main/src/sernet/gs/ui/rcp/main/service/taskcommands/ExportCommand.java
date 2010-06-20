@@ -65,15 +65,19 @@ public class ExportCommand extends GenericCommand
 	
 	private List<CnATreeElement> elements;
 	private String sourceId;
+	private HashMap<String,String> entityTypesToBeExported;
 	private Document exportDocument;
 
-	/**
-	 * @param elements
-	 */
 	public ExportCommand( List<CnATreeElement> elements, String sourceId )
 	{
 		this.elements = elements;
 		this.sourceId = sourceId;
+	}
+	
+	public ExportCommand( List<CnATreeElement> elements, String sourceId, HashMap<String,String> entityTypesToBeExported )
+	{
+		this( elements, sourceId );
+		this.entityTypesToBeExported = entityTypesToBeExported; 
 	}
 	
 	public void execute()
@@ -186,7 +190,13 @@ public class ExportCommand extends GenericCommand
 		hydrate( cnATreeElement );
 		List<Element> syncObjects = new LinkedList<Element>();
 		
-		if( blacklist.get( cnATreeElement.getObjectType() ) == null )
+		/*++++++++++
+		 * Export the given CnATreeElement, iff it is NOT blacklisted (i.e. an IT network
+		 * or category element) AND, if we should restrict the exported objects to certain
+		 * entity types, this element's entity type IS allowed:
+		 *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		
+		if( ( blacklist.get( cnATreeElement.getObjectType() ) == null ) && ( entityTypesToBeExported == null || entityTypesToBeExported.get( cnATreeElement.getObjectType()) != null ) )
 		{
 			Element syncObject = exportDocument.createElementNS(syncNamespaces.get("data"), "syncObject");
 			syncObject.setAttribute("extId", cnATreeElement.getId());
