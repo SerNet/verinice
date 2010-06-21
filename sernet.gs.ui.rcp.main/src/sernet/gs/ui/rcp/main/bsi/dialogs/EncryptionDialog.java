@@ -132,6 +132,7 @@ public class EncryptionDialog extends TitleAreaDialog {
 			public void focusGained(FocusEvent e) {
 				passwordEncryptionRadio.setSelection(false);
 				certificateEncryptionRadio.setSelection(true);
+				selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
 			}
 		});
 		
@@ -153,6 +154,7 @@ public class EncryptionDialog extends TitleAreaDialog {
 				
 				passwordEncryptionRadio.setSelection(false);
 				certificateEncryptionRadio.setSelection(true);
+				selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
 			}
 		});
 		
@@ -161,6 +163,7 @@ public class EncryptionDialog extends TitleAreaDialog {
 			public void focusGained(FocusEvent e) {
 				passwordEncryptionRadio.setSelection(true);
 				certificateEncryptionRadio.setSelection(false);
+				selectedEncryptionMethod = EncryptionMethod.PASSWORD;
 			}
 		});
 
