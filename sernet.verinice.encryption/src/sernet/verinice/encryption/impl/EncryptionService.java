@@ -85,4 +85,12 @@ public class EncryptionService implements IEncryptionService {
 		CertificateException, EncryptionException {
 		return SMIMEBasedEncryption.encrypt(unencryptedDataStream, x509CertificateFile);
 	}
+	
+	@Override
+	public InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, 
+			File privateKeyFile) throws IOException, CertificateNotYetValidException, 
+			CertificateExpiredException, CertificateException, EncryptionException {
+		return SMIMEBasedEncryption.decrypt(encryptedDataStream, x509CertificateFile, 
+				privateKeyFile);
+	}
 }

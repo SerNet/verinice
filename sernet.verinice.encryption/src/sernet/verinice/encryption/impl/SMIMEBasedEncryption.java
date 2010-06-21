@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
@@ -31,7 +32,8 @@ import org.bouncycastle.openssl.PEMReader;
 
 import sernet.verinice.encryption.EncryptionException;
 import sernet.verinice.encryption.impl.util.CertificateUtils;
-import sernet.verinice.encryption.impl.util.SMIMEOutputStream;
+import sernet.verinice.encryption.impl.util.SMIMEDecryptedInputStream;
+import sernet.verinice.encryption.impl.util.SMIMEEncryptedOutputStream;
 
 /**
  * Abstract utility class providing static methods for S/MIME based encryption.
@@ -195,9 +197,7 @@ public class SMIMEBasedEncryption {
 			MimeBodyPart encryptedMimeBodyPart = new MimeBodyPart(new ByteArrayInputStream(
 					encryptedByteData));
 
-			SMIMEEnveloped enveloped = null;
-
-			enveloped = new SMIMEEnveloped(encryptedMimeBodyPart);
+			SMIMEEnveloped enveloped = new SMIMEEnveloped(encryptedMimeBodyPart);
 
 			// look for our recipient identifier
 			RecipientId recipientId = new RecipientId();
@@ -257,7 +257,38 @@ public class SMIMEBasedEncryption {
 			throws IOException, CertificateNotYetValidException, CertificateExpiredException,
 			CertificateException, EncryptionException  {
 
-		return new SMIMEOutputStream(unencryptedDataStream, x509CertificateFile);
+		return new SMIMEEncryptedOutputStream(unencryptedDataStream, x509CertificateFile);
 	}
 
+	/**
+	 * Decrypts the given InputStream using the given X.509 certificate file that was used for 
+	 * encryption and the matching private key file.
+	 * 
+	 * @param encryptedDataStream the InputStream to decrypt
+	 * @param x509CertificateFile the X.509 public certificate that was used for encryption
+	 * @param privateKeyFile the matching private key file needed for decryption
+	 * @return the decrypted InputStream
+	 * @throws IOException
+	 *             <ul>
+	 *             <li>if any of the given files does not exist</li>
+	 *             <li>if any of the given files cannot be read</li>
+	 *             </ul>
+	 * @throws CertificateNotYetValidException
+	 *             if the certificate is not yet valid
+	 * @throws CertificateExpiredException
+	 *             if the certificate is not valid anymore
+	 * @throws CertificateException
+	 *             <ul>
+	 *             <li>if the given certificate file does not contain a certificate</li>
+	 *             <li>if the certificate contained in the given file is not a X.509 certificate</li>
+	 *             </ul>
+	 * @throws EncryptionException
+	 *             if a problem occured during the encryption process
+	 */
+	public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, 
+			File privateKeyFile) throws IOException, CertificateNotYetValidException, 
+			CertificateExpiredException, CertificateException, EncryptionException  {
+
+		return new SMIMEDecryptedInputStream(encryptedDataStream, x509CertificateFile, privateKeyFile);
+	}
 }
