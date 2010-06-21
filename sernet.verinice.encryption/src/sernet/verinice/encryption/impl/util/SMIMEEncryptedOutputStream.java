@@ -22,18 +22,19 @@ import org.bouncycastle.mail.smime.SMIMEUtil;
 import sernet.verinice.encryption.EncryptionException;
 
 /**
- * Class representing an OutputStream that is encrypted using the given x.509 certificate file.
+ * Class representing an OutputStream that is encrypted using a given x.509 certificate file.
  * 
  * @author Sebastian Engel <sengel@tarent.de>
  * 
  */
-public class SMIMEOutputStream extends FilterOutputStream {
+public class SMIMEEncryptedOutputStream extends FilterOutputStream {
 
 	private X509Certificate x509Certificate;
-	private byte[] oneByte = new byte[1];
+	private ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+	private byte[] oneByteArray = new byte[1];
 	private byte[] result;
 
-	public SMIMEOutputStream(OutputStream out, File x509CertificateFile)
+	public SMIMEEncryptedOutputStream(OutputStream out, File x509CertificateFile)
 			throws CertificateNotYetValidException, CertificateExpiredException,
 			CertificateException, IOException {
 
@@ -44,7 +45,7 @@ public class SMIMEOutputStream extends FilterOutputStream {
 	private byte[] encrypt(byte[] unencryptedByteData) throws IOException, EncryptionException {
 
 		byte[] encryptedMimeData = new byte[] {};
-
+		
 		try {
 			SMIMEEnvelopedGenerator generator = new SMIMEEnvelopedGenerator();
 			generator.addKeyTransRecipient(x509Certificate);
@@ -55,7 +56,6 @@ public class SMIMEOutputStream extends FilterOutputStream {
 					SMIMEEnvelopedGenerator.AES256_CBC, BouncyCastleProvider.PROVIDER_NAME);
 
 			// Finally get the encoded bytes from the MimeMessage and return them
-			ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
 			encryptedMimeBodyPart.writeTo(byteOutStream);
 			encryptedMimeData = byteOutStream.toByteArray();
 
@@ -81,9 +81,9 @@ public class SMIMEOutputStream extends FilterOutputStream {
 
 	@Override
 	public void write(int b) throws IOException {
-		oneByte[0] = (byte) b;
+		oneByteArray[0] = (byte) b;
 
-		result = encrypt(oneByte);
+		result = encrypt(oneByteArray);
 		if (result != null) {
 			out.write(result);
 		}
@@ -106,7 +106,7 @@ public class SMIMEOutputStream extends FilterOutputStream {
 			tempArray[index] = b[off];
 			off++;
 		}
-		byte[] result = encrypt(tempArray);
+		result = encrypt(tempArray);
 		out.write(result);
 	}
 
