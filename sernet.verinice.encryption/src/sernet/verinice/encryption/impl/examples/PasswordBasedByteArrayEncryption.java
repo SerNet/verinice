@@ -1,4 +1,4 @@
-package sernet.verinice.encryption.examples;
+package sernet.verinice.encryption.impl.examples;
 
 import sernet.verinice.encryption.IEncryptionService;
 import sernet.verinice.encryption.impl.EncryptionService;
