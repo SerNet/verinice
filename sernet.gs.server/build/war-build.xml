@@ -17,7 +17,14 @@
          ================================= -->
     <target name="war" depends="copy-jars" description="creates a war file">
 		<property name="destination" location="${sp:destination}"/>
-        <war destfile="${destination}/${filename}" basedir="WebContent"/>
+        <war destfile="${destination}/${filename}">
+        	<fileset dir="WebContent"/>
+        	<zipfileset dir="src" prefix="WEB-INF/classes">
+        		<include name="log4j.xml"/>
+        		<include name="server_hibernate.cfg.xml"/>
+        		<include name="server_hibernate_derby.cfg.xml"/>
+        	</zipfileset>
+        </war>
     </target>
 
 	<!-- ================================= 
