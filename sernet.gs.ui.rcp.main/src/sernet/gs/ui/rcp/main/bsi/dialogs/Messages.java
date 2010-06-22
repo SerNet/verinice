@@ -93,6 +93,7 @@ public class Messages extends NLS {
     public static String FilterDialog_1;
     public static String FilterDialog_2;
     public static String FilterDialog_3;
+    public static String ExportSelectedObjectsDialog_0;
     public static String GSImportDialog_1;
     public static String GSImportDialog_2;
     public static String GSImportDialog_3;
