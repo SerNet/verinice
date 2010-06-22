@@ -218,7 +218,7 @@ public class ExportDialog extends TitleAreaDialog
 						}
 						else
 						{
-							entityTypesToBeExported.remove(entityType);
+							entityTypesToBeExported.remove(entityType.getId());
 						}
 					}
 				});
