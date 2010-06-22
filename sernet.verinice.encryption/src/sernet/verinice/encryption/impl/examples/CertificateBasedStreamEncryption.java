@@ -84,7 +84,8 @@ class CertificateBasedStreamEncryption {
 		ByteArrayInputStream bIn = new ByteArrayInputStream(encryptedMessage);
 		InputStream decryptedInputStream = encryptionService.decrypt(bIn, certFile, privateKeyFile);
 		
-		System.out.print("Decrypted message is: " );
+		System.out.println("Decrypted message is:");
+		System.out.println("=====================");
 		byte data = -1;
 		while ((data = (byte) decryptedInputStream.read()) != -1) {
 			System.out.print((char)data);

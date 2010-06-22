@@ -22,7 +22,8 @@ import org.bouncycastle.mail.smime.SMIMEUtil;
 import sernet.verinice.encryption.EncryptionException;
 
 /**
- * Class representing an OutputStream that is encrypted using a given x.509 certificate file.
+ * Class representing an OutputStream that is encrypted using a given x.509 certificate file 
+ * and the AES256 CBC algorithm. 
  * 
  * @author Sebastian Engel <sengel@tarent.de>
  * 

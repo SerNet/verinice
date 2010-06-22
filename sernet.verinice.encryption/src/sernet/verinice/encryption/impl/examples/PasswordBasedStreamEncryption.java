@@ -59,8 +59,8 @@ class PasswordBasedStreamEncryption {
 			// Situation:	We want to save the encrypted message to a file
 			// Solution:	Create FileOutputStream and encrypt it
 			FileOutputStream fileOutputStream = new FileOutputStream(targetFile);
-			OutputStream encryptedOutputStream = 
-				encryptionService.encrypt(fileOutputStream, PASSWORD.toCharArray());
+			OutputStream encryptedOutputStream = encryptionService.encrypt(fileOutputStream, 
+					PASSWORD.toCharArray());
 			encryptedOutputStream.write(SECRET_MESSAGE.getBytes());
 			encryptedOutputStream.flush();
 			encryptedOutputStream.close();
