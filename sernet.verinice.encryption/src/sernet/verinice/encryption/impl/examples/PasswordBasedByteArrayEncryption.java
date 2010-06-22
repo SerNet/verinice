@@ -50,8 +50,8 @@ public class PasswordBasedByteArrayEncryption {
 	 */
 	public static void main(String[] args) {
 
-		System.out.println("Password Based Encryption example");
-		System.out.println("=================================");
+		System.out.println("Password Based Encryption example for byte arrays");
+		System.out.println("==================================================");
 		System.out.println();
 		System.out.println("Secret message is: " + SECRET_MESSAGE);
 		
