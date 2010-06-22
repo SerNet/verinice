@@ -24,28 +24,6 @@ class PasswordBasedByteArrayEncryption {
 	private static IEncryptionService encryptionService = new EncryptionService();
 	
 	/**
-	 * Encrypts the given message with the given password.
-	 * 
-	 * @param unencryptedMessage the message to encrypt
-	 * @param password the password used for encryption
-	 * @return the encrypted message as a String
-	 */
-	private static byte[] encryptMessage(String unencryptedMessage, String password) {
-		return encryptionService.encrypt(unencryptedMessage.getBytes(), password.toCharArray());
-	}
-	
-	/**
-	 * Decrypts the given message with the given password.
-	 * 
-	 * @param encryptedMessage the message to decrypt
-	 * @param password the password used for decryption
-	 * @return the encrypted message as a String
-	 */
-	private static byte[] decryptMessage(byte[] encryptedMessage, String password) {
-		return encryptionService.decrypt(encryptedMessage, password.toCharArray());
-	}
-
-	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -53,17 +31,29 @@ class PasswordBasedByteArrayEncryption {
 		System.out.println("Password Based Encryption example for byte arrays");
 		System.out.println("==================================================");
 		System.out.println();
-		System.out.println("Secret message is: " + SECRET_MESSAGE);
+		System.out.println("Secret message is:");
+		System.out.println("===================");
+		System.out.println(SECRET_MESSAGE);
 		
-		System.out.println();
+		System.out.println("\n");
 		
 		// Encrypt message
-		byte[] encryptedMessage = encryptMessage(SECRET_MESSAGE, PASSWORD);
-		System.out.println("Encrypted message is: " + new String(encryptedMessage));
+		byte[] encryptedMessage = 
+			encryptionService.encrypt(SECRET_MESSAGE.getBytes(), PASSWORD.toCharArray());
+		
+		System.out.println("Encrypted message is:");
+		System.out.println("======================");
+		System.out.println(new String(encryptedMessage));
+		
+		System.out.println("\n");
 		
 		// Decrypt message
-		byte[] decryptedMessage = decryptMessage(encryptedMessage, PASSWORD);
-		System.out.println("Decrypted message is: " + new String(decryptedMessage));
+		byte[] decryptedMessage = 
+			encryptionService.decrypt(encryptedMessage, PASSWORD.toCharArray());
+
+		System.out.println("Decrypted message is:");
+		System.out.println("======================");
+		System.out.println(new String(decryptedMessage));
 	}
 
 }
