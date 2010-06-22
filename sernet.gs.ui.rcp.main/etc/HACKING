@@ -45,6 +45,7 @@ Eclipse IDE:
  
  - go to Window/Preferences/Server/Runtime Environment and add a Tomcat 6.0
     environment by pointing at the directory where you unpacked Apache Tomcat
+    Make sure to name it "tomcat-6" !
  
  - use the svn repository explorer and add the repository
     http://www.verinice.org/svnroot (if you have write access, use svn+ssh:// instead)
@@ -111,7 +112,7 @@ Eclipse IDE:
  
  - open the 'Servers' view (Window/Show View/Others...)
     - do a right-click and chose 'New/Server'
-    - chose Tomcat 6
+    - chose Tomcat 6 (with your "tomcat-6" runtime environment)
     - add the sernet.gs.sever project (if you cannot do this, you did not install the Java EE Development Plugin)
     - copy sernet.gs.server/lib/jsf-additional/*.jar into tomcat/lib
  

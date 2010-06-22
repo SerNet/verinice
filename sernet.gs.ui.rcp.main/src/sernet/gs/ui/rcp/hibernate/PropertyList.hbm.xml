@@ -25,11 +25,14 @@
 			<key column="properties_id"  />		
 			<index column="properties_idx" />
 									
+            <!-- Property is also mapped as non-mutable element in Property.hbm.xml for direct queries -->
 			<composite-element class="Property" >
 				<property name="dbId"/>
 				<property name="propertyType"/>
         
-		        <property name="propertyValue" type="java.lang.String" length="30000"/>
+        <!-- size limit of 4000 to prevent Oracle from using the LONG type which leads to "stream closed" exceptions
+        fixed in Hibernate 3.5, see http://opensource.atlassian.com/projects/hibernate/browse/HHH-3892 -->
+		        <property name="propertyValue" type="java.lang.String" length="3999"/>
 		        
 				<!--
 				<many-to-one 

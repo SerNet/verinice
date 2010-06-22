@@ -51,6 +51,9 @@ public class TextControl implements IHuiControl {
 	private Color bgColor;
 	private Color fgColor;
 	private boolean useRule;
+	
+	// This limit is set in Property.hbm.xml / PropertyList.hbm.xml:
+    private static final int HIBERNATE_MAPPED_STRING_LIMIT = 3999;
 
 	public Control getControl() {
 		return text;
@@ -133,6 +136,7 @@ public class TextControl implements IHuiControl {
 				text.setBackground(Colors.GREY);
 			text.setToolTipText(fieldType.getTooltiptext());
 			text.setText(this.savedProp.getPropertyValue());
+			text.setTextLimit(HIBERNATE_MAPPED_STRING_LIMIT);
 			return text;
 		}
 		// single line field:
@@ -146,6 +150,7 @@ public class TextControl implements IHuiControl {
 			text.setBackground(Colors.GREY);
 		text.setToolTipText(fieldType.getTooltiptext());
 		text.setText(notNull(this.savedProp.getPropertyValue()));
+		text.setTextLimit(HIBERNATE_MAPPED_STRING_LIMIT);
 		return text;
 	}
 

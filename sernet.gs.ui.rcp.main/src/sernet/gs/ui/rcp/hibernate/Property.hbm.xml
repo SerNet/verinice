@@ -4,6 +4,8 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="sernet.hui.common.connect">
+
+    <!-- Property is also mapped as a mutable element in PropertyList.hbm.xml -->
 	<class name="Property" table="properties" mutable="false">
 		<id name="dbId" 
 			column="properties_id" 
@@ -12,6 +14,10 @@
 			<generator class="native" />
 		</id>
 		<property name="propertyType"/>
-        <property name="propertyValue" type="java.lang.String" length="30000"/>			
-	</class>
+        
+         <!-- size limit of 4000 to prevent Oracle from using the LONG type which leads to "stream closed" exceptions
+        fixed in Hibernate 3.5, see http://opensource.atlassian.com/projects/hibernate/browse/HHH-3892 -->
+        <property name="propertyValue" type="java.lang.String" length="3999"/>			
+	
+    </class>
 </hibernate-mapping>
