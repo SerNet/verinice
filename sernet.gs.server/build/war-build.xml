@@ -19,10 +19,9 @@
 		<property name="destination" location="${sp:destination}"/>
         <war destfile="${destination}/${filename}">
         	<fileset dir="WebContent"/>
-        	<zipfileset dir="src" prefix="WEB-INF/classes">
-        		<include name="log4j.xml"/>
-        		<include name="server_hibernate.cfg.xml"/>
-        		<include name="server_hibernate_derby.cfg.xml"/>
+        	<zipfileset dir="bin" prefix="WEB-INF/classes">
+        		<exclude name="log4j-dev.xml"/>
+        		<exclude name="log4j-prod.xml"/>
         	</zipfileset>
         </war>
     </target>
@@ -44,7 +43,6 @@
 			  <include name="sernet.hui.swtclient*.*/jar/sernet.hui.swtclient*.jar"/>
 			  <include name="sernet.hui.server*.*/jar/sernet.hui.server*.jar"/>
 			  <include name="sernet.gs.ui.rcp.main*.*/jar/sernet.gs.ui.rcp.main*.jar"/>
-			  <include name="sernet.gs.server*.*/jar/sernet.gs.server*.jar"/>
 			  <include name="sernet.gs.service*.*/jar/sernet.gs.service*.jar"/>
 			  <include name="sernet.gs.reveng*.*/jar/sernet.gs.reveng*.jar"/>
 			  <include name="sernet.verinice.samt.service*.*/jar/sernet.verinice.samt.service*.jar"/>
