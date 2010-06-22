@@ -21,7 +21,7 @@ import sernet.verinice.encryption.impl.EncryptionService;
  * @author Sebastian Engel <s.engel@tarent.de>
  * 
  */
-public class CertificateBasedByteArrayEncryption {
+class CertificateBasedByteArrayEncryption {
 
 	/**
 	 * The secret message that shall be encrypted.

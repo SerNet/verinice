@@ -9,7 +9,7 @@ import sernet.verinice.encryption.impl.EncryptionService;
  * @author Sebastian Engel <s.engel@tarent.de>
  *
  */
-public class PasswordBasedByteArrayEncryption {
+class PasswordBasedByteArrayEncryption {
 	
 	/**
 	 * The secret message that shall be encrypted.

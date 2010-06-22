@@ -18,7 +18,7 @@ import sernet.verinice.encryption.impl.EncryptionService;
  * @author Sebastian Engel <s.engel@tarent.de>
  *
  */
-public class PasswordBasedStreamEncryption {
+class PasswordBasedStreamEncryption {
 
 	/**
 	 * The secret message that shall be encrypted.
