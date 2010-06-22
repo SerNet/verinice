@@ -18,6 +18,8 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -35,6 +37,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -57,8 +60,10 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
+import org.w3c.dom.Document;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.DOMUtil;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
@@ -66,6 +71,7 @@ import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
+import sernet.gs.ui.rcp.main.bsi.dialogs.ExportSelectedObjectsDialog;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -91,6 +97,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
 import sernet.verinice.iso27k.model.ISO27KModel;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
@@ -122,6 +129,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	private BSIModelViewFilterAction filterAction;
 
 	private BSIModelViewContentProvider contentProvider;
+	
+	private Action exportAction;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
@@ -295,6 +304,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		manager.add(collapseAction);
 
 		manager.add(new Separator());
+		manager.add(exportAction);
 
 	}
 
@@ -447,6 +457,46 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		dropAdapter = new MetaDropAdapter(viewer);
 		dropAdapter.addAdapter(new BSIModelViewDropPerformer());
 
+		exportAction = new Action(){
+			public void run()
+			{
+				ExportSelectedObjectsDialog dialog = new ExportSelectedObjectsDialog(Display.getCurrent().getActiveShell());
+				
+				if( dialog.open() == Dialog.OK )
+				{
+					LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
+					
+					IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+					Iterator iter = selection.iterator();
+					
+					while( iter.hasNext() )
+					{
+						Object o = iter.next();
+						
+						if( o instanceof CnATreeElement )
+						{
+							exportElements.add( (CnATreeElement) o );
+						}
+					}
+					
+					ExportCommand exportCommand;
+					exportCommand = new ExportCommand(exportElements, dialog.getSourceId());
+					
+					try
+					{
+						exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
+					}
+					catch(CommandException ex)
+					{
+						ex.printStackTrace();
+					}
+					
+					Document doc = exportCommand.getExportDocument();
+					DOMUtil.writeDocumentToFile(doc, dialog.getStorageLocation(), dialog.getEncryptOutput());
+				}
+			}
+		};
+		exportAction.setText("Export");
 	}
 
 	private void expandAll() {
