@@ -61,6 +61,10 @@ public class Activator extends AbstractUIPlugin {
 
 	private static final Logger LOG = Logger.getLogger(Activator.class);
 
+	// string to avoid using IEncryptionService.class.getName() 
+	// which causes NoClassDefFoundException on bundle start
+	public static final String ENCRYPTION_SERVICE_NAME = "sernet.verinice.encryption.IEncryptionService";
+	
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main"; //$NON-NLS-1$
 
@@ -144,8 +148,12 @@ public class Activator extends AbstractUIPlugin {
 				}
 			}
 			
-			ServiceReference service = ctx.getServiceReference("sernet.verinice.encryption.IEncryptionService");
-			encryptionService = (IEncryptionService) ctx.getService(service);
+			ServiceReference serviceReference = ctx.getServiceReference(ENCRYPTION_SERVICE_NAME);
+			if(serviceReference!=null) {
+			    encryptionService = (IEncryptionService) ctx.getService(serviceReference);
+			} else {
+			    LOG.error("Could not load and start service: " + ENCRYPTION_SERVICE_NAME);
+			}
 		}
 
 		// set workdir preference:
