@@ -25,7 +25,7 @@ public class PDFOutputFormat implements IOutputFormat {
 		PDFRenderOption pdfOptions = new PDFRenderOption();
 		pdfOptions.setOutputFileName("output/bsh-networking.pdf");
 		pdfOptions.setOutputFormat("pdf");
-		pdfOptions.setOption(IPDFRenderOption.PAGE_OVERFLOW, IPDFRenderOption.FIT_TO_PAGE_SIZE | IPDFRenderOption.OUTPUT_TO_MULTIPLE_PAGES);
+		pdfOptions.setOption(IPDFRenderOption.PAGE_OVERFLOW, IPDFRenderOption.OUTPUT_TO_MULTIPLE_PAGES);
 
 		return pdfOptions;
 	}
