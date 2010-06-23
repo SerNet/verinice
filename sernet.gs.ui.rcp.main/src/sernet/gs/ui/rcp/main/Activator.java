@@ -144,7 +144,7 @@ public class Activator extends AbstractUIPlugin {
 				}
 			}
 			
-			ServiceReference service = ctx.getServiceReference(IEncryptionService.class.getName());
+			ServiceReference service = ctx.getServiceReference("sernet.verinice.encryption.IEncryptionService");
 			encryptionService = (IEncryptionService) ctx.getService(service);
 		}
 
