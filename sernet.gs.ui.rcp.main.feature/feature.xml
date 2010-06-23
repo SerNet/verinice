@@ -260,6 +260,7 @@ Library.
       <import plugin="sernet.gs.reveng"/>
       <import plugin="sernet.hui.swtclient"/>
       <import plugin="sernet.springclient"/>
+      <import plugin="sernet.verinice.encryption"/>
       <import plugin="com.springsource.antlr"/>
    </requires>
 
