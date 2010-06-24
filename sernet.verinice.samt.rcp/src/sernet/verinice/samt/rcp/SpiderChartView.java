@@ -29,11 +29,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot.ISelectionListener;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.IChartGenerator;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.samt.service.FindSamtGroup;
 

@@ -25,13 +25,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.IAuthService;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
-import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.samt.model.SamtTopic;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IAuthAwareCommand;
+import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * Given a {@link ControlGroup} instance this loads all reachable (= recursive) 

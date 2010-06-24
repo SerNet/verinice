@@ -1,1 +1,1479 @@
-"1.1","1.1 Self assessment catalog","0","Save your catalog file samt-catalog.cvs to <VERINICE_HOME>/workspace/conf",1,1,,5,8
+"5","Security Policy","0",,1,1,,5,8
+"5.1","5.1 Does the enterprise have an information security regulation/policy which is published by the management and distributed to the employees on a regular basis?","0","Level 0:  Incomplete 
+- no existing/incomplete information security regulation",1,1,,5,8
+,,"0","Level 1:  Performed
+- information security regulations are in place, published and distributed, but not systematic",1,1,,5,8
+,,"0","Level 2:  Managed
+- information security regulations are documented, published and distributed:
+- security targets are identified and defined
+- management commitment/ -support documented
+- responsibilities defined and staffed
+- resources are identified and allocated
+- information regulations/documents are provided to all employees
+- documentation takes place according to given processes (version control, change management, clearance etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- central information security regulations are documented, published and distributed:
+- a organizational standard process is defined and/or used (e.g. RFC)
+- Information Security regulations are integrated in other organizational processes
+- documentation takes place according to standardized processes
+(-experience feeds into information security regulations)
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- central information security regulations are known and reviewed regularly
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- central information security regulations are improved and refined continuously
+- additional projects are started with own resources to improve and optimize the information security regulations  ",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"6","Organization of information security","0",,1,1,,5,8
+"6.1","6.1 Is there any organization for information security within the enterprise?","0","Level 0:  Incomplete 
+- no existing information security organization",1,1,,5,8
+,,"0","Level 1:  Performed 
+- persons, not directly appointed to information security, take care of it",1,1,,5,8
+,,"0","Level 2:  Managed
+- information security functions are defined and allocated
+- responsibilities defined and staffed
+- objectives of the information security functions are identified and defined
+- resources are identified and allocated
+- documentation takes place according the information security functions",1,1,,5,8
+,,"0","Level 3:  Established
+- information security organization is described and implemented
+- organizational standard processes are defined and/or used 
+- information security organization is integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- information security organization is reviewed regularly
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- information security organization is getting improved and refined continuously
+- additional projects are started with own resources to improve and optimize the information security organization  
+",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"6.2","6.2 Have the information security risks (personnel and organizational) been addressed in regards to external companies?","0","Level 0:  Incomplete 
+- no risks evaluation in case of involving external parties",1,1,,5,8
+,,"0","Level 1:  Performed
+- risks are identified and documented, but not systematically",1,1,,5,8
+,,"0","Level 2:  Managed
+- process for risk analysis is defined
+- objectives are identified and defined 
+- responsibilities defined and staffed
+- resources are identified and allocated 
+- documentation takes place
+",1,1,,5,8
+,,"0","Level 3:  Established
+- systematic risk analysis for identifying risk resulting from involving external parties
+- a organizational standard process is defined and/or used
+- risk analysis are integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- a process for controlling the risk analysis and for reviewing of results of risk analysis are implemented
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize the risk analysis   
+",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"6.3","6.3 Are non-disclosure agreements (security agreements) in place in cooperation with external companies?","0","Level 0:  Incomplete
+- no (separate) confidentiality agreements and no agreements about security issues",1,1,,5,8
+,,"0","Level 1:  Performed 
+- agreements are signed, but not separate (special agreements for projects including security issues)",1,1,,5,8
+,,"0","Level 2:  Managed
+- process for security agreements including is defined and resources are allocated
+- objectives are identified and defined 
+- responsibilities defined and staffed
+- resources are identified and allocated 
+- documentation takes place according to given processes (version control, change management, clearance etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- process for signing and handling of security agreements established
+- a organizational standard process is defined and/or used 
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process is regularly controlled and reviewed
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and refined
+- additional projects are started with own resources to improve and optimize the process
+",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"7","Asset Management","0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"7.1","7.1 Is there an information asset (physical and digital) inventory showing information asset owners and respective asset details?","0","Level 0:  Incomplete 
+- no tables, overviews or indexes exist",1,1,,5,8
+,,"0","Level 1:  Performed
+- overviews including ownerships are available, but not up-to-date or incomplete",1,1,,5,8
+,,"0","Level 2:  Managed
+- a process assure that overviews and ownership are documented and available
+- objectives are identified and defined 
+- responsibilities defined and staffed also for maintenance
+- resources are identified and allocated also for maintenance
+- documentation takes place according to given processes (version control, change management, clearance etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- a defined process assure that a asset registry is available, up-to-date and complete
+- a organizational standard process is defined and/or used
+- the defined process is integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- the defined process is reviewed regularly
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- the defined process for the creation of the main overview is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"7.2","7.2 Is information classified in terms of a defined data classification scheme?","0","Level 0:  Incomplete 
+- no rules for classification of data implemented",1,1,,5,8
+,,"0","Level 1:  Performed
+- rules for data classification are defined and used sporadically, but not systematically or completely",1,1,,5,8
+,,"0","Level 2:  Managed
+- rules/process for data classification are/is published, specifications from departments are in place and physical documents are classified accordingly
+- objectives are identified and defined 
+- responsibilities defined and staffed 
+- resources are identified and allocated (e.g. distribution, contacts)
+- documentation takes place according to given processes (version control, change management, clearance etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- a defined process assure that the rules for data classification are published, specifications are available everywhere and documents are handled accordingly in case of electronic exchange as well as in case of storage
+- a organizational standard process is defined and/or used (e.g. RFC)
+- rules for classification are integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- central data classification is well-known and in compliance; reviewed regularly
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- central data classification is improved and refined continuously
+- additional projects are started with own resources to improve and optimize the process",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"8","Human Resources security","0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"8.1","8.1 Do the employees sign a usage agreement containing the necessary clauses outlining responsibilities of the employees regarding information security (e.g. information security policy, non-disclosure agreement, remote access)?","0","Level 0:  Incomplete 
+- no security-related paragraphs are included",1,1,,5,8
+,,"0","Level 1:  Performed
+- security-related paragraphs are included partially",1,1,,5,8
+,,"0","Level 2:  Managed
+- a process assure that security-related paragraphs are mainly included
+- security targets are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, clearance etc.)",1,1,,5,8
+,,"0","Level 3:  Established 
+- a defined process assure that security-related paragraphs are included and updated on a regular basis
+- a organizational standard process is defined and/or used (e.g. RFC)
+- the defined process is integrated in other organizational processes (e.g. information security organization, data classification, requirements of country specific laws)
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- security-related paragraphs are reviewed regularly
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- security-related paragraphs are continuously improved by needs and get refined
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"8.2","8.2 Are user training programs regarding information security policies and procedures carried out by the management regularly?","0","Level 0:  Incomplete 
+- no information/awareness programs are given by the company",1,1,,5,8
+,,"0","Level 1:  Performed
+- sporadic incident related activities",1,1,,5,8
+,,"0","Level 2:  Managed
+- a process assure that basic information and regular updates takes place
+- objectives are identified and defined 
+- responsibilities defined and staffed
+- resources are identified and allocated 
+- documentation takes place according to given processes (version control, change management, clearance etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a defined process assure that coordinated and company covering awareness programs exist (e.g. trainings, Info-sessions based on an overall concept)
+- a organizational standard process is defined and/or used (e.g. further education)
+- the defined process is integrated in other organizational processes (e.g. processes for further education)
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- regular review on effectiveness of awareness and training programs
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- awareness and training programs are improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"8.3","Question 8.3.1 and 8.3.3:
+Are termination/transfer responsibilities defined and is a access rights (grant/revoke) procedure defined and documented?","0","Level 0:  Incomplete 
+- no responsibilities and procedures are defined",1,1,,5,8
+,,"0","Level 1:  Performed
+- responsibilities and procedures are partially defined",1,1,,5,8
+,,"0","Level 2:  Managed
+- a process assure that responsibilities and procedures are mainly defined and documented
+- objectives are identified and defined 
+- responsibilities defined and staffed
+- resources are identified and allocated 
+- documentation takes place according to given processes (change management, clearance etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- a defined process assure that responsibilities are established, access rights are changed regularly
+- a organizational standard process is defined and/or used (e.g. change management) 
+- a defined process are integrated in other organizational processes (change management)
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- change of access rights are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- responsibilities get adjusted, process in changing of access rights is continuously improved
+- additional projects are started with own resources to improve and optimize the defined process  
+",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"9","Physical and Environmental Security","0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"9.1","9.1 Are security zones defined and secured?","0","Level 0:  Incomplete 
+- no security zones defined",1,1,,5,8
+,,"0","Level 1:  Performed
+- security zones are partially defined",1,1,,5,8
+,,"0","Level 2:  Managed
+- security zones are mainly defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, clearance etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- all security zones are defined, a central process is established
+- a organizational standard process is defined and/or used 
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- security zones and the respective process are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"9.2","9.2 Does the company have an emergency response plan (covering phyiscal incidents such as fire, earthquake etc.)?","0","Level 0:  Incomplete 
+- no analysis about physical protection against damages",1,1,,5,8
+,,"0","Level 1:  Performed
+- analysis is partially performed",1,1,,5,8
+,,"0","Level 2:  Managed
+- physical protection against damages is defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, clearance etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used (e.g. emergency schedules)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process and respective documents are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"9.3","Question 1 to 9.1.6:
+Is a physical access control process available?","0","Level 0:  Incomplete 
+- no access process for entering the premises",1,1,,5,8
+,,"0","Level 1:  Performed
+- access process is partially performed ",1,1,,5,8
+,,"0","Level 2:  Managed 
+- access process for entering premises is defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, clearance etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process is reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"9.4","Question 2 to 9.1.6:
+Are precautionary measures taken for the protection of goods upon delivery and shipment?","0","Level 0:  Incomplete 
+- no measures defined for protecting goods during delivery",1,1,,5,8
+,,"0","Level 1:  Performed
+- some measures are performed but not systematically",1,1,,5,8
+,,"0","Level 2:  Managed
+- measures and process are defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, clearance etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used 
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process and respective documents are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"9.5","9.5 Is the process of handling operational supplies defined (incl. removal, disposal and reuse)?","0","Level 0:  Incomplete 
+- no process for equipment taken off-site the premises",1,1,,5,8
+,,"0","Level 1:  Performed
+- some issue are defined and process is partially performed",1,1,,5,8
+,,"0","Level 2:  Managed
+- process is defined and documented, respective regulations are published
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, clearance etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established 
+- a central process is established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process is reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10","Communications and Operations Management","0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.1","10.1 Are all hardware and software documentation (operating manual) as well as changes in the systems (change management) up-to-date?","0","Level 0:  Incomplete 
+- no documentation, no change management process",1,1,,5,8
+,,"0","Level 1:  Performed
+- some hard- and software documentation available and process is partially performed",1,1,,5,8
+,,"0","Level 2:  Managed
+- process is defined and documented, respective regulations are published
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, clearance etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established, resources are allocated and responsibilities are defined
+- a organizational standard process is defined and/or used (e.g. change management)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process is reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.2","10.2 Are the development and test environments separated from the production environments?","0","Level 0:  Incomplete 
+- no separated environments for development, test & production",1,1,,5,8
+,,"0","Level 1:  Performed
+- all environments are separated",1,1,,5,8
+,,"0","Level 2:  Managed
+- all environments are separated, respective regulations are published
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, clearance etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is separation of environments
+- a organizational standard process is defined and/or used (e.g. change management)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process and documents are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.3","10.3 Are the services, reports and records provided by third party companies checked/audited regularly?","0","Level 0:  Incomplete 
+- no supervising of services done by third parties",1,1,,5,8
+,,"0","Level 1:  Performed
+- only a general check against contracts is perfumed, but not detailed and systematic",1,1,,5,8
+,,"0","Level 2:  Managed 
+- process for supervising is defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established, responsibilities are defined
+- a organizational standard process is defined and/or used (e.g. change management, documentation, version control)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process and documents are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.4","Question 1 to 10.4.1:
+Are anti-virus programs been implemented and updated regularly?","0","Level 0:  Incomplete 
+- no virus protection",1,1,,5,8
+,,"0","Level 1:  Performed
+- individual installation of anti virus programs without secured updating processes",1,1,,5,8
+,,"0","Level 2:  Managed
+- installation with secured updating processes
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- central and company covering distribution of virus protection individuals in charge identified and empowered
+- a organizational standard process is defined and/or used (e.g. software-updates, change management)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness (functionality) and up-to-date of the virus protection
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- virus protection is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.5","Question 2 to 10.4.1:
+Are Firewalls and/or IDS/IPS software installed on all local systems?","0","Level 0:  Incomplete  
+- no protective SW (like Personal Firewall (PF), Intrusion Detection or Intrusion Prevention System (IDS/IPS)).",1,1,,5,8
+,,"0","Level 1:  Performed
+- sporadic installed and roughly configured protective SW without secure analysis",1,1,,5,8
+,,"0","Level 2:  Managed
+- on all existing protection SW a standard configuration is installed without central administration and central reporting
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- on all devices a protection SW is installed with central administration. Exceptions are to be justified and to be permitted with IT security.
+- a organizational standard process is defined and/or used (e.g. version control, change management, reporting)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness (operativeness) and minimizing the false-positive
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize
+",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.6","10.6 Are protective features enabled against active contents for example Active-X controls, Java Applets etc.?","0","Level 0:  Incomplete 
+- no check against mobile code",1,1,,5,8
+,,"0","Level 1:  Performed
+- only some issue are checked, but not detailed and systematic",1,1,,5,8
+,,"0","Level 2:  Managed
+- process is defined and documented, but not centrally managed
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established, responsibilities are defined
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process and systems are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.7","10.7 Are back-up's controlled and the relevant restores carried out regularly?","0","Level 0:  Incomplete 
+- no process for back-up defined",1,1,,5,8
+,,"0","Level 1:  Performed
+- only some systems have back-ups, but not detailed and systematic",1,1,,5,8
+,,"0","Level 2:  Managed
+- process for back-up and carry out restores is defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established, responsibilities are defined, back-ups are stored at different locations and the relevant restores carried out regularly 
+- a organizational standard process is defined and/or used (e.g.)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process and back-up & restore are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.8","Question 1 to 10.6.1:
+Is the network managed and controlled so that it can be protected against threats (e.g. firewall, IDS/IPS, network security software)? ","0","Level 0:  Incomplete 
+- no network management in place",1,1,,5,8
+,,"0","Level 1:  Performed
+- network management in place, but not systematically and regularly used",1,1,,5,8
+,,"0","Level 2:  Managed
+- network is managed and checked regularly
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used (e.g. change management)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- network is reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.9","Question 2 to 10.6.1:
+Is the use of modem devices (Analog, ISDN, DSL etc.) properly regulated with respect to simultaneous operation with the enterprise network?","0","Level 0:  Incomplete 
+- no regulation of usage of modem",1,1,,5,8
+,,"0","Level 1:  Performed
+- regulation in place, but not checked",1,1,,5,8
+,,"0","Level 2:  Managed
+- regulation and usage of modems are checked regularly
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- usage of modems is reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.10","Question 1 to 10.6.2:
+Are security requirements for network services defined?","0","Level 0:  Incomplete 
+- no security requirements (confidentiality, integrity, availability (CIA)) for network services defined",1,1,,5,8
+,,"0","Level 1:  Performed
+- regulation in place, but only for some systems",1,1,,5,8
+,,"0","Level 2:  Managed
+- process is defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process for security requirements and documentation are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.11","Question 2 to  10.6.2:
+Are SLAs defined for network services and are they reviewed regularly?","0","Level 0:  Incomplete 
+- no SLAs for network services",1,1,,5,8
+,,"0","Level 1:  Performed 
+- regulation in place, but only for some systems",1,1,,5,8
+,,"0","Level 2:  Managed
+- process is defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process for SLAs and documentation are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.12","10.12 Are policies in place for the management of removable computer media such as tapes, USB-memory sticks, USB HDs, CDs, and DVDs?","0","Level 0:  Incomplete 
+- no regulation regarding usage of removable media",1,1,,5,8
+,,"0","Level 1:  Performed
+- regulation partially in place",1,1,,5,8
+,,"0","Level 2:  Managed
+- process is defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- regulation and process are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.13","10.13 Is there a process in place to ensure that computer media is disposed of securely and safely when no longer required?","0","Level 0:  Incomplete 
+- no regulation regarding disposal of removable media in place",1,1,,5,8
+,,"0","Level 1:  Performed
+- regulation partially in place",1,1,,5,8
+,,"0","Level 2:  Managed
+- process is defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- regulation and process are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.14","10.14 Are precautions taken, if media (e.g.CD's, DVD's, paper documents) containing confidential information must be transported physically (e.g. via DHL, UPS etc.)?","0","Level 0:  Incomplete 
+- no measures defined for protecting media on transport",1,1,,5,8
+,,"0","Level 1:  Performed
+- some measures are performed but not systematically",1,1,,5,8
+,,"0","Level 2:  Managed
+- measures and process are defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes 
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process and respective documents are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.15","10.15 Are precautions taken, if confidential information must be exchanged electronically?","0","Level 0:  Incomplete 
+- no encryption, no precaution ",1,1,,5,8
+,,"0","Level 1:  Performed
+- encryption of single data channels",1,1,,5,8
+,,"0","Level 2:  Managed 
+- encryption of all data channels without central administration/coordination. Exceptions are to be justified and to be permitted with IT security.
+- a concept/process for protecting data is used with:
+  - identified and defined objectives
+  - defined and staffed responsibilities     
+  - identified and allocated resources
+  - documentation takes place according to given processes",1,1,,5,8
+,,"0","Level 3:  Established
+- encryption of all data channels with central administration/coordination
+- a organizational standard process is defined and/or used (e.g.)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness (operativeness)
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.16","10.16 Is a log maintained for system administration and system operator tasks for critical systems?","0","Level 0:  Incomplete 
+- no logging of system administrator and system operator tasks for critical systems",1,1,,5,8
+,,"0","Level 1:  Performed
+- some logging but not systematically",1,1,,5,8
+,,"0","Level 2:  Managed
+- process is defined and documented, but not centrally
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process and respective log files are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"10.17","10.17 Are processes defined that monitor the use of information systems with regards to the legal / allowed storage time frames?","0","Level 0:  Incomplete 
+- no logging of faults",1,1,,5,8
+,,"0","Level 1:  Performed
+some logging but not systematically",1,1,,5,8
+,,"0","Level 2:  Managed
+- process is defined and documented, but not centrally
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used 
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process and respective log files are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"11","Access Control","0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"11.1","11.1 Is there a formal user registration and de-registration procedure in place for access to all  IT systems and IT services?","0","Level 0:  Incomplete  
+- no central User-Id directory and -management or no central process for creating and deleting identities",1,1,,5,8
+,,"0","Level 1:  Performed
+- central management of User-Id directory on systems and for creating and deleting of identities. Exceptions are to be justified and to be permitted with IT security.",1,1,,5,8
+,,"0","Level 2:  Managed
+- creating of Global-Identities and User-ID directories on systems are updated daily and synchronized towards each other
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- central identity management system:
+- the generation and deletion of identities, of User-Ids and of accesses is executed by this system exclusively
+- justified exceptions after approval by information security Organization (p.e. triggered by cost-/effect-analysis or number of users)
+- overview over all user accesses to systems (including justified exceptions; for these only the technical automatism gets neglected)
+- a organizational standard process is defined and/or used 
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness (operativeness)
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"11.2","11.2 Are appropriate user privileges assigned and checked (user as well as administrator) regularly?","0","Level 0:  Incomplete 
+- no supervising of access rights",1,1,,5,8
+,,"0","Level 1:  Performed
+- only a general check is performed, but not detailed and systematic",1,1,,5,8
+,,"0","Level 2:  Managed
+- process for supervising is defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used (e.g.)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process and documents are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"11.3","11.3 Is a password policy in place that defines the management of personal passwords?","0","Level 0:  Incomplete 
+- no regulation form handling of passwords",1,1,,5,8
+,,"0","Level 1:  Performed
+- regulation in place, but not checked",1,1,,5,8
+,,"0","Level 2:  Managed
+- a process for regularly checks of regulation
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used (e.g.)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- process and passwords are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"11.4","11.4 Is there a password guideline that prescribes the structure and complexity of passwords?","0","Level 0:  Incomplete 
+- no existing password guideline",1,1,,5,8
+,,"0","Level 1:  Performed
+- isolated guidelines are in place, but not systematic or complete",1,1,,5,8
+,,"0","Level 2:  Managed
+- information security guideline/regulation are documented and published:
+- length of passwords
+- using of combination of characters defined
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- IT-regulations/documents are provided to all employees
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- central information security guidelines/regulations are documented and published:
+- a organizational standard process is defined and/or used (e.g. RFC)
+- information security regulations are integrated in other organizational processes
+- documentation takes place according to standardized processes
+- experience feeds into information security regulations",1,1,,5,8
+,,"0","Level 4:  Predictable
+- central information security guidelines/regulations are known and their adherence is reviewed regularly
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- central information security guidelines/regulations are improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"11.5","11.5 Is a clear desk/clear screen policy adopted to reduce the risks of unauthorized access, loss of, and damage to information?","0","Level 0:  Incomplete 
+- no clear desk/clear screen policy",1,1,,5,8
+,,"0","Level 1:  Performed
+- isolated regulations regarding clear desk/clear screen policy are in place, but not systematic or complete",1,1,,5,8
+,,"0","Level 2:  Managed
+- regulation regarding clear desk/clear screen policy is documented and published
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- IT-regulations/documents are provided to all employees
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- central information security regulations regarding clear desk/clear screen policy are documented and published
+- a organizational standard process is defined and/or used (e.g. RFC)
+- information security regulations are integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- compliance is reviewed regularly
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"11.6","11.6 Are there solutions in place for the access control of remote users? ","0","Level 0:  Incomplete  
+- no concept/strategy for remote access",1,1,,5,8
+,,"0","Level 1:  Performed
+- isolated regulations for remote access are in place, but not systematic or complete",1,1,,5,8
+,,"0","Level 2:  Managed
+- regulation for remote access is documented and published
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- IT-regulations/documents are provided to all employees
+- documentation takes place according to given processes (version control, change management,  etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- central information security regulations are documented and published
+- a organizational standard process is defined and/or used (e.g. RFC)
+- information security regulations are integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- compliance is reviewed regularly
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"11.7","11.7 Is there a concept in place for the monitoring of the network-technical access to diagnostic and configuration ports of, for example, switches, routers, VoIP gateways etc.?","0","Level 0:  Incomplete 
+- no concept & strategy for diagnostic and configuration ports",1,1,,5,8
+,,"0","Level 1:  Performed
+- isolated regulations are in place, but not systematic or complete",1,1,,5,8
+,,"0","Level 2:  Managed
+- regulation is documented and published
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- IT-regulations/documents are provided to all employees
+- documentation takes place according to given processes (version control, change management,  etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- central information security regulations are documented and published
+- a organizational standard process is defined and/or used (e.g. RFC)
+- information security regulations are integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- compliance is reviewed regularly
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"11.8","11.8 Is there a strategy for the segregation of network segments available? ","0","Level 0:  Incomplete  
+- no separation of data and networks",1,1,,5,8
+,,"0","Level 1:  Performed
+- isolated security zones or isolated network segments",1,1,,5,8
+,,"0","Level 2:  Managed
+- Network segmentation or security zones for all areas/services.
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- centrally coordinated of network segmentation or separated security zones
+- a organizational standard process is defined and/or used (e.g.)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness (operability)
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"11.9","11.9 Are procedures in place that describe the authentication on IT systems with regards to the classification of data and information?","0","Level 0:  Incomplete 
+- no authentication according data classification",1,1,,5,8
+,,"0","Level 1:  Performed
+- sporadic authentication according data classification",1,1,,5,8
+,,"0","Level 2:  Managed
+- Separate authentication for dedicated IT systems according to data classification
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- common authentication via a central authentication system
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness (operativeness)
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"11.10","11.10 Has a formal policy been developed that addresses the risks of working with mobile computing devices (e.g. requirements for physical protection, access controls, cryptographic techniques, back-up and virus protection)?","0","Level 0:  Incomplete
+- no regulation regarding mobile computing",1,1,,5,8
+,,"0","Level 1:  Performed
+- regulation partially in place",1,1,,5,8
+,,"0","Level 2:  Managed 
+- process is defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- regulation and process are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"12","Information Systems Acquisition, Development and Management","0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"12.1","12.1 Are there concepts in place for data encryption in order to protect the information in suitable manner? ","0","Level 0:  Incomplete
+- no encryption concept",1,1,,5,8
+,,"0","Level 1:  Performed
+- some regulations and procedures",1,1,,5,8
+,,"0","Level 2:  Managed
+- encryption concepts according to data classification for all systems 
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- central concept/processes for encryption according to data classification for all systems
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness (operativeness)
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"12.2","12.2 Is a concept implemented for protection against information leakage (e.g. hardening of systems, protection against trojan-code, prevention of unauthorized network access, policies and procedures to discourage misuse of information services by personnel)?","0","Level 0:  Incomplete
+- no concepts/processes for protection against information leakage",1,1,,5,8
+,,"0","Level 1:  Performed
+- sporadic concepts/processes",1,1,,5,8
+,,"0","Level 2:  Managed
+- concept/processes defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- central concept/processes is/are established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness (operativeness)
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"12.3","12.3 Is current information gathered on potential technical vulnerabilities on information systems in use, in order to take timely responsive action (Patch Management)?","0","Level 0:  Incomplete
+- no supervising in place and no information gathering",1,1,,5,8
+,,"0","Level 1:  Performed
+- information are collected but not analyzed",1,1,,5,8
+,,"0","Level 2:  Managed 
+- process is defined and documented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process is established
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- unrealities are reviewed on a regular basis
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- process will be continuously improved and optimized
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"13","Information Security Incident Management","0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"13.1","13.1 Are there regulations in place, on how information security incidents are to be handled?","0","Level 0:  Incomplete 
+- no reporting",1,1,,5,8
+,,"0","Level 1:  Performed
+- sporadic incident related measures",1,1,,5,8
+,,"0","Level 2:  Managed 
+- reporting is described and implemented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- completely implemented and standardized reporting
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- regular review on effectiveness
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- reporting is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"13.2","13.2 Are procedures and responsibilities defined and implemented to ensure appropriate Incident Management (CERT)?","0","Level 0:  Incomplete 
+- no CERT (Computer Emergency Response Team)",1,1,,5,8
+,,"0","Level 1:  Performed
+- sporadic, incident related measures",1,1,,5,8
+,,"0","Level 2:  Managed
+- CERT is described and implemented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- completely implemented and standardized CERT
+- a organizational standard process is defined and/or used (e.g. incident management, reporting)
+- CERT is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- regular review on effectiveness
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- CERT is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"14","Business Continuity Management","0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"14.1","14.1 Is there a documented process on how to develop and maintain business continuity (continuation of the appropriate business operation) in the enterprise? ","0","Level 0:  Incomplete 
+- no concepts",1,1,,5,8
+,,"0","Level 1:  Performed
+- single concepts",1,1,,5,8
+,,"0","Level 2:  Managed
+- isolated concepts for all necessary areas without central coordination.  Determination of necessary areas to cover
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- integrated concepts for all necessary areas under central coordination
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness (operativeness)
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"15","Compliance","0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"15.1","15.1 Are processes defined in order to assure compliance with legal restrictions for the use of intellectual property (e.g. patents, software designs and code etc.)?","0","Level 0:  Incomplete
+- no existing processes to ensure compliance with legislative, regulatory, and contractual requirements",1,1,,5,8
+,,"0","Level 1:  Performed
+- sporadic processes to ensure compliance with legislative, regulatory, and contractual requirements",1,1,,5,8
+,,"0","Level 2:  Managed
+- a process to ensure compliance with legislative, regulatory, and contractual requirements is implemented
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process to ensure compliance with legislative, regulatory, and contractual requirements is implemented
+- a organizational standard process is defined and/or used
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"15.2","15.2 Have measures been taken that protect personal information as legally / contractually required (e.g. data protection law)?","0","Level 0:  Incomplete
+- no measures to protect personal information (e.g. regarding confidentiality, integrity of personal information)",1,1,,5,8
+,,"0","Level 1:  Performed
+- sporadic measures to protect data and privacy of personal information",1,1,,5,8
+,,"0","Level 2:  Managed
+- a process/regulations is/are implemented to protect personal information
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)",1,1,,5,8
+,,"0","Level 3:  Established
+- a central process/regulations is/are implemented to protect personal information
+- a organizational standard process is defined and/or used (e.g. information security Regulations, RFC)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"15.3","15.3 Are organizations regularly checked for the compliance and implementation of security policies and standards?","0","Level 0:  Incomplete
+- no vulnerability testing",1,1,,5,8
+,,"0","Level 1:  Performed
+- vulnerability test for single units",1,1,,5,8
+,,"0","Level 2:  Managed
+- regular vulnerability tests for all necessary units. Determination of necessary units.
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management,  etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- regular vulnerability tests for all necessary units under central coordination
+- a organizational standard process is defined and/or used 
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review on effectiveness (operativeness)
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+,,"0",,1,1,,5,8
+"15.4","15.4 Are audits (incl. penetration tests) on operational IT systems planned and arranged in order to minimize the risk of disruptions to business processes?","0","Level 0:  Incomplete
+- no audits",1,1,,5,8
+,,"0","Level 1:  Performed
+- sporadic audits",1,1,,5,8
+,,"0","Level 2:  Managed
+- company covering audits without central coordination
+- objectives are identified and defined
+- responsibilities defined and staffed
+- resources are identified and allocated
+- documentation takes place according to given processes (version control, change management, clearance etc.)
+",1,1,,5,8
+,,"0","Level 3:  Established
+- company covering audits with central coordination and standardized processes
+- a organizational standard audit process is defined and/or used (e.g. review processes, processes of the internal audit department)
+- the process is integrated in other organizational processes
+- documentation takes place according to standardized processes
+",1,1,,5,8
+,,"0","Level 4:  Predictable
+- review of the audit process
+- determination of key performance indicators and the resulting objectives for improving are identified
+- measures and corrections takes place based on the identified objectives
+- documentation of measures and corrections
+",1,1,,5,8
+,,"0","Level 5:  Optimizing
+- configuration is improved and refined continuously
+- additional projects are started with own resources to improve and optimize",1,1,,5,8
