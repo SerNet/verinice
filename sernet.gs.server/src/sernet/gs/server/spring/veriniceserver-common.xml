@@ -52,8 +52,12 @@ This variant:
 		<constructor-arg value="${snca.resource}" />
 	</bean>
 
-	<bean id="hitroUtil" class="sernet.gs.ui.rcp.main.common.model.HitroUtil" init-method="initForServer">
+	<bean id="hitroUtil" class="sernet.gs.ui.rcp.main.common.model.HitroUtil"
+		init-method="initForServer">
 		<property name="typeFactory" ref="huiTypeFactory" />
+		<property name="entityResolverFactory">
+			<bean class="sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory"/>
+		</property>
 	</bean>
 
 	<bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
