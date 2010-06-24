@@ -53,12 +53,13 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.LoadAssociatedGefaehrdungen;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
+import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 
 /**
  * WizardPage which lists all Gefaehrdungen from BSI IT-Grundschutz-Kataloge and

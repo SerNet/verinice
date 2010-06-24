@@ -31,11 +31,11 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.hui.common.connect.HuiUrl;
 import sernet.hui.swt.widgets.URL.URLUtil;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.BSIModel;
 
 /**
  * Retrieves the properties which are URLs as a list of {@link HuiUrl}

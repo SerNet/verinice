@@ -20,8 +20,8 @@ package sernet.gs.ui.rcp.main.reports;
 import java.io.Serializable;
 import java.util.Properties;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.ITVerbund;
 
 @SuppressWarnings("serial")
 public abstract class BsiReport implements Serializable, IBSIReport {

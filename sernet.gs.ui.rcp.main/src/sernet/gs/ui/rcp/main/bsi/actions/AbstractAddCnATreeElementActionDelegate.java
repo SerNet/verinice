@@ -6,7 +6,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement;
 
 public abstract class AbstractAddCnATreeElementActionDelegate implements IObjectActionDelegate {
 

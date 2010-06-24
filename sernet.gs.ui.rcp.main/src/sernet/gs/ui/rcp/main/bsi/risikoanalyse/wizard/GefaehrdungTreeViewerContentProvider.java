@@ -21,6 +21,8 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import sernet.verinice.model.bsi.risikoanalyse.IGefaehrdungsBaumElement;
+
 /**
  * Tells the TreeViewer how to transform a domain object into an element
  * of the tree. 

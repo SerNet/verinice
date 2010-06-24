@@ -26,26 +26,26 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.hibernate.proxy.HibernateProxy;
 
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.Client;
-import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
-import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.bsi.model.Raum;
-import sernet.gs.ui.rcp.main.bsi.model.Server;
-import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
-import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.DAOFactory;
 import sernet.gs.ui.rcp.office.IOOTableRow;
-import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.iso27k.model.IISO27kGroup;
-import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Export all items of the given CnaTreeElementType.

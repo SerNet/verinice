@@ -19,13 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.iso27k.model.IControl;
-import sernet.verinice.iso27k.model.IISO27kGroup;
 import sernet.verinice.iso27k.rcp.CatalogView;
-import sernet.verinice.samt.model.SamtTopic;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * Transforms {@link IItem} from {@link CatalogView} to ISO 27k {@link Control}s

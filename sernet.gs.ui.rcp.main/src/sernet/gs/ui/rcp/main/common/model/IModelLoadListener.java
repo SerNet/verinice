@@ -17,8 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.verinice.iso27k.model.ISO27KModel;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.iso27k.ISO27KModel;
 
 public interface IModelLoadListener {
 	

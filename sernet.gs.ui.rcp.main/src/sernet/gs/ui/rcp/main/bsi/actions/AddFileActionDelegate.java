@@ -31,9 +31,9 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.model.Attachment;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class AddFileActionDelegate implements IObjectActionDelegate {
 

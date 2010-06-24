@@ -21,10 +21,10 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.Addition;
-import sernet.gs.ui.rcp.main.bsi.model.Note;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.Addition;
+import sernet.verinice.model.bsi.Note;
 
 public class DeleteNote extends GenericCommand {
 

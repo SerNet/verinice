@@ -8,9 +8,9 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-import sernet.gs.ui.rcp.main.bsi.model.Attachment;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.verinice.model.bsi.Attachment;
 
 public class AttachmentContentProvider implements IStructuredContentProvider {
 

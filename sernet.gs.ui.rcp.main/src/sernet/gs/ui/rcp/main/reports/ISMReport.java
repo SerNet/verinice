@@ -1,6 +1,6 @@
 package sernet.gs.ui.rcp.main.reports;
 
-import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Marker interface for reports of ISM perspective items. 

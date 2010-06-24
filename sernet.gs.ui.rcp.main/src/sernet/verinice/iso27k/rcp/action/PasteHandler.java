@@ -36,12 +36,12 @@ import org.eclipse.ui.progress.IProgressService;
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.CopyBausteine;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.iso27k.rcp.CopyTreeElements;
 import sernet.verinice.iso27k.rcp.CutOperation;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 

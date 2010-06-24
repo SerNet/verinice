@@ -19,13 +19,13 @@ package sernet.gs.ui.rcp.main.service.migrationcommands;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.SonstigeITKategorie;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class MigrateDbTo0_91 extends DbMigration {
 	

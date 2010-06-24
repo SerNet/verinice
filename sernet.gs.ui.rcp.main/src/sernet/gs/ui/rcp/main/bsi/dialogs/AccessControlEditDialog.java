@@ -37,13 +37,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.Permission;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdatePermissions;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 
 /**
  * Simple dialog that allows defining the access options for an element.

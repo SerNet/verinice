@@ -21,12 +21,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
 import sernet.gs.ui.rcp.main.bsi.model.SubtypenZielobjekte;
-import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.BausteinVorschlag;
+import sernet.verinice.model.common.ChangeLogEntry;
 
 /**
  * Insert subtype-module mapping tables into DB.

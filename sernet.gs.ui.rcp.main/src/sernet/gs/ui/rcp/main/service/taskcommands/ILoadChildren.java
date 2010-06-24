@@ -2,8 +2,8 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.commands.ICommand;
+import sernet.verinice.interfaces.ICommand;
+import sernet.verinice.model.common.CnATreeElement;
 
 public interface ILoadChildren extends ICommand{
 

@@ -30,9 +30,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.TagHelper;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.TagHelper;
 
 /** Retrieves all the tags used in the model.
  * 

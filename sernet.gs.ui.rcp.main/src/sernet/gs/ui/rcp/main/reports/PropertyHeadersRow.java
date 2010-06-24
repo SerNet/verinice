@@ -19,10 +19,10 @@ package sernet.gs.ui.rcp.main.reports;
 
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Returns the given property names as columns for OpenOffice export.

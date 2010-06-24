@@ -17,8 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class CreateAnwendung extends CreateElement {
 

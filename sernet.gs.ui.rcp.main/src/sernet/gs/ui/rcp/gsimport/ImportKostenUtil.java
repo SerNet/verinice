@@ -21,7 +21,7 @@ import java.util.List;
 
 import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 public class ImportKostenUtil {
 

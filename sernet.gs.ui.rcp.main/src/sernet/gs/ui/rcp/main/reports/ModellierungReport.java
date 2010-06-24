@@ -25,12 +25,12 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * This report prints out the association of assets with modules.

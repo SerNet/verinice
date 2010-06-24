@@ -31,12 +31,12 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 @SuppressWarnings("serial")
 public class CompletedLayerSummary extends MassnahmenSummary {

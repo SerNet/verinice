@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-import sernet.gs.ui.rcp.main.bsi.model.IMassnahmeUmsetzung;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 
 /**
  * Filter to select items based on search string comparison with Zielobjekt.

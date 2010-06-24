@@ -29,7 +29,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.model.Attachment;
+import sernet.verinice.model.bsi.Attachment;
 
 /**
  * @author koderman[at]sernet[dot]de

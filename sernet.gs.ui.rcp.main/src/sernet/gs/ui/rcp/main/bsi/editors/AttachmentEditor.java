@@ -33,11 +33,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.Attachment;
-import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
-import sernet.gs.ui.rcp.main.bsi.model.Addition.INoteChangedListener;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
-import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
@@ -47,6 +43,10 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.snutils.DBException;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.model.bsi.AttachmentFile;
+import sernet.verinice.model.bsi.Addition.INoteChangedListener;
 
 public class AttachmentEditor extends EditorPart {
 

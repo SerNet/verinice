@@ -23,6 +23,8 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.SpringClientPlugin;
+import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.ICommandService;
 
 public abstract class ServiceFactory {
 	

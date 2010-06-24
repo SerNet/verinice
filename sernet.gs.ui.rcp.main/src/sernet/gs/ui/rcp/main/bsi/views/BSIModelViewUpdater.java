@@ -20,13 +20,13 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import org.eclipse.jface.viewers.TreeViewer;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
-import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.IBSIModelListener;
+import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Listener to check for model changes and update the connected tree viewer.

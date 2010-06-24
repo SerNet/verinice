@@ -23,10 +23,10 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.bsi.NKKategorie;
+import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class AddNetzKomponenteActionDelegate extends AbstractAddCnATreeElementActionDelegate {
     private IWorkbenchPart targetPart;

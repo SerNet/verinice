@@ -25,9 +25,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.expressions.PropertyTester;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.iso27k.service.CopyService;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

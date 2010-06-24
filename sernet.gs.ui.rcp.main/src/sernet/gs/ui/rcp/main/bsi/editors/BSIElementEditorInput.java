@@ -23,8 +23,8 @@ import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Wraps BSI element as editor input.

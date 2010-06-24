@@ -46,12 +46,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.BausteinVorschlag;
 
 /**
  * Dialog to choose from a list of standard module assignments to target

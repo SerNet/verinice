@@ -28,29 +28,29 @@ import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.Client;
-import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
-import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.bsi.model.Raum;
-import sernet.gs.ui.rcp.main.bsi.model.Server;
-import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
-import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmeById;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.IBSIModelListener;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Gets Massnahmen from current BSIModel and reacts to model changes.

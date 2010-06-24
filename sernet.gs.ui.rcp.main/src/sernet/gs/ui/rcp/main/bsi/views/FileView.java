@@ -69,21 +69,21 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.model.Attachment;
-import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachmentFile;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachments;
-import sernet.verinice.iso27k.model.ISO27KModel;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.model.bsi.AttachmentFile;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.StatusResult;
 
 /**

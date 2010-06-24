@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 
+import org.apache.commons.io.FileUtils;
+
 import sernet.gs.ui.rcp.main.VeriniceCharset;
 import sernet.verinice.iso27k.service.FileUtil;
 
@@ -71,7 +73,7 @@ public class CsvFile implements Serializable{
 	public void readFile(Charset charset) throws IOException {
 		if( getFilePath()!=null) {
 			File file = new File(getFilePath());
-			byte[] content = FileUtil.getBytesFromFile(file);
+			byte[] content = FileUtils.readFileToByteArray(file);
 			if(!VeriniceCharset.CHARSET_UTF_8.equals(charset)) {
 			    content = FileUtil.changeEncoding(content, charset, VeriniceCharset.CHARSET_UTF_8);
 			}

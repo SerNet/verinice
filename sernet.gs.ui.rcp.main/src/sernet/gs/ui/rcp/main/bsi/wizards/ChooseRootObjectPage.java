@@ -45,14 +45,14 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.StatusLine;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.bsi.views.GenericMassnahmenView;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.reports.ISMReport;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
-import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Wizard page to allow the user to choose the ITVerbund or organization

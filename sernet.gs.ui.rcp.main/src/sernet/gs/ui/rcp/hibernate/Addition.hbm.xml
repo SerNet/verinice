@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                                    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="sernet.gs.ui.rcp.main.bsi.model">
+<hibernate-mapping package="sernet.verinice.model.bsi">
 	<class name="Addition" table="note">
 		<id column="dbId" name="dbId" type="java.lang.Integer">
 			<generator class="native"/>
@@ -16,14 +16,14 @@
 			unique="true"/>
 		 	
 		<subclass 
-			name="sernet.gs.ui.rcp.main.bsi.model.Attachment"
+			name="sernet.verinice.model.bsi.Attachment"
 			extends="Addition"
 			discriminator-value="attachment">
 			<!-- <property name="fileData" type="binary" lazy="true"/>-->
 		</subclass>
 		
 		<subclass 
-			name="sernet.gs.ui.rcp.main.bsi.model.Note"
+			name="sernet.verinice.model.bsi.Note"
 			extends="Addition"
 			discriminator-value="note"/>
 

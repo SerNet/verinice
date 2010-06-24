@@ -21,12 +21,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
 import sernet.hui.common.connect.ITypedElement;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Save element of type T to the database using its class to lookup

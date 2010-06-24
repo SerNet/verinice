@@ -6,7 +6,7 @@
 	Permission items.
 	@author Robert Schuster <r.schuster@tarent.de>
  -->
-<hibernate-mapping package="sernet.gs.ui.rcp.main.common.model">
+<hibernate-mapping package="sernet.verinice.model.common">
 	<class name="Permission" table="permission">
 		
 		<id name="dbId" 

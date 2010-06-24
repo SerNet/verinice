@@ -26,17 +26,17 @@ import org.apache.log4j.Logger;
 
 import junit.framework.TestCase;
 import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
-import sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NullMonitor;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class TestHibernate extends TestCase {
 	

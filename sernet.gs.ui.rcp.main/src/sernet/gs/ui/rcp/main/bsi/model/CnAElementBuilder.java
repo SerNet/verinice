@@ -18,7 +18,26 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
+import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.ClientsKategorie;
+import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.NKKategorie;
+import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.bsi.RaeumeKategorie;
+import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.ServerKategorie;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.SonstigeITKategorie;
+import sernet.verinice.model.bsi.TKKategorie;
+import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class CnAElementBuilder {
 	private static CnAElementBuilder instance;

@@ -20,6 +20,8 @@ package sernet.gs.ui.rcp.main.common.model;
 import java.util.Date;
 import java.util.List;
 
+import sernet.verinice.model.common.ChangeLogEntry;
+
 /**
  * Class to check for model changes made by other clients.
  * 

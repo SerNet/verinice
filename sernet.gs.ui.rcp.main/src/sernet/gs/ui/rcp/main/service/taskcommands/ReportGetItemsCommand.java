@@ -20,22 +20,22 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.BsiReport;
 import sernet.gs.ui.rcp.main.reports.ISMReport;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
-import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
 
 public class ReportGetItemsCommand extends GenericCommand {
 

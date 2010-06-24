@@ -17,11 +17,11 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
-import sernet.gs.ui.rcp.main.bsi.model.Person;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.multiselectionlist.ICheckBoxHandler;
 import sernet.hui.common.multiselectionlist.IContextMenuListener;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
+import sernet.verinice.model.bsi.Person;
 
 public class PersonEntityOptionWrapper implements IMLPropertyOption {
 

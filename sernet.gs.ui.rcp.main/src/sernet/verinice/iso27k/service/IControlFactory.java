@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
-import sernet.verinice.iso27k.model.IControl;
+import sernet.verinice.model.iso27k.IControl;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>

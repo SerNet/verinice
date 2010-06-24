@@ -23,19 +23,19 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityId;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 //import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.iso27k.model.IControl;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.iso27k.service.ControlMaturityService;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.IControl;
 
 @SuppressWarnings("serial")
 public class MaturitySummary extends GenericCommand {

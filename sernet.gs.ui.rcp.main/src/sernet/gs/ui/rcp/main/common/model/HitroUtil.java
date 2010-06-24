@@ -31,8 +31,6 @@ import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
-import sernet.hui.common.connect.PropertyGroup;
-import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.snutils.DBException;

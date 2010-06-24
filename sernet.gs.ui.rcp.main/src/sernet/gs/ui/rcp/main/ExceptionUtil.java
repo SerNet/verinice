@@ -29,7 +29,7 @@ import org.hibernate.exception.GenericJDBCException;
 
 import sernet.gs.common.SecurityException;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.verinice.interfaces.CommandException;
 
 /**
  * Helper class to handle and display exceptions.

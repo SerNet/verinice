@@ -24,9 +24,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.verinice.iso27k.service.CopyService;
 import sernet.verinice.iso27k.service.IProgressObserver;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.IProgressRunnable;
 
 /**

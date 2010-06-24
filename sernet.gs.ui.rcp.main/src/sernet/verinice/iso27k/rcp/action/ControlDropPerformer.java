@@ -37,12 +37,12 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.Group;
-import sernet.verinice.iso27k.model.Threat;
-import sernet.verinice.iso27k.model.Vulnerability;
 import sernet.verinice.iso27k.rcp.ControlTransformOperation;
 import sernet.verinice.iso27k.service.IItem;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.Vulnerability;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

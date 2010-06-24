@@ -7,7 +7,7 @@
 	@author ahanekop@sernet.de
  -->
  
-<hibernate-mapping package="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model">
+<hibernate-mapping package="sernet.verinice.model.bsi.risikoanalyse">
 	<class name="RisikoMassnahme" table="risikomassnahme">
 		
 		<id name="dbId" 

@@ -25,8 +25,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.verinice.iso27k.model.IISO27kGroup;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>

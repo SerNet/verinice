@@ -28,15 +28,15 @@ import org.apache.log4j.Logger;
 import org.hibernate.LazyInitializationException;
 
 import sernet.gs.ui.rcp.main.bsi.views.chart.MaturitySpiderChart;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
-import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.ControlGroup;
 import sernet.verinice.iso27k.service.ControlMaturityService;
 import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
 
 /**
  * Returns the given properties as columns for OpenOffice export.

@@ -19,13 +19,13 @@ package sernet.verinice.iso27k.service;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.iso27k.model.IControl;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.IControl;
 
 /**
  * 

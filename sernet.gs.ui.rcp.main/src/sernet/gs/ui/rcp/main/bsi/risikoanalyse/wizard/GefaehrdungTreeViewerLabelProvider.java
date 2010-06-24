@@ -21,6 +21,8 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
+import sernet.verinice.model.bsi.risikoanalyse.IGefaehrdungsBaumElement;
+
 /**
  * Provides an image and text for each item in the TreeViewer.
  * 

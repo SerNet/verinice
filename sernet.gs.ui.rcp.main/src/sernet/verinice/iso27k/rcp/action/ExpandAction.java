@@ -31,9 +31,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.verinice.iso27k.model.Organization;
 import sernet.verinice.iso27k.rcp.ISMViewContentProvider;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

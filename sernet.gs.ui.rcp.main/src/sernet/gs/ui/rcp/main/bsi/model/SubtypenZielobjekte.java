@@ -28,6 +28,8 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.model.bsi.BausteinVorschlag;
+
 public class SubtypenZielobjekte {
 
 		List<BausteinVorschlag> mapping = new ArrayList<BausteinVorschlag>(50);

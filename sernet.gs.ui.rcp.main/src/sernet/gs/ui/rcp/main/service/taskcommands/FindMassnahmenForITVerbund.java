@@ -28,13 +28,13 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.views.AuditView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**
  * This command loads {@link MassnahmenUmsetzung} instances out of the databse 

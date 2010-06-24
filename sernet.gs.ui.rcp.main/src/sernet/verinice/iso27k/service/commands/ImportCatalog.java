@@ -28,8 +28,8 @@ import java.nio.charset.Charset;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.VeriniceCharset;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.iso27k.service.Catalog;
 import sernet.verinice.iso27k.service.ICatalog;
 import sernet.verinice.iso27k.service.ICatalogImporter;

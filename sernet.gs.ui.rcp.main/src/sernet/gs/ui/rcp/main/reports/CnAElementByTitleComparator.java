@@ -20,9 +20,9 @@ package sernet.gs.ui.rcp.main.reports;
 import java.text.Collator;
 import java.util.Comparator;
 
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class CnAElementByTitleComparator implements
 		Comparator<CnATreeElement> {

@@ -22,12 +22,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.ds.IDatenschutzElement;
 
 /**
  * This report prints all safeguards grouped by modules and assets.

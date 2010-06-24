@@ -23,12 +23,12 @@ import org.eclipse.jface.viewers.Viewer;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Content provider for BSI model elements.

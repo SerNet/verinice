@@ -25,15 +25,15 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
-import sernet.verinice.iso27k.model.Group;
-import sernet.verinice.iso27k.model.IISO27kGroup;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
  * A CutService is a job, which moves a list of elements from one to another Element-{@link Group}.

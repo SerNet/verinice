@@ -17,10 +17,10 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.configuration.Configuration;
 
 @SuppressWarnings("serial")
 public class CreateConfiguration extends GenericCommand {

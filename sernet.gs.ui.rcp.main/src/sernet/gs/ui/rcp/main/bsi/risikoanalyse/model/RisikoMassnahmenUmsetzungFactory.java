@@ -17,8 +17,11 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Create new RirikomassnahmenUmsetzung from various sources, copying all relevant values to the new object.
@@ -50,6 +53,7 @@ public class RisikoMassnahmenUmsetzungFactory {
 			CnATreeElement superParent, 
 			GefaehrdungsUmsetzung myParent) {
 		
+		RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(draftMnUms);
 		RisikoMassnahme massnahme = draftMnUms.getRisikoMassnahme();
 		RisikoMassnahmenUmsetzung massnahmenUmsetzung = new RisikoMassnahmenUmsetzung(superParent, myParent, massnahme);
 

@@ -29,8 +29,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 
 /**
  * Dialog to enter a new MassnahmenUmsetzung.

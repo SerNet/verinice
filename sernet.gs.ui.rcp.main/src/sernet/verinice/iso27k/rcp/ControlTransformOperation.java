@@ -25,12 +25,12 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
-import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.service.ControlTransformService;
 import sernet.verinice.iso27k.service.IModelUpdater;
 import sernet.verinice.iso27k.service.IProgressObserver;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Group;
 
 /**
  * Operation with transforms items from the {@link CatalogView}

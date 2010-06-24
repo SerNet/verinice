@@ -54,13 +54,15 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.RemoveMassnahmeFromGefaherdung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsBaumRoot;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.IGefaehrdungsBaumElement;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Add security measures (Massnahmen) to the risks (Gefaehrdungen). New security
@@ -553,6 +555,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 			/* delete from List of MassnahmenUmsetzungen */
 			if (arrListMassnahmenUmsetzungen.contains(risikoMassnahmenUmsetzung)) {
 				arrListMassnahmenUmsetzungen.remove(risikoMassnahmenUmsetzung);
+				RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(risikoMassnahmenUmsetzung);
 				RisikoMassnahmeHome.getInstance().remove(risikoMassnahmenUmsetzung.getRisikoMassnahme());
 			}
 

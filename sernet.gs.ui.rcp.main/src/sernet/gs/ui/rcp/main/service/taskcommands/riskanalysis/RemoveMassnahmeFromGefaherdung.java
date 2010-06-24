@@ -19,11 +19,11 @@ package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import java.io.Serializable;
 
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
 /**
  * Remove a control instance from a threat instance.

@@ -22,20 +22,20 @@ import java.util.Set;
 
 import org.hibernate.proxy.HibernateProxyHelper;
 
-import sernet.gs.ui.rcp.main.common.model.CnALink;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateLink;
-import sernet.verinice.iso27k.model.IncidentScenario;
-import sernet.verinice.iso27k.model.IncidentScenarioGroup;
-import sernet.verinice.iso27k.model.Organization;
-import sernet.verinice.iso27k.model.Threat;
-import sernet.verinice.iso27k.model.Vulnerability;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.IncidentScenarioGroup;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.Vulnerability;
 
 /**
  * @author koderman@sernet.de

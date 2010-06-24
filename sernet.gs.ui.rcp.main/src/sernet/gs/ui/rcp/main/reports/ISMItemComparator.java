@@ -19,9 +19,9 @@ package sernet.gs.ui.rcp.main.reports;
 
 import java.util.Comparator;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
-import sernet.verinice.iso27k.model.IISO27kElement;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
  * @author koderman@sernet.de

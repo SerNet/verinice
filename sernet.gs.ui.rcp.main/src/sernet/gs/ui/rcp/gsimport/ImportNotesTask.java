@@ -35,9 +35,9 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportNotesForZielobjekt;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.CommandException;
 
 /**
  * @author koderman@sernet.de

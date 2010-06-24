@@ -46,10 +46,11 @@ import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.IInternalServer;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.encryption.IEncryptionService;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
 import sernet.verinice.rcp.StatusResult;
@@ -141,6 +142,12 @@ public class Activator extends AbstractUIPlugin {
 					ClientPropertyPlaceholderConfigurer.setRemoteServerMode(uri);
 					ServiceFactory.openCommandService();
 					VeriniceContext.setState(state = ServiceFactory.getClientWorkObjects());
+					
+					// Make command service available as an OSGi service
+					context.registerService(
+							ICommandService.class.getName(),
+							VeriniceContext.get(VeriniceContext.COMMAND_SERVICE),
+							null);
 					
 					// Skip anything that is related to the actual client application as we are
 					// only interested in accessing data for the reports.
@@ -240,6 +247,13 @@ public class Activator extends AbstractUIPlugin {
 		// be accessed.
 		// The line below initializes the VeriniceContext initially.
 		VeriniceContext.setState(state = ServiceFactory.getClientWorkObjects());
+
+		// Make command service available as an OSGi service
+		context.registerService(
+				ICommandService.class.getName(),
+				VeriniceContext.get(VeriniceContext.COMMAND_SERVICE),
+				null);
+
 	}
 
 	/*

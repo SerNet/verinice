@@ -35,18 +35,18 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dnd.CnPItems;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.bsi.dnd.Messages;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
-import sernet.verinice.iso27k.model.Group;
-import sernet.verinice.iso27k.model.IISO27kGroup;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.IProgressObserver;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.IBSIModelListener;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
  * A CopyBausteineService is a job, which

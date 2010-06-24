@@ -19,97 +19,95 @@ package sernet.gs.ui.rcp.main.service;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.bsi.model.Addition;
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
-import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.Attachment;
-import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
-import sernet.gs.ui.rcp.main.bsi.model.Client;
-import sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
-import sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.NKKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
-import sernet.gs.ui.rcp.main.bsi.model.Note;
-import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.Raum;
-import sernet.gs.ui.rcp.main.bsi.model.Server;
-import sernet.gs.ui.rcp.main.bsi.model.ServerKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
-import sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisLists;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.Permission;
-import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.ds.model.Datenverarbeitung;
-import sernet.gs.ui.rcp.main.ds.model.Personengruppen;
-import sernet.gs.ui.rcp.main.ds.model.StellungnahmeDSB;
-import sernet.gs.ui.rcp.main.ds.model.VerantwortlicheStelle;
-import sernet.gs.ui.rcp.main.ds.model.Verarbeitungsangaben;
-import sernet.gs.ui.rcp.main.ds.model.Zweckbestimmung;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
-import sernet.verinice.iso27k.model.Asset;
-import sernet.verinice.iso27k.model.AssetGroup;
-import sernet.verinice.iso27k.model.Audit;
-import sernet.verinice.iso27k.model.AuditGroup;
-import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.iso27k.model.Document;
-import sernet.verinice.iso27k.model.DocumentGroup;
-import sernet.verinice.iso27k.model.Evidence;
-import sernet.verinice.iso27k.model.EvidenceGroup;
-import sernet.verinice.iso27k.model.Exception;
-import sernet.verinice.iso27k.model.ExceptionGroup;
-import sernet.verinice.iso27k.model.Finding;
-import sernet.verinice.iso27k.model.FindingGroup;
-import sernet.verinice.iso27k.model.ISO27KModel;
-import sernet.verinice.iso27k.model.Incident;
-import sernet.verinice.iso27k.model.IncidentGroup;
-import sernet.verinice.iso27k.model.IncidentScenario;
-import sernet.verinice.iso27k.model.IncidentScenarioGroup;
-import sernet.verinice.iso27k.model.Interview;
-import sernet.verinice.iso27k.model.InterviewGroup;
-import sernet.verinice.iso27k.model.Organization;
-import sernet.verinice.iso27k.model.PersonGroup;
-import sernet.verinice.iso27k.model.PersonIso;
-import sernet.verinice.iso27k.model.ProcessGroup;
-import sernet.verinice.iso27k.model.Record;
-import sernet.verinice.iso27k.model.RecordGroup;
-import sernet.verinice.iso27k.model.Requirement;
-import sernet.verinice.iso27k.model.RequirementGroup;
-import sernet.verinice.iso27k.model.Response;
-import sernet.verinice.iso27k.model.ResponseGroup;
-import sernet.verinice.iso27k.model.Threat;
-import sernet.verinice.iso27k.model.ThreatGroup;
-import sernet.verinice.iso27k.model.Vulnerability;
-import sernet.verinice.iso27k.model.VulnerabilityGroup;
-import sernet.verinice.samt.model.SamtTopic;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDAOFactory;
+import sernet.verinice.model.bsi.Addition;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
+import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.model.bsi.AttachmentFile;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.BausteinVorschlag;
+import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.ClientsKategorie;
+import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.NKKategorie;
+import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.bsi.Note;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.bsi.RaeumeKategorie;
+import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.ServerKategorie;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.SonstigeITKategorie;
+import sernet.verinice.model.bsi.TKKategorie;
+import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
+import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.Permission;
+import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.ds.Datenverarbeitung;
+import sernet.verinice.model.ds.Personengruppen;
+import sernet.verinice.model.ds.StellungnahmeDSB;
+import sernet.verinice.model.ds.VerantwortlicheStelle;
+import sernet.verinice.model.ds.Verarbeitungsangaben;
+import sernet.verinice.model.ds.Zweckbestimmung;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Document;
+import sernet.verinice.model.iso27k.DocumentGroup;
+import sernet.verinice.model.iso27k.Evidence;
+import sernet.verinice.model.iso27k.EvidenceGroup;
+import sernet.verinice.model.iso27k.Exception;
+import sernet.verinice.model.iso27k.ExceptionGroup;
+import sernet.verinice.model.iso27k.Finding;
+import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.Incident;
+import sernet.verinice.model.iso27k.IncidentGroup;
+import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.IncidentScenarioGroup;
+import sernet.verinice.model.iso27k.Interview;
+import sernet.verinice.model.iso27k.InterviewGroup;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.iso27k.ProcessGroup;
+import sernet.verinice.model.iso27k.Record;
+import sernet.verinice.model.iso27k.RecordGroup;
+import sernet.verinice.model.iso27k.Requirement;
+import sernet.verinice.model.iso27k.RequirementGroup;
+import sernet.verinice.model.iso27k.Response;
+import sernet.verinice.model.iso27k.ResponseGroup;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.ThreatGroup;
+import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * Registry for DAOs for different types of objects. DAOs are managed by and injected by the Spring framework. 
@@ -119,7 +117,7 @@ import sernet.verinice.samt.model.SamtTopic;
  * $LastChangedBy$
  *
  */
-public class DAOFactory {
+public class DAOFactory implements IDAOFactory {
 	
 	private final Logger log = Logger.getLogger(DAOFactory.class);
 	
@@ -620,9 +618,9 @@ public class DAOFactory {
     	daosByClass.put(ProcessGroup.class, daoToSet);
     	daosByTypeID.put(ProcessGroup.TYPE_ID, daoToSet);
     }
-    public void setProcessDAO(IBaseDao<sernet.verinice.iso27k.model.Process, Integer> daoToSet) {
-    	daosByClass.put(sernet.verinice.iso27k.model.Process.class, daoToSet);
-    	daosByTypeID.put(sernet.verinice.iso27k.model.Process.TYPE_ID, daoToSet);
+    public void setProcessDAO(IBaseDao<sernet.verinice.model.iso27k.Process, Integer> daoToSet) {
+    	daosByClass.put(sernet.verinice.model.iso27k.Process.class, daoToSet);
+    	daosByTypeID.put(sernet.verinice.model.iso27k.Process.TYPE_ID, daoToSet);
     }
     
     public void setRecordGroupDAO(IBaseDao<RecordGroup, Integer> daoToSet) {

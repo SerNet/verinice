@@ -41,19 +41,19 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.BulkEditUpdate;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.verinice.iso27k.model.IISO27kElement;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.IBSIModelListener;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
  * Erlaubt das gemeinsame Editieren der Eigenschaften von gleichen,

@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.verinice.model.bsi.ITVerbund;
 
 public interface IMassnahmenListView {
 

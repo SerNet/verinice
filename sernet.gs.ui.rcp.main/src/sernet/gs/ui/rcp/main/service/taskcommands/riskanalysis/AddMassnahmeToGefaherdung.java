@@ -19,15 +19,15 @@ package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import java.io.Serializable;
 
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.Permission;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.IAuthService;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.hui.common.connect.ITypedElement;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IAuthAwareCommand;
+import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 
 /**
  * Assign a control instance to a threat instance.

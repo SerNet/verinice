@@ -36,11 +36,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RectangleEdge;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 public class LebenszyklusBarChart implements IChartGenerator {
 

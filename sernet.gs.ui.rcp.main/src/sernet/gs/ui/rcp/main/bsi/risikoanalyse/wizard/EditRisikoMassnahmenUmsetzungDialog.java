@@ -30,9 +30,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
 /**
  * Modal dialog to enter a new security measure ("Massnahme").
@@ -127,6 +127,8 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 		gridTextDescription.widthHint = 400;
 		gridTextDescription.heightHint = 200;
 		textDescription.setLayoutData(gridTextDescription);
+		
+		RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(risikoMassnahmenUmsetzung);
 		textDescription.setText(notNull(risikoMassnahmenUmsetzung.getDescription()));
 
 		return container;
@@ -149,7 +151,7 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
-
+		RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(risikoMassnahmenUmsetzung);
 		risikoMassnahmenUmsetzung.getRisikoMassnahme().setNumber(textNumber.getText());
 		risikoMassnahmenUmsetzung.setName(textName.getText());
 		risikoMassnahmenUmsetzung.getRisikoMassnahme().setDescription(textDescription.getText());

@@ -21,13 +21,13 @@ package sernet.verinice.iso27k.service.commands;
 
 import java.io.Serializable;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.verinice.iso27k.model.Group;
-import sernet.verinice.iso27k.model.ISO27KModel;
-import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

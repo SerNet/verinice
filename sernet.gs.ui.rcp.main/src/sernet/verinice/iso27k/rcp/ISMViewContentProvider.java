@@ -31,14 +31,14 @@ import org.eclipse.ui.actions.NewExampleAction;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.verinice.iso27k.model.Group;
-import sernet.verinice.iso27k.model.ISO27KModel;
-import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Content provider for BSI model elements.

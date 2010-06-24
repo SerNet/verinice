@@ -36,10 +36,10 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RectangleEdge;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ControlGroup;
 
 public class MaturitySpiderChart implements ISelectionChartGenerator {
 

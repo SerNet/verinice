@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.model.Massnahme;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**
  * Sorts Massnahmen in table viewer.

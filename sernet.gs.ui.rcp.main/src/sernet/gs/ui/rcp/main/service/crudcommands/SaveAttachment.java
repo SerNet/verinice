@@ -18,7 +18,7 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
-import sernet.gs.ui.rcp.main.bsi.model.AttachmentFile;
+import sernet.verinice.model.bsi.AttachmentFile;
 
 /**
  * Saves AttachmentFiles in database.

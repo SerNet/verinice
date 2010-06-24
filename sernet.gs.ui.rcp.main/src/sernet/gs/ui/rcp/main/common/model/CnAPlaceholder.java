@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
+import sernet.verinice.model.common.CnATreeElement;
+
 public class CnAPlaceholder extends CnATreeElement {
 
 	public CnAPlaceholder(NullModel nullModel) {

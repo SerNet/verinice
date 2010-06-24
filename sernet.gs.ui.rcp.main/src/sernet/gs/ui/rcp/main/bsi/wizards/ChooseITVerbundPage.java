@@ -30,9 +30,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
+import sernet.verinice.model.bsi.ITVerbund;
 
 /**
  * Wizard page to allow the user to choose the ITVerbund for the report about to

@@ -38,12 +38,8 @@ import org.hibernate.StaleObjectStateException;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturKategorie;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementForEditor;
@@ -54,10 +50,14 @@ import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
-import sernet.verinice.iso27k.model.Group;
-import sernet.verinice.iso27k.model.IISO27kElement;
-import sernet.verinice.iso27k.model.Organization;
-import sernet.verinice.samt.model.SamtTopic;
+import sernet.verinice.model.bsi.IBSIModelListener;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.IBSIStrukturKategorie;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * Editor for all BSI elements with attached HUI entities.

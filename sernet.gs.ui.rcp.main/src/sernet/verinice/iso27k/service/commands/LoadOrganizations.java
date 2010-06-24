@@ -25,9 +25,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.verinice.iso27k.model.ISO27KModel;
-import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

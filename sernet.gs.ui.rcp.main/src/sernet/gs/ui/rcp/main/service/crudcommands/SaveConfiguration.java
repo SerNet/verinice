@@ -23,17 +23,17 @@ import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
-import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.IAuthService;
-import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
-import sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand;
 import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
 import sernet.gs.ui.rcp.main.service.commands.UsernameExistsRuntimeException;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IAuthAwareCommand;
+import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * Save element of type T to the database using its class to lookup the DAO from

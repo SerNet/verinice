@@ -54,8 +54,6 @@ import sernet.gs.ui.rcp.main.bsi.views.RelationViewContentProvider;
 import sernet.gs.ui.rcp.main.bsi.views.RelationViewLabelProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -63,6 +61,8 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * A SWT composite that allow the user to create links (relations) to other objects, display the existing links, 

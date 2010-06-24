@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.common.model;
 import java.util.Map;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.statscommands.CompletedLayerSummary;
 import sernet.gs.ui.rcp.main.service.statscommands.CompletedStepsSummary;
 import sernet.gs.ui.rcp.main.service.statscommands.CompletedZyklusSummary;
@@ -29,7 +28,8 @@ import sernet.gs.ui.rcp.main.service.statscommands.IncompleteZyklusSummary;
 import sernet.gs.ui.rcp.main.service.statscommands.LayerSummary;
 import sernet.gs.ui.rcp.main.service.statscommands.MaturitySummary;
 import sernet.gs.ui.rcp.main.service.statscommands.UmsetzungSummary;
-import sernet.verinice.iso27k.model.ControlGroup;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.iso27k.ControlGroup;
 
 public class MassnahmenSummaryHome {
 

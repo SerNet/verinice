@@ -26,14 +26,14 @@ import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
-import sernet.gs.ui.rcp.main.bsi.model.Attachment;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Loads files/attachmets meta data for a {@link CnATreeElement}
@@ -88,7 +88,7 @@ public class LoadAttachments extends GenericCommand {
 	 * File data will not be loaded by this command. 
  	 * Use {@link LoadAttachmentFile} to load file data from database.
 	 * 
-	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+	 * @see sernet.verinice.interfaces.ICommand#execute()
 	 */
 	public void execute() {
 		if (getLog().isDebugEnabled()) {

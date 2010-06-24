@@ -23,7 +23,7 @@ import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 
 /**
  *  Provides text or image for each column per item in the CheckboxTableViewer.

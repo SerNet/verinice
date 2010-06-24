@@ -20,7 +20,7 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**
  * Helper to execute viewer updates from any thread.

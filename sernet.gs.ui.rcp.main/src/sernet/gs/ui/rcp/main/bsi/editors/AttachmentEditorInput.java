@@ -23,8 +23,8 @@ import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-import sernet.gs.ui.rcp.main.bsi.model.Attachment;
-import sernet.gs.ui.rcp.main.bsi.model.Note;
+import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.model.bsi.Note;
 
 public class AttachmentEditorInput implements IEditorInput {
 

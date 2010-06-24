@@ -33,7 +33,6 @@ import org.eclipse.ui.IWorkbench;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.PropertySelection;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -42,7 +41,8 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.gs.ui.rcp.office.OOWrapper;
 
 import sernet.snutils.ExceptionHandlerFactory;
-import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Wizard to create different kinds of reports using OpenOffice as backend.

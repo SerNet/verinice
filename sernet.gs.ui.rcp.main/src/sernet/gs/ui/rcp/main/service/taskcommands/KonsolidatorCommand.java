@@ -20,10 +20,10 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.Serializable;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.Konsolidator;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 
 public class KonsolidatorCommand extends GenericCommand {
 

@@ -21,8 +21,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import sernet.verinice.iso27k.model.IISO27kElement;
-import sernet.verinice.iso27k.model.IISO27kGroup;
+import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.iso27k.IISO27kGroup;
 
 public class TagFilter extends ViewerFilter {
 

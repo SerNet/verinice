@@ -31,8 +31,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 @SuppressWarnings("serial")
 public class CompletedZyklusSummary extends MassnahmenSummary {

@@ -19,7 +19,7 @@ package sernet.gs.ui.rcp.main.service.statscommands;
 
 import java.util.Map;
 
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.verinice.interfaces.GenericCommand;
 
 @SuppressWarnings("serial")
 public abstract class MassnahmenSummary<T> extends GenericCommand {

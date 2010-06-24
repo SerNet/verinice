@@ -32,24 +32,24 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.CreateScenario;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HuiRelation;
-import sernet.verinice.iso27k.model.IISO27kElement;
-import sernet.verinice.iso27k.model.IncidentScenario;
-import sernet.verinice.iso27k.model.IncidentScenarioGroup;
-import sernet.verinice.iso27k.model.Organization;
-import sernet.verinice.iso27k.model.Threat;
-import sernet.verinice.iso27k.model.Vulnerability;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.IncidentScenarioGroup;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.Vulnerability;
 
 public class LinkDropper {
 

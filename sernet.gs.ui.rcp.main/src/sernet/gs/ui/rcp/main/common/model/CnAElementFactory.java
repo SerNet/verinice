@@ -26,65 +26,67 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
-import sernet.gs.ui.rcp.main.bsi.model.Client;
-import sernet.gs.ui.rcp.main.bsi.model.Gebaeude;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.bsi.model.NetzKomponente;
-import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.bsi.model.Raum;
-import sernet.gs.ui.rcp.main.bsi.model.Server;
-import sernet.gs.ui.rcp.main.bsi.model.SonstIT;
 import sernet.gs.ui.rcp.main.bsi.model.SubtypenZielobjekte;
-import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
-import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateAnwendung;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateITVerbund;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
-import sernet.verinice.iso27k.model.Asset;
-import sernet.verinice.iso27k.model.AssetGroup;
-import sernet.verinice.iso27k.model.Audit;
-import sernet.verinice.iso27k.model.AuditGroup;
-import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.iso27k.model.Document;
-import sernet.verinice.iso27k.model.DocumentGroup;
-import sernet.verinice.iso27k.model.Evidence;
-import sernet.verinice.iso27k.model.EvidenceGroup;
-import sernet.verinice.iso27k.model.ExceptionGroup;
-import sernet.verinice.iso27k.model.Finding;
-import sernet.verinice.iso27k.model.FindingGroup;
-import sernet.verinice.iso27k.model.IISO27kElement;
-import sernet.verinice.iso27k.model.ISO27KModel;
-import sernet.verinice.iso27k.model.Incident;
-import sernet.verinice.iso27k.model.IncidentGroup;
-import sernet.verinice.iso27k.model.IncidentScenario;
-import sernet.verinice.iso27k.model.IncidentScenarioGroup;
-import sernet.verinice.iso27k.model.Interview;
-import sernet.verinice.iso27k.model.InterviewGroup;
-import sernet.verinice.iso27k.model.Organization;
-import sernet.verinice.iso27k.model.PersonGroup;
-import sernet.verinice.iso27k.model.Process;
-import sernet.verinice.iso27k.model.ProcessGroup;
-import sernet.verinice.iso27k.model.Record;
-import sernet.verinice.iso27k.model.RecordGroup;
-import sernet.verinice.iso27k.model.Requirement;
-import sernet.verinice.iso27k.model.RequirementGroup;
-import sernet.verinice.iso27k.model.Response;
-import sernet.verinice.iso27k.model.ResponseGroup;
-import sernet.verinice.iso27k.model.Threat;
-import sernet.verinice.iso27k.model.ThreatGroup;
-import sernet.verinice.iso27k.model.Vulnerability;
-import sernet.verinice.iso27k.model.VulnerabilityGroup;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.commands.LoadModel;
-import sernet.verinice.samt.model.SamtTopic;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.BausteinVorschlag;
+import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Document;
+import sernet.verinice.model.iso27k.DocumentGroup;
+import sernet.verinice.model.iso27k.Evidence;
+import sernet.verinice.model.iso27k.EvidenceGroup;
+import sernet.verinice.model.iso27k.ExceptionGroup;
+import sernet.verinice.model.iso27k.Finding;
+import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.Incident;
+import sernet.verinice.model.iso27k.IncidentGroup;
+import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.IncidentScenarioGroup;
+import sernet.verinice.model.iso27k.Interview;
+import sernet.verinice.model.iso27k.InterviewGroup;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.model.iso27k.Process;
+import sernet.verinice.model.iso27k.ProcessGroup;
+import sernet.verinice.model.iso27k.Record;
+import sernet.verinice.model.iso27k.RecordGroup;
+import sernet.verinice.model.iso27k.Requirement;
+import sernet.verinice.model.iso27k.RequirementGroup;
+import sernet.verinice.model.iso27k.Response;
+import sernet.verinice.model.iso27k.ResponseGroup;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.ThreatGroup;
+import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * Factory for all model elements. Contains typed factories for sub-elements.
@@ -284,9 +286,9 @@ public class CnAElementFactory {
 				return child;
 			}
 		});
-		elementbuilders.put(sernet.verinice.iso27k.model.PersonIso.TYPE_ID, new ElementBuilder() {
+		elementbuilders.put(sernet.verinice.model.iso27k.PersonIso.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				sernet.verinice.iso27k.model.PersonIso child = dbHome.save(container, sernet.verinice.iso27k.model.PersonIso.class, sernet.verinice.iso27k.model.PersonIso.TYPE_ID);
+				sernet.verinice.model.iso27k.PersonIso child = dbHome.save(container, sernet.verinice.model.iso27k.PersonIso.class, sernet.verinice.model.iso27k.PersonIso.TYPE_ID);
 				init(container, child);
 				return child;
 			}
@@ -329,9 +331,9 @@ public class CnAElementFactory {
 				return child;
 			}
 		});
-		elementbuilders.put(sernet.verinice.iso27k.model.Exception.TYPE_ID, new ElementBuilder() {
+		elementbuilders.put(sernet.verinice.model.iso27k.Exception.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
-				sernet.verinice.iso27k.model.Exception child = dbHome.save(container, sernet.verinice.iso27k.model.Exception.class, sernet.verinice.iso27k.model.Exception.TYPE_ID);
+				sernet.verinice.model.iso27k.Exception child = dbHome.save(container, sernet.verinice.model.iso27k.Exception.class, sernet.verinice.model.iso27k.Exception.TYPE_ID);
 				init(container, child);
 				return child;
 			}

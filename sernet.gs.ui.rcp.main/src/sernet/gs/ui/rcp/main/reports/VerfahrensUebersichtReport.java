@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
-import sernet.gs.ui.rcp.main.ds.model.IDatenschutzElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.ds.IDatenschutzElement;
 
 /**
  * Creates an overview of privacy requirements for the companies applications as

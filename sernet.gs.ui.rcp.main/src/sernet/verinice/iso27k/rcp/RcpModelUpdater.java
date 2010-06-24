@@ -20,9 +20,9 @@
 package sernet.verinice.iso27k.rcp;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.verinice.iso27k.model.Group;
 import sernet.verinice.iso27k.service.IModelUpdater;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Group;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>

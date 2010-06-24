@@ -28,10 +28,10 @@ import org.w3c.dom.Document;
 
 import sernet.gs.ui.rcp.main.DOMUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.ExportDialog;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * {@link Action} that exports selected objects from the

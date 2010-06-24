@@ -19,8 +19,8 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 
-import sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
+import sernet.verinice.model.bsi.ITVerbund;
 
 public class DSViewLabelProvider extends BSIModelViewLabelProvider implements
 		IBaseLabelProvider {

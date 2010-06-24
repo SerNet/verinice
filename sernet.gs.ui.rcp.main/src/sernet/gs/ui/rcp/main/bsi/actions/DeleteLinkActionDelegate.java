@@ -31,7 +31,7 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
+import sernet.verinice.model.common.CnALink;
 
 /**
  * Delete items on user request.

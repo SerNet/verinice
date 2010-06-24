@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.ui.rcp.main.bsi.model.BausteinVorschlag;
+import sernet.verinice.model.bsi.BausteinVorschlag;
 
 /**
  * Dialog to edit an exsisting OwnGefaehrdung.

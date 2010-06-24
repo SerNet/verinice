@@ -17,14 +17,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.reports.ISMReport;
 import sernet.gs.ui.rcp.main.reports.ISMTypedItemReport;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
 import sernet.hui.common.connect.EntityType;
-import sernet.verinice.iso27k.model.Organization;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Choose which entitytype to include in the report.

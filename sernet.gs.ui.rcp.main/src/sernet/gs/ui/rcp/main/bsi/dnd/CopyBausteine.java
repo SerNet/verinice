@@ -28,10 +28,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.service.CopyBausteineService;
 import sernet.verinice.iso27k.rcp.RcpProgressObserver;
 import sernet.verinice.iso27k.service.IProgressObserver;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.IProgressRunnable;
 
 /**

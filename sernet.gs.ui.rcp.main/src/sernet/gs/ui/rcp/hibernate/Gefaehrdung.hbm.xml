@@ -33,7 +33,7 @@
 		<property name="stand"/>
 		
 		<joined-subclass
-			name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung"
+			name="sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung"
 			extends="Gefaehrdung"
 			table="owngefaehrdung">
 			

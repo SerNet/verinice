@@ -20,11 +20,11 @@ package sernet.verinice.iso27k.service.commands;
 import java.util.List;
 import java.util.Set;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
-import sernet.verinice.iso27k.model.ISO27KModel;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ISO27KModel;
 
 @SuppressWarnings("serial")
 public class LoadModel extends GenericCommand implements INoAccessControl {

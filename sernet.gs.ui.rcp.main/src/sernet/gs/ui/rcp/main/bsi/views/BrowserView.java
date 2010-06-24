@@ -47,17 +47,18 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.StatusLine;
 import sernet.gs.ui.rcp.main.VeriniceCharset;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
-import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.IControl;
-import sernet.verinice.iso27k.model.Threat;
-import sernet.verinice.iso27k.model.Vulnerability;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.verinice.iso27k.service.IItem;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.Vulnerability;
 
 public class BrowserView extends ViewPart {
     
@@ -140,6 +141,7 @@ public class BrowserView extends ViewPart {
 
 			if (element instanceof RisikoMassnahmenUmsetzung) {
 				RisikoMassnahmenUmsetzung ums = (RisikoMassnahmenUmsetzung) element;
+				RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(ums);
 				if (ums.getRisikoMassnahme() != null) {
 					browser.stop();
 					browser.setText(toHtml(ums));
@@ -221,6 +223,7 @@ public class BrowserView extends ViewPart {
 
 	private String toHtml(RisikoMassnahmenUmsetzung ums) {
 		StringBuilder buf = new StringBuilder();
+		RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(ums);
 		writeHtml(buf, ums.getNumber() + " " + ums.getName(), ums.getDescription(), "iso-8859-1");
 		return buf.toString();
 	}

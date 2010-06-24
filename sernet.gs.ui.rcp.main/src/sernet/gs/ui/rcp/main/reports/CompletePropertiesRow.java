@@ -20,10 +20,10 @@ package sernet.gs.ui.rcp.main.reports;
 import java.util.ArrayList;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Row to print out all properties of a given item.

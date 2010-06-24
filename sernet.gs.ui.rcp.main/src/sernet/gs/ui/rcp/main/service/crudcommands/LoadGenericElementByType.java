@@ -19,7 +19,7 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.verinice.interfaces.GenericCommand;
 
 @SuppressWarnings("serial")
 public class LoadGenericElementByType<T> extends GenericCommand {

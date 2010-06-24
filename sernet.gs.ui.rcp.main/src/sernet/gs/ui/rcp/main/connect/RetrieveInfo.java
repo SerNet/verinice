@@ -19,7 +19,9 @@ package sernet.gs.ui.rcp.main.connect;
 
 import java.io.Serializable;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IRetrieveInfo;
+import sernet.verinice.model.common.CnATreeElement;
 
 
 /**
@@ -28,7 +30,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class RetrieveInfo implements Serializable{
+public class RetrieveInfo implements Serializable, IRetrieveInfo{
 
 	private static final RetrieveInfo PROPERTY_INSTANCE;
 	private static final RetrieveInfo CHILDREN_INSTANCE;

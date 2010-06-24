@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.service;
 
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ICommandService;
 
 /**
  * This interfaces makes the {@link #setWorkObjects(sernet.hui.common.VeriniceContext.State)}

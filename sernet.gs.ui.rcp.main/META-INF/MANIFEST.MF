@@ -176,7 +176,6 @@ Export-Package: au.com.bytecode.opencsv,
    sernet.gs.ui.rcp.main.bsi.model,
    sernet.hui.common.multiselectionlist,
    sernet.gs.ui.rcp.main.service",
- sernet.gs.ui.rcp.main.common.model.configuration;version="1.1.1";uses:="sernet.hui.common.connect,sernet.gs.ui.rcp.main.bsi.model",
  sernet.gs.ui.rcp.main.connect;version="1.1.1";
   uses:="org.hibernate.persister.entity,
    org.springframework.core.io,
@@ -188,7 +187,6 @@ Export-Package: au.com.bytecode.opencsv,
    org.hibernate.event.def,
    org.springframework.orm.hibernate3,
    sernet.gs.ui.rcp.main.service",
- sernet.gs.ui.rcp.main.ds.model;version="1.1.1";uses:="sernet.gs.ui.rcp.main.common.model",
  sernet.gs.ui.rcp.main.preferences;version="1.1.1";
   uses:="org.eclipse.jface.action,
    org.eclipse.jface.preference,
@@ -226,7 +224,6 @@ Export-Package: au.com.bytecode.opencsv,
    sernet.gs.ui.rcp.main.service",
  sernet.gs.ui.rcp.office;version="1.1.1";uses:="junit.framework",
  sernet.verinice.hibernate;version="1.1.1";uses:="org.hibernate.dialect",
- sernet.verinice.iso27k.model;version="1.1.1";uses:="sernet.gs.ui.rcp.main.common.model",
  sernet.verinice.iso27k.rcp;version="1.1.1";
   uses:="org.eclipse.jface.operation,
    org.eclipse.core.runtime,
@@ -272,8 +269,7 @@ Export-Package: au.com.bytecode.opencsv,
    org.apache.log4j,
    sernet.gs.ui.rcp.main.common.model,
    sernet.verinice.iso27k.service",
- sernet.verinice.rcp;version="1.1.1",
- sernet.verinice.samt.model;version="1.1.1";uses:="sernet.verinice.iso27k.model,sernet.gs.ui.rcp.main.common.model"
+ sernet.verinice.rcp;version="1.1.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Eclipse-RegisterBuddy: sernet.verinice.oda.driver,sernet.springclient,com.springsource.org.hibernate
 Require-Bundle: org.eclipse.equinox.app;bundle-version="1.2.1",

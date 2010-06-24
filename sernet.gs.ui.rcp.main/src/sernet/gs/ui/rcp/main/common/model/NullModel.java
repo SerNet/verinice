@@ -17,7 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class NullModel extends BSIModel {
 	

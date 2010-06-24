@@ -23,10 +23,10 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.model.Server;
-import sernet.gs.ui.rcp.main.bsi.model.ServerKategorie;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.ServerKategorie;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class AddServerActionDelegate extends AbstractAddCnATreeElementActionDelegate {
     private IWorkbenchPart targetPart;

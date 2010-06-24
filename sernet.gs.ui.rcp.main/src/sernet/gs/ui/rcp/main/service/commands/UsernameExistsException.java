@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.commands;
 
+import sernet.verinice.interfaces.CommandException;
+
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *

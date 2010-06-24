@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement;
 
 
 /**

@@ -19,13 +19,16 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.service.ICommandService;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRisikomassnahmeByNumber;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
 public class RisikoMassnahmeHome {
 	
@@ -66,5 +69,21 @@ public class RisikoMassnahmeHome {
 		command = commandService.executeCommand(command);
 		return command.getMassnahme();
 	}		
+	
+	/**
+	 * Returns an instance of the RisikoMassnahme.
+	 *  
+	 * @return an instance of the RisikoMassnahme
+	 */
+	public void initRisikoMassnahmeUmsetzung(RisikoMassnahmenUmsetzung umsetzung) {
+		if (umsetzung.isInitNeeded())
+		{
+			try {
+				umsetzung.setMassnahme(loadByNumber(umsetzung.getNumber()));
+			} catch (CommandException e) {
+				ExceptionUtil.log(e, "Fehler beim Datenzugriff");
+			}
+		}
+	}
 	
 }

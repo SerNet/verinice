@@ -22,11 +22,11 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.common.model.CnALink;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
 import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * This command loads the accessory links (linksDown) for a CnATreeElement.
@@ -63,7 +63,7 @@ public class LoadLinksDown extends GenericCommand {
 	 * Executes this command.
 	 * Loads accessory links of <code>CnATreeElement parent</code> by calling dao method retrieve.
 	 * 
-	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+	 * @see sernet.verinice.interfaces.ICommand#execute()
 	 */
 	public void execute() {
 		if(this.parent==null) {

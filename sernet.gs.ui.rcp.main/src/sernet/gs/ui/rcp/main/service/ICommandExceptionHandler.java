@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service;
 
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.verinice.interfaces.CommandException;
 
 public interface ICommandExceptionHandler {
 

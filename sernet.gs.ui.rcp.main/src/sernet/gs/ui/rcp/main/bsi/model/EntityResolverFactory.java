@@ -28,9 +28,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
-import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.FastLoadCnAElementsByIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
@@ -48,6 +46,9 @@ import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * The HUI framework has no knowledge aout the database, so this factory

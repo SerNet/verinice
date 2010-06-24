@@ -23,6 +23,8 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparable<TodoViewItem> {
 	

@@ -19,8 +19,8 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahme;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 
 public class FindRisikomassnahmeByNumber extends GenericCommand {
 

@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 
 /**

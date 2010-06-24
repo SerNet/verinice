@@ -34,8 +34,8 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
+import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 
 /**
  * Dialog to enter a new Gefaehrdung.

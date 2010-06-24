@@ -24,14 +24,14 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener;
-import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.verinice.iso27k.model.IISO27KModelListener;
-import sernet.verinice.iso27k.model.ISO27KModel;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.IBSIModelListener;
+import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IISO27KModelListener;
+import sernet.verinice.model.iso27k.ISO27KModel;
 
 /**
  * @author koderman[at]sernet[dot]de

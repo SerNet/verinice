@@ -20,8 +20,8 @@ package sernet.gs.ui.rcp.main.reports;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Interface for different BSI report types that will be exported to OpenOffice.

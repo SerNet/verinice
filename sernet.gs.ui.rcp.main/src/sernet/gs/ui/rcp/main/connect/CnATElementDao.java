@@ -24,10 +24,11 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.common.SecurityException;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.Permission;
-import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.service.IAuthService;
+import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * Extends {@link HibernateBaseDao} to check write and delete authorization for {@link CnATreeElement}s.

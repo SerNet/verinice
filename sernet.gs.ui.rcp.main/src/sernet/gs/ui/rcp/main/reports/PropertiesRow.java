@@ -24,12 +24,12 @@ import java.util.regex.Pattern;
 
 import org.hibernate.LazyInitializationException;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Returns the given properties as columns for OpenOffice export.

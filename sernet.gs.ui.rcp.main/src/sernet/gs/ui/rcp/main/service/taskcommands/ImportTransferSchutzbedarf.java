@@ -19,12 +19,12 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
 
-import sernet.gs.ui.rcp.main.bsi.model.Anwendung;
-import sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider;
-import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.ISchutzbedarfProvider;
+import sernet.verinice.model.common.CascadingTransaction;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class ImportTransferSchutzbedarf extends GenericCommand {
 

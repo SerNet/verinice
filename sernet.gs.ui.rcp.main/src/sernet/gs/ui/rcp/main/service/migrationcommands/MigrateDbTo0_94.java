@@ -32,8 +32,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.BSIModel;
 
 /**
  * Adds UUID to all required objects.

@@ -44,11 +44,12 @@ import sernet.gs.scraper.ZIPGSSource;
 import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.GetBausteinText;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.GetGefaehrdungText;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.GetMassnahmeText;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 
 public class BSIMassnahmenModel {
 	

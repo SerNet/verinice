@@ -24,7 +24,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import sernet.gs.ui.rcp.main.bsi.model.IMassnahmeUmsetzung;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 
 
 public class MassnahmenUmsetzungFilter extends ViewerFilter {

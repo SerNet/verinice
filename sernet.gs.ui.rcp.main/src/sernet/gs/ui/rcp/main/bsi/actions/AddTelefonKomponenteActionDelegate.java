@@ -23,10 +23,10 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.model.TKKategorie;
-import sernet.gs.ui.rcp.main.bsi.model.TelefonKomponente;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.bsi.TKKategorie;
+import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class AddTelefonKomponenteActionDelegate extends AbstractAddCnATreeElementActionDelegate {
     private IWorkbenchPart targetPart;

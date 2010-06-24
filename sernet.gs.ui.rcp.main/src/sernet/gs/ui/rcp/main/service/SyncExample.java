@@ -23,11 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.BSIModel;
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateITVerbund;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
@@ -36,6 +32,10 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsByIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsBySourceID;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.common.CnATreeElement;
 
 
 

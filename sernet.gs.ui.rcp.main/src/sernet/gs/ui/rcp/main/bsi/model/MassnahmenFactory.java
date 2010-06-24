@@ -18,8 +18,10 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 import sernet.gs.model.Massnahme;
-import sernet.gs.ui.rcp.main.common.model.Permission;
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.common.Permission;
 
 public class MassnahmenFactory {
 

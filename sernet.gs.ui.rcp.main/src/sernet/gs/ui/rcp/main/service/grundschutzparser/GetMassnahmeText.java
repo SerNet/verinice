@@ -23,8 +23,8 @@ import java.io.InputStream;
 import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.verinice.interfaces.GenericCommand;
 
 public class GetMassnahmeText extends GenericCommand {
 

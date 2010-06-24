@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service;
 
+import sernet.verinice.interfaces.IAuthService;
+
 
 /**
  * Authentication service to be used when no service is configured.

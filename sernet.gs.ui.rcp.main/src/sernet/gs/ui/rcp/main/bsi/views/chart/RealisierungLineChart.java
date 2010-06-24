@@ -44,9 +44,9 @@ import org.jfree.ui.TextAnchor;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.statscommands.CountMassnahmen;
 import sernet.gs.ui.rcp.main.service.statscommands.RealisierungSummary;
+import sernet.verinice.interfaces.CommandException;
 
 @SuppressWarnings("serial")
 public class RealisierungLineChart implements IChartGenerator, Serializable {

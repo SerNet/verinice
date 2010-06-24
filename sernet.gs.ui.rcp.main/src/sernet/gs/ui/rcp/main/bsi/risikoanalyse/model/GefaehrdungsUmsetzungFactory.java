@@ -18,7 +18,9 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
 import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class GefaehrdungsUmsetzungFactory {
 

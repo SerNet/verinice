@@ -17,6 +17,8 @@
 */
 package sernet.gs.ui.rcp.main.service.commands;
 
+import sernet.verinice.interfaces.ICommand;
+
 
 /**
  * Marker interface that can be used by {@link ICommand} implementations

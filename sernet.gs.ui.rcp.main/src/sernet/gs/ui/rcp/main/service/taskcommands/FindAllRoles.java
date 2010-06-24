@@ -21,10 +21,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * Retrieves all the roles that have been used in the database.

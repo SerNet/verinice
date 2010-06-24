@@ -19,9 +19,9 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
 
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**
  * @author koderman[at]sernet[dot]de

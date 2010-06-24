@@ -6,7 +6,7 @@
 	Configuration items.
 	@author koderman@sernet.de
  -->
-<hibernate-mapping package="sernet.gs.ui.rcp.main.common.model.configuration">
+<hibernate-mapping package="sernet.verinice.model.common.configuration">
 	<class name="Configuration" table="configuration">
 		
 		<id name="dbId" 
@@ -27,7 +27,7 @@
 		<many-to-one 
 			name="person"
 			column="person_id"
-			class="sernet.gs.ui.rcp.main.bsi.model.Person"	
+			class="sernet.verinice.model.bsi.Person"	
 		/>
 
 		

@@ -34,11 +34,11 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Verknüpfe kopierte Bausteine mit selektierten Strukturobjekten.

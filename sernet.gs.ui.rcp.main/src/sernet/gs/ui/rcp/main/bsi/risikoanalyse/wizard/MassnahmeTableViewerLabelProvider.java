@@ -23,8 +23,9 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
 /**
  * Provides an image or text for each column per item in the TableViewer.
@@ -76,6 +77,7 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
             case 2:
                 return "[" + massnahme.getStufe() + "] " + massnahme.getName(); //$NON-NLS-1$ //$NON-NLS-2$
             case 3:
+        		RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(massnahme);
                 return shorten(massnahme.getDescription());
             }
             ;

@@ -19,11 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
-import sernet.verinice.iso27k.model.Control;
-import sernet.verinice.iso27k.model.ControlGroup;
-import sernet.verinice.iso27k.model.Threat;
-import sernet.verinice.iso27k.model.ThreatGroup;
 import sernet.verinice.iso27k.rcp.CatalogView;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.ThreatGroup;
 
 /**
  * Transforms {@link IItem} from {@link CatalogView} to ISO 27k {@link Threat}s

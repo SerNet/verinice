@@ -28,12 +28,11 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import sernet.gs.ui.rcp.gsimport.AttachDbFileTask;
-import sernet.gs.ui.rcp.main.common.model.CascadingTransaction;
-import sernet.gs.ui.rcp.main.common.model.CnALink;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.LoopException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IRetrieveInfo;
+import sernet.verinice.model.common.CascadingTransaction;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSupport 
 	implements IBaseDao<T, ID> {
@@ -97,7 +96,7 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			 return findByCriteria(criteria);
 		 }
 		 
-		 public List findAll(RetrieveInfo ri) {
+		 public List findAll(IRetrieveInfo ri) {
 			 // this could be used to limit result size:
 //			 DetachedCriteria criteria = DetachedCriteria.forClass(type);
 //			 List results = getHibernateTemplate().findByCriteria(criteria, 0, 1000);
@@ -117,7 +116,7 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			 	);
 		 }
 		 
-		public T retrieve(ID id, RetrieveInfo ri) {
+		public T retrieve(ID id, IRetrieveInfo ri) {
 			// akoderman this eats too much performance, since we currently ship verinice with log level set to 'debug' I commented it out:
 //			if(log.isDebugEnabled()) {
 //				log.debug("retrieve - id: " + id + " " + ri);
@@ -137,7 +136,7 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 			return loadByCriteria(criteria);
 		}
 
-		private void configureCriteria(DetachedCriteria criteria, RetrieveInfo ri) {
+		private void configureCriteria(DetachedCriteria criteria, IRetrieveInfo ri) {
 			if(ri.isProperties()) {
 				criteria.setFetchMode("entity", FetchMode.JOIN);
 				criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);

@@ -37,13 +37,13 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.KonsolidatorDialog;
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.KonsolidatorCommand;
 import sernet.hui.common.connect.EntityType;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 
 public class ShowKonsolidatorAction extends Action implements ISelectionListener {
 

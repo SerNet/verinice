@@ -6,7 +6,7 @@
 	Mapping for binary links between CnaElements.
 	@author koderman@sernet.de
  -->
-<hibernate-mapping package="sernet.gs.ui.rcp.main.common.model">
+<hibernate-mapping package="sernet.verinice.model.common">
 	<class name="CnALink" table="cnalink"
 		mutable="false">
 		

@@ -19,7 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.io.Serializable;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class DocumentReference implements Serializable {
 

@@ -6,7 +6,7 @@
 	User defined module groups for quick associations of multiple modules to a target object.
 	@author koderman@sernet.de
  -->
-<hibernate-mapping package="sernet.gs.ui.rcp.main.bsi.model">
+<hibernate-mapping package="sernet.verinice.model.bsi">
 	<class name="BausteinVorschlag" table="bausteinvorschlag">
 		
 		<id name="dbId" 

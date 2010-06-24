@@ -17,6 +17,9 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+
 
 /**
  * The Konsolidator copys values from one object to another,

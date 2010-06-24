@@ -19,8 +19,8 @@ package sernet.gs.ui.rcp.main.reports;
 
 import java.util.ArrayList;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
 import sernet.gs.ui.rcp.office.IOOTableRow;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Row that fills all vlues on creation, avoiding proxy problems when transporting the data between
