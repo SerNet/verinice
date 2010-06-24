@@ -26,7 +26,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.common.model.HitroUtil;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
@@ -38,7 +37,9 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindHuiUrls;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiUrl;
+import sernet.hui.common.connect.IEntityResolverFactory;
 import sernet.hui.common.connect.IReferenceResolver;
 import sernet.hui.common.connect.IUrlResolver;
 import sernet.hui.common.connect.Property;
@@ -64,15 +65,15 @@ import sernet.verinice.model.common.configuration.Configuration;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class EntityResolverFactory {
+public class BSIEntityResolverFactory implements IEntityResolverFactory {
 
-    private static final Logger LOG = Logger.getLogger(EntityResolverFactory.class);
+    private static final Logger LOG = Logger.getLogger(BSIEntityResolverFactory.class);
     
     private static IReferenceResolver roleResolver;
     private static IReferenceResolver personResolver;
     private static IUrlResolver urlresolver;
 
-    public static void createResolvers(HUITypeFactory typeFactory) {
+    public void createResolvers(HUITypeFactory typeFactory) {
         createPersonResolver();
         createRoleResolver();
 
@@ -101,7 +102,7 @@ public class EntityResolverFactory {
         }
     }
 
-    private static void addPersonResolverToTypes(HUITypeFactory typeFactory, EntityType entityType, List<PropertyType> propertyTypes) {
+    private void addPersonResolverToTypes(HUITypeFactory typeFactory, EntityType entityType, List<PropertyType> propertyTypes) {
         for (PropertyType propertyType : propertyTypes) {
             if (propertyType.isReference()) {
                 if (propertyType.getReferencedEntityTypeId().equals(Person.TYPE_ID)) {
@@ -111,7 +112,7 @@ public class EntityResolverFactory {
         }
     }
 
-    private static void addRoleResolverToTypes(HUITypeFactory typeFactory, EntityType entityType, List<PropertyType> propertyTypes) {
+    private void addRoleResolverToTypes(HUITypeFactory typeFactory, EntityType entityType, List<PropertyType> propertyTypes) {
         for (PropertyType propertyType : propertyTypes) {
             if (propertyType.isReference()) {
                 if (propertyType.getReferencedEntityTypeId().equals(Configuration.ROLE_TYPE_ID)) {
@@ -121,7 +122,7 @@ public class EntityResolverFactory {
         }
     }
 
-    private static void createUrlResolver(HUITypeFactory typeFactory) {
+    private void createUrlResolver(HUITypeFactory typeFactory) {
         // create list of all fields containing urls:
         final Set<String> allIDs = new HashSet<String>();
         try {
@@ -155,7 +156,7 @@ public class EntityResolverFactory {
         };
     }
 
-    private static void createPersonResolver() {
+    private void createPersonResolver() {
         if (personResolver == null) {
             personResolver = new IReferenceResolver() {
 
@@ -213,7 +214,7 @@ public class EntityResolverFactory {
         }
     }
 
-    private static void createRoleResolver() {
+    private void createRoleResolver() {
         if (roleResolver == null) {
             roleResolver = new IReferenceResolver() {
 
