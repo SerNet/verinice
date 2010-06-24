@@ -9,7 +9,7 @@
 
 	<bean id="configurationDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
 		<constructor-arg>
-			<value>sernet.gs.ui.rcp.main.common.model.configuration.Configuration</value>
+			<value>sernet.verinice.model.common.configuration.Configuration</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory"/>
 		

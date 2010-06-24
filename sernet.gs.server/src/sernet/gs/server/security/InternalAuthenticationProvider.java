@@ -32,7 +32,7 @@ import org.springframework.security.providers.UsernamePasswordAuthenticationToke
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.service.HibernateCommandService;
-import sernet.gs.ui.rcp.main.service.commands.ICommand;
+import sernet.verinice.interfaces.ICommand;
 
 /**
  * {@link AuthenticationProvider} implementation which authenticates

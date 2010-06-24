@@ -21,9 +21,9 @@ import java.io.Serializable;
 import java.util.List;
 
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
 
 @SuppressWarnings("serial")
 public class LoadUserConfiguration extends GenericCommand {

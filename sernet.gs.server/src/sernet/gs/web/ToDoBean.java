@@ -37,14 +37,13 @@ import org.richfaces.model.selection.SimpleSelection;
 
 import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.taskcommands.LoadChildrenAndMassnahmen;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**
  * JSF managed bean for view ToDoList, template: toso/todo.xhtml

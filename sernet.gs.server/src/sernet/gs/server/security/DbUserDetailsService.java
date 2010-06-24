@@ -27,12 +27,12 @@ import org.springframework.security.userdetails.UsernameNotFoundException;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.server.commands.LoadUserConfiguration;
-import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.service.ICommandService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * Provides access to user details in the verinice database.

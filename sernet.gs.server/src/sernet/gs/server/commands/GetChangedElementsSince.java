@@ -31,12 +31,12 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.connect.IBaseDao;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPolymorphicCnAElementById;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Retrieves all {@link CnATreeElement} instances which have been changed since

@@ -43,11 +43,11 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import sernet.gs.server.commands.NotificationInfo;
 import sernet.gs.server.commands.PrepareNotificationInfo;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.service.ICommandService;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * A {@link MailJob} instance is a job that is to run once per day.

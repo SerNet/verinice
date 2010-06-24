@@ -21,7 +21,7 @@ import org.springframework.security.SpringSecurityException;
 
 import sernet.gs.ui.rcp.main.service.BaseExceptionHandler;
 import sernet.gs.ui.rcp.main.service.ICommandExceptionHandler;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
+import sernet.verinice.interfaces.CommandException;
 
 /**
  * Translate certain exceptions before returning them to the client, i.e. to prevent

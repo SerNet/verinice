@@ -21,7 +21,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 public class UmsetzungConverter implements Converter {
 

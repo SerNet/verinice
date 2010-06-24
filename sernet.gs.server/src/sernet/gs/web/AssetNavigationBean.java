@@ -24,13 +24,13 @@ import javax.faces.convert.Converter;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.ITVerbund;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.ICommandService;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.ILoadChildren;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * JSF managed bean for asset-navigation data and methods.

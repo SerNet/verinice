@@ -30,14 +30,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.bsi.model.Person;
-import sernet.gs.ui.rcp.main.common.model.ChangeLogEntry;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElement;
-import sernet.gs.ui.rcp.main.common.model.configuration.Configuration;
-import sernet.gs.ui.rcp.main.service.commands.CommandException;
-import sernet.gs.ui.rcp.main.service.commands.GenericCommand;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsByEntityIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
@@ -45,6 +37,14 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindResponsiblePerson;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * Iterates over all {@link MassnahmenUmsetzung} instances and prepares the following collections containing

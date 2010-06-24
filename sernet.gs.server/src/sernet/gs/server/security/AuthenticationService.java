@@ -24,7 +24,7 @@ import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.ui.digestauth.DigestProcessingFilter;
 import org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint;
 
-import sernet.gs.ui.rcp.main.service.IAuthService;
+import sernet.verinice.interfaces.IAuthService;
 
 /**
  * HTTP digest method authentication service.
