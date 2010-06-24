@@ -87,6 +87,9 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     	class="sernet.gs.ui.rcp.main.common.model.HitroUtil"
 		init-method="initForClient">
 		<property name="url" value="${verinice.serverURL}/GetHitroConfig" />
+		<property name="entityResolverFactory">
+			<bean class="sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory"/>
+		</property>
     </bean>
 
 	<bean id="huiTypeFactory"
