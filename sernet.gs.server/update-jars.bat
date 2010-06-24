@@ -1,6 +1,7 @@
  set webinflib=WebContent\WEB-INF\lib
  SET PATH=%PATH%;c:\programme\java\jdk1.6.0_18\bin
   
+ jar cf %webinflib%\sernet.gs.ehcache.fragment.jar -C ..\sernet.gs.ehcache.fragment\bin .
  jar cf %webinflib%\sernet.hui.common.jar -C ..\sernet.hui.common\bin .
  jar cf %webinflib%\sernet.hui.swtclient.jar -C ..\sernet.hui.swtclient\bin . 
  jar cf %webinflib%\sernet.hui.server.jar -C ..\sernet.hui.server\bin . 
