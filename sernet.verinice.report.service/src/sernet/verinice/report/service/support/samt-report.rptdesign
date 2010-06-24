@@ -476,6 +476,7 @@ if (l instanceof List)
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <property name="pageBreakInterval">0</property>
             <column id="80">
                 <property name="width">5.197916666666667in</property>
             </column>

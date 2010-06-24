@@ -4,6 +4,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
 import sernet.verinice.report.service.impl.IReportService;
 import sernet.verinice.report.service.impl.ReportService;
@@ -11,6 +12,8 @@ import sernet.verinice.report.service.impl.ReportService;
 public class Activator implements BundleActivator {
 	
 	private IVeriniceOdaDriver odaDriver;
+	
+	private ICommandService commandService;
 	
     // The shared instance
     private static Activator plugin;
@@ -24,6 +27,12 @@ public class Activator implements BundleActivator {
 		if (sr != null)
 		{
 			odaDriver = (IVeriniceOdaDriver) context.getService(sr);
+		}
+		
+		sr = context.getServiceReference(ICommandService.class.getName());
+		if (sr != null)
+		{
+			commandService = (ICommandService) context.getService(sr);
 		}
 	}
 
@@ -39,4 +48,10 @@ public class Activator implements BundleActivator {
 	{
 		return odaDriver;
 	}
+	
+	public ICommandService getCommandService()
+	{
+		return commandService;
+	}
+	
 }

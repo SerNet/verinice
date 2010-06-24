@@ -27,12 +27,10 @@ public class ReportService implements IReportService {
 	}
 
 	@Override
-	public void runSamtReportGeneration(Map<String, Object> variables, IReportOptions reportOptions) {
+	public void runSamtReportGeneration(IReportOptions reportOptions) {
 		IReportType rt = new SamtReportType();
 		
 		IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
-		
-		odaDriver.setScriptVariables(variables);
 		
 		rt.createReport(reportOptions);
 	}

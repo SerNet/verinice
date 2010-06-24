@@ -15,6 +15,9 @@ Require-Bundle: org.eclipse.birt.core;bundle-version="2.5.2",
  org.eclipse.birt.report.engine.emitter.pdf;bundle-version="2.5.2",
  org.eclipse.birt.report.engine.emitter.pdf.config;bundle-version="2.5.2",
  org.eclipse.birt.report.engine.script.javascript;bundle-version="2.5.2",
- sernet.verinice.oda.driver;bundle-version="1.0.0"
+ sernet.verinice.oda.driver;bundle-version="1.0.0",
+ sernet.verinice.samt.service;bundle-version="0.1.0",
+ com.springsource.org.apache.log4j;bundle-version="1.2.15",
+ sernet.gs.service;bundle-version="1.11.1"
 Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.impl
