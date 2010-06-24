@@ -87,7 +87,7 @@
 			overflowToDisk="false"
 		/>
 
-		 <cache name="sernet.gs.ui.rcp.main.common.model.CnALink"
+		 <cache name="sernet.verinice.model.common.CnALink"
 			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
@@ -95,28 +95,28 @@
 			overflowToDisk="false"
 		/>
 
-		 <cache name="sernet.gs.ui.rcp.main.common.model.CnATreeElement"
+		 <cache name="sernet.verinice.model.common.CnATreeElement"
 			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
 			overflowToDisk="false"
 		/>
-		 <cache name="sernet.gs.ui.rcp.main.common.model.CnATreeElement.children"
+		 <cache name="sernet.verinice.model.common.CnATreeElement.children"
 			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
 			overflowToDisk="false"
 		/>
-		 <cache name="sernet.gs.ui.rcp.main.common.model.CnATreeElement.linksDown"
+		 <cache name="sernet.verinice.model.common.CnATreeElement.linksDown"
 			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
 			timeToLiveSeconds="0"
 			overflowToDisk="false"
 		/>
-		 <cache name="sernet.gs.ui.rcp.main.common.model.CnATreeElement.linksUp"
+		 <cache name="sernet.verinice.model.common.CnATreeElement.linksUp"
 			maxElementsInMemory="10000"
 			eternal="true"
 			timeToIdleSeconds="0"
@@ -124,7 +124,7 @@
 			overflowToDisk="false"
 		/>
 		
-		 <cache name="sernet.gs.ui.rcp.main.common.model.Permission"
+		 <cache name="sernet.verinice.model.common.Permission"
 			maxElementsInMemory="100000"
 			eternal="true"
 			timeToIdleSeconds="0"
