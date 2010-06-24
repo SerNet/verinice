@@ -52,7 +52,7 @@ This variant:
 		<constructor-arg value="${snca.resource}" />
 	</bean>
 
-	<bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil.HitroUtil"
+	<bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil"
 		init-method="initForServer">
 		<property name="typeFactory" ref="huiTypeFactory" />
 		<property name="entityResolverFactory">
