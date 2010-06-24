@@ -32,7 +32,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             </value>
         </property>
         <property name="serviceInterface">
-            <value>sernet.gs.ui.rcp.main.service.ICommandService</value>
+            <value>sernet.verinice.interfaces.ICommandService</value>
         </property>
     </bean>
     
@@ -44,7 +44,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             </value>
         </property>
         <property name="serviceInterface">
-            <value>sernet.gs.ui.rcp.main.service.IAuthService</value>
+            <value>sernet.verinice.interfaces.IAuthService</value>
         </property>
     </bean>
     
