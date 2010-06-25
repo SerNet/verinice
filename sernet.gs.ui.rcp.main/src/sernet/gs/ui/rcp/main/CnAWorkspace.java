@@ -83,7 +83,7 @@ public class CnAWorkspace {
 
 	private static final String POLICY_FILE = "updatePolicyURL"; //$NON-NLS-1$
 
-	private static final Object LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-1.0"; //$NON-NLS-1$
+	private static final Object LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-2010"; //$NON-NLS-1$
 
     private static CnAWorkspace instance;
 
