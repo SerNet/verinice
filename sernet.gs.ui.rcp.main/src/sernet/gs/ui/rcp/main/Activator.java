@@ -151,9 +151,11 @@ public class Activator extends AbstractUIPlugin {
 					return;
 				}
 			}
+			
+			
 		}
 		
-		encryptionServiceTracker = new ServiceTracker(null, IEncryptionService.class.getName(), null);
+		encryptionServiceTracker = new ServiceTracker(context, IEncryptionService.class.getName(), null);
 
 		// set workdir preference:
 		CnAWorkspace.getInstance().prepareWorkDir();
