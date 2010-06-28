@@ -2,41 +2,28 @@ package sernet.verinice.report.service;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
 
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
-import sernet.verinice.report.service.impl.IReportService;
-import sernet.verinice.report.service.impl.ReportService;
 
 public class Activator implements BundleActivator {
 	
-	private IVeriniceOdaDriver odaDriver;
-	
-	private ICommandService commandService;
-	
     // The shared instance
     private static Activator plugin;
+    
+    private ServiceTracker commandServiceTracker;
 	
 	public void start(BundleContext context) throws Exception {
 		plugin = this;
-		
-		context.registerService(IReportService.class.getName(), new ReportService(), null);
-		
-		ServiceReference sr = context.getServiceReference(IVeriniceOdaDriver.class.getName());
-		if (sr != null)
-		{
-			odaDriver = (IVeriniceOdaDriver) context.getService(sr);
-		}
-		
-		sr = context.getServiceReference(ICommandService.class.getName());
-		if (sr != null)
-		{
-			commandService = (ICommandService) context.getService(sr);
-		}
+
+		// Reach ICommandService implementation via service tracker since the instance
+		// is provided via Spring (and should not be instantiated by OSGi)
+		commandServiceTracker = new ServiceTracker(context, ICommandService.class.getName(), null);
+		commandServiceTracker.open();
 	}
 
 	public void stop(BundleContext context) throws Exception {
+		commandServiceTracker.close();
 	}
 	
 	public static Activator getDefault()
@@ -44,14 +31,9 @@ public class Activator implements BundleActivator {
 		return plugin;
 	}
 
-	public IVeriniceOdaDriver getOdaDriver()
-	{
-		return odaDriver;
-	}
-	
 	public ICommandService getCommandService()
 	{
-		return commandService;
+		return (ICommandService) commandServiceTracker.getService();
 	}
 	
 }

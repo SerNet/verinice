@@ -35,7 +35,7 @@ public class GenerateReportDialog extends Dialog {
 		
 		// DEMO: Hard-code the report type. Later on use a dialog or something to chose the report
 		// type.
-		reportType = Activator.getDefault().getReportService().getReportTypes()[0];
+		reportType = ServiceComponent.getDefault().getReportService().getReportTypes()[0];
 		outputFormat = reportType.getOutputFormats()[0];
 	}
 

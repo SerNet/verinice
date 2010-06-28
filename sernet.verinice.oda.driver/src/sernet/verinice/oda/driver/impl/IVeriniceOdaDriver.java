@@ -22,11 +22,15 @@ import java.util.Map;
 public interface IVeriniceOdaDriver {
 
 	String getServerURI();
+	
+	void setServerURI(String uri);
 
 	void setImageProvider(String name, IImageProvider imageProvider);
 
 	void removeImageProvider(String name);
 
 	void setScriptVariables(Map<String, Object> Map);
+	
+	Map<String, Object> getScriptVariables();
 
 }

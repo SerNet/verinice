@@ -75,7 +75,7 @@ public class GenerateReportAction extends ActionDelegate implements
 				public File getOutputFile() { return dialog.getOutputFile(); }
 			};
 
-			Activator.getDefault().getReportService().runSamtReportGeneration(ro);
+			ServiceComponent.getDefault().getReportService().runSamtReportGeneration(ro);
 		}
 	}
 

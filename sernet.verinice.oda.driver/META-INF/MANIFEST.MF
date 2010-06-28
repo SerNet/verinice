@@ -13,7 +13,8 @@ Export-Package: sernet.verinice.oda.driver.impl;
    com.ibm.icu.util,
    org.eclipse.datatools.connectivity.oda.spec,
    org.eclipse.datatools.connectivity.oda"
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
+ org.eclipse.core.runtime,
  org.eclipse.datatools.connectivity.oda;bundle-version="[3.2.2,4.0.0)",
  org.eclipse.datatools.connectivity.oda.profile;bundle-version="[3.2.0,4.0.0)",
  sernet.hui.common;bundle-version="1.1.1",
@@ -21,3 +22,5 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: SerNet
+Service-Component: OSGI-INF/component-user.xml, OSGI-INF/component.xml
+Import-Package: org.osgi.service.component

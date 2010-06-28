@@ -1,16 +1,17 @@
 package sernet.verinice.report.service.impl;
 
 import java.io.File;
-import java.util.Map;
 
-import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
-import sernet.verinice.report.service.Activator;
-import sernet.verinice.report.service.output.HTMLOutputFormat;
 import sernet.verinice.report.service.output.PDFOutputFormat;
 import sernet.verinice.report.service.support.SamtReportType;
 import sernet.verinice.report.service.support.TestReportType;
 
 public class ReportService implements IReportService {
+	
+	public ReportService()
+	{
+		
+	}
 
 	@Override
 	public void runTestReportGeneration() {
@@ -29,8 +30,6 @@ public class ReportService implements IReportService {
 	@Override
 	public void runSamtReportGeneration(IReportOptions reportOptions) {
 		IReportType rt = new SamtReportType();
-		
-		IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
 		
 		rt.createReport(reportOptions);
 	}

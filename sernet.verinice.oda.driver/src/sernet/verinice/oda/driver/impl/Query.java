@@ -41,6 +41,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.oda.driver.Activator;
+import sernet.verinice.oda.driver.ServiceComponent;
 import bsh.EvalError;
 import bsh.Interpreter;
 
@@ -61,7 +62,7 @@ public class Query implements IQuery
     
     Query(HUITypeFactory huiTypeFactory)
     {
-    	VeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
+    	IVeriniceOdaDriver odaDriver = ServiceComponent.getDefault().getOdaDriver();
     	
     	try {
     		interpreter = new Interpreter();

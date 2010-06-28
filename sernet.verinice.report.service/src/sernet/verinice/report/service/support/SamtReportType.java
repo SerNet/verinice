@@ -19,6 +19,7 @@ import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.oda.driver.impl.IImageProvider;
 import sernet.verinice.report.service.Activator;
+import sernet.verinice.report.service.ServiceComponent;
 import sernet.verinice.report.service.impl.BIRTReportService;
 import sernet.verinice.report.service.impl.IOutputFormat;
 import sernet.verinice.report.service.impl.IReportOptions;
@@ -92,7 +93,7 @@ public class SamtReportType implements IReportType {
 		variables.put("totalSecurityFigure", 23);
 		variables.put("samtTopics", samtTopics);
 		
-		Activator.getDefault().getOdaDriver().setScriptVariables(variables);
+		ServiceComponent.getDefault().getOdaDriver().setScriptVariables(variables);
 	}
 
 	private ControlGroup getSamtGroup() {

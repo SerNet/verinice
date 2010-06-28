@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sernet.verinice.report.service.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.birt.core;bundle-version="2.5.2",
+Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
+ org.eclipse.birt.core;bundle-version="2.5.2",
  org.eclipse.birt.report.engine;bundle-version="2.5.2",
  org.eclipse.birt.chart.engine;bundle-version="2.5.2",
  org.eclipse.birt.report.engine.emitter.html;bundle-version="2.5.2",
@@ -21,3 +22,5 @@ Require-Bundle: org.eclipse.birt.core;bundle-version="2.5.2",
  sernet.gs.service;bundle-version="1.11.1"
 Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.impl
+Service-Component: OSGI-INF/component-user.xml, OSGI-INF/component.xml
+Import-Package: org.osgi.service.component;version="1.1.0"

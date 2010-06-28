@@ -44,8 +44,6 @@ public class Activator extends Plugin {
 	
 	private VeriniceURLStreamHandlerService urlStreamHandlerService = new VeriniceURLStreamHandlerService();
 	
-	private VeriniceOdaDriver odaDriver;
-	
 	/**
 	 * The constructor
 	 */
@@ -67,13 +65,6 @@ public class Activator extends Plugin {
 		context.registerService(
 				URLStreamHandlerService.class.getName(),
 				urlStreamHandlerService, properties );
-		
-		odaDriver = new VeriniceOdaDriver(urlStreamHandlerService);
-		
-		context.registerService(
-				IVeriniceOdaDriver.class.getName(),
-				odaDriver, null);
-
 	}
 
 	/*
@@ -99,7 +90,4 @@ public class Activator extends Plugin {
 		return urlStreamHandlerService;
 	}
 
-	public VeriniceOdaDriver getOdaDriver() {
-		return odaDriver;
-	}
 }
