@@ -3,5 +3,5 @@
 	resourceMap="http://www.verinice.org/svnroot/TRUNK/sernet.gs.ui.rcp.main.feature/verinice.rmap">
     <cq:rootRequest name="sernet.gs.ui.rcp.main.feature" 
     	componentType="eclipse.feature" 
-    	versionDesignator="[1.1.1,1.1.1]"/>
+    	versionDesignator="(1.1.1,1.1.2]"/>
 </cq:componentQuery>
