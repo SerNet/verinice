@@ -109,7 +109,7 @@ public class DOMUtil
 			if (encryptOutput) {
 				EncryptionDialog encDialog = new EncryptionDialog(Display.getDefault().getActiveShell());
 				if (encDialog.open() == Dialog.OK) {
-					IEncryptionService service = Activator.getDefault().getEncryptionService();
+					IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
 					
 					EncryptionMethod encMethod = encDialog.getSelectedEncryptionMethod();
 					if (encMethod == EncryptionMethod.PASSWORD) {

@@ -39,7 +39,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.osgi.util.tracker.ServiceTracker;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -51,7 +50,6 @@ import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
 import sernet.verinice.rcp.StatusResult;
@@ -69,6 +67,8 @@ public class Activator extends AbstractUIPlugin {
 	private static final String PAX_WEB_SYMBOLIC_NAME = "org.ops4j.pax.web.pax-web-bundle"; //$NON-NLS-1$
 
 	private static final String VERINICE_ODA_DRIVER_SYMBOLIC_NAME = "sernet.verinice.oda.driver"; //$NON-NLS-1$
+	
+	private static final String ENCRYPTION_SYMBOLIC_NAME = "sernet.verinice.encryption"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
@@ -79,8 +79,6 @@ public class Activator extends AbstractUIPlugin {
 	
 	private IVeriniceOdaDriver odaDriver;
 	
-	private ServiceTracker encryptionServiceTracker;
-
 	/**
 	 * The constructor
 	 */
@@ -155,8 +153,16 @@ public class Activator extends AbstractUIPlugin {
 			
 		}
 		
-		encryptionServiceTracker = new ServiceTracker(context, IEncryptionService.class.getName(), null);
-
+		bundle = Platform.getBundle(ENCRYPTION_SYMBOLIC_NAME);
+		if (bundle == null)
+		{
+			LOG.warn("Encryption bundle is not available!");
+		}
+		else
+		{
+			bundle.start();
+		}
+		
 		// set workdir preference:
 		CnAWorkspace.getInstance().prepareWorkDir();
 		CnAWorkspace.getInstance().updatePolicyFile();
@@ -281,10 +287,6 @@ public class Activator extends AbstractUIPlugin {
 		return odaDriver;
 	}
 	
-	public IEncryptionService getEncryptionService() {
-		return (IEncryptionService) encryptionServiceTracker.getService();
-	}
-
 	public static void initDatabase() {
 		initDatabase(JobScheduler.getInitMutex(), new StatusResult());
 	}
