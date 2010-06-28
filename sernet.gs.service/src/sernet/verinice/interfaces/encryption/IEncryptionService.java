@@ -1,4 +1,4 @@
-package sernet.verinice.encryption;
+package sernet.verinice.interfaces.encryption;
 
 import java.io.File;
 import java.io.IOException;

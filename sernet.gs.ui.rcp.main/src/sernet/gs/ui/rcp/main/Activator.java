@@ -39,6 +39,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -48,9 +49,9 @@ import sernet.gs.ui.rcp.main.service.IInternalServer;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.encryption.IEncryptionService;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
 import sernet.verinice.rcp.StatusResult;
@@ -61,10 +62,6 @@ import sernet.verinice.rcp.StatusResult;
 public class Activator extends AbstractUIPlugin {
 
 	private static final Logger LOG = Logger.getLogger(Activator.class);
-
-	// string to avoid using IEncryptionService.class.getName() 
-	// which causes NoClassDefFoundException on bundle start
-	public static final String ENCRYPTION_SERVICE_NAME = "sernet.verinice.encryption.IEncryptionService";
 	
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main"; //$NON-NLS-1$
@@ -82,7 +79,7 @@ public class Activator extends AbstractUIPlugin {
 	
 	private IVeriniceOdaDriver odaDriver;
 	
-	private IEncryptionService encryptionService;
+	private ServiceTracker encryptionServiceTracker;
 
 	/**
 	 * The constructor
@@ -154,14 +151,9 @@ public class Activator extends AbstractUIPlugin {
 					return;
 				}
 			}
-			
-			ServiceReference serviceReference = ctx.getServiceReference(ENCRYPTION_SERVICE_NAME);
-			if(serviceReference!=null) {
-			    encryptionService = (IEncryptionService) ctx.getService(serviceReference);
-			} else {
-			    LOG.error("Could not load and start service: " + ENCRYPTION_SERVICE_NAME);
-			}
 		}
+		
+		encryptionServiceTracker = new ServiceTracker(null, IEncryptionService.class.getName(), null);
 
 		// set workdir preference:
 		CnAWorkspace.getInstance().prepareWorkDir();
@@ -288,7 +280,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 	
 	public IEncryptionService getEncryptionService() {
-		return encryptionService;
+		return (IEncryptionService) encryptionServiceTracker.getService();
 	}
 
 	public static void initDatabase() {

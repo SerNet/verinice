@@ -25,7 +25,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
 import org.bouncycastle.openssl.PEMReader;
 
-import sernet.verinice.encryption.EncryptionException;
+import sernet.verinice.interfaces.encryption.EncryptionException;
 
 /**
  * Class representing a S/MIME encrypted InputStream that is decrypted using the 

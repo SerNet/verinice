@@ -9,9 +9,9 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 
-import sernet.verinice.encryption.EncryptionException;
-import sernet.verinice.encryption.IEncryptionService;
 import sernet.verinice.encryption.impl.EncryptionService;
+import sernet.verinice.interfaces.encryption.EncryptionException;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
 
 /**
  * Example application that shows how to encrypt and decrypt an array of bytes with a X.509

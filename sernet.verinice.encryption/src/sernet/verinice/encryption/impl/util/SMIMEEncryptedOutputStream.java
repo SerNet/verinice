@@ -19,7 +19,7 @@ import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMEUtil;
 
-import sernet.verinice.encryption.EncryptionException;
+import sernet.verinice.interfaces.encryption.EncryptionException;
 
 /**
  * Class representing an OutputStream that is encrypted using a given x.509 certificate file 

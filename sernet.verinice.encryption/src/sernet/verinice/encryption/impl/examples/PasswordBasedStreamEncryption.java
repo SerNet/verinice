@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import sernet.verinice.encryption.IEncryptionService;
 import sernet.verinice.encryption.impl.EncryptionService;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
 
 /**
  * Example application that shows how to encrypt OutputStreams and decrypt InputStreams 

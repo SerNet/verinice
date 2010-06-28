@@ -15,7 +15,7 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
-import sernet.verinice.encryption.EncryptionException;
+import sernet.verinice.interfaces.encryption.EncryptionException;
 
 /**
  * Abstract utility class providing static methods for Password Based Encryption (PBE).

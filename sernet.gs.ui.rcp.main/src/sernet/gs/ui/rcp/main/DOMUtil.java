@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
 
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
-import sernet.verinice.encryption.IEncryptionService;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
 
 /**
  * Utility class for parsing files into DOM trees and writing

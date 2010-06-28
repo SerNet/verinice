@@ -30,10 +30,10 @@ import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMEUtil;
 import org.bouncycastle.openssl.PEMReader;
 
-import sernet.verinice.encryption.EncryptionException;
 import sernet.verinice.encryption.impl.util.CertificateUtils;
 import sernet.verinice.encryption.impl.util.SMIMEDecryptedInputStream;
 import sernet.verinice.encryption.impl.util.SMIMEEncryptedOutputStream;
+import sernet.verinice.interfaces.encryption.EncryptionException;
 
 /**
  * Abstract utility class providing static methods for S/MIME based encryption.

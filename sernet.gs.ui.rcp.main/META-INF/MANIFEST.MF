@@ -310,7 +310,6 @@ Require-Bundle: org.eclipse.equinox.app;bundle-version="1.2.1",
  sernet.springclient;bundle-version="1.2.1",
  sernet.gs.reveng;bundle-version="1.1.1",
  sernet.gs.service;bundle-version="1.11.1",
- sernet.verinice.encryption;bundle-version="1.0.0",
  sernet.verinice.oda.driver;bundle-version="1.0.0";visibility:=reexport
 Import-Package: org.eclipse.core.runtime;version="3.4.0",
  org.eclipse.osgi.service.datalocation;version="1.2.0",

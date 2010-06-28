@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
 import sernet.verinice.encryption.impl.EncryptionService;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
 
 /**
  * The activator class controls the plug-in life cycle

@@ -1,7 +1,7 @@
 package sernet.verinice.encryption.impl.examples;
 
-import sernet.verinice.encryption.IEncryptionService;
 import sernet.verinice.encryption.impl.EncryptionService;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
 
 /**
  * Example application that shows how to encrypt and decrypt an array of bytes with a password.

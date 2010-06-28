@@ -1,4 +1,4 @@
-package sernet.verinice.encryption;
+package sernet.verinice.interfaces.encryption;
 
 /**
  * Runtime exception that can be thrown when something went wrong during the en-
