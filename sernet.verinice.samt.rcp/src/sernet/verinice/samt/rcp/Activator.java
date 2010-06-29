@@ -3,11 +3,6 @@ package sernet.verinice.samt.rcp;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.service.component.ComponentContext;
-
-import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
-import sernet.verinice.report.service.impl.IReportService;
 
 /**
  * The activator class controls the plug-in life cycle

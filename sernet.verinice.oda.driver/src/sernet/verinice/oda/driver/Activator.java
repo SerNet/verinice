@@ -24,8 +24,9 @@ import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.url.URLConstants;
 import org.osgi.service.url.URLStreamHandlerService;
+import org.osgi.util.tracker.ServiceTracker;
 
-import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
+import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.impl.VeriniceOdaDriver;
 import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
 
@@ -43,6 +44,8 @@ public class Activator extends Plugin {
 	private static Activator plugin;
 	
 	private VeriniceURLStreamHandlerService urlStreamHandlerService = new VeriniceURLStreamHandlerService();
+	
+	private ServiceTracker veriniceOdaDriverTracker;
 	
 	/**
 	 * The constructor
@@ -65,6 +68,9 @@ public class Activator extends Plugin {
 		context.registerService(
 				URLStreamHandlerService.class.getName(),
 				urlStreamHandlerService, properties );
+		
+		veriniceOdaDriverTracker = new ServiceTracker(context, IVeriniceOdaDriver.class.getName(), null);
+		veriniceOdaDriverTracker.open();
 	}
 
 	/*
@@ -72,8 +78,9 @@ public class Activator extends Plugin {
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		plugin = null;
 		super.stop(context);
+		plugin = null;
+		veriniceOdaDriverTracker.close();
 	}
 
 	/**
@@ -88,6 +95,11 @@ public class Activator extends Plugin {
 	public VeriniceURLStreamHandlerService getURLStreamHandlerService()
 	{
 		return urlStreamHandlerService;
+	}
+	
+	public IVeriniceOdaDriver getOdaDriver()
+	{
+		return (IVeriniceOdaDriver) veriniceOdaDriverTracker.getService();
 	}
 
 }

@@ -14,11 +14,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/NOA-2.2.1/sandbox.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/NOA-2.2.1/unoil.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/NOA-2.2.1/unoloader.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jfreechart/jcommon-1.0.14.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jfreechart/jfreechart-1.0.11-experimental.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jfreechart/jfreechart-1.0.11-swt.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jfreechart/jfreechart-1.0.11.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jfreechart/swtgraphics2d.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="testSrc"/>

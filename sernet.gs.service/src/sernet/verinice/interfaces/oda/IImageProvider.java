@@ -1,4 +1,4 @@
-package sernet.verinice.oda.driver.impl;
+package sernet.verinice.interfaces.oda;
 
 import java.io.InputStream;
 

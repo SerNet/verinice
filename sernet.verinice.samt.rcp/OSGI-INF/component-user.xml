@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="sernet.verinice.samt.rcp">
+   <implementation class="sernet.verinice.samt.rcp.ServiceComponent"/>
+   <reference bind="bindReportService" cardinality="1..1" interface="sernet.verinice.interfaces.report.IReportService" name="IReportService" policy="static" unbind="unbindReportService"/>
+   <reference bind="bindOdaDriver" cardinality="1..1" interface="sernet.verinice.interfaces.oda.IVeriniceOdaDriver" name="IVeriniceOdaDriver" policy="static" unbind="unbindOdaDriver"/>
+</scr:component>

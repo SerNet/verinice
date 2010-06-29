@@ -15,8 +15,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.verinice.report.service.impl.IOutputFormat;
-import sernet.verinice.report.service.impl.IReportType;
+import sernet.verinice.interfaces.report.IOutputFormat;
+import sernet.verinice.interfaces.report.IReportType;
 
 public class GenerateReportDialog extends Dialog {
 

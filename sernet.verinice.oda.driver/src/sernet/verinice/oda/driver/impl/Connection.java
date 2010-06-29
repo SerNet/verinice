@@ -29,7 +29,6 @@ import org.osgi.framework.BundleException;
 
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.oda.driver.Activator;
-import sernet.verinice.oda.driver.ServiceComponent;
 
 import com.ibm.icu.util.ULocale;
 
@@ -64,7 +63,7 @@ public class Connection implements IConnection {
 						|| bundle.getState() == Bundle.RESOLVED) {
 					String uri = connProperties.getProperty("serverURI");
 
-					ServiceComponent.getDefault().getOdaDriver().setServerURI(uri);
+					Activator.getDefault().getOdaDriver().setServerURI(uri);
 					
 					bundle.start();
 					

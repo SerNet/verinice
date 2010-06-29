@@ -17,6 +17,8 @@ import org.eclipse.birt.report.engine.api.IReportRunnable;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.birt.report.engine.api.PDFRenderOption;
 
+import sernet.verinice.interfaces.report.IReportOptions;
+
 public class BIRTReportService {
 	
 	Logger log = Logger.getLogger(BIRTReportService.class.getName());

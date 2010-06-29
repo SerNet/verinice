@@ -15,7 +15,7 @@
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.oda.driver.impl;
+package sernet.verinice.interfaces.oda;
 
 import java.util.Map;
 

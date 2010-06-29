@@ -2,6 +2,11 @@ package sernet.verinice.report.service.impl;
 
 import java.io.File;
 
+import sernet.verinice.interfaces.report.IOutputFormat;
+import sernet.verinice.interfaces.report.IReportOptions;
+import sernet.verinice.interfaces.report.IReportService;
+import sernet.verinice.interfaces.report.IReportType;
+
 
 public class ReportService implements IReportService {
 	

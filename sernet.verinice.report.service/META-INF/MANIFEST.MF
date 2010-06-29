@@ -22,5 +22,6 @@ Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
  sernet.gs.service;bundle-version="1.11.1"
 Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.impl
-Service-Component: OSGI-INF/component-user.xml, OSGI-INF/component.xml
-Import-Package: org.osgi.service.component;version="1.1.0"
+Service-Component: OSGI-INF/component.xml
+Import-Package: org.jfree.chart,
+ sernet.gs.ui.rcp.main.bsi.views.chart;version="1.1.1"

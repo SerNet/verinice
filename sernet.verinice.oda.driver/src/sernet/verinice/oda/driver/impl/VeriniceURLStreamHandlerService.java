@@ -19,6 +19,8 @@ import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
 
+import sernet.verinice.interfaces.oda.IImageProvider;
+
 public class VeriniceURLStreamHandlerService extends AbstractURLStreamHandlerService {
 	
 	private static final Logger log = Logger.getLogger(VeriniceURLStreamHandlerService.class);

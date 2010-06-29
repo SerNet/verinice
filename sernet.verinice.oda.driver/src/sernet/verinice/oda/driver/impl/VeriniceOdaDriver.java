@@ -22,6 +22,8 @@ import java.util.Map;
 
 import org.osgi.service.component.ComponentContext;
 
+import sernet.verinice.interfaces.oda.IImageProvider;
+import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.Activator;
 
 public class VeriniceOdaDriver implements IVeriniceOdaDriver {

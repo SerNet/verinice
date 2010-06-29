@@ -1,9 +1,7 @@
 package sernet.verinice.samt.rcp;
 
-import org.osgi.service.component.ComponentContext;
-
-import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
-import sernet.verinice.report.service.impl.IReportService;
+import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
+import sernet.verinice.interfaces.report.IReportService;
 
 public class ServiceComponent {
 

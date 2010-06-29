@@ -1,4 +1,4 @@
-package sernet.verinice.report.service.impl;
+package sernet.verinice.interfaces.report;
 
 public interface IReportType {
 

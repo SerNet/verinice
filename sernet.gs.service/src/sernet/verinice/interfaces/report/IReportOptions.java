@@ -1,4 +1,4 @@
-package sernet.verinice.report.service.impl;
+package sernet.verinice.interfaces.report;
 
 import java.io.File;
 

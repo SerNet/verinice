@@ -50,8 +50,9 @@ import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
+import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.oda.driver.impl.IVeriniceOdaDriver;
 import sernet.verinice.rcp.StatusResult;
 
 /**
@@ -68,7 +69,7 @@ public class Activator extends AbstractUIPlugin {
 
 	private static final String VERINICE_ODA_DRIVER_SYMBOLIC_NAME = "sernet.verinice.oda.driver"; //$NON-NLS-1$
 	
-	private static final String ENCRYPTION_SYMBOLIC_NAME = "sernet.verinice.encryption"; //$NON-NLS-1$
+	private static final String REPORT_SERVICE_SYMBOLIC_NAME = "sernet.verinice.report.service"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
@@ -117,7 +118,7 @@ public class Activator extends AbstractUIPlugin {
 			LOG.error(msg);
 			throw new IllegalStateException(msg);
 		}
-		else
+		else if (bundle.getState() == Bundle.ACTIVE)
 		{
 			// Try to access a verinice ODA driver service instance. If one is available
 			// we can assume that we are in designer mode and should not start the whole
@@ -150,13 +151,16 @@ public class Activator extends AbstractUIPlugin {
 				}
 			}
 			
-			
+		}
+		else
+		{
+			bundle.start();
 		}
 		
-		bundle = Platform.getBundle(ENCRYPTION_SYMBOLIC_NAME);
+		bundle = Platform.getBundle(REPORT_SERVICE_SYMBOLIC_NAME);
 		if (bundle == null)
 		{
-			LOG.warn("Encryption bundle is not available!");
+			LOG.warn("Report service bundle is not available!");
 		}
 		else
 		{

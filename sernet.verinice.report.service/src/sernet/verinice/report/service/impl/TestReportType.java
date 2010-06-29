@@ -4,6 +4,10 @@ import java.net.URL;
 
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 
+import sernet.verinice.interfaces.report.IOutputFormat;
+import sernet.verinice.interfaces.report.IReportOptions;
+import sernet.verinice.interfaces.report.IReportType;
+
 
 public class TestReportType implements IReportType {
 

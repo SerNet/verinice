@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import sernet.verinice.interfaces.oda.IImageProvider;
+
 public class VeriniceURLConnection extends URLConnection {
 	
 	private IImageProvider imageProvider;

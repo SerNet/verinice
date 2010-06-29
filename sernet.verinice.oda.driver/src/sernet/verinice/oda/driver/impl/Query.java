@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.datatools.connectivity.oda.IParameterMetaData;
 import org.eclipse.datatools.connectivity.oda.IQuery;
@@ -40,8 +39,8 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.Activator;
-import sernet.verinice.oda.driver.ServiceComponent;
 import bsh.EvalError;
 import bsh.Interpreter;
 
@@ -62,7 +61,7 @@ public class Query implements IQuery
     
     Query(HUITypeFactory huiTypeFactory)
     {
-    	IVeriniceOdaDriver odaDriver = ServiceComponent.getDefault().getOdaDriver();
+    	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
     	
     	try {
     		interpreter = new Interpreter();

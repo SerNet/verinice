@@ -13,8 +13,6 @@ Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.ui.intro;bundle-version="3.3.2",
  org.eclipse.ui.cheatsheets,
- sernet.verinice.report.service;bundle-version="1.0.0",
- sernet.verinice.oda.driver;bundle-version="1.0.0",
  sernet.gs.ui.rcp.main;bundle-version="1.1.1",
  sernet.gs.service;bundle-version="1.11.1"
 Bundle-ActivationPolicy: lazy
@@ -25,4 +23,4 @@ Import-Package: org.eclipse.core.runtime,
  org.eclipse.osgi.util,
  org.osgi.framework,
  org.osgi.service.component
-Service-Component: OSGI-INF/component.xml
+Service-Component: OSGI-INF/component-user.xml

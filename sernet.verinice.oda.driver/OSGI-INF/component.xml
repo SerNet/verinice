@@ -2,6 +2,6 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="sernet.verinice.oda.driver">
    <implementation class="sernet.verinice.oda.driver.impl.VeriniceOdaDriver"/>
    <service>
-      <provide interface="sernet.verinice.oda.driver.impl.IVeriniceOdaDriver"/>
+      <provide interface="sernet.verinice.interfaces.oda.IVeriniceOdaDriver"/>
    </service>
 </scr:component>

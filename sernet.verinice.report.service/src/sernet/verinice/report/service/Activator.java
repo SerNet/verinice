@@ -5,6 +5,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 
 public class Activator implements BundleActivator {
 	
@@ -12,6 +13,8 @@ public class Activator implements BundleActivator {
     private static Activator plugin;
     
     private ServiceTracker commandServiceTracker;
+    
+    private ServiceTracker odaDriverTracker;
 	
 	public void start(BundleContext context) throws Exception {
 		plugin = this;
@@ -20,10 +23,14 @@ public class Activator implements BundleActivator {
 		// is provided via Spring (and should not be instantiated by OSGi)
 		commandServiceTracker = new ServiceTracker(context, ICommandService.class.getName(), null);
 		commandServiceTracker.open();
+		
+		odaDriverTracker = new ServiceTracker(context, IVeriniceOdaDriver.class.getName(), null);
+		odaDriverTracker.open();
 	}
 
 	public void stop(BundleContext context) throws Exception {
 		commandServiceTracker.close();
+		odaDriverTracker.close();
 	}
 	
 	public static Activator getDefault()
@@ -34,6 +41,11 @@ public class Activator implements BundleActivator {
 	public ICommandService getCommandService()
 	{
 		return (ICommandService) commandServiceTracker.getService();
+	}
+	
+	public IVeriniceOdaDriver getOdaDriver()
+	{
+		return (IVeriniceOdaDriver) odaDriverTracker.getService();
 	}
 	
 }

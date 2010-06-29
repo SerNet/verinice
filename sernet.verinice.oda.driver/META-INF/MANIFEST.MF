@@ -22,5 +22,6 @@ Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: SerNet
-Service-Component: OSGI-INF/component-user.xml, OSGI-INF/component.xml
-Import-Package: org.osgi.service.component
+Service-Component: OSGI-INF/component.xml
+Import-Package: org.osgi.service.component,
+ sernet.verinice.interfaces.oda

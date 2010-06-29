@@ -14,12 +14,16 @@ import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
+import org.jfree.chart.JFreeChart;
 
+import sernet.gs.ui.rcp.main.bsi.views.chart.MaturitySpiderChart;
+import sernet.verinice.interfaces.oda.IImageProvider;
+import sernet.verinice.interfaces.report.IOutputFormat;
+import sernet.verinice.interfaces.report.IReportOptions;
+import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.oda.driver.impl.IImageProvider;
 import sernet.verinice.report.service.Activator;
-import sernet.verinice.report.service.ServiceComponent;
 import sernet.verinice.samt.service.FindSamtGroup;
 import sernet.verinice.samt.service.LoadAllSamtTopics;
 
@@ -59,7 +63,6 @@ public class SamtReportType implements IReportType {
 	{
 		ControlGroup samtGroup = getSamtGroup();
 		
-		/*
 		JFreeChart chart = new MaturitySpiderChart().createChart(samtGroup);
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		try {
@@ -77,7 +80,6 @@ public class SamtReportType implements IReportType {
 					}
 
 				});
-				*/
 		
 		List<SamtTopic> samtTopics = getAllSamtTopics(samtGroup);
 
@@ -87,7 +89,7 @@ public class SamtReportType implements IReportType {
 		variables.put("totalSecurityFigure", 23);
 		variables.put("samtTopics", samtTopics);
 		
-		ServiceComponent.getDefault().getOdaDriver().setScriptVariables(variables);
+		Activator.getDefault().getOdaDriver().setScriptVariables(variables);
 	}
 
 	private ControlGroup getSamtGroup() {
