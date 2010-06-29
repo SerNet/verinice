@@ -2020,11 +2020,39 @@ Library.
          id="org.eclipse.equinox.ds"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.1.1.R35x_v20090806"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.equinox.util"
+         download-size="0"
+         install-size="0"
+         version="1.0.100.v20090520-1800"
+         unpack="false"/>
+
+   <plugin
+         id="jfreechart-1.0.11"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="jfreechart-1.0.11-experimental"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="jfreechart-1.0.11-swt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="jcommon-1.0.14"
          download-size="0"
          install-size="0"
          version="0.0.0"
