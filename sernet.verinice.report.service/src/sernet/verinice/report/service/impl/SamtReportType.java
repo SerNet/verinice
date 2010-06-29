@@ -13,6 +13,8 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
+import org.eclipse.birt.report.engine.api.IDataExtractionOption;
+import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.jfree.chart.JFreeChart;
 
@@ -44,7 +46,7 @@ public class SamtReportType implements IReportType {
 	}
 
 	public IOutputFormat[] getOutputFormats() {
-		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat() };
+		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new CSVOutputFormat() };
 	}
 
 	public void createReport(IReportOptions reportOptions) {
@@ -54,9 +56,17 @@ public class SamtReportType implements IReportType {
 		
 		URL reportDesign = SamtReportType.class.getResource("samt-report.rptdesign");
 		
-		IRunAndRenderTask task = brs.createTask(reportDesign);
-		
-		brs.render(task, reportOptions);
+		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
+		{
+			IRunAndRenderTask task = brs.createTask(reportDesign);
+			brs.render(task, reportOptions);
+		}
+		else
+		{
+			IDataExtractionTask task = brs.createExtractionTask(reportDesign);
+			// In a SAMT report the 4th result set is the one that is of interest.
+			brs.extract(task, reportOptions, 3);
+		}
 	}
 	
 	private void prepareReport()

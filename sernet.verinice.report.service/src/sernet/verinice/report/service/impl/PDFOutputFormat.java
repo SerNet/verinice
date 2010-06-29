@@ -26,11 +26,15 @@ class PDFOutputFormat extends AbstractOutputFormat {
 	IRenderOption createBIRTRenderOptions()
 	{
 		PDFRenderOption pdfOptions = new PDFRenderOption();
-		pdfOptions.setOutputFileName("output/bsh-networking.pdf");
 		pdfOptions.setOutputFormat("pdf");
 		pdfOptions.setOption(IPDFRenderOption.PAGE_OVERFLOW, IPDFRenderOption.OUTPUT_TO_MULTIPLE_PAGES);
 
 		return pdfOptions;
+	}
+
+	@Override
+	boolean isRenderOutput() {
+		return true;
 	}
 
 }

@@ -1,21 +1,29 @@
 package sernet.verinice.report.service.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.EngineConfig;
 import org.eclipse.birt.report.engine.api.EngineConstants;
 import org.eclipse.birt.report.engine.api.EngineException;
-import org.eclipse.birt.report.engine.api.IPDFRenderOption;
+import org.eclipse.birt.report.engine.api.IDataExtractionOption;
+import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRenderOption;
+import org.eclipse.birt.report.engine.api.IReportDocument;
 import org.eclipse.birt.report.engine.api.IReportEngine;
 import org.eclipse.birt.report.engine.api.IReportEngineFactory;
 import org.eclipse.birt.report.engine.api.IReportRunnable;
+import org.eclipse.birt.report.engine.api.IResultSetItem;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
-import org.eclipse.birt.report.engine.api.PDFRenderOption;
+import org.eclipse.birt.report.engine.api.IRunTask;
 
 import sernet.verinice.interfaces.report.IReportOptions;
 
@@ -52,6 +60,83 @@ public class BIRTReportService {
 		task.getAppContext().put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
 		
 		return task;
+	}
+	
+	public IDataExtractionTask createExtractionTask(URL rptDesignURL)
+	{
+		IRunTask task = null;
+		try {
+			IReportRunnable design = engine.openReportDesign(rptDesignURL.openStream());
+			task = engine.createRunTask(design);
+		} catch (EngineException e) {
+			log.log(Level.SEVERE, "Could not open report design: " + e);
+			throw new IllegalStateException(e);
+		} catch (IOException e) {
+			log.log(Level.SEVERE, "Could not open report design: " + e);
+			throw new IllegalStateException(e);
+		}
+		
+		task.getAppContext().put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
+		
+		File f;
+		try {
+			f = File.createTempFile("verinice", ".rptdocument");
+		} catch (IOException e) {
+			log.log(Level.SEVERE, "Could not create temporary file for report document.");
+			throw new IllegalStateException(e);
+		}
+		
+		try {
+			task.run(f.getAbsolutePath());
+		} catch (EngineException e) {
+			log.log(Level.SEVERE, "Could not create report: " + e);
+			throw new IllegalStateException(e);
+		}
+		
+		task.close();
+		
+		IReportDocument document = null;
+		try {
+			document = engine.openReportDocument(f.getAbsolutePath());
+		} catch (EngineException e) {
+			log.log(Level.SEVERE, "Could not open report document: " + e);
+			throw new IllegalStateException(e);
+		}
+		
+		return engine.createDataExtractionTask(document);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void extract(IDataExtractionTask task, IReportOptions options, int resultSetIndex)
+	{
+		IDataExtractionOption extractionOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTExtractionOptions();
+		try {
+			extractionOptions.setOutputStream(new FileOutputStream(options.getOutputFile()));
+		} catch (FileNotFoundException e) {
+			log.log(Level.SEVERE, "Could not prepare output stream: " + e);
+			throw new IllegalStateException(e);
+		}
+		
+		//Choose first result set
+		List<IResultSetItem> resultSetList;
+		try {
+			resultSetList = (List<IResultSetItem>) task.getResultSetList();
+		} catch (EngineException e) {
+			log.log(Level.SEVERE, "Could not prepare extraction: " + e);
+			throw new IllegalStateException(e);
+		}
+		IResultSetItem resultItem = (IResultSetItem) resultSetList.get( resultSetIndex );
+		task.selectResultSet(resultItem.getResultSetName());
+		
+		try {
+			task.extract(extractionOptions);
+		} catch (EngineException e) {
+			log.log(Level.SEVERE, "Could not extract data: " + e);
+			throw new IllegalStateException(e);
+		} catch (BirtException e) {
+			log.log(Level.SEVERE, "Could not extract data: " + e);
+			throw new IllegalStateException(e);
+		}
 	}
 	
 	public void render(IRunAndRenderTask task, IReportOptions options)

@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
  sernet.verinice.oda.driver;bundle-version="1.0.0",
  sernet.verinice.samt.service;bundle-version="0.1.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
- sernet.gs.service;bundle-version="1.11.1"
+ sernet.gs.service;bundle-version="1.11.1",
+ org.eclipse.birt.report.engine.dataextraction.csv;bundle-version="2.5.2"
 Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.impl
 Service-Component: OSGI-INF/component.xml

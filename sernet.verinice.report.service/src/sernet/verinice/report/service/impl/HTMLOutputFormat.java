@@ -32,4 +32,9 @@ public class HTMLOutputFormat extends AbstractOutputFormat {
 		return htmlOptions;
 	}
 
+	@Override
+	boolean isRenderOutput() {
+		return true;
+	}
+
 }
