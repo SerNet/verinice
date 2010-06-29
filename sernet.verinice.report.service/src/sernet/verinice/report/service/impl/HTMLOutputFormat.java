@@ -1,25 +1,28 @@
-package sernet.verinice.report.service.output;
+package sernet.verinice.report.service.impl;
 
 import org.eclipse.birt.report.engine.api.HTMLRenderOption;
 import org.eclipse.birt.report.engine.api.IRenderOption;
 
-import sernet.verinice.report.service.impl.IOutputFormat;
 
-public class HTMLOutputFormat implements IOutputFormat {
+public class HTMLOutputFormat extends AbstractOutputFormat {
 
+	@Override
 	public String getFileSuffix() {
 		return "html";
 	}
 
+	@Override
 	public String getId() {
 		return "html";
 	}
 
+	@Override
 	public String getLabel() {
 		return "Hypertext Markup Language (HTML)";
 	}
 	
-	public IRenderOption createBIRTRenderOptions()
+	@Override
+	IRenderOption createBIRTRenderOptions()
 	{
 		HTMLRenderOption htmlOptions = new HTMLRenderOption();
 		htmlOptions.setHtmlPagination(false);

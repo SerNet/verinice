@@ -1,26 +1,29 @@
-package sernet.verinice.report.service.output;
+package sernet.verinice.report.service.impl;
 
 import org.eclipse.birt.report.engine.api.IPDFRenderOption;
 import org.eclipse.birt.report.engine.api.IRenderOption;
 import org.eclipse.birt.report.engine.api.PDFRenderOption;
 
-import sernet.verinice.report.service.impl.IOutputFormat;
 
-public class PDFOutputFormat implements IOutputFormat {
+class PDFOutputFormat extends AbstractOutputFormat {
 
+	@Override
 	public String getFileSuffix() {
 		return "pdf";
 	}
 
+	@Override
 	public String getId() {
 		return "pdf";
 	}
 
+	@Override
 	public String getLabel() {
 		return "Portable Document Format (PDF)";
 	}
 	
-	public IRenderOption createBIRTRenderOptions()
+	@Override
+	IRenderOption createBIRTRenderOptions()
 	{
 		PDFRenderOption pdfOptions = new PDFRenderOption();
 		pdfOptions.setOutputFileName("output/bsh-networking.pdf");

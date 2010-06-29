@@ -1,4 +1,4 @@
-package sernet.verinice.report.service.support;
+package sernet.verinice.report.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,12 +20,6 @@ import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.oda.driver.impl.IImageProvider;
 import sernet.verinice.report.service.Activator;
 import sernet.verinice.report.service.ServiceComponent;
-import sernet.verinice.report.service.impl.BIRTReportService;
-import sernet.verinice.report.service.impl.IOutputFormat;
-import sernet.verinice.report.service.impl.IReportOptions;
-import sernet.verinice.report.service.impl.IReportType;
-import sernet.verinice.report.service.output.HTMLOutputFormat;
-import sernet.verinice.report.service.output.PDFOutputFormat;
 import sernet.verinice.samt.service.FindSamtGroup;
 import sernet.verinice.samt.service.LoadAllSamtTopics;
 

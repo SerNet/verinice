@@ -2,9 +2,6 @@ package sernet.verinice.report.service.impl;
 
 import java.io.File;
 
-import sernet.verinice.report.service.output.PDFOutputFormat;
-import sernet.verinice.report.service.support.SamtReportType;
-import sernet.verinice.report.service.support.TestReportType;
 
 public class ReportService implements IReportService {
 	

@@ -54,7 +54,7 @@ public class BIRTReportService {
 	
 	public void render(IRunAndRenderTask task, IReportOptions options)
 	{
-		IRenderOption renderOptions = options.getOutputFormat().createBIRTRenderOptions();
+		IRenderOption renderOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
 		renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
 		
 		task.setRenderOption(renderOptions);

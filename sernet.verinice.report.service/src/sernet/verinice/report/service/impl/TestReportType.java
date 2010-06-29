@@ -1,14 +1,9 @@
-package sernet.verinice.report.service.support;
+package sernet.verinice.report.service.impl;
 
 import java.net.URL;
 
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 
-import sernet.verinice.report.service.impl.BIRTReportService;
-import sernet.verinice.report.service.impl.IOutputFormat;
-import sernet.verinice.report.service.impl.IReportOptions;
-import sernet.verinice.report.service.impl.IReportType;
-import sernet.verinice.report.service.output.PDFOutputFormat;
 
 public class TestReportType implements IReportType {
 
