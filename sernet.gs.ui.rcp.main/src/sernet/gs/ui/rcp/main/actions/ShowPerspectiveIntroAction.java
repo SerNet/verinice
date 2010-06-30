@@ -70,7 +70,7 @@ public abstract class ShowPerspectiveIntroAction implements IIntroAction {
         PlatformUI.getWorkbench().getIntroManager().closeIntro(introPart);
         
         // Show CheatSheet
-        ShowCheatSheetAction action = new ShowCheatSheetAction("Show self assessment cheat sheet", getCheatSheetId());
+        ShowCheatSheetAction action = new ShowCheatSheetAction("Show security assessment cheat sheet", getCheatSheetId());
         action.run();
     }
 
