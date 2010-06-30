@@ -39,7 +39,6 @@ Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  sernet.hui.common;bundle-version="1.1.1",
  opencsv;bundle-version="2.1.0"
-Import-Package: au.com.bytecode.opencsv,
- org.eclipse.osgi.util,
+Import-Package: org.eclipse.osgi.util,
  org.hibernate.criterion;version="3.2.6.ga",
  org.springframework.orm.hibernate3
