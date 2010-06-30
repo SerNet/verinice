@@ -592,7 +592,7 @@ Library.
          id="sernet.gs.service"
          download-size="0"
          install-size="0"
-         version="1.11.1"
+         version="1.12.0.qualifier"
          unpack="false"/>
 
    <plugin
