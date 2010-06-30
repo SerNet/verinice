@@ -27,7 +27,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.bsi.filter.TextFilter;
-import sernet.verinice.iso27k.service.IItem;
+import sernet.verinice.interfaces.iso27k.IItem;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>

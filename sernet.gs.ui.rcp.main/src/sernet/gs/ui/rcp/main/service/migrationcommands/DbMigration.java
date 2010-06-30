@@ -19,7 +19,7 @@ package sernet.gs.ui.rcp.main.service.migrationcommands;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.verinice.interfaces.CommandException;

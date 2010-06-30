@@ -21,9 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import sernet.gs.service.GSServiceException;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.verinice.interfaces.GenericCommand;
 
 public class GetBausteinText extends GenericCommand {

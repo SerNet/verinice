@@ -7,8 +7,8 @@ Bundle-Activator: sernet.verinice.samt.service.Activator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  com.springsource.org.hibernate;bundle-version="3.2.6",
- sernet.gs.ui.rcp.main;bundle-version="1.1.1",
- sernet.gs.service;bundle-version="1.11.1"
+ sernet.gs.service;bundle-version="1.11.1",
+ sernet.hui.common;bundle-version="1.1.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: sernet.verinice.samt.service

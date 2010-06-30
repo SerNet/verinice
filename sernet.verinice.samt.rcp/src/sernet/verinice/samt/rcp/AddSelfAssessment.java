@@ -30,11 +30,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
+import sernet.gs.service.CsvFile;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.iso27k.service.commands.CsvFile;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>

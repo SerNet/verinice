@@ -31,7 +31,7 @@ import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
-import sernet.verinice.iso27k.service.IItem;
+import sernet.verinice.interfaces.iso27k.IItem;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

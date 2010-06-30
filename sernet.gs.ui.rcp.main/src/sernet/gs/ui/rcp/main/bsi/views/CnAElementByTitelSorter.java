@@ -21,7 +21,7 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
-import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
+import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;

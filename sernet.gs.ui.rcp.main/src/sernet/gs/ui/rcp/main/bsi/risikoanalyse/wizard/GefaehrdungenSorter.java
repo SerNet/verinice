@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
+import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 
 /**

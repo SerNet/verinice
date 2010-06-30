@@ -24,8 +24,8 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.gs.ui.rcp.main.VeriniceCharset;
 
 /**
  * Extension of {@link CnAWorkspace} from verinice core.

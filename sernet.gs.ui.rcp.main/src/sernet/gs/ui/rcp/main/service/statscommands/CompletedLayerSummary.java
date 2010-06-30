@@ -31,7 +31,7 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BSIModel;

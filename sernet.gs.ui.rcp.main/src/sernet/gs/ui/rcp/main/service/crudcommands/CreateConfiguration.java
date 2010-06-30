@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.configuration.Configuration;

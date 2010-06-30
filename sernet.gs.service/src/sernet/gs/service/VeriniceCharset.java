@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main;
+package sernet.gs.service;
 
 import java.nio.charset.Charset;
 

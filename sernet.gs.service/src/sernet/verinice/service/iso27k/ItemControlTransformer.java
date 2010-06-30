@@ -17,18 +17,16 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
+package sernet.verinice.service.iso27k;
 
-import sernet.verinice.iso27k.rcp.CatalogView;
-import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.model.samt.SamtTopic;
 
 /**
- * Transforms {@link IItem} from {@link CatalogView} to ISO 27k {@link Control}s
+ * Transforms {@link IItem} from CatalogView to ISO 27k {@link Control}s
  * or {@link ControlGroup}s
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>

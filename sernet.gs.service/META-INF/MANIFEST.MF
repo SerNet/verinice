@@ -22,6 +22,7 @@ Export-Package: org.ccil.cowan.tagsoup,
  sernet.gs.service;version="1.11.1",
  sernet.verinice.interfaces,
  sernet.verinice.interfaces.encryption,
+ sernet.verinice.interfaces.iso27k,
  sernet.verinice.interfaces.oda,
  sernet.verinice.interfaces.report,
  sernet.verinice.model.bsi,
@@ -30,12 +31,14 @@ Export-Package: org.ccil.cowan.tagsoup,
  sernet.verinice.model.common.configuration,
  sernet.verinice.model.ds,
  sernet.verinice.model.iso27k;version="1.1.1";uses:="sernet.gs.ui.rcp.main.common.model",
- sernet.verinice.model.samt
+ sernet.verinice.model.samt,
+ sernet.verinice.service.iso27k
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
 Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
- sernet.hui.common;bundle-version="1.1.1"
+ sernet.hui.common;bundle-version="1.1.1",
+ opencsv;bundle-version="2.1.0"
 Import-Package: org.eclipse.osgi.util,
  org.hibernate.criterion;version="3.2.6.ga",
  org.springframework.orm.hibernate3

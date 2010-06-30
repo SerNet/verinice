@@ -15,7 +15,7 @@
  * Contributors:
  *     Daniel <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service.commands;
+package sernet.verinice.service.iso27k;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+
+import sernet.gs.service.CsvFile;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>

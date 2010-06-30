@@ -25,7 +25,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import sernet.gs.ui.rcp.main.VeriniceCharset;
+import sernet.gs.service.VeriniceCharset;
 
 /**
  * Preference page to edit self-assessment (SAMT) preferences

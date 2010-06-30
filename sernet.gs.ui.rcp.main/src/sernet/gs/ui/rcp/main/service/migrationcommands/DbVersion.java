@@ -19,10 +19,11 @@ package sernet.gs.ui.rcp.main.service.migrationcommands;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IVersionConstants;
 
 /**
  * Version check.
@@ -41,25 +42,6 @@ public class DbVersion extends GenericCommand  {
 	public DbVersion(double clientVersion) {
 		this.clientVersion = clientVersion;
 	}
-
-	/**
-	 * Version number of DB that can be used:
-	 */
-	public static final double COMPATIBLE_DB_VERSION = 0.97D;
-	
-	/**
-	 * Version number of client that can be used.
-	 * (Must be the same in client / server code of this class.)
-	 * 
-	 * This value is submitted by the client on every first connect in the
-	 * instance variable <code>clientVersion</code>. If this value differs from
-	 * the static field, the server throws an exception to prevent incompatible clients
-	 * from connecting.
-	 * 
-	 * If verinice runs standalone (just on a client without server), the version 
-	 * number will always be the same.
-	 */
-	public static final double COMPATIBLE_CLIENT_VERSION = 0.97D;
 
 	/**
 	 * Update DB version to compatible DB version.
@@ -106,9 +88,9 @@ public class DbVersion extends GenericCommand  {
 
 
 	public void execute() {
-		if (clientVersion != COMPATIBLE_CLIENT_VERSION ) {
+		if (clientVersion != IVersionConstants.COMPATIBLE_CLIENT_VERSION ) {
 			throw new RuntimeCommandException("Inkompatible Client Version. " +
-					"Server akzeptiert nur V " + COMPATIBLE_CLIENT_VERSION
+					"Server akzeptiert nur V " + IVersionConstants.COMPATIBLE_CLIENT_VERSION
 					+ ". Vorhandene Client Version: " + clientVersion);
 		}
 		

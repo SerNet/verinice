@@ -17,19 +17,30 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
-
-import sernet.verinice.model.iso27k.IControl;
+package sernet.verinice.interfaces;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public interface IControlFactory {
+public interface IVersionConstants {
 
     /**
-     * @return
+     * Version number of DB that can be used:
      */
-    IControl createControl();
+    public static final double COMPATIBLE_DB_VERSION = 0.97D;
+    /**
+     * Version number of client that can be used.
+     * (Must be the same in client / server code of this class.)
+     * 
+     * This value is submitted by the client on every first connect in the
+     * instance variable <code>clientVersion</code>. If this value differs from
+     * the static field, the server throws an exception to prevent incompatible clients
+     * from connecting.
+     * 
+     * If verinice runs standalone (just on a client without server), the version 
+     * number will always be the same.
+     */
+    public static final double COMPATIBLE_CLIENT_VERSION = 0.97D;
 
 }

@@ -15,7 +15,7 @@
  * Contributors:
  *     Daniel <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
+package sernet.verinice.service.iso27k;
 
 import java.util.SortedMap;
 import java.util.StringTokenizer;
@@ -24,7 +24,10 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
+import sernet.gs.service.NumericStringComparator;
+import sernet.verinice.interfaces.iso27k.ICatalog;
+import sernet.verinice.interfaces.iso27k.IItem;
+import sernet.verinice.service.iso27k.Item;;
 
 /**
  * Tree structured collections of items.

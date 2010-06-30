@@ -22,8 +22,8 @@ import java.util.Set;
 
 import org.hibernate.proxy.HibernateProxyHelper;
 
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateLink;
 import sernet.verinice.interfaces.CommandException;

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry exported="true" kind="lib" path="lib/miglayout/miglayout-3.7.1-swt.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/opencsv-2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/NOA-2.2.1/ag.ion.noa_2.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/NOA-2.2.1/java_uno_accessbridge.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/NOA-2.2.1/java_uno.jar"/>

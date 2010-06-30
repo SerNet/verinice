@@ -32,26 +32,24 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.service.CsvFile;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.iso27k.service.IControlFactory;
-import sernet.verinice.iso27k.service.IItem;
-import sernet.verinice.iso27k.service.ItemControlTransformer;
-import sernet.verinice.iso27k.service.commands.CsvFile;
-import sernet.verinice.iso27k.service.commands.ImportCatalog;
+import sernet.verinice.interfaces.IChangeLoggingCommand;
+import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.iso27k.ImportCatalog;
+import sernet.verinice.service.iso27k.ItemControlTransformer;
 
 /**
  * Creates a new self-assessment (SAMT).

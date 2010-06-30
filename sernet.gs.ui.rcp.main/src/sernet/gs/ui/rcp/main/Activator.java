@@ -50,6 +50,7 @@ import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IVersionConstants;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.StatusResult;
@@ -378,7 +379,7 @@ public class Activator extends AbstractUIPlugin {
 		};
 		timeout.start();
 		try {
-			DbVersion command = new DbVersion(DbVersion.COMPATIBLE_CLIENT_VERSION);
+			DbVersion command = new DbVersion(IVersionConstants.COMPATIBLE_CLIENT_VERSION);
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
 			done[0] = true;
 		} catch (CommandException e) {

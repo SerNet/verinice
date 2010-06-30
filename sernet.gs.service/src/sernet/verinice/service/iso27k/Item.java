@@ -15,7 +15,7 @@
  * Contributors:
  *     Daniel <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
+package sernet.verinice.service.iso27k;
 
 import java.util.Collection;
 import java.util.SortedMap;
@@ -24,7 +24,7 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
-import sernet.verinice.iso27k.rcp.ISMViewLabelProvider;
+import sernet.verinice.interfaces.iso27k.IItem;
 
 /**
  * An item has a name and a description

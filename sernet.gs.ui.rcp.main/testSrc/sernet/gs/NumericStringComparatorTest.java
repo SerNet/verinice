@@ -18,7 +18,7 @@
 package sernet.gs;
 
 import junit.framework.TestCase;
-import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
+import sernet.gs.service.NumericStringComparator;
 
 
 /**

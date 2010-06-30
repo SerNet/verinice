@@ -20,7 +20,7 @@ package sernet.gs.ui.rcp.main.reports;
 import java.text.Collator;
 import java.util.Comparator;
 
-import sernet.gs.ui.rcp.main.common.model.NumericStringComparator;
+import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 

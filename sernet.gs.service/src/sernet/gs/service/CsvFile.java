@@ -15,7 +15,7 @@
  * Contributors:
  *     Daniel <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service.commands;
+package sernet.gs.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,8 +25,6 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
 
-import sernet.gs.ui.rcp.main.VeriniceCharset;
-import sernet.verinice.iso27k.service.FileUtil;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>

@@ -2058,4 +2058,24 @@ Library.
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="opencsv"
+         download-size="0"
+         install-size="0"
+         version="2.1.0"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.dataextraction.csv"
+         download-size="0"
+         install-size="0"
+         version="2.5.2.v20100115"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.dataextraction"
+         download-size="0"
+         install-size="0"
+         version="2.5.2.v20100115"
+         unpack="false"/>
+
 </feature>

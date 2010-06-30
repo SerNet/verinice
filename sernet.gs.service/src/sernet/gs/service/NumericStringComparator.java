@@ -52,13 +52,11 @@
  * <http://www.apache.org/>.
  */
 
-package sernet.gs.ui.rcp.main.common.model;
+package sernet.gs.service;
 
 import java.util.Comparator;
 
 import org.apache.log4j.Logger;
-
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 
 /**
  * A Comparator which deals with alphabet characters 'naturally', but 

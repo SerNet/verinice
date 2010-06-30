@@ -27,8 +27,6 @@ import org.hibernate.dialect.function.CastFunction;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.verinice.iso27k.service.ControlMaturityService;
-import sernet.verinice.iso27k.service.Item;
-import sernet.verinice.iso27k.service.ItemControlTransformer;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.Audit;
@@ -50,6 +48,8 @@ import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.iso27k.Requirement;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.service.iso27k.Item;
+import sernet.verinice.service.iso27k.ItemControlTransformer;
 
 /**
  * Label provider for ISO 27000 model elements.

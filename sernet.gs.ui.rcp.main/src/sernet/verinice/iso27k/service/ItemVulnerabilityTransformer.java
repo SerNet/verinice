@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
+import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;

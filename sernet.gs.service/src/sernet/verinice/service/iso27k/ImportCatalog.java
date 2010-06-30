@@ -15,25 +15,26 @@
  * Contributors:
  *     Daniel <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service.commands;
+package sernet.verinice.service.iso27k;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.VeriniceCharset;
-import sernet.gs.ui.rcp.main.service.commands.RuntimeCommandException;
+import sernet.gs.service.CsvFile;
+import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.iso27k.service.Catalog;
-import sernet.verinice.iso27k.service.ICatalog;
-import sernet.verinice.iso27k.service.ICatalogImporter;
-import sernet.verinice.iso27k.service.Item;
+import sernet.verinice.interfaces.iso27k.ICatalog;
+import sernet.verinice.service.iso27k.Catalog;
+import sernet.verinice.interfaces.iso27k.ICatalogImporter;
+import sernet.verinice.service.iso27k.Item;
+import sernet.verinice.service.iso27k.ImportConfiguration;
 import au.com.bytecode.opencsv.CSVReader;
 
 /**

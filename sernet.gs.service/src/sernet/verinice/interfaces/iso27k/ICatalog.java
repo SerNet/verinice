@@ -15,53 +15,47 @@
  * Contributors:
  *     Daniel <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
+package sernet.verinice.interfaces.iso27k;
 
-import java.io.Serializable;
-import java.util.Collection;
+
 
 /**
- * An {@link IItem} is an element of a tree structured
- * collection. Items are structured by a number string.
- * Number string format is: n[.n1..] e.g. 1.2 or 3.4.1 or simply 2
+ * Tree structured collections of items.
+ * Each item has a heading and a text 
+ * and optionally a list of items as children.
  * 
- * An item has a name and a description
- * and optionally a collection of child items
- * to create the tree structure.
+ * To get the root item of the tree call getRoot.
  * 
- * @see ICatalog 
- * @author Daniel <dm[at]sernet[dot]de>
+ * @author Daniel Murygin<dm[at]sernet[dot]de>
  */
-public interface IItem extends Serializable {
+public interface ICatalog {
 	
-	static final int CONTROL = 0;
-	static final int THREAT = 1;
-	static final int VULNERABILITY = 2;
-	
-	String getNumberString();
-	
+	/**
+	 * Returns the name of the catalog
+	 * 
+	 * @return the name of the catalog
+	 */
 	String getName();
 	
+	/**
+	 * Returns the description of the catalog
+	 * 
+	 * @return the description of the catalog
+	 */
 	String getDescription();
 	
+	/**
+	 * Sets the description of the catalog
+	 * 
+	 * @param description
+	 */
 	void setDescription( String description );
 	
-	int getTypeId();
-
-	void setTypeId(int typeId);
+	/**
+	 * Returns the root item of the item tree
+	 * 
+	 * @return root of the item tree
+	 */
+	IItem getRoot();
 	
-	void addItem(IItem item);
-	
-	Collection<IItem> getItems();
-
-	boolean isMaturityLevelSupport();
-	
-	public String getMaturity();
-
-	public String getWeight1();
-	public String getWeight2();
-
-	public String getThreshold1();
-	public String getThreshold2();
-
 }

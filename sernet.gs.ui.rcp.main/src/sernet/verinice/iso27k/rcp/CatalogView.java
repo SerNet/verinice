@@ -58,10 +58,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.service.CsvFile;
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.VeriniceCharset;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -74,17 +75,16 @@ import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.action.ControlDragListener;
-import sernet.verinice.iso27k.service.IItem;
-import sernet.verinice.iso27k.service.Item;
-import sernet.verinice.iso27k.service.ItemControlTransformer;
-import sernet.verinice.iso27k.service.commands.CsvFile;
-import sernet.verinice.iso27k.service.commands.ImportCatalog;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.service.iso27k.ImportCatalog;
+import sernet.verinice.service.iso27k.Item;
+import sernet.verinice.service.iso27k.ItemControlTransformer;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>
