@@ -30,7 +30,7 @@ Export-Package: org.ccil.cowan.tagsoup,
  sernet.verinice.model.common,
  sernet.verinice.model.common.configuration,
  sernet.verinice.model.ds,
- sernet.verinice.model.iso27k;version="1.1.1";uses:="sernet.gs.ui.rcp.main.common.model",
+ sernet.verinice.model.iso27k;uses:="sernet.gs.ui.rcp.main.common.model",
  sernet.verinice.model.samt,
  sernet.verinice.service.iso27k
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

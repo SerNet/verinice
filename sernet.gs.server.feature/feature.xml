@@ -223,7 +223,7 @@ Library.
       <import plugin="org.junit4"/>
       <import plugin="org.springframework.security.core"/>
       <import plugin="sernet.hui.common" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="sernet.gs.ui.rcp.main" version="0.8.0" match="greaterOrEqual"/>
+      <import plugin="sernet.gs.ui.rcp.main" version="1.2.0.qualifier" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.app"/>
       <import plugin="org.springframework.orm"/>
@@ -585,7 +585,7 @@ Library.
          id="sernet.gs.ui.rcp.main"
          download-size="0"
          install-size="0"
-         version="1.1.1"
+         version="1.2.0.qualifier"
          unpack="false"/>
 
    <plugin
