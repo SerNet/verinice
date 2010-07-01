@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  sernet.gs.service,
  org.eclipse.birt.report.engine.dataextraction.csv;bundle-version="2.5.2",
- sernet.gs.ui.rcp.main;bundle-version="1.2.0.qualifier"
+ sernet.gs.ui.rcp.main
 Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.impl
 Service-Component: OSGI-INF/component.xml
