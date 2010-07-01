@@ -609,7 +609,7 @@
                commandId="org.eclipse.ui.edit.cut"
                disabledIcon="icons/cut.png"
                icon="icons/cut.png"
-               label="%command.label"/>
+               label="%command.label.2"/>
          <command
                commandId="org.eclipse.ui.edit.copy"
                disabledIcon="icons/copy.png"
