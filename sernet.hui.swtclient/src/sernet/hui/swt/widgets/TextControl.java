@@ -135,7 +135,9 @@ public class TextControl implements IHuiControl {
 			if (!editable)
 				text.setBackground(Colors.GREY);
 			text.setToolTipText(fieldType.getTooltiptext());
-			text.setText(this.savedProp.getPropertyValue());
+			if(this.savedProp!=null && this.savedProp.getPropertyValue()!=null) {
+			    text.setText(this.savedProp.getPropertyValue());
+			}
 			text.setTextLimit(HIBERNATE_MAPPED_STRING_LIMIT);
 			return text;
 		}
