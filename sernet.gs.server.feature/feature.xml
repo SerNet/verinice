@@ -585,7 +585,7 @@ Library.
          id="sernet.gs.ui.rcp.main"
          download-size="0"
          install-size="0"
-         version="1.2.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
