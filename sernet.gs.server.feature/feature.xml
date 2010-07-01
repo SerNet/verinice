@@ -223,13 +223,13 @@ Library.
       <import plugin="org.junit4"/>
       <import plugin="org.springframework.security.core"/>
       <import plugin="sernet.hui.common" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="sernet.gs.ui.rcp.main" version="1.2.0.qualifier" match="greaterOrEqual"/>
+      <import plugin="sernet.gs.ui.rcp.main"/>
       <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.app"/>
       <import plugin="org.springframework.orm"/>
       <import plugin="org.springframework.osgi.web"/>
       <import plugin="org.springframework.web.servlet"/>
-      <import plugin="sernet.gs.service" version="1.7.1" match="greaterOrEqual"/>
+      <import plugin="sernet.gs.service"/>
       <import plugin="sernet.gs.reveng"/>
       <import plugin="org.eclipse.core.runtime" version="3.5.0" match="compatible"/>
       <import plugin="org.eclipse.compare.core" version="3.5.0" match="compatible"/>
@@ -592,7 +592,7 @@ Library.
          id="sernet.gs.service"
          download-size="0"
          install-size="0"
-         version="1.12.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
