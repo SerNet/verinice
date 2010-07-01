@@ -281,7 +281,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.elementcontrib"
-            objectClass="sernet.gs.ui.rcp.main.common.model.CnATreeElement">
+            objectClass="sernet.verinice.model.common.CnATreeElement">
              <action
                    class="sernet.gs.ui.rcp.main.bsi.actions.DeleteActionDelegate"
                    enablesFor="+"
@@ -292,10 +292,10 @@
                    tooltip="%action.tooltip">
                 <enablement>
                    <or>
-                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement"/>
-                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung"/>
-                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysis"/>
-                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzung"/>
+                   	<objectClass name="sernet.verinice.model.bsi.IBSIStrukturElement"/>
+                   	<objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
+                   	<objectClass name="sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis"/>
+                   	<objectClass name="sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung"/>
                    	<objectClass name="sernet.verinice.iso27k.model.IISO27kElement"/>
                    </or>
                 </enablement>
@@ -310,9 +310,9 @@
                    tooltip="%action.tooltip.0">
                    <enablement>
                    <or>
-                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement"/>
-                   	<objectClass name="sernet.gs.ui.rcp.main.bsi.model.BausteinUmsetzung"/>
-                    <objectClass name="sernet.gs.ui.rcp.main.bsi.model.MassnahmenUmsetzung"/>
+                   	<objectClass name="sernet.verinice.model.bsi.IBSIStrukturElement"/>
+                   	<objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
+                    <objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
                    	<objectClass name="sernet.verinice.iso27k.model.IISO27kElement"/>
                    </or>
                 </enablement>
@@ -323,7 +323,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.elementcontrib"
-            objectClass="sernet.gs.ui.rcp.main.common.model.CnALink">
+            objectClass="sernet.verinice.model.common.CnALink">
              <action
                    class="sernet.gs.ui.rcp.main.bsi.actions.DeleteLinkActionDelegate"
                    enablesFor="+"
@@ -340,7 +340,7 @@
           <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.categorycontrib"
-            objectClass="sernet.gs.ui.rcp.main.common.model.CnATreeElement">
+            objectClass="sernet.verinice.model.common.CnATreeElement">
         <menu
                id="sernet.gs.ui.rcp.main.bsi.addsubmenu"
                label="%menu.label"
@@ -353,7 +353,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.gebaeudecontrib"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.GebaeudeKategorie">
+            objectClass="sernet.verinice.model.bsi.GebaeudeKategorie">
         
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddGebaudeActionDelegate"
@@ -370,7 +370,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.personcontrib"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.PersonenKategorie">
+            objectClass="sernet.verinice.model.bsi.PersonenKategorie">
              <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddPersonActionDelegate"
                enablesFor="+"
@@ -384,7 +384,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.anwendungContrib"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.AnwendungenKategorie">
+            objectClass="sernet.verinice.model.bsi.AnwendungenKategorie">
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddAnwendungActionDelegate"
                enablesFor="+"
@@ -398,7 +398,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.clientContrib"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.ClientsKategorie">
+            objectClass="sernet.verinice.model.bsi.ClientsKategorie">
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddClientActionDelegate"
                enablesFor="+"
@@ -413,7 +413,7 @@
        <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.sonstitContrib"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.SonstigeITKategorie">
+            objectClass="sernet.verinice.model.bsi.SonstigeITKategorie">
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddSonstItActionDelegate"
                enablesFor="+"
@@ -428,7 +428,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.nkContrib"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.NKKategorie">
+            objectClass="sernet.verinice.model.bsi.NKKategorie">
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddNetzKomponenteActionDelegate"
                enablesFor="+"
@@ -442,7 +442,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.tkContrib"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.TKKategorie">
+            objectClass="sernet.verinice.model.bsi.TKKategorie">
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddTelefonKomponenteActionDelegate"
                enablesFor="+"
@@ -456,7 +456,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.serverContrib"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.ServerKategorie">
+            objectClass="sernet.verinice.model.bsi.ServerKategorie">
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddServerActionDelegate"
                enablesFor="+"
@@ -470,7 +470,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.raumContrib"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.RaeumeKategorie">
+            objectClass="sernet.verinice.model.bsi.RaeumeKategorie">
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddRaumActionDelegate"
                enablesFor="+"
@@ -484,7 +484,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.itverbundcontrib"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.ITVerbund">
+            objectClass="sernet.verinice.model.bsi.ITVerbund">
              <action
                    class="sernet.gs.ui.rcp.main.bsi.actions.AddITVerbundActionDelegate"
                    enablesFor="*"
@@ -499,7 +499,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.personContribution1"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.Person">
+            objectClass="sernet.verinice.model.bsi.Person">
          <action
                class="sernet.gs.ui.rcp.main.actions.ConfigurationAction"
                enablesFor="1"
@@ -514,7 +514,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.notecontrib"
-            objectClass="sernet.gs.ui.rcp.main.common.model.CnATreeElement">
+            objectClass="sernet.verinice.model.common.CnATreeElement">
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddNoteActionDelegate"
                enablesFor="1"
@@ -529,7 +529,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.filecontrib"
-            objectClass="sernet.gs.ui.rcp.main.common.model.CnATreeElement">
+            objectClass="sernet.verinice.model.common.CnATreeElement">
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddFileActionDelegate"
                enablesFor="1"
@@ -545,7 +545,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.verinice.iso27k.rcp.action.assetcontrib"
-            objectClass="sernet.verinice.iso27k.model.Group">
+            objectClass="sernet.verinice.model.iso27k.IISO27kGroup">
          <action
                class="sernet.verinice.iso27k.rcp.action.AddElement"
                enablesFor="1"
@@ -559,7 +559,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.verinice.iso27k.rcp.action.groupcontrib"
-            objectClass="sernet.verinice.iso27k.model.Group">
+            objectClass="sernet.verinice.model.iso27k.IISO27kGroup">
          <action
                class="sernet.verinice.iso27k.rcp.action.AddGroup"
                enablesFor="1"
@@ -574,7 +574,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsielementcontrib"
-            objectClass="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement">
+            objectClass="sernet.verinice.model.bsi.IBSIStrukturElement">
          <action
                class="sernet.gs.ui.rcp.main.bsi.risikoanalyse.actions.NeueRisikoanalyseAction"
                enablesFor="1"
@@ -586,15 +586,15 @@
             <enablement>
                <and>
                   <objectClass
-                        name="sernet.gs.ui.rcp.main.bsi.model.IBSIStrukturElement">
+                        name="sernet.verinice.model.bsi.IBSIStrukturElement">
                   </objectClass>
                   <not>
                      <or>
                         <objectClass
-                              name="sernet.gs.ui.rcp.main.bsi.model.ITVerbund">
+                              name="sernet.verinice.model.bsi.ITVerbund">
                         </objectClass>
                         <objectClass
-                              name="sernet.gs.ui.rcp.main.bsi.model.Person">
+                              name="sernet.verinice.model.bsi.Person">
                         </objectClass>
                      </or>
                   </not>
@@ -946,7 +946,7 @@
          <enabledWhen>
             	<with variable="selection">
 	                <iterate operator="and">
-	                    <instanceof value="sernet.gs.ui.rcp.main.common.model.CnATreeElement"/>
+	                    <instanceof value="sernet.verinice.model.common.CnATreeElement"/>
 	                    <test property="sernet.verinice.iso27k.model.canContain"/>       
 	                </iterate>
             	</with>
@@ -966,7 +966,7 @@
 	   <propertyTester
 	         id="sernet.verinice.iso27k.rcp.action.GroupTester"
 	         class="sernet.verinice.iso27k.rcp.action.GroupTester"
-	         type="sernet.gs.ui.rcp.main.common.model.CnATreeElement"
+	         type="sernet.verinice.model.common.CnATreeElement"
 	         namespace="sernet.verinice.iso27k.model"
 	         properties="canContain">
 	   </propertyTester>
