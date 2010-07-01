@@ -182,8 +182,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 					// skip value
 				}
 			}
-			else
+			else if(prop.getPropertyValue()!=null ) {
 				result.append(prop.getPropertyValue());
+			}
 			
 			if (iter.hasNext())
 				result.append(", ");
