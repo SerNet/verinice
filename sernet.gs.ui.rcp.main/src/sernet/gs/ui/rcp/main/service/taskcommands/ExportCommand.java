@@ -56,8 +56,31 @@ public class ExportCommand extends GenericCommand
 	// TODO: Use NamespaceUtil, when available!
 	public static HashMap<String, String> syncNamespaces = new HashMap<String, String>();
 	
+	// Blacklist of object types that should not be exported as an object:
+	private static HashMap<String, String> blacklist = new HashMap<String, String>();
+	
+	/*+++
+	 * List of already-exported objects' IDs, to
+	 * prevent multiple inclusion of a single object
+	 * in <syncData>, e.g. due to explicitly selecting
+	 * a father element and one of its successors:
+	 *++++++++++++++++++++++++++++++++++++++++++++++++*/
+	private HashMap<String, String> exportedObjectIDs = new HashMap<String, String>();
+	
 	static
 	{
+		blacklist.put("it-verbund", new String());
+		blacklist.put("raeume-kategorie", new String());
+		blacklist.put("nk-kategorie", new String());
+		blacklist.put("server-kategorie", new String());
+		blacklist.put("personen-kategorie", new String());
+		blacklist.put("gebaeude-kategorie", new String());
+		blacklist.put("clients-kategorie", new String());
+		blacklist.put("anwendungen-kategorie", new String());
+		blacklist.put("nk-kategorie", new String());
+		blacklist.put("sonstige-it-kategorie", new String());
+		blacklist.put("tk-kategorie", new String());
+		
 		syncNamespaces.put("sync", "http://www.sernet.de/sync/sync");
 		syncNamespaces.put("data", "http://www.sernet.de/sync/data");
 		syncNamespaces.put("map", "http://www.sernet.de/sync/mapping");
@@ -82,6 +105,8 @@ public class ExportCommand extends GenericCommand
 	
 	public void execute()
 	{
+		exportedObjectIDs = new HashMap<String, String>();
+		
 		/*+++++
 		 * Create empty DOM-tree from scratch:
 		 *++++++++++++++++++++++++++++++++++++*/
@@ -172,21 +197,7 @@ public class ExportCommand extends GenericCommand
 	 * @return List<Element>
 	 */
 	private List<Element> export( CnATreeElement cnATreeElement, String timestamp )
-	{
-		// Blacklist of object types that should not be exported as an object:
-		HashMap<String, Object> blacklist = new HashMap<String,Object>();
-		blacklist.put("it-verbund", new Object());
-		blacklist.put("raeume-kategorie", new Object());
-		blacklist.put("nk-kategorie", new Object());
-		blacklist.put("server-kategorie", new Object());
-		blacklist.put("personen-kategorie", new Object());
-		blacklist.put("gebaeude-kategorie", new Object());
-		blacklist.put("clients-kategorie", new Object());
-		blacklist.put("anwendungen-kategorie", new Object());
-		blacklist.put("nk-kategorie", new Object());
-		blacklist.put("sonstige-it-kategorie", new Object());
-		blacklist.put("tk-kategorie", new Object());
-		
+	{		
 		hydrate( cnATreeElement );
 		List<Element> syncObjects = new LinkedList<Element>();
 		
@@ -196,7 +207,9 @@ public class ExportCommand extends GenericCommand
 		 * entity types, this element's entity type IS allowed:
 		 *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		
-		if( ( blacklist.get( cnATreeElement.getObjectType() ) == null ) && ( entityTypesToBeExported == null || entityTypesToBeExported.get( cnATreeElement.getObjectType()) != null ) )
+		if ((blacklist.get(cnATreeElement.getObjectType()) == null)
+				&& (exportedObjectIDs.get( cnATreeElement.getId()) == null )
+				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(cnATreeElement.getObjectType()) != null) )
 		{
 			Element syncObject = exportDocument.createElementNS(syncNamespaces.get("data"), "syncObject");
 			syncObject.setAttribute("extId", cnATreeElement.getId());
@@ -224,6 +237,7 @@ public class ExportCommand extends GenericCommand
 			}
 
 			syncObjects.add( syncObject );
+			exportedObjectIDs.put( cnATreeElement.getId(), new String() );
 		}
 		
 		/*++++
