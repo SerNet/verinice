@@ -48,6 +48,20 @@
                tooltip="%action.tooltip">
          </action>
       </viewContribution>
+      <viewContribution
+            id="sernet.verinice.samt.exportSelfAssessment"
+            targetID="sernet.verinice.samt.rcp.views.SamtView">
+         <action
+               class="sernet.verinice.samt.rcp.ExportSelfAssessment"
+               icon="icons/export.gif"
+               id="sernet.verinice.samt.rcp.ExportSelfAssessment"
+               label="Export..."
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Export a Security Assessment...">
+         </action>
+      </viewContribution>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
@@ -139,5 +153,23 @@
 		   itemAttribute="vnicon"
 		   class="none">
 		 </itemExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.model.iso27k.Organization"
+            objectClass="sernet.verinice.model.iso27k.Organization">
+         <action
+               class="sernet.verinice.samt.rcp.ExportSelfAssessment"
+               enablesFor="1"
+               icon="icons/export.gif"
+               id="sernet.verinice.samt.rcp.ExportSelfAssessment.menu"
+               label="Export..."
+               menubarPath="additions"
+               style="push"
+               tooltip="Export Security Assessment...">
+         </action>
+      </objectContribution>
    </extension>
 </plugin>
