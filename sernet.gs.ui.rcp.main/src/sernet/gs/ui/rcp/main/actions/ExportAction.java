@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.actions;
 
 import java.util.LinkedList;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -41,6 +42,8 @@ import sernet.verinice.model.common.CnATreeElement;
 public class ExportAction extends Action
 {
 	public static final String ID = "sernet.gs.ui.rcp.main.export"; //$NON-NLS-1$
+	
+	private static final Logger LOG = Logger.getLogger(ExportAction.class);
 	
 	private IWorkbenchWindow window;
 
@@ -82,7 +85,7 @@ public class ExportAction extends Action
 			}
 			catch(CommandException ex)
 			{
-				ex.printStackTrace();
+				LOG.error("Error while exporting.", ex);
 			}
 			
 			Document doc = exportCommand.getExportDocument();
