@@ -32,6 +32,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.w3c.dom.Document;
@@ -49,6 +50,9 @@ import sernet.verinice.interfaces.encryption.IEncryptionService;
  */
 public class DOMUtil
 {
+    
+    private static final Logger LOG = Logger.getLogger(DOMUtil.class);
+    
 	/************************************************************
 	 * Parses a document for the given {@code path} using DOM.
 	 * Returns the org.w3c.dom.Document if successful. 
@@ -80,10 +84,12 @@ public class DOMUtil
 		}
 		catch(ParserConfigurationException ex)
 		{
+		    LOG.error("Error while parsing xml file", ex);
 			throw new IOException(ex);
 		}
 		catch(SAXException ex)
 		{
+		    LOG.error("Error while parsing xml file", ex);
 			throw new IOException(ex);
 		}
 		
@@ -126,7 +132,7 @@ public class DOMUtil
 		}
 		catch( Exception ex )
 		{
-			ex.printStackTrace();
+			LOG.error("Error while creating xml file", ex);
 			return;
 		}
 	}
