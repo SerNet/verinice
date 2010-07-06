@@ -35,6 +35,8 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.sql.rowset.spi.SyncResolver;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
@@ -45,6 +47,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.update.internal.core.UpdateCore;
+
+import com.sun.star.lib.connections.socket.socketAcceptor;
 
 import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -185,7 +189,7 @@ public class CnAWorkspace {
 
 	}
 
-	public void prepareWorkDir() {
+	public synchronized void prepareWorkDir() {
 		URL url = Platform.getInstanceLocation().getURL();
 		String path = url.getPath().replaceAll("/", "\\" + File.separator); //$NON-NLS-1$ //$NON-NLS-2$
 		workDir = (new File(path)).getAbsolutePath();
