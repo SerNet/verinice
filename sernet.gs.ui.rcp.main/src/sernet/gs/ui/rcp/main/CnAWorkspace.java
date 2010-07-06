@@ -190,6 +190,19 @@ public class CnAWorkspace {
 		String path = url.getPath().replaceAll("/", "\\" + File.separator); //$NON-NLS-1$ //$NON-NLS-2$
 		workDir = (new File(path)).getAbsolutePath();
 		confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
+		if(!confDir.exists()) {
+		    if (log.isDebugEnabled()) {
+                log.debug("Conf dir does not exits: " + confDir.getAbsolutePath());
+            }
+		    try {
+		        confDir.mkdir();
+		        if (log.isDebugEnabled()) {
+	                log.debug("Conf dir created: " + confDir.getAbsolutePath());
+	            }
+		    } catch( Exception e ) {
+		        log.error("Error while creating Conf dir: " + confDir.getAbsolutePath(), e);
+		    }
+		}
 	}
 
 	public void updatePolicyFile() {
