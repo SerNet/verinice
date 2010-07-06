@@ -149,6 +149,7 @@ public class SamtExportDialog extends TitleAreaDialog
          * Widgets to enable/disable encryption:
          *++++++++++++++++++++++++++++++++++++++*/
         
+        /* disabled for beta release 
         final Composite encryptionOptionComposite = new Composite(composite, SWT.NONE);
         encryptionOptionComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
         ((RowLayout) encryptionOptionComposite.getLayout()).marginTop = 15;
@@ -166,7 +167,7 @@ public class SamtExportDialog extends TitleAreaDialog
             }
         });
         encryptionOptionComposite.pack();
-
+        */
         /*+++++
          * Widgets to browse for storage location:
          *++++++++++++++++++++++++++++++++++++++++*/
