@@ -2,6 +2,12 @@
 
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
+import java.io.File;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -25,25 +31,9 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CreateXMLElement;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.WebServiceClient;
-import de.sernet.sync.data.SyncData;
-import de.sernet.sync.mapping.SyncMapping;
-import de.sernet.sync.sync.ISyncWS;
-import de.sernet.sync.sync.StreamToFile;
-import de.sernet.sync.sync.SyncRequest;
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 /**
  * 
@@ -60,7 +50,6 @@ public class XMLImportDialog extends Dialog {
 	private boolean update;
 	private boolean delete;
 
-	private File dataZip;
 	private Text dataPathText;
 	private boolean dataPathFlag;
 	private final static String[] FILTEREXTEND = { "*.zip" };
@@ -87,7 +76,6 @@ public class XMLImportDialog extends Dialog {
 			createErrorMessage(2);
 		else {
 			saveInput();
-			readImportedZip(dataZip);
 				
 			try {
 				syncRequest.getSyncRequestXMLFiles(dataFile, insert, update, delete, sourceId);
@@ -96,12 +84,10 @@ public class XMLImportDialog extends Dialog {
 				
 				WebServiceClient syncService = (WebServiceClient) VeriniceContext
 						.get(VeriniceContext.WEB_SERVICE_CLIENT);
-				System.out.println("send request!!!");
 				syncService.simpleSendAndReceive(syncRequest.getSyncRequestXML());
 
 			} catch (Exception e) {
-				System.out.println("#### #### ####");
-				e.printStackTrace();
+				ExceptionUtil.log(e, "Fehler während des Importvorganges");
 			}
 			close();
 			
@@ -292,8 +278,8 @@ public class XMLImportDialog extends Dialog {
 				false, false, 3, 1));
 		dataPathText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				dataZip = new File(dataPathText.getText());
-				if (dataZip.exists())
+				dataFile = new File(dataPathText.getText());
+				if (dataFile.exists())
 					dataPathFlag = true;
 				else
 					dataPathFlag = false;
@@ -306,7 +292,7 @@ public class XMLImportDialog extends Dialog {
 				GridData.CENTER, false, false, 1, 1));
 		dataBrowse.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				displayFiles(container.getShell(), dataPathText, dataZip);
+				displayFiles(container.getShell(), dataPathText, dataFile);
 			}
 		});
 
@@ -326,76 +312,6 @@ public class XMLImportDialog extends Dialog {
 				pathText.setEditable(true);
 			}
 		}
-	}
-
-	// get the XML Files from zip- archiv
-	private boolean readImportedZip(File importedZip) {
-		try {
-			ZipFile zipFile = new ZipFile(importedZip);
-//			if (checkIfFilesExist(zipFile)) {
-				ZipInputStream in = new ZipInputStream(new FileInputStream(
-						importedZip));
-				ZipEntry entry = in.getNextEntry();
-				dataFile = StreamToFile.convert(in);
-//				if (entry.getName().equals("data.xml")) {
-//					
-//					System.out.println("read : " + entry.getName());
-//					
-//					dataXML = in;
-//					
-//					// convert stream to file
-//					dataFile = StreamToFile.convert(dataXML);
-//					
-//					System.out.println("exist: " + dataFile.exists());
-//					System.out.println("PFAD1: " + dataFile.getAbsolutePath());	
-//					
-//					
-//					entry = in.getNextEntry();
-//					
-//					System.out.println("read : " + entry.getName());
-//					
-//					mappingXML = in;
-//					
-//					mappingFile = StreamToFile.convert(mappingXML);
-//					
-//					System.out.println("exist: " + mappingFile.exists());
-//					System.out.println("PFAD2: " + mappingFile.getAbsolutePath());
-//					
-//				} else {
-//					
-//					System.out.println("read : " + entry.getName());
-//					
-//					mappingXML = in;
-//					
-//					mappingFile = StreamToFile.convert(mappingXML);
-//					
-//					System.out.println("exist: " + mappingFile.exists());
-//					System.out.println("PFAD2: " + mappingFile.getAbsolutePath());
-//					
-//					// convert stream to file
-//					entry = in.getNextEntry();
-//					System.out.println("read : " + entry.getName());
-//
-//					dataXML = in;
-//					
-//					// convert stream to file
-//					
-//					dataFile = StreamToFile.convert(dataXML);
-//					System.out.println("exist: " + dataFile.exists());
-//					System.out.println("PFAD1: " + dataFile.getAbsolutePath());	
-//				}
-				
-				in.close();
-				zipFile.close();
-				return true;
-//			} else
-//				return false;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 
 	@SuppressWarnings("unchecked")

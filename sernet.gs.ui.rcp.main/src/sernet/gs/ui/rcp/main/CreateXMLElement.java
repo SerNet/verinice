@@ -118,10 +118,10 @@ public class CreateXMLElement {
 		try {
 			xmlDoc = new SAXBuilder().build(file);
 			Element data = xmlDoc.getRootElement();
-			data.getAttribute("sourceId").setValue(sourceId);
-			data.getAttribute("insert").setValue(String.valueOf(insert));
-			data.getAttribute("update").setValue(String.valueOf(update));
-			data.getAttribute("delete").setValue(String.valueOf(delete));
+			data.setAttribute("sourceId", sourceId);
+			data.setAttribute("insert", String.valueOf(insert));
+			data.setAttribute("update", String.valueOf(update));
+			data.setAttribute("delete", String.valueOf(delete));
 		} catch (JDOMException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
