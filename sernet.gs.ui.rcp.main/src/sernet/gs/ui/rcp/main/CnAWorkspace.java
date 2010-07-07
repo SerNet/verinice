@@ -179,6 +179,7 @@ public class CnAWorkspace {
 		CnAWorkspace instance = new CnAWorkspace();
 		try {
 			instance.createConfDir();
+			instance.createConfDirFiles();
 			instance.createHtmlDir();
 			instance.createOfficeDir();
 			instance.createDatabaseConfig();
@@ -194,19 +195,6 @@ public class CnAWorkspace {
 		String path = url.getPath().replaceAll("/", "\\" + File.separator); //$NON-NLS-1$ //$NON-NLS-2$
 		workDir = (new File(path)).getAbsolutePath();
 		confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
-		if(!confDir.exists()) {
-		    if (log.isDebugEnabled()) {
-                log.debug("Conf dir does not exits: " + confDir.getAbsolutePath());
-            }
-		    try {
-		        confDir.mkdir();
-		        if (log.isDebugEnabled()) {
-	                log.debug("Conf dir created: " + confDir.getAbsolutePath());
-	            }
-		    } catch( Exception e ) {
-		        log.error("Error while creating Conf dir: " + confDir.getAbsolutePath(), e);
-		    }
-		}
 	}
 
 	public void updatePolicyFile() {
@@ -283,16 +271,18 @@ public class CnAWorkspace {
 	public String getConfDir() {
 		return workDir + File.separator + "conf"; //$NON-NLS-1$
 	}
+	
+	private void createConfDirFiles() throws NullPointerException, IOException {
+        createTextFile("conf" + File.separator + "reports.properties_skeleton", 
+                       workDir, 
+                       "conf" + File.separator + "reports.properties"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        createTextFile("conf" + File.separator + "configuration.version", workDir); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
-	private void createConfDir() throws NullPointerException, IOException {
+	public void createConfDir() throws NullPointerException, IOException {
 		URL url = Platform.getInstanceLocation().getURL();
 		File confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
 		confDir.mkdirs();
-
-		createTextFile("conf" + File.separator + "reports.properties_skeleton", 
-		               workDir, 
-		               "conf" + File.separator + "reports.properties"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		createTextFile("conf" + File.separator + "configuration.version", workDir); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void createOfficeDir() throws NullPointerException, IOException {
