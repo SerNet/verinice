@@ -1,7 +1,7 @@
 0,"Copyright",,,,,,,
 ,,,"Integraler Informationsschutz mit IT-Sicherheit, Prototypenschutz und Risk-Management des VDA",,,,,
 5,"5 Security Policy",,,,,,,
-"5.1","5.1 In wie weit werden Richtlinien zur Informationssicherheit erstellt, veröffentlicht und verteilt? ",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,,,2,3
+"5.1","5.1 In wie weit werden Richtlinien zur Informationssicherheit erstellt, veröffentlicht und verteilt? ",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,2,,2,3
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es existieren keine bzw. nur unvollständige Richtlinien/Regelungen zur Informationssicherheit.",,,,,
@@ -30,7 +30,7 @@
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.  ",,,,,
 ,,,,,,,,
 6,"6 Organization of Information Security",,,,,,,
-"6.1","6.1 Wie ist die Informationssicherheit im Unternehmen organisiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"6.1","6.1 Wie ist die Informationssicherheit im Unternehmen organisiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Keine Informationssicherheitsorganisation bzw. Informationssicherheitsfunktion vorhanden",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -58,7 +58,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"6.2","6.2 Wird vor Auftragsvergabe an Fremdfirmen eine Risikoanalyse der personellen u. organisatorischen Risken durchgeführt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"6.2","6.2 Wird vor Auftragsvergabe an Fremdfirmen eine Risikoanalyse der personellen u. organisatorischen Risken durchgeführt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig
 - Es werden keine Risikoanalysen im Falle der Auftragsvergabe an Fremdfirmen durchgeführt.",,,,,
 ,,,"Level 1:  Durchgeführt 
@@ -84,7 +84,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"6.3","6.3 Wie wird die Geheimhaltung bei der Zusammenarbeit mit Fremdfirmen sichergestellt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"6.3","6.3 Wie wird die Geheimhaltung bei der Zusammenarbeit mit Fremdfirmen sichergestellt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig
 - Es werden keine Geheimhaltungsverpflichtungen und keine Vereinbarungen hinsichtlich Themen des Informationsschutzes mit Fremdfirmen vereinbart.",,,,,
 ,,,"Level 1:  Durchgeführt 
@@ -111,7 +111,7 @@
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 7,"7 Asset Management",,,,,,,
-"7.1","7.1 Wie werden die (physischen und digitalen) Vermögenswerte des Unternehmens inventarisiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"7.1","7.1 Wie werden die (physischen und digitalen) Vermögenswerte des Unternehmens inventarisiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Tabellen, Übersichten oder Verzeichnisse von Vermögenswerten vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -141,7 +141,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"7.2","7.2 Wie werden die Informationen im Unternehmen eingestuft / klassifiziert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,,,2,3
+"7.2","7.2 Wie werden die Informationen im Unternehmen eingestuft / klassifiziert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,2,,2,3
 ,,,"Level 0:  Unvollständig 
 - Eine Klassifikation von Informationen im Unternehmen ist nicht vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -171,7 +171,7 @@
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 8,"8 Human Resources Security",,,,,,,
-"8.1","8.1 In wie weit werden Mitarbeiter auf Einhaltung der Vorgaben zur Informationssicherheit verpflichtet?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"8.1","8.1 In wie weit werden Mitarbeiter auf Einhaltung der Vorgaben zur Informationssicherheit verpflichtet?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - In den Arbeitsverträgen bzw. separaten Dokumenten sind keine sicherheitsbezogene Paragraphen enthalten.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -201,7 +201,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"8.2","8.2 Wie werden die Mitarbeiter über die Gefahren beim Umgang mit Informationen und deren Verarbeitung geschult und sensibilisiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,,,2,3
+"8.2","8.2 Wie werden die Mitarbeiter über die Gefahren beim Umgang mit Informationen und deren Verarbeitung geschult und sensibilisiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,2,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es werden keine Informations- / Sensibilisierungsprogramme durch das Unternehmen initiiert/veranstaltet.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -228,7 +228,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"8.3","8.3 In wie weit werden bei Änderungen des Arbeitsverhältnisses Zutritts-, Zugangs- und Zugriffs- Rechte oder Berechtigungen angepasst (gewähren / widerrufen) und wie werden diese Änderungen dokumentiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"8.3","8.3 In wie weit werden bei Änderungen des Arbeitsverhältnisses Zutritts-, Zugangs- und Zugriffs- Rechte oder Berechtigungen angepasst (gewähren / widerrufen) und wie werden diese Änderungen dokumentiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0: Unvollständig
 - Es findet keine Anpassungen von Zutritts-, Zugangs- und Zugriffs- Rechten oder Berechtigungen bei Änderungen des Arbeitsverhältnisses von Mitarbeitern statt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -257,7 +257,7 @@
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 9,"9 Physical and Environmental Security",,,,,,,
-"9.1","9.1 Wie werden Sicherheitszonen definiert und wie sind diese abgesichert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"9.1","9.1 Wie werden Sicherheitszonen definiert und wie sind diese abgesichert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Sicherheitszonen identifiziert und definiert.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -311,7 +311,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9.3","9.3 Wie ist das Zutrittsmanagement im Unternehmen organisiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,,,2,3
+"9.3","9.3 Wie ist das Zutrittsmanagement im Unternehmen organisiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,2,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es existieren keine Regeln für den Zutritt zu den Sicherheitszonen.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -338,7 +338,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9.4","9.4 Welche Vorsichtsmaßnahmen werden zum Schutz der Waren bei Anlieferung und Versand getroffen?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"9.4","9.4 Welche Vorsichtsmaßnahmen werden zum Schutz der Waren bei Anlieferung und Versand getroffen?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Regeln bzw. Vorsichtsmaßnahmen zum Schutz der Güter getroffen worden.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -364,7 +364,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9.5","9.5 Wie ist der Prozess zum Gebrauch von Betriebsmitteln definiert (einschließlich Mitnahme, Entsorgung und Wiederverwendung)?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"9.5","9.5 Wie ist der Prozess zum Gebrauch von Betriebsmitteln definiert (einschließlich Mitnahme, Entsorgung und Wiederverwendung)?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Vorgaben / Regeln bzw. Maßnahmen definiert bezüglich des Umgangs mit Betriebsmitteln (Mitnahme außerhalb des Unternehmensgeländes, Entsorgung und Wiederverwendung).",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -393,7 +393,7 @@
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 10,"10 Communications and Operations Management",,,,,,,
-"10.1","10.1 In wie weit ist das Änderungs-Management an Systemen im Unternehmen etabliert und werden die Systeme auf dem aktuellsten Stand gehalten?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.1","10.1 In wie weit ist das Änderungs-Management an Systemen im Unternehmen etabliert und werden die Systeme auf dem aktuellsten Stand gehalten?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es existiert kein Änderungs-Management.
 - Änderungen werden ohne jede Kontrolle durchgeführt werden",,,,,
@@ -425,7 +425,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.2","10.2 In wie weit sind die Entwicklungs- und Testumgebungen von den Produktivumgebungen getrennt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.2","10.2 In wie weit sind die Entwicklungs- und Testumgebungen von den Produktivumgebungen getrennt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine separaten Entwicklungs-, Test- und Produktionsumgebungen vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -455,7 +455,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.3","10.3 Wie werden die durch Fremdfirmen erbrachten Leistungen, Berichte und Aufzeichnungen im Bezug auf die Informationssicherheit überwacht und überprüft?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.3","10.3 Wie werden die durch Fremdfirmen erbrachten Leistungen, Berichte und Aufzeichnungen im Bezug auf die Informationssicherheit überwacht und überprüft?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Überwachung und Überprüfung der Leistungen, Berichte und Aufzeichnungen von Dritten statt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -485,7 +485,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.4","10.4 In wie weit ist der Schutz vor Schadsoftware (Viren, Würmer, …) im Unternehmen ausgeprägt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,,,2,3
+"10.4","10.4 In wie weit ist der Schutz vor Schadsoftware (Viren, Würmer, …) im Unternehmen ausgeprägt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,2,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es ist kein Schutz, wie die Erkennung und Verhinderung der Ausführung von Schadsoftware (Viren, Würmer, ...) vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -521,7 +521,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.5","10.5 In wie weit ist auf den Systemen eine lokale Firewall und/oder IDS/IPS Software installiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.5","10.5 In wie weit ist auf den Systemen eine lokale Firewall und/oder IDS/IPS Software installiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Auf den Systemen ist keine lokale Firewall und/oder IDS/IPS Software installiert.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -553,7 +553,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.6","10.6 In wie weit sind Schutzvorkehrungen gegen aktive Inhalte (z.B. ActiveX-Controls, Java-Applets) getroffen?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.6","10.6 In wie weit sind Schutzvorkehrungen gegen aktive Inhalte (z.B. ActiveX-Controls, Java-Applets) getroffen?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Kontrolle und kein Schutz gegen aktive Inhalte statt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -582,7 +582,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.7","10.7 Wie werden die Datensicherungen (Back-Up's) erstellt und kontrolliert und in wie weit wird die Wiederherstellung (Restores) regelmäßig getestet?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,,,2,3
+"10.7","10.7 Wie werden die Datensicherungen (Back-Up's) erstellt und kontrolliert und in wie weit wird die Wiederherstellung (Restores) regelmäßig getestet?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,2,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es werden keine Datensicherungen durchgeführt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -612,7 +612,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.8","10.8 Wie werden die Netzwerke verwaltet und gesteuert, damit sie vor Bedrohungen geschützt sind?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.8","10.8 Wie werden die Netzwerke verwaltet und gesteuert, damit sie vor Bedrohungen geschützt sind?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Eine Verwaltung der Netzwerke findet nicht statt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -643,7 +643,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.9","10.9 Wie ist der Einsatz von Modemgeräten (z.B. Analog, ISDN, DSL, UMTS, GPRS usw.) im Unternehmen geregelt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.9","10.9 Wie ist der Einsatz von Modemgeräten (z.B. Analog, ISDN, DSL, UMTS, GPRS usw.) im Unternehmen geregelt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Regelungen zur Benutzung von Modemgeräten vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -673,7 +673,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.10","10.10 In wie weit sind Sicherheitsanforderungen für die Netzwerkdienste (z.B. DNS, DHCP, VPN, MPLS, ERP, E-Mail, DMS, ...) definiert und umgesetzt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.10","10.10 In wie weit sind Sicherheitsanforderungen für die Netzwerkdienste (z.B. DNS, DHCP, VPN, MPLS, ERP, E-Mail, DMS, ...) definiert und umgesetzt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Sicherheitsanforderungen (organisatorische- u. technische Maßnahmen) für Netzwerkdienste definiert.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -704,7 +704,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.11","10.11 In wie weit sind für Netzwerkdienste (z.B. DNS, DHCP, VPN, MPLS, ERP, E-Mail, DMS, ...) Service-Level-Agreements (SLA) vereinbart?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.11","10.11 In wie weit sind für Netzwerkdienste (z.B. DNS, DHCP, VPN, MPLS, ERP, E-Mail, DMS, ...) Service-Level-Agreements (SLA) vereinbart?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Service-Level-Agreements (SLA's) für Netzwerkdienste vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt 
@@ -733,7 +733,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.12","10.12 In wie weit gibt es Richtlinien zum Umgang mit mobilen Datenträgern (z.B. Bänder, USB-Speichersticks, USB-Festplatten, CD's, DVD's, ...)?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.12","10.12 In wie weit gibt es Richtlinien zum Umgang mit mobilen Datenträgern (z.B. Bänder, USB-Speichersticks, USB-Festplatten, CD's, DVD's, ...)?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig
 - Es sind keine Regelung bezüglich der Nutzung von mobilen Datenträgern vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -760,7 +760,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.13","10.13 In wie weit gibt es eine Prozess für die sichere Entsorgung von Computermedien, wenn diese nicht mehr gebraucht werden?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.13","10.13 In wie weit gibt es eine Prozess für die sichere Entsorgung von Computermedien, wenn diese nicht mehr gebraucht werden?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Regelungen bezüglich der sicheren Entsorgung von Computermedien vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -788,7 +788,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.14","10.14 In wie weit werden Vorkehrungen getroffen, wenn  Medien (z.B. CD's, DVD's, Papier-Dokumente), die vertrauliche Informationen enthalten, physisch transportiert werden müssen (z.B. DHL, UPS)? ",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.14","10.14 In wie weit werden Vorkehrungen getroffen, wenn  Medien (z.B. CD's, DVD's, Papier-Dokumente), die vertrauliche Informationen enthalten, physisch transportiert werden müssen (z.B. DHL, UPS)? ",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Maßnahmen zum Schutz von Medien beim Transport definiert und umgesetzt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -817,7 +817,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.15","10.15 Welche Vorsichtsmaßnahmen sind getroffen worden, wenn vertrauliche Informationen elektronisch ausgetauscht werden müssen?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.15","10.15 Welche Vorsichtsmaßnahmen sind getroffen worden, wenn vertrauliche Informationen elektronisch ausgetauscht werden müssen?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Vorsichtsmaßnahmen für den elektronischen Austausch von vertraulichen Informationen getroffen.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -846,7 +846,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.16","10.16 Wie werden die Aktivitäten von Systemadministratoren und Operatoren auf kritischen Systemen protokolliert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.16","10.16 Wie werden die Aktivitäten von Systemadministratoren und Operatoren auf kritischen Systemen protokolliert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Eine Protokollierung der Aktivitäten von Systemadministratoren und Betreibern für kritische Systeme findet nicht statt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -873,7 +873,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.17","10.17 In wie weit sind Prozesse definiert und umgesetzt, die die gesetzlichen Anforderungen an die Überwachung und Protokollierung der Nutzung von Informationssystemen erfüllen?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"10.17","10.17 In wie weit sind Prozesse definiert und umgesetzt, die die gesetzlichen Anforderungen an die Überwachung und Protokollierung der Nutzung von Informationssystemen erfüllen?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Überwachung und Protokollierung statt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -901,7 +901,7 @@ Schutzsoftware vornehmen können.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 11,"11 Access Control",,,,,,,
-"11.1","11.1 In wie weit besteht ein Antragsverfahren zur Registrierung, Änderung und Löschung von Benutzern, um Zugriff zu allen Informationssystemen und -diensten zu gewähren, zu ändern bzw. aufzuheben?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,,,2,3
+"11.1","11.1 In wie weit besteht ein Antragsverfahren zur Registrierung, Änderung und Löschung von Benutzern, um Zugriff zu allen Informationssystemen und -diensten zu gewähren, zu ändern bzw. aufzuheben?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,2,,2,3
 ,,,"Level 0:  Unvollständig  
 - Es ist kein Antragsverfahren zur Registrierung, Änderung und Löschung von Benutzern vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -934,7 +934,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.2","11.2 Wie werden Anwender- als auch Administratoren- Rechte im jeweiligen Anwendungsfall gewährt und überprüft?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"11.2","11.2 Wie werden Anwender- als auch Administratoren- Rechte im jeweiligen Anwendungsfall gewährt und überprüft?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es findet keine dediziert Vergabe und keine regelmäßige Überwachung der Zugriffsrechte statt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -999,7 +999,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.4","11.4 In wie weit sind Regeln zum Aufbau und Komplexitätsgrad für Passwörter definiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"11.4","11.4 In wie weit sind Regeln zum Aufbau und Komplexitätsgrad für Passwörter definiert?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Regel zum Aufbau und der Komplexität von Passwörtern vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1030,7 +1030,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.5","11.5 Welche Vorgaben zum Umgang mit Geräten und Dokumenten beim Verlassen des Arbeitsplatzes gibt es?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"11.5","11.5 Welche Vorgaben zum Umgang mit Geräten und Dokumenten beim Verlassen des Arbeitsplatzes gibt es?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es gibt keine Vorgaben zum ""Grundsatz des aufgeräumten Schreibtisches und des leeren Bildschirms""",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1061,7 +1061,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.6","11.6 In wie weit sind Regeln und Maßnahmen für den Fernzugriff (Remote Access) auf das Unternehmensnetz definiert und umgesetzt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"11.6","11.6 In wie weit sind Regeln und Maßnahmen für den Fernzugriff (Remote Access) auf das Unternehmensnetz definiert und umgesetzt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig  
 - Es sind keine Regeln/Maßnahmen für den Fernzugriff auf das Unternehmensnetzwerk definiert und umgesetzt.",,,,,
 ,,,"Level 1:  Aufgeführt
@@ -1093,7 +1093,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.7","11.7 In wie weit wird der netzwerktechnische Zugriff auf Diagnose- und Konfigurationsports von Systemen und Infrastrukturkomponenten überwacht?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"11.7","11.7 In wie weit wird der netzwerktechnische Zugriff auf Diagnose- und Konfigurationsports von Systemen und Infrastrukturkomponenten überwacht?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Überwachung der Diagnose- und Konfigurationsports statt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1121,7 +1121,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.8","11.8 In wie weit wird die Sicherheit der Netzwerke durch eine Segmentierung (Trennung) erhöht?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"11.8","11.8 In wie weit wird die Sicherheit der Netzwerke durch eine Segmentierung (Trennung) erhöht?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Das Unternehmensnetzwerk ist nicht segmentiert.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1149,7 +1149,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.9","11.9 In wie weit ist die Authentifikation der Benutzter für den Zugriff auf IT Systeme, unter Berücksichtigung der Klassifizierung von Daten und Informationen, umgesetzt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"11.9","11.9 In wie weit ist die Authentifikation der Benutzter für den Zugriff auf IT Systeme, unter Berücksichtigung der Klassifizierung von Daten und Informationen, umgesetzt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Authentifikation der Benutzer gemäß einer Klassifizierung statt",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1179,7 +1179,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.10","11.10 In wie weit wurde eine Richtlinie, die auf die Risiken beim Arbeiten mit mobilen Computern hinweist, entwickelt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"11.10","11.10 In wie weit wurde eine Richtlinie, die auf die Risiken beim Arbeiten mit mobilen Computern hinweist, entwickelt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig
 - Es existieren keine Reglungen im Bereich des Mobile Computing",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1212,7 +1212,7 @@ Schutzsoftware vornehmen können.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 12,"12 Information Systems Acquisition, Development and Management",,,,,,,
-"12.1","12.1 In wie weit werden Informationen durch Verschlüsselung (Kryptographie) in angemessener Weise geschützt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"12.1","12.1 In wie weit werden Informationen durch Verschlüsselung (Kryptographie) in angemessener Weise geschützt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig
 - Der Einsatz von Verschlüsselung von schutzbedürftigen Informationen findet nicht statt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1242,7 +1242,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"12.2","12.2 In wie weit werden beim Kauf bzw. bei der Erstellung von Software die Anforderungen der Informationssicherheit berücksichtigt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"12.2","12.2 In wie weit werden beim Kauf bzw. bei der Erstellung von Software die Anforderungen der Informationssicherheit berücksichtigt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig
 - Es findet keine Berücksichtigung der Anforderungen statt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1269,7 +1269,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"12.3","12.3 In wie weit werden Informationen über die technischen Schwachstellen der eingesetzten Informationssysteme zeitnah beschafft, beurteilt und geeignete Maßnahmen für eine Umsetzung ergriffen (Patch-Management)?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,,,2,3
+"12.3","12.3 In wie weit werden Informationen über die technischen Schwachstellen der eingesetzten Informationssysteme zeitnah beschafft, beurteilt und geeignete Maßnahmen für eine Umsetzung ergriffen (Patch-Management)?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,2,,2,3
 ,,,"Level 0:  Unvollständig
 - Informationen über Schwachstellen werden nicht beschafft.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1300,7 +1300,7 @@ Schutzsoftware vornehmen können.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 13,"13 Information Security Incident Management",,,,,,,
-"13.1","13.1 Wie und wohin werden Informationssicherheitsvorfälle im Unternehmen gemeldet?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"13.1","13.1 Wie und wohin werden Informationssicherheitsvorfälle im Unternehmen gemeldet?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Die Informationssicherheitsvorfälle / -schwachstellen werden im Unternehmen nicht gemeldet.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1331,7 +1331,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"13.2","13.2 In wie weit werden Informationssicherheitsvorfälle / -schwachstellen ausgewertet und behandelt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"13.2","13.2 In wie weit werden Informationssicherheitsvorfälle / -schwachstellen ausgewertet und behandelt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Auswertung und Behandlung von Informationssicherheitsvorfällen / -schwachstellen statt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1360,7 +1360,7 @@ Schutzsoftware vornehmen können.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 14,"14 Business Continuity Management",,,,,,,
-"14.1","14.1 In wie weit sind Maßnahmen für die Entwicklung und Aufrechterhaltung der Business Continuity (Fortführung des ordnungsgemäßen Geschäftsbetriebs) im Unternehmen eingeführt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"14.1","14.1 In wie weit sind Maßnahmen für die Entwicklung und Aufrechterhaltung der Business Continuity (Fortführung des ordnungsgemäßen Geschäftsbetriebs) im Unternehmen eingeführt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig
 - Es sind keine Maßnahmen zur Entwicklung und Aufrechterhaltung der Business Continuity eingeführt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1392,7 +1392,7 @@ Schutzsoftware vornehmen können.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 15,"15 Compliance",,,,,,,
-"15.1","15.1 In wie weit wird die Einhaltung gesetzlicher Bestimmungen über geistiges Eigentum sichergestellt (z.B. Patente, Softwareentwicklungen und Codes usw.)?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,,,2,3
+"15.1","15.1 In wie weit wird die Einhaltung gesetzlicher Bestimmungen über geistiges Eigentum sichergestellt (z.B. Patente, Softwareentwicklungen und Codes usw.)?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",2,2,,2,3
 ,,,"Level 0:  Unvollständig
 - Die Einhaltung gesetzlicher Bestimmungen über geistiges Eigentum ist nicht sichergestellt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1422,7 +1422,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"15.2","15.2 Welche Regelungen und Maßnahmen sind eingeführt, um personenbezogene Informationen unter Einhaltung der gesetzlichen / vertraglichen Regelungen zu schützen (z.B. Datenschutzgesetz)?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"15.2","15.2 Welche Regelungen und Maßnahmen sind eingeführt, um personenbezogene Informationen unter Einhaltung der gesetzlichen / vertraglichen Regelungen zu schützen (z.B. Datenschutzgesetz)?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig
 - Es sind keine Maßnahmen zum Schutz personenbezogener Informationen eingeführt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1452,7 +1452,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"15.3","15.3 In wie weit werden die Bereiche der Organisation auf Einhaltung der Unternehmenssicherheitsrichtlinien und -standards überprüft?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"15.3","15.3 In wie weit werden die Bereiche der Organisation auf Einhaltung der Unternehmenssicherheitsrichtlinien und -standards überprüft?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig
 - Innerhalb der Organisation werden keine Sicherheitsüberprüfungen durchgeführt.",,,,,
 ,,,"Level 1:  Durchgeführt
@@ -1481,7 +1481,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"15.4","15.4 In wie weit werden Sicherheitsüberprüfungen (Penetrations- / Verwundbarkeits-Test) an operativen Informationssystemen sorgfältig geplant, abgestimmt und durchgeführt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,,,2,3
+"15.4","15.4 In wie weit werden Sicherheitsüberprüfungen (Penetrations- / Verwundbarkeits-Test) an operativen Informationssystemen sorgfältig geplant, abgestimmt und durchgeführt?",0,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",1,1,,2,3
 ,,,"Level 0:  Unvollständig
 - Es werden keine Sicherheitsüberprüfungen durchgeführt.",,,,,
 ,,,"Level 1:  Durchgeführt
