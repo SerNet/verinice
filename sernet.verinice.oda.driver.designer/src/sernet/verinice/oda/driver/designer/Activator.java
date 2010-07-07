@@ -17,8 +17,10 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.designer;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -26,6 +28,8 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
 
+    private final Logger log = Logger.getLogger(Activator.class);
+    
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.verinice.oda.driver.designer";
 
@@ -45,6 +49,10 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		if (log.isInfoEnabled()) {
+            final Bundle bundle = context.getBundle();
+            log.info("Starting bundle " + bundle.getSymbolicName() + " " + bundle.getVersion());
+        }
 	}
 
 	/*

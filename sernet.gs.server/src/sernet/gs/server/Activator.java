@@ -57,6 +57,11 @@ public class Activator extends Plugin {
 
 		plugin = this;
 
+		if (log.isInfoEnabled()) {
+            final Bundle bundle = context.getBundle();
+            log.info("Starting bundle " + bundle.getSymbolicName() + " " + bundle.getVersion());
+        }
+		
 		// Starts the Spring OSGi Extender which provides registering the Spring
 		// namespace handlers. If you get exception saying there is no schema
 		// for Spring security, then the OSGi extender is not running.

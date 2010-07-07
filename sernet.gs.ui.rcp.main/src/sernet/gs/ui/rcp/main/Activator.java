@@ -39,6 +39,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.springframework.osgi.bundle.BundleAction;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -110,6 +111,11 @@ public class Activator extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		if (LOG.isInfoEnabled()) {
+		    final Bundle bundle = context.getBundle();
+            LOG.info("Starting bundle " + bundle.getSymbolicName() + " " + bundle.getVersion());
+        }		
 		
 		Bundle bundle = Platform.getBundle(VERINICE_ODA_DRIVER_SYMBOLIC_NAME);
 		if (bundle == null)

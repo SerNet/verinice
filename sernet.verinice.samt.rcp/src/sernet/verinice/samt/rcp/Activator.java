@@ -1,14 +1,19 @@
 package sernet.verinice.samt.rcp;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
+@SuppressWarnings("restriction")
 public class Activator extends AbstractUIPlugin {
 
+    private final Logger log = Logger.getLogger(Activator.class);
+    
     // The plug-in ID
     public static final String PLUGIN_ID = "sernet.verinice.samt.rcp";
     
@@ -32,6 +37,11 @@ public class Activator extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
+        
+        if (log.isInfoEnabled()) {
+            final Bundle bundle = context.getBundle();
+            log.info("Starting bundle " + bundle.getSymbolicName() + " " + bundle.getVersion());
+        }
         
         // set workdir preference:
         SamtWorkspace.getInstance().prepareWorkDir();
