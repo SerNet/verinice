@@ -5,7 +5,8 @@
 
 <hibernate-mapping package="sernet.verinice.model.common">
 
-	<class name="CnATreeElement" table="cnatreeelement"
+	<class name="CnATreeElement" 
+		table="cnatreeelement"
 		batch-size="10"
 		abstract="true">
 		
@@ -17,8 +18,19 @@
 			unsaved-value="null">
 			<generator class="native" />
 		</id>
-		
+
+
 		<discriminator column="OBJECT_TYPE" type="string"/>	
+		
+		<property
+			name="uuid"
+			not-null="true"
+			unique="true"
+		/>
+		
+		<property name="extId"/>
+		
+		<property name="sourceId"/>
 		
 		<property
 			name="objectType"
@@ -26,11 +38,6 @@
 			insert="false"
 			update="false"/>
 		
-		<property
-			name="uuid"
-			not-null="true"
-			unique="true"
-		/>
 		
 		<set name="permissions"
 			inverse="true"
@@ -448,9 +455,11 @@
 	   treated that constant like the name of a column from the cnatreelement
 	   table. 
 	-->
+	
 	<filter-def name="userAccessReadFilter">
 		<filter-param name="currentRoles" type="string"/>
 		<filter-param name="readAllowed" type="boolean"/>
 	</filter-def>
+
 	
 </hibernate-mapping>

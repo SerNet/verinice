@@ -146,22 +146,33 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
 		return child;
 	}
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType
+	 * ()
 	 */
 	public int getChangeType() {
 		return ChangeLogEntry.TYPE_INSERT;
 	}
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
+	 * ()
 	 */
 	public String getStationId() {
 		return stationId;
 	}
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangedElements()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+	 * getChangedElements()
 	 */
 	public List<CnATreeElement> getChangedElements() {
 		ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
@@ -176,10 +187,11 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
 	public void setAuthService(IAuthService service) {
 		this.authService = service;
 	}
-	
+
 	private Logger getLogger() {
-		if(log==null) {
-			log = Logger.getLogger(CreateElement.class);;
+		if (log == null) {
+			log = Logger.getLogger(CreateElement.class);
+
 		}
 		return log;
 	}

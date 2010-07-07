@@ -15,6 +15,7 @@
 			<generator class="native" />
 		</id>
 		
+		
 		<discriminator column="OBJECT_TYPE" type="string"/>	
 		
 		<property
@@ -23,9 +24,11 @@
 			insert="false"
 			update="false"/>
 		
-		<property
-			name="uuid"
-		/>
+		<property name="uuid"/>
+		
+		<property name="extId"/>
+		
+		<property name="sourceId"/>
 		
 		<set name="permissions"
 			inverse="true"

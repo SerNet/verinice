@@ -41,7 +41,6 @@ public class CharsetHandler extends AbstractHandler {
      * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
      * ExecutionEvent)
      */
-    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         if (HandlerUtil.matchesRadioState(event)) {
             return null; // we are already in the updated state - do nothing

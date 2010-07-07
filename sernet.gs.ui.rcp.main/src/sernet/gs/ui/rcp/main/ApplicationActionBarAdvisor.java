@@ -41,17 +41,19 @@ import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
 import sernet.gs.ui.rcp.main.actions.ExportAction;
+import sernet.gs.ui.rcp.main.actions.ImportCSVAction;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolNotesAction;
+import sernet.gs.ui.rcp.main.actions.ImportXMLAction;
 import sernet.gs.ui.rcp.main.actions.ManageUpdatesAction;
 import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
 import sernet.gs.ui.rcp.main.actions.ReloadAction;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
-import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
 import sernet.gs.ui.rcp.main.actions.ShowExportWizardAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
+import sernet.gs.ui.rcp.main.actions.SyncTestAction;
 import sernet.gs.ui.rcp.main.actions.UpdateAction;
 import sernet.gs.ui.rcp.main.actions.UpdateManualAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
@@ -66,7 +68,6 @@ import sernet.gs.ui.rcp.main.bsi.views.NoteView;
 import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
@@ -148,6 +149,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private ImportGstoolAction importGstoolAction;
     
+	private ImportXMLAction importXMLAction;
+
+	private ImportCSVAction importCSVAction;
+
     private ExportAction exportAction;
 
     private OpenViewAction openDocumentViewAction;
@@ -161,6 +166,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private BausteinZuordnungAction bausteinZuordnungAction;
 
 	private ImportGstoolNotesAction importGSNotesAction;
+
+	private SyncTestAction synctestAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -180,6 +187,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         copyAction = ActionFactory.COPY.create(window);
         register(copyAction);
+        
+        
 
         pasteAction = ActionFactory.PASTE.create(window);
         register(pasteAction);
@@ -247,9 +256,18 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         register(reloadAction);
 
+        synctestAction = new SyncTestAction(window);
+        // TODO rschuster: No registration here?
+
         importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         register(importGstoolAction);
+
+        importXMLAction = new ImportXMLAction(window, Messages.ApplicationActionBarAdvisor_29);
+        register(importXMLAction);
         
+        importCSVAction = new ImportCSVAction(window, "CSV - Import");
+        register(importCSVAction);
+
         exportAction = new ExportAction(window, Messages.ApplicationActionBarAdvisor_28);
         register(exportAction);
 
@@ -341,9 +359,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(new Separator(VeriniceActionConstants.MENU_FILE));
         fileMenu.add(new Separator());
         fileMenu.add(importGstoolAction);
+        fileMenu.add(new Separator());
+        fileMenu.add(importXMLAction);
+        fileMenu.add(importCSVAction);
 		fileMenu.add(importGSNotesAction);
 		fileMenu.add(exportAction);
 
+        fileMenu.add(new Separator());
+        fileMenu.add(synctestAction);
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);
         return fileMenu;
@@ -462,7 +485,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         removeStandardAction(reg, "org.eclipse.ui.edit.text.actionSet.annotationNavigation"); //$NON-NLS-1$
 
-        // Removing “Convert Line Delimiters To” menu
+        // Removing Convert Line Delimiters Tool menu
         removeStandardAction(reg, "org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"); //$NON-NLS-1$
 
         // remove working sets

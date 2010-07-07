@@ -6,8 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: sernet.verinice.encryption.Activator
 Require-Bundle: sernet.gs.service,
  org.eclipse.equinox.ds;bundle-version="1.1.1",
- org.eclipse.core.runtime,
- com.springsource.org.apache.log4j;bundle-version="1.2.15"
+ org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: ., bin, lib/bouncycastle/bcmail-jdk16-145.jar,
  lib/bouncycastle/bcprov-jdk16-145.jar,
@@ -15,3 +14,4 @@ Bundle-ClassPath: ., bin, lib/bouncycastle/bcmail-jdk16-145.jar,
 Export-Package: sernet.verinice.encryption
 Service-Component: OSGI-INF/component.xml
 Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.log4j

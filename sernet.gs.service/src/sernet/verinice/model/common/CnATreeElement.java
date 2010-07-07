@@ -84,17 +84,30 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		this.sourceId = sourceId;
 	}
 
-	public String getExternalId() {
-		return externalId;
+	private String extId;
+
+	/* asdf */
+	public String getextId()
+	{
+	    return extId;
 	}
 
-	public void setExternalId(String externalId) {
-		this.externalId = externalId;
+	public void setextId(String extId)
+	{
+	    this.extId = extId;
+	}
+	
+	/* */
+	
+	public String getExtId()
+	{
+	    return extId;
 	}
 
-
-
-	private String externalId;
+	public void setExtId(String extId)
+	{
+	    this.extId = extId;
+	}
 	
 	private static final String ENTITY_TITLE = "ENTITY_";
 
@@ -219,22 +232,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	private transient EntityType subEntityType;
 
 
-	/**
-	 * Creates a new CnATreeElement as a child of parent.
-	 * Override this constructor in subclasses to set the title.
-	 * 
-	 * @param parent parent element
-	 * @param title title of the element or null if title is unknown
-	 */
-	public CnATreeElement(CnATreeElement parent, String title) {
-        this(parent);
-    }
-	
-	/**
-     * Creates a new CnATreeElement as a child of parent.
-     * 
-     * @param parent parent element
-     */
 	public CnATreeElement(CnATreeElement parent) {
 		this();
 		this.parent = parent;
@@ -261,7 +258,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 	
 	public String getId() {
-		return ENTITY_TITLE + ((getEntity()!=null) ? getEntity().getDbId() : "");
+		return ENTITY_TITLE + getEntity().getDbId();
 	}
 
 	public abstract String getTypeId();

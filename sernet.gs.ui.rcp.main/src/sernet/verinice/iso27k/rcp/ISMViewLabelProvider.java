@@ -17,38 +17,17 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
-import java.util.regex.Pattern;
-
-import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.hibernate.dialect.function.CastFunction;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.verinice.iso27k.service.ControlMaturityService;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.Document;
-import sernet.verinice.model.iso27k.Evidence;
-import sernet.verinice.model.iso27k.Exception;
-import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.model.iso27k.Incident;
-import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.Interview;
-import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.iso27k.PersonIso;
-import sernet.verinice.model.iso27k.Requirement;
-import sernet.verinice.model.iso27k.Threat;
-import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.service.iso27k.Item;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
 
 /**

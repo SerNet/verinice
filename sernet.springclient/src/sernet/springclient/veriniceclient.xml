@@ -110,6 +110,30 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 			</bean>
 		</property>
 	</bean>
+	 <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/> 
+ 	
+
+	
+	<!--<bean id="messageFactory" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping"/> -->
+
+	<bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+		<constructor-arg ref="messageFactory" />
+		<property name="messageSender">
+			<bean
+				class="org.springframework.ws.transport.http.CommonsHttpMessageSender">
+				<property name="credentials">
+					<bean class="org.apache.commons.httpclient.UsernamePasswordCredentials">
+						<constructor-arg value="admin" />
+						<constructor-arg value="geheim" />
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="defaultUri" value="http://localhost:8080/veriniceserver/sync/syncService" />
+	</bean>
+	
+    <bean id="webServiceClient" class="sernet.springclient.WebServiceClient">
+    </bean>
 	
 	<bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
 	<property name="map">
@@ -119,6 +143,8 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 			<entry key="huiTypeFactory" value-ref="huiTypeFactory"/>
 			<entry key="commandService" value-ref="commandService"/>
 			<entry key="authService" value-ref="authService"/>
+			<!--<entry key="syncService" value-ref="syncService" />-->
+			<entry key="webServiceClient" value-ref="webServiceClient" />
 		</map>
 	</property>
 	</bean>

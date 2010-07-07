@@ -148,7 +148,7 @@ public class SyncExample {
 				
 				// elemente finden, die in der DB sind, in der aktuellen Liste aber fehlen:
 				for (CnATreeElement dbElement : dbElements) {
-					Object found = currentIDs.get(dbElement.getExternalId());
+					Object found = currentIDs.get(dbElement.getExtId());
 					if (found == null) {
 						// aus DB löschen, wenn delete flag gesetzt ist:
 						if (delete) {

@@ -290,7 +290,7 @@ public class ImportTask {
 		importBausteinPersonVerknuepfungen();
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
 
-		importZielobjektVerknüpfungen();
+		importZielobjektVerknuepfungen();
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
 
 		importSchutzbedarf();
@@ -352,7 +352,7 @@ public class ImportTask {
 
 	}
 
-	private void importZielobjektVerknüpfungen() {
+	private void importZielobjektVerknuepfungen() {
 		if (!this.zielObjekteZielobjekte)
 			return;
 

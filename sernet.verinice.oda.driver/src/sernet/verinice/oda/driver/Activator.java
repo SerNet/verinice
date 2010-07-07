@@ -27,7 +27,6 @@ import org.osgi.service.url.URLStreamHandlerService;
 import org.osgi.util.tracker.ServiceTracker;
 
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
-import sernet.verinice.oda.driver.impl.VeriniceOdaDriver;
 import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
 
 /**

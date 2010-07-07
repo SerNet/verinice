@@ -31,7 +31,7 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
  * Extension of {@link CnAWorkspace} from verinice core.
  * 
  * Copies the self-assessment CSV-file from this bundle jar to the 
- * workspace of the of verinice.
+ * workspace of verinice.
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */

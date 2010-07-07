@@ -43,8 +43,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.update.internal.core.UpdateCore;
 
@@ -52,7 +52,6 @@ import com.sun.star.lib.connections.socket.socketAcceptor;
 
 import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 
 /**
  * Prepare the workspace directory for the application. Created needed files

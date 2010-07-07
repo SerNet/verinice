@@ -72,6 +72,8 @@ import sernet.hui.common.connect.HUITypeFactory;
 public class VeriniceContext {
 
 	private static final Logger log = Logger.getLogger(VeriniceContext.class);
+	
+	public static final String SYNC_SERVICE = "syncService";
 
 	/** Key for accessing the <code>HUITypeFactory</code> instance. */
 	public static String HUI_TYPE_FACTORY = "huiTypeFactory";
@@ -81,6 +83,8 @@ public class VeriniceContext {
 	public static String GS_SCRAPER_UTIL = "gsScraperUtil";
 	
 	public static String COMMAND_SERVICE = "commandService";
+	
+	public static String WEB_SERVICE_CLIENT = "webServiceClient";
 	
 	public static String AUTH_SERVICE = "authService";
 

@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.server.security;
 
+import org.apache.log4j.Logger;
 import org.springframework.security.Authentication;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.context.SecurityContext;
@@ -75,6 +76,7 @@ public final class AuthenticationService implements IAuthService {
 			}
 		} catch (Exception e) {
 			// do nothing, just return no user name
+			Logger.getLogger( this.getClass() ).error( "dummer fehler", e );
 		}
 		// no user authenticated:
 		return "";

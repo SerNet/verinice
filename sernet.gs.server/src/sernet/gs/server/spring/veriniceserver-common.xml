@@ -61,7 +61,7 @@ This variant:
 	</bean>
 
 	<bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
-		<property name="map">
+	<property name="map">
 			<map>
 				<entry key="gsScraperUtil" value-ref="gsScraperUtil" />
 				<entry key="hitroUtil" value-ref="hitroUtil" />

@@ -17,7 +17,8 @@
     give security privileges to this instance.
      
     See the 'internalAuthenticationProvider' bean.
--->
+	-->
+	
 	<bean id="loadUserConfigurationCommand" class="sernet.gs.server.commands.LoadUserConfiguration">
 	</bean>
 
@@ -73,6 +74,10 @@
 		<security:filter-chain-map path-type="ant">
 			<security:filter-chain pattern="/todo/**" filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
 
+			<!-- editiert / filterchain fuer sync ordner muss deaktiviert sein -->
+			 <security:filter-chain pattern="/sync/**" filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" /> 
+			<!-- editiert -->
+	
 			<security:filter-chain pattern="/service/**" filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
 		</security:filter-chain-map>
 	</bean>
@@ -89,6 +94,7 @@
 			<security:filter-invocation-definition-source>
 				<security:intercept-url pattern="/todo/**" access="ROLE_USER" />
 				<security:intercept-url pattern="/service/**" access="ROLE_USER" />
+				<security:intercept-url pattern="/sync/**" access="ROLE_USER" />
 			</security:filter-invocation-definition-source>
 		</property>
 	</bean>

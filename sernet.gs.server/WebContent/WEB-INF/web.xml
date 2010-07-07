@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
-<web-app id="veriniceserver_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-<!--
-	This file configures the plain veriniceserver. It is not used for the internal verinice server.
-	
-	To find its equivalent have a look at the sernet.gs.server.InternalServer class.
- -->
+<web-app id="veriniceserver_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<!--
+		This file configures the plain veriniceserver. It is not used for the
+		internal verinice server. To find its equivalent have a look at the
+		sernet.gs.server.InternalServer class.
+	-->
 
 	<display-name>veriniceserver</display-name>
 	<welcome-file-list>
@@ -17,19 +19,19 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
-	
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
         	classpath:sernet/gs/server/spring/veriniceserver-common.xml
         	classpath:sernet/gs/server/spring/veriniceserver-plain.xml
         	classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
         	classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml
         	classpath:sernet/gs/server/spring/veriniceserver-security-plain.xml
         </param-value>
-    </context-param>
-    <!-- Webclient conf -->
-    <context-param>
+	</context-param>
+	<!-- Webclient conf -->
+	<context-param>
 		<param-name>javax.faces.CONFIG_FILES</param-name>
 		<param-value>/WEB-INF/faces-config.xml</param-value>
 	</context-param>
@@ -42,11 +44,11 @@
 		<param-value>.xhtml</param-value>
 	</context-param>
 	<context-param>
-	    <param-name>org.richfaces.CONTROL_SKINNING</param-name>
-	    <param-value>enable</param-value>
+		<param-name>org.richfaces.CONTROL_SKINNING</param-name>
+		<param-value>enable</param-value>
 	</context-param>
 	<!-- Webclient conf end -->
-    
+
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -61,13 +63,13 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/todo/*</url-pattern>
+		<url-pattern>/sync/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>contextInitializer</filter-name>
 		<url-pattern>/todo/*</url-pattern>
 	</filter-mapping>
-	
+
 	<!-- Webclient conf -->
 	<filter>
 		<display-name>Ajax4jsf Filter</display-name>
@@ -84,9 +86,9 @@
 	</filter-mapping>
 	<!-- OPENFACES RESOURCE FILTER -->
 	<filter>
-    	<filter-name>ResourceFilter</filter-name>
-    	<filter-class>org.openfaces.util.ResourceFilter</filter-class>
-  	</filter>
+		<filter-name>ResourceFilter</filter-name>
+		<filter-class>org.openfaces.util.ResourceFilter</filter-class>
+	</filter>
 	<filter-mapping>
 		<filter-name>ResourceFilter</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -96,63 +98,103 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
-	 </filter-mapping>
-	 <filter-mapping>
+	</filter-mapping>
+	<filter-mapping>
 		<filter-name>ResourceFilter</filter-name>
 		<url-pattern>/openFacesResources/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
-	 </filter-mapping>
+	</filter-mapping>
 	<!-- Webclient conf end -->
-	
+
+	<!-- TEST - axis servlet -->
+
+	<servlet>
+		<servlet-name>axis</servlet-name>
+		<servlet-class>org.apache.axis.transport.http.AxisServlet</servlet-class>
+ 		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>axis</servlet-name>
+		<url-pattern>/axis/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- axis servlet -->
+
 	<servlet>
 		<servlet-name>context</servlet-name>
 		<servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
-    <servlet>
-        <servlet-name>springDispatcher</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-        	<param-name>contextConfigLocation</param-name>
-        	<param-value>classpath:sernet/gs/server/spring/springDispatcher-servlet.xml</param-value>
-        </init-param>
+
+	<servlet>
+		<servlet-name>springDispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:sernet/gs/server/spring/springDispatcher-servlet.xml</param-value>
+		</init-param>
 		<load-on-startup>2</load-on-startup>
-    </servlet>
-    <servlet>
-    	<description>Output HuiConfig from classpath.</description>
-    	<display-name>GetHitroConfig</display-name>
-    	<servlet-name>GetHitroConfig</servlet-name>
-    	<servlet-class>sernet.gs.server.GetHitroConfig</servlet-class>
-        <init-param>
-        	<param-name>snca.xml.path</param-name>
-        	<param-value>/WEB-INF</param-value>
-        </init-param>
+	</servlet>
+
+	<servlet>
+		<servlet-name>messageDispatcher</servlet-name>
+		<servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>transformWsdlLocation</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/messageDispatcher-servlet.xml</param-value>
+		</init-param>
+	</servlet>
+
+
+	<servlet>
+		<description>Output HuiConfig from classpath.</description>
+		<display-name>GetHitroConfig</display-name>
+		<servlet-name>GetHitroConfig</servlet-name>
+		<servlet-class>sernet.gs.server.GetHitroConfig</servlet-class>
+		<init-param>
+			<param-name>snca.xml.path</param-name>
+			<param-value>/WEB-INF</param-value>
+		</init-param>
 		<load-on-startup>3</load-on-startup>
-    </servlet>
+	</servlet>
 
-    <servlet-mapping>
-        <servlet-name>springDispatcher</servlet-name>
-        <url-pattern>/service/*</url-pattern>
-    </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>messageDispatcher</servlet-name>
+		<url-pattern>/sync/*</url-pattern>
+	</servlet-mapping>
 
-    <servlet-mapping>
-    	<servlet-name>GetHitroConfig</servlet-name>
-    	<url-pattern>/GetHitroConfig</url-pattern>
-    </servlet-mapping>
-    
-    <!-- Webclient conf -->
-    <servlet>
+	<servlet-mapping>
+		<servlet-name>messageDispatcher</servlet-name>
+		<url-pattern>*.wsdl</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>springDispatcher</servlet-name>
+		<url-pattern>/service/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>GetHitroConfig</servlet-name>
+		<url-pattern>/GetHitroConfig</url-pattern>
+	</servlet-mapping>
+
+	<!-- Webclient conf -->
+	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
+
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
-    <!-- Webclient conf end -->
-    
+	<!-- Webclient conf end -->
+
 </web-app>
