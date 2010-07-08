@@ -335,3 +335,4 @@ Import-Package: javax.xml.rpc.encoding,
  org.osgi.util.tracker,
  sernet.gs.service
 Service-Component: OSGI-INF/component-user.xml
+Bundle-ActivationPolicy: lazy
