@@ -8,10 +8,13 @@ Require-Bundle: sernet.gs.service,
  org.eclipse.equinox.ds;bundle-version="1.1.1",
  org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: ., bin, lib/bouncycastle/bcmail-jdk16-145.jar,
- lib/bouncycastle/bcprov-jdk16-145.jar,
- lib/javamail/javamail-1.4.3.jar
+Bundle-ClassPath: .,
+ bin,
+ lib/bouncycastle/bcmail-jdk16-145.jar,
+ lib/bouncycastle/bcprov-jdk16-145.jar
 Export-Package: sernet.verinice.encryption
 Service-Component: OSGI-INF/component.xml
 Bundle-ActivationPolicy: lazy
-Import-Package: org.apache.log4j
+Import-Package: javax.mail,
+ javax.mail.internet,
+ org.apache.log4j
