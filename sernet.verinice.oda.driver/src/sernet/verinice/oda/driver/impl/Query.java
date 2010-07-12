@@ -42,8 +42,9 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -63,12 +64,9 @@ public class Query implements IQuery
     
     private String[] columns;
     
-    private ICommandService commandService;
-    
     Query(HUITypeFactory huiTypeFactory)
     {
     	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
-    	commandService = Activator.getDefault().getCommandService();
     	
     	try {
     		interpreter = new Interpreter();
@@ -78,10 +76,9 @@ public class Query implements IQuery
 					" v = _vars.get(s);" +
 					" return (v == null) ? s + \" does not exist.\" : v;" +
 					"}");
-    		interpreter.set("helper", this);
+    		interpreter.set("helper", new Helper());
     		interpreter.eval("gpt(entityType) { return helper.getAllPropertyTypes(entityType); }");
     		interpreter.set("htf", huiTypeFactory);
-    		interpreter.set("_commandService", commandService);
 			interpreter.set("properties", properties);
 			interpreter.set("__columns", null);
 			interpreter.eval("columns(c) { __columns = c; }");
@@ -92,73 +89,108 @@ public class Query implements IQuery
     }
     
     /**
-     * A variant of 'retrieveEntityValues' which does not specify the type of the properties. (Defaults
-     * to 'getSimpleValue'.)
+     * A class with utility methods which are supposed to be used by report scripts.
      * 
-     * @param typeId
-     * @param propertyNames
-     * @return
+     * @author Robert Schuster <r.schuster@tarent.de>
+     *
      */
-    public List<List<String>> retrieveEntityValues(String typeId, String[] propertyNames)
-    {
-    	return retrieveEntityValues(typeId, propertyNames, new Class[0]);
-    }
-    
-    /**
-     * Retrieves a list containing the values of the propertytypes of the specified entitytype.
-     * 
-     * The data is returned in a way that it can directly be used for BIRT tables (list of property value lists) 
-     * 
-     * By specifying the class of the result the retrieval code will use {@link Entity#getInt(String)} (for
-     * <code>Integer.class</code>) or {@link Entity#getSimpleValue(String)} (for <code>String.class</code>).
-     * 
-     * @param typeId
-     * @param propertyNames
-     * @param classes
-     * @return
-     */
-    public List<List<String>> retrieveEntityValues(String typeId, String[] propertyNames, Class<?>[] classes)
-    {
-		LoadEntityValues command = new LoadEntityValues(typeId, propertyNames, classes );
-
-			try {
-				command = commandService.executeCommand(command);
-			} catch (CommandException e) {
-				return Collections.emptyList();
-			}
-		
-		return command.getResult();
-    }
-    
-    public String[] getAllPropertyTypes(EntityType et)
-    {
-    	List<String> result = new ArrayList<String>();
-    	for (PropertyType pt : et.getPropertyTypes())
-    	{
-    		result.add(pt.getName());
-    	}
+    public class Helper {
     	
-    	for (PropertyGroup pg : et.getPropertyGroups())
+    	public ICommand execute(ICommand c)
     	{
-    		for (PropertyType pt : pg.getPropertyTypes())
+    		try
     		{
-    			result.add(pt.getName());
+    			return Activator.getDefault().getCommandService().executeCommand(c);
+    		} catch (CommandException e)
+    		{
+    			throw new IllegalStateException("Running the command failed.");
     		}
     	}
     	
-    	return result.toArray(new String[result.size()]);
-    }
-    
-    List<List<Object>> map(List<Object> input, String[] props)
-    {
-    	List<List<Object>> result = new ArrayList<List<Object>>();
+        /**
+         * A variant of 'retrieveEntityValues' which does not specify the type of the properties. (Defaults
+         * to 'getSimpleValue'.)
+         * 
+         * @param typeId
+         * @param propertyNames
+         * @return
+         */
+        public List<List<String>> retrieveEntityValues(String typeId, String[] propertyNames)
+        {
+        	return retrieveEntityValues(typeId, propertyNames, new Class[0]);
+        }
+        
+        /**
+         * Retrieves a list containing the values of the propertytypes of the specified entitytype.
+         * 
+         * The data is returned in a way that it can directly be used for BIRT tables (list of property value lists) 
+         * 
+         * By specifying the class of the result the retrieval code will use {@link Entity#getInt(String)} (for
+         * <code>Integer.class</code>) or {@link Entity#getSimpleValue(String)} (for <code>String.class</code>).
+         * 
+         * @param typeId
+         * @param propertyNames
+         * @param classes
+         * @return
+         */
+        public List<List<String>> retrieveEntityValues(String typeId, String[] propertyNames, Class<?>[] classes)
+        {
+    		LoadEntityValues command = new LoadEntityValues(typeId, propertyNames, classes );
+
+    			try {
+    				command = Activator.getDefault().getCommandService().executeCommand(command);
+    			} catch (CommandException e) {
+    				return Collections.emptyList();
+    			}
+    		
+    		return command.getResult();
+        }
+        
+        public String[] getAllPropertyTypes(EntityType et)
+        {
+        	List<String> result = new ArrayList<String>();
+        	for (PropertyType pt : et.getPropertyTypes())
+        	{
+        		result.add(pt.getName());
+        	}
+        	
+        	for (PropertyGroup pg : et.getPropertyGroups())
+        	{
+        		for (PropertyType pt : pg.getPropertyTypes())
+        		{
+        			result.add(pt.getName());
+        		}
+        	}
+        	
+        	return result.toArray(new String[result.size()]);
+        }
+        
+        public List<List<String>> map(List<CnATreeElement> input, String[] props)
+        {
+        	return map(input, props, new Class<?>[0]);
+        }
+        
+        /**
+         * Takes an existing list of {@link CnATreeElement} instances and converts them into a list
+         * of string values (this can be used as the input for BIRT tables).
+         * 
+         * @param input
+         * @param props
+         * @param classes
+         * @return
+         */
+        public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes)
+        {
+        	List<List<String>> result = new ArrayList<List<String>>();
+        	
+        	for (CnATreeElement e : input)
+        	{
+        		result.add(LoadEntityValues.retrievePropertyValues(e.getEntity(), props, classes));
+        	}
+        	
+        	return result;
+        }
     	
-    	for (Object o : input)
-    	{
-    		// TODO: Use anonymous classes
-    	}
-    	
-    	return result;
     }
 	
 	public void prepare( String queryText ) throws OdaException

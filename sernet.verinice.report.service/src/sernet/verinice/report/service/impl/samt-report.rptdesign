@@ -38,7 +38,7 @@
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[return vars("companyName");]]></xml-property>
+            <xml-property name="queryText"><![CDATA[return vars("samtGroup").getParent().getTitle();]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>1.0</Version>
@@ -262,8 +262,10 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[columns(new String[] { "title", "weight", "threshold", "maturity" });
 
-return helper.retrieveEntityValues(
-	"samt_topic",
+c = helper.execute(new sernet.verinice.samt.service.LoadAllSamtTopics(vars("samtGroup")));
+
+return helper.map(
+	c.getAllSamtTopics(),
 	new String[] {
 		"samt_topic_name",
 		"samt_topic_ownweight",

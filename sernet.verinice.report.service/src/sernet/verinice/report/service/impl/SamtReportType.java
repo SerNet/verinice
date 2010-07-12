@@ -7,13 +7,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
-import org.eclipse.birt.report.engine.api.IDataExtractionOption;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.jfree.chart.JFreeChart;
@@ -24,10 +22,8 @@ import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.report.service.Activator;
 import sernet.verinice.samt.service.FindSamtGroup;
-import sernet.verinice.samt.service.LoadAllSamtTopics;
 
 public class SamtReportType implements IReportType {
 	
@@ -91,13 +87,10 @@ public class SamtReportType implements IReportType {
 
 				});
 		
-		List<SamtTopic> samtTopics = getAllSamtTopics(samtGroup);
-
 		Map<String, Object> variables = new HashMap<String, Object>();
-		variables.put("companyName", samtGroup.getParent().getTitle());
 		variables.put("date", new Date());
 		variables.put("totalSecurityFigure", 23);
-		variables.put("samtTopics", samtTopics);
+		variables.put("samtGroup", samtGroup);
 		
 		Activator.getDefault().getOdaDriver().setScriptVariables(variables);
 	}
@@ -116,22 +109,5 @@ public class SamtReportType implements IReportType {
 		}
 		return command.getSelfAssessmentGroup();
 	}
-	
-	private List<SamtTopic> getAllSamtTopics(ControlGroup cg)
-	{
-		LoadAllSamtTopics command = new LoadAllSamtTopics(cg);
-		try {
-			command = Activator.getDefault().getCommandService().executeCommand(command);
-		} catch (RuntimeException e) {
-			LOG.error("Error while executing FindSamtGroup command", e); //$NON-NLS-1$
-			throw e;
-		} catch (Exception e) {
-			final String message = "Error while executing FindSamtGroup command"; //$NON-NLS-1$
-			LOG.error(message, e);
-			throw new RuntimeException(message, e);
-		}
-		return command.getAllSamtTopics();
-	}
-
 
 }

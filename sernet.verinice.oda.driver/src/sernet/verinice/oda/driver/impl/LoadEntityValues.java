@@ -63,11 +63,16 @@ public class LoadEntityValues extends GenericCommand {
 		for (CnATreeElement element : elements)
 		{
 			Entity e = element.getEntity();
-			result.add(retrievePropertyValues(e));
+			result.add(retrievePropertyValues(e, propertyTypes, classes));
 		}
 	}
 	
-	private List<String> retrievePropertyValues(Entity e)
+	/**
+	 * Retrieves the values of the properties of the given entity and returns them as a list of strings.
+	 * 
+	 * <p>Note: The method is purposely written in a way that it can be reused from other parts of the application.</p>
+	 */
+	public static List<String> retrievePropertyValues(Entity e, String[] propertyTypes, Class<?>[] classes)
 	{
 		ArrayList<String> values = new ArrayList<String>(propertyTypes.length);
 		

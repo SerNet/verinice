@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .,
  lib/bsh.jar
 Bundle-Activator: sernet.verinice.oda.driver.Activator
-Eclipse-BuddyPolicy: registered
+Eclipse-BuddyPolicy: global
+Eclipse-RegisterBuddy: sernet.springclient
 Bundle-Localization: plugin
 Export-Package: sernet.verinice.oda.driver.impl;
   uses:="org.eclipse.datatools.connectivity.oda.util.manifest,
