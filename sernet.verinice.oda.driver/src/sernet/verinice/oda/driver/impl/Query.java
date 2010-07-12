@@ -23,6 +23,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,10 +36,13 @@ import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.eclipse.datatools.connectivity.oda.SortSpec;
 import org.eclipse.datatools.connectivity.oda.spec.QuerySpecification;
 
+import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.Activator;
 import bsh.EvalError;
@@ -59,9 +63,12 @@ public class Query implements IQuery
     
     private String[] columns;
     
+    private ICommandService commandService;
+    
     Query(HUITypeFactory huiTypeFactory)
     {
     	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
+    	commandService = Activator.getDefault().getCommandService();
     	
     	try {
     		interpreter = new Interpreter();
@@ -74,6 +81,7 @@ public class Query implements IQuery
     		interpreter.set("helper", this);
     		interpreter.eval("gpt(entityType) { return helper.getAllPropertyTypes(entityType); }");
     		interpreter.set("htf", huiTypeFactory);
+    		interpreter.set("_commandService", commandService);
 			interpreter.set("properties", properties);
 			interpreter.set("__columns", null);
 			interpreter.eval("columns(c) { __columns = c; }");
@@ -81,6 +89,45 @@ public class Query implements IQuery
 		} catch (EvalError e) {
 			new RuntimeException("Unable to set BSH variable 'properties'.", e);
 		}
+    }
+    
+    /**
+     * A variant of 'retrieveEntityValues' which does not specify the type of the properties. (Defaults
+     * to 'getSimpleValue'.)
+     * 
+     * @param typeId
+     * @param propertyNames
+     * @return
+     */
+    public List<List<String>> retrieveEntityValues(String typeId, String[] propertyNames)
+    {
+    	return retrieveEntityValues(typeId, propertyNames, new Class[0]);
+    }
+    
+    /**
+     * Retrieves a list containing the values of the propertytypes of the specified entitytype.
+     * 
+     * The data is returned in a way that it can directly be used for BIRT tables (list of property value lists) 
+     * 
+     * By specifying the class of the result the retrieval code will use {@link Entity#getInt(String)} (for
+     * <code>Integer.class</code>) or {@link Entity#getSimpleValue(String)} (for <code>String.class</code>).
+     * 
+     * @param typeId
+     * @param propertyNames
+     * @param classes
+     * @return
+     */
+    public List<List<String>> retrieveEntityValues(String typeId, String[] propertyNames, Class<?>[] classes)
+    {
+		LoadEntityValues command = new LoadEntityValues(typeId, propertyNames, classes );
+
+			try {
+				command = commandService.executeCommand(command);
+			} catch (CommandException e) {
+				return Collections.emptyList();
+			}
+		
+		return command.getResult();
     }
     
     public String[] getAllPropertyTypes(EntityType et)

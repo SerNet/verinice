@@ -19,3 +19,5 @@ jar_cmd sernet.gs.ui.rcp.main
 jar_cmd sernet.gs.service
 jar_cmd sernet.gs.reveng
 jar_cmd sernet.verinice.samt.service
+jar_cmd sernet.verinice.oda.driver
+

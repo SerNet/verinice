@@ -262,30 +262,19 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[columns(new String[] { "title", "weight", "threshold", "maturity" });
 
-l = vars("samtTopics");
+return helper.retrieveEntityValues(
+	"samt_topic",
+	new String[] {
+		"samt_topic_name",
+		"samt_topic_ownweight",
+		"samt_topic_min2",
+		"samt_topic_maturity" },
+	new Class[] {
+		String.class,
+		Integer.class,
+		Integer.class,
+		Integer.class });
 
-if (l instanceof List)
-{
-   result = new ArrayList();
-
-   ite = l.iterator();
-
-   while (ite.hasNext())
-   {
-	e = ite.next();
-	line = new ArrayList();
-	line.add(e.getTitle());
-	line.add(e.getWeight2());
-	line.add(e.getThreshold2());
-	line.add(e.getMaturity());
-
-	result.add(line);
-   }
-
-   return result;
-
-} else
-  return l;
 ]]></xml-property>
         </oda-data-set>
     </data-sets>

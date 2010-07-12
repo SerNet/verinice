@@ -26,6 +26,7 @@ import org.osgi.service.url.URLConstants;
 import org.osgi.service.url.URLStreamHandlerService;
 import org.osgi.util.tracker.ServiceTracker;
 
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
 
@@ -45,6 +46,8 @@ public class Activator extends Plugin {
 	private VeriniceURLStreamHandlerService urlStreamHandlerService = new VeriniceURLStreamHandlerService();
 	
 	private ServiceTracker veriniceOdaDriverTracker;
+	
+	private ServiceTracker commandServiceTracker;
 	
 	/**
 	 * The constructor
@@ -70,6 +73,9 @@ public class Activator extends Plugin {
 		
 		veriniceOdaDriverTracker = new ServiceTracker(context, IVeriniceOdaDriver.class.getName(), null);
 		veriniceOdaDriverTracker.open();
+		
+		commandServiceTracker = new ServiceTracker(context, ICommandService.class.getName(), null);
+		commandServiceTracker.open();
 	}
 
 	/*
@@ -80,6 +86,7 @@ public class Activator extends Plugin {
 		super.stop(context);
 		plugin = null;
 		veriniceOdaDriverTracker.close();
+		commandServiceTracker.close();
 	}
 
 	/**
@@ -99,6 +106,11 @@ public class Activator extends Plugin {
 	public IVeriniceOdaDriver getOdaDriver()
 	{
 		return (IVeriniceOdaDriver) veriniceOdaDriverTracker.getService();
+	}
+	
+	public ICommandService getCommandService()
+	{
+		return (ICommandService) commandServiceTracker.getService();
 	}
 
 }
