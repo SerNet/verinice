@@ -74,7 +74,6 @@ public class LoadEntityValues extends GenericCommand {
 		int i = 0;
 		for (String name : propertyTypes)
 		{
-			i++;
 			Class<?> c = (i >= classes.length ? null : classes[i]);
 			if (c == null || c == String.class)
 				values.add(e.getSimpleValue(name));
@@ -82,6 +81,8 @@ public class LoadEntityValues extends GenericCommand {
 				values.add(String.valueOf(e.getInt(name)));
 			else
 				throw new IllegalArgumentException("Invalid class for propertyType '" + name + "'.");
+			
+			i++;
 		}
 		
 		return values;
