@@ -36,7 +36,7 @@ import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
 
 /**
  * This action is called by a link an the intro/welcome page of verinice.
- * The action switches to the {@link SamtPerspective} (Samt=Self Assessment)
+ * The action switches to the {@link AuditPerspective} (Samt=Self Assessment)
  * and closes the welcome page.
  * 
  * At the moment there is a static link to this action on the standard welcome 
@@ -64,7 +64,7 @@ public class SamtIntroAction implements IIntroAction {
    
     @Override
     public void run(IIntroSite arg0, Properties arg1) {
-        // Switch to SamtPerspective
+        // Switch to AuditPerspective
         final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         IPerspectiveDescriptor activePerspective = workbenchWindow.getActivePage().getPerspective();
         if(activePerspective==null || !activePerspective.getId().equals(SamtPerspective.ID)) {           

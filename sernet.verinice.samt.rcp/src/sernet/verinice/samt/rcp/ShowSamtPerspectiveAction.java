@@ -29,7 +29,7 @@ public class ShowSamtPerspectiveAction implements IWorkbenchWindowActionDelegate
     @SuppressWarnings("restriction")
     @Override
     public void run(IAction action) {
-        // Switch to SamtPerspective
+        // Switch to AuditPerspective
         IPerspectiveDescriptor activePerspective = window.getActivePage().getPerspective();
         if(activePerspective==null || !activePerspective.getId().equals(SamtPerspective.ID)) {           
             Display.getCurrent().asyncExec(new Runnable() {

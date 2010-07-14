@@ -23,13 +23,52 @@
             name="%view.name.0"
             restorable="true">
       </view>
+      <view
+            allowMultiple="true"
+            category="sernet.verinice.samt.rcp"
+            class="sernet.verinice.samt.audit.rcp.OrganizationView"
+            icon="icons/organization.gif"
+            id="sernet.verinice.samt.audit.rcp.OrganizationView"
+            name="Organization-View">
+      </view> 
+      <view
+            allowMultiple="true"
+            category="sernet.verinice.samt.rcp"
+            class="sernet.verinice.samt.audit.rcp.AuditView"
+            icon="icons/audit.png"
+            id="sernet.verinice.samt.audit.rcp.AuditView"
+            name="Audit-View">
+      </view>
+      <view
+            allowMultiple="true"
+            category="sernet.verinice.samt.rcp"
+            class="sernet.verinice.samt.audit.rcp.AssetView"
+            icon="icons/audit.png"
+            id="sernet.verinice.samt.audit.rcp.AssetView"
+            name="Asset-View">
+      </view>
+      <view
+            allowMultiple="true"
+            category="sernet.verinice.samt.rcp"
+            class="sernet.verinice.samt.audit.rcp.ControlView"
+            icon="icons/audit.png"
+            id="sernet.verinice.samt.audit.rcp.ControlView"
+            name="Control-View">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
             class="sernet.verinice.samt.rcp.SamtPerspective"
             id="sernet.verinice.samt.rcp.SamtPerspective"
-            name="%perspective.name">
+            name="%perspective.name"
+            icon="icons/self-assessment.png">
+      </perspective>
+      <perspective
+            class="sernet.verinice.samt.audit.rcp.AuditPerspective"
+            id="sernet.verinice.samt.audit.rcp.AuditPerspective"
+            name="Audit Perspective"
+            icon="icons/audit.png">
       </perspective>
    </extension>
    <extension
