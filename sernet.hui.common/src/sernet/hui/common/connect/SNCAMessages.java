@@ -60,12 +60,12 @@ public class SNCAMessages {
 				resource = bundle.getString(key);
 			}
 		} catch (MissingResourceException e) {
-		    if (LOG.isInfoEnabled()) {        
+		    if (LOG.isDebugEnabled()) {        
     			StringBuilder sb = new StringBuilder();
     			sb.append("missing resource: ").append(key);
     			sb.append(", baseUrl: ").append(baseUrl);
     			sb.append(", bundle-name: ").append(BUNDLE_NAME);
-    			LOG.info(sb.toString());
+    			LOG.debug(sb.toString());
 		    }
 			return null;
 		}

@@ -21,6 +21,7 @@ package sernet.verinice.iso27k.rcp;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -64,6 +65,9 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 	public void dispose() {
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
+	 */
 	public Object[] getChildren(Object parent) {
 		CnATreeElement[] children = new CnATreeElement[]{};
 
@@ -72,33 +76,36 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 		if (cachedObject != null) {
 			parent = cachedObject;
 		}
-			
-		if(parent instanceof List) {
-			List<CnATreeElement> list = (List<CnATreeElement>)parent;
-			children = list.toArray(new CnATreeElement[list.size()]);
-		} else if (parent instanceof CnATreeElement) {
-			CnATreeElement el = (CnATreeElement) parent;
-			CnATreeElement newElement;
-			try {
-				if(!el.isChildrenLoaded()) {
-					newElement = loadChildren(el);
-					if(newElement!=null) {
-						el.replace(newElement);
-						el = newElement;
-						children = el.getChildrenAsArray();
-					}
-					
-				} else {
-					children = el.getChildrenAsArray();
-				}
-				Arrays.sort(children,comparator);
-				
-			} catch (CommandException e) {
-				log.error("Error while loading child elements", e);
-				ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
-			}
-		}
-
+		try {
+    		if(parent instanceof List) {
+    			List<CnATreeElement> list = (List<CnATreeElement>)parent;
+    			children = new CnATreeElement[list.size()];
+    			int i = 0;
+    			for (Iterator<CnATreeElement> iterator = list.iterator(); iterator.hasNext();) {			 
+                    CnATreeElement cnATreeElement = iterator.next();
+                    children[i]=loadChildren(cnATreeElement);
+                    i++;
+                }
+    		} else if (parent instanceof CnATreeElement) {
+    			CnATreeElement el = (CnATreeElement) parent;
+    			CnATreeElement newElement;
+    			
+    				if(!el.isChildrenLoaded()) {
+    					newElement = loadChildren(el);
+    					if(newElement!=null) {
+    						el.replace(newElement);
+    						el = newElement;
+    						children = el.getChildrenAsArray();
+    					}					
+    				} else {
+    					children = el.getChildrenAsArray();
+    				}
+    				Arrays.sort(children,comparator);			
+    		}
+		} catch (CommandException e) {
+            log.error("Error while loading child elements", e);
+            ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
+        }
 		return children;
 	}
 
