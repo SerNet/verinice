@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main;
 
 import org.eclipse.core.runtime.IExtension;
+import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
@@ -315,14 +316,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     }
 
     private IContributionItem createHelpMenu() {
-        MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_21);
+        MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_21,IWorkbenchActionConstants.M_HELP);
         helpMenu.add(introAction);
         helpMenu.add(showCheatSheetListAction);
         helpMenu.add(aboutAction);
         helpMenu.add(new Separator());
-        helpMenu.add(updateAction);
-        helpMenu.add(manageUpdatesAction);
-        helpMenu.add(manualUpdate);
+        helpMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         return helpMenu;
     }
 

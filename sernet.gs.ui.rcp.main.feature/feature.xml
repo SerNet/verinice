@@ -1015,7 +1015,7 @@ Library.
          id="sernet.gs.service"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.12.0.qualifier"
          unpack="false"/>
 
    <plugin
@@ -1089,7 +1089,7 @@ Library.
          id="sernet.gs.ui.rcp.main"
          download-size="60"
          install-size="188"
-         version="0.0.0"
+         version="1.2.0.qualifier"
          unpack="false"/>
 
    <plugin
@@ -2209,7 +2209,7 @@ Library.
          id="javax.servlet"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.5.0.v200806031605"
          unpack="false"/>
 
    <plugin
@@ -2230,6 +2230,76 @@ Library.
          download-size="0"
          install-size="0"
          version="2.5.2.v20100115"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.ui"
+         download-size="0"
+         install-size="0"
+         version="1.0.101.R35x_v20090819"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.ui.sdk"
+         download-size="0"
+         install-size="0"
+         version="1.0.100.v20090520-1905"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.ui.sdk.scheduler"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v20090520-1905"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.garbagecollector"
+         download-size="0"
+         install-size="0"
+         version="1.0.100.v20090520-1905"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.simpleconfigurator"
+         download-size="0"
+         install-size="0"
+         version="1.0.101.R35x_v20090807-1100"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.frameworkadmin"
+         download-size="0"
+         install-size="0"
+         version="1.0.100.v20090520-1905"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.director"
+         download-size="0"
+         install-size="0"
+         version="1.0.101.R35x_v20100112"
+         unpack="false"/>
+
+   <plugin
+         id="org.sat4j.core"
+         download-size="0"
+         install-size="0"
+         version="2.1.1.v20090825"
+         unpack="false"/>
+
+   <plugin
+         id="org.sat4j.pb"
+         download-size="0"
+         install-size="0"
+         version="2.1.1.v20090825"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.frameworkadmin.equinox"
+         download-size="0"
+         install-size="0"
+         version="1.0.101.R35x_v20091214"
          unpack="false"/>
 
 </feature>
