@@ -1,4 +1,4 @@
-package sernet.gs.ui.rcp.main.service;
+package sernet.verinice.interfaces;
 
 import java.net.URL;
 

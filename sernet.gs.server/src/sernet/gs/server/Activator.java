@@ -26,7 +26,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 
-import sernet.gs.ui.rcp.main.service.IInternalServer;
+import sernet.verinice.interfaces.IInternalServer;
 
 public class Activator extends Plugin {
 

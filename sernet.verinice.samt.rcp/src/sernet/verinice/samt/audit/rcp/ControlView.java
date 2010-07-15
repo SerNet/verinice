@@ -19,24 +19,19 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.service.commands.LoadElementByClass;
 import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
-import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 
 /**
+ * 
+ * 
  * @author Daniel Murygin <dm@sernet.de>
- *
  */
 public class ControlView extends GroupView<ControlGroup> {
 

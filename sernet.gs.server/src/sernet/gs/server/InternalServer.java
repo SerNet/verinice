@@ -40,7 +40,7 @@ import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.ContextLoaderServlet;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import sernet.gs.ui.rcp.main.service.IInternalServer;
+import sernet.verinice.interfaces.IInternalServer;
 
 /**
  * Implementation of the {@link IInternalServer} interface which allows managing

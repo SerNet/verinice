@@ -37,7 +37,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.service.IInternalServer;
+import sernet.verinice.interfaces.IInternalServer;
 
 /**
  * Main preference page for CnA Tool Settings.
