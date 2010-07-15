@@ -1,0 +1,3 @@
+instructions.configure=\
+org.eclipse.equinox.p2.touchpoint.eclipse.addRepository(type:0,location:http${#58}//localhost:8080/veriniceserver/Verinice-Update-Site-2010);\
+org.eclipse.equinox.p2.touchpoint.eclipse.addRepository(type:1,location:http${#58}//localhost:8080/veriniceserver/Verinice-Update-Site-2010);
