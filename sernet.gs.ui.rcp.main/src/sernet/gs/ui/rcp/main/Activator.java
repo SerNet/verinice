@@ -19,6 +19,8 @@ package sernet.gs.ui.rcp.main;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
@@ -29,6 +31,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.equinox.internal.p2.console.ProvisioningHelper;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
@@ -39,7 +43,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.springframework.osgi.bundle.BundleAction;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -56,6 +59,7 @@ import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.StatusResult;
 
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -71,6 +75,10 @@ public class Activator extends AbstractUIPlugin {
 	private static final String VERINICE_ODA_DRIVER_SYMBOLIC_NAME = "sernet.verinice.oda.driver"; //$NON-NLS-1$
 	
 	private static final String REPORT_SERVICE_SYMBOLIC_NAME = "sernet.verinice.report.service"; //$NON-NLS-1$
+
+    private static final String LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-2010"; //$NON-NLS-1$
+    
+    public static final String UPDATE_SITE_URL = "http://update.verinice.org/pub/verinice/Verinice-Update-Site-2010"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
@@ -175,7 +183,6 @@ public class Activator extends AbstractUIPlugin {
 		
 		// set workdir preference:
 		CnAWorkspace.getInstance().prepareWorkDir();
-		CnAWorkspace.getInstance().updatePolicyFile();
 
 		Preferences prefs = getPluginPreferences();
 
@@ -263,8 +270,24 @@ public class Activator extends AbstractUIPlugin {
 				ICommandService.class.getName(),
 				VeriniceContext.get(VeriniceContext.COMMAND_SERVICE),
 				null);
+		
+		Job repositoryJob = new Job("add-repository") {
+		    /* (non-Javadoc)
+		     * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+		     */
+		    protected IStatus run(IProgressMonitor monitor) {
+		        try {
+                    addUpdateRepository();
+                } catch (URISyntaxException e) {
+                    LOG.error("Error while adding update repository.");
+                }
+		        return Status.OK_STATUS;
 
+		    };
+		};
+		repositoryJob.schedule();	
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -279,7 +302,7 @@ public class Activator extends AbstractUIPlugin {
 		plugin = null;
 		super.stop(context);
 	}
-
+	
 	/**
 	 * Returns the shared instance
 	 * 
@@ -414,6 +437,73 @@ public class Activator extends AbstractUIPlugin {
 			}
 		}
 	}
+	
+	@SuppressWarnings("restriction")
+    private void addUpdateRepository() throws URISyntaxException {  
+	    Preferences prefs = Activator.getDefault().getPluginPreferences();
+	    URI repoUri = null;
+	    if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
+            repoUri = new URI(createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
+	    } else {
+	        repoUri = new URI(UPDATE_SITE_URL); 
+	    }
+        removeRepository();    
+        try {
+            ProvisioningHelper.addMetadataRepository(repoUri);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("MetadataRepository added: " + repoUri);
+            }
+        } catch( Exception e ) {
+            LOG.warn("Can not add update repository: " + repoUri);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("stacktrace: ", e);
+            }
+        }
+        try {
+            ProvisioningHelper.addArtifactRepository(repoUri);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("ArtifactRepository added: " + repoUri);
+            }
+        } catch( Exception e ) {
+            LOG.warn("Can not add update repository: " + repoUri);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("stacktrace: ", e);
+            }
+        }
+    }
+
+    private void removeRepository() {
+        URI[] uriArray = ProvisioningHelper.getArtifactRepositories();
+        if(uriArray!=null) {
+    	    for (int i = 0; i < uriArray.length; i++) {
+                URI uri = uriArray[i];
+                if(uri.toString().equals(UPDATE_SITE_URL) || uri.toString().endsWith(LOCAL_UPDATE_SITE_URL)) {
+                    ProvisioningHelper.removeArtifactRepository(uri);
+                }
+            }
+        }
+        uriArray = ProvisioningHelper.getMetadataRepositories();
+    	if(uriArray!=null) {
+            for (int i = 0; i < uriArray.length; i++) {
+                URI uri = uriArray[i];
+                if(uri.toString().equals(UPDATE_SITE_URL) || uri.toString().endsWith(LOCAL_UPDATE_SITE_URL)) {
+                    ProvisioningHelper.removeMetadataRepository(uri);
+                }
+            }
+        }
+            
+    }
+	
+	/**
+     * @param string
+     * @return
+     */
+    private String createUpdateSiteUrl(String serverUrl) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(serverUrl);
+        stringBuilder.append(LOCAL_UPDATE_SITE_URL);
+        return stringBuilder.toString();
+    }
 
 	public static StatusResult startServer() {
 		return startServer(JobScheduler.getInitMutex(), new StatusResult());

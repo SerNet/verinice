@@ -46,7 +46,6 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.update.internal.core.UpdateCore;
 
 import com.sun.star.lib.connections.socket.socketAcceptor;
 
@@ -87,8 +86,6 @@ public class CnAWorkspace {
 
 	private static final String POLICY_FILE = "updatePolicyURL"; //$NON-NLS-1$
 
-	private static final Object LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-2010"; //$NON-NLS-1$
-
     private static CnAWorkspace instance;
 
 	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
@@ -105,19 +102,6 @@ public class CnAWorkspace {
 
 				} catch (Exception e) {
 					ExceptionUtil.log(e, Messages.CnAWorkspace_0);
-				}
-			}
-
-			if (event.getProperty().equals(PreferenceConstants.OPERATION_MODE) || event.getProperty().equals(PreferenceConstants.VNSERVER_URI)) {
-				try {
-					updatePolicyFile();
-
-					if (!modechangeWarning) {
-						modechangeWarning = false;
-						MessageDialog.openWarning(Display.getCurrent().getActiveShell(), Messages.CnAWorkspace_1, Messages.CnAWorkspace_2);
-					}
-				} catch (Exception e) {
-					ExceptionUtil.log(e, Messages.CnAWorkspace_3);
 				}
 			}
 		}
@@ -153,7 +137,6 @@ public class CnAWorkspace {
 	 */
 	public void prepare(boolean force) {
 		prepareWorkDir();
-		updatePolicyFile();
 		
 		if (!force && confDir.exists() && confDir.isDirectory()) {
 			File confFile = new File(confDir, "configuration.version"); //$NON-NLS-1$
@@ -182,7 +165,6 @@ public class CnAWorkspace {
 			instance.createHtmlDir();
 			instance.createOfficeDir();
 			instance.createDatabaseConfig();
-			instance.updatePolicyFile();
 		} catch (Exception e) {
 			ExceptionUtil.log(e, NLS.bind(Messages.CnAWorkspace_4, confDir.getAbsolutePath()));
 		}
@@ -194,41 +176,6 @@ public class CnAWorkspace {
 		String path = url.getPath().replaceAll("/", "\\" + File.separator); //$NON-NLS-1$ //$NON-NLS-2$
 		workDir = (new File(path)).getAbsolutePath();
 		confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
-	}
-
-	public void updatePolicyFile() {
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
-
-		if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER)) {
-			removePolicyFile();
-		} else {
-			try {
-				createPolicyFile(prefs);
-			} catch (MalformedURLException e) {
-				log.error("Konnte Update-Policy File nicht erzeugen.", e); //$NON-NLS-1$
-			} catch (IOException e) {
-				log.error("Konnte Update-Policy File nicht erzeugen.", e); //$NON-NLS-1$
-			}
-		}
-	}
-
-	private void removePolicyFile() {
-		// remove policy file / path to policy file. thereby setting update site
-		// to default:
-		removeFile(getConfDir(), "policy.xml"); //$NON-NLS-1$
-		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", ""); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	private void createPolicyFile(Preferences prefs) throws IOException, MalformedURLException {
-		// create update policy file to set update site to local verinice
-		// server:
-		HashMap<String, String> settings = new HashMap<String, String>(1);
-		settings.put("updatesiteurl", createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI))); //$NON-NLS-1$
-		createTextFile("conf" + File.separator + "skel_policy.xml", getConfDir(), "policy.xml", settings); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-		// set path to policy.xml with changed update site (on local server):
-		File policyFile = new File(getConfDir() + File.separator + "policy.xml"); //$NON-NLS-1$
-		UpdateCore.getPlugin().getPluginPreferences().setValue("updatePolicyURL", policyFile.toURI().toURL().toString()); //$NON-NLS-1$
 	}
 
 	/**
@@ -243,17 +190,6 @@ public class CnAWorkspace {
 		} else {
 			log.debug(name + " was NOT deleted."); //$NON-NLS-1$
 		}
-	}
-
-	/**
-	 * @param string
-	 * @return
-	 */
-	private String createUpdateSiteUrl(String serverUrl) {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(serverUrl);
-		stringBuilder.append(LOCAL_UPDATE_SITE_URL);
-		return stringBuilder.toString();
 	}
 
 	public String getWorkdir() {

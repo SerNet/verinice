@@ -754,13 +754,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.update.configurator"
-         download-size="0"
-         install-size="0"
-         version="3.3.0.v20090312"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.lucene"
          download-size="0"
          install-size="0"
@@ -929,29 +922,6 @@ Library.
          install-size="0"
          version="3.2.100.v20090429-1800"
          fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.core"
-         download-size="0"
-         install-size="0"
-         version="3.2.300.v20090525"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.core.linux"
-         os="linux"
-         download-size="0"
-         install-size="0"
-         version="3.2.100.v20081008"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.ui"
-         download-size="0"
-         install-size="0"
-         version="3.2.201.R35x_v20090813"
          unpack="false"/>
 
    <plugin
@@ -1132,13 +1102,6 @@ Library.
          download-size="0"
          install-size="0"
          version="1.2.0.M20090819-0800"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.scheduler"
-         download-size="0"
-         install-size="0"
-         version="3.2.200.v20081127"
          unpack="false"/>
 
    <plugin
@@ -1610,38 +1573,6 @@ Library.
 
    <plugin
          id="org.eclipse.ui.workbench.texteditor.nl_de"
-         download-size="0"
-         install-size="0"
-         version="3.5.0.v20091121043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.configurator.nl_de"
-         download-size="0"
-         install-size="0"
-         version="3.5.0.v20091121043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.core.nl_de"
-         download-size="0"
-         install-size="0"
-         version="3.5.0.v20091121043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.scheduler.nl_de"
-         download-size="0"
-         install-size="0"
-         version="3.5.0.v20091121043401"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.ui.nl_de"
          download-size="0"
          install-size="0"
          version="3.5.0.v20091121043401"

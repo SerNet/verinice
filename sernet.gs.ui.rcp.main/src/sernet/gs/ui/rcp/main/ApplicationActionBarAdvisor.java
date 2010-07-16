@@ -46,7 +46,6 @@ import sernet.gs.ui.rcp.main.actions.ImportCSVAction;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolNotesAction;
 import sernet.gs.ui.rcp.main.actions.ImportXMLAction;
-import sernet.gs.ui.rcp.main.actions.ManageUpdatesAction;
 import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
 import sernet.gs.ui.rcp.main.actions.ReloadAction;
@@ -55,8 +54,6 @@ import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowExportWizardAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.actions.SyncTestAction;
-import sernet.gs.ui.rcp.main.actions.UpdateAction;
-import sernet.gs.ui.rcp.main.actions.UpdateManualAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.views.AuditView;
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
@@ -157,12 +154,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private ExportAction exportAction;
 
     private OpenViewAction openDocumentViewAction;
-
-    private UpdateAction updateAction;
-
-    private UpdateManualAction manualUpdate;
-
-    private ManageUpdatesAction manageUpdatesAction;
 
     private BausteinZuordnungAction bausteinZuordnungAction;
 
@@ -297,10 +288,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         introAction = ActionFactory.INTRO.create(window);
         register(introAction);
-
-        updateAction = new UpdateAction(window);
-        manageUpdatesAction = new ManageUpdatesAction(window);
-        manualUpdate = new UpdateManualAction(window);
 
     }
 
