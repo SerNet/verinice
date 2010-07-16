@@ -214,10 +214,6 @@ Library.
       <import plugin="org.eclipse.jface.databinding"/>
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.update.configurator"/>
-      <import plugin="org.eclipse.update.core"/>
-      <import plugin="org.eclipse.update.scheduler"/>
-      <import plugin="org.eclipse.update.ui"/>
       <import plugin="org.eclipse.ui.intro"/>
       <import plugin="org.eclipse.ui.cheatsheets"/>
       <import plugin="org.eclipse.ui.editors"/>
