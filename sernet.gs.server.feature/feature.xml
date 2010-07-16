@@ -603,13 +603,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.update.core"
-         download-size="0"
-         install-size="0"
-         version="3.2.300.v20090525"
-         unpack="false"/>
-
-   <plugin
          id="com.springsource.org.hibernate"
          download-size="0"
          install-size="0"
