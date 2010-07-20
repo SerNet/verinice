@@ -85,6 +85,8 @@ public class CreateScenario extends GenericCommand {
             return;
         
         try {
+            // FIXME externalize strings
+            
             CreateElement<IncidentScenario> cmd = new CreateElement<IncidentScenario>(group, IncidentScenario.class, true);
             cmd = getCommandService().executeCommand(cmd);
             IncidentScenario incidentScenario = cmd.getNewElement();
@@ -92,9 +94,12 @@ public class CreateScenario extends GenericCommand {
             StringBuilder sb = new StringBuilder();
             sb.append("Scenario: ");
             sb.append(threat.getTitle().substring(0, threat.getTitle().length()<21 ? threat.getTitle().length() : 20  ));
-            sb.append("[...]");
+            sb.append(threat.getTitle().length()<21 ? "" : "[...]");
+            sb.append(" - ");
+            
             sb.append(vulnerability.getTitle().substring(0, vulnerability.getTitle().length()<21 ? vulnerability.getTitle().length() : 20));
-            sb.append("[...]");
+            sb.append(vulnerability.getTitle().length()<21 ? "" : "[...]");
+            
             incidentScenario.setTitel(sb.toString());
             
             CreateLink<CnALink, Threat, IncidentScenario> cmd2 = new CreateLink<CnALink, Threat, IncidentScenario>(threat, incidentScenario );

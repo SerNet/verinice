@@ -51,6 +51,7 @@ public class PreferenceConstants {
 	public static final String DB_DRIVER_DERBY = "org.apache.derby.jdbc.EmbeddedDriver"; //$NON-NLS-1$
 	public static final String DB_DRIVER_POSTGRES = "org.postgresql.Driver"; //$NON-NLS-1$
 	public static final String DB_DRIVER_MYSQL = "org.gjt.mm.mysql.Driver"; //$NON-NLS-1$
+	public static final String DB_DRIVER_ORACLE = "oracle.jdbc.OracleDriver"; //$NON-NLS-1$
 	
 	// Verinice DB:
 	public static final String DB_USER = "cna_dbuser"; //$NON-NLS-1$

@@ -17,15 +17,25 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
+import java.util.ArrayList;
+import org.eclipse.osgi.util.NLS;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -79,15 +89,18 @@ public class LinkMaker extends Composite implements IRelationTable {
 
 	private CnATreeElement inputElmt;
 	private boolean writeable;
-	private Set<HuiRelation> relationsFromHere;
+	private List<HuiRelation> allPossibleRelations;
 	private RelationTableViewer viewer;
 	private Combo combo;
 	private Action doubleClickAction;
 	private RelationViewContentProvider contentProvider;
 	private Button buttonLink;
-	private Button buttonCreateAndLink;
 	private Button buttonUnlink;
 	private SelectionListener linkAction;
+    private String[] names;
+    SortedMap<String, String> namesAndIds;
+    private EntityTypeFilter elementTypeFilter;
+    private SelectionListener unlinkAction;
 	
 	/**
 	 * @param parent
@@ -106,10 +119,11 @@ public class LinkMaker extends Composite implements IRelationTable {
 	 */
 	public void createPartControl(Boolean isWriteAllowed) {
 		this.writeable = isWriteAllowed;
+
+		// FIXME externalize strings
 		
 		Label label1 = new Label(this, SWT.NULL	);
 		label1.setText("Relations to: ");
-		label1.setVisible(false);
 
 		FormData formData = new FormData();
 		formData.top = new FormAttachment(0, 5);
@@ -117,44 +131,36 @@ public class LinkMaker extends Composite implements IRelationTable {
 		label1.setLayoutData(formData);
 		label1.pack();
 		
-		combo = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
+		combo = new Combo(this, SWT.READ_ONLY);
 		FormData formData2 = new FormData();
 		formData2.top = new FormAttachment(0, 5);
 		formData2.left = new FormAttachment(label1, 5);
 		combo.setLayoutData(formData2);
-		combo.setVisible(false);
-		combo.pack();
+		//combo.pack();
 		
-		buttonLink = new Button(this, SWT.PUSH | SWT.BORDER);
+		buttonLink = new Button(this, SWT.PUSH);
 		FormData formData3 = new FormData();
-		formData3.top = new FormAttachment(0, 5);
+		formData3.top = new FormAttachment(combo, 0, SWT.CENTER);
 		formData3.left = new FormAttachment(combo, 5);
 		buttonLink.setLayoutData(formData3);
-		buttonLink.setText("Verknüpfen...");
-		buttonLink.setVisible(false);
-		buttonLink.pack();
+		buttonLink.setText("Add...");
+		buttonLink.setToolTipText("Add a new relation to another element.");
+		buttonLink.setEnabled(false);
+		//buttonLink.pack();
 		
-		buttonCreateAndLink = new Button(this, SWT.PUSH | SWT.BORDER);
-		FormData formData4 = new FormData();
-		formData4.top = new FormAttachment(0, 5);
-		formData4.left = new FormAttachment(buttonLink, 5);
-		buttonCreateAndLink.setLayoutData(formData4);
-		buttonCreateAndLink.setText("Anlegen & verknüpfen...");
-		buttonCreateAndLink.setVisible(false);
-		buttonCreateAndLink.pack();
-
-		buttonUnlink = new Button(this, SWT.PUSH | SWT.BORDER);
+		buttonUnlink = new Button(this,  SWT.PUSH );
 		FormData formData5 = new FormData();
-		formData5.top = new FormAttachment(0, 5);
-		formData5.left = new FormAttachment(buttonCreateAndLink, 5);
+		formData5.top = new FormAttachment(combo, 0, SWT.CENTER);
+		formData5.left = new FormAttachment(buttonLink, 5);
 		buttonUnlink.setLayoutData(formData5);
-		buttonUnlink.setText("Verknüpfung lösen...");
-		buttonUnlink.setVisible(false);
-		buttonUnlink.pack();
+		buttonUnlink.setText("Remove...");
+		buttonUnlink.setEnabled(writeable);
+		buttonUnlink.setToolTipText("Remove a relation to another element.");
+		//buttonUnlink.pack();
 		
 		viewer = new RelationTableViewer(this, this, SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
 		FormData formData6 = new FormData();
-		formData6.top = new FormAttachment(combo, 1);
+		formData6.top = new FormAttachment(buttonLink, 2);
 		formData6.left = new FormAttachment(0, 1);
 		formData6.right = new FormAttachment(100, -1);
 		formData6.bottom = new FormAttachment(100, -1);
@@ -166,7 +172,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 		viewer.setLabelProvider(new RelationViewLabelProvider(this));
 		viewer.setSorter(new RelationByNameSorter(this, IRelationTable.COLUMN_TITLE, IRelationTable.COLUMN_TYPE_IMG));
 		
-		CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
+		CnAElementFactory.getLoadedModel().addBSIModelListener(contentProvider);
 		CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
 		createDoubleClickAction();
 		hookDoubleClickAction();
@@ -174,13 +180,55 @@ public class LinkMaker extends Composite implements IRelationTable {
 		createButtonListeners();
 		hookButtonListeners();
 		
+		createFilter();
 	}
 	
 	/**
+     * 
+     */
+    private void createFilter() {
+        elementTypeFilter = new EntityTypeFilter(this.viewer);
+        
+        combo.addSelectionListener(new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                setFilter(combo.getSelectionIndex());
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+            
+        });
+    }
+
+
+    /**
+     * @param selectionIndex
+     */
+    protected void setFilter(int selectionIndex) {
+        if (selectionIndex == 0) {
+            elementTypeFilter.setEntityType(null);
+            buttonLink.setEnabled(false);
+            return;
+        }
+        Object[] array = namesAndIds.entrySet().toArray();
+        String entType = ((Entry<String, String>)array[selectionIndex]).getValue();
+        elementTypeFilter.setEntityType(entType);
+        
+        // enable link button if we have write permissions:
+        buttonLink.setEnabled(writeable);
+    }
+
+
+    /**
 	 * 
 	 */
 	private void hookButtonListeners() {
 		this.buttonLink.addSelectionListener(linkAction);
+		this.buttonUnlink.addSelectionListener(unlinkAction);
 	}
 
 
@@ -194,9 +242,45 @@ public class LinkMaker extends Composite implements IRelationTable {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				
+			    // create new link to object
+				 Object[] array = namesAndIds.entrySet().toArray();
+			     String selectedType = ((Entry<String, String>)array[combo.getSelectionIndex()]).getValue();
+			     // TODO show dialog for elements, create links
 			}
 		};
+		
+		unlinkAction = new SelectionListener() {
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+
+            public void widgetSelected(SelectionEvent e) {
+                // delete link:
+                
+                // FIXME this creates a conflict when saving the editor, editor must be reloaded after the link has been deleted
+                
+                if (viewer.getSelection().isEmpty())
+                    return;
+                
+                List selection = ((IStructuredSelection)viewer.getSelection()).toList();
+                boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), "Remove link?", 
+                        NLS.bind("Really remove the selected {0} relations? Only the links will be removed, actual objects will stay in the database.", selection.size()));
+                if (!confirm)
+                    return;
+                
+                for (Object object : selection) {
+                    CnALink link = (CnALink) object;
+                    try {
+                        CnAElementHome.getInstance().remove(link);
+                        viewer.remove(link);
+                        inputElmt.removeLinkDown(link);
+                    } catch (Exception e1) {
+                        ExceptionUtil.log(e1, "Could not remove link.");
+                    }
+                }
+                
+            }
+        };
 	}
 
 
@@ -239,33 +323,51 @@ public class LinkMaker extends Composite implements IRelationTable {
 	}
 
 
-	private String[] getNames(Set<HuiRelation> relationsFromHere2) {
-		if (relationsFromHere2 == null)
-			return new String[0];
+	private void initNamesForCombo() {
+		if (allPossibleRelations == null)
+			names =  new String[0];
+
 		
-		String[] names = new String[relationsFromHere2.size()];
-        int i=0;
-		for (HuiRelation huiRelation : relationsFromHere) {
+        namesAndIds = new TreeMap<String, String>();
+		
+		for (HuiRelation huiRelation : allPossibleRelations) {
+		    // from or to element, show other side respectively:
 			String targetEntityTypeID = huiRelation.getTo();
-			names[i] = HitroUtil.getInstance().getTypeFactory().getEntityType(targetEntityTypeID).getName();
-			i++;
+			String sourceEntityTypeID = huiRelation.getFrom();
+			
+			if (sourceEntityTypeID.equals(this.inputElmt.getEntity().getEntityType())) {
+			    namesAndIds.put( 
+			            HitroUtil.getInstance().getTypeFactory().getEntityType(targetEntityTypeID).getName(),
+			            targetEntityTypeID
+			            );
+			} else {
+			    namesAndIds.put( 
+			            HitroUtil.getInstance().getTypeFactory().getEntityType(sourceEntityTypeID).getName(),
+			            sourceEntityTypeID
+			            );
+			}
 		}
-		return names;
+
+		namesAndIds.put("<alle Elemente>", null);
+		
+		Set<String> names = namesAndIds.keySet();
+		this.names = new String[names.size()];
+		this.names = (String[]) names.toArray(new String[names.size()]);
 	}
 
 	/**
 	 * @return
 	 */
 	private void fillPossibleLinkLists() {
-		relationsFromHere = new HashSet<HuiRelation>();
+	    // get relations from here to other elements:
+		allPossibleRelations = new ArrayList<HuiRelation>();
 		EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(inputElmt.getEntity().getEntityType());
+		allPossibleRelations.addAll(entityType.getPossibleRelations());
 		
-		relationsFromHere = entityType.getPossibleRelations();
-		
-		
-		// relations are always modelled from one side of the relation. We will allow the user to create links both FROM the current element
-		// as well as TO the current element (because he doesn't know, from which side a relation is modelled):
-		// FIXME akoderman still to do, see ismview where this already woirks (dragndrop)
+		// get relations from other elements to this one:
+		allPossibleRelations.addAll(
+		        HitroUtil.getInstance().getTypeFactory().getPossibleRelationsTo(inputElmt.getEntity().getEntityType())
+		        );
 		
 	}
 
@@ -302,7 +404,8 @@ public class LinkMaker extends Composite implements IRelationTable {
 		
 		this.inputElmt = inputElmt;
 		fillPossibleLinkLists();
-		combo.setItems(getNames(relationsFromHere));
+		initNamesForCombo();
+		combo.setItems(names);
 		viewer.setInput(inputElmt);
 	}
 

@@ -127,6 +127,10 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
 		url.setEnabled(enable, parent);
 		user.setEnabled(enable, parent);
 		pass.setEnabled(enable, parent);
+		
+		// always disable the Oracle-Button, it's just there to point the user to verinice.PRO:
+		Control[] radioButtons = dbDriver.getRadioBoxControl(parent).getChildren();
+		radioButtons[radioButtons.length-1].setEnabled(false);
 
 		if (enable) {
 			setMessage(null);
@@ -139,10 +143,9 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
 		dbDriver = new RadioGroupFieldEditor(PreferenceConstants.DB_DRIVER, Messages.getString("DatenbankPreferencePage.11"), //$NON-NLS-1$
 				1, new String[][] { { Messages.getString("DatenbankPreferencePage.12"), PreferenceConstants.DB_DRIVER_DERBY }, //$NON-NLS-1$
 						{ Messages.getString("DatenbankPreferencePage.13"), PreferenceConstants.DB_DRIVER_POSTGRES }, //$NON-NLS-1$
-						{ Messages.getString("DatenbankPreferencePage.14"), PreferenceConstants.DB_DRIVER_MYSQL } //$NON-NLS-1$
+						{ Messages.getString("DatenbankPreferencePage.15"), PreferenceConstants.DB_DRIVER_ORACLE } //$NON-NLS-1$
 				}, getFieldEditorParent());
 		addField(dbDriver);
-
 	}
 
 	@Override

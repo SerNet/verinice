@@ -63,6 +63,21 @@ public class CnALink implements Serializable, ITypedElement {
 	}
 	
 	/**
+     * Takes an object and a link and gives back the object on the *other* side
+     * of the link. 
+     * Which side is the other side, is determined on whether the link goes from or to the object.
+     * 
+     * @param link
+     */
+    
+	public CnATreeElement getRelationObject(CnATreeElement inputElmt, CnALink link) {
+        if (CnALink.isDownwardLink(inputElmt, link))
+            return link.getDependency();
+        else
+            return link.getDependant();
+    }
+	
+	/**
 	 * Returns the correct title for a link for e given element and a given link.
 	 * The correct name is determined using the direction in which the link points to the object.
 	 * 

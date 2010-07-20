@@ -61,6 +61,15 @@ public class HuiRelation implements Serializable {
 	private String to;
 	private String name; 
 	private String reversename; 
+	/**
+     * @return the from
+     */
+    public String getFrom() {
+        return from;
+    }
+
+    private String tooltip;
+	private String from;
 	
 	public String getReversename() {
 		return reversename;
@@ -70,7 +79,6 @@ public class HuiRelation implements Serializable {
 		this.reversename = reversename;
 	}
 
-	private String tooltip;
 
 	/**
 	 * @param attribute
@@ -78,6 +86,15 @@ public class HuiRelation implements Serializable {
 	public HuiRelation(String id) {
 		this.id = id;
 	}
+
+    /**
+     * @param sourceTypeId
+     */
+    public void setFrom(String sourceTypeId) {
+        this.from = sourceTypeId;
+    }
+    
+    
 
 
 }

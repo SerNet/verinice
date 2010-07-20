@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -212,6 +213,31 @@ public class HitroUtil {
 		public HuiRelation getRelation(String typeId) {
 			return getTypeFactory().getRelation(typeId);
 		}
+		
+		/* (non-Javadoc)
+		 * @see sernet.hui.common.connect.HUITypeFactory#getPossibleRelations(java.lang.String, java.lang.String)
+		 */
+		@Override
+		public Set<HuiRelation> getPossibleRelations(String fromEntityTypeID, String toEntityTypeID) {
+		    return getTypeFactory().getPossibleRelations(fromEntityTypeID, toEntityTypeID);
+		}
+		
+		/* (non-Javadoc)
+		 * @see sernet.hui.common.connect.HUITypeFactory#getPossibleRelationsTo(java.lang.String)
+		 */
+		@Override
+		public Set<HuiRelation> getPossibleRelationsTo(String toEntityTypeID) {
+		    return getTypeFactory().getPossibleRelationsTo(toEntityTypeID);
+		}
+		
+		/* (non-Javadoc)
+		 * @see sernet.hui.common.connect.HUITypeFactory#getPossibleRelationsFrom(java.lang.String)
+		 */
+		@Override
+		public Set<HuiRelation> getPossibleRelationsFrom(String fromEntityTypeID) {
+		    return getTypeFactory().getPossibleRelationsFrom(fromEntityTypeID);
+		}
+		
 		
 		/* (non-Javadoc)
 		 * @see sernet.hui.common.connect.HUITypeFactory#getMessage(java.lang.String)

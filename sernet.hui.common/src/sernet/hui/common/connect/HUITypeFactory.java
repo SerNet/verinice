@@ -291,7 +291,7 @@ public class HUITypeFactory {
                 readChildElements(entityType, group);
             } else if (child.getTagName().equals("huirelation")) {
                 HuiRelation relation = new HuiRelation(child.getAttribute("id"));
-                readRelation(child, relation);
+                readRelation(child, entityType.getId(), relation);
                 entityType.addRelation(relation);
             }
         }
@@ -301,7 +301,7 @@ public class HUITypeFactory {
      * @param child
      * @param relation
      */
-    private void readRelation(Element child, HuiRelation relation) {
+    private void readRelation(Element child, String sourceTypeId, HuiRelation relation) {
         final String id = child.getAttribute("id");
         // name, reversename and tooltip are loaded from SNCAMessages (resource bundles)
         // key is: [id]_name, [id]_reversename, [id]_tooltip 
@@ -310,6 +310,7 @@ public class HUITypeFactory {
         relation.setTooltip(getMessage(getKey(id,"tooltip"), child.getAttribute("tooltip"), true));
         
         relation.setTo(child.getAttribute("to"));
+        relation.setFrom(sourceTypeId);
     }
 
     /**
@@ -488,7 +489,8 @@ public class HUITypeFactory {
     }
 
     /**
-     * Get list of possible relations from one entity to another.
+     * Get list of possible relations from one entity type to another entity type.
+     * I.e. from person to document: author, reviewer, signer
      * 
      * @param fromEntityTypeID
      * @param toEntityTypeID
@@ -497,6 +499,45 @@ public class HUITypeFactory {
     public Set<HuiRelation> getPossibleRelations(String fromEntityTypeID, String toEntityTypeID) {
         return getEntityType(fromEntityTypeID).getPossibleRelations(toEntityTypeID);
     }
+    
+    /**
+     * Get list of possible relations from the given entity type to any other entities.
+     * I.e. from "document"
+     * - to person: author, reviewer, signer
+     * - to server: documentation
+     * - to requirement: contract 
+     * 
+     * @param fromEntityTypeID
+     * @return
+     */
+    public Set<HuiRelation> getPossibleRelationsFrom(String fromEntityTypeID) {
+        return getEntityType(fromEntityTypeID).getPossibleRelations();
+    }
+    
+    /**
+     * Get list of all possible relations from any entity type to the given entity type.
+     * I.e. to "requirement"
+     * - from document: contract
+     * - from person: responsible
+     * - from control: implementation
+     * 
+     * @param toEntityTypeID
+     * @return
+     */
+    public Set<HuiRelation> getPossibleRelationsTo(String toEntityTypeID) {
+        // for this reverse request we have to iterate through all entitytypes and search:
+        Set<HuiRelation> allRelations = new HashSet<HuiRelation>();
+        Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
+        for (Entry<String, EntityType> entry : entrySet) {
+            EntityType entityType = entry.getValue();
+            Set<HuiRelation> theseRelations = entityType.getPossibleRelations(toEntityTypeID);
+            if (theseRelations != null && theseRelations.size()>0) {
+                allRelations.addAll(theseRelations);
+            }
+        }
+        return allRelations;
+    }
+    
 
     public boolean isDependency(IMLPropertyOption opt) {
         return allDependecies.contains(opt.getId());
