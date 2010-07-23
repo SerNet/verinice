@@ -296,7 +296,7 @@
                    	<objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
                    	<objectClass name="sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis"/>
                    	<objectClass name="sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung"/>
-                   	<objectClass name="sernet.verinice.iso27k.model.IISO27kElement"/>
+                   	<objectClass name="sernet.verinice.model.iso27k.IISO27kElement"/>
                    </or>
                 </enablement>
              </action>
