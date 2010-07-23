@@ -4,7 +4,7 @@ Bundle-Name: SpringClient Plug-in
 Bundle-SymbolicName: sernet.springclient
 Bundle-Version: 1.2.1
 Bundle-Activator: sernet.springclient.SpringClientPlugin
-Eclipse-BuddyPolicy: registered
+Eclipse-BuddyPolicy: global
 Bundle-ClassPath: .
 Export-Package: sernet.springclient;version="1.2.1";
   uses:="org.eclipse.jface.resource,

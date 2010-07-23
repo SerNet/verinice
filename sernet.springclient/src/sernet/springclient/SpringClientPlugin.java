@@ -98,6 +98,7 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 
 	public synchronized void openBeanFactory() {
 		if (beanFactory == null) {
+			
 			URL url = getClass().getResource("veriniceclient.xml");
 			OsgiBundleXmlApplicationContext appCtx =
 				new OsgiBundleXmlApplicationContext(new String[] { url.toString() });
