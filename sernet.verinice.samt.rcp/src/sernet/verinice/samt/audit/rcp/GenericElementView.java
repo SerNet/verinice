@@ -41,7 +41,7 @@ import sernet.verinice.model.iso27k.Organization;
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public class GenericGroupView extends ElementView {
+public class GenericElementView extends ElementView {
 
     static Map<String, ICommandFactory> commandMap;
 
@@ -57,19 +57,19 @@ public class GenericGroupView extends ElementView {
     
     private ICommandFactory commandFactory;
     
-    public static GenericGroupView getAssetInstance() {
-        return new GenericGroupView(new AssetCommandFactory());
+    public static GenericElementView getAssetInstance() {
+        return new GenericElementView(new AssetCommandFactory());
     }
     
-    public static GenericGroupView getAuditInstance() {
-        return new GenericGroupView(new AuditCommandFactory());
+    public static GenericElementView getAuditInstance() {
+        return new GenericElementView(new AuditCommandFactory());
     }
     
-    public static GenericGroupView getControlInstance() {
-        return new GenericGroupView(new ControlCommandFactory());
+    public static GenericElementView getControlInstance() {
+        return new GenericElementView(new ControlCommandFactory());
     }
     
-    public GenericGroupView(ICommandFactory commandFactory) {
+    public GenericElementView(ICommandFactory commandFactory) {
         super();
         this.commandFactory = commandFactory;
     }

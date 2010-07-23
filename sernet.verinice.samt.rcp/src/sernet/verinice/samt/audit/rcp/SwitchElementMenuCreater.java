@@ -49,7 +49,7 @@ public class SwitchElementMenuCreater implements IViewActionDelegate, IMenuCreat
     
     private IAction action;
     private Menu menu;
-    private GenericGroupView groupView;
+    private GenericElementView groupView;
     private LinkedList<SwitchElementAction> handlerList;
     private Iterator<SwitchElementAction> handlerIterator;
 
@@ -59,7 +59,7 @@ public class SwitchElementMenuCreater implements IViewActionDelegate, IMenuCreat
     @Override
     public void init(IViewPart view) {
         if(view instanceof ElementView) {
-            this.groupView = (GenericGroupView) view;
+            this.groupView = (GenericElementView) view;
             handlerList = new LinkedList<SwitchElementAction>();         
             handlerList.add(new SwitchElementAction(groupView,Asset.TYPE_ID));
             handlerList.add(new SwitchElementAction(groupView,sernet.verinice.model.iso27k.Control.TYPE_ID));           

@@ -24,7 +24,7 @@ package sernet.verinice.samt.audit.rcp;
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
-public class ControlView extends GenericGroupView {
+public class ControlView extends GenericElementView {
 
     public static final String ID = "sernet.verinice.samt.audit.rcp.ControlView"; //$NON-NLS-1$
     

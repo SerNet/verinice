@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public class AssetView extends GenericGroupView {
+public class AssetView extends GenericElementView {
 
     public static final String ID = "sernet.verinice.samt.audit.rcp.AssetView"; //$NON-NLS-1$
     

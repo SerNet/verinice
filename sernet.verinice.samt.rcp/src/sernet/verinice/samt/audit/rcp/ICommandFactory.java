@@ -25,7 +25,7 @@ import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Returns commands to load {@link CnATreeElement}s
- * ICommandFactory is used in {@link GenericGroupView}
+ * ICommandFactory is used in {@link GenericElementView}
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */

@@ -26,14 +26,14 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Set the {@link CnATreeElement} type which is displayed in a {@link GenericGroupView}
+ * Set the {@link CnATreeElement} type which is displayed in a {@link GenericElementView}
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("restriction")
 public class SwitchElementAction extends Action {
     
-    private GenericGroupView groupView;
+    private GenericElementView groupView;
 
     private String objectTypeId;
 
@@ -43,7 +43,7 @@ public class SwitchElementAction extends Action {
      * @param groupView the view the type is displyed
      * @param typeId {@link CnATreeElement} type
      */
-    public SwitchElementAction(GenericGroupView groupView, String typeId) {
+    public SwitchElementAction(GenericElementView groupView, String typeId) {
         this.groupView = groupView;
         this.objectTypeId = typeId;
         setText(typeId);

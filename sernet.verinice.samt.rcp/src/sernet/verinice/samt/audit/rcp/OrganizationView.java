@@ -32,7 +32,7 @@ import sernet.verinice.model.iso27k.Organization;
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public class OrganizationView extends GenericGroupView {
+public class OrganizationView extends GenericElementView {
 
     public static final String ID = "sernet.verinice.samt.audit.rcp.OrganizationView"; //$NON-NLS-1$
     
