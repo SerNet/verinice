@@ -182,7 +182,7 @@ Library.
    </license>
 
    <url>
-      <update label="Verinice Updates und Features" url="http://updates.verinice.org/pub/verinice/Verinice-Update-Site-2010"/>
+      <update label="Verinice Updates und Features" url="http://update.verinice.org/pub/verinice/Verinice-Update-Site-2010"/>
    </url>
 
    <requires>
