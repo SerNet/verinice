@@ -196,7 +196,7 @@
       </command>
       <command
       		categoryId="sernet.gs.ui.rcp.commands"
-      		defaultHandler="org.eclipse.ui.category.help"
+      		defaultHandler="sernet.verinice.rcp.DefaultHandler"
       		id="sernet.verinice.iso27k.rcp.commands.charset"
       		name="%command.name.7">
 				<commandParameter

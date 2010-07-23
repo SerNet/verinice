@@ -19,16 +19,31 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
-/**
- * 
- * 
- * @author Daniel Murygin <dm@sernet.de>
- */
-public class ControlView extends GenericGroupView {
+import sernet.verinice.iso27k.service.commands.LoadElementByClass;
+import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
+import sernet.verinice.model.common.CnATreeElement;
 
-    public static final String ID = "sernet.verinice.samt.audit.rcp.ControlView"; //$NON-NLS-1$
+/**
+ * Returns commands to load {@link CnATreeElement}s
+ * ICommandFactory is used in {@link GenericGroupView}
+ * 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
+ */
+public interface ICommandFactory {
+
+    /**
+     * @return a command which loads {@link CnATreeElement}s
+     * for a given class
+     */
+    public LoadElementByClass getElementCommand();
     
-    public ControlView() {
-        super(new ControlCommandFactory());
-    }
+    /**
+     * Returns a command which loads {@link CnATreeElement}s
+     * which are linked to a {@link CnATreeElement} with primary key selectedId
+     * 
+     * @param selectedId primary key of an {@link CnATreeElement}
+     * @return a command which loads linked {@link CnATreeElement}s
+     */
+    public LoadLinkedElements getLinkedElementCommand(int selectedId);
+
 }

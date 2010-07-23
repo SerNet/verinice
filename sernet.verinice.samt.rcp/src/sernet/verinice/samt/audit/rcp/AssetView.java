@@ -19,39 +19,31 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
-import java.util.List;
-
-import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.service.commands.LoadElementByClass;
-import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetGroup;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public class AssetView extends GroupView<AssetGroup> {
+public class AssetView extends GenericGroupView {
 
     public static final String ID = "sernet.verinice.samt.audit.rcp.AssetView"; //$NON-NLS-1$
     
+    public AssetView() {
+        super(new AssetCommandFactory());
+    }
     
-    protected List<AssetGroup> getElementList() throws CommandException {
-        LoadElementByClass<AssetGroup> command = new LoadElementByClass<AssetGroup>(new AssetGroup());
-        command = getCommandService().executeCommand(command);
-        final List<AssetGroup> elementList = command.getElementList();
-        return elementList;
+    
+    protected void fillToolBar() {
+        
     }
-
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.samt.audit.rcp.GroupView#getLinkedElements(int)
-     */
-    @Override
-    protected List<CnATreeElement> getLinkedElements(int selectedId) throws CommandException {
-        LoadLinkedElements<CnATreeElement> command = new LoadLinkedElements<CnATreeElement>(Asset.class,selectedId);
-        command = getCommandService().executeCommand(command);
-        return command.getElementList();
-    }
+    
 }

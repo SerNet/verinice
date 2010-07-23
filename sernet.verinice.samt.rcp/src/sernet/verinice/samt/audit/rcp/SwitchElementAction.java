@@ -19,35 +19,44 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
-import java.util.Collections;
-import java.util.List;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 
-import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.service.commands.LoadElementByClass;
+import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.AssetGroup;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
- * @author Daniel Murygin <dm@sernet.de>
- *
+ * Set the {@link CnATreeElement} type which is displayed in a {@link GenericGroupView}
+ * 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class OrganizationView extends GenericGroupView {
+@SuppressWarnings("restriction")
+public class SwitchElementAction extends Action {
+    
+    private GenericGroupView groupView;
 
-    public static final String ID = "sernet.verinice.samt.audit.rcp.OrganizationView"; //$NON-NLS-1$
-    
-    
-    public OrganizationView() {
-        super(new OrganizationCommandFactory());
+    private String objectTypeId;
+
+    /**
+     * Creates an action to set the typeId of an groupView
+     * 
+     * @param groupView the view the type is displyed
+     * @param typeId {@link CnATreeElement} type
+     */
+    public SwitchElementAction(GenericGroupView groupView, String typeId) {
+        this.groupView = groupView;
+        this.objectTypeId = typeId;
+        setText(typeId);
+        setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(objectTypeId)));
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.samt.audit.rcp.ElementView#getLinkedElements(int)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
      */
     @Override
-    protected List<CnATreeElement> getLinkedElements(int selectedId) throws CommandException {
-        LoadElementByClass<CnATreeElement> command = new LoadElementByClass<CnATreeElement>(new Organization());
-        command = getCommandService().executeCommand(command);
-        return command.getElementList();
+    public void run() {
+        groupView.switchElement(objectTypeId);
     }
 }

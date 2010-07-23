@@ -17,18 +17,25 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.samt.audit.rcp;
+package sernet.verinice.rcp;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 
 /**
- * 
- * 
  * @author Daniel Murygin <dm@sernet.de>
+ *
  */
-public class ControlView extends GenericGroupView {
+public class DefaultHandler extends AbstractHandler {
 
-    public static final String ID = "sernet.verinice.samt.audit.rcp.ControlView"; //$NON-NLS-1$
-    
-    public ControlView() {
-        super(new ControlCommandFactory());
+    /* (non-Javadoc)
+     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+     */
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        // empty dummy-handler
+        return null;
     }
+
 }

@@ -22,7 +22,6 @@ package sernet.verinice.samt.audit.rcp;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -32,6 +31,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -53,23 +53,24 @@ import sernet.verinice.iso27k.rcp.ISMViewContentProvider;
 import sernet.verinice.iso27k.rcp.ISMViewLabelProvider;
 import sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.iso27k.service.commands.LoadElementByClass;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.CnaStructureHelper;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.AssetGroup;
-import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.samt.service.FindSamtGroup;
 
 /**
- * @author Daniel Murygin <dm@sernet.de>
+ * Abstract view with tree viewer to show {@link CnATreeElement}s of specific types
+ * and of {@link Group}s which contains these types.
+ * 
+ * Subclasses implements methods to load the desired elements.
+ * 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("restriction")
-public abstract class GroupView<T> extends ViewPart {
+public abstract class ElementView extends ViewPart {
 
-    private static final Logger LOG = Logger.getLogger(GroupView.class);
+    private static final Logger LOG = Logger.getLogger(ElementView.class);
     
     protected static ISO27KModel DUMMY = null;
     
@@ -98,8 +99,22 @@ public abstract class GroupView<T> extends ViewPart {
 
     protected Integer selectedId;
     
-    abstract protected List<T> getElementList() throws CommandException;
+    protected Object selection;
     
+    /**
+     * @return {@link CnATreeElement}s to show in this view
+     * @throws CommandException
+     */
+    abstract protected List<? extends CnATreeElement> getElementList() throws CommandException;
+    
+    /**
+     * Loads {@link CnATreeElement}s which are linked to the element with primary key
+     * selectedId. After loading elements are shown in the view
+     * 
+     * @param selectedId primary key of a {@link CnATreeElement}
+     * @return Elements linked to primary key selectedId
+     * @throws CommandException
+     */
     abstract protected List<CnATreeElement> getLinkedElements(int selectedId) throws CommandException;
     
     /* (non-Javadoc)
@@ -170,7 +185,7 @@ public abstract class GroupView<T> extends ViewPart {
                 Activator.inheritVeriniceContextState();
                 modelUpdateListener = new ISO27KModelViewUpdate(viewer,cache);
                 CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
-                final List<T> elementList = getElementList();
+                final List<? extends CnATreeElement> elementList = getElementList();
                 Display.getDefault().syncExec(new Runnable(){
                     public void run() {
                         setInput(elementList);
@@ -200,42 +215,62 @@ public abstract class GroupView<T> extends ViewPart {
     
     private void addSelectionListener() {
         selectionListener = new ISelectionListener() {
-            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-                pageSelectionChanged(part, selection);
+            /* (non-Javadoc)
+             * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+             */
+            public void selectionChanged(IWorkbenchPart sourcePart, ISelection selection) {
+                pageSelectionChanged(sourcePart, selection);
             }
         };
         getSite().getPage().addPostSelectionListener(selectionListener);
     }
     
-    protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
+    /**
+     * @param part
+     * @param selection
+     */
+    protected void pageSelectionChanged(IWorkbenchPart sourcePart, ISelection selection) {
+        if(!this.equals(sourcePart)) {
+            Object element = ((IStructuredSelection) selection).getFirstElement();
+            loadElements(element);
+        }    
+    }
+
+    private void loadElements(Object element) {
+        this.selection = element;
         try {
-        Object element = ((IStructuredSelection) selection).getFirstElement();
-        if(element instanceof Organization) {
-            final List<T> elementList = getElementList();
-            Display.getDefault().syncExec(new Runnable(){
-                public void run() {
-                    setInput(elementList);
+            if(element instanceof Organization || element==null) {
+                final List<? extends CnATreeElement> elementList = getElementList();
+                Display.getDefault().syncExec(new Runnable(){
+                    public void run() {
+                        setInput(elementList);
+                    }
+                });
+            } else if(element instanceof CnATreeElement) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("CnATreeElement selected: " + ((CnATreeElement)element).getTitle());
                 }
-            });
-        } else if(element instanceof CnATreeElement) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("CnATreeElement selected: " + ((CnATreeElement)element).getTitle());
-            }
-            selectedId = ((CnATreeElement)element).getDbId();
-            final List<CnATreeElement> elementList = getLinkedElements(selectedId);
-            Display.getDefault().syncExec(new Runnable(){
-                public void run() {
-                    setInput(elementList);
+                selectedId = ((CnATreeElement)element).getDbId();
+                final List<CnATreeElement> elementList = getLinkedElements(selectedId);
+                Display.getDefault().syncExec(new Runnable(){
+                    public void run() {
+                        setInput(elementList);
+                    }
+                });
+                setDescription(((CnATreeElement)element).getTitle());
+            } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Unknown element selected: " + element);
                 }
-            });
-        } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Unknown element selected: " + element);
             }
-        }
         } catch(Exception e) {
             LOG.error("Error while loading linked elements", e);
         }
+    }
+    
+    public void reload() {
+        loadElements(this.selection);
+        viewer.refresh();
     }
 
     public void setInput(List list) {
@@ -244,6 +279,18 @@ public abstract class GroupView<T> extends ViewPart {
         } else {
             viewer.setInput(getDummy());
         }
+    }
+    
+    public void setIcon(Image icon) {
+        this.setTitleImage(icon);
+    }
+    
+    public void setViewTitle(String title) {
+        setPartName(title);
+    }
+    
+    public void setDescription(String title) {
+        this.setContentDescription(title);
     }
 
     /**
@@ -265,7 +312,7 @@ public abstract class GroupView<T> extends ViewPart {
     /**
      * 
      */
-    private void fillToolBar() {
+    protected void fillToolBar() {
         // TODO Auto-generated method stub
         
     }

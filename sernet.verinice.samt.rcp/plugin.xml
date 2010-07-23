@@ -101,6 +101,42 @@
                tooltip="Export a Security Assessment...">
          </action>
       </viewContribution>
+      <viewContribution
+            id="sernet.verinice.samt.audit.rcp.AssetView.switch"
+            targetID="sernet.verinice.samt.audit.rcp.AssetView">
+         <action
+               class="sernet.verinice.samt.audit.rcp.SwitchElementMenuCreater"
+               icon="icons/filter.gif"
+               id="sernet.verinice.samt.audit.rcp.SwitchElement"
+               label="Select element"
+               style="pulldown"
+               toolbarPath="additions">
+         </action>
+      </viewContribution>
+      <viewContribution
+            id="sernet.verinice.samt.audit.rcp.AuditView.switch"
+            targetID="sernet.verinice.samt.audit.rcp.AuditView">
+         <action
+               class="sernet.verinice.samt.audit.rcp.SwitchElementMenuCreater"
+               icon="icons/filter.gif"
+               id="sernet.verinice.samt.audit.rcp.SwitchElement"
+               label="Select element"
+               style="pulldown"
+               toolbarPath="additions">
+         </action>
+      </viewContribution>
+      <viewContribution
+            id="sernet.verinice.samt.audit.rcp.ControlView.switch"
+            targetID="sernet.verinice.samt.audit.rcp.ControlView">
+         <action
+               class="sernet.verinice.samt.audit.rcp.SwitchElementMenuCreater"
+               icon="icons/filter.gif"
+               id="sernet.verinice.samt.audit.rcp.SwitchElement"
+               label="Select element"
+               style="pulldown"
+               toolbarPath="additions">
+         </action>
+      </viewContribution>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">

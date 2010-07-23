@@ -19,16 +19,33 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
-/**
- * 
- * 
- * @author Daniel Murygin <dm@sernet.de>
- */
-public class ControlView extends GenericGroupView {
+import java.util.Arrays;
 
-    public static final String ID = "sernet.verinice.samt.audit.rcp.ControlView"; //$NON-NLS-1$
-    
-    public ControlView() {
-        super(new ControlCommandFactory());
+import sernet.verinice.iso27k.service.commands.LoadElementByClass;
+import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
+import sernet.verinice.model.iso27k.Finding;
+import sernet.verinice.model.iso27k.FindingGroup;
+
+/**
+ * @author Daniel Murygin <dm@sernet.de>
+ *
+ */
+public class EvidenceCommandFactory implements ICommandFactory {
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.samt.audit.rcp.CommandFactory#getElementCommand()
+     */
+    @Override
+    public LoadElementByClass getElementCommand() {
+        return new LoadElementByClass<FindingGroup>(new FindingGroup());
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.samt.audit.rcp.CommandFactory#getLinkedElementCommand(int)
+     */
+    @Override
+    public LoadLinkedElements getLinkedElementCommand(int selectedId) {
+        return new LoadLinkedElements(Arrays.asList(new Class[]{FindingGroup.class,Finding.class}),selectedId);
+    }
+
 }

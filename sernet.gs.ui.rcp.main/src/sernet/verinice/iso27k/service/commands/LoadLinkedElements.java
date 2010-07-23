@@ -17,7 +17,9 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service.commands;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -26,7 +28,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class LoadLinkedElements<T extends CnATreeElement> extends GenericCommand implements INoAccessControl {
+public class LoadLinkedElements extends GenericCommand implements INoAccessControl {
 
     private transient Logger log = Logger.getLogger(LoadLinkedElements.class);
 
@@ -37,18 +39,18 @@ public class LoadLinkedElements<T extends CnATreeElement> extends GenericCommand
         return log;
     }
     
-    private Class clazz;
-	private List<T> elementList;
+    private List<Class> classList;
+	private List<CnATreeElement> elementList;
 	private int selectedId;
 
-	public LoadLinkedElements(Class clazz,int selectedId) {
-	    this.clazz = clazz;
+	public LoadLinkedElements(List<Class> classList,int selectedId) {
+	    this.classList = classList;
 	    this.selectedId = selectedId;
 	}
 	
 	public void execute() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select element from ").append(clazz.getName()).append(" as element ");
+		sb.append("select element from ").append(CnATreeElement.class.getName()).append(" as element ");
 		sb.append("left outer join element.linksDown as linksDown ");
 		sb.append("left outer join element.linksUp as linksUp ");
 		sb.append("where linksDown.id.dependencyId = ? ");
@@ -57,11 +59,19 @@ public class LoadLinkedElements<T extends CnATreeElement> extends GenericCommand
 		if(getLog().isDebugEnabled()) {
 		    getLog().debug("hql: " + hql);
 		}
-		elementList = getDaoFactory().getDAO(clazz).findByQuery(hql,new Object[]{selectedId,selectedId});
+		elementList = new Vector<CnATreeElement>();
+		List<CnATreeElement> resultList = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(hql,new Object[]{selectedId,selectedId});
+		for (Iterator<CnATreeElement> iterator = resultList.iterator(); iterator.hasNext();) {
+		    CnATreeElement element =  iterator.next();
+		    if(classList.contains(element.getClass())) {
+		        elementList.add(element);
+		    }
+            
+        }
 	}
 
 
-	public List<T> getElementList() {
+	public List<CnATreeElement> getElementList() {
 		return elementList;
 	}
 	

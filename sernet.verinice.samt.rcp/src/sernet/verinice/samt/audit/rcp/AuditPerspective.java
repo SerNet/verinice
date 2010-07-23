@@ -27,7 +27,7 @@ import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.verinice.samt.audit.rcp.AssetView;
 import sernet.verinice.samt.audit.rcp.ControlView;
-import sernet.verinice.samt.audit.rcp.GroupView;
+import sernet.verinice.samt.audit.rcp.ElementView;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>

@@ -64,6 +64,7 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.ds.Datenverarbeitung;
@@ -197,6 +198,14 @@ public class DAOFactory implements IDAOFactory {
 		daosByClass.put(CnALink.class, dao);
 		daosByTypeID.put(CnALink.TYPE_ID, dao);
 	}
+	
+	/**
+     * Setter method used by spring to inject DAO.
+     */
+    public void setCnaTreeElementDao(IBaseDao<CnATreeElement, Integer> dao) {
+        daosByClass.put(CnATreeElement.class, dao);
+        daosByTypeID.put("cnatreeelement", dao);
+    }
 	
     /** 
      * Setter method used by spring to inject DAO.
