@@ -992,5 +992,14 @@
             </objectClass>
          </enablement>
       </decorator>
+      <decorator
+            adaptable="true"
+            icon="icons/overlays/alien.png"
+            id="sernet.gs.ui.rcp.main.aliendecorator"
+            label="%decorator.label.0"
+            lightweight="true"
+            location="TOP_RIGHT"
+            state="false">
+      </decorator>
    </extension>
 </plugin>

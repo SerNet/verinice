@@ -54,7 +54,7 @@ import sernet.verinice.model.iso27k.Vulnerability;
 public class LinkDropper {
 
 	private static final Logger LOG = Logger.getLogger(LinkDropper.class);
-	protected static final String NO_COMMENT = "";
+	
 
 	public boolean dropLink(final List<CnATreeElement> toDrop, final CnATreeElement target) {
 
@@ -78,7 +78,7 @@ public class LinkDropper {
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						Activator.inheritVeriniceContextState();
-						createLink(target, toDrop);
+						CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(target, toDrop);
 					} catch (Exception e) {
 						LOG.error("Drop failed", e); //$NON-NLS-1$
 						return Status.CANCEL_STATUS;
@@ -94,147 +94,6 @@ public class LinkDropper {
 		return true;
 	}
 
-	private void createLink(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("createLink...");
-		}
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				Activator.inheritVeriniceContextState();
-				List<CnALink> newLinks = new ArrayList<CnALink>();
-				allDragged: for (CnATreeElement dragged : toDrop) {
-					try {
-						// ISO 27k elements are only linked using XML-defined relations:
-						if (dropTarget instanceof IISO27kElement && dragged instanceof IISO27kElement) {
-
-						    // special case: threats and vulnerabilities can create a new scenario when dropped:
-						    if (dropTarget instanceof Threat && dragged instanceof Vulnerability) {
-						        Threat threat;
-						        Vulnerability vuln;
-						        threat = (Threat) dropTarget;
-						        vuln = (Vulnerability) dragged;
-						        createScenario(threat, vuln);
-						    } 
-						    else if (dropTarget instanceof Vulnerability && dragged instanceof Threat) {
-						        Threat threat;
-						        Vulnerability vuln;
-						        vuln = (Vulnerability) dropTarget;
-						        threat = (Threat) dragged;
-						        createScenario(threat, vuln);
-						    }
-						    
-							Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory()
-								.getPossibleRelations(dropTarget.getEntityType().getId(), dragged.getEntityType().getId());
-							// try to link from target to dragged elements first:
-							// use first relation type (user can change it later):
-							if (!possibleRelations.isEmpty()) {
-								boolean linkCreated = createTypedLink(newLinks, dropTarget, dragged, possibleRelations.iterator().next().getId(), NO_COMMENT);
-								if (linkCreated)
-									continue allDragged;
-							}
-							
-							// if none found: try reverse direction from dragged element to target (link is always modelled from one side only)
-							possibleRelations = HitroUtil.getInstance().getTypeFactory()
-								.getPossibleRelations(dragged.getEntityType().getId(), dropTarget.getEntityType().getId());
-							if ( !possibleRelations.isEmpty()) {
-								// use first relation type (user can change it later):
-								boolean linkCreated = createTypedLink(newLinks, dragged, dropTarget, possibleRelations.iterator().next().getId(), NO_COMMENT);
-								if (linkCreated)
-									continue allDragged;
-							}
-						} // end for ISO 27k elements
-						
-						// backwards compatibility: BSI elements can be linked without a defined relation type, but we use one if present:
-						if (dropTarget instanceof IBSIStrukturElement || dragged instanceof IBSIStrukturElement) {
-							CnATreeElement from = dropTarget;
-							CnATreeElement to = dragged;
-							Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory()
-								.getPossibleRelations(from.getEntityType().getId(), to.getEntityType().getId());
-							if (possibleRelations.isEmpty()) {
-								// try again for reverse direction:
-								from = dragged;
-								to = dropTarget;
-								possibleRelations = HitroUtil.getInstance().getTypeFactory()
-								.getPossibleRelations(from.getEntityType().getId(), to.getEntityType().getId());
-							}
-							if (possibleRelations.isEmpty()) {
-								//still nothing found, create untyped link:
-								CnALink link = CnAElementHome.getInstance().createLink(dropTarget, dragged);
-								newLinks.add(link);
-							}
-							else {
-								// create link with type:
-								createTypedLink(newLinks, from, to, possibleRelations.iterator().next().getId(), NO_COMMENT);
-							}
-						}
-					} catch (Exception e) {
-						LOG.debug("Saving link failed.", e); //$NON-NLS-1$
-					}
-				}
-		
-				// fire model changed events:
-				for (CnALink link : newLinks) {
-					if (link.getDependant() instanceof ITVerbund) {
-						CnAElementFactory.getInstance().reloadModelFromDatabase();
-						return;
-					} else {
-						if (link.getDependant() instanceof IBSIStrukturElement || link.getDependency() instanceof IBSIStrukturElement) {
-							CnAElementFactory.getLoadedModel().linkAdded(link);
-						}
-						if (link.getDependant() instanceof IISO27kElement || link.getDependency() instanceof IISO27kElement) {
-							CnAElementFactory.getInstance().getISO27kModel().linkAdded(link);
-						}
-					}
-				}
-				DNDItems.clear();
-			}
-		});
-	}
-
-	/**
-     * @param threat
-     * @param vuln
-     */
-    protected void createScenario(Threat threat, Vulnerability vuln) {
-        boolean confirm = MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
-                "Create new scenario?", "Threats and vulnerabilities cannot be connected with each other directly. " +
-                		"Do you wish to create a new scenario for the connected threat and vulnerability?");
-        if (!confirm)
-            return;
-        
-        try {
-            CreateScenario command = new CreateScenario(threat, vuln);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            IncidentScenario newElement = command.getNewElement();
-            CnAElementFactory.getInstance().getISO27kModel().childAdded(newElement.getParent(), newElement);
-        } catch (CommandException e) {
-            ExceptionUtil.log(e, "Error while creating the new scenario.");
-        }
-    }
-
-
-
-    /**
-	 * @param newLinks
-	 * @param dropTarget
-	 * @param dragged
-	 * @param id
-	 * @param noComment
-	 * @return
-	 * @throws CommandException 
-	 */
-	protected boolean createTypedLink(List<CnALink> newLinks,
-			CnATreeElement from, CnATreeElement to, String relationTypeid,
-			String comment) throws CommandException {
-		// use first one (user can change it later):
-		CnALink link = CnAElementHome.getInstance()
-			.createLink(from, to, relationTypeid, comment );
-		if (link == null)
-			return false;
-		newLinks.add(link);
-		if (LOG.isDebugEnabled())
-			LOG.debug("Link created");
-		return true;
-	}
+	
 
 }

@@ -19,9 +19,11 @@ package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -56,6 +58,10 @@ public class BulkEditDialog extends Dialog {
         super.configureShell(newShell);
         newShell.setText(title);
         newShell.setSize(400, 800);
+        
+        // open the window right under the mouse pointer:
+        Point cursorLocation = Display.getCurrent().getCursorLocation();
+        newShell.setLocation(new Point(cursorLocation.x-200, cursorLocation.y-400));
     }
 
     @Override

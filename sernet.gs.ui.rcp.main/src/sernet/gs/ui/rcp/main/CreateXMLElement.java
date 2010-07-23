@@ -112,6 +112,7 @@ public class CreateXMLElement {
 	public Document getXMLDocument() {
 		return xmlDoc;
 	}
+	
 	//For XML Import
 	public void getSyncRequestXMLFiles(File file, boolean insert, 
 			boolean update, boolean delete, String sourceId){

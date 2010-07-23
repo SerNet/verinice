@@ -24,7 +24,7 @@ public class CnAPlaceholder extends CnATreeElement {
 	public CnAPlaceholder(NullModel nullModel) {
 		super(nullModel);
 	}
-
+	
 	@Override
 	public String getTitle() {
 		return Messages.getString("CnAPlaceholder.0"); //$NON-NLS-1$

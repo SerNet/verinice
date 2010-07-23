@@ -15,59 +15,51 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.filter;
+package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.util.regex.Pattern;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Abstract superclass for view filters that filter elements using a string pattern.
+ * Loads all elements for a given entity type id and hydrates their titles so they can be displayed in a list.
  * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$
  *
  */
-public abstract class TextFilter extends ViewerFilter {
+public class LoadCnAElementByEntityTypeId extends GenericCommand {
 
-	protected Pattern regex;
-	private String suche;
-	private StructuredViewer viewer;
+	private String id;
 
-	public TextFilter(StructuredViewer viewer) {
-		this.viewer = viewer;
+	private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
+	
+	private static final String QUERY = "from CnATreeElement elmt " +
+		"where elmt.entity.entityType = ?"; 
+
+	public LoadCnAElementByEntityTypeId( String id) {
+		this.id = id;
 	}
 
-	@Override
-	public abstract boolean select(Viewer viewer, Object parentElement, Object element);
-	
-	
-	public String getPattern() {
-		return suche;
-	}
-	
-	public void setPattern(String newPattern) {
-		boolean active = suche != null;
-		if (newPattern != null && newPattern.length() > 0) {
-			suche = newPattern;
-			regex = Pattern.compile(suche, Pattern.CASE_INSENSITIVE);
-			if (active)
-				viewer.refresh();
-			else {
-				viewer.addFilter(this);
-				active = true;
-			}
-			return;
-		}
+	public void execute() {
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
+		list = dao.findByQuery(QUERY, new Object[] {id});
 		
-		// else deactivate:
-		suche = null;
-		regex=null;
-		if (active)
-			viewer.removeFilter(this);
+		// hydrate titles
+		for (CnATreeElement elmt : list) {
+		    elmt.getTitle();
+		}
 	}
+
+	public List<CnATreeElement> getElements() {
+		return list;
+	}
+
 
 }

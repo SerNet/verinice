@@ -102,8 +102,6 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	
 	private Action deleteCatalogAction;
 	
-	private Action filterAction;
-	
 	private Action expandAllAction;
 
 	private Action collapseAllAction;
@@ -344,7 +342,6 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		deleteCatalogAction.setEnabled(false);
 		
 		textFilter = new CatalogTextFilter(viewer);
-		filterAction = new CatalogViewFilterAction(viewer, this.textFilter);
 		
 		expandAllAction = new Action() {
 			@Override
