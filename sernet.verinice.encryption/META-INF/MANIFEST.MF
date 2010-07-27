@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: sernet.verinice.encryption
-Bundle-SymbolicName: sernet.verinice.encryption
+Bundle-SymbolicName: sernet.verinice.encryption;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: sernet.verinice.encryption.Activator
 Require-Bundle: sernet.gs.service,
