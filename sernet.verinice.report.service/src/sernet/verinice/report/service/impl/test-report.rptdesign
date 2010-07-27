@@ -89,8 +89,6 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[import java.net.*;
 
-columns(new String[] { "if", "IPv6", "IPv4", "date" });
-
 e = NetworkInterface.getNetworkInterfaces();
 rl = new ArrayList();
 while (e.hasMoreElements()){
@@ -185,6 +183,12 @@ return a;
     </design:resultSetDefinitions>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "if", "IPv6", "IPv4", "date" });</value>
+                </ex-property>
+            </list-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="systemproperties" id="62">
             <list-property name="columnHints">
@@ -245,9 +249,7 @@ return a;
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[columns(new String[] { "key", "value", "random" });
-
-props = System.getProperties();
+            <xml-property name="queryText"><![CDATA[props = System.getProperties();
 
 l = new ArrayList();
 starttime = System.nanoTime();
@@ -2366,13 +2368,54 @@ return l;
     </design:resultSetDefinitions>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "key", "value", "random" });</value>
+                </ex-property>
+            </list-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="vnurltypes" id="147">
-            <structure name="cachedMetaData"/>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <text-property name="displayName">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <text-property name="displayName">name</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
             <property name="dataSource">testdriverdatasource</property>
-            <xml-property name="queryText"><![CDATA[columns(new String[] { "id", "name" });
-
-rl = new ArrayList();
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[rl = new ArrayList();
 
 it = htf.getURLPropertyTypes().iterator();
 while(it.hasNext())
@@ -2387,6 +2430,12 @@ while(it.hasNext())
 
 return rl;
 ]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "id", "name" });</value>
+                </ex-property>
+            </list-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="vnentitytypes" id="148">
             <list-property name="columnHints">
@@ -2430,11 +2479,9 @@ return rl;
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[columns(new String[] { "id", "name" });
+            <xml-property name="queryText"><![CDATA[rl = new ArrayList();
 
-rl = new ArrayList();
-
-it = htf.getAllEntityTypes().iterator();
+it = helper.getAllEntityTypes().iterator();
 while(it.hasNext())
 {
   o = it.next();
@@ -2447,235 +2494,43 @@ while(it.hasNext())
 
 return rl;
 ]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "id", "name" });</value>
+                </ex-property>
+            </list-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="vnpropertytype1" id="184">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">Abkürzung</property>
-                    <text-property name="displayName">Abkürzung</text-property>
+                    <property name="columnName">Column1</property>
+                    <text-property name="displayName">Column1</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Titel</property>
-                    <text-property name="displayName">Titel</text-property>
+                    <property name="columnName">Column2</property>
+                    <text-property name="displayName">Column2</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Tags</property>
-                    <text-property name="displayName">Tags</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Beschreibung</property>
-                    <text-property name="displayName">Beschreibung</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Reifegrad</property>
-                    <text-property name="displayName">Reifegrad</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Vorgeschlagene Gewichtung</property>
-                    <text-property name="displayName">Vorgeschlagene Gewichtung</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Benutzte Gewichtung</property>
-                    <text-property name="displayName">Benutzte Gewichtung</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Schwellwert 1</property>
-                    <text-property name="displayName">Schwellwert 1</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Grenzwert 2</property>
-                    <text-property name="displayName">Grenzwert 2</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Erläuterungen</property>
-                    <text-property name="displayName">Erläuterungen</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Realisieren bis</property>
-                    <text-property name="displayName">Realisieren bis</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Effektivität</property>
-                    <text-property name="displayName">Effektivität</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Erklärung</property>
-                    <text-property name="displayName">Erklärung</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Implementiert</property>
-                    <text-property name="displayName">Implementiert</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Erklärung_15</property>
-                    <text-property name="displayName">Erklärung</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Implementierungsdatum</property>
-                    <text-property name="displayName">Implementierungsdatum</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Letzte Revision</property>
-                    <text-property name="displayName">Letzte Revision</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Notizen</property>
-                    <text-property name="displayName">Notizen</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Nächste Revision</property>
-                    <text-property name="displayName">Nächste Revision</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Personalkosten fix EUR</property>
-                    <text-property name="displayName">Personalkosten fix EUR</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Personalkosten lfd. EUR</property>
-                    <text-property name="displayName">Personalkosten lfd. EUR</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Zeitraum</property>
-                    <text-property name="displayName">Zeitraum</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Materialkosten fix EUR</property>
-                    <text-property name="displayName">Materialkosten fix EUR</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Materialkosten lfd. EUR</property>
-                    <text-property name="displayName">Materialkosten lfd. EUR</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Zeitraum_25</property>
-                    <text-property name="displayName">Zeitraum</text-property>
+                    <property name="columnName">Column3</property>
+                    <text-property name="displayName">Column3</text-property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">Abkürzung</property>
+                        <property name="name">Column1</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">Titel</property>
+                        <property name="name">Column2</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">Tags</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">Beschreibung</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">Reifegrad</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">Vorgeschlagene Gewichtung</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
-                        <property name="name">Benutzte Gewichtung</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">Schwellwert 1</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
-                        <property name="name">Grenzwert 2</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">Erläuterungen</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">Realisieren bis</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">Effektivität</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">Erklärung</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">Implementiert</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">Erklärung_15</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">Implementierungsdatum</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">Letzte Revision</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
-                        <property name="name">Notizen</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">19</property>
-                        <property name="name">Nächste Revision</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">20</property>
-                        <property name="name">Personalkosten fix EUR</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">21</property>
-                        <property name="name">Personalkosten lfd. EUR</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">22</property>
-                        <property name="name">Zeitraum</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">23</property>
-                        <property name="name">Materialkosten fix EUR</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">24</property>
-                        <property name="name">Materialkosten lfd. EUR</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">25</property>
-                        <property name="name">Zeitraum_25</property>
+                        <property name="name">Column3</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -2684,323 +2539,63 @@ return rl;
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">Abkürzung</property>
-                    <property name="nativeName">Abkürzung</property>
+                    <property name="name">Column1</property>
+                    <property name="nativeName">Column1</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">Titel</property>
-                    <property name="nativeName">Titel</property>
+                    <property name="name">Column2</property>
+                    <property name="nativeName">Column2</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">Tags</property>
-                    <property name="nativeName">Tags</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">Beschreibung</property>
-                    <property name="nativeName">Beschreibung</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">Reifegrad</property>
-                    <property name="nativeName">Reifegrad</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">Vorgeschlagene Gewichtung</property>
-                    <property name="nativeName">Vorgeschlagene Gewichtung</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">Benutzte Gewichtung</property>
-                    <property name="nativeName">Benutzte Gewichtung</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">Schwellwert 1</property>
-                    <property name="nativeName">Schwellwert 1</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
-                    <property name="name">Grenzwert 2</property>
-                    <property name="nativeName">Grenzwert 2</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">Erläuterungen</property>
-                    <property name="nativeName">Erläuterungen</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">Realisieren bis</property>
-                    <property name="nativeName">Realisieren bis</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">Effektivität</property>
-                    <property name="nativeName">Effektivität</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">Erklärung</property>
-                    <property name="nativeName">Erklärung</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">Implementiert</property>
-                    <property name="nativeName">Implementiert</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">Erklärung_15</property>
-                    <property name="nativeName">Erklärung</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">Implementierungsdatum</property>
-                    <property name="nativeName">Implementierungsdatum</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">Letzte Revision</property>
-                    <property name="nativeName">Letzte Revision</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">18</property>
-                    <property name="name">Notizen</property>
-                    <property name="nativeName">Notizen</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">19</property>
-                    <property name="name">Nächste Revision</property>
-                    <property name="nativeName">Nächste Revision</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">20</property>
-                    <property name="name">Personalkosten fix EUR</property>
-                    <property name="nativeName">Personalkosten fix EUR</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">21</property>
-                    <property name="name">Personalkosten lfd. EUR</property>
-                    <property name="nativeName">Personalkosten lfd. EUR</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">22</property>
-                    <property name="name">Zeitraum</property>
-                    <property name="nativeName">Zeitraum</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">23</property>
-                    <property name="name">Materialkosten fix EUR</property>
-                    <property name="nativeName">Materialkosten fix EUR</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">24</property>
-                    <property name="name">Materialkosten lfd. EUR</property>
-                    <property name="nativeName">Materialkosten lfd. EUR</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">25</property>
-                    <property name="name">Zeitraum_25</property>
-                    <property name="nativeName">Zeitraum</property>
+                    <property name="name">Column3</property>
+                    <property name="nativeName">Column3</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[columns(gpt(htf.getEntityType("control")));
-
-//return commandService.getSoundso();
+            <xml-property name="queryText"><![CDATA[//return commandService.getSoundso();
 
 return new String[][] { new String[] { "bsp", "bsp2", "bsp3"} };]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(gpt(htf.getEntityType("control")));</value>
+                </ex-property>
+            </list-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="vnpropertytype" id="155">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">Anzahl Mitarbeiter</property>
-                    <text-property name="displayName">Anzahl Mitarbeiter</text-property>
+                    <property name="columnName">Column1</property>
+                    <text-property name="displayName">Column1</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Name</property>
-                    <text-property name="displayName">Name</text-property>
+                    <property name="columnName">Column2</property>
+                    <text-property name="displayName">Column2</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Dokument</property>
-                    <text-property name="displayName">Dokument</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Organisation</property>
-                    <text-property name="displayName">Organisation</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Geltungsbereich</property>
-                    <text-property name="displayName">Geltungsbereich</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Gesetze / Vorschriften / Verträge</property>
-                    <text-property name="displayName">Gesetze / Vorschriften / Verträge</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Selbstbestimmungsrecht</property>
-                    <text-property name="displayName">Selbstbestimmungsrecht</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Unversehrtheit</property>
-                    <text-property name="displayName">Unversehrtheit</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Aufgabenerfüllung</property>
-                    <text-property name="displayName">Aufgabenerfüllung</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Innen- / Außenwirkung</property>
-                    <text-property name="displayName">Innen- / Außenwirkung</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Finanzielle Auswirkungen</property>
-                    <text-property name="displayName">Finanzielle Auswirkungen</text-property>
+                    <property name="columnName">Column3</property>
+                    <text-property name="displayName">Column3</text-property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">Anzahl Mitarbeiter</property>
+                        <property name="name">Column1</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">Name</property>
+                        <property name="name">Column2</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">Dokument</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">Organisation</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">Geltungsbereich</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">Gesetze / Vorschriften / Verträge</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
-                        <property name="name">Selbstbestimmungsrecht</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">Unversehrtheit</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
-                        <property name="name">Aufgabenerfüllung</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">Innen- / Außenwirkung</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">Finanzielle Auswirkungen</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">Gesetze / Vorschriften / Verträge_12</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">Selbstbestimmungsrecht_13</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">Unversehrtheit_14</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">Aufgabenerfüllung_15</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">Innen- / Außenwirkung_16</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">Finanzielle Auswirkungen_17</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
-                        <property name="name">Gesetze / Vorschriften / Verträge_18</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">19</property>
-                        <property name="name">Selbstbestimmungsrecht_19</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">20</property>
-                        <property name="name">Unversehrtheit_20</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">21</property>
-                        <property name="name">Aufgabenerfüllung_21</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">22</property>
-                        <property name="name">Innen- / Außenwirkung_22</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">23</property>
-                        <property name="name">Finanzielle Auswirkungen_23</property>
+                        <property name="name">Column3</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -3009,171 +2604,30 @@ return new String[][] { new String[] { "bsp", "bsp2", "bsp3"} };]]></xml-propert
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">Anzahl Mitarbeiter</property>
-                    <property name="nativeName">Anzahl Mitarbeiter</property>
-                    <property name="dataType">string</property>
+                    <property name="name">Column1</property>
+                    <property name="nativeName">Column1</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">Name</property>
-                    <property name="nativeName">Name</property>
-                    <property name="dataType">string</property>
+                    <property name="name">Column2</property>
+                    <property name="nativeName">Column2</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">Dokument</property>
-                    <property name="nativeName">Dokument</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">Organisation</property>
-                    <property name="nativeName">Organisation</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">Geltungsbereich</property>
-                    <property name="nativeName">Geltungsbereich</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">Gesetze / Vorschriften / Verträge</property>
-                    <property name="nativeName">Gesetze / Vorschriften / Verträge</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">Selbstbestimmungsrecht</property>
-                    <property name="nativeName">Selbstbestimmungsrecht</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">Unversehrtheit</property>
-                    <property name="nativeName">Unversehrtheit</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
-                    <property name="name">Aufgabenerfüllung</property>
-                    <property name="nativeName">Aufgabenerfüllung</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">Innen- / Außenwirkung</property>
-                    <property name="nativeName">Innen- / Außenwirkung</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">Finanzielle Auswirkungen</property>
-                    <property name="nativeName">Finanzielle Auswirkungen</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">Gesetze / Vorschriften / Verträge_12</property>
-                    <property name="nativeName">Gesetze / Vorschriften / Verträge</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">Selbstbestimmungsrecht_13</property>
-                    <property name="nativeName">Selbstbestimmungsrecht</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">Unversehrtheit_14</property>
-                    <property name="nativeName">Unversehrtheit</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">Aufgabenerfüllung_15</property>
-                    <property name="nativeName">Aufgabenerfüllung</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">Innen- / Außenwirkung_16</property>
-                    <property name="nativeName">Innen- / Außenwirkung</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">Finanzielle Auswirkungen_17</property>
-                    <property name="nativeName">Finanzielle Auswirkungen</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">18</property>
-                    <property name="name">Gesetze / Vorschriften / Verträge_18</property>
-                    <property name="nativeName">Gesetze / Vorschriften / Verträge</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">19</property>
-                    <property name="name">Selbstbestimmungsrecht_19</property>
-                    <property name="nativeName">Selbstbestimmungsrecht</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">20</property>
-                    <property name="name">Unversehrtheit_20</property>
-                    <property name="nativeName">Unversehrtheit</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">21</property>
-                    <property name="name">Aufgabenerfüllung_21</property>
-                    <property name="nativeName">Aufgabenerfüllung</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">22</property>
-                    <property name="name">Innen- / Außenwirkung_22</property>
-                    <property name="nativeName">Innen- / Außenwirkung</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">23</property>
-                    <property name="name">Finanzielle Auswirkungen_23</property>
-                    <property name="nativeName">Finanzielle Auswirkungen</property>
-                    <property name="dataType">string</property>
+                    <property name="name">Column3</property>
+                    <property name="nativeName">Column3</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[columns(gpt(htf.getEntityType("itverbund")));
-
-//return commandService.getSoundso();
-
-return new String[][] { new String[] { "bsp", "bsp2", "bsp3"} };]]></xml-property>
+            <xml-property name="queryText"><![CDATA[return new String[][] { new String[] { "bsp", "bsp2", "bsp3"} };]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(gpt(htf.getEntityType("itverbund")));</value>
+                </ex-property>
+            </list-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="vnctx" id="185">
             <list-property name="columnHints">
@@ -3326,21 +2780,7 @@ return command.getTotalCount();
                     </cell>
                     <cell id="197"/>
                 </row>
-                <row id="198">
-                    <cell id="199"/>
-                    <cell id="200"/>
-                    <cell id="201"/>
-                    <cell id="202"/>
-                </row>
             </detail>
-            <footer>
-                <row id="203">
-                    <cell id="204"/>
-                    <cell id="205"/>
-                    <cell id="206"/>
-                    <cell id="207"/>
-                </row>
-            </footer>
         </table>
         <image id="219">
             <property name="height">0.676056338028169in</property>
@@ -3399,6 +2839,12 @@ return command.getTotalCount();
             </list-property>
             <property name="source">file</property>
             <expression name="uri" type="constant">verinice://test3</expression>
+        </image>
+        <image id="220">
+            <property name="height">5.447916666666667in</property>
+            <property name="width">5.572916666666667in</property>
+            <property name="source">file</property>
+            <expression name="uri" type="constant">file:///home/rschus/gnu.png</expression>
         </image>
     </body>
     <list-property name="images">

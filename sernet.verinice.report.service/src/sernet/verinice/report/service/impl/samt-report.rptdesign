@@ -15,7 +15,7 @@
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="companyName" id="45">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">Column1</property>
+                    <property name="columnName">companyName</property>
                     <text-property name="displayName">companyName</text-property>
                 </structure>
             </list-property>
@@ -23,7 +23,7 @@
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">Column1</property>
+                        <property name="name">companyName</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -32,13 +32,15 @@
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">Column1</property>
-                    <property name="nativeName">Column1</property>
+                    <property name="name">companyName</property>
+                    <property name="nativeName">companyName</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[return vars("samtGroup").getParent().getTitle();]]></xml-property>
+            <xml-property name="queryText"><![CDATA[c = new sernet.verinice.samt.service.FindSamtGroup(true);
+
+return helper.execute(c).getSelfAssessmentGroup().getParent().getTitle();]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>1.0</Version>
@@ -69,69 +71,17 @@
     </design:resultSetDefinitions>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
-        </oda-data-set>
-        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="date" id="59">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">Column1</property>
-                    <text-property name="displayName">date</text-property>
-                </structure>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "companyName" });</value>
+                </ex-property>
             </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">Column1</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">verinice</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">Column1</property>
-                    <property name="nativeName">Column1</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[return vars("date");]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:name>Column1</design:name>
-            <design:position>1</design:position>
-            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
-            <design:precision>-1</design:precision>
-            <design:scale>-1</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>Column1</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>Column1</design:label>
-            <design:formattingHints>
-              <design:displaySize>8</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="totalSecurityFigure" id="61">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">Column1</property>
+                    <property name="columnName">totalSecurityFigure</property>
                     <text-property name="displayName">totalSecurityFigure</text-property>
                 </structure>
             </list-property>
@@ -139,7 +89,7 @@
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">Column1</property>
+                        <property name="name">totalSecurityFigure</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -148,13 +98,15 @@
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">Column1</property>
-                    <property name="nativeName">Column1</property>
-                    <property name="dataType">string</property>
+                    <property name="name">totalSecurityFigure</property>
+                    <property name="nativeName">totalSecurityFigure</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[return vars("totalSecurityFigure");]]></xml-property>
+            <xml-property name="queryText"><![CDATA[// TODO: Call respective command which can provide this number
+
+// return helper.execute(new TotalSecurityFigureCommand().getResult());
+return "TODO - implement command";]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>1.0</Version>
@@ -185,6 +137,12 @@
     </design:resultSetDefinitions>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "totalSecurityFigure" });</value>
+                </ex-property>
+            </list-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="samtTopics" id="63">
             <list-property name="columnHints">
@@ -260,9 +218,9 @@
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[columns(new String[] { "title", "weight", "threshold", "maturity" });
+            <xml-property name="queryText"><![CDATA[sag = helper.execute(new sernet.verinice.samt.service.FindSamtGroup(true)).getSelfAssessmentGroup();
 
-c = helper.execute(new sernet.verinice.samt.service.LoadAllSamtTopics(vars("samtGroup")));
+c = helper.execute(new sernet.verinice.samt.service.LoadAllSamtTopics(sag));
 
 return helper.map(
 	c.getAllSamtTopics(),
@@ -278,6 +236,210 @@ return helper.map(
 		Integer.class });
 
 ]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "title", "weight", "threshold", "maturity" });</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="maxAttainableSecurityFigure" id="93">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">maxAttainableSecurityFigure</property>
+                    <text-property name="displayName">maxAttainableSecurityFigure</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">maxAttainableSecurityFigure</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">maxAttainableSecurityFigure</property>
+                    <property name="nativeName">maxAttainableSecurityFigure</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[// TODO: Call Command which can provide this number
+
+// return helper.execute(new GetMaximumAttainableSecurityFigureCommand().getResult());
+return "TODO - implement a command";]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>Column1</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>Column1</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>Column1</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "maxAttainableSecurityFigure" });</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="maturityChartImage" id="96">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">image</property>
+                    <text-property name="displayName">image</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">width</property>
+                    <property name="nativeName">width</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">800</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">height</property>
+                    <property name="nativeName">height</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">2</property>
+                    <expression name="defaultValue" type="javascript">600</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">image</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">image</property>
+                    <property name="nativeName">image</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.gs.ui.rcp.main.bsi.views.chart.MaturitySpiderChart;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.samt.service.FindSamtGroup;
+
+c = helper.execute(new FindSamtGroup(true));
+sag = c.getSelfAssessmentGroup();
+
+chart = new MaturitySpiderChart().createChart(sag);
+
+w = inpv("width");
+h = inpv("height");
+
+return helper.createImageResult(chart.createBufferedImage(w,h));
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>width</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>height</design:name>
+        <design:position>2</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>image</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>image</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>image</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "image" });
+inParameters(new String[] { "width", "height" });</value>
+                </ex-property>
+            </list-property>
         </oda-data-set>
     </data-sets>
     <styles>
@@ -330,7 +492,7 @@ return helper.map(
             <text-property name="content"><![CDATA[<CENTER>Information Security Assessment</CENTER>]]></text-property>
         </text>
         <grid id="7">
-            <property name="height">5.947916666666667in</property>
+            <property name="height">4.072916666666667in</property>
             <property name="width">7.9375in</property>
             <column id="8">
                 <property name="width">1.5520833333333333in</property>
@@ -354,17 +516,17 @@ return helper.map(
                 <cell id="12">
                     <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
-                    <data id="58">
+                    <data id="92">
                         <property name="dataSet">companyName</property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">Column1</property>
+                                <property name="name">companyName</property>
                                 <text-property name="displayName">companyName</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Column1"]</expression>
+                                <expression name="expression" type="javascript">dataSetRow["companyName"]</expression>
                                 <property name="dataType">string</property>
                             </structure>
                         </list-property>
-                        <property name="resultSetColumn">Column1</property>
+                        <property name="resultSetColumn">companyName</property>
                     </data>
                 </cell>
             </row>
@@ -379,12 +541,11 @@ return helper.map(
                     <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
                     <data id="60">
-                        <property name="dataSet">date</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">Column1</property>
                                 <text-property name="displayName">date</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Column1"]</expression>
+                                <expression name="expression" type="javascript">BirtDateTime.now()</expression>
                                 <property name="dataType">string</property>
                             </structure>
                         </list-property>
@@ -400,17 +561,17 @@ return helper.map(
                     </text>
                 </cell>
                 <cell id="18">
-                    <data id="62">
+                    <data id="95">
                         <property name="dataSet">totalSecurityFigure</property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">Column1</property>
+                                <property name="name">totalSecurityFigure</property>
                                 <text-property name="displayName">totalSecurityFigure</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Column1"]</expression>
+                                <expression name="expression" type="javascript">dataSetRow["totalSecurityFigure"]</expression>
                                 <property name="dataType">string</property>
                             </structure>
                         </list-property>
-                        <property name="resultSetColumn">Column1</property>
+                        <property name="resultSetColumn">totalSecurityFigure</property>
                     </data>
                 </cell>
                 <cell id="38">
@@ -419,10 +580,23 @@ return helper.map(
                         <text-property name="content"><![CDATA[Maximal Attainable:]]></text-property>
                     </text>
                 </cell>
-                <cell id="32"/>
+                <cell id="32">
+                    <data id="94">
+                        <property name="dataSet">maxAttainableSecurityFigure</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">maxAttainableSecurityFigure</property>
+                                <text-property name="displayName">maxAttainableSecurityFigure</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["maxAttainableSecurityFigure"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">maxAttainableSecurityFigure</property>
+                    </data>
+                </cell>
             </row>
             <row id="19">
-                <property name="height">5.125in</property>
+                <property name="height">3.25in</property>
                 <cell id="20">
                     <text id="42">
                         <property name="contentType">auto</property>
@@ -432,12 +606,31 @@ return helper.map(
                 <cell id="21">
                     <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
-                    <image id="43">
+                    <image name="maturityChartImage" id="43">
                         <property name="display">block</property>
-                        <property name="height">5in</property>
-                        <property name="width">100%</property>
-                        <property name="source">file</property>
-                        <expression name="uri" type="constant">verinice://spider-graph</expression>
+                        <property name="height">300px</property>
+                        <property name="width">600px</property>
+                        <property name="dataSet">maturityChartImage</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">width</property>
+                                <expression name="expression" type="javascript">600</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">height</property>
+                                <expression name="expression" type="javascript">300;</expression>
+                            </structure>
+                        </list-property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">image</property>
+                                <text-property name="displayName">image</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["image"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                        </list-property>
+                        <property name="source">expr</property>
+                        <expression name="valueExpr">row["image"]</expression>
                     </image>
                 </cell>
             </row>
@@ -485,16 +678,16 @@ return helper.map(
                     <cell id="66">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
+                        <property name="borderRightWidth">thin</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
+                        <property name="borderTopWidth">thin</property>
                         <label id="84">
                             <text-property name="text">title</text-property>
                         </label>
@@ -502,16 +695,16 @@ return helper.map(
                     <cell id="67">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
+                        <property name="borderRightWidth">thin</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
+                        <property name="borderTopWidth">thin</property>
                         <label id="86">
                             <text-property name="text">weight</text-property>
                         </label>
@@ -519,16 +712,16 @@ return helper.map(
                     <cell id="68">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
+                        <property name="borderRightWidth">thin</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
+                        <property name="borderTopWidth">thin</property>
                         <label id="88">
                             <text-property name="text">threshold</text-property>
                         </label>
@@ -536,16 +729,16 @@ return helper.map(
                     <cell id="69">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
+                        <property name="borderRightWidth">thin</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
+                        <property name="borderTopWidth">thin</property>
                         <label id="90">
                             <text-property name="text">maturity</text-property>
                         </label>
@@ -556,29 +749,29 @@ return helper.map(
                 <row id="70">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">medium</property>
+                    <property name="borderBottomWidth">thin</property>
                     <property name="borderLeftColor">#000000</property>
                     <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
+                    <property name="borderLeftWidth">thin</property>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
+                    <property name="borderRightWidth">thin</property>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
+                    <property name="borderTopWidth">thin</property>
                     <cell id="71">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
+                        <property name="borderRightWidth">thin</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="85">
                             <property name="resultSetColumn">title</property>
                         </data>
@@ -586,16 +779,16 @@ return helper.map(
                     <cell id="72">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
+                        <property name="borderRightWidth">thin</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="87">
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
@@ -607,16 +800,16 @@ return helper.map(
                     <cell id="73">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
+                        <property name="borderRightWidth">thin</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="89">
                             <property name="resultSetColumn">threshold</property>
                         </data>
@@ -624,82 +817,22 @@ return helper.map(
                     <cell id="74">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
+                        <property name="borderRightWidth">thin</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="91">
                             <property name="resultSetColumn">maturity</property>
                         </data>
                     </cell>
                 </row>
             </detail>
-            <footer>
-                <row id="75">
-                    <cell id="76">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
-                    </cell>
-                    <cell id="77">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
-                    </cell>
-                    <cell id="78">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
-                    </cell>
-                    <cell id="79">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">medium</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">medium</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">medium</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">medium</property>
-                    </cell>
-                </row>
-            </footer>
         </table>
     </body>
 </report>

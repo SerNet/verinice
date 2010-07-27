@@ -2,6 +2,8 @@ package sernet.verinice.report.service.impl;
 
 import java.io.File;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportService;
@@ -10,11 +12,12 @@ import sernet.verinice.interfaces.report.IReportType;
 
 public class ReportService implements IReportService {
 	
+	private static final Logger LOG = Logger.getLogger(ReportService.class);
+
 	public ReportService()
 	{
-		
 	}
-
+	
 	@Override
 	public void runTestReportGeneration() {
 		IReportType rt = new TestReportType();

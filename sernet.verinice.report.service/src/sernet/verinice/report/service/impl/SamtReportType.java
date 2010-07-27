@@ -46,8 +46,6 @@ public class SamtReportType implements IReportType {
 	}
 
 	public void createReport(IReportOptions reportOptions) {
-		prepareReport();
-		
 		BIRTReportService brs = new BIRTReportService();
 		
 		URL reportDesign = SamtReportType.class.getResource("samt-report.rptdesign");
@@ -63,51 +61,6 @@ public class SamtReportType implements IReportType {
 			// In a SAMT report the 4th result set is the one that is of interest.
 			brs.extract(task, reportOptions, 3);
 		}
-	}
-	
-	private void prepareReport()
-	{
-		ControlGroup samtGroup = getSamtGroup();
-		
-		JFreeChart chart = new MaturitySpiderChart().createChart(samtGroup);
-		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		try {
-			ImageIO.write(chart.createBufferedImage(750, 750), "png", bos);
-		} catch (IOException e1) {
-			LOG.warn("Unable to generate spider chart for report");
-		}
-
-		Activator.getDefault().getOdaDriver().setImageProvider(
-				"spider-graph", new IImageProvider() {
-
-					@Override
-					public InputStream newInputStream() {
-						return new ByteArrayInputStream(bos.toByteArray());
-					}
-
-				});
-		
-		Map<String, Object> variables = new HashMap<String, Object>();
-		variables.put("date", new Date());
-		variables.put("totalSecurityFigure", 23);
-		variables.put("samtGroup", samtGroup);
-		
-		Activator.getDefault().getOdaDriver().setScriptVariables(variables);
-	}
-
-	private ControlGroup getSamtGroup() {
-		FindSamtGroup command = new FindSamtGroup(true);
-		try {
-			command = Activator.getDefault().getCommandService().executeCommand(command);
-		} catch (RuntimeException e) {
-			LOG.error("Error while executing FindSamtGroup command", e); //$NON-NLS-1$
-			throw e;
-		} catch (Exception e) {
-			final String message = "Error while executing FindSamtGroup command"; //$NON-NLS-1$
-			LOG.error(message, e);
-			throw new RuntimeException(message, e);
-		}
-		return command.getSelfAssessmentGroup();
 	}
 
 }
