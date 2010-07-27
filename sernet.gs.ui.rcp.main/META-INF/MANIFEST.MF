@@ -267,7 +267,7 @@ Export-Package: com.heatonresearch.datamover;uses:="com.heatonresearch.datamover
    sernet.verinice.iso27k.service",
  sernet.verinice.rcp
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Eclipse-RegisterBuddy: sernet.verinice.oda.driver,sernet.springclient,com.springsource.org.hibernate
+Eclipse-RegisterBuddy: sernet.verinice.oda.driver,com.springsource.org.hibernate
 Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
  org.eclipse.equinox.app;bundle-version="1.2.1",
  org.eclipse.equinox.common;bundle-version="3.5.1",

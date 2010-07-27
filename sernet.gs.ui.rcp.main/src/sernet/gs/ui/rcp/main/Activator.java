@@ -42,6 +42,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -54,6 +55,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IInternalServer;
+import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IVersionConstants;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -63,7 +65,7 @@ import sernet.verinice.rcp.StatusResult;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class Activator extends AbstractUIPlugin implements IMain {
 
 	private static final Logger LOG = Logger.getLogger(Activator.class);
 	
@@ -71,8 +73,6 @@ public class Activator extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main"; //$NON-NLS-1$
 
 	private static final String PAX_WEB_SYMBOLIC_NAME = "org.ops4j.pax.web.pax-web-bundle"; //$NON-NLS-1$
-
-	private static final String VERINICE_ODA_DRIVER_SYMBOLIC_NAME = "sernet.verinice.oda.driver"; //$NON-NLS-1$
 	
 	private static final String REPORT_SERVICE_SYMBOLIC_NAME = "sernet.verinice.report.service"; //$NON-NLS-1$
 
@@ -88,6 +88,10 @@ public class Activator extends AbstractUIPlugin {
 	private IInternalServer internalServer;
 	
 	private IVeriniceOdaDriver odaDriver;
+	
+	private BundleContext context;
+	
+	private boolean runsAsApplication = false;
 	
 	/**
 	 * The constructor
@@ -108,70 +112,44 @@ public class Activator extends AbstractUIPlugin {
 		return page;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Brings the bundle (not the whole RCP application) in a usable state.
 	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
-	 * )
 	 */
 	@SuppressWarnings("restriction")
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		
+		this.context = context;
+		
 		if (LOG.isInfoEnabled()) {
 		    final Bundle bundle = context.getBundle();
             LOG.info("Starting bundle " + bundle.getSymbolicName() + " " + bundle.getVersion());
-        }		
+        }
 		
-		Bundle bundle = Platform.getBundle(VERINICE_ODA_DRIVER_SYMBOLIC_NAME);
-		if (bundle == null)
-		{
-			String msg = "verinice ODA driver not available. Giving up!"; //$NON-NLS-1$
-			LOG.error(msg);
-			throw new IllegalStateException(msg);
-		}
-		else if (bundle.getState() == Bundle.ACTIVE)
-		{
-			// Try to access a verinice ODA driver service instance. If one is available
-			// we can assume that we are in designer mode and should not start the whole
-			// verinice application (workspace and stuff).
-			BundleContext ctx = bundle.getBundleContext();
-			ServiceReference sr = ctx.getServiceReference(IVeriniceOdaDriver.class.getName());
-			if (sr != null)
-			{
-				// Driver is available. Retrieve the the URI for the server from it and let
-				// the verinice data model communication with it.
-				odaDriver = (IVeriniceOdaDriver) ctx.getService(sr);
-				
-				String uri = odaDriver.getServerURI();
-				// If an URI is put into the ODA driver we assume that we are running in designer mode.
-				if (uri != null)
-				{
-					ClientPropertyPlaceholderConfigurer.setRemoteServerMode(uri);
-					ServiceFactory.openCommandService();
-					VeriniceContext.setState(state = ServiceFactory.getClientWorkObjects());
-					
-					// Make command service available as an OSGi service
-					context.registerService(
-							ICommandService.class.getName(),
-							VeriniceContext.get(VeriniceContext.COMMAND_SERVICE),
-							null);
-					
-					// Skip anything that is related to the actual client application as we are
-					// only interested in accessing data for the reports.
-					return;
-				}
-			}
-			
-		}
-		else
-		{
-			bundle.start();
-		}
+		// Makes a representation of this bundle as a service available.
+		context.registerService(IMain.class.getName(), this, null);
+	}
+	
+	/**
+	 * Starts everything that is needed for the whole application.
+	 * 
+	 * <p>Note: This method can only be called once.</p>
+	 * 
+	 * <p>Note: This method is solely to be called from {@link Application}.</p>
+	 * 
+	 * <p>Note: This method is *NOT* to be called when verinice is being used as a library
+	 * (IOW when being run during the report design phase).</p>
+	 * 
+	 * @throws BundleException
+	 */
+	@SuppressWarnings("restriction")
+	void startApplication() throws BundleException
+	{
+		runsAsApplication = true;
 		
-		bundle = Platform.getBundle(REPORT_SERVICE_SYMBOLIC_NAME);
+		Bundle bundle = Platform.getBundle(REPORT_SERVICE_SYMBOLIC_NAME);
 		if (bundle == null)
 		{
 			LOG.warn("Report service bundle is not available!");
@@ -608,4 +586,37 @@ public class Activator extends AbstractUIPlugin {
 		}
 
 	}
+
+	/**
+	 * Allows setting the server URI from another bundle (actually it is the
+	 * ODA driver which does that).
+	 * 
+	 * <p>That method is needed during the report design phase to forward the server
+	 * settings from the designer into the main bundle.</p>
+	 * 
+	 * <p>Due to the design of ODA drivers this method is also called when the driver
+	 * is used through verinice itself (during report generation). However in that
+	 * case the method call has no effect.</p>
+	 */
+	@Override
+	public void updateServerURI(String uri) {
+		if (!runsAsApplication)
+		{
+			LOG.info("verinice runs in designer mode - retrieving server configuration from ODA driver.");
+			ClientPropertyPlaceholderConfigurer.setRemoteServerMode(uri);
+			try {
+				ServiceFactory.openCommandService();
+			} catch (MalformedURLException e) {
+				throw new IllegalStateException(e);
+			}
+			VeriniceContext.setState(state = ServiceFactory.getClientWorkObjects());
+			
+			// Make command service available as an OSGi service
+			context.registerService(
+					ICommandService.class.getName(),
+					VeriniceContext.get(VeriniceContext.COMMAND_SERVICE),
+					null);
+		}
+	}
+	
 }
