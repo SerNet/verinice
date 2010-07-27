@@ -15,9 +15,13 @@
 		</id>
 		<property name="propertyType"/>
         
-        <property name="propertyValue" type="java.lang.String" length="400000"/>			
+         <!-- size limit of 4000 to prevent Oracle from using the LONG type which leads to "stream closed" exceptions
+        fixed in Hibernate 3.5, see http://opensource.atlassian.com/projects/hibernate/browse/HHH-3892
+         currently fixed by a workaround, see class OracleLongStringType.java
+          -->
+        <property name="propertyValue" type="sernet.gs.ui.rcp.hibernate.OracleLongStringType" length="400000"/>			
    
-    <!-- CAUTION: Property is also mapped as a mutable element in PropertyList.hbm.xml! -->
+    <!-- CAUTION: Property is also mapped as a mutable element in PropertyList.hbm.xml -->
 	
     </class>
 </hibernate-mapping>

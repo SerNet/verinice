@@ -53,7 +53,7 @@ public class TextControl implements IHuiControl {
 	private boolean useRule;
 	
 	// This limit is set in Property.hbm.xml / PropertyList.hbm.xml:
-    private static final int HIBERNATE_MAPPED_STRING_LIMIT = 3999;
+    private static final int HIBERNATE_MAPPED_STRING_LIMIT = 400000;
 
 	public Control getControl() {
 		return text;
