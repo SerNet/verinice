@@ -4,6 +4,6 @@ import java.io.InputStream;
 
 public interface IImageProvider {
 
-	InputStream newInputStream();
+	InputStream newInputStream(int width, int height);
 	
 }
