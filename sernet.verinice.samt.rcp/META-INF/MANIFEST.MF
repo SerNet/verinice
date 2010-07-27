@@ -4,7 +4,6 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sernet.verinice.samt.rcp;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Activator: sernet.verinice.samt.rcp.Activator
-Eclipse-RegisterBuddy: sernet.springclient
 Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
  sernet.springclient;bundle-version="1.2.1",
  sernet.verinice.samt.service;bundle-version="0.1.0",
