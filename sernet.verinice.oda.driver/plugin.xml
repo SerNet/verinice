@@ -72,6 +72,11 @@
                odaScalarDataType="Boolean"
                nativeDataType="Boolean">
          </dataTypeMapping>
+         <dataTypeMapping
+               nativeDataType="JavaObject"
+               nativeDataTypeCode="2000"
+               odaScalarDataType="JavaObject">
+         </dataTypeMapping>
       </dataSet>
    </extension>
    <extension

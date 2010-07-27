@@ -11,10 +11,18 @@ public class VeriniceURLConnection extends URLConnection {
 	
 	private IImageProvider imageProvider;
 	
+	private int width, height;
+	
 	protected VeriniceURLConnection(URL url) {
 		super(url);
 		
 		setDoOutput(false);
+	}
+	
+	void setBounds(int w, int h)
+	{
+		width = w;
+		height = h;
 	}
 	
 	void setImageProvider(IImageProvider imageProvider)
@@ -25,11 +33,18 @@ public class VeriniceURLConnection extends URLConnection {
 	@Override
 	public InputStream getInputStream()
 	{
-		return imageProvider.newInputStream();
+		return imageProvider.newInputStream(width, height);
 	}
 
 	@Override
 	public final void connect() throws IOException {
 	}
+
+	@Override
+	public String getContentType() {
+		return "image/svg+xml";
+	}
+	
+	
 
 }

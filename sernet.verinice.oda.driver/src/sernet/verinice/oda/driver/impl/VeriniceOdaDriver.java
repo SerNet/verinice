@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,13 +25,10 @@ import org.osgi.service.component.ComponentContext;
 
 import sernet.verinice.interfaces.oda.IImageProvider;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.oda.driver.Activator;
 
 public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 
-	private String serverURI;
-	
 	private VeriniceURLStreamHandlerService urlStreamHandlerFactory;
 	
 	private Map<String, Object> vars = new HashMap<String, Object>();
@@ -43,16 +41,6 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	protected void activate(ComponentContext ctx)
 	{
 		this.urlStreamHandlerFactory = Activator.getDefault().getURLStreamHandlerService();
-	}
-	
-	@Override
-	public String getServerURI() {
-		return serverURI;
-	}
-	
-	@Override
-	public void setServerURI(String uri) {
-		serverURI = uri;
 	}
 	
 	@Override

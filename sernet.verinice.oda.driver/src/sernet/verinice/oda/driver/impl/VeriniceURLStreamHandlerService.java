@@ -34,7 +34,7 @@ public class VeriniceURLStreamHandlerService extends AbstractURLStreamHandlerSer
 		{
 
 			@Override
-			public InputStream newInputStream() {
+			public InputStream newInputStream(int width, int height) {
 				try {
 					return new FileInputStream(f);
 				} catch (FileNotFoundException e) {
@@ -62,15 +62,29 @@ public class VeriniceURLStreamHandlerService extends AbstractURLStreamHandlerSer
 		
 		String imageId = u.getAuthority();
 		IImageProvider provider = imageStreams.get(imageId);
+		
+		String queryPart = u.getQuery();
+		HashMap<String, String> parms = new HashMap<String, String>();
+		if (queryPart != null)
+		{
+			String[] split = queryPart.split("=|&");
+			for (int i=0;i+1<split.length;i+=2)
+			{
+				parms.put(split[i], split[i+1]);
+			}
+		}
+		
+		int width = parms.containsKey("width") ? Integer.parseInt(parms.get("width")) : 200;
+		int height = parms.containsKey("height") ? Integer.parseInt(parms.get("height")) : 60;
 
 		if (provider == null)
 		{
 			// Generate a placeholder graphic on the fly.
-			BufferedImage image = new BufferedImage(200, 60, BufferedImage.TYPE_INT_RGB);
+			BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 			Graphics2D g2d = (Graphics2D) image.getGraphics();
 			g2d.setBackground(Color.WHITE);
 			g2d.setColor(Color.BLACK);
-			g2d.clearRect(0, 0, 200, 60);
+			g2d.clearRect(0, 0, width, height);
 			g2d.drawString(String.format("Image '%s' not available!", imageId), 5, 30);
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ImageIO.write(image, "jpeg", bos);
@@ -81,13 +95,14 @@ public class VeriniceURLStreamHandlerService extends AbstractURLStreamHandlerSer
 			{
 
 				@Override
-				public InputStream newInputStream() {
+				public InputStream newInputStream(int width, int height) {
 					return new ByteArrayInputStream(imageData);
 				}
 				
 			};
 		}
 		
+		uc.setBounds(width, height);
 		uc.setImageProvider(provider);
 		
 		return uc;

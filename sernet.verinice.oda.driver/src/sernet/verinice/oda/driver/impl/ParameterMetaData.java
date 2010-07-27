@@ -22,14 +22,19 @@ import org.eclipse.datatools.connectivity.oda.OdaException;
 
 public class ParameterMetaData implements IParameterMetaData 
 {
+	String[] inParameters;
+	
+	ParameterMetaData(String[] inParameters)
+	{
+		this.inParameters = (inParameters == null ? new String[0] : inParameters);
+	}
 
 	/* 
 	 * @see org.eclipse.datatools.connectivity.oda.IParameterMetaData#getParameterCount()
 	 */
 	public int getParameterCount() throws OdaException 
 	{
-		// No parameter suppport yet.
-        return 0;
+        return inParameters.length;
 	}
 
     /*
@@ -37,17 +42,12 @@ public class ParameterMetaData implements IParameterMetaData
 	 */
 	public int getParameterMode( int param ) throws OdaException 
 	{
-        // TODO Auto-generated method stub
 		return IParameterMetaData.parameterModeIn;
 	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IParameterMetaData#getParameterName(int)
-     */
     public String getParameterName( int param ) throws OdaException
     {
-        // TODO Auto-generated method stub
-        return null;    // name is not available
+        return inParameters[param-1];
     }
 
 	/* 
@@ -55,45 +55,29 @@ public class ParameterMetaData implements IParameterMetaData
 	 */
 	public int getParameterType( int param ) throws OdaException 
 	{
-        // TODO replace with data source specific implementation
-
-        // hard-coded for demo purpose
-        return java.sql.Types.CHAR;   // as defined in data set extension manifest
+        return java.sql.Types.VARCHAR;
 	}
 
-	/* 
-	 * @see org.eclipse.datatools.connectivity.oda.IParameterMetaData#getParameterTypeName(int)
-	 */
 	public String getParameterTypeName( int param ) throws OdaException 
 	{
         int nativeTypeCode = getParameterType( param );
         return Driver.getNativeDataTypeName( nativeTypeCode );
 	}
 
-	/* 
-	 * @see org.eclipse.datatools.connectivity.oda.IParameterMetaData#getPrecision(int)
-	 */
 	public int getPrecision( int param ) throws OdaException 
 	{
         // TODO Auto-generated method stub
 		return -1;
 	}
 
-	/* 
-	 * @see org.eclipse.datatools.connectivity.oda.IParameterMetaData#getScale(int)
-	 */
 	public int getScale( int param ) throws OdaException 
 	{
         // TODO Auto-generated method stub
 		return -1;
 	}
 
-	/* 
-	 * @see org.eclipse.datatools.connectivity.oda.IParameterMetaData#isNullable(int)
-	 */
 	public int isNullable( int param ) throws OdaException 
 	{
-        // TODO Auto-generated method stub
 		return IParameterMetaData.parameterNullableUnknown;
 	}
 

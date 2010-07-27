@@ -40,46 +40,15 @@ public class Connection implements IConnection {
 
 	private HUITypeFactory huiTypeFactory;
 
-	private static final String MAIN_SYMBOLIC_NAME = "sernet.gs.ui.rcp.main"; //$NON-NLS-1$
-
-	private Bundle mainBundle;
-
 	/*
 	 * @see
 	 * org.eclipse.datatools.connectivity.oda.IConnection#open(java.util.Properties
 	 * )
 	 */
 	public void open(Properties connProperties) throws OdaException {
-		try {
-			Bundle bundle = Platform.getBundle(MAIN_SYMBOLIC_NAME);
+		String uri = connProperties.getProperty("serverURI");
 
-			if (bundle != null) {
-				// When running the driver from inside the designer we expect
-				// that the main bundle is not running yet and only in that case
-				// we
-				// publish a service that can be accessed from the main bundle
-				// then.
-				if (bundle.getState() == Bundle.INSTALLED
-						|| bundle.getState() == Bundle.RESOLVED) {
-					String uri = connProperties.getProperty("serverURI");
-
-					Activator.getDefault().getOdaDriver().setServerURI(uri);
-					
-					bundle.start();
-					
-					// Allow shutting down the main application.
-					mainBundle = bundle;
-				} else if (bundle.getState() == Bundle.ACTIVE)
-				{
-					// Main bundle runs already. We assume that it is the application that uses
-					// the ODA driver to generate reports. To prevent accidentally 
-				}
-
-			}
-		} catch (BundleException e) {
-			throw (OdaException) new OdaException("Could not start")
-					.initCause(e);
-		}
+		Activator.getDefault().getMain().updateServerURI(uri);
 
 		/*
 		 * URL url; try { // TODO: When nicht angegeben, dann nimm
@@ -106,15 +75,6 @@ public class Connection implements IConnection {
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#close()
 	 */
 	public void close() throws OdaException {
-		if (mainBundle != null) {
-			try {
-				mainBundle.stop();
-			} catch (BundleException e) {
-				throw new OdaException(
-						"Problem stopping main application bundle: " + e);
-			}
-		}
-		mainBundle = null;
 		huiTypeFactory = null;
 		isOpen = false;
 	}

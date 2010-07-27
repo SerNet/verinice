@@ -39,7 +39,7 @@ public class ResultSetMetaData implements IResultSetMetaData {
 		this.columns = columns;
 
 		Class<?> rowClass = result.getClass();
-		if (rowClass.isArray()) {
+		if (rowClass.isArray() && rowClass.getComponentType() != Byte.TYPE) {
 			Object firstElement = Array.get(result, 0);
 			if (firstElement.getClass().isArray()) {
 				// 2-dimensional array (at least)
@@ -116,7 +116,7 @@ public class ResultSetMetaData implements IResultSetMetaData {
 		}
 	}
 
-	public int getRowCount() {
+	int getRowCount() {
 		return rowCount;
 	}
 

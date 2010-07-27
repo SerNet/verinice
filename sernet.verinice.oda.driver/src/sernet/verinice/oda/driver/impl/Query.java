@@ -18,6 +18,9 @@
 
 package sernet.verinice.oda.driver.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
@@ -25,8 +28,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.eclipse.datatools.connectivity.oda.IParameterMetaData;
 import org.eclipse.datatools.connectivity.oda.IQuery;
@@ -54,35 +58,56 @@ public class Query implements IQuery
 	private int maxRows;
     private String queryText;
     
-    private Interpreter interpreter;
+    private Interpreter setupInterpreter, interpreter;
     
     private HashMap<String, String> properties = new HashMap<String, String>();
     
-    private HashSet<String> inParameters = new HashSet<String>();
+    private HashMap<String, Object> inParameterValues = new HashMap<String, Object>();
     
     private Object result;
     
-    private String[] columns;
+    private String[] columns, inParameters;
+    
+    public static final String PROP_SETUP_QUERY_TEXT = "setupQueryText";
     
     Query(HUITypeFactory huiTypeFactory)
     {
     	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
-    	
+
     	try {
+    		setupInterpreter = new Interpreter();
+    		setupInterpreter.setClassLoader(Query.class.getClassLoader());
+    		
+    		setupInterpreter.set("__columns", null);
+    		setupInterpreter.eval("columns(c) { __columns = c; }");
+			
+    		setupInterpreter.set("__inParameters", null);
+    		setupInterpreter.eval("inParameters(ip) { __inParameters = ip; }");
+    		setupInterpreter.set("htf", huiTypeFactory);
+			
     		interpreter = new Interpreter();
+    		interpreter.setClassLoader(Query.class.getClassLoader());
+    		
+			interpreter.set("_inpv", inParameterValues);
+			interpreter.eval(
+					"inpv(s) {" +
+					" v = _inpv.get(s);" +
+					" return (v == null) ? \"input parameter value \" + s + \" does not exist.\" : v;" +
+					"}");
+
 			interpreter.set("_vars", odaDriver.getScriptVariables());
 			interpreter.eval(
 					"vars(s) {" +
 					" v = _vars.get(s);" +
 					" return (v == null) ? s + \" does not exist.\" : v;" +
 					"}");
+			
     		interpreter.set("helper", new Helper());
     		interpreter.eval("gpt(entityType) { return helper.getAllPropertyTypes(entityType); }");
+    		
     		interpreter.set("htf", huiTypeFactory);
+    		
 			interpreter.set("properties", properties);
-			interpreter.set("__columns", null);
-			interpreter.eval("columns(c) { __columns = c; }");
-
 		} catch (EvalError e) {
 			new RuntimeException("Unable to set BSH variable 'properties'.", e);
 		}
@@ -190,6 +215,26 @@ public class Query implements IQuery
         	
         	return result;
         }
+
+        /**
+         * Takes a {@link BufferedImage} instance and turns it into a byte array which can be used
+         * by BIRT's dynamic images.
+         * 
+         * <p>Note: If a dataset should contain only a single image it *MUST* be wrapped
+         * using {@link #wrapeSingleImageResult}.</p>
+         * 
+         * @param im
+         * @return
+         * @throws IOException
+         */
+        public byte[] createImageResult(BufferedImage im) throws IOException
+        {
+        	ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        	ImageIO.write(im, "png", bos);
+
+        	return bos.toByteArray();
+        }
     	
     }
 	
@@ -214,23 +259,44 @@ public class Query implements IQuery
 	 */
 	public IResultSetMetaData getMetaData() throws OdaException
 	{
-		return new ResultSetMetaData(createResult(), columns);
+		return new ResultSetMetaData(runQuery(), columns);
 	}
 	
-	private Object createResult() throws OdaException
+	private void runSetupQuery() throws OdaException
 	{
-		if (result == null)
-		{
-			try {
-				result = interpreter.eval(queryText);
-				Object cols = interpreter.get("__columns");
-				if (cols instanceof String[])
-					columns = (String[]) cols;
-				else
-					columns = null;
-			} catch (EvalError e) {
-				throw (OdaException) new OdaException("Unable to execute query.").initCause(e);
-			}
+		try {
+			String setupQueryText = properties.get(PROP_SETUP_QUERY_TEXT);
+			if (setupQueryText == null)
+				return;
+			
+			setupInterpreter.eval(setupQueryText);
+			Object cols = setupInterpreter.get("__columns");
+			if (cols instanceof String[])
+				columns = (String[]) cols;
+			else
+				columns = null;
+			
+			Object inp = setupInterpreter.get("__inParameters");
+			if (inp instanceof String[])
+				inParameters = (String[]) inp;
+			else
+				inParameters = null;
+		} catch (EvalError e) {
+			e.printStackTrace();
+//			return "Unable to execute setup query: " + e.getErrorText();
+		}
+	}
+	
+	private Object runQuery() throws OdaException
+	{
+		runSetupQuery();
+		
+		try {
+			result = interpreter.eval(queryText);
+		} catch (EvalError e) {
+			e.printStackTrace();
+			result = new String("Unable to execute query: " + e.getErrorText());
+//			throw (OdaException) new OdaException("Unable to execute query.").initCause(e);
 		}
 		
 		return result;
@@ -241,7 +307,7 @@ public class Query implements IQuery
 	 */
 	public IResultSet executeQuery() throws OdaException
 	{
-		ResultSet resultSet = new ResultSet(createResult(), columns);
+		ResultSet resultSet = new ResultSet(runQuery(), columns);
 		resultSet.setMaxRows( getMaxRows() );
 		return resultSet;
 	}
@@ -269,259 +335,143 @@ public class Query implements IQuery
 	{
 		return maxRows;
 	}
+	
+	private void setValue(int parameterId, Object value) throws OdaException
+	{
+    	runSetupQuery();
+    	if (inParameters != null
+    			&& inParameters.length >= parameterId)
+    	{
+    		inParameterValues.put(inParameters[parameterId-1], value);
+    	}
+	}
 
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#clearInParameters()
 	 */
 	public void clearInParameters() throws OdaException
 	{
-		for (String ip : inParameters)
-		{
-			try {
-				interpreter.unset(ip);
-			} catch (EvalError e) {
-				throw new RuntimeException("Unable to unset BSH variable '" + ip + "'.", e);
-			}
-		}
+		inParameterValues.clear();
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setInt(java.lang.String, int)
-	 */
 	public void setInt( String parameterName, int value ) throws OdaException
 	{
-		inParameters.add(parameterName);
-		try {
-			interpreter.set(parameterName, value);
-		} catch (EvalError e) {
-			throw new RuntimeException("Unable to set BSH variable '" + parameterName + "'.", e);
-		}
+		inParameterValues.put(parameterName, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setInt(int, int)
-	 */
 	public void setInt( int parameterId, int value ) throws OdaException
 	{
+		setValue(parameterId, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setDouble(java.lang.String, double)
-	 */
 	public void setDouble( String parameterName, double value ) throws OdaException
 	{
-		inParameters.add(parameterName);
-		try {
-			interpreter.set(parameterName, value);
-		} catch (EvalError e) {
-			throw new RuntimeException("Unable to set BSH variable '" + parameterName + "'.", e);
-		}
+		inParameterValues.put(parameterName, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setDouble(int, double)
-	 */
 	public void setDouble( int parameterId, double value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
-		// only applies to input parameter
+		setValue(parameterId, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setBigDecimal(java.lang.String, java.math.BigDecimal)
-	 */
 	public void setBigDecimal( String parameterName, BigDecimal value ) throws OdaException
 	{
-		inParameters.add(parameterName);
-		try {
-			interpreter.set(parameterName, value);
-		} catch (EvalError e) {
-			throw new RuntimeException("Unable to set BSH variable '" + parameterName + "'.", e);
-		}
+		inParameterValues.put(parameterName, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setBigDecimal(int, java.math.BigDecimal)
-	 */
 	public void setBigDecimal( int parameterId, BigDecimal value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
-		// only applies to input parameter
+		setValue(parameterId, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setString(java.lang.String, java.lang.String)
-	 */
 	public void setString( String parameterName, String value ) throws OdaException
 	{
-		inParameters.add(parameterName);
-		try {
-			interpreter.set(parameterName, value);
-		} catch (EvalError e) {
-			throw new RuntimeException("Unable to set BSH variable '" + parameterName + "'.", e);
-		}
+		inParameterValues.put(parameterName, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setString(int, java.lang.String)
-	 */
 	public void setString( int parameterId, String value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
-		// only applies to input parameter
+		setValue(parameterId, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setDate(java.lang.String, java.sql.Date)
-	 */
 	public void setDate( String parameterName, Date value ) throws OdaException
 	{
-		inParameters.add(parameterName);
-		try {
-			interpreter.set(parameterName, value);
-		} catch (EvalError e) {
-			throw new RuntimeException("Unable to set BSH variable '" + parameterName + "'.", e);
-		}
+		inParameterValues.put(parameterName, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setDate(int, java.sql.Date)
-	 */
 	public void setDate( int parameterId, Date value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
-		// only applies to input parameter
+		setValue(parameterId, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setTime(java.lang.String, java.sql.Time)
-	 */
 	public void setTime( String parameterName, Time value ) throws OdaException
 	{
-		inParameters.add(parameterName);
-		try {
-			interpreter.set(parameterName, value);
-		} catch (EvalError e) {
-			throw new RuntimeException("Unable to set BSH variable '" + parameterName + "'.", e);
-		}
+		inParameterValues.put(parameterName, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setTime(int, java.sql.Time)
-	 */
 	public void setTime( int parameterId, Time value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
-		// only applies to input parameter
+		setValue(parameterId, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setTimestamp(java.lang.String, java.sql.Timestamp)
-	 */
 	public void setTimestamp( String parameterName, Timestamp value ) throws OdaException
 	{
-		inParameters.add(parameterName);
-		try {
-			interpreter.set(parameterName, value);
-		} catch (EvalError e) {
-			throw new RuntimeException("Unable to set BSH variable '" + parameterName + "'.", e);
-		}
+		inParameterValues.put(parameterName, value);
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setTimestamp(int, java.sql.Timestamp)
-	 */
 	public void setTimestamp( int parameterId, Timestamp value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
-		// only applies to input parameter
+		setValue(parameterId, value);
 	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setBoolean(java.lang.String, boolean)
-     */
     public void setBoolean( String parameterName, boolean value )
             throws OdaException
     {
-		inParameters.add(parameterName);
-		try {
-			interpreter.set(parameterName, value);
-		} catch (EvalError e) {
-			throw new RuntimeException("Unable to set BSH variable '" + parameterName + "'.", e);
-		}
+		inParameterValues.put(parameterName, value);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setBoolean(int, boolean)
-     */
     public void setBoolean( int parameterId, boolean value )
             throws OdaException
     {
-        // TODO Auto-generated method stub       
-        // only applies to input parameter
+		setValue(parameterId, value);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setObject(java.lang.String, java.lang.Object)
-     */
     public void setObject( String parameterName, Object value )
             throws OdaException
     {
-		inParameters.add(parameterName);
-		try {
-			interpreter.set(parameterName, value);
-		} catch (EvalError e) {
-			throw new RuntimeException("Unable to set BSH variable '" + parameterName + "'.", e);
-		}
+		inParameterValues.put(parameterName, value);
     }
     
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setObject(int, java.lang.Object)
-     */
     public void setObject( int parameterId, Object value ) throws OdaException
     {
-        // TODO Auto-generated method stub
-        // only applies to input parameter
+		setValue(parameterId, value);
     }
     
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setNull(java.lang.String)
-     */
     public void setNull( String parameterName ) throws OdaException
     {
-		inParameters.add(parameterName);
-		try {
-			interpreter.set(parameterName, null);
-		} catch (EvalError e) {
-			throw new RuntimeException("Unable to set BSH variable '" + parameterName + "'.", e);
-		}
+		inParameterValues.put(parameterName, null);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setNull(int)
-     */
     public void setNull( int parameterId ) throws OdaException
     {
-        // TODO Auto-generated method stub
-        // only applies to input parameter
+		setValue(parameterId, null);
     }
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#findInParameter(java.lang.String)
-	 */
 	public int findInParameter( String parameterName ) throws OdaException
 	{
-        // TODO Auto-generated method stub
-		// only applies to named input parameter
-		return 0;
+		for (int i = 0; i < inParameters.length; i++)
+		{
+			if (inParameters[i].equals(parameterName))
+				return i;
+		}
+		
+		return -1;
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#getParameterMetaData()
-	 */
 	public IParameterMetaData getParameterMetaData() throws OdaException
 	{
-		return new ParameterMetaData();
+		runSetupQuery();
+		return new ParameterMetaData(inParameters);
 	}
 
 	/*
