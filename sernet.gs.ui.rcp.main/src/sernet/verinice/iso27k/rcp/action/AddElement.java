@@ -36,6 +36,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.DocumentGroup;

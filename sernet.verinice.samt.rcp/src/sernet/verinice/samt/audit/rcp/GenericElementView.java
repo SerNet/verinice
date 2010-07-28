@@ -19,22 +19,36 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.widgets.Composite;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.service.commands.LoadElementByClass;
 import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Evidence;
+import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.Finding;
+import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
@@ -43,31 +57,21 @@ import sernet.verinice.model.iso27k.Organization;
  */
 public class GenericElementView extends ElementView {
 
+    private static final Logger LOG = Logger.getLogger(GenericElementView.class);
+    
     static Map<String, ICommandFactory> commandMap;
 
     static {
         commandMap = new Hashtable<String, ICommandFactory>();
-        commandMap.put(Asset.TYPE_ID, new AssetCommandFactory());
-        commandMap.put(Audit.TYPE_ID, new AuditCommandFactory());
-        commandMap.put(Finding.TYPE_ID, new FindingCommandFactory());
-        commandMap.put(Evidence.TYPE_ID, new EvidenceCommandFactory());
-        commandMap.put(Control.TYPE_ID, new ControlCommandFactory());
+        commandMap.put(Asset.TYPE_ID, new ElementViewCommandFactory(Asset.TYPE_ID,AssetGroup.TYPE_ID));
+        commandMap.put(Audit.TYPE_ID, new ElementViewCommandFactory(Audit.TYPE_ID,AuditGroup.TYPE_ID));
+        commandMap.put(Finding.TYPE_ID, new ElementViewCommandFactory(Finding.TYPE_ID,FindingGroup.TYPE_ID));
+        commandMap.put(Evidence.TYPE_ID, new ElementViewCommandFactory(Evidence.TYPE_ID,EvidenceGroup.TYPE_ID));
+        commandMap.put(Control.TYPE_ID, new ElementViewCommandFactory(Control.TYPE_ID,ControlGroup.TYPE_ID));
         commandMap.put(Organization.TYPE_ID, new OrganizationCommandFactory());
     }
     
     private ICommandFactory commandFactory;
-    
-    public static GenericElementView getAssetInstance() {
-        return new GenericElementView(new AssetCommandFactory());
-    }
-    
-    public static GenericElementView getAuditInstance() {
-        return new GenericElementView(new AuditCommandFactory());
-    }
-    
-    public static GenericElementView getControlInstance() {
-        return new GenericElementView(new ControlCommandFactory());
-    }
     
     public GenericElementView(ICommandFactory commandFactory) {
         super();
@@ -80,11 +84,7 @@ public class GenericElementView extends ElementView {
     @Override
     protected List<? extends CnATreeElement> getElementList() throws CommandException {
         List<AssetGroup> elementList = Collections.emptyList();
-        if(commandFactory!=null) {
-            LoadElementByClass command = commandFactory.getElementCommand();
-            command = getCommandService().executeCommand(command);
-            elementList = command.getElementList();
-        }
+        checkSelectedGroup(elementList);
         return elementList;
     }
 
@@ -92,14 +92,35 @@ public class GenericElementView extends ElementView {
      * @see sernet.verinice.samt.audit.rcp.ElementView#getLinkedElements(int)
      */
     @Override
-    protected List<CnATreeElement> getLinkedElements(int selectedId) throws CommandException {
+    protected List<? extends CnATreeElement> getLinkedElements(int selectedId) throws CommandException {
         List<CnATreeElement> elementList = Collections.emptyList();
         if(commandFactory!=null) {
             LoadLinkedElements command = commandFactory.getLinkedElementCommand(selectedId);
             command = getCommandService().executeCommand(command);
             elementList = command.getElementList();
         }
+        checkSelectedGroup(elementList);
         return elementList;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.samt.audit.rcp.ElementView#initView(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected void initView(Composite parent) {
+        super.initView(parent);
+        Filter filter = new Filter(commandFactory.getElementTypeId());
+        viewer.addFilter(filter);
+        contentProvider.addFilter(filter);
+    }
+    
+    private void checkSelectedGroup(List elementList) {
+        if(selectedGroup!=null && (elementList==null || !elementList.contains(getSelectedGroup()))) {    
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Removing selected group, Type: " + getSelectedGroup().getObjectType() + ", name: " + getSelectedGroup().getTitle());
+            }
+            setSelectedGroup(null);
+        }
     }
 
     protected ICommandFactory getCommandFactory() {
@@ -121,5 +142,50 @@ public class GenericElementView extends ElementView {
             setViewTitle(objectTypeId);
         }   
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.samt.audit.rcp.ElementView#checkRelations(sernet.verinice.model.common.CnATreeElement)
+     */
+    protected boolean checkRelations(CnATreeElement treeElement) {
+        boolean result = false; 
+        EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(treeElement.getEntity().getEntityType());
+        Set<HuiRelation> relationSet = entityType.getPossibleRelations();
+        for (HuiRelation huiRelation : relationSet) {
+            if(commandFactory.getElementTypeId().equals(huiRelation.getTo())) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
 
+}
+
+class Filter extends ViewerFilter {
+
+    String typeId;
+    
+    /**
+     * @param typeId
+     */
+    public Filter(String typeId) {
+        this.typeId = typeId;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
+    @Override
+    public boolean select(Viewer viewer, Object parentElement, Object element) {
+        boolean result = true;
+        if(element instanceof CnATreeElement) {
+            CnATreeElement treeElement = (CnATreeElement) element;
+            if(!treeElement.getTypeId().equals(typeId) && treeElement instanceof IISO27kGroup) {
+                IISO27kGroup group = (IISO27kGroup) element;
+                result = Arrays.binarySearch(group.getChildTypes(), this.typeId)>-1;
+            }
+        }
+        return result;
+    }
+    
 }

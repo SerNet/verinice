@@ -27,24 +27,24 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
 @SuppressWarnings("serial")
-public class LoadElementByClass<T extends CnATreeElement> extends GenericCommand implements INoAccessControl {
+public class LoadElementByClass extends GenericCommand implements INoAccessControl {
 
     
-    private Class clazz;
-	private List<T> elementList;
+    private String typeId;
+	private List<? extends CnATreeElement> elementList;
 
-	public LoadElementByClass(T element) {
-	    this.clazz = element.getClass();
+	public LoadElementByClass(String typeId) {
+	    this.typeId = typeId;
 	}
 	
 	public void execute() {
 		RetrieveInfo ri = new RetrieveInfo();
 		//ri.setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
-		elementList = getDaoFactory().getDAO(clazz).findAll(ri);		
+		elementList = getDaoFactory().getDAO(typeId).findAll(ri);		
 	}
 
 
-	public List<T> getElementList() {
+	public List<? extends CnATreeElement> getElementList() {
 		return elementList;
 	}
 	

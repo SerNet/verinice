@@ -29,5 +29,7 @@ public interface IISO27kGroup extends IISO27kElement {
 
 	boolean canContain(Object obj);
 	
+	public String[] getChildTypes();
+	
 	public void addChild(CnATreeElement child);
 }

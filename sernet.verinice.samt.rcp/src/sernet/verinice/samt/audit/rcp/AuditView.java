@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
+
 /**
  * @author Daniel Murygin <dm@sernet.de>
  *
@@ -28,7 +31,7 @@ public class AuditView extends GenericElementView {
     public static final String ID = "sernet.verinice.samt.audit.rcp.AuditView"; //$NON-NLS-1$
     
     public AuditView() {
-        super(new AuditCommandFactory());
+        super(new ElementViewCommandFactory(Audit.TYPE_ID,AuditGroup.TYPE_ID));
     }
     
 }

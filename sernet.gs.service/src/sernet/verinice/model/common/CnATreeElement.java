@@ -18,6 +18,7 @@
 package sernet.verinice.model.common;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -37,6 +38,7 @@ import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.Schutzbedarf;
+import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
  * This is the base class for all model classes of this application.
@@ -54,6 +56,15 @@ import sernet.verinice.model.bsi.Schutzbedarf;
 @SuppressWarnings("serial")
 public abstract class CnATreeElement implements Serializable, IBSIModelListener, ITypedElement {
 
+    private transient Logger log = Logger.getLogger(CnATreeElement.class);
+
+    private Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(CnATreeElement.class);
+        }
+        return log;
+    }
+    
 	public static final String PERSON = "person";
 	public static final String BAUSTEIN_UMSETZUNG = "baustein-umsetzung";
 	public static final String MASSNAHMEN_UMSETZUNG = "massnahmen-umsetzung";
@@ -135,7 +146,13 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		if (!(obj instanceof CnATreeElement))
 			return false;
 		CnATreeElement that = (CnATreeElement) obj;
-		return (this.uuid.equals(that.getUuid()));
+		boolean result = false;
+		try {
+		    result = this.uuid.equals(that.uuid);
+        } catch (Exception e) {
+            getLog().error("Error in equals, this title: " + this.getTitle(), e);
+        }
+		return result;
 	}
 	
 	@Override
@@ -453,6 +470,29 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public void setLinks(LinkKategorie links) {
 		this.links = links;
 	}
+	
+	/**
+	 * Returns a child-group of this this element
+	 * which can contain elements of type childTypeId
+	 * 
+	 * @param childTypeId a type id
+	 * @return a child-group of this this element
+	 */
+	public CnATreeElement getGroup(String childTypeId) {
+        CnATreeElement group = null;
+        for (CnATreeElement cnATreeElement : getChildren()) {
+            if(cnATreeElement!=null && cnATreeElement instanceof IISO27kGroup) {
+                // true if: group can contain childTypeId
+                // or group.typeId == childTypeId
+                if(Arrays.binarySearch(((IISO27kGroup)cnATreeElement).getChildTypes(), childTypeId)>-1
+                   || ((IISO27kGroup)cnATreeElement).getTypeId().equals(childTypeId)) {
+                    group = (CnATreeElement) cnATreeElement;
+                    break;
+                }
+            }
+        }
+        return group;
+    }
 
 	public void fireVertraulichkeitChanged(CascadingTransaction ta) {
 		if (isSchutzbedarfProvider()) {
@@ -490,9 +530,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 			this.setChildrenLoaded(true);
 			
 			return;
-		}
-		
-		else {
+		} else {
 //			Logger.getLogger(this.getClass()).debug("Replacing child " + this + "in parent " + getParent());
 			getParent().removeChild(this);
 //			CnAElementFactory.getLoadedModel().childRemoved(parent, this);

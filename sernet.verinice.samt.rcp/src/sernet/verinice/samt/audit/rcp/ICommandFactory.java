@@ -31,6 +31,10 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public interface ICommandFactory {
 
+    public String getElementTypeId();
+    
+    public String getGroupTypeId();
+    
     /**
      * @return a command which loads {@link CnATreeElement}s
      * for a given class

@@ -39,18 +39,18 @@ public class LoadLinkedElements extends GenericCommand implements INoAccessContr
         return log;
     }
     
-    private List<Class> classList;
+    private List<String> typeIdList;
 	private List<CnATreeElement> elementList;
 	private int selectedId;
 
-	public LoadLinkedElements(List<Class> classList,int selectedId) {
-	    this.classList = classList;
+	public LoadLinkedElements(List<String> typeIdList,int selectedId) {
+	    this.typeIdList = typeIdList;
 	    this.selectedId = selectedId;
 	}
 	
 	public void execute() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select element from ").append(CnATreeElement.class.getName()).append(" as element ");
+		sb.append("select distinct element from ").append(CnATreeElement.class.getName()).append(" as element ");
 		sb.append("left outer join element.linksDown as linksDown ");
 		sb.append("left outer join element.linksUp as linksUp ");
 		sb.append("where linksDown.id.dependencyId = ? ");
@@ -63,7 +63,7 @@ public class LoadLinkedElements extends GenericCommand implements INoAccessContr
 		List<CnATreeElement> resultList = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(hql,new Object[]{selectedId,selectedId});
 		for (Iterator<CnATreeElement> iterator = resultList.iterator(); iterator.hasNext();) {
 		    CnATreeElement element =  iterator.next();
-		    if(classList.contains(element.getClass())) {
+		    if(typeIdList.contains(element.getTypeId())) {
 		        elementList.add(element);
 		    }
             

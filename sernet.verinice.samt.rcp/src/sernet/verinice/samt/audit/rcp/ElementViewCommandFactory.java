@@ -23,29 +23,45 @@ import java.util.Arrays;
 
 import sernet.verinice.iso27k.service.commands.LoadElementByClass;
 import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
-import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.AuditGroup;
 
 /**
- * @author Daniel Murygin <dm@sernet.de>
- *
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class AuditCommandFactory implements ICommandFactory {
+public class ElementViewCommandFactory implements ICommandFactory {
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.samt.audit.rcp.CommandFactory#getElementCommand()
-     */
-    @Override
-    public LoadElementByClass getElementCommand() {
-        return new LoadElementByClass<AuditGroup>(new AuditGroup());
+    private String elementTypeId;
+    
+    private String groupTypeId;
+    
+    public ElementViewCommandFactory(String elementTypeId, String groupTypeId) {
+        super();
+        this.elementTypeId = elementTypeId;
+        this.groupTypeId = groupTypeId;
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.samt.audit.rcp.CommandFactory#getLinkedElementCommand(int)
+     * @see sernet.verinice.samt.audit.rcp.ICommandFactory#getElementCommand()
+     */
+    @Override
+    public LoadElementByClass getElementCommand() {
+        return new LoadElementByClass(groupTypeId);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.samt.audit.rcp.ICommandFactory#getLinkedElementCommand(int)
      */
     @Override
     public LoadLinkedElements getLinkedElementCommand(int selectedId) {
-        return new LoadLinkedElements(Arrays.asList(new Class[]{AuditGroup.class,Audit.class}),selectedId);
+        return new LoadLinkedElements(Arrays.asList(new String[]{elementTypeId,groupTypeId}),selectedId);
+    }
+
+    public String getElementTypeId() {
+        return elementTypeId;
+    }
+
+
+    public String getGroupTypeId() {
+        return groupTypeId;
     }
 
 }

@@ -43,7 +43,7 @@
             allowMultiple="true"
             category="sernet.verinice.samt.rcp"
             class="sernet.verinice.samt.audit.rcp.AssetView"
-            icon="icons/audit.png"
+            icon="icons/asset.png"
             id="sernet.verinice.samt.audit.rcp.AssetView"
             name="Asset-View">
       </view>
@@ -51,7 +51,7 @@
             allowMultiple="true"
             category="sernet.verinice.samt.rcp"
             class="sernet.verinice.samt.audit.rcp.ControlView"
-            icon="icons/audit.png"
+            icon="icons/control.png"
             id="sernet.verinice.samt.audit.rcp.ControlView"
             name="Control-View">
       </view>
@@ -102,18 +102,6 @@
          </action>
       </viewContribution>
       <viewContribution
-            id="sernet.verinice.samt.audit.rcp.AssetView.switch"
-            targetID="sernet.verinice.samt.audit.rcp.AssetView">
-         <action
-               class="sernet.verinice.samt.audit.rcp.SwitchElementMenuCreater"
-               icon="icons/filter.gif"
-               id="sernet.verinice.samt.audit.rcp.SwitchElement"
-               label="Select element"
-               style="pulldown"
-               toolbarPath="additions">
-         </action>
-      </viewContribution>
-      <viewContribution
             id="sernet.verinice.samt.audit.rcp.AuditView.switch"
             targetID="sernet.verinice.samt.audit.rcp.AuditView">
          <action
@@ -126,6 +114,42 @@
          </action>
       </viewContribution>
       <viewContribution
+            id="sernet.verinice.samt.audit.rcp.AuditView.add"
+            targetID="sernet.verinice.samt.audit.rcp.AuditView">
+         <action
+               class="sernet.verinice.samt.audit.rcp.AddMenuCreater"
+               icon="icons/new.png"
+               id="sernet.verinice.samt.audit.rcp.AddAudit"
+               label="Add element"
+               style="pulldown"
+               toolbarPath="additions">
+         </action>
+      </viewContribution>
+      <viewContribution
+            id="sernet.verinice.samt.audit.rcp.AssetView.switch"
+            targetID="sernet.verinice.samt.audit.rcp.AssetView">
+         <action
+               class="sernet.verinice.samt.audit.rcp.SwitchElementMenuCreater"
+               icon="icons/filter.gif"
+               id="sernet.verinice.samt.audit.rcp.SwitchElement"
+               label="Select element"
+               style="pulldown"
+               toolbarPath="additions">
+         </action>
+      </viewContribution>
+      <viewContribution
+            id="sernet.verinice.samt.audit.rcp.AssetView.add"
+            targetID="sernet.verinice.samt.audit.rcp.AssetView">
+         <action
+               class="sernet.verinice.samt.audit.rcp.AddMenuCreater"
+               icon="icons/new.png"
+               id="sernet.verinice.samt.audit.rcp.AddAsset"
+               label="Add element"
+               style="pulldown"
+               toolbarPath="additions">
+         </action>
+      </viewContribution>
+      <viewContribution
             id="sernet.verinice.samt.audit.rcp.ControlView.switch"
             targetID="sernet.verinice.samt.audit.rcp.ControlView">
          <action
@@ -133,6 +157,18 @@
                icon="icons/filter.gif"
                id="sernet.verinice.samt.audit.rcp.SwitchElement"
                label="Select element"
+               style="pulldown"
+               toolbarPath="additions">
+         </action>
+      </viewContribution>
+      <viewContribution
+            id="sernet.verinice.samt.audit.rcp.AssetView.add"
+            targetID="sernet.verinice.samt.audit.rcp.ControlView">
+         <action
+               class="sernet.verinice.samt.audit.rcp.AddMenuCreater"
+               icon="icons/new.png"
+               id="sernet.verinice.samt.audit.rcp.AddControl"
+               label="Add element"
                style="pulldown"
                toolbarPath="additions">
          </action>

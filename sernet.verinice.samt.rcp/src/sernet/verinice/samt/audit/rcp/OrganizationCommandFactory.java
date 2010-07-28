@@ -36,7 +36,7 @@ public class OrganizationCommandFactory implements ICommandFactory {
      */
     @Override
     public LoadElementByClass getElementCommand() {
-        return new LoadElementByClass<Organization>(new Organization());
+        return new LoadElementByClass(Organization.TYPE_ID);
     }
 
     /* (non-Javadoc)
@@ -44,7 +44,24 @@ public class OrganizationCommandFactory implements ICommandFactory {
      */
     @Override
     public LoadLinkedElements getLinkedElementCommand(int selectedId) {
-        return new LoadLinkedElements(Arrays.asList(new Class[]{Organization.class}),selectedId);     
+        return new LoadLinkedElements(Arrays.asList(new String[]{Organization.TYPE_ID}),selectedId);     
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.samt.audit.rcp.ICommandFactory#getElementTypeId()
+     */
+    @Override
+    public String getElementTypeId() {
+        return Organization.TYPE_ID;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.samt.audit.rcp.ICommandFactory#getGroupTypeId()
+     */
+    @Override
+    public String getGroupTypeId() {
+        // there is no OrganizationGroup
+        return null;
     }
 
 }

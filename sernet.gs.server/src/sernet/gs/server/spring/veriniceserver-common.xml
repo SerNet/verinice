@@ -110,6 +110,7 @@ This variant:
 		<property name="propertyDao" ref="propertyDao" />
 		<property name="entityDao" ref="entityDao" />
 		<property name="cnaLinkDao" ref="cnaLinkDao" />
+        <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
 		<property name="finishedRiskAnalysisListsDAO" ref="finishedRiskAnalysisListsDAO" />
 		<property name="gefaehrdungDao" ref="gefaehrdungDao" />
 		<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao" />

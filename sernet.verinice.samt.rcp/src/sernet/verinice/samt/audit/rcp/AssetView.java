@@ -29,6 +29,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.AssetGroup;
+
 /**
  * @author Daniel Murygin <dm@sernet.de>
  *
@@ -38,12 +41,7 @@ public class AssetView extends GenericElementView {
     public static final String ID = "sernet.verinice.samt.audit.rcp.AssetView"; //$NON-NLS-1$
     
     public AssetView() {
-        super(new AssetCommandFactory());
-    }
-    
-    
-    protected void fillToolBar() {
-        
+        super(new ElementViewCommandFactory(Asset.TYPE_ID,AssetGroup.TYPE_ID));
     }
     
 }

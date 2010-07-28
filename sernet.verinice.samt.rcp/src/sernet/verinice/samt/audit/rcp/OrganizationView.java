@@ -22,6 +22,7 @@ package sernet.verinice.samt.audit.rcp;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.service.commands.LoadElementByClass;
 import sernet.verinice.model.common.CnATreeElement;
@@ -34,19 +35,41 @@ import sernet.verinice.model.iso27k.Organization;
  */
 public class OrganizationView extends GenericElementView {
 
+    private static final Logger LOG = Logger.getLogger(OrganizationView.class);
+    
     public static final String ID = "sernet.verinice.samt.audit.rcp.OrganizationView"; //$NON-NLS-1$
     
     
     public OrganizationView() {
         super(new OrganizationCommandFactory());
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.samt.audit.rcp.ElementView#getElementList()
+     */
+    @Override
+    protected List<? extends CnATreeElement> getElementList() throws CommandException {
+        List<? extends CnATreeElement> elementList = Collections.emptyList();
+        if(getCommandFactory()!=null) {
+            LoadElementByClass command = getCommandFactory().getElementCommand();
+            command = getCommandService().executeCommand(command);
+            elementList = command.getElementList();
+        }
+        if(selectedGroup!=null && (elementList==null || !elementList.contains(getSelectedGroup()))) {    
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Removing selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle());
+            }
+            setSelectedGroup(null);
+        }
+        return elementList;
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.samt.audit.rcp.ElementView#getLinkedElements(int)
      */
     @Override
-    protected List<CnATreeElement> getLinkedElements(int selectedId) throws CommandException {
-        LoadElementByClass<CnATreeElement> command = new LoadElementByClass<CnATreeElement>(new Organization());
+    protected List<? extends CnATreeElement> getLinkedElements(int selectedId) throws CommandException {
+        LoadElementByClass command = new LoadElementByClass(Organization.TYPE_ID);
         command = getCommandService().executeCommand(command);
         return command.getElementList();
     }

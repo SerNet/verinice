@@ -26,10 +26,15 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -42,6 +47,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -54,8 +60,11 @@ import sernet.verinice.iso27k.rcp.ISMViewLabelProvider;
 import sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 
@@ -78,16 +87,15 @@ public abstract class ElementView extends ViewPart {
         if(DUMMY==null) {
             DUMMY = new ISO27KModel();
             DUMMY.setEntity(new Entity(ISO27KModel.TYPE_ID));
-            DUMMY.setTitel("empty");
         }
         return DUMMY;
     }
     
-    private TreeViewer viewer;
+    protected TreeViewer viewer;
     
     private TreeViewerCache cache = new TreeViewerCache();
     
-    private ISMViewContentProvider contentProvider;
+    protected ISMViewContentProvider contentProvider;
     
     private ISO27KModelViewUpdate modelUpdateListener;
     
@@ -95,12 +103,22 @@ public abstract class ElementView extends ViewPart {
     
     private ISelectionListener selectionListener;
     
+    private Action doubleClickAction;
+    
     private ICommandService commandService;
 
     protected Integer selectedId;
     
     protected Object selection;
     
+    protected CnATreeElement selectedGroup;
+    
+    private CnATreeElement selectedElement;
+    
+    private Audit selectedAudit;
+    
+    private Organization selectedOrganization;
+
     /**
      * @return {@link CnATreeElement}s to show in this view
      * @throws CommandException
@@ -115,7 +133,7 @@ public abstract class ElementView extends ViewPart {
      * @return Elements linked to primary key selectedId
      * @throws CommandException
      */
-    abstract protected List<CnATreeElement> getLinkedElements(int selectedId) throws CommandException;
+    abstract protected List<? extends CnATreeElement> getLinkedElements(int selectedId) throws CommandException;
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -149,6 +167,7 @@ public abstract class ElementView extends ViewPart {
         
         hookContextMenu();
         makeActions();
+        addActions();
         fillToolBar();
         hookDndListeners();
     }
@@ -183,7 +202,14 @@ public abstract class ElementView extends ViewPart {
                     LOG.debug("Creating modelUpdateListener for ISMView."); 
                 }
                 Activator.inheritVeriniceContextState();
-                modelUpdateListener = new ISO27KModelViewUpdate(viewer,cache);
+                modelUpdateListener = new ISO27KModelViewUpdate(viewer,cache) {
+                    /* (non-Javadoc)
+                     * @see sernet.verinice.iso27k.model.IISO27KModelListener#linkAdded(sernet.gs.ui.rcp.main.common.model.CnALink)
+                     */
+                    public void linkAdded(CnALink link) {
+                        reload();
+                    }
+                };
                 CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
                 final List<? extends CnATreeElement> elementList = getElementList();
                 Display.getDefault().syncExec(new Runnable(){
@@ -230,16 +256,35 @@ public abstract class ElementView extends ViewPart {
      * @param selection
      */
     protected void pageSelectionChanged(IWorkbenchPart sourcePart, ISelection selection) {
-        if(!this.equals(sourcePart)) {
+        if(selection instanceof IStructuredSelection) {
             Object element = ((IStructuredSelection) selection).getFirstElement();
-            loadElements(element);
-        }    
+            if(element instanceof CnATreeElement) {
+                boolean sourceIsThisView = this.equals(sourcePart);
+                if(!sourceIsThisView) {
+                    loadElements(element);
+                }            
+                if(element instanceof IISO27kGroup && sourceIsThisView) {
+                    CnATreeElement selectedElement = (CnATreeElement) element;
+                    setSelectedGroup(selectedElement);             
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle());
+                    }
+                }
+                if(!sourceIsThisView) {
+                    CnATreeElement selectedElement = (CnATreeElement) element;
+                    setSelectedElement(selectedElement);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Selected link element, Type: " + selectedElement.getObjectType() + ", name: " + selectedElement.getTitle());
+                    }              
+                }
+            }
+        }
     }
 
     private void loadElements(Object element) {
         this.selection = element;
         try {
-            if(element instanceof Organization || element==null) {
+            if(element==null) {
                 final List<? extends CnATreeElement> elementList = getElementList();
                 Display.getDefault().syncExec(new Runnable(){
                     public void run() {
@@ -247,17 +292,19 @@ public abstract class ElementView extends ViewPart {
                     }
                 });
             } else if(element instanceof CnATreeElement) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("CnATreeElement selected: " + ((CnATreeElement)element).getTitle());
+                CnATreeElement treeElement = (CnATreeElement)element;
+                
+                // check if treeElement has a relation to elements in this view
+                if(checkRelations(treeElement)) {                                      
+                    selectedId = treeElement.getDbId();
+                    final List<? extends CnATreeElement> elementList = getLinkedElements(selectedId);
+                    Display.getDefault().syncExec(new Runnable(){
+                        public void run() {
+                            setInput(elementList);
+                        }
+                    });
+                    setDescription(((CnATreeElement)element).getTitle());
                 }
-                selectedId = ((CnATreeElement)element).getDbId();
-                final List<CnATreeElement> elementList = getLinkedElements(selectedId);
-                Display.getDefault().syncExec(new Runnable(){
-                    public void run() {
-                        setInput(elementList);
-                    }
-                });
-                setDescription(((CnATreeElement)element).getTitle());
             } else {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Unknown element selected: " + element);
@@ -268,6 +315,17 @@ public abstract class ElementView extends ViewPart {
         }
     }
     
+    /**
+     * Returns true if treeElement has a relation to elements in this view.
+     * Implement this in classes extending this view.
+     * 
+     * @param treeElement 
+     * @return true if treeElement has a relation to elements in this view
+     */
+    protected boolean checkRelations(CnATreeElement treeElement) {
+        return true;
+    }
+
     public void reload() {
         loadElements(this.selection);
         viewer.refresh();
@@ -305,8 +363,22 @@ public abstract class ElementView extends ViewPart {
      * 
      */
     private void makeActions() {
-        // TODO Auto-generated method stub
-        
+        doubleClickAction = new Action() {
+            public void run() {
+                if(viewer.getSelection() instanceof IStructuredSelection) {
+                    Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();      
+                    EditorFactory.getInstance().updateAndOpenObject(sel);
+                }
+            }
+        };
+    }
+    
+    private void addActions() {
+        viewer.addDoubleClickListener(new IDoubleClickListener() {
+            public void doubleClick(DoubleClickEvent event) {
+                doubleClickAction.run();
+            }
+        });
     }
 
     /**
@@ -334,9 +406,10 @@ public abstract class ElementView extends ViewPart {
     public void dispose() {
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(modelUpdateListener);
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+        getSite().getPage().removePostSelectionListener(selectionListener);
         super.dispose();
     }
-
+   
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
      */
@@ -346,6 +419,44 @@ public abstract class ElementView extends ViewPart {
 
     }
     
+    protected CnATreeElement getSelectedGroup() {
+        return selectedGroup;
+    }
+
+    protected void setSelectedGroup(CnATreeElement selectedGroup) {
+        this.selectedGroup = selectedGroup;
+    }
+    
+    public void setSelectedElement(CnATreeElement element) {
+        this.selectedElement = element;
+        if(element!=null && element.getTypeId().equals(Audit.TYPE_ID)) {
+            setSelectedAudit((Audit)element);
+        }
+        if(element!=null && element.getTypeId().equals(Organization.TYPE_ID)) {
+            setSelectedOrganization((Organization)element);
+        }
+    }
+
+    public CnATreeElement getSelectedElement() {
+        return selectedElement;
+    }
+
+    public void setSelectedAudit(Audit selectedAudit) {
+        this.selectedAudit = selectedAudit;
+    }
+
+    public Audit getSelectedAudit() {
+        return selectedAudit;
+    }
+
+    protected Organization getSelectedOrganization() {
+        return selectedOrganization;
+    }
+
+    protected void setSelectedOrganization(Organization selectedOrganization) {
+        this.selectedOrganization = selectedOrganization;
+    }
+
     public ICommandService getCommandService() {
         if (commandService == null) {
             commandService = createCommandServive();

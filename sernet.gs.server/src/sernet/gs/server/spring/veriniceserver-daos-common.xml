@@ -305,6 +305,13 @@
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+    
+    <bean id="cnaTreeElementDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.common.CnATreeElement</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
 
 	<bean id="finishedRiskAnalysisListsDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
 		<constructor-arg>

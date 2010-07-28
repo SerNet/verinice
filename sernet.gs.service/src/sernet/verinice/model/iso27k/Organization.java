@@ -34,6 +34,23 @@ public class Organization extends CnATreeElement implements IISO27kGroup {
 	public static final String PROP_NAME = "org_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "org_tag"; //$NON-NLS-1$
 	
+	public static final String[] CHILD_TYPES = new String[] {
+	    AssetGroup.TYPE_ID,
+        ControlGroup.TYPE_ID,
+        AuditGroup.TYPE_ID,
+        ExceptionGroup.TYPE_ID,
+        PersonGroup.TYPE_ID,
+        RequirementGroup.TYPE_ID,
+        IncidentGroup.TYPE_ID,
+        IncidentScenarioGroup.TYPE_ID,
+        ResponseGroup.TYPE_ID,
+        ThreatGroup.TYPE_ID,
+        VulnerabilityGroup.TYPE_ID,
+        DocumentGroup.TYPE_ID,
+        RecordGroup.TYPE_ID,
+        ProcessGroup.TYPE_ID,
+    };
+	
 	/**
 	 * Creates an empty Organization
 	 */
@@ -58,9 +75,6 @@ public class Organization extends CnATreeElement implements IISO27kGroup {
 		addChild(new ThreatGroup(this));
 		addChild(new VulnerabilityGroup(this));
 		addChild(new DocumentGroup(this));
-		addChild(new EvidenceGroup(this));
-		addChild(new FindingGroup(this));
-		addChild(new InterviewGroup(this));
 		addChild(new RecordGroup(this));
 		addChild(new ProcessGroup(this));
 	}
@@ -69,6 +83,14 @@ public class Organization extends CnATreeElement implements IISO27kGroup {
 	public boolean canContain(Object child) {
 		return (child instanceof Group);
 	}
+	
+	/* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27kGroup#getChildTypes()
+     */
+    @Override
+    public String[] getChildTypes() {
+        return CHILD_TYPES;
+    }
 	
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
@@ -112,5 +134,6 @@ public class Organization extends CnATreeElement implements IISO27kGroup {
 	public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
+
 	
 }

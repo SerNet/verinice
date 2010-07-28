@@ -305,7 +305,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      */
     public boolean isCalculatedAvailability() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_AVAILABILITY);
-        if (properties != null && properties.getProperties().size() > 0)
+        if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0)
             return properties.getProperty(0).getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
         else
             return false;
@@ -316,7 +316,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      */
     public boolean isCalculatedConfidentiality() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_CONFIDENTIALITY);
-        if (properties != null && properties.getProperties().size() > 0)
+        if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0)
             return properties.getProperty(0).getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
         else
             return false;
@@ -327,7 +327,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      */
     public boolean isCalculatedIntegrity() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_INTEGRITY);
-        if (properties != null && properties.getProperties().size() > 0)
+        if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0)
             return properties.getProperty(0).getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
         else
             return false;

@@ -2855,6 +2855,10 @@ the value between <param></param> will be used directly if no string is found fo
     <huientity
         name="Organization"
         id="org" >
+        
+        <huirelation to="audit" id="rel_org_audit" />
+        <huirelation to="auditgroup" id="rel_org_auditgroup" />
+        
         <huiproperty
             name="Title"
             id="org_name" 
@@ -2908,6 +2912,9 @@ the value between <param></param> will be used directly if no string is found fo
         	name="consulted" reversename="consulted for" tooltip="" />
         <huirelation to="person-iso" id="rel_asset_person_info"
         	name="informed" reversename="informed for" tooltip="" />
+            
+        <huirelation to="control" id="rel_asset_control" 
+            name="impact reduced by" reversename="reduces impact of" tooltip=""/>
         
         <huiproperty
             name="Title"
@@ -3344,6 +3351,8 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Title"
             id="auditgroup_name" />
+        
+        <huirelation to="asset" id="rel_auditgroup_asset"/>
     </huientity>
     
     <huientity
@@ -3360,6 +3369,15 @@ the value between <param></param> will be used directly if no string is found fo
         	name="Lead Auditor" reversename="Lead Auditor in" tooltip="" />
         <huirelation to="person-iso" id="rel_audit_person_mgmtrep"
         	name="Management Representative" reversename="Management Representative in" tooltip="" />
+        <huirelation to="asset" id="rel_audit_asset"/>
+        <huirelation to="assetgroup" id="rel_audit_assetgroup"/>
+        <huirelation to="control" id="rel_audit_control"/>
+        <huirelation to="controlgroup" id="rel_audit_controlgroup"/>
+        <huirelation to="finding" id="rel_audit_finding"/>
+        <huirelation to="finding_group" id="rel_audit_finding_group"/>
+        <huirelation to="evidence" id="rel_audit_evidence"/>
+        <huirelation to="evidence_group" id="rel_audit_evidence_group"/>
+        
         
         <huiproperty
             name="Title"
@@ -3406,8 +3424,6 @@ the value between <param></param> will be used directly if no string is found fo
         name="Control"
         id="control" >
         
-        <huirelation to="asset" id="rel_control_asset" 
-        	name="reduces impact of" reversename="impact reduced by" tooltip=""/>
         <huirelation to="incident_scenario" id="rel_control_incscen" 
         	name="reduces likelihood of" reversename="likelihood reduced by" tooltip=""/>
 		<huirelation to="control" id="rel_control_control"

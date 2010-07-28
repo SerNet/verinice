@@ -16,20 +16,17 @@
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  *     Daniel Murygin <dm[at]sernet[dot]de> - modified for ISO 27000
  ******************************************************************************/
-package sernet.verinice.iso27k.rcp;
+package sernet.verinice.samt.audit.rcp;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -39,6 +36,8 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
@@ -49,23 +48,21 @@ import sernet.verinice.model.iso27k.Organization;
  * @author koderman[at]sernet[dot]de
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class ISMViewContentProvider implements ITreeContentProvider {
+public class ElementViewContentProvider implements ITreeContentProvider {
 
-	private static final Logger log = Logger.getLogger(ISMViewContentProvider.class);
+	private static final Logger log = Logger.getLogger(ElementViewContentProvider.class);
 
 	private final ElementComparator comparator = new ElementComparator();
 	
 	private BSIModelElementFilter modelFilter;
 
-	public ISMViewContentProvider(TreeViewerCache cache) {
+	public ElementViewContentProvider(TreeViewerCache cache) {
 		super();
 		this.cache = cache;
 	}
 
 	private TreeViewerCache cache;
 
-	private List<ViewerFilter> filterList = new ArrayList<ViewerFilter>();
-	
 	public void dispose() {
 	}
 
@@ -90,22 +87,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                     children[i]=loadChildren(cnATreeElement);
                     i++;
                 }
-    		} else if (parent instanceof CnATreeElement) {
-    			CnATreeElement el = (CnATreeElement) parent;
-    			CnATreeElement newElement;
-    			
-    				if(!el.isChildrenLoaded()) {
-    					newElement = loadChildren(el);
-    					if(newElement!=null) {
-    						el.replace(newElement);
-    						el = newElement;
-    						children = el.getChildrenAsArray();
-    					}					
-    				} else {
-    					children = el.getChildrenAsArray();
-    				}
-    				Arrays.sort(children,comparator);			
-    		}
+    		} 
 		} catch (CommandException e) {
             log.error("Error while loading child elements", e);
             ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
@@ -168,54 +150,20 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 		return getChildren(parent);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
+	 */
 	public Object getParent(Object child) {
-		Object parent = null;
-		if (child instanceof CnATreeElement) {
-			CnATreeElement el = (CnATreeElement) child;
-			parent = el.getParent();
-		} 
-		return parent;
+		return null;
 	}
 
 	public boolean hasChildren(Object parent) {
-		boolean hasChildren = false;
-		if (parent instanceof CnATreeElement) {
-			try {
-				CnATreeElement el = (CnATreeElement) parent;
-				Set<CnATreeElement> children = el.getChildren();
-				Set<CnATreeElement> filteredList;
-				if(filterList.isEmpty()) {
-				    filteredList = children;
-				} else {
-				    filteredList = new HashSet<CnATreeElement>(children.size());
-    				for (CnATreeElement cnATreeElement : children) {
-                        for (ViewerFilter filter : filterList) {
-                            if(filter.select(null, null, cnATreeElement)) {
-                                filteredList.add(cnATreeElement);
-                            }
-                        }
-                    }
-				}
-				hasChildren = !filteredList.isEmpty();
-			} catch (Exception e) {
-				if (parent != null) {
-					log.error("Error in hasChildren, element type: " + parent.getClass().getSimpleName(), e);
-				} else {
-					log.error("Error in hasChildren, element is null", e);
-				}
-				return true;
-			}
-		}
-		return hasChildren;
+		return false;
 	}
 	
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		cache.clear();
 		cache.addObject(newInput);
-	}
-	
-	public void addFilter(ViewerFilter filter) {
-	    filterList.add(filter);
 	}
 	
 	class ElementComparator implements Comparator<CnATreeElement> {

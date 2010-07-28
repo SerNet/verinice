@@ -19,6 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+
 /**
  * 
  * 
@@ -29,6 +34,6 @@ public class ControlView extends GenericElementView {
     public static final String ID = "sernet.verinice.samt.audit.rcp.ControlView"; //$NON-NLS-1$
     
     public ControlView() {
-        super(new ControlCommandFactory());
+        super(new ElementViewCommandFactory(Control.TYPE_ID,ControlGroup.TYPE_ID));
     }
 }

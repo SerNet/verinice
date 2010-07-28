@@ -19,9 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.model.iso27k;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.multiselectionlist.ISelectOptionHandler;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -30,12 +34,21 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 @SuppressWarnings("serial")
-public class Audit extends CnATreeElement implements IISO27kElement {
+public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGroup {
 
 	public static final String TYPE_ID = "audit"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "audit_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "audit_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "audit_tag"; //$NON-NLS-1$
+	
+	public static final String[] CHILD_TYPES = new String[] {
+        AssetGroup.TYPE_ID,
+        PersonGroup.TYPE_ID,
+        ControlGroup.TYPE_ID,
+        FindingGroup.TYPE_ID,
+        EvidenceGroup.TYPE_ID,
+        InterviewGroup.TYPE_ID
+    };
 	
 	/**
 	 * Creates an empty audit
@@ -58,6 +71,28 @@ public class Audit extends CnATreeElement implements IISO27kElement {
 	public String getTypeId() {
 		return TYPE_ID;
 	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.verinice.model.common.CnATreeElement#canContain(java.lang.Object)
+	 */
+	@Override
+	public boolean canContain(Object obj) {
+	    boolean canContain = false;
+        if(obj instanceof CnATreeElement) {
+            CnATreeElement element = (CnATreeElement)obj;
+            canContain = Arrays.asList(getChildTypes()).contains(element.getTypeId()) 
+                         || this.getTypeId().equals(element.getTypeId());
+        }
+        return canContain;
+	}
+	
+	/* (non-Javadoc)
+     * @see sernet.verinice.iso27k.model.Group#getChildTypes()
+     */
+    @Override
+    public String[] getChildTypes() {
+        return CHILD_TYPES;
+    }
 	
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitel()
