@@ -20,32 +20,59 @@ import sernet.verinice.interfaces.report.IReportType;
 
 public class GenerateReportDialog extends Dialog {
 
+	private Combo comboReportType;
+
 	private Combo comboOutputFormat;
-	
+
 	private Text textFile;
 
 	private File outputFile;
 
-	private IOutputFormat outputFormat;
+	private IReportType[] reportTypes;
 	
-	private IReportType reportType;
+	private IOutputFormat chosenOutputFormat;
+	
+	private IReportType chosenReportType;
 
 	protected GenerateReportDialog(Shell parentShell) {
 		super(parentShell);
-		
-		// DEMO: Hard-code the report type. Later on use a dialog or something to chose the report
-		// type.
-		reportType = ServiceComponent.getDefault().getReportService().getReportTypes()[0];
-		outputFormat = reportType.getOutputFormats()[0];
+
+		reportTypes = ServiceComponent.getDefault().getReportService()
+				.getReportTypes();
 	}
 
+	@SuppressWarnings("restriction")
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		container.setLayout(layout);
-		
+
+		Label labelReportType = new Label(container, SWT.NONE);
+		GridData gridLabelReportType = new GridData();
+		gridLabelReportType.horizontalAlignment = SWT.LEFT;
+		gridLabelReportType.verticalAlignment = SWT.CENTER;
+		labelReportType.setText("Datei");
+		labelReportType.setLayoutData(gridLabelReportType);
+
+		comboReportType = new Combo(container, SWT.READ_ONLY);
+		GridData gridComboReportType = new GridData();
+		gridComboReportType.horizontalAlignment = SWT.FILL;
+		gridComboReportType.verticalAlignment = SWT.CENTER;
+		gridComboReportType.grabExcessHorizontalSpace = true;
+
+		for (IReportType rt : reportTypes) {
+			comboReportType.add(rt.getLabel());
+		}
+		comboReportType.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setupComboOutputFormatContent();
+			}
+
+		});
+
 		Label labelOutputFormat = new Label(container, SWT.NONE);
 		GridData gridLabelOutputFormat = new GridData();
 		gridLabelOutputFormat.horizontalAlignment = SWT.LEFT;
@@ -58,24 +85,7 @@ public class GenerateReportDialog extends Dialog {
 		gridComboOutputFormat.horizontalAlignment = SWT.FILL;
 		gridComboOutputFormat.verticalAlignment = SWT.CENTER;
 		gridComboOutputFormat.grabExcessHorizontalSpace = true;
-		
-		/* TODO: Possible output formats should be put into this combobox
-		 * everytime the dialog is shown.
-		 */
-		for (IOutputFormat of : reportType.getOutputFormats())
-		{
-			comboOutputFormat.add(of.getLabel());
-		};
-		comboOutputFormat.select(0);
-		comboOutputFormat.addSelectionListener(new SelectionAdapter()
-		{
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				outputFormat = reportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
-			}
-			
-		});
 		comboOutputFormat.setLayoutData(gridComboOutputFormat);
 
 		Label labelFile = new Label(container, SWT.NONE);
@@ -92,22 +102,38 @@ public class GenerateReportDialog extends Dialog {
 		gridTextFile.grabExcessHorizontalSpace = true;
 		textFile.setText("/tmp/samt-report");
 		textFile.setLayoutData(gridTextFile);
+		
+		comboReportType.select(0);
+		setupComboOutputFormatContent();
 
 		return container;
+	}
+	
+	private void setupComboOutputFormatContent()
+	{
+		comboOutputFormat.removeAll();
+		for (IOutputFormat of : reportTypes[comboReportType
+				.getSelectionIndex()].getOutputFormats()) {
+			comboOutputFormat.add(of.getLabel());
+		};
+		comboOutputFormat.select(0);
 	}
 
 	@Override
 	protected void okPressed() {
 		String f = textFile.getText();
 
+		chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
+		chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
+		
 		// TODO: This just appends ".pdf" or ".html" if the existing
 		// suffix does not match. Very simple and should be enhanced.
-		if (!f.endsWith(outputFormat.getFileSuffix())) {
-			f += "." + outputFormat.getFileSuffix();
+		if (!f.endsWith(chosenOutputFormat.getFileSuffix())) {
+			f += "." + chosenOutputFormat.getFileSuffix();
 		}
 
 		outputFile = new File(f);
-		
+
 		super.okPressed();
 	}
 
@@ -115,8 +141,13 @@ public class GenerateReportDialog extends Dialog {
 		return outputFile;
 	}
 
-	public IOutputFormat getOutputFormat() {
-		return outputFormat;
+	IOutputFormat getOutputFormat()
+	{
+		return chosenOutputFormat;
 	}
 
+	IReportType getReportType() {
+		return chosenReportType;
+	}
+	
 }

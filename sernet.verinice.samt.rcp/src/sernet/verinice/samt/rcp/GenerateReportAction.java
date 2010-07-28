@@ -42,7 +42,7 @@ public class GenerateReportAction extends ActionDelegate implements
 				public File getOutputFile() { return dialog.getOutputFile(); }
 			};
 
-			ServiceComponent.getDefault().getReportService().runSamtReportGeneration(ro);
+			dialog.getReportType().createReport(ro);
 		}
 	}
 
