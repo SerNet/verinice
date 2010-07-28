@@ -1,6 +1,7 @@
 package sernet.verinice.report.service.commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import sernet.verinice.interfaces.GenericCommand;
@@ -10,6 +11,22 @@ public class LoadSamtIntroTableCommand extends GenericCommand{
 
 	private List<List<String>> result;
 	
+	static HashMap<String, String> hardcodeTable = new HashMap<String, String>();
+	
+	static
+	{
+		// TODO: Values taken from demo report - serve as placeholders.
+		hardcodeTable.put("companyName", "TEST - Company 1");
+		hardcodeTable.put("ceo", "Schulze Peter");
+		hardcodeTable.put("itManager", "Gustav Hafensaenger");
+		hardcodeTable.put("ciso", "Dr. Gerd Meier");
+		hardcodeTable.put("auditor", "Max Mustermann, Hans Müller");
+		hardcodeTable.put("scope", "IT Area of TEST - Company 1");
+		hardcodeTable.put("basis", "Assessment based on ISO/IEC 27001 with additional physical checks and system checks");
+		hardcodeTable.put("date", "30.07.2007 - 03.08.2007");
+		hardcodeTable.put("language", "English");
+		hardcodeTable.put("version", "0.4");
+	}
 	
 	public List<List<String>> getResult()
 	{
@@ -38,7 +55,17 @@ public class LoadSamtIntroTableCommand extends GenericCommand{
 	{
 		List<String> l = new ArrayList<String>();
 		l.add(label);
-		l.add("'" + key + "'");
+		
+		
+		String value = hardcodeTable.get(key);
+		if (value == null)
+		{
+			l.add("'" + key + "'");
+		}
+		else
+		{
+			l.add(value);
+		}
 		
 		return l;
 	}
