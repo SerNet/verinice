@@ -34,11 +34,11 @@ public class SamtReportType implements IReportType {
 	}
 
 	public String getId() {
-		return "test";
+		return "samt";
 	}
 
 	public String getLabel() {
-		return "Information Security Assessment report (demo)";
+		return "Information Security Assessment report";
 	}
 
 	public IOutputFormat[] getOutputFormats() {
