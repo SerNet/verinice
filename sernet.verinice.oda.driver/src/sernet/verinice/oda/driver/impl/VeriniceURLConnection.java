@@ -40,11 +40,4 @@ public class VeriniceURLConnection extends URLConnection {
 	public final void connect() throws IOException {
 	}
 
-	@Override
-	public String getContentType() {
-		return "image/svg+xml";
-	}
-	
-	
-
 }

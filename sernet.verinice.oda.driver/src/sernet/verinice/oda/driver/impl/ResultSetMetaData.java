@@ -56,9 +56,11 @@ public class ResultSetMetaData implements IResultSetMetaData {
 			}
 		} else if (Collection.class.isAssignableFrom(rowClass)) {
 			
-			Object firstElement = ((Collection) result).toArray()[0];
-			Class columnClass = firstElement.getClass();
-			if (Collection.class.isAssignableFrom(columnClass)) {
+			Object[] arr = ((Collection) result).toArray();
+			
+			Object firstElement = (arr.length > 0 ? arr[0] : null);
+			Class columnClass = (firstElement != null ? firstElement.getClass() : null);
+			if (columnClass != null && Collection.class.isAssignableFrom(columnClass)) {
 				// 2-dimensional collection (at least)
 				// first dimension: row
 				// second dimension: column
