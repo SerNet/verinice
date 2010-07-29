@@ -89,8 +89,8 @@ public class ElementViewContentProvider implements ITreeContentProvider {
                 }
     		} 
 		} catch (CommandException e) {
-            log.error("Error while loading child elements", e);
-            ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
+            log.error("Error while loading child elements", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.ElementViewContentProvider_1);
         }
 		return children;
 	}
@@ -99,8 +99,10 @@ public class ElementViewContentProvider implements ITreeContentProvider {
 		if (el.isChildrenLoaded()) {
 			return el;
 		}
-
-		Logger.getLogger(this.getClass()).debug("Loading children from DB for " + el);
+		
+        if (log.isDebugEnabled()) {
+            log.debug("Loading children from DB for " + el); //$NON-NLS-1$
+        }
 
 		RetrieveCnATreeElement command = null;
 		if(el instanceof ISO27KModel) {
@@ -131,7 +133,10 @@ public class ElementViewContentProvider implements ITreeContentProvider {
 			}
 	
 			// replace with loaded object in cache:
-			Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
+			if (log.isDebugEnabled()) {
+			    log.debug("Replacing in cache: " + el + " replaced with " + newElement); //$NON-NLS-1$ //$NON-NLS-2$
+	        }
+			
 			cache.clear(el);
 			cache.addObject(newElement);
 		}

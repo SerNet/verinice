@@ -45,8 +45,11 @@ import sernet.verinice.model.bsi.SonstigeITKategorie;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Document;
 import sernet.verinice.model.iso27k.Evidence;
 import sernet.verinice.model.iso27k.Exception;
@@ -213,14 +216,16 @@ public class ImageCache {
 	/* ************************************************************************************************** */
 	// ISO 27000 icons - ISM Tree View:
 	public static final String ISO27K_ASSET 			= "sweetie-verinice/png/16-asset-grey.png";
-	public static final String ISO27K_THREAT 			= "sweetie-verinice/png/16-lightening.png";
+	public static final String ISO27K_ASSETGROUP        = "sweetie-verinice/png/assetgroup.png";
+    public static final String ISO27K_THREAT 			= "sweetie-verinice/png/16-lightening.png";
 	public static final String ISO27K_VULNERABILITY 	= "sweetie-verinice/png/16-shield-blue-broken.png";
 	public static final String ISO27K_INCIDENT_SCENARIO = "sweetie-verinice/png/16-arrow-branch-bgr.png";
 	public static final String ISO27K_INCIDENT 			= "sweetie-verinice/png/16-arrow-incident-red.png";
 	public static final String ISO27K_REQUIREMENT 		= "sweetie-verinice/png/16-paper-gavel-alt.png";
 	public static final String ISO27K_EXCEPTION 		= "sweetie-verinice/png/16-paper-excerpt-yellow.png";
 	public static final String ISO27K_AUDIT 			= "sweetie-verinice/png/16-clipboard-audit.png";
-	public static final String ISO27K_INTERVIEW 		= "sweetie-verinice/png/16-clipboard-comment.png";
+	public static final String ISO27K_AUDITGROUP        = "sweetie-verinice/png/auditgroup.png";
+    public static final String ISO27K_INTERVIEW 		= "sweetie-verinice/png/16-clipboard-comment.png";
 	public static final String ISO27K_IMRPOVEMENT_NOTE 	= "sweetie-verinice/png/16-clipboard-report-bar.png";
 	public static final String ISO27K_EVIDENCE 			= "sweetie-verinice/png/16-clipboard-eye.png";
 	public static final String ISO27K_RESPONSE 			= "sweetie-verinice/png/16-paper-arrow-green.png";
@@ -232,7 +237,8 @@ public class ImageCache {
 	public static final String ISO27K_PROCESS 			= "sweetie-verinice/png/16-paper-workplan.png";
 
 	public static final String ISO27K_CONTROL			= "stufe_none.png";
-	public static final String ISO27K_CONTROL_NO		= "16-em-cross.png";
+	public static final String ISO27K_CONTROLGROUP      = "controlgroup.png";
+    public static final String ISO27K_CONTROL_NO		= "16-em-cross.png";
 	public static final String ISO27K_CONTROL_YES		= "16-em-check.png";
 	
 	// ISO 27k icons - other:
@@ -261,20 +267,23 @@ public class ImageCache {
 		// fill type map for iso27k icons:
 		ISO27K_ICON_MAP.put(Organization.TYPE_ID, ImageCache.ISO27K_SCOPE);
 		ISO27K_ICON_MAP.put(Asset.TYPE_ID, ImageCache.ISO27K_ASSET);
-		ISO27K_ICON_MAP.put(Threat.TYPE_ID, ImageCache.ISO27K_THREAT);
+		ISO27K_ICON_MAP.put(AssetGroup.TYPE_ID, ImageCache.ISO27K_ASSETGROUP);
+        ISO27K_ICON_MAP.put(Threat.TYPE_ID, ImageCache.ISO27K_THREAT);
 		ISO27K_ICON_MAP.put(Vulnerability.TYPE_ID, ImageCache.ISO27K_VULNERABILITY);
 		ISO27K_ICON_MAP.put(IncidentScenario.TYPE_ID,ImageCache.ISO27K_INCIDENT_SCENARIO);
 		ISO27K_ICON_MAP.put(Incident.TYPE_ID, ImageCache.ISO27K_INCIDENT);
 		ISO27K_ICON_MAP.put(Requirement.TYPE_ID, ImageCache.ISO27K_REQUIREMENT);
 		ISO27K_ICON_MAP.put(Exception.TYPE_ID, ImageCache.ISO27K_EXCEPTION);
 		ISO27K_ICON_MAP.put(Audit.TYPE_ID, ImageCache.ISO27K_AUDIT);
-		ISO27K_ICON_MAP.put(Interview.TYPE_ID, ImageCache.ISO27K_INTERVIEW);
+		ISO27K_ICON_MAP.put(AuditGroup.TYPE_ID, ImageCache.ISO27K_AUDITGROUP);
+        ISO27K_ICON_MAP.put(Interview.TYPE_ID, ImageCache.ISO27K_INTERVIEW);
 		ISO27K_ICON_MAP.put(Finding.TYPE_ID, ImageCache.ISO27K_IMRPOVEMENT_NOTE);
 		ISO27K_ICON_MAP.put(Evidence.TYPE_ID, ImageCache.ISO27K_EVIDENCE);
 		ISO27K_ICON_MAP.put(Document.TYPE_ID, ImageCache.ISO27K_DOCUMENT);
 		ISO27K_ICON_MAP.put(PersonIso.TYPE_ID, ImageCache.ISO27K_PERSON);
 		ISO27K_ICON_MAP.put(Control.TYPE_ID,   ImageCache.ISO27K_CONTROL);
-		ISO27K_ICON_MAP.put(Response.TYPE_ID,   ImageCache.ISO27K_RESPONSE);
+		ISO27K_ICON_MAP.put(ControlGroup.TYPE_ID,   ImageCache.ISO27K_CONTROLGROUP);
+        ISO27K_ICON_MAP.put(Response.TYPE_ID,   ImageCache.ISO27K_RESPONSE);
 		ISO27K_ICON_MAP.put(sernet.verinice.model.iso27k.Process.TYPE_ID,   ImageCache.ISO27K_PROCESS);
 		ISO27K_ICON_MAP.put(Record.TYPE_ID,   ImageCache.ISO27K_RECORD);
 		ISO27K_ICON_MAP.put(SamtTopic.TYPE_ID,   ImageCache.ISO27K_CONTROL);

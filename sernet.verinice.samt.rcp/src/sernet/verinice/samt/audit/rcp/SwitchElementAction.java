@@ -23,6 +23,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -46,7 +47,8 @@ public class SwitchElementAction extends Action {
     public SwitchElementAction(GenericElementView groupView, String typeId) {
         this.groupView = groupView;
         this.objectTypeId = typeId;
-        setText(typeId);
+        String title = HitroUtil.getInstance().getTypeFactory().getMessage(typeId);
+        setText(title);
         setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(objectTypeId)));
     }
 

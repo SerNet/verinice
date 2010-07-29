@@ -24,15 +24,18 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate;
 import sernet.verinice.iso27k.service.commands.LoadElementByClass;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
+ * ElementView which shows {@link Organization}s.
+ * 
  * @author Daniel Murygin <dm@sernet.de>
- *
  */
+@SuppressWarnings("restriction")
 public class OrganizationView extends GenericElementView {
 
     private static final Logger LOG = Logger.getLogger(OrganizationView.class);
@@ -57,7 +60,7 @@ public class OrganizationView extends GenericElementView {
         }
         if(selectedGroup!=null && (elementList==null || !elementList.contains(getSelectedGroup()))) {    
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Removing selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle());
+                LOG.debug("Removing selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             setSelectedGroup(null);
         }
@@ -72,5 +75,26 @@ public class OrganizationView extends GenericElementView {
         LoadElementByClass command = new LoadElementByClass(Organization.TYPE_ID);
         command = getCommandService().executeCommand(command);
         return command.getElementList();
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.samt.audit.rcp.ElementView#createISO27KModelViewUpdate()
+     */
+    protected ISO27KModelViewUpdate createISO27KModelViewUpdate() {
+        return new ISO27KModelViewUpdate(viewer,cache) {
+            /* (non-Javadoc)
+             * @see sernet.verinice.iso27k.model.IISO27KModelListener#linkAdded(sernet.gs.ui.rcp.main.common.model.CnALink)
+             */
+            public void linkAdded(CnALink link) {
+                reload();
+            }
+            /* (non-Javadoc)
+             * @see sernet.verinice.iso27k.model.IISO27KModelListener#databaseChildAdded(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+             */
+            public void databaseChildAdded(CnATreeElement child) {
+                super.databaseChildAdded(child);
+                reload();
+            }
+        };
     }
 }

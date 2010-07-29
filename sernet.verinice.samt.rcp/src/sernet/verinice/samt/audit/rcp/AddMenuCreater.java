@@ -19,25 +19,20 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.cheatsheets.data.IActionItem;
 
+import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.verinice.iso27k.rcp.action.AddElement;
+import sernet.verinice.iso27k.rcp.action.AddGroup;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.Evidence;
-import sernet.verinice.model.iso27k.Finding;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Creates a pulldown menu in a view toolbar to switch the {@link CnATreeElement}
@@ -61,8 +56,15 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator {
     public void init(IViewPart view) {
         if(view instanceof ElementView) {
             this.groupView = (GenericElementView) view;
-            addElementAction = new AddAction(groupView.getCommandFactory().getElementTypeId(), groupView);
-            addGroupAction = new AddAction(groupView.getCommandFactory().getGroupTypeId(), groupView);
+            final String typeId = groupView.getCommandFactory().getElementTypeId();
+            final String groupId = groupView.getCommandFactory().getGroupTypeId();
+            // this is not a typo: "groupId"
+            String title = AddElement.TITLE_FOR_TYPE.get(groupId);
+            addElementAction = new AddAction(typeId, title, groupView);
+            addElementAction.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(typeId)));
+            title = AddGroup.TITLE_FOR_TYPE.get(groupId);
+            addGroupAction = new AddAction(groupId, title, groupView);
+            addGroupAction.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(groupId)));         
         }       
     }
 

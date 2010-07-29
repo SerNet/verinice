@@ -48,13 +48,19 @@ import sernet.verinice.model.iso27k.Evidence;
 import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
- * @author Daniel Murygin <dm@sernet.de>
- *
+ * View with tree viewer to show {@link CnATreeElement}s of specific types
+ * and of {@link Group}s which contains these types.
+ * 
+ * Elements are loaded by commands created by a {@link ICommandFactory} implementation.
+ * 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class GenericElementView extends ElementView {
 
     private static final Logger LOG = Logger.getLogger(GenericElementView.class);
@@ -113,15 +119,6 @@ public class GenericElementView extends ElementView {
         viewer.addFilter(filter);
         contentProvider.addFilter(filter);
     }
-    
-    private void checkSelectedGroup(List elementList) {
-        if(selectedGroup!=null && (elementList==null || !elementList.contains(getSelectedGroup()))) {    
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Removing selected group, Type: " + getSelectedGroup().getObjectType() + ", name: " + getSelectedGroup().getTitle());
-            }
-            setSelectedGroup(null);
-        }
-    }
 
     protected ICommandFactory getCommandFactory() {
         return commandFactory;
@@ -139,7 +136,8 @@ public class GenericElementView extends ElementView {
             setCommandFactory(commandMap.get(objectTypeId));
             setIcon(ImageCache.getInstance().getISO27kTypeImage(objectTypeId));
             reload();
-            setViewTitle(objectTypeId);
+            String title = HitroUtil.getInstance().getTypeFactory().getMessage(objectTypeId);
+            setViewTitle(title);
         }   
     }
     

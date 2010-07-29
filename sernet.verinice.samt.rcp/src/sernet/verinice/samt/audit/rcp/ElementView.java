@@ -33,13 +33,13 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
@@ -93,7 +93,7 @@ public abstract class ElementView extends ViewPart {
     
     protected TreeViewer viewer;
     
-    private TreeViewerCache cache = new TreeViewerCache();
+    protected TreeViewerCache cache = new TreeViewerCache();
     
     protected ISMViewContentProvider contentProvider;
     
@@ -118,6 +118,8 @@ public abstract class ElementView extends ViewPart {
     private Audit selectedAudit;
     
     private Organization selectedOrganization;
+    
+    private Label textLink, textGroup;
 
     /**
      * @return {@link CnATreeElement}s to show in this view
@@ -144,17 +146,37 @@ public abstract class ElementView extends ViewPart {
             initView(parent);
             startInitDataJob();
         } catch (Exception e) {
-            LOG.error("Error while creating view", e); 
-            ExceptionUtil.log(e, "Error while opening Audit-View.");
+            LOG.error("Error while creating view", e);  //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.ElementView_1);
         }
         
     }
 
     protected void initView(Composite parent) {
-        contentProvider = new ISMViewContentProvider(cache);
+        GridLayout gridLayoutParent = new GridLayout(1, true);
+        parent.setLayout(gridLayoutParent);
+        
+        Composite compositeInfo = new Composite(parent,SWT.NONE);
+        compositeInfo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        GridLayout gridLayoutInfo = new GridLayout(2, false);
+        compositeInfo.setLayout(gridLayoutInfo);
+        
+        Label labelLink = new Label(compositeInfo,SWT.NONE);
+        labelLink.setText(Messages.ElementView_2);
+        labelLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+        textLink = new Label(compositeInfo,SWT.NONE);
+        textLink.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
+        Label labelGroup = new Label(compositeInfo,SWT.NONE);
+        labelGroup.setText(Messages.ElementView_3);
+        labelGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+        textGroup = new Label(compositeInfo,SWT.NONE);
+        textGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
+        contentProvider = new ISMViewContentProvider(cache);
+        
         viewer.setContentProvider(contentProvider);
         
         IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
@@ -176,15 +198,15 @@ public abstract class ElementView extends ViewPart {
      * 
      */
     protected void startInitDataJob() {
-        WorkspaceJob initDataJob = new WorkspaceJob("Loading data...") {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ElementView_4) {
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
-                    monitor.beginTask("Loading data...", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(Messages.ElementView_5, IProgressMonitor.UNKNOWN);
                     initData();
                 } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); 
-                    status= new Status(Status.ERROR, "sernet.verinice.samt.audit.rcp", "Error while loading data.",e); 
+                    LOG.error("Error while loading data.", e);  //$NON-NLS-1$
+                    status= new Status(Status.ERROR, "sernet.verinice.samt.audit.rcp", Messages.ElementView_8,e);  //$NON-NLS-1$
                 } finally {
                     monitor.done();
                 }
@@ -199,17 +221,10 @@ public abstract class ElementView extends ViewPart {
             if (modelUpdateListener == null ) {
                 // modellistener should only be created once!
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Creating modelUpdateListener for ISMView."); 
+                    LOG.debug("Creating modelUpdateListener for ISMView.");  //$NON-NLS-1$
                 }
                 Activator.inheritVeriniceContextState();
-                modelUpdateListener = new ISO27KModelViewUpdate(viewer,cache) {
-                    /* (non-Javadoc)
-                     * @see sernet.verinice.iso27k.model.IISO27KModelListener#linkAdded(sernet.gs.ui.rcp.main.common.model.CnALink)
-                     */
-                    public void linkAdded(CnALink link) {
-                        reload();
-                    }
-                };
+                modelUpdateListener = createISO27KModelViewUpdate();
                 CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
                 final List<? extends CnATreeElement> elementList = getElementList();
                 Display.getDefault().syncExec(new Runnable(){
@@ -239,6 +254,17 @@ public abstract class ElementView extends ViewPart {
         }
     }
     
+    protected ISO27KModelViewUpdate createISO27KModelViewUpdate() {
+        return new ISO27KModelViewUpdate(viewer,cache) {
+            /* (non-Javadoc)
+             * @see sernet.verinice.iso27k.model.IISO27KModelListener#linkAdded(sernet.gs.ui.rcp.main.common.model.CnALink)
+             */
+            public void linkAdded(CnALink link) {
+                reload();
+            }
+        };
+    }
+    
     private void addSelectionListener() {
         selectionListener = new ISelectionListener() {
             /* (non-Javadoc)
@@ -262,20 +288,19 @@ public abstract class ElementView extends ViewPart {
                 boolean sourceIsThisView = this.equals(sourcePart);
                 if(!sourceIsThisView) {
                     loadElements(element);
-                }            
-                if(element instanceof IISO27kGroup && sourceIsThisView) {
-                    CnATreeElement selectedElement = (CnATreeElement) element;
-                    setSelectedGroup(selectedElement);             
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle());
-                    }
-                }
-                if(!sourceIsThisView) {
                     CnATreeElement selectedElement = (CnATreeElement) element;
                     setSelectedElement(selectedElement);
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Selected link element, Type: " + selectedElement.getObjectType() + ", name: " + selectedElement.getTitle());
-                    }              
+                        LOG.debug("Selected link element, Type: " + selectedElement.getObjectType() + ", name: " + selectedElement.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                    } 
+                }            
+                if(element instanceof IISO27kGroup && sourceIsThisView) {
+                    CnATreeElement selectedElement = (CnATreeElement) element;
+                    setSelectedGroup(selectedElement);
+                   
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                    }
                 }
             }
         }
@@ -303,15 +328,29 @@ public abstract class ElementView extends ViewPart {
                             setInput(elementList);
                         }
                     });
-                    setDescription(((CnATreeElement)element).getTitle());
                 }
             } else {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Unknown element selected: " + element);
+                    LOG.debug("Unknown element selected: " + element); //$NON-NLS-1$
                 }
             }
         } catch(Exception e) {
-            LOG.error("Error while loading linked elements", e);
+            LOG.error("Error while loading linked elements", e); //$NON-NLS-1$
+        }
+    }
+    
+    /**
+     * Checks if selectedGroup is in elementList. 
+     * If not selectedGroup is set to null.
+     * 
+     * @param elementList list of {@link CnATreeElement}s
+     */
+    protected void checkSelectedGroup(List elementList) {
+        if(selectedGroup!=null && (elementList==null || !elementList.contains(getSelectedGroup()))) {    
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Removing selected group, Type: " + getSelectedGroup().getObjectType() + ", name: " + getSelectedGroup().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+            setSelectedGroup(null);          
         }
     }
     
@@ -328,7 +367,11 @@ public abstract class ElementView extends ViewPart {
 
     public void reload() {
         loadElements(this.selection);
-        viewer.refresh();
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                viewer.refresh();
+            }
+        });     
     }
 
     public void setInput(List list) {
@@ -347,10 +390,6 @@ public abstract class ElementView extends ViewPart {
         setPartName(title);
     }
     
-    public void setDescription(String title) {
-        this.setContentDescription(title);
-    }
-
     /**
      * 
      */
@@ -425,10 +464,12 @@ public abstract class ElementView extends ViewPart {
 
     protected void setSelectedGroup(CnATreeElement selectedGroup) {
         this.selectedGroup = selectedGroup;
+        textGroup.setText((selectedGroup!=null) ? selectedGroup.getTitle() : ""); //$NON-NLS-1$
     }
     
     public void setSelectedElement(CnATreeElement element) {
         this.selectedElement = element;
+        textLink.setText((element!=null) ? element.getTitle() : ""); //$NON-NLS-1$
         if(element!=null && element.getTypeId().equals(Audit.TYPE_ID)) {
             setSelectedAudit((Audit)element);
         }

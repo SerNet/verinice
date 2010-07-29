@@ -64,7 +64,7 @@ public class AddElement implements IObjectActionDelegate {
 
 	private static final Logger LOG = Logger.getLogger(AddElement.class);
 	
-	private static final Map<String, String> TITLE_FOR_TYPE;
+	public static final Map<String, String> TITLE_FOR_TYPE;
 	
 	static {
 		TITLE_FOR_TYPE = new HashMap<String, String>();

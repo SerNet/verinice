@@ -2915,7 +2915,9 @@ the value between <param></param> will be used directly if no string is found fo
             
         <huirelation to="control" id="rel_asset_control" 
             name="impact reduced by" reversename="reduces impact of" tooltip=""/>
-        
+        <huirelation to="controlgroup" id="rel_asset_controlgroup" 
+            name="impact reduced by" reversename="reduces impact of" tooltip=""/> 
+               
         <huiproperty
             name="Title"
             id="asset_name"/>

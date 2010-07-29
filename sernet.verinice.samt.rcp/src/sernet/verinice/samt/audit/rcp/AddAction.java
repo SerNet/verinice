@@ -19,22 +19,27 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
+import sernet.verinice.iso27k.rcp.action.AddGroup;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.rcp.IProgressRunnable;
 
 /**
  * Set the {@link CnATreeElement} type which is displayed in a
@@ -58,50 +63,19 @@ public class AddAction extends Action {
      *            the view the type is displyed
      * @param typeId
      *            {@link CnATreeElement} type
+     * @param title 
      * @param groupView
      */
-    public AddAction(String typeId, GenericElementView groupView) {
+    public AddAction(String typeId, String title, GenericElementView groupView) {
         this.objectTypeId = typeId;
-        setText(typeId);
+        if(title==null) {
+            title = AddGroup.TITLE_FOR_TYPE.get(typeId);
+        }
+        setText(title);
         setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(objectTypeId)));
         this.groupView = groupView;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.action.Action#run()
-     */
-    @Override
-    public void run() {
-        try {
-            CnATreeElement group = getGroup();
-            if (group != null) {
-                group = Retriever.retrieveElement(group,new RetrieveInfo().setProperties(true).setChildren(true).setParent(true));
-                CnATreeElement newElement = CnAElementFactory.getInstance().saveNew(group, this.objectTypeId, null);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("New element - type: " + newElement.getObjectType() + ", title: " + newElement.getTitle() + ", group: " + group.getTitle());
-                }
-                // create a link to last selected (foreign) element
-                // if no group in this view is selected
-                if (groupView.getSelectedElement() != null && groupView.getSelectedGroup() == null) {
-                    // this method also fires events for added links:
-                    CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(newElement, Arrays.asList(groupView.getSelectedElement()));
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("New element linked - type: " + groupView.getSelectedElement().getObjectType() + ", title: " + groupView.getSelectedElement().getTitle());
-                    }
-                }
-                if (newElement != null) {
-                    EditorFactory.getInstance().openEditor(newElement);
-                }
-            } else {
-                LOG.warn("Can't add element. No group found. Type: " + this.objectTypeId);
-            }
-        } catch (Exception e) {
-            LOG.error("Error while creating new element", e);
-        }
-    }
-
+    
     private CnATreeElement getGroup() {
         CnATreeElement group = groupView.getSelectedGroup();
         if (group == null) {
@@ -120,4 +94,82 @@ public class AddAction extends Action {
         return group;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        try {
+            openEditor(doAdd());
+        } catch (Exception e) {
+            LOG.error("Error while creating new element.", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.AddAction_1);
+        } 
+    }
+
+    private CnATreeElement doAdd() throws Exception { 
+            CnATreeElement newElement = null;
+            CnATreeElement group = getGroup();
+            if (group != null) {
+                group = Retriever.retrieveElement(group,new RetrieveInfo().setProperties(true).setChildren(true).setParent(true));
+                newElement = CnAElementFactory.getInstance().saveNew(group, this.objectTypeId, null);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("New element - type: " + newElement.getObjectType() + ", title: " + newElement.getTitle() + ", group: " + group.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                }
+                // create a link to last selected (foreign) element
+                // if no group in this view is selected
+                if (groupView.getSelectedElement() != null && groupView.getSelectedGroup() == null) {
+                    // this method also fires events for added links:
+                    CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(newElement, Arrays.asList(groupView.getSelectedElement()));
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("New element linked - type: " + groupView.getSelectedElement().getObjectType() + ", title: " + groupView.getSelectedElement().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                    }
+                }           
+            } else {
+                LOG.warn("Can't add element. No group found. Type: " + this.objectTypeId); //$NON-NLS-1$
+            }  
+            return newElement;
+    }
+    
+    private void openEditor(CnATreeElement newElement) {
+        if (newElement != null) {
+            EditorFactory.getInstance().openEditor(newElement);
+        }
+    }
+
+    /**
+     * Class to run element creating in a parallel job with GUI notification.
+     * 
+     * Not used at the moment.
+     * 
+     * @author Daniel Murygin <dm[at]sernet[dot]de>
+     */
+    class CreateJob implements IProgressRunnable {
+        
+        CnATreeElement newElement;
+  
+        public CnATreeElement getElement() {
+            return newElement;
+        }
+        /* (non-Javadoc)
+         * @see sernet.verinice.rcp.IProgressRunnable#getNumberOfElements()
+         */
+        @Override
+        public int getNumberOfElements() {
+            return 0;
+        }
+        /* (non-Javadoc)
+         * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+         */
+        @Override
+        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+            try {
+                newElement = doAdd();
+            } catch (Exception e) {
+                LOG.error("Error while creating new element", e); //$NON-NLS-1$
+            }           
+        }
+    }
 }

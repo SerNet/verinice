@@ -29,7 +29,7 @@
             class="sernet.verinice.samt.audit.rcp.OrganizationView"
             icon="icons/organization.gif"
             id="sernet.verinice.samt.audit.rcp.OrganizationView"
-            name="Organization-View">
+            name="%view.name.1">
       </view> 
       <view
             allowMultiple="true"
@@ -37,7 +37,7 @@
             class="sernet.verinice.samt.audit.rcp.AuditView"
             icon="icons/audit.png"
             id="sernet.verinice.samt.audit.rcp.AuditView"
-            name="Audit-View">
+            name="%view.name.2">
       </view>
       <view
             allowMultiple="true"
@@ -45,7 +45,7 @@
             class="sernet.verinice.samt.audit.rcp.AssetView"
             icon="icons/asset.png"
             id="sernet.verinice.samt.audit.rcp.AssetView"
-            name="Asset-View">
+            name="%view.name.3">
       </view>
       <view
             allowMultiple="true"
@@ -53,7 +53,7 @@
             class="sernet.verinice.samt.audit.rcp.ControlView"
             icon="icons/control.png"
             id="sernet.verinice.samt.audit.rcp.ControlView"
-            name="Control-View">
+            name="%view.name.4">
       </view>
    </extension>
    <extension
@@ -67,7 +67,7 @@
       <perspective
             class="sernet.verinice.samt.audit.rcp.AuditPerspective"
             id="sernet.verinice.samt.audit.rcp.AuditPerspective"
-            name="Audit Perspective"
+            name="%perspective.name.0"
             icon="icons/audit.png">
       </perspective>
    </extension>
@@ -94,11 +94,11 @@
                class="sernet.verinice.samt.rcp.ExportSelfAssessment"
                icon="icons/export.gif"
                id="sernet.verinice.samt.rcp.ExportSelfAssessment"
-               label="Export..."
+               label="%action.label.6"
                state="true"
                style="push"
                toolbarPath="additions"
-               tooltip="Export a Security Assessment...">
+               tooltip="%action.tooltip.0">
          </action>
       </viewContribution>
       <viewContribution
@@ -108,7 +108,7 @@
                class="sernet.verinice.samt.audit.rcp.SwitchElementMenuCreater"
                icon="icons/filter.gif"
                id="sernet.verinice.samt.audit.rcp.SwitchElement"
-               label="Select element"
+               label="%action.label.7"
                style="pulldown"
                toolbarPath="additions">
          </action>
@@ -120,7 +120,7 @@
                class="sernet.verinice.samt.audit.rcp.AddMenuCreater"
                icon="icons/new.png"
                id="sernet.verinice.samt.audit.rcp.AddAudit"
-               label="Add element"
+               label="%action.label.8"
                style="pulldown"
                toolbarPath="additions">
          </action>
@@ -132,7 +132,7 @@
                class="sernet.verinice.samt.audit.rcp.SwitchElementMenuCreater"
                icon="icons/filter.gif"
                id="sernet.verinice.samt.audit.rcp.SwitchElement"
-               label="Select element"
+               label="%action.label.9"
                style="pulldown"
                toolbarPath="additions">
          </action>
@@ -144,7 +144,7 @@
                class="sernet.verinice.samt.audit.rcp.AddMenuCreater"
                icon="icons/new.png"
                id="sernet.verinice.samt.audit.rcp.AddAsset"
-               label="Add element"
+               label="%action.label.10"
                style="pulldown"
                toolbarPath="additions">
          </action>
@@ -156,7 +156,7 @@
                class="sernet.verinice.samt.audit.rcp.SwitchElementMenuCreater"
                icon="icons/filter.gif"
                id="sernet.verinice.samt.audit.rcp.SwitchElement"
-               label="Select element"
+               label="%action.label.11"
                style="pulldown"
                toolbarPath="additions">
          </action>
@@ -168,7 +168,7 @@
                class="sernet.verinice.samt.audit.rcp.AddMenuCreater"
                icon="icons/new.png"
                id="sernet.verinice.samt.audit.rcp.AddControl"
-               label="Add element"
+               label="%action.label.12"
                style="pulldown"
                toolbarPath="additions">
          </action>
@@ -276,10 +276,10 @@
                enablesFor="1"
                icon="icons/export.gif"
                id="sernet.verinice.samt.rcp.ExportSelfAssessment.menu"
-               label="Export..."
+               label="%action.label.13"
                menubarPath="additions"
                style="push"
-               tooltip="Export Security Assessment...">
+               tooltip="%action.tooltip.1">
          </action>
       </objectContribution>
    </extension>
