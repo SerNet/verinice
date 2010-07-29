@@ -4433,6 +4433,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
         <grid id="1069">
             <property name="marginBottom">1cm</property>
             <property name="pageBreakAfter">always</property>
+            <property name="width">8.020833333333334in</property>
             <column id="1070"/>
             <row id="1071">
                 <cell id="1072">
@@ -5455,10 +5456,10 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                             <property name="width">0.7083333333333334in</property>
                         </column>
                         <column id="1506">
-                            <property name="width">0.4895833333333333in</property>
+                            <property name="width">0.5833333333333334in</property>
                         </column>
                         <column id="1507">
-                            <property name="width">3.9583333333333335in</property>
+                            <property name="width">3.8645833333333335in</property>
                         </column>
                         <header>
                             <row id="1486">
@@ -5806,7 +5807,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                         <list-property name="paramBindings">
                             <structure>
                                 <property name="paramName">checkId</property>
-                                <expression name="expression" type="javascript">0</expression>
+                                <expression name="expression" type="javascript">1</expression>
                             </structure>
                         </list-property>
                         <list-property name="boundDataColumns">
@@ -5846,10 +5847,10 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                             <property name="width">0.7083333333333334in</property>
                         </column>
                         <column id="1720">
-                            <property name="width">0.4895833333333333in</property>
+                            <property name="width">0.5833333333333334in</property>
                         </column>
                         <column id="1721">
-                            <property name="width">3.9583333333333335in</property>
+                            <property name="width">3.8645833333333335in</property>
                         </column>
                         <header>
                             <row id="1695">
@@ -6247,7 +6248,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                     <property name="borderTopStyle">solid</property>
                                                     <property name="borderTopWidth">thin</property>
                                                     <property name="marginBottom">1cm</property>
-                                                    <property name="width">8.520833333333334in</property>
+                                                    <property name="width">7.8125in</property>
                                                     <property name="dataSet">controlDetails</property>
                                                     <list-property name="boundDataColumns">
                                                         <structure>
@@ -6295,25 +6296,25 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                         <property name="width">0.65625in</property>
                                                     </column>
                                                     <column id="1632">
-                                                        <property name="width">1.7708333333333333in</property>
+                                                        <property name="width">1.1145833333333333in</property>
                                                     </column>
                                                     <column id="1612">
-                                                        <property name="width">1.625in</property>
+                                                        <property name="width">1.3541666666666667in</property>
                                                     </column>
                                                     <column id="1618">
-                                                        <property name="width">0.9791666666666666in</property>
+                                                        <property name="width">1.1875in</property>
                                                     </column>
                                                     <column id="1613">
-                                                        <property name="width">0.7083333333333334in</property>
+                                                        <property name="width">0.75in</property>
                                                     </column>
                                                     <column id="1614">
-                                                        <property name="width">0.6354166666666666in</property>
+                                                        <property name="width">0.5729166666666666in</property>
                                                     </column>
                                                     <column id="1615">
                                                         <property name="width">1.0208333333333333in</property>
                                                     </column>
                                                     <column id="1624">
-                                                        <property name="width">1.125in</property>
+                                                        <property name="width">1.15625in</property>
                                                     </column>
                                                     <header>
                                                         <row id="1589">
@@ -6751,6 +6752,7 @@ Level]]></text-property>
         <grid id="1184">
             <property name="marginBottom">1cm</property>
             <property name="pageBreakAfter">always</property>
+            <property name="width">11.427083333333334in</property>
             <column id="1185"/>
             <row id="1186">
                 <cell id="1187">
@@ -6764,6 +6766,7 @@ Level]]></text-property>
                 <cell id="1190">
                     <table id="1639">
                         <property name="marginBottom">1pt</property>
+                        <property name="width">11.354166666666666in</property>
                         <property name="dataSet">isoChapterList</property>
                         <list-property name="paramBindings">
                             <structure>
@@ -6809,7 +6812,7 @@ Level]]></text-property>
                                             <cell id="1649">
                                                 <property name="colSpan">2</property>
                                                 <property name="rowSpan">1</property>
-                                                <table id="1722">
+                                                <table id="1765">
                                                     <property name="borderBottomColor">#000000</property>
                                                     <property name="borderBottomStyle">solid</property>
                                                     <property name="borderBottomWidth">thin</property>
@@ -6823,7 +6826,7 @@ Level]]></text-property>
                                                     <property name="borderTopStyle">solid</property>
                                                     <property name="borderTopWidth">thin</property>
                                                     <property name="marginBottom">1cm</property>
-                                                    <property name="width">8.520833333333334in</property>
+                                                    <property name="width">7.8125in</property>
                                                     <property name="dataSet">controlDetails</property>
                                                     <list-property name="boundDataColumns">
                                                         <structure>
@@ -6867,33 +6870,33 @@ Level]]></text-property>
                                                             <property name="dataType">javaObject</property>
                                                         </structure>
                                                     </list-property>
-                                                    <column id="1757">
+                                                    <column id="1800">
                                                         <property name="width">0.65625in</property>
                                                     </column>
-                                                    <column id="1758">
-                                                        <property name="width">1.7708333333333333in</property>
+                                                    <column id="1801">
+                                                        <property name="width">1.1145833333333333in</property>
                                                     </column>
-                                                    <column id="1759">
-                                                        <property name="width">1.625in</property>
+                                                    <column id="1802">
+                                                        <property name="width">1.3541666666666667in</property>
                                                     </column>
-                                                    <column id="1760">
-                                                        <property name="width">0.9791666666666666in</property>
+                                                    <column id="1803">
+                                                        <property name="width">1.1875in</property>
                                                     </column>
-                                                    <column id="1761">
-                                                        <property name="width">0.7083333333333334in</property>
+                                                    <column id="1804">
+                                                        <property name="width">0.75in</property>
                                                     </column>
-                                                    <column id="1762">
-                                                        <property name="width">0.6354166666666666in</property>
+                                                    <column id="1805">
+                                                        <property name="width">0.5729166666666666in</property>
                                                     </column>
-                                                    <column id="1763">
+                                                    <column id="1806">
                                                         <property name="width">1.0208333333333333in</property>
                                                     </column>
-                                                    <column id="1764">
-                                                        <property name="width">1.125in</property>
+                                                    <column id="1807">
+                                                        <property name="width">1.15625in</property>
                                                     </column>
                                                     <header>
-                                                        <row id="1723">
-                                                            <cell id="1724">
+                                                        <row id="1766">
+                                                            <cell id="1767">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -6906,12 +6909,12 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1725">
+                                                                <text id="1768">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[No.]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1726">
+                                                            <cell id="1769">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -6924,12 +6927,12 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1727">
+                                                                <text id="1770">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Control]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1728">
+                                                            <cell id="1771">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -6942,12 +6945,12 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1729">
+                                                                <text id="1772">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Finding]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1730">
+                                                            <cell id="1773">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -6960,13 +6963,13 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1731">
+                                                                <text id="1774">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Maturity
 Level]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1732">
+                                                            <cell id="1775">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -6979,12 +6982,12 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1733">
+                                                                <text id="1776">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Deviation]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1734">
+                                                            <cell id="1777">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -6997,12 +7000,12 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1735">
+                                                                <text id="1778">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Risk]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1736">
+                                                            <cell id="1779">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -7015,12 +7018,12 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1737">
+                                                                <text id="1780">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Measure]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1738">
+                                                            <cell id="1781">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -7033,7 +7036,7 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1739">
+                                                                <text id="1782">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Person in charge]]></text-property>
                                                                 </text>
@@ -7041,7 +7044,7 @@ Level]]></text-property>
                                                         </row>
                                                     </header>
                                                     <detail>
-                                                        <row id="1740">
+                                                        <row id="1783">
                                                             <property name="backgroundColor">#BFBFBF</property>
                                                             <list-property name="highlightRules">
                                                                 <structure>
@@ -7053,7 +7056,7 @@ Level]]></text-property>
                                                                     </simple-property-list>
                                                                 </structure>
                                                             </list-property>
-                                                            <cell id="1741">
+                                                            <cell id="1784">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -7066,12 +7069,12 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text-data id="1742">
+                                                                <text-data id="1785">
                                                                     <expression name="valueExpr">row["no"]</expression>
                                                                     <property name="contentType">html</property>
                                                                 </text-data>
                                                             </cell>
-                                                            <cell id="1743">
+                                                            <cell id="1786">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -7084,11 +7087,11 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <data id="1744">
+                                                                <data id="1787">
                                                                     <property name="resultSetColumn">control</property>
                                                                 </data>
                                                             </cell>
-                                                            <cell id="1745">
+                                                            <cell id="1788">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -7101,12 +7104,12 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text-data id="1746">
+                                                                <text-data id="1789">
                                                                     <expression name="valueExpr">row["findings"]</expression>
                                                                     <property name="contentType">html</property>
                                                                 </text-data>
                                                             </cell>
-                                                            <cell id="1747">
+                                                            <cell id="1790">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -7119,11 +7122,11 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <data id="1748">
+                                                                <data id="1791">
                                                                     <property name="resultSetColumn">maturityLevel</property>
                                                                 </data>
                                                             </cell>
-                                                            <cell id="1749">
+                                                            <cell id="1792">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -7188,11 +7191,11 @@ Level]]></text-property>
                                                                         <text-property name="display">Major</text-property>
                                                                     </structure>
                                                                 </list-property>
-                                                                <data id="1750">
+                                                                <data id="1793">
                                                                     <property name="resultSetColumn">deviation</property>
                                                                 </data>
                                                             </cell>
-                                                            <cell id="1751">
+                                                            <cell id="1794">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -7272,11 +7275,11 @@ Level]]></text-property>
                                                                         <text-property name="display">High</text-property>
                                                                     </structure>
                                                                 </list-property>
-                                                                <data id="1752">
+                                                                <data id="1795">
                                                                     <property name="resultSetColumn">risk</property>
                                                                 </data>
                                                             </cell>
-                                                            <cell id="1753">
+                                                            <cell id="1796">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -7289,12 +7292,12 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text-data id="1754">
+                                                                <text-data id="1797">
                                                                     <expression name="valueExpr">row["measure"]</expression>
                                                                     <property name="contentType">html</property>
                                                                 </text-data>
                                                             </cell>
-                                                            <cell id="1755">
+                                                            <cell id="1798">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -7307,7 +7310,7 @@ Level]]></text-property>
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <data id="1756">
+                                                                <data id="1799">
                                                                     <property name="resultSetColumn">personInCharge</property>
                                                                 </data>
                                                             </cell>
