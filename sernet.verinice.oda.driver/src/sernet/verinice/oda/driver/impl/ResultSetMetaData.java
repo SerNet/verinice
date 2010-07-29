@@ -40,8 +40,9 @@ public class ResultSetMetaData implements IResultSetMetaData {
 
 		Class<?> rowClass = result.getClass();
 		if (rowClass.isArray() && rowClass.getComponentType() != Byte.TYPE) {
-			Object firstElement = Array.get(result, 0);
-			if (firstElement.getClass().isArray()) {
+			Object firstElement = (Array.getLength(result) > 0 ? Array.get(result, 0) : null);
+			Class<?> columnClass = (firstElement != null ? firstElement.getClass() : null);
+			if (columnClass != null && columnClass.isArray()) {
 				// 2-dimensional array (at least)
 				// first dimension: row
 				// second dimension: column
@@ -59,7 +60,7 @@ public class ResultSetMetaData implements IResultSetMetaData {
 			Object[] arr = ((Collection) result).toArray();
 			
 			Object firstElement = (arr.length > 0 ? arr[0] : null);
-			Class columnClass = (firstElement != null ? firstElement.getClass() : null);
+			Class<?> columnClass = (firstElement != null ? firstElement.getClass() : null);
 			if (columnClass != null && Collection.class.isAssignableFrom(columnClass)) {
 				// 2-dimensional collection (at least)
 				// first dimension: row
@@ -80,6 +81,10 @@ public class ResultSetMetaData implements IResultSetMetaData {
 			accessor = new SingleValueAccessor();
 		}
 
+		// If a data set is actually empty we need to pass -1 as the rowcount otherwise BIRT
+		// thinks the dataset is endless.
+		if (rowCount == 0)
+			rowCount = -1;
 	}
 
 	Object getValue(int row, int column) {
