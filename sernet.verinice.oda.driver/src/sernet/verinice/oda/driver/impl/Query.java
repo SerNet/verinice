@@ -283,7 +283,8 @@ public class Query implements IQuery
 				inParameters = null;
 		} catch (EvalError e) {
 			e.printStackTrace();
-//			return "Unable to execute setup query: " + e.getErrorText();
+			
+			throw new IllegalStateException("Unable to execute setup query: " + e.getErrorText());
 		}
 	}
 	
@@ -294,9 +295,7 @@ public class Query implements IQuery
 		try {
 			result = interpreter.eval(queryText);
 		} catch (EvalError e) {
-			e.printStackTrace();
 			result = new String("Unable to execute query: " + e.getErrorText());
-//			throw (OdaException) new OdaException("Unable to execute query.").initCause(e);
 		}
 		
 		return result;
