@@ -1207,8 +1207,8 @@ sag = c.getSelfAssessmentGroup();
 
 chart = new MaturitySpiderChart().createChart(sag);
 
-w = inpv("width");
-h = inpv("height");
+w = new Integer(inpv("width"));
+h = new Integer(inpv("height"));
 
 return helper.createImageResult(chart.createBufferedImage(w,h));
 ]]></xml-property>
@@ -1468,7 +1468,8 @@ return helper.execute(c).getResult();
             </list-property>
             <xml-property name="queryText"><![CDATA[c = helper.execute(new sernet.verinice.report.service.commands.LoadElementImagesCommand());
 
-return c.getResult();]]></xml-property>
+return c.getResult();
+]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>1.0</Version>
@@ -1524,6 +1525,636 @@ return c.getResult();]]></xml-property>
                     <name>setupQueryText</name>
                     <value>columns(new String[] { "image" });
 inParameters(new String[] { "findingId" });</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="checkDetails" id="1484">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">checkName</property>
+                    <text-property name="displayName">checkName</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">finding</property>
+                    <text-property name="displayName">finding</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">deviation</property>
+                    <text-property name="displayName">deviation</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">risk</property>
+                    <text-property name="displayName">risk</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">measure</property>
+                    <text-property name="displayName">measure</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">checkId</property>
+                    <property name="nativeName">checkId</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">0</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">checkName</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">finding</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">deviation</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">risk</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">measure</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">checkName</property>
+                    <property name="nativeName">checkName</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">finding</property>
+                    <property name="nativeName">finding</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">deviation</property>
+                    <property name="nativeName">deviation</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">risk</property>
+                    <property name="nativeName">risk</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">measure</property>
+                    <property name="nativeName">measure</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[checkId = inpv("checkId");
+
+c = new sernet.verinice.report.service.commands.LoadCheckDetailsCommand(checkId);
+	
+return helper.execute(c).getResult();
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>checkId</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>Column1</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>Column1</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>Column1</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "checkName", "finding", "deviation", "risk", "measure" });
+inParameters(new String[] { "checkId" });</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="isoChapterList" id="1587">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">chapterId</property>
+                    <text-property name="displayName">chapterId</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">chapterName</property>
+                    <text-property name="displayName">chapterName</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">0</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">chapterId</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">chapterName</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">chapterId</property>
+                    <property name="nativeName">chapterId</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">chapterName</property>
+                    <property name="nativeName">chapterName</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[id = inpv("id");
+
+c = helper.execute(new sernet.verinice.report.service.commands.LoadISOChapterList(id));
+
+return c.getResult();]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>id</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>chapterId</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>chapterId</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>chapterId</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "chapterId", "chapterName" });
+inParameters(new String[] { "id" });</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="controlDetails" id="1628">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">no</property>
+                    <text-property name="displayName">no</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">control</property>
+                    <text-property name="displayName">control</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">findings</property>
+                    <text-property name="displayName">findings</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">maturityLevel</property>
+                    <text-property name="displayName">maturityLevel</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">deviation</property>
+                    <text-property name="displayName">deviation</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">risk</property>
+                    <text-property name="displayName">risk</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">measure</property>
+                    <text-property name="displayName">measure</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">personInCharge</property>
+                    <text-property name="displayName">personInCharge</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">no</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">control</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">findings</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">maturityLevel</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">deviation</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">risk</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">measure</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">personInCharge</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">no</property>
+                    <property name="nativeName">no</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">control</property>
+                    <property name="nativeName">control</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">findings</property>
+                    <property name="nativeName">findings</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">maturityLevel</property>
+                    <property name="nativeName">maturityLevel</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">deviation</property>
+                    <property name="nativeName">deviation</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">risk</property>
+                    <property name="nativeName">risk</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">measure</property>
+                    <property name="nativeName">measure</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">personInCharge</property>
+                    <property name="nativeName">personInCharge</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[id = inpv("id");
+
+c = helper.execute(new sernet.verinice.report.service.commands.LoadControlDetails(id));
+
+return c.getResult();]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters derivedMetaData="true">
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>id</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>no</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>no</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>no</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control</design:name>
+            <design:position>2</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>findings</design:name>
+            <design:position>3</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>findings</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>findings</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>maturityLevel</design:name>
+            <design:position>4</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>maturityLevel</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>maturityLevel</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>deviation</design:name>
+            <design:position>5</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>deviation</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>deviation</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>risk</design:name>
+            <design:position>6</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>risk</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>risk</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>measure</design:name>
+            <design:position>7</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>measure</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>measure</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>personInCharge</design:name>
+            <design:position>8</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>personInCharge</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>personInCharge</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "no", "control", "findings", "maturityLevel", "deviation", "risk", "measure", "personInCharge" });
+inParameters(new String[] { "id" });</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
@@ -3089,9 +3720,10 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <data id="717">
-                                                                    <property name="resultSetColumn">finding</property>
-                                                                </data>
+                                                                <text-data id="1579">
+                                                                    <expression name="valueExpr">row["finding"]</expression>
+                                                                    <property name="contentType">html</property>
+                                                                </text-data>
                                                             </cell>
                                                             <cell id="587">
                                                                 <property name="borderBottomColor">#000000</property>
@@ -3259,9 +3891,10 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <data id="720">
-                                                                    <property name="resultSetColumn">measure</property>
-                                                                </data>
+                                                                <text-data id="1580">
+                                                                    <expression name="valueExpr">row["measure"]</expression>
+                                                                    <property name="contentType">html</property>
+                                                                </text-data>
                                                             </cell>
                                                         </row>
                                                     </detail>
@@ -4020,9 +4653,10 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <data id="1402">
-                                                                    <property name="resultSetColumn">finding</property>
-                                                                </data>
+                                                                <text-data id="1578">
+                                                                    <expression name="valueExpr">row["finding"]</expression>
+                                                                    <property name="contentType">html</property>
+                                                                </text-data>
                                                             </cell>
                                                             <cell id="1403">
                                                                 <property name="borderBottomColor">#000000</property>
@@ -4190,9 +4824,10 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <data id="1408">
-                                                                    <property name="resultSetColumn">measure</property>
-                                                                </data>
+                                                                <text-data id="1577">
+                                                                    <expression name="valueExpr">row["measure"]</expression>
+                                                                    <property name="contentType">html</property>
+                                                                </text-data>
                                                             </cell>
                                                         </row>
                                                     </detail>
@@ -4760,24 +5395,787 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                 </cell>
             </row>
             <row id="1082">
-                <cell id="1083"/>
+                <cell id="1083">
+                    <table id="1485">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="marginBottom">1cm</property>
+                        <property name="width">7.916666666666667in</property>
+                        <property name="dataSet">checkDetails</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">checkId</property>
+                                <expression name="expression" type="javascript">0</expression>
+                            </structure>
+                        </list-property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">checkName</property>
+                                <expression name="expression" type="javascript">dataSetRow["checkName"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">finding</property>
+                                <expression name="expression" type="javascript">dataSetRow["finding"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">deviation</property>
+                                <expression name="expression" type="javascript">dataSetRow["deviation"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">risk</property>
+                                <expression name="expression" type="javascript">dataSetRow["risk"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">measure</property>
+                                <expression name="expression" type="javascript">dataSetRow["measure"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                        </list-property>
+                        <column id="1510">
+                            <property name="width">1.0833333333333333in</property>
+                        </column>
+                        <column id="1504">
+                            <property name="width">1.6770833333333333in</property>
+                        </column>
+                        <column id="1505">
+                            <property name="width">0.7083333333333334in</property>
+                        </column>
+                        <column id="1506">
+                            <property name="width">0.4895833333333333in</property>
+                        </column>
+                        <column id="1507">
+                            <property name="width">3.9583333333333335in</property>
+                        </column>
+                        <header>
+                            <row id="1486">
+                                <cell id="1508">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="1511">
+                                        <text-property name="text">Check</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="1487">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text id="1488">
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Finding]]></text-property>
+                                    </text>
+                                </cell>
+                                <cell id="1489">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text id="1490">
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Deviation]]></text-property>
+                                    </text>
+                                </cell>
+                                <cell id="1491">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text id="1492">
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Risk]]></text-property>
+                                    </text>
+                                </cell>
+                                <cell id="1493">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text id="1494">
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Measure]]></text-property>
+                                    </text>
+                                </cell>
+                            </row>
+                        </header>
+                        <detail>
+                            <row id="1495">
+                                <property name="backgroundColor">#BFBFBF</property>
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#7F7F7F</property>
+                                        <expression name="testExpr" type="javascript">row.__rownum % 2</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">1</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
+                                <cell id="1509">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="1512">
+                                        <property name="resultSetColumn">checkName</property>
+                                    </data>
+                                </cell>
+                                <cell id="1496">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text-data id="1569">
+                                        <expression name="valueExpr">row["finding"]</expression>
+                                        <property name="contentType">html</property>
+                                    </text-data>
+                                </cell>
+                                <cell id="1498">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <list-property name="highlightRules">
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#00FF00</property>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">0</value>
+                                            </simple-property-list>
+                                        </structure>
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#FFFF00</property>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">1</value>
+                                            </simple-property-list>
+                                        </structure>
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#FF0000</property>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">2</value>
+                                            </simple-property-list>
+                                        </structure>
+                                    </list-property>
+                                    <list-property name="mapRules">
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">0</value>
+                                            </simple-property-list>
+                                            <text-property name="display">Ok</text-property>
+                                        </structure>
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">1</value>
+                                            </simple-property-list>
+                                            <text-property name="display">Minor</text-property>
+                                        </structure>
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">2</value>
+                                            </simple-property-list>
+                                            <text-property name="display">Major</text-property>
+                                        </structure>
+                                    </list-property>
+                                    <data id="1499">
+                                        <property name="resultSetColumn">deviation</property>
+                                    </data>
+                                </cell>
+                                <cell id="1500">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <list-property name="highlightRules">
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">0</value>
+                                            </simple-property-list>
+                                        </structure>
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#FFFF00</property>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">1</value>
+                                            </simple-property-list>
+                                        </structure>
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#FFA500</property>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">2</value>
+                                            </simple-property-list>
+                                        </structure>
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#FF0000</property>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">3</value>
+                                            </simple-property-list>
+                                        </structure>
+                                    </list-property>
+                                    <list-property name="mapRules">
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">0</value>
+                                            </simple-property-list>
+                                            <text-property name="display">-</text-property>
+                                        </structure>
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">1</value>
+                                            </simple-property-list>
+                                            <text-property name="display">Low</text-property>
+                                        </structure>
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">2</value>
+                                            </simple-property-list>
+                                            <text-property name="display">Medium</text-property>
+                                        </structure>
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">3</value>
+                                            </simple-property-list>
+                                            <text-property name="display">High</text-property>
+                                        </structure>
+                                    </list-property>
+                                    <data id="1501">
+                                        <property name="resultSetColumn">risk</property>
+                                    </data>
+                                </cell>
+                                <cell id="1502">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text-data id="1571">
+                                        <expression name="valueExpr">row["measure"]</expression>
+                                        <property name="contentType">html</property>
+                                    </text-data>
+                                </cell>
+                            </row>
+                        </detail>
+                    </table>
+                </cell>
             </row>
             <row id="1084">
                 <cell id="1085">
                     <text id="1086">
                         <property name="contentType">html</property>
-                        <text-property name="content"><![CDATA[<H3>.3.3. System Checks</H3]]></text-property>
+                        <text-property name="content"><![CDATA[<H3>4.3.3. System Checks</H3]]></text-property>
                     </text>
                 </cell>
             </row>
             <row id="1087">
-                <cell id="1088"/>
+                <cell id="1088">
+                    <table id="1694">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="marginBottom">1cm</property>
+                        <property name="width">7.916666666666667in</property>
+                        <property name="dataSet">checkDetails</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">checkId</property>
+                                <expression name="expression" type="javascript">0</expression>
+                            </structure>
+                        </list-property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">checkName</property>
+                                <expression name="expression" type="javascript">dataSetRow["checkName"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">finding</property>
+                                <expression name="expression" type="javascript">dataSetRow["finding"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">deviation</property>
+                                <expression name="expression" type="javascript">dataSetRow["deviation"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">risk</property>
+                                <expression name="expression" type="javascript">dataSetRow["risk"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">measure</property>
+                                <expression name="expression" type="javascript">dataSetRow["measure"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                        </list-property>
+                        <column id="1717">
+                            <property name="width">1.0833333333333333in</property>
+                        </column>
+                        <column id="1718">
+                            <property name="width">1.6770833333333333in</property>
+                        </column>
+                        <column id="1719">
+                            <property name="width">0.7083333333333334in</property>
+                        </column>
+                        <column id="1720">
+                            <property name="width">0.4895833333333333in</property>
+                        </column>
+                        <column id="1721">
+                            <property name="width">3.9583333333333335in</property>
+                        </column>
+                        <header>
+                            <row id="1695">
+                                <cell id="1696">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="1697">
+                                        <text-property name="text">Check</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="1698">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text id="1699">
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Finding]]></text-property>
+                                    </text>
+                                </cell>
+                                <cell id="1700">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text id="1701">
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Deviation]]></text-property>
+                                    </text>
+                                </cell>
+                                <cell id="1702">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text id="1703">
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Risk]]></text-property>
+                                    </text>
+                                </cell>
+                                <cell id="1704">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text id="1705">
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Measure]]></text-property>
+                                    </text>
+                                </cell>
+                            </row>
+                        </header>
+                        <detail>
+                            <row id="1706">
+                                <property name="backgroundColor">#BFBFBF</property>
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#7F7F7F</property>
+                                        <expression name="testExpr" type="javascript">row.__rownum % 2</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">1</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
+                                <cell id="1707">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="1708">
+                                        <property name="resultSetColumn">checkName</property>
+                                    </data>
+                                </cell>
+                                <cell id="1709">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text-data id="1710">
+                                        <expression name="valueExpr">row["finding"]</expression>
+                                        <property name="contentType">html</property>
+                                    </text-data>
+                                </cell>
+                                <cell id="1711">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <list-property name="highlightRules">
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#00FF00</property>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">0</value>
+                                            </simple-property-list>
+                                        </structure>
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#FFFF00</property>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">1</value>
+                                            </simple-property-list>
+                                        </structure>
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#FF0000</property>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">2</value>
+                                            </simple-property-list>
+                                        </structure>
+                                    </list-property>
+                                    <list-property name="mapRules">
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">0</value>
+                                            </simple-property-list>
+                                            <text-property name="display">Ok</text-property>
+                                        </structure>
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">1</value>
+                                            </simple-property-list>
+                                            <text-property name="display">Minor</text-property>
+                                        </structure>
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["deviation"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">2</value>
+                                            </simple-property-list>
+                                            <text-property name="display">Major</text-property>
+                                        </structure>
+                                    </list-property>
+                                    <data id="1712">
+                                        <property name="resultSetColumn">deviation</property>
+                                    </data>
+                                </cell>
+                                <cell id="1713">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <list-property name="highlightRules">
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">0</value>
+                                            </simple-property-list>
+                                        </structure>
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#FFFF00</property>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">1</value>
+                                            </simple-property-list>
+                                        </structure>
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#FFA500</property>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">2</value>
+                                            </simple-property-list>
+                                        </structure>
+                                        <structure>
+                                            <property name="operator">eq</property>
+                                            <property name="backgroundColor">#FF0000</property>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">3</value>
+                                            </simple-property-list>
+                                        </structure>
+                                    </list-property>
+                                    <list-property name="mapRules">
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">0</value>
+                                            </simple-property-list>
+                                            <text-property name="display">-</text-property>
+                                        </structure>
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">1</value>
+                                            </simple-property-list>
+                                            <text-property name="display">Low</text-property>
+                                        </structure>
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">2</value>
+                                            </simple-property-list>
+                                            <text-property name="display">Medium</text-property>
+                                        </structure>
+                                        <structure>
+                                            <expression name="testExpr" type="javascript">row["risk"]</expression>
+                                            <property name="operator">eq</property>
+                                            <simple-property-list name="value1">
+                                                <value type="javascript">3</value>
+                                            </simple-property-list>
+                                            <text-property name="display">High</text-property>
+                                        </structure>
+                                    </list-property>
+                                    <data id="1714">
+                                        <property name="resultSetColumn">risk</property>
+                                    </data>
+                                </cell>
+                                <cell id="1715">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text-data id="1716">
+                                        <expression name="valueExpr">row["measure"]</expression>
+                                        <property name="contentType">html</property>
+                                    </text-data>
+                                </cell>
+                            </row>
+                        </detail>
+                    </table>
+                </cell>
             </row>
         </grid>
         <grid id="1089">
             <property name="marginBottom">1cm</property>
             <property name="pageBreakAfter">always</property>
-            <column id="1090"/>
+            <property name="width">11.010416666666666in</property>
+            <column id="1090">
+                <property name="width">11.010416666666666in</property>
+            </column>
             <row id="1091">
                 <cell id="1092">
                     <text id="1093">
@@ -4790,37 +6188,23 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                 <cell id="1180">
                     <table id="1191">
                         <property name="marginBottom">1pt</property>
-                        <property name="dataSet">isoChapters</property>
+                        <property name="dataSet">isoChapterList</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">id</property>
+                                <expression name="expression" type="javascript">0</expression>
+                            </structure>
+                        </list-property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">chapterNo</property>
-                                <expression name="expression" type="javascript">dataSetRow["chapterNo"]</expression>
-                                <property name="dataType">string</property>
+                                <property name="name">chapterId</property>
+                                <expression name="expression" type="javascript">dataSetRow["chapterId"]</expression>
+                                <property name="dataType">javaObject</property>
                             </structure>
                             <structure>
                                 <property name="name">chapterName</property>
                                 <expression name="expression" type="javascript">dataSetRow["chapterName"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">finding</property>
-                                <expression name="expression" type="javascript">dataSetRow["finding"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">risk</property>
-                                <expression name="expression" type="javascript">dataSetRow["risk"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">deviation</property>
-                                <expression name="expression" type="javascript">dataSetRow["deviation"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">measure</property>
-                                <expression name="expression" type="javascript">dataSetRow["measure"]</expression>
-                                <property name="dataType">string</property>
+                                <property name="dataType">javaObject</property>
                             </structure>
                         </list-property>
                         <column id="1284"/>
@@ -4830,14 +6214,17 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                     <grid id="1194">
                                         <property name="marginBottom">1cm</property>
                                         <property name="pageBreakAfter">always</property>
+                                        <property name="width">11.28125in</property>
                                         <column id="1195"/>
-                                        <column id="1196"/>
+                                        <column id="1196">
+                                            <property name="width">3.9375in</property>
+                                        </column>
                                         <row id="1197">
                                             <cell id="1198">
                                                 <property name="colSpan">2</property>
                                                 <property name="rowSpan">1</property>
                                                 <text-data id="1199">
-                                                    <expression name="valueExpr">"&lt;h2>" + row["chapterName"] + "&lt;/h2>"</expression>
+                                                    <expression name="valueExpr">"&lt;h2>5." + (row.__rownum + 1) + " " + row["chapterName"] + "&lt;/h2>"</expression>
                                                     <property name="contentType">html</property>
                                                 </text-data>
                                             </cell>
@@ -4846,7 +6233,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                             <cell id="1201">
                                                 <property name="colSpan">2</property>
                                                 <property name="rowSpan">1</property>
-                                                <table id="1202">
+                                                <table id="1588">
                                                     <property name="borderBottomColor">#000000</property>
                                                     <property name="borderBottomStyle">solid</property>
                                                     <property name="borderBottomWidth">thin</property>
@@ -4860,47 +6247,77 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                     <property name="borderTopStyle">solid</property>
                                                     <property name="borderTopWidth">thin</property>
                                                     <property name="marginBottom">1cm</property>
+                                                    <property name="width">8.520833333333334in</property>
+                                                    <property name="dataSet">controlDetails</property>
                                                     <list-property name="boundDataColumns">
                                                         <structure>
-                                                            <property name="name">finding</property>
-                                                            <text-property name="displayName">finding</text-property>
-                                                            <expression name="expression" type="javascript">dataSetRow["finding"]</expression>
-                                                            <property name="dataType">string</property>
+                                                            <property name="name">no</property>
+                                                            <expression name="expression" type="javascript">dataSetRow["no"]</expression>
+                                                            <property name="dataType">javaObject</property>
+                                                        </structure>
+                                                        <structure>
+                                                            <property name="name">control</property>
+                                                            <expression name="expression" type="javascript">dataSetRow["control"]</expression>
+                                                            <property name="dataType">javaObject</property>
+                                                        </structure>
+                                                        <structure>
+                                                            <property name="name">findings</property>
+                                                            <expression name="expression" type="javascript">dataSetRow["findings"]</expression>
+                                                            <property name="dataType">javaObject</property>
+                                                        </structure>
+                                                        <structure>
+                                                            <property name="name">maturityLevel</property>
+                                                            <expression name="expression" type="javascript">dataSetRow["maturityLevel"]</expression>
+                                                            <property name="dataType">javaObject</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="name">deviation</property>
-                                                            <text-property name="displayName">deviation</text-property>
                                                             <expression name="expression" type="javascript">dataSetRow["deviation"]</expression>
-                                                            <property name="dataType">string</property>
+                                                            <property name="dataType">javaObject</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="name">risk</property>
-                                                            <text-property name="displayName">risk</text-property>
                                                             <expression name="expression" type="javascript">dataSetRow["risk"]</expression>
-                                                            <property name="dataType">string</property>
+                                                            <property name="dataType">javaObject</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="name">measure</property>
-                                                            <text-property name="displayName">measure</text-property>
                                                             <expression name="expression" type="javascript">dataSetRow["measure"]</expression>
-                                                            <property name="dataType">string</property>
+                                                            <property name="dataType">javaObject</property>
+                                                        </structure>
+                                                        <structure>
+                                                            <property name="name">personInCharge</property>
+                                                            <expression name="expression" type="javascript">dataSetRow["personInCharge"]</expression>
+                                                            <property name="dataType">javaObject</property>
                                                         </structure>
                                                     </list-property>
-                                                    <column id="1221">
-                                                        <property name="width">2.9895833333333335in</property>
+                                                    <column id="1621">
+                                                        <property name="width">0.65625in</property>
                                                     </column>
-                                                    <column id="1222">
-                                                        <property name="width">0.9166666666666666in</property>
+                                                    <column id="1632">
+                                                        <property name="width">1.7708333333333333in</property>
                                                     </column>
-                                                    <column id="1223">
-                                                        <property name="width">0.6979166666666666in</property>
+                                                    <column id="1612">
+                                                        <property name="width">1.625in</property>
                                                     </column>
-                                                    <column id="1224">
-                                                        <property name="width">3.1979166666666665in</property>
+                                                    <column id="1618">
+                                                        <property name="width">0.9791666666666666in</property>
+                                                    </column>
+                                                    <column id="1613">
+                                                        <property name="width">0.7083333333333334in</property>
+                                                    </column>
+                                                    <column id="1614">
+                                                        <property name="width">0.6354166666666666in</property>
+                                                    </column>
+                                                    <column id="1615">
+                                                        <property name="width">1.0208333333333333in</property>
+                                                    </column>
+                                                    <column id="1624">
+                                                        <property name="width">1.125in</property>
                                                     </column>
                                                     <header>
-                                                        <row id="1203">
-                                                            <cell id="1204">
+                                                        <row id="1589">
+                                                            <cell id="1619">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -4913,12 +6330,48 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1205">
+                                                                <text id="1625">
+                                                                    <property name="contentType">auto</property>
+                                                                    <text-property name="content"><![CDATA[No.]]></text-property>
+                                                                </text>
+                                                            </cell>
+                                                            <cell id="1630">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <text id="1633">
+                                                                    <property name="contentType">auto</property>
+                                                                    <text-property name="content"><![CDATA[Control]]></text-property>
+                                                                </text>
+                                                            </cell>
+                                                            <cell id="1592">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <text id="1593">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Finding]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1206">
+                                                            <cell id="1616">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -4931,12 +6384,31 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1207">
+                                                                <text id="1626">
+                                                                    <property name="contentType">auto</property>
+                                                                    <text-property name="content"><![CDATA[Maturity
+Level]]></text-property>
+                                                                </text>
+                                                            </cell>
+                                                            <cell id="1594">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <text id="1595">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Deviation]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1208">
+                                                            <cell id="1596">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -4949,12 +6421,12 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1209">
+                                                                <text id="1597">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Risk]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1210">
+                                                            <cell id="1598">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -4967,16 +6439,45 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1211">
+                                                                <text id="1599">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Measure]]></text-property>
+                                                                </text>
+                                                            </cell>
+                                                            <cell id="1622">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <text id="1627">
+                                                                    <property name="contentType">auto</property>
+                                                                    <text-property name="content"><![CDATA[Person in charge]]></text-property>
                                                                 </text>
                                                             </cell>
                                                         </row>
                                                     </header>
                                                     <detail>
-                                                        <row id="1212">
-                                                            <cell id="1213">
+                                                        <row id="1600">
+                                                            <property name="backgroundColor">#BFBFBF</property>
+                                                            <list-property name="highlightRules">
+                                                                <structure>
+                                                                    <property name="operator">eq</property>
+                                                                    <property name="backgroundColor">#7F7F7F</property>
+                                                                    <expression name="testExpr" type="javascript">row.__rownum % 2</expression>
+                                                                    <simple-property-list name="value1">
+                                                                        <value type="javascript">1</value>
+                                                                    </simple-property-list>
+                                                                </structure>
+                                                            </list-property>
+                                                            <cell id="1620">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -4989,11 +6490,64 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <data id="1214">
-                                                                    <property name="resultSetColumn">finding</property>
+                                                                <text-data id="1629">
+                                                                    <expression name="valueExpr">row["no"]</expression>
+                                                                    <property name="contentType">html</property>
+                                                                </text-data>
+                                                            </cell>
+                                                            <cell id="1631">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <data id="1634">
+                                                                    <property name="resultSetColumn">control</property>
                                                                 </data>
                                                             </cell>
-                                                            <cell id="1215">
+                                                            <cell id="1603">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <text-data id="1604">
+                                                                    <expression name="valueExpr">row["findings"]</expression>
+                                                                    <property name="contentType">html</property>
+                                                                </text-data>
+                                                            </cell>
+                                                            <cell id="1617">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <data id="1635">
+                                                                    <property name="resultSetColumn">maturityLevel</property>
+                                                                </data>
+                                                            </cell>
+                                                            <cell id="1605">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -5058,11 +6612,11 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                         <text-property name="display">Major</text-property>
                                                                     </structure>
                                                                 </list-property>
-                                                                <data id="1216">
+                                                                <data id="1606">
                                                                     <property name="resultSetColumn">deviation</property>
                                                                 </data>
                                                             </cell>
-                                                            <cell id="1217">
+                                                            <cell id="1607">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -5142,11 +6696,11 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                         <text-property name="display">High</text-property>
                                                                     </structure>
                                                                 </list-property>
-                                                                <data id="1218">
+                                                                <data id="1608">
                                                                     <property name="resultSetColumn">risk</property>
                                                                 </data>
                                                             </cell>
-                                                            <cell id="1219">
+                                                            <cell id="1609">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -5159,8 +6713,26 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <data id="1220">
-                                                                    <property name="resultSetColumn">measure</property>
+                                                                <text-data id="1610">
+                                                                    <expression name="valueExpr">row["measure"]</expression>
+                                                                    <property name="contentType">html</property>
+                                                                </text-data>
+                                                            </cell>
+                                                            <cell id="1623">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <data id="1636">
+                                                                    <property name="resultSetColumn">personInCharge</property>
                                                                 </data>
                                                             </cell>
                                                         </row>
@@ -5190,65 +6762,54 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
             </row>
             <row id="1189">
                 <cell id="1190">
-                    <table id="1285">
+                    <table id="1639">
                         <property name="marginBottom">1pt</property>
-                        <property name="dataSet">isoChapters</property>
+                        <property name="dataSet">isoChapterList</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">id</property>
+                                <expression name="expression" type="javascript">1</expression>
+                            </structure>
+                        </list-property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">chapterNo</property>
-                                <expression name="expression" type="javascript">dataSetRow["chapterNo"]</expression>
-                                <property name="dataType">string</property>
+                                <property name="name">chapterId</property>
+                                <expression name="expression" type="javascript">dataSetRow["chapterId"]</expression>
+                                <property name="dataType">javaObject</property>
                             </structure>
                             <structure>
                                 <property name="name">chapterName</property>
                                 <expression name="expression" type="javascript">dataSetRow["chapterName"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">finding</property>
-                                <expression name="expression" type="javascript">dataSetRow["finding"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">risk</property>
-                                <expression name="expression" type="javascript">dataSetRow["risk"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">deviation</property>
-                                <expression name="expression" type="javascript">dataSetRow["deviation"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">measure</property>
-                                <expression name="expression" type="javascript">dataSetRow["measure"]</expression>
-                                <property name="dataType">string</property>
+                                <property name="dataType">javaObject</property>
                             </structure>
                         </list-property>
-                        <column id="1378"/>
+                        <column id="1693"/>
                         <detail>
-                            <row id="1286">
-                                <cell id="1287">
-                                    <grid id="1288">
+                            <row id="1640">
+                                <cell id="1641">
+                                    <grid id="1642">
                                         <property name="marginBottom">1cm</property>
                                         <property name="pageBreakAfter">always</property>
-                                        <column id="1289"/>
-                                        <column id="1290"/>
-                                        <row id="1291">
-                                            <cell id="1292">
+                                        <property name="width">11.28125in</property>
+                                        <column id="1643"/>
+                                        <column id="1644">
+                                            <property name="width">3.9375in</property>
+                                        </column>
+                                        <row id="1645">
+                                            <cell id="1646">
                                                 <property name="colSpan">2</property>
                                                 <property name="rowSpan">1</property>
-                                                <text-data id="1293">
-                                                    <expression name="valueExpr">"&lt;h2>" + row["chapterName"] + "&lt;/h2>"</expression>
+                                                <text-data id="1647">
+                                                    <expression name="valueExpr">"&lt;h2>6." + (row.__rownum + 1) + " " + row["chapterName"] + "&lt;/h2>"</expression>
                                                     <property name="contentType">html</property>
                                                 </text-data>
                                             </cell>
                                         </row>
-                                        <row id="1294">
-                                            <cell id="1295">
+                                        <row id="1648">
+                                            <cell id="1649">
                                                 <property name="colSpan">2</property>
                                                 <property name="rowSpan">1</property>
-                                                <table id="1296">
+                                                <table id="1722">
                                                     <property name="borderBottomColor">#000000</property>
                                                     <property name="borderBottomStyle">solid</property>
                                                     <property name="borderBottomWidth">thin</property>
@@ -5262,47 +6823,77 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                     <property name="borderTopStyle">solid</property>
                                                     <property name="borderTopWidth">thin</property>
                                                     <property name="marginBottom">1cm</property>
+                                                    <property name="width">8.520833333333334in</property>
+                                                    <property name="dataSet">controlDetails</property>
                                                     <list-property name="boundDataColumns">
                                                         <structure>
-                                                            <property name="name">finding</property>
-                                                            <text-property name="displayName">finding</text-property>
-                                                            <expression name="expression" type="javascript">dataSetRow["finding"]</expression>
-                                                            <property name="dataType">string</property>
+                                                            <property name="name">no</property>
+                                                            <expression name="expression" type="javascript">dataSetRow["no"]</expression>
+                                                            <property name="dataType">javaObject</property>
+                                                        </structure>
+                                                        <structure>
+                                                            <property name="name">control</property>
+                                                            <expression name="expression" type="javascript">dataSetRow["control"]</expression>
+                                                            <property name="dataType">javaObject</property>
+                                                        </structure>
+                                                        <structure>
+                                                            <property name="name">findings</property>
+                                                            <expression name="expression" type="javascript">dataSetRow["findings"]</expression>
+                                                            <property name="dataType">javaObject</property>
+                                                        </structure>
+                                                        <structure>
+                                                            <property name="name">maturityLevel</property>
+                                                            <expression name="expression" type="javascript">dataSetRow["maturityLevel"]</expression>
+                                                            <property name="dataType">javaObject</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="name">deviation</property>
-                                                            <text-property name="displayName">deviation</text-property>
                                                             <expression name="expression" type="javascript">dataSetRow["deviation"]</expression>
-                                                            <property name="dataType">string</property>
+                                                            <property name="dataType">javaObject</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="name">risk</property>
-                                                            <text-property name="displayName">risk</text-property>
                                                             <expression name="expression" type="javascript">dataSetRow["risk"]</expression>
-                                                            <property name="dataType">string</property>
+                                                            <property name="dataType">javaObject</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="name">measure</property>
-                                                            <text-property name="displayName">measure</text-property>
                                                             <expression name="expression" type="javascript">dataSetRow["measure"]</expression>
-                                                            <property name="dataType">string</property>
+                                                            <property name="dataType">javaObject</property>
+                                                        </structure>
+                                                        <structure>
+                                                            <property name="name">personInCharge</property>
+                                                            <expression name="expression" type="javascript">dataSetRow["personInCharge"]</expression>
+                                                            <property name="dataType">javaObject</property>
                                                         </structure>
                                                     </list-property>
-                                                    <column id="1315">
-                                                        <property name="width">2.9895833333333335in</property>
+                                                    <column id="1757">
+                                                        <property name="width">0.65625in</property>
                                                     </column>
-                                                    <column id="1316">
-                                                        <property name="width">0.9166666666666666in</property>
+                                                    <column id="1758">
+                                                        <property name="width">1.7708333333333333in</property>
                                                     </column>
-                                                    <column id="1317">
-                                                        <property name="width">0.6979166666666666in</property>
+                                                    <column id="1759">
+                                                        <property name="width">1.625in</property>
                                                     </column>
-                                                    <column id="1318">
-                                                        <property name="width">3.1979166666666665in</property>
+                                                    <column id="1760">
+                                                        <property name="width">0.9791666666666666in</property>
+                                                    </column>
+                                                    <column id="1761">
+                                                        <property name="width">0.7083333333333334in</property>
+                                                    </column>
+                                                    <column id="1762">
+                                                        <property name="width">0.6354166666666666in</property>
+                                                    </column>
+                                                    <column id="1763">
+                                                        <property name="width">1.0208333333333333in</property>
+                                                    </column>
+                                                    <column id="1764">
+                                                        <property name="width">1.125in</property>
                                                     </column>
                                                     <header>
-                                                        <row id="1297">
-                                                            <cell id="1298">
+                                                        <row id="1723">
+                                                            <cell id="1724">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -5315,12 +6906,48 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1299">
+                                                                <text id="1725">
+                                                                    <property name="contentType">auto</property>
+                                                                    <text-property name="content"><![CDATA[No.]]></text-property>
+                                                                </text>
+                                                            </cell>
+                                                            <cell id="1726">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <text id="1727">
+                                                                    <property name="contentType">auto</property>
+                                                                    <text-property name="content"><![CDATA[Control]]></text-property>
+                                                                </text>
+                                                            </cell>
+                                                            <cell id="1728">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <text id="1729">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Finding]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1300">
+                                                            <cell id="1730">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -5333,12 +6960,31 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1301">
+                                                                <text id="1731">
+                                                                    <property name="contentType">auto</property>
+                                                                    <text-property name="content"><![CDATA[Maturity
+Level]]></text-property>
+                                                                </text>
+                                                            </cell>
+                                                            <cell id="1732">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <text id="1733">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Deviation]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1302">
+                                                            <cell id="1734">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -5351,12 +6997,12 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1303">
+                                                                <text id="1735">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Risk]]></text-property>
                                                                 </text>
                                                             </cell>
-                                                            <cell id="1304">
+                                                            <cell id="1736">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -5369,16 +7015,45 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <text id="1305">
+                                                                <text id="1737">
                                                                     <property name="contentType">auto</property>
                                                                     <text-property name="content"><![CDATA[Measure]]></text-property>
+                                                                </text>
+                                                            </cell>
+                                                            <cell id="1738">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <text id="1739">
+                                                                    <property name="contentType">auto</property>
+                                                                    <text-property name="content"><![CDATA[Person in charge]]></text-property>
                                                                 </text>
                                                             </cell>
                                                         </row>
                                                     </header>
                                                     <detail>
-                                                        <row id="1306">
-                                                            <cell id="1307">
+                                                        <row id="1740">
+                                                            <property name="backgroundColor">#BFBFBF</property>
+                                                            <list-property name="highlightRules">
+                                                                <structure>
+                                                                    <property name="operator">eq</property>
+                                                                    <property name="backgroundColor">#7F7F7F</property>
+                                                                    <expression name="testExpr" type="javascript">row.__rownum % 2</expression>
+                                                                    <simple-property-list name="value1">
+                                                                        <value type="javascript">1</value>
+                                                                    </simple-property-list>
+                                                                </structure>
+                                                            </list-property>
+                                                            <cell id="1741">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -5391,11 +7066,64 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <data id="1308">
-                                                                    <property name="resultSetColumn">finding</property>
+                                                                <text-data id="1742">
+                                                                    <expression name="valueExpr">row["no"]</expression>
+                                                                    <property name="contentType">html</property>
+                                                                </text-data>
+                                                            </cell>
+                                                            <cell id="1743">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <data id="1744">
+                                                                    <property name="resultSetColumn">control</property>
                                                                 </data>
                                                             </cell>
-                                                            <cell id="1309">
+                                                            <cell id="1745">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <text-data id="1746">
+                                                                    <expression name="valueExpr">row["findings"]</expression>
+                                                                    <property name="contentType">html</property>
+                                                                </text-data>
+                                                            </cell>
+                                                            <cell id="1747">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <data id="1748">
+                                                                    <property name="resultSetColumn">maturityLevel</property>
+                                                                </data>
+                                                            </cell>
+                                                            <cell id="1749">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -5460,11 +7188,11 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                         <text-property name="display">Major</text-property>
                                                                     </structure>
                                                                 </list-property>
-                                                                <data id="1310">
+                                                                <data id="1750">
                                                                     <property name="resultSetColumn">deviation</property>
                                                                 </data>
                                                             </cell>
-                                                            <cell id="1311">
+                                                            <cell id="1751">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -5544,11 +7272,11 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                         <text-property name="display">High</text-property>
                                                                     </structure>
                                                                 </list-property>
-                                                                <data id="1312">
+                                                                <data id="1752">
                                                                     <property name="resultSetColumn">risk</property>
                                                                 </data>
                                                             </cell>
-                                                            <cell id="1313">
+                                                            <cell id="1753">
                                                                 <property name="borderBottomColor">#000000</property>
                                                                 <property name="borderBottomStyle">solid</property>
                                                                 <property name="borderBottomWidth">thin</property>
@@ -5561,8 +7289,26 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="borderTopColor">#000000</property>
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
-                                                                <data id="1314">
-                                                                    <property name="resultSetColumn">measure</property>
+                                                                <text-data id="1754">
+                                                                    <expression name="valueExpr">row["measure"]</expression>
+                                                                    <property name="contentType">html</property>
+                                                                </text-data>
+                                                            </cell>
+                                                            <cell id="1755">
+                                                                <property name="borderBottomColor">#000000</property>
+                                                                <property name="borderBottomStyle">solid</property>
+                                                                <property name="borderBottomWidth">thin</property>
+                                                                <property name="borderLeftColor">#000000</property>
+                                                                <property name="borderLeftStyle">solid</property>
+                                                                <property name="borderLeftWidth">thin</property>
+                                                                <property name="borderRightColor">#000000</property>
+                                                                <property name="borderRightStyle">solid</property>
+                                                                <property name="borderRightWidth">thin</property>
+                                                                <property name="borderTopColor">#000000</property>
+                                                                <property name="borderTopStyle">solid</property>
+                                                                <property name="borderTopWidth">thin</property>
+                                                                <data id="1756">
+                                                                    <property name="resultSetColumn">personInCharge</property>
                                                                 </data>
                                                             </cell>
                                                         </row>
