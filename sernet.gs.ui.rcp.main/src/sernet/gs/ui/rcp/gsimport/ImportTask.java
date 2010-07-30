@@ -239,9 +239,7 @@ public class ImportTask {
 		// create all found ITVerbund first
 		List<ITVerbund> neueVerbuende = new ArrayList<ITVerbund>();
 		for (ZielobjektTypeResult result : zielobjekte) {
-			if (ImportZielobjektTypUtil.translateZielobjektType(result.type,
-					result.subtype).equals(ITVerbund.TYPE_ID)) {
-
+			if (ITVerbund.TYPE_ID.equals(ImportZielobjektTypUtil.translateZielobjektType(result.type,result.subtype))) {
 				ITVerbund itverbund = (ITVerbund) CnAElementFactory
 						.getInstance().saveNew(
 								CnAElementFactory.getLoadedModel(),
