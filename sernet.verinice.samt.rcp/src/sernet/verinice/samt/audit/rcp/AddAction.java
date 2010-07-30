@@ -102,14 +102,6 @@ public class AddAction extends Action {
     @Override
     public void run() {
         try {
-            openEditor(doAdd());
-        } catch (Exception e) {
-            LOG.error("Error while creating new element.", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, Messages.AddAction_1);
-        } 
-    }
-
-    private CnATreeElement doAdd() throws Exception { 
             CnATreeElement newElement = null;
             CnATreeElement group = getGroup();
             if (group != null) {
@@ -126,50 +118,19 @@ public class AddAction extends Action {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("New element linked - type: " + groupView.getSelectedElement().getObjectType() + ", title: " + groupView.getSelectedElement().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                     }
-                }           
+                    // link is created asynchron
+                    // editor is opened in ISO27KModelViewUpdate of ElmentView when linkAdded event is fired
+                    groupView.registerforEdit(newElement);
+                } else {
+                    EditorFactory.getInstance().openEditor(newElement);
+                }
             } else {
                 LOG.warn("Can't add element. No group found. Type: " + this.objectTypeId); //$NON-NLS-1$
             }  
-            return newElement;
+        } catch (Exception e) {
+            LOG.error("Error while creating new element.", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.AddAction_1);
+        } 
     }
-    
-    private void openEditor(CnATreeElement newElement) {
-        if (newElement != null) {
-            EditorFactory.getInstance().openEditor(newElement);
-        }
-    }
-
-    /**
-     * Class to run element creating in a parallel job with GUI notification.
-     * 
-     * Not used at the moment.
-     * 
-     * @author Daniel Murygin <dm[at]sernet[dot]de>
-     */
-    class CreateJob implements IProgressRunnable {
-        
-        CnATreeElement newElement;
-  
-        public CnATreeElement getElement() {
-            return newElement;
-        }
-        /* (non-Javadoc)
-         * @see sernet.verinice.rcp.IProgressRunnable#getNumberOfElements()
-         */
-        @Override
-        public int getNumberOfElements() {
-            return 0;
-        }
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-         */
-        @Override
-        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-            try {
-                newElement = doAdd();
-            } catch (Exception e) {
-                LOG.error("Error while creating new element", e); //$NON-NLS-1$
-            }           
-        }
-    }
+ 
 }

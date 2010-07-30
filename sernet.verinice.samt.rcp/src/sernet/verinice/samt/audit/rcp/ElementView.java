@@ -19,7 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -254,6 +257,16 @@ public abstract class ElementView extends ViewPart {
         }
     }
     
+    Set<CnATreeElement> editElementSet = new HashSet<CnATreeElement>();
+    /**
+     * @param newElement
+     */
+    public void registerforEdit(CnATreeElement newElement) {
+        synchronized (editElementSet) {
+            editElementSet.add(newElement);
+        }       
+    }
+    
     protected ISO27KModelViewUpdate createISO27KModelViewUpdate() {
         return new ISO27KModelViewUpdate(viewer,cache) {
             /* (non-Javadoc)
@@ -261,6 +274,23 @@ public abstract class ElementView extends ViewPart {
              */
             public void linkAdded(CnALink link) {
                 reload();
+                // Open the editors registered before in AddAction
+                synchronized (editElementSet) {
+                    Set<CnATreeElement> workSet =  new HashSet<CnATreeElement>(editElementSet);
+                    for (CnATreeElement element : workSet) {
+                        if(element.equals(link.getDependant())) {
+                            EditorFactory.getInstance().openEditor(link.getDependant());
+                            editElementSet.remove(element);
+                        }
+                        if(element.equals(link.getDependency())) {
+                            EditorFactory.getInstance().openEditor(link.getDependency());
+                            editElementSet.remove(element);
+                        }
+                    }
+                    if(editElementSet.size()>0) {
+                        LOG.warn("Two links added at the same time");
+                    }
+                }
             }
         };
     }
