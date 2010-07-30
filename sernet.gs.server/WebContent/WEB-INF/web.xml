@@ -60,7 +60,11 @@
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/service/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> 
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/todo/*</url-pattern>
+    </filter-mapping>
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/sync/*</url-pattern>
