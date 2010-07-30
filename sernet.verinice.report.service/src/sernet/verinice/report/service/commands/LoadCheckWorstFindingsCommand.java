@@ -3,13 +3,13 @@ package sernet.verinice.report.service.commands;
 import sernet.verinice.interfaces.GenericCommand;
 
 @SuppressWarnings("serial")
-public class LoadCheckDetailsCommand extends GenericCommand {
+public class LoadCheckWorstFindingsCommand extends GenericCommand {
 
 	private Object[][] result;
 
 	private int checkId;
 
-	public LoadCheckDetailsCommand(int checkId) {
+	public LoadCheckWorstFindingsCommand(int checkId) {
 		this.checkId = checkId;
 	}
 

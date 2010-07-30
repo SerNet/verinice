@@ -11,9 +11,27 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.common.CnATreeElement;
 
+/**
+ * Loads the images that have been stored along with a finding.
+ * 
+ * TODO: The images are supposedly attached to a measure, the {@link CnATreeElement}
+ * to which the measure belongs or a completely different entity. The {@link #id}
+ * property is supposed to be used for this.
+ * 
+ * @author Robert Schuster <r.schuster@tarent.de>
+ *
+ */
 @SuppressWarnings("serial")
 public class LoadElementImagesCommand extends GenericCommand {
+	
+	private int id;
+	
+	public LoadElementImagesCommand(int id)
+	{
+		this.id = id;
+	}
 
 	private List<byte[]> result;
 

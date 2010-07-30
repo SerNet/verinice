@@ -6,6 +6,14 @@ import java.util.List;
 
 import sernet.verinice.interfaces.GenericCommand;
 
+/** This commands loads the values that should appear in the introduction part of the
+ * 'comprehensive security assessment report'.
+ * 
+ * TODO: Decide upon appearance, order and (most importantly) on how to retrieve the values.
+ * 
+ * @author Robert Schuster <r.schuster@tarent.de>
+ *
+ */
 @SuppressWarnings("serial")
 public class LoadSamtIntroTableCommand extends GenericCommand{
 

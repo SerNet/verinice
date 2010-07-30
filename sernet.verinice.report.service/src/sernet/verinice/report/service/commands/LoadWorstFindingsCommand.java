@@ -1,16 +1,66 @@
 package sernet.verinice.report.service.commands;
 
-import sernet.verinice.interfaces.GenericCommand;
+import java.util.HashMap;
 
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.common.CnATreeElement;
+
+/**
+ * Loads the worst finding for a given {@link CnATreeElement} (?).
+ *
+ * TODO samt: Needs to be implemented in a way that it really finds out the
+ * worst finding of a given element. It is not completely clear whether the
+ * element of which this is being done is really a {@link CnATreeElement} or
+ * a specific subclass. 
+ * 
+ * @author Robert Schuster <r.schuster@tarent.de>
+ */
 @SuppressWarnings("serial")
 public class LoadWorstFindingsCommand extends GenericCommand {
 
 	private Object[][] result;
 
-	private int type;
+	private int id;
+	
+	static HashMap<Integer, Object[]> hardcodedData = new HashMap<Integer, Object[]>();
+	
+	static
+	{
+		// ISO/IEC entries
+		makeEntry(1001, "Security Policy", "finding", 0, 1, "measure");
+		makeEntry(1002, "Organization of Information Security",
+				"finding", 1, 2, "measure");
+		makeEntry(1003, "Asset Management", "finding", 2, 3, "measure");
+		makeEntry(1004, "Human Resources Security", "finding", 0, 0,
+				"measure");
+		makeEntry(1005, "Physical and Environmental Security",
+				"finding", 1, 0, "measure");
+		makeEntry(1006, "Communications and Operations Management",
+				"finding", 2, 2, "measure");
+		makeEntry(1007, "Access Control", "finding", 2, 1, "measure");
+		makeEntry(
+				1008,
+				"Information Systems Acquisition, Development and Maintenance",
+				"finding", 1, 1, "measure");
+		makeEntry(1009, "Information Security Incident Management",
+				"finding", 0, 2, "measure");
+		makeEntry(1010, "Business Continuity Management", "finding",
+				0, 0, "measure");
+		
+		// IT-Rooms entry
+		makeEntry(2000, "Serverroom #1", "Package material (combustible material) inside the data center.", 1, 3, "Remove package material.\nRecommendation:\nRemove own data center and move the server to the new data center, because of cost & security synergies."); 
+		makeEntry(2001, "Serverroom #2", "Package material (combustible material) inside the data center.", 1, 2, "Remove package material.\nRecommendation:\nRemove own data center and move the server to the new data center, because of cost & security synergies."); 
+		makeEntry(2002, "Serverroom #3", "Package material (combustible material) inside the data center.", 1, 1, "Remove package material.\nRecommendation:\nRemove own data center and move the server to the new data center, because of cost & security synergies.");
+		makeEntry(2003, "Workstationroom #1", "Package material (combustible material) inside the data center.", 1, 0, "Remove package material.\nRecommendation:\nRemove own data center and move the server to the new data center, because of cost & security synergies.");
+	}
+	
+	private static void makeEntry(int id, String name, String finding,
+			int deviation, int risk, String measure) {
+		hardcodedData.put(id, new Object[] { id, name, finding, deviation, risk, measure + id });
+	}
 
-	public LoadWorstFindingsCommand(int type) {
-		this.type = type;
+	public LoadWorstFindingsCommand(int id) {
+		this.id = id;
 	}
 
 	public Object[][] getResult() {
@@ -19,45 +69,7 @@ public class LoadWorstFindingsCommand extends GenericCommand {
 
 	@Override
 	public void execute() {
-		switch (type) {
-		case 0:
-			// ISO/IEC chapters
-			result = new Object[][] {
-					makeEntry(1, "Security Policy", "finding", 0, 1, "measure"),
-					makeEntry(2, "Organization of Information Security",
-							"finding", 1, 2, "measure"),
-					makeEntry(3, "Asset Management", "finding", 2, 3, "measure"),
-					makeEntry(4, "Human Resources Security", "finding", 0, 0,
-							"measure"),
-					makeEntry(5, "Physical and Environmental Security",
-							"finding", 1, 0, "measure"),
-					makeEntry(6, "Communications and Operations Management",
-							"finding", 2, 2, "measure"),
-					makeEntry(7, "Access Control", "finding", 2, 1, "measure"),
-					makeEntry(
-							8,
-							"Information Systems Acquisition, Development and Maintenance",
-							"finding", 1, 1, "measure"),
-					makeEntry(9, "Information Security Incident Management",
-							"finding", 0, 2, "measure"),
-					makeEntry(10, "Business Continuity Management", "finding",
-							0, 0, "measure") };
-			break;
-		default:
-		case 1:
-			// IT rooms
-			result = new Object[][] {
-					makeEntry(0, "Serverroom #1", "Package material (combustible material) inside the data center.", 1, 3, "Remove package material.\nRecommendation:\nRemove own data center and move the server to the new data center, because of cost & security synergies."), 
-					makeEntry(1, "Serverroom #2", "Package material (combustible material) inside the data center.", 1, 2, "Remove package material.\nRecommendation:\nRemove own data center and move the server to the new data center, because of cost & security synergies."), 
-					makeEntry(2, "Serverroom #3", "Package material (combustible material) inside the data center.", 1, 1, "Remove package material.\nRecommendation:\nRemove own data center and move the server to the new data center, because of cost & security synergies.") 
-			};
-			break;
-		}
+		result = new Object[][] { hardcodedData.get(id) };
 	}
-
-	private Object[] makeEntry(int no, String name, String finding,
-			int deviation, int risk, String measure) {
-		return new Object[] { no, name, finding, deviation, risk, measure + no };
-	};
 
 }

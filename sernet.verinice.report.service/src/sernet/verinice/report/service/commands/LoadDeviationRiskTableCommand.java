@@ -6,14 +6,14 @@ import java.util.List;
 import sernet.verinice.interfaces.GenericCommand;
 
 @SuppressWarnings("serial")
-public class LoadSamtTableRequestCommand extends GenericCommand{
+public class LoadDeviationRiskTableCommand extends GenericCommand{
 
 	private List<List<String>> result;
 	
 	private int chapterId;
 	private String chapterName;
 	
-	public LoadSamtTableRequestCommand(int chapterId, String chapterName)
+	public LoadDeviationRiskTableCommand(int chapterId, String chapterName)
 	{
 		this.chapterId = chapterId;
 		this.chapterName = chapterName;
