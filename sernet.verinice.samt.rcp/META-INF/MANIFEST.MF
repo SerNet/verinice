@@ -6,9 +6,9 @@ Bundle-Version: 0.1.0.qualifier
 Bundle-Activator: sernet.verinice.samt.rcp.Activator
 Require-Bundle: sernet.gs.ui.rcp.main,
  sernet.gs.service,
- sernet.verinice.samt.service;bundle-version="0.1.0",
+ sernet.verinice.samt.service,
  org.eclipse.equinox.ds;bundle-version="1.1.1",
- sernet.springclient;bundle-version="1.2.1",
+ sernet.springclient,
  org.eclipse.ui;bundle-version="3.5.2",
  org.eclipse.core.resources;bundle-version="3.5.2",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",

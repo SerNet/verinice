@@ -3,5 +3,5 @@
 	resourceMap="http://www.verinice.org/svnroot/TRUNK/sernet.springclient/verinice.rmap" >
 	<cq:rootRequest name="sernet.springclient" 
     	componentType="osgi.bundle" 
-    	versionDesignator="[1.2.1,1.2.1]"/>
+    	versionDesignator="[1.2.2.qualifier,1.2.2.qualifier]"/>
 </cq:componentQuery>
