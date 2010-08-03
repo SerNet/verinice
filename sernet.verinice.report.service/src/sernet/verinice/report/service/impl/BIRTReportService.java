@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +36,12 @@ public class BIRTReportService {
 	
 	public BIRTReportService() {
 		EngineConfig config = new EngineConfig();
+		
+		HashMap hm = config.getAppContext();
+		hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
+		
+		config.setAppContext(hm);
+
 
 		IReportEngineFactory factory = (IReportEngineFactory) Platform
 				.createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
@@ -56,8 +63,6 @@ public class BIRTReportService {
 			log.log(Level.SEVERE, "Could not open report design: " + e);
 			throw new IllegalStateException(e);
 		}
-		
-		task.getAppContext().put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
 		
 		return task;
 	}
