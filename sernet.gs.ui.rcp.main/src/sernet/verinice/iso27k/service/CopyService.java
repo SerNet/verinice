@@ -126,7 +126,7 @@ public class CopyService {
 		if(element!=null 
 			&& element.getTypeId()!=null 
 			&& !BLACKLIST.contains(element.getTypeId()) 
-			&& selectedGroup.canContain(element)) {
+			&& group.canContain(element)) {
 			element = Retriever.retrieveElement(element, RetrieveInfo.getPropertyChildrenInstance());
 			monitor.setTaskName(getText(numberOfElements,numberProcessed,element.getTitle()));
 			elementCopy = copyElement(group, element);
