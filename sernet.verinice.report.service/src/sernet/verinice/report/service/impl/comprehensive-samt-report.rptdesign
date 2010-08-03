@@ -8,6 +8,24 @@
             <property name="id">120</property>
         </structure>
     </list-property>
+    <method name="initialize"><![CDATA[
+function addTOCItem(name, indent) {
+  importPackage(Packages.sernet.verinice.report.service.impl);
+
+  TocHelper.addTocItem(name, indent);
+}
+]]></method>
+    <method name="beforeFactory"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
+
+TocHelper.resetPages();
+]]></method>
+    <method name="afterFactory"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
+
+TocHelper.resetToc();
+]]></method>
+    <method name="onPageStart"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
+
+TocHelper.increasePageNumber();]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -17,6 +35,7 @@
             <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
             <property name="serverURI">http://localhost:8080/veriniceserver</property>
         </oda-data-source>
+        <script-data-source name="toc-ds" id="2006"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="companyName" id="45">
@@ -2304,6 +2323,62 @@ inParameters(new String[] { "imageKey" });</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
+        <script-data-set name="toc-ds" id="2007">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">0</property>
+                    <property name="name">name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">page</property>
+                    <property name="dataType">integer</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">name</property>
+                </structure>
+                <structure>
+                    <property name="columnName">page</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">page</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">toc-ds</property>
+            <method name="open"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
+tocDSIdx = 0;
+tocDSCount = TocHelper.getTocCount();
+]]></method>
+            <method name="fetch"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
+
+importPackage(Packages.java.lang);
+
+if (tocDSIdx >= tocDSCount) {
+  // end of toc
+  return false;
+} else {
+  row["name"] = TocHelper.getTocItem(tocDSIdx);
+  row["page"] = TocHelper.getTocPage(tocDSIdx);
+  tocDSIdx++;
+  
+  return true;
+}
+]]></method>
+        </script-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -2653,10 +2728,55 @@ inParameters(new String[] { "imageKey" });</value>
             </row>
             <row id="1058">
                 <cell id="1059">
-                    <text id="1061">
-                        <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[TODO!]]></text-property>
-                    </text>
+                    <table id="2008">
+                        <property name="dataSet">toc-ds</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">name</property>
+                                <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">page</property>
+                                <expression name="expression" type="javascript">dataSetRow["page"]</expression>
+                                <property name="dataType">integer</property>
+                            </structure>
+                        </list-property>
+                        <method name="onPageBreak"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
+
+TocHelper.increaseTocPageCount();]]></method>
+                        <column id="2021"/>
+                        <column id="2022"/>
+                        <header>
+                            <row id="2009">
+                                <cell id="2010">
+                                    <label id="2024">
+                                        <text-property name="text">name</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2011">
+                                    <label id="2026">
+                                        <text-property name="text">page</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </header>
+                        <detail>
+                            <row id="2013">
+                                <cell id="2014">
+                                    <text-data id="2028">
+                                        <expression name="valueExpr">row["name"]</expression>
+                                        <property name="contentType">html</property>
+                                    </text-data>
+                                </cell>
+                                <cell id="2015">
+                                    <data id="2027">
+                                        <property name="resultSetColumn">page</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </detail>
+                    </table>
                 </cell>
             </row>
         </grid>
@@ -2667,6 +2787,7 @@ inParameters(new String[] { "imageKey" });</value>
             <row id="1010">
                 <cell id="1011">
                     <text id="1016">
+                        <method name="onCreate"><![CDATA[addTOCItem("Introduction", 1);]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H1>2. Introduction</H1>]]></text-property>
                     </text>
@@ -2696,6 +2817,7 @@ inParameters(new String[] { "imageKey" });</value>
             <row id="1040">
                 <cell id="1041">
                     <text id="1042">
+                        <method name="onCreate"><![CDATA[addTOCItem("Management Summary", 1);]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H1>3. Management Summary</H1>]]></text-property>
                     </text>
@@ -2704,6 +2826,7 @@ inParameters(new String[] { "imageKey" });</value>
             <row id="993">
                 <cell id="994">
                     <text id="998">
+                        <method name="onCreate"><![CDATA[addTOCItem("Methodology and Assessment approach", 2);]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H2>3.1. Methodology and Assessment approach</H2>]]></text-property>
                     </text>
@@ -3110,6 +3233,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
             <row id="1032">
                 <cell id="1033">
                     <text id="1036">
+                        <method name="onCreate"><![CDATA[addTOCItem("Results Overview", 1);]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H1>4. Results Overview</H1>
 ]]></text-property>
@@ -3119,6 +3243,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
             <row id="1037">
                 <cell id="1038">
                     <text id="1039">
+                        <method name="onCreate"><![CDATA[addTOCItem("Spiderweb Graph", 2);]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H2>4.1. Spiderweb Graph</H2>]]></text-property>
                     </text>
@@ -3165,6 +3290,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
             <row id="1025">
                 <cell id="1026">
                     <text id="1029">
+                        <method name="onCreate"><![CDATA[addTOCItem("ISO/IEC 27001 Overview", 2);]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H2>4.2. ISO/IEC 27001 Overview</H2>
 ]]></text-property>
@@ -3735,6 +3861,8 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                 <property name="colSpan">2</property>
                                                 <property name="rowSpan">1</property>
                                                 <text-data id="1068">
+                                                    <method name="onCreate"><![CDATA[addTOCItem(row["chapterName"], 2);
+]]></method>
                                                     <expression name="valueExpr">"&lt;h2>" + row["chapterName"] + "&lt;/h2>"</expression>
                                                     <property name="contentType">html</property>
                                                 </text-data>
@@ -4618,6 +4746,8 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
             <row id="1071">
                 <cell id="1072">
                     <text id="1077">
+                        <method name="onCreate"><![CDATA[addTOCItem("IT - Check Overview", 2);
+]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H2>4.3. IT - Check Overview</H2>]]></text-property>
                     </text>
@@ -4626,6 +4756,8 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
             <row id="1073">
                 <cell id="1074">
                     <text id="1078">
+                        <method name="onCreate"><![CDATA[addTOCItem("IT - Rooms", 3);
+]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H3>4.3.1. IT - Room</H3>]]></text-property>
                     </text>
@@ -4668,6 +4800,8 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                 <property name="colSpan">2</property>
                                                 <property name="rowSpan">1</property>
                                                 <text-data id="1387">
+                                                    <method name="onCreate"><![CDATA[addTOCItem(row["chapterName"], 4);
+]]></method>
                                                     <expression name="valueExpr">"&lt;h2>" + row["chapterName"] + "&lt;/h2>"</expression>
                                                     <property name="contentType">html</property>
                                                 </text-data>
@@ -5575,6 +5709,8 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
             <row id="1079">
                 <cell id="1080">
                     <text id="1081">
+                        <method name="onCreate"><![CDATA[addTOCItem("Office Places", 3);
+]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H3>4.3.2. Office Places</H3>]]></text-property>
                     </text>
@@ -5966,6 +6102,8 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
             <row id="1084">
                 <cell id="1085">
                     <text id="1086">
+                        <method name="onCreate"><![CDATA[addTOCItem("System Checks", 3);
+]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H3>4.3.3. System Checks</H3]]></text-property>
                     </text>
@@ -6365,6 +6503,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
             <row id="1091">
                 <cell id="1092">
                     <text id="1093">
+                        <method name="onCreate"><![CDATA[addTOCItem("Results in detail", 1);]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H1>5. Results in detail</H1>]]></text-property>
                     </text>
@@ -6399,6 +6538,8 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                             <row id="1942">
                                 <cell id="1943">
                                     <text-data id="1944">
+                                        <method name="onCreate"><![CDATA[addTOCItem(row["chapterName"], 2);
+]]></method>
                                         <expression name="valueExpr">"&lt;h2>5." + (row.__rownum + 1) + " " + row["chapterName"] + "&lt;/h2>"</expression>
                                         <property name="contentType">html</property>
                                     </text-data>
@@ -6443,6 +6584,8 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                                                 <property name="colSpan">2</property>
                                                                 <property name="rowSpan">1</property>
                                                                 <text-data id="1955">
+                                                                    <method name="onCreate"><![CDATA[addTOCItem(row["chapterName"], 3);
+]]></method>
                                                                     <expression name="valueExpr">"&lt;h3>" + row["chapterName"] + "&lt;/h3>"</expression>
                                                                     <property name="contentType">html</property>
                                                                 </text-data>
@@ -6985,6 +7128,7 @@ Level]]></text-property>
             <row id="1186">
                 <cell id="1187">
                     <text id="1188">
+                        <method name="onCreate"><![CDATA[addTOCItem("Check details", 1);]]></method>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H1>6. Check details</H1>]]></text-property>
                     </text>
@@ -7019,6 +7163,8 @@ Level]]></text-property>
                             <row id="1938">
                                 <cell id="1939">
                                     <text-data id="1647">
+                                        <method name="onCreate"><![CDATA[addTOCItem(row["chapterName"], 2);
+]]></method>
                                         <expression name="valueExpr">"&lt;h2>6." + (row.__rownum + 1) + " " + row["chapterName"] + "&lt;/h2>"</expression>
                                         <property name="contentType">html</property>
                                     </text-data>
@@ -7063,6 +7209,8 @@ Level]]></text-property>
                                                                 <property name="colSpan">2</property>
                                                                 <property name="rowSpan">1</property>
                                                                 <text-data id="1940">
+                                                                    <method name="onCreate"><![CDATA[addTOCItem(row["chapterName"], 3);
+]]></method>
                                                                     <expression name="valueExpr">"&lt;h3>" + row["chapterName"] + "&lt;/h3>"</expression>
                                                                     <property name="contentType">html</property>
                                                                 </text-data>

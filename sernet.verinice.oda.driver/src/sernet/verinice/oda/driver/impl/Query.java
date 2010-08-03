@@ -235,7 +235,7 @@ public class Query implements IQuery
 
         	return bos.toByteArray();
         }
-    	
+        
     }
 	
 	public void prepare( String queryText ) throws OdaException
