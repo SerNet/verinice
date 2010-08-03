@@ -64,7 +64,7 @@ public class RetrieveCnATreeElement extends GenericCommand {
 	public static RetrieveCnATreeElement getISO27KModelISMViewInstance(Integer dbId) {
 		RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(ISO27KModel.TYPE_ID, dbId);
 		RetrieveInfo retrieveInfo = new RetrieveInfo();
-		retrieveInfo.setChildren(true).setChildrenProperties(true).setChildrenPermissions(true).setGrandchildren(true);
+		retrieveInfo.setPermissions(true).setChildren(true).setChildrenProperties(true).setChildrenPermissions(true).setGrandchildren(true);
 		retrieveElement.setRetrieveInfo(retrieveInfo);
 		return retrieveElement;
 	}
@@ -72,7 +72,7 @@ public class RetrieveCnATreeElement extends GenericCommand {
 	public static RetrieveCnATreeElement getOrganizationISMViewInstance(Integer dbId) {
 		RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(Organization.TYPE_ID, dbId);
 		RetrieveInfo retrieveInfo = new RetrieveInfo();
-		retrieveInfo.setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
+		retrieveInfo.setPermissions(true).setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
 		retrieveElement.setRetrieveInfo(retrieveInfo);
 		return retrieveElement;
 	}

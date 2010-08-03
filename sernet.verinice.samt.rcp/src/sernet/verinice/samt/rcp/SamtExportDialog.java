@@ -135,6 +135,8 @@ public class SamtExportDialog extends TitleAreaDialog
             }
         };
         
+        CnATreeElement oldSelectedElement = selectedElement;
+        selectedElement=null;
         while( organizationIter.hasNext() )
         {
             final Button radioOrganization = new Button(groupOrganization,SWT.RADIO);
@@ -142,11 +144,13 @@ public class SamtExportDialog extends TitleAreaDialog
             radioOrganization.setText(organization.getTitle());
             radioOrganization.setData(organization );
             radioOrganization.addSelectionListener(organizationListener);
-            if(selectedElement!=null && selectedElement.equals(organization)) {
+            if(oldSelectedElement!=null && oldSelectedElement.equals(organization)) {
                 radioOrganization.setSelection(true);
+                selectedElement = organization;
             }
             if(organizationList.size()==1) {
                 radioOrganization.setSelection(true);
+                selectedElement = organization;
             }
         }
         

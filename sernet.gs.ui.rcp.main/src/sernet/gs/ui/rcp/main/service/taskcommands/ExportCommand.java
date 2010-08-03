@@ -18,6 +18,7 @@
 
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,11 +36,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
+import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -264,8 +267,11 @@ public class ExportCommand extends GenericCommand
 		if (element == null)
 			return;
 		
-		HydratorUtil.hydrateElement( getDaoFactory().getDAOforTypedElement(element), element, true);
-		HydratorUtil.hydrateEntity( getDaoFactory().getDAOforTypedElement(element), element);
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
+		//element = dao.retrieve(element.getDbId(), RetrieveInfo.getPropertyChildrenInstance());
+		
+		HydratorUtil.hydrateElement( dao, element, true);
+		HydratorUtil.hydrateEntity( dao, element);
 		
 		Set<CnATreeElement> children = element.getChildren();
 		for (CnATreeElement child : children)
