@@ -113,6 +113,13 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
             Collection<IItem> itemCollection = getItemCollection();
             ControlGroup controlGroup = getControlGroup(selfAssessment);
             
+            // We use the name of the currently
+            // logged in user as a role which has read and write permissions for
+            // the new element.
+            HashSet<Permission> permissionSet = new HashSet<Permission>();
+            permissionSet.add(Permission.createPermission(controlGroup, authService.getUsername(), true, true));
+            controlGroup.setPermissions(permissionSet);
+            
             // convert catalog items to self assessment topics (class: SamtTopic)
             importCatalogItems(controlGroup, itemCollection);
 
@@ -134,8 +141,16 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
                 importCatalogItems(element, item.getItems());
             } else {
                 // create an element
-                element = ItemControlTransformer.transformVoodoo(item, new SamtTopic());
+                element = ItemControlTransformer.transformGeneric(item, new SamtTopic());
             }
+            
+            // We use the name of the currently
+            // logged in user as a role which has read and write permissions for
+            // the new element.
+            HashSet<Permission> permissionSet = new HashSet<Permission>();
+            permissionSet.add(Permission.createPermission(element, authService.getUsername(), true, true));
+            element.setPermissions(permissionSet);
+            
             group.addChild(element);
             element.setParent(group);
         }

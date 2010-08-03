@@ -41,7 +41,7 @@ public class ItemControlTransformer {
 	 * @param item an item from a control catalog
 	 * @return an ISO 27k control
 	 */
-	public static <T extends IControl> T transformVoodoo(IItem item, T control) {
+	public static <T extends IControl> T transformGeneric(IItem item, T control) {
 		if(item.getName()!=null) {
 			control.setTitel(item.getName().replaceAll("\\s", " "));
 		}
