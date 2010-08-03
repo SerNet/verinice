@@ -92,7 +92,7 @@ public class ExportSelfAssessment implements IViewActionDelegate
     			}
     			
     			Document doc = exportCommand.getExportDocument();
-    			DOMUtil.writeDocumentToFile(doc, dialog.getStorageLocation(), dialog.getEncryptOutput());
+    			DOMUtil.writeDocumentToFile(doc, dialog.getFilePath(), dialog.getEncryptOutput());
     			String title = "";
     			if(selectedElement instanceof Organization) {
     			    title = ((Organization)selectedElement).getTitle();
@@ -100,7 +100,7 @@ public class ExportSelfAssessment implements IViewActionDelegate
     			
     			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
     			        Messages.ExportSelfAssessment_2, 
-    			        NLS.bind(Messages.ExportSelfAssessment_3, new Object[] {title, dialog.getStorageLocation()}));
+    			        NLS.bind(Messages.ExportSelfAssessment_3, new Object[] {title, dialog.getFilePath()}));
 			}
 		}
 	}

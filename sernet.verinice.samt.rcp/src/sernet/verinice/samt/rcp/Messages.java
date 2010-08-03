@@ -36,11 +36,17 @@ public class Messages extends NLS {
     public static String ExportSelfAssessment_3;
     public static String SamtExportDialog_0;
     public static String SamtExportDialog_1;
+    public static String SamtExportDialog_10;
+    public static String SamtExportDialog_11;
+    public static String SamtExportDialog_12;
+    public static String SamtExportDialog_13;
     public static String SamtExportDialog_2;
+    public static String SamtExportDialog_3;
     public static String SamtExportDialog_4;
     public static String SamtExportDialog_5;
     public static String SamtExportDialog_6;
     public static String SamtExportDialog_7;
+    public static String SamtExportDialog_8;
     public static String SamtPreferencePage_1;
     public static String SamtPreferencePage_2;
     public static String SamtView_1;

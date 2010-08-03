@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.samt.rcp;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,6 +28,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -42,12 +46,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.internal.intro.impl.util.Log;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 
@@ -64,7 +66,7 @@ public class SamtExportDialog extends TitleAreaDialog
      */
     private boolean encryptOutput = false;
     private CnATreeElement selectedElement;
-    private String storageLocation;
+    private String filePath;
 
     public SamtExportDialog(Shell activeShell)
     {
@@ -143,13 +145,15 @@ public class SamtExportDialog extends TitleAreaDialog
             if(selectedElement!=null && selectedElement.equals(organization)) {
                 radioOrganization.setSelection(true);
             }
+            if(organizationList.size()==1) {
+                radioOrganization.setSelection(true);
+            }
         }
         
         /*++++
          * Widgets to enable/disable encryption:
          *++++++++++++++++++++++++++++++++++++++*/
-        
-        /* disabled for beta release 
+         
         final Composite encryptionOptionComposite = new Composite(composite, SWT.NONE);
         encryptionOptionComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
         ((RowLayout) encryptionOptionComposite.getLayout()).marginTop = 15;
@@ -167,7 +171,7 @@ public class SamtExportDialog extends TitleAreaDialog
             }
         });
         encryptionOptionComposite.pack();
-        */
+        
         /*+++++
          * Widgets to browse for storage location:
          *++++++++++++++++++++++++++++++++++++++++*/
@@ -177,12 +181,24 @@ public class SamtExportDialog extends TitleAreaDialog
         ((RowLayout) compositeSaveLocation.getLayout()).marginTop = 15;
         final Label labelLocation = new Label(compositeSaveLocation, SWT.NONE);
         labelLocation.setText(Messages.SamtExportDialog_6);
-        final Text txtLocation = new Text(compositeSaveLocation, SWT.SINGLE | SWT.BORDER);
+        final Text txtLocation = new Text(compositeSaveLocation, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
         short textLocationWidth = 300;
         txtLocation.setSize(textLocationWidth, 30);
         final RowData textLocationData = new RowData();
         textLocationData.width = textLocationWidth;
         txtLocation.setLayoutData(textLocationData);
+        txtLocation.addKeyListener(new KeyListener() {             
+            @Override
+            public void keyReleased(KeyEvent e) {
+                filePath = txtLocation.getText();
+                
+            }          
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // nothing to do
+            }
+        });
+            
         composite.pack();
         final Button buttonBrowseLocations = new Button(compositeSaveLocation, SWT.NONE);
         buttonBrowseLocations.setText(Messages.SamtExportDialog_7);
@@ -193,21 +209,49 @@ public class SamtExportDialog extends TitleAreaDialog
             public void widgetSelected(SelectionEvent e)
             {
                 FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
+                dialog.setText(Messages.SamtExportDialog_3);
                 dialog.setFilterExtensions(new String[]{ "*.xml" }); //$NON-NLS-1$
+                dialog.setFilterNames(new String[]{ Messages.SamtExportDialog_8 }); 
                 String exportPath = dialog.open();
                 if( exportPath != null )
                 {
                     txtLocation.setText(exportPath);
-                    storageLocation = exportPath;
+                    filePath = exportPath;
                 }
                 else
                 {
                     txtLocation.setText(""); //$NON-NLS-1$
-                    storageLocation = ""; //$NON-NLS-1$
+                    filePath = ""; //$NON-NLS-1$
                 }
             }
         });
         return composite;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+     */
+    protected void okPressed() {
+        StringBuilder sb = new StringBuilder();
+        if(filePath==null || filePath.isEmpty()) {
+            sb.append(Messages.SamtExportDialog_10);         
+        } else {
+            try {
+                new File(filePath).createNewFile();
+            } catch (Exception e) {
+                sb.append(Messages.SamtExportDialog_11);  
+            }
+        }
+        if(selectedElement==null) {
+           sb.append(Messages.SamtExportDialog_12);         
+        } 
+        if(sb.length()>0) {
+            sb.append(Messages.SamtExportDialog_13);
+            setMessage(sb.toString(), IMessageProvider.ERROR);
+        } 
+        else {     
+            super.okPressed();
+        }
     }
     
     /* Getters and Setters: */
@@ -217,10 +261,9 @@ public class SamtExportDialog extends TitleAreaDialog
         return selectedElement;
     }
 
-    public String getStorageLocation()
-    {
-        
-        return storageLocation;
+    public String getFilePath()
+    {   
+        return filePath;
     }
     
     public boolean getEncryptOutput()
