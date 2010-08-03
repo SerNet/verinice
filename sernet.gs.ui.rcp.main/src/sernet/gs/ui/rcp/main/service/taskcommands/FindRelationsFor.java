@@ -57,17 +57,19 @@ public class FindRelationsFor extends GenericCommand {
 		RetrieveInfo ri = new RetrieveInfo();
 		ri.setLinksDown(true).setLinksUp(true);
 		elmt = dao.retrieve(dbId, ri);
-	
-		Set<CnALink> linksDown = elmt.getLinksDown();
-		for (CnALink cnALink : linksDown) {
-			HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);
-			
-		}
 		
-		Set<CnALink> linksUp = elmt.getLinksUp();
-		for (CnALink cnALink : linksUp) {
-			HydratorUtil.hydrateElement(dao, cnALink.getDependant(), false);
-			
+		if(elmt!=null) {
+    		Set<CnALink> linksDown = elmt.getLinksDown();
+    		for (CnALink cnALink : linksDown) {
+    			HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);
+    			
+    		}
+    		
+    		Set<CnALink> linksUp = elmt.getLinksUp();
+    		for (CnALink cnALink : linksUp) {
+    			HydratorUtil.hydrateElement(dao, cnALink.getDependant(), false);
+    			
+    		}
 		}
 	}
 
