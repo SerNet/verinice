@@ -103,7 +103,7 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 				
 				DetachedCriteria criteria = DetachedCriteria.forClass(Property.class);
 				criteria.add(Restrictions.eq("propertyType", Configuration.PROP_USERNAME));
-				criteria.add(Restrictions.eq("propertyValue", username));
+				criteria.add(Restrictions.like("propertyValue", username));
 				
 				List resultList = getDao().findByCriteria(criteria);
 				if(resultList!=null && !resultList.isEmpty()) {
