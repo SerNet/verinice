@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -102,22 +103,7 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
             }
 
             if (authService.isPermissionHandlingNeeded()) {
-                // By default, inherit permissions from parent element but
-                // ITVerbund
-                // instances cannot do this, as its parents (BSIModel) is not
-                // visible
-                // and has no permissions. Therefore we use the name of the
-                // currently
-                // logged in user as a role which has read and write permissions
-                // for
-                // the new ITVerbund.
-                if (child instanceof ITVerbund || child instanceof Organization) {
-                    HashSet<Permission> newperms = new HashSet<Permission>();
-                    newperms.add(Permission.createPermission(child, authService.getUsername(), true, true));
-                    child.setPermissions(newperms);
-                } else {
-                    child.setPermissions(Permission.clonePermissions(child, container.getPermissions()));
-                }
+                addPermissions();
             }
 
             child = dao.merge(child, false);
@@ -129,6 +115,28 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
         } catch (Exception e) {
             getLogger().error("Error while creating element", e);
             throw new RuntimeCommandException(e);
+        }
+    }
+
+    private void addPermissions() {
+        // By default, inherit permissions from parent element but ITVerbund
+        // instances cannot do this, as its parents (BSIModel) is not visible
+        // and has no permissions. Therefore we use the name of the currently
+        // logged in user as a role which has read and write permissions for
+        // the new ITVerbund.
+        if (child instanceof ITVerbund || child instanceof Organization) {
+            addPermissions(child);           
+        } else {
+            child.setPermissions(Permission.clonePermissions(child, container.getPermissions()));
+        }
+    }
+    
+    private void addPermissions(/*not final*/ CnATreeElement element) {
+        HashSet<Permission> newperms = new HashSet<Permission>();
+        newperms.add(Permission.createPermission(element, authService.getUsername(), true, true));
+        element.setPermissions(newperms);
+        for (CnATreeElement child : element.getChildren()) {
+            addPermissions(child);
         }
     }
 
