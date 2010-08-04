@@ -867,6 +867,16 @@
               name="%cheatsheets.17">
            <description>%cheatsheets.description.17</description>
         </cheatsheet>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets3"
+              composite="false"
+              contentFile="%cheatsheets.content.18"
+              id="sernet.verinice.iso27k.cheatsheet3"
+              name="%cheatsheets.18">
+           <description>
+              %cheatsheets.description.18
+           </description>
+        </cheatsheet>
    </extension>
    <extension
          point="org.eclipse.ui.intro">
