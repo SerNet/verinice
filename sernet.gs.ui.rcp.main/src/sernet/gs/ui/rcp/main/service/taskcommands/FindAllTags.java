@@ -80,11 +80,10 @@ public class FindAllTags extends GenericCommand {
 			// have the common suffix '_tag'.
 			return session
 			.createSQLQuery(
-					"select distinct propertyValue " +
+					"select propertyValue " +
 					"from properties " +
-					"where propertytype like '%_tag' " +
-					"and propertyvalue != ''")
-			.addScalar("propertyvalue", Hibernate.STRING)
+					"where propertytype like '%_tag'")
+			.addScalar("propertyValue", Hibernate.STRING)
 			.list();
 		}
 		

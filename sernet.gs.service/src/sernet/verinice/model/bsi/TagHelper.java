@@ -57,10 +57,12 @@ public class TagHelper {
 	{
 		// TODO rschuster: The regex could be refined to not return
 		// empty value.
-		String[] split = pattern.split(simpleValue); //$NON-NLS-1$
-		for (String tag : split) {
-			if ( ! (tag.length() < 1 || tag.equals(" ")) ) //$NON-NLS-1$
-				set.add(tag);
-		}
+	    if(simpleValue!=null) {
+    		String[] split = pattern.split(simpleValue); //$NON-NLS-1$
+    		for (String tag : split) {
+    			if ( ! (tag.length() < 1 || tag.equals(" ")) ) //$NON-NLS-1$
+    				set.add(tag);
+    		}
+	    }
 	}
 }
