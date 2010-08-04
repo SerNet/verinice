@@ -20,6 +20,7 @@
 package sernet.verinice.iso27k.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -27,9 +28,11 @@ import org.apache.log4j.Logger;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.Group;
 
 /**
@@ -40,7 +43,9 @@ public class ControlTransformService {
 	private final Logger log = Logger.getLogger(ControlTransformService.class);
 	
 	private ICommandService commandService;
-	
+
+	private IAuthService authService;
+
 	private IProgressObserver progressObserver;
 	
 	private IModelUpdater modelUpdater;
@@ -114,7 +119,6 @@ public class ControlTransformService {
 			if (group.canContain(element)) {
 				group.addChild(element);
 				element.setParent(group);
-				command = new SaveElement( element);
 				if (log.isDebugEnabled()) {
                	 log.debug("Creating control group,  UUID: " + element.getUuid() + ", title: " + element.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
            	 	}	
@@ -128,7 +132,6 @@ public class ControlTransformService {
 			if (group.canContain(element)) {
 				group.addChild(element);
 				element.setParent(group);
-				command = new SaveElement( element);
 				if (log.isDebugEnabled()) {
 			    	log.debug("Creating control,  UUID: " + element.getUuid() + ", title: " + element.getTitle());    //$NON-NLS-1$ //$NON-NLS-2$
 			
@@ -137,6 +140,10 @@ public class ControlTransformService {
 		}
 
 		try {
+		    HashSet<Permission> newperms = new HashSet<Permission>();
+	        newperms.add(Permission.createPermission(element, getAuthService().getUsername(), true, true));
+	        element.setPermissions(newperms);
+		    command = new SaveElement( element);
 			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {
 			log.error("Error while inserting control", e); //$NON-NLS-1$
@@ -217,6 +224,17 @@ public class ControlTransformService {
 
     private void setItemList(List itemList) {
         this.itemList = itemList;
+    }
+    
+    public IAuthService getAuthService() {
+        if (authService == null) {
+            authService = createAuthService();
+        }
+        return authService;
+    }
+
+    private IAuthService createAuthService() {
+        return ServiceFactory.lookupAuthService();
     }
 
     public ICommandService getCommandService() {
