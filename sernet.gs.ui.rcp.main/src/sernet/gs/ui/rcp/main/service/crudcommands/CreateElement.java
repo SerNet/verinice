@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,33 +37,31 @@ import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
- * Create and save new element of clazz clazz to the database using its class to lookup
- * the DAO from the factory.
+ * Create and save new element of clazz clazz to the database using its class to
+ * lookup the DAO from the factory.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * 
  * @param <T>
  */
 @SuppressWarnings("serial")
-public class CreateElement<T extends CnATreeElement> extends GenericCommand
-	implements IChangeLoggingCommand, IAuthAwareCommand {
+public class CreateElement<T extends CnATreeElement> extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand {
 
-	transient private Logger log = Logger.getLogger(CreateElement.class);
-	
-	private CnATreeElement container;
-	private Class<T> clazz;
-	// may be null
-	private String title;
-	protected T child;
-	private String stationId;
-	
-	private transient IAuthService authService;
+    transient private Logger log = Logger.getLogger(CreateElement.class);
+
+    private CnATreeElement container;
+    private Class<T> clazz;
+    // may be null
+    private String title;
+    protected T child;
+    private String stationId;
+
+    private transient IAuthService authService;
 
     private boolean skipReload;
 
-	/**
+    /**
      * @param container2
      * @param clazz
      * @param typeId
@@ -74,126 +71,119 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand
         this.clazz = clazz;
         this.title = title;
         this.stationId = ChangeLogEntry.STATION_ID;
-		this.skipReload = skipReload;
-	}
-	
-	public CreateElement(CnATreeElement container, Class<T> type, String title) {
-	    this(container, type, title, false);
+        this.skipReload = skipReload;
     }
-	
-	public CreateElement(CnATreeElement container, Class<T> type) {
+
+    public CreateElement(CnATreeElement container, Class<T> type, String title) {
+        this(container, type, title, false);
+    }
+
+    public CreateElement(CnATreeElement container, Class<T> type) {
         this(container, type, null, false);
     }
-	
-	public CreateElement(CnATreeElement container, Class<T> type, boolean skipReload) {
+
+    public CreateElement(CnATreeElement container, Class<T> type, boolean skipReload) {
         this(container, type, null, skipReload);
     }
 
     public void execute() {
-		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(clazz);
-		IBaseDao<Object, Serializable> containerDAO = getDaoFactory().getDAOforTypedElement(container);
-		
-		try {
-		    if (!skipReload)
-		        containerDAO.reload(container, container.getDbId());
-			
-			// get constructor with parent-parameter and create new object:
-			child = clazz.getConstructor(CnATreeElement.class).newInstance(container);
-			if(title!=null) {
-			    // override the default title
-			    child.setTitel(title);
-			}
-			
-			if (authService.isPermissionHandlingNeeded())
-			{
-				// By default, inherit permissions from parent element but ITVerbund
-				// instances cannot do this, as its parents (BSIModel) is not visible
-				// and has no permissions. Therefore we use the name of the currently
-				// logged in user as a role which has read and write permissions for
-				// the new ITVerbund.
-				if (child instanceof ITVerbund || child instanceof Organization)
-				{
-					HashSet<Permission> newperms = new HashSet<Permission>();
-					newperms.add(Permission.createPermission(
-							child,
-							authService.getUsername(),
-							true, true));
-					child.setPermissions(newperms);
-				}
-				else
-				{
-					child.setPermissions(
-						Permission.clonePermissions(
-								child,
-								container.getPermissions()));
-				}
-			}
-			
-			child = dao.merge(child, false);
-			container.addChild(child);
-			child.setParent(container);
-			
-			
-			// initialize UUID, used to find container in display in views:
-			container.getUuid();
-		} catch (Exception e) {
-			getLogger().error("Error while creating element", e);
-			throw new RuntimeCommandException(e);
-		}
-	}
+        IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(clazz);
+        IBaseDao<Object, Serializable> containerDAO = getDaoFactory().getDAOforTypedElement(container);
 
-	public T getNewElement() {
-		return child;
-	}
+        try {
+            if (!skipReload)
+                containerDAO.reload(container, container.getDbId());
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType
-	 * ()
-	 */
-	public int getChangeType() {
-		return ChangeLogEntry.TYPE_INSERT;
-	}
+            // get constructor with parent-parameter and create new object:
+            child = clazz.getConstructor(CnATreeElement.class).newInstance(container);
+            if (title != null) {
+                // override the default title
+                child.setTitel(title);
+            }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
-	 * ()
-	 */
-	public String getStationId() {
-		return stationId;
-	}
+            if (authService.isPermissionHandlingNeeded()) {
+                // By default, inherit permissions from parent element but
+                // ITVerbund
+                // instances cannot do this, as its parents (BSIModel) is not
+                // visible
+                // and has no permissions. Therefore we use the name of the
+                // currently
+                // logged in user as a role which has read and write permissions
+                // for
+                // the new ITVerbund.
+                if (child instanceof ITVerbund || child instanceof Organization) {
+                    HashSet<Permission> newperms = new HashSet<Permission>();
+                    newperms.add(Permission.createPermission(child, authService.getUsername(), true, true));
+                    child.setPermissions(newperms);
+                } else {
+                    child.setPermissions(Permission.clonePermissions(child, container.getPermissions()));
+                }
+            }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
-	 * getChangedElements()
-	 */
-	public List<CnATreeElement> getChangedElements() {
-		ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
-		result.add(child);
-		return result;
-	}
+            child = dao.merge(child, false);
+            container.addChild(child);
+            child.setParent(container);
 
-	public IAuthService getAuthService() {
-		return authService;
-	}
+            // initialize UUID, used to find container in display in views:
+            container.getUuid();
+        } catch (Exception e) {
+            getLogger().error("Error while creating element", e);
+            throw new RuntimeCommandException(e);
+        }
+    }
 
-	public void setAuthService(IAuthService service) {
-		this.authService = service;
-	}
+    public T getNewElement() {
+        return child;
+    }
 
-	private Logger getLogger() {
-		if (log == null) {
-			log = Logger.getLogger(CreateElement.class);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType
+     * ()
+     */
+    public int getChangeType() {
+        return ChangeLogEntry.TYPE_INSERT;
+    }
 
-		}
-		return log;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
+     * ()
+     */
+    public String getStationId() {
+        return stationId;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * getChangedElements()
+     */
+    public List<CnATreeElement> getChangedElements() {
+        ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
+        result.add(child);
+        return result;
+    }
+
+    public IAuthService getAuthService() {
+        return authService;
+    }
+
+    public void setAuthService(IAuthService service) {
+        this.authService = service;
+    }
+
+    private Logger getLogger() {
+        if (log == null) {
+            log = Logger.getLogger(CreateElement.class);
+
+        }
+        return log;
+    }
 
 }
