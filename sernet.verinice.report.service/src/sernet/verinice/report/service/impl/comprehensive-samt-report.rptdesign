@@ -17,11 +17,11 @@ function addTOCItem(name, indent) {
 ]]></method>
     <method name="beforeFactory"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
 
-TocHelper.resetPages();
+TocHelper.startRun();
 ]]></method>
     <method name="afterFactory"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
 
-TocHelper.resetToc();
+TocHelper.endRun();
 ]]></method>
     <method name="onPageStart"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
 
@@ -2372,7 +2372,7 @@ if (tocDSIdx >= tocDSCount) {
   return false;
 } else {
   row["name"] = TocHelper.getTocItem(tocDSIdx);
-  row["page"] = TocHelper.getTocPage(tocDSIdx);
+  row["page"] = TocHelper.getTocItemPage(tocDSIdx);
   tocDSIdx++;
   
   return true;
