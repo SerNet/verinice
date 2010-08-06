@@ -25,6 +25,10 @@ import sernet.verinice.interfaces.GenericCommand;
  * TODO: Somehow allow setting and storing the report's title in the application and then
  * provide access to that value via this command.
  * 
+ * TODO: The command could probably be abstracted in a way that it can retrieve some arbitrary
+ * report values from verinice (e.g. the confidentally value). If those values are stored as a
+ * CnATreeElement using a specialized command could be avoided (the LoadEntityValues can do that). 
+ * 
  * @author Robert Schuster <r.schuster@tarent.de>
  */
 @SuppressWarnings("serial")

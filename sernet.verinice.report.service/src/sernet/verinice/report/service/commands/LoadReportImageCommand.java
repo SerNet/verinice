@@ -33,7 +33,9 @@ import sernet.verinice.interfaces.GenericCommand;
  * TODO: A special place needs to be designated to store images which is then 
  * accessed through this command.
  * TODO: The sizes of the pictures should be fixed, otherwise BIRT will stretch or shrink them,
- * making them look ugly.
+ * making them look ugly. With a bit of Javascript hackery it might be possible to make the
+ * image element in the report adopt the size of the actual image. According to BIRT documentation
+ * changes to report design elements are only allowed during onPrepare(). 
  * 
  * @author Robert Schuster <r.schuster@tarent.de>
  */

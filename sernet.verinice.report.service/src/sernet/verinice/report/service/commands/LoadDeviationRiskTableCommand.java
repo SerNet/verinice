@@ -22,6 +22,13 @@ import java.util.List;
 
 import sernet.verinice.interfaces.GenericCommand;
 
+/**
+ * Retrieves the values needed for the 'deviation/risk' tables that are part of each worst
+ * finding.
+ * 
+ * @author Robert Schuster <r.schuster@tarent.de>
+ *
+ */
 @SuppressWarnings("serial")
 public class LoadDeviationRiskTableCommand extends GenericCommand{
 
