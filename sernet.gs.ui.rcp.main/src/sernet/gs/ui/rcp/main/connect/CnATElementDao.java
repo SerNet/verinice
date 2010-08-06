@@ -162,8 +162,8 @@ public class CnATElementDao extends HibernateBaseDao<CnATreeElement, Integer> {
 					// Put result into map and save asking the DB next time.
 					roleMap.put(user, result);
 
-					// TODO: Whenever an admin modifies the roles the roleMap
-					// should be cleared.
+					// FIXME: Whenever an admin modifies the roles the roleMap
+					// must be cleared.
 					// We could introduce a special command just for this.
 
 					return result;

@@ -35,10 +35,24 @@ import sernet.hui.common.connect.ITypedElement;
 @SuppressWarnings("serial")
 public class ChangeLogEntry implements Serializable, ITypedElement {
 
+    /**
+     * Changes to cnatree elements:
+     */
 	public static final int TYPE_UPDATE = 0;
 	public static final int TYPE_INSERT = 1;
 	public static final int TYPE_DELETE = 2;
+	
+	/**
+	 * Changes to permissions, may cause the client to check if it can still read 
+	 * displayed items etc.
+	 */
 	public static final int TYPE_PERMISSION = 3;
+	
+	/**
+	 * Audit trails such as password changes etc. Mostly for later 
+	 * investigation by a human. Can be ignored by the client.
+	 */
+	public static final int TYPE_SYSTEM = 4;
 
 	private Integer dbId;
 
@@ -140,6 +154,9 @@ public class ChangeLogEntry implements Serializable, ITypedElement {
 			case ChangeLogEntry.TYPE_PERMISSION:
 				desc = "permission";
 				break;
+			case ChangeLogEntry.TYPE_SYSTEM:
+			    desc= "system";
+			    break;
 			default:
 				desc = "unknown, id: " + this.change;	
 		}

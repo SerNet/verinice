@@ -124,7 +124,8 @@ public class TransactionLogWatcher {
 				CnAElementFactory.getInstance().reloadModelFromDatabase();
 				break;
 			default:
-				Logger.getLogger(this.getClass()).debug("Unrecognized change type received from server.");
+			    //ignore (but debug) other change types
+				Logger.getLogger(this.getClass()).debug("Unrecognized change type received from server. Ignored, type ID was: " + changetype);
 				break;
 		}
 	}

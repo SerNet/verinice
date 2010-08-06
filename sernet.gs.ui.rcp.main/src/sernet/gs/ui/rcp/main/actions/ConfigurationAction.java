@@ -219,7 +219,9 @@ public class ConfigurationAction implements IObjectActionDelegate {
 			// method will be called before the server connection is enabled.)
 			// - permission handling is needed by IAuthService implementation
 			// - user has administrator privileges
-			boolean b = CnAElementHome.getInstance().isOpen() && ServiceFactory.isPermissionHandlingNeeded() && AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
+			boolean b = CnAElementHome.getInstance().isOpen() 
+			    && ServiceFactory.isPermissionHandlingNeeded() 
+			    && AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
 
 			action.setEnabled(b);
 		}

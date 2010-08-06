@@ -41,6 +41,14 @@ public interface IAuthService {
 	public String hashPassword(String username, String clearText);
 
 	/**
+	 * Only hash password if user is currently logged in.
+	 * @param username
+	 * @param clearText
+	 * @return
+	 */
+	public String hashOwnPassword(String username, String clearText);
+
+	/**
 	 * Returns whether the creation and management of {@link Permission}
 	 * objects is needed.
 	 * 

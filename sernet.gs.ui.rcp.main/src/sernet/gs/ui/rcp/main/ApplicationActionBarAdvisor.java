@@ -41,6 +41,7 @@ import org.eclipse.ui.internal.cheatsheets.actions.CheatSheetCategoryBasedSelect
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
+import sernet.gs.ui.rcp.main.actions.ChangeOwnPasswordAction;
 import sernet.gs.ui.rcp.main.actions.ExportAction;
 import sernet.gs.ui.rcp.main.actions.ImportCSVAction;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
@@ -136,7 +137,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private ShowAccessControlEditAction accessControlEditAction;
 
-
+    private ChangeOwnPasswordAction changeOwnPasswordAction;
+    
     private IWorkbenchAction introAction;
 
     private ShowKonsolidatorAction konsolidatorAction;
@@ -281,6 +283,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         bausteinZuordnungAction = new BausteinZuordnungAction(window);
         register(bausteinZuordnungAction);
+        
+        // FIXME externalize strings!
+        changeOwnPasswordAction = new ChangeOwnPasswordAction(window, "Change my login password");
 
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
         
@@ -323,6 +328,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         editMenu.add(copyAction);
         editMenu.add(pasteAction);
         editMenu.add(new Separator());
+        editMenu.add(changeOwnPasswordAction);
         editMenu.add(showPreferencesAction);
         return editMenu;
     }

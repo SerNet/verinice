@@ -64,4 +64,12 @@ public final class NoAuthenticationService implements IAuthService {
 	{
 		return false;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IAuthService#hashOwnPassword(java.lang.String, java.lang.String)
+     */
+    @Override
+    public String hashOwnPassword(String username, String clearText) {
+        return null;
+    }
 }

@@ -25,6 +25,7 @@ import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.ui.digestauth.DigestProcessingFilter;
 import org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint;
 
+import sernet.gs.common.SecurityException;
 import sernet.verinice.interfaces.IAuthService;
 
 /**
@@ -49,10 +50,33 @@ public final class AuthenticationService implements IAuthService {
 		 return roles;
 	}
 
+	/**
+	 * Create a password hash for given user and password string.
+	 * Protected by Spring's security config, must have ROLE_ADMIN to use.
+	 */
 	public String hashPassword(String username, String pass) {
 		return DigestProcessingFilter.encodePasswordInA1Format(username,
 			getEntryPoint().getRealmName(), pass);
 	}
+
+	
+	/**
+	 * Create a password hash for given user and password string.
+	 * Additionally checks if user is the currently logged in user
+	 * This method is availably to normal users, not protected by Spring's scecurity config.
+	 * 
+	 * @param username
+	 * @param pass
+	 * @return
+	 */
+	public String hashOwnPassword(String username, String pass) throws SecurityException {
+	    if (!getUsername().equals(username)) {
+	        throw new SecurityException(Messages.getString("AuthenticationService.0")); //$NON-NLS-1$
+	    }
+	    
+        return DigestProcessingFilter.encodePasswordInA1Format(username,
+            getEntryPoint().getRealmName(), pass);
+    }
 	
 	public DigestProcessingFilterEntryPoint getEntryPoint() {
 		return entryPoint;
@@ -76,10 +100,10 @@ public final class AuthenticationService implements IAuthService {
 			}
 		} catch (Exception e) {
 			// do nothing, just return no user name
-			Logger.getLogger( this.getClass() ).error( "dummer fehler", e );
+			Logger.getLogger( this.getClass() ).error( Messages.getString("AuthenticationService.1"), e ); //$NON-NLS-1$
 		}
 		// no user authenticated:
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public boolean isPermissionHandlingNeeded()
