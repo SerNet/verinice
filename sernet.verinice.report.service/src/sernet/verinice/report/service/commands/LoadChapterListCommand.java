@@ -1,16 +1,32 @@
+/*******************************************************************************
+ * Copyright (c) 2010 Robert Schuster <r.schuster@tarent.de>.
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU Lesser General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ *     This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU Lesser General Public License for more details.
+ *     You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
+ ******************************************************************************/
 package sernet.verinice.report.service.commands;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Loads the available elements of {@link CnATreeElement} (?) that are eligible
+ * Loads the ids and names of various elements of {@link CnATreeElement} (?) that are eligible
  * for a security assesment. They are referenced as chapters since each element
  * turns into a chapter in the 'comprehensive security assessment report'.
  * 
- * TODO: The input value is arbitrarily chosen to be an integer. It is likely
- * that this needs to be the name of an entity. The result of this command is
- * likely to be a list of the children of the initial entity.
+ * TODO samt: Check the comments for explanations of where the ids come from and what they
+ * are supposed to mean.  
  * 
  * @author Robert Schuster <r.schuster@tarent.de>
  */
@@ -32,18 +48,26 @@ public class LoadChapterListCommand extends GenericCommand {
 	@Override
 	public void execute() {
 		switch (id) {
+		/*
+		 * The id used here is more or less a magic number. Maybe a customized command
+		 * that finds the elements for this part of the report makes more sense.
+		 */
 		case 0:
 			/* 
-			 * Chapters designated for the ISO/IEC 
+			 * Chapters designated for the ISO/IEC
 			 */
 			result = new Object[][] {
 					makeEntry(100, "ISO/IEC Overview"),
 			};
 			break;
-		/* 
-		 * Chapters designated for the IT check *details*
+		/*
+		 * The id used here is more or less a magic number. Maybe a customized command
+		 * that finds the elements for this part of the report makes more sense.
 		 */
 		case 1:
+			/* 
+			 * Chapters designated for the IT check *details*
+			 */
 			result = new Object[][] {
 					makeEntry(200, "IT rooms"),
 					makeEntry(300, "Office places"),
@@ -52,6 +76,13 @@ public class LoadChapterListCommand extends GenericCommand {
 			break;
 		/*
 		 * Sort of main chapters
+		 * 
+		 * The ids used here are supposed to be database ids that are the result of a previous
+		 * request.
+		 * 
+		 * The 100 is a slight exception as it is directly used to find the subchapters for
+		 * chapter 4. It should be a goal to get of this direct usage when a better understanding
+		 * has developed about the nature of the data.
 		 */
 		case 100:
 			// ISO/IEC
@@ -86,6 +117,8 @@ public class LoadChapterListCommand extends GenericCommand {
 			break;
 		/* 
 		 * Subchapters of the ISO/IEC part - correspond to constants in LoadAllFindingsCommand
+		 * 
+		 * From now one the ids resemble a parent->child relation in the database.
 		 */
 		case 1001:
 			result = new Object[][] {
