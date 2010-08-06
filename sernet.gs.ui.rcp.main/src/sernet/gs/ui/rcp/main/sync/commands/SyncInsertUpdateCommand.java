@@ -20,13 +20,10 @@
 package sernet.gs.ui.rcp.main.sync.commands;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.proxy.HibernateProxy;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.xpath.XPath;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -35,7 +32,6 @@ import sernet.gs.ui.rcp.main.service.crudcommands.CreateImportITVerbund;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
 import sernet.gs.ui.rcp.main.sync.InvalidRequestException;
-import sernet.gs.ui.rcp.main.sync.SyncNamespaceUtil;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -51,6 +47,11 @@ import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.common.CnATreeElement;
+import de.sernet.sync.data.SyncData;
+import de.sernet.sync.data.SyncData.SyncObject.SyncAttribute;
+import de.sernet.sync.mapping.SyncMapping;
+import de.sernet.sync.mapping.SyncMapping.MapObjectType;
+import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 
 @SuppressWarnings("serial")
 public class SyncInsertUpdateCommand extends GenericCommand {
@@ -86,7 +87,9 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 	}
 
 	private String sourceId;
-	private Element syncDataElement, syncMappingElement;
+	private SyncMapping syncMapping;
+	private SyncData syncData;
+	
 	private boolean insert, update;
 	private List<String> errorList;
 
@@ -104,12 +107,12 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 		return errorList;
 	}
 
-	public SyncInsertUpdateCommand(String sourceId, Element syncDataElement,
-			Element syncMappingElement, boolean insert, boolean update,
+	public SyncInsertUpdateCommand(String sourceId, SyncData syncData,
+			SyncMapping syncMapping, boolean insert, boolean update,
 			List<String> errorList) {
 		this.sourceId = sourceId;
-		this.syncDataElement = syncDataElement;
-		this.syncMappingElement = syncMappingElement;
+		this.syncData = syncData;
+		this.syncMapping = syncMapping;
 		this.insert = insert;
 		this.update = update;
 		this.errorList = errorList;
@@ -160,54 +163,29 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 						"Fehler beim Anlegen eines ITVerbundes");
 			}
 
-		Iterator iterator = syncDataElement.getChildren("syncObject",
-				SyncNamespaceUtil.DATA_NS).iterator();
+		for (SyncData.SyncObject so : syncData.getSyncObject()) {
 
-		while (iterator.hasNext()) {
-			Element obj = (Element) iterator.next();
-
-			String extId = obj.getAttributeValue("extId");
-			// String extId = obj.getAttributeValue( "externalId" );
-			String extObjectType = obj.getAttributeValue("extObjectType");
+			String extId = so.getExtId();
+			String extObjectType = so.getExtObjectType();
 			boolean setAttributes = false;
 
-			// we have to retreive the information from the mapping data,
+			// we have to retrieve the information from the mapping data,
 			// which huientitytype corresponds with the current object's
 			// external object type, given by extObjectType. Therefore, search
 			// the element node with (object type)extId = obj.extObjectType from
 			// syncMapping:
 
-			Element mapObj = null;
+			MapObjectType mot = getMap(extObjectType);
 
-			try {
-				// XPath Expression:
-				// //map:mapObjectType[@map:extId="extObjectType"]
-				String xPathExpression = "//map:mapObjectType[@extId=\""
-						+ extObjectType + "\"]";
-				// String xPathExpression =
-				// "//map:mapObjectType[@externalId=\""+extObjectType + "\"]";
-				XPath xPath = XPath.newInstance(xPathExpression);
-				xPath.addNamespace(SyncNamespaceUtil.DATA_NS);
-				xPath.addNamespace(SyncNamespaceUtil.MAPPING_NS);
-				xPath.addNamespace(SyncNamespaceUtil.SYNC_NS);
-				mapObj = (Element) xPath.selectSingleNode(syncMappingElement);
-			} catch (JDOMException e) {
-				errorList
-						.add("Konnte XPath-Ausdruck zur Selektion der Objekttypen nicht anwenden!");
-				return;
-			}
-
-			if (null == mapObj) {
-				// liefert fehler-response
-				errorList
-						.add("Konnte kein mapObjectType-Element finden für den Objekttypen "
+			if (mot == null) {
+				errorList.add("Konnte kein mapObjectType-Element finden für den Objekttypen "
 								+ extObjectType);
 				return;
 			}
 
 			// this element "knows", which huientitytype is applicable and
 			// how the associated properties have to be mapped!
-			String veriniceObjectType = mapObj.getAttributeValue("intId");
+			String veriniceObjectType = mot.getIntId();
 
 			CnATreeElement elementInDB = null;
 
@@ -241,7 +219,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 					// create new object in db...
 					CreateElement<CnATreeElement> createElement = new CreateElement<CnATreeElement>(
 							container, getClassFromTypeId(veriniceObjectType));
-					ServiceFactory.lookupCommandService().executeCommand(
+					getCommandService().executeCommand(
 							createElement);
 					elementInDB = createElement.getNewElement();
 
@@ -265,44 +243,19 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 			if (null != elementInDB && setAttributes) {
 				// for all <syncAttribute>-Elements below current
 				// <syncObject>...
-				Iterator attrIterator = obj.getChildren("syncAttribute",
-						SyncNamespaceUtil.DATA_NS).iterator();
+				
+				for (SyncAttribute sa : so.getSyncAttribute()) {
+					String attrExtId = sa.getName();
+					String attrValue = sa.getValue();
+					
+					MapAttributeType mat = getMapAttribute(mot, extObjectType);
 
-				while (attrIterator.hasNext()) {
-					Element attr = (Element) attrIterator.next();
-					String attrExtId = attr.getAttributeValue("name");
-					String attrValue = attr.getAttributeValue("value");
-					Element mapAttr = null;
-
-					try // to find corresponding <mapAttributeType>-Element:
-					{
-						// XPath Expression:
-						// //mapObjectType[@extId="extObjectType"]/mapAttributeType[@extId="attrExtId"]
-						String xPathExpression = "//map:mapObjectType[@extId=\""
-								+ extObjectType
-								+ "\"]/map:mapAttributeType[@extId=\""
-								+ attrExtId + "\"]";
-						// String xPathExpression =
-						// "//map:mapObjectType[@externalId=\""+extObjectType +
-						// "\"]/map:mapAttributeType[@extId=\"" + attrExtId
-						// +"\"]";
-						XPath xPath = XPath.newInstance(xPathExpression);
-						xPath.addNamespace(SyncNamespaceUtil.DATA_NS);
-						xPath.addNamespace(SyncNamespaceUtil.MAPPING_NS);
-						xPath.addNamespace(SyncNamespaceUtil.SYNC_NS);
-						mapAttr = (Element) xPath
-								.selectSingleNode(this.syncMappingElement);
-					} catch (JDOMException e) {
-						this.errorList
-								.add("Konnte XPath-Ausdruck zur Selektion der Attribute nicht anwenden!");
-					}
-
-					if (null == mapAttr)
+					if (mat == null)
 						this.errorList
 								.add("Konnte kein mapAttributeType-Element finden für das Attribut "
 										+ attrExtId + " von " + extObjectType);
 					else {
-						String attrIntId = mapAttr.getAttributeValue("intId");
+						String attrIntId = mat.getIntId();
 						PropertyType propertyType = elementInDB.getEntityType()
 								.getPropertyType(attrIntId);
 
@@ -314,6 +267,29 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 				} // for <syncAttribute>
 			} // if( null != ... )
 		} // for <syncObject>
+	}
+	
+	private MapObjectType getMap(String extObjectType)
+	{
+		for (MapObjectType mot : syncMapping.getMapObjectType())
+		{
+			if (extObjectType.equals(mot.getExtId()))
+					return mot;
+		}
+		
+		return null;
+	}
+	
+	private SyncMapping.MapObjectType.MapAttributeType getMapAttribute(
+			MapObjectType mot, String extObjectType) {
+		for (SyncMapping.MapObjectType.MapAttributeType mat : mot
+				.getMapAttributeType()) {
+			if (extObjectType.equals(mat.getExtId())) {
+				return mat;
+			}
+		}
+
+		return null;
 	}
 
 	/************************************************************
@@ -332,7 +308,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 		// use a new crudCommand (load by external, source id):
 		LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(
 				sourceID, externalID);
-		command = ServiceFactory.lookupCommandService().executeCommand(command);
+		command = getCommandService().executeCommand(command);
 
 		List<CnATreeElement> foundElements = command.getElements();
 
@@ -388,7 +364,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 
 		CreateImportITVerbund command = new CreateImportITVerbund(model,
 				ITVerbund.class, sourceId);
-		command = ServiceFactory.lookupCommandService().executeCommand(command);
+		command = getCommandService().executeCommand(command);
 		CnATreeElement itverbund = command.getNewElement();
 
 		return (ITVerbund) itverbund;

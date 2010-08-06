@@ -26,9 +26,6 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
 Export-Package: com.heatonresearch.datamover;uses:="com.heatonresearch.datamover.db",
  com.heatonresearch.datamover.db,
- de.sernet.sync.data,
- de.sernet.sync.mapping,
- de.sernet.sync.sync,
  sernet.gs.common,
  sernet.gs.ui.rcp.gsimport;
   uses:="sernet.gs.reveng,
@@ -218,6 +215,7 @@ Export-Package: com.heatonresearch.datamover;uses:="com.heatonresearch.datamover
    sernet.gs.ui.rcp.main.common.model,
    sernet.gs.ui.rcp.main.service",
  sernet.gs.ui.rcp.main.sync,
+ sernet.gs.ui.rcp.main.sync.commands,
  sernet.gs.ui.rcp.office;uses:="junit.framework",
  sernet.verinice.hibernate;uses:="org.hibernate.dialect",
  sernet.verinice.iso27k.rcp;

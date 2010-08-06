@@ -3,13 +3,17 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
+import javax.xml.bind.JAXB;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -28,12 +32,15 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CreateXMLElement;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.WebServiceClient;
+import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.sync.commands.SyncCommand;
+import sernet.verinice.interfaces.CommandException;
+import de.sernet.sync.sync.SyncRequest;
 
 /**
  * 
@@ -54,16 +61,10 @@ public class XMLImportDialog extends Dialog {
     private boolean dataPathFlag;
     private final static String[] FILTEREXTEND = { "*.xml" };
 
-    private static ZipInputStream dataXML;
-    private static ZipInputStream mappingXML;
-
     private File dataFile;
-    private File mappingFile;
-    private CreateXMLElement syncRequest;
 
     public XMLImportDialog(Shell shell) {
         super(shell);
-        syncRequest = new CreateXMLElement();
     }
 
     @Override
@@ -77,19 +78,38 @@ public class XMLImportDialog extends Dialog {
         } else {
             saveInput();
 
-            try {
-                syncRequest.getSyncRequestXMLFiles(dataFile, insert, update, delete, sourceId);
-                syncRequest.show();
-                Activator.inheritVeriniceContextState();
+			try {
+				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
+						new IRunnableWithProgress() {
+							public void run(IProgressMonitor monitor)
+									throws InvocationTargetException,
+									InterruptedException {
+								Activator.inheritVeriniceContextState();
 
-                WebServiceClient syncService = (WebServiceClient) VeriniceContext.get(VeriniceContext.WEB_SERVICE_CLIENT);
-                syncService.simpleSendAndReceive(syncRequest.getSyncRequestXML());
+								SyncRequest sr = (SyncRequest) JAXB.unmarshal(
+										dataFile, SyncRequest.class);
 
-            } catch (Exception e) {
-                ExceptionUtil.log(e, "Fehler während des Importvorganges");
-            }
-            close();
+								SyncCommand command = new SyncCommand(sourceId,
+										insert, update, delete, sr
+												.getSyncData(), sr
+												.getSyncMapping());
+								try {
+									command = ServiceFactory
+											.lookupCommandService()
+											.executeCommand(command);
 
+								} catch (CommandException e) {
+									throw new IllegalStateException(e);
+								}
+							}
+						});
+			} catch (InvocationTargetException e) {
+				ExceptionUtil.log(e, "Fehler während des Importvorganges");
+			} catch (InterruptedException e) {
+				ExceptionUtil.log(e, "Fehler während des Importvorganges");
+			}
+
+			close();
         }
     }
 
@@ -306,14 +326,6 @@ public class XMLImportDialog extends Dialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.XMLImportDialog_1);
-    }
-
-    public ZipInputStream getDataStream() {
-        return dataXML;
-    }
-
-    public ZipInputStream getMappingStream() {
-        return mappingXML;
     }
 
     @Override

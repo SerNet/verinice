@@ -2,64 +2,77 @@ package sernet.gs.ui.rcp.main.bsi.wizards;
 
 import java.io.File;
 
+import javax.xml.bind.JAXB;
+
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
-import sernet.gs.ui.rcp.main.CreateXMLElement;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.WebServiceClient;
-import de.sernet.sync.data.SyncData;
-import de.sernet.sync.mapping.SyncMapping;
-import de.sernet.sync.sync.ISyncWS;
-import de.sernet.sync.sync.StreamToFile;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.sync.commands.SyncCommand;
+import sernet.verinice.interfaces.CommandException;
+
 import de.sernet.sync.sync.SyncRequest;
 
-
-public class ImportCSVWizard extends Wizard{
+public class ImportCSVWizard extends Wizard {
 	private EntitySelectionPage entityPage;
 	private PropertiesSelectionPage propertyPage;
-	private CreateXMLElement xmlDoc;
-	private File syncRequestXML;
-	
-	public ImportCSVWizard(){
+
+	public ImportCSVWizard() {
 		super();
 		propertyPage = new PropertiesSelectionPage("Select properties");
 		entityPage = new EntitySelectionPage("Select entity");
-		xmlDoc = new CreateXMLElement();
 	}
-	
+
 	@Override
 	public boolean performFinish() {
-		xmlDoc.syncRequest(entityPage.getInsertState(), entityPage.getUpdateState(), entityPage.getDeleteState(), entityPage.getSourceId());
-		xmlDoc.mapping(propertyPage.getEntityName(), entityPage.getEntityNameId(), propertyPage.getPropertyTable());
-		xmlDoc.data(propertyPage.getEntityName(), propertyPage.getInhaltDerDatei(), propertyPage.getPropertyColumns());
-		this.syncRequestXML = xmlDoc.getSyncRequestXML();
-		xmlDoc.show();
+		Activator.inheritVeriniceContextState();
+
+		SyncRequest sr = createSyncRequest();
+
+		SyncCommand command = new SyncCommand(entityPage.getSourceId(),
+				entityPage.getInsertState(), entityPage.getUpdateState(),
+				entityPage.getDeleteState(), sr.getSyncData(), sr
+						.getSyncMapping());
 		try {
-            Activator.inheritVeriniceContextState();
-            WebServiceClient syncService = (WebServiceClient) VeriniceContext
-                            .get(VeriniceContext.WEB_SERVICE_CLIENT);
-            System.out.println("send request!!!");
-            syncService.simpleSendAndReceive(syncRequestXML);
-	    } catch (Exception e) {
-	    	System.out.println("Could not send request");
-	        e.printStackTrace();
-	    }
+			command = ServiceFactory.lookupCommandService().executeCommand(
+					command);
+
+		} catch (CommandException e) {
+			throw new IllegalStateException(e);
+		}
+
 		return true;
 	}
-	
-	public void addPages(){
+
+	public void addPages() {
 		addPage(entityPage);
 		addPage(propertyPage);
 	}
-	
-	public IWizardPage getNextPage(IWizardPage page){
-		if(page == entityPage) {
+
+	public IWizardPage getNextPage(IWizardPage page) {
+		if (page == entityPage) {
 			propertyPage.setEntityName(entityPage.getEntityName());
 			propertyPage.setCSVDatei(entityPage.getCSVDatei());
 			propertyPage.fillTable();
 		}
 		return super.getNextPage(page);
+	}
+
+	private SyncRequest createSyncRequest() {
+		// TODO rschuster: Needs to be implemented. 
+		throw new UnsupportedOperationException();
+		/*
+		 * xmlDoc.syncRequest(entityPage.getInsertState(),
+		 * entityPage.getUpdateState(), entityPage.getDeleteState(),
+		 * entityPage.getSourceId());
+		 * xmlDoc.mapping(propertyPage.getEntityName(),
+		 * entityPage.getEntityNameId(), propertyPage.getPropertyTable());
+		 * xmlDoc.data(propertyPage.getEntityName(),
+		 * propertyPage.getInhaltDerDatei(), propertyPage.getPropertyColumns());
+		 * this.syncRequestXML = xmlDoc.getSyncRequestXML();
+		 */
+
+		// return null;
 	}
 }

@@ -18,20 +18,33 @@
 
 package sernet.gs.ui.rcp.main.actions;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 import java.util.LinkedList;
 
+import javax.xml.bind.JAXB;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.w3c.dom.Document;
 
-import sernet.gs.ui.rcp.main.DOMUtil;
+import sernet.gs.ui.rcp.main.ServiceComponent;
+import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.ExportDialog;
+import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.encryption.EncryptionException;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -88,8 +101,55 @@ public class ExportAction extends Action
 				LOG.error("Error while exporting.", ex);
 			}
 			
-			Document doc = exportCommand.getExportDocument();
-			DOMUtil.writeDocumentToFile(doc, dialog.getStorageLocation(), dialog.getEncryptOutput());
+			try {
+				IOUtils.write(exportCommand.getResult(),
+						ExportAction.getExportOutputStream(dialog.getStorageLocation(), dialog.getEncryptOutput()));
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}
+			
 		}
 	}
+	
+	public static OutputStream getExportOutputStream(String path, boolean encryptOutput )
+	{
+		OutputStream os;
+		try {
+			os = new FileOutputStream(path);
+		} catch (FileNotFoundException e) {
+			throw new IllegalArgumentException(e);
+		}
+		
+		if (encryptOutput) {
+			EncryptionDialog encDialog = new EncryptionDialog(Display.getDefault().getActiveShell());
+			if (encDialog.open() == Dialog.OK) {
+				IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
+				
+				try {
+					EncryptionMethod encMethod = encDialog
+							.getSelectedEncryptionMethod();
+					if (encMethod == EncryptionMethod.PASSWORD) {
+						os = service
+								.encrypt(os, encDialog.getEnteredPassword());
+					} else if (encMethod == EncryptionMethod.X509_CERTIFICATE) {
+						os = service.encrypt(os, encDialog
+								.getSelectedX509CertificateFile());
+					}
+				} catch (IOException ioe) {
+					throw new IllegalArgumentException(ioe);
+				} catch (CertificateNotYetValidException e) {
+					throw new IllegalArgumentException(e);
+				} catch (CertificateExpiredException e) {
+					throw new IllegalArgumentException(e);
+				} catch (CertificateException e) {
+					throw new IllegalArgumentException(e);
+				} catch (EncryptionException e) {
+					throw new IllegalArgumentException(e);
+				}
+			}
+		}
+		
+		return os;
+	}
+
 }

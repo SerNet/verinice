@@ -17,12 +17,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -60,13 +62,12 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
-import org.w3c.dom.Document;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.DOMUtil;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
+import sernet.gs.ui.rcp.main.actions.ExportAction;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
@@ -488,11 +489,15 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 					}
 					catch(CommandException ex)
 					{
-						ex.printStackTrace();
+						throw new IllegalStateException(ex);
 					}
 					
-					Document doc = exportCommand.getExportDocument();
-					DOMUtil.writeDocumentToFile(doc, dialog.getStorageLocation(), dialog.getEncryptOutput());
+					try {
+						IOUtils.write(exportCommand.getResult(),
+								ExportAction.getExportOutputStream(dialog.getStorageLocation(), dialog.getEncryptOutput()));
+					} catch (IOException e) {
+						throw new IllegalStateException(e);
+					}
 				}
 			}
 		};

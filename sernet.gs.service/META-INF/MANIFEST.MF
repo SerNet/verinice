@@ -16,7 +16,11 @@ Bundle-ClassPath: .,
  lib/saxon9/saxon9-xqj.jar,
  lib/saxon9/saxon9.jar
 Bundle-Localization: plugin
-Export-Package: org.ccil.cowan.tagsoup,
+Export-Package: de.sernet.sync.data,
+ de.sernet.sync.mapping,
+ de.sernet.sync.sync,
+ de.sernet.sync.sync_service,
+ org.ccil.cowan.tagsoup,
  sernet.gs.model,
  sernet.gs.scraper,
  sernet.gs.service,

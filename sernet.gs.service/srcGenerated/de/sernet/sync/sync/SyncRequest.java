@@ -1,46 +1,60 @@
 
 package de.sernet.sync.sync;
 
-import java.io.File;
-import java.util.zip.ZipInputStream;
-import sernet.springclient.SpringClientPlugin;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.mapping.SyncMapping;
 
 
-@SuppressWarnings("serial")
-public class SyncRequest /*implements java.io.Serializable*/ {
+/**
+ * <p>Java class for anonymous complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType>
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element ref="{http://www.sernet.de/sync/data}syncData"/>
+ *         &lt;element ref="{http://www.sernet.de/sync/mapping}syncMapping"/>
+ *       &lt;/sequence>
+ *       &lt;attribute name="sourceId" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="insert" type="{http://www.w3.org/2001/XMLSchema}boolean" default="true" />
+ *       &lt;attribute name="update" type="{http://www.w3.org/2001/XMLSchema}boolean" default="true" />
+ *       &lt;attribute name="delete" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+    "syncData",
+    "syncMapping"
+})
+@XmlRootElement(name = "syncRequest")
+public class SyncRequest {
 
+    @XmlElement(namespace = "http://www.sernet.de/sync/data", required = true)
     protected SyncData syncData;
+    @XmlElement(namespace = "http://www.sernet.de/sync/mapping", required = true)
     protected SyncMapping syncMapping;
+    @XmlAttribute(name = "sourceId", required = true)
     protected String sourceId;
+    @XmlAttribute(name = "insert")
     protected Boolean insert;
+    @XmlAttribute(name = "update")
     protected Boolean update;
+    @XmlAttribute(name = "delete")
     protected Boolean delete;
-    
-    
-    public SyncRequest() {
-	}
-    
-    public SyncRequest(String sourceId, boolean insert, boolean update, boolean delete, SyncData syncData, SyncMapping syncMapping) {
-    	this.sourceId = sourceId;
-    	this.insert = insert;
-    	this.update = update;
-    	this.delete = delete;
-    	this.syncData = syncData;
-    	this.syncMapping = syncMapping;
-    }
-    
-    public SyncRequest(String sourceId, boolean insert, boolean update, boolean delete, /*ZipInputStream*/ File dataStream, /*ZipInputStream*/ File mappingStream) {
-    	this.sourceId = sourceId;
-    	this.insert = insert;
-    	this.update = update;
-    	this.delete = delete;
-    	this.syncData = new SyncData();
-    	this.syncData.fill(dataStream);
-    	this.syncMapping = new SyncMapping();
-    	this.syncMapping.fill(mappingStream);
-    }
 
     /**
      * Gets the value of the syncData property.

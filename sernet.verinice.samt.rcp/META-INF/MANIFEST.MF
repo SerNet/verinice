@@ -17,7 +17,8 @@ Require-Bundle: sernet.gs.ui.rcp.main,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %Bundle-Vendor
-Import-Package: org.eclipse.core.runtime,
+Import-Package: org.apache.commons.io,
+ org.eclipse.core.runtime,
  org.eclipse.core.runtime.jobs,
  org.eclipse.osgi.util,
  org.osgi.framework,

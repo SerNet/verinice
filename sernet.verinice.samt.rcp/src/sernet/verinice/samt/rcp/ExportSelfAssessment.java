@@ -18,24 +18,24 @@
 
 package sernet.verinice.samt.rcp;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.w3c.dom.Document;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-
-import sernet.gs.ui.rcp.main.DOMUtil;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.actions.ExportAction;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
 import sernet.verinice.interfaces.CommandException;
@@ -91,8 +91,13 @@ public class ExportSelfAssessment implements IViewActionDelegate
     				ExceptionUtil.log(ex, Messages.ExportSelfAssessment_1);
     			}
     			
-    			Document doc = exportCommand.getExportDocument();
-    			DOMUtil.writeDocumentToFile(doc, dialog.getFilePath(), dialog.getEncryptOutput());
+    			try {
+    				IOUtils.write(exportCommand.getResult(),
+    						ExportAction.getExportOutputStream(dialog.getFilePath(), dialog.getEncryptOutput()));
+    			} catch (IOException e) {
+    				throw new IllegalStateException(e);
+    			}
+
     			String title = "";
     			if(selectedElement instanceof Organization) {
     			    title = ((Organization)selectedElement).getTitle();

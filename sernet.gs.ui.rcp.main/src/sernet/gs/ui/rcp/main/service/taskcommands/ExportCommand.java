@@ -18,25 +18,20 @@
 
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import javax.xml.bind.JAXB;
 
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyList;
@@ -45,6 +40,13 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
+import de.sernet.sync.data.SyncData;
+import de.sernet.sync.data.SyncData.SyncObject;
+import de.sernet.sync.data.SyncData.SyncObject.SyncAttribute;
+import de.sernet.sync.mapping.SyncMapping;
+import de.sernet.sync.mapping.SyncMapping.MapObjectType;
+import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
+import de.sernet.sync.sync.SyncRequest;
 
 /**
  * Creates an XML representation of the given list of
@@ -52,12 +54,9 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  * @author <andreas[at]becker[dot]name>
  */
+@SuppressWarnings("serial")
 public class ExportCommand extends GenericCommand
 {
-	private static final long serialVersionUID = 821504393526786830L;
-	
-	// TODO: Use NamespaceUtil, when available!
-	public static HashMap<String, String> syncNamespaces = new HashMap<String, String>();
 	
 	// Blacklist of object types that should not be exported as an object:
 	private static HashMap<String, String> blacklist = new HashMap<String, String>();
@@ -83,17 +82,14 @@ public class ExportCommand extends GenericCommand
 		blacklist.put("nk-kategorie", new String());
 		blacklist.put("sonstige-it-kategorie", new String());
 		blacklist.put("tk-kategorie", new String());
-		
-		syncNamespaces.put("sync", "http://www.sernet.de/sync/sync");
-		syncNamespaces.put("data", "http://www.sernet.de/sync/data");
-		syncNamespaces.put("map", "http://www.sernet.de/sync/mapping");
 	}
 	
 	private List<CnATreeElement> elements;
 	private String sourceId;
 	private HashMap<String,String> entityTypesToBeExported;
-	private Document exportDocument;
-
+	
+	private byte[] result;
+	
 	public ExportCommand( List<CnATreeElement> elements, String sourceId )
 	{
 		this.elements = elements;
@@ -108,32 +104,18 @@ public class ExportCommand extends GenericCommand
 	
 	public void execute()
 	{
+		String timestamp = Long.toString(Calendar.getInstance().getTimeInMillis());
 		exportedObjectIDs = new HashMap<String, String>();
 		
-		/*+++++
-		 * Create empty DOM-tree from scratch:
-		 *++++++++++++++++++++++++++++++++++++*/
-		try
-		{
-			this.exportDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-		}
-		catch (ParserConfigurationException e)
-		{
-			throw new RuntimeException(e);
-		}
+		SyncData sd = new SyncData();
 		
-		Element syncRequest = exportDocument.createElementNS(syncNamespaces.get("sync"), "syncRequest");
-		syncRequest.setAttribute("sourceId", sourceId);
-		Element syncData = exportDocument.createElementNS(syncNamespaces.get("data"), "syncData");
-		Element syncMapping = exportDocument.createElementNS(syncNamespaces.get("map"), "syncMapping");
-		syncRequest.appendChild(syncData);
-		syncRequest.appendChild(syncMapping);
+		SyncMapping sm = new SyncMapping();
+		List<MapObjectType> mapObjectTypeList = sm.getMapObjectType();
 		
-		exportDocument.appendChild(syncRequest);
-		
-		List<Element> syncObjects = new LinkedList<Element>();
-		
-		String timestamp = Long.toString(Calendar.getInstance().getTimeInMillis());
+		SyncRequest sr = new SyncRequest();
+		sr.setSourceId(sourceId);
+		sr.setSyncData(sd);
+		sr.setSyncMapping(sm);
 		
 		/*+++++
 		 * Add one <syncObject> element for each
@@ -141,14 +123,7 @@ public class ExportCommand extends GenericCommand
 		 *+++++++++++++++++++++++++++++++++++++++*/
 		for( CnATreeElement element : elements )
 		{
-			syncObjects.addAll(export(element, timestamp));
-		}
-		
-		ListIterator<Element> iter = syncObjects.listIterator();
-		
-		while( iter.hasNext() )
-		{
-			syncData.appendChild(iter.next());
+			export(sd.getSyncObject(), element, timestamp);
 		}
 		
 		/*+++++
@@ -167,26 +142,32 @@ public class ExportCommand extends GenericCommand
 			if(!(entityType.getId().equals("itverbund"))) //$NON-NLS-1$
 			{
 				// Add <mapObjectType> element for this entity type to <syncMapping>:
-				Element mapObjectType = exportDocument.createElementNS(syncNamespaces.get("map"), "mapObjectType");
-				syncMapping.appendChild(mapObjectType);
-				mapObjectType.setAttribute("extId", entityType.getId());
-				mapObjectType.setAttribute("intId", entityType.getId());
+				MapObjectType mapObjectType = new MapObjectType();
 				
-				List<PropertyType> propertyTypes = entityType.getPropertyTypes();
-				Iterator<PropertyType> propertyTypesIter = propertyTypes.iterator();
+				mapObjectType.setIntId(entityType.getId());
+				mapObjectType.setExtId(entityType.getId());
 				
-				while( propertyTypesIter.hasNext() )
+				List<MapAttributeType> mapAttributeTypes = mapObjectType.getMapAttributeType();
+				for (PropertyType propertyType : entityType.getPropertyTypes())
 				{
-					PropertyType propertyType = propertyTypesIter.next();
-					
 					// Add <mapAttributeType> for this property type to current <mapObjectType>:
-					Element mapAttributeType = exportDocument.createElementNS(syncNamespaces.get("map"), "mapAttributeType");
-					mapObjectType.appendChild(mapAttributeType);
-					mapAttributeType.setAttribute("extId", propertyType.getId());
-					mapAttributeType.setAttribute("intId", propertyType.getId());
+					MapAttributeType mapAttributeType = new MapAttributeType();
+					
+					mapAttributeType.setExtId(propertyType.getId());
+					mapAttributeType.setIntId(propertyType.getId());
+					
+					mapAttributeTypes.add(mapAttributeType);
 				}
+				
+				mapObjectTypeList.add(mapObjectType);
 			}
 		}
+		
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		PrintWriter pw = new PrintWriter(bos);
+		JAXB.marshal(sr, pw);
+		
+		result = bos.toByteArray();
 	}
 
 	/**
@@ -199,10 +180,9 @@ public class ExportCommand extends GenericCommand
 	 * @param cnATreeElement
 	 * @return List<Element>
 	 */
-	private List<Element> export( CnATreeElement cnATreeElement, String timestamp )
+	private void export(List<SyncData.SyncObject> list, CnATreeElement cnATreeElement, String timestamp )
 	{		
 		hydrate( cnATreeElement );
-		List<Element> syncObjects = new LinkedList<Element>();
 		
 		/*++++++++++
 		 * Export the given CnATreeElement, iff it is NOT blacklisted (i.e. an IT network
@@ -214,11 +194,12 @@ public class ExportCommand extends GenericCommand
 				&& (exportedObjectIDs.get( cnATreeElement.getId()) == null )
 				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(cnATreeElement.getObjectType()) != null) )
 		{
-			Element syncObject = exportDocument.createElementNS(syncNamespaces.get("data"), "syncObject");
-			syncObject.setAttribute("extId", cnATreeElement.getId());
-			syncObject.setAttribute("extObjectType", cnATreeElement.getObjectType());
-			syncObject.setAttribute("timestamp", timestamp);
+			SyncObject syncObject = new SyncObject();
+			syncObject.setExtId(cnATreeElement.getId());
+			syncObject.setExtObjectType(cnATreeElement.getObjectType());
 
+			List<SyncAttribute> attributes = syncObject.getSyncAttribute();
+			
 			/*+++++
 			 * Retrieve all properties from the entity:
 			 *+++++++++++++++++++++++++++++++++++++++++*/
@@ -231,15 +212,16 @@ public class ExportCommand extends GenericCommand
 
 				if( propertyValue != null )
 				{
+					SyncAttribute syncAttribute = new SyncAttribute();
+					
 					// Add <syncAttribute> to this <syncObject>:
-					Element syncAttribute = exportDocument.createElementNS(syncNamespaces.get("data"), "syncAttribute");
-					syncAttribute.setAttribute("name", s);
-					syncAttribute.setAttribute("value", propertyValue);
-					syncObject.appendChild(syncAttribute);
+					syncAttribute.setName(s);
+					syncAttribute.setValue(propertyValue);
+					attributes.add(syncAttribute);
 				}			
 			}
 
-			syncObjects.add( syncObject );
+			list.add(syncObject);
 			exportedObjectIDs.put( cnATreeElement.getId(), new String() );
 		}
 		
@@ -250,10 +232,8 @@ public class ExportCommand extends GenericCommand
 		
 		for( CnATreeElement child : children )
 		{
-			syncObjects.addAll( export(child, timestamp) );
+			export(list, child, timestamp);
 		}
-		
-		return syncObjects;
 	}
 	
 	/*************************************************
@@ -285,11 +265,9 @@ public class ExportCommand extends GenericCommand
 			hydrate(child);
 		}
 	}
-	
-	/* Getters and Setters: */
-	
-	public Document getExportDocument()
-	{
-		return exportDocument;
+
+	public byte[] getResult() {
+		return result; 
 	}
+	
 }

@@ -54,7 +54,6 @@ import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowExportWizardAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
-import sernet.gs.ui.rcp.main.actions.SyncTestAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.views.AuditView;
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
@@ -161,8 +160,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	private ImportGstoolNotesAction importGSNotesAction;
 
-	private SyncTestAction synctestAction;
-
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
         removeExtraneousActions();
@@ -249,9 +246,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         register(reloadAction);
-
-        synctestAction = new SyncTestAction(window);
-        // TODO rschuster: No registration here?
 
         importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         register(importGstoolAction);
@@ -357,8 +351,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		fileMenu.add(importGSNotesAction);
 		fileMenu.add(exportAction);
 
-        fileMenu.add(new Separator());
-        fileMenu.add(synctestAction);
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);
         return fileMenu;

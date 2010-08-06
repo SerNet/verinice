@@ -112,6 +112,7 @@
 	<!-- Webclient conf end -->
 
 	<!-- TEST - axis servlet -->
+<!--
 
 	<servlet>
 		<servlet-name>axis</servlet-name>
@@ -123,9 +124,22 @@
 		<servlet-name>axis</servlet-name>
 		<url-pattern>/axis/*</url-pattern>
 	</servlet-mapping>
-
+-->
 	<!-- axis servlet -->
-
+<!-- 
+	<servlet>
+		<servlet-name>messageDispatcher</servlet-name>
+		<servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>transformWsdlLocation</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/messageDispatcher-servlet.xml</param-value>
+		</init-param>
+	</servlet>
+-->
 	<servlet>
 		<servlet-name>context</servlet-name>
 		<servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class>
@@ -143,20 +157,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>messageDispatcher</servlet-name>
-		<servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>transformWsdlLocation</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/messageDispatcher-servlet.xml</param-value>
-		</init-param>
-	</servlet>
-
-
-	<servlet>
 		<description>Output HuiConfig from classpath.</description>
 		<display-name>GetHitroConfig</display-name>
 		<servlet-name>GetHitroConfig</servlet-name>
@@ -167,7 +167,8 @@
 		</init-param>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
-
+	
+<!-- 
 	<servlet-mapping>
 		<servlet-name>messageDispatcher</servlet-name>
 		<url-pattern>/sync/*</url-pattern>
@@ -177,7 +178,8 @@
 		<servlet-name>messageDispatcher</servlet-name>
 		<url-pattern>*.wsdl</url-pattern>
 	</servlet-mapping>
-
+ -->
+ 
 	<servlet-mapping>
 		<servlet-name>springDispatcher</servlet-name>
 		<url-pattern>/service/*</url-pattern>

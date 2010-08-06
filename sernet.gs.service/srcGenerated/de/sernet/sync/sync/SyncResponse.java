@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlType;
     "deleted"
 })
 @XmlRootElement(name = "syncResponse")
-public class SyncResponse implements java.io.Serializable {
+public class SyncResponse {
 
     @XmlElement(required = true)
     protected String replyMessage;

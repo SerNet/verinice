@@ -1,50 +1,44 @@
 /*******************************************************************************
- * InsertUpdateCommand.java
- *
  * Copyright (c) 2009 Andreas Becker <andreas.r.becker@rub.de>.
+ * Copyright (c) 2010 Robert Schuster <r.schuster@tarent.de>
  * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
+ * modify it under the terms of the GNU Lesser General Public License 
  * as published by the Free Software Foundation, either version 3 
  * of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful,    
+ *     This program is distributed in the hope that it will be useful,    
  * but WITHOUT ANY WARRANTY; without even the implied warranty 
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
- * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
+ * See the GNU Lesser General Public License for more details.
+ *     You should have received a copy of the GNU Lesser General Public 
  * License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * 14.08.2009
  * 
- * @author Andreas Becker
+ * Contributors:
+ *     Andreas Becker <andreas.r.becker[at]rub[dot]de> - initial API and implementation
+ *     Robert Schuster <r.schuster[a]tarent[dot]de> - removal of JDom API use
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.sync.commands;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 
-import org.jdom.Element;
-
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsBySourceID;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
-import sernet.gs.ui.rcp.main.sync.SyncNamespaceUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import de.sernet.sync.data.SyncData;
 
+/**
+ * 
+ * @author Andreas Becker <andreas.r.becker@rub.de>
+ * @author Robert Schuster <r.schuster@tarent.de>
+ */
 @SuppressWarnings("serial")
 public class SyncDeleteCommand extends GenericCommand {
-	/*
-	 * Since we are possibly instanciating objects from verinice business
-	 * classes without having access to a tree with categories as parent nodes,
-	 * we have to map huientitytype --> category manually:
-	 */
 
 	private String sourceId;
-	private Element syncDataElement;
+	private SyncData syncData;
 
 	private List<String> errors;
 
@@ -54,10 +48,10 @@ public class SyncDeleteCommand extends GenericCommand {
 		return deleted;
 	}
 
-	public SyncDeleteCommand(String sourceId, Element syncDataElement,
+	public SyncDeleteCommand(String sourceId, SyncData syncData,
 			List<String> errorList) {
 		this.sourceId = sourceId;
-		this.syncDataElement = syncDataElement;
+		this.syncData = syncData;
 		this.errors = errorList;
 	}
 
@@ -78,13 +72,11 @@ public class SyncDeleteCommand extends GenericCommand {
 				sourceId);
 
 		try {
-			command = ServiceFactory.lookupCommandService().executeCommand(
+			command = getCommandService().executeCommand(
 					command);
 		} catch (CommandException e) {
-			errors
-					.add("Fehler beim Ausführen von LoadCnAElementsBySourceID mit der sourceId = "
+			errors.add("Fehler beim Ausführen von LoadCnAElementsBySourceID mit der sourceId = "
 							+ sourceId);
-			e.printStackTrace();
 			return;
 		}
 
@@ -92,42 +84,29 @@ public class SyncDeleteCommand extends GenericCommand {
 
 		// create a hash map, which contains a token for all
 		// extId's which are present in the sync Data:
-		HashMap<String, Object> currentExtIds = new HashMap<String, Object>();
-		Object exists = new Object();
-
-		Iterator iter = syncDataElement.getChildren("syncObject",
-				SyncNamespaceUtil.DATA_NS).iterator();
-
-		// store a token for the extId of every <syncObject> in the sync data:
-		while (iter.hasNext()) {
-			Element obj = (Element) iter.next();
-			currentExtIds.put(obj.getAttributeValue("extId"), exists);
-			// currentExtIds.put( obj.getAttributeValue( "externalId" ), exists
-			// );
+		HashSet<String> currentExtIds = new HashSet<String>();
+		
+		for (SyncData.SyncObject so : syncData.getSyncObject()) {
+			// store a token for the extId of every <syncObject> in the sync data:
+			currentExtIds.add(so.getExtId());
 		}
 
 		// find objects in the db, which have been synched from
-		// this sourceId in the past, but missing in the current list:
-		allElements: for (CnATreeElement dbElement : dbElements) {
+		// this sourceId in the past, but are missing in the current list:
+		for (CnATreeElement e : dbElements) {
 
-			if (dbElement instanceof ITVerbund)
-				continue allElements;
-
-			Object elementExists = currentExtIds.get(dbElement.getExtId());
-
-			if (null == elementExists) // delete this object from the database:
+			if (!currentExtIds.contains(e.getExtId())) // delete this object from the database:
 			{
-				RemoveElement cmdRemove = new RemoveElement(dbElement);
+				RemoveElement<?> cmdRemove = new RemoveElement<CnATreeElement>(e);
 
 				try {
-					cmdRemove = ServiceFactory.lookupCommandService()
+					cmdRemove = getCommandService()
 							.executeCommand(cmdRemove);
 					deleted++;
-				} catch (CommandException e) {
-					errors.add("Konnte Objekt ( id=" + dbElement.getId()
-							+ ", externalId=" + dbElement.getExtId()
+				} catch (CommandException ex) {
+					errors.add("Konnte Objekt ( id=" + e.getId()
+							+ ", externalId=" + e.getExtId()
 							+ ") nicht löschen.");
-					e.printStackTrace();
 				}
 			}
 		}
