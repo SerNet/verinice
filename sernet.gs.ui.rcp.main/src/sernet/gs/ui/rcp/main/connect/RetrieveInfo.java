@@ -66,6 +66,8 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	
 	boolean parent = false;
 	
+	boolean parentPermissions = false;
+	
 	boolean siblings = false;
 	
 	boolean permissions = false;
@@ -192,7 +194,17 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 		return this;
 	}
 
-	public boolean isSiblings() {
+
+    public RetrieveInfo setParentPermissions(boolean parentPermissions) {
+        this.parentPermissions = parentPermissions;
+        return this;  
+    }
+
+    public boolean isParentPermissions() {
+        return parentPermissions;
+    }
+
+    public boolean isSiblings() {
 		return siblings;
 	}
 
@@ -266,7 +278,14 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 		if(isChildrenPermissions()) {
 			sb.append(" childrenPermissions");
 		}
+        if(isParent()) {
+            sb.append(" parent");
+        }
+        if(isParentPermissions()) {
+            sb.append(" parentPermissions");
+        }
 		return sb.toString();
 	}
+
 	
 }

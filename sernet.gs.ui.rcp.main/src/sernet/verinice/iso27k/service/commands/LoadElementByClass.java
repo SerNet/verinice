@@ -27,7 +27,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
 @SuppressWarnings("serial")
-public class LoadElementByClass extends GenericCommand implements INoAccessControl {
+public class LoadElementByClass extends GenericCommand {
 
     
     private String typeId;

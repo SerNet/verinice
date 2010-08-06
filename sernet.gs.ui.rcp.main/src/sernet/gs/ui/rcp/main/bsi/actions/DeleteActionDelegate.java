@@ -37,6 +37,8 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -123,7 +125,6 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                             }
 
                             CnATreeElement el = (CnATreeElement) sel;
-
                             try {
                                 monitor.setTaskName(NLS.bind(Messages.DeleteActionDelegate_14, el.getTitle()));
                                 el.getParent().removeChild(el);

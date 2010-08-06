@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Robert Schuster <r.schuster@tarent.de>.
+ * Copyright (c) 2010 Daniel Murygin <dm[at]sernet[dot]de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -13,7 +13,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
+ *      Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
@@ -76,6 +76,8 @@ public interface IRetrieveInfo {
 	public abstract boolean isGrandchildren();
 
 	public abstract boolean isParent();
+	
+	public abstract boolean isParentPermissions();
 
 	public abstract IRetrieveInfo setParent(boolean parent);
 

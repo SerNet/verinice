@@ -30,6 +30,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -43,6 +47,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
@@ -54,6 +60,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.CommandException;
@@ -62,6 +69,7 @@ import sernet.verinice.iso27k.rcp.ISMViewContentProvider;
 import sernet.verinice.iso27k.rcp.ISMViewLabelProvider;
 import sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -178,7 +186,7 @@ public abstract class ElementView extends ViewPart {
         
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
-        contentProvider = new ISMViewContentProvider(cache);
+        contentProvider = new ISMViewContentProvider(cache, new ElementViewTreeCommandFactory());
         
         viewer.setContentProvider(contentProvider);
         
@@ -292,7 +300,16 @@ public abstract class ElementView extends ViewPart {
                     }
                 }
             }
-        };
+            
+            /* (non-Javadoc)
+             * @see sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate#databaseChildRemoved(sernet.verinice.model.common.CnATreeElement)
+             */
+            @Override
+            public void databaseChildRemoved(CnATreeElement child) {              
+                super.databaseChildRemoved(child);
+                reload();
+            }
+         };
     }
     
     private void addSelectionListener() {
@@ -323,13 +340,18 @@ public abstract class ElementView extends ViewPart {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Selected link element, Type: " + selectedElement.getObjectType() + ", name: " + selectedElement.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                     } 
-                }            
-                if(element instanceof IISO27kGroup && sourceIsThisView) {
-                    CnATreeElement selectedElement = (CnATreeElement) element;
-                    setSelectedGroup(selectedElement);
-                   
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                } else {         
+                    if(element instanceof Group ) {
+                        CnATreeElement selectedElement = (CnATreeElement) element;
+                        setSelectedGroup(selectedElement);                
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                        }
+                    } else {
+                        setSelectedGroup(null);                
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Removing selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                        }
                     }
                 }
             }
@@ -412,6 +434,7 @@ public abstract class ElementView extends ViewPart {
         }
     }
     
+
     public void setIcon(Image icon) {
         this.setTitleImage(icon);
     }
@@ -420,10 +443,24 @@ public abstract class ElementView extends ViewPart {
         setPartName(title);
     }
     
-    /**
-     * 
-     */
     private void hookContextMenu() {
+        MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+        menuMgr.setRemoveAllWhenShown(true);
+        menuMgr.addMenuListener(new IMenuListener() {
+            public void menuAboutToShow(IMenuManager manager) {
+                fillContextMenu(manager);
+            }           
+        });
+        Menu menu = menuMgr.createContextMenu(viewer.getControl());
+        
+        viewer.getControl().setMenu(menu);
+        getSite().registerContextMenu(menuMgr, viewer);
+    }
+
+    /**
+     * @param manager
+     */
+    protected void fillContextMenu(IMenuManager manager) {
         // TODO Auto-generated method stub
         
     }
@@ -454,8 +491,9 @@ public abstract class ElementView extends ViewPart {
      * 
      */
     protected void fillToolBar() {
-        // TODO Auto-generated method stub
-        
+        //IActionBars bars = getViewSite().getActionBars();
+        //IToolBarManager manager = bars.getToolBarManager();
+        //manager.add(someAction);
     }
 
     /**

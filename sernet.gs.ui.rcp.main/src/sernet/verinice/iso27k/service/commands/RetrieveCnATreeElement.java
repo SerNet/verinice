@@ -44,7 +44,7 @@ public class RetrieveCnATreeElement extends GenericCommand {
 
     private String typeId;
 	
-	private RetrieveCnATreeElement(String typeId, Integer dbId) {
+    public RetrieveCnATreeElement(String typeId, Integer dbId) {
 	    this.typeId = typeId;
 		this.dbId = dbId;
 	}
@@ -88,7 +88,7 @@ public class RetrieveCnATreeElement extends GenericCommand {
 	public static RetrieveCnATreeElement getElementISMViewInstance(Integer dbId, String typeId) {
 		RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(typeId, dbId);
 		RetrieveInfo retrieveInfo = new RetrieveInfo();
-		retrieveInfo.setProperties(true).setChildren(true);
+		retrieveInfo.setPermissions(true).setProperties(true).setChildren(true);
 		retrieveElement.setRetrieveInfo(retrieveInfo);
 		return retrieveElement;
 	}

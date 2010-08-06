@@ -57,10 +57,19 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 	
 	private BSIModelElementFilter modelFilter;
 
+	IContentCommandFactory commandFactory;
+	
 	public ISMViewContentProvider(TreeViewerCache cache) {
 		super();
 		this.cache = cache;
+		commandFactory = new DefaultCommandFactory();
 	}
+	
+	public ISMViewContentProvider(TreeViewerCache cache, IContentCommandFactory commandFactory) {
+        super();
+        this.cache = cache;
+        this.commandFactory = commandFactory;
+    }
 
 	private TreeViewerCache cache;
 
@@ -72,26 +81,26 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
 	 */
-	public Object[] getChildren(Object parent) {
+	public Object[] getChildren(Object element) {
 		CnATreeElement[] children = new CnATreeElement[]{};
 
 		// replace object in event with the one actually displayed in the tree:
-		Object cachedObject = cache.getCachedObject(parent);
+		Object cachedObject = cache.getCachedObject(element);
 		if (cachedObject != null) {
-			parent = cachedObject;
+			element = cachedObject;
 		}
 		try {
-    		if(parent instanceof List) {
-    			List<CnATreeElement> list = (List<CnATreeElement>)parent;
+    		if(element instanceof List) {
+    			List<CnATreeElement> list = (List<CnATreeElement>)element;
     			children = new CnATreeElement[list.size()];
     			int i = 0;
     			for (Iterator<CnATreeElement> iterator = list.iterator(); iterator.hasNext();) {			 
                     CnATreeElement cnATreeElement = iterator.next();
-                    children[i]=loadChildren(cnATreeElement);
+                    children[i]=loadChildren(cnATreeElement,true);
                     i++;
                 }
-    		} else if (parent instanceof CnATreeElement) {
-    			CnATreeElement el = (CnATreeElement) parent;
+    		} else if (element instanceof CnATreeElement) {
+    			CnATreeElement el = (CnATreeElement) element;
     			CnATreeElement newElement;
     			
     				if(!el.isChildrenLoaded()) {
@@ -112,24 +121,19 @@ public class ISMViewContentProvider implements ITreeContentProvider {
         }
 		return children;
 	}
-
+	
 	private CnATreeElement loadChildren(CnATreeElement el) throws CommandException {
+	    return loadChildren(el, false);
+	}
+	    
+	private CnATreeElement loadChildren(CnATreeElement el, boolean loadParent) throws CommandException {
 		if (el.isChildrenLoaded()) {
 			return el;
 		}
 
 		Logger.getLogger(this.getClass()).debug("Loading children from DB for " + el);
 
-		RetrieveCnATreeElement command = null;
-		if(el instanceof ISO27KModel) {
-			command = RetrieveCnATreeElement.getISO27KModelISMViewInstance(el.getDbId());
-		} else if(el instanceof Organization) {
-			command = RetrieveCnATreeElement.getOrganizationISMViewInstance(el.getDbId());
-		} else if( el instanceof IISO27kGroup ) {
-			command = RetrieveCnATreeElement.getGroupISMViewInstance(el.getDbId(), el.getTypeId());
-		} else if( el instanceof CnATreeElement) {
-			command = RetrieveCnATreeElement.getElementISMViewInstance(el.getDbId(), el.getTypeId());
-		}
+		RetrieveCnATreeElement command = commandFactory.createCommand(el,loadParent);
 
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		CnATreeElement newElement = command.getElement();
@@ -152,6 +156,11 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 			Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
 			cache.clear(el);
 			cache.addObject(newElement);
+			if(loadParent && newElement.getParent()!=null) {
+			    // set the parent of the parent to bull to avoid lazy except.
+			    newElement.getParent().setParent(null);
+			    cache.addObject(newElement.getParent());
+			}
 		}
 		return newElement;
 	}

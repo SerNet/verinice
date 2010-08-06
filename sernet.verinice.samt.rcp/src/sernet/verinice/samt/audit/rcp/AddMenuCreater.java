@@ -19,17 +19,26 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
+import java.util.Set;
+
 import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.iso27k.rcp.action.AddElement;
 import sernet.verinice.iso27k.rcp.action.AddGroup;
 import sernet.verinice.model.common.CnATreeElement;
@@ -41,13 +50,14 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("restriction")
-public class AddMenuCreater implements IViewActionDelegate, IMenuCreator {
+public class AddMenuCreater implements IViewActionDelegate, IMenuCreator, ISelectionListener {
     
     private IAction action;
     private Menu menu;
+    private boolean enabled = true;
     private GenericElementView groupView;
-    private IAction addElementAction;
-    private IAction addGroupAction;
+    private AddAction addElementAction;
+    private AddAction addGroupAction;
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
@@ -62,9 +72,12 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator {
             String title = AddElement.TITLE_FOR_TYPE.get(groupId);
             addElementAction = new AddAction(typeId, title, groupView);
             addElementAction.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(typeId)));
+            //view.getSite().getPage().addPostSelectionListener(addElementAction);
             title = AddGroup.TITLE_FOR_TYPE.get(groupId);
             addGroupAction = new AddAction(groupId, title, groupView);
-            addGroupAction.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(groupId)));         
+            addGroupAction.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(groupId))); 
+            //view.getSite().getPage().addPostSelectionListener(addGroupAction);              
+            view.getSite().getPage().addPostSelectionListener(this);
         }       
     }
 
@@ -109,9 +122,11 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator {
      */
     public Menu getMenu(Control parent)
     {
-      Menu menu = new Menu(parent);
-      addActionToMenu(menu, addElementAction);
-      addActionToMenu(menu, addGroupAction);
+      menu = new Menu(parent);
+      if(isEnabled()) {
+          addActionToMenu(menu, addElementAction);
+          addActionToMenu(menu, addGroupAction);
+      }
       return menu;
     }
 
@@ -124,12 +139,61 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator {
       // Not used
       return null;
     }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
+     * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+     */
+    @Override
+    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+        if (part instanceof ElementView && part!=groupView) {
+            if (selection instanceof IStructuredSelection) {
+                Object element = ((IStructuredSelection) selection).getFirstElement();
+                if (element instanceof CnATreeElement) {
+                    boolean addElementEnabled = false;
+                    boolean addGroupEnabled = false;
+                    String elementType = groupView.getCommandFactory().getElementTypeId();
+                    String groupType = groupView.getCommandFactory().getGroupTypeId();
+                    String selectedElementType = ((CnATreeElement) element).getTypeId();
+                    EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(selectedElementType);
+                    Set<HuiRelation> relationSet = entityType.getPossibleRelations();
+                    for (HuiRelation huiRelation : relationSet) {
+                        if (huiRelation.getTo().equals(elementType)) {                          
+                            addElementEnabled = true;
+                        }
+                        if (huiRelation.getTo().equals(groupType)) {                     
+                            addGroupEnabled = true;
+                        }
+                        if(addElementEnabled && addGroupEnabled) {
+                            break;
+                        }
+                    }
+                    addElementAction.setEnabled(addElementEnabled);
+                    addGroupAction.setEnabled(addGroupEnabled); 
+                    setEnabled(addElementEnabled||addGroupEnabled);
+                    action.setEnabled(isEnabled());
+                }
+            }
+        }
+    }
 
 
     private void addActionToMenu(Menu menu, IAction action)
     {
       ActionContributionItem item= new ActionContributionItem(action);
       item.fill(menu, -1);
+    }
+
+
+    protected boolean isEnabled() {
+        return enabled;
+    }
+
+
+    protected void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
   }

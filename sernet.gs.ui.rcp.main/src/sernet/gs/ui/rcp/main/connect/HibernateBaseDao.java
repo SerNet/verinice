@@ -169,6 +169,9 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 				if(ri.isSiblings()) {
 					criteria.setFetchMode("parent.children", FetchMode.JOIN);
 				}
+				if(ri.isParentPermissions()) {
+                    criteria.setFetchMode("parent.permissions", FetchMode.JOIN);
+                }
 			}
 			if( ri.isChildren()) {
 				criteria.setFetchMode("children", FetchMode.JOIN);

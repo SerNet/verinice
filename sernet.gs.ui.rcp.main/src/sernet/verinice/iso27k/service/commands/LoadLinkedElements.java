@@ -28,7 +28,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class LoadLinkedElements extends GenericCommand implements INoAccessControl {
+public class LoadLinkedElements extends GenericCommand {
 
     private transient Logger log = Logger.getLogger(LoadLinkedElements.class);
 

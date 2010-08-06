@@ -96,6 +96,25 @@ public class Retriever {
 		return element;
 	}
 	
+	/**
+     * @param cte
+     */
+    public static CnATreeElement checkRetrieveParentPermissions(CnATreeElement element) {
+        try {
+            checkParentPermissions(element);
+        } catch(LazyInitializationException e) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Loading children of element: " + element.getDbId());
+            }
+            RetrieveInfo ri = new RetrieveInfo();   
+            ri.setParent(true);
+            ri.setParentPermissions(true);
+            ri.setPermissions(true);
+            element = retrieveElement(element,ri);
+        }
+        return element;
+    }
+	
 	private static void checkElement(CnATreeElement element) {
 		if(element.getEntity()!=null
 		   && element.getEntity().getTypedPropertyLists()!=null
@@ -112,6 +131,21 @@ public class Retriever {
 			element.getChildren().iterator();
 		}
 	}
+	
+	/**
+     * @param cte
+     */
+    public static void checkParentPermissions(CnATreeElement element) {
+        if(element.getParent()!=null && element.getParent().getPermissions()!=null) {
+            
+            try {
+                element.getParent().getPermissions().iterator();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }     
+    }
 	
 	public static CnATreeElement retrieveElement(CnATreeElement element, RetrieveInfo ri)  {
 		RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(

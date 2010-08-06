@@ -29,6 +29,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
@@ -60,6 +62,10 @@ public class PasteHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			Object selection = HandlerUtil.getCurrentSelection(event);
+			IViewPart part = (IViewPart) HandlerUtil.getActivePart(event);
+			if (LOG.isDebugEnabled()) {
+                LOG.debug("Avtive part: " + part.getViewSite().getId());
+            }
 			if(selection instanceof IStructuredSelection) {
 				IStructuredSelection sel = ((IStructuredSelection) selection);		
 				if(!CnPItems.getCopyItems().isEmpty()) {
@@ -89,31 +95,6 @@ public class PasteHandler extends AbstractHandler {
 			}
 		}
 	}
-	
-	/**
-	 * @param sel
-	 * @param copyList
-	 * @return
-	 */
-	private IProgressRunnable createOperation(IStructuredSelection sel, List copyList) {
-		IProgressRunnable operation = null;
-		if(copyList!=null && !copyList.isEmpty()) {
-			if(copyList.get(0) instanceof CnATreeElement) { 
-				if( sel.size()==1  && sel.getFirstElement() instanceof CnATreeElement) {
-					operation = new CopyTreeElements((CnATreeElement)sel.getFirstElement(),copyList);
-				} else if( sel.size()>1 ) {
-					MessageDialog.openWarning( 
-							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-							Messages.getString("PasteHandler.5"),  //$NON-NLS-1$
-							Messages.getString("PasteHandler.6")); //$NON-NLS-1$
-				}			
-			}
-			if(copyList.get(0) instanceof Baustein) {
-				operation = new CopyBausteine(sel,copyList);
-			}
-		}
-		return operation;
-	}
 
 	private void cut(IStructuredSelection sel, List cutList) throws InvocationTargetException, InterruptedException {
 		if(cutList.get(0) instanceof CnATreeElement 
@@ -131,5 +112,30 @@ public class PasteHandler extends AbstractHandler {
 		}
 		
 	}
+	
+	/**
+     * @param sel
+     * @param copyList
+     * @return
+     */
+    private IProgressRunnable createOperation(IStructuredSelection sel, List copyList) {
+        IProgressRunnable operation = null;
+        if(copyList!=null && !copyList.isEmpty()) {
+            if(copyList.get(0) instanceof CnATreeElement) { 
+                if( sel.size()==1  && sel.getFirstElement() instanceof CnATreeElement) {
+                    operation = new CopyTreeElements((CnATreeElement)sel.getFirstElement(),copyList);
+                } else if( sel.size()>1 ) {
+                    MessageDialog.openWarning( 
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+                            Messages.getString("PasteHandler.5"),  //$NON-NLS-1$
+                            Messages.getString("PasteHandler.6")); //$NON-NLS-1$
+                }           
+            }
+            if(copyList.get(0) instanceof Baustein) {
+                operation = new CopyBausteine(sel,copyList);
+            }
+        }
+        return operation;
+    }
 
 }
