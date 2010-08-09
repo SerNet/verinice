@@ -26,6 +26,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.mapping.SyncMapping;
+import de.sernet.sync.sync.SyncRequest;
 
 @SuppressWarnings("serial")
 public class SyncCommand extends GenericCommand
@@ -42,18 +43,16 @@ public class SyncCommand extends GenericCommand
 	
 	private List<String> errors = new ArrayList<String>();
 	
-	public SyncCommand(String sourceId,
-			boolean insert, boolean update, boolean delete,
-			SyncData syncData, SyncMapping syncMapping)
+	public SyncCommand(SyncRequest sr)
 	{
-		this.sourceId = sourceId;
+		this.sourceId = sr.getSourceId();
 		
-		this.insert = insert;
-		this.update = update;
-		this.delete = delete;
+		this.insert = sr.isInsert();
+		this.update = sr.isUpdate();
+		this.delete = sr.isDelete();
 		
-		this.syncData = syncData;
-		this.syncMapping = syncMapping;
+		this.syncData = sr.getSyncData();
+		this.syncMapping = sr.getSyncMapping();
 	}
 	
 	@Override

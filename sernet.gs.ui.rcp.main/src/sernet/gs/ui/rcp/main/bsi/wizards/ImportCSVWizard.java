@@ -1,9 +1,5 @@
 package sernet.gs.ui.rcp.main.bsi.wizards;
 
-import java.io.File;
-
-import javax.xml.bind.JAXB;
-
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
@@ -11,7 +7,8 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.sync.commands.SyncCommand;
 import sernet.verinice.interfaces.CommandException;
-
+import de.sernet.sync.data.SyncData;
+import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.sync.SyncRequest;
 
 public class ImportCSVWizard extends Wizard {
@@ -30,10 +27,7 @@ public class ImportCSVWizard extends Wizard {
 
 		SyncRequest sr = createSyncRequest();
 
-		SyncCommand command = new SyncCommand(entityPage.getSourceId(),
-				entityPage.getInsertState(), entityPage.getUpdateState(),
-				entityPage.getDeleteState(), sr.getSyncData(), sr
-						.getSyncMapping());
+		SyncCommand command = new SyncCommand(sr);
 		try {
 			command = ServiceFactory.lookupCommandService().executeCommand(
 					command);
@@ -60,12 +54,22 @@ public class ImportCSVWizard extends Wizard {
 	}
 
 	private SyncRequest createSyncRequest() {
-		// TODO rschuster: Needs to be implemented. 
-		throw new UnsupportedOperationException();
+		SyncRequest sr = new SyncRequest();
+		sr.setInsert(entityPage.getInsertState());
+		sr.setUpdate(entityPage.getUpdateState());
+		sr.setDelete(entityPage.getDeleteState());
+		sr.setSourceId(entityPage.getSourceId());
+		
+		SyncData sd = new SyncData();
+		sr.setSyncData(sd);
+		
+		SyncMapping sm = new SyncMapping();
+		sr.setSyncMapping(sm);
+		
+		
+		
+		// TODO: Reimplement the generation of the content
 		/*
-		 * xmlDoc.syncRequest(entityPage.getInsertState(),
-		 * entityPage.getUpdateState(), entityPage.getDeleteState(),
-		 * entityPage.getSourceId());
 		 * xmlDoc.mapping(propertyPage.getEntityName(),
 		 * entityPage.getEntityNameId(), propertyPage.getPropertyTable());
 		 * xmlDoc.data(propertyPage.getEntityName(),
@@ -73,6 +77,6 @@ public class ImportCSVWizard extends Wizard {
 		 * this.syncRequestXML = xmlDoc.getSyncRequestXML();
 		 */
 
-		// return null;
+		return sr;
 	}
 }

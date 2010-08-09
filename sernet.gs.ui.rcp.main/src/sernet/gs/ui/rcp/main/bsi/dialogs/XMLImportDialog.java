@@ -88,11 +88,13 @@ public class XMLImportDialog extends Dialog {
 
 								SyncRequest sr = (SyncRequest) JAXB.unmarshal(
 										dataFile, SyncRequest.class);
+								
+								sr.setSourceId(sourceId);
+								sr.setInsert(insert);
+								sr.setUpdate(update);
+								sr.setDelete(delete);
 
-								SyncCommand command = new SyncCommand(sourceId,
-										insert, update, delete, sr
-												.getSyncData(), sr
-												.getSyncMapping());
+								SyncCommand command = new SyncCommand(sr);
 								try {
 									command = ServiceFactory
 											.lookupCommandService()
