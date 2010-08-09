@@ -24,7 +24,8 @@
 
 		<wsdl:operation name="sync">
 			<wsdl:input message="ss:syncRequest" />
-			<wsdl:output message="ss:syncRequest" />
+			
+			<wsdl:output message="ss:syncResponse" />
 		</wsdl:operation>
 
 	</wsdl:portType>

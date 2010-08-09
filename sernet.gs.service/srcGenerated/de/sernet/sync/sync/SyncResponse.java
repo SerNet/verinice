@@ -1,6 +1,8 @@
 
 package de.sernet.sync.sync;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -18,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="replyMessage" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="replyMessage" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded"/>
  *         &lt;element name="inserted" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="updated" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="deleted" type="{http://www.w3.org/2001/XMLSchema}int"/>
@@ -41,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
 public class SyncResponse {
 
     @XmlElement(required = true)
-    protected String replyMessage;
+    protected List<String> replyMessage;
     protected int inserted;
     protected int updated;
     protected int deleted;
@@ -49,25 +51,30 @@ public class SyncResponse {
     /**
      * Gets the value of the replyMessage property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getReplyMessage() {
-        return replyMessage;
-    }
-
-    /**
-     * Sets the value of the replyMessage property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the replyMessage property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getReplyMessage().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link String }
+     * 
+     * 
      */
-    public void setReplyMessage(String value) {
-        this.replyMessage = value;
+    public List<String> getReplyMessage() {
+        if (replyMessage == null) {
+            replyMessage = new ArrayList<String>();
+        }
+        return this.replyMessage;
     }
 
     /**

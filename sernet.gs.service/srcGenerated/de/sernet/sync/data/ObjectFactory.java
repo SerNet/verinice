@@ -30,14 +30,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link SyncData }
-     * 
-     */
-    public SyncData createSyncData() {
-        return new SyncData();
-    }
-
-    /**
      * Create an instance of {@link SyncData.SyncObject }
      * 
      */
@@ -51,6 +43,14 @@ public class ObjectFactory {
      */
     public SyncData.SyncObject.SyncAttribute createSyncDataSyncObjectSyncAttribute() {
         return new SyncData.SyncObject.SyncAttribute();
+    }
+
+    /**
+     * Create an instance of {@link SyncData }
+     * 
+     */
+    public SyncData createSyncData() {
+        return new SyncData();
     }
 
 }

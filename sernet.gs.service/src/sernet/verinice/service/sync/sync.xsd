@@ -35,7 +35,7 @@
     	<xsd:complexType>
     		<xsd:sequence>
     		
-    			<xsd:element name="replyMessage" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+    			<xsd:element name="replyMessage" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
     			<xsd:element name="inserted" type="xsd:int" minOccurs="1" maxOccurs="1"/>
     			<xsd:element name="updated" type="xsd:int" minOccurs="1" maxOccurs="1"/>
     			<xsd:element name="deleted" type="xsd:int" minOccurs="1" maxOccurs="1"/>
