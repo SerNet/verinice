@@ -28,6 +28,7 @@
         	classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
         	classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml
         	classpath:sernet/gs/server/spring/veriniceserver-security-plain.xml
+        	classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
         </param-value>
 	</context-param>
 	<!-- Webclient conf -->
@@ -155,6 +156,12 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>cxfServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
 
 	<servlet>
 		<description>Output HuiConfig from classpath.</description>
@@ -188,6 +195,11 @@
 	<servlet-mapping>
 		<servlet-name>GetHitroConfig</servlet-name>
 		<url-pattern>/GetHitroConfig</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>cxfServlet</servlet-name>
+		<url-pattern>/sync/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Webclient conf -->
