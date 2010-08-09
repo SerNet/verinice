@@ -1,5 +1,7 @@
 package sernet.gs.server.sync;
 
+import java.util.List;
+
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
@@ -19,18 +21,18 @@ public class SyncServiceImpl implements SyncService {
     public de.sernet.sync.sync.SyncResponse sync(de.sernet.sync.sync.SyncRequest request)
     {
     	SyncResponse response = new SyncResponse();
+    	List<String> errors = response.getReplyMessage();
     	
     	SyncCommand command = null;
     	try
     	{
     		command = commandService.executeCommand(new SyncCommand(request));
+        	errors.addAll(command.getErrors());
     	} catch (CommandException ce)
     	{
-    		// TODO: No exception type (=> fault) specified yet.
-    		throw new IllegalStateException(ce);
+    		errors.add(ce.getLocalizedMessage());
     	}
     	
-    	response.getReplyMessage().addAll(command.getErrors());
     	response.setDeleted(command.getDeleted());
     	response.setInserted(command.getInserted());
     	response.setUpdated(command.getUpdated());
