@@ -32,13 +32,6 @@
 		
 		<property name="sourceId"/>
 		
-		<property
-			name="objectType"
-			column="OBJECT_TYPE"
-			insert="false"
-			update="false"/>
-		
-		
 		<set name="permissions"
 			inverse="true"
 			cascade="all"

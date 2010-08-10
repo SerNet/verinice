@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,16 @@ import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.ClientsKategorie;
+import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.NKKategorie;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.bsi.RaeumeKategorie;
+import sernet.verinice.model.bsi.ServerKategorie;
+import sernet.verinice.model.bsi.SonstigeITKategorie;
+import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.data.SyncData.SyncObject;
@@ -59,7 +69,7 @@ public class ExportCommand extends GenericCommand
 {
 	
 	// Blacklist of object types that should not be exported as an object:
-	private static HashMap<String, String> blacklist = new HashMap<String, String>();
+	private static HashSet<String> blacklist = new HashSet<String>();
 	
 	/*+++
 	 * List of already-exported objects' IDs, to
@@ -71,17 +81,15 @@ public class ExportCommand extends GenericCommand
 	
 	static
 	{
-		blacklist.put("it-verbund", new String());
-		blacklist.put("raeume-kategorie", new String());
-		blacklist.put("nk-kategorie", new String());
-		blacklist.put("server-kategorie", new String());
-		blacklist.put("personen-kategorie", new String());
-		blacklist.put("gebaeude-kategorie", new String());
-		blacklist.put("clients-kategorie", new String());
-		blacklist.put("anwendungen-kategorie", new String());
-		blacklist.put("nk-kategorie", new String());
-		blacklist.put("sonstige-it-kategorie", new String());
-		blacklist.put("tk-kategorie", new String());
+		blacklist.add(RaeumeKategorie.TYPE_ID);
+		blacklist.add(NKKategorie.TYPE_ID);
+		blacklist.add(ServerKategorie.TYPE_ID);
+		blacklist.add(PersonenKategorie.TYPE_ID);
+		blacklist.add(GebaeudeKategorie.TYPE_ID);
+		blacklist.add(ClientsKategorie.TYPE_ID);
+		blacklist.add(AnwendungenKategorie.TYPE_ID);
+		blacklist.add(SonstigeITKategorie.TYPE_ID);
+		blacklist.add(TKKategorie.TYPE_ID);
 	}
 	
 	private List<CnATreeElement> elements;
@@ -139,28 +147,25 @@ public class ExportCommand extends GenericCommand
 		{
 			EntityType entityType = entityTypesIter.next();
 			
-			if(!(entityType.getId().equals("itverbund"))) //$NON-NLS-1$
+			// Add <mapObjectType> element for this entity type to <syncMapping>:
+			MapObjectType mapObjectType = new MapObjectType();
+			
+			mapObjectType.setIntId(entityType.getId());
+			mapObjectType.setExtId(entityType.getId());
+			
+			List<MapAttributeType> mapAttributeTypes = mapObjectType.getMapAttributeType();
+			for (PropertyType propertyType : entityType.getPropertyTypes())
 			{
-				// Add <mapObjectType> element for this entity type to <syncMapping>:
-				MapObjectType mapObjectType = new MapObjectType();
+				// Add <mapAttributeType> for this property type to current <mapObjectType>:
+				MapAttributeType mapAttributeType = new MapAttributeType();
 				
-				mapObjectType.setIntId(entityType.getId());
-				mapObjectType.setExtId(entityType.getId());
+				mapAttributeType.setExtId(propertyType.getId());
+				mapAttributeType.setIntId(propertyType.getId());
 				
-				List<MapAttributeType> mapAttributeTypes = mapObjectType.getMapAttributeType();
-				for (PropertyType propertyType : entityType.getPropertyTypes())
-				{
-					// Add <mapAttributeType> for this property type to current <mapObjectType>:
-					MapAttributeType mapAttributeType = new MapAttributeType();
-					
-					mapAttributeType.setExtId(propertyType.getId());
-					mapAttributeType.setIntId(propertyType.getId());
-					
-					mapAttributeTypes.add(mapAttributeType);
-				}
-				
-				mapObjectTypeList.add(mapObjectType);
+				mapAttributeTypes.add(mapAttributeType);
 			}
+			
+			mapObjectTypeList.add(mapObjectType);
 		}
 		
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -190,13 +195,13 @@ public class ExportCommand extends GenericCommand
 		 * entity types, this element's entity type IS allowed:
 		 *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		
-		if ((blacklist.get(cnATreeElement.getObjectType()) == null)
+		if ((!blacklist.contains(cnATreeElement.getEntityType().getId()))
 				&& (exportedObjectIDs.get( cnATreeElement.getId()) == null )
-				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(cnATreeElement.getObjectType()) != null) )
+				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(cnATreeElement.getEntityType().getId()) != null) )
 		{
 			SyncObject syncObject = new SyncObject();
 			syncObject.setExtId(cnATreeElement.getId());
-			syncObject.setExtObjectType(cnATreeElement.getObjectType());
+			syncObject.setExtObjectType(cnATreeElement.getEntityType().getId());
 
 			List<SyncAttribute> attributes = syncObject.getSyncAttribute();
 			

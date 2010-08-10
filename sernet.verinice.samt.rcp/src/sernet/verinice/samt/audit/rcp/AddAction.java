@@ -116,7 +116,7 @@ public class AddAction extends Action implements ISelectionListener {
                 group = Retriever.retrieveElement(group, new RetrieveInfo().setProperties(true).setChildren(true).setParent(true));
                 newElement = CnAElementFactory.getInstance().saveNew(group, this.objectTypeId, null);
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("New element - type: " + newElement.getObjectType() + ", title: " + newElement.getTitle() + ", group: " + group.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    LOG.debug("New element - type: " + newElement.getEntityType() + ", title: " + newElement.getTitle() + ", group: " + group.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 }
                 // create a link to last selected (foreign) element
                 // if no group in this view is selected
@@ -124,7 +124,7 @@ public class AddAction extends Action implements ISelectionListener {
                     // this method also fires events for added links:
                     CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(newElement, Arrays.asList(groupView.getSelectedElement()));
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("New element linked - type: " + groupView.getSelectedElement().getObjectType() + ", title: " + groupView.getSelectedElement().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                        LOG.debug("New element linked - type: " + groupView.getSelectedElement().getEntityType() + ", title: " + groupView.getSelectedElement().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                     }
                     // link is created asynchron
                     // editor is opened in ISO27KModelViewUpdate of ElmentView

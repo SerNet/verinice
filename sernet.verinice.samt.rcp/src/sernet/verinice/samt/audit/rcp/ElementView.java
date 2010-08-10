@@ -338,19 +338,19 @@ public abstract class ElementView extends ViewPart {
                     CnATreeElement selectedElement = (CnATreeElement) element;
                     setSelectedElement(selectedElement);
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Selected link element, Type: " + selectedElement.getObjectType() + ", name: " + selectedElement.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                        LOG.debug("Selected link element, Type: " + selectedElement.getEntityType() + ", name: " + selectedElement.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                     } 
                 } else {         
                     if(element instanceof Group ) {
                         CnATreeElement selectedElement = (CnATreeElement) element;
                         setSelectedGroup(selectedElement);                
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("Selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                            LOG.debug("Selected group, Type: " + selectedGroup.getEntityType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                         }
                     } else {
                         setSelectedGroup(null);                
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("Removing selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                            LOG.debug("Removing selected group, Type: " + selectedGroup.getEntityType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                         }
                     }
                 }
@@ -400,7 +400,7 @@ public abstract class ElementView extends ViewPart {
     protected void checkSelectedGroup(List elementList) {
         if(selectedGroup!=null && (elementList==null || !elementList.contains(getSelectedGroup()))) {    
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Removing selected group, Type: " + getSelectedGroup().getObjectType() + ", name: " + getSelectedGroup().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                LOG.debug("Removing selected group, Type: " + getSelectedGroup().getEntityType() + ", name: " + getSelectedGroup().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             setSelectedGroup(null);          
         }

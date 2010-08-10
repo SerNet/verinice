@@ -1,8 +1,10 @@
 
 package de.sernet.sync.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -51,12 +53,13 @@ import javax.xml.bind.annotation.XmlType;
  * 
  * 
  */
+@SuppressWarnings("serial")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "syncObject"
 })
 @XmlRootElement(name = "syncData")
-public class SyncData {
+public class SyncData implements Serializable {
 
     @XmlElement(required = true)
     protected List<SyncData.SyncObject> syncObject;
@@ -125,7 +128,7 @@ public class SyncData {
     @XmlType(name = "", propOrder = {
         "syncAttribute"
     })
-    public static class SyncObject {
+    public static class SyncObject implements Serializable {
 
         @XmlElement(required = true)
         protected List<SyncData.SyncObject.SyncAttribute> syncAttribute;
@@ -232,7 +235,7 @@ public class SyncData {
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
-        public static class SyncAttribute {
+        public static class SyncAttribute implements Serializable {
 
             @XmlAttribute(name = "name", required = true)
             protected String name;

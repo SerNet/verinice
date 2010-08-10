@@ -48,9 +48,15 @@ import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
@@ -158,22 +164,23 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 					}
 				} else {
 					hydrate(clcl);
-					if(CnATreeElement.ANWENDUNG.equals(clcl.getObjectType())) {
+					String entityTypeId = clcl.getEntityType().getId();
+					if(Anwendung.TYPE_ID.equals(entityTypeId)) {
 						anwendungList.add(clcl);
-					} else if(CnATreeElement.CLIENT.equals(clcl.getObjectType())) {
+					} else if(Client.TYPE_ID.equals(entityTypeId)) {
 						clienteList.add(clcl);
-					} else if(CnATreeElement.GEBAEUDE.equals(clcl.getObjectType())) {
+					} else if(Gebaeude.TYPE_ID.equals(entityTypeId)) {
 						gebaeudeList.add(clcl);
-					} else if(CnATreeElement.PERSON.equals(clcl.getObjectType())) {
+					} else if(Person.TYPE_ID.equals(entityTypeId)) {
 						personList.add(clcl);
-					} else if(CnATreeElement.NETZ_KOMPONENTE.equals(clcl.getObjectType())) {
+					} else if(NetzKomponente.TYPE_ID.equals(entityTypeId)) {
 						netzList.add(clcl);
-					} else if(CnATreeElement.RAUM.equals(clcl.getObjectType())) {
+					} else if(Raum.TYPE_ID.equals(entityTypeId)) {
 						raumList.add(clcl);
-					} else if(CnATreeElement.SERVER.equals(clcl.getObjectType())) {
+					} else if(Server.TYPE_ID.equals(entityTypeId)) {
 						serverList.add(clcl);
 					} else  {
-						log.error("Unknown object type: " + clcl.getObjectType());
+						log.error("Unknown object type: " + entityTypeId);
 					}
 				}
 			}

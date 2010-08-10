@@ -1,6 +1,7 @@
 
 package de.sernet.sync.mapping;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -54,12 +55,13 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  * 
  */
+@SuppressWarnings("serial")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "mapObjectType"
 })
 @XmlRootElement(name = "syncMapping")
-public class SyncMapping {
+public class SyncMapping implements Serializable {
 
     protected List<SyncMapping.MapObjectType> mapObjectType;
 
@@ -127,7 +129,7 @@ public class SyncMapping {
     @XmlType(name = "", propOrder = {
         "mapAttributeType"
     })
-    public static class MapObjectType {
+    public static class MapObjectType implements Serializable {
 
         protected List<SyncMapping.MapObjectType.MapAttributeType> mapAttributeType;
         @XmlAttribute(name = "extId", required = true)
@@ -236,7 +238,7 @@ public class SyncMapping {
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
-        public static class MapAttributeType {
+        public static class MapAttributeType implements Serializable {
 
             @XmlAttribute(name = "extId")
             protected String extId;

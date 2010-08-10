@@ -65,28 +65,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         return log;
     }
     
-	public static final String PERSON = "person";
-	public static final String BAUSTEIN_UMSETZUNG = "baustein-umsetzung";
-	public static final String MASSNAHMEN_UMSETZUNG = "massnahmen-umsetzung";
-	public static final String RISIKO_MASSNAHMEN_UMSETZUNG = "risiko-massnahmen-umsetzung";
-	public static final String GEFAEHRDUNGS_UMSETZUNG = "gefaehrdungs-umsetzung";
-	public static final String GEBAEUDE = "gebaeude";
-	public static final String FINISHED_RISK_ANALYSIS = "finished-risk-analysis";
-	public static final String ANWENDUNG = "anwendung";
-	public static final String CLIENT = "client";
-	public static final String SONST_IT = "sonst-it";
-	public static final String NETZ_KOMPONENTE = "netz-komponente";
-	public static final String RAUM = "raum";
-	public static final String TELEFON_KOMPONENTE = "telefon-komponente";
-	public static final String SERVER = "server";
-	public static final String IT_VERBUND = "it-verbund";
-	
 	private Integer dbId;
 
 	private String sourceId;
 	
-	private String objectType;
-
 	public String getSourceId() {
 		return sourceId;
 	}
@@ -96,12 +78,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 
 	private String extId;
-
-	/* asdf */
-	public String getextId()
-	{
-	    return extId;
-	}
 
 	public void setextId(String extId)
 	{
@@ -279,14 +255,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 
 	public abstract String getTypeId();
-
-	public String getObjectType() {
-		return objectType;
-	}
-
-	public void setObjectType(String objectType) {
-		this.objectType = objectType;
-	}
 
 	public Entity getEntity() {
 		return entity;
