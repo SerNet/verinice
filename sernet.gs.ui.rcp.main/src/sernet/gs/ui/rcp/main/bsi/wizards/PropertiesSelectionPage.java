@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.jface.wizard.WizardPage;
@@ -35,10 +37,10 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 	private Table tabelle;
 	private TableItem[] items;
 	private TableEditor editor;
-	private Vector<Text> texts;
-	private Vector<CCombo> combos;
-	private Vector<String> idCombos;
-	private Vector<Vector<String>> inhaltDerTabelle;
+	private List<Text> texts;
+	private List<CCombo> combos;
+	private List<String> idCombos;
+	private List<List<String>> inhaltDerTabelle;
 	
 	protected PropertiesSelectionPage(String pageName) {
 		super(pageName);
@@ -48,7 +50,7 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 		combos = new Vector<CCombo>();
 		idCombos = new Vector<String>();
 		texts = new Vector<Text>();
-		inhaltDerTabelle = new Vector<Vector<String>>();
+		inhaltDerTabelle = new ArrayList<List<String>>();
 	}
 
 	@Override
@@ -98,7 +100,7 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 	public void fillTable() {
 		//get entities from verinice
 		if(idCombos.size()>0)
-			idCombos.removeAllElements();
+			idCombos.clear();
 		
 		String[] cString = null;
 		Collection<EntityType> allEntityTypes =  HitroUtil.getInstance().getTypeFactory().getAllEntityTypes();
@@ -138,8 +140,8 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 		}
 		//get the combos in default state
 		if(this.combos.size() > 0){
-			combos.removeAllElements();
-			texts.removeAllElements();
+			combos.clear();
+			texts.clear();
 		}
 		//fill the combos with content	
 	    for (int i = 0; i < items.length; i++) {
@@ -209,12 +211,12 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 		return this.entityName;
 	}
 	
-	public Vector<Vector<String>> getInhaltDerDatei(){
+	public List<List<String>> getInhaltDerDatei(){
 		return this.inhaltDerTabelle;
 	}
 	//get property and values of the csv
 	public String[] getPropertyColumns(){
-		this.inhaltDerTabelle.removeAllElements();
+		this.inhaltDerTabelle.clear();
 		RandomAccessFile file;
 		String[] spalten = null;
 		String input = "";
