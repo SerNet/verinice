@@ -111,36 +111,9 @@
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<!-- Webclient conf end -->
-
-	<!-- TEST - axis servlet -->
-<!--
-
-	<servlet>
-		<servlet-name>axis</servlet-name>
-		<servlet-class>org.apache.axis.transport.http.AxisServlet</servlet-class>
- 		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>axis</servlet-name>
-		<url-pattern>/axis/*</url-pattern>
-	</servlet-mapping>
--->
-	<!-- axis servlet -->
-<!-- 
-	<servlet>
-		<servlet-name>messageDispatcher</servlet-name>
-		<servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>transformWsdlLocation</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/messageDispatcher-servlet.xml</param-value>
-		</init-param>
-	</servlet>
--->
+	
+	
+	<!-- Spring context loader -->
 	<servlet>
 		<servlet-name>context</servlet-name>
 		<servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class>
@@ -157,6 +130,7 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 	
+	<!-- Apache CXF Servlet -->
 	<servlet>
 		<servlet-name>cxfServlet</servlet-name>
 		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
