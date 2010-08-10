@@ -31,6 +31,7 @@
         	classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
         </param-value>
 	</context-param>
+	
 	<!-- Webclient conf -->
 	<context-param>
 		<param-name>javax.faces.CONFIG_FILES</param-name>
@@ -148,19 +149,7 @@
 		</init-param>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
-	
-<!-- 
-	<servlet-mapping>
-		<servlet-name>messageDispatcher</servlet-name>
-		<url-pattern>/sync/*</url-pattern>
-	</servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>messageDispatcher</servlet-name>
-		<url-pattern>*.wsdl</url-pattern>
-	</servlet-mapping>
- -->
- 
 	<servlet-mapping>
 		<servlet-name>springDispatcher</servlet-name>
 		<url-pattern>/service/*</url-pattern>
