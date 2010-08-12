@@ -164,7 +164,7 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 					}
 				} else {
 					hydrate(clcl);
-					String entityTypeId = clcl.getEntityType().getId();
+					String entityTypeId = clcl.getTypeId();
 					if(Anwendung.TYPE_ID.equals(entityTypeId)) {
 						anwendungList.add(clcl);
 					} else if(Client.TYPE_ID.equals(entityTypeId)) {
