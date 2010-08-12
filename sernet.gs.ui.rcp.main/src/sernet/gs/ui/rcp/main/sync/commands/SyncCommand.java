@@ -19,8 +19,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.sync.commands;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.bind.JAXB;
+
+import org.apache.commons.io.IOUtils;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -35,13 +41,64 @@ public class SyncCommand extends GenericCommand
 	
 	private boolean insert, update, delete;
 	
-	private SyncData syncData;
+	private byte[] syncRequestSerialized;
 	
-	private SyncMapping syncMapping;
+	private transient SyncData syncData;
+	
+	private transient SyncMapping syncMapping;
 	
 	private int inserted, updated, deleted;
 	
 	private List<String> errors = new ArrayList<String>();
+
+	/** Creates an instance of the SyncCommand where the {@link SyncRequest} object is already
+	 * serialized to a byte array.
+	 * 
+	 * <p>Usage of this constructor is needed in all cases where command is going
+	 * to be serialized/deserialized. This in turn would cause the same being done
+	 * to the {@link SyncRequest} object which unfortunately is not possible (through
+	 * default Spring HttpInvoker mechanism at least).</p>
+	 * 
+	 * @param sourceId
+	 * @param insert
+	 * @param update
+	 * @param delete
+	 * @param syncRequestSerialized
+	 */
+	public SyncCommand(String sourceId, boolean insert, boolean update, boolean delete, byte[] syncRequestSerialized)
+	{
+		this.sourceId = sourceId;
+		
+		this.insert = insert;
+		this.update = update;
+		this.delete = delete;
+
+		this.syncRequestSerialized = syncRequestSerialized;
+	}
+	
+	/**
+	 * Works like {@link #SyncCommand(String, boolean, boolean, boolean, byte[])} but does the JAXB serialization
+	 * under the hood automatically.
+	 * 
+	 * @param sourceId
+	 * @param insert
+	 * @param update
+	 * @param delete
+	 * @param sr
+	 */
+	public SyncCommand(String sourceId, boolean insert, boolean update, boolean delete, SyncRequest sr)
+	{
+		this.sourceId = sourceId;
+		
+		this.insert = insert;
+		this.update = update;
+		this.delete = delete;
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		JAXB.marshal(sr, bos);
+		
+		this.syncRequestSerialized = bos.toByteArray();
+	}
 	
 	public SyncCommand(SyncRequest sr)
 	{
@@ -53,11 +110,23 @@ public class SyncCommand extends GenericCommand
 		
 		this.syncData = sr.getSyncData();
 		this.syncMapping = sr.getSyncMapping();
+		
+		this.syncRequestSerialized = null;
 	}
 	
 	@Override
 	public void execute()
 	{
+		if (syncRequestSerialized != null)
+		{
+			SyncRequest sr = (SyncRequest) JAXB.unmarshal(new ByteArrayInputStream(syncRequestSerialized), SyncRequest.class);
+			syncData = sr.getSyncData();
+			syncMapping = sr.getSyncMapping();
+		} else if (syncData == null || syncMapping == null)
+		{
+			throw new IllegalStateException("Command serialized but " + SyncRequest.class.getName() + " not provided pre-serialized. Check constructor usage!");
+		}
+		
 		SyncInsertUpdateCommand cmdInsertUpdate =
 			new SyncInsertUpdateCommand(sourceId,
 					syncData, syncMapping,
