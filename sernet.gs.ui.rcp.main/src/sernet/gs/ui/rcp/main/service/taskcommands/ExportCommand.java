@@ -21,11 +21,10 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,16 +38,7 @@ import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.ClientsKategorie;
-import sernet.verinice.model.bsi.GebaeudeKategorie;
-import sernet.verinice.model.bsi.NKKategorie;
-import sernet.verinice.model.bsi.PersonenKategorie;
-import sernet.verinice.model.bsi.RaeumeKategorie;
-import sernet.verinice.model.bsi.ServerKategorie;
-import sernet.verinice.model.bsi.SonstigeITKategorie;
-import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.data.SyncObject;
@@ -67,10 +57,6 @@ import de.sernet.sync.sync.SyncRequest;
 @SuppressWarnings("serial")
 public class ExportCommand extends GenericCommand
 {
-	
-	// Blacklist of object types that should not be exported as an object:
-	private static HashSet<String> blacklist = new HashSet<String>();
-	
 	/*+++
 	 * List of already-exported objects' IDs, to
 	 * prevent multiple inclusion of a single object
@@ -79,19 +65,8 @@ public class ExportCommand extends GenericCommand
 	 *++++++++++++++++++++++++++++++++++++++++++++++++*/
 	private HashMap<String, String> exportedObjectIDs = new HashMap<String, String>();
 	
-	static
-	{
-		blacklist.add(RaeumeKategorie.TYPE_ID);
-		blacklist.add(NKKategorie.TYPE_ID);
-		blacklist.add(ServerKategorie.TYPE_ID);
-		blacklist.add(PersonenKategorie.TYPE_ID);
-		blacklist.add(GebaeudeKategorie.TYPE_ID);
-		blacklist.add(ClientsKategorie.TYPE_ID);
-		blacklist.add(AnwendungenKategorie.TYPE_ID);
-		blacklist.add(SonstigeITKategorie.TYPE_ID);
-		blacklist.add(TKKategorie.TYPE_ID);
-	}
-	
+	private transient List<SyncObject> orphaneList;
+
 	private List<CnATreeElement> elements;
 	private String sourceId;
 	private HashMap<String,String> entityTypesToBeExported;
@@ -125,27 +100,29 @@ public class ExportCommand extends GenericCommand
 		sr.setSyncData(sd);
 		sr.setSyncMapping(sm);
 		
+		/** A list for objects whose parent object is not in the exported set.
+		 * 
+		 * The orphanes are added last as top-level elements to the SyncData
+		 * object.
+		 */
+		orphaneList = new ArrayList<SyncObject>();
+
 		/*+++++
 		 * Add one <syncObject> element for each
 		 * given CnATreeElement to <syncData>: 
 		 *+++++++++++++++++++++++++++++++++++++++*/
+		Set<EntityType> exportedEntityTypes = new HashSet<EntityType>();
 		for( CnATreeElement element : elements )
 		{
-			export(sd.getSyncObject(), element, timestamp);
+			export(sd.getSyncObject(), element, timestamp, exportedEntityTypes);
 		}
+		sd.getSyncObject().addAll(orphaneList);
 		
-		/*+++++
-		 * Add Sync Mapping, which in our case describes
-		 * the identity map, i.e. it maps every object type
-		 * and every attribute type to itself. 
-		 *+++++++++++++++++++++++++++++++++++++++++++++++++*/
-		
-		Collection<EntityType> entityTypes = HUITypeFactory.getInstance().getAllEntityTypes();
-		Iterator<EntityType> entityTypesIter = entityTypes.iterator();
-		
-		while( entityTypesIter.hasNext() )
+		/* Adds SynMapping for all EntityTypes that have been exported. This
+		 * is going to be an identity mapping.
+		 */
+		for (EntityType entityType : exportedEntityTypes)
 		{
-			EntityType entityType = entityTypesIter.next();
 			
 			// Add <mapObjectType> element for this entity type to <syncMapping>:
 			MapObjectType mapObjectType = new MapObjectType();
@@ -185,9 +162,11 @@ public class ExportCommand extends GenericCommand
 	 * @param cnATreeElement
 	 * @return List<Element>
 	 */
-	private void export(List<SyncObject> list, CnATreeElement cnATreeElement, String timestamp )
+	private void export(List<SyncObject> list, CnATreeElement cnATreeElement, String timestamp, Set<EntityType> exportedEntityTypes)
 	{		
 		hydrate( cnATreeElement );
+		
+		List<SyncObject> childList = null;
 		
 		/*++++++++++
 		 * Export the given CnATreeElement, iff it is NOT blacklisted (i.e. an IT network
@@ -196,10 +175,13 @@ public class ExportCommand extends GenericCommand
 		 *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		
 		String typeId = cnATreeElement.getTypeId();
-		if ((!blacklist.contains(typeId))
-				&& (exportedObjectIDs.get( cnATreeElement.getId()) == null )
+		if ((exportedObjectIDs.get( cnATreeElement.getId()) == null )
 				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(typeId) != null) )
 		{
+			// Add the elements EntityType to the set of exported EntityTypes in order to
+			// use it for the mapping generation later on.
+			exportedEntityTypes.add(HUITypeFactory.getInstance().getEntityType(typeId));
+			
 			SyncObject syncObject = new SyncObject();
 			syncObject.setExtId(cnATreeElement.getId());
 			syncObject.setExtObjectType(typeId);
@@ -228,6 +210,7 @@ public class ExportCommand extends GenericCommand
 			}
 
 			list.add(syncObject);
+			childList = syncObject.getChildren();
 			exportedObjectIDs.put( cnATreeElement.getId(), new String() );
 		}
 		
@@ -236,9 +219,11 @@ public class ExportCommand extends GenericCommand
 		 *+++++++++++++++++++++++++++++*/
 		Set<CnATreeElement> children = cnATreeElement.getChildren();
 		
+		List<SyncObject> targetList = (childList == null ? orphaneList : childList);
+		
 		for( CnATreeElement child : children )
 		{
-			export(list, child, timestamp);
+			export(targetList, child, timestamp, exportedEntityTypes);
 		}
 	}
 	
