@@ -4,4 +4,4 @@
 # Prior to running this command make sure that you have the 'wsdl2java' script from
 # *Apache CXF* in your path.
 #
-wsdl2java -d srcGenerated/ -all -verbose src/sernet/verinice/service/sync/sync-service.wsdl
+wsdl2java -d srcGenerated/ -server -verbose src/sernet/verinice/service/sync/sync-service.wsdl

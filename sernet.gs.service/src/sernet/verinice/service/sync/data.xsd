@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-		targetNamespace="http://www.sernet.de/sync/data"
-		elementFormDefault="qualified">
-		
-		<xsd:element name="syncData">
-			<xsd:complexType>
-				<xsd:sequence>
-				
-                	<xsd:element name="syncObject" maxOccurs="unbounded">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="syncAttribute" maxOccurs="unbounded">
-									<xsd:complexType>
-									
-										<xsd:attribute name="name" type="xsd:string" use="required"/>
-										<xsd:attribute name="value" type="xsd:string" use="required"/>
-										
-									</xsd:complexType>
-								</xsd:element>
-							</xsd:sequence>
-							
-							<xsd:attribute name="extId" type="xsd:string" use="required"/>
-							<xsd:attribute name="extObjectType" type="xsd:string" use="required"/>
-							
-						</xsd:complexType>
-					</xsd:element>
-					 
-            	</xsd:sequence>
-            	
-			</xsd:complexType>
-		</xsd:element>
-		
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:data="http://www.sernet.de/sync/data" targetNamespace="http://www.sernet.de/sync/data"
+	elementFormDefault="qualified">
+
+	<xsd:element name="syncData">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="syncObject" type="data:syncObject"
+					maxOccurs="unbounded" />
+			</xsd:sequence>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="syncObject">
+		<xsd:sequence>
+			<xsd:element name="syncAttribute" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:attribute name="name" type="xsd:string" use="required" />
+					<xsd:attribute name="value" type="xsd:string" use="required" />
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="extId" type="xsd:string" minOccurs="1"
+				nillable="false" />
+			<xsd:element name="extObjectType" type="xsd:string"
+				minOccurs="1" nillable="false" />
+			<xsd:element name="children" maxOccurs="unbounded" type="data:syncObject" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+
 </xsd:schema>

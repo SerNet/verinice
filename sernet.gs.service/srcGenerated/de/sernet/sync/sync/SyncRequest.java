@@ -1,8 +1,6 @@
 
 package de.sernet.sync.sync;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -37,14 +35,13 @@ import de.sernet.sync.mapping.SyncMapping;
  * 
  * 
  */
-@SuppressWarnings("serial")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "syncData",
     "syncMapping"
 })
 @XmlRootElement(name = "syncRequest")
-public class SyncRequest implements Serializable {
+public class SyncRequest {
 
     @XmlElement(namespace = "http://www.sernet.de/sync/data", required = true)
     protected SyncData syncData;
