@@ -47,7 +47,8 @@ import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import de.sernet.sync.data.SyncData;
-import de.sernet.sync.data.SyncData.SyncObject.SyncAttribute;
+import de.sernet.sync.data.SyncObject;
+import de.sernet.sync.data.SyncObject.SyncAttribute;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
@@ -162,7 +163,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 						"Fehler beim Anlegen eines ITVerbundes");
 			}
 
-		for (SyncData.SyncObject so : syncData.getSyncObject()) {
+		for (SyncObject so : syncData.getSyncObject()) {
 
 			String extId = so.getExtId();
 			String extObjectType = so.getExtObjectType();

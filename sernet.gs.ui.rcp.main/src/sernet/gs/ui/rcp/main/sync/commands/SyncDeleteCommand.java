@@ -28,6 +28,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import de.sernet.sync.data.SyncData;
+import de.sernet.sync.data.SyncObject;
 
 /**
  * 
@@ -86,7 +87,7 @@ public class SyncDeleteCommand extends GenericCommand {
 		// extId's which are present in the sync Data:
 		HashSet<String> currentExtIds = new HashSet<String>();
 		
-		for (SyncData.SyncObject so : syncData.getSyncObject()) {
+		for (SyncObject so : syncData.getSyncObject()) {
 			// store a token for the extId of every <syncObject> in the sync data:
 			currentExtIds.add(so.getExtId());
 		}

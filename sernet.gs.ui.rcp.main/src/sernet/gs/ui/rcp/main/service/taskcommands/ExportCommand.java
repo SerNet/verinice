@@ -51,8 +51,8 @@ import sernet.verinice.model.bsi.SonstigeITKategorie;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import de.sernet.sync.data.SyncData;
-import de.sernet.sync.data.SyncData.SyncObject;
-import de.sernet.sync.data.SyncData.SyncObject.SyncAttribute;
+import de.sernet.sync.data.SyncObject;
+import de.sernet.sync.data.SyncObject.SyncAttribute;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
@@ -185,7 +185,7 @@ public class ExportCommand extends GenericCommand
 	 * @param cnATreeElement
 	 * @return List<Element>
 	 */
-	private void export(List<SyncData.SyncObject> list, CnATreeElement cnATreeElement, String timestamp )
+	private void export(List<SyncObject> list, CnATreeElement cnATreeElement, String timestamp )
 	{		
 		hydrate( cnATreeElement );
 		
@@ -195,7 +195,7 @@ public class ExportCommand extends GenericCommand
 		 * entity types, this element's entity type IS allowed:
 		 *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		
-		if ((!blacklist.contains(cnATreeElement.getEntityType().getId()))
+		if ((!blacklist.contains(cnATreeElement.getTypeId()))
 				&& (exportedObjectIDs.get( cnATreeElement.getId()) == null )
 				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(cnATreeElement.getEntityType().getId()) != null) )
 		{
