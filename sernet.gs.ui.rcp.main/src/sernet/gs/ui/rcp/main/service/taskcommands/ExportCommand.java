@@ -195,13 +195,14 @@ public class ExportCommand extends GenericCommand
 		 * entity types, this element's entity type IS allowed:
 		 *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		
-		if ((!blacklist.contains(cnATreeElement.getTypeId()))
+		String typeId = cnATreeElement.getTypeId();
+		if ((!blacklist.contains(typeId))
 				&& (exportedObjectIDs.get( cnATreeElement.getId()) == null )
-				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(cnATreeElement.getEntityType().getId()) != null) )
+				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(typeId) != null) )
 		{
 			SyncObject syncObject = new SyncObject();
 			syncObject.setExtId(cnATreeElement.getId());
-			syncObject.setExtObjectType(cnATreeElement.getEntityType().getId());
+			syncObject.setExtObjectType(typeId);
 
 			List<SyncAttribute> attributes = syncObject.getSyncAttribute();
 			
