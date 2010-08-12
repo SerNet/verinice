@@ -60,7 +60,7 @@ public class OrganizationView extends GenericElementView {
         }
         if(selectedGroup!=null && (elementList==null || !elementList.contains(getSelectedGroup()))) {    
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Removing selected group, Type: " + selectedGroup.getEntityType().getId() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                LOG.debug("Removing selected group, Type: " + selectedGroup.getTypeId() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             setSelectedGroup(null);
         }
