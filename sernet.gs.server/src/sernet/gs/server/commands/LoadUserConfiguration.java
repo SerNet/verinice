@@ -18,12 +18,14 @@
 package sernet.gs.server.commands;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.configuration.Configuration;
 
 @SuppressWarnings("serial")
 public class LoadUserConfiguration extends GenericCommand {
@@ -32,8 +34,17 @@ public class LoadUserConfiguration extends GenericCommand {
 	"join fetch entity.typedPropertyLists " +
 	"where entity.entityType = ?"; //$NON-NLS-1$
 	
+	private String username = "";
+	
 
-	private List<Entity> entities;
+	/**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    private List<Entity> entities;
 
 	public LoadUserConfiguration() {
 	}
@@ -41,13 +52,35 @@ public class LoadUserConfiguration extends GenericCommand {
 	public void execute() {
 		IBaseDao<Entity, Serializable> dao = getDaoFactory().getDAO(Entity.class);
 		entities = dao.findByQuery(QUERY, new String[] {"configuration"});
-		for (Entity entity : entities) {
-			HydratorUtil.hydrateEntity(dao, entity);
+		// only searched user if present, otherwise return all:
+		if (username != null && username.length()>0) {
+		    allResults: for (Entity entity : entities) {
+		        if (username.equals(entity.getSimpleValue(Configuration.PROP_USERNAME))) {
+		            HydratorUtil.hydrateEntity(dao, entity);
+		            entities = new ArrayList<Entity>();
+		            entities.add(entity);
+		            break allResults;
+		        }
+		    }
+		}
+		else {
+		    allResults: for (Entity entity : entities) {
+		        HydratorUtil.hydrateEntity(dao, entity);
+		    }
 		}
 	}
-
+	
 	public List<Entity> getEntities() {
 		return entities;
+	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.verinice.interfaces.GenericCommand#clear()
+	 */
+	@Override
+	public void clear() {
+	    super.clear();
+	    this.username = "";
 	}
 	
 	

@@ -19,7 +19,9 @@
 package sernet.gs.ui.rcp.main.service;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -214,7 +216,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	
 		if (enable)
 		{
-			final Object[] roles = getRolesAsParameterList(authService.getUsername());
+		    final Object[] roles = getRolesAsParameterList(authService.getUsername());
 			
 			dao.executeCallback(new HibernateCallback()
 			{
@@ -264,6 +266,8 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		Object[] result = roleMap.get(user);
 		if (result == null)
 		{
+		    
+		    
 			IBaseDao<Configuration, Serializable> dao = daoFactory.getDAO(Configuration.class);
 			List<Configuration> configurations = dao.findAll();
 			

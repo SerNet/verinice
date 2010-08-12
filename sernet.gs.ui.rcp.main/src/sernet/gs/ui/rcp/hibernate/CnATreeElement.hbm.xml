@@ -21,6 +21,12 @@
 
 
 		<discriminator column="OBJECT_TYPE" type="string"/>	
+        
+        <property
+            name="objectType"
+            column="OBJECT_TYPE"
+            insert="false"
+            update="false"/>
 		
 		<property
 			name="uuid"

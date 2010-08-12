@@ -69,6 +69,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	private String sourceId;
 	
+	private String objectType;
+
 	public String getSourceId() {
 		return sourceId;
 	}
@@ -255,6 +257,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 
 	public abstract String getTypeId();
+
+	public String getObjectType() {
+		return objectType;
+	}
+
+	public void setObjectType(String objectType) {
+		this.objectType = objectType;
+	}
 
 	public Entity getEntity() {
 		return entity;

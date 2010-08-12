@@ -33,7 +33,7 @@ This variant:
  	The beans are configured for use in the verinice server (the client
  	uses the same classes but in a different configuration) and are made
  	available via the VeriniceContext class (look it up for further details).
- -->
+    -->
 
 	<bean id="gsScraperUtil" class="sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil">
 		<property name="model">

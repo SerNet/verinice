@@ -146,7 +146,6 @@ public class Activator extends Plugin {
 
 			webContainer = (WebContainer) context.getService(sr);
 		}
-		
 		return webContainer;
 	}
 

@@ -48,6 +48,7 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class DbUserDetailsService implements UserDetailsService {
 	
+    // injected by spring
 	private ICommandService commandService;
 
 	// injected by spring
@@ -68,6 +69,7 @@ public class DbUserDetailsService implements UserDetailsService {
 		Logger.getLogger(this.getClass()).debug("Loading user from DB: " + username);
 
 		try {
+		    loadUserConfigurationCommand.setUsername(username);
 			commandService.executeCommand(loadUserConfigurationCommand);
 		} catch (CommandException e) {
 			throw new RuntimeException("Failed to retrieve user configurations.", e);
@@ -107,10 +109,10 @@ public class DbUserDetailsService implements UserDetailsService {
 		return userDetails;
 	}
 
-	private boolean isUser(String username, Entity entity) {
-		return entity.getSimpleValue(Configuration.PROP_USERNAME).equals(
+	public static boolean isUser(String username, Entity entity) {
+		boolean isUser = entity.getSimpleValue(Configuration.PROP_USERNAME).equals(
 				username);
-
+		return isUser;
 	}
 
 	public void setAdminuser(String adminuser) {

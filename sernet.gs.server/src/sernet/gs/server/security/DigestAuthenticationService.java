@@ -37,7 +37,7 @@ import sernet.verinice.interfaces.IAuthService;
  * $LastChangedBy$
  *
  */
-public final class AuthenticationService implements IAuthService {
+public final class DigestAuthenticationService implements IAuthService {
 
 	private DigestProcessingFilterEntryPoint entryPoint;
 	
@@ -56,7 +56,7 @@ public final class AuthenticationService implements IAuthService {
 	 */
 	public String hashPassword(String username, String pass) {
 		return DigestProcessingFilter.encodePasswordInA1Format(username,
-			getEntryPoint().getRealmName(), pass);
+		        entryPoint.getRealmName(), pass);
 	}
 
 	
@@ -75,13 +75,9 @@ public final class AuthenticationService implements IAuthService {
 	    }
 	    
         return DigestProcessingFilter.encodePasswordInA1Format(username,
-            getEntryPoint().getRealmName(), pass);
+                entryPoint.getRealmName(), pass);
     }
 	
-	public DigestProcessingFilterEntryPoint getEntryPoint() {
-		return entryPoint;
-	}
-
 	public void setEntryPoint(DigestProcessingFilterEntryPoint entryPoint) {
 		this.entryPoint = entryPoint;
 	}
