@@ -23,7 +23,7 @@
 		implementor="#syncService"
 		address="/sync" />
 		
-	<!-- Makes the carpc's WebService available as a Spring bean. -->
+	<!-- Makes the SyncService WebService available as a Spring bean. -->
 	<bean id="syncService" class="sernet.gs.server.sync.SyncServiceImpl" >
 		<property name="commandService" ref="hibernateCommandService" />
 	</bean>
