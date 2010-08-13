@@ -171,109 +171,113 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 			}
 
 		for (SyncObject so : syncData.getSyncObject()) {
+			importObject(importRootObject, so);
+		} // for <syncObject>
+	}
+	
+	private void importObject(CnATreeElement importRootObject, SyncObject so)
+	{
+		String extId = so.getExtId();
+		String extObjectType = so.getExtObjectType();
+		boolean setAttributes = false;
 
-			String extId = so.getExtId();
-			String extObjectType = so.getExtObjectType();
-			boolean setAttributes = false;
+		MapObjectType mot = getMap(extObjectType);
 
-			// we have to retrieve the information from the mapping data,
-			// which huientitytype corresponds with the current object's
-			// external object type, given by extObjectType. Therefore, search
-			// the element node with (object type)extId = obj.extObjectType from
-			// syncMapping:
+		if (mot == null) {
+			errorList.add("Konnte kein mapObjectType-Element finden für den Objekttypen "
+							+ extObjectType);
+			return;
+		}
 
-			MapObjectType mot = getMap(extObjectType);
+		// this element "knows", which huientitytype is applicable and
+		// how the associated properties have to be mapped!
+		String veriniceObjectType = mot.getIntId();
 
-			if (mot == null) {
-				errorList.add("Konnte kein mapObjectType-Element finden für den Objekttypen "
-								+ extObjectType);
-				return;
-			}
+		CnATreeElement elementInDB = null;
 
-			// this element "knows", which huientitytype is applicable and
-			// how the associated properties have to be mapped!
-			String veriniceObjectType = mot.getIntId();
+		try {
+			elementInDB = findDbElement(sourceId, extId);
+		} catch (CommandException e1) {
+			throw new RuntimeCommandException(e1);
+		}
 
-			CnATreeElement elementInDB = null;
+		if (elementInDB != null) // object found!
+		{
+			if (update) // this object should be updated!
+			{
+				/*** UPDATE: ***/
+				setAttributes = true;
+				updated++;
+			} else
+				// do not update this object's attributes!
+				setAttributes = false;
+		}
+		
+		if (null == elementInDB && insert) // nothing found -> create new
+											// object, if "insert" flag is
+											// set:
+		{
+			/*** INSERT: ***/
+			CnATreeElement container = findContainerFor(importRootObject,
+					veriniceObjectType);
 
 			try {
-				elementInDB = findDbElement(sourceId, extId);
-			} catch (CommandException e1) {
-				throw new RuntimeCommandException(e1);
+				// create new object in db...
+				CreateElement<CnATreeElement> newElement = new CreateElement<CnATreeElement>(
+						container, getClassFromTypeId(veriniceObjectType));
+				getCommandService().executeCommand(
+						newElement);
+				elementInDB = newElement.getNewElement();
+
+				// ...and set its sourceId and extId:
+				elementInDB.setSourceId(sourceId);
+				elementInDB.setExtId(extId);
+
+				setAttributes = true;
+				inserted++;
+			} catch (Exception e) {
+				errorList.add("Konnte " + veriniceObjectType
+						+ "-Objekt nicht erzeugen.");
+				e.printStackTrace();
 			}
+		}
 
-			if (elementInDB != null) // object found!
-			{
-				if (update) // this object should be updated!
-				{
-					/*** UPDATE: ***/
-					setAttributes = true;
-					updated++;
-				} else
-					// do not update this object's attributes!
-					setAttributes = false;
-			}
-
-			if (null == elementInDB && insert) // nothing found -> create new
-												// object, if "insert" flag is
-												// set:
-			{
-				/*** INSERT: ***/
-				CnATreeElement container = findContainerFor(importRootObject,
-						veriniceObjectType);
-
-				try {
-					// create new object in db...
-					CreateElement<CnATreeElement> createElement = new CreateElement<CnATreeElement>(
-							container, getClassFromTypeId(veriniceObjectType));
-					getCommandService().executeCommand(
-							createElement);
-					elementInDB = createElement.getNewElement();
-
-					// ...and set its sourceId and extId:
-					elementInDB.setSourceId(sourceId);
-					elementInDB.setExtId(extId);
-
-					setAttributes = true;
-					inserted++;
-				} catch (Exception e) {
-					errorList.add("Konnte " + veriniceObjectType
-							+ "-Objekt nicht erzeugen.");
-					e.printStackTrace();
-				}
-			}
-
-			/*
-			 * Now if we should update an existing object or created a new
-			 * object, set the associated attributes:
-			 */
-			if (null != elementInDB && setAttributes) {
-				// for all <syncAttribute>-Elements below current
-				// <syncObject>...
+		/*
+		 * Now if we should update an existing object or created a new
+		 * object, set the associated attributes:
+		 */
+		if (null != elementInDB && setAttributes) {
+			// for all <syncAttribute>-Elements below current
+			// <syncObject>...
+			
+			for (SyncAttribute sa : so.getSyncAttribute()) {
+				String attrExtId = sa.getName();
+				String attrValue = sa.getValue();
 				
-				for (SyncAttribute sa : so.getSyncAttribute()) {
-					String attrExtId = sa.getName();
-					String attrValue = sa.getValue();
-					
-					MapAttributeType mat = getMapAttribute(mot, extObjectType);
+				MapAttributeType mat = getMapAttribute(mot, extObjectType);
 
-					if (mat == null)
-						this.errorList
-								.add("Konnte kein mapAttributeType-Element finden für das Attribut "
-										+ attrExtId + " von " + extObjectType);
-					else {
-						String attrIntId = mat.getIntId();
-						PropertyType propertyType = elementInDB.getEntityType()
-								.getPropertyType(attrIntId);
+				if (mat == null)
+					this.errorList
+							.add("Konnte kein mapAttributeType-Element finden für das Attribut "
+									+ attrExtId + " von " + extObjectType);
+				else {
+					String attrIntId = mat.getIntId();
+					PropertyType propertyType = elementInDB.getEntityType()
+							.getPropertyType(attrIntId);
 
-						if (null != propertyType)
-							elementInDB.setSimpleProperty(attrIntId, attrValue);
-						// else: ignore this attribute!
-					}
+					if (null != propertyType)
+						elementInDB.setSimpleProperty(attrIntId, attrValue);
+					// else: ignore this attribute!
+				}
 
-				} // for <syncAttribute>
-			} // if( null != ... )
-		} // for <syncObject>
+			} // for <syncAttribute>
+		} // if( null != ... )
+
+		// Handle all the child objects.
+		for (SyncObject child : so.getChildren())
+		{
+			importObject(elementInDB, child);
+		}
 	}
 	
 	private MapObjectType getMap(String extObjectType)

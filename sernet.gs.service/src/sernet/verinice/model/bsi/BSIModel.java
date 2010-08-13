@@ -32,6 +32,7 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.ImportedObjectsHolder;
 
 /**
  * Top level category for all BSI model elements.
@@ -182,7 +183,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof ITVerbund)
+		if (obj instanceof ITVerbund || obj instanceof ImportedObjectsHolder)
 			return true;
 		return false;
 	}

@@ -99,7 +99,7 @@
 		</set>
 		
 	<subclass 
-		name="sernet.verinice.model.commands.ImportedObjectsHolder"
+		name="sernet.verinice.model.common.ImportedObjectsHolder"
 		extends="CnATreeElement"
 		discriminator-value="imported-objects-holder"/>
 		
