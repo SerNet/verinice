@@ -19,10 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.samt.rcp;
 
-import org.apache.log4j.Logger;
-
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -33,6 +32,7 @@ import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 
 import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
+import sernet.verinice.samt.audit.rcp.AuditPerspective;
 
 /**
  * This action is called by a link an the intro/welcome page of verinice.

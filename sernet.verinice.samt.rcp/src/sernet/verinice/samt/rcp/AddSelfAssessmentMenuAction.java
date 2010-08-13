@@ -7,10 +7,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.samt.service.CreateSelfAssessment;
 
 
 public class AddSelfAssessmentMenuAction implements IWorkbenchWindowActionDelegate {

@@ -7,7 +7,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 
 public class ShowSamtPerspectiveAction implements IWorkbenchWindowActionDelegate {

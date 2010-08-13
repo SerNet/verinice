@@ -19,10 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.samt.rcp;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -30,11 +26,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
-import sernet.gs.service.CsvFile;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.interfaces.ICommandService;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>

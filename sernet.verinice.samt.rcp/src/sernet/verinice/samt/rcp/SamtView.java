@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.verinice.iso27k.rcp.ISMView;
-import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.rcp.IAttachedToPerspective;

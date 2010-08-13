@@ -78,7 +78,7 @@ public class GenericElementView extends ElementView {
         commandMap.put(Organization.TYPE_ID, new OrganizationCommandFactory());
     }
     
-    private ICommandFactory commandFactory;
+    protected ICommandFactory commandFactory;
     
     public GenericElementView(ICommandFactory commandFactory) {
         super();
@@ -157,6 +157,18 @@ public class GenericElementView extends ElementView {
         }
         return result;
     }
+    
+    public CnATreeElement getGroupToAdd() {
+        CnATreeElement group = getSelectedGroup();
+        final String typeId = this.commandFactory.getElementTypeId();
+        if (group == null) {     
+            Audit audit = getSelectedAudit();
+            if (audit != null) {
+                group = audit.getGroup(typeId);
+            }        
+        }
+        return group;
+    }
 
 }
 
@@ -186,5 +198,6 @@ class Filter extends ViewerFilter {
         }
         return result;
     }
+    
     
 }

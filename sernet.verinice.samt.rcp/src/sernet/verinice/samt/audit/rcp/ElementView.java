@@ -20,7 +20,6 @@
 package sernet.verinice.samt.audit.rcp;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +31,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -48,7 +46,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
@@ -60,7 +57,6 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.CommandException;
@@ -69,13 +65,11 @@ import sernet.verinice.iso27k.rcp.ISMViewContentProvider;
 import sernet.verinice.iso27k.rcp.ISMViewLabelProvider;
 import sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 
@@ -338,19 +332,19 @@ public abstract class ElementView extends ViewPart {
                     CnATreeElement selectedElement = (CnATreeElement) element;
                     setSelectedElement(selectedElement);
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Selected link element, Type: " + selectedElement.getEntityType() + ", name: " + selectedElement.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                        LOG.debug("Selected link element, Type: " + selectedElement.getObjectType() + ", name: " + selectedElement.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                     } 
                 } else {         
                     if(element instanceof Group ) {
                         CnATreeElement selectedElement = (CnATreeElement) element;
                         setSelectedGroup(selectedElement);                
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("Selected group, Type: " + selectedGroup.getEntityType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                            LOG.debug("Selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                         }
                     } else {
                         setSelectedGroup(null);                
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("Removing selected group, Type: " + selectedGroup.getEntityType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                            LOG.debug("Removing selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                         }
                     }
                 }
@@ -400,7 +394,7 @@ public abstract class ElementView extends ViewPart {
     protected void checkSelectedGroup(List elementList) {
         if(selectedGroup!=null && (elementList==null || !elementList.contains(getSelectedGroup()))) {    
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Removing selected group, Type: " + getSelectedGroup().getEntityType() + ", name: " + getSelectedGroup().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                LOG.debug("Removing selected group, Type: " + getSelectedGroup().getObjectType() + ", name: " + getSelectedGroup().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             setSelectedGroup(null);          
         }

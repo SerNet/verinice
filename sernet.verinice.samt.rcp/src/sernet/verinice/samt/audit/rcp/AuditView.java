@@ -19,8 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -32,6 +34,18 @@ public class AuditView extends GenericElementView {
     
     public AuditView() {
         super(new ElementViewCommandFactory(Audit.TYPE_ID,AuditGroup.TYPE_ID));
+    }
+    
+    public CnATreeElement getGroupToAdd() {
+        CnATreeElement group = getSelectedGroup();
+        final String typeId = this.commandFactory.getElementTypeId();
+        if (group == null) {
+            Organization org = getSelectedOrganization();
+            if (org != null) {
+                group = org.getGroup(typeId);
+            }    
+        }
+        return group;
     }
     
 }

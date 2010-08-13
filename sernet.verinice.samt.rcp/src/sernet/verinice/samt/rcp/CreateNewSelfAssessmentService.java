@@ -20,6 +20,7 @@ package sernet.verinice.samt.rcp;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.CsvFile;
@@ -28,7 +29,6 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.commands.LoadModel;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.samt.service.CreateSelfAssessment;

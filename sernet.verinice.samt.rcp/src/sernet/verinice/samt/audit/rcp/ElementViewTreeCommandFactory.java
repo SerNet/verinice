@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.iso27k.rcp.IContentCommandFactory;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;

@@ -18,8 +18,6 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -36,8 +34,6 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
