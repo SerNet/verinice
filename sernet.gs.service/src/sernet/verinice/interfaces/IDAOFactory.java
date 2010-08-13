@@ -452,6 +452,8 @@ public interface IDAOFactory {
 
 	public abstract void setSamtTopicDAO(IBaseDao<SamtTopic, Integer> daoToSet);
 
+	public abstract void setImportedObjectsHolderDAO(IBaseDao<SamtTopic, Integer> daoToSet);
+
 	@SuppressWarnings("unchecked")
 	/**
 	 *  Tries to find a DAO by class.

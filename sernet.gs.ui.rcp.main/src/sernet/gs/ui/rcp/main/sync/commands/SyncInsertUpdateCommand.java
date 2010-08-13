@@ -22,12 +22,9 @@ package sernet.gs.ui.rcp.main.sync.commands;
 import java.util.HashMap;
 import java.util.List;
 
-import org.hibernate.proxy.HibernateProxy;
-
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.CreateImportITVerbund;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
 import sernet.gs.ui.rcp.main.sync.InvalidRequestException;
@@ -35,17 +32,27 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.bsi.RaeumeKategorie;
 import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.ServerKategorie;
 import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.SonstigeITKategorie;
 import sernet.verinice.model.bsi.TKKategorie;
+import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.ImportedObjectsHolder;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.data.SyncObject;
 import de.sernet.sync.data.SyncObject.SyncAttribute;
@@ -55,35 +62,30 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 
 @SuppressWarnings("serial")
 public class SyncInsertUpdateCommand extends GenericCommand {
-	/*
-	 * Since we are possibly instantiating objects from verinice business
-	 * classes without having access to a tree with categories as parent nodes,
-	 * we have to map huientitytype --> category manually:
-	 */
 
 	private static HashMap<String, String> containerTypes = new HashMap<String, String>();
 	private static HashMap<String, Class> typeIdClass = new HashMap<String, Class>();
 
 	static {
-		containerTypes.put("anwendung", "anwendungenkategorie");
-		containerTypes.put("client", "clientskategorie");
-		containerTypes.put("gebaeude", "gebaeudekategorie");
-		containerTypes.put("netzkomponente", "netzkategorie");
-		containerTypes.put("person", "personkategorie");
-		containerTypes.put("raum", "raeumekategorie");
-		containerTypes.put("server", "serverkategorie");
-		containerTypes.put("sonstit", "sonstitkategorie");
-		containerTypes.put("tkkomponente", "tkkategorie");
+		containerTypes.put(Anwendung.TYPE_ID, AnwendungenKategorie.TYPE_ID);
+		containerTypes.put(Client.TYPE_ID, ClientsKategorie.TYPE_ID);
+		containerTypes.put(Gebaeude.TYPE_ID, GebaeudeKategorie.TYPE_ID);
+		containerTypes.put(NetzKomponente.TYPE_ID, NKKategorie.TYPE_ID);
+		containerTypes.put(Person.TYPE_ID, PersonenKategorie.TYPE_ID);
+		containerTypes.put(Raum.TYPE_ID, RaeumeKategorie.TYPE_ID);
+		containerTypes.put(Server.TYPE_ID, ServerKategorie.TYPE_ID);
+		containerTypes.put(SonstIT.TYPE_ID, SonstigeITKategorie.TYPE_ID);
+		containerTypes.put(TelefonKomponente.TYPE_ID, TKKategorie.TYPE_ID);
 
-		typeIdClass.put("anwendung", Anwendung.class);
-		typeIdClass.put("client", Client.class);
-		typeIdClass.put("gebaeude", Gebaeude.class);
-		typeIdClass.put("netzkomponente", NetzKomponente.class);
-		typeIdClass.put("person", Person.class);
-		typeIdClass.put("raum", Raum.class);
-		typeIdClass.put("server", Server.class);
-		typeIdClass.put("sonstit", SonstIT.class);
-		typeIdClass.put("tkkomponente", TKKategorie.class);
+		typeIdClass.put(Anwendung.TYPE_ID, Anwendung.class);
+		typeIdClass.put(Client.TYPE_ID, Client.class);
+		typeIdClass.put(Gebaeude.TYPE_ID, Gebaeude.class);
+		typeIdClass.put(NetzKomponente.TYPE_ID, NetzKomponente.class);
+		typeIdClass.put(Person.TYPE_ID, Person.class);
+		typeIdClass.put(Raum.TYPE_ID, Raum.class);
+		typeIdClass.put(Server.TYPE_ID, Server.class);
+		typeIdClass.put(SonstIT.TYPE_ID, SonstIT.class);
+		typeIdClass.put(TKKategorie.TYPE_ID, TKKategorie.class);
 	}
 
 	private String sourceId;
@@ -147,20 +149,25 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 
 		BSIModel model = cmdLoadBSIModel.getModel();
 
-		// retreive ITVerbuende from model:
+		// Try to find an ITVerbund whose sourceId is that of the
+		// imported data.
 		List<ITVerbund> itVerbuende = model.getItverbuende();
-		ITVerbund importITVerbund = null;
+		CnATreeElement importRootObject = null;
 
 		for (ITVerbund v : itVerbuende)
 			if (v.getSourceId() != null && v.getSourceId().equals(sourceId))
-				importITVerbund = v;
-
-		if (null == importITVerbund)
+				importRootObject = v;
+		
+		// If no such object found then create an artificial root object
+		// to hold all imported objects.
+		if (importRootObject == null)
 			try {
-				importITVerbund = createNewItVerbund(model, sourceId);
+				ImportedObjectsHolder holder = new ImportedObjectsHolder(model);
+				getDaoFactory().getDAO(ImportedObjectsHolder.class).saveOrUpdate(holder);
+				importRootObject = holder;
 			} catch (Exception e1) {
 				throw new RuntimeCommandException(
-						"Fehler beim Anlegen eines ITVerbundes");
+						"Fehler beim Anlegen des Behälters für importierte Objekte.");
 			}
 
 		for (SyncObject so : syncData.getSyncObject()) {
@@ -212,7 +219,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 												// set:
 			{
 				/*** INSERT: ***/
-				CnATreeElement container = findContainerFor(importITVerbund,
+				CnATreeElement container = findContainerFor(importRootObject,
 						veriniceObjectType);
 
 				try {
@@ -327,47 +334,18 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 	 * @param veriniceObjectType
 	 * @return the Category - CnATreeElement
 	 ************************************************************/
-	private CnATreeElement findContainerFor(ITVerbund verbund,
+	private CnATreeElement findContainerFor(CnATreeElement root,
 			String veriniceObjectType) {
-		String containerType = containerTypes.get(veriniceObjectType);
 
-		CnATreeElement container = verbund.getCategory(containerType);
-
-		// TODO: passt das so?
-		// teilweise gab's Probleme mit dem Objekt verbund.getCategory(),
-		// welches
-		// z.B. beim Einfügen in eine vorher bereits einmal "benutzte" Kategorie
-		// nur
-		// ein HibernateProxy war und nicht das "echte" Objekt?!
-		if (container instanceof HibernateProxy)
-			return (CnATreeElement) ((HibernateProxy) container)
-					.getHibernateLazyInitializer().getImplementation();
-		else
-			return container;
-	}
-
-	/************************************************************
-	 * createNewItVerbund()
-	 * 
-	 * Create a new ITVerbund in the given model.
-	 * 
-	 * @param model
-	 * @param sourceId
-	 * @return
-	 * @throws Exception
-	 ************************************************************/
-	private ITVerbund createNewItVerbund(BSIModel model, String sourceId)
-			throws Exception {
-		// we can use the command, or the factory to build the ITVerbund
-		// Using the factory is better, since it automatically sets the
-		// model as parent etc.):
-
-		CreateImportITVerbund command = new CreateImportITVerbund(model,
-				ITVerbund.class, sourceId);
-		command = getCommandService().executeCommand(command);
-		CnATreeElement itverbund = command.getNewElement();
-
-		return (ITVerbund) itverbund;
+		// TODO: Not sure if this is necessary
+		if (root instanceof ITVerbund)
+		{
+			String containerType = containerTypes.get(veriniceObjectType);
+			return ((ITVerbund) root).getCategory(containerType);
+		}
+		
+		// If in doubt the root for imported objects should always be used.
+		return root;
 	}
 
 	/************************************************************

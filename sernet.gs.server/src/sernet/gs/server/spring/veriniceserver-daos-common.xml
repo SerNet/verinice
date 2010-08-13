@@ -558,6 +558,15 @@
         </constructor-arg>
     </bean>
     
+    <!-- Miscellaneous Daos ==================================================================== -->
+
+	<bean id="importedObjectsHolderDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.common.ImportedObjectsHolder</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+    
 	<!-- END dao definitions ============================================================================ -->
 
 </beans>

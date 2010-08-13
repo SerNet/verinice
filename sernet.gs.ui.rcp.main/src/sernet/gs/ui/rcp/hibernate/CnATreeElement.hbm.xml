@@ -98,6 +98,10 @@
 			<one-to-many class="CnALink"/>
 		</set>
 		
+	<subclass 
+		name="sernet.verinice.model.commands.ImportedObjectsHolder"
+		extends="CnATreeElement"
+		discriminator-value="imported-objects-holder"/>
 		
 <!-- Grundschutz-Elemente: ################################################################# -->
 

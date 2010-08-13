@@ -65,6 +65,7 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.ImportedObjectsHolder;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.ds.Datenverarbeitung;
@@ -646,6 +647,13 @@ public class DAOFactory implements IDAOFactory {
     public void setSamtTopicDAO(IBaseDao<SamtTopic, Integer> daoToSet) {
         daosByClass.put(SamtTopic.class, daoToSet);
         daosByTypeID.put(SamtTopic.TYPE_ID, daoToSet);
+    }
+    
+    /* Miscellaneous Daos */
+    
+    public void setImportedObjectsHolderDAO(IBaseDao<SamtTopic, Integer> daoToSet) {
+        daosByClass.put(ImportedObjectsHolder.class, daoToSet);
+        daosByTypeID.put(ImportedObjectsHolder.TYPE_ID, daoToSet);
     }
     
 	@SuppressWarnings("unchecked")
