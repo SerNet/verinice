@@ -32,6 +32,7 @@ import java.util.Set;
 import javax.xml.bind.JAXB;
 
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
+import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyList;
@@ -180,7 +181,9 @@ public class ExportCommand extends GenericCommand
 		{
 			// Add the elements EntityType to the set of exported EntityTypes in order to
 			// use it for the mapping generation later on.
-			exportedEntityTypes.add(HUITypeFactory.getInstance().getEntityType(typeId));
+			EntityType et = HUITypeFactory.getInstance().getEntityType(typeId);
+			if (et != null)
+				exportedEntityTypes.add(et);
 			
 			SyncObject syncObject = new SyncObject();
 			syncObject.setExtId(cnATreeElement.getId());
@@ -192,21 +195,25 @@ public class ExportCommand extends GenericCommand
 			 * Retrieve all properties from the entity:
 			 *+++++++++++++++++++++++++++++++++++++++++*/
 			
-			Map<String, PropertyList> properties = cnATreeElement.getEntity().getTypedPropertyLists();
+			Entity entity = cnATreeElement.getEntity();
+			// Category instance may have no Entity attached to it
+			// For those we do not store any property values.
+			if (entity != null) {
+				Map<String, PropertyList> properties = entity.getTypedPropertyLists();
 
-			for( String s : properties.keySet() )
-			{
-				String propertyValue = cnATreeElement.getEntity().getSimpleValue(s);
+				for (String s : properties.keySet()) {
+					String propertyValue = cnATreeElement.getEntity()
+							.getSimpleValue(s);
 
-				if( propertyValue != null )
-				{
-					SyncAttribute syncAttribute = new SyncAttribute();
-					
-					// Add <syncAttribute> to this <syncObject>:
-					syncAttribute.setName(s);
-					syncAttribute.setValue(propertyValue);
-					attributes.add(syncAttribute);
-				}			
+					if (propertyValue != null) {
+						SyncAttribute syncAttribute = new SyncAttribute();
+
+						// Add <syncAttribute> to this <syncObject>:
+						syncAttribute.setName(s);
+						syncAttribute.setValue(propertyValue);
+						attributes.add(syncAttribute);
+					}
+				}
 			}
 
 			list.add(syncObject);
