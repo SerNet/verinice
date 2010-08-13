@@ -32,9 +32,8 @@ public class ImportCSVWizard extends Wizard {
 
 		SyncRequest sr = createSyncRequest();
 
-		SyncCommand command = new SyncCommand(entityPage.getSourceId(),
-				entityPage.getInsertState(), entityPage.getUpdateState(),
-				entityPage.getDeleteState(), sr);
+		SyncCommand command = new SyncCommand(entityPage.getInsertState(),
+				entityPage.getUpdateState(), entityPage.getDeleteState(), sr);
 		try {
 			command = ServiceFactory.lookupCommandService().executeCommand(
 					command);

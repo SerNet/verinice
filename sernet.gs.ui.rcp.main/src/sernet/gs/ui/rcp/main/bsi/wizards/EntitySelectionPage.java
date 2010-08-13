@@ -35,7 +35,6 @@ public class EntitySelectionPage extends WizardPage{
 	private String entityName = "";
 	private Text csvText;
 	private Text entityText;
-	private Text sourceIdText;
 	private Label validateSize;
 	private Vector<String> entityNames;
 	private String entityNameId = "";
@@ -72,14 +71,6 @@ public class EntitySelectionPage extends WizardPage{
 		gridLayout.numColumns = 4;
 		gridLayout.makeColumnsEqualWidth = true;
 		idGroup.setLayout(gridLayout);
-		
-		Label idIntro = new Label(idGroup, SWT.LEFT);
-		idIntro.setText(Messages.XMLImportDialog_4);
-		idIntro.setLayoutData(new GridData(GridData.FILL,GridData.CENTER, true, false, 4, 1));
-		
-		sourceIdText = new Text(idGroup, SWT.SINGLE | SWT.BORDER);
-		sourceIdText.setText(Messages.XMLImportDialog_5);
-		sourceIdText.setLayoutData(new GridData(GridData.FILL,GridData.CENTER, false, false, 4, 1));
 		
 		//Operations of database (update,insert,delete)
 		
@@ -283,10 +274,6 @@ public class EntitySelectionPage extends WizardPage{
 		}
 		return numberOfElements;
 	}
-    
-	public String getSourceId() {
-    	return sourceIdText.getText();
-    }
     
     public boolean getInsertState() {
     	return insert;

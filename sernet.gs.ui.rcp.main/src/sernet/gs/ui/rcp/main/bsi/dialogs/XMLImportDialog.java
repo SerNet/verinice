@@ -53,9 +53,6 @@ import de.sernet.sync.sync.SyncRequest;
 
 public class XMLImportDialog extends Dialog {
 
-	private String sourceId;
-	private Text sourceIdText;
-
 	private boolean insert;
 	private boolean update;
 	private boolean delete;
@@ -79,7 +76,6 @@ public class XMLImportDialog extends Dialog {
 		} else if ((!insert && !update && !delete)) {
 			createErrorMessage(2);
 		} else {
-			saveInput();
 
 			try {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
@@ -92,7 +88,6 @@ public class XMLImportDialog extends Dialog {
 								SyncCommand command;
 								try {
 									command = new SyncCommand(
-											sourceId,
 											insert,
 											update,
 											delete,
@@ -196,16 +191,6 @@ public class XMLImportDialog extends Dialog {
 		layout.numColumns = 4;
 		layout.makeColumnsEqualWidth = true;
 		idGroup.setLayout(layout);
-
-		Label idIntro = new Label(idGroup, SWT.LEFT);
-		idIntro.setText(Messages.XMLImportDialog_4);
-		idIntro.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
-				true, false, 4, 1));
-
-		sourceIdText = new Text(idGroup, SWT.SINGLE | SWT.BORDER);
-		sourceIdText.setText(Messages.XMLImportDialog_5);
-		sourceIdText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
-				false, false, 4, 1));
 
 		// Operations of database (update,insert,delete)
 
@@ -346,23 +331,6 @@ public class XMLImportDialog extends Dialog {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private boolean checkIfFilesExist(ZipFile zipFile) {
-		Enumeration enumeration = zipFile.entries();
-		while (enumeration.hasMoreElements()) {
-			ZipEntry zipEntry = (ZipEntry) enumeration.nextElement();
-			if ((!zipEntry.getName().equals("data.xml"))
-					&& (!zipEntry.getName().equals("mapping.xml"))) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private void saveInput() {
-		sourceId = sourceIdText.getText();
-	}
-
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -372,10 +340,6 @@ public class XMLImportDialog extends Dialog {
 	@Override
 	protected boolean isResizable() {
 		return true;
-	}
-
-	public String getSourceId() {
-		return sourceId;
 	}
 
 	public boolean getInsertState() {

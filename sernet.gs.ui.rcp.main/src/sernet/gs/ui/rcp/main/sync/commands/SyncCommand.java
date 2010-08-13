@@ -59,16 +59,13 @@ public class SyncCommand extends GenericCommand
 	 * to the {@link SyncRequest} object which unfortunately is not possible (through
 	 * default Spring HttpInvoker mechanism at least).</p>
 	 * 
-	 * @param sourceId
 	 * @param insert
 	 * @param update
 	 * @param delete
 	 * @param syncRequestSerialized
 	 */
-	public SyncCommand(String sourceId, boolean insert, boolean update, boolean delete, byte[] syncRequestSerialized)
+	public SyncCommand(boolean insert, boolean update, boolean delete, byte[] syncRequestSerialized)
 	{
-		this.sourceId = sourceId;
-		
 		this.insert = insert;
 		this.update = update;
 		this.delete = delete;
@@ -80,16 +77,13 @@ public class SyncCommand extends GenericCommand
 	 * Works like {@link #SyncCommand(String, boolean, boolean, boolean, byte[])} but does the JAXB serialization
 	 * under the hood automatically.
 	 * 
-	 * @param sourceId
 	 * @param insert
 	 * @param update
 	 * @param delete
 	 * @param sr
 	 */
-	public SyncCommand(String sourceId, boolean insert, boolean update, boolean delete, SyncRequest sr)
+	public SyncCommand(boolean insert, boolean update, boolean delete, SyncRequest sr)
 	{
-		this.sourceId = sourceId;
-		
 		this.insert = insert;
 		this.update = update;
 		this.delete = delete;
@@ -120,6 +114,7 @@ public class SyncCommand extends GenericCommand
 		if (syncRequestSerialized != null)
 		{
 			SyncRequest sr = (SyncRequest) JAXB.unmarshal(new ByteArrayInputStream(syncRequestSerialized), SyncRequest.class);
+			sourceId = sr.getSourceId();
 			syncData = sr.getSyncData();
 			syncMapping = sr.getSyncMapping();
 		} else if (syncData == null || syncMapping == null)

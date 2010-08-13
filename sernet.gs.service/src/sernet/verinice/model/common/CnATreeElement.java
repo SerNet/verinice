@@ -262,7 +262,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 	
 	public String getId() {
-		return ENTITY_TITLE + getEntity().getDbId();
+		if (getEntity() == null)
+			return ENTITY_TITLE + getUuid();
+		else
+			return ENTITY_TITLE + getEntity().getDbId();
 	}
 
 	public abstract String getTypeId();
