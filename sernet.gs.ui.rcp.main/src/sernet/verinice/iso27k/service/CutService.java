@@ -30,6 +30,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.iso27k.rcp.RcpProgressObserver;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
@@ -41,25 +42,25 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class CutService {
+public class CutService extends PasteService implements IProgressTask {
 	
 	private final Logger log = Logger.getLogger(CutService.class);
 	
-	private ICommandService commandService;
-	
-	private IProgressObserver progressObserver;
-	
-	private CnATreeElement selectedGroup;
-	
-	private int numberOfElements;
-	
 	private int numberProcessed;
-
-	private List<CnATreeElement> elements;
 	
-	public int getNumberOfElements() {
-		return numberOfElements;
-	}
+	   /**
+     * Creates a new CopyService
+     * 
+     * @param progressObserver used to monitor the job process
+     * @param group an element group, elements are copied to this group
+     * @param elementList a list of elements
+     */
+    @SuppressWarnings("unchecked")
+    public CutService(CnATreeElement group, List<CnATreeElement> elementList) {
+        progressObserver = new DummyProgressObserver();
+        this.selectedGroup = group;
+        this.elements = elementList;    
+    }
 	
 	/**
 	 * Creates a new CutService
@@ -139,36 +140,6 @@ public class CutService {
 		return element;
 	}
 
-	private List<CnATreeElement> createInsertList(List<CnATreeElement> elementDragList) {
-		List<CnATreeElement> tempList = new ArrayList<CnATreeElement>();
-		List<CnATreeElement> insertList = new ArrayList<CnATreeElement>();
-		int depth = 0;
-		int removed = 0;
-		for (CnATreeElement item : elementDragList) {
-			createInsertList(item,tempList,insertList, depth, removed);
-		}
-		this.numberOfElements = tempList.size() - removed;
-		return insertList;
-	}
-
-	private void createInsertList(CnATreeElement element, List<CnATreeElement> tempList, List<CnATreeElement> insertList, int depth, int removed) {
-		if(!tempList.contains(element)) {
-			tempList.add(element);
-			if(depth==0) {
-				insertList.add(element);
-			}
-			if(element instanceof IISO27kGroup && element.getChildren()!=null) {
-				depth++;
-				element = Retriever.checkRetrieveChildren(element);
-				for (CnATreeElement child : element.getChildren()) {
-					createInsertList(child,tempList,insertList,depth,removed);
-				}
-			}
-		} else {
-			insertList.remove(element);
-			removed++;
-		}
-	}
 
 	/**
 	 * @param n
@@ -179,15 +150,4 @@ public class CutService {
 		return Messages.getString("CutService.2", i, n, title);
 	}
 
-
-	public ICommandService getCommandService() {
-		if (commandService == null) {
-			commandService = createCommandServive();
-		}
-		return commandService;
-	}
-
-	private ICommandService createCommandServive() {
-		return ServiceFactory.lookupCommandService();
-	}
 }

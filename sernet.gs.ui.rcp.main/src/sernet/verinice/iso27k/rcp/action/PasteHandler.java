@@ -30,7 +30,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
@@ -43,7 +42,6 @@ import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.iso27k.rcp.CopyTreeElements;
 import sernet.verinice.iso27k.rcp.CutOperation;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 
@@ -95,6 +93,8 @@ public class PasteHandler extends AbstractHandler {
 			}
 		}
 	}
+	
+	
 
 	private void cut(IStructuredSelection sel, List cutList) throws InvocationTargetException, InterruptedException {
 		if(cutList.get(0) instanceof CnATreeElement 

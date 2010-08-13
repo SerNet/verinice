@@ -24,7 +24,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.hibernate.LazyInitializationException;
 
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;

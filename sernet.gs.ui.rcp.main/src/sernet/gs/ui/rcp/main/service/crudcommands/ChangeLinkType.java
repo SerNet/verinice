@@ -31,6 +31,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnALink.Id;
+import sernet.verinice.service.commands.CreateLink;
 
 /**
  * Changes the link type. Because links are immutable, the link will be deleted and inserted again with new link type.

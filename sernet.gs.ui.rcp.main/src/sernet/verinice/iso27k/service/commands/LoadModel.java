@@ -20,7 +20,7 @@ package sernet.verinice.iso27k.service.commands;
 import java.util.List;
 import java.util.Set;
 
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;

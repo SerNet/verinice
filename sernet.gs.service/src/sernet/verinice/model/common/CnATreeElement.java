@@ -107,8 +107,17 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	private transient IBSIModelListener modelChangeListener;
 
 	// bi-directional qualified link list between items:
+	
+	/**
+	 * dependant in linksDown is this {@link CnATreeElement}
+	 */
 	private Set<CnALink> linksDown = new HashSet<CnALink>(1);
+	
+	/**
+	 * dependency in linksUp is this {@link CnATreeElement}
+	 */
 	private Set<CnALink> linksUp = new HashSet<CnALink>(1);
+	
 	private LinkKategorie links = new LinkKategorie(this);
 
 	private Set<CnATreeElement> children;
@@ -308,6 +317,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		return false;
 	}
 
+	
+	/**
+     * dependant in linksDown is this {@link CnATreeElement}
+     *
+     * @return
+     */
 	public Set<CnALink> getLinksDown() {
 		return linksDown;
 	}
@@ -316,6 +331,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		this.linksDown = linkDown;
 	}
 
+	/**
+     * dependency in linksDown is this {@link CnATreeElement}
+     *
+     * @return
+     */
 	public Set<CnALink> getLinksUp() {
 		return linksUp;
 	}

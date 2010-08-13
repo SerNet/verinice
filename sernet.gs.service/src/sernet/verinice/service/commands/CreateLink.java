@@ -15,16 +15,14 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -50,10 +48,10 @@ extends GenericCommand {
         return log;
     }
 
-    private U target;
-	private V dragged;
+    private U dependant;
+	private V dependancy;
 	private CnALink link;
-	private String typeId;
+	private String relationId;
 	private String comment;
 
 	public CreateLink(U target, V dragged) {
@@ -64,41 +62,41 @@ extends GenericCommand {
 		this(target, dragged, typeId, "");
 	}
 	
-	public CreateLink(U target, V dragged, String typeId, String comment) {
-		this.target = target;
-		this.dragged = dragged;
-		this.typeId = typeId;
+	public CreateLink(U dependant, V dependancy, String relationId, String comment) {
+		this.dependant = dependant;
+		this.dependancy = dependancy;
+		this.relationId = relationId;
 		this.comment = comment;
 	}
 	
 	public void execute() {
 	    if (getLog().isDebugEnabled()) {
-            getLog().debug("Creating link from " + dragged.getTypeId() + " to " + target.getTypeId());
+            getLog().debug("Creating link from " + dependancy.getTypeId() + " to " + dependant.getTypeId());
         }
 	    
 		IBaseDao<CnALink, Serializable> linkDao 
 			= (IBaseDao<CnALink, Serializable>) getDaoFactory().getDAO(CnALink.class);
 		
 		IBaseDao<U, Serializable> targetDao 
-		= (IBaseDao<U, Serializable>) getDaoFactory().getDAO(target.getTypeId());
+		= (IBaseDao<U, Serializable>) getDaoFactory().getDAO(dependant.getTypeId());
 
 		IBaseDao<V, Serializable> draggedDao 
-		= (IBaseDao<V, Serializable>) getDaoFactory().getDAO(dragged.getTypeId());
+		= (IBaseDao<V, Serializable>) getDaoFactory().getDAO(dependancy.getTypeId());
 
-//		// if dragged or target are cglib enhanced, we won't get a DAO, but in this case we don't need to reload
+//		// if dependancy or dependant are cglib enhanced, we won't get a DAO, but in this case we don't need to reload
 //		// because we're already inside the session:
 //		if (draggedDao != null && targetDao != null) {
-//			draggedDao.reload(dragged, dragged.getDbId());
-//			targetDao.reload(target, target.getDbId());
+//			draggedDao.reload(dependancy, dependancy.getDbId());
+//			targetDao.reload(dependant, dependant.getDbId());
 //		}
-		dragged = draggedDao.findById(dragged.getDbId());
-		target = targetDao.findById(target.getDbId());
+		dependancy = draggedDao.findById(dependancy.getDbId());
+		dependant = targetDao.findById(dependant.getDbId());
 		
-		link = new CnALink(target, dragged, typeId, comment);
+		link = new CnALink(dependant, dependancy, relationId, comment);
 		try {
 		    linkDao.merge(link, true);
         } catch (Exception e) {
-            getLog().error("Could not create link from " + dragged.getTypeId() + " to " + target.getTypeId() );
+            getLog().error("Could not create link from " + dependancy.getTypeId() + " to " + dependant.getTypeId() );
         }
 		
 	}

@@ -22,17 +22,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -42,9 +38,6 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
-import sernet.gs.ui.rcp.main.bsi.views.AuditView;
-import sernet.gs.ui.rcp.main.bsi.views.TodoView;
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -58,7 +51,6 @@ import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
-import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**

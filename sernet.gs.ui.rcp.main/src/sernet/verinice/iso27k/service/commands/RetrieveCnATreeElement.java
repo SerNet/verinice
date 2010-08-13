@@ -21,7 +21,7 @@ package sernet.verinice.iso27k.service.commands;
 
 import java.io.Serializable;
 
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;

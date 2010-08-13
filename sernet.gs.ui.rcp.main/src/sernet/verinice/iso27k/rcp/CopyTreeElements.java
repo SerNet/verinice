@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import sernet.verinice.iso27k.service.CopyService;
 import sernet.verinice.iso27k.service.IProgressObserver;
+import sernet.verinice.iso27k.service.IProgressTask;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.IProgressRunnable;
 
@@ -42,7 +43,7 @@ public class CopyTreeElements implements IProgressRunnable {
 
 	private IProgressObserver progressObserver;
 	
-	private CopyService service;
+	private IProgressTask service;
 	
 	private CnATreeElement selectedGroup;
 
@@ -75,5 +76,15 @@ public class CopyTreeElements implements IProgressRunnable {
 		}
 		return n;
 	}
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.IProgressRunnable#openInformation()
+     */
+    @Override
+    public void openInformation() {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

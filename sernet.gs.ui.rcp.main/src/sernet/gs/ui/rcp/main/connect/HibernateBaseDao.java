@@ -28,6 +28,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IRetrieveInfo;
 import sernet.verinice.model.common.CascadingTransaction;
@@ -123,13 +124,21 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
         // return (T) getHibernateTemplate().load(type, id);
         return retrieve(id, (new RetrieveInfo()).setProperties(true));
     }
+    
+    public T findByUuid(String uuid, IRetrieveInfo ri) {
+        if (ri == null) {
+            ri = new RetrieveInfo();
+        }
+        DetachedCriteria criteria = DetachedCriteria.forClass(type);
+        criteria.add(Restrictions.eq("uuid", uuid));
+        configureCriteria(criteria, ri);
+        return loadByCriteria(criteria);
+    }
 
     public T retrieve(ID id, IRetrieveInfo ri) {
-        // akoderman this eats too much performance, since we currently ship
-        // verinice with log level set to 'debug' I commented it out:
-        // if(log.isDebugEnabled()) {
-        // log.debug("retrieve - id: " + id + " " + ri);
-        // }
+        if(log.isDebugEnabled()) {
+            log.debug("retrieve - id: " + id + " " + ri);
+        }
         if (ri == null) {
             ri = new RetrieveInfo();
         }

@@ -19,25 +19,24 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
  * A CopyService is a job, which
@@ -46,7 +45,7 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class CopyService {
+public class CopyService extends PasteService implements IProgressTask {
 	
 	private final Logger log = Logger.getLogger(CopyService.class);
 	
@@ -56,21 +55,25 @@ public class CopyService {
 		BLACKLIST = Arrays.asList("riskanalysis","bstumsetzung","mnums"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
-	private ICommandService commandService;
-	
-	private IProgressObserver progressObserver;
-	
-	private CnATreeElement selectedGroup;
-	
-	private int numberOfElements;
-	
 	private int numberProcessed;
 
 	private List<CnATreeElement> elements;
 	
-	public int getNumberOfElements() {
-		return numberOfElements;
-	}
+	private List<CnATreeElement> copyElements;
+	
+	/**
+     * Creates a new CopyService
+     * 
+     * @param progressObserver used to monitor the job process
+     * @param group an element group, elements are copied to this group
+     * @param elementList a list of elements
+     */
+    @SuppressWarnings("unchecked")
+    public CopyService(CnATreeElement group, List<CnATreeElement> elementList) {
+        progressObserver = new DummyProgressObserver();
+        this.selectedGroup = group;
+        this.elements = elementList;    
+    }
 	
 	/**
 	 * Creates a new CopyService
@@ -86,21 +89,25 @@ public class CopyService {
 		this.elements = elementList;	
 	}
 
-	/**
-	 * Starts the execution of the copy job.
-	 */
+	/* (non-Javadoc)
+     * @see sernet.verinice.iso27k.service.IProgressTask#run()
+     */
 	public void run()  {
 		try {	
 			Activator.inheritVeriniceContextState();
 			this.numberOfElements = 0;
-			List<CnATreeElement> elementList = createInsertList(elements);	
+			copyElements = createInsertList(elements);
 			progressObserver.beginTask(Messages.getString("CopyService.1",numberOfElements), numberOfElements);		
-			numberProcessed = 0;
-			for (CnATreeElement element : elementList) {			
-				CnATreeElement elementCopy = insertCopy(progressObserver, selectedGroup, element);
+			Map<String, String> sourceDestMap = new Hashtable<String, String>();
+            numberProcessed = 0;
+			for (CnATreeElement element : copyElements) {	    
+				CnATreeElement elementCopy = copy(progressObserver, selectedGroup, element, sourceDestMap);
 				CnAElementFactory.getModel(elementCopy).childAdded(selectedGroup, elementCopy);
 				CnAElementFactory.getModel(elementCopy).databaseChildAdded(elementCopy);
-			}		
+			}	
+			for (IPostProcessor postProcessor : getPostProcessorList()) {
+			    postProcessor.process(sourceDestMap);
+            }
 		} catch (Exception e) {
 			log.error("Error while copying element", e); //$NON-NLS-1$
 			throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$
@@ -113,10 +120,11 @@ public class CopyService {
 	 * @param monitor
 	 * @param group 
 	 * @param element
+	 * @param sourceDestMap 
 	 * @throws Exception 
 	 */
 	@SuppressWarnings("unchecked")
-	private CnATreeElement insertCopy(IProgressObserver monitor, CnATreeElement group, CnATreeElement element) throws Exception {
+	private CnATreeElement copy(IProgressObserver monitor, CnATreeElement group, CnATreeElement element, Map<String, String> sourceDestMap) throws Exception {
 		if(monitor.isCanceled()) {
 			log.warn("Copying canceled. " + numberProcessed + " of " + numberOfElements + " elements copied."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return null;
@@ -128,12 +136,13 @@ public class CopyService {
 			&& group.canContain(element)) {
 			element = Retriever.retrieveElement(element, RetrieveInfo.getPropertyChildrenInstance());
 			monitor.setTaskName(getText(numberOfElements,numberProcessed,element.getTitle()));
-			elementCopy = copyElement(group, element);
+			elementCopy = saveCopy(group, element);
+			sourceDestMap.put(element.getUuid(), elementCopy.getUuid());
 			monitor.processed(1);
 			numberProcessed++;
 			if(element.getChildren()!=null) {
 				for (CnATreeElement child : element.getChildren()) {
-					insertCopy(monitor,elementCopy,child);
+					copy(monitor,elementCopy,child,sourceDestMap);
 				}
 			}
 		} else {
@@ -143,17 +152,25 @@ public class CopyService {
 	}
 
 	/**
+	 * @param sourceDestMap 
 	 * @param element 
 	 * @param element
 	 * @return
 	 * @throws Exception 
 	 */
-	private CnATreeElement copyElement(CnATreeElement toGroup, CnATreeElement copyElement) throws Exception {
-		CnATreeElement newElement = CnAElementFactory.getInstance().saveNew(toGroup, copyElement.getTypeId(), null, false);
+	private CnATreeElement saveCopy(CnATreeElement toGroup, CnATreeElement copyElement) throws Exception {
+		CnATreeElement newElement = null;
+		if(Audit.TYPE_ID.equals(copyElement.getTypeId())) {
+		    newElement = CnAElementFactory.getInstance().saveNewAudit(toGroup, false, false);
+		} else {
+		    newElement = CnAElementFactory.getInstance().saveNew(toGroup, copyElement.getTypeId(), null, false);
+		}
 		newElement.getEntity().copyEntity(copyElement.getEntity());
 		if(toGroup.getChildren()!=null && toGroup.getChildren().size()>0) {
 			String title = newElement.getTitle();
-			newElement.setTitel(getUniqueTitle(title, title, toGroup.getChildren(), 0));
+			Set<CnATreeElement> siblings = toGroup.getChildren();
+			siblings.remove(newElement);
+			newElement.setTitel(getUniqueTitle(title, title, siblings, 0));
 		}
 		SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(newElement);
 		saveCommand = getCommandService().executeCommand(saveCommand);
@@ -178,7 +195,7 @@ public class CopyService {
 		String result = copyTitle;
 		for (CnATreeElement cnATreeElement : siblings) {
 			cnATreeElement = Retriever.retrieveElement(cnATreeElement,RetrieveInfo.getPropertyInstance());
-			if(cnATreeElement.getTitle()!=null && (cnATreeElement.getTitle().equals(copyTitle)) ) {
+			if(cnATreeElement!=null && cnATreeElement.getTitle()!=null && (cnATreeElement.getTitle().equals(copyTitle)) ) {
 				n++;
 				return getUniqueTitle(title, getCopyTitle(title, n), siblings, n);
 			}
@@ -191,37 +208,6 @@ public class CopyService {
 		return sb.append(title).append(" ").append(Messages.getString("CopyService.3", n)).toString();
 	}
 
-	private List<CnATreeElement> createInsertList(List<CnATreeElement> elementDragList) {
-		List<CnATreeElement> tempList = new ArrayList<CnATreeElement>();
-		List<CnATreeElement> insertList = new ArrayList<CnATreeElement>();
-		int depth = 0;
-		int removed = 0;
-		for (CnATreeElement item : elementDragList) {
-			createInsertList(item,tempList,insertList, depth, removed);
-		}
-		this.numberOfElements = tempList.size() - removed;
-		return insertList;
-	}
-
-	private void createInsertList(CnATreeElement element, List<CnATreeElement> tempList, List<CnATreeElement> insertList, int depth, int removed) {
-		if(!tempList.contains(element)) {
-			tempList.add(element);
-			if(depth==0) {
-				insertList.add(element);
-			}
-			if(element instanceof IISO27kGroup && element.getChildren()!=null) {
-				depth++;
-				element = Retriever.checkRetrieveChildren(element);
-				for (CnATreeElement child : element.getChildren()) {
-					createInsertList(child,tempList,insertList,depth,removed);
-				}
-			}
-		} else {
-			insertList.remove(element);
-			removed++;
-		}
-	}
-
 	/**
 	 * @param n
 	 * @param i
@@ -231,15 +217,8 @@ public class CopyService {
         return Messages.getString("CopyService.2", i, n, title);
 	}
 
-
-	public ICommandService getCommandService() {
-		if (commandService == null) {
-			commandService = createCommandServive();
-		}
-		return commandService;
-	}
-
-	private ICommandService createCommandServive() {
-		return ServiceFactory.lookupCommandService();
-	}
+    protected List<CnATreeElement> getCopyElements() {
+        return copyElements;
+    }
+	
 }

@@ -34,6 +34,8 @@ public interface IBaseDao<T, ID extends Serializable> {
 	public void delete(T entity);
 
 	public T findById(ID id);
+	
+	public T findByUuid(String uuid, IRetrieveInfo ri);
 
 	public T retrieve(ID id, IRetrieveInfo ri);
 

@@ -15,7 +15,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.connect;
+package sernet.gs.service;
 
 import java.io.Serializable;
 

@@ -22,7 +22,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;

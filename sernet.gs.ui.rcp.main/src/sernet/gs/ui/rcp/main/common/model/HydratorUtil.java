@@ -25,7 +25,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.connect.RetrieveInfo;
+import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;

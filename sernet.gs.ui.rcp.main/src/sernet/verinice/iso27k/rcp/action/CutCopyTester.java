@@ -33,9 +33,9 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class GroupTester extends PropertyTester {
+public class CutCopyTester extends PropertyTester {
 
-	private static final Logger LOG = Logger.getLogger(GroupTester.class);
+	private static final Logger LOG = Logger.getLogger(CutCopyTester.class);
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
@@ -46,40 +46,9 @@ public class GroupTester extends PropertyTester {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Testing target: " + selectedElement);
 		}
-		boolean enabled = true;
 		List copyList = CnPItems.getCopyItems();
 		List cutList = CnPItems.getCutItems();
-		List activeList = Collections.EMPTY_LIST;
-		
-		if(!copyList.isEmpty()) {
-			activeList = copyList;
-		} else if(!cutList.isEmpty()) {
-			activeList = cutList;
-		}
-		for (Object object : activeList) {
-			if(!selectedElement.canContain(object)) {
-				enabled = false;
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("target can not cantain object: " + object);
-				}
-				break;
-			}
-			if(object instanceof CnATreeElement) {
-				CnATreeElement element = (CnATreeElement) object;
-				if(CopyService.BLACKLIST.contains(element.getTypeId())) {
-					enabled = false;
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("object is in blacklist: " + object);
-					}
-					break;
-				}
-			}
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Cut/Copy of element ok: " + object);
-			}
-		}
-		
-		return enabled;
+		return ((copyList!=null && copyList.size()>0) || (cutList!=null && cutList.size()>0));
 	}
 
 }

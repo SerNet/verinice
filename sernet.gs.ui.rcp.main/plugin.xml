@@ -957,7 +957,8 @@
             	<with variable="selection">
 	                <iterate operator="and">
 	                    <instanceof value="sernet.verinice.model.common.CnATreeElement"/>
-	                    <test property="sernet.verinice.iso27k.model.canContain"/>       
+	                    <test property="sernet.verinice.iso27k.model.canContain"/>
+	                    <test property="sernet.verinice.iso27k.model.cutCopy"/>              
 	                </iterate>
             	</with>
 		 </enabledWhen>
@@ -974,13 +975,18 @@
    </extension>
    <extension point="org.eclipse.core.expressions.propertyTesters">
 	   <propertyTester
+	         id="sernet.verinice.iso27k.rcp.action.CutCopyTester"
+	         class="sernet.verinice.iso27k.rcp.action.CutCopyTester"
+	         type="sernet.verinice.model.common.CnATreeElement"
+	         namespace="sernet.verinice.iso27k.model"
+	         properties="cutCopy" />
+	   <propertyTester
 	         id="sernet.verinice.iso27k.rcp.action.GroupTester"
 	         class="sernet.verinice.iso27k.rcp.action.GroupTester"
 	         type="sernet.verinice.model.common.CnATreeElement"
 	         namespace="sernet.verinice.iso27k.model"
-	         properties="canContain">
-	   </propertyTester>
-	</extension>
+	         properties="canContain" />
+   </extension>
    <extension
          point="org.eclipse.ui.startup">
       <startup class="sernet.verinice.rcp.PerspectiveSwitcher" />

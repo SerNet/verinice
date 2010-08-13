@@ -536,6 +536,38 @@ public class CnAElementFactory {
 			instance = new CnAElementFactory();
 		return instance;
 	}
+	
+	/**
+     * Create new BSI element with new HUI Entity. The HUI Entity will be added
+     * to the given container.
+     * 
+     * @param container
+     * @return the newly added element
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public CnATreeElement saveNewAudit(CnATreeElement container, boolean createChildren,  boolean fireUpdates) throws Exception {
+        IElementBuilder builder = elementbuilders.get(Audit.TYPE_ID);
+        if (builder == null) {
+            throw new Exception(Messages.getString("CnAElementFactory.0") + Audit.TYPE_ID); //$NON-NLS-1$
+        }
+        CnATreeElement child = builder.build(container, null);
+
+        // notify all listeners:
+        if (fireUpdates) {
+            CnAElementFactory.getModel(child).childAdded(container, child);
+            CnAElementFactory.getModel(child).databaseChildAdded(child);
+        }
+        if(createChildren) {
+            CnAElementFactory.getInstance().saveNew(child, AssetGroup.TYPE_ID, null);
+            CnAElementFactory.getInstance().saveNew(child, ControlGroup.TYPE_ID, null);
+            CnAElementFactory.getInstance().saveNew(child, PersonGroup.TYPE_ID, null);
+            CnAElementFactory.getInstance().saveNew(child, FindingGroup.TYPE_ID, null);
+            CnAElementFactory.getInstance().saveNew(child, EvidenceGroup.TYPE_ID, null);
+            CnAElementFactory.getInstance().saveNew(child, InterviewGroup.TYPE_ID, null);
+        }
+        return child;
+    }
 
 	/**
 	 * Create new BSI element with new HUI Entity. The HUI Entity will be added

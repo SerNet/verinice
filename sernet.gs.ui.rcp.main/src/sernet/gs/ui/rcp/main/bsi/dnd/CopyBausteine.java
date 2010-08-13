@@ -94,4 +94,14 @@ public class CopyBausteine implements IProgressRunnable {
 		return n;
 	}
 
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.IProgressRunnable#openInformation()
+     */
+    @Override
+    public void openInformation() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

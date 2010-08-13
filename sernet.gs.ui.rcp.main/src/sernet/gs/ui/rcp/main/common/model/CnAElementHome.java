@@ -36,7 +36,6 @@ import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.CreateLink;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
@@ -73,6 +72,7 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.service.commands.CreateLink;
 
 /**
  * DAO class for model objects. Uses Hibernate as persistence framework.

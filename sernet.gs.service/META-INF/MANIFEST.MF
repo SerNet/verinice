@@ -36,6 +36,7 @@ Export-Package: de.sernet.sync.data,
  sernet.verinice.model.ds,
  sernet.verinice.model.iso27k;uses:="sernet.gs.ui.rcp.main.common.model",
  sernet.verinice.model.samt,
+ sernet.verinice.service.commands,
  sernet.verinice.service.iso27k
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
