@@ -113,13 +113,14 @@ public class ExportCommand extends GenericCommand
 		 * given CnATreeElement to <syncData>: 
 		 *+++++++++++++++++++++++++++++++++++++++*/
 		Set<EntityType> exportedEntityTypes = new HashSet<EntityType>();
+		Set<String> exportedTypes = new HashSet<String>();
 		for( CnATreeElement element : elements )
 		{
-			export(sd.getSyncObject(), element, timestamp, exportedEntityTypes);
+			export(sd.getSyncObject(), element, timestamp, exportedEntityTypes, exportedTypes);
 		}
 		sd.getSyncObject().addAll(orphaneList);
 		
-		/* Adds SynMapping for all EntityTypes that have been exported. This
+		/* Adds SyncMapping for all EntityTypes that have been exported. This
 		 * is going to be an identity mapping.
 		 */
 		for (EntityType entityType : exportedEntityTypes)
@@ -132,7 +133,7 @@ public class ExportCommand extends GenericCommand
 			mapObjectType.setExtId(entityType.getId());
 			
 			List<MapAttributeType> mapAttributeTypes = mapObjectType.getMapAttributeType();
-			for (PropertyType propertyType : entityType.getPropertyTypes())
+			for (PropertyType propertyType : entityType.getAllPropertyTypes())
 			{
 				// Add <mapAttributeType> for this property type to current <mapObjectType>:
 				MapAttributeType mapAttributeType = new MapAttributeType();
@@ -142,6 +143,17 @@ public class ExportCommand extends GenericCommand
 				
 				mapAttributeTypes.add(mapAttributeType);
 			}
+			
+			mapObjectTypeList.add(mapObjectType);
+		}
+		
+		// For all exported objects that had no entity type (e.g. category objects)
+		// we create a simple 1-to-1 mapping using their type id.
+		for (String typeId : exportedTypes)
+		{
+			MapObjectType mapObjectType = new MapObjectType();
+			mapObjectType.setIntId(typeId);
+			mapObjectType.setExtId(typeId);
 			
 			mapObjectTypeList.add(mapObjectType);
 		}
@@ -163,7 +175,7 @@ public class ExportCommand extends GenericCommand
 	 * @param cnATreeElement
 	 * @return List<Element>
 	 */
-	private void export(List<SyncObject> list, CnATreeElement cnATreeElement, String timestamp, Set<EntityType> exportedEntityTypes)
+	private void export(List<SyncObject> list, CnATreeElement cnATreeElement, String timestamp, Set<EntityType> exportedEntityTypes, Set<String> exportedTypes)
 	{		
 		hydrate( cnATreeElement );
 		
@@ -179,12 +191,6 @@ public class ExportCommand extends GenericCommand
 		if ((exportedObjectIDs.get( cnATreeElement.getId()) == null )
 				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(typeId) != null) )
 		{
-			// Add the elements EntityType to the set of exported EntityTypes in order to
-			// use it for the mapping generation later on.
-			EntityType et = HUITypeFactory.getInstance().getEntityType(typeId);
-			if (et != null)
-				exportedEntityTypes.add(et);
-			
 			SyncObject syncObject = new SyncObject();
 			syncObject.setExtId(cnATreeElement.getId());
 			syncObject.setExtObjectType(typeId);
@@ -214,6 +220,16 @@ public class ExportCommand extends GenericCommand
 						attributes.add(syncAttribute);
 					}
 				}
+				
+				// Add the elements EntityType to the set of exported EntityTypes in order to
+				// use it for the mapping generation later on.
+				exportedEntityTypes.add(cnATreeElement.getEntityType());
+			}
+			else
+			{
+				// Instance has no EntityType. This is fine but still some mapping
+				// information is needed. We save the typeId for later then.
+				exportedTypes.add(typeId);
 			}
 
 			list.add(syncObject);
@@ -230,7 +246,7 @@ public class ExportCommand extends GenericCommand
 		
 		for( CnATreeElement child : children )
 		{
-			export(targetList, child, timestamp, exportedEntityTypes);
+			export(targetList, child, timestamp, exportedEntityTypes, exportedTypes);
 		}
 	}
 	

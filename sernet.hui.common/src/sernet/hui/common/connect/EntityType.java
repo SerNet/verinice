@@ -63,6 +63,21 @@ public class EntityType {
 		types.addAll(propertyTypes.values());
 		return types;
 	}
+	
+	/** Retrieves this {@link EntityType}'s property types and those
+	 * of all its {@link PropertyGroup}s.
+	 * 
+	 * @return
+	 */
+	public List<PropertyType> getAllPropertyTypes() {
+		List<PropertyType> types = getPropertyTypes();
+		for (PropertyGroup pg : propertyGroups)
+		{
+			types.addAll(pg.getPropertyTypes());
+		}
+		
+		return types;
+	}
 
 	public List<IEntityElement> getElements() {
 		return elements;

@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
@@ -41,6 +40,7 @@ import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
@@ -55,6 +55,11 @@ import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ImportedObjectsHolder;
+import sernet.verinice.model.ds.Datenverarbeitung;
+import sernet.verinice.model.ds.Personengruppen;
+import sernet.verinice.model.ds.StellungnahmeDSB;
+import sernet.verinice.model.ds.VerantwortlicheStelle;
+import sernet.verinice.model.ds.Verarbeitungsangaben;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.data.SyncObject;
 import de.sernet.sync.data.SyncObject.SyncAttribute;
@@ -69,16 +74,6 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 	private static HashMap<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<String, Class<? extends CnATreeElement>>();
 
 	static {
-		containerTypes.put(Anwendung.TYPE_ID, AnwendungenKategorie.TYPE_ID);
-		containerTypes.put(Client.TYPE_ID, ClientsKategorie.TYPE_ID);
-		containerTypes.put(Gebaeude.TYPE_ID, GebaeudeKategorie.TYPE_ID);
-		containerTypes.put(NetzKomponente.TYPE_ID, NKKategorie.TYPE_ID);
-		containerTypes.put(Person.TYPE_ID, PersonenKategorie.TYPE_ID);
-		containerTypes.put(Raum.TYPE_ID, RaeumeKategorie.TYPE_ID);
-		containerTypes.put(Server.TYPE_ID, ServerKategorie.TYPE_ID);
-		containerTypes.put(SonstIT.TYPE_ID, SonstigeITKategorie.TYPE_ID);
-		containerTypes.put(TelefonKomponente.TYPE_ID, TKKategorie.TYPE_ID);
-
 		typeIdClass.put(Anwendung.TYPE_ID, Anwendung.class);
 		typeIdClass.put(Gebaeude.TYPE_ID, Gebaeude.class);
 		typeIdClass.put(Client.TYPE_ID, Client.class);
@@ -99,6 +94,12 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 		typeIdClass.put(RaeumeKategorie.TYPE_ID, RaeumeKategorie.class);
 		typeIdClass.put(BausteinUmsetzung.TYPE_ID, BausteinUmsetzung.class);
 		typeIdClass.put(ITVerbund.TYPE_ID, ITVerbund.class);
+		typeIdClass.put(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.class);
+		typeIdClass.put(Verarbeitungsangaben.TYPE_ID, Verarbeitungsangaben.class);
+		typeIdClass.put(Personengruppen.TYPE_ID, Personengruppen.class);
+		typeIdClass.put(VerantwortlicheStelle.TYPE_ID, VerantwortlicheStelle.class);
+		typeIdClass.put(StellungnahmeDSB.TYPE_ID, StellungnahmeDSB.class);
+		typeIdClass.put(Datenverarbeitung.TYPE_ID, Datenverarbeitung.class);
 	}
 
 	private String sourceId;
@@ -353,14 +354,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 	 ************************************************************/
 	private CnATreeElement findContainerFor(CnATreeElement root,
 			String veriniceObjectType) {
-
-		// TODO: Not sure if this is necessary
-		if (root instanceof ITVerbund)
-		{
-			String containerType = containerTypes.get(veriniceObjectType);
-			return ((ITVerbund) root).getCategory(containerType);
-		}
-		
+	
 		// If in doubt the root for imported objects should always be used.
 		return root;
 	}
