@@ -63,6 +63,7 @@ import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.ImportedObjectsHolder;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Asset;
@@ -332,6 +333,10 @@ public class CnAElementHome {
      * @return
      */
     public boolean isDeleteAllowed(CnATreeElement cte) {
+        if (cte instanceof ImportedObjectsHolder) {
+            return true;
+        }
+        
         // Category objects cannot be deleted.
         if (cte instanceof IBSIStrukturKategorie) {
             return false;

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
@@ -34,6 +35,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
@@ -64,7 +66,7 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 public class SyncInsertUpdateCommand extends GenericCommand {
 
 	private static HashMap<String, String> containerTypes = new HashMap<String, String>();
-	private static HashMap<String, Class> typeIdClass = new HashMap<String, Class>();
+	private static HashMap<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<String, Class<? extends CnATreeElement>>();
 
 	static {
 		containerTypes.put(Anwendung.TYPE_ID, AnwendungenKategorie.TYPE_ID);
@@ -78,14 +80,25 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 		containerTypes.put(TelefonKomponente.TYPE_ID, TKKategorie.TYPE_ID);
 
 		typeIdClass.put(Anwendung.TYPE_ID, Anwendung.class);
-		typeIdClass.put(Client.TYPE_ID, Client.class);
 		typeIdClass.put(Gebaeude.TYPE_ID, Gebaeude.class);
-		typeIdClass.put(NetzKomponente.TYPE_ID, NetzKomponente.class);
-		typeIdClass.put(Person.TYPE_ID, Person.class);
-		typeIdClass.put(Raum.TYPE_ID, Raum.class);
+		typeIdClass.put(Client.TYPE_ID, Client.class);
 		typeIdClass.put(Server.TYPE_ID, Server.class);
 		typeIdClass.put(SonstIT.TYPE_ID, SonstIT.class);
+		typeIdClass.put(TelefonKomponente.TYPE_ID, TelefonKomponente.class);
+		typeIdClass.put(Person.TYPE_ID, Person.class);
+		typeIdClass.put(NetzKomponente.TYPE_ID, NetzKomponente.class);
+		typeIdClass.put(Raum.TYPE_ID, Raum.class);
+		typeIdClass.put(AnwendungenKategorie.TYPE_ID, AnwendungenKategorie.class);
+		typeIdClass.put(GebaeudeKategorie.TYPE_ID, GebaeudeKategorie.class);
+		typeIdClass.put(ClientsKategorie.TYPE_ID, ClientsKategorie.class);
+		typeIdClass.put(ServerKategorie.TYPE_ID, ServerKategorie.class);
+		typeIdClass.put(SonstigeITKategorie.TYPE_ID, SonstigeITKategorie.class);
 		typeIdClass.put(TKKategorie.TYPE_ID, TKKategorie.class);
+		typeIdClass.put(PersonenKategorie.TYPE_ID, PersonenKategorie.class);
+		typeIdClass.put(NKKategorie.TYPE_ID, NKKategorie.class);
+		typeIdClass.put(RaeumeKategorie.TYPE_ID, RaeumeKategorie.class);
+		typeIdClass.put(BausteinUmsetzung.TYPE_ID, BausteinUmsetzung.class);
+		typeIdClass.put(ITVerbund.TYPE_ID, ITVerbund.class);
 	}
 
 	private String sourceId;
@@ -224,7 +237,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 			try {
 				// create new object in db...
 				CreateElement<CnATreeElement> newElement = new CreateElement<CnATreeElement>(
-						container, getClassFromTypeId(veriniceObjectType));
+						container, getClassFromTypeId(veriniceObjectType), true);
 				getCommandService().executeCommand(
 						newElement);
 				elementInDB = newElement.getNewElement();
@@ -254,7 +267,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 				String attrExtId = sa.getName();
 				String attrValue = sa.getValue();
 				
-				MapAttributeType mat = getMapAttribute(mot, extObjectType);
+				MapAttributeType mat = getMapAttribute(mot, attrExtId);
 
 				if (mat == null)
 					this.errorList
@@ -358,7 +371,12 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 	 * @param typeId
 	 * @return the corresponding Class
 	 ************************************************************/
-	private Class getClassFromTypeId(String typeId) {
-		return typeIdClass.get(typeId);
+	@SuppressWarnings("unchecked")
+	private Class<CnATreeElement > getClassFromTypeId(String typeId) {
+		Class<CnATreeElement> klass = (Class<CnATreeElement>) typeIdClass.get(typeId);
+		if (klass == null)
+			throw new IllegalStateException(String.format("Type ID '%s' was not available in type map.", typeId));
+		
+		return klass;
 	}
 }

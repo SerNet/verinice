@@ -170,7 +170,10 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 	@SuppressWarnings("unchecked")//$NON-NLS-1$
 	public List<ITVerbund> getItverbuende() {
 		List itvs = new ArrayList<ITVerbund>();
-		itvs.addAll(getChildren());
+		for (CnATreeElement c : getChildren())
+			if (c.getTypeId() == ITVerbund.TYPE_ID)
+				itvs.add(c);
+		
 		return itvs;
 	}
 
