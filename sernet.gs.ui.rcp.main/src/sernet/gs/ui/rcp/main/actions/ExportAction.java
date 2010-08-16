@@ -27,8 +27,6 @@ import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.util.LinkedList;
 
-import javax.xml.bind.JAXB;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;

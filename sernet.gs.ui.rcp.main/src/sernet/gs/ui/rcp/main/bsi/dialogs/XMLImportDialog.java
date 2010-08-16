@@ -7,11 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import javax.xml.bind.JAXB;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,10 +35,11 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.sync.commands.SyncCommand;
 import sernet.verinice.interfaces.CommandException;
-import de.sernet.sync.sync.SyncRequest;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * 
@@ -107,6 +103,13 @@ public class XMLImportDialog extends Dialog {
 								} catch (CommandException e) {
 									throw new IllegalStateException(e);
 								}
+								
+								CnATreeElement importRootObject = command.getImportRootObject();
+								if (importRootObject != null)
+								{
+									CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
+								}
+
 							}
 						});
 			} catch (InvocationTargetException e) {
@@ -179,18 +182,6 @@ public class XMLImportDialog extends Dialog {
 		Label seperator = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
 		seperator.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
 				true, false, 5, 1));
-
-		// set ID
-
-		Group idGroup = new Group(container, SWT.NULL);
-		idGroup.setText(Messages.XMLImportDialog_3);
-		idGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
-				true, false, 5, 1));
-
-		layout = new GridLayout();
-		layout.numColumns = 4;
-		layout.makeColumnsEqualWidth = true;
-		idGroup.setLayout(layout);
 
 		// Operations of database (update,insert,delete)
 

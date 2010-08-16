@@ -30,19 +30,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link SyncObject }
-     * 
-     */
-    public SyncObject createSyncObject() {
-        return new SyncObject();
-    }
-
-    /**
      * Create an instance of {@link SyncData }
      * 
      */
     public SyncData createSyncData() {
         return new SyncData();
+    }
+
+    /**
+     * Create an instance of {@link SyncObject }
+     * 
+     */
+    public SyncObject createSyncObject() {
+        return new SyncObject();
     }
 
     /**

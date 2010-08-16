@@ -90,7 +90,6 @@ public class PropertyList implements Serializable, ITypedElement  {
 		properties.add(prop);
 	}
 	
-	
 	public Property getProperty(int idx)  {
 			if (properties != null && properties.size() > 0)
 				return properties.get(idx);

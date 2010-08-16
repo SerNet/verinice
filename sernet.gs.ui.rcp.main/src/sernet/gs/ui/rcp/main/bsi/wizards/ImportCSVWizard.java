@@ -104,7 +104,12 @@ public class ImportCSVWizard extends Wizard {
 			for (String tableElement : tableLine) {
 				SyncAttribute sa = new SyncAttribute();
 				sa.setName(columns[j]);
-				sa.setValue(tableElement);
+				
+				// TODO: Table element should actually be a list of values.
+				// With this approach the import will be fine but the CSV format
+				// will not have the ability to properly represent verinice's
+				// way of handling property values (which are lists internally).
+				sa.getValue().add(tableElement);
 
 				syncAttributes.add(sa);
 				j++;

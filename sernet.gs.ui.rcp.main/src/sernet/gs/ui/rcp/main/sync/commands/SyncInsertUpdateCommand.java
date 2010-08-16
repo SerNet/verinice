@@ -28,6 +28,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
 import sernet.gs.ui.rcp.main.sync.InvalidRequestException;
+import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -110,6 +111,8 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 	private List<String> errorList;
 
 	private int inserted = 0, updated = 0;
+	
+	private CnATreeElement importRootObject = null;
 
 	public int getUpdated() {
 		return updated;
@@ -150,46 +153,12 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 	 ************************************************************/
 	@SuppressWarnings("unchecked")
 	public void execute() {
-		LoadBSIModel cmdLoadBSIModel = new LoadBSIModel();
-
-		try {
-			cmdLoadBSIModel = ServiceFactory.lookupCommandService()
-					.executeCommand(cmdLoadBSIModel);
-		} catch (CommandException e) {
-			e.printStackTrace();
-			errorList.add("Fehler beim Ausführen von LoadBSIModel.");
-			return;
-		}
-
-		BSIModel model = cmdLoadBSIModel.getModel();
-
-		// Try to find an ITVerbund whose sourceId is that of the
-		// imported data.
-		List<ITVerbund> itVerbuende = model.getItverbuende();
-		CnATreeElement importRootObject = null;
-
-		for (ITVerbund v : itVerbuende)
-			if (v.getSourceId() != null && v.getSourceId().equals(sourceId))
-				importRootObject = v;
-		
-		// If no such object found then create an artificial root object
-		// to hold all imported objects.
-		if (importRootObject == null)
-			try {
-				ImportedObjectsHolder holder = new ImportedObjectsHolder(model);
-				getDaoFactory().getDAO(ImportedObjectsHolder.class).saveOrUpdate(holder);
-				importRootObject = holder;
-			} catch (Exception e1) {
-				throw new RuntimeCommandException(
-						"Fehler beim Anlegen des Behälters für importierte Objekte.");
-			}
-
 		for (SyncObject so : syncData.getSyncObject()) {
-			importObject(importRootObject, so);
+			importObject(null, so);
 		} // for <syncObject>
 	}
 	
-	private void importObject(CnATreeElement importRootObject, SyncObject so)
+	private void importObject(CnATreeElement parent, SyncObject so)
 	{
 		String extId = so.getExtId();
 		String extObjectType = so.getExtObjectType();
@@ -227,13 +196,16 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 				setAttributes = false;
 		}
 		
-		if (null == elementInDB && insert) // nothing found -> create new
-											// object, if "insert" flag is
-											// set:
+		// If no previous object was found in the database and the 'insert'
+		// flag is given, create a new object.
+		if (elementInDB == null && insert)
 		{
-			/*** INSERT: ***/
-			CnATreeElement container = findContainerFor(importRootObject,
-					veriniceObjectType);
+			// Each new object needs a parent. The top-level element(s) in the import
+			// set might not automatically have one. For those objects it is neccessary
+			// to use the 'import root object' instead.
+			CnATreeElement container = (parent == null)
+				? accessRootImportObject()
+				: parent;
 
 			try {
 				// create new object in db...
@@ -266,7 +238,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 			
 			for (SyncAttribute sa : so.getSyncAttribute()) {
 				String attrExtId = sa.getName();
-				String attrValue = sa.getValue();
+				List<String> attrValues = sa.getValue();
 				
 				MapAttributeType mat = getMapAttribute(mot, attrExtId);
 
@@ -276,12 +248,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 									+ attrExtId + " von " + extObjectType);
 				else {
 					String attrIntId = mat.getIntId();
-					PropertyType propertyType = elementInDB.getEntityType()
-							.getPropertyType(attrIntId);
-
-					if (null != propertyType)
-						elementInDB.setSimpleProperty(attrIntId, attrValue);
-					// else: ignore this attribute!
+					elementInDB.getEntity().importProperties(attrIntId, attrValues);
 				}
 
 			} // for <syncAttribute>
@@ -290,6 +257,9 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 		// Handle all the child objects.
 		for (SyncObject child : so.getChildren())
 		{
+			// The object that was created or modified during the course of
+			// this method call is the parent for the import of the
+			// child elements.
 			importObject(elementInDB, child);
 		}
 	}
@@ -373,4 +343,59 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 		
 		return klass;
 	}
+	
+	/**
+	 * If during the import action an object has to be created for which
+	 * no parent is available (or can be found) the artificial 'rootImportObject'
+	 * should be used.
+	 * 
+	 * <p>This method should <em>onl</em> be called when the 'rootImportObject'
+	 * is definitely needed and going to be used because the root object is not
+	 * only created but also automatically persisted in the database. If it were
+	 * not used later on the user would see an object node in the object tree.</p>  
+	 * 
+	 * @return
+	 */
+	private CnATreeElement accessRootImportObject()
+	{
+		// Create the importRootObject if it does not exist yet
+		// and set the 'importRootObject' variable.
+		if (importRootObject == null)
+		{
+			LoadBSIModel cmdLoadBSIModel = new LoadBSIModel();
+
+		try {
+			cmdLoadBSIModel = ServiceFactory.lookupCommandService()
+					.executeCommand(cmdLoadBSIModel);
+		} catch (CommandException e) {
+			errorList.add("Fehler beim Ausführen von LoadBSIModel.");
+			throw new RuntimeCommandException(
+			"Fehler beim Anlegen des Behälters für importierte Objekte.");
+		}
+
+		BSIModel model = cmdLoadBSIModel.getModel();
+			try {
+				ImportedObjectsHolder holder = new ImportedObjectsHolder(model);
+				getDaoFactory().getDAO(ImportedObjectsHolder.class).saveOrUpdate(holder);
+				importRootObject = holder;
+			} catch (Exception e1) {
+				throw new RuntimeCommandException(
+						"Fehler beim Anlegen des Behälters für importierte Objekte.");
+			}
+
+		}
+		
+		return importRootObject;
+	}
+	
+	/** Returns the 'import root object'. May be null if it was not created
+	 * during the import.
+	 * 
+	 * @return
+	 */
+	CnATreeElement getImportRootObject()
+	{
+		return importRootObject;
+	}
+	
 }

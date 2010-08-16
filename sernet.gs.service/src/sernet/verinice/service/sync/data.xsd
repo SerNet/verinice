@@ -17,8 +17,15 @@
 		<xsd:sequence>
 			<xsd:element name="syncAttribute" maxOccurs="unbounded">
 				<xsd:complexType>
-					<xsd:attribute name="name" type="xsd:string" use="required" />
-					<xsd:attribute name="value" type="xsd:string" use="required" />
+					<xsd:sequence>
+						<xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" />
+						
+						<!-- The verinice object system consistently treats property values as lists. This
+						is hereby reflected. One valued properties simply use only one entry in the
+						value list. 
+						-->
+						<xsd:element name="value" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
 			<xsd:element name="extId" type="xsd:string" minOccurs="1"

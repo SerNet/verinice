@@ -26,10 +26,9 @@ import java.util.List;
 
 import javax.xml.bind.JAXB;
 
-import org.apache.commons.io.IOUtils;
-
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.common.CnATreeElement;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.sync.SyncRequest;
@@ -50,6 +49,8 @@ public class SyncCommand extends GenericCommand
 	private int inserted, updated, deleted;
 	
 	private List<String> errors = new ArrayList<String>();
+	
+	private CnATreeElement importRootObject;
 
 	/** Creates an instance of the SyncCommand where the {@link SyncRequest} object is already
 	 * serialized to a byte array.
@@ -134,6 +135,8 @@ public class SyncCommand extends GenericCommand
 			return;
 		}
 		
+		importRootObject = cmdInsertUpdate.getImportRootObject();
+		
 		inserted += cmdInsertUpdate.getInserted();
 		updated += cmdInsertUpdate.getUpdated();
 
@@ -172,5 +175,13 @@ public class SyncCommand extends GenericCommand
 	{
 		return errors;
 	}
-	
+
+	/** See {@link SyncInsertUpdateCommand#getImportRootObject()}.
+	 * 
+	 * @return
+	 */
+	public CnATreeElement getImportRootObject()
+	{
+		return importRootObject;
+	}
 }

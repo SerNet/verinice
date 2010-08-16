@@ -35,6 +35,7 @@ import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
@@ -208,15 +209,17 @@ public class ExportCommand extends GenericCommand
 				Map<String, PropertyList> properties = entity.getTypedPropertyLists();
 
 				for (String s : properties.keySet()) {
-					String propertyValue = cnATreeElement.getEntity()
-							.getSimpleValue(s);
+					
+					SyncAttribute syncAttribute = new SyncAttribute();
+					// Add <syncAttribute> to this <syncObject>:
+					syncAttribute.setName(s);
+					
+					int noOfValues = entity.exportProperties(s, syncAttribute.getValue());
 
-					if (propertyValue != null) {
-						SyncAttribute syncAttribute = new SyncAttribute();
-
-						// Add <syncAttribute> to this <syncObject>:
-						syncAttribute.setName(s);
-						syncAttribute.setValue(propertyValue);
+					// Only if any value for the attribute could be found the whole
+					// attribute instance is being added to the SyncObject's attribute
+					// list.
+					if (noOfValues > 0) {
 						attributes.add(syncAttribute);
 					}
 				}

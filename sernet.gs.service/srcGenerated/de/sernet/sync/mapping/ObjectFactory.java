@@ -30,19 +30,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link SyncMapping.MapObjectType }
-     * 
-     */
-    public SyncMapping.MapObjectType createSyncMappingMapObjectType() {
-        return new SyncMapping.MapObjectType();
-    }
-
-    /**
      * Create an instance of {@link SyncMapping }
      * 
      */
     public SyncMapping createSyncMapping() {
         return new SyncMapping();
+    }
+
+    /**
+     * Create an instance of {@link SyncMapping.MapObjectType }
+     * 
+     */
+    public SyncMapping.MapObjectType createSyncMappingMapObjectType() {
+        return new SyncMapping.MapObjectType();
     }
 
     /**
