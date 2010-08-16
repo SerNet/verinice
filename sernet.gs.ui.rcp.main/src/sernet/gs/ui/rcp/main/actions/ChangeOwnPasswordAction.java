@@ -66,6 +66,7 @@ public class ChangeOwnPasswordAction extends Action  {
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PERSON));
         setToolTipText("Change your own password for verinice.");
+       
     }
 
     /* (non-Javadoc)
@@ -73,6 +74,12 @@ public class ChangeOwnPasswordAction extends Action  {
      */
     @Override
     public void run() {
+        
+        if (!ServiceFactory.isPermissionHandlingNeeded()) {
+            setEnabled(false);
+            return;
+        }
+        
         // this action works for normal users, admins are supposed to change their password differently, since admin acounts can also be defined in the config file
         // where they cannot be edited from within the application.
         // (admins can change the passwords for anybody, this action here only works for the currently logged in user)

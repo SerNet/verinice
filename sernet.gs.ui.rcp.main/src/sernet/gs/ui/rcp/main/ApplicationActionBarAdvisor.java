@@ -280,6 +280,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         // FIXME externalize strings!
         changeOwnPasswordAction = new ChangeOwnPasswordAction(window, "Change my login password");
+        
 
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
         

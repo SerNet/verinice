@@ -26,9 +26,15 @@
         	classpath:sernet/gs/server/spring/veriniceserver-common.xml
         	classpath:sernet/gs/server/spring/veriniceserver-plain.xml
         	classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
-        	classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml
-        	classpath:sernet/gs/server/spring/veriniceserver-security-plain.xml
-        	classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
+        	classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml 
+            
+            <!-- Use this configuration for internal authentication: -->
+        	classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml
+            
+            <!-- Use this configuration for LDAP / Active Directory: -->
+        	<!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml -->
+        	
+            classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
         </param-value>
 	</context-param>
 	

@@ -18,6 +18,7 @@
 package sernet.verinice.interfaces;
 
 public interface IAuthService {
+    
 	/**
 	 * Get granted roles of currently active user.
 	 * 

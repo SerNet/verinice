@@ -32,7 +32,6 @@
          custom authentication providers.
     -->
     
-
     <!-- Using digest authentication: (doesn't work with LDAP) 
     
 	 Instead of digest auth, the authentication method can be switched, i.e. to basic auth over SSL with SHA hashes.
@@ -44,7 +43,6 @@
      algorithm for passwords so there would be no way to compare the A1 hash against the directory. Basic authentication transmits the password in clear text over HTTP, so make sure to
      use HTTPS when switching to LDAP / AD authentication too!
      -->
-    <!--   
     
     <bean id="digestProcessingFilterEntryPoint" class="org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint">
         <property name="realmName" value="${veriniceserver.realm}" />
@@ -66,14 +64,14 @@
 		</security:filter-chain-map>
 	</bean>
     
-    service to allow application access to currently active roles, server realm etc:
+    <!--  service to allow application access to currently active roles, server realm etc: -->
     <bean id="authService" class="sernet.gs.server.security.DigestAuthenticationService">
         <property name="entryPoint" ref="digestProcessingFilterEntryPoint" />
 
         <security:intercept-methods>
-             must be logged in to access roles: 
+             <!-- must be logged in to access roles: -->
             <security:protect method="sernet.gs.server.security.DigestAuthenticationService.getRoles" access="ROLE_USER" />
-             must be logged in as admin to change passwords: 
+             <!-- must be logged in as admin to change passwords:--> 
             <security:protect method="sernet.gs.server.security.DigestAuthenticationService.hashPassword" access="ROLE_ADMIN" />
         </security:intercept-methods>
     </bean>
@@ -98,75 +96,8 @@
 
     <security:authentication-provider user-service-ref="uds" />
     
-     -->
      <!-- END digest auth  ======================================================================================== -->
 
-
-    <!-- Using basic authentication: (works with LDAP, transmits passwords in clear text when not using HTTPS) -->
-    
-    <!-- The filter chain that all HTTP requests go through: -->
-	<bean id="springSecurityFilterChain" class="org.springframework.security.util.FilterChainProxy">
-		<security:filter-chain-map path-type="ant">
-			<security:filter-chain pattern="/todo/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
-			 <security:filter-chain pattern="/sync/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" /> 
-			<security:filter-chain pattern="/service/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
-		</security:filter-chain-map>
-	</bean>
-
-    <!-- HTTP basic auth: -->
-    <bean
-        id="basicProcessingFilter"
-        class="org.springframework.security.ui.basicauth.BasicProcessingFilter">
-        <property
-            name="authenticationManager">
-            <ref
-                bean="authenticationManager" />
-        </property>
-        <property
-            name="authenticationEntryPoint">
-            <ref
-                bean="basicProcessingFilterEntryPoint" />
-        </property>
-    </bean>
-
-    <!-- The basic auth entry point that stores credentials, defines the real etc.: -->
-    <bean
-        id="basicProcessingFilterEntryPoint"
-        class="org.springframework.security.ui.basicauth.BasicProcessingFilterEntryPoint">
-        <property
-            name="realmName">
-            <value>${veriniceserver.realm}</value>
-        </property>
-    </bean>
-
-    <!-- A programmatic way to access authenticated roles. Its methods are protected against unauthorized access: -->
-    <bean
-        id="authService"
-        class="sernet.gs.server.security.BasicAuthenticationService">
-        <property
-            name="entryPoint"
-            ref="basicProcessingFilterEntryPoint" />
-            
-        <property
-            name="guestUser"
-            value="${ldap.guestuser}" />
-
-        <security:intercept-methods>
-            <security:protect
-                method="sernet.gs.server.security.BasicAuthenticationService.getRoles"
-                access="ROLE_USER" />
-            <security:protect
-                method="sernet.gs.server.security.BasicAuthenticationService.hashPassword"
-                access="ROLE_ADMIN" />
-        </security:intercept-methods>
-    </bean>
-    
-    <bean id="exceptionTranslationFilter" class="org.springframework.security.ui.ExceptionTranslationFilter">
-        <property name="authenticationEntryPoint" ref="basicProcessingFilterEntryPoint" />
-    </bean>
-    
-    <!-- END basic auth ======================================================================================== -->
-    
 
 	<bean id="httpSessionContextIntegrationFilter" class="org.springframework.security.context.HttpSessionContextIntegrationFilter" />
 
@@ -225,66 +156,6 @@
 	</aop:config>
 
 
-    <!--
-        BEGIN LDAP Security configuration
-        ============================================================================
-    -->
-    <bean
-        id="contextSource"
-        class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
-        <constructor-arg
-         value="ldap://${ldap.server}:${ldap.port}/${ldap.base}"/>
-    </bean>
-    
-    <bean
-        id="ldapAuthenticationProvider"
-        class="sernet.gs.server.security.LdapAuthenticationProvider">
-        
-        <security:custom-authentication-provider/>
-        
-        <property
-            name="authenticator"
-            ref="ldapAuthenticator" />
-    </bean>
-
-    <bean
-        id="ldapAuthenticator"
-        class="sernet.gs.server.security.LdapAuthenticatorImpl">
-        <property
-            name="contextFactory"
-            ref="contextSource" />
-        
-        <property
-            name="principalPrefix"
-            value="${ldap.prefix}" />
-            
-        <property
-            name="guestUser"
-            value="${ldap.guestuser}" />
-            
-        <property name="loadUserConfigurationCommand" ref="loadUserConfigurationCommand" />
-
-        <property name="commandService" ref="commandService" />
-        
-        <!-- The following three values are used to hash the password of the fallback admin. -->
-        <property name="adminuser">
-            <value>${admin.username}</value>
-        </property>
-        
-        <property name="adminpass">
-            <value>${admin.password}</value>
-        </property>
-
-        <property name="passwordRealm">
-            <value>${veriniceserver.realm}</value>
-        </property>
-        
-        
-       
-    </bean>
-
-	<!-- END LDAP Security configuration ============================================================================ -->
-    
 
 	<!-- END Security configuration ============================================================================ -->
 
