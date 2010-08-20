@@ -22,9 +22,12 @@ import java.net.URL;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.osgi.context.support.OsgiBundleXmlApplicationContext;
@@ -35,6 +38,8 @@ import org.springframework.osgi.context.support.OsgiBundleXmlApplicationContext;
 public class SpringClientPlugin extends AbstractUIPlugin {
 	
 	private static final Logger log = Logger.getLogger(SpringClientPlugin.class);
+
+	private static final String OSGI_EXTENDER_SYMBOLIC_NAME = "org.springframework.osgi.extender";
 	
 	private BeanFactory beanFactory;
 
@@ -56,6 +61,25 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		ctx = context;
+		
+		// Starts the Spring OSGi Extender which provides registering the Spring
+		// namespace handlers. If you get an exception saying there is no schema
+		// for Spring security, then the OSGi extender is not running.
+		// Another way this can happen is when you cannot start verinice when you
+		// do not have a working internet connection.
+		Bundle bundle = Platform.getBundle(OSGI_EXTENDER_SYMBOLIC_NAME);
+		if (bundle == null) {
+			log.error("Spring OSGi Extender bundle is not available. Giving up!");
+			throw new RuntimeException();
+		} else if (bundle.getState() == Bundle.INSTALLED
+				|| bundle.getState() == Bundle.RESOLVED) {
+			log.debug("Manually starting Spring's OSGi Extender");
+			try {
+				bundle.start();
+			} catch (BundleException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	/**
