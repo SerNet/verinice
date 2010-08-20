@@ -38,8 +38,6 @@ public class Activator extends Plugin {
 	// The shared instance
 	private static Activator plugin;
 
-	private static final String OSGI_EXTENDER_SYMBOLIC_NAME = "org.springframework.osgi.extender";
-
 	private static final String PAX_WEB_SYMBOLIC_NAME = "org.ops4j.pax.web.pax-web-bundle";
 	
 	private WebContainer webContainer;
@@ -62,21 +60,8 @@ public class Activator extends Plugin {
             log.info("Starting bundle " + bundle.getSymbolicName() + " " + bundle.getVersion());
         }
 		
-		// Starts the Spring OSGi Extender which provides registering the Spring
-		// namespace handlers. If you get exception saying there is no schema
-		// for Spring security, then the OSGi extender is not running.
-		Bundle bundle = Platform.getBundle(OSGI_EXTENDER_SYMBOLIC_NAME);
-		if (bundle == null) {
-			log.error("Spring OSGi Extender bundle is not available. Giving up!");
-			throw new RuntimeException();
-		} else if (bundle.getState() == Bundle.INSTALLED
-				|| bundle.getState() == Bundle.RESOLVED) {
-			log.debug("Manually starting Spring's OSGi Extender");
-			bundle.start();
-		}
-		
 		// Only make sure that PAX WEB is available.
-		bundle = Platform.getBundle(PAX_WEB_SYMBOLIC_NAME);
+		Bundle bundle = Platform.getBundle(PAX_WEB_SYMBOLIC_NAME);
 		if (bundle == null) {
 			log.error("Pax Web bundle is not available. Giving up!");
 			throw new RuntimeException();

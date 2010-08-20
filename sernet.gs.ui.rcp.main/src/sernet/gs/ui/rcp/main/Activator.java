@@ -80,6 +80,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
     
     public static final String UPDATE_SITE_URL = "http://update.verinice.org/pub/verinice/Verinice-Update-Site-2010"; //$NON-NLS-1$
 
+	private static final String OSGI_EXTENDER_SYMBOLIC_NAME = "org.springframework.osgi.extender";
+
 	// The shared instance
 	private static Activator plugin;
 
@@ -149,7 +151,22 @@ public class Activator extends AbstractUIPlugin implements IMain {
 	{
 		runsAsApplication = true;
 		
-		Bundle bundle = Platform.getBundle(REPORT_SERVICE_SYMBOLIC_NAME);
+		// Starts the Spring OSGi Extender which provides registering the Spring
+		// namespace handlers. If you get an exception saying there is no schema
+		// for Spring security, then the OSGi extender is not running.
+		// Another way this can happen is when you cannot start verinice when you
+		// do not have a working internet connection.
+		Bundle bundle = Platform.getBundle(OSGI_EXTENDER_SYMBOLIC_NAME);
+		if (bundle == null) {
+			LOG.error("Spring OSGi Extender bundle is not available. Giving up!");
+			throw new RuntimeException();
+		} else if (bundle.getState() == Bundle.INSTALLED
+				|| bundle.getState() == Bundle.RESOLVED) {
+			LOG.debug("Manually starting Spring's OSGi Extender");
+			bundle.start();
+		}
+		
+		bundle = Platform.getBundle(REPORT_SERVICE_SYMBOLIC_NAME);
 		if (bundle == null)
 		{
 			LOG.warn("Report service bundle is not available!");

@@ -32,6 +32,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
 import org.eclipse.datatools.connectivity.oda.IParameterMetaData;
 import org.eclipse.datatools.connectivity.oda.IQuery;
 import org.eclipse.datatools.connectivity.oda.IResultSet;
@@ -55,6 +56,8 @@ import bsh.Interpreter;
 
 public class Query implements IQuery
 {
+	private Logger log = Logger.getLogger(Query.class);
+	
 	private int maxRows;
     private String queryText;
     
@@ -282,7 +285,7 @@ public class Query implements IQuery
 			else
 				inParameters = null;
 		} catch (EvalError e) {
-			e.printStackTrace();
+			log.warn("Error evaluating the setup query: " + e);
 			
 			throw new IllegalStateException("Unable to execute setup query: " + e.getErrorText());
 		}
@@ -295,6 +298,7 @@ public class Query implements IQuery
 		try {
 			result = interpreter.eval(queryText);
 		} catch (EvalError e) {
+			log.warn("Error evaluating the query: " + e);
 			result = new String("Unable to execute query: " + e.getErrorText());
 		}
 		

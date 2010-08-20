@@ -69,6 +69,10 @@
         <level value="DEBUG" />
     </logger>
     
+    <logger name="sernet.verinice.oda">
+		<level value="DEBUG" />
+	</logger>
+	
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
