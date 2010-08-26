@@ -25,7 +25,7 @@ class CSVOutputFormat extends AbstractOutputFormat {
 
 	@Override
 	public String getFileSuffix() {
-		return "csv";
+		return "xls";
 	}
 
 	@Override
@@ -35,7 +35,7 @@ class CSVOutputFormat extends AbstractOutputFormat {
 
 	@Override
 	public String getLabel() {
-		return "Comma-separated values (CSV)";
+		return "Excel export (CSV)";
 	}
 	
 	@Override

@@ -20,15 +20,20 @@
 package sernet.verinice.samt.service;
 
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
@@ -53,6 +58,8 @@ public class LoadAllSamtTopics extends GenericCommand implements IAuthAwareComma
     
     private transient IAuthService authService;
     
+    private boolean topTenOnly = false;
+    
     private Integer id;
     
     private List<SamtTopic> result;
@@ -60,6 +67,11 @@ public class LoadAllSamtTopics extends GenericCommand implements IAuthAwareComma
     public LoadAllSamtTopics(ControlGroup cg)
     {
     	id = cg.getDbId();
+    }
+
+    public LoadAllSamtTopics(ControlGroup cg, boolean topTenOnly) {
+        this(cg);
+        this.topTenOnly = topTenOnly;
     }
     
     @Override
@@ -83,7 +95,10 @@ public class LoadAllSamtTopics extends GenericCommand implements IAuthAwareComma
     		if (e instanceof SamtTopic)
     		{
     			SamtTopic st = (SamtTopic) e;
-    			result.add(st);
+    			//ignore chapters 0.x (Copyright et al):
+    			if (!st.getTitle().startsWith("0")) {
+    			    result.add(st);
+    			}
     			hydrate(st);
     		}
     		else if (e instanceof ControlGroup)
@@ -106,8 +121,16 @@ public class LoadAllSamtTopics extends GenericCommand implements IAuthAwareComma
     	st.getMaturity();
     }
     
+    @SuppressWarnings("unchecked")
     public List<SamtTopic> getAllSamtTopics()
     {
+        Collections.sort(result, new Comparator<CnATreeElement>() {
+            @Override
+            public int compare(CnATreeElement o1, CnATreeElement o2) {
+                NumericStringComparator comparator = new NumericStringComparator();
+                return comparator.compare(o1.getTitle(), o2.getTitle());
+            }
+        });
     	return result;
     }
     

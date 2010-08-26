@@ -66,7 +66,7 @@ public class ChangeOwnPasswordAction extends Action  {
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PERSON));
         setToolTipText("Change your own password for verinice.");
-       
+        setEnabled(true);
     }
 
     /* (non-Javadoc)
@@ -75,6 +75,9 @@ public class ChangeOwnPasswordAction extends Action  {
     @Override
     public void run() {
         
+        // if the user clicks this action as the first thing he does in verinice, the auth service, might not have been enabled
+        // because no object was accessed yet. Make sure it is there:
+        ServiceFactory.lookupAuthService();
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
             setEnabled(false);
             return;
@@ -85,7 +88,7 @@ public class ChangeOwnPasswordAction extends Action  {
         // (admins can change the passwords for anybody, this action here only works for the currently logged in user)
         boolean isAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
         if (isAdmin) {
-            MessageDialog.openInformation(window.getShell(), "Administrator", "You are an administrator. For security reasons you have to change your password settings in your user's account settings or - in case of the fallback administrator account - in the configuration file of the verinice.PRO server.");
+            MessageDialog.openInformation(window.getShell(), "Administrator", "You are an administrator. For security reasons you have to change your password settings in your user's account settings or - in case of the fallback administrator account - in the configuration file of the verinice.PRO server. To access your account settings, right-click on your user in the model view.");
             return;
         }
         

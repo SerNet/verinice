@@ -32,7 +32,7 @@ public class ReportService implements IReportService {
 	@Override
 	public IReportType[] getReportTypes() {
 		if (reportTypes == null)
-			reportTypes = new IReportType[] { new SamtReportType(), new ComprehensiveSamtReportType() };
+			reportTypes = new IReportType[] { new UserReportType(), new SamtReportType(), new ComprehensiveSamtReportType() };
 		
 		return reportTypes;
 	}

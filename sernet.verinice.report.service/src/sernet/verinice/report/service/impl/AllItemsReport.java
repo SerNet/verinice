@@ -27,30 +27,32 @@ import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 
-public class ComprehensiveSamtReportType implements IReportType {
+public class AllItemsReport implements IReportType {
 	
-	private static final Logger LOG = Logger.getLogger(ComprehensiveSamtReportType.class);
+	private static final Logger LOG = Logger.getLogger(AllItemsReport.class);
 
+	// FIXME externalize strings
+	
 	public String getDescription() {
-		return "A comprehensive Information Security Assessment report.";
+		return "Strukturanalyse";
 	}
 
 	public String getId() {
-		return "csamt";
+		return "strukturanalyse";
 	}
 
 	public String getLabel() {
-		return "Comprehensive Information Security Assessment report";
+		return "BSI: Strukturanalyse";
 	}
 
 	public IOutputFormat[] getOutputFormats() {
-		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat() };
+		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new CSVOutputFormat() };
 	}
 
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
 		
-		URL reportDesign = ComprehensiveSamtReportType.class.getResource("comprehensive-samt-report.rptdesign");
+		URL reportDesign = AllItemsReport.class.getResource("allitems.rptdesign");
 		
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
 		{
@@ -60,8 +62,7 @@ public class ComprehensiveSamtReportType implements IReportType {
 		else
 		{
 			IDataExtractionTask task = brs.createExtractionTask(reportDesign);
-			// In a comprehensive SAMT report the 4th result set is the one that is of interest.
-			brs.extract(task, reportOptions, 3);
+			brs.extract(task, reportOptions, 1);
 		}
 	}
 

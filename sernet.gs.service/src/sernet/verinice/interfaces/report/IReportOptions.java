@@ -35,4 +35,11 @@ public interface IReportOptions {
 	
 	boolean isToBeEncrypted();
 	
+	/**
+	 * The optional root element for the report.
+	 */
+	void setRootElement(Integer rootElement);
+
+    Integer getRootElement();
+	
 }

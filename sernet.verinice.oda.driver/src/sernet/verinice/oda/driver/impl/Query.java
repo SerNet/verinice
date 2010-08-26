@@ -41,6 +41,7 @@ import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.eclipse.datatools.connectivity.oda.SortSpec;
 import org.eclipse.datatools.connectivity.oda.spec.QuerySpecification;
 
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -73,11 +74,12 @@ public class Query implements IQuery
     
     public static final String PROP_SETUP_QUERY_TEXT = "setupQueryText";
     
-    Query(HUITypeFactory huiTypeFactory)
+    Query()
     {
     	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
 
     	try {
+    	    // "Setup" BSH environment:
     		setupInterpreter = new Interpreter();
     		setupInterpreter.setClassLoader(Query.class.getClassLoader());
     		
@@ -86,10 +88,12 @@ public class Query implements IQuery
 			
     		setupInterpreter.set("__inParameters", null);
     		setupInterpreter.eval("inParameters(ip) { __inParameters = ip; }");
-    		setupInterpreter.set("htf", huiTypeFactory);
-			
+    		setupInterpreter.set("helper", new Helper());
+
+    		// BSH environment:
     		interpreter = new Interpreter();
     		interpreter.setClassLoader(Query.class.getClassLoader());
+    		
     		
 			interpreter.set("_inpv", inParameterValues);
 			interpreter.eval(
@@ -107,10 +111,10 @@ public class Query implements IQuery
 			
     		interpreter.set("helper", new Helper());
     		interpreter.eval("gpt(entityType) { return helper.getAllPropertyTypes(entityType); }");
+    		interpreter.set("properties", properties);
+
     		
-    		interpreter.set("htf", huiTypeFactory);
     		
-			interpreter.set("properties", properties);
 		} catch (EvalError e) {
 			new RuntimeException("Unable to set BSH variable 'properties'.", e);
 		}
@@ -174,24 +178,15 @@ public class Query implements IQuery
     		return command.getResult();
         }
         
-        public String[] getAllPropertyTypes(EntityType et)
-        {
-        	List<String> result = new ArrayList<String>();
-        	for (PropertyType pt : et.getPropertyTypes())
-        	{
-        		result.add(pt.getName());
-        	}
-        	
-        	for (PropertyGroup pg : et.getPropertyGroups())
-        	{
-        		for (PropertyType pt : pg.getPropertyTypes())
-        		{
-        			result.add(pt.getName());
-        		}
-        	}
-        	
-        	return result.toArray(new String[result.size()]);
-        }
+      public String[] getAllPropertyTypes(String entityTypeId) {
+          HUITypeFactory htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+          return htf.getEntityType(entityTypeId).getAllPropertyTypeIDsIncludingGroups();
+      }
+
+      public String[] getAllPropertyTitles(String entityTypeId) {
+          HUITypeFactory htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+          return htf.getEntityType(entityTypeId).getAllPropertyTypeTitlesIncludingGroups();
+      }
         
         public List<List<String>> map(List<CnATreeElement> input, String[] props)
         {
@@ -298,7 +293,7 @@ public class Query implements IQuery
 		try {
 			result = interpreter.eval(queryText);
 		} catch (EvalError e) {
-			log.warn("Error evaluating the query: " + e);
+			log.warn("Error evaluating the query: ", e);
 			result = new String("Unable to execute query: " + e.getErrorText());
 		}
 		

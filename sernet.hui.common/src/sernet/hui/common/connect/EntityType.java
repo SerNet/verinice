@@ -78,6 +78,39 @@ public class EntityType {
 		
 		return types;
 	}
+	
+	/**
+	 * Retrieves all propertytype IDs. CAUTION: Does not return types that are contained in groups!
+	 * Use <code>getAllPropertyTypeIDsIncludingGroups()</code> instead.
+	 * 
+	 * @return
+	 */
+	public String[] getAllPropertyTypeIds() {
+	    List<PropertyType> types = getAllPropertyTypes();
+	    List<String> ids = new ArrayList<String>();
+	    for (PropertyType type : types) {
+            ids.add(type.getId());
+        }
+	    return (String[]) ids.toArray(new String[ids.size()]);
+	}
+	
+	public String[] getAllPropertyTypeIDsIncludingGroups() {
+	    ArrayList<String> result = new ArrayList<String>();
+	    List<PropertyType> types = getAllPropertyTypes();
+	    for (PropertyType type : types) {
+            result.add(type.getId());
+        }
+	    return (String[]) result.toArray(new String[result.size()]);
+	}
+	
+	public String[] getAllPropertyTypeTitlesIncludingGroups() {
+        ArrayList<String> result = new ArrayList<String>();
+        String[] typeIDs = getAllPropertyTypeIDsIncludingGroups();
+        for (String id : typeIDs) {
+            result.add(getPropertyType(id).getName());
+        }
+        return (String[]) result.toArray(new String[result.size()]);
+    }
 
 	public List<IEntityElement> getElements() {
 		return elements;

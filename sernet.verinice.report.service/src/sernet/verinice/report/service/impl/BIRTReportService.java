@@ -34,6 +34,7 @@ import org.eclipse.birt.report.engine.api.EngineConstants;
 import org.eclipse.birt.report.engine.api.EngineException;
 import org.eclipse.birt.report.engine.api.IDataExtractionOption;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
+import org.eclipse.birt.report.engine.api.IGetParameterDefinitionTask;
 import org.eclipse.birt.report.engine.api.IRenderOption;
 import org.eclipse.birt.report.engine.api.IReportDocument;
 import org.eclipse.birt.report.engine.api.IReportEngine;
@@ -42,15 +43,22 @@ import org.eclipse.birt.report.engine.api.IReportRunnable;
 import org.eclipse.birt.report.engine.api.IResultSetItem;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.birt.report.engine.api.IRunTask;
+import org.eclipse.birt.report.engine.api.IScalarParameterDefn;
 
 import sernet.verinice.interfaces.report.IReportOptions;
+import sernet.verinice.report.service.Activator;
 
 public class BIRTReportService {
 	
 	Logger log = Logger.getLogger(BIRTReportService.class.getName());
 	
 	IReportEngine engine;
-	
+
+    private IReportRunnable design;
+
+    // variables that are passed to the verinice oda driver to be used in queries:
+    private static final String VN_ROOT_ELEMENT = "vn_root_element";
+
 	public BIRTReportService() {
 		EngineConfig config = new EngineConfig();
 		
@@ -71,7 +79,7 @@ public class BIRTReportService {
 		
 		IRunAndRenderTask task = null;
 		try {
-			IReportRunnable design = engine.openReportDesign(rptDesignURL.openStream());
+			design = engine.openReportDesign(rptDesignURL.openStream());
 			task = engine.createRunAndRenderTask(design);
 		} catch (EngineException e) {
 			log.log(Level.SEVERE, "Could not open report design: " + e);
@@ -165,8 +173,9 @@ public class BIRTReportService {
 	{
 		IRenderOption renderOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
 		renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
-		
+
 		task.setRenderOption(renderOptions);
+		Activator.getDefault().getOdaDriver().getScriptVariables().put(VN_ROOT_ELEMENT, options.getRootElement());
 		
 		try {
 			task.run();

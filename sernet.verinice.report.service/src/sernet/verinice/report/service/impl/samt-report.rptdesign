@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.21" id="1">
+    <property name="author">A. Koderman</property>
     <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
+    <text-property name="title">Standard ISA-Report</text-property>
     <property name="units">in</property>
-    <list-property name="propertyBindings">
-        <structure>
-            <property name="name">sncaUrl</property>
-            <property name="id">44</property>
-        </structure>
-        <structure>
-            <property name="name">serverURI</property>
-            <property name="id">44</property>
-        </structure>
-        <structure>
-            <property name="name">OdaConnProfileName</property>
-            <property name="id">44</property>
-        </structure>
-        <structure>
-            <property name="name">OdaConnProfileStorePath</property>
-            <property name="id">44</property>
-        </structure>
-    </list-property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
@@ -56,8 +40,8 @@
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[c = new sernet.verinice.samt.service.FindSamtGroup(true);
-
+            <xml-property name="queryText"><![CDATA[root = _vars.get("vn_root_element");
+c = new sernet.verinice.samt.service.FindSamtGroup(true, root);
 return helper.execute(c).getSelfAssessmentGroup().getParent().getTitle();]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -118,13 +102,14 @@ return helper.execute(c).getSelfAssessmentGroup().getParent().getTitle();]]></xm
                     <property name="position">1</property>
                     <property name="name">totalSecurityFigure</property>
                     <property name="nativeName">totalSecurityFigure</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[// TODO: Call respective command which can provide this number
-
-// return helper.execute(new TotalSecurityFigureCommand().getResult());
-return "TODO - implement command";]]></xml-property>
+            <xml-property name="queryText"><![CDATA[root = _vars.get("vn_root_element");
+return helper.execute(
+	new sernet.verinice.samt.service.TotalSecurityFigureCommand(root)
+).getResult();]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>1.0</Version>
@@ -236,7 +221,10 @@ return "TODO - implement command";]]></xml-property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[sag = helper.execute(new sernet.verinice.samt.service.FindSamtGroup(true)).getSelfAssessmentGroup();
+            <xml-property name="queryText"><![CDATA[root = _vars.get("vn_root_element");
+sag = helper.execute(
+	new sernet.verinice.samt.service.FindSamtGroup(true, root)
+	).getSelfAssessmentGroup();
 
 c = helper.execute(new sernet.verinice.samt.service.LoadAllSamtTopics(sag));
 
@@ -258,72 +246,6 @@ return helper.map(
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>columns(new String[] { "title", "weight", "threshold", "maturity" });</value>
-                </ex-property>
-            </list-property>
-        </oda-data-set>
-        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="maxAttainableSecurityFigure" id="93">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">maxAttainableSecurityFigure</property>
-                    <text-property name="displayName">maxAttainableSecurityFigure</text-property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">maxAttainableSecurityFigure</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">verinice</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">maxAttainableSecurityFigure</property>
-                    <property name="nativeName">maxAttainableSecurityFigure</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[// TODO: Call Command which can provide this number
-
-// return helper.execute(new GetMaximumAttainableSecurityFigureCommand().getResult());
-return "TODO - implement a command";]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:name>Column1</design:name>
-            <design:position>1</design:position>
-            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
-            <design:precision>-1</design:precision>
-            <design:scale>-1</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>Column1</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>Column1</design:label>
-            <design:formattingHints>
-              <design:displaySize>8</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>setupQueryText</name>
-                    <value>columns(new String[] { "maxAttainableSecurityFigure" });</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
@@ -380,7 +302,8 @@ return "TODO - implement a command";]]></xml-property>
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.samt.service.FindSamtGroup;
 
-c = helper.execute(new FindSamtGroup(true));
+root = _vars.get("vn_root_element");
+c = helper.execute(new FindSamtGroup(true, root));
 sag = c.getSelfAssessmentGroup();
 
 chart = new MaturitySpiderChart().createChart(sag);
@@ -493,11 +416,16 @@ inParameters(new String[] { "width", "height" });</value>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">1pt</property>
         </style>
+        <style name="table-header" id="156">
+            <property name="backgroundColor">#BDBDBD</property>
+            <property name="fontWeight">bold</property>
+        </style>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
             <page-footer>
                 <text id="3">
+                    <property name="paddingTop">20pt</property>
                     <property name="contentType">html</property>
                     <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
                 </text>
@@ -506,27 +434,47 @@ inParameters(new String[] { "width", "height" });</value>
     </page-setup>
     <body>
         <text id="24">
+            <property name="fontSize">14pt</property>
+            <property name="fontWeight">bold</property>
             <property name="contentType">html</property>
             <text-property name="content"><![CDATA[<CENTER>Information Security Assessment</CENTER>]]></text-property>
         </text>
         <grid id="7">
             <property name="height">4.072916666666667in</property>
-            <property name="width">7.9375in</property>
+            <property name="width">7.929292929292929in</property>
             <column id="8">
                 <property name="width">1.5520833333333333in</property>
             </column>
             <column id="9">
-                <property name="width">2.1458333333333335in</property>
+                <property name="width">1.8484848484848484in</property>
             </column>
             <column id="41">
-                <property name="width">1.6979166666666667in</property>
+                <property name="width">1.9898989898989898in</property>
             </column>
             <column id="35">
                 <property name="width">2.5416666666666665in</property>
             </column>
             <row id="10">
                 <cell id="11">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <text id="22">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
                         <text-property name="content"><![CDATA[Company:]]></text-property>
                     </text>
@@ -534,7 +482,24 @@ inParameters(new String[] { "width", "height" });</value>
                 <cell id="12">
                     <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <data id="92">
+                        <property name="fontSize">12pt</property>
                         <property name="dataSet">companyName</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -550,7 +515,24 @@ inParameters(new String[] { "width", "height" });</value>
             </row>
             <row id="13">
                 <cell id="14">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <text id="23">
+                        <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
                         <text-property name="content"><![CDATA[Date:]]></text-property>
                     </text>
@@ -558,13 +540,33 @@ inParameters(new String[] { "width", "height" });</value>
                 <cell id="15">
                     <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <data id="60">
+                        <structure name="dateTimeFormat">
+                            <property name="category">Long Date</property>
+                            <property name="pattern">Long Date</property>
+                        </structure>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">Column1</property>
                                 <text-property name="displayName">date</text-property>
                                 <expression name="expression" type="javascript">BirtDateTime.now()</expression>
-                                <property name="dataType">string</property>
+                                <property name="dataType">date-time</property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">Column1</property>
@@ -572,51 +574,165 @@ inParameters(new String[] { "width", "height" });</value>
                 </cell>
             </row>
             <row id="16">
+                <property name="verticalAlign">middle</property>
                 <cell id="17">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <text id="25">
+                        <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
                         <text-property name="content"><![CDATA[Total Security Figure:]]></text-property>
                     </text>
                 </cell>
                 <cell id="18">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
+                    <property name="verticalAlign">middle</property>
                     <data id="95">
+                        <property name="fontWeight">bold</property>
+                        <structure name="numberFormat">
+                            <property name="category">Percent</property>
+                            <property name="pattern">Percent</property>
+                        </structure>
+                        <property name="textAlign">center</property>
+                        <list-property name="highlightRules">
+                            <structure>
+                                <property name="operator">between</property>
+                                <property name="color">#FF5D5D</property>
+                                <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">0</value>
+                                </simple-property-list>
+                                <expression name="value2" type="javascript">0,6</expression>
+                            </structure>
+                            <structure>
+                                <property name="operator">between</property>
+                                <property name="color">#FFCA53</property>
+                                <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">0,6</value>
+                                </simple-property-list>
+                                <expression name="value2" type="javascript">0,9</expression>
+                            </structure>
+                            <structure>
+                                <property name="operator">between</property>
+                                <property name="color">#48E247</property>
+                                <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">0,9</value>
+                                </simple-property-list>
+                                <expression name="value2" type="javascript">1</expression>
+                            </structure>
+                        </list-property>
                         <property name="dataSet">totalSecurityFigure</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">totalSecurityFigure</property>
                                 <text-property name="displayName">totalSecurityFigure</text-property>
                                 <expression name="expression" type="javascript">dataSetRow["totalSecurityFigure"]</expression>
-                                <property name="dataType">string</property>
+                                <property name="dataType">float</property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">totalSecurityFigure</property>
                     </data>
                 </cell>
                 <cell id="38">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <text id="26">
+                        <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Maximal Attainable:]]></text-property>
+                        <text-property name="content"><![CDATA[Maximally Attainable:]]></text-property>
                     </text>
                 </cell>
                 <cell id="32">
-                    <data id="94">
-                        <property name="dataSet">maxAttainableSecurityFigure</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">maxAttainableSecurityFigure</property>
-                                <text-property name="displayName">maxAttainableSecurityFigure</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["maxAttainableSecurityFigure"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">maxAttainableSecurityFigure</property>
-                    </data>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
+                    <label id="157">
+                        <property name="fontWeight">bold</property>
+                        <property name="color">#00D400</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">100%</text-property>
+                    </label>
                 </cell>
             </row>
             <row id="19">
                 <property name="height">3.25in</property>
                 <cell id="20">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">3pt</property>
+                    <property name="paddingLeft">3pt</property>
+                    <property name="paddingBottom">3pt</property>
+                    <property name="paddingRight">3pt</property>
                     <text id="42">
+                        <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
                         <text-property name="content"><![CDATA[Results:]]></text-property>
                     </text>
@@ -624,6 +740,22 @@ inParameters(new String[] { "width", "height" });</value>
                 <cell id="21">
                     <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <image name="maturityChartImage" id="43">
                         <property name="display">block</property>
                         <property name="height">300px</property>
@@ -653,7 +785,25 @@ inParameters(new String[] { "width", "height" });</value>
                 </cell>
             </row>
         </grid>
-        <table id="64">
+        <label id="136">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingTop">20pt</property>
+            <text-property name="text">Details</text-property>
+        </label>
+        <table name="Details" id="64">
+            <property name="borderBottomColor">#000000</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftColor">#000000</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightColor">#000000</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopColor">#000000</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
             <property name="width">7.947916666666667in</property>
             <property name="dataSet">samtTopics</property>
             <list-property name="boundDataColumns">
@@ -707,7 +857,7 @@ inParameters(new String[] { "width", "height" });</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="84">
-                            <text-property name="text">title</text-property>
+                            <text-property name="text">Topic</text-property>
                         </label>
                     </cell>
                     <cell id="67">
@@ -724,7 +874,7 @@ inParameters(new String[] { "width", "height" });</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="86">
-                            <text-property name="text">weight</text-property>
+                            <text-property name="text">Weight</text-property>
                         </label>
                     </cell>
                     <cell id="68">
@@ -741,7 +891,7 @@ inParameters(new String[] { "width", "height" });</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="88">
-                            <text-property name="text">threshold</text-property>
+                            <text-property name="text">Threshold</text-property>
                         </label>
                     </cell>
                     <cell id="69">
@@ -758,7 +908,7 @@ inParameters(new String[] { "width", "height" });</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="90">
-                            <text-property name="text">maturity</text-property>
+                            <text-property name="text">Maturity</text-property>
                         </label>
                     </cell>
                 </row>
@@ -846,6 +996,32 @@ inParameters(new String[] { "width", "height" });</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="91">
+                            <list-property name="highlightRules">
+                                <structure>
+                                    <property name="operator">le</property>
+                                    <property name="color">#FF5555</property>
+                                    <expression name="testExpr" type="javascript">row["maturity"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["threshold"]-2</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">eq</property>
+                                    <property name="color">#FCD054</property>
+                                    <expression name="testExpr" type="javascript">row["maturity"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["threshold"]-1</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">ge</property>
+                                    <property name="color">#20D221</property>
+                                    <expression name="testExpr" type="javascript">row["maturity"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["threshold"]</value>
+                                    </simple-property-list>
+                                </structure>
+                            </list-property>
                             <property name="resultSetColumn">maturity</property>
                         </data>
                     </cell>

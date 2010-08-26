@@ -54,4 +54,12 @@ public class TestReportType implements IReportType {
 		brs.render(task, reportOptions);
 	}
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.report.IReportType#getReportFile()
+     */
+    @Override
+    public String getReportFile() {
+        return null;
+    }
+
 }

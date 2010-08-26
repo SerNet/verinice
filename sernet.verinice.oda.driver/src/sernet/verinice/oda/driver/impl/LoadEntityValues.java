@@ -27,7 +27,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Ultra-generic command to retrieve arbitrary cna tree elements and their property values.
+ * Generic command to retrieve arbitrary cna tree elements and their property values.
  * 
  * <p>The command is to be used by reports who wish to access elements and their property values.</p>
  * 

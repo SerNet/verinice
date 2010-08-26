@@ -38,7 +38,6 @@ import com.ibm.icu.util.ULocale;
 public class Connection implements IConnection {
 	private boolean isOpen = false;
 
-	private HUITypeFactory huiTypeFactory;
 
 	/*
 	 * @see
@@ -49,16 +48,6 @@ public class Connection implements IConnection {
 		String uri = connProperties.getProperty("serverURI");
 
 		Activator.getDefault().getMain().updateServerURI(uri);
-
-		/*
-		 * URL url; try { // TODO: When nicht angegeben, dann nimm
-		 * vorkonfigurierte Umgebung // HuiTypefactory.getXXX() url = new
-		 * URL(connProperties.getProperty("sncaUrl")); huiTypeFactory =
-		 * HUITypeFactory.createInstance(url); } catch (MalformedURLException e)
-		 * { throw new OdaException("URL was invalid."); } catch (DBException e)
-		 * { throw new OdaException("URL was invalid."); }
-		 */
-
 		isOpen = true;
 	}
 
@@ -75,7 +64,6 @@ public class Connection implements IConnection {
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#close()
 	 */
 	public void close() throws OdaException {
-		huiTypeFactory = null;
 		isOpen = false;
 	}
 
@@ -105,7 +93,7 @@ public class Connection implements IConnection {
 	public IQuery newQuery(String dataSetType) throws OdaException {
 		// assumes that this driver supports only one type of data set,
 		// ignores the specified dataSetType
-		return new Query(huiTypeFactory);
+		return new Query();
 	}
 
 	/*

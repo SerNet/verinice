@@ -27,7 +27,7 @@ public interface IReportType {
 	String getId();
 
 	/**
-	 * Returns a humand-readable name for this report type.
+	 * Returns a human-readable name for this report type.
 	 * 
 	 * @return
 	 */
@@ -48,4 +48,12 @@ public interface IReportType {
 	IOutputFormat[] getOutputFormats();
 	
 	void createReport(IReportOptions reportOptions);
+	
+	/**
+	 * Return the selected report file or empty string.
+	 * Reports that do not support file selection should return null.
+	 * 
+	 * @return file String or null if not supported (i.e. internal reports contained in JAR file).
+	 */
+	String getReportFile();
 }

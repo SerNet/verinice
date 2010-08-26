@@ -17,7 +17,11 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
+
+import javax.management.RuntimeErrorException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
@@ -27,30 +31,55 @@ import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 
-public class ComprehensiveSamtReportType implements IReportType {
+public class UserReportType implements IReportType {
 	
-	private static final Logger LOG = Logger.getLogger(ComprehensiveSamtReportType.class);
+	private static final Logger LOG = Logger.getLogger(UserReportType.class);
+	
+	private String reportFile = "";
 
-	public String getDescription() {
-		return "A comprehensive Information Security Assessment report.";
+	/**
+     * @return the reportFile
+     */
+    public String getReportFile() {
+        return reportFile;
+    }
+
+    /**
+     * @param reportFile the reportFile to set
+     */
+    public void setReportFile(String reportFile) {
+        this.reportFile = reportFile;
+    }
+    
+// FIXME externalize strings
+    
+    public String getDescription() {
+		return "User supplied custom report.";
 	}
 
 	public String getId() {
-		return "csamt";
+		return "user";
 	}
 
 	public String getLabel() {
-		return "Comprehensive Information Security Assessment report";
+		return "Report from file";
 	}
 
 	public IOutputFormat[] getOutputFormats() {
-		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat() };
+		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new CSVOutputFormat() };
 	}
 
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
 		
-		URL reportDesign = ComprehensiveSamtReportType.class.getResource("comprehensive-samt-report.rptdesign");
+		
+		URL reportDesign;
+        try {
+            reportDesign = (new File(reportFile)).toURI().toURL();
+        } catch (MalformedURLException e) {
+            LOG.error("Could not load user supplied report file.", e);
+            throw new RuntimeException("Could not load user report file.", e);
+        }
 		
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
 		{
@@ -60,17 +89,9 @@ public class ComprehensiveSamtReportType implements IReportType {
 		else
 		{
 			IDataExtractionTask task = brs.createExtractionTask(reportDesign);
-			// In a comprehensive SAMT report the 4th result set is the one that is of interest.
-			brs.extract(task, reportOptions, 3);
+			// in a user report, only one table should be present for the CSV report (first one found is used):
+			brs.extract(task, reportOptions, 1);
 		}
 	}
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.report.IReportType#getReportFile()
-     */
-    @Override
-    public String getReportFile() {
-        return null;
-    }
 
 }

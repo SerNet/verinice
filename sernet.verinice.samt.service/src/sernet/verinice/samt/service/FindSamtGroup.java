@@ -65,6 +65,8 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
     private ControlGroup selfAssessmentGroup = null;
     
     private boolean hydrateParent;
+
+    private Integer dbId = null;
     
     public FindSamtGroup()
     {
@@ -75,6 +77,12 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
     {
     	this.hydrateParent = hydrateParent;
     }
+
+    public FindSamtGroup(boolean hydrateParent, Integer samtGroupDbId) {
+        this.hydrateParent = hydrateParent;
+        this.dbId = samtGroupDbId;
+    }
+    
     
     /* (non-Javadoc)
      * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
@@ -86,12 +94,25 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
         // find all ControlGroups
         StringBuilder sbHql =  new StringBuilder();
         sbHql.append("select distinct controlGroup from ControlGroup as controlGroup");
+        
+        // get just one element if specified:
+        if (dbId != null) {
+            sbHql.append(" where controlGroup.dbId = ?");
+        }
+        
         final String hql = sbHql.toString();
         if (getLog().isDebugEnabled()) {
             getLog().debug("hql: " + hql);
         }
         
-        List<ControlGroup> controlGroupList = dao.findByQuery(hql,null);
+        List<ControlGroup> controlGroupList;
+        if (dbId != null ) {
+            controlGroupList = dao.findByQuery(hql,new Object[] {dbId});
+        } else {
+            controlGroupList = dao.findByQuery(hql,null);
+        }
+        
+        
         if(controlGroupList==null) {
             controlGroupList = Collections.emptyList();
         }

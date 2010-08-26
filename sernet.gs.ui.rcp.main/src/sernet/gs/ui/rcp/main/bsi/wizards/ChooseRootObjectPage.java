@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -194,6 +195,7 @@ public class ChooseRootObjectPage extends WizardPage {
 
 	ExportWizard getExportWizard() {
 		return ((ExportWizard) getWizard());
+		
 	}
 	
 	

@@ -79,7 +79,7 @@ public class StrukturanalyseReport extends BsiReport
 		return "[BSI] Strukturanalyse nach BSI-GS";
 	}
 
-	private void getStrukturElements(CnATreeElement parent) {
+	public void getStrukturElements(CnATreeElement parent) {
 		for (CnATreeElement child : parent.getChildren()) {
 			
 			if ( isStrukturElement(child) ) {

@@ -36,11 +36,15 @@ public class GenerateReportAction extends ActionDelegate implements
 	public void run(IAction action) {
 		if (dialog.open() == Dialog.OK) {
 			IReportOptions ro = new IReportOptions() {
+			    Integer rootElmt; 
 				public boolean isToBeEncrypted() { return false; }
 				public boolean isToBeCompressed() { return false; }
 				public IOutputFormat getOutputFormat() { return dialog.getOutputFormat(); } 
 				public File getOutputFile() { return dialog.getOutputFile(); }
+                public void setRootElement(Integer rootElement) { rootElmt = rootElement; }
+                public Integer getRootElement() {return rootElmt; }
 			};
+			ro.setRootElement(dialog.getRootElement());
 
 			dialog.getReportType().createReport(ro);
 		}
