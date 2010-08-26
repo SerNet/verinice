@@ -19,14 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
-import java.util.Map;
-
 import org.apache.log4j.Logger;
-import org.hibernate.LazyInitializationException;
+import org.hibernate.Hibernate;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
@@ -43,9 +40,7 @@ public class Retriever {
 	private static ICommandService commandService;
 	
 	public static CnATreeElement checkRetrieveElement(CnATreeElement element) {
-		try {
-			checkElement(element);
-		} catch(LazyInitializationException e) {
+		if(!isElementInitialized(element)) {
 			if (LOG.isInfoEnabled()) {
 				LOG.info("Loading properties of element: " + element.getDbId());
 			}
@@ -55,9 +50,7 @@ public class Retriever {
 	}
 	
 	public static CnATreeElement checkRetrieveChildren(CnATreeElement element) {
-		try {
-			checkChildren(element);
-		} catch(LazyInitializationException e) {
+		if(!areChildrenInitialized(element)) {
 			if (LOG.isInfoEnabled()) {
 				LOG.info("Loading children of element: " + element.getDbId());
 			}
@@ -68,9 +61,7 @@ public class Retriever {
 	
 	public static CnATreeElement checkRetrieveElementAndChildren(CnATreeElement element) {
 		RetrieveInfo ri = null;
-		try {
-			checkElement(element);
-		} catch(LazyInitializationException e) {
+		if(!isElementInitialized(element)) {
 			if (LOG.isInfoEnabled()) {
 				LOG.info("Loading children of element: " + element.getDbId());
 			}
@@ -79,9 +70,7 @@ public class Retriever {
 			}
 			ri.setProperties(true);
 		}
-		try {
-			checkChildren(element);
-		} catch(LazyInitializationException e) {
+		if(!areChildrenInitialized(element)) {
 			if (LOG.isInfoEnabled()) {
 				LOG.info("Loading properties of element: " + element.getDbId());
 			}
@@ -99,52 +88,33 @@ public class Retriever {
 	/**
      * @param cte
      */
-    public static CnATreeElement checkRetrieveParentPermissions(CnATreeElement element) {
-        try {
-            checkParentPermissions(element);
-        } catch(LazyInitializationException e) {
+    public static CnATreeElement checkRetrieveParent(CnATreeElement element) {
+        if(!isParentInitialized(element) && element!=null) {
             if (LOG.isInfoEnabled()) {
-                LOG.info("Loading children of element: " + element.getDbId());
+                LOG.info("Loading parent of element: " + element.getDbId());
             }
             RetrieveInfo ri = new RetrieveInfo();   
             ri.setParent(true);
-            ri.setParentPermissions(true);
-            ri.setPermissions(true);
             element = retrieveElement(element,ri);
         }
         return element;
     }
+    
+    public static boolean isParentInitialized(CnATreeElement element) {
+        return Hibernate.isInitialized(element) 
+            && (element==null || Hibernate.isInitialized(element.getParent())); 
+
+    }
 	
-	private static void checkElement(CnATreeElement element) {
-		if(element.getEntity()!=null
-		   && element.getEntity().getTypedPropertyLists()!=null
-		   && !element.getEntity().getTypedPropertyLists().isEmpty()) {
-			Map<String, PropertyList> map = element.getEntity().getTypedPropertyLists();
-			String key = map.keySet().iterator().next();
-			PropertyList propertyList = map.get(key);
-			propertyList.getProperties();
-		}
-	}
+	private static boolean isElementInitialized(CnATreeElement element) {
+        return Hibernate.isInitialized(element)
+            && (element==null || Hibernate.isInitialized(element.getEntity()))
+            && (element==null || element.getEntity()==null || Hibernate.isInitialized(element.getEntity().getTypedPropertyLists()));
+    }
 	
-	private static void checkChildren(CnATreeElement element) {
-		if(element.getChildren()!=null) {
-			element.getChildren().iterator();
-		}
-	}
-	
-	/**
-     * @param cte
-     */
-    public static void checkParentPermissions(CnATreeElement element) {
-        if(element.getParent()!=null && element.getParent().getPermissions()!=null) {
-            
-            try {
-                element.getParent().getPermissions().iterator();
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }     
+	public static boolean areChildrenInitialized(CnATreeElement element) {
+        return Hibernate.isInitialized(element) 
+            && (element==null || Hibernate.isInitialized(element.getChildren()));
     }
 	
 	public static CnATreeElement retrieveElement(CnATreeElement element, RetrieveInfo ri)  {

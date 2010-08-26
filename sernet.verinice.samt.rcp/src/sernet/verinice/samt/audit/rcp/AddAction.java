@@ -96,11 +96,11 @@ public class AddAction extends Action implements ISelectionListener {
                 }
                 // create a link to last selected (foreign) element
                 // if no group in this view is selected
-                if (groupView.getSelectedElement() != null && groupView.getSelectedGroup() == null) {
+                if (groupView.getElementToLink() != null && groupView.getSelectedGroup() == null) {
                     // this method also fires events for added links:
-                    CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(newElement, Arrays.asList(groupView.getSelectedElement()));
+                    CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(newElement, Arrays.asList(groupView.getElementToLink()));
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("New element linked - type: " + groupView.getSelectedElement().getObjectType() + ", title: " + groupView.getSelectedElement().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                        LOG.debug("New element linked - type: " + groupView.getElementToLink().getObjectType() + ", title: " + groupView.getElementToLink().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                     }
                     // link is created asynchron
                     // editor is opened in ISO27KModelViewUpdate of ElmentView

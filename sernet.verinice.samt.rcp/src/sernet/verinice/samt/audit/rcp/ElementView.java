@@ -118,7 +118,7 @@ public abstract class ElementView extends ViewPart {
     
     protected CnATreeElement selectedGroup;
     
-    private CnATreeElement selectedElement;
+    private CnATreeElement elementToLink;
     
     private Audit selectedAudit;
     
@@ -172,15 +172,17 @@ public abstract class ElementView extends ViewPart {
         textLink = new Label(compositeInfo,SWT.NONE);
         textLink.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
+        /*
         Label labelGroup = new Label(compositeInfo,SWT.NONE);
         labelGroup.setText(Messages.ElementView_3);
         labelGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
         textGroup = new Label(compositeInfo,SWT.NONE);
         textGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        */
         
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
-        contentProvider = new ISMViewContentProvider(cache, new ElementViewTreeCommandFactory());
+        contentProvider = new ISMViewContentProvider(cache, new ElementViewTreeCommandFactory(), new ElementViewParentLoader());
         
         viewer.setContentProvider(contentProvider);
         
@@ -323,17 +325,26 @@ public abstract class ElementView extends ViewPart {
      * @param selection
      */
     protected void pageSelectionChanged(IWorkbenchPart sourcePart, ISelection selection) {
-        if(selection instanceof IStructuredSelection) {
+        if(selection instanceof IStructuredSelection && sourcePart instanceof ElementView) {
             Object element = ((IStructuredSelection) selection).getFirstElement();
             if(element instanceof CnATreeElement) {
+                CnATreeElement treeElement = (CnATreeElement) element;
                 boolean sourceIsThisView = this.equals(sourcePart);
                 if(!sourceIsThisView) {
-                    loadElements(element);
-                    CnATreeElement selectedElement = (CnATreeElement) element;
-                    setSelectedElement(selectedElement);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Selected link element, Type: " + selectedElement.getObjectType() + ", name: " + selectedElement.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
-                    } 
+                    // check if treeElement has a relation to elements in this view
+                    if(checkRelations(treeElement)) {   
+                        loadElements(treeElement);
+                        setElementToLink(treeElement);
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Selected link element, Type: " + treeElement.getObjectType() + ", name: " + treeElement.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                        } 
+                    }
+                    if(treeElement!=null && treeElement.getTypeId().equals(Audit.TYPE_ID)) {
+                        setSelectedAudit((Audit)treeElement);
+                    }
+                    if(treeElement!=null && treeElement.getTypeId().equals(Organization.TYPE_ID)) {
+                        setSelectedOrganization((Organization)treeElement);
+                    }
                 } else {         
                     if(element instanceof Group ) {
                         CnATreeElement selectedElement = (CnATreeElement) element;
@@ -526,22 +537,18 @@ public abstract class ElementView extends ViewPart {
 
     protected void setSelectedGroup(CnATreeElement selectedGroup) {
         this.selectedGroup = selectedGroup;
-        textGroup.setText((selectedGroup!=null) ? selectedGroup.getTitle() : ""); //$NON-NLS-1$
+        if(textGroup!=null) {
+            textGroup.setText((selectedGroup!=null) ? selectedGroup.getTitle() : ""); //$NON-NLS-1$
+        }
     }
     
-    public void setSelectedElement(CnATreeElement element) {
-        this.selectedElement = element;
+    public void setElementToLink(CnATreeElement element) {
+        this.elementToLink = element;
         textLink.setText((element!=null) ? element.getTitle() : ""); //$NON-NLS-1$
-        if(element!=null && element.getTypeId().equals(Audit.TYPE_ID)) {
-            setSelectedAudit((Audit)element);
-        }
-        if(element!=null && element.getTypeId().equals(Organization.TYPE_ID)) {
-            setSelectedOrganization((Organization)element);
-        }
     }
 
-    public CnATreeElement getSelectedElement() {
-        return selectedElement;
+    public CnATreeElement getElementToLink() {
+        return elementToLink;
     }
 
     public void setSelectedAudit(Audit selectedAudit) {

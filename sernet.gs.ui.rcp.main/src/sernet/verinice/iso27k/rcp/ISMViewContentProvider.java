@@ -37,6 +37,7 @@ import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -65,15 +66,26 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 		commandFactory = new DefaultCommandFactory();
 	}
 	
-	public ISMViewContentProvider(TreeViewerCache cache, IContentCommandFactory commandFactory) {
+	public ISMViewContentProvider(TreeViewerCache cache, IContentCommandFactory commandFactory, IParentLoader parentLoader) {
         super();
         this.cache = cache;
-        this.commandFactory = commandFactory;
+        if(commandFactory!=null) {
+            this.commandFactory = commandFactory;
+        } else {
+            commandFactory = new DefaultCommandFactory();
+        }
+        if(parentLoader!=null) {
+            this.parentLoader = parentLoader;
+        } else {
+            parentLoader = new DefaultParentLoader();
+        }
     }
 
 	private TreeViewerCache cache;
 
 	private List<ViewerFilter> filterList = new ArrayList<ViewerFilter>();
+
+    private IParentLoader parentLoader;
 	
 	public void dispose() {
 	}
@@ -157,8 +169,6 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 			cache.clear(el);
 			cache.addObject(newElement);
 			if(loadParent && newElement.getParent()!=null) {
-			    // set the parent of the parent to bull to avoid lazy except.
-			    newElement.getParent().setParent(null);
 			    cache.addObject(newElement.getParent());
 			}
 		}
@@ -180,13 +190,27 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 	public Object getParent(Object child) {
 		Object parent = null;
 		if (child instanceof CnATreeElement) {
-			CnATreeElement el = (CnATreeElement) child;
-			parent = el.getParent();
+		    parent = getParentLoader().getParent((CnATreeElement) child);
+		    addParentToCache((CnATreeElement) parent);
 		} 
 		return parent;
 	}
+	
+	private void addParentToCache(CnATreeElement element) {
+	    if(element!=null) {
+            cache.addObject(element);
+            addParentToCache(element.getParent());
+        }
+	}
 
-	public boolean hasChildren(Object parent) {
+	/**
+     * @return
+     */
+    private IParentLoader getParentLoader() {
+        return parentLoader;
+    }
+
+    public boolean hasChildren(Object parent) {
 		boolean hasChildren = false;
 		if (parent instanceof CnATreeElement) {
 			try {
@@ -246,5 +270,17 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 			return result;
 		}
 		
+	}
+	
+	class DefaultParentLoader implements IParentLoader {
+
+        /* (non-Javadoc)
+         * @see sernet.verinice.iso27k.rcp.IParentLoader#getParent(sernet.verinice.model.common.CnATreeElement)
+         */
+        @Override
+        public CnATreeElement getParent(CnATreeElement child) {
+            return (child!=null) ? child.getParent() : null;          
+        }
+	    
 	}
 }

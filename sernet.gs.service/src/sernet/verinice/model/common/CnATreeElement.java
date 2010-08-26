@@ -137,7 +137,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		try {
 		    result = this.uuid.equals(that.uuid);
         } catch (Exception e) {
-            getLog().error("Error in equals, this title: " + this.getTitle(), e);
+            getLog().error("Error in equals, this uuid: " + this.uuid, e);
         }
 		return result;
 	}
@@ -335,7 +335,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 
 	/**
-     * dependency in linksDown is this {@link CnATreeElement}
+     * dependency in linksUp is this {@link CnATreeElement}
      *
      * @return
      */

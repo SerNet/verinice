@@ -76,7 +76,6 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 		if (child == null)
 			return;
 		
-		Logger.getLogger(this.getClass()).debug("Added child in database: " + child.getTitle()); //$NON-NLS-1$
 		for (IISO27KModelListener listener : getListeners()) {
 			listener.databaseChildAdded(child);
 		}

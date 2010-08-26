@@ -20,10 +20,14 @@
 package sernet.verinice.iso27k.service;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -31,6 +35,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.RcpProgressObserver;
+import sernet.verinice.iso27k.service.PasteService.IPostProcessor;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
@@ -85,12 +90,18 @@ public class CutService extends PasteService implements IProgressTask {
 			this.numberOfElements = 0;
 			List<CnATreeElement> elementList = createInsertList(elements);		
 			progressObserver.beginTask(Messages.getString("CutService.1",numberOfElements), numberOfElements);
-			numberProcessed = 0;		
+			numberProcessed = 0;
+			Map<String, String> sourceDestMap = new Hashtable<String, String>();
 			for (CnATreeElement element : elementList) {
-				CnATreeElement elementCopy = move(progressObserver, selectedGroup, element);
-				CnAElementFactory.getModel(elementCopy).childAdded(selectedGroup, elementCopy);
-				CnAElementFactory.getModel(elementCopy).databaseChildAdded(elementCopy);
-			}		
+				CnATreeElement movedElement = move(progressObserver, selectedGroup, element);
+				CnAElementFactory.getModel(movedElement).childAdded(selectedGroup, movedElement);
+				CnAElementFactory.getModel(movedElement).databaseChildAdded(movedElement);
+				// cut: source and dest is the same
+				sourceDestMap.put(movedElement.getUuid(),movedElement.getUuid());
+			}
+            for (IPostProcessor postProcessor : getPostProcessorList()) {
+                postProcessor.process(sourceDestMap);
+            }	
 		} catch (Exception e) {
 			log.error("Error while copying element", e);
 			throw new RuntimeException("Error while copying element", e);
@@ -112,7 +123,9 @@ public class CutService extends PasteService implements IProgressTask {
 			return null;
 		}
 		monitor.setTaskName(getText(numberOfElements,numberProcessed,element.getTitle()));
+		element = Retriever.retrieveElement(element,new RetrieveInfo().setParent(true));
 		CnATreeElement parentOld = element.getParent();
+		parentOld = Retriever.retrieveElement(parentOld,RetrieveInfo.getChildrenInstance().setParent(true));
 		parentOld.removeChild(element);
 		element.setParent(group);
 		group.addChild(element);

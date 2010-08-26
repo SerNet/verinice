@@ -34,6 +34,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.iso27k.rcp.CnPItems;
@@ -42,6 +43,7 @@ import sernet.verinice.iso27k.service.CopyService;
 import sernet.verinice.iso27k.service.CutService;
 import sernet.verinice.iso27k.service.IProgressObserver;
 import sernet.verinice.iso27k.service.PasteService;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
@@ -70,9 +72,10 @@ public class PasteHandler extends AbstractHandler {
 			if(part instanceof GenericElementView) {
 			    elementView = (GenericElementView) part;
 			    groupToAdd = elementView.getGroupToAdd();
-			    elementToLink = elementView.getSelectedElement();
+			    elementToLink = elementView.getElementToLink();
 			}
-			if(selection instanceof IStructuredSelection) {	
+			if(selection instanceof IStructuredSelection) {
+			    groupToAdd = Retriever.retrieveElement(groupToAdd, RetrieveInfo.getPropertyChildrenInstance().setParent(true));
 				IProgressRunnable operation = createOperation(groupToAdd,elementToLink);
 	            if(operation!=null) {
 	                IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
@@ -103,10 +106,10 @@ public class PasteHandler extends AbstractHandler {
         List copyList = CnPItems.getCopyItems();
         List cutList = CnPItems.getCutItems();         
         if(copyList!=null && !copyList.isEmpty() && CnPItems.getCopyItems().get(0) instanceof CnATreeElement) { 
-            PasteService task = new AuditCopyService(element, elementToLink, CnPItems.getCopyItems());
+            PasteService task = new AuditCopyService(element, elementToLink, copyList);
             operation = new PasteOperation(task,"{0} elements copied to group {1}",PreferenceConstants.INFO_ELEMENTS_COPIED) ;
         } else if(cutList!=null && cutList.size()>0 && cutList.get(0) instanceof CnATreeElement) { 
-            PasteService task = new CutService(element,cutList);
+            PasteService task = new AuditCutService(element, elementToLink, cutList);
             operation = new PasteOperation(task,"{0} elements moved to group {1}",PreferenceConstants.INFO_ELEMENTS_CUT) ;
         }
         return operation;

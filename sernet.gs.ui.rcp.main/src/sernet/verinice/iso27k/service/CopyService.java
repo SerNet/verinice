@@ -100,11 +100,12 @@ public class CopyService extends PasteService implements IProgressTask {
 			progressObserver.beginTask(Messages.getString("CopyService.1",numberOfElements), numberOfElements);		
 			Map<String, String> sourceDestMap = new Hashtable<String, String>();
             numberProcessed = 0;
+            selectedGroup = Retriever.retrieveElement(selectedGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));
 			for (CnATreeElement element : copyElements) {	    
 				CnATreeElement elementCopy = copy(progressObserver, selectedGroup, element, sourceDestMap);
 				CnAElementFactory.getModel(elementCopy).childAdded(selectedGroup, elementCopy);
 				CnAElementFactory.getModel(elementCopy).databaseChildAdded(elementCopy);
-			}	
+			}
 			for (IPostProcessor postProcessor : getPostProcessorList()) {
 			    postProcessor.process(sourceDestMap);
             }

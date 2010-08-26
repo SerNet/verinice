@@ -20,6 +20,7 @@
 package sernet.verinice.samt.audit.service;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -40,38 +41,34 @@ import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CreateLink;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class CopyLinks extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand {
+public class MoveLinks extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand {
 
-    private transient Logger log = Logger.getLogger(CopyLinks.class);
+    private transient Logger log = Logger.getLogger(MoveLinks.class);
     public Logger getLog() {
-        if (log == null) { log = Logger.getLogger(CopyLinks.class); }
+        if (log == null) { log = Logger.getLogger(MoveLinks.class); }
         return log;
     }
-    
-    Set<String> copyUuidSet;
     
     Map<String, String> sourceDestMap;
     
     CnATreeElement linkTo;
-    
-    private transient Set<CnALink> cretedLinkSet;
     
     private transient IBaseDao<CnATreeElement, Serializable> cnaTreeElementDao;
     
     private transient IAuthService authService;
 
     private String stationId;
+
     
-    public CopyLinks(Set<String> copyUuidSet, Map<String, String> sourceDestMap, CnATreeElement linkTo) {
+    
+    public MoveLinks(Map<String, String> sourceDestMap, CnATreeElement linkTo) {
         super();
-        this.copyUuidSet = copyUuidSet;
         this.sourceDestMap = sourceDestMap;
         this.linkTo = linkTo;
         this.stationId = ChangeLogEntry.STATION_ID;
@@ -83,41 +80,30 @@ public class CopyLinks extends GenericCommand implements IChangeLoggingCommand, 
     @Override
     public void execute() {
         if(sourceDestMap!=null) {
-            Set<CnALink> allLinks = new HashSet<CnALink>();
-            Set<String> uuidSourceSet = sourceDestMap.keySet();
-            cretedLinkSet = new HashSet<CnALink>();
-            for (String uuidSource : uuidSourceSet) {
-                RetrieveInfo ri = new RetrieveInfo().setLinksDown(true).setLinksUp(true);
+            Collection<String> uuidDestCollection = sourceDestMap.values();
+            // find the old link up and remove it
+            for (String uuidSource : uuidDestCollection) {
+                RetrieveInfo ri = new RetrieveInfo().setLinksUp(true).setParent(true);
                 CnATreeElement element = getCnaTreeElementDao().findByUuid(uuidSource, ri);
-                Set<CnALink> linkDownSet = element.getLinksDown();
-                allLinks.addAll(linkDownSet);
-                CnATreeElement linkFrom = element;
-                for (CnALink cnALink : linkDownSet) {
-                    // element is dependant                 
-                    CnATreeElement dependency = cnALink.getDependency();
-                    createLink(linkFrom, dependency, cnALink.getRelationId());
-                }
                 Set<CnALink> linkUpSet = element.getLinksUp();
-                allLinks.addAll(linkUpSet);
-                if(copyUuidSet.contains(uuidSource)) {
-                    // linkFrom was selected to copy             
-                    linkTo = getCnaTreeElementDao().merge(linkTo);
-                    // check if parent is already linked
-                    if(!parentIsLinked(linkFrom,linkTo)) {                   
-                        createLink(linkTo, linkFrom);
+                Set<CnALink> linkDeleteSet = new HashSet<CnALink>();
+                for (CnALink link : linkUpSet) {
+                    if(linkTo.getTypeId().equals(link.getDependant().getTypeId())) {
+                        linkDeleteSet.add(link);
                     }
-                } else {
-                    // linkFrom was copied by recursion
-                    for (CnALink cnALink : linkUpSet) {
-                        // element is dependency
-                        CnATreeElement dependant = cnALink.getDependant(); 
-                        createLink(dependant, linkFrom, cnALink.getRelationId()); 
-                    }
+                }
+                for (CnALink link : linkDeleteSet) {
+                    element.getLinksUp().remove(link);                 
+                }
+                element = getCnaTreeElementDao().merge(element);
+                linkTo = getCnaTreeElementDao().merge(linkTo);
+                if(!parentIsLinked(element,linkTo)) {
+                    createLink(linkTo, element);
                 }
             }
         }
     }
-
+    
     /**
      * @param linkFrom
      * @param linkTo2
@@ -125,10 +111,6 @@ public class CopyLinks extends GenericCommand implements IChangeLoggingCommand, 
      */
     private boolean parentIsLinked(CnATreeElement linkFrom, CnATreeElement linkTo) {
         boolean result = false;
-        if(sourceDestMap.get(linkFrom.getUuid())!=null) {
-            String linkFromUuid = sourceDestMap.get(linkFrom.getUuid());
-            linkFrom = getCnaTreeElementDao().findByUuid(linkFromUuid,null);
-        }
         CnATreeElement parent = linkFrom.getParent();
         if(parent!=null && linkTo!=null) {
             Set<CnALink> linksUpSet = parent.getLinksUp();
@@ -141,7 +123,7 @@ public class CopyLinks extends GenericCommand implements IChangeLoggingCommand, 
         }
         return result;
     }
-
+    
     /**
      * @param uuidSource
      * @param linkFrom
@@ -160,46 +142,21 @@ public class CopyLinks extends GenericCommand implements IChangeLoggingCommand, 
 
     private CnALink createLink(CnATreeElement dependant, CnATreeElement dependency, String relationId) {
         try {
-            if(sourceDestMap.get(dependency.getUuid())!=null) {
-                String destUuid = sourceDestMap.get(dependency.getUuid());
-                dependency = getCnaTreeElementDao().findByUuid(destUuid,null);
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Creating link, dependency " + dependency.getTitle() + " (copy)...");
-                }
-            } else if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating link, dependency " + dependency.getTitle() + "...");
-            }
-            if(sourceDestMap.get(dependant.getUuid())!=null) {
-                String destUuid = sourceDestMap.get(dependant.getUuid());
-                dependant = getCnaTreeElementDao().findByUuid(destUuid,null);
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Creating link, dependant " + dependant.getTitle() + " (copy)...");
-                }
-            } else if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating link, dependant " + dependant.getTitle() + "...");
-            } 
-            if(!cretedLinkSet.contains(new CnALink(dependant, dependency, relationId, null))) {
-                CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(dependant, dependency, relationId, "created by command CopyLinks");      
-                createLink = getCommandService().executeCommand(createLink);
-                cretedLinkSet.add(createLink.getLink());
-                return createLink.getLink();
-            } else {
-                return null;
-            }
-            
+            CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(dependant, dependency, relationId, "created by command CopyLinks");      
+            createLink = getCommandService().executeCommand(createLink);
+            return createLink.getLink();          
         } catch (CommandException e) {
             getLog().error("Error while creating cnalink in db", e);
             return null;
-        }
-        
+        }       
     }
-    
+
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
      */
     @Override
     public int getChangeType() {
-        return ChangeLogEntry.TYPE_INSERT;
+        return ChangeLogEntry.TYPE_UPDATE;
     }
 
     /* (non-Javadoc)
@@ -218,8 +175,6 @@ public class CopyLinks extends GenericCommand implements IChangeLoggingCommand, 
     public String getStationId() {
         return stationId;
     }
-
-
     
     protected IBaseDao<CnATreeElement, Serializable> getCnaTreeElementDao() {
         if(cnaTreeElementDao==null) {
