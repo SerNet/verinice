@@ -32,6 +32,7 @@ import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.iso27k.service.commands.LoadModel;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BSIModel;
@@ -61,6 +62,23 @@ import sernet.verinice.model.ds.Personengruppen;
 import sernet.verinice.model.ds.StellungnahmeDSB;
 import sernet.verinice.model.ds.VerantwortlicheStelle;
 import sernet.verinice.model.ds.Verarbeitungsangaben;
+import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.DocumentGroup;
+import sernet.verinice.model.iso27k.ExceptionGroup;
+import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.IncidentGroup;
+import sernet.verinice.model.iso27k.IncidentScenarioGroup;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.model.iso27k.ProcessGroup;
+import sernet.verinice.model.iso27k.RecordGroup;
+import sernet.verinice.model.iso27k.RequirementGroup;
+import sernet.verinice.model.iso27k.ResponseGroup;
+import sernet.verinice.model.iso27k.ThreatGroup;
+import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.model.samt.SamtTopic;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.data.SyncObject;
 import de.sernet.sync.data.SyncObject.SyncAttribute;
@@ -101,6 +119,24 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 		typeIdClass.put(VerantwortlicheStelle.TYPE_ID, VerantwortlicheStelle.class);
 		typeIdClass.put(StellungnahmeDSB.TYPE_ID, StellungnahmeDSB.class);
 		typeIdClass.put(Datenverarbeitung.TYPE_ID, Datenverarbeitung.class);
+		
+        typeIdClass.put(ResponseGroup.TYPE_ID, ResponseGroup.class);
+        typeIdClass.put(ExceptionGroup.TYPE_ID, ExceptionGroup.class);
+        typeIdClass.put(VulnerabilityGroup.TYPE_ID, VulnerabilityGroup.class);
+        typeIdClass.put(PersonGroup.TYPE_ID, PersonGroup.class);
+        typeIdClass.put(IncidentGroup.TYPE_ID, IncidentGroup.class);
+        typeIdClass.put(ThreatGroup.TYPE_ID, ThreatGroup.class);
+        typeIdClass.put(Organization.TYPE_ID, Organization.class);
+        typeIdClass.put(ProcessGroup.TYPE_ID, ProcessGroup.class);
+        typeIdClass.put(AuditGroup.TYPE_ID, AuditGroup.class);
+        typeIdClass.put(IncidentScenarioGroup.TYPE_ID, IncidentScenarioGroup.class);
+        typeIdClass.put(RecordGroup.TYPE_ID, RecordGroup.class);
+        typeIdClass.put(RequirementGroup.TYPE_ID, RequirementGroup.class);
+        typeIdClass.put(ControlGroup.TYPE_ID, ControlGroup.class);
+        typeIdClass.put(DocumentGroup.TYPE_ID, DocumentGroup.class);
+        typeIdClass.put(AssetGroup.TYPE_ID, AssetGroup.class);
+        
+        typeIdClass.put(SamtTopic.TYPE_ID, SamtTopic.class);
 	}
 
 	private String sourceId;
@@ -362,18 +398,18 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 		// and set the 'importRootObject' variable.
 		if (importRootObject == null)
 		{
-			LoadBSIModel cmdLoadBSIModel = new LoadBSIModel();
+		    LoadModel cmdLoadModel = new LoadModel();
 
 		try {
-			cmdLoadBSIModel = ServiceFactory.lookupCommandService()
-					.executeCommand(cmdLoadBSIModel);
+			cmdLoadModel = ServiceFactory.lookupCommandService()
+					.executeCommand(cmdLoadModel);
 		} catch (CommandException e) {
 			errorList.add("Fehler beim Ausführen von LoadBSIModel.");
 			throw new RuntimeCommandException(
 			"Fehler beim Anlegen des Behälters für importierte Objekte.");
 		}
 
-		BSIModel model = cmdLoadBSIModel.getModel();
+		ISO27KModel model = cmdLoadModel.getModel();
 			try {
 				ImportedObjectsHolder holder = new ImportedObjectsHolder(model);
 				getDaoFactory().getDAO(ImportedObjectsHolder.class).saveOrUpdate(holder);
