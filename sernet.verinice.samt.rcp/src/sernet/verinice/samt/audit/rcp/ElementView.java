@@ -39,6 +39,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -51,8 +55,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -65,6 +71,8 @@ import sernet.verinice.iso27k.rcp.ISMViewContentProvider;
 import sernet.verinice.iso27k.rcp.ISMViewLabelProvider;
 import sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -305,6 +313,22 @@ public abstract class ElementView extends ViewPart {
                 super.databaseChildRemoved(child);
                 reload();
             }
+            /**
+             * 
+             */
+            /* (non-Javadoc)
+             * @see sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate#databaseChildAdded(sernet.verinice.model.common.CnATreeElement)
+             */
+            @Override
+            public void databaseChildAdded(CnATreeElement child) {
+                // reload the parent, put is to the cache
+                RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance().setParent(true);
+                CnATreeElement parent = Retriever.retrieveElement(child.getParent(), ri);
+                cache.clear(parent);      
+                cache.addObject(parent);
+                child.setParent(parent);
+                super.databaseChildAdded(child);
+            }
          };
     }
     
@@ -473,7 +497,7 @@ public abstract class ElementView extends ViewPart {
     /**
      * 
      */
-    private void makeActions() {
+    protected void makeActions() {
         doubleClickAction = new Action() {
             public void run() {
                 if(viewer.getSelection() instanceof IStructuredSelection) {
@@ -482,6 +506,7 @@ public abstract class ElementView extends ViewPart {
                 }
             }
         };
+        
     }
     
     private void addActions() {
@@ -501,16 +526,9 @@ public abstract class ElementView extends ViewPart {
         //manager.add(someAction);
     }
 
-    /**
-     * 
-     */
-    private void hookDndListeners() {
-        // TODO Auto-generated method stub
-        
+    protected void hookDndListeners() {   
     }
 
-
-    
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */

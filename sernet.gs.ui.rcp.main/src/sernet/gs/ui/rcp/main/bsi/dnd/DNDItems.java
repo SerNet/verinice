@@ -18,9 +18,14 @@
 package sernet.gs.ui.rcp.main.bsi.dnd;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+
+import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("unchecked")
 public class DNDItems {
@@ -34,20 +39,32 @@ public class DNDItems {
 	public static final Object RISIKOMASSNAHMENUMSETZUNG = "risikomassnahmenumsetzung";
 	
 	private static List dndItems = new ArrayList();
+	private static Set<String> typeIdSet = new HashSet<String>(1);
 
 	public static void setItems(List items) {
-//		if (LOG.isDebugEnabled()) {
-//			LOG.debug("setItems, list: " + items);
-//		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("setItems, list: " + items);
+		}
 		dndItems = items; 
+		typeIdSet.clear();
+		for (Object item : dndItems) {
+            if(item instanceof CnATreeElement) {
+                typeIdSet.add(((CnATreeElement)item).getTypeId());
+            }
+        }
 	}
 
 	public static List getItems() {
 		return dndItems;
 	}
+	
+	public static Set<String> getTypes() {
+        return typeIdSet;
+    }
 
 	public static void clear() {
 		dndItems = new ArrayList();
+		typeIdSet = new HashSet<String>(1);
 	}
 	
 }

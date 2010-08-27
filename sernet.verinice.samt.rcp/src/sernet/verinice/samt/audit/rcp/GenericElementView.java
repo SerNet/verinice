@@ -30,13 +30,19 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -77,6 +83,11 @@ public class GenericElementView extends ElementView {
         commandMap.put(Control.TYPE_ID, new ElementViewCommandFactory(Control.TYPE_ID,ControlGroup.TYPE_ID));
         commandMap.put(Organization.TYPE_ID, new OrganizationCommandFactory());
     }
+    
+    private static Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
+    private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
+    
+    private MetaDropAdapter metaDropAdapter;
     
     protected ICommandFactory commandFactory;
     
@@ -120,7 +131,28 @@ public class GenericElementView extends ElementView {
         viewer.addFilter(filter);
         contentProvider.addFilter(filter);
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.samt.audit.rcp.ElementView#makeActions()
+     */
+    @Override
+    protected void makeActions() {
+        super.makeActions();
+        
+        metaDropAdapter = new MetaDropAdapter(viewer);
+        // add drop performer
+        metaDropAdapter.addAdapter(new ElementViewDropPerformer(this));
+    }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.samt.audit.rcp.ElementView#hookDndListeners()
+     */
+    @Override
+    protected void hookDndListeners() {
+        viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
+        viewer.addDropSupport(operations, types, metaDropAdapter);  
+    }
+   
     protected ICommandFactory getCommandFactory() {
         return commandFactory;
     }

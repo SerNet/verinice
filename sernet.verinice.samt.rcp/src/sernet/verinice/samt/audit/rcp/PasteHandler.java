@@ -25,10 +25,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -38,15 +36,12 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.iso27k.rcp.CnPItems;
-import sernet.verinice.iso27k.rcp.RcpProgressObserver;
 import sernet.verinice.iso27k.service.CopyService;
 import sernet.verinice.iso27k.service.CutService;
-import sernet.verinice.iso27k.service.IProgressObserver;
 import sernet.verinice.iso27k.service.PasteService;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.IProgressRunnable;
-import sernet.verinice.rcp.InfoDialogWithShowToggle;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -113,45 +108,6 @@ public class PasteHandler extends AbstractHandler {
             operation = new PasteOperation(task,"{0} elements moved to group {1}",PreferenceConstants.INFO_ELEMENTS_CUT) ;
         }
         return operation;
-    }
-    
-    class PasteOperation implements IProgressRunnable {
-        
-        private IProgressObserver progressObserver;      
-        private PasteService service;
-        private String message;
-        private String id;
-        
-        @SuppressWarnings("unchecked")
-        public PasteOperation(PasteService service, String message, String id) {
-            this.service = service;
-            this.message =  message;
-        }
-          
-        /* (non-Javadoc)
-         * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
-         */
-        public void run(IProgressMonitor monitor)  {    
-            service.setProgressObserver(new RcpProgressObserver(monitor));
-            service.run();
-        }
-
-        public int getNumberOfElements() {
-            int n = 0;
-            if(service!=null) {
-                n = service.getNumberOfElements();
-            }
-            return n;
-        }
-
-        public void openInformation() {
-            InfoDialogWithShowToggle.openInformation(
-                    "Status Information",  
-                    NLS.bind(message, getNumberOfElements(), (service.getGroup()!=null) ? service.getGroup().getTitle() : ""), 
-                    "Don't show this message again (You can change this in the preferences)", 
-                    id);
-            
-        }
     }
     
 
