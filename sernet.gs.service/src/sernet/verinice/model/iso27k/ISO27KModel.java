@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.ImportedObjectsHolder;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>
@@ -59,15 +60,16 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 	
 	@Override
 	public boolean canContain(Object obj) {
-		return (obj instanceof Organization);
+		return (obj instanceof Organization || obj instanceof ImportedObjectsHolder);
 	}
 
 	@Override
 	public void childAdded(CnATreeElement category, CnATreeElement child) {
 		for (IISO27KModelListener listener : getListeners()) {
 			listener.childAdded(category, child);
-			if (child instanceof Organization)
+			if (child instanceof Organization || child instanceof ImportedObjectsHolder) {
 				listener.modelRefresh(null);
+			}
 		}
 	}
 	

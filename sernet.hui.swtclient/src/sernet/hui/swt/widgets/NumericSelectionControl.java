@@ -46,6 +46,8 @@ import sernet.snutils.AssertException;
  */
 public class NumericSelectionControl implements IHuiControl {
 
+    private static final Logger LOG = Logger.getLogger(NumericSelectionControl.class);
+    
 	private Entity entity;
 
 	private PropertyType fieldType;
@@ -104,7 +106,7 @@ public class NumericSelectionControl implements IHuiControl {
 
 			List<Property> savedProps = entity.getProperties(fieldType.getId())
 					.getProperties();
-			savedProp = savedProps != null ? (Property) savedProps.get(0)
+			savedProp = savedProps != null && !savedProps.isEmpty() ? (Property) savedProps.get(0)
 					: null;
 
 			combo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
@@ -139,7 +141,7 @@ public class NumericSelectionControl implements IHuiControl {
 			});
 			combo.pack(true);
 		} catch (Exception e1) {
-			Logger.getLogger(NumericSelectionControl.class).error(e1);
+			LOG.error("Error while creating",e1);
 		}
 
 	}

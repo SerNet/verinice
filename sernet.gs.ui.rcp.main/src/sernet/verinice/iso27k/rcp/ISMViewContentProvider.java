@@ -64,6 +64,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 		super();
 		this.cache = cache;
 		commandFactory = new DefaultCommandFactory();
+		parentLoader = new DefaultParentLoader();
 	}
 	
 	public ISMViewContentProvider(TreeViewerCache cache, IContentCommandFactory commandFactory, IParentLoader parentLoader) {

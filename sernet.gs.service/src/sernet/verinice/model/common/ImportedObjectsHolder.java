@@ -20,11 +20,9 @@ package sernet.verinice.model.common;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 
 @SuppressWarnings("serial")
-public class ImportedObjectsHolder extends CnATreeElement implements
-		IBSIStrukturKategorie {
+public class ImportedObjectsHolder extends CnATreeElement implements IBSIStrukturKategorie {
 	
-	public static final String TYPE_ID = ImportedObjectsHolder.class
-			.getSimpleName();
+	public static final String TYPE_ID = ImportedObjectsHolder.class.getSimpleName();
 
 	public ImportedObjectsHolder(CnATreeElement model) {
 		super(model);

@@ -61,30 +61,37 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
     private transient IAuthService authService;
 
     private boolean skipReload;
+    
+    private boolean createChildren;
 
     /**
      * @param container2
      * @param clazz
      * @param typeId
      */
-    public CreateElement(CnATreeElement container, Class<T> clazz, String title, boolean skipReload) {
+    public CreateElement(CnATreeElement container, Class<T> clazz, String title, boolean skipReload, boolean createChildren) {
         this.container = container;
         this.clazz = clazz;
         this.title = title;
         this.stationId = ChangeLogEntry.STATION_ID;
         this.skipReload = skipReload;
+        this.createChildren = createChildren;
     }
 
     public CreateElement(CnATreeElement container, Class<T> type, String title) {
-        this(container, type, title, false);
+        this(container, type, title, false, true);
     }
 
     public CreateElement(CnATreeElement container, Class<T> type) {
-        this(container, type, null, false);
+        this(container, type, null, false, true);
     }
 
     public CreateElement(CnATreeElement container, Class<T> type, boolean skipReload) {
-        this(container, type, null, skipReload);
+        this(container, type, null, skipReload, true);
+    }
+    
+    public CreateElement(CnATreeElement container, Class<T> type, boolean skipReload, boolean createChildren) {
+        this(container, type, null, skipReload, createChildren);
     }
 
     public void execute() {
@@ -96,7 +103,11 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
                 containerDAO.reload(container, container.getDbId());
 
             // get constructor with parent-parameter and create new object:
-            child = clazz.getConstructor(CnATreeElement.class).newInstance(container);
+            if(clazz.equals(Organization.class)) {
+                child = clazz.getConstructor(CnATreeElement.class,boolean.class).newInstance(container,createChildren);
+            } else {
+                child = clazz.getConstructor(CnATreeElement.class).newInstance(container);
+            }
             if (title != null) {
                 // override the default title
                 child.setTitel(title);

@@ -59,24 +59,30 @@ public class Organization extends CnATreeElement implements IISO27kGroup {
 	}
 	
 	public Organization(CnATreeElement parent) {
+	    this(parent,true);
+	}
+	
+	public Organization(CnATreeElement parent, boolean createChildren) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
-        addChild(new AssetGroup(this));
-		addChild(new ControlGroup(this));
-		addChild(new AuditGroup(this));
-		addChild(new ExceptionGroup(this));
-		addChild(new PersonGroup(this));
-		addChild(new RequirementGroup(this));
-		addChild(new IncidentGroup(this));
-		addChild(new IncidentScenarioGroup(this));
-		addChild(new ResponseGroup(this));
-		addChild(new ThreatGroup(this));
-		addChild(new VulnerabilityGroup(this));
-		addChild(new DocumentGroup(this));
-		addChild(new RecordGroup(this));
-		addChild(new ProcessGroup(this));
+        if(createChildren) {
+            addChild(new AssetGroup(this));
+    		addChild(new ControlGroup(this));
+    		addChild(new AuditGroup(this));
+    		addChild(new ExceptionGroup(this));
+    		addChild(new PersonGroup(this));
+    		addChild(new RequirementGroup(this));
+    		addChild(new IncidentGroup(this));
+    		addChild(new IncidentScenarioGroup(this));
+    		addChild(new ResponseGroup(this));
+    		addChild(new ThreatGroup(this));
+    		addChild(new VulnerabilityGroup(this));
+    		addChild(new DocumentGroup(this));
+    		addChild(new RecordGroup(this));
+    		addChild(new ProcessGroup(this));
+        }
 	}
 	
 	@Override

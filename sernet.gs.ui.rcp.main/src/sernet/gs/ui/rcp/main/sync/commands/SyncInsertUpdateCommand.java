@@ -22,6 +22,8 @@ package sernet.gs.ui.rcp.main.sync.commands;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
@@ -85,6 +87,15 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 @SuppressWarnings("serial")
 public class SyncInsertUpdateCommand extends GenericCommand {
 
+    private transient Logger log = Logger.getLogger(SyncInsertUpdateCommand.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(SyncInsertUpdateCommand.class);
+        }
+        return log;
+    }
+    
     private static HashMap<String, String> containerTypes = new HashMap<String, String>();
     private static HashMap<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<String, Class<? extends CnATreeElement>>();
 
@@ -191,12 +202,18 @@ public class SyncInsertUpdateCommand extends GenericCommand {
     private void importObject(CnATreeElement parent, SyncObject so) {
         String extId = so.getExtId();
         String extObjectType = so.getExtObjectType();
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Importing element type: " + extObjectType + ", extId: " + extId + "...");
+        }
+        
         boolean setAttributes = false;
 
         MapObjectType mot = getMap(extObjectType);
 
         if (mot == null) {
-            errorList.add("Konnte kein mapObjectType-Element finden für den Objekttypen " + extObjectType);
+            final String message = "Could not find mapObjectType-Element for XML type: " + extObjectType;
+            getLog().error(message);
+            errorList.add(message);
             return;
         }
 
@@ -217,9 +234,15 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             if (update) // this object should be updated!
             {
                 /*** UPDATE: ***/
+                if (getLog().isDebugEnabled()) {
+                    getLog().debug("Element found in db: updating, uuid: " + elementInDB.getUuid());
+                }
                 setAttributes = true;
                 updated++;
             } else {
+                if (getLog().isDebugEnabled()) {
+                    getLog().debug("Element found in db, update disabled, uuid: " + elementInDB.getUuid());
+                }
                 // do not update this object's attributes!
                 setAttributes = false;
             }
@@ -229,16 +252,14 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         // flag is given, create a new object.
         if (elementInDB == null && insert) {
             // Each new object needs a parent. The top-level element(s) in the
-            // import
-            // set might not automatically have one. For those objects it is
-            // neccessary
-            // to use the 'import root object' instead.
+            // import set might not automatically have one. For those objects it is
+            // neccessary to use the 'import root object' instead.
             CnATreeElement container = (parent == null) ? accessRootImportObject() : parent;
 
             try {
                 // create new object in db...
-                CreateElement<CnATreeElement> newElement = new CreateElement<CnATreeElement>(container, getClassFromTypeId(veriniceObjectType), true);
-                getCommandService().executeCommand(newElement);
+                CreateElement<CnATreeElement> newElement = new CreateElement<CnATreeElement>(container, getClassFromTypeId(veriniceObjectType), true, false);
+                newElement = getCommandService().executeCommand(newElement);
                 elementInDB = newElement.getNewElement();
 
                 // ...and set its sourceId and extId:
@@ -247,9 +268,12 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 
                 setAttributes = true;
                 inserted++;
+                if (getLog().isDebugEnabled()) {
+                    getLog().debug("Element inserted, uuid: " + elementInDB.getUuid());
+                }
             } catch (Exception e) {
+                getLog().error("Error while inserting element, type: " + extObjectType + ", extId: " + extId, e);
                 errorList.add("Konnte " + veriniceObjectType + "-Objekt nicht erzeugen.");
-                e.printStackTrace();
             }
         }
 
@@ -268,7 +292,9 @@ public class SyncInsertUpdateCommand extends GenericCommand {
                 MapAttributeType mat = getMapAttribute(mot, attrExtId);
 
                 if (mat == null) {
-                    this.errorList.add("Konnte kein mapAttributeType-Element finden für das Attribut " + attrExtId + " von " + extObjectType);
+                    final String message = "Could not find mapObjectType-Element for XML attribute type: " + attrExtId + " of type: " + extObjectType;
+                    getLog().error(message);
+                    this.errorList.add(message);
                 } else {
                     String attrIntId = mat.getIntId();
                     elementInDB.getEntity().importProperties(attrIntId, attrValues);
@@ -282,6 +308,9 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             // The object that was created or modified during the course of
             // this method call is the parent for the import of the
             // child elements.
+            if (getLog().isDebugEnabled() && child!=null) {
+                getLog().debug("Child found, type: " + child.getExtObjectType() + ", extId: " + child.getExtId());
+            }
             importObject(elementInDB, child);
         }
     }

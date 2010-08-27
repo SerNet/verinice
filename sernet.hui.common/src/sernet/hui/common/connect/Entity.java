@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -223,7 +224,12 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		// use that but that causes problems with hibernate. As such the existing list
 		// is taken and cleared before use.
 		List<Property> properties = pl.getProperties();
-		properties.clear();
+		if(properties==null) {
+		    properties = new LinkedList<Property>();
+		    pl.setProperties(properties);
+		} else {
+		    properties.clear();
+		}
 		
 		for (String value : foreignProperties)
 		{

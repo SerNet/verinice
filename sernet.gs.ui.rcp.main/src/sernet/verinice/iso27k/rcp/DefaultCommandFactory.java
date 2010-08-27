@@ -21,6 +21,7 @@ package sernet.verinice.iso27k.rcp;
 
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.ImportedObjectsHolder;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
@@ -41,7 +42,7 @@ public class DefaultCommandFactory implements IContentCommandFactory {
             command = RetrieveCnATreeElement.getISO27KModelISMViewInstance(el.getDbId());
         } else if(el instanceof Organization) {
             command = RetrieveCnATreeElement.getOrganizationISMViewInstance(el.getDbId());
-        } else if( el instanceof IISO27kGroup ) {
+        } else if( el instanceof IISO27kGroup || el instanceof ImportedObjectsHolder ) {
             command = RetrieveCnATreeElement.getGroupISMViewInstance(el.getDbId(), el.getTypeId());
         } else if( el instanceof CnATreeElement) {
             command = RetrieveCnATreeElement.getElementISMViewInstance(el.getDbId(), el.getTypeId());
