@@ -183,7 +183,7 @@ public class ExportCommand extends GenericCommand
 		List<SyncObject> childList = null;
 		
 		/*++++++++++
-		 * Export the given CnATreeElement, iff it is NOT blacklisted (i.e. an IT network
+		 * Export the given CnATreeElement, if it is NOT blacklisted (i.e. an IT network
 		 * or category element) AND, if we should restrict the exported objects to certain
 		 * entity types, this element's entity type IS allowed:
 		 *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/

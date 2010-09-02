@@ -147,9 +147,8 @@ public class DateSelectionControl implements IHuiControl {
 			}
 		});
 
-		List savedProps = entity.getProperties(fieldType.getId())
-				.getProperties();
-		savedProp = savedProps != null ? (Property) savedProps.get(0) : null;
+		List savedProps = entity.getProperties(fieldType.getId()).getProperties();
+		savedProp = savedProps!=null &&  !savedProps.isEmpty() ? (Property) savedProps.get(0) : null;
 
 		String millis = "";
 		if (savedProp != null) {

@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.sync.commands;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
 import sernet.gs.ui.rcp.main.sync.InvalidRequestException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.iso27k.service.commands.LoadModel;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -301,6 +303,8 @@ public class SyncInsertUpdateCommand extends GenericCommand {
                 }
 
             } // for <syncAttribute>
+            IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(elementInDB.getTypeId());
+            dao.merge(elementInDB);
         } // if( null != ... )
 
         // Handle all the child objects.

@@ -56,12 +56,12 @@ public class PropertyList implements Serializable, ITypedElement  {
 	}
 
 	public PropertyList(int size) {
-		this();
+	    uuid = UUID.randomUUID().toString();
 		properties = new ArrayList<Property>(size);
 	}
 
 	public PropertyList() {
-		uuid = UUID.randomUUID().toString();
+		this(1);
 	}
 	
 	@Override

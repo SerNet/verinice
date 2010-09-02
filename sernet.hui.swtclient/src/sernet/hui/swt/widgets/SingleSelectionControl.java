@@ -99,10 +99,8 @@ public class SingleSelectionControl implements IHuiControl {
 			Label label = new Label(composite, SWT.NULL);
 			label.setText(fieldType.getName());
 
-			List<Property> savedProps = entity.getProperties(fieldType.getId())
-					.getProperties();
-			savedProp = savedProps != null ? (Property) savedProps.get(0)
-					: null;
+			List<Property> savedProps = entity.getProperties(fieldType.getId()).getProperties();
+			savedProp = savedProps!=null && !savedProps.isEmpty() ? (Property) savedProps.get(0) : null;
 
 			combo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 			fgColor = combo.getForeground();

@@ -129,9 +129,11 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	 * @return Returns all set properties of the given type.
 	 */
 	public PropertyList getProperties(String propertyType) {
-		PropertyList result = typedPropertyLists.get(propertyType) != null 
-								? typedPropertyLists.get(propertyType)
-								: new PropertyList();
+	    PropertyList result = typedPropertyLists.get(propertyType);
+	    if(result==null) {
+	        result = new PropertyList();
+	        typedPropertyLists.put(propertyType,result);
+	    }
 		return result;
 	}
 	
@@ -236,6 +238,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 			Property p = new Property();
 			p.setPropertyType(propertyType);
 			p.setPropertyValue(value);
+			p.setParent(this);
 			properties.add(p);
 		}
 	}
