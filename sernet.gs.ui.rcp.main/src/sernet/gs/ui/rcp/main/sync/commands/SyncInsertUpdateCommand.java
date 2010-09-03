@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.sync.InvalidRequestException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.iso27k.service.commands.LoadImportObjectsHolder;
 import sernet.verinice.iso27k.service.commands.LoadModel;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -62,21 +63,38 @@ import sernet.verinice.model.ds.Personengruppen;
 import sernet.verinice.model.ds.StellungnahmeDSB;
 import sernet.verinice.model.ds.VerantwortlicheStelle;
 import sernet.verinice.model.ds.Verarbeitungsangaben;
+import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Document;
 import sernet.verinice.model.iso27k.DocumentGroup;
+import sernet.verinice.model.iso27k.Evidence;
+import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.ExceptionGroup;
+import sernet.verinice.model.iso27k.Finding;
+import sernet.verinice.model.iso27k.FindingGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentGroup;
+import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.IncidentScenarioGroup;
+import sernet.verinice.model.iso27k.Interview;
+import sernet.verinice.model.iso27k.InterviewGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonGroup;
 import sernet.verinice.model.iso27k.ProcessGroup;
+import sernet.verinice.model.iso27k.Record;
 import sernet.verinice.model.iso27k.RecordGroup;
+import sernet.verinice.model.iso27k.Requirement;
 import sernet.verinice.model.iso27k.RequirementGroup;
+import sernet.verinice.model.iso27k.Response;
 import sernet.verinice.model.iso27k.ResponseGroup;
+import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
+import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import de.sernet.sync.data.SyncData;
@@ -144,6 +162,27 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         typeIdClass.put(ControlGroup.TYPE_ID, ControlGroup.class);
         typeIdClass.put(DocumentGroup.TYPE_ID, DocumentGroup.class);
         typeIdClass.put(AssetGroup.TYPE_ID, AssetGroup.class);
+        typeIdClass.put(EvidenceGroup.TYPE_ID, EvidenceGroup.class);
+        typeIdClass.put(InterviewGroup.TYPE_ID, InterviewGroup.class);
+        typeIdClass.put(FindingGroup.TYPE_ID, FindingGroup.class);
+        
+        typeIdClass.put(Response.TYPE_ID, Response.class);
+        typeIdClass.put(sernet.verinice.model.iso27k.Exception.TYPE_ID, sernet.verinice.model.iso27k.Exception.class);
+        typeIdClass.put(Vulnerability.TYPE_ID, Vulnerability.class);
+        typeIdClass.put(Person.TYPE_ID, Person.class);
+        typeIdClass.put(Incident.TYPE_ID, Incident.class);
+        typeIdClass.put(Threat.TYPE_ID, Threat.class);
+        typeIdClass.put(sernet.verinice.model.iso27k.Process.TYPE_ID, sernet.verinice.model.iso27k.Process.class);
+        typeIdClass.put(Audit.TYPE_ID, Audit.class);
+        typeIdClass.put(IncidentScenario.TYPE_ID, IncidentScenario.class);
+        typeIdClass.put(Record.TYPE_ID, Record.class);
+        typeIdClass.put(Requirement.TYPE_ID, Requirement.class);
+        typeIdClass.put(Control.TYPE_ID, Control.class);
+        typeIdClass.put(Document.TYPE_ID, Document.class);
+        typeIdClass.put(Asset.TYPE_ID, Asset.class);
+        typeIdClass.put(Evidence.TYPE_ID, Evidence.class);
+        typeIdClass.put(Interview.TYPE_ID, Interview.class);
+        typeIdClass.put(Finding.TYPE_ID, Finding.class);
 
         typeIdClass.put(SamtTopic.TYPE_ID, SamtTopic.class);
     }
@@ -157,8 +196,9 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 
     private int inserted = 0, updated = 0;
 
-    private CnATreeElement importRootObject = null;
+    private CnATreeElement container = null;
 
+    
     public int getUpdated() {
         return updated;
     }
@@ -256,11 +296,11 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             // Each new object needs a parent. The top-level element(s) in the
             // import set might not automatically have one. For those objects it is
             // neccessary to use the 'import root object' instead.
-            CnATreeElement container = (parent == null) ? accessRootImportObject() : parent;
+            parent = (parent == null) ? accessContainer() : parent;
 
             try {
                 // create new object in db...
-                CreateElement<CnATreeElement> newElement = new CreateElement<CnATreeElement>(container, getClassFromTypeId(veriniceObjectType), true, false);
+                CreateElement<CnATreeElement> newElement = new CreateElement<CnATreeElement>(parent, getClassFromTypeId(veriniceObjectType), true, false);
                 newElement = getCommandService().executeCommand(newElement);
                 elementInDB = newElement.getNewElement();
 
@@ -409,31 +449,43 @@ public class SyncInsertUpdateCommand extends GenericCommand {
      * 
      * @return
      */
-    private CnATreeElement accessRootImportObject() {
+    private CnATreeElement accessContainer() {
         // Create the importRootObject if it does not exist yet
         // and set the 'importRootObject' variable.
-        if (importRootObject == null) {
-            LoadModel cmdLoadModel = new LoadModel();
-
+        if (container == null) {
+            LoadImportObjectsHolder cmdLoadContainer = new LoadImportObjectsHolder();
             try {
-                cmdLoadModel = ServiceFactory.lookupCommandService().executeCommand(cmdLoadModel);
+                cmdLoadContainer = ServiceFactory.lookupCommandService().executeCommand(cmdLoadContainer);
             } catch (CommandException e) {
                 errorList.add("Fehler beim Ausführen von LoadBSIModel.");
                 throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.");
             }
-
-            ISO27KModel model = cmdLoadModel.getModel();
-            try {
-                ImportedObjectsHolder holder = new ImportedObjectsHolder(model);
-                getDaoFactory().getDAO(ImportedObjectsHolder.class).saveOrUpdate(holder);
-                importRootObject = holder;
-            } catch (Exception e1) {
-                throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.");
+            container = cmdLoadContainer.getHolder();
+            if(container==null) {
+                container = createContainer();
             }
-
         }
 
-        return importRootObject;
+        return container;
+    }
+
+    private CnATreeElement createContainer() {
+        LoadModel cmdLoadModel = new LoadModel();
+        try {
+            cmdLoadModel = ServiceFactory.lookupCommandService().executeCommand(cmdLoadModel);
+        } catch (CommandException e) {
+            errorList.add("Fehler beim Ausführen von LoadBSIModel.");
+            throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.");
+        }
+        ISO27KModel model = cmdLoadModel.getModel();
+        try {
+            ImportedObjectsHolder holder = new ImportedObjectsHolder(model);
+            getDaoFactory().getDAO(ImportedObjectsHolder.class).saveOrUpdate(holder);
+            container = holder;
+        } catch (Exception e1) {
+            throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.");
+        }
+        return container;
     }
 
     /**
@@ -442,8 +494,8 @@ public class SyncInsertUpdateCommand extends GenericCommand {
      * 
      * @return
      */
-    CnATreeElement getImportRootObject() {
-        return importRootObject;
+    public CnATreeElement getContainer() {
+        return container;
     }
 
 }

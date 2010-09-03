@@ -15,54 +15,40 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.common;
+package sernet.verinice.iso27k.service.commands;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
-import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.gs.service.RetrieveInfo;
+import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.common.ImportedObjectsHolder;
 
 @SuppressWarnings("serial")
-public class ImportedObjectsHolder extends CnATreeElement implements IISO27kElement {
+public class LoadImportObjectsHolder extends GenericCommand implements INoAccessControl {
+
+	private ImportedObjectsHolder holder;
+
+	public LoadImportObjectsHolder() {
+	}
 	
-	public static final String TYPE_ID = ImportedObjectsHolder.class.getSimpleName();
-
-	public ImportedObjectsHolder(CnATreeElement model) {
-		super(model);
+	public void execute() {
+		RetrieveInfo ri = new RetrieveInfo();
+		List<ImportedObjectsHolder> resultList = getDaoFactory().getDAO(ImportedObjectsHolder.TYPE_ID).findAll(ri);
+		if(resultList != null) {
+			if(resultList.size()>1) {
+				throw new RuntimeException("More than one ImportedObjectsHolder found.");
+			} else if(resultList.size()==1) {			
+			    holder = resultList.get(0);
+			}
+		}
 	}
 
-	protected ImportedObjectsHolder() {
+
+	public ImportedObjectsHolder getHolder() {
+		return holder;
 	}
-
-	@Override
-	public String getTitle() {
-		return "importierte Objekte";
-	}
-
-	@Override
-	public String getTypeId() {
-		return TYPE_ID;
-	}
-
-	@Override
-	public boolean canContain(Object obj) {
-		return true;
-	}
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.iso27k.IISO27kElement#getAbbreviation()
-     */
-    @Override
-    public String getAbbreviation() {
-        return getTypeId();
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.iso27k.IISO27kElement#getTags()
-     */
-    @Override
-    public Collection<? extends String> getTags() {
-        return Collections.emptyList();
-    }
 	
+	
+
 }

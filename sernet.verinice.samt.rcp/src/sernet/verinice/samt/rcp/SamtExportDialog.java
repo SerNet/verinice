@@ -211,7 +211,7 @@ public class SamtExportDialog extends TitleAreaDialog
             @Override
             public void widgetSelected(SelectionEvent e)
             {
-                FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
+                FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(),SWT.SAVE);
                 dialog.setText(Messages.SamtExportDialog_3);
                 dialog.setFilterExtensions(new String[]{ "*.xml" }); //$NON-NLS-1$
                 dialog.setFilterNames(new String[]{ Messages.SamtExportDialog_8 }); 

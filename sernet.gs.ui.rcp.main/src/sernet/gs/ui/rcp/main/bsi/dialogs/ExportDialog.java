@@ -287,7 +287,7 @@ public class ExportDialog extends TitleAreaDialog
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
+				FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(),SWT.SAVE);
 				dialog.setFilterExtensions(new String[]{ "*.xml" }); //$NON-NLS-1$
 				String exportPath = dialog.open();
 				if( exportPath != null )

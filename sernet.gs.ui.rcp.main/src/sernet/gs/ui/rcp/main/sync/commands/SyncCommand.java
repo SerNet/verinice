@@ -135,7 +135,7 @@ public class SyncCommand extends GenericCommand
 			return;
 		}
 		
-		importRootObject = cmdInsertUpdate.getImportRootObject();
+		importRootObject = cmdInsertUpdate.getContainer();
 		
 		inserted += cmdInsertUpdate.getInserted();
 		updated += cmdInsertUpdate.getUpdated();
@@ -184,4 +184,5 @@ public class SyncCommand extends GenericCommand
 	{
 		return importRootObject;
 	}
+
 }

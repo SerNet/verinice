@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -107,7 +109,8 @@ public class XMLImportDialog extends Dialog {
 								CnATreeElement importRootObject = command.getImportRootObject();
 								if (importRootObject != null)
 								{
-									CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
+								    CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
+                                    CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);                                 	    
 								}
 
 							}
