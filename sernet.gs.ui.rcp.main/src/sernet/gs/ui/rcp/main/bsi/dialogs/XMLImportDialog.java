@@ -1,5 +1,3 @@
-//Neu hinzugefÃ¼gt vom Projektteam: XML import
-
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
@@ -46,7 +44,7 @@ import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * 
- * @author: Projektteam
+ * @author: Projektteam HFU
  * 
  */
 
