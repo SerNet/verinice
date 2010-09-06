@@ -56,10 +56,9 @@ import sernet.verinice.model.iso27k.Organization;
  * @author Daniel Murygin <dm@sernet.de>
  */
 @SuppressWarnings("restriction")
-public class SamtExportDialog extends TitleAreaDialog
-{   
+public class SamtExportDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(SamtExportDialog.class);
-    
+
     /**
      * Indicates if the output should be encrypted.
      */
@@ -67,9 +66,8 @@ public class SamtExportDialog extends TitleAreaDialog
     private CnATreeElement selectedElement;
     private String filePath;
 
-    public SamtExportDialog(Shell activeShell)
-    {
-        this(activeShell,null);
+    public SamtExportDialog(Shell activeShell) {
+        this(activeShell, null);
     }
 
     /**
@@ -82,38 +80,36 @@ public class SamtExportDialog extends TitleAreaDialog
     }
 
     @Override
-    protected Control createDialogArea(Composite parent)
-    {
-        /*++++
-         * Dialog title, message and layout:
-         *++++++++++++++++++++++++++++++++++*/
-        
+    protected Control createDialogArea(Composite parent) {
+        /*
+         * ++++ Dialog title, message and layout:
+         * ++++++++++++++++++++++++++++++++++
+         */
+
         setTitle(Messages.SamtExportDialog_0);
         setMessage(Messages.SamtExportDialog_1, IMessageProvider.INFORMATION);
-        
+
         final Composite composite = (Composite) super.createDialogArea(parent);
-        ((GridLayout)composite.getLayout()).marginWidth = 10;
-        ((GridLayout)composite.getLayout()).marginHeight = 10;
-        
-        /*++++
-         * Widgets for selection of an IT network:
-         *++++++++++++++++++++++++++++++++++++++++*/
-        
+        ((GridLayout) composite.getLayout()).marginWidth = 10;
+        ((GridLayout) composite.getLayout()).marginHeight = 10;
+
+        /*
+         * ++++ Widgets for selection of an IT network:
+         * ++++++++++++++++++++++++++++++++++++++++
+         */
+
         final Label lblITNetwork = new Label(composite, SWT.NONE);
         lblITNetwork.setText(Messages.SamtExportDialog_2);
-        
+
         LoadCnAElementByType<Organization> cmdLoadOrganization = new LoadCnAElementByType<Organization>(Organization.class);
-        try
-        {
+        try {
             cmdLoadOrganization = ServiceFactory.lookupCommandService().executeCommand(cmdLoadOrganization);
-        }
-        catch (CommandException ex)
-        {
+        } catch (CommandException ex) {
             LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
             setMessage(Messages.SamtExportDialog_4, IMessageProvider.ERROR);
             return null;
         }
-        
+
         final Group groupOrganization = new Group(composite, SWT.NONE);
         GridLayout groupOrganizationLayout = new GridLayout(1, true);
         GridData groupOrganizationLayoutData = new GridData();
@@ -123,50 +119,48 @@ public class SamtExportDialog extends TitleAreaDialog
         groupOrganization.setLayout(groupOrganizationLayout);
         List<Organization> organizationList = cmdLoadOrganization.getElements();
         Iterator<Organization> organizationIter = organizationList.iterator();
-        
-        SelectionListener organizationListener = new SelectionAdapter()
-        {
+
+        SelectionListener organizationListener = new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e)
-            {
-                selectedElement = (CnATreeElement) ( (Button) e.getSource() ).getData();
+            public void widgetSelected(SelectionEvent e) {
+                selectedElement = (CnATreeElement) ((Button) e.getSource()).getData();
                 super.widgetSelected(e);
             }
         };
-        
+
         CnATreeElement oldSelectedElement = selectedElement;
-        selectedElement=null;
-        while( organizationIter.hasNext() )
-        {
-            final Button radioOrganization = new Button(groupOrganization,SWT.RADIO);
+        selectedElement = null;
+        while (organizationIter.hasNext()) {
+            final Button radioOrganization = new Button(groupOrganization, SWT.RADIO);
             Organization organization = organizationIter.next();
             radioOrganization.setText(organization.getTitle());
-            radioOrganization.setData(organization );
+            radioOrganization.setData(organization);
             radioOrganization.addSelectionListener(organizationListener);
-            if(oldSelectedElement!=null && oldSelectedElement.equals(organization)) {
+            if (oldSelectedElement != null && oldSelectedElement.equals(organization)) {
                 radioOrganization.setSelection(true);
                 selectedElement = organization;
             }
-            if(organizationList.size()==1) {
+            if (organizationList.size() == 1) {
                 radioOrganization.setSelection(true);
                 selectedElement = organization;
             }
         }
-        
-        /*++++
-         * Widgets to enable/disable encryption:
-         *++++++++++++++++++++++++++++++++++++++*/
-         
+
+        /*
+         * ++++ Widgets to enable/disable encryption:
+         * ++++++++++++++++++++++++++++++++++++++
+         */
+
         final Composite encryptionOptionComposite = new Composite(composite, SWT.NONE);
         encryptionOptionComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
         ((RowLayout) encryptionOptionComposite.getLayout()).marginTop = 15;
-        
+
         final Button encryptionCheckbox = new Button(encryptionOptionComposite, SWT.CHECK);
         encryptionCheckbox.setText(Messages.SamtExportDialog_5);
         encryptionCheckbox.setSelection(encryptOutput);
         encryptionCheckbox.setEnabled(true);
         encryptionCheckbox.addSelectionListener(new SelectionAdapter() {
-            
+
             @Override
             public void widgetSelected(SelectionEvent e) {
                 Button checkBox = (Button) e.getSource();
@@ -174,12 +168,13 @@ public class SamtExportDialog extends TitleAreaDialog
             }
         });
         encryptionOptionComposite.pack();
-        
-        /*+++++
-         * Widgets to browse for storage location:
-         *++++++++++++++++++++++++++++++++++++++++*/
-        
-        final Composite compositeSaveLocation = new Composite(composite,SWT.NONE);
+
+        /*
+         * +++++ Widgets to browse for storage location:
+         * ++++++++++++++++++++++++++++++++++++++++
+         */
+
+        final Composite compositeSaveLocation = new Composite(composite, SWT.NONE);
         compositeSaveLocation.setLayout(new RowLayout(SWT.HORIZONTAL));
         ((RowLayout) compositeSaveLocation.getLayout()).marginTop = 15;
         final Label labelLocation = new Label(compositeSaveLocation, SWT.NONE);
@@ -190,39 +185,36 @@ public class SamtExportDialog extends TitleAreaDialog
         final RowData textLocationData = new RowData();
         textLocationData.width = textLocationWidth;
         txtLocation.setLayoutData(textLocationData);
-        txtLocation.addKeyListener(new KeyListener() {             
+        txtLocation.addKeyListener(new KeyListener() {
             @Override
             public void keyReleased(KeyEvent e) {
                 filePath = txtLocation.getText();
-                
-            }          
+
+            }
+
             @Override
             public void keyPressed(KeyEvent e) {
                 // nothing to do
             }
         });
-            
+
         composite.pack();
         final Button buttonBrowseLocations = new Button(compositeSaveLocation, SWT.NONE);
         buttonBrowseLocations.setText(Messages.SamtExportDialog_7);
-        
+
         buttonBrowseLocations.addSelectionListener(new SelectionAdapter() {
-            
+
             @Override
-            public void widgetSelected(SelectionEvent e)
-            {
-                FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(),SWT.SAVE);
+            public void widgetSelected(SelectionEvent e) {
+                FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
                 dialog.setText(Messages.SamtExportDialog_3);
-                dialog.setFilterExtensions(new String[]{ "*.xml" }); //$NON-NLS-1$
-                dialog.setFilterNames(new String[]{ Messages.SamtExportDialog_8 }); 
+                dialog.setFilterExtensions(new String[] { "*.xml" }); //$NON-NLS-1$
+                dialog.setFilterNames(new String[] { Messages.SamtExportDialog_8 });
                 String exportPath = dialog.open();
-                if( exportPath != null )
-                {
+                if (exportPath != null) {
                     txtLocation.setText(exportPath);
                     filePath = exportPath;
-                }
-                else
-                {
+                } else {
                     txtLocation.setText(""); //$NON-NLS-1$
                     filePath = ""; //$NON-NLS-1$
                 }
@@ -230,48 +222,46 @@ public class SamtExportDialog extends TitleAreaDialog
         });
         return composite;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     protected void okPressed() {
         StringBuilder sb = new StringBuilder();
-        if(filePath==null || filePath.isEmpty()) {
-            sb.append(Messages.SamtExportDialog_10);         
+        if (filePath == null || filePath.isEmpty()) {
+            sb.append(Messages.SamtExportDialog_10);
         } else {
             try {
                 new File(filePath).createNewFile();
             } catch (Exception e) {
-                sb.append(Messages.SamtExportDialog_11);  
+                sb.append(Messages.SamtExportDialog_11);
             }
         }
-        if(selectedElement==null) {
-           sb.append(Messages.SamtExportDialog_12);         
-        } 
-        if(sb.length()>0) {
+        if (selectedElement == null) {
+            sb.append(Messages.SamtExportDialog_12);
+        }
+        if (sb.length() > 0) {
             sb.append(Messages.SamtExportDialog_13);
             setMessage(sb.toString(), IMessageProvider.ERROR);
-        } 
-        else {     
+        } else {
             super.okPressed();
         }
     }
-    
+
     /* Getters and Setters: */
-    
-    public CnATreeElement getSelectedElement()
-    {
+
+    public CnATreeElement getSelectedElement() {
         return selectedElement;
     }
 
-    public String getFilePath()
-    {   
+    public String getFilePath() {
         return filePath;
     }
-    
-    public boolean getEncryptOutput()
-    {
+
+    public boolean getEncryptOutput() {
         return encryptOutput;
     }
-    
+
 }

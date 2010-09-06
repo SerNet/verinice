@@ -33,6 +33,9 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.actions.ExportAction;
@@ -48,7 +51,7 @@ import sernet.verinice.model.iso27k.Organization;
  * {@link SamtExportDialog} to retrieve user selections.
  */
 @SuppressWarnings("restriction")
-public class ExportSelfAssessment implements IViewActionDelegate
+public class ExportSelfAssessment extends ActionDelegate implements IViewActionDelegate, IWorkbenchWindowActionDelegate
 {
 	public static final String ID = "sernet.verinice.samt.rcp.ExportSelfAssessment"; //$NON-NLS-1$
 	
@@ -63,6 +66,13 @@ public class ExportSelfAssessment implements IViewActionDelegate
      */
     @Override
     public void init(IViewPart view) {
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+     */
+    @Override
+    public void init(IWorkbenchWindow window) {
     }
 	
 	/*
@@ -127,4 +137,5 @@ public class ExportSelfAssessment implements IViewActionDelegate
           }
       }
     }
+
 }

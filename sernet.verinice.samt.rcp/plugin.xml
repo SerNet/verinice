@@ -245,12 +245,15 @@
          </menu>
          <action
                class="sernet.verinice.samt.rcp.GenerateReportAction"
+               icon="icons/report.png"
                id="sernet.verinice.samt.rcp.generatereport"
                label="%action.label.4"
                menubarPath="file/sernet.verinice.samt.rcp.menu1/slot1"
                style="push">
          </action>
          <action
+               class="sernet.verinice.samt.rcp.ExportSelfAssessment"
+               icon="icons/export.gif"
                id="sernet.verinice.samt.rcp.exporttofile"
                label="%action.label.5"
                menubarPath="file/sernet.verinice.samt.rcp.menu1/slot1"
