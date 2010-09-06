@@ -44,6 +44,7 @@ import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.SonstigeITKategorie;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.common.ImportedObjectsHolder;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
@@ -235,6 +236,7 @@ public class ImageCache {
 	public static final String ISO27K_PERSON 			= "user_suit.png";
 	public static final String ISO27K_FOLDER 			= "folder.png";
 	public static final String ISO27K_PROCESS 			= "sweetie-verinice/png/16-paper-workplan.png";
+	public static final String ISO27K_IMPORT            = "import.gif";
 
 	public static final String ISO27K_CONTROL			= "stufe_none.png";
 	public static final String ISO27K_CONTROLGROUP      = "controlgroup.png";
@@ -287,6 +289,7 @@ public class ImageCache {
 		ISO27K_ICON_MAP.put(sernet.verinice.model.iso27k.Process.TYPE_ID,   ImageCache.ISO27K_PROCESS);
 		ISO27K_ICON_MAP.put(Record.TYPE_ID,   ImageCache.ISO27K_RECORD);
 		ISO27K_ICON_MAP.put(SamtTopic.TYPE_ID,   ImageCache.ISO27K_CONTROL);
+		ISO27K_ICON_MAP.put(ImportedObjectsHolder.TYPE_ID, ImageCache.ISO27K_IMPORT);
 		
 		BSI_ICON_MAP = new HashMap<String, String>();
 		

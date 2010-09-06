@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -110,9 +111,14 @@ public class XMLImportDialog extends Dialog {
 								if (importRootObject != null)
 								{
 								    CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
-                                    CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);                                 	    
+                                    CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);                                  
 								}
-
+								Set<CnATreeElement> changedElement = command.getElementSet();
+								if(changedElement!=null) {
+                                    for (CnATreeElement cnATreeElement : changedElement) {
+                                        CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
+                                    }
+								}
 							}
 						});
 			} catch (InvocationTargetException e) {

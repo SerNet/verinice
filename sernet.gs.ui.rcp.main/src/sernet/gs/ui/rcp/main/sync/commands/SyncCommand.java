@@ -22,21 +22,31 @@ package sernet.gs.ui.rcp.main.sync.commands;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.JAXB;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IAuthAwareCommand;
+import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IChangeLoggingCommand;
+import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.sync.SyncRequest;
 
 @SuppressWarnings("serial")
-public class SyncCommand extends GenericCommand
+public class SyncCommand extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand
 {
 	private String sourceId;
+	
+	private transient IAuthService authService;
+	
+	private String stationId;
 	
 	private boolean insert, update, delete;
 	
@@ -51,6 +61,8 @@ public class SyncCommand extends GenericCommand
 	private List<String> errors = new ArrayList<String>();
 	
 	private CnATreeElement importRootObject;
+
+    private Set<CnATreeElement> elementSet = null;
 
 	/** Creates an instance of the SyncCommand where the {@link SyncRequest} object is already
 	 * serialized to a byte array.
@@ -72,6 +84,7 @@ public class SyncCommand extends GenericCommand
 		this.delete = delete;
 
 		this.syncRequestSerialized = syncRequestSerialized;
+		this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
 	/**
@@ -93,6 +106,7 @@ public class SyncCommand extends GenericCommand
 		JAXB.marshal(sr, bos);
 		
 		this.syncRequestSerialized = bos.toByteArray();
+		this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
 	public SyncCommand(SyncRequest sr)
@@ -107,6 +121,7 @@ public class SyncCommand extends GenericCommand
 		this.syncMapping = sr.getSyncMapping();
 		
 		this.syncRequestSerialized = null;
+		this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
 	@Override
@@ -136,6 +151,7 @@ public class SyncCommand extends GenericCommand
 		}
 		
 		importRootObject = cmdInsertUpdate.getContainer();
+		elementSet = cmdInsertUpdate.getElementSet();
 		
 		inserted += cmdInsertUpdate.getInserted();
 		updated += cmdInsertUpdate.getUpdated();
@@ -184,5 +200,63 @@ public class SyncCommand extends GenericCommand
 	{
 		return importRootObject;
 	}
+	
+	public Set<CnATreeElement> getElementSet() {
+        return elementSet;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
+     */
+    @Override
+    public int getChangeType() {
+        return ChangeLogEntry.TYPE_INSERT;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
+     */
+    @Override
+    public List<CnATreeElement> getChangedElements() {
+        List<CnATreeElement> changedElements = new LinkedList<CnATreeElement>();
+        if(importRootObject!=null) {
+            changedElements.add(importRootObject);
+        }
+        if(elementSet!=null) {
+            changedElements.addAll(elementSet);
+        }
+        return changedElements;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
+     */
+    @Override
+    public String getStationId() {
+        return stationId;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand#getAuthService()
+     */
+    @Override
+    public IAuthService getAuthService() {
+        return authService;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand#setAuthService
+     * (sernet.gs.ui.rcp.main.service.IAuthService)
+     */
+    @Override
+    public void setAuthService(IAuthService service) {
+        this.authService = service;
+    }
 
 }

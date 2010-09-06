@@ -21,7 +21,9 @@ package sernet.gs.ui.rcp.main.sync.commands;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -198,6 +200,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 
     private CnATreeElement container = null;
 
+    private Set<CnATreeElement> elementSet = null;
     
     public int getUpdated() {
         return updated;
@@ -340,6 +343,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
                 } else {
                     String attrIntId = mat.getIntId();
                     elementInDB.getEntity().importProperties(attrIntId, attrValues);
+                    addElement(elementInDB);
                 }
 
             } // for <syncAttribute>
@@ -496,6 +500,17 @@ public class SyncInsertUpdateCommand extends GenericCommand {
      */
     public CnATreeElement getContainer() {
         return container;
+    }
+    
+    protected void addElement(CnATreeElement element) {
+        if(elementSet==null) {
+            elementSet = new HashSet<CnATreeElement>();
+        }
+        elementSet.add(element);
+    }
+
+    public Set<CnATreeElement> getElementSet() {
+        return elementSet;
     }
 
 }
