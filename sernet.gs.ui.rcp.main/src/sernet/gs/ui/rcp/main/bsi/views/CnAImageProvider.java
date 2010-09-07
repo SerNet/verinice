@@ -30,6 +30,7 @@ import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
@@ -102,6 +103,9 @@ public class CnAImageProvider {
 		
 		if (elmt instanceof FinishedRiskAnalysis)
 			return ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
+		
+		if (elmt instanceof ImportBsiGroup)
+            return ImageCache.getInstance().getImage(ImageCache.ISO27K_IMPORT);
 		
 		return ImageCache.getInstance().getImage(
 				ImageCache.UNKNOWN);

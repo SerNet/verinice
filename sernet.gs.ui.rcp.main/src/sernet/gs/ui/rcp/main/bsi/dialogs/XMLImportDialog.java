@@ -1,3 +1,5 @@
+//Neu hinzugefÃ¼gt vom Projektteam: XML import
+
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
@@ -10,7 +12,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -40,6 +47,8 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.sync.commands.SyncCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -50,6 +59,8 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class XMLImportDialog extends Dialog {
 
+    private static final Logger LOG = Logger.getLogger(XMLImportDialog.class);
+    
 	private boolean insert;
 	private boolean update;
 	private boolean delete;
@@ -60,6 +71,8 @@ public class XMLImportDialog extends Dialog {
 
 	private File dataFile;
 
+	private static ISchedulingRule iSchedulingRule = new Mutex();
+	
 	public XMLImportDialog(Shell shell) {
 		super(shell);
 	}
@@ -74,57 +87,22 @@ public class XMLImportDialog extends Dialog {
 			createErrorMessage(2);
 		} else {
 
-			try {
-				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
-						new IRunnableWithProgress() {
-							public void run(IProgressMonitor monitor)
-									throws InvocationTargetException,
-									InterruptedException {
-								Activator.inheritVeriniceContextState();
-
-								SyncCommand command;
-								try {
-									command = new SyncCommand(
-											insert,
-											update,
-											delete,
-											IOUtils.toByteArray(new FileInputStream(
-															dataFile)));
-								} catch (FileNotFoundException e1) {
-									throw new IllegalStateException(e1);
-								} catch (IOException e1) {
-									throw new IllegalStateException(e1);
-								}
-
-								try {
-									command = ServiceFactory
-											.lookupCommandService()
-											.executeCommand(command);
-
-								} catch (CommandException e) {
-									throw new IllegalStateException(e);
-								}
-								
-								CnATreeElement importRootObject = command.getImportRootObject();
-								if (importRootObject != null)
-								{
-								    CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
-                                    CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);                                  
-								}
-								Set<CnATreeElement> changedElement = command.getElementSet();
-								if(changedElement!=null) {
-                                    for (CnATreeElement cnATreeElement : changedElement) {
-                                        CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
-                                    }
-								}
-							}
-						});
-			} catch (InvocationTargetException e) {
-				ExceptionUtil.log(e, "Fehler während des Importvorganges");
-			} catch (InterruptedException e) {
-				ExceptionUtil.log(e, "Fehler während des Importvorganges");
-			}
-
+		    WorkspaceJob exportJob = new WorkspaceJob("Importing...") {
+                public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                    IStatus status = Status.OK_STATUS;
+                    try {
+                        monitor.beginTask("Importing from file " + dataFile.getName() + "... This may take several minutes.", IProgressMonitor.UNKNOWN);
+                        doImport();
+                    } catch (Exception e) {
+                        LOG.error("Error while importing data.", e); //$NON-NLS-1$
+                        status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while importing data.",e); 
+                    } finally {
+                        monitor.done();
+                    }
+                    return status;
+                }
+            };
+            JobScheduler.scheduleJob(exportJob,iSchedulingRule);
 			close();
 		}
 	}
@@ -210,6 +188,8 @@ public class XMLImportDialog extends Dialog {
 		insertCheck.setText("insert");
 		insertCheck.setLayoutData(new GridData(GridData.BEGINNING,
 				GridData.CENTER, false, false, 1, 1));
+		insertCheck.setSelection(true);
+		insert=true;
 		insertCheck.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -226,6 +206,8 @@ public class XMLImportDialog extends Dialog {
 		updateCheck.setText("update");
 		updateCheck.setLayoutData(new GridData(GridData.BEGINNING,
 				GridData.CENTER, false, false, 1, 1));
+		updateCheck.setSelection(true);
+		update=true;
 		updateCheck.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -351,4 +333,44 @@ public class XMLImportDialog extends Dialog {
 	public boolean getDeleteState() {
 		return delete;
 	}
+
+    private void doImport() {
+        Activator.inheritVeriniceContextState();
+
+        SyncCommand command;
+        try {
+        	command = new SyncCommand(
+        			insert,
+        			update,
+        			delete,
+        			IOUtils.toByteArray(new FileInputStream(
+        							dataFile)));
+        } catch (FileNotFoundException e1) {
+        	throw new IllegalStateException(e1);
+        } catch (IOException e1) {
+        	throw new IllegalStateException(e1);
+        }
+
+        try {
+        	command = ServiceFactory
+        			.lookupCommandService()
+        			.executeCommand(command);
+
+        } catch (CommandException e) {
+        	throw new IllegalStateException(e);
+        }
+        
+        CnATreeElement importRootObject = command.getImportRootObject();
+        if (importRootObject != null)
+        {
+            CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
+            CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);                                  
+        }
+        Set<CnATreeElement> changedElement = command.getElementSet();
+        if(changedElement!=null) {
+            for (CnATreeElement cnATreeElement : changedElement) {
+                CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
+            }
+        }
+    }
 }

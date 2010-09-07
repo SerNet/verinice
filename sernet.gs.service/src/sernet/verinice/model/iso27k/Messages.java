@@ -31,6 +31,7 @@ public class Messages extends NLS {
     public static String AssetValueAdapter_12;
     public static String AssetValueAdapter_7;
     public static String AssetValueAdapter_9;
+    public static String ImportIsoGroup_0;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

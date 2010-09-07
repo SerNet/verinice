@@ -44,7 +44,6 @@ import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.SonstigeITKategorie;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
-import sernet.verinice.model.common.ImportedObjectsHolder;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
@@ -57,6 +56,7 @@ import sernet.verinice.model.iso27k.Exception;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Interview;
@@ -289,7 +289,7 @@ public class ImageCache {
 		ISO27K_ICON_MAP.put(sernet.verinice.model.iso27k.Process.TYPE_ID,   ImageCache.ISO27K_PROCESS);
 		ISO27K_ICON_MAP.put(Record.TYPE_ID,   ImageCache.ISO27K_RECORD);
 		ISO27K_ICON_MAP.put(SamtTopic.TYPE_ID,   ImageCache.ISO27K_CONTROL);
-		ISO27K_ICON_MAP.put(ImportedObjectsHolder.TYPE_ID, ImageCache.ISO27K_IMPORT);
+		ISO27K_ICON_MAP.put(ImportIsoGroup.TYPE_ID, ImageCache.ISO27K_IMPORT);
 		
 		BSI_ICON_MAP = new HashMap<String, String>();
 		

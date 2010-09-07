@@ -45,9 +45,9 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ImportedObjectsHolder;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kRoot;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 
 /**
  * Delete items on user request.
@@ -113,7 +113,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                     for (Iterator iter = selection.iterator(); iter.hasNext();) {
                         Object sel = iter.next();
 
-                        if (sel instanceof IBSIStrukturElement || sel instanceof BausteinUmsetzung || sel instanceof FinishedRiskAnalysis || sel instanceof GefaehrdungsUmsetzung || sel instanceof ITVerbund || sel instanceof IISO27kRoot || sel instanceof IISO27kElement || sel instanceof ImportedObjectsHolder) {
+                        if (sel instanceof IBSIStrukturElement || sel instanceof BausteinUmsetzung || sel instanceof FinishedRiskAnalysis || sel instanceof GefaehrdungsUmsetzung || sel instanceof ITVerbund || sel instanceof IISO27kRoot || sel instanceof IISO27kElement || sel instanceof ImportIsoGroup) {
 
                             // do not delete last ITVerbund:
                             try {

@@ -17,27 +17,36 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service.commands;
 
+import java.util.Arrays;
 import java.util.List;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.model.common.ImportedObjectsHolder;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 
 @SuppressWarnings("serial")
 public class LoadImportObjectsHolder extends GenericCommand implements INoAccessControl {
 
-	private ImportedObjectsHolder holder;
+	private CnATreeElement holder;
+	
+	private Class clazz;
 
-	public LoadImportObjectsHolder() {
+	public LoadImportObjectsHolder(Class clazz) {
+	    this.clazz = clazz;
 	}
 	
 	public void execute() {
+	    String typeId = getTypeId(clazz);
 		RetrieveInfo ri = new RetrieveInfo();
-		List<ImportedObjectsHolder> resultList = getDaoFactory().getDAO(ImportedObjectsHolder.TYPE_ID).findAll(ri);
+		List<CnATreeElement> resultList = getDaoFactory().getDAO(typeId).findAll(ri);
 		if(resultList != null) {
 			if(resultList.size()>1) {
-				throw new RuntimeException("More than one ImportedObjectsHolder found.");
+				throw new RuntimeException("More than one ImportIsoGroup found.");
 			} else if(resultList.size()==1) {			
 			    holder = resultList.get(0);
 			}
@@ -45,7 +54,31 @@ public class LoadImportObjectsHolder extends GenericCommand implements INoAccess
 	}
 
 
-	public ImportedObjectsHolder getHolder() {
+	/**
+     * @param clazz2
+     * @return
+     */
+    private String getTypeId(Class clazz) {
+        String typeId = ImportIsoGroup.TYPE_ID;
+        if(isImplementation(clazz,IBSIStrukturElement.class)) {
+            typeId = ImportBsiGroup.TYPE_ID;
+        }
+        return typeId;
+    }
+
+    public static boolean isImplementation(Class clazz,Class interfaze) {
+        boolean implementz = false;
+        Class[] interfaceArray = clazz.getInterfaces();
+        for (int i = 0; i < interfaceArray.length; i++) {
+            if(interfaceArray[i].equals(interfaze)) {
+                implementz=true;
+                break;
+            }
+        }
+        return implementz;
+    }
+
+    public CnATreeElement getHolder() {
 		return holder;
 	}
 	

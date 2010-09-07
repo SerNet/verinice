@@ -48,8 +48,7 @@ public class LoadBSIModelForTreeView extends GenericCommand implements INoAccess
 		if (element == null)
 			return;
 		
-		HydratorUtil.hydrateElement(getDaoFactory().getDAOforTypedElement(element), 
-				element, false);
+		HydratorUtil.hydrateElement(getDaoFactory().getDAOforTypedElement(element), element, true);
 		
 //		Set<CnATreeElement> children = element.getChildren();
 //		for (CnATreeElement child : children) {

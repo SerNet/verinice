@@ -63,12 +63,12 @@ import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ImportedObjectsHolder;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
@@ -333,7 +333,7 @@ public class CnAElementHome {
      * @return
      */
     public boolean isDeleteAllowed(CnATreeElement cte) {
-        if (cte instanceof ImportedObjectsHolder) {
+        if (cte instanceof ImportIsoGroup) {
             return true;
         }
         

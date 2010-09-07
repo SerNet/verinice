@@ -29,6 +29,11 @@ import java.util.LinkedList;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -43,6 +48,9 @@ import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
+import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.rcp.Messages;
+import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -57,6 +65,8 @@ public class ExportAction extends Action
 	private static final Logger LOG = Logger.getLogger(ExportAction.class);
 	
 	private IWorkbenchWindow window;
+	
+	private static ISchedulingRule iSchedulingRule = new Mutex();
 
 	public ExportAction(IWorkbenchWindow window, String label)
 	{
@@ -73,40 +83,45 @@ public class ExportAction extends Action
 	@Override
 	public void run()
 	{
-		ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell());
+		final ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell());
 		if( dialog.open() == Dialog.OK )
 		{
-			LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
-			exportElements.add(dialog.getSelectedITNetwork());
-			ExportCommand exportCommand;
-			
-			if( dialog.isRestrictedToEntityTypes() )
-			{
-				exportCommand = new ExportCommand(exportElements, dialog.getSourceId(), dialog.getEntityTypesToBeExported());
-			}
-			else
-			{
-				exportCommand = new ExportCommand(exportElements, dialog.getSourceId());
-			}
-				
-			
-			try
-			{
-				exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
-			}
-			catch(CommandException ex)
-			{
-				LOG.error("Error while exporting.", ex);
-			}
-			
-			try {
-				IOUtils.write(exportCommand.getResult(),
-						ExportAction.getExportOutputStream(dialog.getStorageLocation(), dialog.getEncryptOutput()));
-			} catch (IOException e) {
-				throw new IllegalStateException(e);
-			}
-			
+		    WorkspaceJob exportJob = new WorkspaceJob("Exporting...") {
+	            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+	                IStatus status = Status.OK_STATUS;
+	                try {
+	                    monitor.beginTask("Exporting to file " + dialog.getStorageLocation() + "... This may take several minutes.", IProgressMonitor.UNKNOWN);
+	                    export(dialog);
+	                } catch (Exception e) {
+	                    LOG.error("Error while exporting data.", e); //$NON-NLS-1$
+	                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while exporting data.",e); 
+	                } finally {
+	                    monitor.done();
+	                }
+	                return status;
+	            }
+	        };
+	        JobScheduler.scheduleJob(exportJob,iSchedulingRule);		          		
 		}
+	}
+	
+	public void export(ExportDialog dialog) {
+	    try {
+            LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
+            exportElements.add(dialog.getSelectedITNetwork());
+            ExportCommand exportCommand;            
+            if( dialog.isRestrictedToEntityTypes() ) {
+                exportCommand = new ExportCommand(exportElements, dialog.getSourceId(), dialog.getEntityTypesToBeExported());
+            }
+            else {
+                exportCommand = new ExportCommand(exportElements, dialog.getSourceId());
+            }
+            exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
+            IOUtils.write(exportCommand.getResult(), ExportAction.getExportOutputStream(dialog.getStorageLocation(), dialog.getEncryptOutput()));           
+        }
+        catch(Exception ex) {
+            LOG.error("Error while exporting.", ex);
+        }
 	}
 	
 	public static OutputStream getExportOutputStream(String path, boolean encryptOutput )

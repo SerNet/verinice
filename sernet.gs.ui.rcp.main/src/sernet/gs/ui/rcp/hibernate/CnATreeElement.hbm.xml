@@ -98,11 +98,6 @@
 			<one-to-many class="CnALink"/>
 		</set>
 		
-	<subclass 
-		name="sernet.verinice.model.common.ImportedObjectsHolder"
-		extends="CnATreeElement"
-		discriminator-value="imported-objects-holder"/>
-		
 <!-- Grundschutz-Elemente: ################################################################# -->
 
 	<subclass 
@@ -234,6 +229,11 @@
 		name="sernet.verinice.model.bsi.ITVerbund"
 		extends="CnATreeElement"
 		discriminator-value="it-verbund"/>
+        
+    <subclass 
+        name="sernet.verinice.model.bsi.ImportBsiGroup"
+        extends="CnATreeElement"
+        discriminator-value="import-bsi"/>
 
 <!-- Datenschutz Elemente: ################################################################# -->
 
@@ -273,6 +273,11 @@
 		name="sernet.verinice.model.iso27k.Organization"
 		extends="CnATreeElement"
 		discriminator-value="org" />
+    
+    <subclass 
+        name="sernet.verinice.model.iso27k.ImportIsoGroup"
+        extends="CnATreeElement"
+        discriminator-value="import-iso"/>
 		
 	<subclass 
 		name="sernet.verinice.model.iso27k.AssetGroup"

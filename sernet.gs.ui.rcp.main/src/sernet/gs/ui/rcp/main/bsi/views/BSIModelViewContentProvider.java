@@ -89,9 +89,11 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 			// + el);
 			return el;
 		}
-
-		Logger.getLogger(this.getClass()).debug("Loading children from DB for " + el);
-
+		
+		if (log.isDebugEnabled()) {
+		    log.debug("Loading children from DB for " + el);
+        }
+		
 		LoadChildrenForExpansion command;
 		if (modelFilter != null) {
 			command = new LoadChildrenForExpansion(el, modelFilter.getFilteredClasses());
@@ -115,7 +117,10 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 		}
 
 		// replace with loaded object in cache:
-		Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
+		if (log.isDebugEnabled()) {
+		    log.debug("Replacing in cache: " + el + " replaced with " + newElement);
+        }
+		
 		cache.clear(el);
 		cache.addObject(newElement);
 

@@ -292,7 +292,8 @@
                    tooltip="%action.tooltip">
                 <enablement>
                    <or>
-                   	<objectClass name="sernet.verinice.model.common.ImportedObjectsHolder"/>
+                   	<objectClass name="sernet.verinice.model.iso27k.ImportIsoGroup"/>
+                    <objectClass name="sernet.verinice.model.bsi.ImportBsiGroup"/>
                    	<objectClass name="sernet.verinice.model.bsi.IBSIStrukturElement"/>
                    	<objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
                    	<objectClass name="sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis"/>

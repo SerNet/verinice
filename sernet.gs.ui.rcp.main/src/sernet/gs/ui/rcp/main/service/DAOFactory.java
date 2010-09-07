@@ -42,6 +42,7 @@ import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
@@ -65,7 +66,6 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ImportedObjectsHolder;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.ds.Datenverarbeitung;
@@ -89,6 +89,7 @@ import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.FindingGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentGroup;
 import sernet.verinice.model.iso27k.IncidentScenario;
@@ -651,9 +652,14 @@ public class DAOFactory implements IDAOFactory {
     
     /* Miscellaneous Daos */
     
-    public void setImportedObjectsHolderDAO(IBaseDao<SamtTopic, Integer> daoToSet) {
-        daosByClass.put(ImportedObjectsHolder.class, daoToSet);
-        daosByTypeID.put(ImportedObjectsHolder.TYPE_ID, daoToSet);
+    public void setImportIsoDAO(IBaseDao<SamtTopic, Integer> daoToSet) {
+        daosByClass.put(ImportIsoGroup.class, daoToSet);
+        daosByTypeID.put(ImportIsoGroup.TYPE_ID, daoToSet);
+    }
+    
+    public void setImportBsiDAO(IBaseDao<SamtTopic, Integer> daoToSet) {
+        daosByClass.put(ImportBsiGroup.class, daoToSet);
+        daosByTypeID.put(ImportBsiGroup.TYPE_ID, daoToSet);
     }
     
 	@SuppressWarnings("unchecked")

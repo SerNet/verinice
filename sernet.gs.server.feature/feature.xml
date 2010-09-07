@@ -669,4 +669,12 @@ Library.
          install-size="0"
          version="1.1.2"/>
 
+   <plugin
+         id="sernet.gs.pax_web.fragment"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
 </feature>

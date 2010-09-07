@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
 import sernet.gs.ui.rcp.main.sync.InvalidRequestException;
 import sernet.verinice.interfaces.CommandException;
@@ -39,12 +40,15 @@ import sernet.verinice.iso27k.service.commands.LoadImportObjectsHolder;
 import sernet.verinice.iso27k.service.commands.LoadModel;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
+import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
@@ -59,7 +63,6 @@ import sernet.verinice.model.bsi.SonstigeITKategorie;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ImportedObjectsHolder;
 import sernet.verinice.model.ds.Datenverarbeitung;
 import sernet.verinice.model.ds.Personengruppen;
 import sernet.verinice.model.ds.StellungnahmeDSB;
@@ -79,6 +82,7 @@ import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.FindingGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentGroup;
 import sernet.verinice.model.iso27k.IncidentScenario;
@@ -200,7 +204,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 
     private CnATreeElement container = null;
 
-    private Set<CnATreeElement> elementSet = null;
+    private Set<CnATreeElement> elementSet = new HashSet<CnATreeElement>();
     
     public int getUpdated() {
         return updated;
@@ -292,18 +296,19 @@ public class SyncInsertUpdateCommand extends GenericCommand {
                 setAttributes = false;
             }
         }
-
+        
         // If no previous object was found in the database and the 'insert'
         // flag is given, create a new object.
         if (elementInDB == null && insert) {
             // Each new object needs a parent. The top-level element(s) in the
             // import set might not automatically have one. For those objects it is
             // neccessary to use the 'import root object' instead.
-            parent = (parent == null) ? accessContainer() : parent;
+            Class clazz = getClassFromTypeId(veriniceObjectType);
+            parent = (parent == null) ? accessContainer(clazz) : parent;
 
             try {
                 // create new object in db...
-                CreateElement<CnATreeElement> newElement = new CreateElement<CnATreeElement>(parent, getClassFromTypeId(veriniceObjectType), true, false);
+                CreateElement<CnATreeElement> newElement = new CreateElement<CnATreeElement>(parent, clazz, true, false);
                 newElement = getCommandService().executeCommand(newElement);
                 elementInDB = newElement.getNewElement();
 
@@ -450,14 +455,15 @@ public class SyncInsertUpdateCommand extends GenericCommand {
      * only created but also automatically persisted in the database. If it were
      * not used later on the user would see an object node in the object tree.
      * </p>
+     * @param clazz 
      * 
      * @return
      */
-    private CnATreeElement accessContainer() {
+    private CnATreeElement accessContainer(Class clazz) {
         // Create the importRootObject if it does not exist yet
         // and set the 'importRootObject' variable.
         if (container == null) {
-            LoadImportObjectsHolder cmdLoadContainer = new LoadImportObjectsHolder();
+            LoadImportObjectsHolder cmdLoadContainer = new LoadImportObjectsHolder(clazz);
             try {
                 cmdLoadContainer = ServiceFactory.lookupCommandService().executeCommand(cmdLoadContainer);
             } catch (CommandException e) {
@@ -466,25 +472,55 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             }
             container = cmdLoadContainer.getHolder();
             if(container==null) {
-                container = createContainer();
+                container = createContainer(clazz);
             }
+            // load the parent
+            container.getParent().getTitle();
         }
 
         return container;
     }
 
-    private CnATreeElement createContainer() {
+    private CnATreeElement createContainer(Class clazz) {
+        if(LoadImportObjectsHolder.isImplementation(clazz, IBSIStrukturElement.class)) {
+            return createBsiContainer();
+        } else {
+            return createIsoContainer();
+        }
+       
+    }
+    
+    private CnATreeElement createBsiContainer() {
+        LoadBSIModel cmdLoadModel = new LoadBSIModel();
+        try {
+            cmdLoadModel = ServiceFactory.lookupCommandService().executeCommand(cmdLoadModel);
+        } catch (CommandException e) {
+            errorList.add("Fehler beim Ausführen von LoadBSIModel.");
+            throw new RuntimeCommandException("Fehler beim Anlegen des Behaelters für importierte Objekte.");
+        }
+        BSIModel model = cmdLoadModel.getModel();
+        try {
+            ImportBsiGroup holder = new ImportBsiGroup(model);
+            getDaoFactory().getDAO(ImportBsiGroup.class).saveOrUpdate(holder);
+            container = holder;
+        } catch (Exception e1) {
+            throw new RuntimeCommandException("Fehler beim Anlegen des Behaelters für importierte Objekte.");
+        }
+        return container;
+    }
+    
+    private CnATreeElement createIsoContainer() {
         LoadModel cmdLoadModel = new LoadModel();
         try {
             cmdLoadModel = ServiceFactory.lookupCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
             errorList.add("Fehler beim Ausführen von LoadBSIModel.");
-            throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.");
+            throw new RuntimeCommandException("Fehler beim Anlegen des Behaelters für importierte Objekte.");
         }
         ISO27KModel model = cmdLoadModel.getModel();
         try {
-            ImportedObjectsHolder holder = new ImportedObjectsHolder(model);
-            getDaoFactory().getDAO(ImportedObjectsHolder.class).saveOrUpdate(holder);
+            ImportIsoGroup holder = new ImportIsoGroup(model);
+            getDaoFactory().getDAO(ImportIsoGroup.class).saveOrUpdate(holder);
             container = holder;
         } catch (Exception e1) {
             throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.");
@@ -506,6 +542,8 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         if(elementSet==null) {
             elementSet = new HashSet<CnATreeElement>();
         }
+        // load the parent
+        element.getParent().getTitle();
         elementSet.add(element);
     }
 

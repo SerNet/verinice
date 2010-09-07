@@ -34,6 +34,12 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.ICommandService</value>
         </property>
+        <property name="httpInvokerRequestExecutor" ref="httpExecuter"/>
+    </bean>
+    
+    <bean name="httpExecuter" class="org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor">
+        <!-- Request-timeout in ms -->
+        <property name="readTimeout" value="500000"/>
     </bean>
     
      <bean id="authService"

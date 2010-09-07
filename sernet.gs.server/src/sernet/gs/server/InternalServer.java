@@ -234,7 +234,7 @@ public class InternalServer implements IInternalServer {
 
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "springDispatcher"); //$NON-NLS-1$ //$NON-NLS-2$
-		dict.put("contextConfigLocation", "classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$ //$NON-NLS-2$
+		dict.put("contextConfigLocation", "classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$ //$NON-NLS-2$      
 		dispatcherServlet = new DispatcherServlet();
 		wc.registerServlet(dispatcherServlet, new String[] { "/service/*" }, dict, ctx); //$NON-NLS-1$
 				

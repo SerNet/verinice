@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 
 import sernet.verinice.iso27k.rcp.ISMViewContentProvider;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ImportedObjectsHolder;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
@@ -66,8 +66,8 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
 		// add all elements form selection to organization
 		CnATreeElement element = selectedElement;
 		expandedElements.add(element);
-		if(!(element instanceof Organization) && !(element instanceof ImportedObjectsHolder)) {
-			while(element.getParent()!=null && !(element.getParent() instanceof Organization) && !(element.getParent() instanceof ImportedObjectsHolder)) {
+		if(!(element instanceof Organization) && !(element instanceof ImportIsoGroup)) {
+			while(element.getParent()!=null && !(element.getParent() instanceof Organization) && !(element.getParent() instanceof ImportIsoGroup)) {
 				element = element.getParent();
 				expandedElements.add(element);
 			}

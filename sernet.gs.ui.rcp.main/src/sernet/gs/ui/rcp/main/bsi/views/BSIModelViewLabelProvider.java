@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -34,85 +35,92 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  */
 public class BSIModelViewLabelProvider extends LabelProvider {
-	
-	public BSIModelViewLabelProvider(TreeViewerCache cache) {
-		super();
-		this.cache = cache;
-	}
 
-	private TreeViewerCache cache;
-	
-	
-		public Image getImage(Object obj) {
-//			Logger.getLogger(this.getClass()).debug("getImage " + obj);
-			
-			Object cachedObject = cache.getCachedObject(obj);
-			if (cachedObject == null) {
-				cache.addObject(obj);
-			} else {
-				obj = cachedObject;
-			}
-			
-			if (obj instanceof BausteinUmsetzung) {
-				BausteinUmsetzung bu = (BausteinUmsetzung) obj;
-				switch (bu.getErreichteSiegelStufe()) {
-				case 'A':
-					return ImageCache.getInstance().getImage(
-							ImageCache.BAUSTEIN_UMSETZUNG_A);
-				case 'B':
-					return ImageCache.getInstance().getImage(
-							ImageCache.BAUSTEIN_UMSETZUNG_B);
-				case 'C':
-					return ImageCache.getInstance().getImage(
-							ImageCache.BAUSTEIN_UMSETZUNG_C);
-				}
-				// else return default image
-				return ImageCache.getInstance().getImage(
-						ImageCache.BAUSTEIN_UMSETZUNG);
-			} 
-			
-			else if (obj instanceof LinkKategorie) {
-				return ImageCache.getInstance().getImage(ImageCache.LINKS);
-			} 
-			
-			else if (obj instanceof CnALink) {
-				CnALink link = (CnALink) obj;
-				return CnAImageProvider.getImage(link.getDependency());
-			}
-			
-			CnATreeElement el = (CnATreeElement) obj;
-			return CnAImageProvider.getImage(el);
-		}
+    private static final Logger LOG = Logger.getLogger(BSIModelViewLabelProvider.class);
+    
+    public BSIModelViewLabelProvider(TreeViewerCache cache) {
+        super();
+        this.cache = cache;
+    }
 
-		public String getText(Object obj) {
-//			Logger.getLogger(this.getClass()).debug("getLabel "+obj);
-			
-			if (obj == null)
-				return "<null>";
-			
-			Object cachedObject = cache.getCachedObject(obj);
-			if (cachedObject == null) {
-				cache.addObject(obj);
-			} else {
-				obj = cachedObject;
-			}
+    private TreeViewerCache cache;
 
-			if (obj instanceof IBSIStrukturElement) {
-				IBSIStrukturElement el = (IBSIStrukturElement) obj;
-				CnATreeElement el2 = (CnATreeElement) obj;
-				return el.getKuerzel() + " " + el2.getTitle();
-			}
+    @Override
+    public Image getImage(Object obj) {
+        // Logger.getLogger(this.getClass()).debug("getImage " + obj);
 
-			else if (obj instanceof LinkKategorie)
-				return ((LinkKategorie) obj).getTitle();
+        Object cachedObject = cache.getCachedObject(obj);
+        if (cachedObject == null) {
+            cache.addObject(obj);
+        } else {
+            obj = cachedObject;
+        }
 
-			else if (obj instanceof CnALink) {
-				CnALink link = (CnALink) obj;
-				return link.getTitle();
-			}
+        if (obj instanceof BausteinUmsetzung) {
+            BausteinUmsetzung bu = (BausteinUmsetzung) obj;
+            switch (bu.getErreichteSiegelStufe()) {
+            case 'A':
+                return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG_A);
+            case 'B':
+                return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG_B);
+            case 'C':
+                return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG_C);
+            }
+            // else return default image
+            return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
+        }
 
-			CnATreeElement el = (CnATreeElement) obj;
-			return el.getTitle();
-		}
+        else if (obj instanceof LinkKategorie) {
+            return ImageCache.getInstance().getImage(ImageCache.LINKS);
+        }
+
+        else if (obj instanceof CnALink) {
+            CnALink link = (CnALink) obj;
+            return CnAImageProvider.getImage(link.getDependency());
+        }
+
+        CnATreeElement el = (CnATreeElement) obj;
+        return CnAImageProvider.getImage(el);
+    }
+
+    @Override
+    public String getText(Object obj) {
+        // Logger.getLogger(this.getClass()).debug("getLabel "+obj);
+        try {
+            if (obj == null) {
+                return "<null>";
+            }
+    
+            Object cachedObject = cache.getCachedObject(obj);
+            if (cachedObject == null) {
+                cache.addObject(obj);
+            } else {
+                obj = cachedObject;
+            }
+    
+            if (obj instanceof IBSIStrukturElement) {
+                IBSIStrukturElement el = (IBSIStrukturElement) obj;
+                CnATreeElement el2 = (CnATreeElement) obj;
+                StringBuilder title = new StringBuilder();
+                if (el.getKuerzel() != null && el.getKuerzel().length() > 0) {
+                    title.append(el.getKuerzel()).append(" ");
+                }
+                return title.append(el2.getTitle()).toString();
+            }
+    
+            else if (obj instanceof LinkKategorie) {
+                return ((LinkKategorie) obj).getTitle();
+            } else if (obj instanceof CnALink) {
+                CnALink link = (CnALink) obj;
+                return link.getTitle();
+            }
+    
+            CnATreeElement el = (CnATreeElement) obj;
+            return el.getTitle();
+        } catch( Exception e ) {
+            LOG.error("Error while getting label", e);
+            return "";
+        }
+    }
 
 }

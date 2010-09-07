@@ -15,34 +15,59 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.common;
+package sernet.verinice.model.iso27k;
 
 import java.util.Collection;
 import java.util.Collections;
 
-import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class ImportedObjectsHolder extends CnATreeElement implements IISO27kElement {
+public class ImportIsoGroup extends CnATreeElement implements IISO27kGroup {
 	
-	public static final String TYPE_ID = ImportedObjectsHolder.class.getSimpleName();
+	public static final String TYPE_ID = ImportIsoGroup.class.getSimpleName();
 
-	public ImportedObjectsHolder(CnATreeElement model) {
+	public static final String[] CHILD_TYPES = new String[] {
+        AssetGroup.TYPE_ID,
+        ControlGroup.TYPE_ID,
+        AuditGroup.TYPE_ID,
+        ExceptionGroup.TYPE_ID,
+        PersonGroup.TYPE_ID,
+        RequirementGroup.TYPE_ID,
+        IncidentGroup.TYPE_ID,
+        IncidentScenarioGroup.TYPE_ID,
+        ResponseGroup.TYPE_ID,
+        ThreatGroup.TYPE_ID,
+        VulnerabilityGroup.TYPE_ID,
+        DocumentGroup.TYPE_ID,
+        RecordGroup.TYPE_ID,
+        ProcessGroup.TYPE_ID,
+    };
+	
+	public ImportIsoGroup(CnATreeElement model) {
 		super(model);
 	}
 
-	protected ImportedObjectsHolder() {
+	protected ImportIsoGroup() {
 	}
 
 	@Override
 	public String getTitle() {
-		return "importierte Objekte";
+		return Messages.ImportIsoGroup_0;
 	}
 
 	@Override
 	public String getTypeId() {
 		return TYPE_ID;
 	}
+	
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27kGroup#getChildTypes()
+     */
+    @Override
+    public String[] getChildTypes() {
+        return CHILD_TYPES;
+    }
 
 	@Override
 	public boolean canContain(Object obj) {
@@ -64,5 +89,7 @@ public class ImportedObjectsHolder extends CnATreeElement implements IISO27kElem
     public Collection<? extends String> getTags() {
         return Collections.emptyList();
     }
+
+
 	
 }

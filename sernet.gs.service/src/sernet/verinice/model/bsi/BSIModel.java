@@ -32,7 +32,7 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ImportedObjectsHolder;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 
 /**
  * Top level category for all BSI model elements.
@@ -84,7 +84,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 	public void childAdded(CnATreeElement category, CnATreeElement child) {
 		for (IBSIModelListener listener : getListeners()) {
 			listener.childAdded(category, child);
-			if (child instanceof ITVerbund)
+			if (child instanceof ITVerbund | child instanceof ImportBsiGroup)
 				listener.modelRefresh(null);
 		}
 	}
@@ -186,7 +186,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof ITVerbund || obj instanceof ImportedObjectsHolder)
+		if (obj instanceof ITVerbund || obj instanceof ImportBsiGroup)
 			return true;
 		return false;
 	}

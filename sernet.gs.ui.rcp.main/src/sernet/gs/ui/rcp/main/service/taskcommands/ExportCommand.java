@@ -28,8 +28,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.xml.bind.JAXB;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+
+import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.hui.common.connect.Entity;
@@ -59,6 +66,21 @@ import de.sernet.sync.sync.SyncRequest;
 @SuppressWarnings("serial")
 public class ExportCommand extends GenericCommand
 {
+    private transient Logger log = Logger.getLogger(ExportCommand.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(ExportCommand.class);
+        }
+        return log;
+    }
+    
+    private transient CacheManager manager = null;
+    private String cacheId = null;
+    private transient Cache cache = null;
+
+    transient private IBaseDao<CnATreeElement, Serializable> dao;
+    
 	/*+++
 	 * List of already-exported objects' IDs, to
 	 * prevent multiple inclusion of a single object
@@ -84,11 +106,12 @@ public class ExportCommand extends GenericCommand
 	public ExportCommand( List<CnATreeElement> elements, String sourceId, HashMap<String,String> entityTypesToBeExported )
 	{
 		this( elements, sourceId );
-		this.entityTypesToBeExported = entityTypesToBeExported; 
+		this.entityTypesToBeExported = entityTypesToBeExported;
 	}
 	
 	public void execute()
 	{
+	    getCache().removeAll();
 		String timestamp = Long.toString(Calendar.getInstance().getTimeInMillis());
 		exportedObjectIDs = new HashMap<String, String>();
 		
@@ -116,7 +139,7 @@ public class ExportCommand extends GenericCommand
 		Set<EntityType> exportedEntityTypes = new HashSet<EntityType>();
 		Set<String> exportedTypes = new HashSet<String>();
 		for( CnATreeElement element : elements )
-		{
+		{	    
 			export(sd.getSyncObject(), element, timestamp, exportedEntityTypes, exportedTypes);
 		}
 		sd.getSyncObject().addAll(orphaneList);
@@ -253,22 +276,56 @@ public class ExportCommand extends GenericCommand
 		}
 	}
 	
-	/*************************************************
+	/**
+     * @param cnATreeElement
+     */
+    private void merge(CnATreeElement element) {
+        getDao().merge(element);
+    }
+    
+    private IBaseDao<CnATreeElement, Serializable> getDao() {
+        if(dao==null) {
+            dao = createDao();
+        }
+        return dao;
+    }
+    
+    private IBaseDao<CnATreeElement, Serializable> createDao() {
+        return getDaoFactory().getDAO(CnATreeElement.class);
+    }
+
+    /*************************************************
 	 * Hydrate {@code element}, including all of its
 	 * successor elements and properties.
 	 * 
 	 * @param element
 	 *************************************************/
 	private void hydrate(CnATreeElement element)
-	{
+	{ 
 		if (element == null)
 			return;
 		
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
+		Element cachedElement = getCache().get(element.getUuid());
+		if(cachedElement!=null) {
+		    element = (CnATreeElement) cachedElement.getValue();
+		    if (getLog().isDebugEnabled()) {
+		        getLog().debug("Element from cache: " + element.getTitle());
+            }
+		    return;
+		}
+		
+		
+		//IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
 		//element = dao.retrieve(element.getDbId(), RetrieveInfo.getPropertyChildrenInstance());
 		
-		HydratorUtil.hydrateElement( dao, element, true);
-		HydratorUtil.hydrateEntity( dao, element);
+		HydratorUtil.hydrateElement( getDao(), element, true);
+		HydratorUtil.hydrateEntity( getDao(), element);
+		
+		getCache().put(new Element(element.getUuid(), element));
+		
+		if (getLog().isDebugEnabled()) {
+		    getLog().debug("Hydrating element: " + element.getTitle() + ", UUID: " + element.getUuid());
+        }
 		
 		Set<CnATreeElement> children = element.getChildren();
 		for (CnATreeElement child : children)
@@ -281,10 +338,32 @@ public class ExportCommand extends GenericCommand
 			
 			hydrate(child);
 		}
+		
 	}
 
 	public byte[] getResult() {
 		return result; 
+	}
+	
+	protected void finalize() throws Throwable {
+	    CacheManager.getInstance().shutdown();
+	};
+	
+	private Cache getCache() { 	
+	    if(manager==null || cache==null) {
+	        cache = createCache();
+	    } else {
+	        cache = manager.getCache(cacheId);
+	    }
+	    return cache;
+ 	}
+	
+	private Cache createCache() {
+	    cacheId = UUID.randomUUID().toString();
+        manager = CacheManager.create();
+        cache = new Cache(cacheId, 20000, false, false, 600, 500);
+        manager.addCache(cache);
+        return cache;
 	}
 	
 }

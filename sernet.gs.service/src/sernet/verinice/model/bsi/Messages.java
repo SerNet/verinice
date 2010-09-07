@@ -50,6 +50,7 @@ public class Messages extends NLS {
     public static String BSIModel_2;
     public static String ClientsKategorie_0;
     public static String GebaeudeKategorie_0;
+    public static String ImportBsiGroup_0;
     public static String MassnahmenUmsetzung_1;
     public static String NKKategorie_0;
     public static String PersonenKategorie_0;
