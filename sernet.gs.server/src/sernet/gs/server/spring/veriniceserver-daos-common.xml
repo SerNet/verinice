@@ -560,12 +560,19 @@
     
     <!-- Miscellaneous Daos ==================================================================== -->
 
-	<bean id="importedObjectsHolderDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="importIsoDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
 		<constructor-arg>
-			<value>sernet.verinice.model.common.ImportedObjectsHolder</value>
+			<value>sernet.verinice.model.iso27k.ImportIsoGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+    
+    <bean id="importBsiDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.bsi.ImportBsiGroup</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
     
 	<!-- END dao definitions ============================================================================ -->
 

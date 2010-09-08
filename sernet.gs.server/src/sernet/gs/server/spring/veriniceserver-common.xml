@@ -197,7 +197,8 @@ This variant:
         <!-- Self Assessment (SAMT) Daos -->
         <property name="samtTopicDAO" ref="samtTopicDAO" />   
         <!-- Miscellaneous DAOs -->
-        <property name="importedObjectsHolderDAO" ref="importedObjectsHolderDAO" />   
+        <property name="importIsoDAO" ref="importIsoDAO" /> 
+        <property name="importBsiDAO" ref="importBsiDAO" />  
 	</bean>
 
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
