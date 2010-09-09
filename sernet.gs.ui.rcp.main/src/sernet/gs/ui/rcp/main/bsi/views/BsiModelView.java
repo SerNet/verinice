@@ -458,6 +458,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		dropAdapter = new MetaDropAdapter(viewer);
 		dropAdapter.addAdapter(new BSIModelViewDropPerformer());
 
+		exportAction = new ExportAction(getSite().getWorkbenchWindow(), "Export");
+		/*
 		exportAction = new Action(){
 			public void run()
 			{
@@ -502,6 +504,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 			}
 		};
 		exportAction.setText("Export");
+		*/
 	}
 
 	private void expandAll() {

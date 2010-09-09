@@ -315,7 +315,11 @@ public class SyncInsertUpdateCommand extends GenericCommand {
                 // ...and set its sourceId and extId:
                 elementInDB.setSourceId(sourceId);
                 elementInDB.setExtId(extId);
-
+                
+                if(elementInDB instanceof Organization || elementInDB instanceof ITVerbund) {
+                    addElement(elementInDB);
+                }
+                
                 setAttributes = true;
                 inserted++;
                 if (getLog().isDebugEnabled()) {

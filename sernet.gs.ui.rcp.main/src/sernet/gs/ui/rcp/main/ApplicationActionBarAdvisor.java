@@ -147,12 +147,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenMultipleViewAction openChartViewAction;
 
     private ImportGstoolAction importGstoolAction;
-    
-	private ImportXMLAction importXMLAction;
 
 	private ImportCSVAction importCSVAction;
-
-    private ExportAction exportAction;
 
     private OpenViewAction openDocumentViewAction;
 
@@ -249,15 +245,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         register(importGstoolAction);
-
-        importXMLAction = new ImportXMLAction(window, Messages.ApplicationActionBarAdvisor_29);
-        register(importXMLAction);
         
         importCSVAction = new ImportCSVAction(window, "CSV - Import");
         register(importCSVAction);
-
-        exportAction = new ExportAction(window, Messages.ApplicationActionBarAdvisor_28);
-        register(exportAction);
 
 		importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27);
 		register(importGSNotesAction);
@@ -347,10 +337,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(new Separator());
         fileMenu.add(importGstoolAction);
         fileMenu.add(new Separator());
-        fileMenu.add(importXMLAction);
         fileMenu.add(importCSVAction);
 		fileMenu.add(importGSNotesAction);
-		fileMenu.add(exportAction);
 
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);

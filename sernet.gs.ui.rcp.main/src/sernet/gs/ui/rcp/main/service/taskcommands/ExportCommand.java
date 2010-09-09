@@ -35,6 +35,7 @@ import javax.xml.bind.JAXB;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.Status;
 
 import org.apache.log4j.Logger;
 
@@ -347,10 +348,11 @@ public class ExportCommand extends GenericCommand
 	
 	protected void finalize() throws Throwable {
 	    CacheManager.getInstance().shutdown();
+	    manager=null;
 	};
 	
 	private Cache getCache() { 	
-	    if(manager==null || cache==null) {
+	    if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache==null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
 	        cache = createCache();
 	    } else {
 	        cache = manager.getCache(cacheId);

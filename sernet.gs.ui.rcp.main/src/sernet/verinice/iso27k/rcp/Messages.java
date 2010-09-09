@@ -41,6 +41,10 @@ public class Messages extends NLS {
 	public static String CatalogView_28;
 	public static String CatalogView_4;
 	public static String CatalogView_7;
+    public static String ExportSelfAssessment_1;
+    public static String ExportSelfAssessment_2;
+    public static String ExportSelfAssessment_3;
+    public static String ExportSelfAssessment_4;
 	public static String ISMView_10;
 	public static String ISMView_11;
 	public static String ISMView_12;
@@ -58,6 +62,19 @@ public class Messages extends NLS {
     public static String ISMViewFilterDialog_3;
     public static String ISMViewFilterDialog_4;
     public static String ISMViewFilterDialog_5;
+    public static String SamtExportDialog_0;
+    public static String SamtExportDialog_1;
+    public static String SamtExportDialog_10;
+    public static String SamtExportDialog_11;
+    public static String SamtExportDialog_12;
+    public static String SamtExportDialog_13;
+    public static String SamtExportDialog_2;
+    public static String SamtExportDialog_3;
+    public static String SamtExportDialog_4;
+    public static String SamtExportDialog_5;
+    public static String SamtExportDialog_6;
+    public static String SamtExportDialog_7;
+    public static String SamtExportDialog_8;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

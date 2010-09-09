@@ -91,9 +91,9 @@
             id="sernet.verinice.samt.exportSelfAssessment"
             targetID="sernet.verinice.samt.rcp.views.SamtView">
          <action
-               class="sernet.verinice.samt.rcp.ExportSelfAssessment"
+               class="sernet.verinice.iso27k.rcp.action.ExportAction"
                icon="icons/export.gif"
-               id="sernet.verinice.samt.rcp.ExportSelfAssessment"
+               id="sernet.verinice.iso27k.rcp.action.ExportAction"
                label="%action.label.6"
                state="true"
                style="push"
@@ -252,7 +252,7 @@
                style="push">
          </action>
          <action
-               class="sernet.verinice.samt.rcp.ExportSelfAssessment"
+               class="sernet.verinice.iso27k.rcp.action.ExportAction"
                icon="icons/export.gif"
                id="sernet.verinice.samt.rcp.exporttofile"
                label="%action.label.5"
@@ -267,24 +267,6 @@
 		   itemAttribute="vnicon"
 		   class="none">
 		 </itemExtension>
-   </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="false"
-            id="sernet.verinice.model.iso27k.Organization"
-            objectClass="sernet.verinice.model.iso27k.Organization">
-         <action
-               class="sernet.verinice.samt.rcp.ExportSelfAssessment"
-               enablesFor="1"
-               icon="icons/export.gif"
-               id="sernet.verinice.samt.rcp.ExportSelfAssessment.menu"
-               label="%action.label.13"
-               menubarPath="additions"
-               style="push"
-               tooltip="%action.tooltip.1">
-         </action>
-      </objectContribution>
    </extension>
    <extension point="org.eclipse.ui.handlers">
       <handler

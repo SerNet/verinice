@@ -35,7 +35,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -45,124 +46,113 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.ExportDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * {@link Action} that exports selected objects from the
- * database to an XML file at the selected path. This uses
- * {@link ExportDialog} to retrieve user selections.
+ * {@link Action} that exports selected objects from the database to an XML file
+ * at the selected path. This uses {@link ExportDialog} to retrieve user
+ * selections.
  */
-public class ExportAction extends Action
-{
-	public static final String ID = "sernet.gs.ui.rcp.main.export"; //$NON-NLS-1$
-	
-	private static final Logger LOG = Logger.getLogger(ExportAction.class);
-	
-	private IWorkbenchWindow window;
-	
-	private static ISchedulingRule iSchedulingRule = new Mutex();
+public class ExportAction extends Action {
+    public static final String ID = "sernet.gs.ui.rcp.main.export"; //$NON-NLS-1$
 
-	public ExportAction(IWorkbenchWindow window, String label)
-	{
-		this.window = window;
-		setText(label);
-		setId(ID);
-	}
-	
-	/*
-	 * @see
-	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
-	 * ExecutionEvent)
-	 */
-	@Override
-	public void run()
-	{
-		final ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell());
-		if( dialog.open() == Dialog.OK )
-		{
-		    WorkspaceJob exportJob = new WorkspaceJob("Exporting...") {
-	            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-	                IStatus status = Status.OK_STATUS;
-	                try {
-	                    monitor.beginTask("Exporting to file " + dialog.getStorageLocation() + "... This may take several minutes.", IProgressMonitor.UNKNOWN);
-	                    export(dialog);
-	                } catch (Exception e) {
-	                    LOG.error("Error while exporting data.", e); //$NON-NLS-1$
-	                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while exporting data.",e); 
-	                } finally {
-	                    monitor.done();
-	                }
-	                return status;
-	            }
-	        };
-	        JobScheduler.scheduleJob(exportJob,iSchedulingRule);		          		
-		}
-	}
-	
-	public void export(ExportDialog dialog) {
-	    try {
+    private static final Logger LOG = Logger.getLogger(ExportAction.class);
+
+    private IWorkbenchWindow window;
+
+    EncryptionDialog encDialog;
+    
+    private ISchedulingRule iSchedulingRule = new Mutex();
+
+    public ExportAction(IWorkbenchWindow window, String label) {
+        this.window = window;
+        setText(label);
+        setId(ID);
+    }
+
+    /*
+     * @see
+     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+     * ExecutionEvent)
+     */
+    @Override
+    public void run() {
+        final ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell());
+        if (dialog.open() == Window.OK) {
+            WorkspaceJob exportJob = new WorkspaceJob(Messages.ExportAction_0) {
+                @Override
+                public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                    IStatus status = Status.OK_STATUS;
+                    try {
+
+                        monitor.beginTask(NLS.bind(Messages.ExportAction_1, new Object[] { dialog.getStorageLocation() }), IProgressMonitor.UNKNOWN);
+                        export(dialog);
+                    } catch (Exception e) {
+                        LOG.error("Error while exporting data.", e); //$NON-NLS-1$
+                        status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.ExportAction_4, e); //$NON-NLS-1$
+                    } finally {
+                        monitor.done();
+                    }
+                    return status;
+                }
+            };
+            JobScheduler.scheduleJob(exportJob, iSchedulingRule);
+        }
+    }
+
+    public void export(ExportDialog dialog) {
+        try {
             LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
             exportElements.add(dialog.getSelectedITNetwork());
-            ExportCommand exportCommand;            
-            if( dialog.isRestrictedToEntityTypes() ) {
+            ExportCommand exportCommand;
+            if (dialog.isRestrictedToEntityTypes()) {
                 exportCommand = new ExportCommand(exportElements, dialog.getSourceId(), dialog.getEntityTypesToBeExported());
-            }
-            else {
+            } else {
                 exportCommand = new ExportCommand(exportElements, dialog.getSourceId());
             }
             exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
-            IOUtils.write(exportCommand.getResult(), ExportAction.getExportOutputStream(dialog.getStorageLocation(), dialog.getEncryptOutput()));           
+            IOUtils.write(exportCommand.getResult(), getExportOutputStream(dialog.getStorageLocation(), dialog.getEncryptOutput()));
+        } catch (Exception ex) {
+            LOG.error("Error while exporting.", ex); //$NON-NLS-1$
         }
-        catch(Exception ex) {
-            LOG.error("Error while exporting.", ex);
+    }
+
+    public OutputStream getExportOutputStream(String path, boolean encryptOutput) {
+        OutputStream os;
+        try {
+            os = new FileOutputStream(path);
+        } catch (FileNotFoundException e) {
+            throw new IllegalArgumentException(e);
         }
-	}
-	
-	public static OutputStream getExportOutputStream(String path, boolean encryptOutput )
-	{
-		OutputStream os;
-		try {
-			os = new FileOutputStream(path);
-		} catch (FileNotFoundException e) {
-			throw new IllegalArgumentException(e);
-		}
-		
-		if (encryptOutput) {
-			EncryptionDialog encDialog = new EncryptionDialog(Display.getDefault().getActiveShell());
-			if (encDialog.open() == Dialog.OK) {
-				IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
-				
-				try {
-					EncryptionMethod encMethod = encDialog
-							.getSelectedEncryptionMethod();
-					if (encMethod == EncryptionMethod.PASSWORD) {
-						os = service
-								.encrypt(os, encDialog.getEnteredPassword());
-					} else if (encMethod == EncryptionMethod.X509_CERTIFICATE) {
-						os = service.encrypt(os, encDialog
-								.getSelectedX509CertificateFile());
-					}
-				} catch (IOException ioe) {
-					throw new IllegalArgumentException(ioe);
-				} catch (CertificateNotYetValidException e) {
-					throw new IllegalArgumentException(e);
-				} catch (CertificateExpiredException e) {
-					throw new IllegalArgumentException(e);
-				} catch (CertificateException e) {
-					throw new IllegalArgumentException(e);
-				} catch (EncryptionException e) {
-					throw new IllegalArgumentException(e);
-				}
-			}
-		}
-		
-		return os;
-	}
+
+        if (encryptOutput) {       
+            Display.getCurrent().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    encDialog = new EncryptionDialog(Display.getDefault().getActiveShell());                   
+                }            
+            });
+            if (encDialog!=null && encDialog.open() == Window.OK) {
+                IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
+
+                try {
+                    EncryptionMethod encMethod = encDialog.getSelectedEncryptionMethod();
+                    if (encMethod == EncryptionMethod.PASSWORD) {
+                        os = service.encrypt(os, encDialog.getEnteredPassword());
+                    } else if (encMethod == EncryptionMethod.X509_CERTIFICATE) {
+                        os = service.encrypt(os, encDialog.getSelectedX509CertificateFile());
+                    }
+                } catch (Exception ioe) {
+                    throw new IllegalArgumentException(ioe);
+                }
+            }
+        }
+
+        return os;
+    }
 
 }

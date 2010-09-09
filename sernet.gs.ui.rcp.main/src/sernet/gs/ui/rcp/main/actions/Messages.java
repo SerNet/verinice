@@ -35,6 +35,9 @@ public class Messages extends NLS {
 	public static String ConfigurationAction_5;
 	public static String ConfigurationAction_7;
 	public static String ConfigurationAction_8;
+    public static String ExportAction_0;
+    public static String ExportAction_1;
+    public static String ExportAction_4;
     public static String ImportGstoolAction_1;
     public static String ImportGstoolAction_2;
     public static String ManageUpdatesAction_1;

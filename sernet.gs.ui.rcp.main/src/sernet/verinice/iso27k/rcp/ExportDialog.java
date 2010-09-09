@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.samt.rcp;
+package sernet.verinice.iso27k.rcp;
 
 import java.io.File;
 import java.util.Iterator;
@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 
@@ -56,8 +57,8 @@ import sernet.verinice.model.iso27k.Organization;
  * @author Daniel Murygin <dm@sernet.de>
  */
 @SuppressWarnings("restriction")
-public class SamtExportDialog extends TitleAreaDialog {
-    private static final Logger LOG = Logger.getLogger(SamtExportDialog.class);
+public class ExportDialog extends TitleAreaDialog {
+    private static final Logger LOG = Logger.getLogger(ExportDialog.class);
 
     /**
      * Indicates if the output should be encrypted.
@@ -66,7 +67,7 @@ public class SamtExportDialog extends TitleAreaDialog {
     private CnATreeElement selectedElement;
     private String filePath;
 
-    public SamtExportDialog(Shell activeShell) {
+    public ExportDialog(Shell activeShell) {
         this(activeShell, null);
     }
 
@@ -74,7 +75,7 @@ public class SamtExportDialog extends TitleAreaDialog {
      * @param activeShell
      * @param selectedOrganization
      */
-    public SamtExportDialog(Shell activeShell, Organization selectedOrganization) {
+    public ExportDialog(Shell activeShell, Organization selectedOrganization) {
         super(activeShell);
         selectedElement = selectedOrganization;
     }
@@ -109,6 +110,15 @@ public class SamtExportDialog extends TitleAreaDialog {
             setMessage(Messages.SamtExportDialog_4, IMessageProvider.ERROR);
             return null;
         }
+        
+        LoadCnAElementByType<ITVerbund> cmdItVerbund = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
+        try {
+            cmdItVerbund = ServiceFactory.lookupCommandService().executeCommand(cmdItVerbund);
+        } catch (CommandException ex) {
+            LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
+            setMessage(Messages.SamtExportDialog_4, IMessageProvider.ERROR);
+            return null;
+        }
 
         final Group groupOrganization = new Group(composite, SWT.NONE);
         GridLayout groupOrganizationLayout = new GridLayout(1, true);
@@ -117,8 +127,6 @@ public class SamtExportDialog extends TitleAreaDialog {
         groupOrganizationLayoutData.horizontalIndent = 20;
         groupOrganization.setLayoutData(groupOrganizationLayoutData);
         groupOrganization.setLayout(groupOrganizationLayout);
-        List<Organization> organizationList = cmdLoadOrganization.getElements();
-        Iterator<Organization> organizationIter = organizationList.iterator();
 
         SelectionListener organizationListener = new SelectionAdapter() {
             @Override
@@ -130,6 +138,8 @@ public class SamtExportDialog extends TitleAreaDialog {
 
         CnATreeElement oldSelectedElement = selectedElement;
         selectedElement = null;
+        List<Organization> organizationList = cmdLoadOrganization.getElements();
+        Iterator<Organization> organizationIter = organizationList.iterator();
         while (organizationIter.hasNext()) {
             final Button radioOrganization = new Button(groupOrganization, SWT.RADIO);
             Organization organization = organizationIter.next();
@@ -143,6 +153,24 @@ public class SamtExportDialog extends TitleAreaDialog {
             if (organizationList.size() == 1) {
                 radioOrganization.setSelection(true);
                 selectedElement = organization;
+            }
+        }
+        
+        List<ITVerbund> itVerbundList = cmdItVerbund.getElements();
+        Iterator<ITVerbund> itVerbundIter = itVerbundList.iterator();
+        while (itVerbundIter.hasNext()) {
+            final Button radio = new Button(groupOrganization, SWT.RADIO);
+            ITVerbund verbund = itVerbundIter.next();
+            radio.setText(verbund.getTitle());
+            radio.setData(verbund);
+            radio.addSelectionListener(organizationListener);
+            if (oldSelectedElement != null && oldSelectedElement.equals(verbund)) {
+                radio.setSelection(true);
+                selectedElement = verbund;
+            }
+            if (organizationList.size() == 1) {
+                radio.setSelection(true);
+                selectedElement = verbund;
             }
         }
 

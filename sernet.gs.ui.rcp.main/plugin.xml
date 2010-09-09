@@ -604,6 +604,36 @@
             </enablement>
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.model.iso27k.ExportItVerbund"
+            objectClass="sernet.verinice.model.bsi.ITVerbund">
+         <action
+               class="sernet.verinice.iso27k.rcp.action.ExportAction"
+               enablesFor="1"
+               icon="icons/export.gif"
+               id="sernet.verinice.model.iso27k.ExportItVerbund.menu"
+               label="Export..."
+               menubarPath="additions"
+               style="push"
+               tooltip="Export to file...">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.model.iso27k.ExportOrganization"
+            objectClass="sernet.verinice.model.iso27k.Organization">
+         <action
+               class="sernet.verinice.iso27k.rcp.action.ExportAction"
+               enablesFor="1"
+               icon="icons/export.gif"
+               id="sernet.verinice.model.iso27k.ExportOrganization.menu"
+               label="Export..."
+               menubarPath="additions"
+               style="push"
+               tooltip="Export to file...">
+         </action>
+      </objectContribution>
    </extension>
    <extension point="org.eclipse.ui.menus">
    	  <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=additions">
@@ -916,6 +946,62 @@
                style="push"
                toolbarPath="additions"
                tooltip="%action.tooltip.18">
+         </action>
+      </viewContribution>
+      <viewContribution
+            id="sernet.verinice.iso27k.rcp.action.importOrganization"
+            targetID="sernet.verinice.iso27k.rcp.ISMView">
+         <action
+               class="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
+               icon="icons/import.gif"
+               id="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
+               label="Import organization..."
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Import organization from file...">
+         </action>
+      </viewContribution>
+      <viewContribution
+            id="sernet.verinice.iso27k.rcp.action..importItVerbund"
+            targetID="sernet.gs.ui.rcp.main.views.bsimodelview">
+         <action
+               class="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
+               icon="icons/import.gif"
+               id="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
+               label="Import it-verbund..."
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Import it-verbund from file...">
+         </action>
+      </viewContribution>
+      <viewContribution
+            id="sernet.verinice.samt.exportOrganization"
+            targetID="sernet.verinice.iso27k.rcp.ISMView">
+         <action
+               class="sernet.verinice.iso27k.rcp.action.ExportAction"
+               icon="icons/export.gif"
+               id="sernet.verinice.iso27k.rcp.action.ExportAction"
+               label="Export organization..."
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Export organization to a file...">
+         </action>
+      </viewContribution>
+      <viewContribution
+            id="sernet.verinice.samt.exportItVerbund"
+            targetID="sernet.gs.ui.rcp.main.views.bsimodelview">
+         <action
+               class="sernet.verinice.iso27k.rcp.action.ExportAction"
+               icon="icons/export.gif"
+               id="sernet.verinice.iso27k.rcp.action.ExportAction"
+               label="Export IT-Verbund..."
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Export IT-Verbund to a file...">
          </action>
       </viewContribution>
    </extension>
