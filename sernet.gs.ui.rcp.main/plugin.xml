@@ -1082,28 +1082,29 @@
    </extension>
    <extension
          point="org.eclipse.ui.decorators">
-      <decorator
-            adaptable="true"
-            icon="icons/overlays/folder_decorator.png"
-            id="sernet.gs.ui.rcp.main.groupdecorator"
-            label="%decorator.label"
-            lightweight="true"
-            location="BOTTOM_RIGHT"
-            state="true">
-         <enablement>
-            <objectClass
-                  name="sernet.verinice.model.iso27k.IISO27kGroup">
-            </objectClass>
-         </enablement>
-      </decorator>
-      <decorator
-            adaptable="true"
-            icon="icons/overlays/alien.png"
-            id="sernet.gs.ui.rcp.main.aliendecorator"
-            label="%decorator.label.0"
-            lightweight="true"
-            location="TOP_RIGHT"
-            state="false">
-      </decorator>
+	      <decorator
+	            adaptable="true"
+	            icon="icons/overlays/folder_decorator.png"
+	            id="sernet.gs.ui.rcp.main.groupdecorator"
+	            label="%decorator.label"
+	            lightweight="false"
+	            location="BOTTOM_RIGHT"
+	            state="true">
+	         <enablement>
+	            <objectClass name="sernet.verinice.model.iso27k.IISO27kGroup"/>
+	         </enablement>
+	      </decorator>
+	      <decorator
+	            adaptable="true"
+	            class="sernet.verinice.rcp.ImportDecorator"
+	            id="sernet.verinice.rcp.ImportDecorator"
+	            label="importDecorator"
+	            lightweight="true"
+	            location="BOTTOM_LEFT"
+	            state="true">
+	          <enablement>
+	          	<objectClass name="sernet.hui.common.connect.ITypedElement"/>
+	         </enablement>
+	      </decorator>
    </extension>
 </plugin>

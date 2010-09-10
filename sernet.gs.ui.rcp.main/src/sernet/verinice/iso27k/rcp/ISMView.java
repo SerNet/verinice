@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IDecoratorManager;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.DrillDownAdapter;
@@ -72,6 +73,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.ImportDecorator;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -138,15 +140,14 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	}
 
 	protected void initView(Composite parent) {
+	    IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
+	    
 		contentProvider = new ISMViewContentProvider(cache);
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.setContentProvider(contentProvider);
-		
-		IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-		viewer.setLabelProvider(new DecoratingLabelProvider(new ISMViewLabelProvider(cache), workbench.getDecoratorManager())
-		        );
+		viewer.setLabelProvider(new DecoratingLabelProvider(new ISMViewLabelProvider(cache), workbench.getDecoratorManager()));
 		
 		getSite().setSelectionProvider(viewer);
 		hookContextMenu();
@@ -155,8 +156,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		fillToolBar();
 		hookDNDListeners();
 	}
-	
-	/**
+
+    /**
 	 * 
 	 */
 	protected void startInitDataJob() {

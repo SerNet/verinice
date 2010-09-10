@@ -40,6 +40,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -58,6 +59,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
@@ -92,6 +94,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.rcp.ISMViewLabelProvider;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.model.bsi.BSIModel;
@@ -220,10 +223,12 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	}
 
 	private void initView(Composite parent) {
+	    IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
+        
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewer.setContentProvider(contentProvider = new BSIModelViewContentProvider(cache));
-		viewer.setLabelProvider(new BSIModelViewLabelProvider(cache));
+		viewer.setContentProvider(contentProvider = new BSIModelViewContentProvider(cache));		
+		viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(cache), workbench.getDecoratorManager()));
 		viewer.setSorter(new CnAElementByTitelSorter());
 
 		getSite().setSelectionProvider(viewer);
