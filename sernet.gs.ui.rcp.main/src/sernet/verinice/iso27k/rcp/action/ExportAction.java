@@ -21,9 +21,14 @@ package sernet.verinice.iso27k.rcp.action;
 import java.io.File;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 import java.util.LinkedList;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -55,6 +60,7 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
+import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
@@ -145,7 +151,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 		}
 	}
 
-    private void export(CnATreeElement element, String path, char[] password, File x509CertificateFile) {
+    private void export(CnATreeElement element, String path, char[] exportPassword, File x509CertificateFile) {
         LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
         if(element!=null) {
             Activator.inheritVeriniceContextState();
@@ -153,8 +159,9 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         	ExportCommand exportCommand = new ExportCommand(exportElements, element.getUuid());
         	try
         	{
-        		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);  		
-        		IOUtils.write(exportCommand.getResult(), getExportOutputStream( path ,password, x509CertificateFile ));
+        		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
+        		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, x509CertificateFile));
+        		//IOUtils.write(exportCommand.getResult(), getExportOutputStream( path ,exportPassword, x509CertificateFile ));
         	} catch (Exception e) {
         		throw new IllegalStateException(e);
         	}
@@ -166,6 +173,30 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         }
     }
 	
+
+    /**
+     * @param result
+     * @param password2
+     * @param x509CertificateFile2
+     * @return
+     * @throws IOException 
+     * @throws EncryptionException 
+     * @throws CertificateException 
+     * @throws CertificateExpiredException 
+     * @throws CertificateNotYetValidException 
+     */
+    private byte[] encrypt(byte[] result, char[] password, File x509CertificateFile2) throws CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException, IOException {
+        if (password!=null || x509CertificateFile!=null) {               
+            IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
+            if (password!=null) {
+                result = service.encrypt(result, password);
+            } else if (x509CertificateFile!=null) {
+                result = service.encrypt(result, x509CertificateFile);
+            }                     
+        }
+        return result;
+    }
+
     public OutputStream getExportOutputStream(String path, char[] password, File x509CertificateFile) {
         OutputStream os;
         try {

@@ -6,6 +6,8 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -105,7 +107,7 @@ public class EncryptionDialog extends TitleAreaDialog {
 			}
 		});
 		
-		Text passwordField = new Text(encryptionChoicePanel, SWT.PASSWORD | SWT.BORDER);
+		final Text passwordField = new Text(encryptionChoicePanel, SWT.PASSWORD | SWT.BORDER);
 		GridData data = new GridData();
 		data.widthHint = 280;
 		passwordField.setLayoutData(data);
@@ -166,6 +168,16 @@ public class EncryptionDialog extends TitleAreaDialog {
 				selectedEncryptionMethod = EncryptionMethod.PASSWORD;
 			}
 		});
+		passwordField.addModifyListener(new ModifyListener() {         
+            @Override
+            public void modifyText(ModifyEvent e) {
+                if(passwordField.getText()!=null) {
+                    enteredPassword=passwordField.getText().toCharArray(); 
+                } else {
+                    enteredPassword="".toCharArray();
+                }
+            }
+        });
 
 		encryptionChoicePanel.pack();
 		composite.pack();

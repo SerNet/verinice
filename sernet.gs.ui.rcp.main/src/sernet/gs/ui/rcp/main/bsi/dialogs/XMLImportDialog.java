@@ -3,15 +3,9 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -20,7 +14,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -47,9 +40,8 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.sync.commands.SyncCommand;
-import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
+import sernet.verinice.interfaces.encryption.PasswordException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.common.CnATreeElement;
@@ -57,9 +49,8 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * 
  * @author: Projektteam HFU
- * 
+ * FIXME: externalize strings (translate in message.properties)
  */
-
 public class XMLImportDialog extends Dialog {
 
     private static final Logger LOG = Logger.getLogger(XMLImportDialog.class);
@@ -82,7 +73,7 @@ public class XMLImportDialog extends Dialog {
     protected File privateKeyPemFile;
     
     private Text passwordField;
-    private String password = "";
+    private String password = ""; //$NON-NLS-1$
     
     private Text certificatePathField;
     
@@ -99,7 +90,6 @@ public class XMLImportDialog extends Dialog {
         } else if ((!insert && !update && !delete)) {
             createErrorMessage(2);
         } else {
-
             WorkspaceJob exportJob = new WorkspaceJob(Messages.XMLImportDialog_4) {
                 @Override
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
@@ -107,6 +97,8 @@ public class XMLImportDialog extends Dialog {
                     try {                        
                         monitor.beginTask(NLS.bind(Messages.XMLImportDialog_5, new Object[] {dataFile.getName()}), IProgressMonitor.UNKNOWN);
                         doImport();
+                    } catch (PasswordException e) {
+                        status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.XMLImportDialog_13, e); //$NON-NLS-1$
                     } catch (Exception e) {
                         LOG.error("Error while importing data.", e); //$NON-NLS-1$
                         status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.XMLImportDialog_17, e); //$NON-NLS-1$
@@ -224,7 +216,7 @@ public class XMLImportDialog extends Dialog {
         // decryption
         
         final Group cryptGroup = new Group(container, SWT.NULL);
-        cryptGroup.setText("Encryption");
+        cryptGroup.setText(Messages.XMLImportDialog_15);
         cryptGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 5, 1));       
         GridLayout pbeLayout = new GridLayout(3, false);
         cryptGroup.setLayout(pbeLayout);
@@ -232,7 +224,7 @@ public class XMLImportDialog extends Dialog {
 
         // ==== Password Based Encryption controls
         final Button passwordEncryptionRadio = new Button(cryptGroup, SWT.RADIO);
-        passwordEncryptionRadio.setText("Decrypt with password:");
+        passwordEncryptionRadio.setText(Messages.XMLImportDialog_16);
         passwordEncryptionRadio.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -254,7 +246,7 @@ public class XMLImportDialog extends Dialog {
         
         // ==== Certificate Based Encryption controls
         final Button certificateEncryptionRadio = new Button(cryptGroup, SWT.RADIO);
-        certificateEncryptionRadio.setText("Decrypt with certificate:");
+        certificateEncryptionRadio.setText(Messages.XMLImportDialog_28);
         certificateEncryptionRadio.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -300,18 +292,18 @@ public class XMLImportDialog extends Dialog {
         });
         
         Button browseX509CertificateButton = new Button(cryptGroup, SWT.NONE);
-        browseX509CertificateButton.setText("Select X.509 certificate...");
+        browseX509CertificateButton.setText(Messages.XMLImportDialog_29);
         browseX509CertificateButton.addSelectionListener(new SelectionAdapter() {         
             @Override
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
-                dialog.setFilterExtensions(new String[]{ "*.pem",});
+                dialog.setFilterExtensions(new String[]{ "*.pem",}); //$NON-NLS-1$
                 String certificatePath = dialog.open();
                 if(certificatePath != null) {
                     x509CertificateFile = new File(certificatePath);
                     certificatePathField.setText(certificatePath);
                 } else {
-                    certificatePathField.setText("");
+                    certificatePathField.setText(""); //$NON-NLS-1$
                 }             
                 passwordEncryptionRadio.setSelection(false);
                 certificateEncryptionRadio.setSelection(true);
@@ -335,18 +327,18 @@ public class XMLImportDialog extends Dialog {
         });
         
         Button browsePrivateKeyButton = new Button(cryptGroup, SWT.NONE);
-        browsePrivateKeyButton.setText("Select private key PEM file...");
+        browsePrivateKeyButton.setText(Messages.XMLImportDialog_32);
         browsePrivateKeyButton.addSelectionListener(new SelectionAdapter() {         
             @Override
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
-                dialog.setFilterExtensions(new String[]{ "*.pem",});
+                dialog.setFilterExtensions(new String[]{ "*.pem",}); //$NON-NLS-1$
                 String path = dialog.open();
                 if(path != null) {
                     privateKeyPemFile = new File(path);
                     privateKeyPathField.setText(path);
                 } else {
-                    privateKeyPathField.setText("");
+                    privateKeyPathField.setText(""); //$NON-NLS-1$
                 }             
                 passwordEncryptionRadio.setSelection(false);
                 certificateEncryptionRadio.setSelection(true);
@@ -438,7 +430,7 @@ public class XMLImportDialog extends Dialog {
 
         SyncCommand command;
         try {
-            byte[] fileData =  IOUtils.toByteArray(new FileInputStream(dataFile));
+            byte[] fileData =  FileUtils.readFileToByteArray(dataFile);
             if (selectedEncryptionMethod!=null) {           
                 IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
                 if (selectedEncryptionMethod == EncryptionMethod.PASSWORD) {
@@ -446,10 +438,16 @@ public class XMLImportDialog extends Dialog {
                 } else if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {
                     fileData = service.decrypt(fileData, x509CertificateFile, privateKeyPemFile);
                 }                       
-            }         
-            command = new SyncCommand(insert, update, delete,fileData);    
+            }
+            command = new SyncCommand(insert, update, delete, fileData);    
             command = ServiceFactory.lookupCommandService().executeCommand(command);
 
+        } catch (PasswordException  e) {
+            LOG.warn("Wrong password while decrypting import file."); //$NON-NLS-1$
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Stacktrace: ", e); //$NON-NLS-1$
+            }
+            throw e;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

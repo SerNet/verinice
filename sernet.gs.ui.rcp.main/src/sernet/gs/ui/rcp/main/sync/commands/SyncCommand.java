@@ -28,6 +28,8 @@ import java.util.Set;
 
 import javax.xml.bind.JAXB;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -42,7 +44,16 @@ import de.sernet.sync.sync.SyncRequest;
 @SuppressWarnings("serial")
 public class SyncCommand extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand
 {
-	private String sourceId;
+	private transient Logger log = Logger.getLogger(SyncCommand.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(SyncCommand.class);
+        }
+        return log;
+    }
+    
+    private String sourceId;
 	
 	private transient IAuthService authService;
 	
@@ -127,6 +138,12 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
 	@Override
 	public void execute()
 	{
+	    if (getLog().isDebugEnabled()) {
+	        String xml = new String(syncRequestSerialized);
+	        getLog().debug("Importing data:");
+            getLog().debug(xml);
+        }
+	    
 		if (syncRequestSerialized != null)
 		{
 			SyncRequest sr = (SyncRequest) JAXB.unmarshal(new ByteArrayInputStream(syncRequestSerialized), SyncRequest.class);
