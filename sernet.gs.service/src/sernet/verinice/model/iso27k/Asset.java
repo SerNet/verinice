@@ -36,6 +36,10 @@ public class Asset extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_NAME = "asset_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "asset_tag"; //$NON-NLS-1$
 	
+	// all risk management constants are in AssetValueService.java
+	
+	
+	
     private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
 

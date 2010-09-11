@@ -38,6 +38,7 @@ import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.Schutzbedarf;
+import sernet.verinice.model.iso27k.AssetValueService;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
@@ -77,6 +78,19 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
+	}
+	
+	public int getNumericProperty(String propertyTypeId) {
+	    PropertyList properties = getEntity().getProperties(propertyTypeId);
+	    if (properties == null || properties.getProperties().size()==0)
+	        return 0;
+	    else
+	        return properties.getProperty(0).getNumericPropertyValue();
+	}
+	
+	public void setNumericProperty(String propTypeId, int value) {
+	    EntityType type = getTypeFactory().getEntityType(getEntity().getEntityType());
+        getEntity().setSimpleValue(type.getPropertyType(propTypeId), Integer.toString(value));
 	}
 
 	private String extId;

@@ -35,7 +35,6 @@ public class Threat extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_TAG = "threat_tag"; //$NON-NLS-1$
 	public static final String PROP_DESCRIPTION = "threat_description"; //$NON-NLS-1$
 
-	public static final String PROP_LIKELIHOOD = "threat_likelihood"; //$NON-NLS-1$
 	
 	/**
 	 * Creates an empty asset
@@ -68,10 +67,6 @@ public class Threat extends CnATreeElement implements IISO27kElement {
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 
-	public String getLikelihood() {
-	    return getEntity().getSimpleValue(PROP_LIKELIHOOD);
-	}
-	
 	public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}

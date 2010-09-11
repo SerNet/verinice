@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# extract keys for properties from snca.xml, property tooltips only
+# extract keys for properties from snca.xml, rule parameters only
 
 
 while (<>) {

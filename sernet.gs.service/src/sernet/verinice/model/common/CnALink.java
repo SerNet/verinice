@@ -18,6 +18,8 @@
 package sernet.verinice.model.common;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -61,6 +63,29 @@ public class CnALink implements Serializable, ITypedElement {
 		else
 			return link.getDependant().getTitle();
 	}
+	
+	 /**
+	  * Get linkeed elements of specified type.
+	  * 
+     * @param scenario
+     * @param typeId
+     */
+    public static Set<CnATreeElement> getLinkedElements(CnATreeElement elmt, String typeId) {
+        Set<CnATreeElement> result = new HashSet<CnATreeElement>();
+        
+        Set<CnALink> linksDown = elmt.getLinksDown();
+        for (CnALink cnALink : linksDown) {
+            if (cnALink.getDependency().getTypeId().equals(typeId))
+                result.add(cnALink.getDependency());
+        }
+        
+        Set<CnALink> linksUp = elmt.getLinksUp();
+        for (CnALink cnALink : linksUp) {
+            if (cnALink.getDependant().getTypeId().equals(typeId))
+                result.add(cnALink.getDependant());
+        }
+        return result;
+    }
 	
 	/**
      * Takes an object and a link and gives back the object on the *other* side

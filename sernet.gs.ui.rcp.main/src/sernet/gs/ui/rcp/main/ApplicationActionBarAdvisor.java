@@ -50,6 +50,7 @@ import sernet.gs.ui.rcp.main.actions.ImportXMLAction;
 import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
 import sernet.gs.ui.rcp.main.actions.ReloadAction;
+import sernet.gs.ui.rcp.main.actions.RunRiskAnalysisAction;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowExportWizardAction;
@@ -156,6 +157,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	private ImportGstoolNotesAction importGSNotesAction;
 
+    private RunRiskAnalysisAction runRiskAnalysisAction;
+
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
         removeExtraneousActions();
@@ -258,6 +261,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16);
         register(bulkEditAction);
+        
+        runRiskAnalysisAction = new RunRiskAnalysisAction(window);
+        register(runRiskAnalysisAction);
 
         accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17);
         register(accessControlEditAction);
@@ -306,6 +312,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         MenuManager editMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_22, IWorkbenchActionConstants.M_EDIT);
 
         editMenu.add(bulkEditAction);
+        editMenu.add(runRiskAnalysisAction);
         editMenu.add(accessControlEditAction);
         editMenu.add(konsolidatorAction);
         editMenu.add(showWizardAction);
@@ -425,6 +432,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // ISO 27k items
         myToolbar.add(openISMViewAction);
         myToolbar.add(openCatalogAction);
+        myToolbar.add(runRiskAnalysisAction);
 
         myToolbar.add(new Separator());
         // common items

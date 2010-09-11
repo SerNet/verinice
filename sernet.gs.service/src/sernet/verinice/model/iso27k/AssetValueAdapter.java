@@ -116,7 +116,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             // 2nd step: traverse up:
             for (CnATreeElement bottomNode : bottomNodes) {
                 // determine protection level from parents (or keep own
-                // depending on description):
+                // depending on settings):
                 bottomNode.getLinkChangeListener().determineVerfuegbarkeit(ta);
             }
 

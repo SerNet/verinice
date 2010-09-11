@@ -2879,7 +2879,7 @@ the value between <param></param> will be used directly if no string is found fo
         </huiproperty>
         
         <!-- risk analysis, ranges must match defined CIA levels + scnario probability -->
-		<huipropertygroup name="Acceptable Risk Levels" id="org_riskgroup">
+		<huipropertygroup name="Acceptable Risk Levels xxx" id="org_riskgroup">
 			<huiproperty 
 				name="Confidentiality" id="org_riskaccept_confid" 
 				inputtype="numericoption" min="0" max="11" />
@@ -3038,9 +3038,6 @@ the value between <param></param> will be used directly if no string is found fo
                         name="4 Exceptional" value="4" />
 				</huiproperty>
 				
-				
-				
-				
 				<huiproperty
 					name="Explanation"
 					inputtype="text"
@@ -3050,17 +3047,18 @@ the value between <param></param> will be used directly if no string is found fo
 	
 		<huipropertygroup name="Risk Management" id="asset_riskgroup">
 			<huiproperty
-				name="Risk value" id="asset_riskvalue" editable="false">
-				<defaultRule class="SimpleValue">
-                	<param id="asset_riskvalue_default">- not calculated -</param>
-                </defaultRule>
-            </huiproperty>
+				name="Confidentiality risk value" id="asset_riskvalue_c" editable="false"/>
 			<huiproperty
-				name="Risk after controls" id="asset_riskwcontrolvalue" editable="false">
-				<defaultRule class="SimpleValue">
-                	<param id="asset_riskwcontrolvalue_default">- not calculated -</param>
-                </defaultRule>
-			</huiproperty>
+				name="Confidentiality risk after controls" id="asset_riskwcontrolvalue_c" editable="false"/>
+            <huiproperty
+                name="Integrity risk value" id="asset_riskvalue_i" editable="false"/>
+            <huiproperty
+                name="Integrity risk after controls" id="asset_riskwcontrolvalue_i" editable="false"/>                
+            <huiproperty
+                name="Availability risk value" id="asset_riskvalue_a" editable="false"/>
+            <huiproperty
+                name="Availability risk after controls" id="asset_riskwcontrolvalue_a" editable="false"/>
+            
 			<huiproperty 
 				name="Risk Treatment" id="asset_risktreat" inputtype="singleoption">
 				<option name="Reduction" id="asset_risktreat_reduct" />       	
@@ -3439,7 +3437,7 @@ the value between <param></param> will be used directly if no string is found fo
         id="control" >
         
         <huirelation to="incident_scenario" id="rel_control_incscen" 
-        	name="reduces likelihood of" reversename="likelihood reduced by" tooltip=""/>
+        	name="reduces probability of xxx" reversename="probability reduced by" tooltip=""/>
 		<huirelation to="control" id="rel_control_control"
         	name="concretizes" reversename="is conretized by" tooltip="" />
         	
@@ -3462,8 +3460,6 @@ the value between <param></param> will be used directly if no string is found fo
      	
      	<huipropertygroup id="control_maturitygroup" name="Maturity Level" >
      	
-     	
-        
 	        <huiproperty
 				id="control_maturity"
 				name="Maturity"
@@ -3507,25 +3503,25 @@ the value between <param></param> will be used directly if no string is found fo
         
      
 	        	
-    <!-- Risk analysis, values must match those defined for asset CIA and scenario probability -->
+    <!-- Risk analysis, values must match those defined for asset CIA and scenario probability xxx -->
 	<huipropertygroup name="Business impact" id="control_effectivenessgroup">
 	        <huiproperty name="Impact on Confidentiality" id="control_effectiveness_confidentiality" 
 	        	inputtype="numericoption" min="0" max="3" >
                 <option name="No effect"          id="control_eff_conf_0" value="0" />
-                <option name="Reduces 1 levels"    id="control_eff_conf_1" value="1" />
+                <option name="Reduces 1 level"    id="control_eff_conf_1" value="1" />
                 <option name="Reduces 2 levels"    id="control_eff_conf_2" value="2" />
                 <option name="Reduces completely" id="control_eff_conf_3" value="3" />
             </huiproperty>
 	        <huiproperty name="Impact on Integrity" id="control_effectiveness_integrity" 
 	        	inputtype="numericoption" min="0" max="2">
                 <option name="No effect"         id="control_eff_integ_0" value="0" />
-                <option name="Reduces 1 levels"    id="control_eff_integ_1" value="1" />
+                <option name="Reduces 1 level"    id="control_eff_integ_1" value="1" />
                 <option name="Reduces completely" id="control_eff_integ_2" value="2" />
             </huiproperty>
 	        <huiproperty name="Impact on Availability" id="control_effectiveness_availability" 
 	        	inputtype="numericoption" min="0" max="4" >
                 <option name="No effect"         id="control_eff_avail_0" value="0" />
-                <option name="Reduces 1 levels"    id="control_eff_avail_1" value="1" />
+                <option name="Reduces 1 level"    id="control_eff_avail_1" value="1" />
                 <option name="Reduces 2 levels"    id="control_eff_avail_2" value="2" />
                 <option name="Reduces 3 levels"    id="control_eff_avail_3" value="3" />
                 <option name="Reduces completely" id="control_eff_avail_4" value="4" />
@@ -3533,7 +3529,7 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty name="Probability of scenario" id="control_eff_probability"
                 inputtype="numericoption" min="0" max="8" >
                 <option name="No effect."      id="control_eff_prob_0" value="0" />
-                <option name="Reduces 1 levels" id="control_eff_prob_1" value="1" /> xxx Strings anpassen
+                <option name="Reduces 1 level" id="control_eff_prob_1" value="1" /> 
                 <option name="Reduces 2 levels" id="control_eff_prob_2" value="2" />
                 <option name="Reduces 3 levels" id="control_eff_prob_3" value="3" />
                 <option name="Reduces 4 levels" id="control_eff_prob_4" value="4" />
@@ -3819,6 +3815,22 @@ the value between <param></param> will be used directly if no string is found fo
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty 
         	name="Explanation" id="incscen_explanation" inputtype="text"/>
+            
+        <huiproperty
+                    id="scenario_value_method_confidentiality"
+                    name="Affects Confidentiality"
+                    inputtype="booleanoption" min="0" max="1" >
+                </huiproperty>  
+        <huiproperty
+                    id="scenario_value_method_integrity"
+                    name="Affects Integrity"
+                    inputtype="booleanoption" min="0" max="1" >
+                </huiproperty>  
+        <huiproperty
+                    id="scenario_value_method_availability"
+                    name="Affects Availability"
+                    inputtype="booleanoption" min="0" max="1" >
+        </huiproperty>  
         
         <huipropertygroup name="Probability" id="incscen_likelihoodgroup">
 			<huiproperty
@@ -3842,6 +3854,20 @@ the value between <param></param> will be used directly if no string is found fo
                     <option id="incscen_likely_7" name="7: 80%" value="7" />
                     <option id="incscen_likely_8" name="8: 90% and higher" value="8" />
             </huiproperty>
+            
+            <huiproperty id="incscen_likelihood_wcontrol" name="Probability after controls xxx" 
+              inputtype="numericoption" min="0" max="8" editable="false">
+                <option id="incscen_likelyc_0" name="0: Less than 10%" value="0" />
+                <option id="incscen_likelyc_1" name="1: 20%" value="1" />
+                <option id="incscen_likelyc_2" name="2: 30%" value="2" />
+                <option id="incscen_likelyc_3" name="3: 40%" value="3" />
+                <option id="incscen_likelyc_4" name="4: 50%" value="4" />
+                <option id="incscen_likelyc_5" name="5: 60%" value="5" />
+                <option id="incscen_likelyc_6" name="6: 70%" value="6" />
+                <option id="incscen_likelyc_7" name="7: 80%" value="7" />
+                <option id="incscen_likelyc_8" name="8: 90% and higher" value="8" />
+          </huiproperty>
+            
 			        	
         </huipropertygroup>
         
@@ -3929,12 +3955,13 @@ the value between <param></param> will be used directly if no string is found fo
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
 				name="Description" id="vulnerability_desc"  visible="false" />
-		<huiproperty name="Ease of Exploitation" id="vulnerability_level" inputtype="numericoption"
+                
+		<huiproperty name="Ease of Exploitation xxx" id="vulnerability_level" inputtype="numericoption"
 			min="0" max="3">
-            <option id="vulnerability_level_0" name="Hardly possible" value="0"/>
-            <option id="vulnerability_level_1" name="Possible" value="1"/>
-            <option id="vulnerability_level_2" name="Easily possible" value="2"/>
-            <option id="vulnerability_level_3" name="Probable" value="3"/>
+            <option id="vulnerability_level_0" name="0: Hardly possible" value="0"/>
+            <option id="vulnerability_level_1" name="1: Possible" value="1"/>
+            <option id="vulnerability_level_2" name="2: Easily possible" value="2"/>
+            <option id="vulnerability_level_3" name="3: Probable" value="3"/>
 		</huiproperty>
     </huientity>
     
@@ -4167,46 +4194,43 @@ the value between <param></param> will be used directly if no string is found fo
             tooltip="List of tags, separated by comma or space"/>
             
             
-        <huipropertygroup id="process_value_group" name="Asset Value">
-	
+     <huipropertygroup id="process_value_group" name="Business Impact">
 		<huiproperty
 					id="process_value_method_confidentiality"
-					name="Determine Confidentiality"
-					inputtype="numericoption" min="0" max="1" >
-					<option id="process_value_method_confidentiality_manual" name="Manual" value="0" />
-					<option id="process_value_method_confidentiality_auto" name="Calculated"  value="1" />
+					name="Deduce Confidentiality"
+					inputtype="booleanoption" min="0" max="1" >
 				</huiproperty>	
 		<huiproperty
 					id="process_value_method_integrity"
-					name="Determine Integrity"
-					inputtype="numericoption" min="0" max="1" >
-					<option id="process_value_method_integrity_manual" name="Manual" value="0" />
-					<option id="process_value_method_integrity_auto" name="Calculated"  value="1" />
+					name="Deduce Integrity"
+					inputtype="booleanoption" min="0" max="1" >
 				</huiproperty>	
 		<huiproperty
 					id="process_value_method_availability"
-					name="Determine Availability"
-					inputtype="numericoption" min="0" max="1" >
-					<option id="process_value_method_availability_manual" name="Manual" value="0" />
-					<option id="process_value_method_availability_auto" name="Calculated"  value="1" />
+					name="Deduce Availability"
+					inputtype="booleanoption" min="0" max="1" >
 		</huiproperty>	
 	
 		<huiproperty
 					id="process_value_confidentiality"
 					name="Confidentiality"
-					inputtype="numericoption" min="0" max="2">
+					inputtype="numericoption" min="0" max="3">
 					<option
 						id="process_value_confidentiality_normal"
-						name="Low" 
+						name="0 Public" 
 						value="0" />
 					<option
 						id="process_value_confidentiality_hoch"
-						name="Medium" 
+						name="1 Company confidential" 
 						value ="1" />
 					<option
 						id="process_value_confidentiality_sehrhoch"
-						name="High"
+						name="2 Customer confidential"
 						value="2" />
+                    <option
+                        id="process_value_confidentiality_sehrhoch2"
+                        name="3 Sensitive"
+                        value="3" />
 				</huiproperty>
 				
 				<huiproperty
@@ -4215,28 +4239,34 @@ the value between <param></param> will be used directly if no string is found fo
 					inputtype="numericoption"  min="0" max="2" >
 					<option
 						id="process_value_integrity_normal"
-						name="Low" value="0"  />
+						name="0 None" value="0"  />
 					<option
 						id="process_value_integrity_hoch"
-						name="Medium" value="1"  />
+						name="1 Normal" value="1"  />
 					<option
 						id="process_value_integrity_sehrhoch"
-						name="High" value="2" />
+						name="2 High" value="2" />
 				</huiproperty>
 				
 				<huiproperty
 					id="process_value_availability"
 					name="Availability"
-					inputtype="numericoption"  min="0" max="2" >
+					inputtype="numericoption"  min="0" max="4" >
 					<option
 						id="process_value_availability_normal"
-						name="Low" value="0" />
+						name="0 Basic" value="0" />
 					<option
 						id="process_value_availability_hoch"
-						name="Medium" value="1" />
+						name="1 Standard" value="1" />
 					<option
 						id="process_value_availability_sehrhoch"
-						name="High" value="2" />
+						name="2 Premium" value="2" />
+                    <option
+                        id="process_value_availability_sehrhoch2"
+                        name="3 Enterprise" value="3" />
+                    <option
+                        id="process_value_availability_sehrhoch3"
+                        name="4 Exceptional" value="4" />
 				</huiproperty>
 				
 				<huiproperty
@@ -4244,6 +4274,33 @@ the value between <param></param> will be used directly if no string is found fo
 					inputtype="text"
 					id="process_value_comment" />
 		</huipropertygroup>
+		
+	
+		<huipropertygroup name="Risk Management" id="process_riskgroup">
+			<huiproperty
+				name="Risk value" id="process_riskvalue" editable="false">
+				<defaultRule class="SimpleValue">
+                	<param id="process_riskvalue_default">- not calculated -</param>
+                </defaultRule>
+            </huiproperty>
+			<huiproperty
+				name="Risk after controls" id="process_riskwcontrolvalue" editable="false">
+				<defaultRule class="SimpleValue">
+                	<param id="process_riskwcontrolvalue_default">- not calculated -</param>
+                </defaultRule>
+			</huiproperty>
+			<huiproperty 
+				name="Risk Treatment" id="process_risktreat" inputtype="singleoption">
+				<option name="Reduction" id="process_risktreat_reduct" />       	
+				<option name="Retention" id="process_risktreat_retent" />       	
+				<option name="Avoidance" id="process_risktreat_avoid" />       	
+				<option name="Transfer" id="process_risktreat_transf" />       	
+				<option name="Acceptance" id="process_risktreat_accept" />       	
+			</huiproperty>
+			<huiproperty
+				name="Explanation" id="process_risktreatexpl" inputtype="text" />
+		</huipropertygroup>
+        
     </huientity>
     
     <huientity

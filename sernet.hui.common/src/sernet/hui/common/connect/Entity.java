@@ -205,6 +205,10 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		}
 	}
 	
+	public void setNumericValue(PropertyType type, int value) {
+	    setSimpleValue(type, Integer.toString(value));
+	}
+	
 	/**
 	 * Sets the value for a given property.
 	 * 
