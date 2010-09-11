@@ -45,6 +45,10 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	public static final String PROP_THRESHOLD1 = "control_min1"; //$NON-NLS-1$
 	public static final String PROP_THRESHOLD2 = "control_min2"; //$NON-NLS-1$
 	
+	public static final String PROP_EFFECTIVENESS_CONFIDENTIALITY ="control_effectiveness_confidentiality"; 
+    public static final String PROP_EFFECTIVENESS_INTEGRITY="control_effectiveness_integrity" ;
+    public static final String PROP_EFFECTIVENESS_AVAILABILITY="control_effectiveness_availability"; 
+    public static final String PROP_EFFECTIVENESS_PROBABILITY="control_eff_probability"; 
 	
    
 	/**
@@ -107,20 +111,28 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	}
 
 	
-
-
-
-		
-	
-	
-	
-
 	public void setMaturity(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_MATURITY), value);
 	}
 	
 	public int getMaturity() {
 	    return getEntity().getInt(PROP_MATURITY);
+	}
+	
+	public int getEffectivenessConfidentiality() {
+	    return getEntity().getInt(PROP_EFFECTIVENESS_CONFIDENTIALITY);
+	}
+	
+	public int getEffectivenessIntegrity() {
+	    return getEntity().getInt(PROP_EFFECTIVENESS_INTEGRITY);
+	}
+	
+	public int getEffectivenessAvailability() {
+	    return getEntity().getInt(PROP_EFFECTIVENESS_AVAILABILITY);
+	}
+	
+	public int getEffectivenessProbability() {
+	    return getEntity().getInt(PROP_EFFECTIVENESS_PROBABILITY);
 	}
 
 	/**

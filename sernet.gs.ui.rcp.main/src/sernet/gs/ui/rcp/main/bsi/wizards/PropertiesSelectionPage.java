@@ -43,6 +43,7 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 	private List<List<String>> inhaltDerTabelle;
 	
 	protected PropertiesSelectionPage(String pageName) {
+	    // FIXME externalize strings
 		super(pageName);
 		this.setTitle("Attributzuweisung");
 		this.setDescription("Ordnen Sie die Attribute Ihrer CSV Datei den Attributen in Verinice zu.");
@@ -69,7 +70,7 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 	    setControl(container);
 	    
 	    Label lab = new Label(container, SWT.NONE);
-		lab.setText("W�hlen Sie die entsprechenden Attribute in der ComboBox aus.");
+		lab.setText("Wählen Sie die entsprechenden Attribute in der ComboBox aus.");
 		lab.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
 				false));
 		
@@ -221,6 +222,7 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 		String[] spalten = null;
 		String input = "";
 		try {
+		    // FIXME this wont work, use CsvFile, set charset, use csvreader to read
 			file = new RandomAccessFile(csvDatei, "r");
 			file.seek(0); 
 			spalten = file.readLine().split(";");

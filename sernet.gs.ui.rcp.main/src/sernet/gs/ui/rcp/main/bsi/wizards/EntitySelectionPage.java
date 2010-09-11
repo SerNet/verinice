@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Vector;
 
 import org.eclipse.jface.wizard.WizardPage;
@@ -30,12 +33,11 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.IEntityElement;
 
 public class EntitySelectionPage extends WizardPage{
-	private final static String[] FILTEREXTEND = { "*.csv"};
+	private final static String[] FILTEREXTEND = { "*.csv", "*.CSV", "*.*"};
 	private File csvFile;
 	private String entityName = "";
 	private Text csvText;
 	private Text entityText;
-	private Label validateSize;
 	private Vector<String> entityNames;
 	private String entityNameId = "";
 	private boolean insert;
@@ -43,9 +45,10 @@ public class EntitySelectionPage extends WizardPage{
 	private boolean delete;
 
 	protected EntitySelectionPage(String pageName) {
+	    // FIXME externalize strings
 		super(pageName);
-		this.setTitle("Entit�timport und Einstellungen");
-		this.setDescription("Synchronisationseinstellungen festlegen und die zu importierende Entit�t angeben.");
+		this.setTitle("Entitätimport und Einstellungen");
+		this.setDescription("Synchronisationseinstellungen festlegen und die zu importierende Entität angeben.");
 		entityNames = new Vector<String>();
 		setPageComplete(false);
 	}
@@ -87,6 +90,7 @@ public class EntitySelectionPage extends WizardPage{
 		operationIntro.setLayoutData(new GridData(GridData.FILL,GridData.CENTER, true, false, 2, 1));
 		
 		final Button insertCheck = new Button(operationGroup, SWT.CHECK);
+		insertCheck.setSelection(true);
     	insertCheck.setText("insert");
     	insertCheck.setLayoutData(new GridData(GridData.BEGINNING,GridData.CENTER, false, false, 1, 1));
     	insertCheck.addSelectionListener(new SelectionAdapter() {
@@ -103,6 +107,7 @@ public class EntitySelectionPage extends WizardPage{
 		
     	final Button updateCheck = new Button(operationGroup, SWT.CHECK);
     	updateCheck.setText("update");
+    	updateCheck.setSelection(true);
     	updateCheck.setLayoutData(new GridData(GridData.BEGINNING,GridData.CENTER, false, false, 1, 1));
     	updateCheck.addSelectionListener(new SelectionAdapter() {
 			 @Override
@@ -138,7 +143,14 @@ public class EntitySelectionPage extends WizardPage{
 	    Rectangle trim = list.computeTrim(0, 0, 0, listHeight);
 	    gridData.heightHint = trim.height;
 	    list.setLayoutData(gridData);
-	    Collection<EntityType> allEntityTypes =  HitroUtil.getInstance().getTypeFactory().getAllEntityTypes();
+	    Collection<EntityType> types =  HitroUtil.getInstance().getTypeFactory().getAllEntityTypes();
+	    java.util.List<EntityType> allEntityTypes = new ArrayList<EntityType>();
+	    allEntityTypes.addAll(types);
+	    Collections.sort(allEntityTypes, new Comparator<EntityType>() {
+            public int compare(EntityType o1, EntityType o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
         for (EntityType entityType : allEntityTypes) {
         	list.add(entityType.getName());
         	this.entityNames.add(entityType.getId());
@@ -166,12 +178,12 @@ public class EntitySelectionPage extends WizardPage{
 		comp.setLayout(gridLayout);
 		
 		Label selectedEntity = new Label(comp, SWT.NONE);
-		selectedEntity.setText("Verinice Entit�t:");
+		selectedEntity.setText("Verinice Entität:");
 		selectedEntity.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
 				false, 1, 1));
 
 		Label importedCSV = new Label(comp, SWT.NONE);
-		importedCSV.setText("Importierte Entit�t:");
+		importedCSV.setText("Importierte Entität:");
 		importedCSV.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
 				false, 2, 1));
 	    
@@ -193,26 +205,11 @@ public class EntitySelectionPage extends WizardPage{
 			}
 		});
 		
-	    validateSize = new Label(comp, SWT.NONE);
-	    validateSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
-				false, 3, 1));
 	}
 	
 	public boolean validateData(){
 		if(this.entityName.equals("") || csvText.getText().equals("")|| (!insert && !update && !delete))
 			return false;
-		return true;
-	}
-	
-	public boolean canFlipToNextPage(){
-		if(this.entityName.equals("") || csvText.getText().equals("") || (!insert && !update && !delete)){
-			return false; 
-		}else if(getNumberOfProperties() < getColumnLength()){
-			this.validateSize.setText("Die Datei hat " + getColumnLength() + " Spalte/n und " +
-					" die ausgew�hlte Entit�t hat " + getNumberOfProperties() + " Attribute ");
-			return false;
-		}
-		this.validateSize.setText("");
 		return true;
 	}
 	

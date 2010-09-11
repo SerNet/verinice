@@ -21,6 +21,7 @@ public class ImportCSVWizard extends Wizard {
 	private PropertiesSelectionPage propertyPage;
 
 	public ImportCSVWizard() {
+	    // FIXME externalize strings
 		super();
 		propertyPage = new PropertiesSelectionPage("Select properties");
 		entityPage = new EntitySelectionPage("Select entity");
@@ -108,7 +109,7 @@ public class ImportCSVWizard extends Wizard {
 				// TODO: Table element should actually be a list of values.
 				// With this approach the import will be fine but the CSV format
 				// will not have the ability to properly represent verinice's
-				// way of handling property values (which are lists internally).
+				// way of handling multiple property values (which are lists internally).
 				sa.getValue().add(tableElement);
 
 				syncAttributes.add(sa);

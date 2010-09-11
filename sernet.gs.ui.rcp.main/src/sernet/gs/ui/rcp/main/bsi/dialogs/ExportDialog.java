@@ -71,6 +71,7 @@ public class ExportDialog extends TitleAreaDialog {
 
     public ExportDialog(Shell parentShell) {
         super(parentShell);
+        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
     }
 
     @Override
@@ -178,7 +179,7 @@ public class ExportDialog extends TitleAreaDialog {
         Collection<EntityType> entityTypes = HUITypeFactory.getInstance().getAllEntityTypes();
         Iterator<EntityType> entityTypesIter = entityTypes.iterator();
 
-        while (entityTypesIter.hasNext()) {
+        //while (entityTypesIter.hasNext()) {
             EntityType entityType = entityTypesIter.next();
 
             if (!(entityType.getId().equals("itverbund"))) //$NON-NLS-1$
@@ -207,7 +208,7 @@ public class ExportDialog extends TitleAreaDialog {
                     }
                 });
             }
-        }
+        //}
 
         checkboxRestrict.addSelectionListener(new SelectionAdapter() {
             @Override

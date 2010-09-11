@@ -19,6 +19,7 @@ package sernet.verinice.report.service.impl;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.reports.StrukturanalyseReport;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.interfaces.report.IReportType;
 
@@ -29,10 +30,22 @@ public class ReportService implements IReportService {
 	
 	private IReportType[] reportTypes;
 
+	/*
+	 * (non-Javadoc)
+	 * @see sernet.verinice.interfaces.report.IReportService#getReportTypes()
+	 * 
+	 * List built-in reports offered by this report service.
+	 * 
+	 */
 	@Override
 	public IReportType[] getReportTypes() {
 		if (reportTypes == null)
-			reportTypes = new IReportType[] { new UserReportType(), new SamtReportType(), new ComprehensiveSamtReportType() };
+			reportTypes = new IReportType[] { 
+		        new UserReportType(), 
+		        new SamtReportType(), 
+		        new ComprehensiveSamtReportType(),
+		        new AllItemsReport()
+		    };
 		
 		return reportTypes;
 	}

@@ -41,13 +41,13 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.snutils.AssertException;
 
 /**
- * The HUI version of a dropdown box for numeric values.
+ * The HUI version of a chdeckbox.
  * 
  * @author koderman[at]sernet[dot]de
  */
-public class NumericSelectionControl implements IHuiControl {
+public class BooleanSelectionControl implements IHuiControl {
 
-    private static final Logger LOG = Logger.getLogger(NumericSelectionControl.class);
+    private static final Logger LOG = Logger.getLogger(BooleanSelectionControl.class);
     
 	private Entity entity;
 
@@ -55,26 +55,15 @@ public class NumericSelectionControl implements IHuiControl {
 
 	private Composite composite;
 
-	private Combo combo;
-
 	private boolean editable = false;
 
 	private Property savedProp;
 
-	private Color fgColor;
 
-	private Color bgColor;
-
-	private int min;
-
-	private int max;
-
-	private String[] shownItems;
-	private String[] numericItems;
-
+    private Button button;
 
 	public Control getControl() {
-            return combo;
+	        return button;
 	}
 
 	private static final Color GREY = new Color(Display.getDefault(), 240, 240,
@@ -87,14 +76,12 @@ public class NumericSelectionControl implements IHuiControl {
 	 * @param type
 	 * @param composite
 	 */
-	public NumericSelectionControl(Entity dyndoc, PropertyType type,
+	public BooleanSelectionControl(Entity dyndoc, PropertyType type,
 			Composite parent, boolean edit) {
 		this.entity = dyndoc;
 		this.fieldType = type;
 		this.composite = parent;
 		this.editable = edit;
-		this.min = type.getMinValue();
-		this.max = type.getMaxValue();
 	}
 
 	/**
@@ -109,7 +96,7 @@ public class NumericSelectionControl implements IHuiControl {
 			List<Property> savedProps = entity.getProperties(fieldType.getId()).getProperties();
 			savedProp = savedProps != null && !savedProps.isEmpty() ? (Property) savedProps.get(0) : null;
 
-		    createCombo();
+			    createCheckbox();
 			
 		} catch (Exception e1) {
 			LOG.error("Error while creating",e1);
@@ -117,85 +104,33 @@ public class NumericSelectionControl implements IHuiControl {
 
 	}
 
+
     /**
      * 
      */
-    private void createCombo() {
-        combo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
-        fgColor = combo.getForeground();
-        bgColor = combo.getBackground();
-        this.numericItems = createNumericItems();
-        this.shownItems = createNumericItemsWithDisplayString();
-        combo.setItems(shownItems);
+    private void createCheckbox() {
+        button = new Button(composite, SWT.CHECK);
+        button.setEnabled(editable);
+        
         if (savedProp == null) {
-        	// create property in which to save entered value:
-        	savedProp = entity.createNewProperty(fieldType, "");
-        	combo.deselectAll();
+            // create property in which to save entered value:
+            savedProp = entity.createNewProperty(fieldType, "");
         } else {
-        	// use saved property:
-        	combo.select(indexForOption(savedProp));
+            // use saved property:
+            button.setSelection(savedProp.getNumericPropertyValue()==1);
         }
+        
+        button.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent evt) {
+                savedProp.setPropertyValue(button.getSelection() ? "1" : "0");
+            }
 
-        GridData comboLData = new GridData();
-        comboLData.horizontalAlignment = GridData.BEGINNING;
-        comboLData.grabExcessHorizontalSpace = false;
-        combo.setLayoutData(comboLData);
-        combo.setEnabled(editable);
-        if (!editable)
-        	combo.setBackground(GREY);
-        combo.setToolTipText(fieldType.getTooltiptext());
-
-        combo.addSelectionListener(new SelectionAdapter() {
-        	public void widgetSelected(SelectionEvent evt) {
-        		savedProp.setPropertyValue(numericItems[combo.getSelectionIndex()], true, combo);
-        		validate();
-        	}
         });
-        combo.pack(true);
     }
 
-	/**
-	 * @return
-	 */
-	private String[] createNumericItems() {
-		String[] items = new String[max-min+1];
-		int j=0;
-		for(int i = min; i <= max; i++) {
-			items[j] = Integer.toString(i);
-			j++;
-		}
-		return items;
-	}
 	
-	/**
-     * @return
-     */
-    private String[] createNumericItemsWithDisplayString() {
-        String[] items = new String[max-min+1];
-        int j=0;
-        for(int i = min; i <= max; i++) {
-            items[j] = fieldType.getNameForValue(i); 
-            j++;
-        }
-        return items;
-    }
-
-
     public void setFocus() {
-		this.combo.setFocus();
-	}
-
-	public boolean validate() {
-		//FIXME bg colour not working in 3.4M4:
-		if (fieldType.validate(combo.getText(), null)) {
-//			combo.setForeground(fgColor);
-//			combo.setBackground(bgColor);
-			return true;
-		}
-
-//		combo.setForeground(Colors.BLACK);
-//		combo.setBackground(Colors.YELLOW);
-		return false;
+		this.button.setFocus();
 	}
 
 	public void update() {
@@ -206,12 +141,12 @@ public class NumericSelectionControl implements IHuiControl {
 			savedProp = entityProp;
 
 			if (Display.getCurrent() != null) {
-				combo.select(indexForOption(savedProp));
+				button.setSelection(savedProp.getNumericPropertyValue() == 1);
 				validate();
 			} else {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						combo.select(indexForOption(savedProp));
+					    button.setSelection(savedProp.getNumericPropertyValue() == 1);
 						validate();
 					}
 				});
@@ -219,18 +154,13 @@ public class NumericSelectionControl implements IHuiControl {
 		}
 	}
 
-	/**
-	 * @param savedProp2
-	 * @return
-	 */
-	private int indexForOption(Property savedProp) {
-		int i = 0;
-		for (String item : numericItems) {
-			if ( item.equals(savedProp.getPropertyValue()) ) {
-				return i;
-			}
-			i++;
-		}
-		return -1;
-	}
+    /* (non-Javadoc)
+     * @see sernet.hui.swt.widgets.IHuiControl#validate()
+     */
+    @Override
+    public boolean validate() {
+        return true;
+    }
+
+	
 }

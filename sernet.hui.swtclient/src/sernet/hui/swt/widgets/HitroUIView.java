@@ -281,8 +281,10 @@ public class HitroUIView implements IEntityChangedListener   {
 			createDateField(type, editableField, parent, type.isFocus());
 		else if (type.isText())
 			createTextField(type, editableField, parent, type.isFocus(), TEXTBOX_NUM_LINES /*three lines high*/);
+		else if (type.isBooleanSelect())
+		    createBooleanSelect(type, editableField, parent, type.isFocus());
 		else if (type.isNumericSelect())
-			createNumericSelect(type, editableField, parent, type.isFocus());
+		    createNumericSelect(type, editableField, parent, type.isFocus());
 	}
 
 	/**
@@ -302,6 +304,18 @@ public class HitroUIView implements IEntityChangedListener   {
 		sglControl.validate();
 		setFirstField(sglControl);
 	}
+	
+	private void createBooleanSelect(PropertyType fieldType, boolean editableField,
+            Composite parent, boolean focus) {
+        BooleanSelectionControl sglControl = new BooleanSelectionControl(entity, fieldType,
+                parent, editable);
+        sglControl.create();
+        if (focus)
+            focusField = sglControl;
+        fields.put(fieldType.getId(), sglControl);
+        sglControl.validate();
+        setFirstField(sglControl);
+    }
 
 	private void createURLField(PropertyType type, boolean editableField,
 			Composite parent) {

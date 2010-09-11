@@ -196,6 +196,7 @@ This variant:
 		<property name="recordDAO" ref="recordDAO" />
         <!-- Self Assessment (SAMT) Daos -->
         <property name="samtTopicDAO" ref="samtTopicDAO" />   
+
         <!-- Miscellaneous DAOs -->
         <property name="importIsoDAO" ref="importIsoDAO" /> 
         <property name="importBsiDAO" ref="importBsiDAO" />  

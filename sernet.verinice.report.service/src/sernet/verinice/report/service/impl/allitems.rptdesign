@@ -14,6 +14,25 @@
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="root_object" id="609">
+            <property name="hidden">true</property>
+            <text-property name="helpText">Manually set root object for this report.</text-property>
+            <text-property name="promptText">Root object for this report, provided by verinice in production setup.</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">6181</value>
+            </simple-property-list>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
             <property name="sncaUrl">http://localhost:2010/veriniceserver/GetHitroConfig</property>
@@ -26,6 +45,20 @@
                 <structure>
                     <property name="columnName">scopeName</property>
                     <text-property name="displayName">scopeName</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -49,8 +82,13 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-
+// set top level element for report:
 root = _vars.get("vn_root_element");
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
 
 c = new LoadPolymorphicCnAElementById( new Integer[]  {root} );
 return helper.execute(c).getElements().get(0).getTitle();
@@ -59,6 +97,26 @@ return helper.execute(c).getElements().get(0).getTitle();
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -89,211 +147,226 @@ return helper.execute(c).getElements().get(0).getTitle();
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
-                    <value>columns(new String[] { "scopeName" });</value>
+                    <value>inParameters(new String[] { "root_object", });
+columns(new String[] { "scopeName" });</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="anwendungen" id="63">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">anwendung_erlaeuterung</property>
-                    <text-property name="displayName">anwendung_erlaeuterung</text-property>
+                    <property name="columnName">Erläuterung</property>
+                    <text-property name="displayName">Erläuterung</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_tag</property>
-                    <text-property name="displayName">anwendung_tag</text-property>
+                    <property name="columnName">Tags</property>
+                    <text-property name="displayName">Tags</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_kuerzel</property>
-                    <text-property name="displayName">anwendung_kuerzel</text-property>
+                    <property name="columnName">Kürzel</property>
+                    <text-property name="displayName">Kürzel</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_dokument</property>
-                    <text-property name="displayName">anwendung_dokument</text-property>
+                    <property name="columnName">Dokument</property>
+                    <text-property name="displayName">Dokument</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_persbez</property>
-                    <text-property name="displayName">anwendung_persbez</text-property>
+                    <property name="columnName">Personenbezogene Daten</property>
+                    <text-property name="displayName">Personenbezogene Daten</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_status</property>
-                    <text-property name="displayName">anwendung_status</text-property>
+                    <property name="columnName">Status</property>
+                    <text-property name="displayName">Status</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_name</property>
-                    <text-property name="displayName">anwendung_name</text-property>
+                    <property name="columnName">Name</property>
+                    <text-property name="displayName">Name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_benutzer_link</property>
-                    <text-property name="displayName">anwendung_benutzer_link</text-property>
+                    <property name="columnName">Benutzer</property>
+                    <text-property name="displayName">Benutzer</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_vertraulichkeit</property>
-                    <text-property name="displayName">anwendung_vertraulichkeit</text-property>
+                    <property name="columnName">Vertraulichkeit</property>
+                    <text-property name="displayName">Vertraulichkeit</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_verfuegbarkeit</property>
-                    <text-property name="displayName">anwendung_verfuegbarkeit</text-property>
+                    <property name="columnName">Verfügbarkeit</property>
+                    <text-property name="displayName">Verfügbarkeit</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_integritaet</property>
-                    <text-property name="displayName">anwendung_integritaet</text-property>
+                    <property name="columnName">Integrität</property>
+                    <text-property name="displayName">Integrität</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_vertraulichkeit_begruendung</property>
-                    <text-property name="displayName">anwendung_vertraulichkeit_begruendung</text-property>
+                    <property name="columnName">Begründung Vertraulichkeit</property>
+                    <text-property name="displayName">Begründung Vertraulichkeit</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_verfuegbarkeit_begruendung</property>
-                    <text-property name="displayName">anwendung_verfuegbarkeit_begruendung</text-property>
+                    <property name="columnName">Begründung Verfügbarkeit</property>
+                    <text-property name="displayName">Begründung Verfügbarkeit</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_integritaet_begruendung</property>
-                    <text-property name="displayName">anwendung_integritaet_begruendung</text-property>
+                    <property name="columnName">Begründung Integrität</property>
+                    <text-property name="displayName">Begründung Integrität</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_prozess</property>
-                    <text-property name="displayName">anwendung_prozess</text-property>
+                    <property name="columnName">Prozessbeschreibung</property>
+                    <text-property name="displayName">Prozessbeschreibung</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_prozess_informationen</property>
-                    <text-property name="displayName">anwendung_prozess_informationen</text-property>
+                    <property name="columnName">Verarbeitete Informationen</property>
+                    <text-property name="displayName">Verarbeitete Informationen</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_eigentümer_link</property>
-                    <text-property name="displayName">anwendung_eigentümer_link</text-property>
+                    <property name="columnName">Prozess-Eigentümer</property>
+                    <text-property name="displayName">Prozess-Eigentümer</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_prozessbezug</property>
-                    <text-property name="displayName">anwendung_prozessbezug</text-property>
+                    <property name="columnName">Bedeutung für Prozess</property>
+                    <text-property name="displayName">Bedeutung für Prozess</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_prozessbezug_begruendung</property>
-                    <text-property name="displayName">anwendung_prozessbezug_begruendung</text-property>
+                    <property name="columnName">Begründung</property>
+                    <text-property name="displayName">Begründung</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_ergaenzendeanalyse</property>
-                    <text-property name="displayName">anwendung_ergaenzendeanalyse</text-property>
+                    <property name="columnName">Erg. Sicherheitsanalyse</property>
+                    <text-property name="displayName">Erg. Sicherheitsanalyse</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_risikoanalyse</property>
-                    <text-property name="displayName">anwendung_risikoanalyse</text-property>
+                    <property name="columnName">Risikoanalyse</property>
+                    <text-property name="displayName">Risikoanalyse</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">anwendung_risikoanalyse_begruendung</property>
-                    <text-property name="displayName">anwendung_risikoanalyse_begruendung</text-property>
+                    <property name="columnName">Begründung Mgmt</property>
+                    <text-property name="displayName">Begründung Mgmt</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">111</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">anwendung_erlaeuterung</property>
+                        <property name="name">Erläuterung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">anwendung_tag</property>
+                        <property name="name">Tags</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">anwendung_kuerzel</property>
+                        <property name="name">Kürzel</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">anwendung_dokument</property>
+                        <property name="name">Dokument</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">anwendung_persbez</property>
+                        <property name="name">Personenbezogene Daten</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">anwendung_status</property>
+                        <property name="name">Status</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">anwendung_name</property>
+                        <property name="name">Name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">anwendung_benutzer_link</property>
+                        <property name="name">Benutzer</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">anwendung_vertraulichkeit</property>
+                        <property name="name">Vertraulichkeit</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">anwendung_verfuegbarkeit</property>
+                        <property name="name">Verfügbarkeit</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">anwendung_integritaet</property>
+                        <property name="name">Integrität</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">anwendung_vertraulichkeit_begruendung</property>
+                        <property name="name">Begründung Vertraulichkeit</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">anwendung_verfuegbarkeit_begruendung</property>
+                        <property name="name">Begründung Verfügbarkeit</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">anwendung_integritaet_begruendung</property>
+                        <property name="name">Begründung Integrität</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">anwendung_prozess</property>
+                        <property name="name">Prozessbeschreibung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">anwendung_prozess_informationen</property>
+                        <property name="name">Verarbeitete Informationen</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">anwendung_eigentümer_link</property>
+                        <property name="name">Prozess-Eigentümer</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">anwendung_prozessbezug</property>
+                        <property name="name">Bedeutung für Prozess</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">anwendung_prozessbezug_begruendung</property>
+                        <property name="name">Begründung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">anwendung_ergaenzendeanalyse</property>
+                        <property name="name">Erg. Sicherheitsanalyse</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
-                        <property name="name">anwendung_risikoanalyse</property>
+                        <property name="name">Risikoanalyse</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">22</property>
-                        <property name="name">anwendung_risikoanalyse_begruendung</property>
+                        <property name="name">Begründung Mgmt</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -302,155 +375,155 @@ return helper.execute(c).getElements().get(0).getTitle();
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">anwendung_erlaeuterung</property>
-                    <property name="nativeName">anwendung_erlaeuterung</property>
+                    <property name="name">Erläuterung</property>
+                    <property name="nativeName">Erläuterung</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">anwendung_tag</property>
-                    <property name="nativeName">anwendung_tag</property>
+                    <property name="name">Tags</property>
+                    <property name="nativeName">Tags</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">anwendung_kuerzel</property>
-                    <property name="nativeName">anwendung_kuerzel</property>
+                    <property name="name">Kürzel</property>
+                    <property name="nativeName">Kürzel</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">anwendung_dokument</property>
-                    <property name="nativeName">anwendung_dokument</property>
+                    <property name="name">Dokument</property>
+                    <property name="nativeName">Dokument</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">anwendung_persbez</property>
-                    <property name="nativeName">anwendung_persbez</property>
+                    <property name="name">Personenbezogene Daten</property>
+                    <property name="nativeName">Personenbezogene Daten</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">anwendung_status</property>
-                    <property name="nativeName">anwendung_status</property>
+                    <property name="name">Status</property>
+                    <property name="nativeName">Status</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
-                    <property name="name">anwendung_name</property>
-                    <property name="nativeName">anwendung_name</property>
+                    <property name="name">Name</property>
+                    <property name="nativeName">Name</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">8</property>
-                    <property name="name">anwendung_benutzer_link</property>
-                    <property name="nativeName">anwendung_benutzer_link</property>
+                    <property name="name">Benutzer</property>
+                    <property name="nativeName">Benutzer</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">anwendung_vertraulichkeit</property>
-                    <property name="nativeName">anwendung_vertraulichkeit</property>
+                    <property name="name">Vertraulichkeit</property>
+                    <property name="nativeName">Vertraulichkeit</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">10</property>
-                    <property name="name">anwendung_verfuegbarkeit</property>
-                    <property name="nativeName">anwendung_verfuegbarkeit</property>
+                    <property name="name">Verfügbarkeit</property>
+                    <property name="nativeName">Verfügbarkeit</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">11</property>
-                    <property name="name">anwendung_integritaet</property>
-                    <property name="nativeName">anwendung_integritaet</property>
+                    <property name="name">Integrität</property>
+                    <property name="nativeName">Integrität</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">12</property>
-                    <property name="name">anwendung_vertraulichkeit_begruendung</property>
-                    <property name="nativeName">anwendung_vertraulichkeit_begruendung</property>
+                    <property name="name">Begründung Vertraulichkeit</property>
+                    <property name="nativeName">Begründung Vertraulichkeit</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">anwendung_verfuegbarkeit_begruendung</property>
-                    <property name="nativeName">anwendung_verfuegbarkeit_begruendung</property>
+                    <property name="name">Begründung Verfügbarkeit</property>
+                    <property name="nativeName">Begründung Verfügbarkeit</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">anwendung_integritaet_begruendung</property>
-                    <property name="nativeName">anwendung_integritaet_begruendung</property>
+                    <property name="name">Begründung Integrität</property>
+                    <property name="nativeName">Begründung Integrität</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">anwendung_prozess</property>
-                    <property name="nativeName">anwendung_prozess</property>
+                    <property name="name">Prozessbeschreibung</property>
+                    <property name="nativeName">Prozessbeschreibung</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">16</property>
-                    <property name="name">anwendung_prozess_informationen</property>
-                    <property name="nativeName">anwendung_prozess_informationen</property>
+                    <property name="name">Verarbeitete Informationen</property>
+                    <property name="nativeName">Verarbeitete Informationen</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">17</property>
-                    <property name="name">anwendung_eigentümer_link</property>
-                    <property name="nativeName">anwendung_eigentümer_link</property>
+                    <property name="name">Prozess-Eigentümer</property>
+                    <property name="nativeName">Prozess-Eigentümer</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">18</property>
-                    <property name="name">anwendung_prozessbezug</property>
-                    <property name="nativeName">anwendung_prozessbezug</property>
+                    <property name="name">Bedeutung für Prozess</property>
+                    <property name="nativeName">Bedeutung für Prozess</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">19</property>
-                    <property name="name">anwendung_prozessbezug_begruendung</property>
-                    <property name="nativeName">anwendung_prozessbezug_begruendung</property>
+                    <property name="name">Begründung</property>
+                    <property name="nativeName">Begründung</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">20</property>
-                    <property name="name">anwendung_ergaenzendeanalyse</property>
-                    <property name="nativeName">anwendung_ergaenzendeanalyse</property>
+                    <property name="name">Erg. Sicherheitsanalyse</property>
+                    <property name="nativeName">Erg. Sicherheitsanalyse</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">21</property>
-                    <property name="name">anwendung_risikoanalyse</property>
-                    <property name="nativeName">anwendung_risikoanalyse</property>
+                    <property name="name">Risikoanalyse</property>
+                    <property name="nativeName">Risikoanalyse</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">22</property>
-                    <property name="name">anwendung_risikoanalyse_begruendung</property>
-                    <property name="nativeName">anwendung_risikoanalyse_begruendung</property>
+                    <property name="name">Begründung Mgmt</property>
+                    <property name="nativeName">Begründung Mgmt</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -458,8 +531,13 @@ return helper.execute(c).getElements().get(0).getTitle();
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 
+// set top level element for report:
 root = _vars.get("vn_root_element");
-
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
 
 
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
@@ -473,6 +551,30 @@ return helper.map(
 	cols
 );
 ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
@@ -480,8 +582,9 @@ return helper.map(
 
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("anwendung")
-	.getAllPropertyTypeIDsIncludingGroups();
+	.getAllPropertyTypeTitlesIncludingGroups();
 
+inParameters(new String[] { "root_object", });
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -489,195 +592,209 @@ columns(cols);</value>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="server" id="540">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">server_anzahl</property>
-                    <text-property name="displayName">server_anzahl</text-property>
+                    <property name="columnName">Anzahl</property>
+                    <text-property name="displayName">Anzahl</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_name</property>
-                    <text-property name="displayName">server_name</text-property>
+                    <property name="columnName">Name</property>
+                    <text-property name="displayName">Name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_netadr</property>
-                    <text-property name="displayName">server_netadr</text-property>
+                    <property name="columnName">Netzadressen</property>
+                    <text-property name="displayName">Netzadressen</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_aufstellungsort</property>
-                    <text-property name="displayName">server_aufstellungsort</text-property>
+                    <property name="columnName">Aufstellungsort</property>
+                    <text-property name="displayName">Aufstellungsort</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_dokument</property>
-                    <text-property name="displayName">server_dokument</text-property>
+                    <property name="columnName">Dokument</property>
+                    <text-property name="displayName">Dokument</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_admin_link</property>
-                    <text-property name="displayName">server_admin_link</text-property>
+                    <property name="columnName">Admin</property>
+                    <text-property name="displayName">Admin</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_plattform</property>
-                    <text-property name="displayName">server_plattform</text-property>
+                    <property name="columnName">Plattform</property>
+                    <text-property name="displayName">Plattform</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_kuerzel</property>
-                    <text-property name="displayName">server_kuerzel</text-property>
+                    <property name="columnName">Kürzel</property>
+                    <text-property name="displayName">Kürzel</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_tag</property>
-                    <text-property name="displayName">server_tag</text-property>
+                    <property name="columnName">Tags</property>
+                    <text-property name="displayName">Tags</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_anwender_link</property>
-                    <text-property name="displayName">server_anwender_link</text-property>
+                    <property name="columnName">Anwender</property>
+                    <text-property name="displayName">Anwender</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_status</property>
-                    <text-property name="displayName">server_status</text-property>
+                    <property name="columnName">Status</property>
+                    <text-property name="displayName">Status</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_erlaeuterung</property>
-                    <text-property name="displayName">server_erlaeuterung</text-property>
+                    <property name="columnName">Erläuterung</property>
+                    <text-property name="displayName">Erläuterung</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_vertraulichkeit</property>
-                    <text-property name="displayName">server_vertraulichkeit</text-property>
+                    <property name="columnName">Vertraulichkeit</property>
+                    <text-property name="displayName">Vertraulichkeit</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_verfuegbarkeit</property>
-                    <text-property name="displayName">server_verfuegbarkeit</text-property>
+                    <property name="columnName">Verfügbarkeit</property>
+                    <text-property name="displayName">Verfügbarkeit</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_integritaet</property>
-                    <text-property name="displayName">server_integritaet</text-property>
+                    <property name="columnName">Integrität</property>
+                    <text-property name="displayName">Integrität</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_vertraulichkeit_begruendung</property>
-                    <text-property name="displayName">server_vertraulichkeit_begruendung</text-property>
+                    <property name="columnName">Begründung Vertraulichkeit</property>
+                    <text-property name="displayName">Begründung Vertraulichkeit</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_verfuegbarkeit_begruendung</property>
-                    <text-property name="displayName">server_verfuegbarkeit_begruendung</text-property>
+                    <property name="columnName">Begründung Verfügbarkeit</property>
+                    <text-property name="displayName">Begründung Verfügbarkeit</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_integritaet_begruendung</property>
-                    <text-property name="displayName">server_integritaet_begruendung</text-property>
+                    <property name="columnName">Begründung Integrität</property>
+                    <text-property name="displayName">Begründung Integrität</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_ergaenzendeanalyse</property>
-                    <text-property name="displayName">server_ergaenzendeanalyse</text-property>
+                    <property name="columnName">Erg. Sicherheitsanalyse</property>
+                    <text-property name="displayName">Erg. Sicherheitsanalyse</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_risikoanalyse</property>
-                    <text-property name="displayName">server_risikoanalyse</text-property>
+                    <property name="columnName">Risikoanalyse</property>
+                    <text-property name="displayName">Risikoanalyse</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">server_risikoanalyse_begruendung</property>
-                    <text-property name="displayName">server_risikoanalyse_begruendung</text-property>
+                    <property name="columnName">Begründung Mgmt</property>
+                    <text-property name="displayName">Begründung Mgmt</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">server_anzahl</property>
+                        <property name="name">Anzahl</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">server_name</property>
+                        <property name="name">Name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">server_netadr</property>
+                        <property name="name">Netzadressen</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">server_aufstellungsort</property>
+                        <property name="name">Aufstellungsort</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">server_dokument</property>
+                        <property name="name">Dokument</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">server_admin_link</property>
+                        <property name="name">Admin</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">server_plattform</property>
+                        <property name="name">Plattform</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">server_kuerzel</property>
+                        <property name="name">Kürzel</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">server_tag</property>
+                        <property name="name">Tags</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">server_anwender_link</property>
+                        <property name="name">Anwender</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">server_status</property>
+                        <property name="name">Status</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">server_erlaeuterung</property>
+                        <property name="name">Erläuterung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">server_vertraulichkeit</property>
+                        <property name="name">Vertraulichkeit</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">server_verfuegbarkeit</property>
+                        <property name="name">Verfügbarkeit</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">server_integritaet</property>
+                        <property name="name">Integrität</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">server_vertraulichkeit_begruendung</property>
+                        <property name="name">Begründung Vertraulichkeit</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">server_verfuegbarkeit_begruendung</property>
+                        <property name="name">Begründung Verfügbarkeit</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">server_integritaet_begruendung</property>
+                        <property name="name">Begründung Integrität</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">server_ergaenzendeanalyse</property>
+                        <property name="name">Erg. Sicherheitsanalyse</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">server_risikoanalyse</property>
+                        <property name="name">Risikoanalyse</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
-                        <property name="name">server_risikoanalyse_begruendung</property>
+                        <property name="name">Begründung Mgmt</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -686,148 +803,148 @@ columns(cols);</value>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">server_anzahl</property>
-                    <property name="nativeName">server_anzahl</property>
+                    <property name="name">Anzahl</property>
+                    <property name="nativeName">Anzahl</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">server_name</property>
-                    <property name="nativeName">server_name</property>
+                    <property name="name">Name</property>
+                    <property name="nativeName">Name</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">server_netadr</property>
-                    <property name="nativeName">server_netadr</property>
+                    <property name="name">Netzadressen</property>
+                    <property name="nativeName">Netzadressen</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">server_aufstellungsort</property>
-                    <property name="nativeName">server_aufstellungsort</property>
+                    <property name="name">Aufstellungsort</property>
+                    <property name="nativeName">Aufstellungsort</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">server_dokument</property>
-                    <property name="nativeName">server_dokument</property>
+                    <property name="name">Dokument</property>
+                    <property name="nativeName">Dokument</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">server_admin_link</property>
-                    <property name="nativeName">server_admin_link</property>
+                    <property name="name">Admin</property>
+                    <property name="nativeName">Admin</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
-                    <property name="name">server_plattform</property>
-                    <property name="nativeName">server_plattform</property>
+                    <property name="name">Plattform</property>
+                    <property name="nativeName">Plattform</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">8</property>
-                    <property name="name">server_kuerzel</property>
-                    <property name="nativeName">server_kuerzel</property>
+                    <property name="name">Kürzel</property>
+                    <property name="nativeName">Kürzel</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">server_tag</property>
-                    <property name="nativeName">server_tag</property>
+                    <property name="name">Tags</property>
+                    <property name="nativeName">Tags</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">10</property>
-                    <property name="name">server_anwender_link</property>
-                    <property name="nativeName">server_anwender_link</property>
+                    <property name="name">Anwender</property>
+                    <property name="nativeName">Anwender</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">11</property>
-                    <property name="name">server_status</property>
-                    <property name="nativeName">server_status</property>
+                    <property name="name">Status</property>
+                    <property name="nativeName">Status</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">12</property>
-                    <property name="name">server_erlaeuterung</property>
-                    <property name="nativeName">server_erlaeuterung</property>
+                    <property name="name">Erläuterung</property>
+                    <property name="nativeName">Erläuterung</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">server_vertraulichkeit</property>
-                    <property name="nativeName">server_vertraulichkeit</property>
+                    <property name="name">Vertraulichkeit</property>
+                    <property name="nativeName">Vertraulichkeit</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">server_verfuegbarkeit</property>
-                    <property name="nativeName">server_verfuegbarkeit</property>
+                    <property name="name">Verfügbarkeit</property>
+                    <property name="nativeName">Verfügbarkeit</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">server_integritaet</property>
-                    <property name="nativeName">server_integritaet</property>
+                    <property name="name">Integrität</property>
+                    <property name="nativeName">Integrität</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">16</property>
-                    <property name="name">server_vertraulichkeit_begruendung</property>
-                    <property name="nativeName">server_vertraulichkeit_begruendung</property>
+                    <property name="name">Begründung Vertraulichkeit</property>
+                    <property name="nativeName">Begründung Vertraulichkeit</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">17</property>
-                    <property name="name">server_verfuegbarkeit_begruendung</property>
-                    <property name="nativeName">server_verfuegbarkeit_begruendung</property>
+                    <property name="name">Begründung Verfügbarkeit</property>
+                    <property name="nativeName">Begründung Verfügbarkeit</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">18</property>
-                    <property name="name">server_integritaet_begruendung</property>
-                    <property name="nativeName">server_integritaet_begruendung</property>
+                    <property name="name">Begründung Integrität</property>
+                    <property name="nativeName">Begründung Integrität</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">19</property>
-                    <property name="name">server_ergaenzendeanalyse</property>
-                    <property name="nativeName">server_ergaenzendeanalyse</property>
+                    <property name="name">Erg. Sicherheitsanalyse</property>
+                    <property name="nativeName">Erg. Sicherheitsanalyse</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">20</property>
-                    <property name="name">server_risikoanalyse</property>
-                    <property name="nativeName">server_risikoanalyse</property>
+                    <property name="name">Risikoanalyse</property>
+                    <property name="nativeName">Risikoanalyse</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">21</property>
-                    <property name="name">server_risikoanalyse_begruendung</property>
-                    <property name="nativeName">server_risikoanalyse_begruendung</property>
+                    <property name="name">Begründung Mgmt</property>
+                    <property name="nativeName">Begründung Mgmt</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -835,7 +952,14 @@ columns(cols);</value>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 
+// set top level element for report:
 root = _vars.get("vn_root_element");
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
+
 
 
 
@@ -843,13 +967,37 @@ htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("server")
 	.getAllPropertyTypeIDsIncludingGroups();
 
-c2 = new LoadReportElements("anwendung", root);
+c2 = new LoadReportElements("server", root);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
 	cols
 );
 ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
@@ -857,8 +1005,8 @@ return helper.map(
 
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("server")
-	.getAllPropertyTypeIDsIncludingGroups();
-
+	.getAllPropertyTypeTitlesIncludingGroups();
+inParameters(new String[] { "root_object", });
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -924,6 +1072,20 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">gebaeude_risikoanalyse_begruendung</property>
                     <text-property name="displayName">gebaeude_risikoanalyse_begruendung</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -1115,8 +1277,13 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-
+// set top level element for report:
 root = _vars.get("vn_root_element");
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
 
 
 
@@ -1124,13 +1291,37 @@ htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("gebaeude")
 	.getAllPropertyTypeIDsIncludingGroups();
 
-c2 = new LoadReportElements("anwendung", root);
+c2 = new LoadReportElements("gebaeude", root);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
 	cols
 );
 ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
@@ -1139,7 +1330,7 @@ return helper.map(
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("gebaeude")
 	.getAllPropertyTypeIDsIncludingGroups();
-
+inParameters(new String[] { "root_object", });
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -1237,6 +1428,20 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">itverbund_sehrhoch_finanzen</property>
                     <text-property name="displayName">itverbund_sehrhoch_finanzen</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -1524,22 +1729,50 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-
+// set top level element for report:
 root = _vars.get("vn_root_element");
-
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
 
 
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("itverbund")
 	.getAllPropertyTypeIDsIncludingGroups();
 
-c2 = new LoadReportElements("anwendung", root);
+c2 = new LoadReportElements("itverbund", root);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
 	cols
 );
 ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
@@ -1548,7 +1781,7 @@ return helper.map(
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("itverbund")
 	.getAllPropertyTypeIDsIncludingGroups();
-
+inParameters(new String[] { "root_object", });
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -1642,6 +1875,20 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">sonstit_risikoanalyse_begruendung</property>
                     <text-property name="displayName">sonstit_risikoanalyse_begruendung</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -1917,22 +2164,50 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-
+// set top level element for report:
 root = _vars.get("vn_root_element");
-
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
 
 
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("sonstit")
 	.getAllPropertyTypeIDsIncludingGroups();
 
-c2 = new LoadReportElements("anwendung", root);
+c2 = new LoadReportElements("sonstit", root);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
 	cols
 );
 ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
@@ -1941,7 +2216,7 @@ return helper.map(
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("sonstit")
 	.getAllPropertyTypeIDsIncludingGroups();
-
+inParameters(new String[] { "root_object", });
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -2027,6 +2302,20 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">tkkomponente_risikoanalyse_begruendung</property>
                     <text-property name="displayName">tkkomponente_risikoanalyse_begruendung</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -2279,7 +2568,14 @@ columns(cols);</value>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 
+// set top level element for report:
 root = _vars.get("vn_root_element");
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
+
 
 
 
@@ -2287,13 +2583,37 @@ htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("tkkomponente")
 	.getAllPropertyTypeIDsIncludingGroups();
 
-c2 = new LoadReportElements("anwendung", root);
+c2 = new LoadReportElements("tkkomponente", root);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
 	cols
 );
 ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
@@ -2302,7 +2622,7 @@ return helper.map(
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("tkkomponente")
 	.getAllPropertyTypeIDsIncludingGroups();
-
+inParameters(new String[] { "root_object", });
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -2368,6 +2688,20 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">raum_risikoanalyse_begruendung</property>
                     <text-property name="displayName">raum_risikoanalyse_begruendung</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -2559,22 +2893,50 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-
+// set top level element for report:
 root = _vars.get("vn_root_element");
-
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
 
 
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("raum")
 	.getAllPropertyTypeIDsIncludingGroups();
 
-c2 = new LoadReportElements("anwendung", root);
+c2 = new LoadReportElements("raum", root);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
 	cols
 );
 ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
@@ -2583,7 +2945,7 @@ return helper.map(
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("raum")
 	.getAllPropertyTypeIDsIncludingGroups();
-
+inParameters(new String[] { "root_object", });
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -2637,6 +2999,20 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">person_kuerzel</property>
                     <text-property name="displayName">person_kuerzel</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -2792,22 +3168,49 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-
+// set top level element for report:
 root = _vars.get("vn_root_element");
-
-
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
 
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("person")
 	.getAllPropertyTypeIDsIncludingGroups();
 
-c2 = new LoadReportElements("anwendung", root);
+c2 = new LoadReportElements("person", root);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
 	cols
 );
 ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
@@ -2816,7 +3219,7 @@ return helper.map(
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("person")
 	.getAllPropertyTypeIDsIncludingGroups();
-
+inParameters(new String[] { "root_object", });
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -2874,6 +3277,20 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">nkkomponente_risikoanalyse_begruendung</property>
                     <text-property name="displayName">nkkomponente_risikoanalyse_begruendung</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -3041,8 +3458,13 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-
+// set top level element for report:
 root = _vars.get("vn_root_element");
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
 
 
 
@@ -3050,13 +3472,37 @@ htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("netzkomponente")
 	.getAllPropertyTypeIDsIncludingGroups();
 
-c2 = new LoadReportElements("anwendung", root);
+c2 = new LoadReportElements("netzkomponente", root);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
 	cols
 );
 ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
@@ -3065,7 +3511,7 @@ return helper.map(
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("netzkomponente")
 	.getAllPropertyTypeIDsIncludingGroups();
-
+inParameters(new String[] { "root_object", });
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -3159,6 +3605,20 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">client_risikoanalyse_begruendung</property>
                     <text-property name="displayName">client_risikoanalyse_begruendung</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -3434,21 +3894,49 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-
+// set top level element for report:
 root = _vars.get("vn_root_element");
-
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
 
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("client")
 	.getAllPropertyTypeIDsIncludingGroups();
 
-c2 = new LoadReportElements("anwendung", root);
+c2 = new LoadReportElements("client", root);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
 	cols
 );
 ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
@@ -3457,7 +3945,7 @@ return helper.map(
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("client")
 	.getAllPropertyTypeIDsIncludingGroups();
-
+inParameters(new String[] { "root_object", });
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -3559,7 +4047,7 @@ columns(cols);</value>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Scope:]]></text-property>
+                        <text-property name="content"><![CDATA[Verbund:]]></text-property>
                     </text>
                 </cell>
                 <cell id="12">
@@ -3617,7 +4105,7 @@ columns(cols);</value>
                     <text id="23">
                         <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Date:]]></text-property>
+                        <text-property name="content"><![CDATA[Datum:]]></text-property>
                     </text>
                 </cell>
                 <cell id="15">
@@ -3663,164 +4151,476 @@ columns(cols);</value>
             <property name="paddingTop">20pt</property>
             <text-property name="text">Anwendungen</text-property>
         </label>
-        <table id="426">
+        <table id="658">
             <property name="dataSet">anwendungen</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">anwendung_kuerzel</property>
-                    <text-property name="displayName">anwendung_kuerzel</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["anwendung_kuerzel"]</expression>
+                    <property name="name">Kürzel</property>
+                    <text-property name="displayName">Kürzel</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Kürzel"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">anwendung_name</property>
-                    <text-property name="displayName">anwendung_name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["anwendung_name"]</expression>
+                    <property name="name">Name</property>
+                    <text-property name="displayName">Name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Name"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">anwendung_vertraulichkeit</property>
+                    <property name="name">Vertraulichkeit</property>
                     <text-property name="displayName">Vertraulichkeit</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["anwendung_vertraulichkeit"]</expression>
+                    <expression name="expression" type="javascript">dataSetRow["Vertraulichkeit"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">anwendung_verfuegbarkeit</property>
-                    <text-property name="displayName">anwendung_verfuegbarkeit</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["anwendung_verfuegbarkeit"]</expression>
+                    <property name="name">Verfügbarkeit</property>
+                    <text-property name="displayName">Verfügbarkeit</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Verfügbarkeit"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">anwendung_integritaet</property>
-                    <text-property name="displayName">anwendung_integritaet</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["anwendung_integritaet"]</expression>
+                    <property name="name">Integrität</property>
+                    <text-property name="displayName">Integrität</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Integrität"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">anwendung_vertraulichkeit_begruendung</property>
-                    <text-property name="displayName">anwendung_vertraulichkeit_begruendung</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["anwendung_vertraulichkeit_begruendung"]</expression>
+                    <property name="name">Erläuterung</property>
+                    <text-property name="displayName">Erläuterung</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Erläuterung"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">anwendung_verfuegbarkeit_begruendung</property>
-                    <text-property name="displayName">anwendung_verfuegbarkeit_begruendung</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["anwendung_verfuegbarkeit_begruendung"]</expression>
+                    <property name="name">Begründung Vertraulichkeit</property>
+                    <text-property name="displayName">Begründung Vertraulichkeit</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Begründung Vertraulichkeit"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">anwendung_integritaet_begruendung</property>
-                    <text-property name="displayName">anwendung_integritaet_begruendung</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["anwendung_integritaet_begruendung"]</expression>
+                    <property name="name">Begründung Verfügbarkeit</property>
+                    <text-property name="displayName">Begründung Verfügbarkeit</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Begründung Verfügbarkeit"]</expression>
                     <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Begründung Integrität</property>
+                    <text-property name="displayName">Begründung Integrität</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Begründung Integrität"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation</property>
+                    <property name="dataType">integer</property>
+                    <property name="aggregateFunction">COUNT</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                        </structure>
+                    </list-property>
                 </structure>
             </list-property>
-            <column id="460"/>
-            <column id="461"/>
-            <column id="462"/>
-            <column id="463"/>
-            <column id="464"/>
-            <column id="465"/>
-            <column id="466"/>
-            <column id="467"/>
+            <column id="695"/>
+            <column id="696"/>
+            <column id="697"/>
+            <column id="698"/>
+            <column id="699"/>
+            <column id="700"/>
+            <column id="701"/>
+            <column id="702"/>
             <header>
-                <row id="427">
-                    <cell id="428">
-                        <label id="470">
-                            <text-property name="text">anwendung_kuerzel</text-property>
+                <row id="659">
+                    <cell id="660">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="703">
+                            <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
-                    <cell id="429">
-                        <label id="472">
-                            <text-property name="text">anwendung_name</text-property>
+                    <cell id="661">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="705">
+                            <text-property name="text">Name</text-property>
                         </label>
                     </cell>
-                    <cell id="430">
-                        <label id="474">
-                            <text-property name="text">anwendung_vertraulichkeit</text-property>
+                    <cell id="662">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="707">
+                            <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
-                    <cell id="431">
-                        <label id="477">
-                            <text-property name="text">anwendung_verfuegbarkeit</text-property>
+                    <cell id="663">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="708">
+                            <text-property name="text">Verfügbarkeit</text-property>
                         </label>
                     </cell>
-                    <cell id="432">
-                        <label id="479">
-                            <text-property name="text">anwendung_integritaet</text-property>
+                    <cell id="664">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="710">
+                            <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
-                    <cell id="433">
-                        <label id="481">
-                            <text-property name="text">anwendung_vertraulichkeit_begruendung</text-property>
+                    <cell id="665">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="769">
+                            <text-property name="text">Begründung Vertraulichkeit</text-property>
                         </label>
                     </cell>
-                    <cell id="434">
-                        <label id="482">
-                            <text-property name="text">anwendung_verfuegbarkeit_begruendung</text-property>
+                    <cell id="666">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="770">
+                            <text-property name="text">Begründung Verfügbarkeit</text-property>
                         </label>
                     </cell>
-                    <cell id="435">
-                        <label id="484">
-                            <text-property name="text">anwendung_integritaet_begruendung</text-property>
+                    <cell id="667">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="772">
+                            <text-property name="text">Begründung Integrität</text-property>
                         </label>
                     </cell>
                 </row>
             </header>
             <detail>
-                <row id="438">
-                    <cell id="439">
-                        <data id="471">
-                            <property name="resultSetColumn">anwendung_kuerzel</property>
+                <row id="668">
+                    <cell id="669">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="704">
+                            <property name="resultSetColumn">Kürzel</property>
                         </data>
                     </cell>
-                    <cell id="440">
-                        <data id="473">
-                            <property name="resultSetColumn">anwendung_name</property>
+                    <cell id="670">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="706">
+                            <property name="resultSetColumn">Name</property>
                         </data>
                     </cell>
-                    <cell id="441">
-                        <data id="476">
-                            <property name="resultSetColumn">anwendung_vertraulichkeit</property>
+                    <cell id="671">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="712">
+                            <property name="resultSetColumn">Vertraulichkeit</property>
                         </data>
                     </cell>
-                    <cell id="442">
-                        <data id="478">
-                            <property name="resultSetColumn">anwendung_verfuegbarkeit</property>
+                    <cell id="672">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="709">
+                            <property name="resultSetColumn">Verfügbarkeit</property>
                         </data>
                     </cell>
-                    <cell id="443">
-                        <data id="480">
-                            <property name="resultSetColumn">anwendung_integritaet</property>
+                    <cell id="673">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="711">
+                            <property name="resultSetColumn">Integrität</property>
                         </data>
                     </cell>
-                    <cell id="444">
-                        <data id="486">
-                            <property name="resultSetColumn">anwendung_vertraulichkeit_begruendung</property>
+                    <cell id="674">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="774">
+                            <property name="resultSetColumn">Begründung Vertraulichkeit</property>
                         </data>
                     </cell>
-                    <cell id="445">
-                        <data id="483">
-                            <property name="resultSetColumn">anwendung_verfuegbarkeit_begruendung</property>
+                    <cell id="675">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="771">
+                            <property name="resultSetColumn">Begründung Verfügbarkeit</property>
                         </data>
                     </cell>
-                    <cell id="446">
-                        <data id="485">
-                            <property name="resultSetColumn">anwendung_integritaet_begruendung</property>
+                    <cell id="676">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="773">
+                            <property name="resultSetColumn">Begründung Integrität</property>
                         </data>
                     </cell>
                 </row>
             </detail>
             <footer>
-                <row id="449">
-                    <cell id="450"/>
-                    <cell id="451"/>
-                    <cell id="452"/>
-                    <cell id="453"/>
-                    <cell id="454"/>
-                    <cell id="455"/>
-                    <cell id="456"/>
-                    <cell id="457"/>
+                <row id="686">
+                    <cell id="687">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="688">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="689">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="690">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="691">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="692">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="693">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="694">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
                 </row>
             </footer>
         </table>
@@ -3830,166 +4630,525 @@ columns(cols);</value>
             <property name="paddingTop">20pt</property>
             <text-property name="text">IT-Systeme: Server</text-property>
         </label>
-        <table id="549">
+        <table id="717">
             <property name="dataSet">server</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">server_kuerzel</property>
-                    <text-property name="displayName">server_kuerzel</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["server_kuerzel"]</expression>
+                    <property name="name">Anzahl</property>
+                    <expression name="expression" type="javascript">dataSetRow["Anzahl"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">server_name</property>
-                    <text-property name="displayName">server_name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["server_name"]</expression>
+                    <property name="name">Name</property>
+                    <expression name="expression" type="javascript">dataSetRow["Name"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">server_vertraulichkeit</property>
-                    <text-property name="displayName">server_vertraulichkeit</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["server_vertraulichkeit"]</expression>
+                    <property name="name">Netzadressen</property>
+                    <expression name="expression" type="javascript">dataSetRow["Netzadressen"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">server_verfuegbarkeit</property>
-                    <text-property name="displayName">server_verfuegbarkeit</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["server_verfuegbarkeit"]</expression>
+                    <property name="name">Aufstellungsort</property>
+                    <expression name="expression" type="javascript">dataSetRow["Aufstellungsort"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">server_integritaet</property>
-                    <text-property name="displayName">server_integritaet</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["server_integritaet"]</expression>
+                    <property name="name">Dokument</property>
+                    <expression name="expression" type="javascript">dataSetRow["Dokument"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">server_vertraulichkeit_begruendung</property>
-                    <text-property name="displayName">server_vertraulichkeit_begruendung</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["server_vertraulichkeit_begruendung"]</expression>
+                    <property name="name">Admin</property>
+                    <expression name="expression" type="javascript">dataSetRow["Admin"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">server_verfuegbarkeit_begruendung</property>
-                    <text-property name="displayName">server_verfuegbarkeit_begruendung</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["server_verfuegbarkeit_begruendung"]</expression>
+                    <property name="name">Plattform</property>
+                    <expression name="expression" type="javascript">dataSetRow["Plattform"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">server_integritaet_begruendung</property>
-                    <text-property name="displayName">server_integritaet_begruendung</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["server_integritaet_begruendung"]</expression>
+                    <property name="name">Kürzel</property>
+                    <expression name="expression" type="javascript">dataSetRow["Kürzel"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Tags</property>
+                    <expression name="expression" type="javascript">dataSetRow["Tags"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Anwender</property>
+                    <expression name="expression" type="javascript">dataSetRow["Anwender"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Status</property>
+                    <expression name="expression" type="javascript">dataSetRow["Status"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Erläuterung</property>
+                    <expression name="expression" type="javascript">dataSetRow["Erläuterung"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Vertraulichkeit</property>
+                    <expression name="expression" type="javascript">dataSetRow["Vertraulichkeit"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Verfügbarkeit</property>
+                    <expression name="expression" type="javascript">dataSetRow["Verfügbarkeit"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Integrität</property>
+                    <expression name="expression" type="javascript">dataSetRow["Integrität"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Begründung Vertraulichkeit</property>
+                    <expression name="expression" type="javascript">dataSetRow["Begründung Vertraulichkeit"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Begründung Verfügbarkeit</property>
+                    <expression name="expression" type="javascript">dataSetRow["Begründung Verfügbarkeit"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Begründung Integrität</property>
+                    <expression name="expression" type="javascript">dataSetRow["Begründung Integrität"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Erg. Sicherheitsanalyse</property>
+                    <expression name="expression" type="javascript">dataSetRow["Erg. Sicherheitsanalyse"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Risikoanalyse</property>
+                    <expression name="expression" type="javascript">dataSetRow["Risikoanalyse"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">Begründung Mgmt</property>
+                    <expression name="expression" type="javascript">dataSetRow["Begründung Mgmt"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
-            <column id="583"/>
-            <column id="584"/>
-            <column id="585"/>
-            <column id="586"/>
-            <column id="587"/>
-            <column id="588"/>
-            <column id="589"/>
-            <column id="590"/>
+            <column id="745"/>
+            <column id="746"/>
+            <column id="747"/>
+            <column id="748"/>
+            <column id="749"/>
+            <column id="750"/>
+            <column id="751"/>
+            <column id="752"/>
             <header>
-                <row id="550">
-                    <cell id="551">
-                        <label id="593">
-                            <text-property name="text">server_kuerzel</text-property>
+                <row id="718">
+                    <cell id="719">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="753">
+                            <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
-                    <cell id="552">
-                        <label id="595">
-                            <text-property name="text">server_name</text-property>
+                    <cell id="720">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="755">
+                            <text-property name="text">Name</text-property>
                         </label>
                     </cell>
-                    <cell id="553">
-                        <label id="597">
-                            <text-property name="text">server_vertraulichkeit</text-property>
+                    <cell id="721">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="757">
+                            <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
-                    <cell id="554">
-                        <label id="598">
-                            <text-property name="text">server_verfuegbarkeit</text-property>
+                    <cell id="722">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="758">
+                            <text-property name="text">Verfügbarkeit</text-property>
                         </label>
                     </cell>
-                    <cell id="555">
-                        <label id="600">
-                            <text-property name="text">server_integritaet</text-property>
+                    <cell id="723">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="760">
+                            <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
-                    <cell id="556">
-                        <label id="602">
-                            <text-property name="text">server_vertraulichkeit_begruendung</text-property>
+                    <cell id="724">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="762">
+                            <text-property name="text">Begründung Vertraulichkeit</text-property>
                         </label>
                     </cell>
-                    <cell id="557">
-                        <label id="604">
-                            <text-property name="text">server_verfuegbarkeit_begruendung</text-property>
+                    <cell id="725">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="764">
+                            <text-property name="text">Begründung Verfügbarkeit</text-property>
                         </label>
                     </cell>
-                    <cell id="558">
-                        <label id="606">
-                            <text-property name="text">server_integritaet_begruendung</text-property>
+                    <cell id="726">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="766">
+                            <text-property name="text">Begründung Integrität</text-property>
                         </label>
                     </cell>
                 </row>
             </header>
             <detail>
-                <row id="561">
-                    <cell id="562">
-                        <data id="594">
-                            <property name="resultSetColumn">server_kuerzel</property>
+                <row id="727">
+                    <cell id="728">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="754">
+                            <property name="resultSetColumn">Kürzel</property>
                         </data>
                     </cell>
-                    <cell id="563">
-                        <data id="596">
-                            <property name="resultSetColumn">server_name</property>
+                    <cell id="729">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="756">
+                            <property name="resultSetColumn">Name</property>
                         </data>
                     </cell>
-                    <cell id="564">
-                        <data id="608">
-                            <property name="resultSetColumn">server_vertraulichkeit</property>
+                    <cell id="730">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="768">
+                            <property name="resultSetColumn">Vertraulichkeit</property>
                         </data>
                     </cell>
-                    <cell id="565">
-                        <data id="599">
-                            <property name="resultSetColumn">server_verfuegbarkeit</property>
+                    <cell id="731">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="759">
+                            <property name="resultSetColumn">Verfügbarkeit</property>
                         </data>
                     </cell>
-                    <cell id="566">
-                        <data id="601">
-                            <property name="resultSetColumn">server_integritaet</property>
+                    <cell id="732">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="761">
+                            <property name="resultSetColumn">Integrität</property>
                         </data>
                     </cell>
-                    <cell id="567">
-                        <data id="603">
-                            <property name="resultSetColumn">server_vertraulichkeit_begruendung</property>
+                    <cell id="733">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="763">
+                            <property name="resultSetColumn">Begründung Vertraulichkeit</property>
                         </data>
                     </cell>
-                    <cell id="568">
-                        <data id="605">
-                            <property name="resultSetColumn">server_verfuegbarkeit_begruendung</property>
+                    <cell id="734">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="765">
+                            <property name="resultSetColumn">Begründung Verfügbarkeit</property>
                         </data>
                     </cell>
-                    <cell id="569">
-                        <data id="607">
-                            <property name="resultSetColumn">server_integritaet_begruendung</property>
+                    <cell id="735">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="767">
+                            <property name="resultSetColumn">Begründung Integrität</property>
                         </data>
                     </cell>
                 </row>
             </detail>
             <footer>
-                <row id="572">
-                    <cell id="573"/>
-                    <cell id="574"/>
-                    <cell id="575"/>
-                    <cell id="576"/>
-                    <cell id="577"/>
-                    <cell id="578"/>
-                    <cell id="579"/>
-                    <cell id="580"/>
+                <row id="736">
+                    <cell id="737">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="738">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="739">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="740">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="741">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="742">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="743">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="744">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
                 </row>
             </footer>
         </table>
+        <label id="657">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingTop">20pt</property>
+            <text-property name="text">IT-Systeme: Clients</text-property>
+        </label>
     </body>
 </report>

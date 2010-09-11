@@ -74,6 +74,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 
 	private static final byte INPUT_NUMERICOPTION = 7;
 
+	private static final byte INPUT_BOOLEANOPTION = 8;
+
 	private List<IValidationRule> validators = new ArrayList<IValidationRule>();
 
 	private IFillRule defaultRule = new NullRule();
@@ -276,6 +278,10 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	public boolean isNumericSelect() {
 		return inputtype == INPUT_NUMERICOPTION;
 	}
+	
+	public boolean isBooleanSelect() {
+	    return inputtype == INPUT_BOOLEANOPTION;
+	}
 
 	public boolean isBool() {
 		return inputtype == INPUT_CHECKBOX;
@@ -319,7 +325,9 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 			inputtype = INPUT_DATE;
 		} else if (attribute.equals("numericoption")) {
 			inputtype = INPUT_NUMERICOPTION;
-		}
+		} else if (attribute.equals("booleanoption")) {
+            inputtype = INPUT_BOOLEANOPTION;
+        }
 	}
 
 	public void setInitialFocus(boolean b) {

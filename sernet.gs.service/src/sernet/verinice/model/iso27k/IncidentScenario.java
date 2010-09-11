@@ -33,6 +33,9 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_ABBR = "incident_scenario_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "incident_scenario_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "incident_scenario_tag"; //$NON-NLS-1$
+
+	public static final String PROP_PROBABILITY = "incscen_likelihood"; //$NON-NLS-1$
+	
 	
 	/**
 	 * Creates an empty asset
@@ -70,6 +73,10 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 	
 	public String getAbbreviation() {
 		return getEntity().getSimpleValue(PROP_ABBR);
+	}
+
+	public String getProbability() {
+	    return getEntity().getSimpleValue(PROP_PROBABILITY);
 	}
 	
 	public void setAbbreviation(String abbreviation) {

@@ -17,7 +17,8 @@ public class ImportCSVAction extends Action{
 		setEnabled(true);
 	}
 
-	public void run() {//Display.getCurrent().getActiveShell()
+	public void run() {
+	    //Display.getCurrent().getActiveShell()
 		final WizardDialog wizard = new WizardDialog(Display.getCurrent().getActiveShell(), new ImportCSVWizard());
 		wizard.open();
 	}

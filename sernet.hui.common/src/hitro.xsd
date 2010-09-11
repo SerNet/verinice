@@ -235,6 +235,7 @@ be displayed when one of the given options has been previously selected.
 		<xs:enumeration value="reference"/>
 		<xs:enumeration value="date"/>
 		<xs:enumeration value="numericoption"/>
+		<xs:enumeration value="booleanoption"/>
 	</xs:restriction>
 </xs:simpleType>
 
