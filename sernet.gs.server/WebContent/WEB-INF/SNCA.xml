@@ -4275,31 +4275,33 @@ the value between <param></param> will be used directly if no string is found fo
 					id="process_value_comment" />
 		</huipropertygroup>
 		
-	
-		<huipropertygroup name="Risk Management" id="process_riskgroup">
-			<huiproperty
-				name="Risk value" id="process_riskvalue" editable="false">
-				<defaultRule class="SimpleValue">
-                	<param id="process_riskvalue_default">- not calculated -</param>
-                </defaultRule>
+	   <huipropertygroup name="Risk Management xxx" id="process_riskgroup">
+            <huiproperty
+                name="Confidentiality risk value" id="process_riskvalue_c" editable="false"/>
+            <huiproperty
+                name="Confidentiality risk after controls" id="process_riskwcontrolvalue_c" editable="false"/>
+            <huiproperty
+                name="Integrity risk value" id="process_riskvalue_i" editable="false"/>
+            <huiproperty
+                name="Integrity risk after controls" id="process_riskwcontrolvalue_i" editable="false"/>                
+            <huiproperty
+                name="Availability risk value" id="process_riskvalue_a" editable="false"/>
+            <huiproperty
+                name="Availability risk after controls" id="process_riskwcontrolvalue_a" editable="false"/>
+            
+            <huiproperty 
+                name="Risk Treatment" id="process_risktreat" inputtype="singleoption">
+                <option name="Reduction" id="process_risktreat_reduct" />         
+                <option name="Retention" id="process_risktreat_retent" />         
+                <option name="Avoidance" id="process_risktreat_avoid" />          
+                <option name="Transfer" id="process_risktreat_transf" />          
+                <option name="Acceptance" id="process_risktreat_accept" />        
             </huiproperty>
-			<huiproperty
-				name="Risk after controls" id="process_riskwcontrolvalue" editable="false">
-				<defaultRule class="SimpleValue">
-                	<param id="process_riskwcontrolvalue_default">- not calculated -</param>
-                </defaultRule>
-			</huiproperty>
-			<huiproperty 
-				name="Risk Treatment" id="process_risktreat" inputtype="singleoption">
-				<option name="Reduction" id="process_risktreat_reduct" />       	
-				<option name="Retention" id="process_risktreat_retent" />       	
-				<option name="Avoidance" id="process_risktreat_avoid" />       	
-				<option name="Transfer" id="process_risktreat_transf" />       	
-				<option name="Acceptance" id="process_risktreat_accept" />       	
-			</huiproperty>
-			<huiproperty
-				name="Explanation" id="process_risktreatexpl" inputtype="text" />
-		</huipropertygroup>
+            <huiproperty
+                name="Explanation" id="process_risktreatexpl" inputtype="text" />
+        </huipropertygroup>
+    
+		
         
     </huientity>
     

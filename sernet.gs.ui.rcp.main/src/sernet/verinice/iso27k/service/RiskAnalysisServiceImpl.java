@@ -81,16 +81,14 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
             Set<CnATreeElement> vulns = CnALink.getLinkedElements(scenario, Vulnerability.TYPE_ID);
             
             int likelihood = 0;
-            for (CnATreeElement elmt : threats) {
-                Threat threat = (Threat) elmt;
+            for (CnATreeElement threat : threats) {
                 int level = threat.getNumericProperty(PROP_THREAT_LIKELIHOOD);
                 if (level > likelihood)
                     likelihood = level;
             }
             
             int exploitability = 0;
-            for (CnATreeElement elmt : vulns) {
-                Vulnerability vuln = (Vulnerability) elmt;
+            for (CnATreeElement vuln : vulns) {
                 int level = vuln.getNumericProperty(PROP_VULNERABILITY_EXPLOITABILITY);
                 if (level > exploitability)
                     exploitability = level;
@@ -100,8 +98,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
         
         // now determine probability after controls:
         Set<CnATreeElement> elmts = CnALink.getLinkedElements(scenario, Control.TYPE_ID);
-        for (CnATreeElement elmt : elmts) {
-            Control control = (Control) elmt;
+        for (CnATreeElement control : elmts) {
             int controlEffect = control.getNumericProperty(PROP_CONTROL_EFFECT_P);
             int probAfterControl = scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY)-controlEffect;
             scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS, 
@@ -121,8 +118,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
     @Override
     public void determineRisks(IncidentScenario scenario) {
         Set<CnATreeElement> elements = CnALink.getLinkedElements(scenario, Asset.TYPE_ID);
-        for (CnATreeElement elmt : elements) {
-            Asset asset = (Asset) elmt;
+        for (CnATreeElement asset : elements) {
             AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
             
             if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_C)==1) {
@@ -133,8 +129,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                 int reducedRisk = valueAdapter.getVertraulichkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
                 
                 Set<CnATreeElement> assetControls = CnALink.getLinkedElements(asset, Control.TYPE_ID);
-                for (CnATreeElement controlElmt : assetControls) {
-                    Control control = (Control) controlElmt;
+                for (CnATreeElement control : assetControls) {
                     reducedRisk = reducedRisk - control.getNumericProperty(PROP_CONTROL_EFFECT_C);
                 }
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_C, reducedRisk < 0 ? 0 : reducedRisk);
@@ -148,13 +143,13 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                 int reducedRisk = valueAdapter.getIntegritaet() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
                 
                 Set<CnATreeElement> assetControls = CnALink.getLinkedElements(asset, Control.TYPE_ID);
-                for (CnATreeElement controlElmt : assetControls) {
-                    Control control = (Control) controlElmt;
+                for (CnATreeElement control : assetControls) {
                     reducedRisk = reducedRisk - control.getNumericProperty(PROP_CONTROL_EFFECT_I);
                 }
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_I, reducedRisk < 0 ? 0 : reducedRisk);
             
             }
+       
             
             if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_A)==1) {
                 int risk = valueAdapter.getVerfuegbarkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY);
@@ -164,8 +159,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                 int reducedRisk = valueAdapter.getVerfuegbarkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
                 
                 Set<CnATreeElement> assetControls = CnALink.getLinkedElements(asset, Control.TYPE_ID);
-                for (CnATreeElement controlElmt : assetControls) {
-                    Control control = (Control) controlElmt;
+                for (CnATreeElement control : assetControls) {
                     reducedRisk = reducedRisk - control.getNumericProperty(PROP_CONTROL_EFFECT_A);
                 }
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_A, reducedRisk < 0 ? 0 : reducedRisk);
