@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,7 @@ import net.sf.ehcache.Status;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
@@ -49,8 +51,10 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import de.sernet.sync.data.SyncData;
+import de.sernet.sync.data.SyncLink;
 import de.sernet.sync.data.SyncObject;
 import de.sernet.sync.data.SyncObject.SyncAttribute;
 import de.sernet.sync.mapping.SyncMapping;
@@ -92,8 +96,10 @@ public class ExportCommand extends GenericCommand
 	
 	private transient List<SyncObject> orphaneList;
 
-	private List<CnATreeElement> elements;
 	private String sourceId;
+	private List<CnATreeElement> elements;
+	private Set<CnALink> linkSet;
+	
 	private HashMap<String,String> entityTypesToBeExported;
 	
 	private byte[] result;
@@ -102,12 +108,14 @@ public class ExportCommand extends GenericCommand
 	{
 		this.elements = elements;
 		this.sourceId = sourceId;
+		this.linkSet = new HashSet<CnALink>();
 	}
 	
 	public ExportCommand( List<CnATreeElement> elements, String sourceId, HashMap<String,String> entityTypesToBeExported )
 	{
 		this( elements, sourceId );
 		this.entityTypesToBeExported = entityTypesToBeExported;
+        this.linkSet = new HashSet<CnALink>();
 	}
 	
 	public void execute()
@@ -126,7 +134,8 @@ public class ExportCommand extends GenericCommand
 		sr.setSyncData(sd);
 		sr.setSyncMapping(sm);
 		
-		/** A list for objects whose parent object is not in the exported set.
+		/** 
+		 * A list for objects whose parent object is not in the exported set.
 		 * 
 		 * The orphanes are added last as top-level elements to the SyncData
 		 * object.
@@ -139,37 +148,41 @@ public class ExportCommand extends GenericCommand
 		 *+++++++++++++++++++++++++++++++++++++++*/
 		Set<EntityType> exportedEntityTypes = new HashSet<EntityType>();
 		Set<String> exportedTypes = new HashSet<String>();
-		for( CnATreeElement element : elements )
-		{	    
+		for( CnATreeElement element : elements ) {	    
 			export(sd.getSyncObject(), element, timestamp, exportedEntityTypes, exportedTypes);
 		}
 		sd.getSyncObject().addAll(orphaneList);
+		
+		for(CnALink link : linkSet) {
+		    export(sd.getSyncLink(),link);
+		}
 		
 		/* Adds SyncMapping for all EntityTypes that have been exported. This
 		 * is going to be an identity mapping.
 		 */
 		for (EntityType entityType : exportedEntityTypes)
 		{
-			
-			// Add <mapObjectType> element for this entity type to <syncMapping>:
-			MapObjectType mapObjectType = new MapObjectType();
-			
-			mapObjectType.setIntId(entityType.getId());
-			mapObjectType.setExtId(entityType.getId());
-			
-			List<MapAttributeType> mapAttributeTypes = mapObjectType.getMapAttributeType();
-			for (PropertyType propertyType : entityType.getAllPropertyTypes())
-			{
-				// Add <mapAttributeType> for this property type to current <mapObjectType>:
-				MapAttributeType mapAttributeType = new MapAttributeType();
-				
-				mapAttributeType.setExtId(propertyType.getId());
-				mapAttributeType.setIntId(propertyType.getId());
-				
-				mapAttributeTypes.add(mapAttributeType);
+			if(entityType!=null) {
+    			// Add <mapObjectType> element for this entity type to <syncMapping>:
+    			MapObjectType mapObjectType = new MapObjectType();
+    			
+    			mapObjectType.setIntId(entityType.getId());
+    			mapObjectType.setExtId(entityType.getId());
+    			
+    			List<MapAttributeType> mapAttributeTypes = mapObjectType.getMapAttributeType();
+    			for (PropertyType propertyType : entityType.getAllPropertyTypes())
+    			{
+    				// Add <mapAttributeType> for this property type to current <mapObjectType>:
+    				MapAttributeType mapAttributeType = new MapAttributeType();
+    				
+    				mapAttributeType.setExtId(propertyType.getId());
+    				mapAttributeType.setIntId(propertyType.getId());
+    				
+    				mapAttributeTypes.add(mapAttributeType);
+    			}
+    			
+    			mapObjectTypeList.add(mapObjectType);
 			}
-			
-			mapObjectTypeList.add(mapObjectType);
 		}
 		
 		// For all exported objects that had no entity type (e.g. category objects)
@@ -190,19 +203,19 @@ public class ExportCommand extends GenericCommand
 		result = bos.toByteArray();
 	}
 
-	/**
+    /**
 	 * Export (i.e. "create XML representation of" the given cnATreeElement
 	 * and its successors. For this, child elements are exported recursively.
 	 * All elements that have been processed are returned as a list of
 	 * {@code syncObject}s with their respective attributes, represented
 	 * as {@code syncAttribute}s.
 	 * 
-	 * @param cnATreeElement
+	 * @param element
 	 * @return List<Element>
 	 */
-	private void export(List<SyncObject> list, CnATreeElement cnATreeElement, String timestamp, Set<EntityType> exportedEntityTypes, Set<String> exportedTypes)
+	private void export(List<SyncObject> list, CnATreeElement element, String timestamp, Set<EntityType> exportedEntityTypes, Set<String> exportedTypes)
 	{		
-		hydrate( cnATreeElement );
+	    element = hydrate( element );
 		
 		List<SyncObject> childList = null;
 		
@@ -212,12 +225,12 @@ public class ExportCommand extends GenericCommand
 		 * entity types, this element's entity type IS allowed:
 		 *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		
-		String typeId = cnATreeElement.getTypeId();
-		if ((exportedObjectIDs.get( cnATreeElement.getId()) == null )
+		String typeId = element.getTypeId();
+		if ((exportedObjectIDs.get( element.getId()) == null )
 				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(typeId) != null) )
 		{
 			SyncObject syncObject = new SyncObject();
-			syncObject.setExtId(cnATreeElement.getId());
+			syncObject.setExtId(element.getId());
 			syncObject.setExtObjectType(typeId);
 
 			List<SyncAttribute> attributes = syncObject.getSyncAttribute();
@@ -226,7 +239,7 @@ public class ExportCommand extends GenericCommand
 			 * Retrieve all properties from the entity:
 			 *+++++++++++++++++++++++++++++++++++++++++*/
 			
-			Entity entity = cnATreeElement.getEntity();
+			Entity entity = element.getEntity();
 			// Category instance may have no Entity attached to it
 			// For those we do not store any property values.
 			if (entity != null) {
@@ -250,7 +263,7 @@ public class ExportCommand extends GenericCommand
 				
 				// Add the elements EntityType to the set of exported EntityTypes in order to
 				// use it for the mapping generation later on.
-				exportedEntityTypes.add(cnATreeElement.getEntityType());
+				exportedEntityTypes.add(element.getEntityType());
 			}
 			else
 			{
@@ -259,15 +272,18 @@ public class ExportCommand extends GenericCommand
 				exportedTypes.add(typeId);
 			}
 
+			// add links to linkSet
+			saveLinks(element);
+            		
 			list.add(syncObject);
 			childList = syncObject.getChildren();
-			exportedObjectIDs.put( cnATreeElement.getId(), new String() );
+			exportedObjectIDs.put( element.getId(), new String() );
 		}
 		
 		/*++++
 		 * Handle children recursively:
 		 *+++++++++++++++++++++++++++++*/
-		Set<CnATreeElement> children = cnATreeElement.getChildren();
+		Set<CnATreeElement> children = element.getChildren();
 		
 		List<SyncObject> targetList = (childList == null ? orphaneList : childList);
 		
@@ -276,6 +292,31 @@ public class ExportCommand extends GenericCommand
 			export(targetList, child, timestamp, exportedEntityTypes, exportedTypes);
 		}
 	}
+	
+	/**
+     * @param syncLink
+     * @param link
+     */
+    private void export(List<SyncLink> syncLinkList, CnALink link) {
+        SyncLink syncLink = new SyncLink();
+        syncLink.setDependant(link.getDependant().getId());
+        syncLink.setDependency(link.getDependency().getId());
+        syncLink.setRelationId(link.getRelationId());
+        if(link.getComment()!=null) {
+            syncLink.setComment(link.getComment());
+        }
+        syncLinkList.add(syncLink);     
+    }
+
+
+    private void saveLinks(CnATreeElement element) {
+        try {
+            linkSet.addAll(element.getLinksDown());
+            linkSet.addAll(element.getLinksUp());
+        } catch (Exception e) {
+            getLog().error("error while getting links of element: " + element.getTitle() + "(" + element.getTypeId() + "), UUID: " + element.getUuid(), e);
+        }
+    }
 	
 	/**
      * @param cnATreeElement
@@ -301,10 +342,10 @@ public class ExportCommand extends GenericCommand
 	 * 
 	 * @param element
 	 *************************************************/
-	private void hydrate(CnATreeElement element)
+	private CnATreeElement hydrate(CnATreeElement element)
 	{ 
 		if (element == null)
-			return;
+			return element;
 		
 		Element cachedElement = getCache().get(element.getUuid());
 		if(cachedElement!=null) {
@@ -312,15 +353,15 @@ public class ExportCommand extends GenericCommand
 		    if (getLog().isDebugEnabled()) {
 		        getLog().debug("Element from cache: " + element.getTitle());
             }
-		    return;
+		    return element;
 		}
 		
 		
 		//IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
-		//element = dao.retrieve(element.getDbId(), RetrieveInfo.getPropertyChildrenInstance());
-		
-		HydratorUtil.hydrateElement( getDao(), element, true);
-		HydratorUtil.hydrateEntity( getDao(), element);
+		RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
+		ri.setLinksDown(true);
+		ri.setLinksUp(true);
+		element = getDao().retrieve(element.getDbId(), ri);
 		
 		getCache().put(new Element(element.getUuid(), element));
 		
@@ -340,6 +381,7 @@ public class ExportCommand extends GenericCommand
 			hydrate(child);
 		}
 		
+		return element;
 	}
 
 	public byte[] getResult() {

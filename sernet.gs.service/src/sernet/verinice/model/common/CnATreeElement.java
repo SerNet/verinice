@@ -364,7 +364,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public LinkKategorie getLinks() {
 		return links;
 	}
-
+	
+	/**
+     * dependant in linksDown is this {@link CnATreeElement}
+     */
 	public void addLinkDown(CnALink link) {
 		linksDown.add(link);
 	}
@@ -384,7 +387,10 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public boolean removeLinkDown(CnALink link) {
 		return linksDown.remove(link);
 	}
-
+	
+	/**
+     * dependency in linksUp is this {@link CnATreeElement}
+     */
 	public void addLinkUp(CnALink link) {
 		linksUp.add(link);
 	}

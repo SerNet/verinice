@@ -49,6 +49,8 @@ public class DbVersion extends GenericCommand  {
 	 * @throws CommandException
 	 */
 	public void updateDBVersion(double dbVersion) throws CommandException {
+	        // round
+	        dbVersion = Math.round(dbVersion*100.0)/100.0;
 			if (dbVersion < 0.91D) {
 				DbMigration migration = new MigrateDbTo0_91();
 				getCommandService().executeCommand(migration);

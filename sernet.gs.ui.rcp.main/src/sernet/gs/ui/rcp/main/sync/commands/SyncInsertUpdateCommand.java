@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -62,6 +63,7 @@ import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.SonstigeITKategorie;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.Datenverarbeitung;
 import sernet.verinice.model.ds.Personengruppen;
@@ -104,6 +106,7 @@ import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import de.sernet.sync.data.SyncData;
+import de.sernet.sync.data.SyncLink;
 import de.sernet.sync.data.SyncObject;
 import de.sernet.sync.data.SyncObject.SyncAttribute;
 import de.sernet.sync.mapping.SyncMapping;
@@ -206,6 +209,8 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 
     private Set<CnATreeElement> elementSet = new HashSet<CnATreeElement>();
     
+    private transient Map<String, CnATreeElement> idElementMap = new HashMap<String, CnATreeElement>();
+    
     public int getUpdated() {
         return updated;
     }
@@ -227,9 +232,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         this.errorList = errorList;
     }
 
-    /************************************************************
-     * execute()
-     * 
+    /**
      * Processes the given <syncData> and <syncMapping> elements in order to
      * insert and/or update objects in(to) the database, according to the flags
      * insert & update.
@@ -240,12 +243,15 @@ public class SyncInsertUpdateCommand extends GenericCommand {
      * 
      * @throws InvalidRequestException
      * @throws CommandException
-     ************************************************************/
-    @SuppressWarnings("unchecked")
+     * @see sernet.verinice.interfaces.ICommand#execute()
+     */
     public void execute() {
         for (SyncObject so : syncData.getSyncObject()) {
             importObject(null, so);
         } // for <syncObject>
+        for (SyncLink syncLink : syncData.getSyncLink()) {
+            importLink(syncLink);
+        }
     }
 
     private void importObject(CnATreeElement parent, SyncObject so) {
@@ -360,6 +366,8 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             dao.merge(elementInDB);
         } // if( null != ... )
 
+        idElementMap.put(elementInDB.getExtId(), elementInDB);
+        
         // Handle all the child objects.
         for (SyncObject child : so.getChildren()) {
             // The object that was created or modified during the course of
@@ -370,6 +378,39 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             }
             importObject(elementInDB, child);
         }
+    }
+    
+    /**
+     * @param syncLink
+     */
+    private void importLink(SyncLink syncLink) {
+        String dependantId = syncLink.getDependant();
+        String dependencyId = syncLink.getDependency();
+        CnATreeElement dependant = idElementMap.get(dependantId);
+        if(dependant==null) {          
+            dependant = getDaoFactory().getDAO(CnATreeElement.class).findById(dependantId);
+            if(dependant==null) {
+                getLog().error("Can not import link. dependant not found in xml file and db, dependant ext-id: " + dependantId + " dependency ext-id: " + dependencyId);
+                return;
+            } else if (getLog().isDebugEnabled()) {
+                getLog().debug("dependant not found in XML file but in db, ext-id: " + dependantId);
+            }
+        }
+        CnATreeElement dependency = idElementMap.get(dependencyId);
+        if(dependency==null) {          
+            dependency = getDaoFactory().getDAO(CnATreeElement.class).findById(dependencyId);
+            if(dependency==null) {
+                getLog().error("Can not impor tlink. dependency not found in xml file and db, dependency ext-id: " + dependencyId + " dependant ext-id: " + dependantId);
+                return;
+            } else if (getLog().isDebugEnabled()) {
+                getLog().debug("dependency not found in XML file but in db, ext-id: " + dependencyId);
+            }
+        }
+        CnALink link = new CnALink(dependant,dependency,syncLink.getRelationId(),syncLink.getComment());
+        dependant.addLinkDown(link);
+        dependency.addLinkUp(link);
+        getDaoFactory().getDAO(CnALink.class).saveOrUpdate(link);
+        
     }
 
     private MapObjectType getMap(String extObjectType) {

@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.encryption;
 
-import javax.crypto.BadPaddingException;
-
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
