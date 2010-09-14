@@ -74,6 +74,7 @@ import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
+import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
 import sernet.gs.ui.rcp.main.bsi.dialogs.ExportSelectedObjectsDialog;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
@@ -164,6 +165,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	private ShowBulkEditAction bulkEditAction;
 
 	private ShowAccessControlEditAction accessControlEditAction;
+
+    private NaturalizeAction naturalizeAction;
 
 	private Action selectEqualsAction;
 
@@ -298,6 +301,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		manager.add(new GroupMarker("special")); //$NON-NLS-1$
 		manager.add(bulkEditAction);
 		manager.add(accessControlEditAction);
+        manager.add(naturalizeAction);
 		manager.add(selectEqualsAction);
 		manager.add(selectLinksAction);
 		selectEqualsAction.setEnabled(bausteinSelected());
@@ -411,6 +415,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_13);
 
 		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_14);
+		
+		naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
 
 		konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_15);
 

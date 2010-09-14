@@ -56,6 +56,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
+import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -119,6 +120,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	private BSIModelViewDropPerformer bsiDropAdapter;
 	
 	private ShowAccessControlEditAction accessControlEditAction;
+
+    private NaturalizeAction naturalizeAction;
 	
 	private IModelLoadListener modelLoadListener;
 
@@ -290,6 +293,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		metaDropAdapter.addAdapter(bsiDropAdapter);	
 		
 		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
+		
+		naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
 	}
 
     /**
@@ -357,6 +362,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		manager.add(new GroupMarker("special")); //$NON-NLS-1$
 		manager.add(bulkEditAction);
 		manager.add(accessControlEditAction);
+        manager.add(naturalizeAction);
 		manager.add(new Separator());
 		manager.add(expandAction);
 		manager.add(collapseAction);
