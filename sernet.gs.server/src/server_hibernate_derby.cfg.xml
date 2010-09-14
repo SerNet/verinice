@@ -51,10 +51,10 @@
         <mapping resource="sernet/gs/ui/rcp/hibernate/CnALink_derby.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/PropertyList_derby.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/Property_derby.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/CnATreeElement_derby.hbm.xml"/> 
+        <mapping resource="sernet/gs/ui/rcp/hibernate/CnATreeElement_derby.hbm.xml"/>
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Risikomassnahme_derby.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/ChangeLogEntry.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/Gefaehrdung.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/Risikomassnahme.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/FinishedRiskAnalysisLists.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/Configuration.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/Permission.hbm.xml"/>
