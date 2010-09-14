@@ -63,9 +63,9 @@
         <mapping resource="CnALink_derby.hbm.xml"/>
         <mapping resource="PropertyList_derby.hbm.xml"/>
         <mapping resource="CnATreeElement_derby.hbm.xml"/> 
+        <mapping resource="Risikomassnahme_derby.hbm.xml"/>
         <mapping resource="ChangeLogEntry.hbm.xml"/>
         <mapping resource="Gefaehrdung.hbm.xml"/>
-        <mapping resource="Risikomassnahme.hbm.xml"/>
         <mapping resource="FinishedRiskAnalysisLists.hbm.xml"/>
         <mapping resource="Configuration.hbm.xml"/>
         <mapping resource="BausteinVorschlag.hbm.xml"/>
