@@ -302,7 +302,7 @@ public class ExportCommand extends GenericCommand
         syncLink.setDependant(link.getDependant().getId());
         syncLink.setDependency(link.getDependency().getId());
         syncLink.setRelationId(link.getRelationId());
-        if(link.getComment()!=null) {
+        if(link.getComment()!=null && !link.getComment().isEmpty()) {
             syncLink.setComment(link.getComment());
         }
         syncLinkList.add(syncLink);     

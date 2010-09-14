@@ -342,7 +342,6 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 		if (child == null)
 			return;
 		
-		Logger.getLogger(this.getClass()).debug(Messages.BSIModel_2 + child.getTitle());
 		for (IBSIModelListener listener : getListeners()) {
 			listener.databaseChildAdded(child);
 		}

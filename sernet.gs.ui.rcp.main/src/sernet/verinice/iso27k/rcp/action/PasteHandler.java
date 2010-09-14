@@ -37,10 +37,13 @@ import org.eclipse.ui.progress.IProgressService;
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.CopyBausteine;
+import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.iso27k.rcp.CopyTreeElements;
 import sernet.verinice.iso27k.rcp.CutOperation;
+import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
@@ -65,11 +68,14 @@ public class PasteHandler extends AbstractHandler {
                 LOG.debug("Avtive part: " + part.getViewSite().getId());
             }
 			if(selection instanceof IStructuredSelection) {
-				IStructuredSelection sel = ((IStructuredSelection) selection);		
+				CnATreeElement target = getTarget(part.getViewSite().getId(),(IStructuredSelection) selection);
+				if (LOG.isDebugEnabled()) {
+                    LOG.debug("Target - type: " + target.getTypeId() + ", title:" + target.getTitle());
+                }
 				if(!CnPItems.getCopyItems().isEmpty()) {
-					copy(sel,CnPItems.getCopyItems());
+					copy(target,CnPItems.getCopyItems());
 				} else if(!CnPItems.getCutItems().isEmpty()) {
-					cut(sel,CnPItems.getCutItems());
+					cut(target,CnPItems.getCutItems());
 				}
 			}
 		} catch(Exception e) {
@@ -79,9 +85,26 @@ public class PasteHandler extends AbstractHandler {
 		return null;
 	}
 	
-	private void copy(IStructuredSelection sel, List copyList) throws InvocationTargetException, InterruptedException {
+	/**
+     * @param id
+     * @param sel
+     * @return
+     */
+    private CnATreeElement getTarget(String id, IStructuredSelection sel) {
+        CnATreeElement target = null;
+        if( sel.size()==1 && sel.getFirstElement() instanceof CnATreeElement) {
+            target = (CnATreeElement) sel.getFirstElement();
+        } else if(ISMView.ID.equals(id)) {
+            target = CnAElementFactory.getInstance().getISO27kModel();
+        } else if(BsiModelView.ID.equals(id)) {
+            target = CnAElementFactory.getLoadedModel();
+        }
+        return target;
+    }
+
+    private void copy(CnATreeElement target, List copyList) throws InvocationTargetException, InterruptedException {
 		if(copyList!=null && !copyList.isEmpty()) {
-			IProgressRunnable operation = createOperation(sel, copyList);
+			IProgressRunnable operation = createOperation(target, copyList);
 			if(operation!=null) {
 				IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 				progressService.run(true, true, operation);
@@ -96,11 +119,8 @@ public class PasteHandler extends AbstractHandler {
 	
 	
 
-	private void cut(IStructuredSelection sel, List cutList) throws InvocationTargetException, InterruptedException {
-		if(cutList.get(0) instanceof CnATreeElement 
-			&& sel.size()==1 
-			&& sel.getFirstElement() instanceof CnATreeElement) {
-			CnATreeElement target = (CnATreeElement)sel.getFirstElement();
+	private void cut(CnATreeElement target, List cutList) throws InvocationTargetException, InterruptedException {
+		if(cutList.get(0) instanceof CnATreeElement && target!=null) {
 			CutOperation operation = new CutOperation(target, cutList);
 			IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 			progressService.run(true, true, operation);
@@ -114,25 +134,18 @@ public class PasteHandler extends AbstractHandler {
 	}
 	
 	/**
-     * @param sel
+     * @param target
      * @param copyList
      * @return
      */
-    private IProgressRunnable createOperation(IStructuredSelection sel, List copyList) {
+    private IProgressRunnable createOperation(CnATreeElement target, List copyList) {
         IProgressRunnable operation = null;
         if(copyList!=null && !copyList.isEmpty()) {
             if(copyList.get(0) instanceof CnATreeElement) { 
-                if( sel.size()==1  && sel.getFirstElement() instanceof CnATreeElement) {
-                    operation = new CopyTreeElements((CnATreeElement)sel.getFirstElement(),copyList);
-                } else if( sel.size()>1 ) {
-                    MessageDialog.openWarning( 
-                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-                            Messages.getString("PasteHandler.5"),  //$NON-NLS-1$
-                            Messages.getString("PasteHandler.6")); //$NON-NLS-1$
-                }           
+                operation = new CopyTreeElements(target,copyList);                   
             }
             if(copyList.get(0) instanceof Baustein) {
-                operation = new CopyBausteine(sel,copyList);
+                operation = new CopyBausteine(target,copyList);
             }
         }
         return operation;

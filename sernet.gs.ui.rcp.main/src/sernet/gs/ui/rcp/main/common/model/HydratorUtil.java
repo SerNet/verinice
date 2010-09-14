@@ -145,33 +145,34 @@ public class HydratorUtil {
 	public static void hydrateElement(
 			IBaseDao<FinishedRiskAnalysisLists, Serializable> dao,
 			FinishedRiskAnalysisLists finishedRiskLists) {
-
-		List<GefaehrdungsUmsetzung> list = finishedRiskLists.getAllGefaehrdungsUmsetzungen();
-		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : list) {
-			hydrateEntity(dao, gefaehrdungsUmsetzung.getEntity());
-		}
-		
-		List<GefaehrdungsUmsetzung> list2 = finishedRiskLists.getAssociatedGefaehrdungen();
-		dao.initialize(list2);
-		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : list2) {
-			hydrateEntity(dao, gefaehrdungsUmsetzung.getEntity());
-		}
-		
-		List<GefaehrdungsUmsetzung> list3 = finishedRiskLists.getNotOKGefaehrdungsUmsetzungen();
-		dao.initialize(list3);
-		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : list3) {
-			hydrateEntity(dao, gefaehrdungsUmsetzung.getEntity());
-			RetrieveInfo ri = new RetrieveInfo();
-			ri.setChildren(true);
-			hydrateElement(dao, gefaehrdungsUmsetzung, ri);
-			
-			Set<CnATreeElement> children = gefaehrdungsUmsetzung.getChildren();
-			for (CnATreeElement child : children) {
-				if (child instanceof MassnahmenUmsetzung) {
-					MassnahmenUmsetzung mn = (MassnahmenUmsetzung) child;
-					hydrateElement(dao, mn, null);
-				}
-			}
-		}
+	    if(finishedRiskLists!=null) {
+	        List<GefaehrdungsUmsetzung> list = finishedRiskLists.getAllGefaehrdungsUmsetzungen();
+    		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : list) {
+    			hydrateEntity(dao, gefaehrdungsUmsetzung.getEntity());
+    		}
+    		
+    		List<GefaehrdungsUmsetzung> list2 = finishedRiskLists.getAssociatedGefaehrdungen();
+    		dao.initialize(list2);
+    		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : list2) {
+    			hydrateEntity(dao, gefaehrdungsUmsetzung.getEntity());
+    		}
+    		
+    		List<GefaehrdungsUmsetzung> list3 = finishedRiskLists.getNotOKGefaehrdungsUmsetzungen();
+    		dao.initialize(list3);
+    		for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : list3) {
+    			hydrateEntity(dao, gefaehrdungsUmsetzung.getEntity());
+    			RetrieveInfo ri = new RetrieveInfo();
+    			ri.setChildren(true);
+    			hydrateElement(dao, gefaehrdungsUmsetzung, ri);
+    			
+    			Set<CnATreeElement> children = gefaehrdungsUmsetzung.getChildren();
+    			for (CnATreeElement child : children) {
+    				if (child instanceof MassnahmenUmsetzung) {
+    					MassnahmenUmsetzung mn = (MassnahmenUmsetzung) child;
+    					hydrateElement(dao, mn, null);
+    				}
+    			}
+    		}
+	    }
 	}
 }

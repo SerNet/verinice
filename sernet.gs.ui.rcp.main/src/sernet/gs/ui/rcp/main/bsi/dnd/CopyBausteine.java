@@ -73,6 +73,14 @@ public class CopyBausteine implements IProgressRunnable {
 		this.elements = elements;
 	}
 	
+	public CopyBausteine(CnATreeElement element, List<Baustein> elements) {
+        selectedElementList = new ArrayList<CnATreeElement>();
+        if(element!=null) {
+            selectedElementList.add(element);
+        }
+        this.elements = elements;
+    }
+	
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)

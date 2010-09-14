@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -63,6 +65,9 @@ import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.SonstigeITKategorie;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.Datenverarbeitung;
@@ -155,6 +160,10 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         typeIdClass.put(VerantwortlicheStelle.TYPE_ID, VerantwortlicheStelle.class);
         typeIdClass.put(StellungnahmeDSB.TYPE_ID, StellungnahmeDSB.class);
         typeIdClass.put(Datenverarbeitung.TYPE_ID, Datenverarbeitung.class);
+        
+        typeIdClass.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.class);
+        typeIdClass.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.class);
+        typeIdClass.put(RisikoMassnahmenUmsetzung.TYPE_ID, RisikoMassnahmenUmsetzung.class);
 
         typeIdClass.put(ResponseGroup.TYPE_ID, ResponseGroup.class);
         typeIdClass.put(ExceptionGroup.TYPE_ID, ExceptionGroup.class);
@@ -388,7 +397,16 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         String dependencyId = syncLink.getDependency();
         CnATreeElement dependant = idElementMap.get(dependantId);
         if(dependant==null) {          
-            dependant = getDaoFactory().getDAO(CnATreeElement.class).findById(dependantId);
+            DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
+            crit.add(Restrictions.eq("extId", dependantId));
+            List<CnATreeElement> resultList = getDaoFactory().getDAO(CnATreeElement.class).findByCriteria(crit);
+            if(resultList!=null && !resultList.isEmpty()) {
+               if(resultList.size()>1) {
+                   getLog().error("Can not import link. Found more than one dependant element, dependant ext-id: " + dependencyId + " dependency ext-id: " + dependencyId);
+                   return;
+               }
+               dependant = resultList.get(0);
+            }
             if(dependant==null) {
                 getLog().error("Can not import link. dependant not found in xml file and db, dependant ext-id: " + dependantId + " dependency ext-id: " + dependencyId);
                 return;
@@ -397,8 +415,17 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             }
         }
         CnATreeElement dependency = idElementMap.get(dependencyId);
-        if(dependency==null) {          
-            dependency = getDaoFactory().getDAO(CnATreeElement.class).findById(dependencyId);
+        if(dependency==null) {    
+            DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
+            crit.add(Restrictions.eq("extId", dependencyId));
+            List<CnATreeElement> resultList = getDaoFactory().getDAO(CnATreeElement.class).findByCriteria(crit);
+            if(resultList!=null && !resultList.isEmpty()) {
+               if(resultList.size()>1) {
+                   getLog().error("Can not import link. Found more than one dependency element, dependency ext-id: " + dependencyId + " dependant ext-id: " + dependantId);
+                   return;
+               }
+               dependency = resultList.get(0);
+            }
             if(dependency==null) {
                 getLog().error("Can not impor tlink. dependency not found in xml file and db, dependency ext-id: " + dependencyId + " dependant ext-id: " + dependantId);
                 return;

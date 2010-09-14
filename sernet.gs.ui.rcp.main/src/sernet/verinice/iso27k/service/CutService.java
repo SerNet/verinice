@@ -123,7 +123,7 @@ public class CutService extends PasteService implements IProgressTask {
 			return null;
 		}
 		monitor.setTaskName(getText(numberOfElements,numberProcessed,element.getTitle()));
-		element = Retriever.retrieveElement(element,new RetrieveInfo().setParent(true));
+		element = Retriever.retrieveElement(element,new RetrieveInfo().setParent(true).setProperties(true));
 		CnATreeElement parentOld = element.getParent();
 		parentOld = Retriever.retrieveElement(parentOld,RetrieveInfo.getChildrenInstance().setParent(true));
 		parentOld.removeChild(element);
