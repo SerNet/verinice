@@ -38,7 +38,7 @@ public class ThreadSafeViewerUpdate {
 	}
 	
 	public void add(final Object parent, final Object child) {
-		if (!viewer.getControl().isDisposed())
+		if (viewer.getControl().isDisposed())
 			return;
 		
 		if (Display.getCurrent() != null) {
@@ -56,7 +56,7 @@ public class ThreadSafeViewerUpdate {
 	}
 	
 	public void refresh(final Object child) {
-		if (!viewer.getControl().isDisposed())
+		if (viewer.getControl().isDisposed())
 			return;
 		
 		if (Display.getCurrent() != null) {
@@ -73,7 +73,7 @@ public class ThreadSafeViewerUpdate {
 	}
 	
 	public void remove(final Object child) {
-		if (!viewer.getControl().isDisposed())
+		if (viewer.getControl().isDisposed())
 			return;
 		
 		if (Display.getCurrent() != null) {
@@ -105,7 +105,7 @@ public class ThreadSafeViewerUpdate {
 	}
 	
 	public void reveal(final Object child) {
-		if (!viewer.getControl().isDisposed())
+		if (viewer.getControl().isDisposed())
 			return;
 		
 		if (Display.getCurrent() != null) {
@@ -122,7 +122,8 @@ public class ThreadSafeViewerUpdate {
 	}
 
 	public void setInput(final Object newModel) {
-		if (!viewer.getControl().isDisposed())
+		//dmurygin, 2010-09-16:
+	    if (viewer.getControl().isDisposed())
 			return;
 		
 		if (Display.getCurrent() != null) {

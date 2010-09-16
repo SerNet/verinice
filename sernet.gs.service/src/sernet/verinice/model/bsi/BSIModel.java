@@ -32,6 +32,8 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IISO27KModelListener;
+import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 
 /**
@@ -367,5 +369,20 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 			listener.databaseChildRemoved(entry);
 		}
 	}
+
+	/**
+     * Moves all {@link IISO27KModelListener} from this model
+     * to newModel.
+     * 
+     * @param newModel 
+     */
+    public void moveListener(BSIModel newModel) {
+        for (IBSIModelListener listener : getListeners()) {
+            newModel.addBSIModelListener(listener);
+        }
+        for (IBSIModelListener listener : getListeners()) {
+            removeBSIModelListener(listener);
+        }      
+    }
 	
 }

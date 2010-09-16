@@ -207,7 +207,7 @@ public class CopyLinks extends GenericCommand implements IChangeLoggingCommand, 
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
-        // TODO Auto-generated method stub
+        // TODO dm implement IChangeLoggingCommand.getChangedElements()
         return Collections.emptyList();
     }
 

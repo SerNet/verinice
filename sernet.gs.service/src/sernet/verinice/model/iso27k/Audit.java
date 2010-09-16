@@ -21,11 +21,8 @@ package sernet.verinice.model.iso27k;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.multiselectionlist.ISelectOptionHandler;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -58,10 +55,22 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	}
 	
 	public Audit(CnATreeElement parent) {
+	    this(parent,false);
+	}
+	
+	public Audit(CnATreeElement parent, boolean createChildren) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
+        if(createChildren) {
+            addChild(new AssetGroup(this));
+            addChild(new ControlGroup(this));
+            addChild(new PersonGroup(this));
+            addChild(new FindingGroup(this));
+            addChild(new EvidenceGroup(this));
+            addChild(new InterviewGroup(this));
+        }
     }
 	
 	/* (non-Javadoc)

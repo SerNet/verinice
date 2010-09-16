@@ -183,4 +183,19 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 		}
 		return log;
 	}
+
+    /**
+     * Moves all {@link IISO27KModelListener} from this model
+     * to newModel.
+     * 
+     * @param newModel 
+     */
+    public void moveListener(ISO27KModel newModel) {
+        for (IISO27KModelListener listener : getListeners()) {
+            newModel.addISO27KModelListener(listener);
+        }
+        for (IISO27KModelListener listener : getListeners()) {
+            removeISO27KModelListener(listener);
+        }      
+    }
 }

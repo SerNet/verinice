@@ -215,7 +215,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 		boolean hasChildren = false;
 		if (parent instanceof CnATreeElement) {
 			try {
-				CnATreeElement el = (CnATreeElement) parent;
+				CnATreeElement el = Retriever.checkRetrieveChildren((CnATreeElement) parent);
 				Set<CnATreeElement> children = el.getChildren();
 				Set<CnATreeElement> filteredList;
 				if(filterList.isEmpty()) {

@@ -106,7 +106,7 @@ public class CreateNewSelfAssessmentService {
         loadModel = getCommandService().executeCommand(loadModel);
         ISO27KModel model = loadModel.getModel();
         // create self-assessment 
-        CreateSelfAssessment command = new CreateSelfAssessment(model, AddSelfAssessment.TITEL);
+        CreateSelfAssessment command = new CreateSelfAssessment(model, AddSelfAssessment.TITEL_ORGANIZATION, AddSelfAssessment.TITEL);
         command.setCsvFile(getCsvFile());
         command = getCommandService().executeCommand(command);
         Organization organization = command.getSelfAssessment();

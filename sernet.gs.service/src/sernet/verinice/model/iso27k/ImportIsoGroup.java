@@ -23,26 +23,11 @@ import java.util.Collections;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class ImportIsoGroup extends CnATreeElement implements IISO27kGroup {
+public class ImportIsoGroup extends Group<Organization> implements IISO27kGroup {
 	
 	public static final String TYPE_ID = ImportIsoGroup.class.getSimpleName();
 
-	public static final String[] CHILD_TYPES = new String[] {
-        AssetGroup.TYPE_ID,
-        ControlGroup.TYPE_ID,
-        AuditGroup.TYPE_ID,
-        ExceptionGroup.TYPE_ID,
-        PersonGroup.TYPE_ID,
-        RequirementGroup.TYPE_ID,
-        IncidentGroup.TYPE_ID,
-        IncidentScenarioGroup.TYPE_ID,
-        ResponseGroup.TYPE_ID,
-        ThreatGroup.TYPE_ID,
-        VulnerabilityGroup.TYPE_ID,
-        DocumentGroup.TYPE_ID,
-        RecordGroup.TYPE_ID,
-        ProcessGroup.TYPE_ID,
-    };
+	public static final String[] CHILD_TYPES = new String[] { Organization.TYPE_ID };
 	
 	public ImportIsoGroup(CnATreeElement model) {
 		super(model);
@@ -68,11 +53,6 @@ public class ImportIsoGroup extends CnATreeElement implements IISO27kGroup {
     public String[] getChildTypes() {
         return CHILD_TYPES;
     }
-
-	@Override
-	public boolean canContain(Object obj) {
-		return true;
-	}
 
     /* (non-Javadoc)
      * @see sernet.verinice.model.iso27k.IISO27kElement#getAbbreviation()

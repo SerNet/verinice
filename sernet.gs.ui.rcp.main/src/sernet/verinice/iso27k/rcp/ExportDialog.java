@@ -168,7 +168,7 @@ public class ExportDialog extends TitleAreaDialog {
                 radio.setSelection(true);
                 selectedElement = verbund;
             }
-            if (organizationList.size() == 1) {
+            if (organizationList.size() == 1 && selectedElement==null) {
                 radio.setSelection(true);
                 selectedElement = verbund;
             }

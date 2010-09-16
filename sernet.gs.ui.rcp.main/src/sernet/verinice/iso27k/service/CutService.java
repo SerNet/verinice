@@ -123,34 +123,32 @@ public class CutService extends PasteService implements IProgressTask {
 			return null;
 		}
 		monitor.setTaskName(getText(numberOfElements,numberProcessed,element.getTitle()));
-		element = Retriever.retrieveElement(element,new RetrieveInfo().setParent(true).setProperties(true));
-		CnATreeElement parentOld = element.getParent();
+		CnATreeElement elementOld = Retriever.retrieveElement(element,new RetrieveInfo().setParent(true).setProperties(true));
+		CnATreeElement parentOld = elementOld.getParent();
 		parentOld = Retriever.retrieveElement(parentOld,RetrieveInfo.getChildrenInstance().setParent(true));
 		parentOld.removeChild(element);
-		element.setParent(group);
-		group.addChild(element);
 		
 		// save old parent
 		UpdateElement command = new UpdateElement(parentOld, true, ChangeLogEntry.STATION_ID);
 		command = getCommandService().executeCommand(command);
 		parentOld = (CnATreeElement) command.getElement();
-		
-		CnAElementFactory.getModel(parentOld).childRemoved(parentOld, element);
-		CnAElementFactory.getModel(parentOld).databaseChildRemoved(element);
+		  
+		element.setParent(group);
+        group.addChild(element);
 		
 		// save element
 		SaveElement saveElementCommand = new SaveElement(element);
 		saveElementCommand = getCommandService().executeCommand(saveElementCommand);
-		element = (CnATreeElement) saveElementCommand.getElement();
+		CnATreeElement savedElement = (CnATreeElement) saveElementCommand.getElement();
 		
-		element.setParent(group);
-		
-		CnAElementFactory.getModel(element).childAdded(group, element);
-		CnAElementFactory.getModel(element).databaseChildAdded(element);
+		CnAElementFactory.getModel(parentOld).childRemoved(parentOld, elementOld);
+        CnAElementFactory.getModel(elementOld).databaseChildRemoved(elementOld);
+		CnAElementFactory.getModel(savedElement).childAdded(group, savedElement);
+		CnAElementFactory.getModel(savedElement).databaseChildAdded(savedElement);
 		
 		monitor.processed(1);
 		numberProcessed++;
-		return element;
+		return savedElement;
 	}
 
 

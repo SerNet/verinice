@@ -36,7 +36,8 @@ public class AddSelfAssessment implements IViewActionDelegate {
 
     private static final Logger LOG = Logger.getLogger(AddSelfAssessment.class);
 
-    public static final String TITEL = Messages.AddSelfAssessment_0;
+    public static final String TITEL_ORGANIZATION = Messages.AddSelfAssessment_0;
+    public static final String TITEL = Messages.AddSelfAssessment_1;
 
   
 

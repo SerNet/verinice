@@ -110,6 +110,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
             CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvFile.getFileContent()), Charset.forName("UTF-8"))), config.getSeperator(), '"', false);
             String[] nextLine;
             Item item = null;
+            int n=1;
             while ((nextLine = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
                 if (nextLine.length >= 3) {
@@ -153,8 +154,13 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
                         item.setDescription(sb.toString());
                     }
                 } else {
-                    log.warn("Invalid line in CSV file.");
+                    log.warn("Invalid line number: " + n + " in CSV file. Line content is: '");
+                    for (int i = 0; i < nextLine.length; i++) {
+                        log.warn(nextLine[i]);
+                    }
+                    log.warn("'");
                 }
+                n++;
             }
             // buffer the last item
             catalog.bufferItem(item);

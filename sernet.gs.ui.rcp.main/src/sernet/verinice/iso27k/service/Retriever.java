@@ -59,8 +59,9 @@ public class Retriever {
 		return element;
 	}
 	
-	public static CnATreeElement checkRetrieveElementAndChildren(CnATreeElement element) {
+	public static CnATreeElement checkRetrieveElementAndChildren(final CnATreeElement element) {
 		RetrieveInfo ri = null;
+		CnATreeElement returnValue;
 		if(!isElementInitialized(element)) {
 			if (LOG.isInfoEnabled()) {
 				LOG.info("Loading children of element: " + element.getDbId());
@@ -80,9 +81,11 @@ public class Retriever {
 			ri.setChildren(true);
 		}
 		if(ri!=null) {
-			element = retrieveElement(element,ri);
+		    returnValue = retrieveElement(element,ri);
+		} else {
+		    returnValue = element;
 		}
-		return element;
+		return returnValue;
 	}
 	
 	/**
@@ -117,7 +120,7 @@ public class Retriever {
             && (element==null || Hibernate.isInitialized(element.getChildren()));
     }
 	
-	public static CnATreeElement retrieveElement(CnATreeElement element, RetrieveInfo ri)  {
+	public static CnATreeElement retrieveElement(final CnATreeElement element, RetrieveInfo ri)  {
 		RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(
 				element.getTypeId(), 
 				element.getDbId(),

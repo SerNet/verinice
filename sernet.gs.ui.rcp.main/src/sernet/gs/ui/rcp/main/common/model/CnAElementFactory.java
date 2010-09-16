@@ -28,6 +28,7 @@ import sernet.gs.model.Baustein;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.SubtypenZielobjekte;
+import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateAnwendung;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateITVerbund;
@@ -671,9 +672,13 @@ public class CnAElementFactory {
 	 */
 	public static CnATreeElement getModel(CnATreeElement element) {
 		CnATreeElement model = null;
-		if(element instanceof IISO27kElement) {
+		if(element instanceof ISO27KModel) {
+            model = CnAElementFactory.getInstance().getISO27kModel();
+        } else if(element instanceof IISO27kElement) {
 			model = CnAElementFactory.getInstance().getISO27kModel();
-		} else {
+		} else if(element instanceof BSIModel) {
+            model = CnAElementFactory.getLoadedModel();
+        } else {
 			model = CnAElementFactory.getLoadedModel();
 		}
 		return model;
@@ -778,6 +783,7 @@ public class CnAElementFactory {
 			if(isModelLoaded()) {
 				BSIModel newModel = dbHome.loadModel(new NullMonitor());
 				loadedModel.modelReload(newModel);
+				loadedModel.moveListener(newModel);
 				loadedModel = newModel;
 				fireLoad();
 			}
@@ -787,6 +793,7 @@ public class CnAElementFactory {
 					log.debug("reloadModelFromDatabase, ISO-model loaded"); //$NON-NLS-1$
 				}
 				isoModel.modelReload(newModel);
+				isoModel.moveListener(newModel);
 				isoModel = newModel;
 				fireLoad(isoModel);
 			}		

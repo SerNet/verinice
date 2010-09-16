@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.samt.service;
 
+import java.awt.image.TileObserver;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,8 +43,11 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
@@ -74,6 +78,7 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
     }
 
     private CsvFile csvFile;
+    private String titleOrganization;
     private String title;
     private ISO27KModel model;
     private Organization selfAssessment;
@@ -81,8 +86,9 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
 
     private transient IAuthService authService;
 
-    public CreateSelfAssessment(ISO27KModel model, String title) {
+    public CreateSelfAssessment(ISO27KModel model, String titleOrganization, String title) {
         super();
+        this.titleOrganization = titleOrganization;
         this.title = title;
         this.model = model;
         this.stationId = ChangeLogEntry.STATION_ID;
@@ -97,8 +103,8 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
     public void execute() {
         try {
             selfAssessment = new Organization(model);
-            if (title != null) {
-                selfAssessment.setTitel(title);
+            if (titleOrganization != null) {
+                selfAssessment.setTitel(titleOrganization);
             }
             model.addChild(selfAssessment);
 
@@ -108,10 +114,21 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
             HashSet<Permission> newperms = new HashSet<Permission>();
             newperms.add(Permission.createPermission(selfAssessment, authService.getUsername(), true, true));
             selfAssessment.setPermissions(newperms);
-
+            
+            // Create the audit add it to organization
+            AuditGroup auditGroup = getAuditGroup(selfAssessment);
+            Audit audit = new Audit(auditGroup, true);
+            if (title != null) {
+                audit.setTitel(title);
+            }
+            HashSet<Permission> auditPerms = new HashSet<Permission>();
+            auditPerms.add(Permission.createPermission(audit, authService.getUsername(), true, true));
+            audit.setPermissions(auditPerms);
+            auditGroup.addChild(audit);
+            
             // read the control items from the csv file
             Collection<IItem> itemCollection = getItemCollection();
-            ControlGroup controlGroup = getControlGroup(selfAssessment);
+            ControlGroup controlGroup = getControlGroup(audit);
             
             // We use the name of the currently
             // logged in user as a role which has read and write permissions for
@@ -125,6 +142,22 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
 
             IBaseDao<Organization, Serializable> dao = getDaoFactory().getDAO(Organization.class);
             dao.saveOrUpdate(selfAssessment);
+            
+            // Link all controls of audit to audit
+            IBaseDao<CnALink, Serializable> daoLink = getDaoFactory().getDAO(CnALink.class);
+            
+            CnALink link = new CnALink(selfAssessment,audit,"rel_org_audit",null);
+            selfAssessment.addLinkDown(link);
+            audit.addLinkUp(link);
+            daoLink.saveOrUpdate(link);
+            
+            Set<CnATreeElement> isaCategories = controlGroup.getChildren();
+            for (CnATreeElement categorie : isaCategories) {
+                link = new CnALink(audit,categorie,"rel_audit_control",null);
+                audit.addLinkDown(link);
+                categorie.addLinkUp(link);
+                daoLink.saveOrUpdate(link);
+            }
         } catch (Exception e) {
             getLog().error("Error while creating self assesment", e); //$NON-NLS-1$
             throw new RuntimeCommandException("Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
@@ -188,13 +221,31 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
      * @param selfAssessment2
      * @return
      */
+    private AuditGroup getAuditGroup(CnATreeElement selfAssessment) {
+        AuditGroup auditGroup = null;
+        Set<CnATreeElement> elementSet = selfAssessment.getChildren();
+        for (Iterator<CnATreeElement> iterator = elementSet.iterator(); iterator.hasNext();) {
+            CnATreeElement element = iterator.next();
+            if (element instanceof AuditGroup) {
+                auditGroup = (AuditGroup) element;
+                break;
+            }
+        }
+        return auditGroup;
+    }
+    
+    /**
+     * @param selfAssessment2
+     * @return
+     */
     private ControlGroup getControlGroup(CnATreeElement selfAssessment) {
         ControlGroup controlGroup = null;
         Set<CnATreeElement> elementSet = selfAssessment.getChildren();
-        for (Iterator iterator = elementSet.iterator(); iterator.hasNext();) {
-            CnATreeElement element = (CnATreeElement) iterator.next();
+        for (Iterator<CnATreeElement> iterator = elementSet.iterator(); iterator.hasNext();) {
+            CnATreeElement element = iterator.next();
             if (element instanceof ControlGroup) {
                 controlGroup = (ControlGroup) element;
+                break;
             }
         }
         return controlGroup;

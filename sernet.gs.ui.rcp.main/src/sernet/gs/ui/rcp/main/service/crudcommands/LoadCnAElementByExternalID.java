@@ -24,6 +24,7 @@ import java.util.List;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -58,7 +59,7 @@ public class LoadCnAElementByExternalID extends GenericCommand {
 	}
 
 	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
+		IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
 		list = dao.findByQuery(QUERY, new Object[] {sourceID, id});
 
 // since we're only using these objects on the server - inside the DB session, everything can be loaded lazyily by hibernate.

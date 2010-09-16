@@ -55,13 +55,19 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
 	 */
 	public void databaseChildRemoved(CnATreeElement child) {
 		// cause reload of children list of parent if currently displayed:
-		CnATreeElement cachedParent = cache.getCachedObject(child.getParent());
+		
+	    CnATreeElement cachedParent = cache.getCachedObject(child.getParent());
 		CnATreeElement cachedChild = cache.getCachedObject(child);
 
 		if (cachedParent != null) {
 			cachedParent.setChildrenLoaded(false);
 			cachedParent.removeChild(cachedChild);
 		}
+				
+		if(cachedParent instanceof ISO27KModel) {
+		    updater.setInput(cachedParent);
+		}	
+
 		updater.refresh();
 	}
 
@@ -185,6 +191,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
 		// remove listener from currently displayed model:
 		getModel(viewer.getInput()).removeISO27KModelListener(this);
 		newModel.addISO27KModelListener(this);
+		cache.clear();
 		updater.setInput(newModel);
 		updater.refresh();
 	}
