@@ -56,4 +56,6 @@ public interface IReportType {
 	 * @return file String or null if not supported (i.e. internal reports contained in JAR file).
 	 */
 	String getReportFile();
+	
+	void setReportFile(String file);
 }

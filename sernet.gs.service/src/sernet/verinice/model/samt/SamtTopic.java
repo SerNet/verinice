@@ -187,4 +187,13 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
         return PROP_MATURITY;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IControl#isImplemented()
+     */
+    @Override
+    public boolean isImplemented() {
+        // never implemented, use maturity service
+        throw new RuntimeException("Use maturity service to determine implementation.");
+    }
+
 }

@@ -48,6 +48,8 @@ public class CreateScenario extends GenericCommand {
     private Integer threatdbId;
     private Integer vulndbId;
     private IncidentScenario incScen;
+    private static final String THREAT_RELATION_ID = "rel_incscen_threat";
+    private static final String VULN_RELATION_ID = "rel_incscen_vulnerability";
 
     /**
      * @param threat
@@ -102,10 +104,10 @@ public class CreateScenario extends GenericCommand {
             
             incidentScenario.setTitel(sb.toString());
             
-            CreateLink<CnALink, Threat, IncidentScenario> cmd2 = new CreateLink<CnALink, Threat, IncidentScenario>(threat, incidentScenario );
+            CreateLink<CnALink, Threat, IncidentScenario> cmd2 = new CreateLink<CnALink, Threat, IncidentScenario>(threat, incidentScenario, THREAT_RELATION_ID );
             cmd2 = getCommandService().executeCommand(cmd2);
 
-            CreateLink<CnALink, Vulnerability, IncidentScenario> cmd3 = new CreateLink<CnALink, Vulnerability, IncidentScenario>(vulnerability, incidentScenario);
+            CreateLink<CnALink, Vulnerability, IncidentScenario> cmd3 = new CreateLink<CnALink, Vulnerability, IncidentScenario>(vulnerability, incidentScenario, VULN_RELATION_ID);
             cmd3 = getCommandService().executeCommand(cmd3);
 
             this.incScen = incidentScenario;

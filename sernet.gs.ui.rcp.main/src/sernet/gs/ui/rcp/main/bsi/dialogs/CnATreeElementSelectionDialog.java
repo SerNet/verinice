@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -197,6 +199,14 @@ public class CnATreeElementSelectionDialog extends Dialog {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 selectedElements = ((IStructuredSelection)viewer.getSelection()).toList();
+            }
+        });
+        viewer.addDoubleClickListener(new IDoubleClickListener() {
+            
+            @Override
+            public void doubleClick(DoubleClickEvent event) {
+                selectedElements = ((IStructuredSelection)viewer.getSelection()).toList();
+                close();
             }
         });
         

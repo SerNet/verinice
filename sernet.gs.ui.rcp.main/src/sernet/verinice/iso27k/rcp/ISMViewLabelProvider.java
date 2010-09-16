@@ -69,9 +69,13 @@ public class ISMViewLabelProvider extends LabelProvider  {
 			return image;
 		}
 
-		else if (obj instanceof IControl) {
-		    IControl control = (IControl) obj;
-			image = ImageCache.getInstance().getControlImplementationImage(maturityService.getImplementationState(control));
+		else if (obj instanceof Control) {
+		    Control control = (Control) obj;
+		    // using maturity:
+			//image = ImageCache.getInstance().getControlImplementationImage(maturityService.getImplementationState(control));
+		    // using implementation dropdown:
+		    image = ImageCache.getInstance().getControlImplementationImage(control.getImplementation());
+		    
 		}
 		else {
 			// else return type icon:

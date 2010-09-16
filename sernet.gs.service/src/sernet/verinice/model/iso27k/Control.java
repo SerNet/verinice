@@ -22,6 +22,8 @@ package sernet.verinice.model.iso27k;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -37,6 +39,9 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	public static final String PROP_NAME = "control_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "control_tag"; //$NON-NLS-1$
 	public static final String PROP_DESC = "control_desc"; //$NON-NLS-1$
+	
+	// control implementation state:
+	// see IControl.java
 	
 	// this is another way to measure control implementation:
 	public static final String PROP_MATURITY = "control_maturity"; //$NON-NLS-1$
@@ -119,20 +124,20 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	    return getEntity().getInt(PROP_MATURITY);
 	}
 	
-	public int getEffectivenessConfidentiality() {
-	    return getEntity().getInt(PROP_EFFECTIVENESS_CONFIDENTIALITY);
-	}
+	public String getImplementation() {
+        PropertyList properties = getEntity().getProperties(PROP_IMPL);
+        if (properties == null || properties.getProperties() == null
+                || properties.getProperties().size() < 1)
+            return IMPLEMENTED_NOTEDITED;
+
+        Property property = properties.getProperty(0);
+        if (property != null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
+            return property.getPropertyValue();
+        return IMPLEMENTED_NOTEDITED;
+    }
 	
-	public int getEffectivenessIntegrity() {
-	    return getEntity().getInt(PROP_EFFECTIVENESS_INTEGRITY);
-	}
-	
-	public int getEffectivenessAvailability() {
-	    return getEntity().getInt(PROP_EFFECTIVENESS_AVAILABILITY);
-	}
-	
-	public int getEffectivenessProbability() {
-	    return getEntity().getInt(PROP_EFFECTIVENESS_PROBABILITY);
+	public boolean isImplemented() {
+	    return getImplementation().equals(IMPLEMENTED_YES);
 	}
 
 	/**

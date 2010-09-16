@@ -49,29 +49,29 @@ extends GenericCommand {
     }
 
     private U dependant;
-	private V dependancy;
+	private V dependency;
 	private CnALink link;
 	private String relationId;
 	private String comment;
 
-	public CreateLink(U target, V dragged) {
-		this(target, dragged, "", "");
+	public CreateLink(U dependant, V dependency) {
+		this(dependant, dependency, "", "");
 	}
 	
-	public CreateLink(U target, V dragged, String typeId) {
-		this(target, dragged, typeId, "");
+	public CreateLink(U dependant, V dependency, String relationId) {
+		this(dependant, dependency, relationId, "");
 	}
 	
 	public CreateLink(U dependant, V dependancy, String relationId, String comment) {
 		this.dependant = dependant;
-		this.dependancy = dependancy;
+		this.dependency = dependancy;
 		this.relationId = relationId;
 		this.comment = comment;
 	}
 	
 	public void execute() {
 	    if (getLog().isDebugEnabled()) {
-            getLog().debug("Creating link from " + dependancy.getTypeId() + " to " + dependant.getTypeId());
+            getLog().debug("Creating link from " + dependency.getTypeId() + " to " + dependant.getTypeId());
         }
 	    
 		IBaseDao<CnALink, Serializable> linkDao 
@@ -81,7 +81,7 @@ extends GenericCommand {
 		= (IBaseDao<U, Serializable>) getDaoFactory().getDAO(dependant.getTypeId());
 
 		IBaseDao<V, Serializable> draggedDao 
-		= (IBaseDao<V, Serializable>) getDaoFactory().getDAO(dependancy.getTypeId());
+		= (IBaseDao<V, Serializable>) getDaoFactory().getDAO(dependency.getTypeId());
 
 //		// if dependancy or dependant are cglib enhanced, we won't get a DAO, but in this case we don't need to reload
 //		// because we're already inside the session:
@@ -89,14 +89,14 @@ extends GenericCommand {
 //			draggedDao.reload(dependancy, dependancy.getDbId());
 //			targetDao.reload(dependant, dependant.getDbId());
 //		}
-		dependancy = draggedDao.findById(dependancy.getDbId());
+		dependency = draggedDao.findById(dependency.getDbId());
 		dependant = targetDao.findById(dependant.getDbId());
 		
-		link = new CnALink(dependant, dependancy, relationId, comment);
+		link = new CnALink(dependant, dependency, relationId, comment);
 		try {
 		    linkDao.merge(link, true);
         } catch (Exception e) {
-            getLog().error("Could not create link from " + dependancy.getTypeId() + " to " + dependant.getTypeId() );
+            getLog().error("Could not create link from " + dependency.getTypeId() + " to " + dependant.getTypeId() );
         }
 		
 	}

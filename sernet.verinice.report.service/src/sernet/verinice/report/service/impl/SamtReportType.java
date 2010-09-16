@@ -73,4 +73,13 @@ public class SamtReportType implements IReportType {
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.report.IReportType#setReportFile(java.lang.String)
+     */
+    @Override
+    public void setReportFile(String file) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

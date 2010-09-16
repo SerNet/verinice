@@ -394,7 +394,7 @@ public class ImageCache {
 	 * @return
 	 */
 	public Image getControlImplementationImage(String implemented) {
-		if (IControl.IMPLEMENTED_NOT_EDITED.equals(implemented))
+		if (IControl.IMPLEMENTED_NOTEDITED.equals(implemented))
 			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
 		
 		if (IControl.IMPLEMENTED_NA.equals(implemented))

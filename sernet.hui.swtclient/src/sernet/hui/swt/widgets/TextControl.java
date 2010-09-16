@@ -162,6 +162,7 @@ public class TextControl implements IHuiControl {
 
 	public void setFocus() {
 		this.text.setFocus();
+		this.text.selectAll();
 	}
 
 	public void update() {

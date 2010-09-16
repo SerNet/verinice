@@ -417,6 +417,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(konsolidatorAction);
 
         myToolbar.add(reloadAction);
+        myToolbar.add(runRiskAnalysisAction);
 
         myToolbar.add(new Separator());
         // Grundschutz items
@@ -432,7 +433,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // ISO 27k items
         myToolbar.add(openISMViewAction);
         myToolbar.add(openCatalogAction);
-        myToolbar.add(runRiskAnalysisAction);
 
         myToolbar.add(new Separator());
         // common items

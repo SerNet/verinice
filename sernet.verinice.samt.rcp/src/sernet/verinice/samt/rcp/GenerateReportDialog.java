@@ -292,10 +292,12 @@ public class GenerateReportDialog extends Dialog {
 
 	@Override
 	protected void okPressed() {
-		String f = textFile.getText();
 
+	    String f = textFile.getText();
 		chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
 		chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
+		
+		chosenReportType.setReportFile(textReportFile.getText());
 		
 		// This just appends the chosen report's extension if the existing
 		// suffix does not match. Could be enhanced.

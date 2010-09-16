@@ -47,7 +47,7 @@ public class LoadPolymorphicCnAElementById extends GenericCommand {
 	
 	@SuppressWarnings("unchecked")
 	public void execute() {
-		if (ids == null || ids.length == 0)
+		if (ids == null || ids.length == 0 || ids[0] == null)
 			return;
 		
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);

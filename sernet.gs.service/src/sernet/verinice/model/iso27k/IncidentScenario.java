@@ -38,7 +38,7 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 	
 	
 	/**
-	 * Creates an empty asset
+	 * Creates an empty scenario
 	 */
 	public IncidentScenario() {
 		super();

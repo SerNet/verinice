@@ -40,11 +40,15 @@ import sernet.verinice.model.bsi.Raum;
 @SuppressWarnings("serial")
 public class CnALink implements Serializable, ITypedElement {
 
+    // constants for link typeId, now replaced by relationIDs that can be defined in SNCA.xml.
+    // these can still be used to differentiate link categories such as "system links" that should never be displayed to the end user
+    // which is why we keep the typeId field for now.
 	public static final int DEPENDANT_ON      	= 1;
 	public static final int ADMINISTRATED_BY 	= 2;
 //	public static final int USED_BY 			= 3;
 	public static final int LOCATED_IN 		= 4;
 	
+	// ID for "typed element" interface, specifies this object as a link to get the correct DAO etc.
 	public static final String TYPE_ID = "cnalink";
 	
 	// user entered comment:
@@ -65,7 +69,7 @@ public class CnALink implements Serializable, ITypedElement {
 	}
 	
 	 /**
-	  * Get linkeed elements of specified type.
+	  * Get linked elements of specified type.
 	  * 
      * @param scenario
      * @param typeId
@@ -180,7 +184,7 @@ public class CnALink implements Serializable, ITypedElement {
 
 	private Id id;
 	
-	// link type category as definied by integer constand (see above):
+	// link type category as defined by integer constant (see above). This is not the relationId specified in SNCA.xml!
 	private int linkType =0;
 	
 	private CnATreeElement dependant;

@@ -394,10 +394,12 @@ public class HitroUIView implements IEntityChangedListener   {
 	}
 	
 	public void setInitialFocus() {
-		if (focusField != null)
-			focusField.setFocus();
-		else if (firstField != null)
+		if (focusField != null) {
+		    focusField.setFocus();
+		}
+		else if (firstField != null) {
 		    firstField.setFocus();
+		}
 		    
 	}
 	

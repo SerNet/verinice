@@ -4,12 +4,6 @@
     <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
     <text-property name="title">verinice - all items generic report</text-property>
     <property name="units">in</property>
-    <list-property name="propertyBindings">
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">45</property>
-        </structure>
-    </list-property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -24,7 +18,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">33369</value>
+                <value type="constant">-1</value>
             </simple-property-list>
             <property name="paramType">simple</property>
             <property name="controlType">text-box</property>
@@ -55,7 +49,7 @@
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">12</property>
                     <property name="position">1</property>
-                    <expression name="defaultValue">'dummy default value'</expression>
+                    <expression name="defaultValue">-1</expression>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -83,7 +77,8 @@
             <xml-property name="queryText"><![CDATA[
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 // set top level element for report:
-root = _vars.get("vn_root_element");
+root = helper.getRoot();
+
 
 
 // try to get manual parameter if set:
@@ -92,9 +87,9 @@ if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
 
-
 c = new LoadPolymorphicCnAElementById( new Integer[]  {root} );
-return helper.execute(c).getElements().get(0).getTitle();
+return "";
+//return helper.execute(c).getElements().get(0).getTitle();
 
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -158,84 +153,96 @@ columns(new String[] { "scopeName" });</value>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="assets" id="775">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">Abkürzung</property>
-                    <text-property name="displayName">Abkürzung</text-property>
+                    <property name="columnName">asset_abbr</property>
+                    <text-property name="displayName">asset_abbr</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Titel</property>
-                    <text-property name="displayName">Titel</text-property>
+                    <property name="columnName">asset_name</property>
+                    <text-property name="displayName">asset_name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Art des Assets</property>
-                    <text-property name="displayName">Art des Assets</text-property>
+                    <property name="columnName">asset_type</property>
+                    <text-property name="displayName">asset_type</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Tags</property>
-                    <text-property name="displayName">Tags</text-property>
+                    <property name="columnName">asset_tag</property>
+                    <text-property name="displayName">asset_tag</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Beschreibung</property>
-                    <text-property name="displayName">Beschreibung</text-property>
+                    <property name="columnName">asset_description</property>
+                    <text-property name="displayName">asset_description</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Bestimme Vertraulichkeit</property>
-                    <text-property name="displayName">Bestimme Vertraulichkeit</text-property>
+                    <property name="columnName">asset_value_method_confidentiality</property>
+                    <text-property name="displayName">asset_value_method_confidentiality</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Bestimme Integrität</property>
-                    <text-property name="displayName">Bestimme Integrität</text-property>
+                    <property name="columnName">asset_value_method_integrity</property>
+                    <text-property name="displayName">asset_value_method_integrity</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Bestimme Verfügbarkeit</property>
-                    <text-property name="displayName">Bestimme Verfügbarkeit</text-property>
+                    <property name="columnName">asset_value_method_availability</property>
+                    <text-property name="displayName">asset_value_method_availability</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Vertraulichkeit</property>
-                    <text-property name="displayName">Vertraulichkeit</text-property>
+                    <property name="columnName">asset_value_confidentiality</property>
+                    <text-property name="displayName">asset_value_confidentiality</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Integrität</property>
-                    <text-property name="displayName">Integrität</text-property>
+                    <property name="columnName">asset_value_integrity</property>
+                    <text-property name="displayName">asset_value_integrity</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Verfügbarkeit</property>
-                    <text-property name="displayName">Verfügbarkeit</text-property>
+                    <property name="columnName">asset_value_availability</property>
+                    <text-property name="displayName">asset_value_availability</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Begründung</property>
-                    <text-property name="displayName">Begründung</text-property>
+                    <property name="columnName">asset_value_comment</property>
+                    <text-property name="displayName">asset_value_comment</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Confidentiality risk value</property>
-                    <text-property name="displayName">Confidentiality risk value</text-property>
+                    <property name="columnName">asset_riskvalue_c</property>
+                    <text-property name="displayName">asset_riskvalue_c</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Confidentiality risk after controls</property>
-                    <text-property name="displayName">Confidentiality risk after controls</text-property>
+                    <property name="columnName">asset_riskwcontrolvalue_c</property>
+                    <text-property name="displayName">asset_riskwcontrolvalue_c</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Integrity risk value</property>
-                    <text-property name="displayName">Integrity risk value</text-property>
+                    <property name="columnName">asset_riskwplancontrolvalue_c</property>
+                    <text-property name="displayName">asset_riskwplancontrolvalue_c</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Integrity risk after controls</property>
-                    <text-property name="displayName">Integrity risk after controls</text-property>
+                    <property name="columnName">asset_riskvalue_i</property>
+                    <text-property name="displayName">asset_riskvalue_i</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Availability risk value</property>
-                    <text-property name="displayName">Availability risk value</text-property>
+                    <property name="columnName">asset_riskwcontrolvalue_i</property>
+                    <text-property name="displayName">asset_riskwcontrolvalue_i</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Availability risk after controls</property>
-                    <text-property name="displayName">Availability risk after controls</text-property>
+                    <property name="columnName">asset_riskwplancontrolvalue_i</property>
+                    <text-property name="displayName">asset_riskwplancontrolvalue_i</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Risk Treatment</property>
-                    <text-property name="displayName">Risk Treatment</text-property>
+                    <property name="columnName">asset_riskvalue_a</property>
+                    <text-property name="displayName">asset_riskvalue_a</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Explanation</property>
-                    <text-property name="displayName">Explanation</text-property>
+                    <property name="columnName">asset_riskwcontrolvalue_a</property>
+                    <text-property name="displayName">asset_riskwcontrolvalue_a</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">asset_riskwplancontrolvalue_a</property>
+                    <text-property name="displayName">asset_riskwplancontrolvalue_a</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">asset_risktreat</property>
+                    <text-property name="displayName">asset_risktreat</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">asset_risktreatexpl</property>
+                    <text-property name="displayName">asset_risktreatexpl</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -246,7 +253,7 @@ columns(new String[] { "scopeName" });</value>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">12</property>
                     <property name="position">1</property>
-                    <expression name="defaultValue" type="javascript">111</expression>
+                    <expression name="defaultValue" type="javascript">-1</expression>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -256,102 +263,117 @@ columns(new String[] { "scopeName" });</value>
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">Abkürzung</property>
+                        <property name="name">asset_abbr</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">Titel</property>
+                        <property name="name">asset_name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">Art des Assets</property>
+                        <property name="name">asset_type</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">Tags</property>
+                        <property name="name">asset_tag</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">Beschreibung</property>
+                        <property name="name">asset_description</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">Bestimme Vertraulichkeit</property>
+                        <property name="name">asset_value_method_confidentiality</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">Bestimme Integrität</property>
+                        <property name="name">asset_value_method_integrity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">Bestimme Verfügbarkeit</property>
+                        <property name="name">asset_value_method_availability</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">Vertraulichkeit</property>
+                        <property name="name">asset_value_confidentiality</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">Integrität</property>
+                        <property name="name">asset_value_integrity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">Verfügbarkeit</property>
+                        <property name="name">asset_value_availability</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">Begründung</property>
+                        <property name="name">asset_value_comment</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">Confidentiality risk value</property>
+                        <property name="name">asset_riskvalue_c</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">Confidentiality risk after controls</property>
+                        <property name="name">asset_riskwcontrolvalue_c</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">Integrity risk value</property>
+                        <property name="name">asset_riskwplancontrolvalue_c</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">Integrity risk after controls</property>
+                        <property name="name">asset_riskvalue_i</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">Availability risk value</property>
+                        <property name="name">asset_riskwcontrolvalue_i</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">Availability risk after controls</property>
+                        <property name="name">asset_riskwplancontrolvalue_i</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">Risk Treatment</property>
+                        <property name="name">asset_riskvalue_a</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">Explanation</property>
+                        <property name="name">asset_riskwcontrolvalue_a</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">asset_riskwplancontrolvalue_a</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">asset_risktreat</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">asset_risktreatexpl</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -360,141 +382,162 @@ columns(new String[] { "scopeName" });</value>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">Abkürzung</property>
-                    <property name="nativeName">Abkürzung</property>
+                    <property name="name">asset_abbr</property>
+                    <property name="nativeName">asset_abbr</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">Titel</property>
-                    <property name="nativeName">Titel</property>
+                    <property name="name">asset_name</property>
+                    <property name="nativeName">asset_name</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">Art des Assets</property>
-                    <property name="nativeName">Art des Assets</property>
+                    <property name="name">asset_type</property>
+                    <property name="nativeName">asset_type</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">Tags</property>
-                    <property name="nativeName">Tags</property>
+                    <property name="name">asset_tag</property>
+                    <property name="nativeName">asset_tag</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">Beschreibung</property>
-                    <property name="nativeName">Beschreibung</property>
+                    <property name="name">asset_description</property>
+                    <property name="nativeName">asset_description</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">Bestimme Vertraulichkeit</property>
-                    <property name="nativeName">Bestimme Vertraulichkeit</property>
+                    <property name="name">asset_value_method_confidentiality</property>
+                    <property name="nativeName">asset_value_method_confidentiality</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
-                    <property name="name">Bestimme Integrität</property>
-                    <property name="nativeName">Bestimme Integrität</property>
+                    <property name="name">asset_value_method_integrity</property>
+                    <property name="nativeName">asset_value_method_integrity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">8</property>
-                    <property name="name">Bestimme Verfügbarkeit</property>
-                    <property name="nativeName">Bestimme Verfügbarkeit</property>
+                    <property name="name">asset_value_method_availability</property>
+                    <property name="nativeName">asset_value_method_availability</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">Vertraulichkeit</property>
-                    <property name="nativeName">Vertraulichkeit</property>
+                    <property name="name">asset_value_confidentiality</property>
+                    <property name="nativeName">asset_value_confidentiality</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">10</property>
-                    <property name="name">Integrität</property>
-                    <property name="nativeName">Integrität</property>
+                    <property name="name">asset_value_integrity</property>
+                    <property name="nativeName">asset_value_integrity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">11</property>
-                    <property name="name">Verfügbarkeit</property>
-                    <property name="nativeName">Verfügbarkeit</property>
+                    <property name="name">asset_value_availability</property>
+                    <property name="nativeName">asset_value_availability</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">12</property>
-                    <property name="name">Begründung</property>
-                    <property name="nativeName">Begründung</property>
+                    <property name="name">asset_value_comment</property>
+                    <property name="nativeName">asset_value_comment</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">Confidentiality risk value</property>
-                    <property name="nativeName">Confidentiality risk value</property>
+                    <property name="name">asset_riskvalue_c</property>
+                    <property name="nativeName">asset_riskvalue_c</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">Confidentiality risk after controls</property>
-                    <property name="nativeName">Confidentiality risk after controls</property>
+                    <property name="name">asset_riskwcontrolvalue_c</property>
+                    <property name="nativeName">asset_riskwcontrolvalue_c</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">Integrity risk value</property>
-                    <property name="nativeName">Integrity risk value</property>
+                    <property name="name">asset_riskwplancontrolvalue_c</property>
+                    <property name="nativeName">asset_riskwplancontrolvalue_c</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">16</property>
-                    <property name="name">Integrity risk after controls</property>
-                    <property name="nativeName">Integrity risk after controls</property>
+                    <property name="name">asset_riskvalue_i</property>
+                    <property name="nativeName">asset_riskvalue_i</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">17</property>
-                    <property name="name">Availability risk value</property>
-                    <property name="nativeName">Availability risk value</property>
+                    <property name="name">asset_riskwcontrolvalue_i</property>
+                    <property name="nativeName">asset_riskwcontrolvalue_i</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">18</property>
-                    <property name="name">Availability risk after controls</property>
-                    <property name="nativeName">Availability risk after controls</property>
+                    <property name="name">asset_riskwplancontrolvalue_i</property>
+                    <property name="nativeName">asset_riskwplancontrolvalue_i</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">19</property>
-                    <property name="name">Risk Treatment</property>
-                    <property name="nativeName">Risk Treatment</property>
+                    <property name="name">asset_riskvalue_a</property>
+                    <property name="nativeName">asset_riskvalue_a</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">20</property>
-                    <property name="name">Explanation</property>
-                    <property name="nativeName">Explanation</property>
+                    <property name="name">asset_riskwcontrolvalue_a</property>
+                    <property name="nativeName">asset_riskwcontrolvalue_a</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">asset_riskwplancontrolvalue_a</property>
+                    <property name="nativeName">asset_riskwplancontrolvalue_a</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">asset_risktreat</property>
+                    <property name="nativeName">asset_risktreat</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">asset_risktreatexpl</property>
+                    <property name="nativeName">asset_risktreatexpl</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -503,13 +546,12 @@ columns(new String[] { "scopeName" });</value>
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 
 // set top level element for report:
-root = _vars.get("vn_root_element");
+root = helper.getRoot();
 // try to get manual parameter if set:
 myroot = _inpv.get("root_object");
 if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
-
 
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 cols = htf.getEntityType("asset")
@@ -551,88 +593,49 @@ return helper.map(
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
 
-htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-cols = htf.getEntityType("asset")
-	.getAllPropertyTypeTitlesIncludingGroups();
-
+cols = helper.getAllPropertyTypes("asset");
 inParameters(new String[] { "root_object" });
 columns(cols);</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
-        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="processes" id="834">
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="scope" id="941">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">Titel</property>
-                    <text-property name="displayName">Titel</text-property>
+                    <property name="columnName">org_name</property>
+                    <text-property name="displayName">org_name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Tags</property>
-                    <text-property name="displayName">Tags</text-property>
+                    <property name="columnName">org_tag</property>
+                    <text-property name="displayName">org_tag</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Abkürzung</property>
-                    <text-property name="displayName">Abkürzung</text-property>
+                    <property name="columnName">org_created</property>
+                    <text-property name="displayName">org_created</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Bestimme Vertraulichkeit</property>
-                    <text-property name="displayName">Bestimme Vertraulichkeit</text-property>
+                    <property name="columnName">org_abbr</property>
+                    <text-property name="displayName">org_abbr</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Bestimme Integrität</property>
-                    <text-property name="displayName">Bestimme Integrität</text-property>
+                    <property name="columnName">org_description</property>
+                    <text-property name="displayName">org_description</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Bestimme Verfügbarkeit</property>
-                    <text-property name="displayName">Bestimme Verfügbarkeit</text-property>
+                    <property name="columnName">org_riskaccept_confid</property>
+                    <text-property name="displayName">org_riskaccept_confid</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Vertraulichkeit</property>
-                    <text-property name="displayName">Vertraulichkeit</text-property>
+                    <property name="columnName">org_riskaccept_integ</property>
+                    <text-property name="displayName">org_riskaccept_integ</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Integrität</property>
-                    <text-property name="displayName">Integrität</text-property>
+                    <property name="columnName">org_riskaccept_avail</property>
+                    <text-property name="displayName">org_riskaccept_avail</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Verfügbarkeit</property>
-                    <text-property name="displayName">Verfügbarkeit</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Begründung</property>
-                    <text-property name="displayName">Begründung</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Confidentiality risk value</property>
-                    <text-property name="displayName">Confidentiality risk value</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Confidentiality risk after controls</property>
-                    <text-property name="displayName">Confidentiality risk after controls</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Integrity risk value</property>
-                    <text-property name="displayName">Integrity risk value</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Integrity risk after controls</property>
-                    <text-property name="displayName">Integrity risk after controls</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Availability risk value</property>
-                    <text-property name="displayName">Availability risk value</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Availability risk after controls</property>
-                    <text-property name="displayName">Availability risk after controls</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Risk Treatment</property>
-                    <text-property name="displayName">Risk Treatment</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Explanation</property>
-                    <text-property name="displayName">Explanation</text-property>
+                    <property name="columnName">org_riskaccept_expl</property>
+                    <text-property name="displayName">org_riskaccept_expl</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -643,7 +646,7 @@ columns(cols);</value>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">12</property>
                     <property name="position">1</property>
-                    <expression name="defaultValue" type="javascript">111</expression>
+                    <expression name="defaultValue" type="javascript">-1</expression>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -653,92 +656,47 @@ columns(cols);</value>
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">Titel</property>
+                        <property name="name">org_name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">Tags</property>
+                        <property name="name">org_tag</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">Abkürzung</property>
+                        <property name="name">org_created</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">Bestimme Vertraulichkeit</property>
+                        <property name="name">org_abbr</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">Bestimme Integrität</property>
+                        <property name="name">org_description</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">Bestimme Verfügbarkeit</property>
+                        <property name="name">org_riskaccept_confid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">Vertraulichkeit</property>
+                        <property name="name">org_riskaccept_integ</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">Integrität</property>
+                        <property name="name">org_riskaccept_avail</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">Verfügbarkeit</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">Begründung</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">Confidentiality risk value</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">Confidentiality risk after controls</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">Integrity risk value</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">Integrity risk after controls</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">Availability risk value</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">Availability risk after controls</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">Risk Treatment</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
-                        <property name="name">Explanation</property>
+                        <property name="name">org_riskaccept_expl</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -747,127 +705,64 @@ columns(cols);</value>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">Titel</property>
-                    <property name="nativeName">Titel</property>
+                    <property name="name">org_name</property>
+                    <property name="nativeName">org_name</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">Tags</property>
-                    <property name="nativeName">Tags</property>
+                    <property name="name">org_tag</property>
+                    <property name="nativeName">org_tag</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">Abkürzung</property>
-                    <property name="nativeName">Abkürzung</property>
+                    <property name="name">org_created</property>
+                    <property name="nativeName">org_created</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">Bestimme Vertraulichkeit</property>
-                    <property name="nativeName">Bestimme Vertraulichkeit</property>
+                    <property name="name">org_abbr</property>
+                    <property name="nativeName">org_abbr</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">Bestimme Integrität</property>
-                    <property name="nativeName">Bestimme Integrität</property>
+                    <property name="name">org_description</property>
+                    <property name="nativeName">org_description</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">Bestimme Verfügbarkeit</property>
-                    <property name="nativeName">Bestimme Verfügbarkeit</property>
+                    <property name="name">org_riskaccept_confid</property>
+                    <property name="nativeName">org_riskaccept_confid</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
-                    <property name="name">Vertraulichkeit</property>
-                    <property name="nativeName">Vertraulichkeit</property>
+                    <property name="name">org_riskaccept_integ</property>
+                    <property name="nativeName">org_riskaccept_integ</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">8</property>
-                    <property name="name">Integrität</property>
-                    <property name="nativeName">Integrität</property>
+                    <property name="name">org_riskaccept_avail</property>
+                    <property name="nativeName">org_riskaccept_avail</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">Verfügbarkeit</property>
-                    <property name="nativeName">Verfügbarkeit</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">Begründung</property>
-                    <property name="nativeName">Begründung</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">Confidentiality risk value</property>
-                    <property name="nativeName">Confidentiality risk value</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">Confidentiality risk after controls</property>
-                    <property name="nativeName">Confidentiality risk after controls</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">Integrity risk value</property>
-                    <property name="nativeName">Integrity risk value</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">Integrity risk after controls</property>
-                    <property name="nativeName">Integrity risk after controls</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">Availability risk value</property>
-                    <property name="nativeName">Availability risk value</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">Availability risk after controls</property>
-                    <property name="nativeName">Availability risk after controls</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">Risk Treatment</property>
-                    <property name="nativeName">Risk Treatment</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">18</property>
-                    <property name="name">Explanation</property>
-                    <property name="nativeName">Explanation</property>
+                    <property name="name">org_riskaccept_expl</property>
+                    <property name="nativeName">org_riskaccept_expl</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -876,8 +771,9 @@ columns(cols);</value>
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 
 // set top level element for report:
-root = _vars.get("vn_root_element");
+root = helper.getRoot();
 // try to get manual parameter if set:
+
 myroot = _inpv.get("root_object");
 if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
@@ -885,10 +781,10 @@ if (myroot != null &amp;&amp; myroot != -1) {
 
 
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-cols = htf.getEntityType("process")
+cols = htf.getEntityType("org")
 	.getAllPropertyTypeIDsIncludingGroups();
 
-c2 = new LoadReportElements("process", root);
+c2 = new LoadReportElements("org", root);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
@@ -924,9 +820,377 @@ return helper.map(
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
 
+cols = helper.getAllPropertyTypes("org");
+
+inParameters(new String[] { "root_object" });
+columns(cols);</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="processes" id="834">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">process_name</property>
+                    <text-property name="displayName">process_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_tag</property>
+                    <text-property name="displayName">process_tag</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_abbr</property>
+                    <text-property name="displayName">process_abbr</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_value_method_confidentiality</property>
+                    <text-property name="displayName">process_value_method_confidentiality</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_value_method_integrity</property>
+                    <text-property name="displayName">process_value_method_integrity</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_value_method_availability</property>
+                    <text-property name="displayName">process_value_method_availability</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_value_confidentiality</property>
+                    <text-property name="displayName">process_value_confidentiality</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_value_integrity</property>
+                    <text-property name="displayName">process_value_integrity</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_value_availability</property>
+                    <text-property name="displayName">process_value_availability</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_value_comment</property>
+                    <text-property name="displayName">process_value_comment</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_riskvalue_c</property>
+                    <text-property name="displayName">process_riskvalue_c</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_riskwcontrolvalue_c</property>
+                    <text-property name="displayName">process_riskwcontrolvalue_c</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_riskvalue_i</property>
+                    <text-property name="displayName">process_riskvalue_i</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_riskwcontrolvalue_i</property>
+                    <text-property name="displayName">process_riskwcontrolvalue_i</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_riskvalue_a</property>
+                    <text-property name="displayName">process_riskvalue_a</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_riskwcontrolvalue_a</property>
+                    <text-property name="displayName">process_riskwcontrolvalue_a</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_risktreat</property>
+                    <text-property name="displayName">process_risktreat</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">process_risktreatexpl</property>
+                    <text-property name="displayName">process_risktreatexpl</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">-1</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">process_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">process_tag</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">process_abbr</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">process_value_method_confidentiality</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">process_value_method_integrity</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">process_value_method_availability</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">process_value_confidentiality</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">process_value_integrity</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">process_value_availability</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">process_value_comment</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">process_riskvalue_c</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">process_riskwcontrolvalue_c</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">process_riskvalue_i</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">process_riskwcontrolvalue_i</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">process_riskvalue_a</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">process_riskwcontrolvalue_a</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">process_risktreat</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">process_risktreatexpl</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">process_name</property>
+                    <property name="nativeName">process_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">process_tag</property>
+                    <property name="nativeName">process_tag</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">process_abbr</property>
+                    <property name="nativeName">process_abbr</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">process_value_method_confidentiality</property>
+                    <property name="nativeName">process_value_method_confidentiality</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">process_value_method_integrity</property>
+                    <property name="nativeName">process_value_method_integrity</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">process_value_method_availability</property>
+                    <property name="nativeName">process_value_method_availability</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">process_value_confidentiality</property>
+                    <property name="nativeName">process_value_confidentiality</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">process_value_integrity</property>
+                    <property name="nativeName">process_value_integrity</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">process_value_availability</property>
+                    <property name="nativeName">process_value_availability</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">process_value_comment</property>
+                    <property name="nativeName">process_value_comment</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">process_riskvalue_c</property>
+                    <property name="nativeName">process_riskvalue_c</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">process_riskwcontrolvalue_c</property>
+                    <property name="nativeName">process_riskwcontrolvalue_c</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">process_riskvalue_i</property>
+                    <property name="nativeName">process_riskvalue_i</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">process_riskwcontrolvalue_i</property>
+                    <property name="nativeName">process_riskwcontrolvalue_i</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">process_riskvalue_a</property>
+                    <property name="nativeName">process_riskvalue_a</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">process_riskwcontrolvalue_a</property>
+                    <property name="nativeName">process_riskwcontrolvalue_a</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">process_risktreat</property>
+                    <property name="nativeName">process_risktreat</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">process_risktreatexpl</property>
+                    <property name="nativeName">process_risktreatexpl</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
+import sernet.gs.ui.rcp.main.service.crudcommands.*;
+
+// set top level element for report:
+root = helper.getRoot();
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
+
 htf = VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-cols = htf.getEntityType("process")
-	.getAllPropertyTypeTitlesIncludingGroups();
+cols = htf.getEntityType("org")
+	.getAllPropertyTypeIDsIncludingGroups();
+
+c2 = new LoadReportElements("org", root);
+elements = helper.execute(c2).getElements();
+return helper.map(
+	elements,
+	cols
+);
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>import sernet.hui.common.*;
+
+cols = helper.getAllPropertyTypes("process");
 
 inParameters(new String[] { "root_object" });
 columns(cols);</value>
@@ -940,6 +1204,7 @@ columns(cols);</value>
             <property name="fontSize">10pt</property>
         </style>
         <style name="crosstab-cell" id="5">
+            <property name="backgroundColor">#E3E3E3</property>
             <property name="borderBottomColor">#CCCCCC</property>
             <property name="borderBottomStyle">solid</property>
             <property name="borderBottomWidth">1pt</property>
@@ -970,6 +1235,37 @@ columns(cols);</value>
         <style name="table-header" id="156">
             <property name="backgroundColor">#BDBDBD</property>
             <property name="fontWeight">bold</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+        </style>
+        <style name="verinice-table" id="1089">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+        </style>
+        <style name="table-detail-cell" id="1090">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+        </style>
+        <style name="vn-groupheader" id="1091">
+            <property name="backgroundColor">#DCDCDC</property>
         </style>
     </styles>
     <page-setup>
@@ -1168,10 +1464,10 @@ columns(cols);</value>
         </Color>
         <Visible>false</Visible>
       </Outline>
-      <Visible>false</Visible>
+      <Visible>true</Visible>
       <Label>
         <Caption>
-          <Value>Risk by assets</Value>
+          <Value>Risk by asset type</Value>
           <Font>
             <Size>16.0</Size>
             <Bold>true</Bold>
@@ -1286,7 +1582,7 @@ columns(cols);</value>
         </Color>
         <Visible>false</Visible>
       </Outline>
-      <Visible>false</Visible>
+      <Visible>true</Visible>
       <ClientArea>
         <Outline>
           <Style>Solid</Style>
@@ -1360,11 +1656,12 @@ columns(cols);</value>
         <Visible>false</Visible>
       </Title>
       <TitlePosition>Above</TitlePosition>
+      <ShowValue>false</ShowValue>
     </Children>
     <Bounds>
       <Left>0.0</Left>
       <Top>0.0</Top>
-      <Width>400.0</Width>
+      <Width>600.0</Width>
       <Height>400.0</Height>
     </Bounds>
     <Insets>
@@ -1408,16 +1705,12 @@ columns(cols);</value>
       <DataSetRepresentation>A, B, C</DataSetRepresentation>
     </BaseSampleData>
     <OrthogonalSampleData>
-      <DataSetRepresentation>5,4,12</DataSetRepresentation>
+      <DataSetRepresentation>15.0,12.0,36.0</DataSetRepresentation>
       <SeriesDefinitionIndex>0</SeriesDefinitionIndex>
     </OrthogonalSampleData>
     <OrthogonalSampleData>
-      <DataSetRepresentation>10.0,8.0,24.0</DataSetRepresentation>
+      <DataSetRepresentation>300.0,240.0,720.0</DataSetRepresentation>
       <SeriesDefinitionIndex>1</SeriesDefinitionIndex>
-    </OrthogonalSampleData>
-    <OrthogonalSampleData>
-      <DataSetRepresentation>15.0,12.0,36.0</DataSetRepresentation>
-      <SeriesDefinitionIndex>2</SeriesDefinitionIndex>
     </OrthogonalSampleData>
     <AncillarySampleData>
       <DataSetRepresentation>Series 1</DataSetRepresentation>
@@ -1457,7 +1750,7 @@ columns(cols);</value>
       <Bottom>10.0</Bottom>
       <Right>10.0</Right>
     </Insets>
-    <Visible>false</Visible>
+    <Visible>true</Visible>
   </EmptyMessage>
   <Axes>
     <Type>Text</Type>
@@ -1772,13 +2065,14 @@ columns(cols);</value>
             <Visible>false</Visible>
           </Label>
           <DataDefinition>
-            <Definition>row[&quot;Confidentiality risk value&quot;]</Definition>
+            <Definition>row[&quot;asset_riskwcontrolvalue_c&quot;]+row[&quot;asset_riskvalue_i&quot;]+row[&quot;asset_riskvalue_a&quot;]</Definition>
             <Grouping>
+              <Enabled>false</Enabled>
               <GroupType>Text</GroupType>
               <AggregateExpression>Sum</AggregateExpression>
             </Grouping>
           </DataDefinition>
-          <SeriesIdentifier>C</SeriesIdentifier>
+          <SeriesIdentifier>Total Risk</SeriesIdentifier>
           <DataPoint>
             <Components>
               <Type>Orthogonal_Value</Type>
@@ -2028,14 +2322,14 @@ columns(cols);</value>
             <Visible>false</Visible>
           </Label>
           <DataDefinition>
-            <Definition>row[&quot;Integrity risk value&quot;]</Definition>
+            <Definition>row[&quot;asset_riskwcontrolvalue_c&quot;]+row[&quot;asset_riskwcontrolvalue_i&quot;]+row[&quot;asset_riskwcontrolvalue_a&quot;]</Definition>
             <Grouping>
               <Enabled>false</Enabled>
               <GroupType>Text</GroupType>
               <AggregateExpression>Sum</AggregateExpression>
             </Grouping>
           </DataDefinition>
-          <SeriesIdentifier>I</SeriesIdentifier>
+          <SeriesIdentifier>Risk with controls</SeriesIdentifier>
           <DataPoint>
             <Components>
               <Type>Orthogonal_Value</Type>
@@ -2045,263 +2339,6 @@ columns(cols);</value>
           <LabelPosition>Outside</LabelPosition>
           <Stacked>false</Stacked>
           <Translucent>true</Translucent>
-          <Riser>Rectangle</Riser>
-        </Series>
-        <Grouping>
-          <GroupType>Text</GroupType>
-          <AggregateExpression>Sum</AggregateExpression>
-        </Grouping>
-      </SeriesDefinitions>
-      <SeriesDefinitions>
-        <Query>
-          <Definition></Definition>
-        </Query>
-        <SeriesPalette>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>232</Red>
-            <Green>172</Green>
-            <Blue>57</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>255</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>64</Red>
-            <Green>128</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>128</Green>
-            <Blue>192</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>170</Red>
-            <Green>85</Green>
-            <Blue>85</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>128</Green>
-            <Blue>0</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>192</Red>
-            <Green>192</Green>
-            <Blue>192</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>255</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>192</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>7</Red>
-            <Green>146</Green>
-            <Blue>94</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>128</Green>
-            <Blue>255</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>128</Green>
-            <Blue>192</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>255</Green>
-            <Blue>255</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>128</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>128</Green>
-            <Blue>192</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>128</Green>
-            <Blue>192</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>0</Green>
-            <Blue>255</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>64</Green>
-            <Blue>64</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>128</Green>
-            <Blue>64</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>80</Red>
-            <Green>240</Green>
-            <Blue>120</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>64</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>0</Green>
-            <Blue>64</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>0</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>128</Green>
-            <Blue>64</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>128</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>128</Green>
-            <Blue>255</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>64</Green>
-            <Blue>0</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>0</Green>
-            <Blue>0</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>255</Green>
-            <Blue>255</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>128</Green>
-            <Blue>0</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>80</Red>
-            <Green>166</Green>
-            <Blue>218</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>242</Red>
-            <Green>88</Green>
-            <Blue>106</Blue>
-          </Entries>
-        </SeriesPalette>
-        <Series xsi:type="type:BarSeries">
-          <Visible>true</Visible>
-          <Label>
-            <Caption>
-              <Value></Value>
-              <Font>
-                <Alignment/>
-              </Font>
-            </Caption>
-            <Background xsi:type="attribute:ColorDefinition">
-              <Transparency>0</Transparency>
-              <Red>255</Red>
-              <Green>255</Green>
-              <Blue>255</Blue>
-            </Background>
-            <Outline>
-              <Style>Solid</Style>
-              <Thickness>1</Thickness>
-              <Color>
-                <Transparency>255</Transparency>
-                <Red>0</Red>
-                <Green>0</Green>
-                <Blue>0</Blue>
-              </Color>
-              <Visible>false</Visible>
-            </Outline>
-            <Insets>
-              <Top>0.0</Top>
-              <Left>2.0</Left>
-              <Bottom>0.0</Bottom>
-              <Right>3.0</Right>
-            </Insets>
-            <Visible>false</Visible>
-          </Label>
-          <DataDefinition>
-            <Definition>row[&quot;Availability risk value&quot;]</Definition>
-            <Grouping>
-              <Enabled>false</Enabled>
-              <GroupType>Text</GroupType>
-              <AggregateExpression>Sum</AggregateExpression>
-            </Grouping>
-          </DataDefinition>
-          <SeriesIdentifier>A</SeriesIdentifier>
-          <DataPoint>
-            <Components>
-              <Type>Orthogonal_Value</Type>
-            </Components>
-            <Separator>, </Separator>
-          </DataPoint>
-          <LabelPosition>Outside</LabelPosition>
-          <Stacked>false</Stacked>
-          <Translucent>false</Translucent>
           <Riser>Rectangle</Riser>
         </Series>
         <Grouping>
@@ -2399,6 +2436,7 @@ columns(cols);</value>
       </MinorGrid>
       <Scale>
         <MinorGridsPerUnit>5</MinorGridsPerUnit>
+        <AutoExpand>true</AutoExpand>
       </Scale>
       <Origin>
         <Type>Min</Type>
@@ -2730,7 +2768,7 @@ columns(cols);</value>
           <Bottom>0.0</Bottom>
           <Right>3.0</Right>
         </Insets>
-        <Visible>true</Visible>
+        <Visible>false</Visible>
       </Label>
       <LabelPosition>Below</LabelPosition>
       <MajorGrid>
@@ -3028,7 +3066,7 @@ columns(cols);</value>
           <Visible>false</Visible>
         </Label>
         <DataDefinition>
-          <Definition>row[&quot;Titel&quot;]</Definition>
+          <Definition>row[&quot;asset_type&quot;]</Definition>
         </DataDefinition>
         <SeriesIdentifier></SeriesIdentifier>
         <DataPoint>
@@ -3044,7 +3082,9 @@ columns(cols);</value>
         <Enabled>true</Enabled>
         <GroupType>Text</GroupType>
         <AggregateExpression>Sum</AggregateExpression>
+        <AggregateParameters>25</AggregateParameters>
       </Grouping>
+      <SortKey/>
     </SeriesDefinitions>
     <Orientation>Horizontal</Orientation>
     <LineAttributes>
@@ -3162,110 +3202,122 @@ columns(cols);</value>
   </Rotation>
 </model:ChartWithAxes>
 ]]></xml-property>
-            <property name="outputFormat">PNG</property>
+            <property name="outputFormat">SVG</property>
             <property name="inheritColumns">false</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="borderTopColor">#000000</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderLeftColor">#000000</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderBottomColor">#000000</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderRightColor">#000000</property>
             <property name="dataSet">assets</property>
             <property name="height">400pt</property>
-            <property name="width">400pt</property>
+            <property name="width">600pt</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">Abkürzung</property>
-                    <expression name="expression" type="javascript">dataSetRow["Abkürzung"]</expression>
+                    <property name="name">asset_abbr</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_abbr"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Titel</property>
-                    <expression name="expression" type="javascript">dataSetRow["Titel"]</expression>
+                    <property name="name">asset_name</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_name"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Art des Assets</property>
-                    <expression name="expression" type="javascript">dataSetRow["Art des Assets"]</expression>
+                    <property name="name">asset_type</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_type"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Tags</property>
-                    <expression name="expression" type="javascript">dataSetRow["Tags"]</expression>
+                    <property name="name">asset_tag</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_tag"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Beschreibung</property>
-                    <expression name="expression" type="javascript">dataSetRow["Beschreibung"]</expression>
+                    <property name="name">asset_description</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_description"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Bestimme Vertraulichkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Bestimme Vertraulichkeit"]</expression>
+                    <property name="name">asset_value_method_confidentiality</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_confidentiality"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Bestimme Integrität</property>
-                    <expression name="expression" type="javascript">dataSetRow["Bestimme Integrität"]</expression>
+                    <property name="name">asset_value_method_integrity</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_integrity"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Bestimme Verfügbarkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Bestimme Verfügbarkeit"]</expression>
+                    <property name="name">asset_value_method_availability</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_availability"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Vertraulichkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Vertraulichkeit"]</expression>
+                    <property name="name">asset_value_confidentiality</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_confidentiality"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Integrität</property>
-                    <expression name="expression" type="javascript">dataSetRow["Integrität"]</expression>
+                    <property name="name">asset_value_integrity</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_integrity"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Verfügbarkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Verfügbarkeit"]</expression>
+                    <property name="name">asset_value_availability</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_availability"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Begründung</property>
-                    <expression name="expression" type="javascript">dataSetRow["Begründung"]</expression>
+                    <property name="name">asset_value_comment</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_comment"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Confidentiality risk value</property>
-                    <expression name="expression" type="javascript">dataSetRow["Confidentiality risk value"]</expression>
+                    <property name="name">asset_riskvalue_c</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_c"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Confidentiality risk after controls</property>
-                    <expression name="expression" type="javascript">dataSetRow["Confidentiality risk after controls"]</expression>
+                    <property name="name">asset_riskwcontrolvalue_c</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_c"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Integrity risk value</property>
-                    <expression name="expression" type="javascript">dataSetRow["Integrity risk value"]</expression>
+                    <property name="name">asset_riskvalue_i</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_i"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Integrity risk after controls</property>
-                    <expression name="expression" type="javascript">dataSetRow["Integrity risk after controls"]</expression>
+                    <property name="name">asset_riskwcontrolvalue_i</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_i"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Availability risk value</property>
-                    <expression name="expression" type="javascript">dataSetRow["Availability risk value"]</expression>
+                    <property name="name">asset_riskvalue_a</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_a"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Availability risk after controls</property>
-                    <expression name="expression" type="javascript">dataSetRow["Availability risk after controls"]</expression>
+                    <property name="name">asset_riskwcontrolvalue_a</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_a"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Risk Treatment</property>
-                    <expression name="expression" type="javascript">dataSetRow["Risk Treatment"]</expression>
+                    <property name="name">asset_risktreat</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_risktreat"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Explanation</property>
-                    <expression name="expression" type="javascript">dataSetRow["Explanation"]</expression>
+                    <property name="name">asset_risktreatexpl</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_risktreatexpl"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
@@ -3274,594 +3326,397 @@ columns(cols);</value>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="paddingTop">20pt</property>
-            <text-property name="text">Assets</text-property>
+            <text-property name="text">Risk Acceptance Criteria</text-property>
         </label>
-        <table id="776">
-            <property name="width">11.148760330578513in</property>
-            <property name="dataSet">assets</property>
+        <table id="943">
+            <property name="dataSet">scope</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">Abkürzung</property>
-                    <expression name="expression" type="javascript">dataSetRow["Abkürzung"]</expression>
+                    <property name="name">org_name</property>
+                    <expression name="expression" type="javascript">dataSetRow["org_name"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Titel</property>
-                    <expression name="expression" type="javascript">dataSetRow["Titel"]</expression>
+                    <property name="name">org_tag</property>
+                    <expression name="expression" type="javascript">dataSetRow["org_tag"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Art des Assets</property>
-                    <expression name="expression" type="javascript">dataSetRow["Art des Assets"]</expression>
+                    <property name="name">org_created</property>
+                    <expression name="expression" type="javascript">dataSetRow["org_created"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Tags</property>
-                    <expression name="expression" type="javascript">dataSetRow["Tags"]</expression>
+                    <property name="name">org_abbr</property>
+                    <expression name="expression" type="javascript">dataSetRow["org_abbr"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Beschreibung</property>
-                    <expression name="expression" type="javascript">dataSetRow["Beschreibung"]</expression>
+                    <property name="name">org_description</property>
+                    <expression name="expression" type="javascript">dataSetRow["org_description"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Bestimme Vertraulichkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Bestimme Vertraulichkeit"]</expression>
+                    <property name="name">org_riskaccept_confid</property>
+                    <expression name="expression" type="javascript">dataSetRow["org_riskaccept_confid"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Bestimme Integrität</property>
-                    <expression name="expression" type="javascript">dataSetRow["Bestimme Integrität"]</expression>
+                    <property name="name">org_riskaccept_integ</property>
+                    <expression name="expression" type="javascript">dataSetRow["org_riskaccept_integ"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Bestimme Verfügbarkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Bestimme Verfügbarkeit"]</expression>
+                    <property name="name">org_riskaccept_avail</property>
+                    <expression name="expression" type="javascript">dataSetRow["org_riskaccept_avail"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Vertraulichkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Vertraulichkeit"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">Integrität</property>
-                    <expression name="expression" type="javascript">dataSetRow["Integrität"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">Verfügbarkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Verfügbarkeit"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">Begründung</property>
-                    <expression name="expression" type="javascript">dataSetRow["Begründung"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">Confidentiality risk value</property>
-                    <expression name="expression" type="javascript">dataSetRow["Confidentiality risk value"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">Confidentiality risk after controls</property>
-                    <expression name="expression" type="javascript">dataSetRow["Confidentiality risk after controls"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">Integrity risk value</property>
-                    <expression name="expression" type="javascript">dataSetRow["Integrity risk value"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">Integrity risk after controls</property>
-                    <expression name="expression" type="javascript">dataSetRow["Integrity risk after controls"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">Availability risk value</property>
-                    <expression name="expression" type="javascript">dataSetRow["Availability risk value"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">Availability risk after controls</property>
-                    <expression name="expression" type="javascript">dataSetRow["Availability risk after controls"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">Risk Treatment</property>
-                    <expression name="expression" type="javascript">dataSetRow["Risk Treatment"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">Explanation</property>
-                    <expression name="expression" type="javascript">dataSetRow["Explanation"]</expression>
+                    <property name="name">org_riskaccept_expl</property>
+                    <expression name="expression" type="javascript">dataSetRow["org_riskaccept_expl"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
-            <list-property name="sort">
-                <structure>
-                    <expression name="key" type="javascript">row["Art des Assets"]</expression>
-                    <property name="direction">asc</property>
-                    <property name="strength">-1</property>
-                </structure>
-                <structure>
-                    <expression name="key" type="javascript">row["Titel"]</expression>
-                    <property name="direction">asc</property>
-                    <property name="strength">-1</property>
-                </structure>
-            </list-property>
-            <column id="792">
-                <property name="width">2cm</property>
-            </column>
-            <column id="793">
-                <property name="width">2.3140495867768593in</property>
-            </column>
-            <column id="801">
-                <property name="width">0.6942148760330579in</property>
-            </column>
-            <column id="794">
-                <property name="width">1cm</property>
-            </column>
-            <column id="821">
-                <property name="width">1cm</property>
-            </column>
-            <column id="817">
-                <property name="width">1cm</property>
-            </column>
-            <column id="813">
-                <property name="width">1cm</property>
-            </column>
-            <column id="809">
-                <property name="width">1cm</property>
-            </column>
-            <column id="795">
-                <property name="width">1cm</property>
-            </column>
+            <column id="959"/>
+            <column id="960"/>
             <header>
-                <row id="777">
-                    <cell id="778">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="796">
-                            <text-property name="text">Abkürzung</text-property>
+                <row id="944">
+                    <cell id="945">
+                        <label id="961">
+                            <text-property name="text">Category</text-property>
                         </label>
                     </cell>
-                    <cell id="779">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="802">
-                            <text-property name="text">Titel</text-property>
-                        </label>
-                    </cell>
-                    <cell id="798">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="804">
-                            <text-property name="text">Art des Assets</text-property>
-                        </label>
-                    </cell>
-                    <cell id="780">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="822">
-                            <text-property name="text">Confidentiality risk value</text-property>
-                        </label>
-                    </cell>
-                    <cell id="818">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="824">
-                            <text-property name="text">Integrity risk value</text-property>
-                        </label>
-                    </cell>
-                    <cell id="814">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="826">
-                            <text-property name="text">Availability risk value</text-property>
-                        </label>
-                    </cell>
-                    <cell id="810">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="828">
-                            <text-property name="text">Confidentiality risk after controls</text-property>
-                        </label>
-                    </cell>
-                    <cell id="806">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="830">
-                            <text-property name="text">Integrity risk after controls</text-property>
-                        </label>
-                    </cell>
-                    <cell id="781">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="832">
-                            <text-property name="text">Availability risk after controls</text-property>
+                    <cell id="946">
+                        <label id="962">
+                            <text-property name="text">Tolerable risk level</text-property>
                         </label>
                     </cell>
                 </row>
             </header>
             <detail>
-                <row id="782">
-                    <cell id="783">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="797">
-                            <property name="resultSetColumn">Abkürzung</property>
+                <row id="947">
+                    <cell id="948">
+                        <label id="966">
+                            <text-property name="text">Confidentiality</text-property>
+                        </label>
+                    </cell>
+                    <cell id="949">
+                        <data id="969">
+                            <property name="resultSetColumn">org_riskaccept_confid</property>
                         </data>
                     </cell>
-                    <cell id="784">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="803">
-                            <property name="resultSetColumn">Titel</property>
+                </row>
+                <row id="950">
+                    <cell id="951">
+                        <label id="967">
+                            <text-property name="text">Integrity</text-property>
+                        </label>
+                    </cell>
+                    <cell id="952">
+                        <data id="970">
+                            <property name="resultSetColumn">org_riskaccept_integ</property>
                         </data>
                     </cell>
-                    <cell id="799">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="805">
-                            <property name="resultSetColumn">Art des Assets</property>
-                        </data>
+                </row>
+                <row id="953">
+                    <cell id="954">
+                        <label id="968">
+                            <text-property name="text">Availability</text-property>
+                        </label>
                     </cell>
-                    <cell id="785">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="823">
-                            <property name="resultSetColumn">Confidentiality risk value</property>
-                        </data>
-                    </cell>
-                    <cell id="819">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="825">
-                            <property name="resultSetColumn">Integrity risk value</property>
-                        </data>
-                    </cell>
-                    <cell id="815">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="827">
-                            <property name="resultSetColumn">Availability risk value</property>
-                        </data>
-                    </cell>
-                    <cell id="811">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="829">
-                            <property name="resultSetColumn">Confidentiality risk after controls</property>
-                        </data>
-                    </cell>
-                    <cell id="807">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="831">
-                            <property name="resultSetColumn">Integrity risk after controls</property>
-                        </data>
-                    </cell>
-                    <cell id="786">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="833">
-                            <property name="resultSetColumn">Availability risk after controls</property>
+                    <cell id="955">
+                        <data id="971">
+                            <property name="resultSetColumn">org_riskaccept_avail</property>
                         </data>
                     </cell>
                 </row>
             </detail>
             <footer>
-                <row id="787">
-                    <cell id="788">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
+                <row id="956">
+                    <cell id="957"/>
+                    <cell id="958"/>
+                </row>
+            </footer>
+        </table>
+        <label id="942">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingTop">20pt</property>
+            <text-property name="text">Risks by asset</text-property>
+        </label>
+        <label id="1092">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingTop">20pt</property>
+            <text-property name="text">Assets</text-property>
+        </label>
+        <table id="973">
+            <property name="dataSet">assets</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">asset_abbr</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_abbr"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_name</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_name"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_type</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_type"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_tag</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_tag"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_description</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_description"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_method_confidentiality</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_confidentiality"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_method_integrity</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_integrity"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_method_availability</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_availability"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_confidentiality</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_confidentiality"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_integrity</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_integrity"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_availability</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_availability"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_comment</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_comment"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskvalue_c</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_c"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskwcontrolvalue_c</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_c"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskvalue_i</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_i"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskwcontrolvalue_i</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_i"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskvalue_a</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_a"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskwcontrolvalue_a</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_a"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_risktreat</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_risktreat"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_risktreatexpl</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_risktreatexpl"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+            </list-property>
+            <list-property name="sort">
+                <structure>
+                    <expression name="key" type="javascript">row["asset_name"]</expression>
+                    <property name="direction">asc</property>
+                    <property name="strength">-1</property>
+                </structure>
+            </list-property>
+            <column id="1004"/>
+            <column id="1005"/>
+            <column id="1006"/>
+            <column id="1007"/>
+            <column id="1008"/>
+            <column id="1009"/>
+            <column id="1010"/>
+            <column id="1011"/>
+            <header>
+                <row id="974">
+                    <cell id="975">
+                        <label id="1013">
+                            <text-property name="text">asset_abbr</text-property>
+                        </label>
                     </cell>
-                    <cell id="789">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
+                    <cell id="976">
+                        <label id="1015">
+                            <text-property name="text">asset_name</text-property>
+                        </label>
                     </cell>
-                    <cell id="800">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
+                    <cell id="977">
+                        <label id="1017">
+                            <text-property name="text">asset_value_confidentiality</text-property>
+                        </label>
                     </cell>
-                    <cell id="790">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
+                    <cell id="978">
+                        <label id="1019">
+                            <text-property name="text">asset_value_integrity</text-property>
+                        </label>
                     </cell>
-                    <cell id="820">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
+                    <cell id="979">
+                        <label id="1021">
+                            <text-property name="text">asset_value_availability</text-property>
+                        </label>
                     </cell>
-                    <cell id="816">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
+                    <cell id="980">
+                        <label id="1026">
+                            <text-property name="text">asset_riskwcontrolvalue_c</text-property>
+                        </label>
                     </cell>
-                    <cell id="812">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
+                    <cell id="981">
+                        <label id="1028">
+                            <text-property name="text">asset_riskwcontrolvalue_i</text-property>
+                        </label>
                     </cell>
-                    <cell id="808">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
+                    <cell id="982">
+                        <label id="1030">
+                            <text-property name="text">asset_riskwcontrolvalue_a</text-property>
+                        </label>
                     </cell>
-                    <cell id="791">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
+                </row>
+            </header>
+            <group id="1032">
+                <property name="groupName">NewTableGroup1</property>
+                <property name="interval">none</property>
+                <property name="sortDirection">asc</property>
+                <expression name="keyExpr" type="javascript">row["asset_type"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["asset_type"]</expression>
+                </structure>
+                <property name="repeatHeader">true</property>
+                <property name="hideDetail">false</property>
+                <property name="pageBreakAfter">auto</property>
+                <property name="pageBreakBefore">auto</property>
+                <property name="pageBreakInside">auto</property>
+                <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["asset_name"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                </list-property>
+                <header>
+                    <row id="1033">
+                        <property name="style">vn-groupheader</property>
+                        <cell id="1034">
+                            <data id="1053">
+                                <property name="resultSetColumn">asset_type</property>
+                            </data>
+                        </cell>
+                        <cell id="1035"/>
+                        <cell id="1036"/>
+                        <cell id="1037"/>
+                        <cell id="1038"/>
+                        <cell id="1039"/>
+                        <cell id="1040"/>
+                        <cell id="1041"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="1043">
+                        <cell id="1044"/>
+                        <cell id="1045"/>
+                        <cell id="1046"/>
+                        <cell id="1047"/>
+                        <cell id="1048"/>
+                        <cell id="1049"/>
+                        <cell id="1050"/>
+                        <cell id="1051"/>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="984">
+                    <cell id="985">
+                        <data id="1014">
+                            <property name="resultSetColumn">asset_abbr</property>
+                        </data>
                     </cell>
+                    <cell id="986">
+                        <data id="1016">
+                            <property name="resultSetColumn">asset_name</property>
+                        </data>
+                    </cell>
+                    <cell id="987">
+                        <data id="1023">
+                            <property name="resultSetColumn">asset_riskvalue_c</property>
+                        </data>
+                    </cell>
+                    <cell id="988">
+                        <data id="1024">
+                            <property name="resultSetColumn">asset_riskvalue_i</property>
+                        </data>
+                    </cell>
+                    <cell id="989">
+                        <data id="1025">
+                            <property name="resultSetColumn">asset_riskvalue_a</property>
+                        </data>
+                    </cell>
+                    <cell id="990">
+                        <data id="1027">
+                            <property name="resultSetColumn">asset_riskwcontrolvalue_c</property>
+                        </data>
+                    </cell>
+                    <cell id="991">
+                        <data id="1029">
+                            <property name="resultSetColumn">asset_riskwcontrolvalue_i</property>
+                        </data>
+                    </cell>
+                    <cell id="992">
+                        <data id="1031">
+                            <property name="resultSetColumn">asset_riskwcontrolvalue_a</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="994">
+                    <cell id="995"/>
+                    <cell id="996"/>
+                    <cell id="997"/>
+                    <cell id="998"/>
+                    <cell id="999"/>
+                    <cell id="1000"/>
+                    <cell id="1001"/>
+                    <cell id="1002"/>
                 </row>
             </footer>
         </table>
@@ -3871,142 +3726,170 @@ columns(cols);</value>
             <property name="paddingTop">20pt</property>
             <text-property name="text">Processes</text-property>
         </label>
-        <table id="894">
+        <table id="1055">
             <property name="dataSet">processes</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">Titel</property>
-                    <expression name="expression" type="javascript">dataSetRow["Titel"]</expression>
+                    <property name="name">process_name</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_name"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Tags</property>
-                    <expression name="expression" type="javascript">dataSetRow["Tags"]</expression>
+                    <property name="name">process_tag</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_tag"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Abkürzung</property>
-                    <expression name="expression" type="javascript">dataSetRow["Abkürzung"]</expression>
+                    <property name="name">process_abbr</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_abbr"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Bestimme Vertraulichkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Bestimme Vertraulichkeit"]</expression>
+                    <property name="name">process_value_method_confidentiality</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_value_method_confidentiality"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Bestimme Integrität</property>
-                    <expression name="expression" type="javascript">dataSetRow["Bestimme Integrität"]</expression>
+                    <property name="name">process_value_method_integrity</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_value_method_integrity"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Bestimme Verfügbarkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Bestimme Verfügbarkeit"]</expression>
+                    <property name="name">process_value_method_availability</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_value_method_availability"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Vertraulichkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Vertraulichkeit"]</expression>
+                    <property name="name">process_value_confidentiality</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_value_confidentiality"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Integrität</property>
-                    <expression name="expression" type="javascript">dataSetRow["Integrität"]</expression>
+                    <property name="name">process_value_integrity</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_value_integrity"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Verfügbarkeit</property>
-                    <expression name="expression" type="javascript">dataSetRow["Verfügbarkeit"]</expression>
+                    <property name="name">process_value_availability</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_value_availability"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Begründung</property>
-                    <expression name="expression" type="javascript">dataSetRow["Begründung"]</expression>
+                    <property name="name">process_value_comment</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_value_comment"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Risk value</property>
-                    <expression name="expression" type="javascript">dataSetRow["Risk value"]</expression>
+                    <property name="name">process_riskvalue_c</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_riskvalue_c"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Risk after controls</property>
-                    <expression name="expression" type="javascript">dataSetRow["Risk after controls"]</expression>
+                    <property name="name">process_riskwcontrolvalue_c</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_riskwcontrolvalue_c"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Risk Treatment</property>
-                    <expression name="expression" type="javascript">dataSetRow["Risk Treatment"]</expression>
+                    <property name="name">process_riskvalue_i</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_riskvalue_i"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Explanation</property>
-                    <expression name="expression" type="javascript">dataSetRow["Explanation"]</expression>
+                    <property name="name">process_riskwcontrolvalue_i</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_riskwcontrolvalue_i"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">process_riskvalue_a</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_riskvalue_a"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">process_riskwcontrolvalue_a</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_riskwcontrolvalue_a"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">process_risktreat</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_risktreat"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">process_risktreatexpl</property>
+                    <expression name="expression" type="javascript">dataSetRow["process_risktreatexpl"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
-            <column id="925"/>
-            <column id="926"/>
-            <column id="927"/>
-            <column id="928"/>
-            <column id="929"/>
-            <column id="930"/>
-            <column id="931"/>
-            <column id="932"/>
-            <column id="933"/>
+            <column id="1071"/>
+            <column id="1072"/>
+            <column id="1073"/>
+            <column id="1074"/>
+            <column id="1082"/>
             <header>
-                <row id="895">
-                    <cell id="896">
-                        <label id="934">
-                            <text-property name="text">Abkürzung</text-property>
+                <row id="1056">
+                    <cell id="1057">
+                        <label id="1075">
+                            <text-property name="text">process_abbr</text-property>
                         </label>
                     </cell>
-                    <cell id="897">
-                        <label id="936">
-                            <text-property name="text">Titel</text-property>
+                    <cell id="1058">
+                        <label id="1077">
+                            <text-property name="text">process_name</text-property>
                         </label>
                     </cell>
-                    <cell id="898"/>
-                    <cell id="899"/>
-                    <cell id="900"/>
-                    <cell id="901"/>
-                    <cell id="902"/>
-                    <cell id="903"/>
-                    <cell id="904"/>
+                    <cell id="1059">
+                        <label id="1083">
+                            <text-property name="text">process_riskvalue_c</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1060">
+                        <label id="1085">
+                            <text-property name="text">process_riskwcontrolvalue_i</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1079">
+                        <label id="1087">
+                            <text-property name="text">process_riskwcontrolvalue_a</text-property>
+                        </label>
+                    </cell>
                 </row>
             </header>
             <detail>
-                <row id="905">
-                    <cell id="906">
-                        <data id="935">
-                            <property name="resultSetColumn">Abkürzung</property>
+                <row id="1061">
+                    <cell id="1062">
+                        <data id="1076">
+                            <property name="resultSetColumn">process_abbr</property>
                         </data>
                     </cell>
-                    <cell id="907">
-                        <data id="937">
-                            <property name="resultSetColumn">Titel</property>
+                    <cell id="1063">
+                        <data id="1078">
+                            <property name="resultSetColumn">process_name</property>
                         </data>
                     </cell>
-                    <cell id="908"/>
-                    <cell id="909"/>
-                    <cell id="910"/>
-                    <cell id="911"/>
-                    <cell id="912"/>
-                    <cell id="913"/>
-                    <cell id="914"/>
+                    <cell id="1064">
+                        <data id="1084">
+                            <property name="resultSetColumn">process_riskvalue_c</property>
+                        </data>
+                    </cell>
+                    <cell id="1065">
+                        <data id="1086">
+                            <property name="resultSetColumn">process_riskwcontrolvalue_i</property>
+                        </data>
+                    </cell>
+                    <cell id="1080">
+                        <data id="1088">
+                            <property name="resultSetColumn">process_riskwcontrolvalue_a</property>
+                        </data>
+                    </cell>
                 </row>
             </detail>
             <footer>
-                <row id="915">
-                    <cell id="916"/>
-                    <cell id="917"/>
-                    <cell id="918"/>
-                    <cell id="919"/>
-                    <cell id="920"/>
-                    <cell id="921"/>
-                    <cell id="922"/>
-                    <cell id="923"/>
-                    <cell id="924"/>
+                <row id="1066">
+                    <cell id="1067"/>
+                    <cell id="1068"/>
+                    <cell id="1069"/>
+                    <cell id="1070"/>
+                    <cell id="1081"/>
                 </row>
             </footer>
         </table>

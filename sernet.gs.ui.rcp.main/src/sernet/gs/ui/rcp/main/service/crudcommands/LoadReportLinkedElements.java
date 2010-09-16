@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
-import com.sun.xml.messaging.saaj.util.LogDomainConstants;
-
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
@@ -27,31 +23,25 @@ import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class LoadReportElements extends GenericCommand {
+/**
+ * Load all elements of given type linked to the given root element.
+ */
+public class LoadReportLinkedElements extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(LoadNotes.class);
-    
-    public Logger getLog() {
-        if(log==null) {
-            log = Logger.getLogger(LoadNotes.class);
-        }
-        return log;
-    }
 
 	private String typeId;
     private Integer rootElement;
-    private ArrayList<CnATreeElement> elements;
+    private List<CnATreeElement> elements;
     
-    public LoadReportElements(String typeId, Integer rootElement) {
+    public LoadReportLinkedElements(String typeId, Integer rootElement) {
 	    this.typeId = typeId;
 	    this.rootElement = rootElement;
 	}
 	
 	public void execute() {
-	    getLog().debug("LoadReportElements for root_object " + rootElement);
-	    
 	    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
 	    try {
             command = getCommandService().executeCommand(command);
@@ -59,17 +49,8 @@ public class LoadReportElements extends GenericCommand {
             throw new RuntimeCommandException(e);
         }
 	    CnATreeElement root = command.getElements().get(0);
-
-	    //if typeId is that of the root object, just return it itself. else look for children:
-	    ArrayList<CnATreeElement> items = new ArrayList<CnATreeElement>();
-	    if (this.typeId.equals(root.getTypeId())) {
-	        this.elements = items;
-	        this.elements.add(root);
-	    }
-	    else {
-	        getElements(typeId, items, root);
-	        this.elements = items;
-	    }
+	    
+	    elements = getLinkedElements(root);
 	    
 	    IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 	    RetrieveInfo ri = new RetrieveInfo();
@@ -84,27 +65,31 @@ public class LoadReportElements extends GenericCommand {
 	}
 
 	/**
+     * @param root
+     * @param typeId2
+     * @return
+     */
+    private List<CnATreeElement> getLinkedElements(CnATreeElement root) {
+        ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>();
+        for (CnALink link : root.getLinksDown()) {
+            if (link.getDependency().getTypeId().equals(this.typeId))
+                result.add(link.getDependency());
+        }
+        for (CnALink link : root.getLinksDown()) {
+            if (link.getDependant().getTypeId().equals(this.typeId))
+                result.add(link.getDependant());
+        }
+        return result;
+    }
+
+    /**
      * @return the elements
      */
     public List<CnATreeElement> getElements() {
         return elements;
     }
 
-    public void getElements(String typeFilter, List<CnATreeElement> items, CnATreeElement parent) {
-        for (CnATreeElement child : parent.getChildren()) {
-            if (typeFilter != null && typeFilter.length()>0) {
-                if (child.getTypeId().equals(typeFilter)) {
-                    items.add(child);
-                    child.getParent().getTitle();
-                }
-            } else {
-                items.add(child);
-                child.getParent().getTitle();
-            }
-            getElements(typeFilter, items, child);
-        }
-        
-    }
+  
 	
 
 

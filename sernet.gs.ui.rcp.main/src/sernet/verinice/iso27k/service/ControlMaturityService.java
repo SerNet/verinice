@@ -135,7 +135,7 @@ public class ControlMaturityService {
     public String getImplementationState(IControl control) {
         
         if (control.getMaturity() == Property.UNDEF) {
-            return IControl.IMPLEMENTED_NOT_EDITED;
+            return IControl.IMPLEMENTED_NOTEDITED;
         }
         
         if (control.getMaturity() >= control.getThreshold2()) {

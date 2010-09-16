@@ -62,6 +62,9 @@ public class Query implements IQuery
 	private int maxRows;
     private String queryText;
     
+    
+    public static Integer vnRrootObject;
+    
     private Interpreter setupInterpreter, interpreter;
     
     private HashMap<String, String> properties = new HashMap<String, String>();
@@ -127,7 +130,7 @@ public class Query implements IQuery
      *
      */
     public class Helper {
-    	
+        
     	public ICommand execute(ICommand c)
     	{
     		try
@@ -183,11 +186,6 @@ public class Query implements IQuery
           return htf.getEntityType(entityTypeId).getAllPropertyTypeIDsIncludingGroups();
       }
 
-      public String[] getAllPropertyTitles(String entityTypeId) {
-          HUITypeFactory htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-          return htf.getEntityType(entityTypeId).getAllPropertyTypeTitlesIncludingGroups();
-      }
-        
         public List<List<String>> map(List<CnATreeElement> input, String[] props)
         {
         	return map(input, props, new Class<?>[0]);
@@ -212,6 +210,10 @@ public class Query implements IQuery
         	}
         	
         	return result;
+        }
+        
+        public Integer getRoot() {
+            return Query.vnRrootObject;
         }
 
         /**

@@ -26,12 +26,14 @@ package sernet.verinice.model.iso27k;
 public interface IControl {
 
     // constants for different implementation  states of controls:
-    public static final String IMPLEMENTED_NOT_EDITED = "implemented_not_edited";
-    public static final String IMPLEMENTED_NO = "implemented_no";
-    public static final String IMPLEMENTED_YES = "implemented_yes";
-    public static final String IMPLEMENTED_PARTLY = "implemented_partly";
-    public static final String IMPLEMENTED_NA = "implemented_na";
-    public static final String PROP_IMPLEMENTED_NOTEDITED = "control_implemented_notedited";
+    public static final String PROP_IMPL = "control_implemented";
+
+    public static final String IMPLEMENTED_NO = "control_implemented_no";
+    public static final String IMPLEMENTED_YES = "control_implemented_yes";
+    public static final String IMPLEMENTED_PARTLY = "control_implemented_partly";
+    public static final String IMPLEMENTED_NA = "control_implemented_na";
+    public static final String IMPLEMENTED_NOTEDITED = "control_implemented_notedited";
+    
     
     public String getTitle();
     
@@ -92,5 +94,7 @@ public interface IControl {
      * @return the id of the maturity property in SNCA.xml
      */
     public String getMaturityPropertyId();
+    
+    public boolean isImplemented();
 
 }
