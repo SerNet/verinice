@@ -94,6 +94,7 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 		// remove listener from currently displayed model:
 		getModel(viewer.getInput()).removeBSIModelListener(this);
 		newModel.addBSIModelListener(this);
+        cache.clear();
 		updater.setInput(newModel);
 		updater.refresh();
 	}
