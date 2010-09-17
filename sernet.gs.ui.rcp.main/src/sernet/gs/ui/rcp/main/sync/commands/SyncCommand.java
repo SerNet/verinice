@@ -42,9 +42,8 @@ import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.sync.SyncRequest;
 
 @SuppressWarnings("serial")
-public class SyncCommand extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand
-{
-	private transient Logger log = Logger.getLogger(SyncCommand.class);
+public class SyncCommand extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand {
+    private transient Logger log = Logger.getLogger(SyncCommand.class);
 
     public Logger getLog() {
         if (log == null) {
@@ -52,177 +51,169 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
         }
         return log;
     }
-    
+
     private String sourceId;
-	
-	private transient IAuthService authService;
-	
-	private String stationId;
-	
-	private boolean insert, update, delete;
-	
-	private byte[] syncRequestSerialized;
-	
-	private transient SyncData syncData;
-	
-	private transient SyncMapping syncMapping;
-	
-	private int inserted, updated, deleted;
-	
-	private List<String> errors = new ArrayList<String>();
-	
-	private CnATreeElement importRootObject;
+
+    private transient IAuthService authService;
+
+    private String stationId;
+
+    private boolean insert, update, delete;
+
+    private byte[] syncRequestSerialized;
+
+    private transient SyncData syncData;
+
+    private transient SyncMapping syncMapping;
+
+    private int inserted, updated, deleted;
+
+    private List<String> errors = new ArrayList<String>();
+
+    private CnATreeElement importRootObject;
 
     private Set<CnATreeElement> elementSet = null;
 
-	/** Creates an instance of the SyncCommand where the {@link SyncRequest} object is already
-	 * serialized to a byte array.
-	 * 
-	 * <p>Usage of this constructor is needed in all cases where command is going
-	 * to be serialized/deserialized. This in turn would cause the same being done
-	 * to the {@link SyncRequest} object which unfortunately is not possible (through
-	 * default Spring HttpInvoker mechanism at least).</p>
-	 * 
-	 * @param insert
-	 * @param update
-	 * @param delete
-	 * @param syncRequestSerialized
-	 */
-	public SyncCommand(boolean insert, boolean update, boolean delete, byte[] syncRequestSerialized)
-	{
-		this.insert = insert;
-		this.update = update;
-		this.delete = delete;
+    /**
+     * Creates an instance of the SyncCommand where the {@link SyncRequest}
+     * object is already serialized to a byte array.
+     * 
+     * <p>
+     * Usage of this constructor is needed in all cases where command is going
+     * to be serialized/deserialized. This in turn would cause the same being
+     * done to the {@link SyncRequest} object which unfortunately is not
+     * possible (through default Spring HttpInvoker mechanism at least).
+     * </p>
+     * 
+     * @param insert
+     * @param update
+     * @param delete
+     * @param syncRequestSerialized
+     */
+    public SyncCommand(boolean insert, boolean update, boolean delete, byte[] syncRequestSerialized) {
+        this.insert = insert;
+        this.update = update;
+        this.delete = delete;
 
-		this.syncRequestSerialized = syncRequestSerialized;
-		this.stationId = ChangeLogEntry.STATION_ID;
-	}
-	
-	/**
-	 * Works like {@link #SyncCommand(String, boolean, boolean, boolean, byte[])} but does the JAXB serialization
-	 * under the hood automatically.
-	 * 
-	 * @param insert
-	 * @param update
-	 * @param delete
-	 * @param sr
-	 */
-	public SyncCommand(boolean insert, boolean update, boolean delete, SyncRequest sr)
-	{
-		this.insert = insert;
-		this.update = update;
-		this.delete = delete;
+        this.syncRequestSerialized = syncRequestSerialized;
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
 
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		JAXB.marshal(sr, bos);
-		
-		this.syncRequestSerialized = bos.toByteArray();
-		this.stationId = ChangeLogEntry.STATION_ID;
-	}
-	
-	public SyncCommand(SyncRequest sr)
-	{
-		this.sourceId = sr.getSourceId();
-		
-		this.insert = sr.isInsert();
-		this.update = sr.isUpdate();
-		this.delete = sr.isDelete();
-		
-		this.syncData = sr.getSyncData();
-		this.syncMapping = sr.getSyncMapping();
-		
-		this.syncRequestSerialized = null;
-		this.stationId = ChangeLogEntry.STATION_ID;
-	}
-	
-	@Override
-	public void execute()
-	{
-	    if (getLog().isDebugEnabled()) {
-	        String xml = new String(syncRequestSerialized);
-	        getLog().debug("Importing data:");
+    /**
+     * Works like
+     * {@link #SyncCommand(String, boolean, boolean, boolean, byte[])} but does
+     * the JAXB serialization under the hood automatically.
+     * 
+     * @param insert
+     * @param update
+     * @param delete
+     * @param sr
+     */
+    public SyncCommand(boolean insert, boolean update, boolean delete, SyncRequest sr) {
+        this.insert = insert;
+        this.update = update;
+        this.delete = delete;
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        JAXB.marshal(sr, bos);
+
+        this.syncRequestSerialized = bos.toByteArray();
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
+
+    public SyncCommand(SyncRequest sr) {
+        this.sourceId = sr.getSourceId();
+
+        this.insert = sr.isInsert();
+        this.update = sr.isUpdate();
+        this.delete = sr.isDelete();
+
+        this.syncData = sr.getSyncData();
+        this.syncMapping = sr.getSyncMapping();
+
+        this.syncRequestSerialized = null;
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
+
+    @Override
+    public void execute() {
+        if (getLog().isDebugEnabled()) {
+            String xml = new String(syncRequestSerialized);
+            getLog().debug("Importing data:");
             getLog().debug(xml);
         }
-	    
-		if (syncRequestSerialized != null)
-		{
-			SyncRequest sr = (SyncRequest) JAXB.unmarshal(new ByteArrayInputStream(syncRequestSerialized), SyncRequest.class);
-			sourceId = sr.getSourceId();
-			syncData = sr.getSyncData();
-			syncMapping = sr.getSyncMapping();
-		} else if (syncData == null || syncMapping == null)
-		{
-			throw new IllegalStateException("Command serialized but " + SyncRequest.class.getName() + " not provided pre-serialized. Check constructor usage!");
-		}
-		
-		SyncInsertUpdateCommand cmdInsertUpdate =
-			new SyncInsertUpdateCommand(sourceId,
-					syncData, syncMapping,
-					insert, update, errors);
 
-		try {
-			cmdInsertUpdate = getCommandService().executeCommand(cmdInsertUpdate);
-		} catch (CommandException e) {
-			errors.add("Insert/Update failed.");
-			return;
-		}
-		
-		importRootObject = cmdInsertUpdate.getContainer();
-		elementSet = cmdInsertUpdate.getElementSet();
-		
-		inserted += cmdInsertUpdate.getInserted();
-		updated += cmdInsertUpdate.getUpdated();
+        if (syncRequestSerialized != null) {
+            SyncRequest sr = JAXB.unmarshal(new ByteArrayInputStream(syncRequestSerialized), SyncRequest.class);
+            sourceId = sr.getSourceId();
+            syncData = sr.getSyncData();
+            syncMapping = sr.getSyncMapping();
+        } else if (syncData == null || syncMapping == null) {
+            throw new IllegalStateException("Command serialized but " + SyncRequest.class.getName() + " not provided pre-serialized. Check constructor usage!");
+        }
 
-		if( delete )
-		{
-			SyncDeleteCommand cmdDelete = new SyncDeleteCommand( sourceId, syncData, errors);
-			
-			try {
-				cmdDelete = getCommandService().executeCommand(cmdDelete);
-			} catch (CommandException e) {
-				errors.add("Delete failed.");
-				return;
-			}
-			
-			deleted += cmdDelete.getDeleted();
-		}
+        SyncInsertUpdateCommand cmdInsertUpdate = new SyncInsertUpdateCommand(sourceId, syncData, syncMapping, insert, update, errors);
 
-	}
+        try {
+            cmdInsertUpdate = getCommandService().executeCommand(cmdInsertUpdate);
+        } catch (CommandException e) {
+            errors.add("Insert/Update failed.");
+            return;
+        }
 
-	public int getInserted()
-	{
-		return inserted;
-	}
-	
-	public int getUpdated()
-	{
-		return updated;
-	}
-	
-	public int getDeleted()
-	{
-		return deleted;
-	}
-	
-	public List<String> getErrors()
-	{
-		return errors;
-	}
+        importRootObject = cmdInsertUpdate.getContainer();
+        elementSet = cmdInsertUpdate.getElementSet();
 
-	/** See {@link SyncInsertUpdateCommand#getImportRootObject()}.
-	 * 
-	 * @return
-	 */
-	public CnATreeElement getImportRootObject()
-	{
-		return importRootObject;
-	}
-	
-	public Set<CnATreeElement> getElementSet() {
+        inserted += cmdInsertUpdate.getInserted();
+        updated += cmdInsertUpdate.getUpdated();
+
+        if (delete) {
+            SyncDeleteCommand cmdDelete = new SyncDeleteCommand(sourceId, syncData, errors);
+
+            try {
+                cmdDelete = getCommandService().executeCommand(cmdDelete);
+            } catch (CommandException e) {
+                errors.add("Delete failed.");
+                return;
+            }
+
+            deleted += cmdDelete.getDeleted();
+        }
+
+    }
+
+    public int getInserted() {
+        return inserted;
+    }
+
+    public int getUpdated() {
+        return updated;
+    }
+
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public List<String> getErrors() {
+        return errors;
+    }
+
+    /**
+     * See {@link SyncInsertUpdateCommand#getImportRootObject()}.
+     * 
+     * @return
+     */
+    public CnATreeElement getImportRootObject() {
+        return importRootObject;
+    }
+
+    public Set<CnATreeElement> getElementSet() {
         return elementSet;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
      */
     @Override
@@ -230,22 +221,27 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
         return ChangeLogEntry.TYPE_INSERT;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
         List<CnATreeElement> changedElements = new LinkedList<CnATreeElement>();
-        if(importRootObject!=null) {
+        if (importRootObject != null) {
             changedElements.add(importRootObject);
         }
-        if(elementSet!=null) {
+        if (elementSet != null) {
             changedElements.addAll(elementSet);
         }
         return changedElements;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
      */
     @Override
