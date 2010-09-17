@@ -50,10 +50,36 @@ public class Messages extends NLS {
     public static String ChooseReportPage_1;
     public static String ChooseReportPage_2;
     public static String ChooseReportPage_3;
+    public static String EntitySelectionPage_0;
+    public static String EntitySelectionPage_1;
+    public static String EntitySelectionPage_10;
+    public static String EntitySelectionPage_11;
+    public static String EntitySelectionPage_12;
+    public static String EntitySelectionPage_13;
+    public static String EntitySelectionPage_14;
+    public static String EntitySelectionPage_16;
+    public static String EntitySelectionPage_17;
+    public static String EntitySelectionPage_18;
+    public static String EntitySelectionPage_2;
+    public static String EntitySelectionPage_3;
+    public static String EntitySelectionPage_4;
+    public static String EntitySelectionPage_7;
+    public static String EntitySelectionPage_8;
+    public static String EntitySelectionPage_9;
     public static String ExportWizard_0;
     public static String ExportWizard_1;
     public static String ExportWizard_2;
     public static String ExportWizard_6;
+    public static String ImportCSVWizard_1;
+    public static String ImportCSVWizard_2;
+    public static String ImportCSVWizard_3;
+    public static String ImportCSVWizard_5;
+    public static String ImportCSVWizard_7;
+    public static String PropertiesSelectionPage_0;
+    public static String PropertiesSelectionPage_1;
+    public static String PropertiesSelectionPage_2;
+    public static String PropertiesSelectionPage_3;
+    public static String PropertiesSelectionPage_4;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

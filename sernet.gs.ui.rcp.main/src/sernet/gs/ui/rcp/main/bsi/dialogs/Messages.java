@@ -81,7 +81,7 @@ public class Messages extends NLS {
     public static String EditBausteinVorgabeDialog_1;
     public static String EditBausteinVorgabeDialog_2;
     public static String EditBausteinVorgabeDialog_3;
-	public static String ExportDialog_0;
+    public static String ExportDialog_0;
 	public static String ExportDialog_1;
 	public static String ExportDialog_2;
 	public static String ExportDialog_3;

@@ -90,7 +90,7 @@ public class XMLImportDialog extends Dialog {
         } else if ((!insert && !update && !delete)) {
             createErrorMessage(2);
         } else {
-            WorkspaceJob exportJob = new WorkspaceJob(Messages.XMLImportDialog_4) {
+            WorkspaceJob importJob = new WorkspaceJob(Messages.XMLImportDialog_4) {
                 @Override
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
                     IStatus status = Status.OK_STATUS;
@@ -108,7 +108,7 @@ public class XMLImportDialog extends Dialog {
                     return status;
                 }
             };
-            JobScheduler.scheduleJob(exportJob, iSchedulingRule);
+            JobScheduler.scheduleJob(importJob, iSchedulingRule);
             close();
         }
     }
@@ -460,6 +460,7 @@ public class XMLImportDialog extends Dialog {
             if (changedElement != null) {
                 for (CnATreeElement cnATreeElement : changedElement) {
                     CnAElementFactory.getModel(cnATreeElement).childAdded(cnATreeElement.getParent(), cnATreeElement);
+                    CnAElementFactory.getModel(cnATreeElement).databaseChildAdded(cnATreeElement);
                 }
             }
         }
@@ -467,6 +468,7 @@ public class XMLImportDialog extends Dialog {
         if (changedElement != null) {
             for (CnATreeElement cnATreeElement : changedElement) {
                 CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
+                CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
             }
         }
     }

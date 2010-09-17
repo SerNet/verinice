@@ -1,9 +1,6 @@
 package sernet.gs.ui.rcp.main.bsi.wizards;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +16,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
@@ -27,28 +25,29 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
+import sernet.gs.service.VeriniceCharset;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
-import sernet.hui.common.connect.IEntityElement;
 
 public class EntitySelectionPage extends WizardPage{
-	private final static String[] FILTEREXTEND = { "*.csv", "*.CSV", "*.*"};
+	private final static String[] FILTEREXTEND = { "*.csv", "*.CSV", "*.*"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	private File csvFile;
-	private String entityName = "";
+	private String entityName = ""; //$NON-NLS-1$
+    private Text sourceIdText;
+    private Combo separatorCombo;
+    private Combo charsetCombo;
 	private Text csvText;
 	private Text entityText;
 	private Vector<String> entityNames;
-	private String entityNameId = "";
+	private String entityNameId = ""; //$NON-NLS-1$
 	private boolean insert;
 	private boolean update;
 	private boolean delete;
 
 	protected EntitySelectionPage(String pageName) {
-	    // FIXME externalize strings
 		super(pageName);
-		this.setTitle("Entitätimport und Einstellungen");
-		this.setDescription("Synchronisationseinstellungen festlegen und die zu importierende Entität angeben.");
+		this.setTitle(Messages.EntitySelectionPage_0); 
+		this.setDescription(Messages.EntitySelectionPage_1); 
 		entityNames = new Vector<String>();
 		setPageComplete(false);
 	}
@@ -63,35 +62,50 @@ public class EntitySelectionPage extends WizardPage{
 		container.setLayout(gridLayout);
 		setControl(container);
 		
-		//set ID
+		// settings
 		
 		Group idGroup = new Group(container,SWT.NULL);
-    	idGroup.setText(Messages.XMLImportDialog_3);
-		idGroup.setLayoutData(new GridData(GridData.FILL,GridData.CENTER, true, false, 5, 1));
-		
-		
-		gridLayout = new GridLayout();
-		gridLayout.numColumns = 4;
-		gridLayout.makeColumnsEqualWidth = true;
+    	idGroup.setText(Messages.EntitySelectionPage_2);
+		gridLayout = new GridLayout(6, false);
 		idGroup.setLayout(gridLayout);
+		idGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Label sourceIdLabel = new Label(idGroup, SWT.LEFT);
+		sourceIdLabel.setText(Messages.EntitySelectionPage_3);
+		sourceIdText = new Text(idGroup, SWT.BORDER);
+		sourceIdText.setLayoutData(new GridData(GridData.FILL,GridData.CENTER, true, false, 1, 1));
+        
+		Label separatorLabel = new Label(idGroup, SWT.LEFT);
+		separatorLabel.setText(Messages.EntitySelectionPage_4);
+		separatorCombo = new Combo(idGroup, SWT.READ_ONLY );
+		separatorCombo.add(";"); //$NON-NLS-1$
+		separatorCombo.add(","); //$NON-NLS-1$
+		separatorCombo.select(0);
+		separatorCombo.setLayoutData(new GridData(GridData.BEGINNING,GridData.CENTER, false, false, 1, 1));
+		separatorCombo.pack();
+		
+		Label charsetLabel = new Label(idGroup, SWT.LEFT);
+		charsetLabel.setText(Messages.EntitySelectionPage_7);
+		charsetCombo = new Combo(idGroup, SWT.READ_ONLY );
+		charsetCombo.add(VeriniceCharset.CHARSET_UTF_8.displayName());
+        charsetCombo.add(VeriniceCharset.CHARSET_ISO_8859_15.displayName());
+        charsetCombo.add(VeriniceCharset.CHARSET_WINDOWS_1252.displayName());
+		charsetCombo.select(0);
 		
 		//Operations of database (update,insert,delete)
 		
 		Group operationGroup = new Group(container,SWT.NULL);
-    	operationGroup.setText(Messages.XMLImportDialog_6);
+    	operationGroup.setText(Messages.EntitySelectionPage_8);
 		operationGroup.setLayoutData(new GridData(GridData.FILL,GridData.CENTER, true, false, 1, 1));
 		
 		gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		operationGroup.setLayout(gridLayout);
 		
-		Label operationIntro = new Label(operationGroup, SWT.LEFT);
-	    operationIntro.setText(Messages.XMLImportDialog_7);
-		operationIntro.setLayoutData(new GridData(GridData.FILL,GridData.CENTER, true, false, 2, 1));
-		
 		final Button insertCheck = new Button(operationGroup, SWT.CHECK);
 		insertCheck.setSelection(true);
-    	insertCheck.setText("insert");
+		insert = true;
+    	insertCheck.setText(Messages.EntitySelectionPage_9); 
     	insertCheck.setLayoutData(new GridData(GridData.BEGINNING,GridData.CENTER, false, false, 1, 1));
     	insertCheck.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -102,12 +116,13 @@ public class EntitySelectionPage extends WizardPage{
 		});
     	
     	Label insertText = new Label(operationGroup, SWT.LEFT);
-    	insertText.setText(Messages.XMLImportDialog_8);
+    	insertText.setText(Messages.EntitySelectionPage_10);
     	insertText.setLayoutData(new GridData(GridData.FILL,GridData.CENTER, true, false, 1, 1));
 		
     	final Button updateCheck = new Button(operationGroup, SWT.CHECK);
-    	updateCheck.setText("update");
+    	updateCheck.setText(Messages.EntitySelectionPage_11); 
     	updateCheck.setSelection(true);
+    	update = true;
     	updateCheck.setLayoutData(new GridData(GridData.BEGINNING,GridData.CENTER, false, false, 1, 1));
     	updateCheck.addSelectionListener(new SelectionAdapter() {
 			 @Override
@@ -118,11 +133,11 @@ public class EntitySelectionPage extends WizardPage{
 		});
     	
     	Label updateText = new Label(operationGroup, SWT.LEFT);
-    	updateText.setText(Messages.XMLImportDialog_9);
+    	updateText.setText(Messages.EntitySelectionPage_12);
     	updateText.setLayoutData(new GridData(GridData.FILL,GridData.CENTER, true, false, 1, 1));
 		
     	final Button deleteCheck = new Button(operationGroup, SWT.CHECK);
-    	deleteCheck.setText("delete");
+    	deleteCheck.setText(Messages.EntitySelectionPage_13); 
     	deleteCheck.setLayoutData(new GridData(GridData.BEGINNING,GridData.CENTER, false, false, 1, 1));
     	deleteCheck.addSelectionListener(new SelectionAdapter() {
 			 @Override
@@ -133,7 +148,7 @@ public class EntitySelectionPage extends WizardPage{
 		});
     	
     	Label deleteText = new Label(operationGroup, SWT.LEFT);
-    	deleteText.setText(Messages.XMLImportDialog_10);
+    	deleteText.setText(Messages.EntitySelectionPage_14);
     	deleteText.setLayoutData(new GridData(GridData.FILL,GridData.CENTER, true, false, 1, 1));
     	
 	    final List list = new List(container, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
@@ -152,8 +167,10 @@ public class EntitySelectionPage extends WizardPage{
             }
         });
         for (EntityType entityType : allEntityTypes) {
-        	list.add(entityType.getName());
-        	this.entityNames.add(entityType.getId());
+            if(!entityType.getId().toLowerCase().endsWith("group")) { //$NON-NLS-1$
+            	list.add(entityType.getName());
+            	this.entityNames.add(entityType.getId());
+            }
         }
         
 	    list.addSelectionListener(new SelectionListener() {
@@ -166,9 +183,9 @@ public class EntitySelectionPage extends WizardPage{
 	
 		    public void widgetDefaultSelected(SelectionEvent event) {
 		        int[] selectedItems = list.getSelectionIndices();
-		        String outString = "";
+		        String outString = ""; //$NON-NLS-1$
 		        for (int loopIndex = 0; loopIndex < selectedItems.length; loopIndex++)
-		        	outString += selectedItems[loopIndex] + " ";
+		        	outString += selectedItems[loopIndex] + " "; //$NON-NLS-1$
 		    }
 	    });
         
@@ -178,12 +195,12 @@ public class EntitySelectionPage extends WizardPage{
 		comp.setLayout(gridLayout);
 		
 		Label selectedEntity = new Label(comp, SWT.NONE);
-		selectedEntity.setText("Verinice Entität:");
+		selectedEntity.setText(Messages.EntitySelectionPage_16); 
 		selectedEntity.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
 				false, 1, 1));
 
 		Label importedCSV = new Label(comp, SWT.NONE);
-		importedCSV.setText("Importierte Entität:");
+		importedCSV.setText(Messages.EntitySelectionPage_17); 
 		importedCSV.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
 				false, 2, 1));
 	    
@@ -196,7 +213,7 @@ public class EntitySelectionPage extends WizardPage{
 	    csvText.setLayoutData(new GridData(120,15));
 	    
 	    final Button dataBrowse = new Button(comp,SWT.PUSH);
-    	dataBrowse.setText(Messages.XMLImportDialog_14);
+    	dataBrowse.setText(Messages.EntitySelectionPage_18);
 		dataBrowse.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1,1));
 		dataBrowse.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -207,10 +224,13 @@ public class EntitySelectionPage extends WizardPage{
 		
 	}
 	
-	public boolean validateData(){
-		if(this.entityName.equals("") || csvText.getText().equals("")|| (!insert && !update && !delete))
-			return false;
-		return true;
+
+	public boolean validateData() {
+	    boolean valid = sourceIdText.getText()!=null && !sourceIdText.getText().isEmpty() &&
+	                    entityName!=null && !entityName.isEmpty() &&
+	                    csvText.getText()!=null && !csvText.getText().isEmpty() &&
+	                    (insert || update || delete);	
+		return valid;
 	}
 	
 	private void displayFiles(Shell shell) {
@@ -222,6 +242,9 @@ public class EntitySelectionPage extends WizardPage{
 			if(file.isFile()){
 				this.csvText.setText(file.getName());//file.getPath()
 				this.csvFile = file;
+				if(this.sourceIdText.getText()==null || this.sourceIdText.getText().isEmpty()) {
+				    this.sourceIdText.setText(file.getName());
+				}
 			}
 		}
 	}
@@ -237,39 +260,8 @@ public class EntitySelectionPage extends WizardPage{
 	}
 	//set the page in default state
 	public void resetEntitySelectionPage() {
-		this.csvText.setText("");
-		this.entityText.setText("");
-	}
-	// get the number of attributes in the *.csv
-	private int getColumnLength(){
-		// open the file to read
-		RandomAccessFile file;
-		String[] spalten = null;
-		try {
-			file = new RandomAccessFile(csvFile, "r");
-			file.seek(0); // set pointer on the beginning of the file
-			spalten = file.readLine().split(";");
-			file.close(); 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return spalten.length;
-	}
-	//get the Number of properties in Verinice
-	private int getNumberOfProperties(){
-		int numberOfElements = 0;
-		Collection<EntityType> allEntityTypes =  HitroUtil.getInstance().getTypeFactory().getAllEntityTypes();
-		if(entityName != null){
-	        for (EntityType entityType : allEntityTypes) {
-	        	if(entityType.getName().equals(entityName)){
-	        		Collection<IEntityElement> elements =  entityType.getElements();
-	        		numberOfElements = elements.size();
-	        	}
-	        }
-		}
-		return numberOfElements;
+		this.csvText.setText(""); //$NON-NLS-1$
+		this.entityText.setText(""); //$NON-NLS-1$
 	}
     
     public boolean getInsertState() {
@@ -282,5 +274,17 @@ public class EntitySelectionPage extends WizardPage{
     
     public boolean getDeleteState() {
     	return delete;
+    }
+
+    protected Text getSourceIdText() {
+        return sourceIdText;
+    }
+
+    public Combo getSeparatorCombo() {
+        return separatorCombo;
+    }
+
+    public Combo getCharsetCombo() {
+        return charsetCombo;
     }
 }

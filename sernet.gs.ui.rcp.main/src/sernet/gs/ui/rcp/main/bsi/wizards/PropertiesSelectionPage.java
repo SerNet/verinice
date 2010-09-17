@@ -1,9 +1,11 @@
 package sernet.gs.ui.rcp.main.bsi.wizards;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,8 +32,13 @@ import org.eclipse.swt.widgets.Text;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.IEntityElement;
+import au.com.bytecode.opencsv.CSVReader;
 
-public class PropertiesSelectionPage extends WizardPage {//implements PageWizardListener
+public class PropertiesSelectionPage extends WizardPage {
+
+    private static final char DEFAULT_SEPARATOR = ';';
+    
+    private char separator = DEFAULT_SEPARATOR;
 	private String entityName;
 	private File csvDatei;
 	private Table tabelle;
@@ -40,13 +47,15 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 	private List<Text> texts;
 	private List<CCombo> combos;
 	private List<String> idCombos;
-	private List<List<String>> inhaltDerTabelle;
+	private String[] firstLine = null;
+	private List<List<String>> inhaltDerTabelle = null;
+
+    private Charset charset;
 	
 	protected PropertiesSelectionPage(String pageName) {
-	    // FIXME externalize strings
 		super(pageName);
-		this.setTitle("Attributzuweisung");
-		this.setDescription("Ordnen Sie die Attribute Ihrer CSV Datei den Attributen in Verinice zu.");
+		this.setTitle(Messages.PropertiesSelectionPage_0);
+		this.setDescription(Messages.PropertiesSelectionPage_1);
 		setPageComplete(false);
 		combos = new Vector<CCombo>();
 		idCombos = new Vector<String>();
@@ -54,6 +63,9 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 		inhaltDerTabelle = new ArrayList<List<String>>();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+	 */
 	@Override
 	public void createControl(Composite parent) {
 		FillLayout layout = new FillLayout();
@@ -70,9 +82,8 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 	    setControl(container);
 	    
 	    Label lab = new Label(container, SWT.NONE);
-		lab.setText("Wählen Sie die entsprechenden Attribute in der ComboBox aus.");
-		lab.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
-				false));
+		lab.setText(Messages.PropertiesSelectionPage_2);
+		lab.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		
 		tabelle = new Table(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 		GridData gridData = new GridData(GridData.FILL,GridData.FILL, true, true);
@@ -85,7 +96,7 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 		tabelle.setLinesVisible(true);
 		
 		//set the columns of the table
-		String[] titles = { "Attribute in der CSV-Datei", "Attribute in Verinice"};
+		String[] titles = { Messages.PropertiesSelectionPage_3, Messages.PropertiesSelectionPage_4};
 		
 		for (int i = 0; i < 2; i++) {
 			TableColumn column = new TableColumn(tabelle, SWT.NONE);
@@ -98,7 +109,7 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 		this.entityName = entityName;
 	}
 	//if next is pressed call this method to fill the table with content 
-	public void fillTable() {
+	public void fillTable() throws IOException {
 		//get entities from verinice
 		if(idCombos.size()>0)
 			idCombos.clear();
@@ -120,13 +131,14 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 	        }
 		}
 		
-		String[] propertyColumns = getPropertyColumns();
+		
 		if(items!= null){
 			for(int i = 0; i < items.length; i++)
 				items[i].dispose();
 		}
 		
-		for (int i = 0; i < propertyColumns.length; i++){
+		String[] propertyColumns = getFirstLine();
+		for (int i = 1; i < propertyColumns.length; i++){
 			new TableItem(tabelle, SWT.NONE);
 		}
 		
@@ -148,7 +160,8 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 	    for (int i = 0; i < items.length; i++) {
 	    	editor = new TableEditor(tabelle);
 	    	Text text = new Text(tabelle, SWT.NONE);
-	    	text.setText(propertyColumns[i]);
+	    	text.setText(propertyColumns[i+1]);
+	    	text.setEditable(false);
 	    	editor.grabHorizontal = true;
 	    	editor.setEditor(text, items[i], 0);
 	    	texts.add(text);
@@ -156,7 +169,7 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 	    	editor = new TableEditor(tabelle);
 	    	final CCombo combo = new CCombo(tabelle, SWT.NONE);
 	    	
-	    	combo.setText("");
+	    	combo.setText(""); //$NON-NLS-1$
 	    	for(int j=0; j < cString.length; j++){
 	    		combo.add(cString[j]);
 	    		combo.addSelectionListener(new SelectionListener(){
@@ -191,12 +204,13 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 		return true;
 	}
 	
-	public Vector<Vector<String>> getPropertyTable(){
+	public Vector<Vector<String>> getPropertyTable() throws IOException{
 		Vector<Vector<String>> table = new Vector<Vector<String>>();
-		String[] spalten = getPropertyColumns();
-		for(int i = 0; i < spalten.length; i++){
+		String[] spalten = getFirstLine();
+		for(int i = 1; i < spalten.length; i++){
 			Vector<String> temp = new Vector<String>();
-			temp.add(this.idCombos.get(combos.get(i).getSelectionIndex()));
+			// first column (ext-id) is not displayed: i-1
+			temp.add(this.idCombos.get(combos.get(i-1).getSelectionIndex()));
 			//temp.add(combos.get(i).getItem(combos.get(i).getSelectionIndex()));
 			temp.add(spalten[i]);
 			table.add(temp);
@@ -212,33 +226,46 @@ public class PropertiesSelectionPage extends WizardPage {//implements PageWizard
 		return this.entityName;
 	}
 	
-	public List<List<String>> getInhaltDerDatei(){
-		return this.inhaltDerTabelle;
-	}
 	//get property and values of the csv
-	public String[] getPropertyColumns(){
+    public String[] getFirstLine() throws IOException {
+        if(firstLine==null) {
+            readFile();
+        }
+        return firstLine;
+    }
+    
+    public List<List<String>> getContent() throws IOException {
+        if(inhaltDerTabelle==null) {
+            readFile();
+        }
+        return inhaltDerTabelle;
+    }
+	
+	//get property and values of the csv
+	private void readFile() throws IOException {
+	    CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(new FileInputStream(csvDatei), getCharset())), getSeparator(), '"', false);
+        // ignore first line
+	    firstLine = reader.readNext();	    
 		this.inhaltDerTabelle.clear();
-		RandomAccessFile file;
-		String[] spalten = null;
-		String input = "";
-		try {
-		    // FIXME this wont work, use CsvFile, set charset, use csvreader to read
-			file = new RandomAccessFile(csvDatei, "r");
-			file.seek(0); 
-			spalten = file.readLine().split(";");
-			while ((input = file.readLine()) != null) {
-				// part the row with split 
-				// in an new array
-				String[] splittedLine = input.split(";");
-				Vector<String> rows = new Vector<String>(Arrays.asList(splittedLine));
-				this.inhaltDerTabelle.add(rows);
-			}
-			file.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		String[] nextLine = null;
+		while ((nextLine = reader.readNext()) != null) {
+		    this.inhaltDerTabelle.add(Arrays.asList(nextLine));
 		}
-		return spalten;
 	}
+	
+	public Charset getCharset() {
+	    return charset;
+	}
+	
+	public void setCharset(Charset charset) {
+        this.charset = charset;
+    }
+
+    protected char getSeparator() {
+        return separator;
+    }
+
+    protected void setSeparator(char separator) {
+        this.separator = separator;
+    }
 }

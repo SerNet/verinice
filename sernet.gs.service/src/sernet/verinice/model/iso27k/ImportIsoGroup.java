@@ -27,7 +27,26 @@ public class ImportIsoGroup extends Group<Organization> implements IISO27kGroup 
 	
 	public static final String TYPE_ID = ImportIsoGroup.class.getSimpleName();
 
-	public static final String[] CHILD_TYPES = new String[] { Organization.TYPE_ID };
+	public static final String[] CHILD_TYPES = new String[] { 
+	    Organization.TYPE_ID,
+	    Asset.TYPE_ID,
+	    Audit.TYPE_ID,
+	    Control.TYPE_ID,
+	    Document.TYPE_ID,
+	    Evidence.TYPE_ID,
+	    Exception.TYPE_ID,
+	    Finding.TYPE_ID,
+	    Incident.TYPE_ID,
+	    IncidentScenario.TYPE_ID,
+	    Interview.TYPE_ID,
+	    PersonIso.TYPE_ID,
+	    Process.TYPE_ID,
+	    Record.TYPE_ID,
+	    Requirement.TYPE_ID,
+	    Response.TYPE_ID,
+	    Threat.TYPE_ID,
+	    Vulnerability.TYPE_ID
+	};
 	
 	public ImportIsoGroup(CnATreeElement model) {
 		super(model);
