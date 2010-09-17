@@ -27,6 +27,10 @@
 
 		<property name="comment"/> 
 
+        <property name="riskConfidentiality" /> 
+        <property name="riskIntegrity" /> 
+        <property name="riskAvailability" /> 
+
 		<many-to-one name="dependant"
 			column="DEPENDANT_ID"
 			not-null="true"

@@ -113,7 +113,7 @@ public class AttachmentEditor extends EditorPart {
             attachment = (Attachment) command.getAddition();
             huiComposite.dispose();
             huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
-            huiComposite.createView(attachment.getEntity(), true, true);
+            huiComposite.createView(attachment.getEntity(), true, true, null, false);
             parent.layout();
             // file-data is immutable, just save new file-data
             if (isNew) {
@@ -168,7 +168,7 @@ public class AttachmentEditor extends EditorPart {
         this.parent = parent;
         huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
         try {
-            huiComposite.createView(attachment.getEntity(), true, true);
+            huiComposite.createView(attachment.getEntity(), true, true, null, false);
         } catch (DBException e) {
             LOG.error("Error while creating editor", e); //$NON-NLS-1$
         }

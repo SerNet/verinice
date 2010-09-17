@@ -92,6 +92,7 @@ be displayed when one of the given options has been previously selected.
 
 	<xs:attribute name="id" type="xs:ID" use="required"/>
 	<xs:attribute name="name" type="xs:string" use="required"/>
+	<xs:attribute name="tags" type="xs:string"/> <!-- Tags can be used to filter properties in the view, enter comma separated. -->
     <xs:attribute name="columns" type="xs:int" default="1" />
 </xs:complexType>
     
@@ -195,6 +196,9 @@ be displayed when one of the given options has been previously selected.
     	name="tooltip" 
     	type="xs:string"/>
     
+    <!-- Tags to filter properties in the view, comma separated -->
+   	<xs:attribute name="tags" type="xs:string" />
+
     <!-- How to edit this property: -->
    	<xs:attribute name="inputtype" type="hitro:inputtypes" default="line"/>
 	
@@ -221,6 +225,7 @@ be displayed when one of the given options has been previously selected.
 	<!-- Value range for numeric option list -->
 	<xs:attribute name="min" type="xs:decimal"/> 
 	<xs:attribute name="max" type="xs:decimal"/> 
+	<xs:attribute name="defaultValue" type="xs:decimal" default="0" /> 
 
 	<!-- Should this property be included in reports? -->
 	<xs:attribute name="report" type="xs:boolean" default="true"/> 

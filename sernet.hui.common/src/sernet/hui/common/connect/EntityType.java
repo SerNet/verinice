@@ -94,6 +94,10 @@ public class EntityType {
 	    return (String[]) ids.toArray(new String[ids.size()]);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String[] getAllPropertyTypeIDsIncludingGroups() {
 	    ArrayList<String> result = new ArrayList<String>();
 	    List<PropertyType> types = getAllPropertyTypes();

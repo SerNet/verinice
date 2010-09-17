@@ -210,8 +210,17 @@ public class BSIElementEditor extends EditorPart {
 				setPartName(getPartName() + Messages.BSIElementEditor_7);
 			}
 
+			
+			String[] tags = null;
+			boolean taggedOnly = false;
+			// samt perspective offers a simple view, only showing properties tagged with "isa":
+			if (isSamtPerspective()) {
+                tags = new String[] {"isa"};
+                taggedOnly = true;
+			}
+			
 			// create view of all properties, read only or read/write:
-			huiComposite.createView(entity, getIsWriteAllowed(), true);
+			huiComposite.createView(entity, getIsWriteAllowed(), true, tags, taggedOnly);
 			InputHelperFactory.setInputHelpers(entityType, huiComposite);
 			huiComposite.resetInitialFocus();
 			

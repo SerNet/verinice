@@ -2862,24 +2862,30 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Title"
             id="org_name" 
-            focus="true" />
+            focus="true"
+            tags="risk,isa" />
         <huiproperty
             name="Abbreviation"
-            id="org_abbr" />
+            id="org_abbr"
+            tags="risk,isa" />
         <huiproperty
             id="org_tag"
             name="Tags"
-            tooltip="List of tags, separated by comma or space"/>
+            tooltip="List of tags, separated by comma or space" 
+            tags="isa"/>
         <huiproperty
-			name="Scope Summary" id="org_description" inputtype="text" />
+			name="Scope Summary" id="org_description" inputtype="text" 
+            tags="isa"
+             />
          <huiproperty 
             id="org_created"
-            inputtype="date">
+            inputtype="date"
+            >
             <defaultRule class="Today" />
         </huiproperty>
         
         <!-- risk analysis, ranges must match defined CIA levels + scnario probability -->
-		<huipropertygroup name="Acceptable Risk Levels xxx" id="org_riskgroup">
+		<huipropertygroup name="Acceptable Risk Levels xxx" id="org_riskgroup" tags="risk">
 			<huiproperty 
 				name="Confidentiality" id="org_riskaccept_confid" 
 				inputtype="numericoption" min="0" max="11" />
@@ -2927,17 +2933,17 @@ the value between <param></param> will be used directly if no string is found fo
             name="impact reduced by" reversename="reduces impact of" tooltip=""/> 
                
         <huiproperty
-            name="Title"
+            name="Title" tags="risk"
             id="asset_name"/>
         <huiproperty
-            name="Abbreviation"
+            name="Abbreviation" tags="risk"
             id="asset_abbr" />
         <huiproperty
             id="asset_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
 		<huiproperty
-			name="Description" id="asset_description" inputtype="text" />
+			name="Description" id="asset_description" inputtype="text" tags="risk"/>
 		
 		<huiproperty
 			name="Type of Asset"
@@ -2963,21 +2969,21 @@ the value between <param></param> will be used directly if no string is found fo
 				id="asset_type_intangible" />
 		</huiproperty>
 		
-		<huipropertygroup id="asset_value_group" name="Business Impact">
+		<huipropertygroup id="asset_value_group" name="Business Impact" tags="risk">
 		<huiproperty
 					id="asset_value_method_confidentiality"
 					name="Deduce Confidentiality"
-					inputtype="booleanoption" min="0" max="1" >
+					inputtype="booleanoption" min="0" max="1" defaultValue="1">
 				</huiproperty>	
 		<huiproperty
 					id="asset_value_method_integrity"
 					name="Deduce Integrity"
-					inputtype="booleanoption" min="0" max="1" >
+					inputtype="booleanoption" min="0" max="1" defaultValue="1">
 				</huiproperty>	
 		<huiproperty
 					id="asset_value_method_availability"
 					name="Deduce Availability"
-					inputtype="booleanoption" min="0" max="1" >
+					inputtype="booleanoption" min="0" max="1" defaultValue="1" >
 		</huiproperty>	
 	
 		<huiproperty
@@ -3045,7 +3051,7 @@ the value between <param></param> will be used directly if no string is found fo
 		</huipropertygroup>
 		
 	
-		<huipropertygroup name="Risk Management" id="asset_riskgroup">
+		<huipropertygroup name="Risk Management" id="asset_riskgroup" tags="risk">
 			<huiproperty
 				name="Confidentiality risk value" id="asset_riskvalue_c" editable="false"/>
 			<huiproperty
@@ -3811,34 +3817,39 @@ the value between <param></param> will be used directly if no string is found fo
         
         <huiproperty
             name="Title"
-            id="incident_scenario_name" />
+            id="incident_scenario_name"
+            tags="risk" />
         <huiproperty
             name="Abbreviation"
-            id="incident_scenario_abbr" />
+            id="incident_scenario_abbr"
+            tags="risk" />
         <huiproperty
             id="incident_scenario_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty 
-        	name="Explanation" id="incscen_explanation" inputtype="text"/>
+        	name="Explanation" id="incscen_explanation" inputtype="text" tags="risk"/>
             
         <huiproperty
                     id="scenario_value_method_confidentiality"
                     name="Affects Confidentiality"
+                    tags="risk"
                     inputtype="booleanoption" min="0" max="1" >
                 </huiproperty>  
         <huiproperty
                     id="scenario_value_method_integrity"
                     name="Affects Integrity"
+                    tags="risk"
                     inputtype="booleanoption" min="0" max="1" >
                 </huiproperty>  
         <huiproperty
                     id="scenario_value_method_availability"
                     name="Affects Availability"
+                    tags="risk"
                     inputtype="booleanoption" min="0" max="1" >
         </huiproperty>  
         
-        <huipropertygroup name="Probability" id="incscen_likelihoodgroup">
+        <huipropertygroup name="Probability" id="incscen_likelihoodgroup" tags="risk">
 			<huiproperty
 				name="Deduce from threat and vuln." id="incscen_likelihoodmethod" inputtype="booleanoption" min="0" max="1">
 			</huiproperty>
@@ -3897,7 +3908,8 @@ the value between <param></param> will be used directly if no string is found fo
         id="incident_scenario_group" >
         <huiproperty
             name="Title"
-            id="incident_scenario_group_name" />
+            id="incident_scenario_group_name" 
+            tags="risk"/>
     </huientity>
     
     <huientity
@@ -3930,20 +3942,22 @@ the value between <param></param> will be used directly if no string is found fo
         id="threat" >
         <huiproperty
             name="Title"
-            id="threat_name" />
+            id="threat_name"
+            tags="risk" />
         <huiproperty
             name="Abbreviation"
-            id="threat_abbr" />
+            id="threat_abbr"
+            tags="risk" />
         <huiproperty
             id="threat_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty 
-        	name="Description" id="threat_description" visible="false"/>
+        	name="Description" id="threat_description" visible="false" tags="risk"/>
             
             <!-- Threat likelihood and impact, the higher of the two values will be used. -->
        	<huiproperty 
-       		name="Threat Likelihood" id="threat_likelihood" inputtype="numericoption" min="0" max="5">
+       		name="Threat Likelihood" id="threat_likelihood" inputtype="numericoption" min="0" max="5" tags="risk">
             <option id="threat_likelihood_0" name="Seldom" value="0"/>
             <option id="threat_likelihood_1" name="Annually" value="1"/>
             <option id="threat_likelihood_2" name="Monthly" value="2"/>
@@ -3952,7 +3966,7 @@ the value between <param></param> will be used directly if no string is found fo
             <option id="threat_likelihood_5" name="Hourly" value="5"/>
 		</huiproperty>
             <huiproperty 
-            name="Threat Impact" id="threat_impact" inputtype="numericoption" min="0" max="5">
+            name="Threat Impact" id="threat_impact" inputtype="numericoption" min="0" max="5" tags="risk">
             <option id="threat_impact_0" name="Very Low" value="0"/>
             <option id="threat_impact_1" name="Low" value="1"/>
             <option id="threat_impact_2" name="Medium" value="2"/>
@@ -3967,7 +3981,7 @@ the value between <param></param> will be used directly if no string is found fo
         id="threat_group" >
         <huiproperty
             name="Title"
-            id="threat_group_name" />
+            id="threat_group_name" tags="risk" />
     </huientity>
     
     <huientity
@@ -3975,19 +3989,19 @@ the value between <param></param> will be used directly if no string is found fo
         id="vulnerability" >
         <huiproperty
             name="Title"
-            id="vulnerability_name" />
+            id="vulnerability_name" tags="risk"/>
         <huiproperty
             name="Abbreviation"
-            id="vulnerability_abbr" />
+            id="vulnerability_abbr" tags="risk"/>
         <huiproperty
             id="vulnerability_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
-				name="Description" id="vulnerability_desc"  visible="false" />
+				name="Description" id="vulnerability_desc"  visible="false" tags="risk"/>
                 
 		<huiproperty name="Ease of Exploitation xxx" id="vulnerability_level" inputtype="numericoption"
-			min="0" max="3">
+			min="0" max="3" tags="risk">
             <option id="vulnerability_level_0" name="0: Hardly possible" value="0"/>
             <option id="vulnerability_level_1" name="1: Possible" value="1"/>
             <option id="vulnerability_level_2" name="2: Easily possible" value="2"/>
@@ -4000,7 +4014,7 @@ the value between <param></param> will be used directly if no string is found fo
         id="vulnerability_group" >
         <huiproperty
             name="Title"
-            id="vulnerability_group_name" />
+            id="vulnerability_group_name" tags="risk" />
     </huientity>
     
     <huientity
@@ -4416,13 +4430,14 @@ the value between <param></param> will be used directly if no string is found fo
             editable="false" />
       </huientity>
       
-      <!-- Self Assessment (SAMT) Elements ==================================================================================== -->
+      <!-- Information Security Assessment (ISA), previously called "Self Assessment (SAMT)" Elements ========================= -->
     
       <huientity id="samt_topic" >	
           <huiproperty 
             id="samt_topic_name" 
             inputtype="text"
-            editable="false" />
+            editable="false" 
+            />
           <huiproperty 
             id="samt_topic_desc"
             inputtype="text"
@@ -4439,6 +4454,7 @@ the value between <param></param> will be used directly if no string is found fo
             inputtype="numericoption" 
             min="-1" 
             max="5" 
+            tags="isa"
             focus="true">
                 <option id="samt_topic_maturity_na"  value="-1" />
                 <option id="samt_topic_maturity_0"  value="0" />
@@ -4460,10 +4476,12 @@ the value between <param></param> will be used directly if no string is found fo
             
           <huiproperty 
             id="samt_topic_externalnote" 
+            tags="isa"
             inputtype="text"/>
           <huiproperty 
             id="samt_topic_internalnote" 
             inputtype="text"
+            tags="isa"
             report="false" />
       
       </huientity>

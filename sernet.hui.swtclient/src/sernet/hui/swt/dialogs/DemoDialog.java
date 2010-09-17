@@ -68,7 +68,7 @@ public class DemoDialog extends org.eclipse.swt.widgets.Composite {
 				
 //				Entity entity = new Entity("mnums");
 				Entity entity = new Entity("mnums");
-				huiComposite.createView(entity, true, true);
+				huiComposite.createView(entity, true, true, null, false);
 
 				PropertyType propertyType = htf.getPropertyType("mnums", "mnums_umsetzung");
 				entity.setSimpleValue(propertyType, "mnums_umsetzung_teilweise");

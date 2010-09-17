@@ -18,7 +18,9 @@
 package sernet.verinice.model.common;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import sernet.hui.common.VeriniceContext;
@@ -73,20 +75,21 @@ public class CnALink implements Serializable, ITypedElement {
 	  * 
      * @param scenario
      * @param typeId
+     * @returns map of linked elements and the corresponding link
      */
-    public static Set<CnATreeElement> getLinkedElements(CnATreeElement elmt, String typeId) {
-        Set<CnATreeElement> result = new HashSet<CnATreeElement>();
+    public static Map<CnATreeElement, CnALink> getLinkedElements(CnATreeElement elmt, String typeId) {
+        HashMap<CnATreeElement, CnALink> result = new HashMap<CnATreeElement, CnALink>();
         
         Set<CnALink> linksDown = elmt.getLinksDown();
         for (CnALink cnALink : linksDown) {
             if (cnALink.getDependency().getTypeId().equals(typeId))
-                result.add(cnALink.getDependency());
+                result.put(cnALink.getDependency(), cnALink);
         }
         
         Set<CnALink> linksUp = elmt.getLinksUp();
         for (CnALink cnALink : linksUp) {
             if (cnALink.getDependant().getTypeId().equals(typeId))
-                result.add(cnALink.getDependant());
+                result.put(cnALink.getDependant(), cnALink);
         }
         return result;
     }
@@ -189,10 +192,17 @@ public class CnALink implements Serializable, ITypedElement {
 	
 	private CnATreeElement dependant;
 	private CnATreeElement dependency;
+    
+	// links can carry risk values to be used in risk assessments:
+	private Integer riskConfidentiality;
+    private Integer riskIntegrity;
+    private Integer riskAvailability;
 	
 	protected CnALink() {}
 	
-	public CnALink(CnATreeElement dependant, CnATreeElement dependency, String relationId, String comment) {
+	
+
+    public CnALink(CnATreeElement dependant, CnATreeElement dependency, String relationId, String comment) {
 		// set linked items:
 		this.dependant = dependant;
 		this.dependency = dependency;
@@ -304,6 +314,51 @@ public class CnALink implements Serializable, ITypedElement {
     public String getTypeId() {
         return TYPE_ID;
     }
+
+    /**
+     * @return the riskConfidentiality
+     */
+    public Integer getRiskConfidentiality() {
+        return riskConfidentiality;
+    }
+
+    /**
+     * @param riskConfidentiality the riskConfidentiality to set
+     */
+    public void setRiskConfidentiality(Integer riskConfidentiality) {
+        this.riskConfidentiality = riskConfidentiality;
+    }
+
+    /**
+     * @return the riskIntegrity
+     */
+    public Integer getRiskIntegrity() {
+        return riskIntegrity;
+    }
+
+    /**
+     * @param riskIntegrity the riskIntegrity to set
+     */
+    public void setRiskIntegrity(Integer riskIntegrity) {
+        this.riskIntegrity = riskIntegrity;
+    }
+
+    /**
+     * @return the riskAvailability
+     */
+    public Integer getRiskAvailability() {
+        return riskAvailability;
+    }
+
+    /**
+     * @param riskAvailability the riskAvailability to set
+     */
+    public void setRiskAvailability(Integer riskAvailability) {
+        this.riskAvailability = riskAvailability;
+    }
+
+ 
+   
 
 	
 }

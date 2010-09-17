@@ -87,6 +87,10 @@ public class HitroUIView implements IEntityChangedListener   {
 
 	private boolean useRules;
 
+    private String[] tags;
+
+    private boolean taggedOnly = false;
+
 	private static final int TEXTBOX_NUM_LINES = 3;
 
 
@@ -210,14 +214,21 @@ public class HitroUIView implements IEntityChangedListener   {
 	 * Create form fields for all defined property types and fill them with
 	 * property values.
 	 * 
-	 * @param entity
+	 * @param entity entitty to edit
+	 * @param edit editable or read only?
+	 * @param useRules use validation and default-value rules?
+	 * @param tags use tags to filter view?
+	 * @param taggedPropertiesOnly 
+	 * true: show only properties with matching tag (filter out all without tag or with different tags)
+	 * false: show properties without tags and those with matching tag (filter out all with different tag) 
 	 * @throws DBException
-	 * @throws AssertException
 	 */
-	public void createView(Entity entity, boolean edit, boolean useRules) throws DBException {
+	public void createView(Entity entity, boolean edit, boolean useRules, String[] tags, boolean taggedPropertiesOnly) throws DBException {
 		
 		this.editable = edit;
 		this.useRules = useRules;
+		this.tags = tags;
+		this.taggedOnly = taggedPropertiesOnly;
 		
 		huiComposite.setVisible(false);
 		this.entity = entity;
@@ -247,6 +258,11 @@ public class HitroUIView implements IEntityChangedListener   {
 		if (!(group.dependenciesFulfilled(entity)))
 			return;
 		
+		if (hideBecauseOfTags(group.getTags()))
+		    return;
+		
+		
+		
 		PropertyTwistie twistie = new PropertyTwistie(this, parent, group);
 		twistie.create();
 		for (PropertyType type: group.getPropertyTypes() ) {
@@ -264,7 +280,7 @@ public class HitroUIView implements IEntityChangedListener   {
 		// only allow edit if both view and field settings are true:
 		boolean editableField = editable && type.isEditable();
 		
-		if (!type.isVisible())
+		if (!type.isVisible() || hideBecauseOfTags(type.getTags()))
 			return;
 		
 		if (type.isURL())
@@ -288,6 +304,33 @@ public class HitroUIView implements IEntityChangedListener   {
 	}
 
 	/**
+     * @param propertyTags
+     * @return
+     */
+    private boolean hideBecauseOfTags(String propertyTags) {
+        // show prop without tags if taggedOnly is not requested:
+        if ( !taggedOnly && (propertyTags == null || propertyTags.length()==0) )
+            return false;
+        
+        // for all other properties (those with tags set), only display them if tag matches:
+        return !tagMatches(propertyTags);
+    }
+
+    /**
+     * Find out if one of the wanted tags matches the property.
+     * 
+     * @param propertyTags
+     * @return
+     */
+    private boolean tagMatches(String propertyTags) {
+        for(String searchTag: tags) {
+           if (propertyTags.indexOf(searchTag) > -1)
+               return true;
+        }
+        return false;
+    }
+
+    /**
 	 * @param type
 	 * @param editableField
 	 * @param parent
@@ -434,7 +477,7 @@ public class HitroUIView implements IEntityChangedListener   {
 	public void dependencyChanged(IMLPropertyType type, IMLPropertyOption opt) {
 		try {
 			closeView();
-			createView(entity, editable, useRules);
+			createView(entity, editable, useRules, tags, taggedOnly);
 		} catch (DBException e) {
 			ExceptionHandlerFactory.getDefaultHandler().handleException(e);
 		}

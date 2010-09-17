@@ -185,8 +185,8 @@ public class HitroUIComposite extends ScrolledComposite {
 				contentComp, fieldsComposite);
 	}
 	
-	public void createView(Entity entity, boolean editable, boolean useRules) throws DBException {
-		huiView.createView(entity, editable, useRules);
+	public void createView(Entity entity, boolean editable, boolean useRules, String[] tags, boolean taggedOnly) throws DBException {
+		huiView.createView(entity, editable, useRules, tags, taggedOnly);
 	}
 	
 	public void closeView() {

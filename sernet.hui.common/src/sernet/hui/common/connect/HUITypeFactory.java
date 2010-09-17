@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -67,6 +68,8 @@ public class HUITypeFactory {
     public static String HUI_CONFIGURATION_FILE = "SNCA.xml";
 
     private static Document doc;
+    
+    private Set<String> allTags = new HashSet<String>();
 
     private Map<String, EntityType> allEntities = null;
 
@@ -340,6 +343,9 @@ public class HUITypeFactory {
         propObj.setName(getMessage(id, prop.getAttribute("name")));
         propObj.setTooltiptext(getMessage(getKey(id, "tooltip"), prop.getAttribute("tooltip"), true));
 
+        propObj.setTags(prop.getAttribute("tags"));
+        addToTagList(prop.getAttribute("tags"));
+
         propObj.setInputType(prop.getAttribute("inputtype"));
         propObj.setCrudButtons(prop.getAttribute("crudButtons").equals("true"));
         propObj.setRequired(prop.getAttribute("required").equals("true"));
@@ -356,6 +362,7 @@ public class HUITypeFactory {
         if (propObj.isNumericSelect()) {
             propObj.setNumericMin(prop.getAttribute("min"));
             propObj.setNumericMax(prop.getAttribute("max"));
+            propObj.setNumericDefault(prop.getAttribute("defaultValue"));
         }
 
         // the shortcut to set a "NotEmpty" validator:
@@ -366,6 +373,27 @@ public class HUITypeFactory {
         propObj.setDefaultRule(readDefaultRule(prop));
 
         return propObj;
+    }
+
+    /**
+     * @param attribute
+     */
+    private void addToTagList(String tags) {
+        if (tags == null || tags.length()<1)
+            return;
+        
+        tags.replaceAll("\\s+", "");
+        String[] individualTags = tags.split(",");
+        allTags.addAll(Arrays.asList(individualTags));
+    }
+    
+    
+
+    /**
+     * @return the allTags
+     */
+    public Set<String> getAllTags() {
+        return allTags;
     }
 
     private String readReferencedEntityId(Element prop) {
@@ -386,6 +414,9 @@ public class HUITypeFactory {
         PropertyGroup groupObj = new PropertyGroup();
         groupObj.setId(group.getAttribute("id"));
         groupObj.setName(group.getAttribute("name"));
+        groupObj.setTags(group.getAttribute("tags"));
+        addToTagList(group.getAttribute("tags"));
+
         groupObj.setDependencies(readDependencies(group));
         return groupObj;
     }

@@ -2,6 +2,7 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -27,16 +28,16 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Load all elements of given type linked to the given root element.
+ * Loads an element with all links from / to it.
  */
-public class LoadReportLinkedElements extends GenericCommand {
+public class LoadReportElementWithLinks extends GenericCommand {
 
 
 	private String typeId;
     private Integer rootElement;
-    private List<CnATreeElement> elements;
+    List<List<String>> result;
     
-    public LoadReportLinkedElements(String typeId, Integer rootElement) {
+    public LoadReportElementWithLinks(String typeId, Integer rootElement) {
 	    this.typeId = typeId;
 	    this.rootElement = rootElement;
 	}
@@ -50,18 +51,8 @@ public class LoadReportLinkedElements extends GenericCommand {
         }
 	    CnATreeElement root = command.getElements().get(0);
 	    
-	    elements = getLinkedElements(root);
+	    loadLinks(root);
 	    
-	    IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
-	    RetrieveInfo ri = new RetrieveInfo();
-	    ri.setProperties(true);
-//	    ri.setParent(true);
-//	    ri.setPermissions(true);
-//	    ri.setParentPermissions(true);
-//	    ri.setChildren(true);
-//	    ri.setChildren(true);
-	    HydratorUtil.hydrateElements(dao, elements, ri);
-
 	}
 
 	/**
@@ -69,25 +60,41 @@ public class LoadReportLinkedElements extends GenericCommand {
      * @param typeId2
      * @return
      */
-    private List<CnATreeElement> getLinkedElements(CnATreeElement root) {
-        ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>();
+    private void loadLinks(CnATreeElement root) {
+        result = new ArrayList<List<String>>();
         for (CnALink link : root.getLinksDown()) {
-            if (link.getDependency().getTypeId().equals(this.typeId))
-                result.add(link.getDependency());
+            result.add(makeRow(root, link));
         }
         for (CnALink link : root.getLinksUp()) {
-            if (link.getDependant().getTypeId().equals(this.typeId))
-                result.add(link.getDependant());
+            result.add(makeRow(root, link));
         }
-        return result;
+    }
+    
+    public static final String[] COLLUMNS = new String[] {"relationName", "toElement", "riskC", "riskI", "riskA"};
+
+    /**
+     * @param root
+     * @param link
+     * @return
+     */
+    private List<String> makeRow(CnATreeElement root, CnALink link) {
+        String relationName = CnALink.getRelationName(root, link);
+        String toElementTitle = CnALink.getRelationObjectTitle(root, link);
+        String riskC = Integer.toString(link.getRiskConfidentiality());
+        String riskI = Integer.toString(link.getRiskIntegrity());
+        String riskA = Integer.toString(link.getRiskAvailability());
+        List<String> asList = Arrays.asList(relationName, toElementTitle, riskC, riskI, riskA);
+        return asList;
     }
 
     /**
-     * @return the elements
+     * @return the result
      */
-    public List<CnATreeElement> getElements() {
-        return elements;
+    public List<List<String>> getResult() {
+        return result;
     }
+
+   
 
   
 	

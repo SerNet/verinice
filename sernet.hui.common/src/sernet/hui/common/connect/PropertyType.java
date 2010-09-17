@@ -66,7 +66,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 
 	public static final byte INPUT_MULTIOPTION = 3;
 
-	public static final byte INPUT_CHECKBOX = 4;
+	//public static final byte INPUT_CHECKBOX = 4; no longer used, see type 8
 
 	public static final byte INPUT_REFERENCE = 5;
 
@@ -107,7 +107,22 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 
     private boolean reportable;
 
+    private int numericDefault;
+
+    private String tags;
+
 	/**
+     * @param numericDefault the numericDefault to set
+     */
+    public void setNumericDefault(String numericDefault) {
+        try {
+            this.numericDefault = Integer.parseInt(numericDefault);
+        } catch (NumberFormatException e) {
+            log.warn("Not a valid number: " + numericDefault);
+        }
+    }
+
+    /**
      * @return the reportable
      */
     public boolean isReportable() {
@@ -281,10 +296,6 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 	
 	public boolean isBooleanSelect() {
 	    return inputtype == INPUT_BOOLEANOPTION;
-	}
-
-	public boolean isBool() {
-		return inputtype == INPUT_CHECKBOX;
 	}
 
 	public boolean isEnum() {
@@ -467,6 +478,27 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
      */
     public void setReportable(boolean value) {
         this.reportable = value;
+    }
+
+    /**
+     * @return
+     */
+    public int getNumericDefault() {
+        return this.numericDefault;
+    }
+
+    /**
+     * @param attribute
+     */
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    /**
+     * @return the tags
+     */
+    public String getTags() {
+        return tags;
     }   
 
 }

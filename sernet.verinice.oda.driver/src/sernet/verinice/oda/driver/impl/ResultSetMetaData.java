@@ -69,7 +69,7 @@ public class ResultSetMetaData implements IResultSetMetaData {
 				rowCount = ((Collection) result).size();
 				accessor = new MultiDimensionalCollectionAccessor();
 			} else {
-				// one-dimensional array -> elements are rows
+				// one-dimensional collection -> elements are rows
 				columnCount = (columns != null) ? columns.length : 1;
 				rowCount = ((Collection) result).size();
 				accessor = new OneDimensionalCollectionAccessor();

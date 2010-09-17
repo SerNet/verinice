@@ -72,6 +72,8 @@ public class NumericSelectionControl implements IHuiControl {
 	private String[] shownItems;
 	private String[] numericItems;
 
+    private Object defaultValue;
+
 
 	public Control getControl() {
             return combo;

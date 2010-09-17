@@ -76,7 +76,8 @@ public class BulkEditDialog extends Dialog {
                 if (this.entity == null) {
                     entity = new Entity(entType.getId());
                 }
-                huiComposite.createView(entity, true, useRules);
+                // FIXME xxx use tags in bulk edit
+                huiComposite.createView(entity, true, useRules, null, false);
                 InputHelperFactory.setInputHelpers(entType, huiComposite);
                 return huiComposite;
             } catch (DBException e) {

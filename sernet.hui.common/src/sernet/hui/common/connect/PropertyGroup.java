@@ -27,6 +27,7 @@ public class PropertyGroup implements IEntityElement {
 	private String name;
 	private List<PropertyType> propertyTypes = new ArrayList<PropertyType>();
 	private HashSet<String> dependencies = new HashSet<String>();
+    private String tags;
 	
 	public void addPropertyType(PropertyType prop) {
 		propertyTypes.add(prop);
@@ -76,4 +77,18 @@ public class PropertyGroup implements IEntityElement {
 	public void setDependencies(HashSet<String> set) {
 		this.dependencies = set;
 	}
+
+    /**
+     * @param attribute
+     */
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    /**
+     * @return the tags
+     */
+    public String getTags() {
+        return tags;
+    }
 }
