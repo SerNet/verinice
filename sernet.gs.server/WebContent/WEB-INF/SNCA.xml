@@ -2888,15 +2888,15 @@ the value between <param></param> will be used directly if no string is found fo
 		<huipropertygroup name="Acceptable Risk Levels xxx" id="org_riskgroup" tags="risk">
 			<huiproperty 
 				name="Confidentiality" id="org_riskaccept_confid" 
-				inputtype="numericoption" min="0" max="11" />
+				inputtype="numericoption" min="0" max="11" tags="risk"/>
 			<huiproperty 
 				name="Integrity" id="org_riskaccept_integ" 
-				inputtype="numericoption" min="0" max="10" />
+				inputtype="numericoption" min="0" max="10" tags="risk"/>
 			<huiproperty 
 				name="Availability" id="org_riskaccept_avail" 
-				inputtype="numericoption" min="0" max="12" />
+				inputtype="numericoption" min="0" max="12" tags="risk" />
 			<huiproperty
-				name="Explanation" id="org_riskaccept_expl" inputtype="text" />
+				name="Explanation" id="org_riskaccept_expl" inputtype="text" tags="risk" />
 		</huipropertygroup>
        
     </huientity>
@@ -3376,7 +3376,8 @@ the value between <param></param> will be used directly if no string is found fo
         id="auditgroup" >
         <huiproperty
             name="Title"
-            id="auditgroup_name" />
+            id="auditgroup_name"
+            />
         
         <huirelation to="asset" id="rel_auditgroup_asset"/>
     </huientity>
@@ -4452,10 +4453,12 @@ the value between <param></param> will be used directly if no string is found fo
           <huiproperty 
             id="samt_topic_maturity"      
             inputtype="numericoption" 
-            min="-1" 
+            min="-2" 
             max="5" 
+            defaultValue="-2" 
             tags="isa"
             focus="true">
+                <option id="samt_topic_maturity_null"  value="-2" />
                 <option id="samt_topic_maturity_na"  value="-1" />
                 <option id="samt_topic_maturity_0"  value="0" />
                 <option id="samt_topic_maturity_1"  value="1" />

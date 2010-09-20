@@ -114,7 +114,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                 setNumericValue(propertyType, propertyType.getNumericDefault());
             }
             else if (propertyType.isText() || propertyType.isDate()) {
-                setSimpleValue(propertyType, propertyType.getDefaultRule().getValue());
+                if (propertyType.getDefaultRule() != null) {
+                    setSimpleValue(propertyType, propertyType.getDefaultRule().getValue());
+                }
             }
         }
     }

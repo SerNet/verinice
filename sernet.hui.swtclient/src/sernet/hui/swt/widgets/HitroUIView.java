@@ -87,7 +87,7 @@ public class HitroUIView implements IEntityChangedListener   {
 
 	private boolean useRules;
 
-    private String[] tags;
+    private String[] filterTags;
 
     private boolean taggedOnly = false;
 
@@ -227,7 +227,7 @@ public class HitroUIView implements IEntityChangedListener   {
 		
 		this.editable = edit;
 		this.useRules = useRules;
-		this.tags = tags;
+		this.filterTags = tags;
 		this.taggedOnly = taggedPropertiesOnly;
 		
 		huiComposite.setVisible(false);
@@ -308,12 +308,17 @@ public class HitroUIView implements IEntityChangedListener   {
      * @return
      */
     private boolean hideBecauseOfTags(String propertyTags) {
-        // show prop without tags if taggedOnly is not requested:
-        if ( !taggedOnly && (propertyTags == null || propertyTags.length()==0) )
-            return false;
-        
-        // for all other properties (those with tags set), only display them if tag matches:
-        return !tagMatches(propertyTags);
+        if (taggedOnly) {
+            // for properties with tags set, display them if tag matches:
+            boolean tagMatches = tagMatches(propertyTags);
+            return !tagMatches;
+        } else {
+            // show all without tag and matching tags:
+            if (propertyTags==null || propertyTags.length()==0)
+                return false;
+            boolean tagMatches = tagMatches(propertyTags);
+            return !tagMatches;
+        }
     }
 
     /**
@@ -323,7 +328,10 @@ public class HitroUIView implements IEntityChangedListener   {
      * @return
      */
     private boolean tagMatches(String propertyTags) {
-        for(String searchTag: tags) {
+        if (filterTags == null || filterTags.length==0 || propertyTags == null || propertyTags.length() == 0)
+            return false;
+        
+        for(String searchTag: filterTags) {
            if (propertyTags.indexOf(searchTag) > -1)
                return true;
         }
@@ -477,7 +485,7 @@ public class HitroUIView implements IEntityChangedListener   {
 	public void dependencyChanged(IMLPropertyType type, IMLPropertyOption opt) {
 		try {
 			closeView();
-			createView(entity, editable, useRules, tags, taggedOnly);
+			createView(entity, editable, useRules, filterTags, taggedOnly);
 		} catch (DBException e) {
 			ExceptionHandlerFactory.getDefaultHandler().handleException(e);
 		}

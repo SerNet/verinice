@@ -26,8 +26,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.InputHelperFactory;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.swt.widgets.HitroUIComposite;
@@ -76,8 +78,11 @@ public class BulkEditDialog extends Dialog {
                 if (this.entity == null) {
                     entity = new Entity(entType.getId());
                 }
-                // FIXME xxx use tags in bulk edit
-                huiComposite.createView(entity, true, useRules, null, false);
+                
+                String tags = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.HUI_TAGS);
+                boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
+                
+                huiComposite.createView(entity, true, useRules, tags, strict);
                 InputHelperFactory.setInputHelpers(entType, huiComposite);
                 return huiComposite;
             } catch (DBException e) {

@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.hui.swt.widgets;
 
+import java.util.Arrays;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
@@ -188,6 +190,12 @@ public class HitroUIComposite extends ScrolledComposite {
 	public void createView(Entity entity, boolean editable, boolean useRules, String[] tags, boolean taggedOnly) throws DBException {
 		huiView.createView(entity, editable, useRules, tags, taggedOnly);
 	}
+	
+	public void createView(Entity entity, boolean editable, boolean useRules, String tags, boolean taggedOnly) throws DBException {
+	    tags.replaceAll("\\s+", "");
+        String[] individualTags = tags.split(",");
+        huiView.createView(entity, editable, useRules, individualTags, taggedOnly);
+    }
 	
 	public void closeView() {
 		huiView.closeView();

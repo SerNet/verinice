@@ -36,10 +36,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.hibernate.StaleObjectStateException;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementForEditor;
 import sernet.hui.common.connect.Entity;
@@ -210,17 +212,18 @@ public class BSIElementEditor extends EditorPart {
 				setPartName(getPartName() + Messages.BSIElementEditor_7);
 			}
 
-			
-			String[] tags = null;
-			boolean taggedOnly = false;
+			 String tagString = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.HUI_TAGS);
+			 String[] tags = split(tagString);
+             boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
+            
 			// samt perspective offers a simple view, only showing properties tagged with "isa":
 			if (isSamtPerspective()) {
                 tags = new String[] {"isa"};
-                taggedOnly = true;
+                strict = true;
 			}
 			
 			// create view of all properties, read only or read/write:
-			huiComposite.createView(entity, getIsWriteAllowed(), true, tags, taggedOnly);
+			huiComposite.createView(entity, getIsWriteAllowed(), true, tags, strict);
 			InputHelperFactory.setInputHelpers(entityType, huiComposite);
 			huiComposite.resetInitialFocus();
 			
@@ -235,6 +238,18 @@ public class BSIElementEditor extends EditorPart {
 		}
 
 	}
+	
+	 /**
+     * @param tags
+     * @return
+     */
+    private String[] split(String tags) {
+        if (tags == null)
+            return new String[] {};
+        
+        tags.replaceAll("\\s+", "");
+        return tags.split(",");
+    }
 
 	/**
 	 * 

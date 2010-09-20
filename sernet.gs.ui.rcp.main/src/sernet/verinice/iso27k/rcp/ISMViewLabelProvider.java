@@ -19,6 +19,7 @@ package sernet.verinice.iso27k.rcp;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.hibernate.dialect.function.CastFunction;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
@@ -28,6 +29,7 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
 
 /**
@@ -69,6 +71,11 @@ public class ISMViewLabelProvider extends LabelProvider  {
 			return image;
 		}
 
+        else if (obj instanceof SamtTopic) {
+	          SamtTopic topic = (SamtTopic) obj;
+	          image = ImageCache.getInstance().getControlImplementationImage(maturityService.getImplementationState(topic));
+	    }
+		
 		else if (obj instanceof Control) {
 		    Control control = (Control) obj;
 		    // using maturity:

@@ -56,9 +56,8 @@ import sernet.hui.common.rules.RuleFactory;
 import sernet.snutils.DBException;
 
 /**
- * Parses XML file with defined systemproperties and creates appropriate
- * <code>DocProperty </code> objects with possible <code>DocValue </code>
- * entries for each.
+ * Parses XML file with defined properties and creates appropriate
+ * <code>PropertyType </code> objects.
  * 
  * 
  */
@@ -387,8 +386,6 @@ public class HUITypeFactory {
         allTags.addAll(Arrays.asList(individualTags));
     }
     
-    
-
     /**
      * @return the allTags
      */

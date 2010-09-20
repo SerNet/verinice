@@ -231,6 +231,14 @@ public class HitroUtil {
 		}
 		
 		/* (non-Javadoc)
+		 * @see sernet.hui.common.connect.HUITypeFactory#getAllTags()
+		 */
+		@Override
+		public Set<String> getAllTags() {
+		    return getTypeFactory().getAllTags();
+		}
+		
+		/* (non-Javadoc)
 		 * @see sernet.hui.common.connect.HUITypeFactory#getPossibleRelationsFrom(java.lang.String)
 		 */
 		@Override

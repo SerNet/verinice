@@ -113,14 +113,14 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
      */
     @Override
     public void determineRisks(IncidentScenario scenario) {
-        Map<CnATreeElement, CnALink> elements = CnALink.getLinkedElements(scenario, Asset.TYPE_ID);
-        for (CnATreeElement asset : elements.keySet()) {
+        Map<CnATreeElement, CnALink> linksForAssets = CnALink.getLinkedElements(scenario, Asset.TYPE_ID);
+        for (CnATreeElement asset : linksForAssets.keySet()) {
             AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
             
             if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_C)==1) {
                 // increase total asset risk by this combination's risk, saving this individual combination's risk in the link between the two objects:
                 int risk = valueAdapter.getVertraulichkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY);
-                elements.get(asset).setRiskConfidentiality(risk);
+                linksForAssets.get(asset).setRiskConfidentiality(risk);
                 asset.setNumericProperty(PROP_ASSET_RISK_C, asset.getNumericProperty(PROP_ASSET_RISK_C) + risk);
                 
                 // now take planned / implemented controls for the scenario into account:
@@ -136,7 +136,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
             if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_I)==1) {
                 // increase total asset risk by this combination's risk
                 int risk = valueAdapter.getVertraulichkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY);
-                elements.get(asset).setRiskIntegrity(risk);
+                linksForAssets.get(asset).setRiskIntegrity(risk);
                 asset.setNumericProperty(PROP_ASSET_RISK_I, asset.getNumericProperty(PROP_ASSET_RISK_I) + risk);
                 
                 // now take planned / implemented controls for the scenario into account:
@@ -151,7 +151,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
             if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_A)==1) {
                 // increase total asset risk by this combination's risk
                 int risk = valueAdapter.getVertraulichkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY);
-                elements.get(asset).setRiskAvailability(risk);
+                linksForAssets.get(asset).setRiskAvailability(risk);
                 asset.setNumericProperty(PROP_ASSET_RISK_A, asset.getNumericProperty(PROP_ASSET_RISK_A) + risk);
                 
                 // now take planned / implemented controls for the scenario into account:

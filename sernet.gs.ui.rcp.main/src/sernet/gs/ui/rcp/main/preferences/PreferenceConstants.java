@@ -109,6 +109,10 @@ public class PreferenceConstants {
 	// catalog import preferences
 	public static final String CHARSET_CATALOG = "org.verinice.iso27k.rcp.charset";
     
+	// tags to filter HitroUI Editor fields / strict filter mode setting:
+	public static final String HUI_TAGS = "hui_tags";
+    public static final String HUI_TAGS_STRICT = "hui_tags_strict";
+    
 	/**
 	 * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view class.
 	 * 

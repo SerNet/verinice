@@ -89,6 +89,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		store.setDefault(PreferenceConstants.VNSERVER_URI, PreferenceConstants.VNSERVER_URI_DEFAULT);
 		
+		store.setDefault(PreferenceConstants.HUI_TAGS, "risk");
+		store.setDefault(PreferenceConstants.HUI_TAGS_STRICT, false);
+		
 
 	}
 

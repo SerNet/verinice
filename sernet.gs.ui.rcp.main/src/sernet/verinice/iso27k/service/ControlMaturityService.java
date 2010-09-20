@@ -128,23 +128,26 @@ public class ControlMaturityService {
     
     /**
      * Returns the correct implementaiton state based on the maturity level of the <code>IControl.</code>
+     * Changed to represent just the states "control has been edited or not".
      * 
      * @param control
      * @return the implementation state as definied in the <code>IControl.IMPLEMENTED</code> constants.
      */
     public String getImplementationState(IControl control) {
         
-        if (control.getMaturity() == Property.UNDEF) {
+        if (control.getMaturity() == IControl.IMPLEMENTED_NOTEDITED_NUMERIC) {
             return IControl.IMPLEMENTED_NOTEDITED;
         }
+        return IControl.IMPLEMENTED_YES;
         
-        if (control.getMaturity() >= control.getThreshold2()) {
-            return IControl.IMPLEMENTED_YES;
-        }
-        if (control.getMaturity() >= control.getThreshold1()) {
-            return IControl.IMPLEMENTED_PARTLY;
-        }
-        return IControl.IMPLEMENTED_PARTLY;
+//        
+//        if (control.getMaturity() >= control.getThreshold2()) {
+//            return IControl.IMPLEMENTED_YES;
+//        }
+//        if (control.getMaturity() >= control.getThreshold1()) {
+//            return IControl.IMPLEMENTED_PARTLY;
+//        }
+//        return IControl.IMPLEMENTED_PARTLY;
     }
 }
 

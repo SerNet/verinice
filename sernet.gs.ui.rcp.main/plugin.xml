@@ -769,6 +769,11 @@
             id="sernet.gs.ui.rcp.main.page6"
             name="%page.name.6">
       </page>
+      <page
+            class="sernet.gs.ui.rcp.main.preferences.EditorPreferencePage"
+            id="sernet.gs.ui.rcp.main.preferences.editorpreferencepage"
+            name="Editor-Einstellungen">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
