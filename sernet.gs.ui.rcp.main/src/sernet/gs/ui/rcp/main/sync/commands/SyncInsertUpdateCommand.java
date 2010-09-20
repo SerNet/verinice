@@ -98,6 +98,7 @@ import sernet.verinice.model.iso27k.Interview;
 import sernet.verinice.model.iso27k.InterviewGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.iso27k.ProcessGroup;
 import sernet.verinice.model.iso27k.Record;
 import sernet.verinice.model.iso27k.RecordGroup;
@@ -187,7 +188,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         typeIdClass.put(Response.TYPE_ID, Response.class);
         typeIdClass.put(sernet.verinice.model.iso27k.Exception.TYPE_ID, sernet.verinice.model.iso27k.Exception.class);
         typeIdClass.put(Vulnerability.TYPE_ID, Vulnerability.class);
-        typeIdClass.put(Person.TYPE_ID, Person.class);
+        typeIdClass.put(PersonIso.TYPE_ID, PersonIso.class);
         typeIdClass.put(Incident.TYPE_ID, Incident.class);
         typeIdClass.put(Threat.TYPE_ID, Threat.class);
         typeIdClass.put(sernet.verinice.model.iso27k.Process.TYPE_ID, sernet.verinice.model.iso27k.Process.class);
