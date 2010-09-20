@@ -29,8 +29,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:2010/veriniceserver/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:2010/veriniceserver</property>
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -88,8 +88,7 @@ if (myroot != null &amp;&amp; myroot != -1) {
 }
 
 c = new LoadPolymorphicCnAElementById( new Integer[]  {root} );
-return "";
-//return helper.execute(c).getElements().get(0).getTitle();
+return helper.execute(c).getElements().get(0).getTitle();
 
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>

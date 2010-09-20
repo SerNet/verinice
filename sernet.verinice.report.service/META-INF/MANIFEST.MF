@@ -22,7 +22,10 @@ Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  sernet.gs.service,
  org.eclipse.birt.report.engine.dataextraction.csv;bundle-version="2.5.2",
- sernet.gs.ui.rcp.main
+ sernet.gs.ui.rcp.main,
+ org.eclipse.birt.chart.engine.extension;bundle-version="2.5.2",
+ org.eclipse.birt.chart.reportitem;bundle-version="2.5.2",
+ org.eclipse.birt.core.script.function;bundle-version="2.5.2"
 Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.commands,
  sernet.verinice.report.service.impl
