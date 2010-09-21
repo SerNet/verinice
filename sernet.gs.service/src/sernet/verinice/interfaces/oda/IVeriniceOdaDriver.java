@@ -21,6 +21,11 @@ import java.util.Map;
 
 public interface IVeriniceOdaDriver {
 
+	/** Name of the property which stores the root element's id. The id specifies the database id of the
+	 * object that is being used for a report.
+	 */
+	public static final String ROOT_ELEMENT_ID_NAME = "rootElementId";
+	
 	/**
 	 * Registers an image provider for a certain image name.
 	 * 
