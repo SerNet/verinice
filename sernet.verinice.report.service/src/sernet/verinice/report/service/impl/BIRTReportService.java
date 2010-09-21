@@ -45,6 +45,7 @@ import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.birt.report.engine.api.IRunTask;
 import org.eclipse.birt.report.engine.api.IScalarParameterDefn;
 
+import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.oda.driver.impl.Query;
 import sernet.verinice.report.service.Activator;
@@ -167,12 +168,14 @@ public class BIRTReportService {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void render(IRunAndRenderTask task, IReportOptions options)
 	{
 		IRenderOption renderOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
 		renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
-		// FIXME quick fix, find a better way to set the root object!
-		Query.vnRrootObject = options.getRootElement();
+
+		// Makes the chosen root element available via the appContext variable 'rootElementId'
+		task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
 
 		task.setRenderOption(renderOptions);
 		

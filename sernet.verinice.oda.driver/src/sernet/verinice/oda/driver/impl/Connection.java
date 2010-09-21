@@ -17,17 +17,15 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.impl;
 
+import java.util.Map;
 import java.util.Properties;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.datatools.connectivity.oda.IConnection;
 import org.eclipse.datatools.connectivity.oda.IDataSetMetaData;
 import org.eclipse.datatools.connectivity.oda.IQuery;
 import org.eclipse.datatools.connectivity.oda.OdaException;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleException;
 
-import sernet.hui.common.connect.HUITypeFactory;
+import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.Activator;
 
 import com.ibm.icu.util.ULocale;
@@ -36,8 +34,10 @@ import com.ibm.icu.util.ULocale;
  * Implementation class of IConnection for an ODA runtime driver.
  */
 public class Connection implements IConnection {
-	private boolean isOpen = false;
 
+	private boolean isOpen = false;
+	
+	private Object appContext;
 
 	/*
 	 * @see
@@ -51,13 +51,8 @@ public class Connection implements IConnection {
 		isOpen = true;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.datatools.connectivity.oda.IConnection#setAppContext(java
-	 * .lang.Object)
-	 */
 	public void setAppContext(Object context) throws OdaException {
-		// do nothing; assumes no support for pass-through context
+		appContext = context;
 	}
 
 	/*
@@ -90,10 +85,20 @@ public class Connection implements IConnection {
 	 * org.eclipse.datatools.connectivity.oda.IConnection#newQuery(java.lang
 	 * .String)
 	 */
+	@SuppressWarnings("unchecked")
 	public IQuery newQuery(String dataSetType) throws OdaException {
 		// assumes that this driver supports only one type of data set,
 		// ignores the specified dataSetType
-		return new Query();
+		
+		Integer rootElementId = null;
+		if (appContext != null)
+		{
+			// Retrieves the root element's id from the appContext. Find the corresponding part of this
+			// code by looking up the references to the used name.
+			Map ctx = (Map) appContext;
+			rootElementId = (Integer) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME);
+		}
+		return new Query(rootElementId);
 	}
 
 	/*

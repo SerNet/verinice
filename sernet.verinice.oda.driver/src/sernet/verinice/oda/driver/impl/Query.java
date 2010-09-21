@@ -63,7 +63,7 @@ public class Query implements IQuery
     private String queryText;
     
     
-    public static Integer vnRrootObject;
+    private Integer vnRootElement;
     
     private Interpreter setupInterpreter, interpreter;
     
@@ -77,9 +77,11 @@ public class Query implements IQuery
     
     public static final String PROP_SETUP_QUERY_TEXT = "setupQueryText";
     
-    Query()
+    Query(Integer rootElementId)
     {
     	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
+    	
+    	vnRootElement = rootElementId;
 
     	try {
     	    // "Setup" BSH environment:
@@ -213,7 +215,7 @@ public class Query implements IQuery
         }
         
         public Integer getRoot() {
-            return Query.vnRrootObject;
+            return vnRootElement;
         }
 
         /**

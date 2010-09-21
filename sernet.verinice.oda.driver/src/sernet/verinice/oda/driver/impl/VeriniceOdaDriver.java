@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +32,12 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	
 	private Map<String, Object> vars = new HashMap<String, Object>();
 	
+	private static Object instance;
+	
 	public VeriniceOdaDriver()
 	{
-		
+		if (instance != null)
+			throw new IllegalStateException();
 	}
 	
 	protected void activate(ComponentContext ctx)
