@@ -52,33 +52,31 @@ public class RunRiskAnalysisCommand extends GenericCommand {
         IBaseDao<Organization, Serializable> dao = getDaoFactory().getDAO(Organization.class);
         List<Organization> orgs = dao.findAll();
         
-        for (Organization organization : orgs) {
-            // update asset values (business impact, CIA):
-            // done on every save, no need to do it here
-            
-            // determine scenario probabilities:
-            IBaseDao<IncidentScenario, Serializable> scenarioDAO = getDaoFactory().getDAO(IncidentScenario.class);
-            List<IncidentScenario> scenarios = scenarioDAO.findAll();
-            for (IncidentScenario scenario : scenarios) {
-                ra.determineProbability(scenario);
-            }
-            
-            // reset all assets' risk values:
-            IBaseDao<Asset, Serializable> assetDAO = getDaoFactory().getDAO(Asset.class);
-            List<Asset> assets = assetDAO.findAll();
-            for (Asset asset : assets) {
-                ra.resetRisks(asset);
-            }
-            
-            // determine risk originating from scenarios for all linked assets:
-            for (IncidentScenario scenario : scenarios) {
-                ra.determineRisks(scenario);
-            }
-            
-            // finally apply controls to assets to reduce risk:
-            for (Asset asset : assets) {
-                ra.applyControls(asset);
-            }
+        // update asset values (business impact, CIA):
+        // done on every save, no need to do it here
+        
+        // determine scenario probabilities:
+        IBaseDao<IncidentScenario, Serializable> scenarioDAO = getDaoFactory().getDAO(IncidentScenario.class);
+        List<IncidentScenario> scenarios = scenarioDAO.findAll();
+        for (IncidentScenario scenario : scenarios) {
+            ra.determineProbability(scenario);
+        }
+        
+        // reset all assets' risk values:
+        IBaseDao<Asset, Serializable> assetDAO = getDaoFactory().getDAO(Asset.class);
+        List<Asset> assets = assetDAO.findAll();
+        for (Asset asset : assets) {
+            ra.resetRisks(asset);
+        }
+        
+        // determine risk originating from scenarios for all linked assets:
+        for (IncidentScenario scenario : scenarios) {
+            ra.determineRisks(scenario);
+        }
+        
+        // finally apply controls to assets to reduce risk:
+        for (Asset asset : assets) {
+            ra.applyControls(asset);
         }
     }
 

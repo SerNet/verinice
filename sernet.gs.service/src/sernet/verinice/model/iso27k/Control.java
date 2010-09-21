@@ -124,17 +124,26 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	    return getEntity().getInt(PROP_MATURITY);
 	}
 	
+	public static String getImplementation(Entity entity) {
+	    PropertyList properties = entity.getProperties(PROP_IMPL);
+	    if (properties == null || properties.getProperties() == null
+	            || properties.getProperties().size() < 1)
+	        return IMPLEMENTED_NOTEDITED;
+	    
+	    Property property = properties.getProperty(0);
+	    if (property != null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
+	        return property.getPropertyValue();
+	    return IMPLEMENTED_NOTEDITED;
+	}
+	
 	public String getImplementation() {
-        PropertyList properties = getEntity().getProperties(PROP_IMPL);
-        if (properties == null || properties.getProperties() == null
-                || properties.getProperties().size() < 1)
-            return IMPLEMENTED_NOTEDITED;
-
-        Property property = properties.getProperty(0);
-        if (property != null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
-            return property.getPropertyValue();
-        return IMPLEMENTED_NOTEDITED;
+	    return getImplementation(getEntity());
     }
+	
+	
+	public static boolean isImplemented(Entity entity) {
+	    return getImplementation(entity).equals(IMPLEMENTED_YES);
+	}
 	
 	public boolean isImplemented() {
 	    return getImplementation().equals(IMPLEMENTED_YES);

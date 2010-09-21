@@ -163,7 +163,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         buttonUnlink.setToolTipText("Remove a relation to another element.");
         // buttonUnlink.pack();
 
-        viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI);
+        viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI, true);
         FormData formData6 = new FormData();
         formData6.top = new FormAttachment(buttonLink, 2);
         formData6.left = new FormAttachment(0, 1);

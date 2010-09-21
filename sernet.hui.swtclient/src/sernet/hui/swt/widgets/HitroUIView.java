@@ -347,7 +347,7 @@ public class HitroUIView implements IEntityChangedListener   {
 	private void createNumericSelect(PropertyType fieldType, boolean editableField,
 			Composite parent, boolean focus) {
 		NumericSelectionControl sglControl = new NumericSelectionControl(entity, fieldType,
-				parent, editable);
+				parent, editableField);
 		sglControl.create();
 		if (focus)
 			focusField = sglControl;

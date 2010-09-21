@@ -8,7 +8,7 @@
  -->
 <hibernate-mapping package="sernet.verinice.model.common">
 	<class name="CnALink" table="cnalink"
-		mutable="false">
+		mutable="true">
 		
 		<cache usage="read-write" />
 		

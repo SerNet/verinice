@@ -613,10 +613,10 @@
                enablesFor="1"
                icon="icons/export.gif"
                id="sernet.verinice.model.iso27k.ExportItVerbund.menu"
-               label="Export..."
+               label="%action.label.19"
                menubarPath="additions"
                style="push"
-               tooltip="Export to file...">
+               tooltip="%action.tooltip.19">
          </action>
       </objectContribution>
       <objectContribution
@@ -628,10 +628,10 @@
                enablesFor="1"
                icon="icons/export.gif"
                id="sernet.verinice.model.iso27k.ExportOrganization.menu"
-               label="Export..."
+               label="%action.label.20"
                menubarPath="additions"
                style="push"
-               tooltip="Export to file...">
+               tooltip="%action.tooltip.20">
          </action>
       </objectContribution>
    </extension>
@@ -772,7 +772,7 @@
       <page
             class="sernet.gs.ui.rcp.main.preferences.EditorPreferencePage"
             id="sernet.gs.ui.rcp.main.preferences.editorpreferencepage"
-            name="Editor-Einstellungen">
+            name="%page.name.7">
       </page>
    </extension>
    <extension
@@ -960,11 +960,11 @@
                class="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
                icon="icons/import.gif"
                id="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
-               label="Import organization..."
+               label="%action.label.21"
                state="true"
                style="push"
                toolbarPath="additions"
-               tooltip="Import organization from file...">
+               tooltip="%action.tooltip.21">
          </action>
       </viewContribution>
       <viewContribution
@@ -974,11 +974,11 @@
                class="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
                icon="icons/import.gif"
                id="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
-               label="Import it-verbund..."
+               label="%action.label.22"
                state="true"
                style="push"
                toolbarPath="additions"
-               tooltip="Import it-verbund from file...">
+               tooltip="%action.tooltip.22">
          </action>
       </viewContribution>
       <viewContribution
@@ -988,11 +988,11 @@
                class="sernet.verinice.iso27k.rcp.action.ExportAction"
                icon="icons/export.gif"
                id="sernet.verinice.iso27k.rcp.action.ExportAction"
-               label="Export organization..."
+               label="%action.label.23"
                state="true"
                style="push"
                toolbarPath="additions"
-               tooltip="Export organization to a file...">
+               tooltip="%action.tooltip.23">
          </action>
       </viewContribution>
       <viewContribution
@@ -1002,11 +1002,11 @@
                class="sernet.verinice.iso27k.rcp.action.ExportAction"
                icon="icons/export.gif"
                id="sernet.verinice.iso27k.rcp.action.ExportAction"
-               label="Export IT-Verbund..."
+               label="%action.label.24"
                state="true"
                style="push"
                toolbarPath="additions"
-               tooltip="Export IT-Verbund to a file...">
+               tooltip="%action.tooltip.24">
          </action>
       </viewContribution>
    </extension>

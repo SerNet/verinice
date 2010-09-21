@@ -2973,17 +2973,17 @@ the value between <param></param> will be used directly if no string is found fo
 		<huiproperty
 					id="asset_value_method_confidentiality"
 					name="Deduce Confidentiality"
-					inputtype="booleanoption" min="0" max="1" defaultValue="1">
+					inputtype="booleanoption"  defaultValue="1">
 				</huiproperty>	
 		<huiproperty
 					id="asset_value_method_integrity"
 					name="Deduce Integrity"
-					inputtype="booleanoption" min="0" max="1" defaultValue="1">
+					inputtype="booleanoption" defaultValue="1">
 				</huiproperty>	
 		<huiproperty
 					id="asset_value_method_availability"
 					name="Deduce Availability"
-					inputtype="booleanoption" min="0" max="1" defaultValue="1" >
+					inputtype="booleanoption"  defaultValue="1" >
 		</huiproperty>	
 	
 		<huiproperty
@@ -3835,30 +3835,31 @@ the value between <param></param> will be used directly if no string is found fo
                     id="scenario_value_method_confidentiality"
                     name="Affects Confidentiality"
                     tags="risk"
-                    inputtype="booleanoption" min="0" max="1" >
+                    inputtype="booleanoption" defaultValue="1" >
                 </huiproperty>  
         <huiproperty
                     id="scenario_value_method_integrity"
                     name="Affects Integrity"
                     tags="risk"
-                    inputtype="booleanoption" min="0" max="1" >
+                    inputtype="booleanoption"  defaultValue="1">
                 </huiproperty>  
         <huiproperty
                     id="scenario_value_method_availability"
                     name="Affects Availability"
                     tags="risk"
-                    inputtype="booleanoption" min="0" max="1" >
+                    inputtype="booleanoption"  defaultValue="1">
         </huiproperty>  
         
         <huipropertygroup name="Probability" id="incscen_likelihoodgroup" tags="risk">
 			<huiproperty
-				name="Deduce from threat and vuln." id="incscen_likelihoodmethod" inputtype="booleanoption" min="0" max="1">
+				name="Deduce from threat and vuln." id="incscen_likelihoodmethod" inputtype="booleanoption" defaultValue="1" >
 			</huiproperty>
             
             <!-- Risk analysis, range has to match min to max sum possible from threat + vulnerability -->
 			<huiproperty
 				name="Probability of scenario occuring" id="incscen_likelihood" 
-					inputtype="numericoption" min="0" max="8" tooltip="Probability as determined by possible combination of threat 
+					inputtype="numericoption" min="0" max="8" defaultValue="4" 
+                    tooltip="Probability as determined by possible combination of threat 
                     and vulnerability, the lowest being a rarely occuring threat (less than once a year) meeting a barely exploitable
                      vulnerability. The highest combination is an hourly occuring threat meeting an easily exploitable vulnerability.
                      Probability is scaled between those limits.">
@@ -4243,17 +4244,17 @@ the value between <param></param> will be used directly if no string is found fo
 		<huiproperty
 					id="process_value_method_confidentiality"
 					name="Deduce Confidentiality"
-					inputtype="booleanoption" min="0" max="1" >
+					inputtype="booleanoption"  >
 				</huiproperty>	
 		<huiproperty
 					id="process_value_method_integrity"
 					name="Deduce Integrity"
-					inputtype="booleanoption" min="0" max="1" >
+					inputtype="booleanoption"  >
 				</huiproperty>	
 		<huiproperty
 					id="process_value_method_availability"
 					name="Deduce Availability"
-					inputtype="booleanoption" min="0" max="1" >
+					inputtype="booleanoption"  >
 		</huiproperty>	
 	
 		<huiproperty

@@ -220,7 +220,8 @@ public class ImageCache {
 	public static final String ISO27K_ASSETGROUP        = "sweetie-verinice/png/assetgroup.png";
     public static final String ISO27K_THREAT 			= "sweetie-verinice/png/16-lightening.png";
 	public static final String ISO27K_VULNERABILITY 	= "sweetie-verinice/png/16-shield-blue-broken.png";
-	public static final String ISO27K_INCIDENT_SCENARIO = "sweetie-verinice/png/16-arrow-branch-bgr.png";
+//	public static final String ISO27K_INCIDENT_SCENARIO = "sweetie-verinice/png/16-arrow-branch-bgr.png";
+	public static final String ISO27K_INCIDENT_SCENARIO = "dialog-warning.png";
 	public static final String ISO27K_INCIDENT 			= "sweetie-verinice/png/16-arrow-incident-red.png";
 	public static final String ISO27K_REQUIREMENT 		= "sweetie-verinice/png/16-paper-gavel-alt.png";
 	public static final String ISO27K_EXCEPTION 		= "sweetie-verinice/png/16-paper-excerpt-yellow.png";

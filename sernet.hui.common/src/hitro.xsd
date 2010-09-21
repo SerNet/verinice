@@ -223,9 +223,9 @@ be displayed when one of the given options has been previously selected.
 	<xs:attribute name="crudButtons" type="xs:boolean" default="false"/> 
 
 	<!-- Value range for numeric option list -->
-	<xs:attribute name="min" type="xs:decimal"/> 
-	<xs:attribute name="max" type="xs:decimal"/> 
-	<xs:attribute name="defaultValue" type="xs:decimal" default="0" /> 
+	<xs:attribute name="min" type="xs:int"/> 
+	<xs:attribute name="max" type="xs:int"/> 
+	<xs:attribute name="defaultValue" type="xs:int" default="0" /> 
 
 	<!-- Should this property be included in reports? -->
 	<xs:attribute name="report" type="xs:boolean" default="true"/> 

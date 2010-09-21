@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -30,6 +31,7 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -38,6 +40,22 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class RelationViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 	private IRelationTable view;
+	
+	  
+	private String getRisk(CnALink link, char risk) {
+	    switch (risk) {
+        case 'C':
+            if (link.getRiskConfidentiality() != null)
+                return link.getRiskConfidentiality().toString();
+        case 'I':
+            if (link.getRiskIntegrity() != null)
+                return link.getRiskIntegrity().toString();
+        case 'A':
+            if (link.getRiskAvailability() != null)
+                return link.getRiskAvailability().toString();
+        }
+	    return "";
+	}
 
 	/**
 	 * @param viewer
@@ -71,6 +89,13 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 			return ""; // image only //$NON-NLS-1$
 		case 3:
 			return CnALink.getRelationObjectTitle(view.getInputElmt(), link);
+		case 4:
+		    return getRisk(link, 'C');
+		case 5:
+		    return getRisk(link, 'I');
+		case 6:
+		    return getRisk(link, 'A');
+			
 		default:
 			return ""; //$NON-NLS-1$
 		}
@@ -103,6 +128,10 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	 * @return
 	 */
 	private Image getObjTypeImage(CnATreeElement elmt) {
+	    if (elmt.getTypeId().equals(Control.TYPE_ID)) {
+	        String impl = Control.getImplementation(elmt.getEntity());
+	        return ImageCache.getInstance().getControlImplementationImage(impl);
+	    }
 		return ImageCache.getInstance().getObjectTypeImage(elmt.getTypeId());
 	}
 

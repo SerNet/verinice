@@ -363,6 +363,12 @@ public class HUITypeFactory {
             propObj.setNumericMax(prop.getAttribute("max"));
             propObj.setNumericDefault(prop.getAttribute("defaultValue"));
         }
+        
+        if (propObj.isBooleanSelect()) {
+            propObj.setNumericMin("0");
+            propObj.setNumericMax("1");
+            propObj.setNumericDefault(prop.getAttribute("defaultValue"));
+        }
 
         // the shortcut to set a "NotEmpty" validator:
         if (prop.getAttribute("required").equals("true")) {

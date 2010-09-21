@@ -24,6 +24,7 @@ import java.util.Set;
 import org.hibernate.dialect.function.CastFunction;
 
 import sernet.hui.common.connect.ITypedElement;
+import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -54,32 +55,36 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
      */
     @Override
     public void determineProbability(IncidentScenario scenario) {
-        // only if automatic is on:
+        // only if automatic mode is activated:
         if (scenario.getNumericProperty(PROP_SCENARIO_METHOD) == 1) {
-            // init value:
-            scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY, 0);
-            // calculate threat + vulnerability, use max combination if more than
-            // one pair:
+            // only calculate if threat AND vulnerability is linked to scenario:
             Map<CnATreeElement, CnALink> threats = CnALink.getLinkedElements(scenario, Threat.TYPE_ID);
             Map<CnATreeElement, CnALink> vulns = CnALink.getLinkedElements(scenario, Vulnerability.TYPE_ID);
             
-            int threatImpact = 0;
-            for (CnATreeElement threat : threats.keySet()) {
-                //use higher value of likelihood or impact:
-                int level1 = threat.getNumericProperty(PROP_THREAT_LIKELIHOOD);
-                int level2 = threat.getNumericProperty(PROP_THREAT_IMPACT);
-                int level = level1 > level2 ? level1 : level2;
-                if (level > threatImpact)
-                    threatImpact = level;
+            if (threats.size()>0 && vulns.size()>0) {
+                // init value:
+                scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY, 0);
+                // calculate threat + vulnerability, use max combination if more than
+                // one pair:
+                
+                int threatImpact = 0;
+                for (CnATreeElement threat : threats.keySet()) {
+                    //use higher value of likelihood or impact:
+                    int level1 = threat.getNumericProperty(PROP_THREAT_LIKELIHOOD);
+                    int level2 = threat.getNumericProperty(PROP_THREAT_IMPACT);
+                    int level = level1 > level2 ? level1 : level2;
+                    if (level > threatImpact)
+                        threatImpact = level;
+                }
+                
+                int exploitability = 0;
+                for (CnATreeElement vuln : vulns.keySet()) {
+                    int level = vuln.getNumericProperty(PROP_VULNERABILITY_EXPLOITABILITY);
+                    if (level > exploitability)
+                        exploitability = level;
+                }
+                scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY, threatImpact + exploitability);
             }
-            
-            int exploitability = 0;
-            for (CnATreeElement vuln : vulns.keySet()) {
-                int level = vuln.getNumericProperty(PROP_VULNERABILITY_EXPLOITABILITY);
-                if (level > exploitability)
-                    exploitability = level;
-            }
-            scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY, threatImpact + exploitability);
         }
         
         // now determine probability after all applied controls:
@@ -135,30 +140,30 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
             
             if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_I)==1) {
                 // increase total asset risk by this combination's risk
-                int risk = valueAdapter.getVertraulichkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY);
+                int risk = valueAdapter.getIntegritaet() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY);
                 linksForAssets.get(asset).setRiskIntegrity(risk);
                 asset.setNumericProperty(PROP_ASSET_RISK_I, asset.getNumericProperty(PROP_ASSET_RISK_I) + risk);
                 
                 // now take planned / implemented controls for the scenario into account:
-                int reducedRisk = valueAdapter.getVertraulichkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+                int reducedRisk = valueAdapter.getIntegritaet() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_I, asset.getNumericProperty(PROP_ASSET_CONTROLRISK_I) + reducedRisk);
                 
-                int reducedRiskPlanned = valueAdapter.getVertraulichkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+                int reducedRiskPlanned = valueAdapter.getIntegritaet() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
                 asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_I, asset.getNumericProperty(PROP_ASSET_PLANCONTROLRISK_I) + reducedRiskPlanned);
                 
             }
        
             if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_A)==1) {
                 // increase total asset risk by this combination's risk
-                int risk = valueAdapter.getVertraulichkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY);
+                int risk = valueAdapter.getVerfuegbarkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY);
                 linksForAssets.get(asset).setRiskAvailability(risk);
                 asset.setNumericProperty(PROP_ASSET_RISK_A, asset.getNumericProperty(PROP_ASSET_RISK_A) + risk);
                 
                 // now take planned / implemented controls for the scenario into account:
-                int reducedRisk = valueAdapter.getVertraulichkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+                int reducedRisk = valueAdapter.getVerfuegbarkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_A, asset.getNumericProperty(PROP_ASSET_CONTROLRISK_A) + reducedRisk);
                 
-                int reducedRiskPlanned = valueAdapter.getVertraulichkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+                int reducedRiskPlanned = valueAdapter.getVerfuegbarkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
                 asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_A, asset.getNumericProperty(PROP_ASSET_PLANCONTROLRISK_A) + reducedRiskPlanned);
             }
         }
@@ -188,7 +193,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
         Map<CnATreeElement, CnALink> assetControls = CnALink.getLinkedElements(asset, Control.TYPE_ID);
         for (CnATreeElement control : assetControls.keySet()) {
             // calculate reduced risk if control is implemented:
-            if (control.getEntity().getSimpleValue(IControl.PROP_IMPL).equals(IControl.IMPLEMENTED_YES)) {
+            if (Control.isImplemented(control.getEntity())) {
                 int reducedRisk = asset.getNumericProperty(PROP_ASSET_CONTROLRISK_C) - control.getNumericProperty(PROP_CONTROL_EFFECT_C);
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_C, reducedRisk < 0 ? 0 : reducedRisk);
                 

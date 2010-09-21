@@ -32,11 +32,10 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 
     private CheckboxTableViewer viewer;
 
-    // FIXME externalize strings
     public EditorPreferencePage() {
         super(GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
-        setDescription("Hier können Sie die Einstellungen für die Eingabeformulare ändern. Sie können zum Beispiel auswählen, ob nur bestimmte Eingabefelder angezeigt werden sollen.");
+        setDescription(sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.0")); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
@@ -44,7 +43,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
      */
     @Override
     protected void createFieldEditors() {
-        BooleanFieldEditor booleanFieldEditor = new BooleanFieldEditor(PreferenceConstants.HUI_TAGS_STRICT, "Strikten Filtermodus aktivieren", getFieldEditorParent());
+        BooleanFieldEditor booleanFieldEditor = new BooleanFieldEditor(PreferenceConstants.HUI_TAGS_STRICT, sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.1"), getFieldEditorParent()); //$NON-NLS-1$
         addField(booleanFieldEditor);
         
         createTagList();
@@ -66,7 +65,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         checkboxColumn.setWidth(35);
 
         TableColumn tagColumn = new TableColumn(table, SWT.LEFT);
-        tagColumn.setText("Zeige nur Eigenschaften mit Tag");
+        tagColumn.setText(sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.2")); //$NON-NLS-1$
         tagColumn.setWidth(100);
         
         viewer.setContentProvider(new ArrayContentProvider());
@@ -117,11 +116,11 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
     private String join(List tags) {
         Iterator iter;
         if (tags == null || (!(iter = tags.iterator()).hasNext()))
-            return "";
+            return ""; //$NON-NLS-1$
 
         StringBuilder oBuilder = new StringBuilder(String.valueOf(iter.next()));
         while (iter.hasNext()) {
-            oBuilder.append(",").append(iter.next());
+            oBuilder.append(",").append(iter.next()); //$NON-NLS-1$
         }
         return oBuilder.toString();
     }
@@ -156,8 +155,8 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         if (tags == null)
             return new String[] {};
         
-        tags.replaceAll("\\s+", "");
-        return tags.split(",");
+        tags.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        return tags.split(","); //$NON-NLS-1$
     }
 
   
