@@ -104,10 +104,10 @@ public class CreateScenario extends GenericCommand {
             
             incidentScenario.setTitel(sb.toString());
             
-            CreateLink<CnALink, Threat, IncidentScenario> cmd2 = new CreateLink<CnALink, Threat, IncidentScenario>(threat, incidentScenario, THREAT_RELATION_ID );
+            CreateLink<CnALink, IncidentScenario, Threat> cmd2 = new CreateLink<CnALink, IncidentScenario,Threat >(incidentScenario, threat, THREAT_RELATION_ID );
             cmd2 = getCommandService().executeCommand(cmd2);
 
-            CreateLink<CnALink, Vulnerability, IncidentScenario> cmd3 = new CreateLink<CnALink, Vulnerability, IncidentScenario>(vulnerability, incidentScenario, VULN_RELATION_ID);
+            CreateLink<CnALink, IncidentScenario, Vulnerability> cmd3 = new CreateLink<CnALink, IncidentScenario,Vulnerability >(incidentScenario, vulnerability, VULN_RELATION_ID);
             cmd3 = getCommandService().executeCommand(cmd3);
 
             this.incScen = incidentScenario;

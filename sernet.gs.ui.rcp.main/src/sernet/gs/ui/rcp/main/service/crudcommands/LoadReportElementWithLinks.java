@@ -63,10 +63,20 @@ public class LoadReportElementWithLinks extends GenericCommand {
     private void loadLinks(CnATreeElement root) {
         result = new ArrayList<List<String>>();
         for (CnALink link : root.getLinksDown()) {
-            result.add(makeRow(root, link));
+            if (typeId == null )
+                result.add(makeRow(root, link));
+            else {
+                if (link.getDependency().getTypeId().equals(typeId))
+                    result.add(makeRow(root, link));
+            }
         }
         for (CnALink link : root.getLinksUp()) {
-            result.add(makeRow(root, link));
+            if (typeId == null )
+                result.add(makeRow(root, link));
+            else {
+                if (link.getDependant().getTypeId().equals(typeId))
+                    result.add(makeRow(root, link));
+            }
         }
     }
     

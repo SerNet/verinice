@@ -49,6 +49,7 @@ import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommand;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
@@ -183,11 +184,11 @@ public class Query implements IQuery
     		return command.getResult();
         }
         
-      public String[] getAllPropertyTypes(String entityTypeId) {
-          HUITypeFactory htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-          return htf.getEntityType(entityTypeId).getAllPropertyTypeIDsIncludingGroups();
-      }
-
+        public String[] getAllPropertyTypes(String entityTypeId) {
+            HUITypeFactory htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+            return htf.getEntityType(entityTypeId).getAllPropertyTypeIDsIncludingGroups();
+        }
+      
         public List<List<String>> map(List<CnATreeElement> input, String[] props)
         {
         	return map(input, props, new Class<?>[0]);

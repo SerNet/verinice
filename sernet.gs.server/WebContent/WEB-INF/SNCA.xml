@@ -2885,7 +2885,7 @@ the value between <param></param> will be used directly if no string is found fo
         </huiproperty>
         
         <!-- risk analysis, ranges must match defined CIA levels + scnario probability -->
-		<huipropertygroup name="Acceptable Risk Levels xxx" id="org_riskgroup" tags="risk">
+		<huipropertygroup name="Acceptable Risk Levels " id="org_riskgroup" tags="risk">
 			<huiproperty 
 				name="Confidentiality" id="org_riskaccept_confid" 
 				inputtype="numericoption" min="0" max="11" tags="risk"/>
@@ -3452,7 +3452,7 @@ the value between <param></param> will be used directly if no string is found fo
         id="control" >
         
         <huirelation to="incident_scenario" id="rel_control_incscen" 
-        	name="reduces probability of xxx" reversename="probability reduced by" tooltip=""/>
+        	name="reduces probability of " reversename="probability reduced by" tooltip=""/>
 		<huirelation to="control" id="rel_control_control"
         	name="concretizes" reversename="is conretized by" tooltip="" />
         	
@@ -3473,7 +3473,7 @@ the value between <param></param> will be used directly if no string is found fo
             visible="false"
             />
      	
-    <!-- Risk analysis, values must match those defined for asset CIA and scenario probability xxx -->
+    <!-- Risk analysis, values must match those defined for asset CIA and scenario probability  -->
 	<huipropertygroup name="Control Strength" id="control_effectivenessgroup">
 	        <huiproperty name="Impact on Confidentiality" id="control_effectiveness_confidentiality" 
 	        	inputtype="numericoption" min="0" max="3" >
@@ -3859,10 +3859,8 @@ the value between <param></param> will be used directly if no string is found fo
 			<huiproperty
 				name="Probability of scenario occuring" id="incscen_likelihood" 
 					inputtype="numericoption" min="0" max="8" defaultValue="4" 
-                    tooltip="Probability as determined by possible combination of threat 
-                    and vulnerability, the lowest being a rarely occuring threat (less than once a year) meeting a barely exploitable
-                     vulnerability. The highest combination is an hourly occuring threat meeting an easily exploitable vulnerability.
-                     Probability is scaled between those limits.">
+                    tooltip="Probability as determined by possible combination of threat and vulnerability, the lowest being a rarely occuring threat (less than once a year) meeting a barely exploitable vulnerability. The highest combination is an hourly occuring threat meeting an easily exploitable vulnerability. Probability is scaled between those limits."
+            >
                     <option id="incscen_likely_0" name="0: Less than 10%" value="0" />
                     <option id="incscen_likely_1" name="1: 20%" value="1" />
                     <option id="incscen_likely_2" name="2: 30%" value="2" />
@@ -3874,7 +3872,7 @@ the value between <param></param> will be used directly if no string is found fo
                     <option id="incscen_likely_8" name="8: 90% and higher" value="8" />
             </huiproperty>
             
-            <huiproperty id="incscen_likelihood_wcontrol" name="Probability with implemented controls xxx" 
+            <huiproperty id="incscen_likelihood_wcontrol" name="Probability with implemented controls " 
               inputtype="numericoption" min="0" max="8" editable="false">
                 <option id="incscen_likelyc_0" name="0: Less than 10%" value="0" />
                 <option id="incscen_likelyc_1" name="1: 20%" value="1" />
@@ -3887,7 +3885,7 @@ the value between <param></param> will be used directly if no string is found fo
                 <option id="incscen_likelyc_8" name="8: 90% and higher" value="8" />
           </huiproperty>
           
-           <huiproperty id="incscen_likelihood_wplancontrol" name="Probability with planned controls xxx" 
+           <huiproperty id="incscen_likelihood_wplancontrol" name="Probability with planned controls " 
               inputtype="numericoption" min="0" max="8" editable="false">
                 <option id="incscen_likelypc_0" name="0: Less than 10%" value="0" />
                 <option id="incscen_likelypc_1" name="1: 20%" value="1" />
@@ -3969,12 +3967,12 @@ the value between <param></param> will be used directly if no string is found fo
 		</huiproperty>
             <huiproperty 
             name="Threat Impact" id="threat_impact" inputtype="numericoption" min="0" max="5" tags="risk">
-            <option id="threat_impact_0" name="Very Low" value="0"/>
-            <option id="threat_impact_1" name="Low" value="1"/>
-            <option id="threat_impact_2" name="Medium" value="2"/>
-            <option id="threat_impact_3" name="High" value="3"/>
-            <option id="threat_impact_4" name="Very High" value="4"/>
-            <option id="threat_impact_5" name="Catastrophic" value="5"/>
+            <option id="threat_impact_0" name="0: Very Low" value="0"/>
+            <option id="threat_impact_1" name="1: Low" value="1"/>
+            <option id="threat_impact_2" name="2: Medium" value="2"/>
+            <option id="threat_impact_3" name="3: High" value="3"/>
+            <option id="threat_impact_4" name="4: Very High" value="4"/>
+            <option id="threat_impact_5" name="5: Catastrophic" value="5"/>
         </huiproperty>
     </huientity>
     
@@ -4002,7 +4000,7 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
 				name="Description" id="vulnerability_desc"  visible="false" tags="risk"/>
                 
-		<huiproperty name="Ease of Exploitation xxx" id="vulnerability_level" inputtype="numericoption"
+		<huiproperty name="Ease of Exploitation " id="vulnerability_level" inputtype="numericoption"
 			min="0" max="3" tags="risk">
             <option id="vulnerability_level_0" name="0: Hardly possible" value="0"/>
             <option id="vulnerability_level_1" name="1: Possible" value="1"/>
@@ -4321,7 +4319,7 @@ the value between <param></param> will be used directly if no string is found fo
 					id="process_value_comment" />
 		</huipropertygroup>
 		
-	   <huipropertygroup name="Risk Management xxx" id="process_riskgroup">
+	   <huipropertygroup name="Risk Management " id="process_riskgroup">
             <huiproperty
                 name="Confidentiality risk value" id="process_riskvalue_c" editable="false"/>
             <huiproperty
