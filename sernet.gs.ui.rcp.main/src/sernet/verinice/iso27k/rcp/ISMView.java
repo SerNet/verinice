@@ -70,6 +70,7 @@ import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.iso27k.rcp.action.TagFilter;
+import sernet.verinice.iso27k.rcp.action.TypeFilter;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
@@ -113,6 +114,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	
 	protected HideEmptyFilter hideEmptyFilter;
 	
+	protected TypeFilter typeFilter;
+    
 	private MetaDropAdapter metaDropAdapter;
 
 	private ControlDropPerformer controlDropAdapter;
@@ -281,10 +284,12 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 		
 		hideEmptyFilter = createHideEmptyFilter();
-		filterAction = new ISMViewFilter(viewer,
+		typeFilter = createTypeFilter();
+        filterAction = new ISMViewFilter(viewer,
 				Messages.ISMView_12,
 				new TagFilter(viewer),
-				hideEmptyFilter);
+				hideEmptyFilter,
+				typeFilter);
 		
 		metaDropAdapter = new MetaDropAdapter(viewer);
 		controlDropAdapter = new ControlDropPerformer(this);
@@ -305,6 +310,16 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
      */
     protected HideEmptyFilter createHideEmptyFilter() {
         return new HideEmptyFilter(viewer);
+    }
+    
+    /**
+     * Override this in subclasses to hide empty groups
+     * on startup.
+     * 
+     * @return a {@link TypeFilter}
+     */
+    protected TypeFilter createTypeFilter() {
+        return new TypeFilter(viewer);
     }
 	
 	protected void fillToolBar() {

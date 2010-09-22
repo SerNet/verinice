@@ -40,6 +40,7 @@ public class PropertiesSelectionPage extends WizardPage {
     
     private char separator = DEFAULT_SEPARATOR;
 	private String entityName;
+    private String entityId;
 	private File csvDatei;
 	private Table tabelle;
 	private TableItem[] items;
@@ -116,9 +117,9 @@ public class PropertiesSelectionPage extends WizardPage {
 		
 		String[] cString = null;
 		Collection<EntityType> allEntityTypes =  HitroUtil.getInstance().getTypeFactory().getAllEntityTypes();
-		if(entityName != null){
+		if(entityId != null){
 	        for (EntityType entityType : allEntityTypes) {
-	        	if(entityType.getName().equals(entityName)){
+	        	if(entityType.getId().equals(entityId)){
 	        		cString = new String[entityType.getElements().size()];
 	        		Collection<IEntityElement> elements =  entityType.getElements();
 	        		int count = 0;
@@ -210,8 +211,8 @@ public class PropertiesSelectionPage extends WizardPage {
 		for(int i = 1; i < spalten.length; i++){
 			Vector<String> temp = new Vector<String>();
 			// first column (ext-id) is not displayed: i-1
-			temp.add(this.idCombos.get(combos.get(i-1).getSelectionIndex()));
-			//temp.add(combos.get(i).getItem(combos.get(i).getSelectionIndex()));
+			int index = combos.get(i-1).getSelectionIndex();
+			temp.add(this.idCombos.get(index));
 			temp.add(spalten[i]);
 			table.add(temp);
 		}
@@ -226,7 +227,15 @@ public class PropertiesSelectionPage extends WizardPage {
 		return this.entityName;
 	}
 	
-	//get property and values of the csv
+	public String getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(String entityId) {
+        this.entityId = entityId;
+    }
+
+    //get property and values of the csv
     public String[] getFirstLine() throws IOException {
         if(firstLine==null) {
             readFile();

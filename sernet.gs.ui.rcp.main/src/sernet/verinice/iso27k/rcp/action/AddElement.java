@@ -35,15 +35,16 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
-import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.DocumentGroup;
 import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.FindingGroup;
-import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.IncidentGroup;
 import sernet.verinice.model.iso27k.IncidentScenarioGroup;
 import sernet.verinice.model.iso27k.InterviewGroup;
@@ -85,6 +86,7 @@ public class AddElement implements IObjectActionDelegate {
 		TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, Messages.getString("AddElement.14")); //$NON-NLS-1$
 		TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, Messages.getString("AddElement.15")); //$NON-NLS-1$
 		TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, Messages.getString("AddElement.16")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(Asset.TYPE_ID, Messages.getString("AddElement.18")); //$NON-NLS-1$
 	}
 	
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -97,15 +99,21 @@ public class AddElement implements IObjectActionDelegate {
 			Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
 			CnATreeElement newElement = null;
 
-			if (sel instanceof Group) {
-				Group group = (Group) sel;
+			if (sel instanceof IISO27kGroup) {
+			    IISO27kGroup group = (IISO27kGroup) sel;
+			    String childType = null;
 				if(group.getChildTypes()!=null && group.getChildTypes().length>0) {
-					// TODO: Fix this for group.getChildTypes().length > 1
 				    // TODO - getChildTypes()[0] problem for more than one type
-					newElement = CnAElementFactory.getInstance().saveNew(group, group.getChildTypes()[0], null);
+				    childType = group.getChildTypes()[0];
+				    if(group instanceof Asset) {
+				        childType = Control.TYPE_ID;
+				    }
 				} else {
 					LOG.error(Messages.getString("AddElement.17")); //$NON-NLS-1$
-				}			
+				}
+				if(childType!=null) {
+				    newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group, childType, null);           		
+				}
 			}
 			if (newElement != null) {
 				EditorFactory.getInstance().openEditor(newElement);
@@ -124,10 +132,14 @@ public class AddElement implements IObjectActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		if(selection instanceof IStructuredSelection) {
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
-			if(sel instanceof Group) {
-				Group group = (Group) sel;
+			if(sel instanceof IISO27kGroup) {
+			    IISO27kGroup group = (IISO27kGroup) sel;
 				// TODO - getChildTypes()[0] might be a problem for more than one type
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0])));	
+			    String childType = group.getChildTypes()[0];
+                if(group instanceof Asset) {
+                    childType = Control.TYPE_ID;
+                }
+				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(childType)));	
 				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddElement.20") ); //$NON-NLS-1$
 			}
 			

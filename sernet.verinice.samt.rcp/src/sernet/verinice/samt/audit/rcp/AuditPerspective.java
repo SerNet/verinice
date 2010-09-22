@@ -48,10 +48,11 @@ public class AuditPerspective implements IPerspectiveFactory {
     public void createInitialLayout(IPageLayout layout) {
         String editorArea = layout.getEditorArea();
         layout.setEditorAreaVisible(true);
-        layout.addView(OrganizationView.ID, IPageLayout.LEFT, 0.25f, editorArea);
-        layout.addView(AuditView.ID, IPageLayout.BOTTOM, 0.25f, OrganizationView.ID);
-        layout.addView(AssetView.ID, IPageLayout.BOTTOM, 0.33f, AuditView.ID);
-        layout.addView(ControlView.ID, IPageLayout.BOTTOM, 0.5f, AssetView.ID);
+        layout.addView(SimpleAuditView.ID, IPageLayout.LEFT, 0.25f, editorArea);
+        //layout.addView(OrganizationView.ID, IPageLayout.LEFT, 0.25f, editorArea);
+        //layout.addView(AuditView.ID, IPageLayout.BOTTOM, 0.25f, OrganizationView.ID);
+        //layout.addView(AssetView.ID, IPageLayout.BOTTOM, 0.33f, AuditView.ID);
+        //layout.addView(ControlView.ID, IPageLayout.BOTTOM, 0.5f, AssetView.ID);
     }
 
 }

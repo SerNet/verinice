@@ -18,23 +18,30 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -44,8 +51,43 @@ import org.eclipse.swt.widgets.TableColumn;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
+import sernet.verinice.iso27k.rcp.action.TypeFilter;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Document;
+import sernet.verinice.model.iso27k.DocumentGroup;
+import sernet.verinice.model.iso27k.Evidence;
+import sernet.verinice.model.iso27k.EvidenceGroup;
+import sernet.verinice.model.iso27k.Exception;
+import sernet.verinice.model.iso27k.ExceptionGroup;
+import sernet.verinice.model.iso27k.Finding;
+import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.Incident;
+import sernet.verinice.model.iso27k.IncidentGroup;
+import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.IncidentScenarioGroup;
+import sernet.verinice.model.iso27k.Interview;
+import sernet.verinice.model.iso27k.InterviewGroup;
+import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.iso27k.Record;
+import sernet.verinice.model.iso27k.RecordGroup;
+import sernet.verinice.model.iso27k.Requirement;
+import sernet.verinice.model.iso27k.RequirementGroup;
+import sernet.verinice.model.iso27k.Response;
+import sernet.verinice.model.iso27k.ResponseGroup;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.ThreatGroup;
+import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.model.iso27k.VulnerabilityGroup;
 
 /**
  * 
@@ -56,102 +98,170 @@ public class ISMViewFilterDialog extends Dialog {
 
     private static final Logger log = Logger.getLogger(ISMViewFilterDialog.class);
 
+    public static final String[][] TYPES = new String[][] {
+        new String[] {Asset.TYPE_ID,AssetGroup.TYPE_ID},
+        new String[] {Audit.TYPE_ID,AuditGroup.TYPE_ID},
+        new String[] {Control.TYPE_ID,ControlGroup.TYPE_ID},        
+        new String[] {Document.TYPE_ID,DocumentGroup.TYPE_ID},        
+        new String[] {Evidence.TYPE_ID,EvidenceGroup.TYPE_ID},        
+        new String[] {Exception.TYPE_ID,ExceptionGroup.TYPE_ID},        
+        new String[] {Finding.TYPE_ID,FindingGroup.TYPE_ID},        
+        new String[] {Incident.TYPE_ID,IncidentGroup.TYPE_ID},        
+        new String[] {IncidentScenario.TYPE_ID,IncidentScenarioGroup.TYPE_ID},       
+        new String[] {Interview.TYPE_ID,InterviewGroup.TYPE_ID},       
+        new String[] {PersonIso.TYPE_ID,PersonGroup.TYPE_ID},        
+        new String[] {Record.TYPE_ID,RecordGroup.TYPE_ID},       
+        new String[] {Requirement.TYPE_ID,RequirementGroup.TYPE_ID},       
+        new String[] {Response.TYPE_ID,ResponseGroup.TYPE_ID},       
+        new String[] {Threat.TYPE_ID,ThreatGroup.TYPE_ID},       
+        new String[] {Vulnerability.TYPE_ID,VulnerabilityGroup.TYPE_ID}
+    };
+    
     private Composite container;
 
     private String[] tagPattern;
-    private Group tagGroup;
     private CheckboxTableViewer viewer;
     private String[] checkedElements;
 
-    private Group hideEmptyGroup;
     private Button hideEmptyCheckbox;
     private boolean hideEmpty;
+    
+    private CheckboxTableViewer viewerType;
+    private Set<String[]> visibleTypes = new HashSet<String[]>();
 
     public ISMViewFilterDialog(Shell parent, ISMViewFilter ismViewFilter) {
         super(parent);
         setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
         this.tagPattern = ismViewFilter.getTagFilter().getPattern();
         this.hideEmpty = ismViewFilter.getHideEmptyFilter().isHideEmpty();
+        this.visibleTypes = ismViewFilter.getTypeFilter().getVisibleTypeSet();
     }
 
     @Override
-    protected Control createDialogArea(Composite parent) {
+    protected org.eclipse.swt.widgets.Control createDialogArea(Composite parent) {
         container = (Composite) super.createDialogArea(parent);
         GridLayout layout = new GridLayout();
-        layout.numColumns = 2;
+        layout.numColumns = 1;
         container.setLayout(layout);
 
         Label intro = new Label(container, SWT.NONE);
-        intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 2, 1));
+        intro.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
         intro.setText(Messages.ISMViewFilterDialog_0);
-
-        tagGroup = createTagfilterGroup(container);
-        hideEmptyGroup = createHideEmptyGroup(container);
-
+        
+        createTypeGroup(container);
+        createTagfilterGroup(container);  
+        createHideEmptyGroup(container);     
+        
         initContent();
         container.layout();
         return container;
     }
 
-    private Group createTagfilterGroup(Composite parent) {
+    /**
+     * @param container2
+     * @return
+     */
+    private void createTypeGroup(Composite parent) {  
+        // FIXME externalize strings
+        
         Group groupComposite = new Group(parent, SWT.BORDER);
-        groupComposite.setText(Messages.ISMViewFilterDialog_1);
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
+        groupComposite.setText("Visible element types");
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
         groupComposite.setLayoutData(gridData);
         groupComposite.setLayout(new GridLayout(1, false));
 
         ScrolledComposite comp = new ScrolledComposite(groupComposite, SWT.V_SCROLL);
         comp.setLayoutData(new GridData(GridData.FILL_BOTH));
         comp.setExpandHorizontal(true);
+          
+        viewerType = CheckboxTableViewer.newCheckList(comp, SWT.BORDER );
+        
+        Table table = viewerType.getTable();
+        table.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, false, false));
+        table.setHeaderVisible(false);
+        table.setLinesVisible(false);    
+        TableColumn checkboxColumn = new TableColumn(table, SWT.LEFT);
+        checkboxColumn.setWidth(100);
+        
+        comp.setContent(viewerType.getControl());
+        viewerType.getTable().setSize(150, 135);
+ 
+        viewerType.setContentProvider(new ArrayContentProvider());
 
+        viewerType.setLabelProvider(new ITableLabelProvider() {
+            @Override
+            public Image getColumnImage(Object element, int columnIndex) {
+                return null;
+            }
+            @Override
+            public String getColumnText(Object element, int columnIndex) {
+                return getTypeFactory().getMessage(((String[])element)[0]);
+            }
+
+            public void dispose() {}
+            public boolean isLabelProperty(Object element, String property) {
+                return false;
+            }
+            public void removeListener(ILabelProviderListener listener) {}
+            @Override
+            public void addListener(ILabelProviderListener listener) {}
+        });
+        viewerType.setCheckStateProvider(new CheckStateProvider(getVisibleTypes()));
+        viewerType.setInput(TYPES);
+        /*
+        Set<String[]> visibleTypesSet = getVisibleTypes();
+        String[][] visibleTypes = new String[visibleTypesSet.size()][2];
+        int i=0;
+        for (String[] strings : visibleTypesSet) {
+            visibleTypes[i] = strings;
+            i++;
+        }
+        
+        viewerType.setCheckedElements(visibleTypes);   
+        */    
+    }
+
+    private void createTagfilterGroup(Composite parent) {
+        Group groupComposite = new Group(parent, SWT.BORDER);
+        groupComposite.setText(Messages.ISMViewFilterDialog_1);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
+        groupComposite.setLayoutData(gridData);
+        groupComposite.setLayout(new GridLayout(1, false));
+
+        ScrolledComposite comp = new ScrolledComposite(groupComposite, SWT.V_SCROLL);
+        comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        comp.setExpandHorizontal(true);
+      
         viewer = CheckboxTableViewer.newCheckList(comp, SWT.BORDER);
         Table table = viewer.getTable();
+        table.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, false, false));
         table.setHeaderVisible(false);
         table.setLinesVisible(false);
-
-        comp.setContent(viewer.getControl());
-
-        // workaround to prevent tableviewer size from exceeding shell size:
-        comp.setMinSize(100, 100);
-
         TableColumn checkboxColumn = new TableColumn(table, SWT.LEFT);
-        checkboxColumn.setText(""); //$NON-NLS-1$
-        checkboxColumn.setWidth(35);
-
-        TableColumn imageColumn = new TableColumn(table, SWT.LEFT);
-        imageColumn.setText(Messages.ISMViewFilterDialog_3);
-        imageColumn.setWidth(100);
+        checkboxColumn.setWidth(100);
+        
+        comp.setContent(viewer.getControl());
+        viewer.getTable().setSize(150, 135);
 
         viewer.setContentProvider(new ArrayContentProvider());
 
         viewer.setLabelProvider(new ITableLabelProvider() {
-
             public Image getColumnImage(Object element, int columnIndex) {
                 return null;
             }
-
             public String getColumnText(Object element, int columnIndex) {
-                if (columnIndex == 1) {
-                    return (String) element;
-                }
-                return null;
+                return (String) element;
             }
-
             public void addListener(ILabelProviderListener listener) {
             }
-
             public void dispose() {
             }
-
             public boolean isLabelProperty(Object element, String property) {
                 return false;
             }
-
             public void removeListener(ILabelProviderListener listener) {
             }
         });
-
-        return groupComposite;
     }
 
     /**
@@ -160,7 +270,7 @@ public class ISMViewFilterDialog extends Dialog {
      */
     private Group createHideEmptyGroup(Composite parent) {
         Group groupComposite = new Group(parent, SWT.BORDER);
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
+        GridData gridData = new GridData(GridData.FILL, GridData.END, true, false);
         groupComposite.setLayoutData(gridData);
         groupComposite.setLayout(new GridLayout(1, false));
         hideEmptyCheckbox = new Button(groupComposite, SWT.CHECK);
@@ -180,6 +290,10 @@ public class ISMViewFilterDialog extends Dialog {
         return getHideEmpty();
     }
 
+    public Set<String[]> getVisibleTypes() {   
+        return visibleTypes;
+    }
+
     protected void initContent() {
         List<String> tags;
         try {
@@ -190,13 +304,9 @@ public class ISMViewFilterDialog extends Dialog {
             ExceptionUtil.log(e, Messages.ISMViewFilterDialog_4);
         }
 
-        // workaround to prevent tableviewer size from exceeding shell size:
-        viewer.getTable().setSize(200, 200);
-
         if (tagPattern != null) {
             viewer.setCheckedElements(tagPattern);
         }
-        tagGroup.getParent().layout(true);
         
         hideEmptyCheckbox.setSelection(getHideEmpty());
     }
@@ -207,6 +317,11 @@ public class ISMViewFilterDialog extends Dialog {
         List<Object> tagList = Arrays.asList(viewer.getCheckedElements());
         this.checkedElements = tagList.toArray(new String[tagList.size()]);
         this.hideEmpty = hideEmptyCheckbox.getSelection();
+        visibleTypes.clear();
+        List<Object> typeList = Arrays.asList(viewerType.getCheckedElements());
+        for (Object object : typeList) {
+            visibleTypes.add((String[]) object);        
+        }
         return super.close();
     }
 
@@ -218,5 +333,48 @@ public class ISMViewFilterDialog extends Dialog {
         // workaround to prevent tableviewer size from exceeding shell size:
         newShell.setSize(400, 500);
     }
+    
+    protected HUITypeFactory getTypeFactory() {
+        return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+    }
+    
+    
 
+}
+
+class CheckStateProvider implements ICheckStateProvider  {
+
+    Set<String[]> visibleTypes;
+    
+    /**
+     * @param visibleTypes
+     */
+    public CheckStateProvider(Set<String[]> visibleTypes) {
+        this.visibleTypes = visibleTypes;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
+     */
+    @Override
+    public boolean isChecked(Object o) {
+        boolean result = false;
+        String[] element = (String[]) o;
+        for (String[] type : visibleTypes) {
+            if(Arrays.hashCode(type)==Arrays.hashCode(element)) {
+                result=true;
+                break;
+            } 
+        } 
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
+     */
+    @Override
+    public boolean isGrayed(Object element) {
+        return false;
+    }
+    
 }

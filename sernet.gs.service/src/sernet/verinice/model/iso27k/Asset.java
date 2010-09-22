@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.model.iso27k;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
@@ -29,12 +30,17 @@ import sernet.verinice.model.common.ILinkChangeListener;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class Asset extends CnATreeElement implements IISO27kElement {
+public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGroup {
 
 	public static final String TYPE_ID = "asset"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "asset_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "asset_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "asset_tag"; //$NON-NLS-1$
+	
+	public static final String[] CHILD_TYPES = new String[] {
+        ControlGroup.TYPE_ID,
+        Control.TYPE_ID
+    };
 	
 	// all risk management constants are in AssetValueService.java
 	
@@ -105,5 +111,26 @@ public class Asset extends CnATreeElement implements IISO27kElement {
 	public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
+	
+	/* (non-Javadoc)
+     * @see sernet.verinice.iso27k.model.Group#getChildTypes()
+     */
+    @Override
+    public String[] getChildTypes() {
+        return CHILD_TYPES;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#canContain(java.lang.Object)
+     */
+    @Override
+    public boolean canContain(Object obj) {
+        boolean canContain = false;
+        if(obj instanceof CnATreeElement) {
+            CnATreeElement element = (CnATreeElement)obj;
+            canContain = Arrays.asList(getChildTypes()).contains(element.getTypeId());
+        }
+        return canContain;
+    }
 
 }

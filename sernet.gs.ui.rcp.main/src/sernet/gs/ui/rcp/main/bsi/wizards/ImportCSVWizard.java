@@ -96,7 +96,8 @@ public class ImportCSVWizard extends Wizard {
 		if (page == entityPage) {
 		    try {
     		    propertyPage.setEntityName(entityPage.getEntityName());
-    			propertyPage.setCSVDatei(entityPage.getCSVDatei());
+    		    propertyPage.setEntityId(entityPage.getEntityNameId());             
+    		    propertyPage.setCSVDatei(entityPage.getCSVDatei());
     			setSourceId(entityPage.getSourceIdText().getText());
     			propertyPage.setSeparator(entityPage.getSeparatorCombo().getText().charAt(0));
     			propertyPage.setCharset(Charset.forName(entityPage.getCharsetCombo().getText()));

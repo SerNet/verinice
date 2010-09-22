@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2009 Andreas Becker <andreas.r.becker@rub.de>.
  * Copyright (c) 2010 Robert Schuster <r.schuster@tarent.de>
+ * Copyright (c) 2010 Daniel Murygin <dm[a]sernet[dot]de>
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -15,7 +16,8 @@
  * 
  * Contributors:
  *     Andreas Becker <andreas.r.becker[at]rub[dot]de> - initial API and implementation
- *     Robert Schuster <r.schuster[a]tarent[dot]de> - conversion to verinice command
+ *     Robert Schuster <r.schuster[a]tarent[dot]de> - conversion to verinice command  
+ *     Daniel Murygin <dm[a]sernet[dot]de> - Bugfixing
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.sync.commands;
 

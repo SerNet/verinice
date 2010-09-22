@@ -35,14 +35,17 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.DocumentGroup;
 import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.FindingGroup;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.IncidentGroup;
 import sernet.verinice.model.iso27k.IncidentScenarioGroup;
 import sernet.verinice.model.iso27k.InterviewGroup;
@@ -84,6 +87,8 @@ public class AddGroup implements IObjectActionDelegate {
 		TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, Messages.getString("AddGroup.14")); //$NON-NLS-1$
 		TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, Messages.getString("AddGroup.15")); //$NON-NLS-1$
 		TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, Messages.getString("AddGroup.16")); //$NON-NLS-1$
+		TITLE_FOR_TYPE.put(Asset.TYPE_ID, Messages.getString("AddGroup.17")); //$NON-NLS-1$
+        
 	}
 	
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -96,10 +101,14 @@ public class AddGroup implements IObjectActionDelegate {
 			Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
 			CnATreeElement newElement = null;
 
-			if (sel instanceof Group) {
-				Group group = (Group) sel;
+			if (sel instanceof IISO27kGroup) {
+			    IISO27kGroup group = (IISO27kGroup) sel;
 				// child groups have the same type as parents
-				newElement = CnAElementFactory.getInstance().saveNew(group, group.getTypeId(), null);		
+				String typeId = group.getTypeId();
+				if(group instanceof Asset) {
+				    typeId = ControlGroup.TYPE_ID;
+                }
+				newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group, typeId, null);		
 			}
 			if (newElement != null) {
 				EditorFactory.getInstance().openEditor(newElement);
@@ -118,10 +127,13 @@ public class AddGroup implements IObjectActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		if(selection instanceof IStructuredSelection) {
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
-			if(sel instanceof Group) {
-				Group group = (Group) sel;
-				// TODO - getChildTypes()[0] might be a problem for more than one type
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0])));	
+			if(sel instanceof IISO27kGroup) {
+			    IISO27kGroup group = (IISO27kGroup) sel;
+			    String typeId = group.getChildTypes()[0];
+                if(group instanceof Asset) {
+                    typeId = Control.TYPE_ID;
+                }
+				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(typeId)));	
 				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
 			}		
 		}

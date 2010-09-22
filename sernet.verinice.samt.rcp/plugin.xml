@@ -16,6 +16,13 @@
             id="sernet.verinice.samt.rcp.views.SamtView">
       </view>
       <view
+            name="%view.name.5"
+            icon="icons/self-assessment.png"
+            category="sernet.verinice.samt.rcp"
+            class="sernet.verinice.samt.audit.rcp.SimpleAuditView"
+            id="sernet.verinice.samt.rcp.views.SimpleAuditView">
+      </view>
+      <view
             category="sernet.verinice.samt.rcp"
             class="sernet.verinice.samt.rcp.SpiderChartView"
             icon="icons/chart.png"

@@ -33,12 +33,19 @@ public class ISMViewFilter extends Action {
     private Shell shell;
     private TagFilter tagFilter;
     private HideEmptyFilter hideEmptyFilter;
+    private TypeFilter typeFilter;
 
-    public ISMViewFilter(StructuredViewer viewer, String title, TagFilter tagFilter, HideEmptyFilter hideEmptyFilter) {
+    public ISMViewFilter(
+            StructuredViewer viewer, 
+            String title, 
+            TagFilter tagFilter, 
+            HideEmptyFilter hideEmptyFilter,
+            TypeFilter typeFilter) {
         super(title, SWT.TOGGLE);
         shell = new Shell();
         this.tagFilter = tagFilter;
         this.hideEmptyFilter = hideEmptyFilter;
+        this.typeFilter = typeFilter;
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
         setUpCheckStatus();
     }
@@ -53,6 +60,7 @@ public class ISMViewFilter extends Action {
         if (dialog.open() == InputDialog.OK) {
             tagFilter.setPattern(dialog.getCheckedElements());
             hideEmptyFilter.setHideEmpty(dialog.getHideEmpty());
+            typeFilter.setVisibleTypeSet(dialog.getVisibleTypes());
         }
         setUpCheckStatus();
     }
@@ -63,5 +71,9 @@ public class ISMViewFilter extends Action {
 
     public HideEmptyFilter getHideEmptyFilter() {
         return hideEmptyFilter;
+    }
+    
+    public TypeFilter getTypeFilter() {
+        return typeFilter;
     }
 }
