@@ -37,6 +37,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -127,7 +128,11 @@ public class AddGroup implements IObjectActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		if(selection instanceof IStructuredSelection) {
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
-			if(sel instanceof IISO27kGroup) {
+			if(sel instanceof Audit) {
+                action.setEnabled(false);
+                action.setText(Messages.getString("AddGroup.19"));
+            } else if(sel instanceof IISO27kGroup) {
+                action.setEnabled(true);
 			    IISO27kGroup group = (IISO27kGroup) sel;
 			    String typeId = group.getChildTypes()[0];
                 if(group instanceof Asset) {

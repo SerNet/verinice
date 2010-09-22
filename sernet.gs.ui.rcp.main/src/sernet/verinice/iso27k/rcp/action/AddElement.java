@@ -37,6 +37,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -132,7 +133,11 @@ public class AddElement implements IObjectActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		if(selection instanceof IStructuredSelection) {
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
-			if(sel instanceof IISO27kGroup) {
+			if(sel instanceof Audit) {
+			    action.setEnabled(false);
+			    action.setText(Messages.getString("AddElement.20"));
+			} else if(sel instanceof IISO27kGroup) {
+			    action.setEnabled(true);
 			    IISO27kGroup group = (IISO27kGroup) sel;
 				// TODO - getChildTypes()[0] might be a problem for more than one type
 			    String childType = group.getChildTypes()[0];

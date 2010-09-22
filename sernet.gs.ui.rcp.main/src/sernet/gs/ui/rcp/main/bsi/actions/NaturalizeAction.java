@@ -19,24 +19,32 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.actions;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
+import com.sun.star.uno.RuntimeException;
+
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -66,14 +74,25 @@ public class NaturalizeAction extends Action implements ISelectionListener {
 
     public void run() {
         try {
-            for (CnATreeElement element : selectedElementList) {
-                element.setSourceId(null);
-                element.setExtId(null);
-                SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(element);
-                command = getCommandService().executeCommand(command);
-                element = command.getElement();
-                CnAElementFactory.getModel(element).childChanged(element.getParent(), element);
-            }
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    try {
+                        Activator.inheritVeriniceContextState();
+                        for (CnATreeElement element : selectedElementList) {
+                            element.setSourceId(null);
+                            element.setExtId(null);
+                            SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(element);
+                            command = getCommandService().executeCommand(command);
+                            element = command.getElement();
+                            CnAElementFactory.getModel(element).childChanged(element.getParent(), element);
+                            CnAElementFactory.getModel(element).databaseChildChanged(element);
+                        }
+                    } catch (CommandException e) {
+                        LOG.error("Error while naturalizing element", e);
+                        throw new RuntimeException("Error while naturalizing element", e);
+                    }
+                }
+            });
         } catch (Exception e) {
             LOG.error("Error while naturalizing element", e);
             ExceptionUtil.log(e, Messages.NaturalizeAction_2);

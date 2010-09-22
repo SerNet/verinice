@@ -78,6 +78,25 @@
             icon="icons/audit.png">
       </perspective>
    </extension>
+   <extension point="org.eclipse.ui.menus">
+   	  <menuContribution locationURI="popup:sernet.verinice.samt.rcp.views.SimpleAuditView?after=additions">
+         <command
+               commandId="org.eclipse.ui.edit.cut"
+               disabledIcon="icons/cut.png"
+               icon="icons/cut.png"
+               label="%command.label"/>
+         <command
+               commandId="org.eclipse.ui.edit.copy"
+               disabledIcon="icons/copy.png"
+               icon="icons/copy.png"
+               label="%command.label.0"/>
+         <command
+               commandId="org.eclipse.ui.edit.paste"
+               disabledIcon="icons/copy.png"
+               icon="icons/paste.png"
+               label="%command.label.1"/>
+      </menuContribution>
+   </extension>
    <extension
          point="org.eclipse.ui.viewActions">
       <viewContribution
@@ -178,6 +197,20 @@
                label="%action.label.12"
                style="pulldown"
                toolbarPath="additions">
+         </action>
+      </viewContribution>
+      <viewContribution
+            id="sernet.verinice.samt.rcp.addOrganization"
+            targetID="sernet.verinice.samt.rcp.views.SimpleAuditView">
+         <action
+               class="sernet.verinice.iso27k.rcp.action.AddOrganisation"
+               icon="icons/new.png"
+               id="sernet.verinice.samt.rcp.action.AddOrganisation"
+               label="%action.label.14"
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="%action.tooltip.2">
          </action>
       </viewContribution>
    </extension>
@@ -285,6 +318,7 @@
        				<equals value="sernet.verinice.samt.audit.rcp.AssetView" />
        				<equals value="sernet.verinice.samt.audit.rcp.AuditView" />
        				<equals value="sernet.verinice.samt.audit.rcp.ControlView" />
+       				<equals value="sernet.verinice.samt.rcp.views.SimpleAuditView" />
        			</or>
     		</with>
          </activeWhen>
@@ -298,12 +332,13 @@
        				<equals value="sernet.verinice.samt.audit.rcp.AssetView" />
        				<equals value="sernet.verinice.samt.audit.rcp.AuditView" />
        				<equals value="sernet.verinice.samt.audit.rcp.ControlView" />
+       				<equals value="sernet.verinice.samt.rcp.views.SimpleAuditView" />
        			</or>
     		</with>
          </activeWhen>
       </handler>
       <handler
-            class="sernet.verinice.samt.audit.rcp.PasteHandler"
+            class="sernet.verinice.iso27k.rcp.action.PasteHandler"
             commandId="org.eclipse.ui.edit.paste">
          <activeWhen>
          	<with variable="activePartId">
@@ -311,6 +346,7 @@
        				<equals value="sernet.verinice.samt.audit.rcp.AssetView" />
        				<equals value="sernet.verinice.samt.audit.rcp.AuditView" />
        				<equals value="sernet.verinice.samt.audit.rcp.ControlView" />
+       				<equals value="sernet.verinice.samt.rcp.views.SimpleAuditView" />
        			</or>
     		</with>
          </activeWhen> 

@@ -111,6 +111,7 @@ public class TypeFilter extends ViewerFilter {
 
     public void setVisibleTypeSet(Set<String[]> visibleTypeSet) {
         this.visibleTypeSet = visibleTypeSet;
+        viewer.addFilter(this);
         viewer.refresh();
     }
 

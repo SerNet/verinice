@@ -14,13 +14,12 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
- *     Robert Schuster <r.schuster@tarent.de> - rewritten to use set of classes
+ *     Robert Schuster <r.schuster[at]tarent.de> - rewritten to use set of classes
+ *     Daniel Murygin <dm[at]sernet[dot]de> - TypeFilter Added, RCP Layout
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,10 +33,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -162,10 +158,8 @@ public class ISMViewFilterDialog extends Dialog {
      * @return
      */
     private void createTypeGroup(Composite parent) {  
-        // FIXME externalize strings
-        
         Group groupComposite = new Group(parent, SWT.BORDER);
-        groupComposite.setText("Visible element types");
+        groupComposite.setText(Messages.ISMViewFilterDialog_2);
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
         groupComposite.setLayoutData(gridData);
         groupComposite.setLayout(new GridLayout(1, false));
@@ -207,18 +201,7 @@ public class ISMViewFilterDialog extends Dialog {
             public void addListener(ILabelProviderListener listener) {}
         });
         viewerType.setCheckStateProvider(new CheckStateProvider(getVisibleTypes()));
-        viewerType.setInput(TYPES);
-        /*
-        Set<String[]> visibleTypesSet = getVisibleTypes();
-        String[][] visibleTypes = new String[visibleTypesSet.size()][2];
-        int i=0;
-        for (String[] strings : visibleTypesSet) {
-            visibleTypes[i] = strings;
-            i++;
-        }
-        
-        viewerType.setCheckedElements(visibleTypes);   
-        */    
+        viewerType.setInput(TYPES);  
     }
 
     private void createTagfilterGroup(Composite parent) {
@@ -274,7 +257,7 @@ public class ISMViewFilterDialog extends Dialog {
         groupComposite.setLayoutData(gridData);
         groupComposite.setLayout(new GridLayout(1, false));
         hideEmptyCheckbox = new Button(groupComposite, SWT.CHECK);
-        hideEmptyCheckbox.setText("Hide empty groups");
+        hideEmptyCheckbox.setText(Messages.ISMViewFilterDialog_6);
         return groupComposite;
     }
 
@@ -361,7 +344,7 @@ class CheckStateProvider implements ICheckStateProvider  {
         boolean result = false;
         String[] element = (String[]) o;
         for (String[] type : visibleTypes) {
-            if(Arrays.hashCode(type)==Arrays.hashCode(element)) {
+            if(Arrays.hashCode(type)==Arrays.hashCode(element) || Arrays.hashCode(type)==Arrays.hashCode(TypeFilter.ALL_TYPES)) {
                 result=true;
                 break;
             } 

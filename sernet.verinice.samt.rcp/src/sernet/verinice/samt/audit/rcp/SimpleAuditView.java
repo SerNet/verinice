@@ -46,10 +46,9 @@ public class SimpleAuditView extends ISMView implements IAttachedToPerspective  
         super();
     }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.iso27k.rcp.ISMView#createHideEmptyFilter()
+   
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.ISMView#createTypeFilter()
      */
     @Override
     protected TypeFilter createTypeFilter() {
