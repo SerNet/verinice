@@ -23,12 +23,17 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.LayoutStyle;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.CellEditor.LayoutData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -49,6 +54,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
@@ -56,7 +62,6 @@ import sernet.verinice.model.iso27k.Organization;
 /**
  * @author Daniel Murygin <dm@sernet.de>
  */
-@SuppressWarnings("restriction")
 public class ExportDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(ExportDialog.class);
 
@@ -66,7 +71,8 @@ public class ExportDialog extends TitleAreaDialog {
     private boolean encryptOutput = false;
     private CnATreeElement selectedElement;
     private String filePath;
-
+    private String sourceId;
+    
     public ExportDialog(Shell activeShell) {
         this(activeShell, null);
     }
@@ -91,16 +97,17 @@ public class ExportDialog extends TitleAreaDialog {
         setMessage(Messages.SamtExportDialog_1, IMessageProvider.INFORMATION);
 
         final Composite composite = (Composite) super.createDialogArea(parent);
-        ((GridLayout) composite.getLayout()).marginWidth = 10;
-        ((GridLayout) composite.getLayout()).marginHeight = 10;
-
+        GridLayout layout = (GridLayout) composite.getLayout();
+        layout.marginWidth = 10;
+        layout.marginHeight = 10;
+        GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd.grabExcessHorizontalSpace = true;
+        composite.setLayoutData(gd);
+        
         /*
          * ++++ Widgets for selection of an IT network:
          * ++++++++++++++++++++++++++++++++++++++++
          */
-
-        final Label lblITNetwork = new Label(composite, SWT.NONE);
-        lblITNetwork.setText(Messages.SamtExportDialog_2);
 
         LoadCnAElementByType<Organization> cmdLoadOrganization = new LoadCnAElementByType<Organization>(Organization.class);
         try {
@@ -121,12 +128,14 @@ public class ExportDialog extends TitleAreaDialog {
         }
 
         final Group groupOrganization = new Group(composite, SWT.NONE);
+        groupOrganization.setText(Messages.SamtExportDialog_2);
         GridLayout groupOrganizationLayout = new GridLayout(1, true);
-        GridData groupOrganizationLayoutData = new GridData();
-        groupOrganizationLayoutData.verticalIndent = 10;
-        groupOrganizationLayoutData.horizontalIndent = 20;
-        groupOrganization.setLayoutData(groupOrganizationLayoutData);
         groupOrganization.setLayout(groupOrganizationLayout);
+        gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd.minimumWidth = 662;
+        groupOrganization.setLayoutData(gd);
+
+        
 
         SelectionListener organizationListener = new SelectionAdapter() {
             @Override
@@ -173,46 +182,45 @@ public class ExportDialog extends TitleAreaDialog {
                 selectedElement = verbund;
             }
         }
-
+        
         /*
-         * ++++ Widgets to enable/disable encryption:
+         * ++++ Widgets for source-id
          * ++++++++++++++++++++++++++++++++++++++
          */
-
-        final Composite encryptionOptionComposite = new Composite(composite, SWT.NONE);
-        encryptionOptionComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
-        ((RowLayout) encryptionOptionComposite.getLayout()).marginTop = 15;
-
-        final Button encryptionCheckbox = new Button(encryptionOptionComposite, SWT.CHECK);
-        encryptionCheckbox.setText(Messages.SamtExportDialog_5);
-        encryptionCheckbox.setSelection(encryptOutput);
-        encryptionCheckbox.setEnabled(true);
-        encryptionCheckbox.addSelectionListener(new SelectionAdapter() {
-
+        
+        final Composite sourceIdComposite = new Composite(composite, SWT.NONE);
+        sourceIdComposite.setLayout(new GridLayout(3,false));
+        ((GridLayout) sourceIdComposite.getLayout()).marginTop = 15;
+        gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd.grabExcessHorizontalSpace=true;
+        sourceIdComposite.setLayoutData(gd);
+        
+        final Label sourceIdLabel = new Label(sourceIdComposite, SWT.NONE);
+        sourceIdLabel.setText(Messages.SamtExportDialog_14);
+        final Text sourceIdText = new Text(sourceIdComposite, SWT.BORDER);
+        gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        gd.minimumWidth = 150;
+        sourceIdText.setLayoutData(gd);
+        sourceIdText.addModifyListener(new ModifyListener() {         
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                Button checkBox = (Button) e.getSource();
-                encryptOutput = checkBox.getSelection();
+            public void modifyText(ModifyEvent e) {
+                sourceId = sourceIdText.getText();          
             }
-        });
-        encryptionOptionComposite.pack();
+        });      
 
         /*
          * +++++ Widgets to browse for storage location:
          * ++++++++++++++++++++++++++++++++++++++++
          */
 
-        final Composite compositeSaveLocation = new Composite(composite, SWT.NONE);
-        compositeSaveLocation.setLayout(new RowLayout(SWT.HORIZONTAL));
-        ((RowLayout) compositeSaveLocation.getLayout()).marginTop = 15;
-        final Label labelLocation = new Label(compositeSaveLocation, SWT.NONE);
+        final Label labelLocation = new Label(sourceIdComposite, SWT.NONE);
         labelLocation.setText(Messages.SamtExportDialog_6);
-        final Text txtLocation = new Text(compositeSaveLocation, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
-        short textLocationWidth = 300;
-        txtLocation.setSize(textLocationWidth, 30);
-        final RowData textLocationData = new RowData();
-        textLocationData.width = textLocationWidth;
-        txtLocation.setLayoutData(textLocationData);
+        final Text txtLocation = new Text(sourceIdComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+        gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd.grabExcessHorizontalSpace=true;
+        gd.minimumWidth = 302;
+        txtLocation.setLayoutData(gd);
         txtLocation.addKeyListener(new KeyListener() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -225,32 +233,61 @@ public class ExportDialog extends TitleAreaDialog {
                 // nothing to do
             }
         });
-
-        composite.pack();
-        final Button buttonBrowseLocations = new Button(compositeSaveLocation, SWT.NONE);
+        
+        final Button buttonBrowseLocations = new Button(sourceIdComposite, SWT.NONE);
         buttonBrowseLocations.setText(Messages.SamtExportDialog_7);
-
         buttonBrowseLocations.addSelectionListener(new SelectionAdapter() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
                 dialog.setText(Messages.SamtExportDialog_3);
-                dialog.setFilterExtensions(new String[] { "*.xml" }); //$NON-NLS-1$
-                dialog.setFilterNames(new String[] { Messages.SamtExportDialog_8 });
+                dialog.setFilterExtensions(new String[] { 
+                        "*"+ExportAction.EXTENSION_XML, //$NON-NLS-1$
+                        "*"+ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
+                        "*"+ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
+                // FIXME: externalize strings 
+                dialog.setFilterNames(new String[] { 
+                        Messages.SamtExportDialog_15,
+                        Messages.SamtExportDialog_16,
+                        Messages.SamtExportDialog_17 });
                 String exportPath = dialog.open();
                 if (exportPath != null) {
-                    txtLocation.setText(exportPath);
+                    txtLocation.setText(ExportAction.addExtension(exportPath,ExportAction.EXTENSION_XML));
                     filePath = exportPath;
                 } else {
                     txtLocation.setText(""); //$NON-NLS-1$
                     filePath = ""; //$NON-NLS-1$
                 }
             }
+
         });
+        
+        /*
+         * ++++ Widgets to enable/disable encryption:
+         * ++++++++++++++++++++++++++++++++++++++
+         */
+
+        final Button encryptionCheckbox = new Button(sourceIdComposite, SWT.CHECK);
+        encryptionCheckbox.setText(Messages.SamtExportDialog_5);
+        gd = new GridData();
+        gd.horizontalSpan = 3;
+        encryptionCheckbox.setLayoutData(gd);
+        encryptionCheckbox.setSelection(encryptOutput);
+        encryptionCheckbox.setEnabled(true);
+        encryptionCheckbox.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Button checkBox = (Button) e.getSource();
+                encryptOutput = checkBox.getSelection();
+            }
+        });
+        
+        sourceIdComposite.pack();     
+        composite.pack();     
         return composite;
     }
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -290,6 +327,10 @@ public class ExportDialog extends TitleAreaDialog {
 
     public boolean getEncryptOutput() {
         return encryptOutput;
+    }
+
+    public String getSourceId() {
+        return sourceId;
     }
 
 }

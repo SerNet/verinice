@@ -80,7 +80,15 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	
 	private static final Logger LOG = Logger.getLogger(ExportAction.class);
 	
+	public static final String EXTENSION_XML = ".xml"; //$NON-NLS-1$
+	
+	public static final String EXTENSION_PASSWORD_ENCRPTION = ".pcr"; //$NON-NLS-1$
+    
+    public static final String EXTENSION_CERTIFICATE_ENCRPTION = ".ccr"; //$NON-NLS-1$
+   
 	private EncryptionDialog encDialog;
+	
+	private String filePath;
 	
 	private char[] password = null;
 	
@@ -127,12 +135,20 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                     }
                 }
             }
+		    filePath = dialog.getFilePath();
+		    filePath = addExtension(filePath, EXTENSION_XML);
+		    if(password!=null) {
+		        filePath = addExtension(filePath, EXTENSION_PASSWORD_ENCRPTION);
+		    }
+		    if(x509CertificateFile!=null) {
+		        filePath = addExtension(filePath, EXTENSION_CERTIFICATE_ENCRPTION);
+            }
 		    WorkspaceJob exportJob = new WorkspaceJob("Exporting...") {
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
                     IStatus status = Status.OK_STATUS;
                     try {
                         monitor.beginTask(NLS.bind(Messages.getString("ExportAction_4"), new Object[] {dialog.getFilePath()}), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-                        export(dialog.getSelectedElement(),dialog.getFilePath(),password,x509CertificateFile);                    
+                        export(dialog.getSelectedElement(),filePath,dialog.getSourceId(),password,x509CertificateFile);                    
                     } catch (Exception e) {
                         LOG.error("Error while exporting data.", e); //$NON-NLS-1$
                         status= new Status(Status.ERROR, "sernet.verinice.samt.rcp", "Error while exporting data.",e); 
@@ -145,18 +161,19 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                     return status;
                 }
             };
-            exportJob.addJobChangeListener(new JobChangeListener(Display.getDefault().getActiveShell(),dialog.getFilePath(),dialog.getSelectedElement().getTitle()));
+            exportJob.addJobChangeListener(new JobChangeListener(Display.getDefault().getActiveShell(),filePath,dialog.getSelectedElement().getTitle()));
             JobScheduler.scheduleJob(exportJob,iSchedulingRule);
             
 		}
 	}
 
-    private void export(CnATreeElement element, String path, char[] exportPassword, File x509CertificateFile) {
+    private void export(CnATreeElement element, String path, String sourceId, char[] exportPassword, File x509CertificateFile) {
         LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
         if(element!=null) {
+            sourceId = (sourceId==null || sourceId.isEmpty()) ? element.getUuid() : sourceId;
             Activator.inheritVeriniceContextState();
         	exportElements.add(element);
-        	ExportCommand exportCommand = new ExportCommand(exportElements, element.getUuid());
+        	ExportCommand exportCommand = new ExportCommand(exportElements, sourceId);
         	try
         	{
         		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
@@ -233,6 +250,15 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
       }
     }
     
+    public static String addExtension(String exportPath,String extension) {
+        if(exportPath!=null 
+           && !exportPath.isEmpty()
+           && !exportPath.endsWith(extension)) {
+            exportPath = exportPath + extension;
+        }      
+        return exportPath;
+    }
+
     class JobChangeListener implements IJobChangeListener {
         Shell shell; 
         String path;

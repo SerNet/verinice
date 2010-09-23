@@ -38,7 +38,7 @@ public class TagFilter extends ViewerFilter {
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object o) {
         boolean result = true;
-        if ((o instanceof IISO27kElement && !(o instanceof IISO27kGroup))) {
+        if (o instanceof IISO27kElement && !(o instanceof IISO27kGroup) && pattern!=null) {
             result = false;
             IISO27kElement element = (IISO27kElement) o;
             for (String tag : pattern) {

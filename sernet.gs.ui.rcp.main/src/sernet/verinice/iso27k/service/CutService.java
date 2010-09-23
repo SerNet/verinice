@@ -19,9 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,16 +28,11 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
-import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.iso27k.rcp.RcpProgressObserver;
-import sernet.verinice.iso27k.service.PasteService.IPostProcessor;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
  * A CutService is a job, which moves a list of elements from one to another Element-{@link Group}.
@@ -94,8 +87,6 @@ public class CutService extends PasteService implements IProgressTask {
 			Map<String, String> sourceDestMap = new Hashtable<String, String>();
 			for (CnATreeElement element : elementList) {
 				CnATreeElement movedElement = move(progressObserver, selectedGroup, element);
-				CnAElementFactory.getModel(movedElement).childAdded(selectedGroup, movedElement);
-				CnAElementFactory.getModel(movedElement).databaseChildAdded(movedElement);
 				// cut: source and dest is the same
 				sourceDestMap.put(movedElement.getUuid(),movedElement.getUuid());
 			}

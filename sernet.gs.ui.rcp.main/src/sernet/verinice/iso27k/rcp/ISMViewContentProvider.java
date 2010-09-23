@@ -88,9 +88,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
-     * .lang.Object)
+     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
     public Object[] getElements(Object parent) {
         return getChildren(parent);
@@ -99,9 +97,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
-     * Object)
+     * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
     public Object[] getChildren(Object element) {
         CnATreeElement[] children = new CnATreeElement[] {};
@@ -112,7 +108,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
             element = cachedObject;
         }
         try {
-            if (element instanceof List) {
+            if (element instanceof List<?>) {
                 List<CnATreeElement> list = (List<CnATreeElement>) element;
                 children = new CnATreeElement[list.size()];
                 int i = 0;
@@ -147,9 +143,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
-     * Object)
+     * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
     public boolean hasChildren(Object parent) {
         boolean hasChildren = false;
@@ -177,7 +171,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                 } else {
                     log.error("Error in hasChildren, element is null", e);
                 }
-                return true;
+                hasChildren = true;
             }
         }
         return hasChildren;
@@ -187,8 +181,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
      * (non-Javadoc)
      * 
      * @see
-     * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
-     * )
+     * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
     public Object getParent(Object child) {
         Object parent = null;
@@ -226,21 +219,15 @@ public class ISMViewContentProvider implements ITreeContentProvider {
         Logger.getLogger(this.getClass()).debug("Loading children from DB for " + el);
 
         RetrieveCnATreeElement command = commandFactory.createCommand(el, loadParent);
-
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         CnATreeElement newElement = command.getElement();
 
         if (newElement != null) {
-            // If a filter was active the tree element for which we loaded the
-            // children
-            // is *not* marked as if its children have been really loaded. This
-            // is
-            // only
-            // done when no classes have been filtered.
-            // By doing this the element gets automatically reloaded (and now
-            // its
-            // children
-            // as well) as soon as the user disables the filter.
+            // If a filter was active the tree element for which we loaded the  children
+            // is *not* marked as if its children have been really loaded. 
+            // This is only done when no classes have been filtered.
+            // By doing this the element gets automatically reloaded 
+            // (and now its children as well) as soon as the user disables the filter.
 
             if (modelFilter == null || modelFilter.isEmpty()) {
                 newElement.setChildrenLoaded(true);
@@ -248,7 +235,6 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 
             // replace with loaded object in cache:
             Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
-            cache.clear(el);
             cache.addObject(newElement);
             if (loadParent && newElement.getParent() != null) {
                 cache.addObject(newElement.getParent());

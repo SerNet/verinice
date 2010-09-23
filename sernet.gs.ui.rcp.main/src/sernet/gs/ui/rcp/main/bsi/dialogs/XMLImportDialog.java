@@ -44,6 +44,7 @@ import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.encryption.PasswordException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
+import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -85,7 +86,6 @@ org.hibernate.exception.ConstraintViolationException: Could not execute JDBC bat
 
     private Text dataPathText;
     private boolean dataPathFlag;
-    private final static String[] FILTEREXTEND = { "*.xml" }; //$NON-NLS-1$
 
     private File dataFile;
 
@@ -409,7 +409,15 @@ org.hibernate.exception.ConstraintViolationException: Could not execute JDBC bat
 
     private void displayFiles(Shell shell, Text pathText, File file) {
         FileDialog dialog = new FileDialog(shell, SWT.NULL);
-        dialog.setFilterExtensions(FILTEREXTEND);
+        dialog.setFilterExtensions(new String[] { 
+                "*"+ExportAction.EXTENSION_XML, //$NON-NLS-1$
+                "*"+ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
+                "*"+ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
+        // FIXME: externalize strings
+        dialog.setFilterNames(new String[] { 
+                Messages.XMLImportDialog_33,
+                Messages.XMLImportDialog_34,
+                Messages.XMLImportDialog_35 });
         String path = dialog.open();
 
         if (path != null) {

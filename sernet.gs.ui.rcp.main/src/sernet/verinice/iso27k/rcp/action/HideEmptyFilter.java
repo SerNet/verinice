@@ -26,6 +26,9 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
@@ -51,7 +54,11 @@ public class HideEmptyFilter extends ViewerFilter {
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         boolean visible = true;
-        if (hideEmpty && element instanceof IISO27kGroup && element instanceof CnATreeElement) {
+        if (hideEmpty 
+            && element instanceof IISO27kGroup 
+            && element instanceof CnATreeElement
+            && !(element instanceof Audit)
+            && !(element instanceof Asset)) { 
             CnATreeElement group = (CnATreeElement) element;
             Set<CnATreeElement> children = group.getChildren();
             visible = (children != null && children.size() > 0);
