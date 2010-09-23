@@ -40,9 +40,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Content provider for BSI model elements.
@@ -52,236 +49,281 @@ import sernet.verinice.model.iso27k.Organization;
  */
 public class ISMViewContentProvider implements ITreeContentProvider {
 
-	private static final Logger log = Logger.getLogger(ISMViewContentProvider.class);
+    private static final Logger log = Logger.getLogger(ISMViewContentProvider.class);
 
-	private final ElementComparator comparator = new ElementComparator();
-	
-	private BSIModelElementFilter modelFilter;
+    private final ElementComparator comparator = new ElementComparator();
 
-	IContentCommandFactory commandFactory;
-	
-	public ISMViewContentProvider(TreeViewerCache cache) {
-		super();
-		this.cache = cache;
-		commandFactory = new DefaultCommandFactory();
-		parentLoader = new DefaultParentLoader();
-	}
-	
-	public ISMViewContentProvider(TreeViewerCache cache, IContentCommandFactory commandFactory, IParentLoader parentLoader) {
+    private BSIModelElementFilter modelFilter;
+
+    private TreeViewerCache cache;
+
+    private List<ViewerFilter> filterList = new ArrayList<ViewerFilter>();
+
+    private IParentLoader parentLoader;
+
+    private IContentCommandFactory commandFactory;
+
+    public ISMViewContentProvider(TreeViewerCache cache) {
         super();
         this.cache = cache;
-        if(commandFactory!=null) {
+        commandFactory = new DefaultCommandFactory();
+        parentLoader = new DefaultParentLoader();
+    }
+
+    public ISMViewContentProvider(TreeViewerCache cache, IContentCommandFactory commandFactory, IParentLoader parentLoader) {
+        super();
+        this.cache = cache;
+        if (commandFactory != null) {
             this.commandFactory = commandFactory;
         } else {
             commandFactory = new DefaultCommandFactory();
         }
-        if(parentLoader!=null) {
+        if (parentLoader != null) {
             this.parentLoader = parentLoader;
         } else {
             parentLoader = new DefaultParentLoader();
         }
     }
 
-	private TreeViewerCache cache;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
+     * .lang.Object)
+     */
+    public Object[] getElements(Object parent) {
+        return getChildren(parent);
+    }
 
-	private List<ViewerFilter> filterList = new ArrayList<ViewerFilter>();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
+     * Object)
+     */
+    public Object[] getChildren(Object element) {
+        CnATreeElement[] children = new CnATreeElement[] {};
 
-    private IParentLoader parentLoader;
-	
-	public void dispose() {
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-	 */
-	public Object[] getChildren(Object element) {
-		CnATreeElement[] children = new CnATreeElement[]{};
-
-		// replace object in event with the one actually displayed in the tree:
-		Object cachedObject = cache.getCachedObject(element);
-		if (cachedObject != null) {
-			element = cachedObject;
-		}
-		try {
-    		if(element instanceof List) {
-    			List<CnATreeElement> list = (List<CnATreeElement>)element;
-    			children = new CnATreeElement[list.size()];
-    			int i = 0;
-    			for (Iterator<CnATreeElement> iterator = list.iterator(); iterator.hasNext();) {			 
+        // replace object in event with the one actually displayed in the tree:
+        Object cachedObject = cache.getCachedObject(element);
+        if (cachedObject != null) {
+            element = cachedObject;
+        }
+        try {
+            if (element instanceof List) {
+                List<CnATreeElement> list = (List<CnATreeElement>) element;
+                children = new CnATreeElement[list.size()];
+                int i = 0;
+                for (Iterator<CnATreeElement> iterator = list.iterator(); iterator.hasNext();) {
                     CnATreeElement cnATreeElement = iterator.next();
-                    children[i]=loadChildren(cnATreeElement,true);
+                    children[i] = loadChildren(cnATreeElement, true);
                     i++;
                 }
-    		} else if (element instanceof CnATreeElement) {
-    			CnATreeElement el = (CnATreeElement) element;
-    			CnATreeElement newElement;
-    			
-    				if(!el.isChildrenLoaded()) {
-    					newElement = loadChildren(el);
-    					if(newElement!=null) {
-    						el.replace(newElement);
-    						el = newElement;
-    						children = el.getChildrenAsArray();
-    					}					
-    				} else {
-    					children = el.getChildrenAsArray();
-    				}
-    				Arrays.sort(children,comparator);			
-    		}
-		} catch (CommandException e) {
+            } else if (element instanceof CnATreeElement) {
+                CnATreeElement el = (CnATreeElement) element;
+                CnATreeElement newElement;
+
+                if (!el.isChildrenLoaded()) {
+                    newElement = loadChildren(el);
+                    if (newElement != null) {
+                        el.replace(newElement);
+                        el = newElement;
+                        children = el.getChildrenAsArray();
+                    }
+                } else {
+                    children = el.getChildrenAsArray();
+                }
+                Arrays.sort(children, comparator);
+            }
+        } catch (CommandException e) {
             log.error("Error while loading child elements", e);
             ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
         }
-		return children;
-	}
-	
-	private CnATreeElement loadChildren(CnATreeElement el) throws CommandException {
-	    return loadChildren(el, false);
-	}
-	    
-	private CnATreeElement loadChildren(CnATreeElement el, boolean loadParent) throws CommandException {
-		if (el.isChildrenLoaded()) {
-			return el;
-		}
+        return children;
+    }
 
-		Logger.getLogger(this.getClass()).debug("Loading children from DB for " + el);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
+     * Object)
+     */
+    public boolean hasChildren(Object parent) {
+        boolean hasChildren = false;
+        if (parent instanceof CnATreeElement) {
+            try {
+                CnATreeElement el = Retriever.checkRetrieveChildren((CnATreeElement) parent);
+                Set<CnATreeElement> children = el.getChildren();
+                Set<CnATreeElement> filteredList;
+                if (filterList.isEmpty()) {
+                    filteredList = children;
+                } else {
+                    filteredList = new HashSet<CnATreeElement>(children.size());
+                    for (CnATreeElement cnATreeElement : children) {
+                        for (ViewerFilter filter : filterList) {
+                            if (filter.select(null, null, cnATreeElement)) {
+                                filteredList.add(cnATreeElement);
+                            }
+                        }
+                    }
+                }
+                hasChildren = !filteredList.isEmpty();
+            } catch (Exception e) {
+                if (parent != null) {
+                    log.error("Error in hasChildren, element type: " + parent.getClass().getSimpleName(), e);
+                } else {
+                    log.error("Error in hasChildren, element is null", e);
+                }
+                return true;
+            }
+        }
+        return hasChildren;
+    }
 
-		RetrieveCnATreeElement command = commandFactory.createCommand(el,loadParent);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
+     * )
+     */
+    public Object getParent(Object child) {
+        Object parent = null;
+        if (child instanceof CnATreeElement) {
+            parent = getParentLoader().getParent((CnATreeElement) child);
+            addParentToCache((CnATreeElement) parent);
+        }
+        return parent;
+    }
 
-		command = ServiceFactory.lookupCommandService().executeCommand(command);
-		CnATreeElement newElement = command.getElement();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+     */
+    @Override
+    public void dispose() {
+    }
 
-		if (newElement!=null) {
-			// If a filter was active the tree element for which we loaded the
-			// children
-			// is *not* marked as if its children have been really loaded. This is
-			// only
-			// done when no classes have been filtered.
-			// By doing this the element gets automatically reloaded (and now its
-			// children
-			// as well) as soon as the user disables the filter.
-			
-			if(modelFilter == null || modelFilter.isEmpty()) {
-				newElement.setChildrenLoaded(true);
-			}
-	
-			// replace with loaded object in cache:
-			Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
-			cache.clear(el);
-			cache.addObject(newElement);
-			if(loadParent && newElement.getParent()!=null) {
-			    cache.addObject(newElement.getParent());
-			}
-		}
-		return newElement;
-	}
-	
-	public Object getCachedObject(Object o) {
-		return cache.getCachedObject(o);
-	}
-	
-	public void addCachedObject(Object o) {
-		cache.addObject(o);
-	}
+    private CnATreeElement loadChildren(CnATreeElement el) throws CommandException {
+        return loadChildren(el, false);
+    }
 
-	public Object[] getElements(Object parent) {
-		return getChildren(parent);
-	}
+    /**
+     * @param el
+     * @param loadParent
+     * @return
+     * @throws CommandException
+     */
+    private CnATreeElement loadChildren(CnATreeElement el, boolean loadParent) throws CommandException {
+        if (el.isChildrenLoaded()) {
+            return el;
+        }
 
-	public Object getParent(Object child) {
-		Object parent = null;
-		if (child instanceof CnATreeElement) {
-		    parent = getParentLoader().getParent((CnATreeElement) child);
-		    addParentToCache((CnATreeElement) parent);
-		} 
-		return parent;
-	}
-	
-	private void addParentToCache(CnATreeElement element) {
-	    if(element!=null) {
+        Logger.getLogger(this.getClass()).debug("Loading children from DB for " + el);
+
+        RetrieveCnATreeElement command = commandFactory.createCommand(el, loadParent);
+
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        CnATreeElement newElement = command.getElement();
+
+        if (newElement != null) {
+            // If a filter was active the tree element for which we loaded the
+            // children
+            // is *not* marked as if its children have been really loaded. This
+            // is
+            // only
+            // done when no classes have been filtered.
+            // By doing this the element gets automatically reloaded (and now
+            // its
+            // children
+            // as well) as soon as the user disables the filter.
+
+            if (modelFilter == null || modelFilter.isEmpty()) {
+                newElement.setChildrenLoaded(true);
+            }
+
+            // replace with loaded object in cache:
+            Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
+            cache.clear(el);
+            cache.addObject(newElement);
+            if (loadParent && newElement.getParent() != null) {
+                cache.addObject(newElement.getParent());
+            }
+        }
+        return newElement;
+    }
+
+    public Object getCachedObject(Object o) {
+        return cache.getCachedObject(o);
+    }
+
+    public void addCachedObject(Object o) {
+        cache.addObject(o);
+    }
+
+    private void addParentToCache(CnATreeElement element) {
+        if (element != null) {
             cache.addObject(element);
             addParentToCache(element.getParent());
         }
-	}
+    }
 
-	/**
+    /**
      * @return
      */
     private IParentLoader getParentLoader() {
         return parentLoader;
     }
 
-    public boolean hasChildren(Object parent) {
-		boolean hasChildren = false;
-		if (parent instanceof CnATreeElement) {
-			try {
-				CnATreeElement el = Retriever.checkRetrieveChildren((CnATreeElement) parent);
-				Set<CnATreeElement> children = el.getChildren();
-				Set<CnATreeElement> filteredList;
-				if(filterList.isEmpty()) {
-				    filteredList = children;
-				} else {
-				    filteredList = new HashSet<CnATreeElement>(children.size());
-    				for (CnATreeElement cnATreeElement : children) {
-                        for (ViewerFilter filter : filterList) {
-                            if(filter.select(null, null, cnATreeElement)) {
-                                filteredList.add(cnATreeElement);
-                            }
-                        }
-                    }
-				}
-				hasChildren = !filteredList.isEmpty();
-			} catch (Exception e) {
-				if (parent != null) {
-					log.error("Error in hasChildren, element type: " + parent.getClass().getSimpleName(), e);
-				} else {
-					log.error("Error in hasChildren, element is null", e);
-				}
-				return true;
-			}
-		}
-		return hasChildren;
-	}
-	
-	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		cache.clear();
-		cache.addObject(newInput);
-	}
-	
-	public void addFilter(ViewerFilter filter) {
-	    filterList.add(filter);
-	}
-	
-	class ElementComparator implements Comparator<CnATreeElement> {
-		NumericStringComparator numericStringComparator = new NumericStringComparator(); 
-		public int compare(CnATreeElement o1, CnATreeElement o2) {
-			int FIRST_IS_LESS = -1;
-			int EQUAL = 0;
-			int FIRST_IS_GREATER = 1;
-			int result = FIRST_IS_LESS;
-			if(o1!=null && o1.getTitle()!=null) {
-				if(o2!=null && o2.getTitle()!=null) {
-					result = numericStringComparator.compare(o1.getTitle().toLowerCase(), o2.getTitle().toLowerCase());
-				} else {
-					result = FIRST_IS_GREATER;
-				}
-			} else if(o2==null) {
-				result = EQUAL;
-			}
-			return result;
-		}
-		
-	}
-	
-	class DefaultParentLoader implements IParentLoader {
+    public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+        cache.clear();
+        cache.addObject(newInput);
+    }
 
-        /* (non-Javadoc)
-         * @see sernet.verinice.iso27k.rcp.IParentLoader#getParent(sernet.verinice.model.common.CnATreeElement)
+    public void addFilter(ViewerFilter filter) {
+        filterList.add(filter);
+    }
+
+    class ElementComparator implements Comparator<CnATreeElement> {
+        NumericStringComparator numericStringComparator = new NumericStringComparator();
+
+        public int compare(CnATreeElement o1, CnATreeElement o2) {
+            int FIRST_IS_LESS = -1;
+            int EQUAL = 0;
+            int FIRST_IS_GREATER = 1;
+            int result = FIRST_IS_LESS;
+            if (o1 != null && o1.getTitle() != null) {
+                if (o2 != null && o2.getTitle() != null) {
+                    result = numericStringComparator.compare(o1.getTitle().toLowerCase(), o2.getTitle().toLowerCase());
+                } else {
+                    result = FIRST_IS_GREATER;
+                }
+            } else if (o2 == null) {
+                result = EQUAL;
+            }
+            return result;
+        }
+
+    }
+
+    class DefaultParentLoader implements IParentLoader {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.iso27k.rcp.IParentLoader#getParent(sernet.verinice
+         * .model.common.CnATreeElement)
          */
         @Override
         public CnATreeElement getParent(CnATreeElement child) {
-            return (child!=null) ? child.getParent() : null;          
+            return (child != null) ? child.getParent() : null;
         }
-	    
-	}
+
+    }
+
 }
