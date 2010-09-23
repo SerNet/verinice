@@ -39,6 +39,23 @@ import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.Document;
+import sernet.verinice.model.iso27k.Evidence;
+import sernet.verinice.model.iso27k.Exception;
+import sernet.verinice.model.iso27k.Finding;
+import sernet.verinice.model.iso27k.Incident;
+import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.Interview;
+import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.iso27k.Process;
+import sernet.verinice.model.iso27k.Record;
+import sernet.verinice.model.iso27k.Requirement;
+import sernet.verinice.model.iso27k.Response;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.Vulnerability;
 
 public class InputHelperFactory {
 
@@ -98,6 +115,7 @@ public class InputHelperFactory {
         boolean showHint = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.INPUTHINTS);
 
         // Tag Helpers:
+        // BSI elements
         huiComposite2.setInputHelper(Anwendung.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Client.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Gebaeude.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
@@ -107,6 +125,25 @@ public class InputHelperFactory {
         huiComposite2.setInputHelper(Server.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(SonstIT.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(TelefonKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+
+        // ISO27k elements
+        huiComposite2.setInputHelper(Asset.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Audit.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Control.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Document.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Evidence.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Exception.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Finding.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Incident.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(IncidentScenario.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Interview.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(PersonIso.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Process.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Record.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Requirement.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Response.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Threat.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Vulnerability.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
 
         setSchutzbedarfHelpers(entityType, huiComposite2, showHint);
 
