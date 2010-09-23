@@ -16,46 +16,20 @@
 		<!-- <param name="Threshold" value="INFO" /> -->
 		<param name="File" value="${catalina.home}/logs/verinice-server.log" />
 		<param name="Append" value="true" />
-		<param name="MaxFileSize" value="10000KB" />
-		<param name="MaxBackupIndex" value="5" />
+		<param name="MaxFileSize" value="5000KB" />
+		<param name="MaxBackupIndex" value="10" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
 		</layout>
 	</appender>
-	
-	<!-- Logging verinice Command-Service -->
-	<!--
-	<logger name="sernet.gs.ui.rcp.main.service">
-		<level value="DEBUG" />
-	</logger>
-	-->
-	
-	<!-- Dao Logging -->
-	<!--
-	<logger name="sernet.gs.ui.rcp.main.connect">
-		<level value="DEBUG" />
-	</logger>
-	-->
-	
-	<!-- Hibernate Logging -->
-	<!-- SQL -->
-	<!--
-	<logger name="org.hibernate.SQL">
-		<level value="DEBUG" />
-	</logger>
-	-->
-	<!-- SQL Parameter -->
-	<!--
-	<logger name="org.hibernate.type">
-		<level value="TRACE" />
-	</logger>
-	-->
-	
-	<!-- Logger for verinice -->
-	<logger name="sernet">
-		<level value="INFO" />
-	</logger>
 
+    <!-- Add settings for packages here  -->
+    <!--
+    <logger name="sernet.gs.ui.rcp.main.service">
+        <level value="DEBUG" />
+    </logger>
+    -->
+	
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />

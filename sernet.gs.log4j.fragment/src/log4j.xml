@@ -28,21 +28,13 @@
 		<level value="ERROR" />
 	</logger>
 
-	<!-- Logger for verinice -->
-	<!--
-	<logger name="sernet">
-		<level value="DEBUG" />
-	</logger>
-	-->
-
-	<!-- Logger for RemoteCalls -->
-	<!--
-	<logger name="org.springframework.remoting.httpinvoker">
-		<level value="DEBUG" />
-	</logger>
-	-->
-
-
+    <!-- Add settings for packages here  -->
+    <!--
+    <logger name="sernet.gs.ui.rcp.main.service">
+        <level value="DEBUG" />
+    </logger>
+    -->
+    
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />

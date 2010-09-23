@@ -23,61 +23,17 @@
 		</layout>
 	</appender>
 
-	<!-- Runtime Logger -->
-	<!--
-	<logger name="sernet.gs.server.RuntimeLogger">
-		<level value="DEBUG" />
-	</logger>
-	-->
-	
-	<!-- Logging verinice Command-Service -->
-	<!--
-	<logger name="sernet.gs.ui.rcp.main.service.HibernateCommandService">
-		<level value="DEBUG" />
-	</logger>
-	-->
-	
-	<!-- Dao Logging -->
-	<!--
-	<logger name="sernet.gs.ui.rcp.main.connect">
-		<level value="DEBUG" />
-	</logger>
-	-->
-	
-	<!-- Control Import Logging -->
-	<!--
-	<logger name="sernet.verinice.iso27k.service.commands.ImportCatalog">
-		<level value="DEBUG" />
-	</logger>
-	-->
-	
-	<!-- SQL -->
-	<!--
-	<logger name="org.hibernate.SQL">
-		<level value="DEBUG" />
-	</logger>
-	-->
-	
-	<!-- SQL Parameter -->
-	<!--
-	<logger name="org.hibernate.type">
-		<level value="TRACE" />
-	</logger>
-	-->
-    
-    <logger name="sernet.verinice.samt">
+    <!-- Add settings for packages here  -->
+    <!--
+    <logger name="sernet.gs.ui.rcp.main.service">
         <level value="DEBUG" />
     </logger>
-    
-    <logger name="sernet.verinice.oda">
-		<level value="DEBUG" />
-	</logger>
+    -->
 	
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
 		<appender-ref ref="FILE" />
-		<appender-ref ref="STDOUT" />
 	</root>
 
 </log4j:configuration>
