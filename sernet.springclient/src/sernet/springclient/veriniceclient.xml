@@ -39,7 +39,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     
     <bean name="httpExecuter" class="sernet.springclient.RequestExecuter">
         <!-- Request-timeout in ms -->
-        <property name="readTimeout" value="500000"/>
+        <property name="readTimeout" value="900000"/>
     </bean>
     
      <bean id="authService"
