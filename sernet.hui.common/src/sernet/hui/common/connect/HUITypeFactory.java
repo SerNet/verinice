@@ -353,6 +353,7 @@ public class HUITypeFactory {
         propObj.setVisible(prop.getAttribute("visible").equals("true"));
         propObj.setURL(prop.getAttribute("isURL").equals("true"));
         propObj.setReportable(prop.getAttribute("report").equals("true"));
+        propObj.setTextRows(prop.getAttribute("textrows"));
         propObj.setReferencedEntityType(readReferencedEntityId(prop));
         // read options for property
         propObj.setPredefinedValues(this.getOptionsForPropertyType(id));

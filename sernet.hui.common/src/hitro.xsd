@@ -228,7 +228,11 @@ be displayed when one of the given options has been previously selected.
 	<xs:attribute name="defaultValue" type="xs:int" default="0" /> 
 
 	<!-- Should this property be included in reports? -->
-	<xs:attribute name="report" type="xs:boolean" default="true"/> 
+	<xs:attribute name="report" type="xs:boolean" default="true"/>
+
+    <!-- Number of rows for text input type -->    
+	<xs:attribute name="textrows" type="xs:int" default="4" /> 
+     
 </xs:complexType>
 
 <xs:simpleType name="inputtypes" >

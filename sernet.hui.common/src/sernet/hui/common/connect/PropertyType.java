@@ -111,6 +111,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
 
     private String tags;
 
+    private int textrows;
+
 	/**
      * @param numericDefault the numericDefault to set
      */
@@ -499,6 +501,20 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
      */
     public String getTags() {
         return tags;
+    }
+
+    /**
+     * @param attribute
+     */
+    public void setTextRows(String rows) {
+        this.textrows = Integer.parseInt(rows);
+    }
+
+    /**
+     * @return the textrows
+     */
+    public int getTextrows() {
+        return textrows;
     }   
 
 }

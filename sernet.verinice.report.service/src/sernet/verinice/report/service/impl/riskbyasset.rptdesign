@@ -855,6 +855,275 @@ columns(cols);</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="asset_list" id="1284">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">elmt_id</property>
+                    <text-property name="displayName">elmt_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">elmt_name</property>
+                    <text-property name="displayName">elmt_name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">elmt_id</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">elmt_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">elmt_id</property>
+                    <property name="nativeName">elmt_id</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">elmt_name</property>
+                    <property name="nativeName">elmt_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
+import sernet.gs.ui.rcp.main.service.crudcommands.*;
+
+// set top level element for report:
+root = helper.getRoot();
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
+
+
+cols =LoadReportElementList.COLUMNS;
+
+c2 = new LoadReportElementList("asset", root);
+elements = helper.execute(c2).getResult();
+return helper.map(
+	elements,
+	cols
+);
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>import sernet.hui.common.*;
+import sernet.gs.ui.rcp.main.service.crudcommands.*;
+
+inParameters(new String[] { "root_object" });
+columns(LoadReportElementList.COLUMNS);</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="asset_scenario1" id="1285">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">relationName</property>
+                    <text-property name="displayName">relationName</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">toElement</property>
+                    <text-property name="displayName">toElement</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">riskC</property>
+                    <text-property name="displayName">riskC</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">riskI</property>
+                    <text-property name="displayName">riskI</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">riskA</property>
+                    <text-property name="displayName">riskA</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">-1</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">relationName</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">toElement</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">riskC</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">riskI</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">riskA</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">relationName</property>
+                    <property name="nativeName">relationName</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">toElement</property>
+                    <property name="nativeName">toElement</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">riskC</property>
+                    <property name="nativeName">riskC</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">riskI</property>
+                    <property name="nativeName">riskI</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">riskA</property>
+                    <property name="nativeName">riskA</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
+import sernet.gs.ui.rcp.main.service.crudcommands.*;
+
+// set top level element for report:
+root = helper.getRoot();
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
+
+cols =LoadReportElementWithLinks.COLLUMNS;
+
+c2 = new LoadReportElementsWithLinks("incident_scenario", root);
+elements = helper.execute(c2).getResult();
+return helper.map(
+	elements,
+	cols
+);
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>import sernet.hui.common.*;
+import sernet.gs.ui.rcp.main.service.crudcommands.*;
+
+inParameters(new String[] { "root_object" });
+columns(LoadReportElementWithLinks.COLLUMNS);</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="controls" id="1105">
             <list-property name="columnHints">
                 <structure>
@@ -2068,7 +2337,7 @@ columns(cols);</value>
             <property name="fontSize">14pt</property>
             <property name="fontWeight">bold</property>
             <property name="contentType">html</property>
-            <text-property name="content"><![CDATA[<CENTER>verinice. - Information risk assessment</CENTER>]]></text-property>
+            <text-property name="content"><![CDATA[verinice. - Information Risk Assessment]]></text-property>
         </text>
         <grid id="7">
             <property name="height">0.7676767676767676in</property>
@@ -12218,6 +12487,148 @@ columns(cols);</value>
             </footer>
         </table>
         <label id="1233">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingTop">20pt</property>
+            <text-property name="text">Detailed risk assessment: risks by asset / scenario</text-property>
+        </label>
+        <table id="1276">
+            <property name="dataSet">assets</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">asset_abbr</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_abbr"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_name</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_name"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_type</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_type"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_tag</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_tag"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_description</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_description"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_method_confidentiality</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_confidentiality"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_method_integrity</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_integrity"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_method_availability</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_availability"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_confidentiality</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_confidentiality"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_integrity</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_integrity"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_availability</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_availability"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_value_comment</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_value_comment"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskvalue_c</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_c"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskwcontrolvalue_c</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_c"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskwplancontrolvalue_c</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwplancontrolvalue_c"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskvalue_i</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_i"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskwcontrolvalue_i</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_i"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskwplancontrolvalue_i</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwplancontrolvalue_i"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskvalue_a</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_a"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskwcontrolvalue_a</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_a"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_riskwplancontrolvalue_a</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_riskwplancontrolvalue_a"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_risktreat</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_risktreat"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">asset_risktreatexpl</property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_risktreatexpl"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+            </list-property>
+            <column id="1283"/>
+            <header>
+                <row id="1277">
+                    <cell id="1278"/>
+                </row>
+            </header>
+            <detail>
+                <row id="1279">
+                    <cell id="1280"/>
+                </row>
+            </detail>
+            <footer>
+                <row id="1281">
+                    <cell id="1282"/>
+                </row>
+            </footer>
+        </table>
+        <label id="1275">
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="paddingTop">20pt</property>

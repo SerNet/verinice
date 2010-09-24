@@ -58,8 +58,6 @@ public class LoadAllSamtTopics extends GenericCommand implements IAuthAwareComma
     
     private transient IAuthService authService;
     
-    private boolean topTenOnly = false;
-    
     private Integer id;
     
     private List<SamtTopic> result;
@@ -69,11 +67,6 @@ public class LoadAllSamtTopics extends GenericCommand implements IAuthAwareComma
     	id = cg.getDbId();
     }
 
-    public LoadAllSamtTopics(ControlGroup cg, boolean topTenOnly) {
-        this(cg);
-        this.topTenOnly = topTenOnly;
-    }
-    
     @Override
     public void execute() {
         IBaseDao<ControlGroup, Serializable> dao = getDaoFactory().getDAO(ControlGroup.class);

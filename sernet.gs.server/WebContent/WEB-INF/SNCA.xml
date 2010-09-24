@@ -2898,7 +2898,75 @@ the value between <param></param> will be used directly if no string is found fo
 			<huiproperty
 				name="Explanation" id="org_riskaccept_expl" inputtype="text" tags="risk" />
 		</huipropertygroup>
-       
+        
+        <huipropertygroup name="Business impact classification" id="org_classification" tags="risk">
+            <huiproperty name="Confidentiality" id="org_class_asset_c" inputtype="text" textrows="6">
+                <defaultRule class="SimpleValue">
+                    <param id="org_class_asset_c_default">0 Public: No special requirements.
+
+1 External Use: Information for internal use and customers or partners. Possible financial loss is between ??? and ???, breach of legal requirements with financial penalties is possible.
+
+2 Internal Use: Information for internal use only. Financial loss between ??? and ???. Breach of legal requirements could lead to high financial penalties. Personal injury could result by breach of confidentiality.
+
+3 Sensitive: Possible financial loss higher than ???. Breach of legal requirements could lead to prosecution and a prison sentence. Information loss could lead to serious injury or loss of life.</param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty name="Integrity" id="org_class_asset_i" inputtype="text" textrows="6">
+                <defaultRule class="SimpleValue">
+                    <param id="org_class_asset_i_default">0 None: Possible financial loss below ???
+
+1 Normal: Possible financial loss between ??? and ???. Breach of legal requirements could lead to financial penalties. Disclosure could result in personal injury.
+
+2 High: Possible financial loss higher than ???. Breach of legal requirements could lead to prison sentence. Disclosure could result in personal injury or death.
+                    </param>
+                </defaultRule>
+                </huiproperty>
+            <huiproperty name="Availability" id="org_class_asset_a" inputtype="text" textrows="6">
+                <defaultRule class="SimpleValue">
+                    <param id="org_class_asset_a_default">0 Basic: Possible financial due to downtime loss below ???. Recovery time objective (RTO) is higher than one week.
+
+1 Normal: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Donwtime could impair public image
+
+2 High: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Donwtime could impair public image or client relationship.
+
+3 Very high: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Donwtime could seriously impair public image or end client relationship. 
+
+4 Extraordinary: Special agreements with individual clients which do not fall in one of the above categories. 
+                    </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+
+        <huipropertygroup id="org_threat_class" name="Threat classification" tags="risk">
+                   <huiproperty name="Likelihood" id="org_class_threat" inputtype="text" textrows="6">
+                <defaultRule class="SimpleValue">
+                    <param id="org_class_threat_default">Threats are classified by the likelihood of their ocurrence as follows:
+0 Rare
+1 Annually
+2 Monthly
+3 Weekly
+4 Daily
+5 Hourly 
+                    </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+        
+        <huipropertygroup id="org_vuln_class" name="Vulnerability classification" tags="risk">
+                   <huiproperty name="Level 0" id="org_class_vuln" inputtype="text" textrows="6" >
+                <defaultRule class="SimpleValue">
+                    <param id="org_class_vuln_default">0: Exploitation of the vulnerability requires a directed attack, highly special knowledge or skill and ressources that are not ordinarily available to an attacker. Rare Natural events or technical failures of a large scale could trigger the vulnerability. 
+                    
+1: Exploitation of the vulnerability requires a directed attack by a determined attacker. Natural events or technical failures could affect the vulnerability. 
+
+2: Exploitation of the vulnerability could occur by an automated attack (i.e. scripted attacks) or any attacker even with limited capabilities. Natural events or technical failures could affect the vulnerability.
+
+3: Exploitation of the vulnerability could occur randomly and is highly likely. Even someone without bad intentions could trigger the vulnerability accidentally. Common events will almost certainly trigger the vulnerability. 
+                    </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>        
+        
     </huientity>
     
     <huientity
@@ -2969,8 +3037,8 @@ the value between <param></param> will be used directly if no string is found fo
 				id="asset_type_intangible" />
 		</huiproperty>
 		
-		<huipropertygroup id="asset_value_group" name="Business Impact" tags="risk">
-		<huiproperty
+		<huipropertygroup id="asset_value_group" name="Business Impact" tags="risk" >
+		<huiproperty 
 					id="asset_value_method_confidentiality"
 					name="Deduce Confidentiality"
 					inputtype="booleanoption"  defaultValue="1">
@@ -3008,7 +3076,7 @@ the value between <param></param> will be used directly if no string is found fo
                         value="3" />
 				</huiproperty>
 				
-				<huiproperty
+			<huiproperty
 					id="asset_value_integrity"
 					name="Integrity"
 					inputtype="numericoption"  min="0" max="2" >
@@ -3165,7 +3233,7 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             id="person-iso_tag"
             name="Tags"
-            tooltip="List of tags, separated by comma or space"/>
+            tooltip="List of tags, separated by comma or space" />
 
 		<huiproperty
 			name="Anrede"
@@ -4203,12 +4271,14 @@ the value between <param></param> will be used directly if no string is found fo
 			name="N.C. Explanation" id="finding_expl" inputtype="text"/>
 		<huiproperty
 			name="Suggested response" id="finding_action" inputtype="text"/>
-		<huiproperty 
+		
+        <huiproperty 
 			name="Noted on"
 			id="finding_date"
 			inputtype="date">
             <defaultRule class="Today" />
         </huiproperty>
+        
     </huientity>
     
     <huientity
