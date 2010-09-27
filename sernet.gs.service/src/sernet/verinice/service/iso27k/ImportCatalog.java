@@ -32,6 +32,7 @@ import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.iso27k.ICatalog;
 import sernet.verinice.interfaces.iso27k.ICatalogImporter;
+import sernet.verinice.model.iso27k.IControl;
 import au.com.bytecode.opencsv.CSVReader;
 
 /**
@@ -193,7 +194,11 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
     private void fillMaturityLevels(Item item, String[] nextLine) {
         item.setWeight1(nextLine[4]);
         item.setWeight2(nextLine[5]);
-        item.setMaturity(nextLine[6]);
+        String maturity = nextLine[6];
+        if(maturity==null || maturity.isEmpty()) {
+            maturity = String.valueOf(IControl.IMPLEMENTED_NOTEDITED_NUMERIC);
+        }
+        item.setMaturity(maturity);
         item.setThreshold1(nextLine[7]);
         item.setThreshold2(nextLine[8]);
         item.setMaturityLevelSupport(true);

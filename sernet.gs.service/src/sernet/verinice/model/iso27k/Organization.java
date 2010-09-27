@@ -59,7 +59,7 @@ public class Organization extends CnATreeElement implements IISO27kGroup {
 	}
 	
 	public Organization(CnATreeElement parent) {
-	    this(parent,true);
+	    this(parent,false);
 	}
 	
 	public Organization(CnATreeElement parent, boolean createChildren) {

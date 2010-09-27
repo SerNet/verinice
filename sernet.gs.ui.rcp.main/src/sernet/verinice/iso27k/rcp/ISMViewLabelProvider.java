@@ -69,22 +69,17 @@ public class ISMViewLabelProvider extends LabelProvider  {
 			// TODO - getChildTypes()[0] might be a problem for more than one type
             image = ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0]);
 			return image;
-		}
-
-        else if (obj instanceof SamtTopic) {
+		} else if (obj instanceof SamtTopic) {
 	          SamtTopic topic = (SamtTopic) obj;
 	          image = ImageCache.getInstance().getControlImplementationImage(maturityService.getImplementationState(topic));
-	    }
-		
-		else if (obj instanceof Control) {
+	    } else if (obj instanceof Control) {
 		    Control control = (Control) obj;
 		    // using maturity:
 			//image = ImageCache.getInstance().getControlImplementationImage(maturityService.getImplementationState(control));
 		    // using implementation dropdown:
 		    image = ImageCache.getInstance().getControlImplementationImage(control.getImplementation());
 		    
-		}
-		else {
+		} else {
 			// else return type icon:
 			IISO27kElement elmt = (IISO27kElement) obj;
 			image = ImageCache.getInstance().getISO27kTypeImage(elmt.getTypeId());

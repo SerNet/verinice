@@ -21,17 +21,23 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class CreateITVerbund extends CreateElement {
-
+    
 	public CreateITVerbund(CnATreeElement container, Class type) {
-		super(container, type);
+		super(container,type,true,true);
 	}
+	
+	public CreateITVerbund(CnATreeElement container, Class type, boolean createChildren) {
+        super(container, type, true, createChildren);
+    }
 	
 	@Override
 	public void execute() {
 		super.execute();
 		if (super.child instanceof ITVerbund) {
 			ITVerbund verbund = (ITVerbund) child;
-			verbund.createNewCategories();
+			if(createChildren) {
+			    verbund.createNewCategories();
+			}
 		}
 	}
 	

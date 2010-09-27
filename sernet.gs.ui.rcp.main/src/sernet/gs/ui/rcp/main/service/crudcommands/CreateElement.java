@@ -62,7 +62,7 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
 
     private boolean skipReload;
     
-    private boolean createChildren;
+    protected boolean createChildren;
 
     /**
      * @param container2

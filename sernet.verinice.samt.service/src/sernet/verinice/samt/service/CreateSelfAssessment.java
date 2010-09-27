@@ -102,7 +102,7 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
     @Override
     public void execute() {
         try {
-            selfAssessment = new Organization(model);
+            selfAssessment = new Organization(model,true);
             if (titleOrganization != null) {
                 selfAssessment.setTitel(titleOrganization);
             }

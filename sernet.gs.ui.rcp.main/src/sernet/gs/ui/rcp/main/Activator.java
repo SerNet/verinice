@@ -447,8 +447,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("stacktrace: ", e);
             }
-        }
+        }  
     }
+	
+
 
     private void removeRepository() {
         URI[] uriArray = ProvisioningHelper.getArtifactRepositories();

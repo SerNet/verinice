@@ -31,12 +31,14 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * A CopyService is a job, which
@@ -161,17 +163,21 @@ public class CopyService extends PasteService implements IProgressTask {
 	 */
 	private CnATreeElement saveCopy(CnATreeElement toGroup, CnATreeElement copyElement) throws Exception {
 		CnATreeElement newElement = null;
-		if(Audit.TYPE_ID.equals(copyElement.getTypeId())) {
-		    newElement = CnAElementFactory.getInstance().saveNewAudit(toGroup, false, false);
-		} else {
-		    newElement = CnAElementFactory.getInstance().saveNew(toGroup, copyElement.getTypeId(), null, false);
+		if(Organization.TYPE_ID.equals(copyElement.getTypeId())) {
+		    newElement = CnAElementFactory.getInstance().saveNewOrganisation(toGroup, false, false);
+		} else if(Audit.TYPE_ID.equals(copyElement.getTypeId())) {
+            newElement = CnAElementFactory.getInstance().saveNewAudit(toGroup, false, false);
+        } else {
+		    newElement = CnAElementFactory.getInstance().saveNew(toGroup, copyElement.getTypeId(), new BuildInput<Boolean>(Boolean.FALSE), false);
 		}
-		newElement.getEntity().copyEntity(copyElement.getEntity());
-		if(toGroup.getChildren()!=null && toGroup.getChildren().size()>0) {
-			String title = newElement.getTitle();
-			Set<CnATreeElement> siblings = toGroup.getChildren();
-			siblings.remove(newElement);
-			newElement.setTitel(getUniqueTitle(title, title, siblings, 0));
+		if(newElement.getEntity()!=null) {
+    		newElement.getEntity().copyEntity(copyElement.getEntity());
+    		if(toGroup.getChildren()!=null && toGroup.getChildren().size()>0) {
+    			String title = newElement.getTitle();
+    			Set<CnATreeElement> siblings = toGroup.getChildren();
+    			siblings.remove(newElement);
+    			newElement.setTitel(getUniqueTitle(title, title, siblings, 0));
+    		}
 		}
 		SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(newElement);
 		saveCommand = getCommandService().executeCommand(saveCommand);

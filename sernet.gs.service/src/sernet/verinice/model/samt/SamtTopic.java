@@ -20,12 +20,8 @@
 package sernet.verinice.model.samt;
 
 import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Map;
 
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IControl;

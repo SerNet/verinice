@@ -31,27 +31,44 @@ import sernet.gs.ui.rcp.main.bsi.model.SubtypenZielobjekte;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateAnwendung;
+import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateITVerbund;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
+import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.commands.LoadModel;
 import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.BausteinVorschlag;
 import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.bsi.RaeumeKategorie;
 import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.ServerKategorie;
 import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.SonstigeITKategorie;
+import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.ds.Datenverarbeitung;
+import sernet.verinice.model.ds.Personengruppen;
+import sernet.verinice.model.ds.StellungnahmeDSB;
+import sernet.verinice.model.ds.VerantwortlicheStelle;
+import sernet.verinice.model.ds.Verarbeitungsangaben;
+import sernet.verinice.model.ds.Zweckbestimmung;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
@@ -152,6 +169,129 @@ public class CnAElementFactory {
 	private CnAElementFactory() {
 		dbHome = CnAElementHome.getInstance();
 
+		// Datenschutz Elemente
+		elementbuilders.put(StellungnahmeDSB.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                StellungnahmeDSB child = dbHome.save(container, StellungnahmeDSB.class, StellungnahmeDSB.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(Personengruppen.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                Personengruppen child = dbHome.save(container, Personengruppen.class, Personengruppen.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(Datenverarbeitung.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                Datenverarbeitung child = dbHome.save(container, Datenverarbeitung.class, Datenverarbeitung.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(Verarbeitungsangaben.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                Verarbeitungsangaben child = dbHome.save(container, Verarbeitungsangaben.class, Verarbeitungsangaben.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+       
+        elementbuilders.put(Zweckbestimmung.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                Zweckbestimmung child = dbHome.save(container, Zweckbestimmung.class, Zweckbestimmung.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+       
+        elementbuilders.put(VerantwortlicheStelle.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                VerantwortlicheStelle child = dbHome.save(container, VerantwortlicheStelle.class, VerantwortlicheStelle.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+		
+        // BSI Grundschutz elements
+        
+        elementbuilders.put(NKKategorie.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                NKKategorie child = dbHome.save(container, NKKategorie.class, NKKategorie.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(SonstigeITKategorie.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                SonstigeITKategorie child = dbHome.save(container, SonstigeITKategorie.class, SonstigeITKategorie.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(PersonenKategorie.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                PersonenKategorie child = dbHome.save(container, PersonenKategorie.class, PersonenKategorie.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(AnwendungenKategorie.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                AnwendungenKategorie child = dbHome.save(container, AnwendungenKategorie.class, AnwendungenKategorie.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(GebaeudeKategorie.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                GebaeudeKategorie child = dbHome.save(container, GebaeudeKategorie.class, GebaeudeKategorie.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(RaeumeKategorie.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                RaeumeKategorie child = dbHome.save(container, RaeumeKategorie.class, RaeumeKategorie.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(TKKategorie.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                TKKategorie child = dbHome.save(container, TKKategorie.class, TKKategorie.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(ServerKategorie.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                ServerKategorie child = dbHome.save(container, ServerKategorie.class, ServerKategorie.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(ClientsKategorie.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                ClientsKategorie child = dbHome.save(container, ClientsKategorie.class, ClientsKategorie.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
 		elementbuilders.put(Gebaeude.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 				Gebaeude child = dbHome.save(container, Gebaeude.class, Gebaeude.TYPE_ID);
@@ -247,7 +387,11 @@ public class CnAElementFactory {
 			public ITVerbund build(CnATreeElement container, BuildInput input) throws Exception {
 
 				log.debug("Creating new ITVerbund in " + container); //$NON-NLS-1$
-				CreateITVerbund saveCommand = new CreateITVerbund(container, ITVerbund.class);
+				boolean createChildren = true;
+				if(input!=null) {
+				    createChildren = (Boolean) input.getInput();
+				}
+				CreateITVerbund saveCommand = new CreateITVerbund(container, ITVerbund.class, createChildren);
 				saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
 				ITVerbund verbund = saveCommand.getNewElement();
 
@@ -258,7 +402,7 @@ public class CnAElementFactory {
 
 		// ISO 27000 builders
 		elementbuilders.put(Organization.TYPE_ID, new ElementBuilder() {
-			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception { 
 				Organization child = dbHome.save(container, Organization.class, Organization.TYPE_ID);
 				init(container, child);
 				return child;
@@ -547,6 +691,30 @@ public class CnAElementFactory {
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
+    public CnATreeElement saveNewOrganisation(CnATreeElement container, boolean createChildren,  boolean fireUpdates) throws Exception {
+        String title = HitroUtil.getInstance().getTypeFactory().getMessage(Organization.TYPE_ID);   
+        CreateElement<Organization> saveCommand = new CreateElement<Organization>(container, Organization.class, title, false, createChildren);
+        saveCommand = getCommandService().executeCommand(saveCommand);
+        CnATreeElement child = saveCommand.getNewElement();
+        container.addChild(child);
+        child.setParent(container);
+        // notify all listeners:
+        if (fireUpdates) {
+            CnAElementFactory.getModel(child).childAdded(container, child);
+            CnAElementFactory.getModel(child).databaseChildAdded(child);
+        }
+        return child;
+    }
+	
+	/**
+     * Create new BSI element with new HUI Entity. The HUI Entity will be added
+     * to the given container.
+     * 
+     * @param container
+     * @return the newly added element
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
     public CnATreeElement saveNewAudit(CnATreeElement container, boolean createChildren,  boolean fireUpdates) throws Exception {
         IElementBuilder builder = elementbuilders.get(Audit.TYPE_ID);
         if (builder == null) {
@@ -582,6 +750,7 @@ public class CnAElementFactory {
 	public CnATreeElement saveNew(CnATreeElement container, String buildableTypeId, BuildInput input, boolean fireUpdates) throws Exception {
 		IElementBuilder builder = elementbuilders.get(buildableTypeId);
 		if (builder == null) {
+		    log.error(Messages.getString("CnAElementFactory.0") + buildableTypeId);
 			throw new Exception(Messages.getString("CnAElementFactory.0") + buildableTypeId); //$NON-NLS-1$
 		}
 		CnATreeElement child = builder.build(container, input);

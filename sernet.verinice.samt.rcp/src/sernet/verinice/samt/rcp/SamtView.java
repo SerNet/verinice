@@ -86,7 +86,7 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
     }
     
     protected void expand() {
-        viewer.expandToLevel(6);
+        viewer.expandToLevel(5);
     }
 
     /*

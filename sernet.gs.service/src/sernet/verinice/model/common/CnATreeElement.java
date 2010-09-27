@@ -271,8 +271,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public abstract String getTitle();
 	
 	public void setTitel(String name) {
-		// this method must be overriden
-		throw new RuntimeException("Method not implemented in this object");
+		// override this method
 	}
 	
 	public String getId() {
