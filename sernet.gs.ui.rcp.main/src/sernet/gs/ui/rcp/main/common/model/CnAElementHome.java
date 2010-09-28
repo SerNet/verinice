@@ -399,6 +399,7 @@ public class CnAElementHome {
 
         // Short cut: If no permission handling is needed than all objects are
         // writable.
+        ServiceFactory.lookupAuthService();
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
             return true;
         }
