@@ -34,10 +34,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -64,6 +67,7 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityTypeId;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementsForScope;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.swt.widgets.Colors;
@@ -91,6 +95,9 @@ public class CnATreeElementSelectionDialog extends Dialog {
     private Text text;
     private CnaTreeElementTitleFilter filter;
     private List<CnATreeElement> input;
+    private Button checkbox;
+    private CnATreeElement inputElmt;
+    protected boolean scopeOnly;
     private static final String COLUMN_IMG = "_img";
     private static final String COLUMN_LABEL = "_label";
     
@@ -98,10 +105,11 @@ public class CnATreeElementSelectionDialog extends Dialog {
      * @param shell
      * @param selectedType
      */
-    public CnATreeElementSelectionDialog(Shell shell, String selectedType) {
+    public CnATreeElementSelectionDialog(Shell shell, String selectedType, CnATreeElement inputElmt) {
         super(shell);
         setShellStyle(SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
         this.entityType = selectedType;
+        this.inputElmt = inputElmt;
     }
     
     
@@ -151,11 +159,29 @@ public class CnATreeElementSelectionDialog extends Dialog {
             }
         });
         
-      
+        checkbox = new Button(container, SWT.CHECK);
+        checkbox.setText("Current scope only");
+        checkbox.setSelection(true);
+        scopeOnly = true;
+        FormData checkboxFD = new FormData();
+        checkboxFD.top = new FormAttachment(text, 5);
+        checkboxFD.left = new FormAttachment(0, 5);
+        checkbox.setLayoutData(checkboxFD);
+        checkbox.pack();
+        checkbox.addSelectionListener(new SelectionListener() {
+            public void widgetSelected(SelectionEvent e) {
+                scopeOnly = checkbox.getSelection();
+                loadElements();
+            }
+            
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+        });
+        
         
         viewer = new TableViewer(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
         FormData formData3 = new FormData();
-        formData3.top = new FormAttachment(text, 5);
+        formData3.top = new FormAttachment(checkbox, 5);
         formData3.left = new FormAttachment(0, 5);
         formData3.right = new FormAttachment(100, -5);
         formData3.bottom = new FormAttachment(100, -5);
@@ -195,6 +221,14 @@ public class CnATreeElementSelectionDialog extends Dialog {
         viewer.setColumnProperties(new String[] {COLUMN_IMG, COLUMN_LABEL});
         viewer.setContentProvider(new ArrayContentProvider());
         filter = new CnaTreeElementTitleFilter(viewer);
+        viewer.setSorter(new ViewerSorter() {
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                CnATreeElement elmt1 = (CnATreeElement) e1;
+                CnATreeElement elmt2 = (CnATreeElement) e2;
+                return elmt1.getTitle().compareTo(elmt2.getTitle());
+            } 
+        });
+        
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
@@ -244,14 +278,27 @@ public class CnATreeElementSelectionDialog extends Dialog {
 
                 try {
                     monitor.setTaskName("Loading elements");
-                    LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(entityType);
-                    command = ServiceFactory.lookupCommandService().executeCommand(command);
-                    input = command.getElements();
-                    Display.getDefault().asyncExec(new Runnable() {
-                        public void run() {
-                            viewer.setInput(input);
-                        }
-                    });
+
+                    if (scopeOnly) {
+                        LoadElementsForScope command = new LoadElementsForScope(entityType, inputElmt.getDbId());
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        input = command.getElements();
+                        Display.getDefault().asyncExec(new Runnable() {
+                            public void run() {
+                                viewer.setInput(input);
+                            }
+                        });
+                        
+                    } else {
+                        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(entityType);
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        input = command.getElements();
+                        Display.getDefault().asyncExec(new Runnable() {
+                            public void run() {
+                                viewer.setInput(input);
+                            }
+                        });
+                    }
                 } catch (Exception e) {
                     ExceptionUtil.log(e, "Could not load elements from database.");
                 }

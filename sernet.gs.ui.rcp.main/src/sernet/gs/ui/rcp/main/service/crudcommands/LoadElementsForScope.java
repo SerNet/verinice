@@ -28,37 +28,48 @@ import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.Organization;
 
-public class LoadReportElements extends GenericCommand {
+/**
+ * Load all elements of given type in same scope as a given element.
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
+public class LoadElementsForScope extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(LoadReportElements.class);
+    private transient Logger log = Logger.getLogger(LoadElementsForScope.class);
     
     public Logger getLog() {
         if(log==null) {
-            log = Logger.getLogger(LoadReportElements.class);
+            log = Logger.getLogger(LoadElementsForScope.class);
         }
         return log;
     }
 
 	private String typeId;
-    private Integer rootElement;
+    private Integer anyElement;
     private ArrayList<CnATreeElement> elements;
     
-    public LoadReportElements(String typeId, Integer rootElement) {
+    public LoadElementsForScope(String typeId, Integer anyElement) {
 	    this.typeId = typeId;
-	    this.rootElement = rootElement;
+	    this.anyElement = anyElement;
 	}
 	
 	public void execute() {
-	    getLog().debug("LoadReportElements for root_object " + rootElement);
+	    getLog().debug("LoadElements for root_object " + anyElement);
 	    
-	    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
+	    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {anyElement});
 	    try {
             command = getCommandService().executeCommand(command);
         } catch (CommandException e) {
             throw new RuntimeCommandException(e);
         }
-	    CnATreeElement root = command.getElements().get(0);
+	    CnATreeElement elmtInScope = command.getElements().get(0);
+	    CnATreeElement root = findRoot(elmtInScope);
 
 	    //if typeId is that of the root object, just return it itself. else look for children:
 	    ArrayList<CnATreeElement> items = new ArrayList<CnATreeElement>();
@@ -84,6 +95,16 @@ public class LoadReportElements extends GenericCommand {
 	}
 
 	/**
+     * @param elmtInScope
+     * @return
+     */
+    private CnATreeElement findRoot(CnATreeElement elmtInScope) {
+        if (elmtInScope.getTypeId().equals(Organization.TYPE_ID))
+            return elmtInScope;
+        return findRoot(elmtInScope.getParent());
+    }
+
+    /**
      * @return the elements
      */
     public List<CnATreeElement> getElements() {

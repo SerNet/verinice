@@ -51,7 +51,7 @@ import sernet.verinice.model.iso27k.ControlGroup;
  * $LastChangedBy$
  *
  */
-public class MaturityBarChart extends MaturitySpiderChart {
+public class SamtProgressChart extends MaturitySpiderChart {
     
     // FIXME externalize strings
     /*
@@ -77,7 +77,7 @@ public class MaturityBarChart extends MaturitySpiderChart {
     
     protected JFreeChart createBarChart(Object dataset) {
         JFreeChart chart = ChartFactory.createBarChart3D(null, 
-                "Controls", "Reifegrad",
+                "Questions", "Progress",
                 (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false,
                 true, false);
         chart.setBackgroundPaint(Color.white);
@@ -129,14 +129,12 @@ public class MaturityBarChart extends MaturitySpiderChart {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         MassnahmenSummaryHome dao = new MassnahmenSummaryHome();
 
-        Map<String, Double> items1 = dao.getControlGroups(elmt);
-        Set<Entry<String, Double>> entrySet = items1.entrySet();
-        for (Entry<String, Double> entry : entrySet) {
-            dataset.addValue(entry.getValue(), "Resultat", entry.getKey());
+        Map<String, Integer> items1 = dao.getSamtTopicsProgress(super.elmt);
+        Set<Entry<String, Integer>> entrySet = items1.entrySet();
+        for (Entry<String, Integer> entry : entrySet) {
+            dataset.addValue(entry.getValue(), "Questions", entry.getKey());
         }
         
-      
-
         return dataset;
     }
 }

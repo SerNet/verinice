@@ -62,7 +62,7 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
      */
     @Override
     protected IChartGenerator getDefaultChartGenerator() {
-        return maturitySpiderChart;
+        return samtProgressChart;
     }
 
     /*
@@ -123,21 +123,7 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         }
     }
 
-    /**
-     * @param selectedElement
-     * @return
-     */
-    private CnATreeElement findControlGroup(CnATreeElement selectedElement) {
-        CnATreeElement result = selectedElement;
-        Set<CnATreeElement> children = selectedElement.getChildren();
-        for (CnATreeElement cnATreeElement : children) {
-            if (cnATreeElement.getTypeId().equals(ControlGroup.TYPE_ID)) {
-                return cnATreeElement;
-            }
-        }
-        
-        return result;
-    }
+   
 
     /**
      * Returns true if selection is a ControlGroup

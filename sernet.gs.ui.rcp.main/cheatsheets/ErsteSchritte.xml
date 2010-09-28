@@ -55,7 +55,7 @@
 	<description>
 	The catalog is now being loaded. When the parser has finished, you will see the contents in the catalog view.
 	<br/><br/>
-	Open the browser view ("View, Open view, Control Browser"). Click on a control to show its contents in the browser view.
+	Open the browser view ("View, Open view, Object Browser"). Click on a control to show its contents in the browser view.
 	<br/><br/>
 	To actually work with the imported controls, you have to create your organization in the database. Go to the view "Information Security Model".
 	It should be displayed in the middle of the verinice workbench. Click on the rightmost button ("Create new organization"). 

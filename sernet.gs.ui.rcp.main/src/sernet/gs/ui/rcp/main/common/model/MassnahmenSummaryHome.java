@@ -27,6 +27,7 @@ import sernet.gs.ui.rcp.main.service.statscommands.IncompleteStepsSummary;
 import sernet.gs.ui.rcp.main.service.statscommands.IncompleteZyklusSummary;
 import sernet.gs.ui.rcp.main.service.statscommands.LayerSummary;
 import sernet.gs.ui.rcp.main.service.statscommands.MaturitySummary;
+import sernet.gs.ui.rcp.main.service.statscommands.SamtProgressSummary;
 import sernet.gs.ui.rcp.main.service.statscommands.UmsetzungSummary;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -104,6 +105,11 @@ public class MassnahmenSummaryHome {
         return command.getSummary();
 
     }
+    
+   // FIXME ak creating links in linkmaker fails, after thagt no links can be created not even by dragndrop
+    
+    // FIXME ak remove "Person" field from Configuration, replace with uuid as STring, change query in "LoadConfiguration", allow accounts for iso-persons as well as bsimodel-persons, test if that works
+    
 
     /**
      * @param elmt
@@ -115,6 +121,17 @@ public class MassnahmenSummaryHome {
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         return command.getSummary();
         
+    }
+
+    /**
+     * @param controlGroup
+     * @return
+     * @throws CommandException 
+     */
+    public Map<String, Integer> getSamtTopicsProgress(ControlGroup controlGroup) throws CommandException {
+        SamtProgressSummary command = new SamtProgressSummary(controlGroup);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        return command.getResult();
     }
 
 }

@@ -255,7 +255,7 @@ public class LinkMaker extends Composite implements IRelationTable {
                 // create new link to object
                 Object[] array = namesAndIds.entrySet().toArray();
                 String selectedType = ((Entry<String, String>) array[combo.getSelectionIndex()]).getValue();
-                CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(viewer.getControl().getShell(), selectedType);
+                CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(viewer.getControl().getShell(), selectedType, inputElmt);
                 
                 if (dialog.open() != Window.OK)
                     return;

@@ -48,12 +48,12 @@ Falls nicht, gehen Sie dorthin indem Sie aus dem Anwendungsmenü auswählen:
     <item title="Fragen beantworten">
     <description>
        Doppelklicken Sie die erste Frage um den Editor zu öffnen.
-       Gleichzeitig zeigt Ihnen der Maßnahmenbrowser die Frage und eine Auswahl von Reifegraden an. 
+       Gleichzeitig zeigt Ihnen der Objektbrowser die Frage und eine Auswahl von Reifegraden an. 
         <br/><br/>
         Lesen Sie die Beschreibungen um zu entscheiden, welchen Reifegrad Sie in ihrer Organisation erreicht haben.
         Um die Frage korrekt zu beantworten, müssen Sie evtl. andere Mitarbeiter befragen oder interne Recherchen anstellen.
         <br/>
-        Wählen Sie den korrekten Reifegrad im Editor unterhalb des Maßnahmenbrowsers aus. Sie können auch ein öffentliches Kommentar
+        Wählen Sie den korrekten Reifegrad im Editor unterhalb des Objektbrowser aus. Sie können auch ein öffentliches Kommentar
         hinzufügen. Dieses Kommentar wird in Exporten und Reports enthalten sein. Sie können auch ein privates Kommentar nur für sich selbst eingeben.
         Das private Kommentar wird ausschließlich in Ihrer lokalen Datenbank verbleiben.
         <br/><br/>
@@ -63,11 +63,10 @@ Falls nicht, gehen Sie dorthin indem Sie aus dem Anwendungsmenü auswählen:
     
     <item title="Report erzeugen">
       <description>
-       Fahren Sie wie beschrieben mit den übrigen Fragen fort. Während Sie dies tun, werden Sie bemerken wie sich das Spinnennetzdiagramm
-       imj linken unteren Bildschirmbereich ändert. Wenn Sie alle Fragen ehrlich beantwortet haben, erhalten Sie dadurch einen guten
-       Überblick über den Stand der Informationssicherheit in Ihrem Unternehmen.
+       Fahren Sie wie beschrieben mit den übrigen Fragen fort. Während Sie dies tun, werden Sie bemerken wie sich das Diagramm
+       im linken unteren Bildschirmbereich ändert.
         <br/><br/>
-        Wenn Sie alle Fragen abschließend beantwortet haben, können Sie einen Report für das Management oder beteiligte Parteien erzeugen.
+        Wenn Sie alle Fragen abschliessend beantwortet haben, können Sie einen Report für das Management oder beteiligte Parteien erzeugen.
         Dies tun Sie durch Auswahl des Menüpunktes
         <b>Datei -> Security Assessment -> Report erzeugen</b>.
         <br/><br/>
@@ -81,8 +80,8 @@ Falls nicht, gehen Sie dorthin indem Sie aus dem Anwendungsmenü auswählen:
         z.B. per E-Mail oder auf anderem Wege.
         Zum Export klicken Sie auf den <b>Export</b> Button im Security Assessment View.
         <br/><br/>
-        Sie müssen einen Dateinamen angeben, unter dem der Export gespeichert werden soll. Der Datenbankexport wird grundsätzlich nur verschlüsselt
-        gespeichert, daher müssen Sie ein Passwort oder ein Zertifikat für die Verschlüsselung angeben. 
+        Sie müssen einen Dateinamen angeben, unter dem der Export gespeichert werden soll. Der Datenbankexport wird verschlüsselt
+        gespeichert, wenn Sie dies wünschen. Falls Sie die Option auswählen, müssen Sie ein Passwort oder ein Zertifikat für die Verschlüsselung angeben. 
         Klicken Sie dann auf OK.
          </description>
     </item>
@@ -91,7 +90,7 @@ Falls nicht, gehen Sie dorthin indem Sie aus dem Anwendungsmenü auswählen:
       <description>
    Herzlichen Glückwunsch, Sie haben Ihr erstes Security Assessment mit verinice durchgeführt. Wenn Sie weitermachen möchten 
    oder darüber nachdenken, ein vollständiges Managementsystem für Informationssicherheit (ISMS) in Ihrem Unternehmen zu etablieren,
-   gehen Sie zur Einstigsseite zurück, indem Sie aus dem Menü wählen <b>Hilfe -> Willkommen</b>
+   gehen Sie zur Startseite zurück, indem Sie aus dem Menü wählen: <b>Hilfe -> Willkommen</b>
     <br/><br/>
     Wählen Sie diesmal die Option "Ein ISMS etablieren". Sie werden zur ISM Perspektive weitergeleitet, in der Sie ein weiteres Tutorial erwartet.
      </description>

@@ -97,6 +97,8 @@ public class ChartView extends ViewPart {
 	private Action chooseSchichtDiagramAction;
 
 	protected MaturitySpiderChart maturitySpiderChart;
+	
+	protected SamtProgressChart samtProgressChart;
 
 	private Action chooseMaturityDiagramAction;
 
@@ -155,6 +157,7 @@ public class ChartView extends ViewPart {
 		schichtenChart = new SchichtenBarChart();
 		maturitySpiderChart = new MaturitySpiderChart();
 		maturityBarChart = new MaturityBarChart();
+		samtProgressChart = new SamtProgressChart();
 
 	}
 

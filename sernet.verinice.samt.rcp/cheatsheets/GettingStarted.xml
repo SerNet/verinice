@@ -48,7 +48,7 @@ If not, you can go there by choosing from the menu:
     <item title="Answering questions">
     <description>
         Double-click on the first question to open the editor.
-        Simultaneously, the Control Browser will show you the question and a selection of maturity levels.
+        Simultaneously, the Object Browser will show you the question and a selection of maturity levels.
         <br/><br/>
         Read the descriptions to decide which maturity level you have reached in your organization. You may have to consult 
         other employees or do some internal research to answer the question correctly. 
@@ -57,7 +57,7 @@ If not, you can go there by choosing from the menu:
         will be included in a database export. You can also add a private comment just for yourself. The private comment 
         will always stay in your local database.
         <br/><br/>
-        Save cour changes by pressing <b>Ctrl-S</b> or by choosing <b>File -> Save</b>.
+        Save your changes by pressing <b>Ctrl-S</b> or by choosing <b>File -> Save</b>.
         </description>
     </item>
     
