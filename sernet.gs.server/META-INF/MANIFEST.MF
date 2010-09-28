@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Server
 Bundle-SymbolicName: sernet.gs.server;singleton:=true
 Bundle-Version: 1.1.1
-Bundle-ClassPath: .,
- WebContent/WEB-INF/lib/org.springframework.ldap-1.3.0.RELEASE.jar
+Bundle-ClassPath: .
 Bundle-Activator: sernet.gs.server.Activator
 Export-Package: sernet.gs.server
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -34,7 +33,8 @@ Require-Bundle: org.apache.commons.httpclient;bundle-version="3.1.0",
  sernet.verinice.samt.service;bundle-version="0.1.0",
  richfaces;bundle-version="3.3.2.SR1",
  jsf-api;bundle-version="1.2.12",
- gnumail;bundle-version="1.1.2"
+ gnumail;bundle-version="1.1.2",
+ org.springframework.ldap;bundle-version="1.3.0"
 Import-Package: org.apache.log4j;version="1.2.15",
  org.eclipse.core.runtime;version="3.4.0",
  org.eclipse.osgi.util;version="1.1.0",
