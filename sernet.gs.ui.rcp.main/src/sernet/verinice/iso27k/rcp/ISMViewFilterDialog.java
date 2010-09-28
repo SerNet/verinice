@@ -302,8 +302,12 @@ public class ISMViewFilterDialog extends Dialog {
         this.hideEmpty = hideEmptyCheckbox.getSelection();
         visibleTypes.clear();
         List<Object> typeList = Arrays.asList(viewerType.getCheckedElements());
-        for (Object object : typeList) {
-            visibleTypes.add((String[]) object);        
+        if(typeList.size()>=TYPES.length) {
+            visibleTypes.add(TypeFilter.ALL_TYPES);
+        } else {
+            for (Object object : typeList) {
+                visibleTypes.add((String[]) object);        
+            }
         }
         return super.close();
     }

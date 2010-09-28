@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp.action;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -28,6 +27,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 
@@ -61,18 +61,47 @@ public class TypeFilter extends ViewerFilter {
         if (o instanceof CnATreeElement && !visible) {
             CnATreeElement element = (CnATreeElement) o;
             visible = Organization.TYPE_ID.equals(element.getTypeId()) || (contains(visibleTypeSet,element.getTypeId()));
+            if(!visible) {
+                CnATreeElement withChildren = Retriever.checkRetrieveChildren(element);
+                Set<CnATreeElement> children = withChildren.getChildren();
+                for (CnATreeElement child : children) {
+                    visible = select(viewer, withChildren, child);
+                    if(visible) {
+                        break;
+                    }
+                }
+            }
         }
         if(!visible && parentElement instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) parentElement;
             visible = (visibleTypeSet.contains(element.getTypeId()));
             if(!visible && element.getParent()!=null) {
-                visible = select(viewer, element.getParent(), element.getParent());
+                CnATreeElement elementWithParent = Retriever.checkRetrieveParent((CnATreeElement) element);
+                visible = checkParent(viewer, elementWithParent.getParent(), elementWithParent);
             }
-        }
-        
+        }       
         return visible;
     }
     
+
+    
+    private boolean checkParent(Viewer viewer, Object parentO, Object o) {
+        boolean visible = (visibleTypeSet.contains(ALL_TYPES));
+        if (o instanceof CnATreeElement && !visible) {
+            CnATreeElement element = (CnATreeElement) o;
+            visible =  contains(visibleTypeSet,element.getTypeId());          
+        }
+        if(!visible && parentO instanceof CnATreeElement) {
+            CnATreeElement element = (CnATreeElement) parentO;
+            visible = (visibleTypeSet.contains(element.getTypeId()));
+            if(!visible && element.getParent()!=null) {
+                CnATreeElement elementWithParent = Retriever.checkRetrieveParent((CnATreeElement) element);        
+                visible = checkParent(viewer, elementWithParent.getParent(), elementWithParent);
+            }
+        }       
+        return visible;
+    }
+
     /**
      * @param visibleTypeSet2
      * @param typeId

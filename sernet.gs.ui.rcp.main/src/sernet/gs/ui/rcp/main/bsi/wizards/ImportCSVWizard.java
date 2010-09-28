@@ -110,7 +110,9 @@ public class ImportCSVWizard extends Wizard {
     			    if(firstLine[0]==null || !firstLine[0].toLowerCase().contains("ext")) { //$NON-NLS-1$
     			        final String message = Messages.ImportCSVWizard_5;
                         LOG.warn(message + " File: " + entityPage.getCSVDatei().getPath()); //$NON-NLS-1$
-                        MessageDialog.openWarning(this.getShell(), Messages.ImportCSVWizard_7, message);
+                        entityPage.setWarning(message);
+    			    } else {
+    			        entityPage.setWarning(""); //$NON-NLS-1$
     			    }
     			}
                 propertyPage.fillTable();

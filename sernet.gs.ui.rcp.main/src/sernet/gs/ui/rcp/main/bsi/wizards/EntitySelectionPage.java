@@ -12,6 +12,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -38,6 +39,7 @@ public class EntitySelectionPage extends WizardPage{
     private Combo charsetCombo;
 	private Text csvText;
 	private Text entityText;
+	private Label warningLabel;
 	private Vector<String> entityNames;
 	private String entityNameId = ""; //$NON-NLS-1$
 	private boolean insert;
@@ -222,6 +224,9 @@ public class EntitySelectionPage extends WizardPage{
 			}
 		});
 		
+		warningLabel = new Label(comp, SWT.NONE);
+		warningLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3,1));
+		
 	}
 	
 
@@ -242,7 +247,9 @@ public class EntitySelectionPage extends WizardPage{
 			if(file.isFile()){
 				this.csvText.setText(file.getName());//file.getPath()
 				this.csvFile = file;
-				if(this.sourceIdText.getText()==null || this.sourceIdText.getText().isEmpty()) {
+				if(this.sourceIdText.getText()==null 
+				   || this.sourceIdText.getText().isEmpty()
+				   || this.sourceIdText.getText().endsWith(".csv")) {
 				    this.sourceIdText.setText(file.getName());
 				}
 			}
@@ -286,5 +293,10 @@ public class EntitySelectionPage extends WizardPage{
 
     public Combo getCharsetCombo() {
         return charsetCombo;
+    }
+    
+    public void setWarning(String message) {
+        warningLabel.setForeground(new Color(getShell().getDisplay(),200,0,0));
+        warningLabel.setText(message);
     }
 }
