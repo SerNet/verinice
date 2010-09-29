@@ -519,7 +519,9 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 					viewer.setInput(importCatalog.getCatalog().getRoot());
 				}
 				comboModel.add(attachment);
-				comboCatalog.setItems(comboModel.getLabelArray());
+				String[] labelArray = comboModel.getLabelArray();
+				comboCatalog.setItems(labelArray);
+				deleteCatalogAction.setEnabled(labelArray.length>0);
 				selectComboItem(attachment);
 			} catch (Exception e) {
 				LOG.error("Error while reading file data", e);
