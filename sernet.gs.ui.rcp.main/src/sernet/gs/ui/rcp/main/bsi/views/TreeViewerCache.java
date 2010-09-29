@@ -52,7 +52,11 @@ public class TreeViewerCache {
 	
 	public void addObject(Object o) {
 	    try {
-	        this.cache.put(o, PRESENT);
+	        if(o!=null) {
+	            this.cache.put(o, PRESENT);
+	        } else {
+	            LOG.warn("Object is null. Will not add this to cache.");
+	        }
 	    } catch(Throwable t) {
 	        LOG.error("Error while adding object",t);
 	    }
@@ -70,6 +74,8 @@ public class TreeViewerCache {
         				if (elmt.equals(o)) {
         					return (T) elmt;
         				}
+    			    } else {
+    			        LOG.warn("Null found in cache.");
     			    }
     			}
     			return null;

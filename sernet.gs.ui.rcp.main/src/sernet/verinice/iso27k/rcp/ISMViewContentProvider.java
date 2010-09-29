@@ -157,6 +157,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                 } else {
                     filteredList = new HashSet<CnATreeElement>(children.size());
                     for (CnATreeElement cnATreeElement : children) {
+                        cnATreeElement = Retriever.checkRetrieveChildren((CnATreeElement) cnATreeElement);
                         for (ViewerFilter filter : filterList) {
                             if (filter.select(null, null, cnATreeElement)) {
                                 filteredList.add(cnATreeElement);

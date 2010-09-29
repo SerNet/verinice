@@ -72,57 +72,33 @@ public class SamtProgressChart extends MaturitySpiderChart {
             ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
             return null;
         }
-
     }
     
-    protected JFreeChart createBarChart(Object dataset) {
-        JFreeChart chart = ChartFactory.createBarChart3D(null, 
-                "Questions", "Progress",
-                (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false,
-                true, false);
+    protected JFreeChart createBarChart(Object dataset) {    
+       JFreeChart chart = ChartFactory.createBarChart3D(
+                null, 
+                "Questions", 
+                "Progress",
+                (CategoryDataset) dataset, 
+                PlotOrientation.HORIZONTAL, 
+                true,
+                true, 
+                false);
+        
         chart.setBackgroundPaint(Color.white);
         chart.getPlot().setForegroundAlpha(0.6f);
         chart.setBackgroundPaint(Color.white);
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         
-        plot.getRenderer().setSeriesPaint(0, ChartColor.LIGHT_BLUE);
+        plot.getRenderer().setSeriesPaint(0, ChartColor.LIGHT_GREEN);
+        plot.getRenderer().setSeriesPaint(1, ChartColor.LIGHT_RED);
 
-        plot.getDomainAxis().setCategoryLabelPositions(
-                CategoryLabelPositions.STANDARD);
+        plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
         
         NumberAxis axis = (NumberAxis) plot.getRangeAxis();
-        axis.setUpperBound(9);
-        
-//        ValueMarker bst = new ValueMarker(3);
-//        bst.setPaint(Color.RED);
-//        bst.setLabel("   Nicht umgesetzt");
-//        bst.setLabelAnchor(RectangleAnchor.LEFT);
-//        bst.setLabelFont(new Font("SansSerif", Font.ITALIC + Font.BOLD, 10));
-//        bst.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
-//        plot.addRangeMarker(bst, Layer.BACKGROUND);
-//        
-//        ValueMarker bst2 = new ValueMarker(5);
-//        bst2.setPaint(Color.YELLOW);
-//        bst2.setLabel("   Teilweise umgesetzt");
-//        bst2.setLabelAnchor(RectangleAnchor.LEFT);
-//        bst2.setLabelFont(new Font("SansSerif", Font.ITALIC + Font.BOLD, 10));
-//        bst2.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
-//        plot.addRangeMarker(bst2, Layer.BACKGROUND);
-//        
-//        ValueMarker bst3 = new ValueMarker(9);
-//        bst3.setPaint(Color.GREEN);
-//        bst3.setLabel("   Vollständig umgesetzt");
-//        bst3.setLabelAnchor(RectangleAnchor.LEFT);
-//        bst3.setLabelFont(new Font("SansSerif", Font.ITALIC + Font.BOLD, 10));
-//        bst3.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
-//        plot.addRangeMarker(bst3, Layer.BACKGROUND);
-        
-//        LegendTitle legend = new LegendTitle(plot);
-//        legend.setPosition(RectangleEdge.BOTTOM);
-//        chart.addSubtitle(legend);
-        
+        axis.setUpperBound(55);
+   
         return chart;
-
     }
     
     protected Object createBarDataset() throws CommandException {
@@ -132,7 +108,7 @@ public class SamtProgressChart extends MaturitySpiderChart {
         Map<String, Integer> items1 = dao.getSamtTopicsProgress(super.elmt);
         Set<Entry<String, Integer>> entrySet = items1.entrySet();
         for (Entry<String, Integer> entry : entrySet) {
-            dataset.addValue(entry.getValue(), "Questions", entry.getKey());
+            dataset.addValue(entry.getValue(), entry.getKey(), "");
         }
         
         return dataset;

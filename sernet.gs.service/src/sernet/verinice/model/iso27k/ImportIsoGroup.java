@@ -23,7 +23,7 @@ import java.util.Collections;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class ImportIsoGroup extends Group<Organization> implements IISO27kGroup {
+public class ImportIsoGroup extends Group<Organization> implements IISO27kGroup,IISO27Scope {
 	
 	public static final String TYPE_ID = ImportIsoGroup.class.getSimpleName();
 

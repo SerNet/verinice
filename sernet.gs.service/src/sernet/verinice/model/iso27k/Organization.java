@@ -27,7 +27,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class Organization extends CnATreeElement implements IISO27kGroup {
+public class Organization extends CnATreeElement implements IISO27kGroup, IISO27Scope {
 
 	public static final String TYPE_ID = "org"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "org_abbr"; //$NON-NLS-1$

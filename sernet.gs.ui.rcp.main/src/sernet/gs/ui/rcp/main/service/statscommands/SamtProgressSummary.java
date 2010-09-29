@@ -80,10 +80,10 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
                 // ignore chapters 0.x (Copyright et al):
                 if (!st.getTitle().startsWith("0")) {
                     if (maturityService.getImplementationState(st) == IControl.IMPLEMENTED_NOTEDITED) {
-                        result.get(UNANSWERED);
+                        result.put(UNANSWERED, (Integer)result.get(UNANSWERED)+1);
                     }
                     else {
-                        result.get(ANSWERED);
+                        result.put(ANSWERED, (Integer)result.get(ANSWERED)+1);
                     }
                 }
             } else if (e instanceof ControlGroup) {

@@ -31,7 +31,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 @SuppressWarnings("serial")
-public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGroup {
+public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGroup,IISO27Scope {
 
 	public static final String TYPE_ID = "audit"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "audit_abbr"; //$NON-NLS-1$

@@ -21,6 +21,7 @@ package sernet.verinice.iso27k.rcp.action;
 
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -37,6 +38,8 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  */
 public class HideEmptyFilter extends ViewerFilter {
 
+    private static final Logger LOG = Logger.getLogger(HideEmptyFilter.class);
+    
     private StructuredViewer viewer;
     private boolean hideEmpty;
 
@@ -54,14 +57,18 @@ public class HideEmptyFilter extends ViewerFilter {
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         boolean visible = true;
-        if (hideEmpty 
-            && element instanceof IISO27kGroup 
-            && element instanceof CnATreeElement
-            && !(element instanceof Audit)
-            && !(element instanceof Asset)) { 
-            CnATreeElement group = (CnATreeElement) element;
-            Set<CnATreeElement> children = group.getChildren();
-            visible = (children != null && children.size() > 0);
+        try {
+            if (hideEmpty 
+                && element instanceof IISO27kGroup 
+                && element instanceof CnATreeElement
+                && !(element instanceof Audit)
+                && !(element instanceof Asset)) { 
+                CnATreeElement group = (CnATreeElement) element;
+                Set<CnATreeElement> children = group.getChildren();
+                visible = (children != null && children.size() > 0);
+            }
+        } catch (Exception e) {
+            LOG.error("Error", e);
         }
         return visible;
     }

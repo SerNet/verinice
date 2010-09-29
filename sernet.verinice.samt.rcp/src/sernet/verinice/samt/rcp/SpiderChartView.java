@@ -25,14 +25,20 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
+import org.w3c.dom.ls.LSInput;
 
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot.ISelectionListener;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.IChartGenerator;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.IISO27KModelListener;
+import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.samt.service.FindSamtGroup;
 
@@ -41,7 +47,7 @@ import sernet.verinice.samt.service.FindSamtGroup;
  * 
  */
 @SuppressWarnings("restriction")
-public class SpiderChartView extends ChartView implements IAttachedToPerspective {
+public class SpiderChartView extends ChartView implements IAttachedToPerspective, IISO27KModelListener {
 
     private static final Logger LOG = Logger.getLogger(SpiderChartView.class);
 
@@ -49,8 +55,10 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
 
     private ICommandService commandService;
 
+    boolean listenerAdded = false;
+    
     public SpiderChartView() {
-        super();
+        super();     
     }
 
     /*
@@ -82,6 +90,10 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
      */
     @Override
     protected CnATreeElement getDefaultElement() {
+        if(!listenerAdded) {
+            CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(this);
+            listenerAdded = true;
+        }
         FindSamtGroup command = new FindSamtGroup();
         try {
             command = getCommandService().executeCommand(command);
@@ -94,6 +106,16 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
             throw new RuntimeException(message, e);
         }
         return command.getSelfAssessmentGroup();
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#dispose()
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(this);
+        listenerAdded = false;
     }
 
     /**
@@ -167,5 +189,103 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
      */
     public String getPerspectiveId() {
         return SamtPerspective.ID;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#childAdded(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
+     */
+    @Override
+    public void childAdded(CnATreeElement category, CnATreeElement child) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#childChanged(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
+     */
+    @Override
+    public void childChanged(CnATreeElement category, CnATreeElement child) {
+        drawChart();     
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#childRemoved(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
+     */
+    @Override
+    public void childRemoved(CnATreeElement category, CnATreeElement child) {
+        drawChart();
+        
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildAdded(sernet.verinice.model.common.CnATreeElement)
+     */
+    @Override
+    public void databaseChildAdded(CnATreeElement child) {
+        drawChart();
+        
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildChanged(sernet.verinice.model.common.CnATreeElement)
+     */
+    @Override
+    public void databaseChildChanged(CnATreeElement child) {
+        drawChart();   
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildRemoved(sernet.verinice.model.common.CnATreeElement)
+     */
+    @Override
+    public void databaseChildRemoved(CnATreeElement child) {
+        drawChart();
+        
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildRemoved(sernet.verinice.model.common.ChangeLogEntry)
+     */
+    @Override
+    public void databaseChildRemoved(ChangeLogEntry entry) {
+        drawChart();  
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#linkAdded(sernet.verinice.model.common.CnALink)
+     */
+    @Override
+    public void linkAdded(CnALink link) {
+
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#linkChanged(sernet.verinice.model.common.CnALink, sernet.verinice.model.common.CnALink, java.lang.Object)
+     */
+    @Override
+    public void linkChanged(CnALink old, CnALink link, Object source) {       
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#linkRemoved(sernet.verinice.model.common.CnALink)
+     */
+    @Override
+    public void linkRemoved(CnALink link) {   
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#modelRefresh(java.lang.Object)
+     */
+    @Override
+    public void modelRefresh(Object object) {
+        drawChart();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISO27KModelListener#modelReload(sernet.verinice.model.iso27k.ISO27KModel)
+     */
+    @Override
+    public void modelReload(ISO27KModel newModel) {
+        drawChart();
     }
 }
