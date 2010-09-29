@@ -29,6 +29,7 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
 
@@ -64,7 +65,7 @@ public class ISMViewLabelProvider extends LabelProvider  {
 //		    maturityService.getImplementationState(controlgroup);
 //		}
 		
-		else if (obj instanceof Group) {
+		else if (obj instanceof Group && !(obj instanceof ImportIsoGroup)) {
 			Group group = (Group) obj;
 			// TODO - getChildTypes()[0] might be a problem for more than one type
             image = ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0]);

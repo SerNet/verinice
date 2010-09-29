@@ -1089,14 +1089,14 @@
          point="org.eclipse.ui.decorators">
 	      <decorator
 	            adaptable="true"
-	            icon="icons/overlays/folder_decorator.png"
-	            id="sernet.gs.ui.rcp.main.groupdecorator"
+	            class="sernet.verinice.iso27k.rcp.GroupDecorator"
+	            id="sernet.verinice.iso27k.rcp.GroupDecorator"
 	            label="%decorator.label"
-	            lightweight="false"
+	            lightweight="true"
 	            location="BOTTOM_RIGHT"
 	            state="true">
 	         <enablement>
-	            <objectClass name="sernet.verinice.model.iso27k.IISO27kGroup"/>
+	         	<objectClass name="sernet.verinice.model.iso27k.IISO27kGroup"/>        
 	         </enablement>
 	      </decorator>
 	      <decorator
