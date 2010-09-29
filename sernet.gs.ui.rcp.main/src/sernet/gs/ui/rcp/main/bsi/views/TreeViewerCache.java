@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.model.common.CnATreeElement;
 
 
@@ -38,6 +40,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class TreeViewerCache {
 
+    private static final Logger LOG = Logger.getLogger(TreeViewerCache.class);
+    
 	private Map<Object, Object> cache;
 	
 	private static final Object PRESENT = new Object();
@@ -47,25 +51,41 @@ public class TreeViewerCache {
 	}
 	
 	public void addObject(Object o) {
-		this.cache.put(o, PRESENT);
-	}
+	    try {
+	        this.cache.put(o, PRESENT);
+	    } catch(Throwable t) {
+	        LOG.error("Error while adding object",t);
+	    }
+ 	}
 	
 	public void clear() {
 		this.cache = Collections.synchronizedMap(new WeakHashMap<Object, Object>());
 	}
 	
 	public <T> T getCachedObject(T o) {
-		synchronized(cache) {
-			for (Object elmt : cache.keySet()) {
-				if (elmt.equals(o))
-					return (T) elmt;
-			}
-			return null;
-		}
+	    try {
+    	    synchronized(cache) {
+    			for (Object elmt : cache.keySet()) {
+    			    if(elmt!=null) {
+        				if (elmt.equals(o)) {
+        					return (T) elmt;
+        				}
+    			    }
+    			}
+    			return null;
+    		}
+    	} catch(Throwable t) {
+            LOG.error("Error while getting object",t);
+            return null;
+        }
 	}
 
 	public void clear(Object oldElement) {
-		this.cache.remove(oldElement);
+	    try {
+	        this.cache.remove(oldElement);
+        } catch(Throwable t) {
+            LOG.error("Error while adding object",t);
+        }	
 	}
 
 	/**
@@ -73,16 +93,21 @@ public class TreeViewerCache {
 	 * @return
 	 */
 	public CnATreeElement getCachedObjectById(Integer id) {
-		synchronized(cache) {
-			for (Object elmt : cache.keySet()) {
-				if (elmt instanceof CnATreeElement) {
-					CnATreeElement cnaElmt = (CnATreeElement) elmt;
-					if (cnaElmt.getDbId().equals(id))
-						return cnaElmt;
-				}
-			}
-			return null;
-		}
+	    try {
+    		synchronized(cache) {
+    			for (Object elmt : cache.keySet()) {
+    				if (elmt instanceof CnATreeElement) {
+    					CnATreeElement cnaElmt = (CnATreeElement) elmt;
+    					if (cnaElmt.getDbId().equals(id))
+    						return cnaElmt;
+    				}
+    			}
+    			return null;
+    		}
+    	} catch(Throwable t) {
+            LOG.error("Error while getting object",t);
+            return null;
+        }
 	}
 
 	
