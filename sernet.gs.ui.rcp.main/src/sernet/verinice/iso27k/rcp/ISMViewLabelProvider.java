@@ -24,6 +24,7 @@ import org.hibernate.dialect.function.CastFunction;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.verinice.iso27k.service.ControlMaturityService;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
@@ -108,6 +109,7 @@ public class ISMViewLabelProvider extends LabelProvider  {
 					    sb.append(abbreviation).append(" ");
 					}
 				}
+				element = Retriever.checkRetrieveElement(element);
 				String title = element.getTitle();
                 if(title!=null && !title.isEmpty()) {
                     sb.append(title);

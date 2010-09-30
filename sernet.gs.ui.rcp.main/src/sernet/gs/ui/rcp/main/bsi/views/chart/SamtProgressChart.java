@@ -104,9 +104,8 @@ public class SamtProgressChart extends MaturitySpiderChart {
     protected Object createBarDataset() throws CommandException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         MassnahmenSummaryHome dao = new MassnahmenSummaryHome();
-
-        Map<String, Integer> items1 = dao.getSamtTopicsProgress(super.elmt);
-        Set<Entry<String, Integer>> entrySet = items1.entrySet();
+        Map<String, Integer> items = dao.getSamtTopicsProgress(super.elmt);
+        Set<Entry<String, Integer>> entrySet = items.entrySet();
         for (Entry<String, Integer> entry : entrySet) {
             dataset.addValue(entry.getValue(), entry.getKey(), "");
         }

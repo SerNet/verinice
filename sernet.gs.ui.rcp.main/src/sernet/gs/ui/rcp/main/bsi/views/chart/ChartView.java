@@ -371,7 +371,7 @@ public class ChartView extends ViewPart {
         }
     }
 
-	private void hookSelectionListeners() {
+	protected void hookSelectionListeners() {
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 		if (CnAElementFactory.getLoadedModel() != null)
 			CnAElementFactory.getLoadedModel().addBSIModelListener(
@@ -450,42 +450,27 @@ public class ChartView extends ViewPart {
         }
 
         public void linkAdded(CnALink link) {
-            // do nothing
         }
 
         public void databaseChildAdded(CnATreeElement child) {
-            // TODO Auto-generated method stub
-
         }
 
         public void databaseChildChanged(CnATreeElement child) {
-            // TODO Auto-generated method stub
-
         }
 
         public void databaseChildRemoved(CnATreeElement child) {
-            // TODO Auto-generated method stub
-
         }
 
         public void modelRefresh() {
-            // TODO Auto-generated method stub
-
         }
 
         public void modelReload(BSIModel newModel) {
-            // TODO Auto-generated method stub
-
         }
         
         public void modelReload(ISO27KModel newModel) {
-            // TODO Auto-generated method stub
-
         }
 
         public void databaseChildRemoved(ChangeLogEntry entry) {
-            // TODO Auto-generated method stub
-
         }
 	}
 

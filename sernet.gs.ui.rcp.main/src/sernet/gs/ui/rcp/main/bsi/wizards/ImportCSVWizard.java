@@ -54,7 +54,11 @@ public class ImportCSVWizard extends Wizard {
             ExceptionUtil.log(e, Messages.ImportCSVWizard_1);
         }
 
-		SyncCommand command = new SyncCommand(entityPage.getInsertState(),entityPage.getUpdateState(), entityPage.getDeleteState(), sr);
+		SyncCommand command = new SyncCommand(
+		        entityPage.getInsertState(),
+		        entityPage.getUpdateState(), 
+		        entityPage.getDeleteState(), 
+		        sr);
 		try {
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
 		} catch (CommandException e) {

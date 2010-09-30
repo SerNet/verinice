@@ -36,6 +36,8 @@ import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
 import sernet.gs.ui.rcp.main.sync.InvalidRequestException;
+import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -354,7 +356,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         if (null != elementInDB && setAttributes) {
             // for all <syncAttribute>-Elements below current
             // <syncObject>...
-
+            HUITypeFactory huiTypeFactory = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
             for (SyncAttribute sa : so.getSyncAttribute()) {
                 String attrExtId = sa.getName();
                 List<String> attrValues = sa.getValue();
@@ -367,7 +369,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
                     this.errorList.add(message);
                 } else {
                     String attrIntId = mat.getIntId();
-                    elementInDB.getEntity().importProperties(attrIntId, attrValues);
+                    elementInDB.getEntity().importProperties(huiTypeFactory,attrIntId, attrValues);
                     addElement(elementInDB);
                 }
 

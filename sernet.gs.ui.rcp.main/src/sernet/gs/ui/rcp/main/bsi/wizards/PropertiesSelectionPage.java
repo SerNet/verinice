@@ -125,18 +125,16 @@ public class PropertiesSelectionPage extends WizardPage {
 
         String[] cString = null;
         Collection<EntityType> allEntityTypes = HitroUtil.getInstance().getTypeFactory().getAllEntityTypes();
+        
         if (entityId != null) {
-            for (EntityType entityType : allEntityTypes) {
-                if (entityType.getId().equals(entityId)) {
-                    cString = new String[entityType.getElements().size()];
-                    Collection<IEntityElement> elements = entityType.getElements();
-                    int count = 0;
-                    for (IEntityElement element : elements) {
-                        cString[count] = element.getName();
-                        idCombos.add(element.getId());
-                        count++;
-                    }
-                }
+            EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entityId);         
+            cString = new String[entityType.getElements().size()];
+            Collection<IEntityElement> elements = entityType.getElements();
+            int count = 0;
+            for (IEntityElement element : elements) {
+                cString[count] = element.getName();
+                idCombos.add(element.getId());
+                count++;
             }
         }
 
@@ -279,7 +277,11 @@ public class PropertiesSelectionPage extends WizardPage {
 
     // get property and values of the csv
     private void readFile() throws IOException {
-        CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(new FileInputStream(csvDatei), getCharset())), getSeparator(), '"', false);
+        CSVReader reader = new CSVReader(
+                new BufferedReader(new InputStreamReader(new FileInputStream(csvDatei), getCharset())), 
+                getSeparator(), 
+                '"', 
+                false);
         // ignore first line
         firstLine = reader.readNext();
         this.inhaltDerTabelle.clear();

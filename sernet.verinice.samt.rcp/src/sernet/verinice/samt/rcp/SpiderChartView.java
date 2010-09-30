@@ -82,6 +82,18 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
     protected void createMenus() {
         // Toolbar and Viewmenu of SpiderChartView must be empty
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#hookSelectionListeners()
+     */
+    @Override
+    protected void hookSelectionListeners() {
+        super.hookSelectionListeners();
+        if(!listenerAdded) {
+            CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(this);
+            listenerAdded = true;
+        }
+    }
 
     /*
      * (non-Javadoc)
@@ -89,11 +101,7 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
      * @see sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#getDefaultElement()
      */
     @Override
-    protected CnATreeElement getDefaultElement() {
-        if(!listenerAdded) {
-            CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(this);
-            listenerAdded = true;
-        }
+    protected CnATreeElement getDefaultElement() {    
         FindSamtGroup command = new FindSamtGroup();
         try {
             command = getCommandService().executeCommand(command);
@@ -195,9 +203,7 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
      * @see sernet.verinice.model.iso27k.IISO27KModelListener#childAdded(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
      */
     @Override
-    public void childAdded(CnATreeElement category, CnATreeElement child) {
-        // TODO Auto-generated method stub
-        
+    public void childAdded(CnATreeElement category, CnATreeElement child) {       
     }
 
     /* (non-Javadoc)
@@ -212,18 +218,14 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
      * @see sernet.verinice.model.iso27k.IISO27KModelListener#childRemoved(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
      */
     @Override
-    public void childRemoved(CnATreeElement category, CnATreeElement child) {
-        drawChart();
-        
+    public void childRemoved(CnATreeElement category, CnATreeElement child) {      
     }
 
     /* (non-Javadoc)
      * @see sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildAdded(sernet.verinice.model.common.CnATreeElement)
      */
     @Override
-    public void databaseChildAdded(CnATreeElement child) {
-        drawChart();
-        
+    public void databaseChildAdded(CnATreeElement child) {  
     }
 
     /* (non-Javadoc)
@@ -238,9 +240,7 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
      * @see sernet.verinice.model.iso27k.IISO27KModelListener#databaseChildRemoved(sernet.verinice.model.common.CnATreeElement)
      */
     @Override
-    public void databaseChildRemoved(CnATreeElement child) {
-        drawChart();
-        
+    public void databaseChildRemoved(CnATreeElement child) { 
     }
 
     /* (non-Javadoc)
@@ -248,7 +248,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
      */
     @Override
     public void databaseChildRemoved(ChangeLogEntry entry) {
-        drawChart();  
     }
 
     /* (non-Javadoc)

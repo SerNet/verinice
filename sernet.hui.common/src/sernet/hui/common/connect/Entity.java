@@ -28,6 +28,7 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.common.multiselectionlist.ISelectOptionHandler;
@@ -52,6 +53,15 @@ import sernet.snutils.Tester;
  */
 public class Entity implements ISelectOptionHandler, ITypedElement, Serializable  {
 	
+    private transient Logger log = Logger.getLogger(Entity.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(Entity.class);
+        }
+        return log;
+    }
+    
 	// map of "propertyTypeId : List of Properties"
     private Map<String, PropertyList> typedPropertyLists 
     	= new HashMap<String, PropertyList>();
@@ -168,8 +178,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		if (propertyList == null || propertyList.getProperties().size() == 0)
 			return "";
 
-		PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, 
-				propertyType);
+		PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, propertyType);
 		StringBuffer result = new StringBuffer();
 		
 		List<IMLPropertyOption> referencedEntities = new ArrayList<IMLPropertyOption>();
@@ -238,12 +247,12 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	 * 
 	 * <p>Note: The actual values that are imported have to be <em>untranslated</em> IOW should directly
 	 * represent the strings used in the SNCA.xml</p>
-	 *  
-	 * @param propertyType
+	 * @param huiTypeFactory
+	 * @param propertyTypeId
 	 * @param foreignProperties
 	 */
-	public void importProperties(String propertyType, List<String> foreignProperties) {
-		PropertyList pl = getProperties(propertyType);
+	public void importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId, List<String> foreignProperties) {
+		PropertyList pl = getProperties(propertyTypeId);
 		
 		// It would be possible to create a new list and make the PropertyList object
 		// use that but that causes problems with hibernate. As such the existing list
@@ -256,10 +265,28 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		    properties.clear();
 		}
 		
+		
+		
 		for (String value : foreignProperties)
 		{
-			Property p = new Property();
-			p.setPropertyType(propertyType);
+		    PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType, propertyTypeId);
+		    Property p = new Property();
+		    if(propertyType.isSingleSelect()) {
+		        List<IMLPropertyOption> optionList = propertyType.getOptions();
+		        boolean found = false;
+		        for (IMLPropertyOption option : optionList) {
+		            if(value.equals(option.getName())) {
+		                value = option.getId();
+		                found = true;
+		            } else if(value.equals(option.getId())) {
+		                found = true;
+		            }
+                }
+		        if(!found) {
+		            getLog().warn("No value found for option property: " + propertyTypeId + " of entity: " + this.entityType + ". Importing unmapped value: " + value);
+		        }
+		    } 		
+			p.setPropertyType(propertyTypeId);
 			p.setPropertyValue(value);
 			p.setParent(this);
 			properties.add(p);
