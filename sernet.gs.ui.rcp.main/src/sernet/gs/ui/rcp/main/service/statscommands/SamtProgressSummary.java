@@ -27,26 +27,20 @@ import sernet.verinice.model.samt.SamtTopic;
  * 
  */
 public class SamtProgressSummary extends GenericCommand implements IAuthAwareCommand {
-    /**
-     * 
-     */
-    public static final String ANSWERED = "Answered";
-
-    /**
-     * 
-     */
-    public static final String UNANSWERED = "Unanswered";
-
-    // FIXME externalize strings
-    
+   
     private transient Logger log = Logger.getLogger(SamtProgressSummary.class);
-
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(SamtProgressSummary.class);
         }
         return log;
     }
+    
+    public static final String ANSWERED = "Answered";
+
+    public static final String UNANSWERED = "Unanswered";
+
+    // FIXME externalize strings
 
     private transient IAuthService authService;
 
@@ -89,7 +83,7 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
             } else if (e instanceof ControlGroup) {
                 loadSamtTopics((ControlGroup) e);
             } else {
-                log.warn("found unexpected child for control group: " + e);
+                getLog().warn("found unexpected child for control group: " + e);
             }
 
         }
