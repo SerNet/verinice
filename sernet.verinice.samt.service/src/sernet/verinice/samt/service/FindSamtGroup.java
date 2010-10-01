@@ -79,9 +79,9 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
     	this.hydrateParent = hydrateParent;
     }
 
-    public FindSamtGroup(boolean hydrateParent, Integer samtGroupDbId) {
+    public FindSamtGroup(boolean hydrateParent, Integer orgDbId) {
         this.hydrateParent = hydrateParent;
-        this.dbId = samtGroupDbId;
+        this.dbId = orgDbId;
     }
     
     
@@ -96,10 +96,7 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
         StringBuilder sbHql =  new StringBuilder();
         sbHql.append("select distinct controlGroup from ControlGroup as controlGroup");
         
-        // get just one element if specified:
-        if (dbId != null) {
-            sbHql.append(" where controlGroup.dbId = ?");
-        }
+       
         
         final String hql = sbHql.toString();
         if (getLog().isDebugEnabled()) {
@@ -107,11 +104,9 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
         }
         
         List<ControlGroup> controlGroupList;
-        if (dbId != null ) {
-            controlGroupList = dao.findByQuery(hql,new Object[] {dbId});
-        } else {
-            controlGroupList = dao.findByQuery(hql,null);
-        }
+       
+        controlGroupList = dao.findByQuery(hql,null);
+        
         
         
         if(controlGroupList==null) {
@@ -122,11 +117,25 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
             getLog().debug("number of controlGroups " + FindSamtGroup.nullSaveSize(controlGroupList));
         }
         
-        // check if parent if Audit and children are SamtTopics
+        // check if parent is Audit and children are SamtTopics
         List<ControlGroup> resultList = new ArrayList<ControlGroup>();
         for (ControlGroup controlGroup : controlGroupList) {
             if(isAudit(controlGroup.getParent()) && isSamtTopicCollection(controlGroup.getChildren())) {
                 resultList.add(controlGroup);
+            }
+        }
+        
+        if(resultList!=null && !resultList.isEmpty() && resultList.size()>1 && dbId != null) {
+            // find group in specified org:
+            for (ControlGroup controlGroup : resultList) {
+                if (controlGroup.getParent().getParent().getDbId().equals(dbId)) {
+                    selfAssessmentGroup =  controlGroup;
+                    hydrate(selfAssessmentGroup);
+                    if (getLog().isDebugEnabled()) {
+                        getLog().debug("result: " + selfAssessmentGroup);
+                    }
+                    return;
+                }
             }
         }
         

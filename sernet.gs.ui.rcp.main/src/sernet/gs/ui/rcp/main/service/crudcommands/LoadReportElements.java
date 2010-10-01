@@ -2,6 +2,8 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -9,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
@@ -87,6 +90,13 @@ public class LoadReportElements extends GenericCommand {
      * @return the elements
      */
     public List<CnATreeElement> getElements() {
+        Collections.sort(elements, new Comparator<CnATreeElement>() {
+            @Override
+            public int compare(CnATreeElement o1, CnATreeElement o2) {
+                NumericStringComparator comparator = new NumericStringComparator();
+                return comparator.compare(o1.getTitle(), o2.getTitle());
+            }
+        });
         return elements;
     }
 
