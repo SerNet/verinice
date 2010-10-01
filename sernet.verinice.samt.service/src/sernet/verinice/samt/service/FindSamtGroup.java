@@ -32,6 +32,7 @@ import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
@@ -121,10 +122,10 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
             getLog().debug("number of controlGroups " + FindSamtGroup.nullSaveSize(controlGroupList));
         }
         
-        // check if parent if Organization and children are SamtTopics
+        // check if parent if Audit and children are SamtTopics
         List<ControlGroup> resultList = new ArrayList<ControlGroup>();
         for (ControlGroup controlGroup : controlGroupList) {
-            if(isOrganization(controlGroup.getParent()) && isSamtTopicCollection(controlGroup.getChildren())) {
+            if(isAudit(controlGroup.getParent()) && isSamtTopicCollection(controlGroup.getChildren())) {
                 resultList.add(controlGroup);
             }
         }
@@ -144,8 +145,8 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
      * @param parent
      * @return
      */
-    private boolean isOrganization(CnATreeElement parent) {
-        return (parent!=null && Organization.TYPE_ID.equals(parent.getTypeId()));
+    private boolean isAudit(CnATreeElement parent) {
+        return (parent!=null && Audit.TYPE_ID.equals(parent.getTypeId()));
     }
     
     /**
