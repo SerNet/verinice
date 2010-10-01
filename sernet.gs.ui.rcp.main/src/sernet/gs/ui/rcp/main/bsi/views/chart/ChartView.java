@@ -335,8 +335,12 @@ public class ChartView extends ViewPart {
             }
 		};
 
-		changeListener = new ChangeListener();
+		changeListener = createChangeListener();
 	}
+
+    protected ChangeListener createChangeListener() {
+        return new ChangeListener();
+    }
 
 	private void hookPageSelection() {
 		selectionListener = new ISelectionListener() {
@@ -421,7 +425,7 @@ public class ChartView extends ViewPart {
         return null;
     }
 	
-	class ChangeListener implements IBSIModelListener,IISO27KModelListener {
+	protected class ChangeListener implements IBSIModelListener,IISO27KModelListener {
 	    public void childAdded(CnATreeElement category, CnATreeElement child) {
             // do nothing
         }
