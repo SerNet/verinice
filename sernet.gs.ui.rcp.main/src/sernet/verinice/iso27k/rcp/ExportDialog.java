@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.swing.LayoutStyle;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -163,7 +164,7 @@ public class ExportDialog extends TitleAreaDialog {
             radioOrganization.addSelectionListener(organizationListener);
             if (oldSelectedElement != null && oldSelectedElement.equals(organization)) {
                 radioOrganization.setSelection(true);
-                selectedElement = organization;
+                selectedElement = organization;              
             }
             if (organizationList.size() == 1) {
                 radioOrganization.setSelection(true);
@@ -181,7 +182,7 @@ public class ExportDialog extends TitleAreaDialog {
             radio.addSelectionListener(organizationListener);
             if (oldSelectedElement != null && oldSelectedElement.equals(verbund)) {
                 radio.setSelection(true);
-                selectedElement = verbund;
+                selectedElement = verbund;              
             }
             if (organizationList.size() == 1 && selectedElement==null) {
                 radio.setSelection(true);
@@ -249,7 +250,7 @@ public class ExportDialog extends TitleAreaDialog {
                 dialog.setText(Messages.SamtExportDialog_3);
                 if(txtLocation!=null && txtLocation.getText()!=null && !txtLocation.getText().isEmpty()) {                 
                     try {
-                        dialog.setFileName(new File(txtLocation.getText()).getName());
+                        dialog.setFileName(getFileNameFromPath(txtLocation.getText()));
                     } catch (Exception e1) {
                         LOG.warn("Can not set file name", e1);
                         dialog.setFileName("");
@@ -274,7 +275,10 @@ public class ExportDialog extends TitleAreaDialog {
                 }
             }
 
+            
+
         });
+        
         
         /*
          * ++++ Widgets to enable/disable encryption:
@@ -297,9 +301,21 @@ public class ExportDialog extends TitleAreaDialog {
             }
         });
         
+        if(selectedElement!=null) {
+            filePath = selectedElement.getTitle() + ".xml";
+            txtLocation.setText(filePath);
+        }
+        
         sourceIdComposite.pack();     
         composite.pack();     
         return composite;
+    }
+    
+    private String getFileNameFromPath(String path) {
+        if(path!=null && path.indexOf(File.separatorChar)!=-1) {
+            path = path.substring(path.lastIndexOf(File.separatorChar)+1);
+        }
+        return path;
     }
     
     /*

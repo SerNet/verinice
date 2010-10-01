@@ -55,16 +55,16 @@ public class HideEmptyFilter extends ViewerFilter {
      * .Viewer, java.lang.Object, java.lang.Object)
      */
     @Override
-    public boolean select(Viewer viewer, Object parentElement, Object element) {
+    public boolean select(Viewer viewer, Object parentElement, Object o) {
         boolean visible = true;
         try {
             if (hideEmpty 
-                && element instanceof IISO27kGroup 
-                && element instanceof CnATreeElement
-                && !(element instanceof Audit)
-                && !(element instanceof Asset)) { 
-                CnATreeElement group = (CnATreeElement) element;
-                Set<CnATreeElement> children = group.getChildren();
+                && o instanceof IISO27kGroup 
+                && o instanceof CnATreeElement
+                && !(o instanceof Audit)
+                && !(o instanceof Asset)) { 
+                CnATreeElement element = (CnATreeElement) o;
+                Set<CnATreeElement> children = element.getChildren();
                 visible = (children != null && children.size() > 0);
             }
         } catch (Exception e) {

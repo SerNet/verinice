@@ -151,13 +151,22 @@ public class ISMViewContentProvider implements ITreeContentProvider {
             try {
                 CnATreeElement el = Retriever.checkRetrieveChildren((CnATreeElement) parent);
                 Set<CnATreeElement> children = el.getChildren();
-                Set<CnATreeElement> filteredList;
+                if(children!=null) {
+                    hasChildren = !children.isEmpty();
+                }
+                // to be correct we have to check by tree filter if children are correctly displayed
+                // this is extremly inperformant
+                /*
+                Set<CnATreeElement> filteredList = children;
                 if (filterList.isEmpty()) {
                     filteredList = children;
                 } else {
                     filteredList = new HashSet<CnATreeElement>(children.size());
                     for (CnATreeElement cnATreeElement : children) {
-                        cnATreeElement = Retriever.checkRetrieveChildren((CnATreeElement) cnATreeElement);
+                        if(getCachedObject(cnATreeElement)!=null) {
+                            cnATreeElement = (CnATreeElement) getCachedObject(cnATreeElement);
+                        }
+                        //cnATreeElement = Retriever.checkRetrieveChildren((CnATreeElement) cnATreeElement);
                         for (ViewerFilter filter : filterList) {
                             if (filter.select(null, null, cnATreeElement)) {
                                 filteredList.add(cnATreeElement);
@@ -165,7 +174,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                         }
                     }
                 }
-                hasChildren = !filteredList.isEmpty();
+                */               
             } catch (Exception e) {
                 if (parent != null) {
                     log.error("Error in hasChildren, element type: " + parent.getClass().getSimpleName(), e);
