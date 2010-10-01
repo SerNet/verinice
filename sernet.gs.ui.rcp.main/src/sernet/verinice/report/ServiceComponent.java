@@ -1,4 +1,4 @@
-package sernet.verinice.samt.rcp;
+package sernet.verinice.report;
 
 import sernet.verinice.interfaces.report.IReportService;
 

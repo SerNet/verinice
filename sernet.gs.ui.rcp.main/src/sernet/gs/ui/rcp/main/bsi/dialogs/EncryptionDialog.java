@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author Sebastian Engel <sengel@tarent.de>
  * 
- * TODO extract text strings 
+ * FIXME externalize strings 
  *
  */
 public class EncryptionDialog extends TitleAreaDialog {

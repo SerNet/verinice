@@ -916,6 +916,22 @@
         </cheatsheet>
    </extension>
    <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="sernet.verinice.report.ActionSet"
+            label="Report Actions"
+            visible="true">
+         <action
+               class="sernet.verinice.report.rcp.GenerateReportAction"
+               icon="icons/report.png"
+               id="sernet.verinice.report.rcp.GenerateReportAction"
+               label="Generate report..."
+               menubarPath="file/vn_menu_file"
+               style="push">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
          point="org.eclipse.ui.intro">
       <intro
             class="org.eclipse.ui.intro.config.CustomizableIntroPart"

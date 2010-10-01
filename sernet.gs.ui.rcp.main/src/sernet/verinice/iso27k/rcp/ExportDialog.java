@@ -73,6 +73,8 @@ public class ExportDialog extends TitleAreaDialog {
     private String filePath;
     private String sourceId;
     
+    private Text txtLocation;
+    
     public ExportDialog(Shell activeShell) {
         this(activeShell, null);
     }
@@ -141,6 +143,10 @@ public class ExportDialog extends TitleAreaDialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 selectedElement = (CnATreeElement) ((Button) e.getSource()).getData();
+                if(txtLocation!=null) {
+                    filePath = selectedElement.getTitle() + ".xml";
+                    txtLocation.setText(filePath);
+                }
                 super.widgetSelected(e);
             }
         };
@@ -216,7 +222,7 @@ public class ExportDialog extends TitleAreaDialog {
 
         final Label labelLocation = new Label(sourceIdComposite, SWT.NONE);
         labelLocation.setText(Messages.SamtExportDialog_6);
-        final Text txtLocation = new Text(sourceIdComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+        txtLocation = new Text(sourceIdComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
         gd = new GridData(GridData.GRAB_HORIZONTAL);
         gd.grabExcessHorizontalSpace=true;
         gd.minimumWidth = 302;
@@ -241,6 +247,14 @@ public class ExportDialog extends TitleAreaDialog {
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
                 dialog.setText(Messages.SamtExportDialog_3);
+                if(txtLocation!=null && txtLocation.getText()!=null && !txtLocation.getText().isEmpty()) {                 
+                    try {
+                        dialog.setFileName(new File(txtLocation.getText()).getName());
+                    } catch (Exception e1) {
+                        LOG.warn("Can not set file name", e1);
+                        dialog.setFileName("");
+                    }
+                }             
                 dialog.setFilterExtensions(new String[] { 
                         "*"+ExportAction.EXTENSION_XML, //$NON-NLS-1$
                         "*"+ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$

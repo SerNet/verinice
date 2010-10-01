@@ -1,11 +1,15 @@
 package sernet.gs.ui.rcp.main;
 
 import sernet.verinice.interfaces.encryption.IEncryptionService;
+import sernet.verinice.interfaces.report.IReportService;
 
 public class ServiceComponent {
 
     private IEncryptionService encryptionService;
 
+    private IReportService reportService;
+
+    
     private static ServiceComponent INSTANCE;
     
     /**
@@ -34,5 +38,21 @@ public class ServiceComponent {
     {
     	if (this.encryptionService == encryptionService)
     		this.encryptionService = null;
+    }
+    
+    public IReportService getReportService()
+    {
+        return reportService;
+    }
+    
+    public void bindReportService(IReportService reportService)
+    {
+        this.reportService = reportService;
+    }
+    
+    public void unbindReportService(IReportService reportService)
+    {
+        if (this.reportService == reportService)
+            this.reportService = null;
     }
 }

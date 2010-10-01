@@ -38,6 +38,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.iso27k.service.commands.CreateIsoModel;
 import sernet.verinice.iso27k.service.commands.LoadModel;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -877,6 +878,7 @@ public class CnAElementFactory {
 			}
 		} catch(Exception e) {
 			log.error(Messages.getString("CnAElementFactory.1"), e); //$NON-NLS-1$
+			throw new RuntimeException(Messages.getString("CnAElementFactory.1"), e);
 		}
 		return model;
 	}
@@ -886,10 +888,9 @@ public class CnAElementFactory {
 	 */
 	private ISO27KModel createIsoModel() {
 		try {
-			isoModel=new ISO27KModel();
-			SaveElement<ISO27KModel> saveCommand = new SaveElement<ISO27KModel>(isoModel);
-			saveCommand = getCommandService().executeCommand(saveCommand);
-			isoModel = saveCommand.getElement();
+		    CreateIsoModel command = new CreateIsoModel();
+		    command = getCommandService().executeCommand(command);
+			ISO27KModel isoModel = command.getElement();
 			if (log.isInfoEnabled()) {
 				log.info("ISO27KModel created"); //$NON-NLS-1$
 			}

@@ -56,9 +56,7 @@ public class XMLImportDialog extends Dialog {
     // FIXME externalize strings and translate those already in message.properties)
     
     // FIXME dm naturalize action should send list of elements to server and work on them there!
-    
-    // FIXME dm save xml dialog: insert field for sourceID, preset filename with scope name, append .xml when not present to file name
-    
+
     // FIXME dm add option on export to set extID to exported ID and sourceId to generated one, option "Prepare for re-import (check out)"
 
     // FIXME dm reload still doesnt update everything, i.e. after naturalization: only after a couple of times the decorator goes away for all elements, 

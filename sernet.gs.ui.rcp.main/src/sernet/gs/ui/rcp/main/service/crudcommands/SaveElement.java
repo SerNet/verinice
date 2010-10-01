@@ -41,16 +41,19 @@ import sernet.verinice.model.common.CnATreeElement;
 public class SaveElement<T extends ITypedElement> extends GenericCommand implements IChangeLoggingCommand {
 
 	protected T element;
-	private String stationId;
+	protected String stationId;
 
+	protected SaveElement() {
+	 
+	}
+	
 	public SaveElement(T element) {
 		this.element = element;
 		this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
 	public void execute() {
-		IBaseDao<T, Serializable> dao 
-			= (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getTypeId());
+		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getTypeId());
 		//dao.saveOrUpdate(element);
 		element = dao.merge(element);
 	}

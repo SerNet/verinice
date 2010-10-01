@@ -226,7 +226,6 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
         T result = null;
         if (resultList != null) {
             if (resultList.size() > 1) {
-                // TODO: dm - exception handling
                 final String message = "More than one entry found, criteria is: " + criteria.toString();
                 log.error(message);
                 throw new RuntimeException(message);

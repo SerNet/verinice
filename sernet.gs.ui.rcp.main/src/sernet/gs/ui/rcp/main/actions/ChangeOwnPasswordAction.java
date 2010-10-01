@@ -57,7 +57,7 @@ public class ChangeOwnPasswordAction extends Action  {
     public static final String ID = "sernet.gs.ui.rcp.main.actions.changeownpasswordaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
 
-    // TODO externalize strings
+    // FIXME externalize strings
     
     public ChangeOwnPasswordAction(IWorkbenchWindow window, String label) {
         this.window = window;

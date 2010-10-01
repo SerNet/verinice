@@ -97,7 +97,7 @@ public class CreateNewSelfAssessmentService {
     }
     /**
      * @throws CommandException
-     * @param addSelfAssessment TODO
+     * @param addSelfAssessment
      * @throws IOException
      */
     public void createSelfAssessment() throws CommandException, IOException {

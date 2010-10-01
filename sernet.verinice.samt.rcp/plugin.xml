@@ -271,7 +271,7 @@
                icon="icons/new.png"
                id="sernet.verinice.samt.rcp.AddSelfAssessmentMenuAction"
                label="%action.label.3"
-               menubarPath="file/vn_menu_file"
+               menubarPath="file/sernet.verinice.samt.rcp.menu1/slot1"
                style="push">
          </action>
          <menu
@@ -283,14 +283,6 @@
                   name="slot1">
             </groupMarker>
          </menu>
-         <action
-               class="sernet.verinice.samt.rcp.GenerateReportAction"
-               icon="icons/report.png"
-               id="sernet.verinice.samt.rcp.generatereport"
-               label="%action.label.4"
-               menubarPath="file/sernet.verinice.samt.rcp.menu1/slot1"
-               style="push">
-         </action>
          <action
                class="sernet.verinice.iso27k.rcp.action.ExportAction"
                icon="icons/export.gif"

@@ -343,9 +343,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(new Separator(VeriniceActionConstants.MENU_FILE));
         fileMenu.add(new Separator());
         fileMenu.add(importGstoolAction);
+        fileMenu.add(importGSNotesAction);
         fileMenu.add(new Separator());
         fileMenu.add(importCSVAction);
-		fileMenu.add(importGSNotesAction);
 
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);
