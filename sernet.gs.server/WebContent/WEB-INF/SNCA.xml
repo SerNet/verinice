@@ -2869,22 +2869,64 @@ the value between <param></param> will be used directly if no string is found fo
             id="org_name" 
             focus="true"
             tags="risk,isa" />
+        
+        <huiproperty
+	       name="Company Group" id="org_isa_compgroup" 
+           tags="isa" />
+        <huiproperty
+	       name="Location" id="org_isa_loc" 
+           tags="isa" />
+        <huiproperty
+	       name="Address" id="org_isa_addr"
+           inputtype="text" 
+           tags="isa" />
+        <huiproperty
+	       name="Website" id="org_isa_web" 
+           tags="isa" />
+        <huiproperty
+	       name="Short company description" id="org_isa_compdesc"
+           inputtype="text" 
+           tags="isa" />
+        <huiproperty
+	       name="D_B D-U-N-S Nr." id="org_isa_duns" 
+           tags="isa" />
+        <huiproperty
+	       name="Contact" id="org_isa_cont" 
+           tags="isa" />
+        <huiproperty
+	       name="Contact Phone" id="org_isa_contphone" 
+           tags="isa" />
+        <huiproperty
+	       name="Contact email" id="org_isa_contmail" 
+           tags="isa" />
+        <huiproperty
+	       name="Creator" id="org_isa_creat" 
+           tags="isa" />
+        <huiproperty
+	       name="Creator Phone" id="org_isa_creatphone" 
+           tags="isa" />
+        <huiproperty
+	       name="Creator Email" id="org_isa_creatmail" 
+           tags="isa" />
+           
+        
         <huiproperty
             name="Abbreviation"
             id="org_abbr"
-            tags="risk,isa" />
+            tags="risk" />
         <huiproperty
             id="org_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space" 
-            tags="isa"/>
+            />
         <huiproperty
 			name="Scope Summary" id="org_description" inputtype="text" 
-            tags="isa"
+            tags="risk,isa"
              />
          <huiproperty 
             id="org_created"
             inputtype="date"
+            tags="risk,isa"
             >
             <defaultRule class="Today" />
         </huiproperty>
@@ -3122,6 +3164,9 @@ the value between <param></param> will be used directly if no string is found fo
                         id="asset_value_availability_sehrhoch3"
                         name="4 Exceptional" value="4" />
 				</huiproperty>
+                
+                <huiproperty
+	               name="Replacement Cost" id="asset_replacementcost" tags="finance" />
 				
 				<huiproperty
 					name="Explanation"
@@ -3131,7 +3176,7 @@ the value between <param></param> will be used directly if no string is found fo
 		</huipropertygroup>
 		
 	
-		<huipropertygroup name="Risk Management" id="asset_riskgroup" tags="risk">
+		<huipropertygroup name="Calculated Total Risk" id="asset_riskgroup" tags="risk">
 			<huiproperty
              tags="risk"
 				name="Confidentiality risk value" id="asset_riskvalue_c" editable="false"/>
@@ -3161,7 +3206,9 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty
              tags="risk"
                 name="Availability risk with planned controls" id="asset_riskwplancontrolvalue_a" editable="false"/>
+		</huipropertygroup>
             
+		<huipropertygroup name="Risk Treatment" id="asset_risktreatgroup" tags="risk">
 			<huiproperty
              tags="risk" 
 				name="Risk Treatment" id="asset_risktreat" inputtype="singleoption">
@@ -3169,7 +3216,6 @@ the value between <param></param> will be used directly if no string is found fo
 				<option name="Retention" id="asset_risktreat_retent" />       	
 				<option name="Avoidance" id="asset_risktreat_avoid" />       	
 				<option name="Transfer" id="asset_risktreat_transf" />       	
-				<option name="Acceptance" id="asset_risktreat_accept" />       	
 			</huiproperty>
 			<huiproperty
              tags="risk"

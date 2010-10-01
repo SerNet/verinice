@@ -4,6 +4,24 @@
     <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
     <text-property name="title">verinice - all items generic report</text-property>
     <property name="units">in</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">sncaUrl</property>
+            <property name="id">44</property>
+        </structure>
+        <structure>
+            <property name="name">serverURI</property>
+            <property name="id">44</property>
+        </structure>
+        <structure>
+            <property name="name">OdaConnProfileName</property>
+            <property name="id">44</property>
+        </structure>
+        <structure>
+            <property name="name">OdaConnProfileStorePath</property>
+            <property name="id">44</property>
+        </structure>
+    </list-property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -378,169 +396,6 @@ columns(new String[] { "scopeName" });</value>
                 </list-property>
             </structure>
             <property name="dataSource">verinice</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">asset_abbr</property>
-                    <property name="nativeName">asset_abbr</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">asset_name</property>
-                    <property name="nativeName">asset_name</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">asset_type</property>
-                    <property name="nativeName">asset_type</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">asset_tag</property>
-                    <property name="nativeName">asset_tag</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">asset_description</property>
-                    <property name="nativeName">asset_description</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">asset_value_method_confidentiality</property>
-                    <property name="nativeName">asset_value_method_confidentiality</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">asset_value_method_integrity</property>
-                    <property name="nativeName">asset_value_method_integrity</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">asset_value_method_availability</property>
-                    <property name="nativeName">asset_value_method_availability</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
-                    <property name="name">asset_value_confidentiality</property>
-                    <property name="nativeName">asset_value_confidentiality</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">asset_value_integrity</property>
-                    <property name="nativeName">asset_value_integrity</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">asset_value_availability</property>
-                    <property name="nativeName">asset_value_availability</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">asset_value_comment</property>
-                    <property name="nativeName">asset_value_comment</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">asset_riskvalue_c</property>
-                    <property name="nativeName">asset_riskvalue_c</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">asset_riskwcontrolvalue_c</property>
-                    <property name="nativeName">asset_riskwcontrolvalue_c</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">asset_riskwplancontrolvalue_c</property>
-                    <property name="nativeName">asset_riskwplancontrolvalue_c</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">asset_riskvalue_i</property>
-                    <property name="nativeName">asset_riskvalue_i</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">asset_riskwcontrolvalue_i</property>
-                    <property name="nativeName">asset_riskwcontrolvalue_i</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">18</property>
-                    <property name="name">asset_riskwplancontrolvalue_i</property>
-                    <property name="nativeName">asset_riskwplancontrolvalue_i</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">19</property>
-                    <property name="name">asset_riskvalue_a</property>
-                    <property name="nativeName">asset_riskvalue_a</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">20</property>
-                    <property name="name">asset_riskwcontrolvalue_a</property>
-                    <property name="nativeName">asset_riskwcontrolvalue_a</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">21</property>
-                    <property name="name">asset_riskwplancontrolvalue_a</property>
-                    <property name="nativeName">asset_riskwplancontrolvalue_a</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">22</property>
-                    <property name="name">asset_risktreat</property>
-                    <property name="nativeName">asset_risktreat</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">23</property>
-                    <property name="name">asset_risktreatexpl</property>
-                    <property name="nativeName">asset_risktreatexpl</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-            </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 

@@ -64,6 +64,8 @@ public class GenerateReportDialog extends Dialog {
     private ArrayList<CnATreeElement> scopes;
 
     private ArrayList<String> scopeTitles;
+
+    private boolean samtOnly = false;
     
     // estimated size of dialog for placement (doesnt have to be exact):
     private static final int SIZE_X = 500;
@@ -86,10 +88,11 @@ public class GenerateReportDialog extends Dialog {
 
 	protected GenerateReportDialog(Shell parentShell) {
 		super(parentShell);
+		this.samtOnly = samtOnly;
 		setShellStyle(SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
 
-		reportTypes = ServiceComponent.getDefault().getReportService()
-				.getReportTypes();
+	    reportTypes = ServiceComponent.getDefault().getReportService()
+		    .getReportTypes();
 	}
 	
 	/* (non-Javadoc)
