@@ -55,18 +55,13 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
      */
     @Override
     public void determineProbability(IncidentScenario scenario) {
-        // only if automatic mode is activated:
+        // get values from linked threat & vuln, only if automatic mode is activated:
         if (scenario.getNumericProperty(PROP_SCENARIO_METHOD) == 1) {
             // only calculate if threat AND vulnerability is linked to scenario:
             Map<CnATreeElement, CnALink> threats = CnALink.getLinkedElements(scenario, Threat.TYPE_ID);
             Map<CnATreeElement, CnALink> vulns = CnALink.getLinkedElements(scenario, Vulnerability.TYPE_ID);
             
             if (threats.size()>0 && vulns.size()>0) {
-                // init value:
-                scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY, 0);
-                // calculate threat + vulnerability, use max combination if more than
-                // one pair:
-                
                 int threatImpact = 0;
                 for (CnATreeElement threat : threats.keySet()) {
                     //use higher value of likelihood or impact:
@@ -83,9 +78,18 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                     if (level > exploitability)
                         exploitability = level;
                 }
-                scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY, threatImpact + exploitability);
+                
+                // set values to highest found:
+                scenario.setNumericProperty(PROP_SCENARIO_THREAT_PROBABILITY, threatImpact);
+                scenario.setNumericProperty(PROP_SCENARIO_VULN_PROBABILITY, exploitability);
             }
         }
+
+        // calculate probability:
+        scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY, 0);
+        int myThreat = scenario.getNumericProperty(PROP_SCENARIO_THREAT_PROBABILITY);
+        int myVuln = scenario.getNumericProperty(PROP_SCENARIO_VULN_PROBABILITY);
+        scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY, myThreat + myVuln);
         
         // now determine probability after all applied controls:
         Map<CnATreeElement, CnALink> elmts = CnALink.getLinkedElements(scenario, Control.TYPE_ID);
@@ -121,6 +125,11 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
         Map<CnATreeElement, CnALink> linksForAssets = CnALink.getLinkedElements(scenario, Asset.TYPE_ID);
         for (CnATreeElement asset : linksForAssets.keySet()) {
             AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
+
+            // reset risk values for link:
+            linksForAssets.get(asset).setRiskConfidentiality(0);
+            linksForAssets.get(asset).setRiskIntegrity(0);
+            linksForAssets.get(asset).setRiskAvailability(0);
             
             if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_C)==1) {
                 // increase total asset risk by this combination's risk, saving this individual combination's risk in the link between the two objects:
@@ -134,8 +143,6 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                 
                 int reducedRiskPlanned = valueAdapter.getVertraulichkeit() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
                 asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_C, asset.getNumericProperty(PROP_ASSET_PLANCONTROLRISK_C) + reducedRiskPlanned);
-                
-               
             }
             
             if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_I)==1) {
@@ -150,7 +157,6 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                 
                 int reducedRiskPlanned = valueAdapter.getIntegritaet() + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
                 asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_I, asset.getNumericProperty(PROP_ASSET_PLANCONTROLRISK_I) + reducedRiskPlanned);
-                
             }
        
             if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_A)==1) {

@@ -34,7 +34,7 @@ public class Iso27kPerspective implements IPerspectiveFactory {
 		
 		layout.addView(CatalogView.ID,  IPageLayout.LEFT, 0.20f, editorArea);
 		
-		layout.addView(ISMView.ID,  IPageLayout.LEFT, 0.31f, editorArea);
+		layout.addView(ISMView.ID,  IPageLayout.LEFT, 0.35f, editorArea);
 		layout.addView(RelationView.ID,  IPageLayout.BOTTOM, 0.7f, ISMView.ID);
 		
 		IFolderLayout folder = layout.createFolder("information", IPageLayout.BOTTOM, 0.75f, editorArea);

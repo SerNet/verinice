@@ -4014,11 +4014,32 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Deduce from threat and vuln." id="incscen_likelihoodmethod" inputtype="booleanoption" defaultValue="1" >
 			</huiproperty>
             
+            <huiproperty 
+                name="Threat Likelihood" id="incscen_threat_likelihood"
+                inputtype="numericoption" min="0" max="5" defaultValue="2" 
+                tags="risk">
+                <option id="incscen_threat_likelihood_0" name="Rare" value="0"/>
+                <option id="incscen_threat_likelihood_1" name="Annually" value="1"/>
+                <option id="incscen_threat_likelihood_2" name="Monthly" value="2"/>
+                <option id="incscen_threat_likelihood_3" name="Weekly" value="3"/>
+                <option id="incscen_threat_likelihood_4" name="Daily" value="4"/>
+                <option id="incscen_threat_likelihood_5" name="Hourly" value="5"/>
+            </huiproperty>
+            
+            <huiproperty name="Vulnerability exploitation" id="incscen_vuln_level" inputtype="numericoption"
+                min="0" max="3" defaultValue="1" 
+                tags="risk">
+                <option id="incscen_vuln_level_0" name="0: Hardly possible" value="0"/>
+                <option id="incscen_vuln_level_1" name="1: Possible" value="1"/>
+                <option id="incscen_vuln_level_2" name="2: Easily possible" value="2"/>
+                <option id="incscen_vuln_level_3" name="3: Probable" value="3"/>
+            </huiproperty> 
+            
             <!-- Risk analysis, range has to match min to max sum possible from threat + vulnerability -->
 			<huiproperty
              tags="risk"
 				name="Probability of scenario occuring" id="incscen_likelihood" 
-					inputtype="numericoption" min="0" max="8" defaultValue="4" 
+					inputtype="numericoption" min="0" max="8" editable="false" 
                     tooltip="Probability as determined by possible combination of threat and vulnerability, the lowest being a rarely occuring threat (less than once a year) meeting a barely exploitable vulnerability. The highest combination is an hourly occuring threat meeting an easily exploitable vulnerability. Probability is scaled between those limits."
             >
                     <option id="incscen_likely_0" name="0: Less than 10%" value="0" />
@@ -4483,34 +4504,6 @@ the value between <param></param> will be used directly if no string is found fo
 					id="process_value_comment" />
 		</huipropertygroup>
 		
-	   <huipropertygroup name="Risk Management " id="process_riskgroup">
-            <huiproperty
-                name="Confidentiality risk value" id="process_riskvalue_c" editable="false"/>
-            <huiproperty
-                name="Confidentiality risk after controls" id="process_riskwcontrolvalue_c" editable="false"/>
-            <huiproperty
-                name="Integrity risk value" id="process_riskvalue_i" editable="false"/>
-            <huiproperty
-                name="Integrity risk after controls" id="process_riskwcontrolvalue_i" editable="false"/>                
-            <huiproperty
-                name="Availability risk value" id="process_riskvalue_a" editable="false"/>
-            <huiproperty
-                name="Availability risk after controls" id="process_riskwcontrolvalue_a" editable="false"/>
-            
-            <huiproperty 
-                name="Risk Treatment" id="process_risktreat" inputtype="singleoption">
-                <option name="Reduction" id="process_risktreat_reduct" />         
-                <option name="Retention" id="process_risktreat_retent" />         
-                <option name="Avoidance" id="process_risktreat_avoid" />          
-                <option name="Transfer" id="process_risktreat_transf" />          
-                <option name="Acceptance" id="process_risktreat_accept" />        
-            </huiproperty>
-            <huiproperty
-                name="Explanation" id="process_risktreatexpl" inputtype="text" />
-        </huipropertygroup>
-    
-		
-        
     </huientity>
     
     <huientity

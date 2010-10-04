@@ -29,6 +29,9 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 public interface IRiskAnalysisService {
     
     public static final String PROP_SCENARIO_METHOD = "incscen_likelihoodmethod";
+    public static final String PROP_SCENARIO_THREAT_PROBABILITY = "incscen_threat_likelihood";
+    public static final String PROP_SCENARIO_VULN_PROBABILITY = "incscen_vuln_level";
+    
     public static final String PROP_SCENARIO_PROBABILITY = "incscen_likelihood";
     public static final String PROP_SCENARIO_PROBABILITY_WITH_CONTROLS = "incscen_likelihood_wcontrol";
     public static final String PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS = "incscen_likelihood_wplancontrol";
