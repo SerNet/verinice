@@ -31,18 +31,16 @@ public class RiskByAssetReport implements IReportType {
 	
 	private static final Logger LOG = Logger.getLogger(RiskByAssetReport.class);
 
-	// FIXME externalize strings
-	
 	public String getDescription() {
-		return "Risk Assessment: Assets";
+		return Messages.RiskByAssetReport_0;
 	}
 
 	public String getId() {
-		return "riskbyasset";
+		return "riskbyasset"; //$NON-NLS-1$
 	}
 
 	public String getLabel() {
-		return "Risk Assessment: Assets";
+		return Messages.RiskByAssetReport_2;
 	}
 
 	public IOutputFormat[] getOutputFormats() {
@@ -52,7 +50,7 @@ public class RiskByAssetReport implements IReportType {
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
 		
-		URL reportDesign = RiskByAssetReport.class.getResource("riskbyasset.rptdesign");
+		URL reportDesign = RiskByAssetReport.class.getResource("riskbyasset.rptdesign"); //$NON-NLS-1$
 		
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
 		{

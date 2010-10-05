@@ -48,8 +48,8 @@ public class CreateScenario extends GenericCommand {
     private Integer threatdbId;
     private Integer vulndbId;
     private IncidentScenario incScen;
-    private static final String THREAT_RELATION_ID = "rel_incscen_threat";
-    private static final String VULN_RELATION_ID = "rel_incscen_vulnerability";
+    private static final String THREAT_RELATION_ID = "rel_incscen_threat"; //$NON-NLS-1$
+    private static final String VULN_RELATION_ID = "rel_incscen_vulnerability"; //$NON-NLS-1$
 
     /**
      * @param threat
@@ -87,20 +87,19 @@ public class CreateScenario extends GenericCommand {
             return;
         
         try {
-            // FIXME externalize strings
             
             CreateElement<IncidentScenario> cmd = new CreateElement<IncidentScenario>(group, IncidentScenario.class, true);
             cmd = getCommandService().executeCommand(cmd);
             IncidentScenario incidentScenario = cmd.getNewElement();
             
             StringBuilder sb = new StringBuilder();
-            sb.append("Scenario: ");
+            sb.append(Messages.CreateScenario_2);
             sb.append(threat.getTitle().substring(0, threat.getTitle().length()<21 ? threat.getTitle().length() : 20  ));
-            sb.append(threat.getTitle().length()<21 ? "" : "[...]");
-            sb.append(" - ");
+            sb.append(threat.getTitle().length()<21 ? "" : "[...]"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append(" - "); //$NON-NLS-1$
             
             sb.append(vulnerability.getTitle().substring(0, vulnerability.getTitle().length()<21 ? vulnerability.getTitle().length() : 20));
-            sb.append(vulnerability.getTitle().length()<21 ? "" : "[...]");
+            sb.append(vulnerability.getTitle().length()<21 ? "" : "[...]"); //$NON-NLS-1$ //$NON-NLS-2$
             
             incidentScenario.setTitel(sb.toString());
             

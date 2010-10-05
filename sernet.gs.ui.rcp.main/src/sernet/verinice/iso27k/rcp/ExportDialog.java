@@ -145,7 +145,7 @@ public class ExportDialog extends TitleAreaDialog {
             public void widgetSelected(SelectionEvent e) {
                 selectedElement = (CnATreeElement) ((Button) e.getSource()).getData();
                 if(txtLocation!=null) {
-                    filePath = selectedElement.getTitle() + ".xml";
+                    filePath = selectedElement.getTitle() + ".xml"; //$NON-NLS-1$
                     txtLocation.setText(filePath);
                 }
                 super.widgetSelected(e);
@@ -252,15 +252,14 @@ public class ExportDialog extends TitleAreaDialog {
                     try {
                         dialog.setFileName(getFileNameFromPath(txtLocation.getText()));
                     } catch (Exception e1) {
-                        LOG.warn("Can not set file name", e1);
-                        dialog.setFileName("");
+                        LOG.warn(Messages.ExportDialog_1, e1);
+                        dialog.setFileName(""); //$NON-NLS-1$
                     }
                 }             
                 dialog.setFilterExtensions(new String[] { 
                         "*"+ExportAction.EXTENSION_XML, //$NON-NLS-1$
                         "*"+ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
                         "*"+ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
-                // FIXME: externalize strings 
                 dialog.setFilterNames(new String[] { 
                         Messages.SamtExportDialog_15,
                         Messages.SamtExportDialog_16,
@@ -302,7 +301,7 @@ public class ExportDialog extends TitleAreaDialog {
         });
         
         if(selectedElement!=null) {
-            filePath = selectedElement.getTitle() + ".xml";
+            filePath = selectedElement.getTitle() + ".xml"; //$NON-NLS-1$
             txtLocation.setText(filePath);
         }
         

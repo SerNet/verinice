@@ -81,9 +81,8 @@ public class PasswordDialog extends Dialog {
     
     @Override
     protected void configureShell(Shell newShell) {
-        // FIXME externalize strings
         super.configureShell(newShell);
-        newShell.setText("Enter your new password");
+        newShell.setText(Messages.PasswordDialog_0);
         newShell.setSize(SIZE_X, SIZE_Y);
         
         // open the window right under the mouse pointer:
@@ -100,10 +99,9 @@ public class PasswordDialog extends Dialog {
         Composite container = (Composite) super.createDialogArea(parent);
         container.setLayout(new FormLayout());
         
-        // FIXME externalize strings
         
         Label label1 = new Label(container, SWT.NULL);
-        label1.setText("New password:");
+        label1.setText(Messages.PasswordDialog_1);
         FormData formData = new FormData();
         formData.top = new FormAttachment(0, 5);
         formData.left = new FormAttachment(0, 5);
@@ -118,7 +116,7 @@ public class PasswordDialog extends Dialog {
         text.setLayoutData(formData2);
 
         Label label2 = new Label(container, SWT.NULL);
-        label2.setText("Confirm password:");
+        label2.setText(Messages.PasswordDialog_2);
         FormData formDataLabel2 = new FormData();
         formDataLabel2.top = new FormAttachment(text, 5);
         formDataLabel2.left = new FormAttachment(0, 5);
@@ -165,7 +163,7 @@ public class PasswordDialog extends Dialog {
             super.okPressed();
         } 
         else {
-            MessageDialog.openWarning(this.getShell(), "Attention", "The entered passwords do not match.");
+            MessageDialog.openWarning(this.getShell(), Messages.PasswordDialog_3, Messages.PasswordDialog_4);
         }
     }
 

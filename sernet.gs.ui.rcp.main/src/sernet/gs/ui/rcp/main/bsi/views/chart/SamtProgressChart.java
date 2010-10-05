@@ -53,7 +53,6 @@ import sernet.verinice.model.iso27k.ControlGroup;
  */
 public class SamtProgressChart extends MaturitySpiderChart {
     
-    // FIXME externalize strings
     /*
      * (non-Javadoc)
      * 
@@ -69,7 +68,7 @@ public class SamtProgressChart extends MaturitySpiderChart {
         try {
             return createBarChart(createBarDataset());
         } catch (CommandException e) {
-            ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+            ExceptionUtil.log(e, Messages.SamtProgressChart_0);
             return null;
         }
     }
@@ -77,8 +76,8 @@ public class SamtProgressChart extends MaturitySpiderChart {
     protected JFreeChart createBarChart(Object dataset) {    
        JFreeChart chart = ChartFactory.createBarChart3D(
                 null, 
-                "Questions", 
-                "Progress",
+                Messages.SamtProgressChart_1, 
+                Messages.SamtProgressChart_2,
                 (CategoryDataset) dataset, 
                 PlotOrientation.HORIZONTAL, 
                 true,
@@ -107,7 +106,7 @@ public class SamtProgressChart extends MaturitySpiderChart {
         Map<String, Integer> items = dao.getSamtTopicsProgress(super.elmt);
         Set<Entry<String, Integer>> entrySet = items.entrySet();
         for (Entry<String, Integer> entry : entrySet) {
-            dataset.addValue(entry.getValue(), entry.getKey(), "");
+            dataset.addValue(entry.getValue(), entry.getKey(), ""); //$NON-NLS-1$
         }
         
         return dataset;

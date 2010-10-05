@@ -56,6 +56,34 @@ public class Messages extends NLS {
 
     public static String InputHelperFactory_5;
 
+    public static String LinkMaker_0;
+
+    public static String LinkMaker_1;
+
+    public static String LinkMaker_10;
+
+    public static String LinkMaker_11;
+
+    public static String LinkMaker_12;
+
+    public static String LinkMaker_13;
+
+    public static String LinkMaker_2;
+
+    public static String LinkMaker_3;
+
+    public static String LinkMaker_4;
+
+    public static String LinkMaker_5;
+
+    public static String LinkMaker_6;
+
+    public static String LinkMaker_7;
+
+    public static String LinkMaker_8;
+
+    public static String LinkMaker_9;
+
     public static String NoteEditor_0;
 
     public static String NoteEditor_1;

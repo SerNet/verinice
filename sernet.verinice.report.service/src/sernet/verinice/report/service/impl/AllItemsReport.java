@@ -31,18 +31,16 @@ public class AllItemsReport implements IReportType {
 	
 	private static final Logger LOG = Logger.getLogger(AllItemsReport.class);
 
-	// FIXME externalize strings
-	
 	public String getDescription() {
-		return "Strukturanalyse";
+		return Messages.AllItemsReport_0;
 	}
 
 	public String getId() {
-		return "strukturanalyse";
+		return "strukturanalyse"; //$NON-NLS-1$
 	}
 
 	public String getLabel() {
-		return "BSI: Strukturanalyse";
+		return Messages.AllItemsReport_2;
 	}
 
 	public IOutputFormat[] getOutputFormats() {
@@ -52,7 +50,7 @@ public class AllItemsReport implements IReportType {
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
 		
-		URL reportDesign = AllItemsReport.class.getResource("allitems.rptdesign");
+		URL reportDesign = AllItemsReport.class.getResource("allitems.rptdesign"); //$NON-NLS-1$
 		
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
 		{

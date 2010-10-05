@@ -35,7 +35,7 @@ public class UserReportType implements IReportType {
 	
 	private static final Logger LOG = Logger.getLogger(UserReportType.class);
 	
-	private String reportFile = "";
+	private String reportFile = ""; //$NON-NLS-1$
 
 	/**
      * @return the reportFile
@@ -51,18 +51,16 @@ public class UserReportType implements IReportType {
         this.reportFile = reportFile;
     }
     
-// FIXME externalize strings
-    
     public String getDescription() {
-		return "User supplied custom report.";
+		return Messages.UserReportType_1;
 	}
 
 	public String getId() {
-		return "user";
+		return "user"; //$NON-NLS-1$
 	}
 
 	public String getLabel() {
-		return "Report from file";
+		return Messages.UserReportType_3;
 	}
 
 	public IOutputFormat[] getOutputFormats() {
@@ -77,8 +75,8 @@ public class UserReportType implements IReportType {
         try {
             reportDesign = (new File(reportFile)).toURI().toURL();
         } catch (MalformedURLException e) {
-            LOG.error("Could not load user supplied report file.", e);
-            throw new RuntimeException("Could not load user report file.", e);
+            LOG.error("Could not load user supplied report file.", e); //$NON-NLS-1$
+            throw new RuntimeException("Could not load user report file.", e); //$NON-NLS-1$
         }
 		
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())

@@ -249,7 +249,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         register(importGstoolAction);
         
-        importCSVAction = new ImportCSVAction(window, "CSV - Import");
+        importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
         register(importCSVAction);
 
 		importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27);
@@ -274,8 +274,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         bausteinZuordnungAction = new BausteinZuordnungAction(window);
         register(bausteinZuordnungAction);
         
-        // FIXME externalize strings!
-        changeOwnPasswordAction = new ChangeOwnPasswordAction(window, "Change my login password");
+        changeOwnPasswordAction = new ChangeOwnPasswordAction(window, Messages.ApplicationActionBarAdvisor_31);
         
 
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);

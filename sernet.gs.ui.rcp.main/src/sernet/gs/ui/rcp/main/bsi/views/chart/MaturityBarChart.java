@@ -53,7 +53,6 @@ import sernet.verinice.model.iso27k.ControlGroup;
  */
 public class MaturityBarChart extends MaturitySpiderChart {
     
-    // FIXME externalize strings
     /*
      * (non-Javadoc)
      * 
@@ -69,7 +68,7 @@ public class MaturityBarChart extends MaturitySpiderChart {
         try {
             return createBarChart(createBarDataset());
         } catch (CommandException e) {
-            ExceptionUtil.log(e, "Fehler beim Datenzugriff.");
+            ExceptionUtil.log(e, Messages.MaturityBarChart_0);
             return null;
         }
 
@@ -77,7 +76,7 @@ public class MaturityBarChart extends MaturitySpiderChart {
     
     protected JFreeChart createBarChart(Object dataset) {
         JFreeChart chart = ChartFactory.createBarChart3D(null, 
-                "Controls", "Reifegrad",
+                Messages.MaturityBarChart_1, Messages.MaturityBarChart_2,
                 (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false,
                 true, false);
         chart.setBackgroundPaint(Color.white);
@@ -132,7 +131,7 @@ public class MaturityBarChart extends MaturitySpiderChart {
         Map<String, Double> items1 = dao.getControlGroups(elmt);
         Set<Entry<String, Double>> entrySet = items1.entrySet();
         for (Entry<String, Double> entry : entrySet) {
-            dataset.addValue(entry.getValue(), "Resultat", entry.getKey());
+            dataset.addValue(entry.getValue(), Messages.MaturityBarChart_3, entry.getKey());
         }
         
       

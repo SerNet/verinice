@@ -74,9 +74,8 @@ public class GenerateReportDialog extends Dialog {
     
     @Override
     protected void configureShell(Shell newShell) {
-        // FIXME externalize strings
         super.configureShell(newShell);
-        newShell.setText("Generate report");
+        newShell.setText(Messages.GenerateReportDialog_0);
         
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
@@ -106,13 +105,12 @@ public class GenerateReportDialog extends Dialog {
 		GridLayout layout = new GridLayout(3, false);
 		container.setLayout(layout);
 		
-		// FIXME externalize strings
 
 		Label labelReportType = new Label(container, SWT.NONE);
 		GridData gridLabelReportType = new GridData();
 		gridLabelReportType.horizontalAlignment = SWT.LEFT;
 		gridLabelReportType.verticalAlignment = SWT.CENTER;
-		labelReportType.setText("Choose Report:");
+		labelReportType.setText(Messages.GenerateReportDialog_1);
 		labelReportType.setLayoutData(gridLabelReportType);
 
 		comboReportType = new Combo(container, SWT.READ_ONLY);
@@ -138,7 +136,7 @@ public class GenerateReportDialog extends Dialog {
         GridData gridLabelReportFile = new GridData();
         gridLabelReportFile.horizontalAlignment = SWT.LEFT;
         //gridLabelReportFile.verticalAlignment = SWT.CENTER;
-        labelReportFile.setText("Report File:");
+        labelReportFile.setText(Messages.GenerateReportDialog_2);
         labelReportFile.setLayoutData(gridLabelReportFile);
         
         textReportFile = new Text(container, SWT.BORDER);
@@ -149,12 +147,12 @@ public class GenerateReportDialog extends Dialog {
         textReportFile.setLayoutData(gridTextFile2);
         
         openReportButton = new Button(container, SWT.PUSH);
-            openReportButton.setText("Browse...");
+            openReportButton.setText(Messages.GenerateReportDialog_3);
             openReportButton.addSelectionListener(new SelectionAdapter() {
               public void widgetSelected(SelectionEvent event) {
                 FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
                 //dlg.setFilterNames(FILTER_NAMES);
-                dlg.setFilterExtensions(new String[] { "*.rptdesign", "*.rpt", "*.xml", "*.*" });
+                dlg.setFilterExtensions(new String[] { "*.rptdesign", "*.rpt", "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                 String fn = dlg.open();
                 if (fn != null) {
                   textReportFile.setText(fn);
@@ -165,7 +163,7 @@ public class GenerateReportDialog extends Dialog {
         Label label2 = new Label(container, SWT.NULL);
         GridData gridData7 = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
         label2.setLayoutData(gridData7);
-        label2.setText("Top level element:");
+        label2.setText(Messages.GenerateReportDialog_8);
 
         scopeCombo = new Combo(container, SWT.READ_ONLY);
         GridData gridDatascopeCombo = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
@@ -188,7 +186,7 @@ public class GenerateReportDialog extends Dialog {
 		GridData gridLabelOutputFormat = new GridData();
 		gridLabelOutputFormat.horizontalAlignment = SWT.LEFT;
 		gridLabelOutputFormat.verticalAlignment = SWT.CENTER;
-		labelOutputFormat.setText("Output Format");
+		labelOutputFormat.setText(Messages.GenerateReportDialog_9);
 		labelOutputFormat.setLayoutData(gridLabelOutputFormat);
 
 		comboOutputFormat = new Combo(container, SWT.READ_ONLY);
@@ -203,7 +201,7 @@ public class GenerateReportDialog extends Dialog {
 		GridData gridLabelFile = new GridData();
 		gridLabelFile.horizontalAlignment = SWT.LEFT;
 		gridLabelFile.verticalAlignment = SWT.CENTER;
-		labelFile.setText("Output File");
+		labelFile.setText(Messages.GenerateReportDialog_10);
 		labelFile.setLayoutData(gridLabelFile);
 
 		textFile = new Text(container, SWT.BORDER);
@@ -220,12 +218,12 @@ public class GenerateReportDialog extends Dialog {
 //	        }
 		
 		openButton = new Button(container, SWT.PUSH);
-		    openButton.setText("Browse...");
+		    openButton.setText(Messages.GenerateReportDialog_11);
 		    openButton.addSelectionListener(new SelectionAdapter() {
 		      public void widgetSelected(SelectionEvent event) {
 		        FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
 		        //dlg.setFilterNames(FILTER_NAMES);
-		        dlg.setFilterExtensions(new String[] { "*.pdf", "*.html", "*.xls", "*.*" });
+		        dlg.setFilterExtensions(new String[] { "*.pdf", "*.html", "*.xls", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		        String fn = dlg.open();
 		        if (fn != null) {
 		          textFile.setText(fn);
@@ -252,7 +250,7 @@ public class GenerateReportDialog extends Dialog {
         for (CnATreeElement elmt : scopes) {
             scopeTitles.add(elmt.getTitle());
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Loaded top level element with ID " + elmt.getDbId() + ": " + elmt.getTitle());
+                LOG.debug(Messages.GenerateReportDialog_16 + elmt.getDbId() + ": " + elmt.getTitle()); //$NON-NLS-2$
             }
         }
         
@@ -292,7 +290,7 @@ public class GenerateReportDialog extends Dialog {
 		// This just appends the chosen report's extension if the existing
 		// suffix does not match. Could be enhanced.
 		if (!f.endsWith(chosenOutputFormat.getFileSuffix())) {
-			f += "." + chosenOutputFormat.getFileSuffix();
+			f += "." + chosenOutputFormat.getFileSuffix(); //$NON-NLS-1$
 		}
 
 		outputFile = new File(f);
@@ -328,7 +326,7 @@ public class GenerateReportDialog extends Dialog {
             compoundLoader = ServiceFactory.lookupCommandService()
                     .executeCommand(compoundLoader);
         } catch (Exception e) {
-            ExceptionUtil.log(e, "Error loading scopes.");
+            ExceptionUtil.log(e, Messages.GenerateReportDialog_19);
         }
         
         return compoundLoader
@@ -348,7 +346,7 @@ public class GenerateReportDialog extends Dialog {
             compoundLoader = ServiceFactory.lookupCommandService()
                     .executeCommand(compoundLoader);
         } catch (Exception e) {
-            ExceptionUtil.log(e, "Error loading IT-networks.");
+            ExceptionUtil.log(e, Messages.GenerateReportDialog_20);
         }
         
         return compoundLoader

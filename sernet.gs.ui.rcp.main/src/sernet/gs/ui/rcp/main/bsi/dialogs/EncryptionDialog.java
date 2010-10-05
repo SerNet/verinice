@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author Sebastian Engel <sengel@tarent.de>
  * 
- * FIXME externalize strings 
  *
  */
 public class EncryptionDialog extends TitleAreaDialog {
@@ -50,13 +49,13 @@ public class EncryptionDialog extends TitleAreaDialog {
 	/**
 	 * The default title of this dialog.
 	 */
-	private static final String DEFAULT_DIALOG_TITLE = "Encryption";
+	private static final String DEFAULT_DIALOG_TITLE = Messages.EncryptionDialog_0;
 	
 	/**
 	 * The default message displayed in the head of this dialog.
 	 */
 	private static final String DEFAULT_DIALOG_MESSAGE = 
-		"Please enter a password or select a x.509 public certificate file used for encryption.";
+		Messages.EncryptionDialog_1;
 	
 	/**
 	 * Indicates which encryption method is used.
@@ -66,7 +65,7 @@ public class EncryptionDialog extends TitleAreaDialog {
 	/**
 	 * The password entered by the user
 	 */
-	private char[] enteredPassword = "".toCharArray();
+	private char[] enteredPassword = "".toCharArray(); //$NON-NLS-1$
 	
 	/**
 	 * The X.509 public certificate file selected by the user
@@ -99,7 +98,7 @@ public class EncryptionDialog extends TitleAreaDialog {
 
 		final Button passwordEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
 		passwordEncryptionRadio.setSelection(true);
-		passwordEncryptionRadio.setText("Encrypt with password:");
+		passwordEncryptionRadio.setText(Messages.EncryptionDialog_3);
 		passwordEncryptionRadio.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -117,7 +116,7 @@ public class EncryptionDialog extends TitleAreaDialog {
 		
 		// ==== Certificate Based Encryption controls
 		final Button certificateEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
-		certificateEncryptionRadio.setText("Encrypt with certificate:");
+		certificateEncryptionRadio.setText(Messages.EncryptionDialog_4);
 		certificateEncryptionRadio.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -139,19 +138,19 @@ public class EncryptionDialog extends TitleAreaDialog {
 		});
 		
 		Button browseX509CertificateButton = new Button(encryptionChoicePanel, SWT.NONE);
-		browseX509CertificateButton.setText("Browse X.509 certificate");
+		browseX509CertificateButton.setText(Messages.EncryptionDialog_5);
 		browseX509CertificateButton.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
-				dialog.setFilterExtensions(new String[]{ "*.pem",});
+				dialog.setFilterExtensions(new String[]{ "*.pem",}); //$NON-NLS-1$
 				String certificatePath = dialog.open();
 				if(certificatePath != null) {
 					selectedX509CertificateFile = new File(certificatePath);
 					certificatePathField.setText(certificatePath);
 				} else {
-					certificatePathField.setText("");
+					certificatePathField.setText(""); //$NON-NLS-1$
 				}
 				
 				passwordEncryptionRadio.setSelection(false);
@@ -174,7 +173,7 @@ public class EncryptionDialog extends TitleAreaDialog {
                 if(passwordField.getText()!=null) {
                     enteredPassword=passwordField.getText().toCharArray(); 
                 } else {
-                    enteredPassword="".toCharArray();
+                    enteredPassword="".toCharArray(); //$NON-NLS-1$
                 }
             }
         });

@@ -32,15 +32,15 @@ public class SamtReportType implements IReportType {
 	private static final Logger LOG = Logger.getLogger(SamtReportType.class);
 
 	public String getDescription() {
-		return "An Information Security Assessment report.";
+		return Messages.SamtReportType_0;
 	}
 
 	public String getId() {
-		return "samt";
+		return "samt"; //$NON-NLS-1$
 	}
 
 	public String getLabel() {
-		return "Information Security Assessment report";
+		return Messages.SamtReportType_2;
 	}
 
 	public IOutputFormat[] getOutputFormats() {
@@ -50,7 +50,7 @@ public class SamtReportType implements IReportType {
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
 		
-		URL reportDesign = SamtReportType.class.getResource("samt-report.rptdesign");
+		URL reportDesign = SamtReportType.class.getResource("samt-report.rptdesign"); //$NON-NLS-1$
 		
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
 		{

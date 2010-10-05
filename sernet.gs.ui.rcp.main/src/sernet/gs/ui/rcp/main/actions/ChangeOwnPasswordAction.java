@@ -57,7 +57,6 @@ public class ChangeOwnPasswordAction extends Action  {
     public static final String ID = "sernet.gs.ui.rcp.main.actions.changeownpasswordaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
 
-    // FIXME externalize strings
     
     public ChangeOwnPasswordAction(IWorkbenchWindow window, String label) {
         this.window = window;
@@ -65,7 +64,7 @@ public class ChangeOwnPasswordAction extends Action  {
         setId(ID);
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PERSON));
-        setToolTipText("Change your own password for verinice.");
+        setToolTipText(Messages.ChangeOwnPasswordAction_0);
         setEnabled(true);
     }
 
@@ -88,7 +87,7 @@ public class ChangeOwnPasswordAction extends Action  {
         // (admins can change the passwords for anybody, this action here only works for the currently logged in user)
         boolean isAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
         if (isAdmin) {
-            MessageDialog.openInformation(window.getShell(), "Administrator", "You are an administrator. For security reasons you have to change your password settings in your user's account settings or - in case of the fallback administrator account - in the configuration file of the verinice.PRO server. To access your account settings, right-click on your user in the model view.");
+            MessageDialog.openInformation(window.getShell(), Messages.ChangeOwnPasswordAction_1, Messages.ChangeOwnPasswordAction_2);
             return;
         }
         
@@ -99,7 +98,7 @@ public class ChangeOwnPasswordAction extends Action  {
             try {
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
             } catch (CommandException e) {
-                ExceptionUtil.log(e, "Could not change password.");
+                ExceptionUtil.log(e, Messages.ChangeOwnPasswordAction_3);
             }
         }
     }

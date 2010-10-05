@@ -53,29 +53,6 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class XMLImportDialog extends Dialog {
 
-    // FIXME externalize strings and translate those already in message.properties)
-    
-    // FIXME dm naturalize action should send list of elements to server and work on them there!
-
-    // FIXME dm add option on export to set extID to exported ID and sourceId to generated one, option "Prepare for re-import (check out)"
-
-    // FIXME dm reload still doesnt update everything, i.e. after naturalization: only after a couple of times the decorator goes away for all elements, 
-    //      and then, trying to delete the whole scope gives an exception: (maybe because of changed link type?)
-    /*
-     *   - SQL Error: 0, SQLState: null
-2010-09-22 08:25:32,501 ERROR [http-2010-4] (JDBCExceptionReporter.java:78)     - Batch-Eintrag 0 delete from cnatreeelement where dbId=67164 wurde abgebrochen.  Rufen Sie 'getNext
-Exception' auf, um die Ursache zu erfahren.
-2010-09-22 08:25:32,502 WARN  [http-2010-4] (JDBCExceptionReporter.java:77)     - SQL Error: 0, SQLState: 23503
-2010-09-22 08:25:32,504 ERROR [http-2010-4] (JDBCExceptionReporter.java:78)     - FEHLER: Aktualisieren oder Löschen in Tabelle »cnatreeelement« verletzt Fremdschlüssel-Constraint 
-»fk17706a884947571d« von Tabelle »cnatreeelement«
-  Detail: Auf Schlüssel (dbid)=(67164) wird noch aus Tabelle »cnatreeelement« verwiesen.
-2010-09-22 08:25:32,506 ERROR [http-2010-4] (AbstractFlushingEventListener.java:301)     - Could not synchronize database state with session
-org.hibernate.exception.ConstraintViolationException: Could not execute JDBC batch update
-     */
-    
-    // FIXME dm nach reload auch beim navigieren durch baum tauchen gelöschte scopes wieder auf
-    
-    
     private static final Logger LOG = Logger.getLogger(XMLImportDialog.class);
 
     private boolean insert;
@@ -411,7 +388,6 @@ org.hibernate.exception.ConstraintViolationException: Could not execute JDBC bat
                 "*"+ExportAction.EXTENSION_XML, //$NON-NLS-1$
                 "*"+ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
                 "*"+ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
-        // FIXME: externalize strings
         dialog.setFilterNames(new String[] { 
                 Messages.XMLImportDialog_33,
                 Messages.XMLImportDialog_34,

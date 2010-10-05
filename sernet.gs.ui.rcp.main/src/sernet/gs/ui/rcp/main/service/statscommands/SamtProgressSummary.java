@@ -36,11 +36,10 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
         return log;
     }
     
-    public static final String ANSWERED = "Answered";
+    public static final String ANSWERED = Messages.SamtProgressSummary_0;
 
-    public static final String UNANSWERED = "Unanswered";
+    public static final String UNANSWERED = Messages.SamtProgressSummary_1;
 
-    // FIXME externalize strings
 
     private transient IAuthService authService;
 
@@ -72,7 +71,7 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
             if (e instanceof SamtTopic) {
                 SamtTopic st = (SamtTopic) e;
                 // ignore chapters 0.x (Copyright et al):
-                if (!st.getTitle().startsWith("0")) {
+                if (!st.getTitle().startsWith("0")) { //$NON-NLS-1$
                     if (maturityService.getImplementationState(st) == IControl.IMPLEMENTED_NOTEDITED) {
                         result.put(UNANSWERED, (Integer)result.get(UNANSWERED)+1);
                     }
@@ -83,7 +82,7 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
             } else if (e instanceof ControlGroup) {
                 loadSamtTopics((ControlGroup) e);
             } else {
-                getLog().warn("found unexpected child for control group: " + e);
+                getLog().warn("found unexpected child for control group: " + e); //$NON-NLS-1$
             }
 
         }

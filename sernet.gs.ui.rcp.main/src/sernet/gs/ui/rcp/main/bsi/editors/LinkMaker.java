@@ -125,10 +125,9 @@ public class LinkMaker extends Composite implements IRelationTable {
     public void createPartControl(Boolean isWriteAllowed) {
         this.writeable = isWriteAllowed;
 
-        // FIXME externalize strings
 
         Label label1 = new Label(this, SWT.NULL);
-        label1.setText("Relations to: ");
+        label1.setText(Messages.LinkMaker_0);
 
         FormData formData = new FormData();
         formData.top = new FormAttachment(0, 5);
@@ -148,8 +147,8 @@ public class LinkMaker extends Composite implements IRelationTable {
         formData3.top = new FormAttachment(combo, 0, SWT.CENTER);
         formData3.left = new FormAttachment(combo, 5);
         buttonLink.setLayoutData(formData3);
-        buttonLink.setText("Add...");
-        buttonLink.setToolTipText("Add a new relation to another element.");
+        buttonLink.setText(Messages.LinkMaker_1);
+        buttonLink.setToolTipText(Messages.LinkMaker_2);
         buttonLink.setEnabled(false);
         // buttonLink.pack();
 
@@ -158,9 +157,9 @@ public class LinkMaker extends Composite implements IRelationTable {
         formData5.top = new FormAttachment(combo, 0, SWT.CENTER);
         formData5.left = new FormAttachment(buttonLink, 5);
         buttonUnlink.setLayoutData(formData5);
-        buttonUnlink.setText("Remove...");
+        buttonUnlink.setText(Messages.LinkMaker_3);
         buttonUnlink.setEnabled(writeable);
-        buttonUnlink.setToolTipText("Remove a relation to another element.");
+        buttonUnlink.setToolTipText(Messages.LinkMaker_4);
         // buttonUnlink.pack();
 
         viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI, true);
@@ -281,7 +280,7 @@ public class LinkMaker extends Composite implements IRelationTable {
                     return;
 
                 List selection = ((IStructuredSelection) viewer.getSelection()).toList();
-                boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), "Remove link?", NLS.bind("Really remove the selected {0} relations? Only the relations to the objects will be removed. The actual objects will stay in the database.", selection.size()));
+                boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), Messages.LinkMaker_5, NLS.bind(Messages.LinkMaker_6, selection.size()));
                 if (!confirm)
                     return;
 
@@ -298,7 +297,7 @@ public class LinkMaker extends Composite implements IRelationTable {
                         }
                         CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
                     } catch (Exception e1) {
-                        ExceptionUtil.log(e1, "Could not remove link.");
+                        ExceptionUtil.log(e1, Messages.LinkMaker_7);
                     }
                 }
 
@@ -368,7 +367,7 @@ public class LinkMaker extends Composite implements IRelationTable {
             }
         }
 
-        namesAndIds.put("<alle Elemente>", null);
+        namesAndIds.put(Messages.LinkMaker_8, null);
 
         Set<String> names = namesAndIds.keySet();
         this.names = new String[names.size()];
@@ -459,16 +458,16 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
-                viewer.setInput(new PlaceHolder("Lade Relationen..."));
+                viewer.setInput(new PlaceHolder(Messages.LinkMaker_9));
             }
         });
 
-        WorkspaceJob job = new WorkspaceJob("Lade Relationen...") {
+        WorkspaceJob job = new WorkspaceJob(Messages.LinkMaker_10) {
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
 
                 try {
-                    monitor.setTaskName("Lade Relationen...");
+                    monitor.setTaskName(Messages.LinkMaker_11);
 
                     FindRelationsFor command = new FindRelationsFor(inputElmt);
                     command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -482,11 +481,11 @@ public class LinkMaker extends Composite implements IRelationTable {
                 } catch (Exception e) {
                     Display.getDefault().asyncExec(new Runnable() {
                         public void run() {
-                            viewer.setInput(new PlaceHolder("Fehler beim Laden."));
+                            viewer.setInput(new PlaceHolder(Messages.LinkMaker_12));
                         }
                     });
 
-                    ExceptionUtil.log(e, "Fehler beim Laden von Beziehungen.");
+                    ExceptionUtil.log(e, Messages.LinkMaker_13);
                 }
                 return Status.OK_STATUS;
             }

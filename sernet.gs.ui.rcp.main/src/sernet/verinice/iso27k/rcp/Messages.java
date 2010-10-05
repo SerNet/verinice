@@ -41,6 +41,7 @@ public class Messages extends NLS {
 	public static String CatalogView_28;
 	public static String CatalogView_4;
 	public static String CatalogView_7;
+    public static String ExportDialog_1;
     public static String ExportSelfAssessment_1;
     public static String ExportSelfAssessment_2;
     public static String ExportSelfAssessment_3;

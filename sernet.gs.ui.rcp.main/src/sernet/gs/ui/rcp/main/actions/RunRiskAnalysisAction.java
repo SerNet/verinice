@@ -41,8 +41,7 @@ public class RunRiskAnalysisAction extends Action {
     public static final String ID = "sernet.gs.ui.rcp.main.runriskanalysisaction"; //$NON-NLS-1$
 
     public RunRiskAnalysisAction(IWorkbenchWindow window) {
-        // FIXME externalie strings
-        setText("Run risk analysis");
+        setText(Messages.RunRiskAnalysisAction_0);
         setId(ID);
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_RISK));
@@ -78,12 +77,12 @@ public class RunRiskAnalysisAction extends Action {
                     try {
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
                     } catch (CommandException e) {
-                        ExceptionUtil.log(e, "Error while running risk analysis.");
+                        ExceptionUtil.log(e, Messages.RunRiskAnalysisAction_1);
                     }
                 }
             });
         } catch (Exception e) {
-            ExceptionUtil.log(e, "Error while running risk analysis.");
+            ExceptionUtil.log(e, Messages.RunRiskAnalysisAction_2);
         }
     }
 

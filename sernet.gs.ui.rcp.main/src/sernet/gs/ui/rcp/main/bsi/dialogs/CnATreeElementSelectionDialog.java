@@ -98,8 +98,8 @@ public class CnATreeElementSelectionDialog extends Dialog {
     private Button checkbox;
     private CnATreeElement inputElmt;
     protected boolean scopeOnly;
-    private static final String COLUMN_IMG = "_img";
-    private static final String COLUMN_LABEL = "_label";
+    private static final String COLUMN_IMG = "_img"; //$NON-NLS-1$
+    private static final String COLUMN_LABEL = "_label"; //$NON-NLS-1$
     
     /**
      * @param shell
@@ -116,9 +116,8 @@ public class CnATreeElementSelectionDialog extends Dialog {
     
     @Override
     protected void configureShell(Shell newShell) {
-        // FIXME externalize strings
         super.configureShell(newShell);
-        newShell.setText("Choose elements");
+        newShell.setText(Messages.CnATreeElementSelectionDialog_2);
         newShell.setSize(400, 500);
         
         // open the window right under the mouse pointer:
@@ -131,10 +130,9 @@ public class CnATreeElementSelectionDialog extends Dialog {
         Composite container = (Composite) super.createDialogArea(parent);
         container.setLayout(new FormLayout());
         
-        // FIXME externalize strings
         
         Label label1 = new Label(container, SWT.NULL);
-        label1.setText("Enter name prefix or pattern: ");
+        label1.setText(Messages.CnATreeElementSelectionDialog_3);
 
         FormData formData = new FormData();
         formData.top = new FormAttachment(0, 5);
@@ -160,7 +158,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
         });
         
         checkbox = new Button(container, SWT.CHECK);
-        checkbox.setText("Current scope only");
+        checkbox.setText(Messages.CnATreeElementSelectionDialog_4);
         checkbox.setSelection(true);
         scopeOnly = true;
         FormData checkboxFD = new FormData();
@@ -191,7 +189,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
         
         // image column:
         column1 = new TableViewerColumn(viewer, SWT.LEFT);
-        column1.getColumn().setText("");
+        column1.getColumn().setText(""); //$NON-NLS-1$
         column1.getColumn().setWidth(25);
         column1.getColumn().setResizable(false);
         column1.setLabelProvider(new CellLabelProvider() {
@@ -266,18 +264,17 @@ public class CnATreeElementSelectionDialog extends Dialog {
             return;
         
         ArrayList temp = new ArrayList(1);
-        temp.add(new PlaceHolder("Loading elements..."));
+        temp.add(new PlaceHolder(Messages.CnATreeElementSelectionDialog_6));
         viewer.setInput(temp);
         
-        // FIXME externalize strings
         
-        WorkspaceJob job = new WorkspaceJob("Loading elements") {
+        WorkspaceJob job = new WorkspaceJob(Messages.CnATreeElementSelectionDialog_7) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
 
                 try {
-                    monitor.setTaskName("Loading elements");
+                    monitor.setTaskName(Messages.CnATreeElementSelectionDialog_8);
 
                     if (scopeOnly) {
                         LoadElementsForScope command = new LoadElementsForScope(entityType, inputElmt.getDbId());
@@ -300,7 +297,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
                         });
                     }
                 } catch (Exception e) {
-                    ExceptionUtil.log(e, "Could not load elements from database.");
+                    ExceptionUtil.log(e, Messages.CnATreeElementSelectionDialog_0);
                 }
                 return Status.OK_STATUS;
             }

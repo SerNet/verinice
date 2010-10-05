@@ -27,7 +27,11 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.actions.messages"; //$NON-NLS-1$
-	public static String ConfigurationAction_0;
+	public static String ChangeOwnPasswordAction_0;
+    public static String ChangeOwnPasswordAction_1;
+    public static String ChangeOwnPasswordAction_2;
+    public static String ChangeOwnPasswordAction_3;
+    public static String ConfigurationAction_0;
 	public static String ConfigurationAction_1;
 	public static String ConfigurationAction_2;
 	public static String ConfigurationAction_3;
@@ -44,6 +48,9 @@ public class Messages extends NLS {
     public static String ManageUpdatesAction_2;
     public static String OpenMultipleViewAction_2;
     public static String ReloadAction_1;
+    public static String RunRiskAnalysisAction_0;
+    public static String RunRiskAnalysisAction_1;
+    public static String RunRiskAnalysisAction_2;
     public static String ShowAccessControlEditAction_1;
     public static String ShowBulkEditAction_1;
     public static String ShowBulkEditAction_2;
