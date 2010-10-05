@@ -64,25 +64,24 @@ If not, you can go there by choosing from the menu:
     <item title="Generate a report">
       <description>
         Continue in the same way with the next question. As you go along, you will notice
-        that the spider chart in the bottom left corner of the screen begins to reflect your answers. When you have answered all questions honestly, you
-        will have a good overview about your current information security situation.
+        that the chart in the bottom left corner of the screen begins to reflect your answers.
         <br/><br/>
         When you are done answering all questions, you may want to generate a report for management or another party, which you can then send them by e-mail 
         or other means.
         You can do so by choosing
-        <b>File -> Security Assessment -> Generate Report...</b>.
+        <b>File -&gt; Generate Report...</b>.
         <br/><br/>
-        Choose the type of report and a filename under which the report should be saved, then click OK.
+        Choose the &quot;Information Security Assessment Report&quot; and a enter a filename under which the report will be saved, then click OK.
          </description>
     </item>
     
     <item title="Export results">
       <description>
         When you are done answering all questions, you can export your results to send them to another party.
-        You can do so by clicking the <b>EXPORT</b> button in the security assessment view.
+        You can do so by clicking the <b>Export</b> button in the security assessment view or by choosing from the menu <b>File -&gt; Security Assessment -&gt; Export to file</b>.
         <br/><br/>
         You have to choose a filename under which the report will be saved. The exported file is always encrypted, so you also
-        have to choose a password or a certificate for encryption. Once you're done, press OK. 
+        have to choose a password or a certificate for encryption. Once you&apos;re done, press OK. 
       </description>
     </item>
     

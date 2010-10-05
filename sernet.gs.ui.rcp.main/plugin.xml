@@ -925,7 +925,7 @@
                class="sernet.verinice.report.rcp.GenerateReportAction"
                icon="icons/report.png"
                id="sernet.verinice.report.rcp.GenerateReportAction"
-               label="Generate report..."
+               label="%action.label.25"
                menubarPath="file/vn_menu_file"
                style="push">
          </action>

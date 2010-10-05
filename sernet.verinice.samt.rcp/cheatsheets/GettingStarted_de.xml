@@ -53,11 +53,11 @@ Falls nicht, gehen Sie dorthin indem Sie aus dem Anwendungsmenü auswählen:
         Lesen Sie die Beschreibungen um zu entscheiden, welchen Reifegrad Sie in ihrer Organisation erreicht haben.
         Um die Frage korrekt zu beantworten, müssen Sie evtl. andere Mitarbeiter befragen oder interne Recherchen anstellen.
         <br/>
-        Wählen Sie den korrekten Reifegrad im Editor unterhalb des Objektbrowser aus. Sie können auch ein öffentliches Kommentar
-        hinzufügen. Dieses Kommentar wird in Exporten und Reports enthalten sein. Sie können auch ein privates Kommentar nur für sich selbst eingeben.
-        Das private Kommentar wird ausschließlich in Ihrer lokalen Datenbank verbleiben.
+        Wählen Sie den korrekten Reifegrad im Editor unterhalb des Objektbrowser aus. Sie können einen öffentlichen Kommentar
+        hinzufügen. Dieser Kommentar wird in Exporten und Reports enthalten sein. Sie können auch einen privaten Kommentar nur für Ihren internen Gebrauch eingeben.
+        Einträge in das Feld &quot;Privater Kommentar&quot; werden nur für die interne Dokumentation genutzt, in keinem Fall sind diese im Export oder Report enthalten.
         <br/><br/>
-        Speichern Sie Ihre Änderungen mit der Tastenkombination <b>Strg-S</b> oder im Menü unter <b>Datei -> Speichern</b>.
+        Speichern Sie Ihre Änderungen mit der Tastenkombination <b>Strg-S</b> oder im Menü unter <b>Datei -&gt; Speichern</b>.
         </description>
     </item>
     
@@ -68,9 +68,9 @@ Falls nicht, gehen Sie dorthin indem Sie aus dem Anwendungsmenü auswählen:
         <br/><br/>
         Wenn Sie alle Fragen abschliessend beantwortet haben, können Sie einen Report für das Management oder beteiligte Parteien erzeugen.
         Dies tun Sie durch Auswahl des Menüpunktes
-        <b>Datei -> Security Assessment -> Report erzeugen</b>.
+        <b>Datei -&gt; Report erzeugen</b>.
         <br/><br/>
-        Wählen Sie den gewünschten Report-Typ und geben Sie einen Dateinamen an, unter dem der Report gespeichert werden soll. Klicken Sie auf OK.
+        Wählen Sie den &quot;nformation Security Assessment Report&quot; aus der Liste und geben Sie einen Dateinamen an, unter dem der Report gespeichert werden soll. Klicken Sie auf OK.
          </description>
     </item>
     
@@ -78,7 +78,7 @@ Falls nicht, gehen Sie dorthin indem Sie aus dem Anwendungsmenü auswählen:
       <description>
         Wenn Sie alle Fragen beantwortet haben, können Sie das Security Assessment exportieren um es einem beteiligtem Dritte zu schicken, 
         z.B. per E-Mail oder auf anderem Wege.
-        Zum Export klicken Sie auf den <b>Export</b> Button im Security Assessment View.
+        Zum Export klicken Sie auf den <b>Export</b> Button im Security Assessment View oder wählen aus dem Menü <b>Datei -&gt; Security Assessment -&gt; Export in Datei.</b>
         <br/><br/>
         Sie müssen einen Dateinamen angeben, unter dem der Export gespeichert werden soll. Der Datenbankexport wird verschlüsselt
         gespeichert, wenn Sie dies wünschen. Falls Sie die Option auswählen, müssen Sie ein Passwort oder ein Zertifikat für die Verschlüsselung angeben. 

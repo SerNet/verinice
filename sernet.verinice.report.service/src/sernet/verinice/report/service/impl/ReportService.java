@@ -43,7 +43,6 @@ public class ReportService implements IReportService {
 			reportTypes = new IReportType[] { 
 		        new UserReportType(), 
 		        new SamtReportType(), 
-		        new ComprehensiveSamtReportType(),
 		        new AllItemsReport(),
 		        new RiskByAssetReport()
 		    };

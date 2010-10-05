@@ -3,6 +3,9 @@
     <property name="author">A. Koderman</property>
     <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
     <text-property name="title">Standard ISA-Report</text-property>
+    <simple-property-list name="includeResource">
+        <value>reports</value>
+    </simple-property-list>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -17,7 +20,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">82007</value>
+                <value type="constant">-1</value>
             </simple-property-list>
             <property name="paramType">simple</property>
             <property name="controlType">text-box</property>
@@ -1208,7 +1211,7 @@ columns(cols);</value>
                         <property name="fontSize">14pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="contentType">html</property>
-                        <text-property name="content"><![CDATA[Information Security Assessment Report]]></text-property>
+                        <text-property name="content" key="isa1"><![CDATA[Information Security Assessment Report]]></text-property>
                     </text>
                 </cell>
                 <cell id="801">
@@ -1216,7 +1219,7 @@ columns(cols);</value>
                     <property name="textAlign">right</property>
                     <property name="verticalAlign">top</property>
                     <label id="802">
-                        <text-property name="text">created with</text-property>
+                        <text-property name="text" key="isa2">created with</text-property>
                     </label>
                     <image id="795">
                         <property name="height">0.36363636363636365in</property>
@@ -1265,7 +1268,7 @@ columns(cols);</value>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Group:]]></text-property>
+                        <text-property name="content" key="isa5"><![CDATA[Group:]]></text-property>
                     </text>
                 </cell>
                 <cell id="12">
@@ -1324,7 +1327,7 @@ columns(cols);</value>
                     <text id="23">
                         <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Company:]]></text-property>
+                        <text-property name="content" key="isa6"><![CDATA[Company:]]></text-property>
                     </text>
                 </cell>
                 <cell id="15">
@@ -1380,7 +1383,7 @@ columns(cols);</value>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
                     <label id="183">
-                        <text-property name="text">Location:</text-property>
+                        <text-property name="text" key="isa7">Location:</text-property>
                     </label>
                 </cell>
                 <cell id="165">
@@ -1435,7 +1438,7 @@ columns(cols);</value>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
                     <label id="184">
-                        <text-property name="text">Address:</text-property>
+                        <text-property name="text" key="isa8">Address:</text-property>
                     </label>
                 </cell>
                 <cell id="170">
@@ -1490,7 +1493,7 @@ columns(cols);</value>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
                     <label id="185">
-                        <text-property name="text">Website:</text-property>
+                        <text-property name="text" key="isa9">Website:</text-property>
                     </label>
                 </cell>
                 <cell id="175">
@@ -1545,7 +1548,7 @@ columns(cols);</value>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
                     <label id="186">
-                        <text-property name="text">Short description of company:</text-property>
+                        <text-property name="text" key="isa10">Short description of company:</text-property>
                     </label>
                 </cell>
                 <cell id="180">
@@ -1600,7 +1603,7 @@ columns(cols);</value>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
                     <label id="202">
-                        <text-property name="text">Scope:</text-property>
+                        <text-property name="text" key="isa11">Scope:</text-property>
                     </label>
                 </cell>
                 <cell id="189">
@@ -1655,7 +1658,7 @@ columns(cols);</value>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
                     <label id="203">
-                        <text-property name="text">D&amp;B D-U-N-S® Nr.:</text-property>
+                        <text-property name="text" key="isa12">D&amp;B D-U-N-S® Nr.:</text-property>
                     </label>
                 </cell>
                 <cell id="194">
@@ -1710,7 +1713,7 @@ columns(cols);</value>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
                     <label id="204">
-                        <text-property name="text">Date of Assessment:</text-property>
+                        <text-property name="text" key="isa13">Date of Assessment:</text-property>
                     </label>
                 </cell>
                 <cell id="199">
@@ -1771,7 +1774,7 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <label id="226">
-                        <text-property name="text">Contact:</text-property>
+                        <text-property name="text" key="isa14">Contact:</text-property>
                     </label>
                 </cell>
                 <cell id="210">
@@ -1816,7 +1819,7 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <label id="227">
-                        <text-property name="text">Contact Phone:</text-property>
+                        <text-property name="text" key="isa15">Contact Phone:</text-property>
                     </label>
                 </cell>
                 <cell id="213">
@@ -1861,7 +1864,7 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <label id="228">
-                        <text-property name="text">Contact Email:</text-property>
+                        <text-property name="text" key="isa16">Contact Email:</text-property>
                     </label>
                 </cell>
                 <cell id="216">
@@ -1906,7 +1909,7 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <label id="229">
-                        <text-property name="text">Creator:</text-property>
+                        <text-property name="text" key="isa17">Creator:</text-property>
                     </label>
                 </cell>
                 <cell id="219">
@@ -1951,7 +1954,7 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <label id="231">
-                        <text-property name="text">Creator Phone:</text-property>
+                        <text-property name="text" key="isa18">Creator Phone:</text-property>
                     </label>
                 </cell>
                 <cell id="222">
@@ -1996,7 +1999,7 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <label id="232">
-                        <text-property name="text">Creator Email:</text-property>
+                        <text-property name="text" key="isa19">Creator Email:</text-property>
                     </label>
                 </cell>
                 <cell id="225">
@@ -2034,6 +2037,7 @@ columns(cols);</value>
             <text-property name="text">Details</text-property>
         </label>
         <table id="891">
+            <property name="pageBreakInside">avoid</property>
             <property name="width">7.757575757575758in</property>
             <property name="dataSet">samtTopics</property>
             <list-property name="boundDataColumns">
@@ -2099,6 +2103,7 @@ columns(cols);</value>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <property name="pageBreakInterval">0</property>
             <column id="904">
                 <property name="width">3.676767676767677in</property>
             </column>
@@ -2124,7 +2129,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="907">
-                            <text-property name="text">samt_topic_name</text-property>
+                            <text-property name="text" key="isa21"></text-property>
                         </label>
                     </cell>
                     <cell id="894">
@@ -2141,7 +2146,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="913">
-                            <text-property name="text">maturitytext</text-property>
+                            <text-property name="text" key="isa22"></text-property>
                         </label>
                     </cell>
                     <cell id="895">
@@ -2158,7 +2163,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="911">
-                            <text-property name="text">samt_topic_externalnote</text-property>
+                            <text-property name="text" key="isa23"></text-property>
                         </label>
                     </cell>
                 </row>
