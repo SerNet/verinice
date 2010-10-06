@@ -20,9 +20,11 @@
 package sernet.gs.ui.rcp.main.bsi.actions;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -46,6 +48,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.iso27k.service.commands.NaturalizeCommand;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -78,14 +81,17 @@ public class NaturalizeAction extends Action implements ISelectionListener {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     try {
                         Activator.inheritVeriniceContextState();
-                        for (CnATreeElement element : selectedElementList) {
-                            element.setSourceId(null);
-                            element.setExtId(null);
-                            SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(element);
+                        if(selectedElementList!=null && !selectedElementList.isEmpty()) {
+                            Set<String> uuidSet = new HashSet<String>(selectedElementList.size());
+                            for (CnATreeElement element : selectedElementList) {
+                                uuidSet.add(element.getUuid());                         
+                            }
+                            NaturalizeCommand command = new NaturalizeCommand(uuidSet);
                             command = getCommandService().executeCommand(command);
-                            element = command.getElement();
-                            CnAElementFactory.getModel(element).childChanged(element.getParent(), element);
-                            //CnAElementFactory.getModel(element).databaseChildChanged(element);
+                            List<CnATreeElement> changedElements = command.getChangedElements();
+                            for (CnATreeElement element : changedElements) {
+                                CnAElementFactory.getModel(element).childChanged(element.getParent(), element);
+                            }
                         }
                     } catch (CommandException e) {
                         LOG.error("Error while naturalizing element", e);
