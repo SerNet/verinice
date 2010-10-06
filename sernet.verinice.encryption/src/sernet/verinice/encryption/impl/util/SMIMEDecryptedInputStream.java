@@ -24,7 +24,10 @@ import org.bouncycastle.cms.RecipientInformationStore;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
 import org.bouncycastle.openssl.PEMReader;
+import org.bouncycastle.openssl.PasswordFinder;
+import org.bouncycastle.util.encoders.Base64;
 
+import sernet.verinice.encryption.impl.SMIMEBasedEncryption;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 
 /**
@@ -44,6 +47,38 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
 	private byte[] decryptedByteData = new byte[] {};
 
 	/**
+     * Creates a new S/MIME encrypted InputStream that is decrypted using the 
+     * given X.509 public certificate file that was used for encryption and the
+     * matching private key file. Both files are expected to be in PEM format. 
+     * 
+     * @param encryptedInputStream the InputStream to decrypt
+     * @param x509CertificateFile the X.509 public certificate that was used for encryption 
+     * @param privateKeyFile the matching private key file needed for decryption
+     * @throws IOException
+     *             <ul>
+     *             <li>if any of the given files does not exist</li>
+     *             <li>if any of the given files cannot be read</li>
+     *             </ul>
+     * @throws CertificateNotYetValidException
+     *             if the certificate is not yet valid
+     * @throws CertificateExpiredException
+     *             if the certificate is not valid anymore
+     * @throws CertificateException
+     *             <ul>
+     *             <li>if the given certificate file does not contain a certificate</li>
+     *             <li>if the certificate contained in the given file is not a X.509 certificate</li>
+     *             </ul>
+     * @throws EncryptionException
+     *             if a problem occured during the encryption process
+     */
+    public SMIMEDecryptedInputStream(InputStream encryptedInputStream, File x509CertificateFile, 
+            File privateKeyFile) 
+        throws CertificateNotYetValidException, CertificateExpiredException, 
+        CertificateException, IOException, EncryptionException {
+        this(encryptedInputStream,x509CertificateFile,privateKeyFile,null);
+    }
+	
+	/**
 	 * Creates a new S/MIME encrypted InputStream that is decrypted using the 
 	 * given X.509 public certificate file that was used for encryption and the
 	 * matching private key file. Both files are expected to be in PEM format. 
@@ -51,6 +86,7 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
 	 * @param encryptedInputStream the InputStream to decrypt
 	 * @param x509CertificateFile the X.509 public certificate that was used for encryption 
 	 * @param privateKeyFile the matching private key file needed for decryption
+	 * @param privateKeyPassword password to encrypt private key
 	 * @throws IOException
 	 *             <ul>
 	 *             <li>if any of the given files does not exist</li>
@@ -69,17 +105,27 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
 	 *             if a problem occured during the encryption process
 	 */
 	public SMIMEDecryptedInputStream(InputStream encryptedInputStream, File x509CertificateFile, 
-			File privateKeyFile) 
+			File privateKeyFile, final String privateKeyPassword) 
 		throws CertificateNotYetValidException, CertificateExpiredException, 
 		CertificateException, IOException, EncryptionException {
 		super(encryptedInputStream);
 		
-		X509Certificate x509Certificate = 
-			CertificateUtils.loadX509CertificateFromFile(x509CertificateFile);
+		X509Certificate x509Certificate = CertificateUtils.loadX509CertificateFromFile(x509CertificateFile);
 		
 		// The recipient's private key
 		FileReader fileReader = new FileReader(privateKeyFile);
-		PEMReader pemReader = new PEMReader(fileReader);
+		PasswordFinder passwordFinder = new PasswordFinder() { 
+            @Override
+            public char[] getPassword() {
+                return (privateKeyPassword!=null) ? privateKeyPassword.toCharArray() : null;
+            }
+        };
+        PEMReader pemReader = null;
+        if(passwordFinder.getPassword()!=null) {
+            pemReader = new PEMReader(fileReader,passwordFinder);
+        } else {
+           pemReader = new PEMReader(fileReader);
+        }
 		KeyPair keyPair = (KeyPair) pemReader.readObject();
 		PrivateKey privateKey = keyPair.getPrivate();
 		
@@ -96,8 +142,8 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
 			RecipientInformation recipientInfo = recipients.get(recipientId);
 
 			if (recipientInfo != null) {
-				decryptedByteData = recipientInfo.getContent(privateKey,
-						BouncyCastleProvider.PROVIDER_NAME);
+				decryptedByteData = recipientInfo.getContent(privateKey,BouncyCastleProvider.PROVIDER_NAME);
+				decryptedByteData = Base64.decode(decryptedByteData);
 			}
 			ByteArrayInputStream byteInStream = new ByteArrayInputStream(decryptedByteData);
 			super.in = byteInStream;

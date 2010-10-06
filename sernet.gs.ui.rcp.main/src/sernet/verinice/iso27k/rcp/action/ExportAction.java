@@ -133,6 +133,8 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                     } else if (encMethod == EncryptionMethod.X509_CERTIFICATE) {
                         x509CertificateFile = encDialog.getSelectedX509CertificateFile();
                     }
+                } else {
+                    return;
                 }
             }
 		    filePath = dialog.getFilePath();
@@ -149,7 +151,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                     try {
                         monitor.beginTask(NLS.bind(Messages.getString("ExportAction_4"), new Object[] {dialog.getFilePath()}), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
                         export(dialog.getSelectedElement(),filePath,dialog.getSourceId(),password,x509CertificateFile);                    
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         LOG.error("Error while exporting data.", e); //$NON-NLS-1$
                         status= new Status(Status.ERROR, "sernet.verinice.samt.rcp", "Error while exporting data.",e); 
                     } finally {
@@ -287,14 +289,16 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
          */
         @Override
         public void done(IJobChangeEvent event) {
-            shell.getDisplay().asyncExec(new Runnable() {          
-                @Override
-                public void run() {
-                    MessageDialog.openInformation(shell, 
-                            Messages.getString("ExportAction_2"), 
-                            NLS.bind(Messages.getString("ExportAction_3"), new Object[] {title, path}));
-                }
-            });         
+            if(Status.OK_STATUS.equals(event.getResult())) {
+                shell.getDisplay().asyncExec(new Runnable() {          
+                    @Override
+                    public void run() {
+                        MessageDialog.openInformation(shell, 
+                                Messages.getString("ExportAction_2"), 
+                                NLS.bind(Messages.getString("ExportAction_3"), new Object[] {title, path}));
+                    }
+                });   
+            }
         }
 
         /* (non-Javadoc)

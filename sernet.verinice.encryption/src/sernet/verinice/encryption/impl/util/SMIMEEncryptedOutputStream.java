@@ -1,6 +1,5 @@
 package sernet.verinice.encryption.impl.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -9,16 +8,8 @@ import java.security.GeneralSecurityException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.X509Certificate;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeBodyPart;
-
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
-import org.bouncycastle.mail.smime.SMIMEException;
-import org.bouncycastle.mail.smime.SMIMEUtil;
-
+import sernet.verinice.encryption.impl.SMIMEBasedEncryption;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 
 /**
@@ -30,8 +21,7 @@ import sernet.verinice.interfaces.encryption.EncryptionException;
  */
 public class SMIMEEncryptedOutputStream extends FilterOutputStream {
 
-	private X509Certificate x509Certificate;
-	private ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+	private File x509CertificateFile;
 	private byte[] oneByteArray = new byte[1];
 	private byte[] result;
 
@@ -40,44 +30,19 @@ public class SMIMEEncryptedOutputStream extends FilterOutputStream {
 			CertificateException, IOException {
 
 		super(out);
-		x509Certificate = CertificateUtils.loadX509CertificateFromFile(x509CertificateFile);
+		this.x509CertificateFile = x509CertificateFile;
 	}
 
-	private byte[] encrypt(byte[] unencryptedByteData) throws IOException, EncryptionException {
-
-		byte[] encryptedMimeData = new byte[] {};
-		
+	private byte[] encrypt(byte[] unencryptedByteData) throws IOException, EncryptionException {	
 		try {
-			SMIMEEnvelopedGenerator generator = new SMIMEEnvelopedGenerator();
-			generator.addKeyTransRecipient(x509Certificate);
-			MimeBodyPart unencryptedContent = SMIMEUtil.toMimeBodyPart(unencryptedByteData);
-
-			// Encrypt the byte data and make a MimeBodyPart from it
-			MimeBodyPart encryptedMimeBodyPart = generator.generate(unencryptedContent,
-					SMIMEEnvelopedGenerator.AES256_CBC, BouncyCastleProvider.PROVIDER_NAME);
-
-			// Finally get the encoded bytes from the MimeMessage and return them
-			encryptedMimeBodyPart.writeTo(byteOutStream);
-			encryptedMimeData = byteOutStream.toByteArray();
-
+		    return SMIMEBasedEncryption.encrypt(unencryptedByteData, x509CertificateFile);
 		} catch (GeneralSecurityException e) {
 			throw new EncryptionException(
-					"There was a problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
-		} catch (SMIMEException smimee) {
-			throw new EncryptionException(
-					"There was a problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", smimee);
-		} catch (MessagingException e) {
-			throw new EncryptionException(
-					"There was a problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
+					"There was a problem during the en- or decryption process. See the stacktrace for details.", e);
 		} catch (IOException ioe) {
 			throw new EncryptionException(
-					"There was an IO problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", ioe);
+					"There was an IO problem during the en- or decryption process. See the stacktrace for details.", ioe);
 		}
-		return encryptedMimeData;
 	}
 
 	@Override

@@ -119,6 +119,7 @@ public class Messages extends NLS {
     public static String GSImportDialog_11;
     public static String GSImportDialog_12;
     public static String GSImportDialog_13;
+    public static String XMLImportDialog_0;
     public static String XMLImportDialog_1;
     public static String XMLImportDialog_2;
     public static String XMLImportDialog_20;

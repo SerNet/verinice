@@ -163,6 +163,40 @@ public interface IEncryptionService {
 		throws IOException, CertificateNotYetValidException, CertificateExpiredException, 
 		CertificateException, EncryptionException;
 	
+	   /**
+     * Decrypts the given byte data with the given receiver certificate and the private key
+     * 
+     * @param encryptedByteData
+     *            an array of byte data to decrypt
+     * @param x509CertificateFile
+     *            X.509 certificate that was used to encrypt the data. The file is expected to be in
+     *            DER or PEM format
+     * @param privateKeyPemFile
+     *            .pem file that contains the private key used for decryption. This key must fit to
+     *            the public key contained in the public certificate
+     * @param privateKeyPassword password to encrypt private key
+     * @return an array of bytes representing the unencrypted byte data.
+     * @throws IOException
+     *             <ul>
+     *             <li>if any of the given files does not exist</li>
+     *             <li>if any of the given files cannot be read</li>
+     *             </ul>
+     * @throws CertificateNotYetValidException
+     *             if the certificate is not yet valid
+     * @throws CertificateExpiredException
+     *             if the certificate is not valid anymore
+     * @throws CertificateException
+     *             <ul>
+     *             <li>if the given certificate file does not contain a certificate</li>
+     *             <li>if the certificate contained in the given file is not a X.509 certificate</li>
+     *             </ul>
+     * @throws EncryptionException
+     *             if a problem occured during the encryption process
+     */
+    byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile, final String privateKeyPassword)
+        throws IOException, CertificateNotYetValidException, CertificateExpiredException, 
+        CertificateException, EncryptionException;
+	
 	/**
 	 * Encrypts the given OutputStream using the given X.509 certificate file.
 	 * 
@@ -220,4 +254,34 @@ public interface IEncryptionService {
 	InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, 
 		File privateKeyFile) throws IOException, CertificateNotYetValidException, 
 		CertificateExpiredException, CertificateException, EncryptionException;
+	
+	/**
+     * Decrypts the given InputStream using the given X.509 certificate file that was used for 
+     * encryption and the matching private key file.
+     * 
+     * @param encryptedDataStream the InputStream to decrypt
+     * @param x509CertificateFile the X.509 public certificate that was used for encryption
+     * @param privateKeyFile the matching private key file needed for decryption
+     * @param privateKeyPassword password to encrypt private key
+     * @return the decrypted InputStream
+     * @throws IOException
+     *             <ul>
+     *             <li>if any of the given files does not exist</li>
+     *             <li>if any of the given files cannot be read</li>
+     *             </ul>
+     * @throws CertificateNotYetValidException
+     *             if the certificate is not yet valid
+     * @throws CertificateExpiredException
+     *             if the certificate is not valid anymore
+     * @throws CertificateException
+     *             <ul>
+     *             <li>if the given certificate file does not contain a certificate</li>
+     *             <li>if the certificate contained in the given file is not a X.509 certificate</li>
+     *             </ul>
+     * @throws EncryptionException
+     *             if a problem occured during the encryption process
+     */
+    InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, 
+        File privateKeyFile, final String privateKeyPassword) throws IOException, CertificateNotYetValidException, 
+        CertificateExpiredException, CertificateException, EncryptionException;
 }

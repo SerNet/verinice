@@ -32,6 +32,7 @@ import javax.xml.bind.JAXB;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -140,9 +141,10 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
     @Override
     public void execute() {
         if (getLog().isDebugEnabled()) {
-            String xml = new String(syncRequestSerialized);
-            getLog().debug("Importing data:");
+            String xml = new String(syncRequestSerialized,VeriniceCharset.CHARSET_UTF_8);
+            getLog().debug("### Importing data begin ###");
             getLog().debug(xml);
+            getLog().debug("### Importing data end ####");
         }
 
         if (syncRequestSerialized != null) {

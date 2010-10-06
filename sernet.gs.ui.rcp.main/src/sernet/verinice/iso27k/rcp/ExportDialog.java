@@ -328,7 +328,10 @@ public class ExportDialog extends TitleAreaDialog {
             sb.append(Messages.SamtExportDialog_10);
         } else {
             try {
-                new File(filePath).createNewFile();
+                File test = new File(filePath);
+                if(test.createNewFile()) {
+                    test.delete();
+                }
             } catch (Exception e) {
                 sb.append(Messages.SamtExportDialog_11);
             }

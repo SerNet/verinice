@@ -3,6 +3,7 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -34,6 +35,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
@@ -70,6 +72,8 @@ public class XMLImportDialog extends Dialog {
 
     protected File x509CertificateFile;
     protected File privateKeyPemFile;
+    private Text privateKeyPasswordField;
+    private String privateKeyPassword = null;
     
     private Text passwordField;
     private String password = ""; //$NON-NLS-1$
@@ -340,6 +344,38 @@ public class XMLImportDialog extends Dialog {
                 selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
             }
         });
+        
+        Label privateKeyPasswordLabel = new Label(cryptGroup, SWT.NONE);
+        data = new GridData();
+        data.horizontalAlignment = SWT.RIGHT;
+        privateKeyPasswordLabel.setLayoutData(data);
+        privateKeyPasswordLabel.setText(Messages.XMLImportDialog_0);
+        
+        privateKeyPasswordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
+        data = new GridData();
+        data.widthHint = 280;
+        privateKeyPasswordField.setLayoutData(data); 
+        // FocusListener is added to passwordField afterwards
+        new Label(cryptGroup, SWT.NONE);
+        privateKeyPasswordField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                certificateEncryptionRadio.setSelection(true);
+                passwordEncryptionRadio.setSelection(false);
+                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
+            }
+            public void focusLost(FocusEvent e) {
+                
+            }
+        });
+        privateKeyPasswordField.addModifyListener(new ModifyListener() {         
+            @Override
+            public void modifyText(ModifyEvent e) {
+                privateKeyPassword = privateKeyPasswordField.getText();
+                
+            }
+        });
+        
         cryptGroup.pack();
         
         // set and save path to zip- archiv
@@ -437,8 +473,26 @@ public class XMLImportDialog extends Dialog {
                 IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
                 if (selectedEncryptionMethod == EncryptionMethod.PASSWORD) {
                     fileData = service.decrypt(fileData, password.toCharArray());
-                } else if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {
-                    fileData = service.decrypt(fileData, x509CertificateFile, privateKeyPemFile);
+                } else if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {             
+                    fileData = service.decrypt(fileData, x509CertificateFile, privateKeyPemFile,privateKeyPassword);                  
+                    if(fileData!=null) {
+                        // fileData ends with lines
+                        //Content-Type: text/plain
+                        //Content-Transfer-Encoding: 7bit
+                        String content = new String(fileData);                   
+                        content = content.trim();
+                        final String SYNC_REQUEST = "syncRequest>"; //$NON-NLS-1$
+                        int n = content.lastIndexOf(SYNC_REQUEST);
+                        
+                        if(!content.endsWith(SYNC_REQUEST) && n!=-1) {
+                            if (LOG.isDebugEnabled()) {
+                                // charset debugging
+                                LOG.debug("Encoding: " + content.substring(n+SYNC_REQUEST.length()));
+                            }
+                            content = content.substring(0, n+SYNC_REQUEST.length());
+                        }
+                        fileData = content.getBytes();
+                    }
                 }                       
             }
             command = new SyncCommand(insert, update, delete, fileData);    

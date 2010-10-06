@@ -2514,4 +2514,22 @@ Library.
          fragment="true"
          unpack="false"/>
 
+   <plugin
+         id="inetlib"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="bouncycastle"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="gnumail"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>

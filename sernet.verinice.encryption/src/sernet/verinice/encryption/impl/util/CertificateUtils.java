@@ -74,29 +74,22 @@ public class CertificateUtils {
 		// Since the file seems to be ok, try to make a X509 certificate from it.
 		CertificateFactory certificateFactory = null;
 		try {
-			certificateFactory = CertificateFactory.getInstance("X.509",
-					BouncyCastleProvider.PROVIDER_NAME);
+			certificateFactory = CertificateFactory.getInstance("X.509",BouncyCastleProvider.PROVIDER_NAME);
 		} catch (NoSuchProviderException e) {
 			// Shouldn't happen, since the BouncyCastle provider was added on class loading
 			// or even before
 			e.printStackTrace();
 		}
 
-		Certificate certificate = certificateFactory.generateCertificate(
-				new FileInputStream(x509CertificateFile));
-
+		Certificate certificate = certificateFactory.generateCertificate(new FileInputStream(x509CertificateFile));
+		if (certificate == null) {
+            throw new CertificateException("The given file \"" + x509CertificateFile + "\" does not contain a X.509 certificate.");
+        }
 		if (!certificate.getType().equalsIgnoreCase("x.509")) {
-			throw new CertificateException(
-					"The certificate contained in the given file is not a X.509 certificate.");
+			throw new CertificateException("The certificate contained in the given file \"" + x509CertificateFile + "\" is not a X.509 certificate.");
 		}
 		
 		X509Certificate x509Certificate = (X509Certificate) certificate;
-
-		if (x509Certificate == null) {
-			throw new CertificateException("The given file \"" + x509CertificateFile
-					+ "\" does not contain a X.509 certificate.");
-		}
-
 		// Lastly checks if the certificate is (still) valid.
 		// If not this throws a CertificateExpiredException or
 		// CertificateNotYetValidException respectively.

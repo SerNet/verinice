@@ -16,6 +16,8 @@ import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 
+import javax.activation.CommandMap;
+import javax.activation.MailcapCommandMap;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 
@@ -29,6 +31,8 @@ import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMEUtil;
 import org.bouncycastle.openssl.PEMReader;
+import org.bouncycastle.openssl.PasswordFinder;
+import org.bouncycastle.util.encoders.Base64;
 
 import sernet.verinice.encryption.impl.util.CertificateUtils;
 import sernet.verinice.encryption.impl.util.SMIMEDecryptedInputStream;
@@ -106,17 +110,26 @@ public class SMIMEBasedEncryption {
 
 		byte[] encryptedMimeData = new byte[] {};
 
-		X509Certificate x509Certificate = CertificateUtils
-				.loadX509CertificateFromFile(x509CertificateFile);
+		/*
+		InputStream is = SMIMEBasedEncryption.class.getClassLoader().getResourceAsStream("mailcap");
+		MailcapCommandMap mc = new MailcapCommandMap(is);
+		CommandMap.setDefaultCommandMap(mc);
+		*/
+		;
+		
+		
+		X509Certificate x509Certificate = CertificateUtils.loadX509CertificateFromFile(x509CertificateFile);
 
 		try {
 			SMIMEEnvelopedGenerator generator = new SMIMEEnvelopedGenerator();
 			generator.addKeyTransRecipient(x509Certificate);
+			unencryptedByteData = Base64.encode(unencryptedByteData);
 			MimeBodyPart unencryptedContent = SMIMEUtil.toMimeBodyPart(unencryptedByteData);
 
 			// Encrypt the byte data and make a MimeBodyPart from it
 			MimeBodyPart encryptedMimeBodyPart = generator.generate(unencryptedContent,
-					SMIMEEnvelopedGenerator.AES256_CBC, BouncyCastleProvider.PROVIDER_NAME);
+					SMIMEEnvelopedGenerator.AES256_CBC, 
+					BouncyCastleProvider.PROVIDER_NAME);
 
 			// Finally get the encoded bytes from the MimeMessage and return them
 			ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
@@ -125,23 +138,54 @@ public class SMIMEBasedEncryption {
 
 		} catch (GeneralSecurityException e) {
 			throw new EncryptionException(
-					"There was a problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
+					"There was a problem during the en- or decryption process. See the stacktrace for details.", e);
 		} catch (SMIMEException smimee) {
 			throw new EncryptionException(
-					"There was a problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", smimee);
+					"There was a problem during the en- or decryption process. See the stacktrace for details.", smimee);
 		} catch (MessagingException e) {
 			throw new EncryptionException(
-					"There was a problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
+					"There was a problem during the en- or decryption process. See the stacktrace for details.", e);
 		} catch (IOException ioe) {
 			throw new EncryptionException(
-					"There was an IO problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", ioe);
+					"There was an IO problem during the en- or decryption process. See the stacktrace for details.", ioe);
 		}
 		return encryptedMimeData;
 	}
+	
+	/**
+     * Decrypts the given byte data with the given receiver certificate and the private key
+     * 
+     * @param encryptedByteData
+     *            an array of byte data to decrypt
+     * @param x509CertificateFile
+     *            X.509 certificate that was used to encrypt the data. The file is expected to be in
+     *            DER or PEM format
+     * @param privateKeyPemFile
+     *            .pem file that contains the private key used for decryption. This key must fit to
+     *            the public key contained in the public certificate
+     * @return an array of bytes representing the unencrypted byte data.
+     * @throws IOException
+     *             <ul>
+     *             <li>if any of the given files does not exist</li>
+     *             <li>if any of the given files cannot be read</li>
+     *             </ul>
+     * @throws CertificateNotYetValidException
+     *             if the certificate is not yet valid
+     * @throws CertificateExpiredException
+     *             if the certificate is not valid anymore
+     * @throws CertificateException
+     *             <ul>
+     *             <li>if the given certificate file does not contain a certificate</li>
+     *             <li>if the certificate contained in the given file is not a X.509 certificate</li>
+     *             </ul>
+     * @throws EncryptionException
+     *             if a problem occured during the encryption process
+     */
+    public static byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile,
+            File privateKeyPemFile) throws IOException, CertificateNotYetValidException,
+            CertificateExpiredException, CertificateException, EncryptionException {
+        return decrypt(encryptedByteData, x509CertificateFile, privateKeyPemFile, null);
+    }
 
 	/**
 	 * Decrypts the given byte data with the given receiver certificate and the private key
@@ -154,6 +198,8 @@ public class SMIMEBasedEncryption {
 	 * @param privateKeyPemFile
 	 *            .pem file that contains the private key used for decryption. This key must fit to
 	 *            the public key contained in the public certificate
+     * @param privateKeyPassword 
+     *            password to encrypt private key
 	 * @return an array of bytes representing the unencrypted byte data.
 	 * @throws IOException
 	 *             <ul>
@@ -173,7 +219,7 @@ public class SMIMEBasedEncryption {
 	 *             if a problem occured during the encryption process
 	 */
 	public static byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile,
-			File privateKeyPemFile) throws IOException, CertificateNotYetValidException,
+			File privateKeyPemFile, final String privateKeyPassword) throws IOException, CertificateNotYetValidException,
 			CertificateExpiredException, CertificateException, EncryptionException {
 
 		byte[] decryptedByteData = new byte[] {};
@@ -189,16 +235,25 @@ public class SMIMEBasedEncryption {
 
 		// The recipient's private key
 		FileReader fileReader = new FileReader(privateKeyPemFile);
-		PEMReader pemReader = new PEMReader(fileReader);
+		PasswordFinder passwordFinder = new PasswordFinder() { 
+            @Override
+            public char[] getPassword() {
+                return (privateKeyPassword!=null) ? privateKeyPassword.toCharArray() : null;
+            }
+        };
+		PEMReader pemReader = null;
+		if(passwordFinder.getPassword()!=null && passwordFinder.getPassword().length>0) {
+		    pemReader = new PEMReader(fileReader,passwordFinder);
+		} else {
+	       pemReader = new PEMReader(fileReader);
+		}
 		KeyPair keyPair = (KeyPair) pemReader.readObject();
 		PrivateKey privateKey = keyPair.getPrivate();
 
 		try {
-			MimeBodyPart encryptedMimeBodyPart = new MimeBodyPart(new ByteArrayInputStream(
-					encryptedByteData));
-
+			MimeBodyPart encryptedMimeBodyPart = new MimeBodyPart(new ByteArrayInputStream(encryptedByteData));
 			SMIMEEnveloped enveloped = new SMIMEEnveloped(encryptedMimeBodyPart);
-
+			
 			// look for our recipient identifier
 			RecipientId recipientId = new RecipientId();
 
@@ -209,22 +264,17 @@ public class SMIMEBasedEncryption {
 			RecipientInformation recipientInfo = recipients.get(recipientId);
 
 			if (recipientInfo != null) {
-				decryptedByteData = recipientInfo.getContent(privateKey,
-						BouncyCastleProvider.PROVIDER_NAME);
+				decryptedByteData = recipientInfo.getContent(privateKey,BouncyCastleProvider.PROVIDER_NAME);
 			}
 		} catch (MessagingException e) {
-			throw new EncryptionException(
-					"There was an IO problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
+			throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
 		} catch (CMSException e) {
-			throw new EncryptionException(
-					"There was an IO problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
+			throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
 		} catch (NoSuchProviderException e) {
-			throw new EncryptionException(
-					"There was an IO problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
+			throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
 		}
+
+		decryptedByteData = Base64.decode(decryptedByteData);
 		return decryptedByteData;
 	}
 	
@@ -291,4 +341,38 @@ public class SMIMEBasedEncryption {
 
 		return new SMIMEDecryptedInputStream(encryptedDataStream, x509CertificateFile, privateKeyFile);
 	}
+	
+	/**
+     * Decrypts the given InputStream using the given X.509 certificate file that was used for 
+     * encryption and the matching private key file.
+     * 
+     * @param encryptedDataStream the InputStream to decrypt
+     * @param x509CertificateFile the X.509 public certificate that was used for encryption
+     * @param privateKeyFile the matching private key file needed for decryption
+     * @param privateKeyPassword 
+     *            password to encrypt private key
+     * @return the decrypted InputStream
+     * @throws IOException
+     *             <ul>
+     *             <li>if any of the given files does not exist</li>
+     *             <li>if any of the given files cannot be read</li>
+     *             </ul>
+     * @throws CertificateNotYetValidException
+     *             if the certificate is not yet valid
+     * @throws CertificateExpiredException
+     *             if the certificate is not valid anymore
+     * @throws CertificateException
+     *             <ul>
+     *             <li>if the given certificate file does not contain a certificate</li>
+     *             <li>if the certificate contained in the given file is not a X.509 certificate</li>
+     *             </ul>
+     * @throws EncryptionException
+     *             if a problem occured during the encryption process
+     */
+    public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, 
+            File privateKeyFile,final String privateKeyPassword) throws IOException, CertificateNotYetValidException, 
+            CertificateExpiredException, CertificateException, EncryptionException  {
+
+        return new SMIMEDecryptedInputStream(encryptedDataStream, x509CertificateFile, privateKeyFile, privateKeyPassword);
+    }
 }

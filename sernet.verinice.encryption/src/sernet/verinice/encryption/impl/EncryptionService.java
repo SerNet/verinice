@@ -79,6 +79,26 @@ public class EncryptionService implements IEncryptionService {
 				privateKeyPemFile);
 	}
 	
+	
+	/* (non-Javadoc)
+     * @see sernet.verinice.interfaces.encryption.IEncryptionService#decrypt(java.io.InputStream, java.io.File, java.io.File, java.lang.String)
+     */
+    @Override
+    public InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, File privateKeyPemFile, String privateKeyPassword) 
+        throws IOException, CertificateNotYetValidException, CertificateExpiredException, 
+        CertificateException, EncryptionException {
+        return SMIMEBasedEncryption.decrypt(encryptedDataStream, x509CertificateFile,
+                privateKeyPemFile,privateKeyPassword);
+    }
+	
+	@Override
+    public byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile, final String privateKeyPassword)
+            throws IOException, CertificateNotYetValidException, CertificateExpiredException,
+            CertificateException, EncryptionException {
+        return SMIMEBasedEncryption.decrypt(encryptedByteData, x509CertificateFile,
+                privateKeyPemFile, privateKeyPassword);
+    }
+	
 	@Override
 	public OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile)
 		throws IOException, CertificateNotYetValidException, CertificateExpiredException, 
