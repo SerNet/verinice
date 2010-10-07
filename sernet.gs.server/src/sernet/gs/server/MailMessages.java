@@ -32,6 +32,9 @@ class MailMessages extends NLS {
 	public static String MailJob_9;
 	public static String MailJob_10;
 	public static String MailJob_11;
+    public static String MailJob_14;
+    public static String MailJob_16;
+    public static String MailJob_18;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, MailMessages.class);

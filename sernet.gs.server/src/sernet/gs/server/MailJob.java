@@ -80,8 +80,17 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	private String notificationEmailFrom;
 	
 	private String notificationEmailReplyTo;
+
+	private String notificationEmailLinkTo;
 	
-	private DateFormat notificationEmailDateFormat;
+	/**
+     * @param notificationEmailLinkTo the notificationEmailLinkTo to set
+     */
+    public void setNotificationEmailLinkTo(String notificationEmailLinkTo) {
+        this.notificationEmailLinkTo = notificationEmailLinkTo;
+    }
+
+    private DateFormat notificationEmailDateFormat;
 
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
@@ -94,7 +103,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		try {
 			commandService.executeCommand(pniCommand);
 		} catch (CommandException e) {
-			log.warn("Exception when retrieving notification information. Notification mails may miss details!", e);
+			log.warn("Exception when retrieving notification information. Notification mails may miss details!", e); //$NON-NLS-1$
 		}
 		
 		// Iterates through the result, generate and send the individual messages.
@@ -105,7 +114,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 					notificationEmailFrom,
 					ei.getConfiguration(),
 					mailSender.createMimeMessage(),
-					notificationEmailDateFormat);
+					notificationEmailDateFormat,
+					notificationEmailLinkTo);
 			
 			try
 			{
@@ -215,14 +225,17 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		MimeMessage mm;
 		
 		DateFormat dateFormat;
+
+        private String linkTo;
 		
-		MessageHelper(String replyTo, String from, Configuration recipient, MimeMessage mm, DateFormat df)
+		MessageHelper(String replyTo, String from, Configuration recipient, MimeMessage mm, DateFormat df, String linkTo)
 		{
 			this.replyTo = replyTo;
 			this.from = from;
 			this.to = recipient.getNotificationEmail();
 			this.mm = mm;
 			dateFormat = df;
+			this.linkTo = linkTo;
 		}
 		
 		void addCompletionExpirationEvent()
@@ -239,14 +252,14 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		{
 			StringBuffer sb = new StringBuffer();
 			sb.append(mu.getTitle());
-			sb.append(" (");
+			sb.append(" ("); //$NON-NLS-1$
 			Calendar c = Calendar.getInstance();
 			Date d = (isCompletion ? mu.getUmsetzungBis() : mu.getNaechsteRevision());
 			if (d != null)
 				c.setTime(d);
 			
 			sb.append(dateFormat.format(c.getTime()));
-			sb.append(")");
+			sb.append(")"); //$NON-NLS-1$
 			
 			return sb.toString();
 		}
@@ -263,8 +276,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			
 			String dateString = mu.getUmsetzungBis() != null 
 									? dateFormat.format(mu.getUmsetzungBis())
-									: "<kein Datum>";
-			l.add(NLS.bind(MailMessages.MailJob_3, dateString + " " + mu.getTitle()));
+									: MailMessages.MailJob_14;
+			l.add(NLS.bind(MailMessages.MailJob_3, dateString + " " + mu.getTitle())); //$NON-NLS-1$
 		}
 		
 		void addRevisionExpirationEvent(MassnahmenUmsetzung mu)
@@ -278,8 +291,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			}
 			String dateString = mu.getNaechsteRevision() != null
 								? dateFormat.format(mu.getNaechsteRevision())
-								: "<kein Datum>";
-			l.add(NLS.bind(MailMessages.MailJob_4, dateString + " " + mu.getTitle()));
+								: MailMessages.MailJob_16;
+			l.add(NLS.bind(MailMessages.MailJob_4, dateString + " " + mu.getTitle())); //$NON-NLS-1$
 		}
 		
 		void addMeasureModifiedEvent(MassnahmenUmsetzung mu)
@@ -318,10 +331,12 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			
 			StringBuffer sb = new StringBuffer();
 			sb.append(MailMessages.MailJob_7);
+			sb.append(MailMessages.MailJob_18);
+			sb.append(linkTo + "\n\n"); //$NON-NLS-1$
 			
 			for (String evt : events)
 			{
-				sb.append(" * " + evt + "\n");
+				sb.append(" * " + evt + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			
 			for (Map.Entry<CnATreeElement, List<String>> e : globalExpirationEvents.entrySet())
