@@ -19,6 +19,8 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,7 +33,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.xml.bind.DataBindingException;
 import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.namespace.QName;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -41,6 +50,7 @@ import net.sf.ehcache.Status;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
@@ -197,11 +207,22 @@ public class ExportCommand extends GenericCommand
 		}
 		
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		PrintWriter pw = new PrintWriter(bos);
-		JAXB.marshal(sr, pw);
+		marshal(sr, bos);
 		
 		result = bos.toByteArray();
 	}
+	
+	private void marshal( Object jaxbObject, OutputStream os ) {
+        try {       
+            JAXBContext context = JAXBContext.newInstance( jaxbObject.getClass() );
+            Marshaller m = context.createMarshaller();
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
+            m.setProperty(Marshaller.JAXB_ENCODING,VeriniceCharset.CHARSET_UTF_8.name());
+            m.marshal(jaxbObject, os);
+        } catch (JAXBException e) {
+            throw new DataBindingException(e);
+        } 
+    }
 
     /**
 	 * Export (i.e. "create XML representation of" the given cnATreeElement
@@ -316,13 +337,6 @@ public class ExportCommand extends GenericCommand
         } catch (Exception e) {
             getLog().error("error while getting links of element: " + element.getTitle() + "(" + element.getTypeId() + "), UUID: " + element.getUuid(), e);
         }
-    }
-	
-	/**
-     * @param cnATreeElement
-     */
-    private void merge(CnATreeElement element) {
-        getDao().merge(element);
     }
     
     private IBaseDao<CnATreeElement, Serializable> getDao() {
