@@ -45,6 +45,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveLink;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
 import sernet.gs.ui.rcp.main.service.taskcommands.CreateScenario;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
@@ -581,6 +582,17 @@ public class CnAElementHome {
         if (log.isDebugEnabled())
             log.debug("Link created");
         return true;
+    }
+
+    /**
+     * @param cnAElement
+     * @throws Exception 
+     */
+    public CnATreeElement updateEntity(CnATreeElement element) throws Exception {
+        UpdateElementEntity<CnATreeElement> command = new UpdateElementEntity(element, true, ChangeLogEntry.STATION_ID);
+        command = getCommandService().executeCommand(command);
+        return (CnATreeElement) command.getElement();
+    
     }
 
    

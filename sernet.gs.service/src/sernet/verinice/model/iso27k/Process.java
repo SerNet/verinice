@@ -54,6 +54,8 @@ public class Process extends CnATreeElement implements IISO27kElement {
 	 */
 	public Process() {
 		super();
+		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	public Process(CnATreeElement parent) {

@@ -53,6 +53,7 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
     public SamtTopic() {
         super();
         setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
     }
     
     public SamtTopic(CnATreeElement parent) {

@@ -21,7 +21,7 @@
       </perspective>
       <perspective
             class="sernet.gs.ui.rcp.main.PerspectiveDS"
-            icon="icons/sample.gif"
+            icon="icons/shield.png"
             id="sernet.gs.ui.rcp.main.dsperspective"
             name="%perspective.name.0"/>
       <perspective

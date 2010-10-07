@@ -147,7 +147,7 @@ public class BSIElementEditor extends EditorPart {
 		try {
 			// save element, refresh etc:
 			BSIElementEditorInput editorinput = (BSIElementEditorInput) getEditorInput();
-			CnAElementHome.getInstance().update(cnAElement);
+			CnAElementHome.getInstance().updateEntity(cnAElement);
 			isModelModified = false;
 			firePropertyChange(IEditorPart.PROP_DIRTY);
 

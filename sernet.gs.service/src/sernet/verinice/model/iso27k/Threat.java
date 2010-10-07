@@ -42,6 +42,7 @@ public class Threat extends CnATreeElement implements IISO27kElement {
 	public Threat() {
 		super();
 		setEntity(new Entity(TYPE_ID));
+		getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	public Threat(CnATreeElement parent) {

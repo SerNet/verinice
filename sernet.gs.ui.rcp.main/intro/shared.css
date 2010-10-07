@@ -13,32 +13,124 @@ body {
 	font-family:Trebuchet MS, sans-serif;
 	font-size: 12px;
 	color:#000000;
-	background-image:url("./titlebanner.gif");
-	background-repeat: repeat-x;
+	background-image:url("./vn-bg.png");
+	background-repeat: no-repeat;
 	} 
 	
 h1 {
 	text-align:left;
 	font-size: 16pt;
 	font-weight:normal;
-	color:#E5E5E5;
+	
 	} 
 
-.arial {
-    font-family:Arial, sans-serif;
+
+
+	
+	
+.redlink {
+	color:#be0000;
+	}
+
+	
+
+#a-isa {
+	 position:absolute; 
+	 top:494px; 
+	 left:780px;
+	padding:0px;
+	margin-top:0px;
+ 	margin-bottom:0px;
+ display:block;
+  	background-image:url(link-isa.png);
+	width:99px;
+ 	height:99px;
+}
+#a-isa:hover { background-image:url(link-isa-hover.png); }
+
+
+.link-isa-text {
+	font-size: 16px;
+	position:absolute;
+	top:520px;
+	left:880px;
+	width:250px;
+	}
+
+
+#a-ism {
+	 position:absolute; 
+	 top:187px; 
+	 left:757px;
+	padding:0px;
+	margin-top:0px;
+ 	margin-bottom:0px;
+ display:block;
+  	background-image:url(link-ism.png);
+	width:95px;
+ 	height:95px;
+}
+#a-ism:hover { background-image:url(link-ism-hover.png); }
+
+
+#a-gs {
+	 position:absolute; 
+	 top:474px; 
+	 left:69px;
+	padding:0px;
+	margin-top:0px;
+ 	margin-bottom:0px;
+ display:block;
+  	background-image:url(link-gs.png);
+	width:97px;
+ 	height:97px;
+}
+#a-gs:hover { background-image:url(link-gs-hover.png); }
+
+#a-info {
+	 position:absolute; 
+	 top:100px; 
+	 left:0px;
+	padding:0px;
+	margin-top:0px;
+ 	margin-bottom:0px;
+ display:block;
+  	background-image:url(link-info.png);
+	width:52px;
+ 	height:89px;
 }
 
-h4 {
-	color:#787878;
-	}	
+#logo {
+	 position:absolute; 
+	 top:0px; 
+	 left:0px;
+}
+
+.link-info-text {
+	position:absolute;
+	top:100px;
+	left:100px;
+	width:500px;
+	}
 	
-a {
-	font-family:Trebuchet MS, sans-serif;
-	font-size: 12px;
-	color:#000000;
-	font-weight:normal;
-	padding-bottom:20px;
+
+.link-ism-text {
+	font-size: 16px;
+	position:absolute;
+	top:210px;
+	left:862px;
+	width:250px;
 	}
 	
 	
+	
+	
+.link-gs-text {
+	font-size: 16px;
+	position:absolute;
+	top:500px;
+	left:170px;
+	width:200px;
+	}
+
 

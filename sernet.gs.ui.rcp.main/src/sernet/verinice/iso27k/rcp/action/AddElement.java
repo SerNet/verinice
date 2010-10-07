@@ -117,7 +117,7 @@ public class AddElement implements IObjectActionDelegate {
 				}
 			}
 			if (newElement != null) {
-				EditorFactory.getInstance().openEditor(newElement);
+				EditorFactory.getInstance().updateAndOpenObject(newElement);
 			}
 		} catch (Exception e) {
 			LOG.error("Could not add element", e); //$NON-NLS-1$

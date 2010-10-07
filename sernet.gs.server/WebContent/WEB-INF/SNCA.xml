@@ -3610,45 +3610,7 @@ the value between <param></param> will be used directly if no string is found fo
             visible="false"
             />
      	
-    <!-- Risk analysis, values must match those defined for asset CIA and scenario probability  -->
-	<huipropertygroup name="Control Strength" id="control_effectivenessgroup" tags="risk">
-	        <huiproperty name="Impact on Confidentiality" id="control_effectiveness_confidentiality"
-            tags="risk" 
-	        	inputtype="numericoption" min="0" max="3" >
-                <option name="No effect"          id="control_eff_conf_0" value="0" />
-                <option name="Reduces 1 level"    id="control_eff_conf_1" value="1" />
-                <option name="Reduces 2 levels"    id="control_eff_conf_2" value="2" />
-                <option name="Reduces completely" id="control_eff_conf_3" value="3" />
-            </huiproperty>
-	        <huiproperty tags="risk" name="Impact on Integrity" id="control_effectiveness_integrity" 
-	        	inputtype="numericoption" min="0" max="2">
-                <option name="No effect"         id="control_eff_integ_0" value="0" />
-                <option name="Reduces 1 level"    id="control_eff_integ_1" value="1" />
-                <option name="Reduces completely" id="control_eff_integ_2" value="2" />
-            </huiproperty>
-	        <huiproperty tags="risk" name="Impact on Availability" id="control_effectiveness_availability" 
-	        	inputtype="numericoption" min="0" max="4" >
-                <option name="No effect"         id="control_eff_avail_0" value="0" />
-                <option name="Reduces 1 level"    id="control_eff_avail_1" value="1" />
-                <option name="Reduces 2 levels"    id="control_eff_avail_2" value="2" />
-                <option name="Reduces 3 levels"    id="control_eff_avail_3" value="3" />
-                <option name="Reduces completely" id="control_eff_avail_4" value="4" />
-            </huiproperty>
-            <huiproperty tags="risk" name="Probability of scenario" id="control_eff_probability"
-                inputtype="numericoption" min="0" max="8" >
-                <option name="No effect."      id="control_eff_prob_0" value="0" />
-                <option name="Reduces 1 level" id="control_eff_prob_1" value="1" /> 
-                <option name="Reduces 2 levels" id="control_eff_prob_2" value="2" />
-                <option name="Reduces 3 levels" id="control_eff_prob_3" value="3" />
-                <option name="Reduces 4 levels" id="control_eff_prob_4" value="4" />
-                <option name="Reduces 5 levels" id="control_eff_prob_5" value="5" />
-                <option name="Reduces 6 levels" id="control_eff_prob_6" value="6" />
-                <option name="Reduces 7 levels" id="control_eff_prob_7" value="7" />
-                <option name="Reduces completely" id="control_eff_prob_8" value="8" />
-            </huiproperty>
-	        <huiproperty tags="risk" name="Explanation" id="control_effectiveness_explanation2" inputtype="text"/>
-	        	
-     	</huipropertygroup>
+   
 
 <!--      	
      	<huipropertygroup name="Monitoring Results" id="control_auditgroup" >
@@ -3684,6 +3646,46 @@ the value between <param></param> will be used directly if no string is found fo
                 </defaultRule>
             </huiproperty>
      	</huipropertygroup>
+        
+         <!-- Risk analysis, values must match those defined for asset CIA and scenario probability  -->
+    <huipropertygroup name="Control Strength" id="control_effectivenessgroup" tags="risk">
+            <huiproperty name="Impact on Confidentiality" id="control_effectiveness_confidentiality"
+            tags="risk" 
+                inputtype="numericoption" min="0" max="3" >
+                <option name="No effect"          id="control_eff_conf_0" value="0" />
+                <option name="Reduces 1 level"    id="control_eff_conf_1" value="1" />
+                <option name="Reduces 2 levels"    id="control_eff_conf_2" value="2" />
+                <option name="Reduces completely" id="control_eff_conf_3" value="3" />
+            </huiproperty>
+            <huiproperty tags="risk" name="Impact on Integrity" id="control_effectiveness_integrity" 
+                inputtype="numericoption" min="0" max="2">
+                <option name="No effect"         id="control_eff_integ_0" value="0" />
+                <option name="Reduces 1 level"    id="control_eff_integ_1" value="1" />
+                <option name="Reduces completely" id="control_eff_integ_2" value="2" />
+            </huiproperty>
+            <huiproperty tags="risk" name="Impact on Availability" id="control_effectiveness_availability" 
+                inputtype="numericoption" min="0" max="4" >
+                <option name="No effect"         id="control_eff_avail_0" value="0" />
+                <option name="Reduces 1 level"    id="control_eff_avail_1" value="1" />
+                <option name="Reduces 2 levels"    id="control_eff_avail_2" value="2" />
+                <option name="Reduces 3 levels"    id="control_eff_avail_3" value="3" />
+                <option name="Reduces completely" id="control_eff_avail_4" value="4" />
+            </huiproperty>
+            <huiproperty tags="risk" name="Probability of scenario" id="control_eff_probability"
+                inputtype="numericoption" min="0" max="8" >
+                <option name="No effect."      id="control_eff_prob_0" value="0" />
+                <option name="Reduces 1 level" id="control_eff_prob_1" value="1" /> 
+                <option name="Reduces 2 levels" id="control_eff_prob_2" value="2" />
+                <option name="Reduces 3 levels" id="control_eff_prob_3" value="3" />
+                <option name="Reduces 4 levels" id="control_eff_prob_4" value="4" />
+                <option name="Reduces 5 levels" id="control_eff_prob_5" value="5" />
+                <option name="Reduces 6 levels" id="control_eff_prob_6" value="6" />
+                <option name="Reduces 7 levels" id="control_eff_prob_7" value="7" />
+                <option name="Reduces completely" id="control_eff_prob_8" value="8" />
+            </huiproperty>
+            <huiproperty tags="risk" name="Explanation" id="control_effectiveness_explanation2" inputtype="text"/>
+                
+        </huipropertygroup>
         
             <huipropertygroup id="control_maturitygroup" name="Maturity Level" tags="maturity" >
         
@@ -4138,7 +4140,7 @@ the value between <param></param> will be used directly if no string is found fo
             
             <!-- Threat likelihood and impact, the higher of the two values will be used. -->
        	<huiproperty 
-       		name="Threat Likelihood" id="threat_likelihood" inputtype="numericoption" min="0" max="5" tags="risk">
+       		name="Threat Likelihood" id="threat_likelihood" inputtype="numericoption" min="0" max="5" defaultValue="0" tags="risk">
             <option id="threat_likelihood_0" name="Rare" value="0"/>
             <option id="threat_likelihood_1" name="Annually" value="1"/>
             <option id="threat_likelihood_2" name="Monthly" value="2"/>
@@ -4184,7 +4186,7 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Description" id="vulnerability_desc"  visible="false" tags="risk"/>
                 
 		<huiproperty name="Ease of Exploitation " id="vulnerability_level" inputtype="numericoption"
-			min="0" max="3" tags="risk">
+			min="0" max="3" defaultValue="0" tags="risk">
             <option id="vulnerability_level_0" name="0: Hardly possible" value="0"/>
             <option id="vulnerability_level_1" name="1: Possible" value="1"/>
             <option id="vulnerability_level_2" name="2: Easily possible" value="2"/>
