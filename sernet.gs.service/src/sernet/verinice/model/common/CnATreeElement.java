@@ -296,8 +296,15 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 	
 	public EntityType getEntityType() {
-		if (subEntityType == null)
+		if (subEntityType == null) {
+		    if (getLog().isDebugEnabled()) {
+		        getLog().debug("type-factory: " + getTypeFactory());
+            }
 			subEntityType = getTypeFactory().getEntityType(getTypeId());
+			if (getLog().isDebugEnabled()) {
+                getLog().debug("type: " + getTypeId() + ", subEntityType: " + subEntityType);
+            }
+		}
 		return subEntityType;
 	}
 

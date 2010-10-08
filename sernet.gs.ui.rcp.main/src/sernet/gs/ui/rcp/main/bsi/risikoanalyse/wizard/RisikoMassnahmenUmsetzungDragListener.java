@@ -21,6 +21,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -40,9 +41,14 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener {
 
+    private static final Logger LOG = Logger.getLogger(RisikoMassnahmenUmsetzungDragListener.class);
+    
     private TableViewer viewer;
     private CnATreeElement cnaElement;
 
+
+    ArrayList<RisikoMassnahmenUmsetzung> risikoMassnahmenUmsetzungen;
+    
     /**
      * Constructor sets the needed data.
      * 
@@ -57,59 +63,81 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
     }
 
     /**
-     * Set information about the event.
-     * 
-     * @param event
-     *            the event information
-     */
-    public void dragSetData(DragSourceEvent event) {
-        event.data = DNDItems.RISIKOMASSNAHMENUMSETZUNG;
-    }
-
-    /**
      * starts drag if necessary
      */
     public void dragStart(DragSourceEvent event) {
 
-        IStructuredSelection selection = ((IStructuredSelection) viewer.getSelection());
-        ArrayList<RisikoMassnahmenUmsetzung> risikoMassnahmenUmsetzungen = new ArrayList<RisikoMassnahmenUmsetzung>();
-
-        /* leave, if selection is empty */
-        if (selection.size() < 1) {
-            event.doit = false;
-            return;
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("dragStart...");
         }
-
-        /*
-         * process RisikoMassnahmenUmsetzungen or cast MassnahmenUmsetzungen to
-         * RisikoMassnahmenUmsetzungen
-         */
-        for (Iterator iter = selection.iterator(); iter.hasNext();) {
-
-            Object object = iter.next();
-
-            if (!(object instanceof RisikoMassnahmenUmsetzung || object instanceof MassnahmenUmsetzung)) {
+        try {
+            IStructuredSelection selection = ((IStructuredSelection) viewer.getSelection());
+            risikoMassnahmenUmsetzungen = new ArrayList<RisikoMassnahmenUmsetzung>();
+    
+            /* leave, if selection is empty */
+            if (selection.size() < 1) {
                 event.doit = false;
                 return;
-
-            } else if (object instanceof RisikoMassnahmenUmsetzung) {
-                /*
-                 * object is of type RisikoMassnahmenUmsetzung - create instance
-                 * for target object and add it
-                 */
-                RisikoMassnahmenUmsetzung umsetzung = RisikoMassnahmenUmsetzungFactory.buildFromRisikomassnahmenUmsetzung((RisikoMassnahmenUmsetzung) object, cnaElement, null);
-                risikoMassnahmenUmsetzungen.add(umsetzung);
-
-            } else {
-                /*
-                 * object is of type MassnahmenUmsetzung - create instance for
-                 * target object and add it
-                 */
-                RisikoMassnahmenUmsetzung umsetzung = RisikoMassnahmenUmsetzungFactory.buildFromMassnahmenUmsetzung((MassnahmenUmsetzung) object, cnaElement, null);
-                risikoMassnahmenUmsetzungen.add(umsetzung);
             }
+    
+            /*
+             * process RisikoMassnahmenUmsetzungen or cast MassnahmenUmsetzungen to
+             * RisikoMassnahmenUmsetzungen
+             */
+            for (Iterator iter = selection.iterator(); iter.hasNext();) {
+    
+                Object object = iter.next();
+    
+                if (!(object instanceof RisikoMassnahmenUmsetzung || object instanceof MassnahmenUmsetzung)) {            
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("dragStart, wrong object");
+                    }
+                    
+                    event.doit = false;
+                    return;
+    
+                } else if (object instanceof RisikoMassnahmenUmsetzung) {
+                    
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("dragStart, RisikoMassnahmenUmsetzung");
+                    }
+                    
+                    /*
+                     * object is of type RisikoMassnahmenUmsetzung - create instance
+                     * for target object and add it
+                     */
+                    RisikoMassnahmenUmsetzung umsetzung = RisikoMassnahmenUmsetzungFactory.buildFromRisikomassnahmenUmsetzung((RisikoMassnahmenUmsetzung) object, cnaElement, null);
+                    risikoMassnahmenUmsetzungen.add(umsetzung);
+    
+                } else {
+                    
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("dragStart, MassnahmenUmsetzung");
+                    }
+                    /*
+                     * object is of type MassnahmenUmsetzung - create instance for
+                     * target object and add it
+                     */
+                    RisikoMassnahmenUmsetzung umsetzung = RisikoMassnahmenUmsetzungFactory.buildFromMassnahmenUmsetzung((MassnahmenUmsetzung) object, cnaElement, null);
+                    risikoMassnahmenUmsetzungen.add(umsetzung);
+                }
+            }
+            event.doit = true;
+            DNDItems.setItems(risikoMassnahmenUmsetzungen);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("dragStart finished");
+            }
+        } catch( Throwable t) {
+            LOG.error("Error in dragStart", t);
         }
-        event.doit = true;
+        
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
+     */
+    public void dragSetData(DragSourceEvent event) {
+        event.data = DNDItems.RISIKOMASSNAHMENUMSETZUNG;
         DNDItems.setItems(risikoMassnahmenUmsetzungen);
     }
 
@@ -121,5 +149,6 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
      *            the information associated with the drag finished event
      */
     public void dragFinished(DragSourceEvent event) {
+        risikoMassnahmenUmsetzungen.clear();
     }
 }

@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
@@ -33,6 +35,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class RisikoMassnahmenUmsetzungFactory {
 
+    private static final Logger LOG = Logger.getLogger(RisikoMassnahmenUmsetzungFactory.class);
+    
 	public static RisikoMassnahmenUmsetzung buildFromRisikomassnahme(RisikoMassnahme draftMn,
 			CnATreeElement superParent, 
 			GefaehrdungsUmsetzung myParent) {
@@ -73,6 +77,10 @@ public class RisikoMassnahmenUmsetzungFactory {
 			GefaehrdungsUmsetzung myParent) {
 		
 		RisikoMassnahmenUmsetzung massnahmenUmsetzung = new RisikoMassnahmenUmsetzung(superParent, myParent);
+		
+		if (LOG.isDebugEnabled()) {
+            LOG.debug("massnahmenUmsetzung, entitiy: " + massnahmenUmsetzung.getEntity());
+        }
 		
 		massnahmenUmsetzung.setLebenszyklus(draftMnUms.getLebenszyklus());
 		massnahmenUmsetzung.setName(draftMnUms.getName());

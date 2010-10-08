@@ -36,7 +36,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
 	private GefaehrdungsUmsetzung parent;
 	private RisikoMassnahme massnahme;
 	
-	public static final String TYPE_ID = "ra_mnums";
+	public static final String TYPE_ID = "mnums";
 
 	public RisikoMassnahmenUmsetzung(CnATreeElement superParent, 
 			GefaehrdungsUmsetzung myParent, RisikoMassnahme massnahme) {

@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
@@ -39,6 +40,8 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
  */
 public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 
+    private static final Logger LOG = Logger.getLogger(RisikoMassnahmenUmsetzungDropListener.class);
+    
     private GefaehrdungsUmsetzung parent;
     private RisikoMassnahmenUmsetzung child;
     private TreeViewer viewer;
@@ -66,6 +69,10 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
     @Override
     public boolean performDrop(Object data) {
 
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("performDrop...");
+        }
+        
         /* get the target object */
         Object receiver = getCurrentTarget();
 
