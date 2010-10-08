@@ -22,6 +22,8 @@ package sernet.verinice.iso27k.rcp;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.TreeViewer;
 
+import com.sun.xml.messaging.saaj.util.LogDomainConstants;
+
 import sernet.gs.ui.rcp.main.bsi.views.ThreadSafeViewerUpdate;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -45,6 +47,9 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
 
     public ISO27KModelViewUpdate(TreeViewer viewer, TreeViewerCache cache) {
         super();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating ISO27k model view updater.");
+        }
         this.viewer = viewer;
         this.cache = cache;
         this.updater = new ThreadSafeViewerUpdate(viewer);

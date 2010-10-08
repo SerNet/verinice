@@ -282,7 +282,12 @@ public class CnATreeElementSelectionDialog extends Dialog {
                         input = command.getElements();
                         Display.getDefault().asyncExec(new Runnable() {
                             public void run() {
-                                viewer.setInput(input);
+                                if (input!=null)
+                                    viewer.setInput(input);
+                                else {
+                                    ArrayList temp = new ArrayList(0);
+                                    viewer.setInput(temp);
+                                }
                             }
                         });
                         
@@ -292,7 +297,12 @@ public class CnATreeElementSelectionDialog extends Dialog {
                         input = command.getElements();
                         Display.getDefault().asyncExec(new Runnable() {
                             public void run() {
-                                viewer.setInput(input);
+                                if (input!=null)
+                                    viewer.setInput(input);
+                                else {
+                                    ArrayList temp = new ArrayList(0);
+                                    viewer.setInput(temp);
+                                }
                             }
                         });
                     }

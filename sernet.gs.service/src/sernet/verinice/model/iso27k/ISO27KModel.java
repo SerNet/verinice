@@ -154,6 +154,9 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 	}
 	
 	public void addISO27KModelListener(IISO27KModelListener listener) {
+	    if (getLog().isDebugEnabled()) {
+            getLog().debug("Adding ISO model listener.");
+        }
 		if (!getListeners().contains(listener))
 			getListeners().add(listener);
 	}

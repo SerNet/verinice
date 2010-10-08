@@ -248,6 +248,7 @@ public class ImageCache {
 	public static final String ISO27K_RISK = "sweetie-verinice/png/16-paper-calculate-percent.png";
 	/* ************************************************************************************************** */
 
+	public static final String NOALIENS = "noaliens.png";
 	
 	
 	
@@ -263,6 +264,7 @@ public class ImageCache {
 	
 	// for ISO27k elements: map of <element type> : <icon name> 
 	private static final HashMap<String, String> ISO27K_ICON_MAP;
+
 	
 	static {
 		ISO27K_ICON_MAP = new HashMap<String, String>();

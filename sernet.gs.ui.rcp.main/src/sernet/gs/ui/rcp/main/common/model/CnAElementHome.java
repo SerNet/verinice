@@ -91,7 +91,7 @@ public class CnAElementHome {
 
     private static CnAElementHome instance;
     
-    protected static final String LINK_NO_COMMENT = "";
+    protected static final String LINK_NO_COMMENT = ""; //$NON-NLS-1$
 
     private static final String QUERY_FIND_BY_ID = "from " + CnATreeElement.class.getName() + " as element " + "where element.dbId = ?"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
@@ -442,7 +442,7 @@ public class CnAElementHome {
     
     public void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop) {
         if (log.isDebugEnabled()) {
-            log.debug("createLink...");
+            log.debug("createLink..."); //$NON-NLS-1$
         }
         
         Display.getDefault().asyncExec(new Runnable() {
@@ -544,8 +544,8 @@ public class CnAElementHome {
      */
     protected void createScenario(Threat threat, Vulnerability vuln) {
         boolean confirm = MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
-                "Create new scenario?", "Threats and vulnerabilities cannot be connected with each other directly. " +
-                        "Do you wish to create a new scenario for the connected threat and vulnerability?");
+                Messages.getString("CnAElementHome.5"), Messages.getString("CnAElementHome.6") + //$NON-NLS-1$ //$NON-NLS-2$
+                        Messages.getString("CnAElementHome.7")); //$NON-NLS-1$
         if (!confirm)
             return;
         
@@ -555,7 +555,7 @@ public class CnAElementHome {
             IncidentScenario newElement = command.getNewElement();
             CnAElementFactory.getInstance().getISO27kModel().childAdded(newElement.getParent(), newElement);
         } catch (CommandException e) {
-            ExceptionUtil.log(e, "Error while creating the new scenario.");
+            ExceptionUtil.log(e, "Error while creating the new scenario."); //$NON-NLS-1$
         }
     }
 
@@ -580,7 +580,7 @@ public class CnAElementHome {
             return false;
         newLinks.add(link);
         if (log.isDebugEnabled())
-            log.debug("Link created");
+            log.debug("Link created"); //$NON-NLS-1$
         return true;
     }
 

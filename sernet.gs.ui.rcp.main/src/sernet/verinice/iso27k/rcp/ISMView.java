@@ -52,6 +52,8 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
+import com.sun.xml.messaging.saaj.util.LogDomainConstants;
+
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
@@ -127,6 +129,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
     private NaturalizeAction naturalizeAction;
 	
 	private IModelLoadListener modelLoadListener;
+	
+	private Object mutex = new Object();
 
 	private ISO27KModelViewUpdate modelUpdateListener;
 	
@@ -167,6 +171,9 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	 * 
 	 */
 	protected void startInitDataJob() {
+	    if (LOG.isDebugEnabled()) {
+            LOG.debug("ISMview: startInitDataJob");
+        }
 		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
@@ -186,41 +193,48 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	}
 
 	protected void initData() {	
-		if(CnAElementFactory.isIsoModelLoaded()) {
-			if (modelUpdateListener == null ) {
-				// modellistener should only be created once!
-				if (LOG.isDebugEnabled())
-					Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for ISMView."); //$NON-NLS-1$
-				modelUpdateListener = new ISO27KModelViewUpdate(viewer,cache);
-				CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
-				Display.getDefault().syncExec(new Runnable(){
-					public void run() {
-						setInput(CnAElementFactory.getInstance().getISO27kModel());
-					}
-				});
-			}
-		} else if(modelLoadListener==null) {
-			// model is not loaded yet: add a listener to load data when it's laoded
-			modelLoadListener = new IModelLoadListener() {
-
-				public void closed(BSIModel model) {
-					// nothing to do
-				}
-
-				public void loaded(BSIModel model) {
-				    // nothing to do
-				}
-
-                @Override
-                public void loaded(ISO27KModel model) {
-                    synchronized (modelLoadListener) {
-                        startInitDataJob();
-                    }
+	    if (LOG.isDebugEnabled()) {
+            LOG.debug("ISMVIEW: initData");
+        }
+	    synchronized (mutex) {
+	        if(CnAElementFactory.isIsoModelLoaded()) {
+	            if (modelUpdateListener == null ) {
+	                // modellistener should only be created once!
+	                if (LOG.isDebugEnabled())
+	                    Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for ISMView."); //$NON-NLS-1$
+	                modelUpdateListener = new ISO27KModelViewUpdate(viewer,cache);
+	                CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
+	                Display.getDefault().syncExec(new Runnable(){
+	                    public void run() {
+	                        setInput(CnAElementFactory.getInstance().getISO27kModel());
+	                    }
+	                });
+	            }
+	        } else if(modelLoadListener==null) {
+	            if (LOG.isDebugEnabled()) {
+                    LOG.debug("ISMView No model loaded, adding model load listener.");
                 }
-				
-			};
-			CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
-		}
+	            // model is not loaded yet: add a listener to load data when it's loaded
+	            modelLoadListener = new IModelLoadListener() {
+	                
+	                public void closed(BSIModel model) {
+	                    // nothing to do
+	                }
+	                
+	                public void loaded(BSIModel model) {
+	                    // nothing to do
+	                }
+	                
+	                @Override
+	                public void loaded(ISO27KModel model) {
+	                    startInitDataJob();
+	                }
+	                
+	            };
+	            CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+	            
+	        }
+	    }
 	}
 	
 	/* (non-Javadoc)

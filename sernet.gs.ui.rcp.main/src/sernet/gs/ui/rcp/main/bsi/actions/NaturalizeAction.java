@@ -69,8 +69,7 @@ public class NaturalizeAction extends Action implements ISelectionListener {
         setText(Messages.NaturalizeAction_0);
         setId(ID);
         setActionDefinitionId(ID);
-        // TODO: create icon
-        //setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
+        setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOALIENS));
         setToolTipText(Messages.NaturalizeAction_1);
         window.getSelectionService().addSelectionListener(this);
     }
