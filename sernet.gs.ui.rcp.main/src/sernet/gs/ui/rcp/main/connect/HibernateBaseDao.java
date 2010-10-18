@@ -323,4 +323,15 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
         return this.type;
     }
 
+    /**
+     * Empty by default.
+     * Override this in subclasses to check user rights.
+     * 
+     * @see sernet.verinice.interfaces.IBaseDao#checkRights(java.lang.Object)
+     */
+    @Override
+    public void checkRights(T entity) /*throws SecurityException*/ {
+        // empty     
+    }
+
 }

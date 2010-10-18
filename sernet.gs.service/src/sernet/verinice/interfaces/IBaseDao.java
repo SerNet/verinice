@@ -64,5 +64,7 @@ public interface IBaseDao<T, ID extends Serializable> {
 	public void flush();
 
 	public Class<T> getType();
+	
+	public void checkRights(T entity) /*throws SecurityException*/ ;
 
 }

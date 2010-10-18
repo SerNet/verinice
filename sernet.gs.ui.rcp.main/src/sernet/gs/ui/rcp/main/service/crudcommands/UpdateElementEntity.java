@@ -17,9 +17,13 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import sernet.gs.common.SecurityException;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.interfaces.GenericCommand;
@@ -40,6 +44,15 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class UpdateElementEntity<T extends CnATreeElement> extends GenericCommand implements IChangeLoggingCommand {
 
+    private transient Logger log = Logger.getLogger(UpdateElementEntity.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(UpdateElementEntity.class);
+        }
+        return log;
+    }
+    
 	private T newElement;
 	private boolean fireupdates;
 	
@@ -52,11 +65,21 @@ public class UpdateElementEntity<T extends CnATreeElement> extends GenericComman
 	}
 
 	public void execute() {
-		IBaseDao dao =  getDaoFactory().getDAOforTypedElement(newElement);
-		Entity newEntity = newElement.getEntity();
-		T oldElement = (T) dao.findById(newElement.getDbId());
-		oldElement.setEntity(newEntity);
-		newElement = (T) dao.merge(oldElement, fireupdates);
+	    IBaseDao<T, Serializable> elementDao = getDaoFactory().getDAO(newElement.getTypeId());
+        try {
+            elementDao.checkRights(newElement);
+        } catch(SecurityException e) {
+            getLog().warn("Can not update entity of element: " + newElement + " security check fails:" + e.getMessage());
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("stacktrace: ", e);
+            }
+            throw e;
+        }
+	    
+	    Entity newEntity = newElement.getEntity();
+	    IBaseDao<Entity, Serializable> entityDao = getDaoFactory().getDAO(Entity.class);
+	    newEntity = entityDao.merge(newEntity);
+	    newElement.setEntity(newEntity);
 	}
 
 	public T getElement() {

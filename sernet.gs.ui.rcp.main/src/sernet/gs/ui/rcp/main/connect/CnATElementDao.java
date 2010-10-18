@@ -95,7 +95,7 @@ public class CnATElementDao extends HibernateBaseDao<CnATreeElement, Integer> {
 	/**
 	 * @param entity
 	 */
-	protected void checkRights(CnATreeElement entity) /*throws SecurityException*/ { 
+	public void checkRights(CnATreeElement entity) /*throws SecurityException*/ { 
 		if (getAuthService().isPermissionHandlingNeeded() && !hasAdminRole(authService.getRoles())) {
 			final String username = getAuthService().getUsername();
 			if (log.isDebugEnabled()) {
