@@ -161,7 +161,6 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	    PropertyList result = typedPropertyLists.get(propertyType);
 	    if(result==null) {
 	        result = new PropertyList();
-	        typedPropertyLists.put(propertyType,result);
 	    }
 		return result;
 	}
@@ -252,7 +251,11 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	 * @param foreignProperties
 	 */
 	public void importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId, List<String> foreignProperties) {
-		PropertyList pl = getProperties(propertyTypeId);
+		PropertyList pl = typedPropertyLists.get(propertyTypeId);
+        if(pl==null) {
+            pl = new PropertyList();
+            typedPropertyLists.put(propertyTypeId,pl);
+        }
 		
 		// It would be possible to create a new list and make the PropertyList object
 		// use that but that causes problems with hibernate. As such the existing list
