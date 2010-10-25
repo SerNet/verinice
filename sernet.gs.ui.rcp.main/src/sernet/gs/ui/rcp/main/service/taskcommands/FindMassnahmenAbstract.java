@@ -92,7 +92,7 @@ public abstract class FindMassnahmenAbstract extends GenericCommand {
 				item.setStand(mn.getStand());
 				item.setDbId(mn.getDbId());
 
-				unresolvedItems.add(new UnresolvedItem(item, mn.getDbId(), mn.getEntity().getProperties(MassnahmenUmsetzung.P_UMSETZUNGDURCH_LINK), mn.getEntity().getProperties(MassnahmenUmsetzung.P_NAECHSTEREVISIONDURCH_LINK)));
+				unresolvedItems.add(new UnresolvedItem(item, mn.getDbId(), mn.getUmsetzungDurchLink(), mn.getNaechsteRevisionLink()));
 
 			}
 		}
@@ -102,6 +102,7 @@ public abstract class FindMassnahmenAbstract extends GenericCommand {
 		findCommand = this.getCommandService().executeCommand(findCommand);
 		all.addAll(findCommand.getResolvedItems());
 		unresolvedItems = findCommand.getUnresolvedItems();
+		
 
 		// find persons according to roles and relation:
 		FindResponsiblePersons command = new FindResponsiblePersons(unresolvedItems, MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
@@ -110,6 +111,7 @@ public abstract class FindMassnahmenAbstract extends GenericCommand {
 		for (UnresolvedItem resolvedItem : unresolvedItems) {
 			all.add(resolvedItem.getItem());
 		}
+		
 	}
 
 	public List<TodoViewItem> getAll() {

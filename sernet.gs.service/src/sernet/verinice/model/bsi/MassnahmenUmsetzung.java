@@ -19,6 +19,7 @@ package sernet.verinice.model.bsi;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -172,6 +173,26 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		return getVerantwortliche(P_UMSETZUNGDURCH_LINK);
 	}
 	
+	public PropertyList getUmsetzungDurchLink() {
+	    PropertyList result = null;
+	    Map<String,PropertyList> map = getEntity().getTypedPropertyLists();
+	    if(map!=null) {
+	        result = map.get(MassnahmenUmsetzung.P_UMSETZUNGDURCH_LINK);
+	    }
+        return result;
+	}
+
+	
+	public PropertyList getNaechsteRevisionLink() {
+        PropertyList result = null;
+        Map<String,PropertyList> map = getEntity().getTypedPropertyLists();
+        if(map!=null) {
+            result = map.get(MassnahmenUmsetzung.P_NAECHSTEREVISIONDURCH_LINK);
+        }
+        return result;
+    }
+	
+	
 	public void addUmsetzungDurch(Person person) {
 		PropertyType propertyType = getEntityType().getPropertyType(P_UMSETZUNGDURCH_LINK);
 		getEntity().createNewProperty(propertyType, person.getEntity().getDbId().toString());
@@ -225,27 +246,35 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	}
 
 	public String getUmsetzung() {
-		PropertyList properties = getEntity().getProperties(P_UMSETZUNG);
-		if (properties == null || properties.getProperties() == null
-				|| properties.getProperties().size() < 1)
-			return P_UMSETZUNG_UNBEARBEITET;
-
-		Property property = properties.getProperty(0);
-		if (property != null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
-			return property.getPropertyValue();
-		return P_UMSETZUNG_UNBEARBEITET;
+	    String umsetzung = P_UMSETZUNG_UNBEARBEITET;
+	    PropertyList properties = null;
+        Map<String,PropertyList> map = getEntity().getTypedPropertyLists();
+        if(map!=null) {
+            properties = map.get(MassnahmenUmsetzung.P_UMSETZUNG);
+        }       
+		if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0) {
+    		Property property = properties.getProperty(0);
+    		if (property != null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
+    		    umsetzung = property.getPropertyValue();
+		}
+		return umsetzung;
 	}
 
 	public Date getUmsetzungBis() {
-		if (getEntity().getProperties(P_UMSETZUNGBIS).getProperty(0) == null)
-			return null;
-
-		String dateString = getEntity().getProperties(P_UMSETZUNGBIS)
-				.getProperty(0).getPropertyValue();
-
-		if (dateString == null || dateString.length() == 0)
-			return null;
-		return new Date(Long.parseLong(dateString));
+	    PropertyList propertyList = null;
+	    Date date = null;
+        Map<String,PropertyList> map = getEntity().getTypedPropertyLists();
+        if(map!=null) {
+            propertyList = map.get(MassnahmenUmsetzung.P_UMSETZUNGBIS);
+        }
+		if (propertyList!=null && propertyList.getProperty(0) != null) {
+		    String dateString = propertyList.getProperty(0).getPropertyValue();
+		    
+		    if (dateString != null && dateString.length() > 0) {
+		        date = new Date(Long.parseLong(dateString));
+		    }
+		}
+		return date;
 	}
 	
 	public void setErlaeuterung(String text) {
@@ -266,20 +295,22 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		}
 	}
 	
-	
-
 	public Date getNaechsteRevision() {
-		PropertyList properties = getEntity().getProperties(
-				P_NAECHSTEREVISIONAM);
-		Property property = properties.getProperty(0);
-		if (property == null)
-			return null;
-		String dateString = property.getPropertyValue();
-		if (dateString == null || dateString.length() == 0)
-			return null;
-		return new Date(Long.parseLong(dateString));
-
-	}
+        PropertyList propertyList = null;
+        Date date = null;
+        Map<String,PropertyList> map = getEntity().getTypedPropertyLists();
+        if(map!=null) {
+            propertyList = map.get(MassnahmenUmsetzung.P_NAECHSTEREVISIONAM);
+        }
+        if (propertyList!=null && propertyList.getProperty(0) != null) {
+            String dateString = propertyList.getProperty(0).getPropertyValue();
+            
+            if (dateString != null && dateString.length() > 0) {
+                date = new Date(Long.parseLong(dateString));
+            }
+        }
+        return date;
+    }
 
 	public String getRevisionDurch() {
 		return getEntity().getSimpleValue(P_NAECHSTEREVISIONDURCH_LINK);

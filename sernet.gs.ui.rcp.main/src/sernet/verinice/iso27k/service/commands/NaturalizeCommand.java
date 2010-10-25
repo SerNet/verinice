@@ -30,20 +30,16 @@ import org.apache.log4j.Logger;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IAuthAwareCommand;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
-import com.sun.star.uno.RuntimeException;
-
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class NaturalizeCommand extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand {
+public class NaturalizeCommand extends GenericCommand implements IChangeLoggingCommand {
 
     private transient Logger log = Logger.getLogger(NaturalizeCommand.class);
 
@@ -59,8 +55,6 @@ public class NaturalizeCommand extends GenericCommand implements IChangeLoggingC
     private List<CnATreeElement> changedElements = Collections.emptyList();
     
     private transient IBaseDao<CnATreeElement, Serializable> cnaTreeElementDao;
-    
-    private transient IAuthService authService;
 
     private String stationId;
     
@@ -119,29 +113,6 @@ public class NaturalizeCommand extends GenericCommand implements IChangeLoggingC
     @Override
     public String getStationId() {
         return stationId;
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand#getAuthService()
-     */
-    @Override
-    public IAuthService getAuthService() {
-        return authService;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.service.commands.IAuthAwareCommand#setAuthService
-     * (sernet.gs.ui.rcp.main.service.IAuthService)
-     */
-    @Override
-    public void setAuthService(IAuthService service) {
-        this.authService = service;
     }
     
     protected IBaseDao<CnATreeElement, Serializable> getCnaTreeElementDao() {

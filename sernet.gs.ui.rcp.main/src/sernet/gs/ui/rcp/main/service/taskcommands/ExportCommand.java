@@ -61,6 +61,9 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import de.sernet.sync.data.SyncData;
@@ -112,6 +115,8 @@ public class ExportCommand extends GenericCommand
 	
 	private HashMap<String,String> entityTypesToBeExported;
 	
+	private Map<String,String> entityTypesBlackList;
+    
 	private byte[] result;
 	
 	public ExportCommand( List<CnATreeElement> elements, String sourceId )
@@ -248,7 +253,8 @@ public class ExportCommand extends GenericCommand
 		
 		String typeId = element.getTypeId();
 		if ((exportedObjectIDs.get( element.getId()) == null )
-				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(typeId) != null) )
+				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(typeId) != null)
+				&& (getEntityTypesBlackList() == null || getEntityTypesBlackList().get(typeId) == null) )
 		{
 			SyncObject syncObject = new SyncObject();
 			syncObject.setExtId(element.getId());
@@ -339,6 +345,25 @@ public class ExportCommand extends GenericCommand
         }
     }
     
+    private Map<String,String> getEntityTypesBlackList() {
+        if(entityTypesBlackList==null) {
+            entityTypesBlackList = createDefaultEntityTypesBlackList();
+        }
+        return entityTypesBlackList;
+    }
+    
+    /**
+     * @return
+     */
+    private Map<String, String> createDefaultEntityTypesBlackList() {
+        Map<String, String> blacklist = new HashMap<String, String>();
+        // BSI Risk analyses will not be imported or exported(Bug 194)
+        blacklist.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.TYPE_ID);
+        blacklist.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.TYPE_ID);
+        blacklist.put(RisikoMassnahmenUmsetzung.TYPE_ID, RisikoMassnahmenUmsetzung.TYPE_ID);
+        return blacklist;
+    }
+
     private IBaseDao<CnATreeElement, Serializable> getDao() {
         if(dao==null) {
             dao = createDao();

@@ -155,7 +155,6 @@ This variant:
 		<property name="verarbeitungsangabenDAO" ref="verarbeitungsangabenDAO" />
 		<property name="zweckbestimmungDAO" ref="zweckbestimmungDAO" />
 		<property name="risikoMassnahmeDAO" ref="risikoMassnahmeDAO" />
-		<property name="risikoMassnahmeUmsetzungDAO" ref="risikoMassnahmeUmsetzungDAO" />
 		<property name="ownGefaehrdungDAO" ref="ownGefaehrdungDAO" />
 		<!-- ISO 27000 Daos -->
 		<property name="ISO27KModelDAO" ref="ISO27KModelDAO" />

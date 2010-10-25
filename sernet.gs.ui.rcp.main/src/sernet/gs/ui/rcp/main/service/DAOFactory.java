@@ -452,11 +452,6 @@ public class DAOFactory implements IDAOFactory {
     	daosByClass.put(FinishedRiskAnalysisLists.class, daoToSet);
     	daosByTypeID.put(FinishedRiskAnalysisLists.TYPE_ID, daoToSet);
     }
-
-    public void setRisikoMassnahmeUmsetzungDAO(IBaseDao<RisikoMassnahmenUmsetzung, Integer> daoToSet) {
-    	daosByClass.put(RisikoMassnahmenUmsetzung.class, daoToSet);
-    	daosByTypeID.put(RisikoMassnahmenUmsetzung.TYPE_ID, daoToSet);
-    }
     
     public void setNoteDAO(IBaseDao<Note, Integer> daoToSet) {
     	daosByClass.put(Note.class, daoToSet);

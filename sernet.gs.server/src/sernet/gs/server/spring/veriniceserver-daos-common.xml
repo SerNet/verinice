@@ -286,12 +286,6 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="risikoMassnahmeUmsetzungDAO" parent="secureDao">
-		<constructor-arg>
-			<value>sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung</value>
-		</constructor-arg>
-	</bean>
-
 	<bean id="ownGefaehrdungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung</value>

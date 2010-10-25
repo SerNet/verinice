@@ -164,9 +164,10 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         typeIdClass.put(StellungnahmeDSB.TYPE_ID, StellungnahmeDSB.class);
         typeIdClass.put(Datenverarbeitung.TYPE_ID, Datenverarbeitung.class);
         
-        typeIdClass.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.class);
-        typeIdClass.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.class);
-        typeIdClass.put(RisikoMassnahmenUmsetzung.TYPE_ID, RisikoMassnahmenUmsetzung.class);
+        // BSI Risk analyses will not be imported or exported(Bug 194)
+        // typeIdClass.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.class);
+        // typeIdClass.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.class);
+        // typeIdClass.put(RisikoMassnahmenUmsetzung.TYPE_ID, RisikoMassnahmenUmsetzung.class);
 
         typeIdClass.put(ResponseGroup.TYPE_ID, ResponseGroup.class);
         typeIdClass.put(ExceptionGroup.TYPE_ID, ExceptionGroup.class);

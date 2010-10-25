@@ -345,9 +345,6 @@ public interface IDAOFactory {
 	public abstract void setFinishedRiskAnalysisListsDAO(
 			IBaseDao<FinishedRiskAnalysisLists, Integer> daoToSet);
 
-	public abstract void setRisikoMassnahmeUmsetzungDAO(
-			IBaseDao<RisikoMassnahmenUmsetzung, Integer> daoToSet);
-
 	public abstract void setNoteDAO(IBaseDao<Note, Integer> daoToSet);
 
 	public abstract void setAttachmentDAO(IBaseDao<Attachment, Integer> daoToSet);

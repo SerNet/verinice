@@ -51,8 +51,15 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 @SuppressWarnings({ "serial", "unchecked" })
 public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
 	
-	private static final Logger log = Logger.getLogger(FindMassnahmenForITVerbund.class);
+	private transient Logger log = Logger.getLogger(FindMassnahmenForITVerbund.class);
 
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(FindMassnahmenForITVerbund.class);
+        }
+        return log;
+    }
+	
 	private Integer itverbundDbId = null;
 	
 	
@@ -65,8 +72,8 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
 	public void execute() {
 		try {
 			long start = System.currentTimeMillis();
-			if (log.isDebugEnabled()) {
-				log.debug("FindMassnahmenForITVerbund, itverbundDbId: " + itverbundDbId);
+			if (getLog().isDebugEnabled()) {
+			    getLog().debug("FindMassnahmenForITVerbund, itverbundDbId: " + itverbundDbId);
 			}
 			List<MassnahmenUmsetzung> list = new ArrayList<MassnahmenUmsetzung>();
 			IBaseDao<MassnahmenUmsetzung, Serializable> dao = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
@@ -74,11 +81,12 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
 			
 			// create display items:
 			fillList(list);
-			if(log.isDebugEnabled()) {
+			if(getLog().isDebugEnabled()) {
 				long runtime = System.currentTimeMillis() - start;
-				log.debug("FindMassnahmenForITVerbund runtime: " + runtime + " ms.");
+				getLog().debug("FindMassnahmenForITVerbund runtime: " + runtime + " ms.");
 			}
-		} catch (CommandException e) {
+		} catch (Exception e) {
+		    getLog().error("Error while executing command", e);
 			throw new RuntimeCommandException(e);
 		}
 	}
