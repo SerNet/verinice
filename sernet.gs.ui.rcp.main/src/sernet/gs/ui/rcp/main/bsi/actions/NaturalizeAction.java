@@ -83,13 +83,14 @@ public class NaturalizeAction extends Action implements ISelectionListener {
                         if(selectedElementList!=null && !selectedElementList.isEmpty()) {
                             Set<String> uuidSet = new HashSet<String>(selectedElementList.size());
                             for (CnATreeElement element : selectedElementList) {
-                                uuidSet.add(element.getUuid());                         
+                                if(element!=null && element.getSourceId()!=null) {
+                                    uuidSet.add(element.getUuid()); 
+                                }
                             }
                             NaturalizeCommand command = new NaturalizeCommand(uuidSet);
                             command = getCommandService().executeCommand(command);
                             List<CnATreeElement> changedElements = command.getChangedElements();
-                            
-                            
+                                               
                             if(changedElements!=null) {
                                 if(changedElements.size()<10) {
                                     for (CnATreeElement element : changedElements) {
@@ -125,7 +126,7 @@ public class NaturalizeAction extends Action implements ISelectionListener {
         selectedElementList.clear();
         for (Iterator iterator = ((IStructuredSelection) selection).iterator(); iterator.hasNext();) {
             Object o = iterator.next();
-            if (o instanceof CnATreeElement && ((CnATreeElement) o).getSourceId()!=null) {
+            if (o instanceof CnATreeElement) {
                 selectedElementList.add((CnATreeElement) o);
                 enabled = true;
             } else {
