@@ -63,6 +63,8 @@ public class CopyService extends PasteService implements IProgressTask {
 	
 	private List<CnATreeElement> copyElements;
 	
+	boolean doFullReload = false;
+	
 	/**
      * Creates a new CopyService
      * 
@@ -75,6 +77,7 @@ public class CopyService extends PasteService implements IProgressTask {
         progressObserver = new DummyProgressObserver();
         this.selectedGroup = group;
         this.elements = elementList;    
+        this.doFullReload = (this.elements!=null && this.elements.size()>9); 
     }
 	
 	/**
@@ -89,6 +92,7 @@ public class CopyService extends PasteService implements IProgressTask {
 		this.progressObserver = progressObserver;
 		this.selectedGroup = group;
 		this.elements = elementList;	
+		this.doFullReload = (this.elements!=null && this.elements.size()>9);
 	}
 
 	/* (non-Javadoc)
@@ -102,15 +106,20 @@ public class CopyService extends PasteService implements IProgressTask {
 			progressObserver.beginTask(Messages.getString("CopyService.1",numberOfElements), numberOfElements);		
 			Map<String, String> sourceDestMap = new Hashtable<String, String>();
             numberProcessed = 0;
-            selectedGroup = Retriever.retrieveElement(selectedGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));
-			for (CnATreeElement element : copyElements) {	    
+            selectedGroup = Retriever.retrieveElement(selectedGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));		
+            for (CnATreeElement element : copyElements) {	    
 				CnATreeElement elementCopy = copy(progressObserver, selectedGroup, element, sourceDestMap);
-				CnAElementFactory.getModel(elementCopy).childAdded(selectedGroup, elementCopy);
-				CnAElementFactory.getModel(elementCopy).databaseChildAdded(elementCopy);
+				if(!doFullReload) {
+				    CnAElementFactory.getModel(elementCopy).childAdded(selectedGroup, elementCopy);
+				    CnAElementFactory.getModel(elementCopy).databaseChildAdded(elementCopy);
+				}
 			}
 			for (IPostProcessor postProcessor : getPostProcessorList()) {
 			    postProcessor.process(sourceDestMap);
             }
+			if(doFullReload) {
+			    CnAElementFactory.getInstance().reloadModelFromDatabase();
+			}
 		} catch (Exception e) {
 			log.error("Error while copying element", e); //$NON-NLS-1$
 			throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$
@@ -187,8 +196,10 @@ public class CopyService extends PasteService implements IProgressTask {
 			log.debug("Copy created: " + newElement.getTitle()); //$NON-NLS-1$
 		}
 		// notify all views of change:
-		CnAElementFactory.getModel(newElement).childChanged(toGroup, newElement);
-		CnAElementFactory.getModel(newElement).refreshAllListeners(IBSIModelListener.SOURCE_EDITOR);
+		if(!doFullReload) {
+		    CnAElementFactory.getModel(newElement).childChanged(toGroup, newElement);
+		    CnAElementFactory.getModel(newElement).refreshAllListeners(IBSIModelListener.SOURCE_EDITOR);
+		}
 		newElement.setChildren(new HashSet<CnATreeElement>());
 		return newElement;
 	}

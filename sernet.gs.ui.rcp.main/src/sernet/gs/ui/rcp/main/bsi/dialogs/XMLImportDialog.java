@@ -510,21 +510,29 @@ public class XMLImportDialog extends Dialog {
 
         CnATreeElement importRootObject = command.getImportRootObject();
         Set<CnATreeElement> changedElement = command.getElementSet();
-        if (importRootObject != null) {
-            CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
-            CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
+        updateModel(importRootObject, changedElement);
+    }
+
+    private void updateModel(CnATreeElement importRootObject, Set<CnATreeElement> changedElement) {
+        if(changedElement!=null && changedElement.size()>9) {
+            // if more than 9 elements changed or added do a complete reload
+            CnAElementFactory.getInstance().reloadModelFromDatabase();
+        } else {
+            if (importRootObject != null) {        
+                CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
+                CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
+                if (changedElement != null) {
+                    for (CnATreeElement cnATreeElement : changedElement) {
+                        CnAElementFactory.getModel(cnATreeElement).childAdded(cnATreeElement.getParent(), cnATreeElement);
+                        CnAElementFactory.getModel(cnATreeElement).databaseChildAdded(cnATreeElement);
+                    }
+                }
+            }    
             if (changedElement != null) {
                 for (CnATreeElement cnATreeElement : changedElement) {
-                    CnAElementFactory.getModel(cnATreeElement).childAdded(cnATreeElement.getParent(), cnATreeElement);
-                    CnAElementFactory.getModel(cnATreeElement).databaseChildAdded(cnATreeElement);
+                    CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
+                    CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
                 }
-            }
-        }
-        
-        if (changedElement != null) {
-            for (CnATreeElement cnATreeElement : changedElement) {
-                CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
-                CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
             }
         }
     }

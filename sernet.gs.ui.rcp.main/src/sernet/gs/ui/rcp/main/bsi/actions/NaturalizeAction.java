@@ -88,9 +88,18 @@ public class NaturalizeAction extends Action implements ISelectionListener {
                             NaturalizeCommand command = new NaturalizeCommand(uuidSet);
                             command = getCommandService().executeCommand(command);
                             List<CnATreeElement> changedElements = command.getChangedElements();
-                            for (CnATreeElement element : changedElements) {
-                                CnAElementFactory.getModel(element).childChanged(element.getParent(), element);
+                            
+                            
+                            if(changedElements!=null) {
+                                if(changedElements.size()<10) {
+                                    for (CnATreeElement element : changedElements) {
+                                        CnAElementFactory.getModel(element).childChanged(element.getParent(), element);
+                                    }
+                                } else {
+                                    CnAElementFactory.getInstance().reloadModelFromDatabase();
+                                }
                             }
+                            
                         }
                     } catch (CommandException e) {
                         LOG.error("Error while naturalizing element", e);

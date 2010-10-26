@@ -46,6 +46,8 @@ public class CutService extends PasteService implements IProgressTask {
 	
 	private int numberProcessed;
 	
+	private boolean doFullReload = false;
+	
 	   /**
      * Creates a new CopyService
      * 
@@ -57,7 +59,8 @@ public class CutService extends PasteService implements IProgressTask {
     public CutService(CnATreeElement group, List<CnATreeElement> elementList) {
         progressObserver = new DummyProgressObserver();
         this.selectedGroup = group;
-        this.elements = elementList;    
+        this.elements = elementList;
+        doFullReload = (this.elements!=null && this.elements.size()>9);
     }
 	
 	/**
@@ -71,7 +74,8 @@ public class CutService extends PasteService implements IProgressTask {
 	public CutService(IProgressObserver progressObserver, CnATreeElement group, List<CnATreeElement> elementList) {
 		this.progressObserver = progressObserver;
 		this.selectedGroup = group;
-		this.elements = elementList;	
+		this.elements = elementList;  
+        doFullReload = (this.elements!=null && this.elements.size()>9);	
 	}
 
 	/**
@@ -93,6 +97,9 @@ public class CutService extends PasteService implements IProgressTask {
             for (IPostProcessor postProcessor : getPostProcessorList()) {
                 postProcessor.process(sourceDestMap);
             }	
+            if(doFullReload) {
+                CnAElementFactory.getInstance().reloadModelFromDatabase();
+            }
 		} catch (Exception e) {
 			log.error("Error while copying element", e);
 			throw new RuntimeException("Error while copying element", e);
@@ -132,10 +139,12 @@ public class CutService extends PasteService implements IProgressTask {
 		saveElementCommand = getCommandService().executeCommand(saveElementCommand);
 		CnATreeElement savedElement = (CnATreeElement) saveElementCommand.getElement();
 		
-		CnAElementFactory.getModel(parentOld).childRemoved(parentOld, elementOld);
-        CnAElementFactory.getModel(elementOld).databaseChildRemoved(elementOld);
-		CnAElementFactory.getModel(savedElement).childAdded(group, savedElement);
-		CnAElementFactory.getModel(savedElement).databaseChildAdded(savedElement);
+		if(!doFullReload) {
+    		CnAElementFactory.getModel(parentOld).childRemoved(parentOld, elementOld);
+            CnAElementFactory.getModel(elementOld).databaseChildRemoved(elementOld);
+    		CnAElementFactory.getModel(savedElement).childAdded(group, savedElement);
+    		CnAElementFactory.getModel(savedElement).databaseChildAdded(savedElement);
+		}
 		
 		monitor.processed(1);
 		numberProcessed++;
