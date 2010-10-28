@@ -29,6 +29,9 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.commands.LoadModel;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.samt.service.CreateSelfAssessment;
@@ -95,25 +98,43 @@ public class CreateNewSelfAssessmentService {
     private String getFullSamtCatalogPath() {
         return new StringBuffer(SamtWorkspace.getInstance().getConfDir()).append(File.separatorChar).append(SamtWorkspace.SAMT_CATALOG_FILE_NAME).toString();
     }
+    
+    public void createSelfAssessment() throws CommandException, IOException {
+        createSelfAssessment(null);
+    }
+    
     /**
      * @throws CommandException
      * @param addSelfAssessment
      * @throws IOException
      */
-    public void createSelfAssessment() throws CommandException, IOException {
-        // load iso-model
-        LoadModel loadModel = new LoadModel();
-        loadModel = getCommandService().executeCommand(loadModel);
-        ISO27KModel model = loadModel.getModel();
+    public void createSelfAssessment(final AuditGroup parent) throws CommandException, IOException {
+        CreateSelfAssessment command;
+        ISO27KModel model = null;
+        if(parent==null) {
+            // load the model to create a new organization first
+            LoadModel loadModel = new LoadModel();
+            loadModel = getCommandService().executeCommand(loadModel);
+            model = loadModel.getModel();
+            command = new CreateSelfAssessment(model, AddSelfAssessment.TITEL_ORGANIZATION, AddSelfAssessment.TITEL);
+        } else {
+            command = new CreateSelfAssessment(parent, AddSelfAssessment.TITEL_ORGANIZATION, AddSelfAssessment.TITEL);
+        }
+        
         // create self-assessment 
-        CreateSelfAssessment command = new CreateSelfAssessment(model, AddSelfAssessment.TITEL_ORGANIZATION, AddSelfAssessment.TITEL);
         command.setCsvFile(getCsvFile());
         command = getCommandService().executeCommand(command);
-        Organization organization = command.getSelfAssessment();
-        if (organization != null) {
+        Organization organization = command.getOrganization();
+        AuditGroup auditGroup = command.getAuditGroup();
+        Audit isaAudit = command.getIsaAudit();
+        if(parent==null) { 
             CnAElementFactory.getModel(organization).childAdded(model, organization);
             CnAElementFactory.getModel(organization).databaseChildAdded(organization);
+        } else {
+            CnAElementFactory.getModel(isaAudit).childAdded(auditGroup, isaAudit);
+            CnAElementFactory.getModel(isaAudit).databaseChildAdded(isaAudit);     
         }
+        
     }
 
 }

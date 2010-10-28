@@ -22,6 +22,8 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.verinice.iso27k.rcp.ISMView;
@@ -47,6 +49,9 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
      */
     public static final String ID = "sernet.verinice.samt.rcp.views.SamtView"; //$NON-NLS-1$
 
+    
+    AddISAToOrganisation addIsaAction;
+    
     /**
      * The constructor.
      */
@@ -54,6 +59,14 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
         super();
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.ISMView#initView(org.eclipse.swt.widgets.Composite)
+     */
+    protected void initView(Composite parent) {
+        super.initView(parent);
+        makeActions();
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -83,6 +96,18 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
             }
         };
         JobScheduler.scheduleInitJob(initDataJob);
+    }
+    
+    private void makeActions() {
+        addIsaAction = new AddISAToOrganisation(getViewSite().getWorkbenchWindow());
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.ISMView#fillContextMenu(org.eclipse.jface.action.IMenuManager)
+     */
+    protected void fillContextMenu(IMenuManager manager) {
+        super.fillContextMenu(manager); 
+        manager.appendToGroup("content",addIsaAction);
     }
     
     protected void expand() {

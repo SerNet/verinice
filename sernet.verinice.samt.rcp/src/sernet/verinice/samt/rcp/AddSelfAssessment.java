@@ -29,6 +29,14 @@ import org.eclipse.ui.IViewPart;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 
 /**
+ * Action in SAMT/ISA view toolbar registered in sernet.verinice.samt.rcp plugin.xml.
+ * 
+ * Creates a new organization with a new ISA. After creation the tree view is expanded to
+ * show the user ISA topics.
+ * 
+ * {@link AddISAToOrganisation} is a context menu action to create a new ISA
+ * in an existing organization.
+ * 
  * @author Daniel Murygin <dm@sernet.de>
  */
 @SuppressWarnings("restriction")

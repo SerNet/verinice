@@ -27,6 +27,9 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.samt.rcp.messages"; //$NON-NLS-1$
+    public static String AddISAToOrganisation_0;
+    public static String AddISAToOrganisation_1;
+    public static String AddISAToOrganisation_3;
     public static String AddSelfAssessment_0;
     public static String AddSelfAssessment_1;
     public static String AddSelfAssessment_2;

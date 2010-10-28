@@ -81,7 +81,9 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
     private String titleOrganization;
     private String title;
     private ISO27KModel model;
-    private Organization selfAssessment;
+    private Organization organization;
+    private AuditGroup auditGroup;
+    private Audit isaAudit;
     private String stationId;
 
     private transient IAuthService authService;
@@ -94,6 +96,19 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
+    /**
+     * @param parent
+     * @param titelOrganization
+     * @param titel
+     */
+    public CreateSelfAssessment(AuditGroup auditGroup, String titleOrganization, String title) {
+        super();
+        this.titleOrganization = titleOrganization;
+        this.title = title;
+        this.auditGroup = auditGroup;
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -102,53 +117,77 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
     @Override
     public void execute() {
         try {
-            selfAssessment = new Organization(model,true);
-            if (titleOrganization != null) {
-                selfAssessment.setTitel(titleOrganization);
+            if(auditGroup==null) {
+                organization = new Organization(model,true);
+                if (titleOrganization != null) {
+                    organization.setTitel(titleOrganization);
+                }
+                model.addChild(organization);
+                addPermissions(organization);
+                
+                // Create the audit add it to organization
+                auditGroup = getAuditGroup(organization);
+                addPermissions(auditGroup);
             }
-            model.addChild(selfAssessment);
-            addPermissions(selfAssessment);
             
-            // Create the audit add it to organization
-            AuditGroup auditGroup = getAuditGroup(selfAssessment);
-            addPermissions(auditGroup);
-            
-            Audit audit = new Audit(auditGroup, true);
+            isaAudit = new Audit(auditGroup, true);
             if (title != null) {
-                audit.setTitel(title);
+                isaAudit.setTitel(title);
             }
-            addPermissions(audit);
-            auditGroup.addChild(audit);
+            addPermissions(isaAudit);
+            auditGroup.addChild(isaAudit);
             
             // read the control items from the csv file
             Collection<IItem> itemCollection = getItemCollection();
-            ControlGroup controlGroup = getControlGroup(audit);
+            ControlGroup controlGroup = getControlGroup(isaAudit);
             addPermissions(controlGroup);
             
             // convert catalog items to self assessment topics (class: SamtTopic)
             importCatalogItems(controlGroup, itemCollection);
-
-            IBaseDao<Organization, Serializable> dao = getDaoFactory().getDAO(Organization.class);
-            dao.saveOrUpdate(selfAssessment);
+            IBaseDao<Organization, Serializable> orgDao = getDaoFactory().getDAO(Organization.class);
+            
+            if(organization!=null) {
+                orgDao.saveOrUpdate(organization);
+            } else {
+                IBaseDao<Audit, Serializable> dao = getDaoFactory().getDAO(Audit.class);
+                dao.saveOrUpdate(isaAudit);
+                organization = findOrganization(isaAudit);
+                organization = orgDao.findById(organization.getDbId());
+            }
             
             // Link all controls of audit to audit
             IBaseDao<CnALink, Serializable> daoLink = getDaoFactory().getDAO(CnALink.class);
             
-            CnALink link = new CnALink(selfAssessment,audit,"rel_org_audit",null);
-            selfAssessment.addLinkDown(link);
-            audit.addLinkUp(link);
+            CnALink link = new CnALink(organization,isaAudit,"rel_org_audit",null);
+            organization.addLinkDown(link);
+            isaAudit.addLinkUp(link);
             daoLink.saveOrUpdate(link);
             
             Set<CnATreeElement> isaCategories = controlGroup.getChildren();
             for (CnATreeElement categorie : isaCategories) {
-                link = new CnALink(audit,categorie,"rel_audit_control",null);
-                audit.addLinkDown(link);
+                link = new CnALink(isaAudit,categorie,"rel_audit_control",null);
+                isaAudit.addLinkDown(link);
                 categorie.addLinkUp(link);
                 daoLink.saveOrUpdate(link);
             }
         } catch (Exception e) {
             getLog().error("Error while creating self assesment", e); //$NON-NLS-1$
             throw new RuntimeCommandException("Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * @param isaAudit2
+     * @return
+     */
+    private Organization findOrganization(CnATreeElement element) {
+        CnATreeElement parent = element.getParent();
+        if(parent instanceof Organization) {
+            return (Organization) parent;
+        } else if(parent!=null) {
+            return findOrganization(parent);          
+        } else {
+            return null;
         }
     }
 
@@ -246,8 +285,16 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
         return model;
     }
 
-    public Organization getSelfAssessment() {
-        return selfAssessment;
+    public Organization getOrganization() {
+        return organization;
+    }
+    
+    public AuditGroup getAuditGroup() {
+        return auditGroup;
+    }
+    
+    public Audit getIsaAudit() {
+        return isaAudit;
     }
 
     public void setCsvFile(CsvFile csvFile) {
@@ -274,7 +321,7 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
-        return Arrays.asList((CnATreeElement) selfAssessment);
+        return Arrays.asList((CnATreeElement) organization);
     }
 
     /*
