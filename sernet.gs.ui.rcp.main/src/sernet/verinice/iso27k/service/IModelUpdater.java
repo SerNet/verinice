@@ -34,4 +34,5 @@ public interface IModelUpdater {
      */
     void childAdded(Group group, CnATreeElement element);
 
+    void reload();
 }

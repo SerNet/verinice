@@ -34,4 +34,11 @@ public class DummyModelUpdater implements IModelUpdater {
     public void childAdded(Group group, CnATreeElement element) {
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.service.IModelUpdater#reload()
+     */
+    @Override
+    public void reload() {
+    }
+
 }

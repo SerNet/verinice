@@ -37,5 +37,12 @@ public class RcpModelUpdater implements IModelUpdater {
         CnAElementFactory.getModel(element).childAdded(group, element);
         CnAElementFactory.getModel(element).databaseChildAdded(element);
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.service.IModelUpdater#reload()
+     */
+    public void reload() {
+        CnAElementFactory.getInstance().reloadModelFromDatabase();
+    }
 
 }

@@ -59,6 +59,8 @@ public class ControlTransformService {
 	
 	private int numberProcessed;
 	
+	private boolean doFullRefresh = false;
+	
 	public int getNumberOfControls() {
 		return numberOfControls;
 	}
@@ -88,10 +90,14 @@ public class ControlTransformService {
 			this.numberOfControls = 0;
 			List<IItem> itemList = createInsertList(getItemList());
 			progressObserver.beginTask(Messages.getString("ControlTransformService.1", numberOfControls), numberOfControls); //$NON-NLS-1$
+			doFullRefresh = numberOfControls > 9;
 			numberProcessed = 0;
 			for (IItem item : itemList) {				
 				insertItem(progressObserver, selectedGroup, item);
-			}		
+			}	
+			if(doFullRefresh) {
+			    modelUpdater.reload();
+			}
 		} catch (Exception e) {
 			log.error("Error while transforming to control", e); //$NON-NLS-1$
 		} finally {
@@ -153,7 +159,9 @@ public class ControlTransformService {
 		
 		element = (CnATreeElement) command.getElement();
 		element.setParent(group);
-		modelUpdater.childAdded(group, element);
+		if(!doFullRefresh) {
+		    modelUpdater.childAdded(group, element);
+		}
 		monitor.processed(1);
 		numberProcessed++;
 		if(item.getItems()!=null) {
