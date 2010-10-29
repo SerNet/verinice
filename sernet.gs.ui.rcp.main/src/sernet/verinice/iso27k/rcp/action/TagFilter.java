@@ -21,6 +21,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.IISO27Scope;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
@@ -38,7 +40,10 @@ public class TagFilter extends ViewerFilter {
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object o) {
         boolean result = true;
-        if (o instanceof IISO27kElement && !(o instanceof IISO27kGroup) && pattern!=null) {
+        if (o instanceof IISO27kElement 
+            && !(o instanceof Group)
+            && !(o instanceof IISO27Scope)
+            && pattern!=null) {
             result = false;
             IISO27kElement element = (IISO27kElement) o;
             for (String tag : pattern) {
@@ -71,13 +76,12 @@ public class TagFilter extends ViewerFilter {
                 viewer.addFilter(this);
                 active = true;
             }
-            return;
-        }
-
-        // else deactivate:
-        pattern = null;
-        if (active) {
-            viewer.removeFilter(this);
+        } else {
+            // deactivate
+            pattern = null;
+            if (active) {
+                viewer.removeFilter(this);
+            }
         }
 
     }
