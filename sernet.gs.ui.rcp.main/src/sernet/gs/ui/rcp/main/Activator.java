@@ -79,7 +79,11 @@ public class Activator extends AbstractUIPlugin implements IMain {
     private static final String LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-2010"; //$NON-NLS-1$
     
     public static final String UPDATE_SITE_URL = "http://update.verinice.org/pub/verinice/Verinice-Update-Site-2010"; //$NON-NLS-1$
-
+    
+    public static final String DERBY_LOG_FILE_PROPERTY = "derby.stream.error.file";
+    
+    public static final String DERBY_LOG_FILE = "verinice" + File.separatorChar + "verinice-derby.log";
+    
 	// The shared instance
 	private static Activator plugin;
 
@@ -224,9 +228,13 @@ public class Activator extends AbstractUIPlugin implements IMain {
 			LOG.warn("Stored DS catalog zip file path is an invalid URL."); //$NON-NLS-1$
 		}
 
+		// Set the derby log file path
+		System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty("user.home") + File.separatorChar + DERBY_LOG_FILE);
+		
 		// Provide initial DB connection details to server.
 		internalServer.configure(prefs.getString(PreferenceConstants.DB_URL), prefs.getString(PreferenceConstants.DB_USER), prefs.getString(PreferenceConstants.DB_PASS), prefs.getString(PreferenceConstants.DB_DRIVER), prefs.getString(PreferenceConstants.DB_DIALECT));
 
+		
 		// prepare client's workspace:
 		CnAWorkspace.getInstance().prepare();
 
