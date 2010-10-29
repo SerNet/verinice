@@ -132,9 +132,13 @@ public class ChartView extends ViewPart {
 		hookSelectionListeners();
 		hookPageSelection();
 		createMenus();
-		this.setContentDescription(Messages.ChartView_0);
+		setDescription();
 
 		currentChartGenerator = getDefaultChartGenerator();
+    }
+    
+    protected void setDescription() {
+        this.setContentDescription(Messages.ChartView_0);
     }
     
     protected synchronized void startInitDataJob() {
@@ -278,7 +282,6 @@ public class ChartView extends ViewPart {
                     else {
                         chart = currentChartGenerator.createChart();
                     }
-                    final String title = (currentElement==null) ? "" : currentElement.getTitle(); 
                     if (chart != null) {
                         Display.getDefault().syncExec(new Runnable() {
                             public void run() {
@@ -287,7 +290,6 @@ public class ChartView extends ViewPart {
                                         return;
                                     frame.setChart(chart);
                                     frame.forceRedraw();
-                                    setContentDescription(NLS.bind(Messages.ChartView_11, new Object[] {title}));                           
                                 } catch (Exception e) {
                                     // chart disposed:
                                     LOG.error(e);

@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.samt.rcp;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -29,6 +30,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot.ISelectionListener;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.IChartGenerator;
+import sernet.gs.ui.rcp.main.bsi.views.chart.Messages;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.BSIModel;
@@ -36,9 +38,12 @@ import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.samt.service.FindSamtGroup;
 
@@ -81,6 +86,13 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
         // Toolbar and Viewmenu of SpiderChartView must be empty
     }
 
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#setDescription()
+     */
+    protected void setDescription() {
+        // no description
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -120,16 +132,56 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
             LOG.debug("Selection changed, selected element: " + selectedElement); //$NON-NLS-1$
         }
         
-        if(showChartForSelection(selectedElement)) {
+        //if(showChartForSelection(selectedElement)) {
+        ControlGroup group = getChartControlGroup(selectedElement);
+        if(group!=null) {
             if (this.element != null && selectedElement == this.element) {
                 return;
             }
-            this.element = selectedElement;
+            this.element = group;
             drawChart();
         }
     }
+    
+    private ControlGroup getChartControlGroup(CnATreeElement selection) {
+        ControlGroup group = null;
+        if(isControlType(selection)) {
+           if(Audit.TYPE_ID.equals(selection.getParent().getTypeId())
+              && ControlGroup.TYPE_ID.equals(selection.getTypeId())) {
+               group = (ControlGroup) selection; 
+           } else {
+               group = getChartControlGroup(selection.getParent()); 
+           }
+        } else if(selection!=null && Audit.TYPE_ID.equals(selection.getTypeId())) {
+            group = getControlGroup(selection);
+        }
+        return group;
+    }
+    
+    private ControlGroup getControlGroup(CnATreeElement selfAssessment) {
+        ControlGroup controlGroup = null;
+        Set<CnATreeElement> elementSet = selfAssessment.getChildren();
+        for (Iterator<CnATreeElement> iterator = elementSet.iterator(); iterator.hasNext();) {
+            CnATreeElement element = iterator.next();
+            if (element instanceof ControlGroup) {
+                controlGroup = (ControlGroup) element;
+                break;
+            }
+        }
+        return controlGroup;
+    }
 
-   
+    /**
+     * @param selection
+     * @return
+     */
+    private boolean isControlType(CnATreeElement selection) {
+        return( selection!=null &&
+                (ControlGroup.TYPE_ID.equals(selection.getTypeId()) ||
+                 Control.TYPE_ID.equals(selection.getTypeId()) ||
+                 SamtTopic.TYPE_ID.equals(selection.getTypeId()))
+        );
+    }
 
     /**
      * Returns true if selection is a ControlGroup
