@@ -10,7 +10,7 @@
       </category>
       <view
             name="%view.name"
-            icon="icons/self-assessment.png"
+            icon="icons/vda.png"
             category="sernet.verinice.samt.rcp"
             class="sernet.verinice.samt.rcp.SamtView"
             id="sernet.verinice.samt.rcp.views.SamtView">
@@ -69,7 +69,7 @@
             class="sernet.verinice.samt.rcp.SamtPerspective"
             id="sernet.verinice.samt.rcp.SamtPerspective"
             name="%perspective.name"
-            icon="icons/self-assessment.png">
+            icon="icons/vda.png">
       </perspective>
       <perspective
             class="sernet.verinice.samt.audit.rcp.AuditPerspective"
