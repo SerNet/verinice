@@ -103,7 +103,8 @@ public class CopyService extends PasteService implements IProgressTask {
 			Activator.inheritVeriniceContextState();
 			this.numberOfElements = 0;
 			copyElements = createInsertList(elements);
-			progressObserver.beginTask(Messages.getString("CopyService.1",numberOfElements), numberOfElements);		
+			progressObserver.beginTask(Messages.getString("CopyService.1",numberOfElements), numberOfElements);
+			this.doFullReload = numberOfElements>9;
 			Map<String, String> sourceDestMap = new Hashtable<String, String>();
             numberProcessed = 0;
             selectedGroup = Retriever.retrieveElement(selectedGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));		

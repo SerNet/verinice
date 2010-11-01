@@ -99,7 +99,8 @@ public class LoadElementsForScope extends GenericCommand {
      * @return
      */
     private CnATreeElement findRoot(CnATreeElement elmtInScope) {
-        if (elmtInScope.getTypeId().equals(Organization.TYPE_ID))
+        if (elmtInScope.getTypeId().equals(Organization.TYPE_ID) ||
+            elmtInScope.getTypeId().equals(ITVerbund.TYPE_ID))
             return elmtInScope;
         return findRoot(elmtInScope.getParent());
     }
