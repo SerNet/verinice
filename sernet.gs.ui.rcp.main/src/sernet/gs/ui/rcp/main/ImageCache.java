@@ -32,6 +32,7 @@ import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
@@ -77,6 +78,10 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class ImageCache {
 
+    // FIXME ak exception accessing read only element as normal user
+    // FIXME ak secureDAO not used on all elements, ie bausteinumsetzung
+    // FIXME ak exception sving element, entity exists in session with separate instance...
+    
 	public static final String UNKNOWN = "generic_element.gif";
 	
 	public static final String UNKNOW_NEW = "generic_element_new.png";
@@ -316,11 +321,14 @@ public class ImageCache {
 		BSI_ICON_MAP.put(NKKategorie.TYPE_ID, ImageCache.NETWORK);
 		BSI_ICON_MAP.put(RaeumeKategorie.TYPE_ID, ImageCache.RAUM);
 		BSI_ICON_MAP.put(BausteinUmsetzung.TYPE_ID, ImageCache.BAUSTEIN_UMSETZUNG);
+		BSI_ICON_MAP.put(MassnahmenUmsetzung.TYPE_ID, ImageCache.ISO27K_CONTROL);
 	}
 	
 	private ImageCache() {
 		
 	}
+	
+
 
 	public static ImageCache getInstance() {
 		if (instance == null) {

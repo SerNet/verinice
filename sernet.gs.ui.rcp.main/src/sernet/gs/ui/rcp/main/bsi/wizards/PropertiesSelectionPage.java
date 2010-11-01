@@ -30,9 +30,11 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.IEntityElement;
+import sernet.hui.common.connect.PropertyType;
 import au.com.bytecode.opencsv.CSVReader;
 
 public class PropertiesSelectionPage extends WizardPage {
@@ -45,14 +47,14 @@ public class PropertiesSelectionPage extends WizardPage {
     private String entityName;
     private String entityId;
     private File csvDatei;
-    private Table tabelle;
+    private Table mainTable;
     private TableItem[] items;
     private TableEditor editor;
     private List<Text> texts;
     private List<CCombo> combos;
     private List<String> idCombos;
     private String[] firstLine = null;
-    private List<List<String>> inhaltDerTabelle = null;
+    private List<List<String>> csvContent = null;
 
     private Charset charset;
 
@@ -64,7 +66,7 @@ public class PropertiesSelectionPage extends WizardPage {
         combos = new Vector<CCombo>();
         idCombos = new Vector<String>();
         texts = new Vector<Text>();
-        inhaltDerTabelle = new ArrayList<List<String>>();
+        csvContent = new ArrayList<List<String>>();
     }
 
     /*
@@ -93,21 +95,21 @@ public class PropertiesSelectionPage extends WizardPage {
         lab.setText(Messages.PropertiesSelectionPage_2);
         lab.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 
-        tabelle = new Table(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
+        mainTable = new Table(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
         GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
         gridData.verticalSpan = 4;
-        int listHeight = tabelle.getItemHeight() * 20;
-        Rectangle trim = tabelle.computeTrim(0, 0, 0, listHeight);
+        int listHeight = mainTable.getItemHeight() * 20;
+        Rectangle trim = mainTable.computeTrim(0, 0, 0, listHeight);
         gridData.heightHint = trim.height;
-        tabelle.setLayoutData(gridData);
-        tabelle.setHeaderVisible(true);
-        tabelle.setLinesVisible(true);
+        mainTable.setLayoutData(gridData);
+        mainTable.setHeaderVisible(true);
+        mainTable.setLinesVisible(true);
 
         // set the columns of the table
         String[] titles = { Messages.PropertiesSelectionPage_3, Messages.PropertiesSelectionPage_4 };
 
         for (int i = 0; i < 2; i++) {
-            TableColumn column = new TableColumn(tabelle, SWT.NONE);
+            TableColumn column = new TableColumn(mainTable, SWT.NONE);
             column.setText(titles[i]);
             column.setWidth(225);
         }
@@ -124,12 +126,12 @@ public class PropertiesSelectionPage extends WizardPage {
             idCombos.clear();
 
         String[] cString = null;
-        Collection<EntityType> allEntityTypes = HitroUtil.getInstance().getTypeFactory().getAllEntityTypes();
         
         if (entityId != null) {
+            Activator.inheritVeriniceContextState();
             EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entityId);         
-            cString = new String[entityType.getElements().size()];
-            Collection<IEntityElement> elements = entityType.getElements();
+            List<PropertyType> elements = entityType.getAllPropertyTypes();
+            cString = new String[elements.size()];
             int count = 0;
             for (IEntityElement element : elements) {
                 cString[count] = element.getName();
@@ -145,10 +147,10 @@ public class PropertiesSelectionPage extends WizardPage {
 
         String[] propertyColumns = getFirstLine();
         for (int i = 1; i < propertyColumns.length; i++) {
-            new TableItem(tabelle, SWT.NONE);
+            new TableItem(mainTable, SWT.NONE);
         }
 
-        items = tabelle.getItems();
+        items = mainTable.getItems();
         // clear the combos
         for (CCombo combo : this.combos) {
             combo.dispose();
@@ -164,16 +166,16 @@ public class PropertiesSelectionPage extends WizardPage {
         }
         // fill the combos with content
         for (int i = 0; i < items.length; i++) {
-            editor = new TableEditor(tabelle);
-            Text text = new Text(tabelle, SWT.NONE);
+            editor = new TableEditor(mainTable);
+            Text text = new Text(mainTable, SWT.NONE);
             text.setText(propertyColumns[i + 1]);
             text.setEditable(false);
             editor.grabHorizontal = true;
             editor.setEditor(text, items[i], 0);
             texts.add(text);
 
-            editor = new TableEditor(tabelle);
-            final CCombo combo = new CCombo(tabelle, SWT.NONE);
+            editor = new TableEditor(mainTable);
+            final CCombo combo = new CCombo(mainTable, SWT.NONE);
             combo.addSelectionListener(new SelectionListener() {
                 @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
@@ -245,7 +247,7 @@ public class PropertiesSelectionPage extends WizardPage {
     public void setCSVDatei(File csvDatei) {
         this.csvDatei = csvDatei;
         this.firstLine = null;
-        this.inhaltDerTabelle.clear();
+        this.csvContent.clear();
     }
 
     public String getEntityName() {
@@ -269,10 +271,10 @@ public class PropertiesSelectionPage extends WizardPage {
     }
 
     public List<List<String>> getContent() throws IOException {
-        if (inhaltDerTabelle == null) {
+        if (csvContent == null) {
             readFile();
         }
-        return inhaltDerTabelle;
+        return csvContent;
     }
 
     // get property and values of the csv
@@ -284,10 +286,10 @@ public class PropertiesSelectionPage extends WizardPage {
                 false);
         // ignore first line
         firstLine = reader.readNext();
-        this.inhaltDerTabelle.clear();
+        this.csvContent.clear();
         String[] nextLine = null;
         while ((nextLine = reader.readNext()) != null) {
-            this.inhaltDerTabelle.add(Arrays.asList(nextLine));
+            this.csvContent.add(Arrays.asList(nextLine));
         }
     }
 

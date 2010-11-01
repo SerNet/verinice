@@ -90,13 +90,12 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		if (!dbOpen)
 			throw new CommandException("DB connection closed.");
 
-		Logger.getLogger(this.getClass()).debug(
-				"Service executing command: "
-						+ command.getClass().getSimpleName() 
-				+ " / user: " + getAuthService().getUsername());
 		
 		if (log.isDebugEnabled()) {
-			log.debug("Service executing command: " + command.getClass().getSimpleName()); 
+			log.debug(
+	                "Service executing command: "
+                    + command.getClass().getSimpleName() 
+            + " / user: " + getAuthService().getUsername()); 
 		}
 		
 		

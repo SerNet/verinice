@@ -417,7 +417,7 @@ public class HUITypeFactory {
 
         PropertyGroup groupObj = new PropertyGroup();
         groupObj.setId(group.getAttribute("id"));
-        groupObj.setName(group.getAttribute("name"));
+        groupObj.setName( getMessage(id, group.getAttribute("name")) );
         groupObj.setTags(group.getAttribute("tags"));
         addToTagList(group.getAttribute("tags"));
 

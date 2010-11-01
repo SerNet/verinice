@@ -55,6 +55,7 @@ import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowExportWizardAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
+import sernet.gs.ui.rcp.main.actions.TestAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.views.AuditView;
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
@@ -158,6 +159,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private ImportGstoolNotesAction importGSNotesAction;
 
     private RunRiskAnalysisAction runRiskAnalysisAction;
+
+    private TestAction testAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -279,6 +282,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
         
+        testAction = new TestAction(window, "test command");
+        
         register(openDocumentViewAction);
 
         introAction = ActionFactory.INTRO.create(window);
@@ -348,6 +353,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);
+        fileMenu.add(testAction);
         return fileMenu;
     }
 

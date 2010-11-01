@@ -31,6 +31,7 @@ import org.springframework.security.providers.AuthenticationProvider;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 
 import sernet.gs.common.ApplicationRoles;
+import sernet.gs.server.ServerInitializer;
 import sernet.gs.ui.rcp.main.service.HibernateCommandService;
 import sernet.verinice.interfaces.ICommand;
 

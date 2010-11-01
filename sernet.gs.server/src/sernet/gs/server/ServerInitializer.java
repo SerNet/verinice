@@ -23,6 +23,7 @@ import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.IHibernateCommandService;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ICommandService;
 
 /**
  * Initialize environemnt on Verinice server on startup.
@@ -35,6 +36,7 @@ import sernet.hui.common.VeriniceContext;
 public class ServerInitializer {
 	
 	private final Logger log = Logger.getLogger(ServerInitializer.class);
+
 	
 	private static VeriniceContext.State state;
 	
@@ -92,6 +94,7 @@ public class ServerInitializer {
 				log.debug("stacktrace: " + e);
 			}
 		}
+		
 	}
 
 	public void setWorkObjects(VeriniceContext.State workObjects) {

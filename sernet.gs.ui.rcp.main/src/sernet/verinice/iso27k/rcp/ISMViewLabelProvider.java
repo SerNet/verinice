@@ -115,7 +115,7 @@ public class ISMViewLabelProvider extends LabelProvider  {
                     sb.append(title);
                 }
                 if(sb.length()>0) {
-                    text = ItemControlTransformer.truncate(sb.toString(),40) ;
+                    text = ItemControlTransformer.truncate(sb.toString(),80) ;
                 }
 			}
 		}

@@ -1221,7 +1221,7 @@ columns(cols);</value>
                     <label id="802">
                         <text-property name="text" key="isa2">created with</text-property>
                     </label>
-                    <image id="795">
+                    <image name="vnlogo" id="795">
                         <property name="height">0.36363636363636365in</property>
                         <property name="width">1.4958677685950412in</property>
                         <property name="source">embed</property>
@@ -2034,10 +2034,14 @@ columns(cols);</value>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="paddingTop">20pt</property>
+            <property name="pageBreakAfter">avoid</property>
+            <property name="pageBreakBefore">avoid</property>
+            <property name="pageBreakInside">avoid</property>
             <text-property name="text">Details</text-property>
         </label>
         <table id="891">
-            <property name="pageBreakInside">avoid</property>
+            <property name="pageBreakBefore">avoid</property>
+            <property name="pageBreakInside">auto</property>
             <property name="width">7.757575757575758in</property>
             <property name="dataSet">samtTopics</property>
             <list-property name="boundDataColumns">

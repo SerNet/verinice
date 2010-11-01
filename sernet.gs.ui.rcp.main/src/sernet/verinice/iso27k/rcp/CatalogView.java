@@ -449,7 +449,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			IItem item = ((IItem)obj);
 			String label = "";
 			if(item!=null) {
-			    label = ItemControlTransformer.truncate(item.getName(), 40);
+			    label = ItemControlTransformer.truncate(item.getName(), 80);
 			}
 			return label;
 		}

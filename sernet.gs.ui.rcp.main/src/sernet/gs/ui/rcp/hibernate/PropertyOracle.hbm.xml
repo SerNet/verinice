@@ -15,7 +15,7 @@
 		</id>
 		<property name="propertyType"/>
         
-         <!-- size limit of 4000 to prevent Oracle from using the LONG type which leads to "stream closed" exceptions
+         <!-- size limit to prevent Oracle from using the LONG type which leads to "stream closed" exceptions
         fixed in Hibernate 3.5, see http://opensource.atlassian.com/projects/hibernate/browse/HHH-3892
          currently fixed by a workaround, see class OracleLongStringType.java
           -->

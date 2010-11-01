@@ -3167,6 +3167,14 @@ the value between <param></param> will be used directly if no string is found fo
                 
                 <huiproperty
 	               name="Replacement Cost" id="asset_replacementcost" tags="finance" />
+                <huiproperty
+	               id="asset_replcost_currency" name="Currency" 
+                   inputtype="singleoption" >
+                   <option id="asset_replcost_currency_eur" name="€"/>
+                   <option id="asset_replcost_currency_usd" name="$"/>
+                   <option id="asset_replcost_currency_bpd" name="£"/>
+                   <option id="asset_replcost_currency_yen" name="¥"/>
+               </huiproperty>
 				
 				<huiproperty
 					name="Explanation"
@@ -3765,13 +3773,22 @@ the value between <param></param> will be used directly if no string is found fo
             tags="finance"
 			name="Cost">
             <huiproperty
+                   id="control_kosten_currency" name="Currency" 
+                   inputtype="singleoption" >
+                   <option id="control_kosten_currency_eur" name="€"/>
+                   <option id="control_kosten_currency_usd" name="$"/>
+                   <option id="control_kosten_currency_bpd" name="£"/>
+                   <option id="control_kosten_currency_yen" name="¥"/>
+           </huiproperty>
+                
+            <huiproperty
                 id="control_kosten_ptfix"
                 tags="finance"
-                name="Labor costs fixed EUR"/>
+                name="Labor costs fixed"/>
             <huiproperty
                 id="control_kosten_ptvar"
                 tags="finance"
-                name="Labor costs running EUR"/>
+                name="Labor costs running"/>
             <huiproperty
 				id="control_kosten_ptperiod"
 				name="Time period"
@@ -3796,11 +3813,11 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty
                 id="control_kosten_sachfix"
                 tags="finance"
-                name="Material costs fixed EUR"/>
+                name="Material costs fixed"/>
             <huiproperty
                 id="control_kosten_sachvar"
                 tags="finance"
-                name="Material costs running EUR"/>
+                name="Material costs running"/>
             <huiproperty
 				id="control_kosten_sachperiod"
                 tags="finance"

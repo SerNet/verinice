@@ -27,5 +27,6 @@
 	<bean id="syncService" class="sernet.gs.server.sync.SyncServiceImpl" >
 		<property name="commandService" ref="hibernateCommandService" />
 	</bean>
+    
 
 </beans>
