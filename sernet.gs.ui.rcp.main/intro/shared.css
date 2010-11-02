@@ -42,11 +42,11 @@ h1 {
 	margin-top:0px;
  	margin-bottom:0px;
  display:block;
-  	background-image:url(link-isa.png);
-	width:99px;
- 	height:99px;
+  	background-image:url(link-isa.gif);
+	width:82px;
+ 	height:82px;
 }
-#a-isa:hover { background-image:url(link-isa-hover.png); }
+#a-isa:hover { background-image:url(link-isa-hover.gif); }
 
 
 .link-isa-text {
@@ -66,11 +66,11 @@ h1 {
 	margin-top:0px;
  	margin-bottom:0px;
  display:block;
-  	background-image:url(link-ism.png);
-	width:95px;
- 	height:95px;
+  	background-image:url(link-ism.gif);
+	width:82px;
+ 	height:82px;
 }
-#a-ism:hover { background-image:url(link-ism-hover.png); }
+#a-ism:hover { background-image:url(link-ism-hover.gif); }
 
 
 #a-gs {
@@ -81,9 +81,9 @@ h1 {
 	margin-top:0px;
  	margin-bottom:0px;
  display:block;
-  	background-image:url(link-gs.png);
-	width:97px;
- 	height:97px;
+  	background-image:url(link-gs.gif);
+	width:82px;
+ 	height:82px;
 }
 #a-gs:hover { background-image:url(link-gs-hover.png); }
 
