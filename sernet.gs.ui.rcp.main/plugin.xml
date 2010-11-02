@@ -927,7 +927,8 @@
                id="sernet.verinice.report.rcp.GenerateReportAction"
                label="%action.label.25"
                menubarPath="file/vn_menu_file"
-               style="push">
+               style="push"
+               toolbarPath="vn_toolbar/vn_toolbar_report">
          </action>
       </actionSet>
    </extension>

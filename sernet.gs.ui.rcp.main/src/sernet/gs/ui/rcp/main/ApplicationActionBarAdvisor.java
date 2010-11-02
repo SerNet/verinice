@@ -42,18 +42,15 @@ import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
 import sernet.gs.ui.rcp.main.actions.ChangeOwnPasswordAction;
-import sernet.gs.ui.rcp.main.actions.ExportAction;
 import sernet.gs.ui.rcp.main.actions.ImportCSVAction;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolNotesAction;
-import sernet.gs.ui.rcp.main.actions.ImportXMLAction;
 import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
 import sernet.gs.ui.rcp.main.actions.ReloadAction;
 import sernet.gs.ui.rcp.main.actions.RunRiskAnalysisAction;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
-import sernet.gs.ui.rcp.main.actions.ShowExportWizardAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.actions.TestAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
@@ -111,8 +108,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openTodoViewAction;
 
     private OpenViewAction openAuditViewAction;
-
-    private ShowExportWizardAction showWizardAction;
 
     private ReloadAction reloadAction;
 
@@ -243,9 +238,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT);
         register(openAuditViewAction);
 
-        showWizardAction = new ShowExportWizardAction(window, Messages.ApplicationActionBarAdvisor_13);
-        register(showWizardAction);
-
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         register(reloadAction);
 
@@ -319,7 +311,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         editMenu.add(runRiskAnalysisAction);
         editMenu.add(accessControlEditAction);
         editMenu.add(konsolidatorAction);
-        editMenu.add(showWizardAction);
         editMenu.add(new Separator());
         editMenu.add(copyAction);
         editMenu.add(pasteAction);
@@ -414,9 +405,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     @Override
     protected void fillCoolBar(ICoolBarManager coolBar) {
         IToolBarManager myToolbar = new ToolBarManager(coolBar.getStyle());
-        coolBar.add(new ToolBarContributionItem(myToolbar));
+        coolBar.add(new ToolBarContributionItem(myToolbar,VeriniceActionConstants.TOOLBAR));
         myToolbar.add(saveAction);
-        myToolbar.add(showWizardAction);
+        myToolbar.add(new Separator(VeriniceActionConstants.TOOLBAR_REPORT));
+        myToolbar.add(new Separator());
         myToolbar.add(bulkEditAction);
         myToolbar.add(accessControlEditAction);
         myToolbar.add(konsolidatorAction);

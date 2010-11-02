@@ -48,6 +48,16 @@ public class VeriniceActionConstants {
      * File menu
      */
     public static final String MENU_FILE = "vn_menu_file";
+    
+    /**
+     * Report toolbar
+     */
+    public static final String TOOLBAR = "vn_toolbar";
+    
+    /**
+     * Report toolbar
+     */
+    public static final String TOOLBAR_REPORT = "vn_toolbar_report";
 
     
     
