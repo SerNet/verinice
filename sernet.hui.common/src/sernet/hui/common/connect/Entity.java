@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
+import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
@@ -538,6 +539,35 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         }
         return Property.UNDEF;
         
+    }
+
+    /**
+     * Returns the value (not the translated title)
+     * of an single select option property.
+     * 
+     * If property with id is not single select option property
+     * a warning is logged and null is returned.
+     * 
+     * @param 
+     *      id the id of the property
+     * @return 
+     *      value (not the translated title) of an single select option property
+     */
+    public String getOptionValue(String id) {   
+        String value = null;
+        PropertyList propertyList = typedPropertyLists.get(id);
+        if (propertyList != null && propertyList.getProperties().size()==1) {
+            PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, id);
+            if (type.isSingleSelect()) {
+                    Property prop = propertyList.getProperties().get(0);
+                    value = prop.getPropertyValue();
+            } else {
+                getLog().warn("Property " + id + " is not of type " + PropertyType.INPUT_SINGLEOPTION + ". Can not determine option value. Entity id is: " + this.getDbId());
+            }
+        } else if(propertyList != null && propertyList.getProperties().size()>1) {
+            getLog().warn("Property list " + id + " contains more than entry. Can not determine option value. Entity id is: " + this.getDbId());
+        }
+        return value;
     }
 
    
