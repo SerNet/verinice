@@ -29,6 +29,11 @@ import org.eclipse.swt.widgets.Display;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
+import sernet.verinice.iso27k.rcp.action.TypeFilter;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.rcp.IAttachedToPerspective;
 
 /**
@@ -123,6 +128,16 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
     protected HideEmptyFilter createHideEmptyFilter() {
         HideEmptyFilter filter = new HideEmptyFilter(viewer);
         filter.setHideEmpty(true);
+        return filter;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.ISMView#createTypeFilter()
+     */
+    @Override
+    protected TypeFilter createTypeFilter() {
+        TypeFilter filter = new TypeFilter(viewer);
+        filter.addType(new String[]{Control.TYPE_ID,ControlGroup.TYPE_ID});
         return filter;
     }
     
