@@ -90,6 +90,9 @@ public class AddElement implements IObjectActionDelegate {
         TITLE_FOR_TYPE.put(Asset.TYPE_ID, Messages.getString("AddElement.18")); //$NON-NLS-1$
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+	 */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		this.targetPart = targetPart;
 	}

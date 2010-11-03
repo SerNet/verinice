@@ -155,7 +155,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private RunRiskAnalysisAction runRiskAnalysisAction;
 
-    private TestAction testAction;
+    //private TestAction testAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -274,7 +274,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
         
-        testAction = new TestAction(window, "test command");
+        //testAction = new TestAction(window, "test command");
         
         register(openDocumentViewAction);
 
@@ -344,7 +344,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);
-        fileMenu.add(testAction);
+        //fileMenu.add(testAction);
         return fileMenu;
     }
 
