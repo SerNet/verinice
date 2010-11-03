@@ -278,50 +278,71 @@
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
+      <!-- ISO27000 actions -->
       <objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.elementcontrib"
-            objectClass="sernet.verinice.model.common.CnATreeElement">
-             <action
-                   class="sernet.gs.ui.rcp.main.bsi.actions.DeleteActionDelegate"
-                   enablesFor="+"
-                   icon="icons/16-em-cross.png"
-                   id="sernet.gs.ui.rcp.main.bsi.deleteaction"
-                   label="%action.label"
-                   menubarPath="content"
-                   tooltip="%action.tooltip">
-                <enablement>
-                   <or>
-                   	<objectClass name="sernet.verinice.model.iso27k.ImportIsoGroup"/>
-                    <objectClass name="sernet.verinice.model.bsi.ImportBsiGroup"/>
-                   	<objectClass name="sernet.verinice.model.bsi.IBSIStrukturElement"/>
-                   	<objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
-                   	<objectClass name="sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis"/>
-                   	<objectClass name="sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung"/>
-                   	<objectClass name="sernet.verinice.model.iso27k.IISO27kElement"/>
-                   </or>
-                </enablement>
-             </action>
-             <action
-                   class="sernet.gs.ui.rcp.main.bsi.actions.OpenAction"
-                   enablesFor="+"
-                   icon="icons/edtsrclkup_co.gif"
-                   id="sernet.gs.ui.rcp.main.bsi.actions.openaction"
-                   label="%action.label.0"
-                   menubarPath="content"
-                   tooltip="%action.tooltip.0">
-                   <enablement>
-                   <or>
-                   	<objectClass name="sernet.verinice.model.bsi.IBSIStrukturElement"/>
-                   	<objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
-                    <objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
-                   	<objectClass name="sernet.verinice.iso27k.model.IISO27kElement"/>
-                   </or>
-                </enablement>
-             </action>
-            
+            id="sernet.verinice.iso27k.rcp.action.assetcontrib"
+            objectClass="sernet.verinice.model.iso27k.Group">
+         <action
+               class="sernet.verinice.iso27k.rcp.action.AddElement"
+               enablesFor="1"
+               icon="icons/generic_element_new.png"
+               id="sernet.verinice.iso27k.rcp.action.AddElement"
+               label="%action.label.15"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.15"/>
+         <action
+               class="sernet.verinice.iso27k.rcp.action.AddGroup"
+               enablesFor="1"
+               icon="icons/generic_elements_new.png"
+               id="sernet.verinice.iso27k.rcp.action.AddGroup"
+               label="%action.label.16"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.16"/>
       </objectContribution>
-      
+      <objectContribution 
+         adaptable="false"
+         id="sernet.gs.ui.rcp.main.elementcontrib"
+         objectClass="sernet.verinice.model.common.CnATreeElement">  
+		<action class="sernet.gs.ui.rcp.main.bsi.actions.OpenAction"
+		   enablesFor="+"
+		   icon="icons/edtsrclkup_co.gif"
+		   id="sernet.gs.ui.rcp.main.bsi.actions.openaction"
+		   label="%action.label.0"
+		   menubarPath="content"
+		   tooltip="%action.tooltip.0">
+		   <enablement>
+		      <or>
+		   	     <objectClass name="sernet.verinice.model.bsi.IBSIStrukturElement"/>
+		   	     <objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
+		         <objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
+		   	     <objectClass name="sernet.verinice.model.iso27k.IISO27kElement"/>
+		      </or>
+		   </enablement>
+		</action>
+		<action
+		   class="sernet.gs.ui.rcp.main.bsi.actions.DeleteActionDelegate"
+		   enablesFor="+"
+		   icon="icons/16-em-cross.png"
+		   id="sernet.gs.ui.rcp.main.bsi.deleteaction"
+		   label="%action.label"
+		   menubarPath="content"
+		   tooltip="%action.tooltip">
+		   <enablement>
+		      <or>
+		   	     <objectClass name="sernet.verinice.model.iso27k.ImportIsoGroup"/>
+		         <objectClass name="sernet.verinice.model.bsi.ImportBsiGroup"/>
+		   	     <objectClass name="sernet.verinice.model.bsi.IBSIStrukturElement"/>
+		   	     <objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
+		   	     <objectClass name="sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis"/>
+		   	     <objectClass name="sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung"/>
+		   	     <objectClass name="sernet.verinice.model.iso27k.IISO27kElement"/>
+		      </or>
+		   </enablement>
+		</action>        
+      </objectContribution>  
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.elementcontrib"
@@ -541,36 +562,6 @@
                menubarPath="special"
                style="push"
                tooltip="%action.tooltip.14">
-         </action>
-      </objectContribution>
-      <!-- ISO27000 actions -->
-      <objectContribution
-            adaptable="false"
-            id="sernet.verinice.iso27k.rcp.action.assetcontrib"
-            objectClass="sernet.verinice.model.iso27k.IISO27kGroup">
-         <action
-               class="sernet.verinice.iso27k.rcp.action.AddElement"
-               enablesFor="1"
-               icon="icons/generic_element_new.png"
-               id="sernet.verinice.iso27k.rcp.action.AddElement"
-               label="%action.label.15"
-               menubarPath="content"
-               style="push"
-               tooltip="%action.tooltip.15"/>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="sernet.verinice.iso27k.rcp.action.groupcontrib"
-            objectClass="sernet.verinice.model.iso27k.IISO27kGroup">
-         <action
-               class="sernet.verinice.iso27k.rcp.action.AddGroup"
-               enablesFor="1"
-               icon="icons/generic_elements_new.png"
-               id="sernet.verinice.iso27k.rcp.action.AddGroup"
-               label="%action.label.16"
-               menubarPath="content"
-               style="push"
-               tooltip="%action.tooltip.16">
          </action>
       </objectContribution>
       <objectContribution
