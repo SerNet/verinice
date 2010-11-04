@@ -34,7 +34,7 @@ import sernet.hui.common.rules.NullRule;
  * @author prack
  * @version $Id: PropertyType.java,v 1.6 2006/10/20 14:55:16 aprack Exp $
  */
-public class PropertyType implements IMLPropertyType, IEntityElement {
+public class PropertyType implements IMLPropertyType, IEntityElement, Comparable<PropertyType> {
 
 	private final Logger log = Logger.getLogger(PropertyType.class);
 
@@ -515,6 +515,29 @@ public class PropertyType implements IMLPropertyType, IEntityElement {
      */
     public int getTextrows() {
         return textrows;
-    }   
+    }
+
+	/**
+	 * Compares this object with the specified object for order.  Returns a
+     * negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(PropertyType o) {
+		final int LESS = -1;
+		final int EQUAL = 0;
+		final int GREATER = 1;
+		int result = LESS;
+		if(o!=null) {
+			if(getName()==null) {
+				result = (o.getName()==null) ? EQUAL : GREATER;
+			} else if(o.getName()!=null) {
+				result = this.getName().compareTo(o.getName());
+			}
+		}
+		return result;
+	}   
 
 }

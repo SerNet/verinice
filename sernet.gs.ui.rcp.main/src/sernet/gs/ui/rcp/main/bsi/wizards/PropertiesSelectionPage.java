@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -131,6 +132,7 @@ public class PropertiesSelectionPage extends WizardPage {
             Activator.inheritVeriniceContextState();
             EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entityId);         
             List<PropertyType> elements = entityType.getAllPropertyTypes();
+            Collections.sort(elements);
             cString = new String[elements.size()];
             int count = 0;
             for (IEntityElement element : elements) {
