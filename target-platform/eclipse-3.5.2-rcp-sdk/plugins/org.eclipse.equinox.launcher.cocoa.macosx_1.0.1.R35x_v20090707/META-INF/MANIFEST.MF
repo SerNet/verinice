@@ -1,10 +1,12 @@
 Manifest-Version: 1.0
-Eclipse-PlatformFilter: (& (osgi.ws=cocoa) (osgi.os=macosx) (|(osgi.arch=x86)(osgi.arch=ppc)) )
+Eclipse-PlatformFilter: (& (osgi.ws=cocoa) (osgi.os=macosx) (|(osgi.ar
+ ch=x86)(osgi.arch=ppc)) )
 Bundle-Vendor: %providerName
 Bundle-Localization: launcher.cocoa.macosx
 Fragment-Host: org.eclipse.equinox.launcher;bundle-version="1.0.0"
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.equinox.launcher.cocoa.macosx;singleton:=true
+Bundle-SymbolicName: org.eclipse.equinox.launcher.cocoa.macosx;singlet
+ on:=true
 Eclipse-BundleShape: dir
 Bundle-Version: 1.0.1.R35x_v20090707
 Bundle-ManifestVersion: 2
