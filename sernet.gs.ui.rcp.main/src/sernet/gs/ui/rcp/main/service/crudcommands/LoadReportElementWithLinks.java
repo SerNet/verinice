@@ -32,6 +32,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class LoadReportElementWithLinks extends GenericCommand {
 
+    public static final String[] COLUMNS = new String[] {"relationName", "toElement", "riskC", "riskI", "riskA"};
 
 	private String typeId;
     private Integer rootElement;
@@ -43,7 +44,8 @@ public class LoadReportElementWithLinks extends GenericCommand {
 	}
 	
 	public void execute() {
-	    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
+	    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement}); 
+	    // FIXME fix this command
 	    try {
             command = getCommandService().executeCommand(command);
         } catch (CommandException e) {
@@ -80,7 +82,6 @@ public class LoadReportElementWithLinks extends GenericCommand {
         }
     }
     
-    public static final String[] COLLUMNS = new String[] {"relationName", "toElement", "riskC", "riskI", "riskA"};
 
     /**
      * @param root

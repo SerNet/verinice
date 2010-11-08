@@ -10,3 +10,7 @@ You will need at least two files:
 
 Their name must match the filename defined in sernet.verinice.samt.rcp.messages.properties for each locale.
 
+
+
+
+

@@ -77,7 +77,9 @@ public class BSIElementEditor extends EditorPart {
 	private Boolean isWriteAllowed = null;
 	
 	// TODO the editor needs another way to determine whether or not to show the linkmaker so we can remove this reference to the SAMT bundle:
-	 public static final String SAMT_PERSPECTIVE_ID = "sernet.verinice.samt.rcp.SamtPerspective";
+	public static final String SAMT_PERSPECTIVE_ID = "sernet.verinice.samt.rcp.SamtPerspective";
+    // limit display in SAMT perspective to properties tagged as "VDA-ISA" (simplified view):
+	private static final String SAMT_PERSPECTIVE_DEFAULT_TAGS = "VDA-ISA";
 	
 	private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
@@ -218,7 +220,7 @@ public class BSIElementEditor extends EditorPart {
             
 			// samt perspective offers a simple view, only showing properties tagged with "isa":
 			if (isSamtPerspective()) {
-                tags = new String[] {"isa"};
+                tags = new String[] {SAMT_PERSPECTIVE_DEFAULT_TAGS};
                 strict = true;
 			}
 			

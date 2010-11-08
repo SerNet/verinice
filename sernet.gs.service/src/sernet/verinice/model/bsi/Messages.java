@@ -57,6 +57,7 @@ public class Messages extends NLS {
     public static String RaeumeKategorie_0;
     public static String SchutzbedarfAdapter_3;
     public static String ServerKategorie_0;
+    public static String SonstigeITKategorie_0;
     public static String SubtypenZielobjekte_1;
     public static String TKKategorie_0;
     static {

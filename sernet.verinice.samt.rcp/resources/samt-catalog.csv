@@ -1,9 +1,10 @@
-0,"VDA Information Security Assessment (EN)",,,,,,,
-,,,"Dieser Fragenkatalog, basierend auf der ISO 27002, kann auf dem Weg zur eigenen Zertifizierung, für Selbstauskünfte der Lieferanten, für Vor-Ort-Audits bei Lieferanten oder interne Audits, genutzt werden.",,,,,
-"0.1","Copyright",,,,,,,
+"0","VDA Information Security Assessment (EN)",0,"Dieser Fragenkatalog, basierend auf der ISO 27002, kann auf dem Weg zur eigenen Zertifizierung, für Selbstauskünfte der Lieferanten, für Vor-Ort-Audits bei Lieferanten oder interne Audits, genutzt werden.",,,,,
 ,,,"Integraler Informationsschutz mit IT-Sicherheit, Prototypenschutz und Risk-Management des VDA",,,,,
-5,"5 Security Policy",,,,,,,
-"5.1","5.1 Information Security Policy",0,"(Reference to ISO 27002: Control 5.1.1 and 5.1.2)",2,2,,2,3
+,,,"(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)",,,,,
+,,,"Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/",,,,,
+,,,"VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), für die Nutzung in verinice lizenziert. Alle Rechte vorbehalten.",,,,,
+"5","5 Security Policy",,,,,,,
+"5.1","5.1 Information Security Policy","0","(Reference to ISO 27002: Control 5.1.1 and 5.1.2)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have information security policies been created, published and distributed? </h1>",,,,,
 ,,,,,,,,
@@ -37,8 +38,8 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-6,"6 Organization of Information Security",,,,,,,
-"6.1","6.1 Information Security Responsibilities Assigned",0,"(Reference to ISO 27002: Control 6.1.3)",1,1,,2,3
+"6","6 Organization of Information Security",,,,,,,
+"6.1","6.1 Information Security Responsibilities Assigned","0","(Reference to ISO 27002: Control 6.1.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How is information security organized within the company?</h1>",,,,,
 ,,,,,,,,
@@ -71,7 +72,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"6.2","6.2 Risks resulting through external parties ",0,"(Reference to ISO 27002: Control 6.2.1)",1,1,,2,3
+"6.2","6.2 Risks resulting through external parties ","0","(Reference to ISO 27002: Control 6.2.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Has a risk analysis of the the personnel and organizational risks been carried out before contracting with external companies?</h1>",,,,,
 ,,,,,,,,
@@ -102,7 +103,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"6.3","6.3 Contracts with third parties",0,"(Reference to ISO 27002: Control 6.2.3)",1,1,,2,3
+"6.3","6.3 Contracts with third parties","0","(Reference to ISO 27002: Control 6.2.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How is none-disclosure agreement ensured in cooperation with external companies?</h1>",,,,,
 ,,,,,,,,
@@ -133,8 +134,8 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-7,"7 Asset Management",,,,,,,
-"7.1","7.1 Inventory sheet",0,"(Reference to ISO 27002: Control 7.1.1)",1,1,,2,3
+"7","7 Asset Management",,,,,,,
+"7.1","7.1 Inventory sheet","0","(Reference to ISO 27002: Control 7.1.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How are the company's (physical and digital) assets inventoried?
 </h1>",,,,,
@@ -169,7 +170,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"7.2","7.2 Description and handling of information",0,"(Reference to ISO 27002: Control 7.2.1)",2,2,,2,3
+"7.2","7.2 Description and handling of information","0","(Reference to ISO 27002: Control 7.2.1)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How is the company's information classified?
 </h1>",,,,,
@@ -203,8 +204,8 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-8,"8 Human Resources Security",,,,,,,
-"8.1","8.1 Employment contract",0,"(Reference to ISO 27002: Control 8.1.3)",1,1,,2,3
+"8","8 Human Resources Security",,,,,,,
+"8.1","8.1 Employment contract","0","(Reference to ISO 27002: Control 8.1.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent are employees obligated to comply with information security requirements?</h1>",,,,,
 ,,,,,,,,
@@ -239,7 +240,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"8.2","8.2 Awareness and key user training",0,"(Reference to ISO 27002: Control 8.2.1 and 8.2.2)",2,2,,2,3
+"8.2","8.2 Awareness and key user training","0","(Reference to ISO 27002: Control 8.2.1 and 8.2.2)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How are employees trained and made aware of handling threats regarding information and its processing? </h1>",,,,,
 ,,,,,,,,
@@ -271,7 +272,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"8.3","8.3 Access control implementations",0,"(Reference to ISO 27002: Control 8.3.1 and 8.3.3)",1,1,,2,3
+"8.3","8.3 Access control implementations","0","(Reference to ISO 27002: Control 8.3.1 and 8.3.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have access rights or authorizations been adapted (granting / revoking rights) in the case of employment changes and how are these changes documented? </h1>",,,,,
 ,,,,,,,,
@@ -304,8 +305,8 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-9,"9 Physical and Environmental Security",,,,,,,
-"9.1","9.1 Security areas",0,"(Reference to ISO 27002: Control 9.1.1)",1,1,,2,3
+"9","9 Physical and Environmental Security",,,,,,,
+"9.1","9.1 Security areas","0","(Reference to ISO 27002: Control 9.1.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How are security areas defined and how are they secured?</h1>",,,,,
 ,,,,,,,,
@@ -337,7 +338,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"9.2","9.2 Protection against external and environment related threats  ",0,"(Reference to ISO 27002: Control 9.1.4)",1,1,,2,3
+"9.2","9.2 Protection against external and environment related threats  ","0","(Reference to ISO 27002: Control 9.1.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent is the company prepared for physical threats (e. g. fire, earthquake etc.)?</h1>",,,,,
 ,,,,,,,,
@@ -369,7 +370,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"9.3","9.3 Access Control Management",0,"(Reference to ISO 27002: Control 9.1.6)",2,2,,2,3
+"9.3","9.3 Access Control Management","0","(Reference to ISO 27002: Control 9.1.6)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How is the access control management organized within the company?</h1>",,,,,
 ,,,,,,,,
@@ -401,7 +402,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"9.4","9.4 Protection of delivered and dispatched goods",0,"(Reference to ISO 27002: Control 9.1.6)",1,1,,2,3
+"9.4","9.4 Protection of delivered and dispatched goods","0","(Reference to ISO 27002: Control 9.1.6)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>What precautions are taken for protection of delivered or dispatched goods?</h1>",,,,,
 ,,,,,,,,
@@ -432,7 +433,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"9.5","9.5 Resources removal authorization",0,"(Reference to ISO 27002: Control 9.2.5, 9.2.6 and 9.2.7)",1,1,,2,3
+"9.5","9.5 Resources removal authorization","0","(Reference to ISO 27002: Control 9.2.5, 9.2.6 and 9.2.7)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How is the process defined for resource usage (including removal, disposal and recycling)? </h1>",,,,,
 ,,,,,,,,
@@ -465,8 +466,8 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-10,"10 Communications and Operations Management",,,,,,,
-"10.1","10.1 Hardware and software documentation (Change Management) ",0,"(Reference to ISO 27002: Control 10.1.1 and 10.1.2)",1,1,,2,3
+"10","10 Communications and Operations Management",,,,,,,
+"10.1","10.1 Hardware and software documentation (Change Management) ","0","(Reference to ISO 27002: Control 10.1.1 and 10.1.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent has the change management been established on systems within the company and are these systems up to date? </h1>",,,,,
 ,,,,,,,,
@@ -503,7 +504,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.2","10.2 Separation of development, test and production environments",0,"(Reference to ISO 27002: Control 10.1.4)",1,1,,2,3
+"10.2","10.2 Separation of development, test and production environments","0","(Reference to ISO 27002: Control 10.1.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have development and test environments been separated from the production environments? </h1>",,,,,
 ,,,,,,,,
@@ -538,7 +539,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.3","10.3 Audits of services provided by external companies",0,"(Reference to ISO 27002: Control 10.2.2)",1,1,,2,3
+"10.3","10.3 Audits of services provided by external companies","0","(Reference to ISO 27002: Control 10.2.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How are services that are provided by external companies, reports and records monitored and audited / inspected regarding information security? </h1>",,,,,
 ,,,,,,,,
@@ -573,7 +574,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.4","10.4 Antivirus Program",0,"(Reference to ISO 27002: Control 10.4.1)",2,2,,2,3
+"10.4","10.4 Antivirus Program","0","(Reference to ISO 27002: Control 10.4.1)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent has the protection against malware (virus, worms,…) been developed within the company?</h1>",,,,,
 ,,,,,,,,
@@ -613,7 +614,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.5","10.5 Firewall on local systems ",0,"(Reference to ISO 27002: Control 10.4.1)",1,1,,2,3
+"10.5","10.5 Firewall on local systems ","0","(Reference to ISO 27002: Control 10.4.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent has a local firewall and / or IDS/IPS software been installed on all systems?</h1>",,,,,
 ,,,,,,,,
@@ -651,7 +652,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.6","10.6 Protective measures against active contents",0,"(Reference to ISO 27002: Control 10.4.2)",1,1,,2,3
+"10.6","10.6 Protective measures against active contents","0","(Reference to ISO 27002: Control 10.4.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have security measures been taken against active contents (e. g. ActiveX-Controls, Java-Applets)?</h1>",,,,,
 ,,,,,,,,
@@ -685,7 +686,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.7","10.7 Information Backup  ",0,"(Reference to ISO 27002: Control 10.5.1)",2,2,,2,3
+"10.7","10.7 Information Backup  ","0","(Reference to ISO 27002: Control 10.5.1)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How are data backups created and controlled and to what extent has restoring been regularly tested? </h1>",,,,,
 ,,,,,,,,
@@ -720,7 +721,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.8","10.8 Administration of networks",0,"(Reference to ISO 27002: Control 10.6.1)",1,1,,2,3
+"10.8","10.8 Administration of networks","0","(Reference to ISO 27002: Control 10.6.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How are networks managed and controlled in order to protect them against threats?</h1>",,,,,
 ,,,,,,,,
@@ -756,7 +757,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.9","10.9 Policies for modem operations",0,"(Reference to ISO 27002: Control 10.6.1)",1,1,,2,3
+"10.9","10.9 Policies for modem operations","0","(Reference to ISO 27002: Control 10.6.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How is the usage of modem devices  (e.g. Analog, ISDN, DSL, UMTS, GPRS etc.) regulated within the company?</h1>",,,,,
 ,,,,,,,,
@@ -791,7 +792,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.10","10.10 Network services: Definition of the security requirements",0,"(Reference to ISO 27002: Control 10.6.2)",1,1,,2,3
+"10.10","10.10 Network services: Definition of the security requirements","0","(Reference to ISO 27002: Control 10.6.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have security requirements been defined and implemented for network services (e. g. DNS, DHCP, VPN, MPLS, ERP, email, DMS, ...)?</h1>",,,,,
 ,,,,,,,,
@@ -827,7 +828,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.11","10.11 Network services: Service Level Agreement ",0,"(Reference to ISO 27002: Control 10.6.2)",1,1,,2,3
+"10.11","10.11 Network services: Service Level Agreement ","0","(Reference to ISO 27002: Control 10.6.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have Service Level Agreements (SLAs) been completed for network services (e. g. DNS, DHCP, VPN, MPLS, ERP, email, DMS, ...)?</h1>",,,,,
 ,,,,,,,,
@@ -861,7 +862,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.12","10.12 Administration of removable media",0,"(Reference to ISO 27002: Control 10.7.1)",1,1,,2,3
+"10.12","10.12 Administration of removable media","0","(Reference to ISO 27002: Control 10.7.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent do policies exist regarding the handling of mobile storage media (e. g. tapes, USB memory sticks, USB hard drive, CDs, DVDs, ...)?</h1>",,,,,
 ,,,,,,,,
@@ -893,7 +894,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.13","10.13 Media disposal ",0,"(Reference to ISO 27002: Control 10.7.2)",1,1,,2,3
+"10.13","10.13 Media disposal ","0","(Reference to ISO 27002: Control 10.7.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent does a process exist for the safe disposal of computer media that is no longer needed? </h1>",,,,,
 ,,,,,,,,
@@ -926,7 +927,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.14","10.14 Physical transport of media",0,"(Reference to ISO 27002: Control 10.8.3)",1,1,,2,3
+"10.14","10.14 Physical transport of media","0","(Reference to ISO 27002: Control 10.8.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have precautions been taken when media (e. g. CDs, DVDs, paper documents) with confidential information is physically transported (e. g. DHL, UPS)? </h1>",,,,,
 ,,,,,,,,
@@ -960,7 +961,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.15","10.15 Electronic information exchange ",0,"(Reference to ISO 27002: Control 10.8.4)",1,1,,2,3
+"10.15","10.15 Electronic information exchange ","0","(Reference to ISO 27002: Control 10.8.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>What  precautions have been taken when confidential information is to be electronically exchanged?</h1>",,,,,
 ,,,,,,,,
@@ -1000,7 +1001,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.16","10.16 Monitoring: logging",0,"(Reference to ISO 27002: Control 10.10.4)",1,1,,2,3
+"10.16","10.16 Monitoring: logging","0","(Reference to ISO 27002: Control 10.10.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How are activities of system administrators and operators logged on critical systems? </h1>",,,,,
 ,,,,,,,,
@@ -1033,7 +1034,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"10.17","10.17 Monitoring: legal retention period",0,"(Reference to ISO 27002: Control 10.10.1, 10.10.2, 10.10.3 and 10.10.5)",1,1,,2,3
+"10.17","10.17 Monitoring: legal retention period","0","(Reference to ISO 27002: Control 10.10.1, 10.10.2, 10.10.3 and 10.10.5)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have processes been defined and implemented fulfilling the legal requirements regarding monitoring and logging of the information system usage? </h1>",,,,,
 ,,,,,,,,
@@ -1065,8 +1066,8 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-11,"11 Access Control ",,,,,,,
-"11.1","11.1 User registration",0,"(Reference to ISO 27002: Control 11.2.1)",2,2,,2,3
+"11","11 Access Control ",,,,,,,
+"11.1","11.1 User registration","0","(Reference to ISO 27002: Control 11.2.1)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent does a process exist for registration, change and deletion of users to ensure the appropriate access to all information systems and services?  </h1>",,,,,
 ,,,,,,,,
@@ -1104,7 +1105,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"11.2","11.2 Rights management",0,"(Reference to ISO 27002: Control 11.2.2 and 10.2.4)",1,1,,2,3
+"11.2","11.2 Rights management","0","(Reference to ISO 27002: Control 11.2.2 and 10.2.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How are user and administrator rights ensured and checked for various use cases?</h1>",,,,,
 ,,,,,,,,
@@ -1144,7 +1145,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"11.3","11.3 User password utilization",0,"(Reference to ISO 27002: Control 11.2.3)",1,1,,2,3
+"11.3","11.3 User password utilization","0","(Reference to ISO 27002: Control 11.2.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have policies been defined for the handling of personal passwords? </h1>",,,,,
 ,,,,,,,,
@@ -1180,7 +1181,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"11.4","11.4 Password complexity",0,"(Reference to ISO 27002: Control 11.3.1)",1,1,,2,3
+"11.4","11.4 Password complexity","0","(Reference to ISO 27002: Control 11.3.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have policies been defined outlining the structure and complexity level of passwords? </h1>",,,,,
 ,,,,,,,,
@@ -1216,7 +1217,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"11.5","11.5 Clean Desk and Clear Screen policy",0,"(Reference to ISO 27002: Control 11.3.3)",1,1,,2,3
+"11.5","11.5 Clean Desk and Clear Screen policy","0","(Reference to ISO 27002: Control 11.3.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>What requirements exist for handling devices and documents when leaving the work area? </h1>",,,,,
 ,,,,,,,,
@@ -1252,7 +1253,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"11.6","11.6 User authentication for remote users / connections",0,"(Reference to ISO 27002: Control 11.4.2)",1,1,,2,3
+"11.6","11.6 User authentication for remote users / connections","0","(Reference to ISO 27002: Control 11.4.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have policies and measures been defined and implemented for remote access to the company's network? </h1>",,,,,
 ,,,,,,,,
@@ -1288,7 +1289,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"11.7","11.7 Protection of configuration ports and remote monitoring ",0,"(Reference to ISO 27002: Control 11.4.4)",1,1,,2,3
+"11.7","11.7 Protection of configuration ports and remote monitoring ","0","(Reference to ISO 27002: Control 11.4.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent has the technical network access been monitored for access to system and infrastructure component diagnostic and configuration ports?  </h1>",,,,,
 ,,,,,,,,
@@ -1321,7 +1322,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"11.8","11.8 Separation of networks",0,"(Reference to ISO 27002: Control 11.4.5)",1,1,,2,3
+"11.8","11.8 Separation of networks","0","(Reference to ISO 27002: Control 11.4.5)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent has network security been increased through segmentation / separation? </h1>",,,,,
 ,,,,,,,,
@@ -1354,7 +1355,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"11.9","11.9 User identification and authentication",0,"(Reference to ISO 27002: Control 11.5.2)",1,1,,2,3
+"11.9","11.9 User identification and authentication","0","(Reference to ISO 27002: Control 11.5.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent has the user authentication been implemented for the access to IT systems in accordance with data and information classification?</h1>",,,,,
 ,,,,,,,,
@@ -1389,7 +1390,7 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"11.10","11.10 Mobile data processing and communication",0,"(Reference to ISO 27002: Control 11.7.1)",1,1,,2,3
+"11.10","11.10 Mobile data processing and communication","0","(Reference to ISO 27002: Control 11.7.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent has the policy been developed with references to risks associated with mobile computers? </h1>",,,,,
 ,,,,,,,,
@@ -1426,8 +1427,8 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-12,"12 Information Systems Acquisition, Development and Management",,,,,,,
-"12.1","12.1 Encryption of information",0,"(Reference to ISO 27002: Control 12.3.1)",1,1,,2,3
+"12","12 Information Systems Acquisition, Development and Management",,,,,,,
+"12.1","12.1 Encryption of information","0","(Reference to ISO 27002: Control 12.3.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent has information been appropriately protected using encryption (cryptography)?</h1>",,,,,
 ,,,,,,,,
@@ -1462,8 +1463,8 @@
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"12.2","12.2 Loss of information ",0,"(Reference to ISO 27002: Control 12.5.4) 
-or 12.5 Security of development and processes",1,1,,2,3
+"12.2","12.2 Loss of information ","0","(Reference to ISO 27002: Control 12.5.4) 
+or 12.5 Security of development and processes","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have information security requirements been taken into account when purchasing or developing software?</h1>",,,,,
 ,,,,,,,,
@@ -1495,7 +1496,7 @@ or 12.5 Security of development and processes",1,1,,2,3
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"12.3","12.3 Detection of vulnerabilities",0,"(Reference to ISO 27002: Control 12.6.1)",2,2,,2,3
+"12.3","12.3 Detection of vulnerabilities","0","(Reference to ISO 27002: Control 12.6.1)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent has information been promptly assessed regarding technical vulnerabilities of information systems and to what extent have appropriate measures been taken for the security implementations (patch anagement)? </h1>",,,,,
 ,,,,,,,,
@@ -1530,8 +1531,8 @@ or 12.5 Security of development and processes",1,1,,2,3
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-13,"13 Information Security Incident Management",,,,,,,
-"13.1","13.1 Information Security Incident Management",0,"(Reference to ISO 27002: Control 13.1.1 and 13.1.2)",1,1,,2,3
+"13","13 Information Security Incident Management",,,,,,,
+"13.1","13.1 Information Security Incident Management","0","(Reference to ISO 27002: Control 13.1.1 and 13.1.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>How and where are information security incidents reported within the company?</h1>",,,,,
 ,,,,,,,,
@@ -1567,7 +1568,7 @@ or 12.5 Security of development and processes",1,1,,2,3
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"13.2","13.2 Responsibilities and procedures (CERT)  ",0,"(Reference to ISO 27002: Control 13.2.1)",1,1,,2,3
+"13.2","13.2 Responsibilities and procedures (CERT)  ","0","(Reference to ISO 27002: Control 13.2.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have information security incidents and vulnerabilities been evaluated and handled?</h1>",,,,,
 ,,,,,,,,
@@ -1600,8 +1601,8 @@ or 12.5 Security of development and processes",1,1,,2,3
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-14,"14 Business Continuity Management",,,,,,,
-"14.1","14.1 Business Continuity Management",0,"(Reference to ISO 27002: Control 14.1.1)",1,1,,2,3
+"14","14 Business Continuity Management",,,,,,,
+"14.1","14.1 Business Continuity Management","0","(Reference to ISO 27002: Control 14.1.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have measures been implemented for the development and maintenance of business continuity (continuity of a stable business) within the company? </h1>",,,,,
 ,,,,,,,,
@@ -1637,8 +1638,8 @@ or 12.5 Security of development and processes",1,1,,2,3
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-15,"15 Compliance",,,,,,,
-"15.1","15.1 Rights of intellectual property",0,"(Reference to ISO 27002: Control 15.1.2)",2,2,,2,3
+"15","15 Compliance",,,,,,,
+"15.1","15.1 Rights of intellectual property","0","(Reference to ISO 27002: Control 15.1.2)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent has compliance of legal requirements been ensured regarding intellectual property (e. g. patents, software development and codes etc.)?</h1>",,,,,
 ,,,,,,,,
@@ -1673,7 +1674,7 @@ or 12.5 Security of development and processes",1,1,,2,3
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"15.2","15.2 Protection against misuse of personal data ",0,"(Reference to ISO 27002: Control 15.1.4)",1,1,,2,3
+"15.2","15.2 Protection against misuse of personal data ","0","(Reference to ISO 27002: Control 15.1.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Which regulations and measures are implemented in order to protect personal information in compliance with legal / contractual regulations (e. g. Data Privacy Law)? </h1>",,,,,
 ,,,,,,,,
@@ -1708,7 +1709,7 @@ or 12.5 Security of development and processes",1,1,,2,3
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"15.3","15.3 Technical audit of Compliance ",0,"(Reference to ISO 27002: Control 15.2.1)",1,1,,2,3
+"15.3","15.3 Technical audit of Compliance ","0","(Reference to ISO 27002: Control 15.2.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have organization departments been checked for compliance with corporate security policies and standards? </h1>",,,,,
 ,,,,,,,,
@@ -1742,7 +1743,7 @@ or 12.5 Security of development and processes",1,1,,2,3
 - In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
 - The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
 ,,,,,,,,
-"15.4","15.4 Audits of information systems",0,"(Reference to ISO 27002: Control 15.2.2)",1,1,,2,3
+"15.4","15.4 Audits of information systems","0","(Reference to ISO 27002: Control 15.2.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>To what extent have security audits (penetration and vulnerability tests) been carefully planned, coordinated and carried out on operational information systems? </h1>",,,,,
 ,,,,,,,,

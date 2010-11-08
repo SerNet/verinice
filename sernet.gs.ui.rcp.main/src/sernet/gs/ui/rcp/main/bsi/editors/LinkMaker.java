@@ -107,6 +107,8 @@ public class LinkMaker extends Composite implements IRelationTable {
     private EntityTypeFilter elementTypeFilter;
     private SelectionListener unlinkAction;
     private LinkRemover linkRemover;
+    
+    static int oldSelection =-1;
 
     /**
      * @param parent
@@ -205,6 +207,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
+                oldSelection = combo.getSelectionIndex();
                 setFilter(combo.getSelectionIndex());
             }
 
@@ -427,13 +430,15 @@ public class LinkMaker extends Composite implements IRelationTable {
         if (inputElmt == null || this.inputElmt == inputElmt)
             return;
 
-        int oldSelection = combo.getSelectionIndex();
+        if (oldSelection==-1)
+            oldSelection = combo.getSelectionIndex();
         this.inputElmt = inputElmt;
         fillPossibleLinkLists();
         initNamesForCombo();
         combo.setItems(names);
-        if (oldSelection != -1) {
+        if (oldSelection != -1 && oldSelection < combo.getItemCount()) {
             combo.select(oldSelection);
+            setFilter(combo.getSelectionIndex());
         }
         viewer.setInput(inputElmt);
     }

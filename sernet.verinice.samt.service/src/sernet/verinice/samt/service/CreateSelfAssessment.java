@@ -212,10 +212,12 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
                 // create an element
                 element = ItemControlTransformer.transformGeneric(item, new SamtTopic());
             }
-            addPermissions(element);
-            
-            group.addChild(element);
-            element.setParent(group);
+            if (element !=null) {
+                addPermissions(element);
+                
+                group.addChild(element);
+                element.setParent(group);
+            }
         }
     }
 
