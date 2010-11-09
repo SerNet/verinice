@@ -113,8 +113,8 @@
 	<subclass 
 		name="sernet.verinice.model.bsi.MassnahmenUmsetzung"
 		extends="CnATreeElement"
-		discriminator-value="massnahmen-umsetzung">
-		
+		discriminator-value="massnahmen-umsetzung" >
+	
 		<subclass
 			name="sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung"
 			extends="MassnahmenUmsetzung"

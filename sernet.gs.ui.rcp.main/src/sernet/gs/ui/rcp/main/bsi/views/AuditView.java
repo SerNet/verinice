@@ -113,7 +113,7 @@ public class AuditView extends GenericMassnahmenView {
 	protected Action createFilterAction(
 			MassnahmenUmsetzungFilter umsetzungFilter,
 			MassnahmenSiegelFilter siegelFilter) {
-		return new AuditViewFilterAction(viewer, Messages.AuditView_19,
+		return new AuditViewFilterAction(this,viewer, Messages.AuditView_19,
 				umsetzungFilter, siegelFilter);
 	}
 
@@ -146,6 +146,22 @@ public class AuditView extends GenericMassnahmenView {
 	protected String getMeasureLoadTaskLabel() {
 		return "Lade Massnahmen";
 	}
+	
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.bsi.views.GenericMassnahmenView#getSortByProperty()
+     */
+    @Override
+    protected String getSortByProperty() {
+        return MassnahmenUmsetzung.P_NAECHSTEREVISIONAM;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.bsi.views.GenericMassnahmenView#getSortByProperty()
+     */
+    @Override
+    protected String getDateProperty() {
+        return MassnahmenUmsetzung.P_NAECHSTEREVISIONAM;
+    }
 	
 	private static class AuditLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -222,6 +238,5 @@ public class AuditView extends GenericMassnahmenView {
 		}
 
 	}
-	
 
 }

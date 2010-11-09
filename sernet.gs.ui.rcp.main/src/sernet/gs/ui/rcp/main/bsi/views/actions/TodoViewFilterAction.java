@@ -28,19 +28,23 @@ import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.UmsetzungDurchFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.ZielobjektPropertyFilter;
+import sernet.gs.ui.rcp.main.bsi.views.GenericMassnahmenView;
 
 public class TodoViewFilterAction extends Action {
 	private Shell shell;
+	private GenericMassnahmenView view;
 	private MassnahmenUmsetzungFilter umsetzungFilter;
 	private MassnahmenSiegelFilter siegelFilter;
 	private UmsetzungDurchFilter umsetzungDurchFilter;
 	private ZielobjektPropertyFilter zielobjektFilter;
 
-	public TodoViewFilterAction(StructuredViewer viewer,
+	public TodoViewFilterAction(GenericMassnahmenView view,
+	        StructuredViewer viewer,
 			String title,
 			MassnahmenUmsetzungFilter filter1,
 			MassnahmenSiegelFilter filter2) {
 		super(title);
+		this.view = view;
 		shell = viewer.getControl().getShell();
 		
 		this.umsetzungFilter = filter1;
@@ -65,5 +69,8 @@ public class TodoViewFilterAction extends Action {
 		siegelFilter.setPattern(dialog.getSiegelSelection());
 		umsetzungDurchFilter.setPattern(dialog.getUmsetzungDurch());
 		zielobjektFilter.setPattern(dialog.getZielobjekt());
+		view.loadBlockNumber=0;
+        view.loadMoreAction.setEnabled(true);
+        view.reloadMeasures();
 	}
 }

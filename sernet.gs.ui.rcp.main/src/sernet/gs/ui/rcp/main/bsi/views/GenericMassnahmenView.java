@@ -21,6 +21,7 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -28,13 +29,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -54,10 +58,12 @@ import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
+import sernet.gs.ui.rcp.main.bsi.views.actions.TodoViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -80,15 +86,24 @@ import sernet.verinice.model.iso27k.ISO27KModel;
  * </p>
  * 
  * @author koderman[at]sernet[dot]de
- * @author r.schuster@tarent.de
+ * @author r.schuster[at]tarent[dot]de
+ * @author dm[at]sernet[dot]de
  * 
  */
 public abstract class GenericMassnahmenView extends ViewPart implements IMassnahmenListView {
 
+    // FIXME externalize Strings
+    
 	private static final Logger log = Logger.getLogger(GenericMassnahmenView.class);
 
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." + "todoview"; //$NON-NLS-1$ //$NON-NLS-2$
 
+	public int loadBlockNumber = 0;
+	
+	public boolean isDateSet = false;
+	
+	protected List allMassnahmen;
+	
 	/**
 	 * Implementation of {@link ContributionItem} which allows choosing one of
 	 * the potentially many {@link ITVerbund} instances.
@@ -156,6 +171,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 						// As long as the loading is in progress, no other
 						// IT-Verbund may be selected.
 						combo.setEnabled(false);
+						GenericMassnahmenView.this.loadBlockNumber = 0;
+                        GenericMassnahmenView.this.loadMoreAction.setEnabled(true);
 						GenericMassnahmenView.this.loadMeasures(elements.get(s - 1));
 					}
 				}
@@ -440,9 +457,13 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	protected TableColumn dateColumn;
 	protected TableColumn zielColumn;
 	private Action doubleClickAction;
+    private Action selectionAction;
 	protected TableColumn bearbeiterColumn;
 
 	private Action filterAction;
+	public Action loadMoreAction;
+	private Action toggleDateAction;
+	
 
 	private MassnahmenUmsetzungFilter umsetzungFilter;
 	private MassnahmenSiegelFilter siegelFilter;
@@ -473,33 +494,36 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 			@SuppressWarnings("unchecked")
 			public void update(Object o, String[] props) {
 				// Access the list containing the elements directly
-				List<Object> list = (List<Object>) getInput();
-
-				// Find the old instance using the new one. Works because
-				// old.equals(new) holds (even if certain properties differ!).
-				int index = list.indexOf(o);
-
-				// Find out whether the element really is being regarded.
-				if (index >= 0) {
-					// Replace the object in memory with the one from the DB.
-					list.set(index, o);
-
-					// Look up whether there is a widget for the object in
-					// question.
-					Widget w = doFindItem(o);
-					if (w != null) {
-						// Replace the object in the widget as well.
-						w.setData(o);
-
-						// Provokes a refresh the line that changed.
-						super.update(o, props);
-					} else {
-						// There is no widget for the element in question. Do a
-						// refresh() so one is created.
-						refresh();
-					}
-
-				}
+			    Object input = getInput();
+			    if(input instanceof List<?>) {
+    				List<Object> list = (List<Object>) getInput();
+    
+    				// Find the old instance using the new one. Works because
+    				// old.equals(new) holds (even if certain properties differ!).
+    				int index = list.indexOf(o);
+    
+    				// Find out whether the element really is being regarded.
+    				if (index >= 0) {
+    					// Replace the object in memory with the one from the DB.
+    					list.set(index, o);
+    
+    					// Look up whether there is a widget for the object in
+    					// question.
+    					Widget w = doFindItem(o);
+    					if (w != null) {
+    						// Replace the object in the widget as well.
+    						w.setData(o);
+    
+    						// Provokes a refresh the line that changed.
+    						super.update(o, props);
+    					} else {
+    						// There is no widget for the element in question. Do a
+    						// refresh() so one is created.
+    						refresh();
+    					}
+    
+    				}
+			    }
 
 			}
 		};
@@ -508,6 +532,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 
 		createFilters();
 		createPullDownMenu();
+		createLoadMoreAction();
+        createToggleDateAction();
 
 		viewer.setContentProvider(contentProvider);
 		viewer.setLabelProvider(createLabelProvider());
@@ -528,7 +554,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		dateColumn.pack();
 	}
 
-	/**
+    /**
 	 * Removes whatever is in the table.
 	 * 
 	 * <p>
@@ -664,7 +690,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	/**
 	 * Loads the MassnahmenUmsetzung instances for the given IT-Verbund.
 	 * 
-	 * <p>
+	 * <p>Qunabu.com Polish Netlabel
 	 * This method is called when the user choses an IT-Verbund and when the
 	 * content provider decides that all data has to be reloaded.
 	 * </p>
@@ -683,21 +709,46 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		}
 
 		viewer.setInput(new PlaceHolder(getMeasureLoadPlaceholderLabel()));
-
 		WorkspaceJob job = new WorkspaceJob(getMeasureLoadJobLabel()) {
-			@Override
+			@SuppressWarnings("unchecked")
+            @Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
 
 				try {
 					monitor.setTaskName(getMeasureLoadTaskLabel());
-					FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(itVerbund.getDbId());
+					loadBlockNumber++;
+					Properties filter = new Properties();
+					filter.put(FindMassnahmenForITVerbund.FILTER_DATE,getDateProperty());
+					if(isDateSet) {
+					    filter.put(getDateProperty(),getDateProperty());					    
+					}
+					if(umsetzungFilter.getUmsetzungPatternSet()!=null) {
+					    filter.put(MassnahmenUmsetzung.P_UMSETZUNG, umsetzungFilter.getUmsetzungPatternSet());
+					}
+					if(siegelFilter.getPatternSet()!=null) {
+					    filter.put(MassnahmenUmsetzung.P_SIEGEL, siegelFilter.getPatternSet());
+					}
+					FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(itVerbund.getDbId(),loadBlockNumber,filter,getSortByProperty() );
 					command = ServiceFactory.lookupCommandService().executeCommand(command);
-					final List<TodoViewItem> allMassnahmen = command.getAll();
+					final int number = command.getNumber();
+					if(loadBlockNumber==1) { 
+					    allMassnahmen = command.getAll();
+					} else {
+					    allMassnahmen.remove(allMassnahmen.size()-1);
+	                    allMassnahmen.addAll(command.getAll());
+					}
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
 							viewer.setInput(allMassnahmen);
 							compoundChoser.setEnabled(true);
+							int loaded = loadBlockNumber*FindMassnahmenForITVerbund.LOAD_BLOCK_SIZE;
+							if(loaded>number) {
+							    loaded=number;
+							    GenericMassnahmenView.this.loadMoreAction.setEnabled(false);
+							}
+							String info = "(" + loaded + " of " + number + ")";
+							GenericMassnahmenView.this.loadMoreAction.setText(info);
 						}
 					});
 				} catch (Exception e) {
@@ -706,7 +757,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 							compoundChoser.setEnabled(true);
 						}
 					});
-
+					log.error("Error while loading massnahmen", e);
 					ExceptionUtil.log(e, getTaskErrorLabel());
 				}
 				return Status.OK_STATUS;
@@ -714,10 +765,21 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		};
 		job.setUser(false);
 		job.schedule();
-
+		
+        
 	}
 
-	protected abstract Action createFilterAction(MassnahmenUmsetzungFilter umsetzungFilter, MassnahmenSiegelFilter siegelFilter);
+	/**
+     * @return
+     */
+    protected abstract String getSortByProperty();
+
+    /**
+     * @return
+     */
+    protected abstract String getDateProperty();
+    
+    protected abstract Action createFilterAction(MassnahmenUmsetzungFilter umsetzungFilter, MassnahmenSiegelFilter siegelFilter);
 
 	private void createPullDownMenu() {
 		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
@@ -726,14 +788,47 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	}
 
 	private void fillLocalToolBar() {
-		IActionBars bars = getViewSite().getActionBars();
-		IToolBarManager manager = bars.getToolBarManager();
+	    IActionBars bars = getViewSite().getActionBars();
+	    IToolBarManager manager = bars.getToolBarManager();
+	    ActionContributionItem item = new ActionContributionItem(loadMoreAction);
+        item.setMode(ActionContributionItem.MODE_FORCE_TEXT);
+        manager.add(item);
+       
+        ActionContributionItem item2 = new ActionContributionItem(toggleDateAction);
+        item2.setMode(ActionContributionItem.MODE_FORCE_TEXT);  
+        manager.add(item2);
+        
 		manager.add(this.filterAction);
-
-		manager.add(compoundChoser);
+		manager.add(compoundChoser);	
 	}
 
-	private void createFilters() {
+	/**
+     * @return
+     */
+    private void createLoadMoreAction() {
+        loadMoreAction = new LoadMoreAction(this, "Load more...");
+    }
+    
+    /**
+     * 
+     */
+    private void createToggleDateAction() {
+        toggleDateAction = new Action() {
+            @Override
+            public void run() {
+                isDateSet = !isDateSet;
+                this.setChecked(isDateSet);
+                loadBlockNumber=0;
+                loadMoreAction.setEnabled(true);
+                reloadMeasures();
+            }
+        };
+        toggleDateAction.setChecked(isDateSet);
+        toggleDateAction.setText("mit Termin");
+        toggleDateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE));
+    }
+
+    private void createFilters() {
 		umsetzungFilter = new MassnahmenUmsetzungFilter(viewer);
 		siegelFilter = new MassnahmenSiegelFilter(viewer);
 		umsetzungFilter.setUmsetzungPattern(getUmsetzungPattern());
@@ -749,6 +844,15 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 				EditorFactory.getInstance().openEditor(sel);
 			}
 		};
+		selectionAction = new Action() {
+            @Override
+            public void run() {
+                Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+                if(sel instanceof PlaceHolder) {
+                    reloadMeasures();
+                }
+            }
+        };
 	}
 
 	@Override
@@ -762,6 +866,12 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 				doubleClickAction.run();
 			}
 		});
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {    
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                selectionAction.run();               
+            }
+        });
 	}
 
 	@Override
@@ -861,46 +971,50 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		
 		
 		public int compare(Viewer viewer, Object o1, Object o2) {
-			TodoViewItem mn1 = (TodoViewItem) o1;
-			TodoViewItem mn2 = (TodoViewItem) o2;
-			int rc = 0;
-			if(o1==null) {
-				if(o2!=null) {
-					rc = 1;
-				}
-			} else if(o2==null) {
-				if(o1!=null) {
-					rc = -1;
-				}
-			} else {
-				// e1 and e2 != null	
-				switch (propertyIndex) {
-				case 0:
-					rc = sortByString(mn1.getUmsetzung(),mn2.getUmsetzung());
-					break;
-				case 1:
-					rc = sortByDate(mn1.getUmsetzungBis(), mn2.getUmsetzungBis());
-					break;
-				case 2:
-					rc = sortByString(mn1.getUmsetzungDurch(),mn2.getUmsetzungDurch());
-					break;
-				case 3:
-					rc = sortByString(String.valueOf(mn1.getStufe()), String.valueOf(mn2.getStufe()));
-					break;
-				case 4:
-					rc = sortByString(mn1.getParentTitle(), mn2.getParentTitle());
-					break;
-				case 5:
-					rc = sortByString(mn1.getTitle(), mn2.getTitle());
-					break;
-				default:
-					rc = 0;
-				}
-			}
-			// If descending order, flip the direction
-			if (direction == DESCENDING) {
-				rc = -rc;
-			}
+		    int rc = 0;
+		    try {
+    			TodoViewItem mn1 = (TodoViewItem) o1;
+    			TodoViewItem mn2 = (TodoViewItem) o2;			
+    			if(o1==null) {
+    				if(o2!=null) {
+    					rc = 1;
+    				}
+    			} else if(o2==null) {
+    				if(o1!=null) {
+    					rc = -1;
+    				}
+    			} else {
+    				// e1 and e2 != null	
+    				switch (propertyIndex) {
+    				case 0:
+    					rc = sortByString(mn1.getUmsetzung(),mn2.getUmsetzung());
+    					break;
+    				case 1:
+    					rc = sortByDate(mn1.getUmsetzungBis(), mn2.getUmsetzungBis());
+    					break;
+    				case 2:
+    					rc = sortByString(mn1.getUmsetzungDurch(),mn2.getUmsetzungDurch());
+    					break;
+    				case 3:
+    					rc = sortByString(String.valueOf(mn1.getStufe()), String.valueOf(mn2.getStufe()));
+    					break;
+    				case 4:
+    					rc = sortByString(mn1.getParentTitle(), mn2.getParentTitle());
+    					break;
+    				case 5:
+    					rc = sortByString(mn1.getTitle(), mn2.getTitle());
+    					break;
+    				default:
+    					rc = 0;
+    				}
+    			}
+    			// If descending order, flip the direction
+    			if (direction == DESCENDING) {
+    				rc = -rc;
+    			}
+		    } catch(Exception e) {
+		        log.error("Error while sorting elements", e);
+		    }
 			return rc;
 		}
 		

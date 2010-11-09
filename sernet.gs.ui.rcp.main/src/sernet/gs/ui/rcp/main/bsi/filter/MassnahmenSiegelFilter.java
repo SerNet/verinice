@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.filter;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -31,11 +32,15 @@ import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 public class MassnahmenSiegelFilter extends ViewerFilter {
 
 	private StructuredViewer viewer;
-	private Collection<String> siegelPattern;
+	private Set<String> siegelPattern;
 
 	public MassnahmenSiegelFilter(StructuredViewer viewer) {
 		this.viewer = viewer;
 	}
+	
+	public Set getPatternSet() {
+        return siegelPattern;
+    }
 
 	public String[] getPattern() {
 		return siegelPattern != null ? 

@@ -218,6 +218,8 @@ public class ImageCache {
 	public static final String LINKED = "linked.gif";
 	
 	public static final String UNLINKED = "unlinked.gif";
+    
+    public static final String LOAD_MORE = "load-more.gif";
 
 	/* ************************************************************************************************** */
 	// ISO 27000 icons - ISM Tree View:

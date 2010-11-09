@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.filter;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -38,16 +39,21 @@ public class MassnahmenUmsetzungFilter extends ViewerFilter {
 	public static final String UMSETZUNG_PROPERTY = "umsetzung";
 
 	private StructuredViewer viewer;
-	private Collection<String> umsetzungPattern;
+	private Set<String> umsetzungPattern;
 
 	public MassnahmenUmsetzungFilter(StructuredViewer viewer) {
 		this.viewer = viewer;
 	}
-
+	
+	
 	public String[] getUmsetzungPattern() {
-		return umsetzungPattern != null ? 
-				(String[]) umsetzungPattern.toArray(new String[umsetzungPattern.size()])
-				: new String[] {};
+        return umsetzungPattern != null ? 
+                (String[]) umsetzungPattern.toArray(new String[umsetzungPattern.size()])
+                : new String[] {};
+    }
+
+	public Set<String> getUmsetzungPatternSet() {
+		return umsetzungPattern;
 	}
 
 	public void setUmsetzungPattern(String[] newPattern) {

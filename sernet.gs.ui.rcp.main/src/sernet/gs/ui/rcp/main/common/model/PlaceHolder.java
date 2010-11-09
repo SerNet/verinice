@@ -19,10 +19,19 @@ package sernet.gs.ui.rcp.main.common.model;
 
 public class PlaceHolder {
 
-	private String title;
+	private static final int PLACEHOLDER = 1;
 
-	public PlaceHolder(String string) {
+    private String title;
+	
+    private String titleShort;
+    
+	public int getTypeId() {
+        return PLACEHOLDER;
+    }
+
+    public PlaceHolder(String string) {
 		this.title = string;
+		this.titleShort = "";
 	}
 
 	public String getTitle() {
@@ -32,5 +41,13 @@ public class PlaceHolder {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
+    public String getTitleShort() {
+        return titleShort;
+    }
+
+    public void setTitleShort(String titleShort) {
+        this.titleShort = titleShort;
+    }
 
 }
