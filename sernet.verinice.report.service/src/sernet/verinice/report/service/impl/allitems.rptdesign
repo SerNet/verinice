@@ -24,7 +24,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">6181</value>
+                <value type="constant">32796</value>
             </simple-property-list>
             <property name="paramType">simple</property>
             <property name="controlType">text-box</property>

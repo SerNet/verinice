@@ -42,10 +42,14 @@ public class LoadReportElementWithLinks extends GenericCommand {
 	    this.typeId = typeId;
 	    this.rootElement = rootElement;
 	}
+
+    public LoadReportElementWithLinks(String typeId, String rootElement) {
+        this.typeId = typeId;
+        this.rootElement = Integer.parseInt(rootElement);
+    }
 	
 	public void execute() {
 	    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement}); 
-	    // FIXME fix this command
 	    try {
             command = getCommandService().executeCommand(command);
         } catch (CommandException e) {
@@ -91,9 +95,9 @@ public class LoadReportElementWithLinks extends GenericCommand {
     private List<String> makeRow(CnATreeElement root, CnALink link) {
         String relationName = CnALink.getRelationName(root, link);
         String toElementTitle = CnALink.getRelationObjectTitle(root, link);
-        String riskC = Integer.toString(link.getRiskConfidentiality());
-        String riskI = Integer.toString(link.getRiskIntegrity());
-        String riskA = Integer.toString(link.getRiskAvailability());
+        String riskC = Integer.toString( link.getRiskConfidentiality()  != null ? link.getRiskConfidentiality() : 0);
+        String riskI = Integer.toString(link.getRiskIntegrity()         != null ? link.getRiskIntegrity()       : 0);
+        String riskA = Integer.toString(link.getRiskAvailability()      != null ? link.getRiskAvailability()    : 0);
         List<String> asList = Arrays.asList(relationName, toElementTitle, riskC, riskI, riskA);
         return asList;
     }

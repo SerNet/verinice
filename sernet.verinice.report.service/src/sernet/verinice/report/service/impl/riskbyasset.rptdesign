@@ -24,7 +24,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">74896</value>
+                <value type="constant">102127</value>
             </simple-property-list>
             <property name="paramType">simple</property>
             <property name="controlType">text-box</property>
@@ -963,10 +963,7 @@ cols =LoadReportElementList.COLUMNS;
 
 c2 = new LoadReportElementList("asset", root);
 elements = helper.execute(c2).getResult();
-return helper.map(
-	elements,
-	cols
-);
+return elements;
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -1028,13 +1025,12 @@ columns(LoadReportElementList.COLUMNS);</value>
             </list-property>
             <list-property name="parameters">
                 <structure>
-                    <property name="name">root_object</property>
-                    <property name="paramName">root_object</property>
-                    <property name="nativeName">root_object</property>
-                    <property name="dataType">integer</property>
+                    <property name="name">elmt_id</property>
+                    <property name="nativeName">elmt_id</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                     <property name="position">1</property>
-                    <expression name="defaultValue" type="javascript">-1</expression>
+                    <expression name="defaultValue">'dummy default value'</expression>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -1110,22 +1106,14 @@ columns(LoadReportElementList.COLUMNS);</value>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 
-// set top level element for report:
-root = helper.getRoot();
-// try to get manual parameter if set:
-myroot = _inpv.get("root_object");
-if (myroot != null &amp;&amp; myroot != -1) {
-	root = myroot;
-}
+// get current elmt:
+elmtid = inpv("elmt_id");
 
-cols =LoadReportElementWithLinks.COLLUMNS;
-
-c2 = new LoadReportElementsWithLinks("incident_scenario", root);
+// load links for it, optionally filtering by certain type:
+cols =LoadReportElementWithLinks.COLUMNS;
+c2 = new LoadReportElementWithLinks("incident_scenario", elmtid);
 elements = helper.execute(c2).getResult();
-return helper.map(
-	elements,
-	cols
-);
+return elements;
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -1134,7 +1122,7 @@ return helper.map(
     <design:parameterDefinitions>
       <design:inOutMode>In</design:inOutMode>
       <design:attributes>
-        <design:name>root_object</design:name>
+        <design:name>elmt_id</design:name>
         <design:position>1</design:position>
         <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
         <design:precision>-1</design:precision>
@@ -1157,8 +1145,8 @@ return helper.map(
                     <value>import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 
-inParameters(new String[] { "root_object" });
-columns(LoadReportElementWithLinks.COLLUMNS);</value>
+inParameters(new String[] { "elmt_id" });
+columns(LoadReportElementWithLinks.COLUMNS);</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
@@ -14232,141 +14220,121 @@ columns(cols);</value>
             <property name="paddingTop">20pt</property>
             <text-property name="text">Detailed risk assessment: risks by asset / scenario</text-property>
         </label>
-        <table id="1276">
-            <property name="dataSet">assets</property>
+        <table id="1455">
+            <property name="dataSet">asset_list</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">asset_abbr</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_abbr"]</expression>
+                    <property name="name">elmt_id</property>
+                    <expression name="expression" type="javascript">dataSetRow["elmt_id"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">asset_name</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_name"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_type</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_type"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_tag</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_tag"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_description</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_description"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_value_method_confidentiality</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_confidentiality"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_value_method_integrity</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_integrity"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_value_method_availability</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_value_method_availability"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_value_confidentiality</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_value_confidentiality"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_value_integrity</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_value_integrity"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_value_availability</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_value_availability"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_value_comment</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_value_comment"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_riskvalue_c</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_c"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_riskwcontrolvalue_c</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_c"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_riskwplancontrolvalue_c</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_riskwplancontrolvalue_c"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_riskvalue_i</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_i"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_riskwcontrolvalue_i</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_i"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_riskwplancontrolvalue_i</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_riskwplancontrolvalue_i"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_riskvalue_a</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_riskvalue_a"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_riskwcontrolvalue_a</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_riskwcontrolvalue_a"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_riskwplancontrolvalue_a</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_riskwplancontrolvalue_a"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_risktreat</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_risktreat"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">asset_risktreatexpl</property>
-                    <expression name="expression" type="javascript">dataSetRow["asset_risktreatexpl"]</expression>
+                    <property name="name">elmt_name</property>
+                    <expression name="expression" type="javascript">dataSetRow["elmt_name"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
-            <column id="1283"/>
-            <header>
-                <row id="1277">
-                    <cell id="1278"/>
-                </row>
-            </header>
+            <column id="1462"/>
             <detail>
-                <row id="1279">
-                    <cell id="1280"/>
+                <row id="1458">
+                    <cell id="1459">
+                        <grid id="1463">
+                            <column id="1464"/>
+                            <row id="1465">
+                                <cell id="1466">
+                                    <text-data id="1469">
+                                        <expression name="valueExpr">row["elmt_name"]</expression>
+                                        <property name="contentType">html</property>
+                                    </text-data>
+                                </cell>
+                            </row>
+                            <row id="1467">
+                                <cell id="1468">
+                                    <table id="1470">
+                                        <property name="dataSet">asset_scenario1</property>
+                                        <list-property name="paramBindings">
+                                            <structure>
+                                                <property name="paramName">elmt_id</property>
+                                                <expression name="expression" type="javascript">row["elmt_id"]</expression>
+                                            </structure>
+                                        </list-property>
+                                        <list-property name="boundDataColumns">
+                                            <structure>
+                                                <property name="name">relationName</property>
+                                                <expression name="expression" type="javascript">dataSetRow["relationName"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">toElement</property>
+                                                <expression name="expression" type="javascript">dataSetRow["toElement"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">riskC</property>
+                                                <expression name="expression" type="javascript">dataSetRow["riskC"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">riskI</property>
+                                                <expression name="expression" type="javascript">dataSetRow["riskI"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">riskA</property>
+                                                <expression name="expression" type="javascript">dataSetRow["riskA"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                        </list-property>
+                                        <column id="1489"/>
+                                        <column id="1490"/>
+                                        <column id="1491"/>
+                                        <column id="1492"/>
+                                        <column id="1493"/>
+                                        <header>
+                                            <row id="1499">
+                                                <cell id="1500"/>
+                                                <cell id="1501"/>
+                                                <cell id="1502"/>
+                                                <cell id="1503"/>
+                                                <cell id="1504"/>
+                                            </row>
+                                        </header>
+                                        <detail>
+                                            <row id="1477">
+                                                <cell id="1478">
+                                                    <data id="1494">
+                                                        <property name="resultSetColumn">relationName</property>
+                                                    </data>
+                                                </cell>
+                                                <cell id="1479">
+                                                    <data id="1495">
+                                                        <property name="resultSetColumn">toElement</property>
+                                                    </data>
+                                                </cell>
+                                                <cell id="1480">
+                                                    <data id="1496">
+                                                        <property name="resultSetColumn">riskC</property>
+                                                    </data>
+                                                </cell>
+                                                <cell id="1481">
+                                                    <data id="1497">
+                                                        <property name="resultSetColumn">riskI</property>
+                                                    </data>
+                                                </cell>
+                                                <cell id="1482">
+                                                    <data id="1498">
+                                                        <property name="resultSetColumn">riskA</property>
+                                                    </data>
+                                                </cell>
+                                            </row>
+                                        </detail>
+                                    </table>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
                 </row>
             </detail>
-            <footer>
-                <row id="1281">
-                    <cell id="1282"/>
-                </row>
-            </footer>
         </table>
         <label id="1275">
             <property name="fontSize">12pt</property>

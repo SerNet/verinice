@@ -25,6 +25,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
  * Loads all elements for a given entity type id and hydrates their titles so they can be displayed in a list.
@@ -51,9 +52,12 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 		list = dao.findByQuery(QUERY, new Object[] {id});
 		
-		// hydrate titles
+		// hydrate titles and abbreviations
 		for (CnATreeElement elmt : list) {
 		    elmt.getTitle();
+		    if (elmt instanceof IISO27kElement) {
+		        ((IISO27kElement)elmt).getAbbreviation();
+		    }
 		}
 	}
 

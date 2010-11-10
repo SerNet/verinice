@@ -109,6 +109,14 @@ public class ISMViewLabelProvider extends LabelProvider  {
 					    sb.append(abbreviation).append(" ");
 					}
 				}
+				
+				if(element instanceof IISO27kElement) {
+                    String abbreviation = ((IISO27kElement)element).getAbbreviation();
+                    if(abbreviation!=null && !abbreviation.isEmpty()) {
+                        sb.append(abbreviation).append(" ");
+                    }
+                }
+				
 				element = Retriever.checkRetrieveElement(element);
 				String title = element.getTitle();
                 if(title!=null && !title.isEmpty()) {

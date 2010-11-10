@@ -80,6 +80,9 @@ public class LoadReportElementList extends GenericCommand {
 	        getElements(typeId, items, root);
 	        this.elements = items;
 	    }
+	    
+	    // load lazy fields:
+	    getResult();
 	}
 	
 	public static final String[] COLUMNS = new String[] {"elmt_id", "elmt_name"};

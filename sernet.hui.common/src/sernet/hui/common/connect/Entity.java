@@ -275,6 +275,12 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		{
 		    PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType, propertyTypeId);
 		    Property p = new Property();
+		    
+		    if (propertyType == null) {
+		        getLog().warn("Skipping data field because PropertyType was not found: " + propertyTypeId + " for entity type " + this.entityType);
+		        continue;
+		    }
+		    
 		    if(propertyType.isSingleSelect()) {
 		        List<IMLPropertyOption> optionList = propertyType.getOptions();
 		        boolean found = false;

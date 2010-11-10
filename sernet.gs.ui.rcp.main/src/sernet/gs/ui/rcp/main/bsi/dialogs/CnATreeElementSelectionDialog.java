@@ -75,6 +75,7 @@ import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.snutils.DBException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
  * Dialog to allow speedy selection of multiple elements of a given type, with filter function.
@@ -211,8 +212,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
                     cell.setText( ((PlaceHolder)cell.getElement()).getTitle() );
                     return;
                 }
-                    
-                cell.setText( ((CnATreeElement)cell.getElement()).getTitle() );
+                cell.setText( makeTitle((CnATreeElement)cell.getElement()) );
             }
         });
         
@@ -223,7 +223,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
             public int compare(Viewer viewer, Object e1, Object e2) {
                 CnATreeElement elmt1 = (CnATreeElement) e1;
                 CnATreeElement elmt2 = (CnATreeElement) e2;
-                return elmt1.getTitle().compareTo(elmt2.getTitle());
+                return makeTitle(elmt1).compareTo(makeTitle(elmt2));
             } 
         });
         
@@ -252,6 +252,19 @@ public class CnATreeElementSelectionDialog extends Dialog {
      */
     public List<CnATreeElement> getSelectedElements() {
         return selectedElements;
+    }
+    
+    private String makeTitle(CnATreeElement elmt) {
+        StringBuilder sb = new StringBuilder();
+        if(elmt instanceof IISO27kElement) {
+            String abbreviation = ((IISO27kElement)elmt).getAbbreviation();
+            if(abbreviation!=null && !abbreviation.isEmpty()) {
+                sb.append(abbreviation).append(" ");
+            }
+        }
+        
+        sb.append(((CnATreeElement)elmt).getTitle());
+        return sb.toString();
     }
 
 

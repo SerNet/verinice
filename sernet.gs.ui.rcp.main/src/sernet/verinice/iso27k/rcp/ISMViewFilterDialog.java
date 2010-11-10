@@ -28,7 +28,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICheckStateProvider;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.SWT;
@@ -74,6 +76,8 @@ import sernet.verinice.model.iso27k.Interview;
 import sernet.verinice.model.iso27k.InterviewGroup;
 import sernet.verinice.model.iso27k.PersonGroup;
 import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.iso27k.Process;
+import sernet.verinice.model.iso27k.ProcessGroup;
 import sernet.verinice.model.iso27k.Record;
 import sernet.verinice.model.iso27k.RecordGroup;
 import sernet.verinice.model.iso27k.Requirement;
@@ -93,6 +97,7 @@ import sernet.verinice.model.iso27k.VulnerabilityGroup;
 public class ISMViewFilterDialog extends Dialog {
 
     private static final Logger log = Logger.getLogger(ISMViewFilterDialog.class);
+    private boolean state = true;
 
     public static final String[][] TYPES = new String[][] {
         new String[] {Asset.TYPE_ID,AssetGroup.TYPE_ID},
@@ -103,12 +108,13 @@ public class ISMViewFilterDialog extends Dialog {
         new String[] {Exception.TYPE_ID,ExceptionGroup.TYPE_ID},        
         new String[] {Finding.TYPE_ID,FindingGroup.TYPE_ID},        
         new String[] {Incident.TYPE_ID,IncidentGroup.TYPE_ID},        
-        new String[] {IncidentScenario.TYPE_ID,IncidentScenarioGroup.TYPE_ID},       
         new String[] {Interview.TYPE_ID,InterviewGroup.TYPE_ID},       
         new String[] {PersonIso.TYPE_ID,PersonGroup.TYPE_ID},        
+        new String[] {Process.TYPE_ID,ProcessGroup.TYPE_ID},
         new String[] {Record.TYPE_ID,RecordGroup.TYPE_ID},       
         new String[] {Requirement.TYPE_ID,RequirementGroup.TYPE_ID},       
         new String[] {Response.TYPE_ID,ResponseGroup.TYPE_ID},       
+        new String[] {IncidentScenario.TYPE_ID,IncidentScenarioGroup.TYPE_ID},       
         new String[] {Threat.TYPE_ID,ThreatGroup.TYPE_ID},       
         new String[] {Vulnerability.TYPE_ID,VulnerabilityGroup.TYPE_ID}
     };
@@ -202,6 +208,14 @@ public class ISMViewFilterDialog extends Dialog {
         });
         viewerType.setCheckStateProvider(new CheckStateProvider(getVisibleTypes()));
         viewerType.setInput(TYPES);  
+        
+        viewerType.addDoubleClickListener(new IDoubleClickListener() {
+            @Override
+            public void doubleClick(DoubleClickEvent event) {
+                state = !state;
+                viewerType.setAllChecked(state);
+            }
+        });
     }
 
     private void createTagfilterGroup(Composite parent) {

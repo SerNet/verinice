@@ -78,7 +78,7 @@ public class ImportIsoGroup extends Group<Organization> implements IISO27kGroup,
      */
     @Override
     public String getAbbreviation() {
-        return getTypeId();
+        return "";
     }
 
     /* (non-Javadoc)

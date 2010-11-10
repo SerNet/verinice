@@ -20,11 +20,14 @@ package sernet.gs.ui.rcp.main.actions;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+
+import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -32,20 +35,29 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementList;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithLinks;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.IncidentScenario;
 
 public class TestAction extends Action {
 
+    private String typeID;
+    private Integer dbID;
     public static final String ID = "sernet.gs.ui.rcp.main.testaction"; //$NON-NLS-1$
+    
+    private static final Logger LOG = Logger.getLogger(TestAction.class);
 
-    public TestAction(IWorkbenchWindow window, String label) {
+    public TestAction(IWorkbenchWindow window, String label, String typeID, Integer dbID) {
         setText(label);
         setId(ID);
         setActionDefinitionId(ID);
+        this.typeID = typeID;
+        this.dbID = dbID;
+        
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
         setEnabled(false);
         CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
@@ -70,15 +82,49 @@ public class TestAction extends Action {
     public void run() {
         Activator.inheritVeriniceContextState();
         try {
-
-                LoadReportElementWithLinks command = new LoadReportElementWithLinks("asset", 74896);
+            
+            StringBuilder allsb = new StringBuilder();
+            
+            LoadReportElementList cmd = new LoadReportElementList(typeID, dbID);
+            cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
+            List<List<String>> elements = cmd.getResult();
+            
+            for (List<String> list : elements) {
+                Integer myDbid = Integer.parseInt(list.get(0));
+                LoadReportElementWithLinks command = new LoadReportElementWithLinks(null, myDbid);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 List<List<String>> result = command.getResult();
+                allsb.append(list.get(1)).append("\n");
+                allsb.append(print(result)).append("\n");
+                
+            }
+            
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(allsb.toString());
+            }
                 
         
         } catch (Exception e) {
             ExceptionUtil.log(e, "test failed");
         }
+    }
+
+    /**
+     * @param result
+     */
+    private String print(List<List<String>> result) {
+        if (LOG.isDebugEnabled()) {
+            StringBuilder sb = new StringBuilder();
+            for (List<String> list : result) {
+                for (String string : list) {
+                    sb.append(string).append("\t");
+                }
+                sb.append("\n");
+            }
+            LOG.debug("List for report: " + sb.toString());
+            return sb.toString();
+        }
+        return "";
     }
 
 }
