@@ -21,6 +21,7 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -53,7 +54,7 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 public class AuditView extends GenericMassnahmenView {
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.auditview"; //$NON-NLS-1$
 
-	TableSorter tableSorter = new TableSorter();
+	AuditTableSorter tableSorter = new AuditTableSorter();
 	
 	@Override
 	protected void createPartControlImpl(Composite parent) {
@@ -211,32 +212,61 @@ public class AuditView extends GenericMassnahmenView {
 		}
 	}
 	
-	private static class SortSelectionAdapter extends SelectionAdapter {
-		AuditView view;
-		TableColumn column;
-		int index;
-		
-		public SortSelectionAdapter(AuditView view, TableColumn column, int index) {
-			this.view = view;
-			this.column = column;
-			this.index = index;
-		}
-	
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			view.tableSorter.setColumn(index);
-			int dir = view.viewer.getTable().getSortDirection();
-			if (view.viewer.getTable().getSortColumn() == column) {
-				dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
-			} else {
-
-				dir = SWT.DOWN;
-			}
-			view.viewer.getTable().setSortDirection(dir);
-			view.viewer.getTable().setSortColumn(column);
-			view.viewer.refresh();
-		}
-
+	protected class AuditTableSorter extends TableSorter {
+	   
+	    private final Logger log = Logger.getLogger(AuditView.AuditTableSorter.class);
+	    
+	     /* (non-Javadoc)
+	     * @see sernet.gs.ui.rcp.main.bsi.views.GenericMassnahmenView.TableSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+	     */
+	    @Override
+	    public int compare(Viewer viewer, Object o1, Object o2) {
+	        int rc = 0;
+            try {
+                TodoViewItem mn1 = (TodoViewItem) o1;
+                TodoViewItem mn2 = (TodoViewItem) o2;           
+                if(o1==null) {
+                    if(o2!=null) {
+                        rc = 1;
+                    }
+                } else if(o2==null) {
+                    if(o1!=null) {
+                        rc = -1;
+                    }
+                } else {
+                    // e1 and e2 != null    
+                    switch (propertyIndex) {
+                    case 0:
+                        rc = sortByString(mn1.getUmsetzung(),mn2.getUmsetzung());
+                        break;
+                    case 1:
+                        rc = sortByDate(mn1.getNaechsteRevision(), mn2.getNaechsteRevision());
+                        break;
+                    case 2:
+                        rc = sortByString(mn1.getRevisionDurch(),mn2.getRevisionDurch());
+                        break;
+                    case 3:
+                        rc = sortByString(String.valueOf(mn1.getStufe()), String.valueOf(mn2.getStufe()));
+                        break;
+                    case 4:
+                        rc = sortByString(mn1.getParentTitle(), mn2.getParentTitle());
+                        break;
+                    case 5:
+                        rc = sortByString(mn1.getTitle(), mn2.getTitle());
+                        break;
+                    default:
+                        rc = 0;
+                    }
+                }
+                // If descending order, flip the direction
+                if (direction == DESCENDING) {
+                    rc = -rc;
+                }
+            } catch(Exception e) {
+                log.error("Error while sorting elements", e);
+            }
+            return rc;
+	    }
 	}
 
 }

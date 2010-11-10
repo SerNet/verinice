@@ -71,7 +71,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 	private static final int REFRESH = 3;
 	
 	private TableViewer viewer;
-	private IMassnahmenListView todoView;
+	private GenericMassnahmenView todoView;
 	
 	IBSIModelListener modelListener = new IBSIModelListener()
 	{
@@ -105,8 +105,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 				try {
 					if (!isOfInterest(child))
 					{
-						log.debug("MassnahmenUmsetzung is not of interest for view: "
-								+ child);
+						log.debug("MassnahmenUmsetzung is not of interest for view: " + child);
 						return;
 					}
 					
@@ -144,16 +143,16 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 		 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
 		 */
 		public void modelRefresh() {
+		   
 			modelRefresh(null);
 		}
 
 		public void modelRefresh(Object source) {
-			if (source != null
-					&& (source.equals(IBSIModelListener.SOURCE_BULK_EDIT)
-					|| source.equals(IBSIModelListener.SOURCE_KONSOLIDATOR)
-					)
-				)
+			if (source != null) {
+			    todoView.loadBlockNumber=0;
+		        todoView.loadMoreAction.setEnabled(true);
 				reloadMeasures();
+			}
 		}
 		
 		public void databaseChildAdded(CnATreeElement child) {
@@ -176,6 +175,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 			 * 
 			 * @see IModelLoadListener
 			 */
+            //reloadMeasures();
 		}
 
 		/* (non-Javadoc)
@@ -188,7 +188,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 
 	};
 	
-	public MassnahmenUmsetzungContentProvider(IMassnahmenListView todoView) {
+	public MassnahmenUmsetzungContentProvider(GenericMassnahmenView todoView) {
 		this.todoView = todoView;
 	}
 

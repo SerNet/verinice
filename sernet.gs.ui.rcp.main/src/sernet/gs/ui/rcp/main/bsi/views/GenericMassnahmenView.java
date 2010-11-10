@@ -734,8 +734,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 					final int number = command.getNumber();
 					if(loadBlockNumber==1) { 
 					    allMassnahmen = command.getAll();
-					} else {
-					    allMassnahmen.remove(allMassnahmen.size()-1);
+					} else {				   
 	                    allMassnahmen.addAll(command.getAll());
 					}
 					Display.getDefault().asyncExec(new Runnable() {
@@ -947,11 +946,11 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	}
 	
 	protected static class TableSorter extends ViewerSorter {
-		private int propertyIndex;
+		protected int propertyIndex;
 		private static final int DEFAULT_SORT_COLUMN = 1;
-		private static final int DESCENDING = 1;
-		private static final int ASCENDING = 0;
-		private int direction = ASCENDING;
+		protected static final int DESCENDING = 1;
+		protected static final int ASCENDING = 0;
+		protected int direction = ASCENDING;
 		
 		public TableSorter() {
 			this.propertyIndex = DEFAULT_SORT_COLUMN;
@@ -1018,7 +1017,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 			return rc;
 		}
 		
-		private int sortByString(String s1, String s2) {
+		protected int sortByString(String s1, String s2) {
 			int rc = 0;
 			if(s1==null) {
 				if(s2!=null) {
@@ -1034,7 +1033,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 			return rc;
 		}
 
-		private int sortByDate(Date date1, Date date2) {
+		protected int sortByDate(Date date1, Date date2) {
 	        if (date1 == null)
 	            return 1;
 	        
