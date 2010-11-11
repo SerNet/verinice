@@ -18,7 +18,9 @@
 package sernet.gs.ui.rcp.main.bsi.actions;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -46,6 +48,7 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.IISO27kRoot;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 
@@ -77,7 +80,8 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
         // ask twice if IT verbund
         boolean goahead = true;
-        Iterator iterator = selection.iterator();
+        final List<CnATreeElement> deleteList = createList(selection.toList());
+        Iterator iterator = deleteList.iterator();
         Object object;
         while (iterator.hasNext()) {
             object = iterator.next();
@@ -110,10 +114,17 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                     Activator.inheritVeriniceContextState();
                     monitor.beginTask(Messages.DeleteActionDelegate_11, selection.size());
 
-                    for (Iterator iter = selection.iterator(); iter.hasNext();) {
+                    for (Iterator iter = deleteList.iterator(); iter.hasNext();) {
                         Object sel = iter.next();
 
-                        if (sel instanceof IBSIStrukturElement || sel instanceof BausteinUmsetzung || sel instanceof FinishedRiskAnalysis || sel instanceof GefaehrdungsUmsetzung || sel instanceof ITVerbund || sel instanceof IISO27kRoot || sel instanceof IISO27kElement || sel instanceof ImportIsoGroup) {
+                        if (sel instanceof IBSIStrukturElement 
+                                || sel instanceof BausteinUmsetzung 
+                                || sel instanceof FinishedRiskAnalysis 
+                                || sel instanceof GefaehrdungsUmsetzung 
+                                || sel instanceof ITVerbund 
+                                || sel instanceof IISO27kRoot 
+                                || sel instanceof IISO27kElement 
+                                || sel instanceof ImportIsoGroup) {
 
                             // do not delete last ITVerbund:
                             try {
@@ -140,7 +151,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                     }
 
                     // notify all listeners:
-                    CnATreeElement child = (CnATreeElement) selection.iterator().next();
+                    CnATreeElement child = (CnATreeElement) deleteList.iterator().next();
                     CnAElementFactory.getModel(child).databaseChildRemoved(child);
                 }
             });
@@ -150,6 +161,45 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
             ExceptionUtil.log(e, Messages.DeleteActionDelegate_17);
         }
 
+    }
+    
+    protected List<CnATreeElement> createList(List elementList) {
+        List<CnATreeElement> tempList = new ArrayList<CnATreeElement>();
+        List<CnATreeElement> insertList = new ArrayList<CnATreeElement>();
+        int depth = 0;
+        int removed = 0;
+        for (Object sel : elementList) {
+            if (sel instanceof IBSIStrukturElement 
+                    || sel instanceof BausteinUmsetzung 
+                    || sel instanceof FinishedRiskAnalysis 
+                    || sel instanceof GefaehrdungsUmsetzung 
+                    || sel instanceof ITVerbund 
+                    || sel instanceof IISO27kRoot 
+                    || sel instanceof IISO27kElement 
+                    || sel instanceof ImportIsoGroup) {
+                createList((CnATreeElement) sel,tempList,insertList, depth, removed);
+            }
+        }
+        return insertList;
+    }
+
+    private void createList(CnATreeElement element, List<CnATreeElement> tempList, List<CnATreeElement> insertList, int depth, int removed) {
+        if(!tempList.contains(element)) {
+            tempList.add(element);
+            if(depth==0) {
+                insertList.add(element);
+            }
+            if(element instanceof IISO27kGroup && element.getChildren()!=null) {
+                depth++;
+                element = Retriever.checkRetrieveChildren(element);
+                for (CnATreeElement child : element.getChildren()) {
+                    createList(child,tempList,insertList,depth,removed);
+                }
+            }
+        } else {
+            insertList.remove(element);
+            removed++;
+        }
     }
 
     public void selectionChanged(IAction action, ISelection selection) {
