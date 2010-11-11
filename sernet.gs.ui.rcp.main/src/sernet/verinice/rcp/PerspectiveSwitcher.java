@@ -63,7 +63,7 @@ public class PerspectiveSwitcher implements IStartup, IPartListener {
 	 */
 	public void partActivated(final IWorkbenchPart part) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("partActivated: " + part.getTitle());
+			LOG.debug("partActivated: " + part.getTitle()); //$NON-NLS-1$
 		}
 	}
 	
@@ -73,7 +73,7 @@ public class PerspectiveSwitcher implements IStartup, IPartListener {
 	 */
 	public void partBroughtToTop(IWorkbenchPart part) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("partBroughtToTop: " + part.getTitle());
+			LOG.debug("partBroughtToTop: " + part.getTitle()); //$NON-NLS-1$
 		}
 	}
 
@@ -82,7 +82,7 @@ public class PerspectiveSwitcher implements IStartup, IPartListener {
 	 */
 	public void partClosed(IWorkbenchPart part) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("partClosed: " + part.getTitle());
+			LOG.debug("partClosed: " + part.getTitle()); //$NON-NLS-1$
 		}
 	}
 
@@ -91,7 +91,7 @@ public class PerspectiveSwitcher implements IStartup, IPartListener {
 	 */
 	public void partDeactivated(IWorkbenchPart part) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("partDeactivated: " + part.getTitle());
+			LOG.debug("partDeactivated: " + part.getTitle()); //$NON-NLS-1$
 		}
 	}
 
@@ -100,7 +100,7 @@ public class PerspectiveSwitcher implements IStartup, IPartListener {
 	 */
 	public void partOpened(final IWorkbenchPart part) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("partOpened: " + part.getTitle());
+			LOG.debug("partOpened: " + part.getTitle()); //$NON-NLS-1$
 		}
 		if (part instanceof IAttachedToPerspective && ((IAttachedToPerspective) part).getPerspectiveId()!=null) {
 			final IWorkbenchWindow workbenchWindow = part.getSite().getPage().getWorkbenchWindow();	
@@ -114,7 +114,7 @@ public class PerspectiveSwitcher implements IStartup, IPartListener {
                         	try {
                         		workbenchWindow.getWorkbench().showPerspective(attachedPerspectiveId,workbenchWindow);
                         	} catch (WorkbenchException e) {
-            					LOG.error("Can not switch to perspective: " + attachedPerspectiveId, e);
+            					LOG.error(Messages.PerspectiveSwitcher_5 + attachedPerspectiveId, e);
             				}
                 		}
                     }
@@ -130,9 +130,9 @@ public class PerspectiveSwitcher implements IStartup, IPartListener {
 		if(!askNot) {
 			MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoCancelQuestion(
 					PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
-					"Switch to Attached Perspective", 
-					"This view is attached to a different perspective. Do you wan't to switch to that perspective now?",
-					"Remember my decision (You can change this in the preferences)",
+					Messages.PerspectiveSwitcher_6, 
+					Messages.PerspectiveSwitcher_7,
+					Messages.PerspectiveSwitcher_8,
 					false,
 					Activator.getDefault().getPreferenceStore(),
 					PreferenceConstants.getSwitch(clazz));

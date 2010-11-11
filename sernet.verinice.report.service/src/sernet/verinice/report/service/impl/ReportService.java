@@ -44,7 +44,8 @@ public class ReportService implements IReportService {
 		        new UserReportType(), 
 		        new SamtReportType(), 
 		        new AllItemsReport(),
-		        new RiskByAssetReport()
+		        new RiskByAssetReport(),
+		        new RiskTreatmentReport()
 		    };
 		
 		return reportTypes;

@@ -27,20 +27,20 @@ import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 
-public class AllItemsReport implements IReportType {
+public class RiskTreatmentReport implements IReportType {
 	
-	private static final Logger LOG = Logger.getLogger(AllItemsReport.class);
+	private static final Logger LOG = Logger.getLogger(RiskTreatmentReport.class);
 
 	public String getDescription() {
-		return Messages.AllItemsReport_0;
-	}
+        return Messages.RiskTreatmentReport_0;
+    }
 
-	public String getId() {
-		return "schutzbedarf"; //$NON-NLS-1$
-	}
+    public String getId() {
+        return "risktreatment"; //$NON-NLS-1$
+    }
 
 	public String getLabel() {
-		return Messages.AllItemsReport_2;
+		return Messages.RiskTreatmentReport_1;
 	}
 
 	public IOutputFormat[] getOutputFormats() {
@@ -50,7 +50,7 @@ public class AllItemsReport implements IReportType {
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
 		
-		URL reportDesign = AllItemsReport.class.getResource("allitems.rptdesign"); //$NON-NLS-1$
+		URL reportDesign = RiskTreatmentReport.class.getResource("risktreatment.rptdesign"); //$NON-NLS-1$
 		
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
 		{
@@ -77,7 +77,7 @@ public class AllItemsReport implements IReportType {
      */
     @Override
     public void setReportFile(String file) {
-        // TODO Auto-generated method stub
+        // user supplied template not supported by this report type
         
     }
 

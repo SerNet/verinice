@@ -197,6 +197,10 @@ the value between <param></param> will be used directly if no string is found fo
  <huientity
         name="Raum"
         id="raum">
+        
+          <huirelation to="gebaeude" id="raum_gebaeude" 
+            name="befindet sich in" reversename="beinhaltet" />
+        
         <huiproperty
             name="Kürzel"
             id="raum_kuerzel"
@@ -531,6 +535,10 @@ the value between <param></param> will be used directly if no string is found fo
     <huientity
         name="TK-Komponente"
         id="tkkomponente">
+        
+          <huirelation to="raum" id="tkkomponente_raum_located" 
+            name="befindet sich in" reversename="beinhaltet" />
+        
         <huiproperty
             name="Kürzel"
             id="tkkomponente_kuerzel"
@@ -719,6 +727,10 @@ the value between <param></param> will be used directly if no string is found fo
     <huientity
         name="Netz / Verbindung"
         id="netzkomponente">
+        
+          <huirelation to="raum" id="netzkomponente_raum_located" 
+            name="befindet sich in" reversename="beinhaltet" />
+        
         <huiproperty
             name="Kürzel"
             id="netzkomponente_kuerzel"
@@ -1005,6 +1017,10 @@ the value between <param></param> will be used directly if no string is found fo
     <huientity
         name="Client"
         id="client" >
+        
+          <huirelation to="raum" id="client_raum_located" 
+        	name="befindet sich in" reversename="beinhaltet" />
+        
 	    <huiproperty	
             name="Kürzel"
             id="client_kuerzel"
@@ -2167,6 +2183,19 @@ the value between <param></param> will be used directly if no string is found fo
       
         <huirelation to="person" id="anwendung_person_informed" 
         	name="informed" reversename="informed about" tooltip="Informed person"/>
+            
+        <huirelation to="server" id="anwendung_server" 
+            name="benötigt" reversename="nötig für" />
+        <huirelation to="client" id="anwendung_client" 
+            name="benötigt" reversename="nötig für" />
+        <huirelation to="sonstit" id="anwendung_sonstit" 
+            name="benötigt" reversename="nötig für" />
+        <huirelation to="netzkomponente" id="anwendung_netzkomponente" 
+            name="benötigt" reversename="nötig für" />
+        <huirelation to="tkkomponente" id="anwendung_tkkomponente" 
+            name="benötigt" reversename="nötig für" />
+
+            
         
         <huiproperty
 			name="Kürzel"

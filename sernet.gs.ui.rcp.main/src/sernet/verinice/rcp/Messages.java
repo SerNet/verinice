@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.report.service.impl;
+package sernet.verinice.rcp;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -26,19 +26,11 @@ import org.eclipse.osgi.util.NLS;
  *
  */
 public class Messages extends NLS {
-    private static final String BUNDLE_NAME = "sernet.verinice.report.service.impl.messages"; //$NON-NLS-1$
-    public static String AllItemsReport_0;
-    public static String AllItemsReport_2;
-    public static String ComprehensiveSamtReportType_0;
-    public static String ComprehensiveSamtReportType_2;
-    public static String RiskByAssetReport_0;
-    public static String RiskByAssetReport_2;
-    public static String RiskTreatmentReport_0;
-    public static String RiskTreatmentReport_1;
-    public static String SamtReportType_0;
-    public static String SamtReportType_2;
-    public static String UserReportType_1;
-    public static String UserReportType_3;
+    private static final String BUNDLE_NAME = "sernet.verinice.rcp.messages"; //$NON-NLS-1$
+    public static String PerspectiveSwitcher_5;
+    public static String PerspectiveSwitcher_6;
+    public static String PerspectiveSwitcher_7;
+    public static String PerspectiveSwitcher_8;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
