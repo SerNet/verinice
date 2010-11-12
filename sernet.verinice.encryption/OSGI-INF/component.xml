@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="sernet.verinice.encryption">
+   <implementation class="sernet.verinice.encryption.impl.EncryptionService"/>
+   <service>
+      <provide interface="sernet.verinice.interfaces.encryption.IEncryptionService"/>
+   </service>
+</scr:component>

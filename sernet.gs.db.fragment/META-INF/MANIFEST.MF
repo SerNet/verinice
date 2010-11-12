@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JDBC Driver Class Providing Fragment
+Bundle-SymbolicName: sernet.gs.db.fragment
+Bundle-Version: 1.1.0
+Fragment-Host: com.springsource.com.mchange.v2.c3p0
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: .,
+ lib/derby/derby.jar,
+ lib/derby/derbyclient.jar,
+ lib/derby/derbynet.jar,
+ lib/derby/derbyrun.jar,
+ lib/derby/derbytools.jar,
+ lib/mysql/mysql-connector-java-5.0.7-bin.jar,
+ lib/postgres/postgresql-8.2-504.jdbc3.jar,
+ lib/oracle/ojdbc6.jar
+Export-Package: com.mysql.jdbc,
+ com.mysql.jdbc.exceptions,
+ oracle.jdbc,
+ oracle.jdbc.driver,
+ org.apache.derby.jdbc,
+ org.gjt.mm.mysql,
+ org.postgresql,
+ org.postgresql.util

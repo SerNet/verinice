@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" 
+	resourceMap="http://www.verinice.org/svnroot/BRANCHES/1.2/sernet.hui.server/verinice.rmap" >
+	<cq:rootRequest name="sernet.hui.server" 
+    	componentType="osgi.bundle" 
+    	versionDesignator="[1.1.1,1.1.1]"/>
+   	<cq:property key="target.arch" value="*"/>
+	<cq:property key="target.os" value="*"/>
+	<cq:property key="target.ws" value="*"/>
+</cq:componentQuery>

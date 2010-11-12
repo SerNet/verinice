@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:http-conf="http://cxf.apache.org/transports/http/configuration"
+       
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+           http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd">
+	
+	<!-- Basic requirements for CXF to work. -->
+	<import
+		resource="classpath:META-INF/cxf/cxf.xml" />
+	<import
+		resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import
+		resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+		
+	<!-- Publishes the WS endpoint -->
+	<jaxws:endpoint
+		id="sync-service"
+		implementor="#syncService"
+		address="/sync" />
+		
+	<!-- Makes the SyncService WebService available as a Spring bean. -->
+	<bean id="syncService" class="sernet.gs.server.sync.SyncServiceImpl" >
+		<property name="commandService" ref="hibernateCommandService" />
+	</bean>
+    
+
+</beans>
