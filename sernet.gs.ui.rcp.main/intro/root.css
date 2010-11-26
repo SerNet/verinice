@@ -1,0 +1,31 @@
+.center {
+    margin-top: 30px;
+     display: block;
+         margin-left: auto;
+             margin-right: auto }
+
+
+
+
+/* Give some space for main div.*/	
+.page-style {
+	margin-top:20px;
+	}
+	
+/* satisfy Mozilla */	
+body > div.page-style {
+	padding-left:10%;
+	}
+
+
+p {
+    padding-left:20%;
+	text-align:left;
+	width:50em;
+	} 
+
+
+
+
+		
+

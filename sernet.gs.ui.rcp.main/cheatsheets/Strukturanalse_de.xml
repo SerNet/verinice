@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Strukturanalyse">
+
+	<intro 
+		>
+		<description>
+		In diesem Tutorial lernen Sie, wie Sie ihren IT-Verbund mit Verinice erfassen.
+		<br/><br/>
+		Welche Daten Sie eingeben müssen und wie Sie dabei am besten vorgehen,
+		beschreibt die BSI Norm 100-2.
+		</description>
+	</intro>
+
+	<item title="DB Verbindung">
+		<description>
+		Klicken Sie mit der rechten Maustaste in die Ansicht "GS-Modell".
+		Wählen Sie den Menüpunkt "Öffne Datenbankverbindung".
+		</description>
+	</item>
+	
+	<item title="Die integrierte Datenbank">
+		<description>
+		Da Sie noch keine andere Datenbank konfiguriert haben, verwendet verinice
+		die integrierte Derby-Datenbank. Bestätigen Sie die Meldung.
+		</description>
+	</item>
+	
+	<item title="Neuer IT-Verbund">
+		<description>
+		Öffnen Sie den neu erstellten IT-Verbund durch Doppelklick.
+		Hier können Sie eine Bezeichnung für den Verbund und die zugehörige Organisation
+		definieren.
+		<br/><br/>
+		Schließen Sie den Editor (Strg-W).
+		</description>
+	</item>
+	
+	<item title="Neuer Mitarbeiter">
+		<description>
+		Klappen Sie den IT-Verbund auf. Klicken Sie mit der rechten Maustaste
+		auf "Mitarbeiter", dann "Neuer Mitarbeiter". Geben Sie Ihren Namen
+		und weitere Daten ein. Wählen Sie als Rolle "Administrator".
+		<br/><br/>
+		Schließen (Strg-W) oder Speichern (Strg-S) Sie den neuen Mitarbeiter.
+		</description>
+	</item>
+	
+	<item title="Neuer Server">
+		<description>
+		Erzeugen Sie einen neuen Server durch Rechtsklick auf "IT-Systeme: Server", 
+		"Neuer Server". Geben Sie ihm den Namen "Buchhaltungssystem".
+		<br/><br/>
+		Lassen Sie die Felder für den Schutzbedarf noch frei!
+		<br/><br/>
+		Im Feld "Admin" ist eine Eingabehilfe verfügbar: drücken Sie die Cursortaste 'Pfeil Runter',
+		dann werden Ihnen die bisher angelegten Mitarbeiter vorgeschlagen.
+		</description>
+	</item>
+	
+	<item title="Neue Anwendung">
+		<description>
+		Schließen Sie den Server (Strg-W). 
+		<br/><br/>
+		Klicken Sie mit der rechten Maustaste auf "Anwendungen", "Neue Anwendung".
+		<br/><br/>
+		Geben Sie der Anwendung den Namen "Buchhaltung". Schließen Sie den Editor (Strg-W).
+		</description>
+		<onCompletion>
+		Sehr gut! Legen Sie weiter Objekte in den anderen Kategorien an, oder fahren Sie mit dem nächsten Spickzettel "Schutzbedarfsanalyse" fort!
+		</onCompletion>
+	</item>
+
+	
+	
+	
+</cheatsheet>
