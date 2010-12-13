@@ -44,17 +44,16 @@ import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveLink;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.UpdateControlEntity;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
 import sernet.gs.ui.rcp.main.service.taskcommands.CreateScenario;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
-import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
@@ -66,7 +65,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
@@ -92,10 +91,6 @@ public class CnAElementHome {
     private static CnAElementHome instance;
     
     protected static final String LINK_NO_COMMENT = ""; //$NON-NLS-1$
-
-    private static final String QUERY_FIND_BY_ID = "from " + CnATreeElement.class.getName() + " as element " + "where element.dbId = ?"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-    private static final String QUERY_FIND_CHANGES_SINCE = "from " + ChangeLogEntry.class.getName() + " as change " + "where change.changetime > ? " + "and not change.stationId = ? " + "order by changetime"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     private ICommandService commandService;
 
@@ -589,10 +584,26 @@ public class CnAElementHome {
      * @throws Exception 
      */
     public CnATreeElement updateEntity(CnATreeElement element) throws Exception {
-        UpdateElementEntity<CnATreeElement> command = new UpdateElementEntity(element, true, ChangeLogEntry.STATION_ID);
+        UpdateElementEntity<? extends CnATreeElement> command = createCommand(element);
         command = getCommandService().executeCommand(command);
         return (CnATreeElement) command.getElement();
     
+    }
+
+    /**
+     * Creates an specific update command for an element.
+     * 
+     * @param element
+     * @return update command
+     */
+    private UpdateElementEntity<? extends CnATreeElement> createCommand(CnATreeElement element) {
+        UpdateElementEntity<? extends CnATreeElement>  command = null;
+        if(Control.TYPE_ID.equals(element.getTypeId())) {
+            command = new UpdateControlEntity((Control) element, true, ChangeLogEntry.STATION_ID);
+        } else {
+            command = new UpdateElementEntity<CnATreeElement>(element, true, ChangeLogEntry.STATION_ID);
+        }
+        return command;
     }
 
    
