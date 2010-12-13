@@ -21,9 +21,9 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
-import sernet.gs.ui.rcp.main.service.IHibernateCommandService;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.service.IHibernateCommandService;
 
 /**
  * Initialize environemnt on Verinice server on startup.

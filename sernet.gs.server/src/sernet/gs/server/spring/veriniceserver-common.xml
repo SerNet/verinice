@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
-	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 	<!--
 	All configuration options for the verinice server are available in the
@@ -107,7 +108,7 @@ This variant:
 	</bean>
 
 
-	<bean id="daoFactory" class="sernet.gs.ui.rcp.main.service.DAOFactory">
+	<bean id="daoFactory" class="sernet.verinice.service.DAOFactory">
 		<property name="propertyListDao" ref="propertyListDao" />
 		<property name="propertyDao" ref="propertyDao" />
 		<property name="entityDao" ref="entityDao" />
@@ -221,10 +222,11 @@ This variant:
 
 	<bean id="serverExceptionHandler" class="sernet.gs.server.ServerExceptionHandler" />
 
-	<bean id="hibernateCommandService" class="sernet.gs.ui.rcp.main.service.HibernateCommandService">
+	<bean id="hibernateCommandService" class="sernet.verinice.service.HibernateCommandService">
 		<property name="daoFactory" ref="daoFactory" />
 		<property name="exceptionHandler" ref="serverExceptionHandler" />
 		<property name="authService" ref="authService" />
+        <property name="processService" ref="processService" />
 	</bean>
 
 	<bean id="commandService" parent="baseTxProxy">

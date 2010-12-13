@@ -174,7 +174,7 @@
 	<aop:config>
 		<aop:aspect ref="internalAuthenticationProvider">
 
-			<aop:pointcut id="commandServicePointcut" expression="execution(* sernet.gs.ui.rcp.main.service.HibernateCommandService.executeCommand(..))" />
+			<aop:pointcut id="commandServicePointcut" expression="execution(* sernet.verinice.service.HibernateCommandService.executeCommand(..))" />
 
 			<aop:around method="doInsertAuthentication" pointcut-ref="commandServicePointcut" />
 

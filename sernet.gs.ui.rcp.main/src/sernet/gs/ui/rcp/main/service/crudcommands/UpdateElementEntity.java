@@ -14,7 +14,8 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
- ******************************************************************************/
+ *     Daniel Murygin <dm[at]sernet[dot]de> - before/afterUpdate added
+  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
@@ -25,7 +26,6 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.common.SecurityException;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
@@ -65,6 +65,7 @@ public class UpdateElementEntity<T extends CnATreeElement> extends GenericComman
 	}
 
 	public void execute() {
+	    beforeUpdate();
 	    IBaseDao<T, Serializable> elementDao = getDaoFactory().getDAO(newElement.getTypeId());
         try {
             elementDao.checkRights(newElement);
@@ -80,9 +81,26 @@ public class UpdateElementEntity<T extends CnATreeElement> extends GenericComman
 	    IBaseDao<Entity, Serializable> entityDao = getDaoFactory().getDAO(Entity.class);
 	    newEntity = entityDao.merge(newEntity);
 	    newElement.setEntity(newEntity);
+	    afterUpdate();
 	}
 
-	public T getElement() {
+	/**
+     * Called before element entity is updated.
+     * You can override this in subclassed to add additional functionality
+     */
+    protected void beforeUpdate() {
+        // empty
+    }
+
+    /**
+     * Called after element entity was updated.
+     * You can override this in subclassed to add additional functionality
+     */
+    protected void afterUpdate() {
+        // empty
+    }
+
+    public T getElement() {
 		return newElement;
 	}
 

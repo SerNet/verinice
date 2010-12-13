@@ -35,6 +35,8 @@
         	<!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml -->
         	
             classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
+            
+            classpath:sernet/gs/server/spring/veriniceserver-jbpm.xml
         </param-value>
 	</context-param>
 	

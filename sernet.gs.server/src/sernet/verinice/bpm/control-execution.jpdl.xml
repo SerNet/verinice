@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process 
+    key="control-execution" 
+    name="verinice Control Execution" 
+    version="5" 
+    xmlns="http://jbpm.org/4.4/jpdl"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="jpdl-4.4.xsd">
+   <start g="248,38,48,48" name="start">
+      <transition to="create task"/>
+   </start>
+   <task assignee="#{context.assigneeUuid}" g="218,130,108,52" name="create task">
+      <transition to="wait for response"/>
+   </task>
+   <state g="204,220,135,46" name="wait for response">
+    <transition to="save state"/>
+   </state>
+   <java class="sernet.verinice.bpm.ControlExecution" g="226,319,92,52" method="saveState" name="save state">
+      <transition to="check result"/>
+   </java>
+   <decision g="248,432,48,48" name="check result">
+      <transition g="-92,-14" name="implemented" to="end">
+        <condition expr="#{context.implementation=='control_implemented_yes'}"/>
+      </transition>
+      <transition g="403,456;403,244:15,-10" name="not implemented" to="wait for response">
+        <condition expr="#{context.implementation!='control_implemented_yes'}"/>
+      </transition>
+   </decision>
+   <end g="248,542,48,48" name="end"/>
+</process>

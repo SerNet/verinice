@@ -5,7 +5,7 @@
 
 <!-- BEGIN Security configuration ============================================================================ -->
 
-<bean id="authService" class="sernet.gs.ui.rcp.main.service.NoAuthenticationService"/>
+<bean id="authService" class="sernet.verinice.service.NoAuthenticationService"/>
 
 <!-- END Security configuration ============================================================================ -->
 

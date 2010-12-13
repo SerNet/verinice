@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-access="field">
+
+  <!-- ### Deployment ##################################################### -->
+  <class name="org.jbpm.pvm.internal.repository.DeploymentImpl" 
+         table="JBPM4_DEPLOYMENT">
+
+    <!-- ProcessElementImpl part ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <id name="dbid" column="DBID_">
+      <generator class="assigned" />
+    </id>
+
+    <property name="name" type="text" column="NAME_" />
+    <property name="timestamp" column="TIMESTAMP_" />
+    <property name="state" column="STATE_" />
+
+    <map name="resources" cascade="all-delete-orphan">
+      <key foreign-key="FK_LOB_DEPLOYMENT">
+        <column name="DEPLOYMENT_" index="IDX_LOB_DEPLOYMENT" />
+      </key>
+      <map-key type="text" column="NAME_" />
+      <one-to-many class="org.jbpm.pvm.internal.lob.Lob"/>
+    </map>
+    
+    <set name="objectProperties" 
+         table="JBPM4_DEPLOYPROPS" 
+         cascade="all-delete-orphan">
+      <key column="DEPLOYMENT_" />
+      <one-to-many class="org.jbpm.pvm.internal.repository.DeploymentProperty" />
+    </set>
+
+  </class>
+
+  <class name="org.jbpm.pvm.internal.repository.DeploymentProperty" table="JBPM4_DEPLOYPROP">
+    <id name="dbid" column="DBID_">
+      <generator class="assigned" />
+    </id>
+    <many-to-one name="deployment" 
+                 class="org.jbpm.pvm.internal.repository.DeploymentImpl" 
+                 column="DEPLOYMENT_"
+                 foreign-key="FK_DEPLPROP_DEPL"
+                 index="IDX_DEPLPROP_DEPL" />
+    <property name="objectName" column="OBJNAME_" />
+    <property name="key" column="KEY_" />
+    <property name="stringValue" column="STRINGVAL_" />
+    <property name="longValue" column="LONGVAL_" />
+  </class> 
+
+  <class name="org.jbpm.pvm.internal.id.PropertyImpl" table="JBPM4_PROPERTY">
+    <id name="key" column="KEY_">
+      <generator class="assigned" />
+    </id>
+    <version name="version" column="VERSION_" />
+    <property name="value" column="VALUE_" />
+  </class> 
+
+</hibernate-mapping>

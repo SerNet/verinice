@@ -18,29 +18,11 @@
 package sernet.gs.ui.rcp.main.reports;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-import org.hibernate.proxy.HibernateProxy;
-
-import sernet.gs.ui.rcp.main.service.DAOFactory;
 import sernet.gs.ui.rcp.office.IOOTableRow;
-import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.Client;
-import sernet.verinice.model.bsi.Gebaeude;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.NetzKomponente;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.bsi.Raum;
-import sernet.verinice.model.bsi.Server;
-import sernet.verinice.model.bsi.SonstIT;
-import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;

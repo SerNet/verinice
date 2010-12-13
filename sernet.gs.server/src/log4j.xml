@@ -23,17 +23,23 @@
 		</layout>
 	</appender>
 
-    <!-- Add settings for packages here  -->
-    <!--
-    <logger name="sernet.gs.ui.rcp.main.service">
+    <logger name="sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund">
         <level value="DEBUG" />
     </logger>
-    -->
+
+    <!-- Add settings for packages here  -->
+    <logger name="sernet.verinice.bpm">
+        <level value="DEBUG" />
+    </logger>
+    <logger name="org.jbpm">
+        <level value="DEBUG" />
+    </logger>
 	
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
 		<appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
 	</root>
 
 </log4j:configuration>

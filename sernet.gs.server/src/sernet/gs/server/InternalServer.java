@@ -197,13 +197,25 @@ public class InternalServer implements IInternalServer {
 
 		ctx = wc.createDefaultHttpContext();
 
+		/*Spring config in gs.server web.xml
+		classpath:sernet/gs/server/spring/veriniceserver-common.xml
+        classpath:sernet/gs/server/spring/veriniceserver-plain.xml
+        classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
+        classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml  
+        classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml  
+        classpath:sernet/gs/server/spring/veriniceserver-webservice.xml   
+        classpath:sernet/gs/server/spring/veriniceserver-jbpm.xml
+		*/
+		
+		
 		Dictionary<String, String> dict = new Hashtable<String, String>();
-		dict.put("contextConfigLocation", "\n" //$NON-NLS-1$ //$NON-NLS-2$
+		dict.put("contextConfigLocation", "\n" //$NON-NLS-1$ //$NON-NLS-2$	        
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-common.xml \n" //$NON-NLS-1$
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-osgi.xml \n" //$NON-NLS-1$
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-common.xml \n" //$NON-NLS-1$
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-osgi.xml \n" //$NON-NLS-1$
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml \n"); //$NON-NLS-1$
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml \n" //$NON-NLS-1$
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-jbpm.xml"); //$NON-NLS-1$
 		dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
 		wc.setContextParam(dict, ctx);
 

@@ -16,12 +16,10 @@
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  *     Robert Schuster <r.schuster@tarent.de> - added support for access control
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service;
+package sernet.verinice.service;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +40,8 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IProcessCommand;
+import sernet.verinice.interfaces.IProcessService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
@@ -66,6 +66,8 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	
 	private IAuthService authService;
 	
+	private IProcessService processService;
+    
 	private boolean dbOpen = false;
 	
 	private VeriniceContext.State workObjects;
@@ -106,9 +108,13 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 
 			// inject authentication service if command is aware of it:
 			if (command instanceof IAuthAwareCommand) {
-				IAuthAwareCommand authCommand = (IAuthAwareCommand) command;
-				authCommand.setAuthService(authService);
+				((IAuthAwareCommand) command).setAuthService(authService);
 			}
+			
+			// inject process service if command is aware of it:
+            if (command instanceof IProcessCommand) {
+                ((IProcessCommand) command).setProcessService(getProcessService());
+            }
 			
 			// When a command is being executed that should be subject to access
 			// control (this is the default) and the logged in user is non-
@@ -201,7 +207,15 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		this.authService = authService;
 	}
 
-	public void setWorkObjects(VeriniceContext.State workObjects) {
+	public IProcessService getProcessService() {
+        return processService;
+    }
+
+    public void setProcessService(IProcessService processService) {
+        this.processService = processService;
+    }
+
+    public void setWorkObjects(VeriniceContext.State workObjects) {
 		this.workObjects = workObjects;
 	}
 

@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service;
+package sernet.verinice.service;
 
 import sernet.verinice.interfaces.IAuthService;
 

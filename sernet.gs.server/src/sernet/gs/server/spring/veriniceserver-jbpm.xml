@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    
+    <bean id="springHelper" class="org.jbpm.pvm.internal.processengine.SpringHelper">
+      <property name="jbpmCfg" value="sernet/verinice/bpm/jbpm.cfg.xml"/>
+    </bean>
+
+    <bean id="processEngine" factory-bean="springHelper" factory-method="createProcessEngine" />
+    
+    <bean id="processService" class="sernet.verinice.bpm.ProcessService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="processDefinitions">
+            <set>
+                <value>sernet/verinice/bpm/control-execution.jpdl.xml</value>
+            </set>
+          </property>
+    </bean>
+    
+</beans>

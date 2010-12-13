@@ -15,7 +15,7 @@
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service;
+package sernet.verinice.service;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;

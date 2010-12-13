@@ -23,15 +23,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
-import org.hibernate.proxy.HibernateProxy;
-
-import sernet.gs.ui.rcp.main.service.DAOFactory;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.Gebaeude;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
