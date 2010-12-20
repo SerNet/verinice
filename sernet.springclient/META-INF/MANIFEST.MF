@@ -4,7 +4,6 @@ Bundle-Name: SpringClient Plug-in
 Bundle-SymbolicName: sernet.springclient
 Bundle-Version: 1.2.2.qualifier
 Bundle-Activator: sernet.springclient.SpringClientPlugin
-Eclipse-BuddyPolicy: global
 Bundle-ClassPath: .
 Export-Package: sernet.springclient;
   uses:="org.eclipse.jface.resource,
@@ -31,3 +30,4 @@ Import-Package: org.apache.log4j,
  org.eclipse.core.runtime;version="3.4.0",
  org.osgi.framework;version="1.5.0",
  org.springframework.beans.factory
+Eclipse-BuddyPolicy: global

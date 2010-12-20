@@ -17,27 +17,33 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm;
+package sernet.verinice.interfaces;
 
-import org.jbpm.api.jpdl.DecisionHandler;
-import org.jbpm.api.model.OpenExecution;
+import java.io.Serializable;
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
+ * @param <T>
+ * @param <ID>
  */
-public class ControlEvaluation implements DecisionHandler {
+public interface IDao<T, ID extends Serializable> {
 
-    
-    public static final String IS_NOT_ASSIGNED = "isNotAssigned";
-    
-    /* (non-Javadoc)
-     * @see org.jbpm.api.jpdl.DecisionHandler#decide(org.jbpm.api.model.OpenExecution)
-     */
-    @Override
-    public String decide(OpenExecution arg0) {
-        // TODO Auto-generated method stub
-        return IS_NOT_ASSIGNED;
-    }
+    public abstract void saveOrUpdate(T entity);
+
+    public abstract T merge(T entity);
+
+    public abstract void delete(T entity);
+
+    public abstract T findById(ID id);
+
+    public abstract List<T> findAll();
+
+    public abstract List findByQuery(String hqlQuery, Object[] params);
+
+    public abstract List findByCriteria(DetachedCriteria criteria);
 
 }

@@ -29,6 +29,8 @@ import sernet.verinice.model.iso27k.IControl;
  */
 public class ControlExecutionContext implements Serializable {
     
+    private String adminUuid;
+    
     private String assigneeUuid;
     
     private String controlUuid;
@@ -40,6 +42,14 @@ public class ControlExecutionContext implements Serializable {
         this.assigneeUuid = assigneeUuid;
         this.controlUuid = controlUuid;
         setImplementation(IControl.IMPLEMENTED_NOTEDITED);
+    }
+
+    public String getAdminUuid() {
+        return adminUuid;
+    }
+
+    public void setAdminUuid(String adminUuid) {
+        this.adminUuid = adminUuid;
     }
 
     public String getAssigneeUuid() {

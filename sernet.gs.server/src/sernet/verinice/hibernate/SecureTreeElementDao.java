@@ -15,7 +15,7 @@
  * Contributors:
  *     Daniel <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.connect;
+package sernet.verinice.hibernate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,14 +31,14 @@ import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
- * Extends {@link HibernateBaseDao} to check write and delete authorization for {@link CnATreeElement}s.
+ * Extends {@link TreeElementDao} to check write and delete authorization for {@link CnATreeElement}s.
  * Use this for CnATreeElement-Daos in Spring configuration
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class CnATElementDao extends HibernateBaseDao<CnATreeElement, Integer> {
+public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer> {
 
-	private final Logger log = Logger.getLogger(CnATElementDao.class);
+	private final Logger log = Logger.getLogger(SecureTreeElementDao.class);
 
 	private IAuthService authService;
 
@@ -52,7 +52,7 @@ public class CnATElementDao extends HibernateBaseDao<CnATreeElement, Integer> {
 	/**
 	 * @param type
 	 */
-	public CnATElementDao(Class<CnATreeElement> type) {
+	public SecureTreeElementDao(Class<CnATreeElement> type) {
 		super(type);
 	}
 	

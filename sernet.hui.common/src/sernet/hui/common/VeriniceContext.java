@@ -87,6 +87,8 @@ public class VeriniceContext {
 	public static String WEB_SERVICE_CLIENT = "webServiceClient";
 	
 	public static String AUTH_SERVICE = "authService";
+	
+	public static String TASK_SERVICE = "taskService";
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();
 

@@ -19,25 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
-import org.jbpm.api.jpdl.DecisionHandler;
-import org.jbpm.api.model.OpenExecution;
-
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class ControlEvaluation implements DecisionHandler {
+public interface IProcessCreater {
 
-    
-    public static final String IS_NOT_ASSIGNED = "isNotAssigned";
-    
-    /* (non-Javadoc)
-     * @see org.jbpm.api.jpdl.DecisionHandler#decide(org.jbpm.api.model.OpenExecution)
-     */
-    @Override
-    public String decide(OpenExecution arg0) {
-        // TODO Auto-generated method stub
-        return IS_NOT_ASSIGNED;
-    }
-
+    void create();
 }

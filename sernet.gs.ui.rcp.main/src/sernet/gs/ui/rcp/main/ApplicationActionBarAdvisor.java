@@ -66,6 +66,7 @@ import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
+import sernet.verinice.bpm.rcp.TaskView;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
@@ -122,6 +123,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openRelationViewAction;
 
     private OpenMultipleViewAction openCatalogAction;
+    
+    private OpenViewAction openTaskViewAction;
 
     private OpenPerspectiveAction openIsoPerspective;
 
@@ -237,6 +240,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT);
         register(openAuditViewAction);
+        
+        openTaskViewAction = new OpenViewAction(window, "Tasks", TaskView.ID, ImageCache.VIEW_TASK);
+        register(openTaskViewAction);
 
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         register(reloadAction);
@@ -367,6 +373,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         viewsMenu.add(openISMViewAction);
         viewsMenu.add(openCatalogAction);
+        viewsMenu.add(openTaskViewAction);
         viewsMenu.add(new Separator());
 
         viewsMenu.add(openBSIBrowserAction);
@@ -430,6 +437,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // ISO 27k items
         myToolbar.add(openISMViewAction);
         myToolbar.add(openCatalogAction);
+        myToolbar.add(openTaskViewAction);
 
         myToolbar.add(new Separator());
         // common items

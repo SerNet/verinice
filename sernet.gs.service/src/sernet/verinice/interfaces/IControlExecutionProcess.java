@@ -17,27 +17,21 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm;
-
-import org.jbpm.api.jpdl.DecisionHandler;
-import org.jbpm.api.model.OpenExecution;
+package sernet.verinice.interfaces;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class ControlEvaluation implements DecisionHandler {
+public interface IControlExecutionProcess {
+    String KEY = "control-execution";
+    
+    String VAR_CONTROL_UUID = "CONTROL_UUID";
+    String VAR_OWNER_NAME = "OWNER_NAME";
+    String VAR_ASSIGNEE_UUID = "ASSIGNEE_UUID";
+    String VAR_IMPLEMENTATION = "IMPLEMENTATION";
+    
+    String DEFAULT_OWNER_NAME = "admin";
 
     
-    public static final String IS_NOT_ASSIGNED = "isNotAssigned";
-    
-    /* (non-Javadoc)
-     * @see org.jbpm.api.jpdl.DecisionHandler#decide(org.jbpm.api.model.OpenExecution)
-     */
-    @Override
-    public String decide(OpenExecution arg0) {
-        // TODO Auto-generated method stub
-        return IS_NOT_ASSIGNED;
-    }
-
 }

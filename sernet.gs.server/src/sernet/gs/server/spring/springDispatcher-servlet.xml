@@ -25,5 +25,16 @@
         </property>
     </bean>
     
+    <bean name="/taskServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="taskService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.ITaskService</value>
+        </property>
+    </bean>
+    
 </beans>
 

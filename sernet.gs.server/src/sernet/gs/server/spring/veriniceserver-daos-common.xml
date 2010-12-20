@@ -4,7 +4,7 @@
 	<!-- BEGIN dao definitions ========================================================================= -->
 
 	<bean id="secureDao" abstract="true"
-        class="sernet.gs.ui.rcp.main.connect.CnATElementDao">
+        class="sernet.verinice.hibernate.SecureTreeElementDao">
         <property name="sessionFactory" ref="sessionFactory" />
 		<property name="authService" ref="authService" />
 		<property name="configurationDao" ref="configurationDao" />
@@ -12,7 +12,7 @@
     </bean>
 
 	<!-- Instance of generic hibernate DAO for class Property -->
-	<bean id="propertyListDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="propertyListDao" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.hui.common.connect.PropertyList</value>
 		</constructor-arg>
@@ -20,7 +20,7 @@
 	</bean>
 	
 	
-	<bean id="propertyDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="propertyDao" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.hui.common.connect.Property</value>
 		</constructor-arg>
@@ -28,35 +28,35 @@
 	</bean>
 
 	<!-- Instance of generic hibernate DAO for class Entity -->
-	<bean id="entityDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="entityDao" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.hui.common.connect.Entity</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="gefaehrdungDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="gefaehrdungDao" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.gs.model.Gefaehrdung</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="ownGefaehrdungDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="ownGefaehrdungDao" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="bausteinVorschlagDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="bausteinVorschlagDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.BausteinVorschlag</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="changeLogEntryDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="changeLogEntryDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.common.ChangeLogEntry</value>
 		</constructor-arg>
@@ -71,28 +71,28 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="anwendungenKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="anwendungenKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.AnwendungenKategorie</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="bausteinUmsetzungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="bausteinUmsetzungDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.BausteinUmsetzung</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="bausteinVorschlagDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="bausteinVorschlagDao" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.BausteinVorschlag</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="BSIModelDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="BSIModelDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.BSIModel</value>
 		</constructor-arg>
@@ -105,21 +105,21 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="clientsKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="clientsKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.ClientsKategorie</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="datenverarbeitungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="datenverarbeitungDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.Datenverarbeitung</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="finishedRiskAnalysisDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="finishedRiskAnalysisDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis</value>
 		</constructor-arg>
@@ -132,21 +132,21 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="gebaeudeKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="gebaeudeKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.GebaeudeKategorie</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="gefaehrdungsUmsetzungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="gefaehrdungsUmsetzungDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="ITVerbundDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="ITVerbundDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.ITVerbund</value>
 		</constructor-arg>
@@ -165,14 +165,14 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="NKKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="NKKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.NKKategorie</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="permissionDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="permissionDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.common.Permission</value>
 		</constructor-arg>
@@ -185,21 +185,21 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="personengruppenDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="personengruppenDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.Personengruppen</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="personenKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="personenKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.PersonenKategorie</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="raeumeKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="raeumeKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.RaeumeKategorie</value>
 		</constructor-arg>
@@ -218,14 +218,14 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="serverKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="serverKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.ServerKategorie</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="sonstigeITKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="sonstigeITKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.SonstigeITKategorie</value>
 		</constructor-arg>
@@ -238,7 +238,7 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="stellungnahmeDSBDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="stellungnahmeDSBDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.StellungnahmeDSB</value>
 		</constructor-arg>
@@ -251,91 +251,91 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="TKKategorieDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="TKKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.TKKategorie</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="verantwortlicheStelleDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="verantwortlicheStelleDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.VerantwortlicheStelle</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="verarbeitungsangabenDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="verarbeitungsangabenDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.Verarbeitungsangaben</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="zweckbestimmungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="zweckbestimmungDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.Zweckbestimmung</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="risikoMassnahmeDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="risikoMassnahmeDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="ownGefaehrdungDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="ownGefaehrdungDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="cnaLinkDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="cnaLinkDao" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.common.CnALink</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
     
-    <bean id="cnaTreeElementDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <bean id="cnaTreeElementDao" class="sernet.verinice.hibernate.TreeElementDao">
         <constructor-arg>
             <value>sernet.verinice.model.common.CnATreeElement</value>
         </constructor-arg>
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
-	<bean id="finishedRiskAnalysisListsDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="finishedRiskAnalysisListsDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-	<bean id="additionDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="additionDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.Addition</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-	<bean id="noteDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="noteDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.Note</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-	<bean id="attachmentDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="attachmentDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.Attachment</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-	<bean id="attachmentFileDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="attachmentFileDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.AttachmentFile</value>
 		</constructor-arg>
@@ -344,7 +344,7 @@
 	
 	<!-- ISO 27000 Daos ================================================================================= -->
 	
-	<bean id="ISO27KModelDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="ISO27KModelDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.iso27k.ISO27KModel</value>
 		</constructor-arg>
@@ -554,14 +554,14 @@
     
     <!-- Miscellaneous Daos ==================================================================== -->
 
-	<bean id="importIsoDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="importIsoDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.iso27k.ImportIsoGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
     
-    <bean id="importBsiDAO" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+    <bean id="importBsiDAO" class="sernet.verinice.hibernate.TreeElementDao">
         <constructor-arg>
             <value>sernet.verinice.model.bsi.ImportBsiGroup</value>
         </constructor-arg>

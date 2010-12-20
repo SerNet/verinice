@@ -158,6 +158,7 @@ public class ImageCache {
 	public static final String VIEW_TODO = "24-em-check.png";
 	public static final String VIEW_AUDIT = "24-zoom.png";
 	public static final String VIEW_NOTE = "note.png";
+    public static final String VIEW_TASK = "tasks.gif";
 
 	public static final String EXPANDALL   = "expandall.gif";
 	public static final String COLLAPSEALL = "collapseall.gif";

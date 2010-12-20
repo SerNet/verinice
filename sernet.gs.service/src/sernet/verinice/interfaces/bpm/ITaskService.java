@@ -17,27 +17,32 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm;
+package sernet.verinice.interfaces.bpm;
 
-import org.jbpm.api.jpdl.DecisionHandler;
-import org.jbpm.api.model.OpenExecution;
+import java.util.List;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
-public class ControlEvaluation implements DecisionHandler {
+public interface ITaskService {
 
-    
-    public static final String IS_NOT_ASSIGNED = "isNotAssigned";
-    
-    /* (non-Javadoc)
-     * @see org.jbpm.api.jpdl.DecisionHandler#decide(org.jbpm.api.model.OpenExecution)
+    /**
+     * Returns the task list for currently logged in user.
+     * If no tasks exists or current user cannot be determined an empty list is returned.
+     * 
+     * @return the task list for current user
      */
-    @Override
-    public String decide(OpenExecution arg0) {
-        // TODO Auto-generated method stub
-        return IS_NOT_ASSIGNED;
-    }
-
+    List<ITask> getTaskList();
+    
+    
+    /**
+     * Returns the task list for user with name username.
+     * If no tasks exists an empty list is returned.
+     * 
+     * @param username a username
+     * @return task list for an user
+     */
+    List<ITask> getTaskList(String username);
+    
+    void completeTask(String taskId);
 }

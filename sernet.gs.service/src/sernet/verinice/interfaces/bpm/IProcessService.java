@@ -17,28 +17,36 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm;
+package sernet.verinice.interfaces.bpm;
 
-import org.jbpm.api.cmd.Command;
-import org.jbpm.api.cmd.Environment;
+import java.util.List;
+import java.util.Map;
+
+import org.jbpm.pvm.internal.model.ExecutionImpl;
+
+import sernet.verinice.model.iso27k.Control;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- * 
+ *
  */
-public class GetEnvironmentObject implements Command<Object> {
+public interface IProcessService {
 
-    private Class<?> objClass;
-
-    public <T> GetEnvironmentObject(Class<?> objClazz) {
-        this.objClass = objClazz;
-    }
-
-    private static final long serialVersionUID = 1L;
-
-    public Object execute(Environment environment) throws Exception {
-        Object es = environment.get(objClass);
-        return es;
-    }
-
+    void startProcess(String processDefinitionKey, Map<java.lang.String,?> variables);
+    
+    /**
+     * Returns the latest process definition id
+     * for a process definition key if any.
+     * 
+     * If there is no process definition found null is returned
+     * 
+     * @param processDefinitionKey  a process definition key
+     * @return latest process definition id or null
+     */
+    String findProcessDefinitionId(String processDefinitionKey);
+    
+    List<ExecutionImpl> findControlExecution(final String uuidControl);
+    
+    void handleControl(Control control);
 }
+

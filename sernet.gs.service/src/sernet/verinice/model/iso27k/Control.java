@@ -53,7 +53,8 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	public static final String PROP_EFFECTIVENESS_CONFIDENTIALITY ="control_effectiveness_confidentiality"; 
     public static final String PROP_EFFECTIVENESS_INTEGRITY="control_effectiveness_integrity" ;
     public static final String PROP_EFFECTIVENESS_AVAILABILITY="control_effectiveness_availability"; 
-    public static final String PROP_EFFECTIVENESS_PROBABILITY="control_eff_probability"; 
+    public static final String PROP_EFFECTIVENESS_PROBABILITY="control_eff_probability";
+    public static final String REL_CONTROL_PERSON_ISO = "rel_control_person-iso"; 
 	
    
 	/**

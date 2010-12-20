@@ -7,7 +7,7 @@
         
 <!-- BEGIN dao definitions ========================================================================= -->
 
-	<bean id="configurationDao" class="sernet.gs.ui.rcp.main.connect.HibernateBaseDao">
+	<bean id="configurationDao" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.common.configuration.Configuration</value>
 		</constructor-arg>

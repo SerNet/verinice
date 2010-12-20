@@ -27,9 +27,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     <bean id="commandService"
           class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>
-                ${verinice.serverURL}/service/commandServiceHttpInvoker
-            </value>
+            <value>${verinice.serverURL}/service/commandServiceHttpInvoker</value>
         </property>
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.ICommandService</value>
@@ -45,13 +43,22 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
      <bean id="authService"
           class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>
-                ${verinice.serverURL}/service/authServiceHttpInvoker
-            </value>
+            <value>${verinice.serverURL}/service/authServiceHttpInvoker</value>
         </property>
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.IAuthService</value>
         </property>
+    </bean>
+    
+    <bean id="taskService"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/taskServiceHttpInvoker</value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.ITaskService</value>         
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="httpExecuter"/>
     </bean>
     
     <!-- timer bean to check for changes every x seconds: -->
@@ -151,6 +158,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 			<entry key="authService" value-ref="authService"/>
 			<!--<entry key="syncService" value-ref="syncService" />-->
 			<entry key="webServiceClient" value-ref="webServiceClient" />
+            <entry key="taskService" value-ref="taskService" />
 		</map>
 	</property>
 	</bean>

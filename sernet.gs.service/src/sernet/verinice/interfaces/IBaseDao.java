@@ -20,36 +20,21 @@ package sernet.verinice.interfaces;
 import java.io.Serializable;
 import java.util.List;
 
-import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-public interface IBaseDao<T, ID extends Serializable> {
-
-	public void saveOrUpdate(T entity);
-
-	public T merge(T entity);
+public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
 
 	public T merge(T entity, boolean fireUpdates);
 
-	public void delete(T entity);
-
-	public T findById(ID id);
-	
 	public T findByUuid(String uuid, IRetrieveInfo ri);
 
 	public T retrieve(ID id, IRetrieveInfo ri);
-
-	public List<T> findAll();
 
 	/**
 	 * @param ri
 	 * @return
 	 */
 	public List findAll(IRetrieveInfo ri);
-
-	public List findByQuery(String hqlQuery, Object[] params);
-
-	public List findByCriteria(DetachedCriteria criteria);
 
 	public List findByCallback(HibernateCallback hcb);
 

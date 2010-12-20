@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces;
+package sernet.verinice.interfaces.bpm;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

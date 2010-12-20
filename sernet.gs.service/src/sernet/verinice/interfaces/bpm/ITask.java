@@ -17,16 +17,39 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces;
+package sernet.verinice.interfaces.bpm;
 
-import java.util.Map;
+import java.util.Date;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public interface IProcessService {
+public interface ITask {
 
-    void startProcess(String processDefinitionKey, Map<java.lang.String,?> variables);
+    /**
+     * @return
+     */
+    String getId();
+    
+    /**
+     * @return
+     */
+    String getName();
+    
+    /**
+     * @return
+     */
+    String getControlTitle();
+
+    /**
+     * @return
+     */
+    Date getCreateDate();
+    
+    /**
+     * @return
+     */
+    String getControlUuid();
+
 }
-

@@ -144,6 +144,15 @@
             name="%view.name.11"
             restorable="true">
       </view>
+      <view
+            allowMultiple="false"
+            category="sernet.verinice.iso27k.rcp"
+            class="sernet.verinice.bpm.rcp.TaskView"
+            icon="icons/tasks.gif"
+            id="sernet.verinice.bpm.rcp.TaskView"
+            name="Tasks"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">

@@ -26,15 +26,25 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.jbpm.api.ExecutionService;
+import org.jbpm.api.ProcessDefinition;
+import org.jbpm.api.ProcessDefinitionQuery;
 import org.jbpm.api.ProcessEngine;
+import org.jbpm.api.ProcessInstance;
 import org.jbpm.api.RepositoryService;
 import org.jbpm.jpdl.internal.xml.JpdlParser;
+import org.jbpm.pvm.internal.model.ExecutionImpl;
 import org.jbpm.pvm.internal.model.ProcessDefinitionImpl;
 import org.jbpm.pvm.internal.stream.ResourceStreamInput;
 import org.jbpm.pvm.internal.xml.Parse;
 
-import sernet.verinice.interfaces.IProcessService;
+import sernet.verinice.interfaces.IControlExecutionProcess;
+import sernet.verinice.interfaces.IDao;
+import sernet.verinice.interfaces.bpm.IProcessService;
+import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.iso27k.Control;
 
 /**
@@ -47,6 +57,10 @@ public class ProcessService implements IProcessService {
     private ProcessEngine processEngine;
 
     protected Set<String> processDefinitions;
+
+    private IDao<ExecutionImpl, Long> jbpmExecutionDao;
+    
+    private IDao<ChangeLogEntry, Integer> changeLogEntryDao;
     
     private boolean wasInitCalled = false;
 
@@ -133,18 +147,100 @@ public class ProcessService implements IProcessService {
      */
     @Override
     public void startProcess(String processDefinitionKey, Map<String, ?> variables) {
+        ProcessInstance processInstance = null;
         if(variables==null) {
-            getExecutionService().startProcessInstanceByKey(processDefinitionKey);
+            processInstance = getExecutionService().startProcessInstanceByKey(processDefinitionKey);
         } else {
-            Control control = (Control) variables.get("control");
-            ControlExecutionContext context = new ControlExecutionContext("assignee",control.getUuid() );
-            Map<String, ControlExecutionContext> props = new HashMap<String, ControlExecutionContext>();
-            props.put("context", context);
-            getExecutionService().startProcessInstanceByKey(processDefinitionKey,props);
+            processInstance = getExecutionService().startProcessInstanceByKey(processDefinitionKey,variables);
         }
         if (log.isInfoEnabled()) {
-            log.info("Process started, key: " + processDefinitionKey);
+            log.info("Process started, key: " + processDefinitionKey + ", id:" + processInstance.getId());
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IProcessService#findProcessDefinitionId(java.lang.String)
+     */
+    @Override
+    public String findProcessDefinitionId(String processDefinitionKey) {
+        String id = null;
+        List<ProcessDefinition> processDefinitionList = getRepositoryService()
+            .createProcessDefinitionQuery()
+            .processDefinitionKey(processDefinitionKey)
+            .orderDesc(ProcessDefinitionQuery.PROPERTY_VERSION).list();
+        if(processDefinitionList!=null && !processDefinitionList.isEmpty()) {
+            id = processDefinitionList.get(0).getId();
+        }
+        return id;
+    }
+    
+    public void handleControl(Control control) {
+        String uuidControl = control.getUuid();
+        List<ExecutionImpl> executionList = findControlExecution(uuidControl);
+        if(executionList==null || executionList.isEmpty()) {
+            if (log.isDebugEnabled()) {
+                log.debug("No process for control: " + uuidControl);
+            }
+            startControlExecution(control);
+            if (log.isInfoEnabled()) {
+                log.info("Process started for control: " + uuidControl);
+            }
+        } else if (log.isDebugEnabled()) {
+            log.debug("Process found for control: " + uuidControl);
+            for (ExecutionImpl executionImpl : executionList) {
+                log.debug("Process execution id: " + executionImpl.getId());
+            }            
+        }
+    }
+    
+    /**
+     * @param control
+     */
+    private void startControlExecution(Control control) {      
+        Map<String, Object> props = new HashMap<String, Object>();
+        props.put(IControlExecutionProcess.VAR_ASSIGNEE_UUID, null);
+        props.put(IControlExecutionProcess.VAR_CONTROL_UUID, control.getUuid());
+        props.put(IControlExecutionProcess.VAR_OWNER_NAME, getOwnerName(control));
+        props.put(IControlExecutionProcess.VAR_IMPLEMENTATION, control.getImplementation());
+        startProcess(IControlExecutionProcess.KEY, props);     
+    }
+    
+    /**
+     * @param control
+     */
+    private String getOwnerName(Control control) {
+        String owner = IControlExecutionProcess.DEFAULT_OWNER_NAME;
+        DetachedCriteria crit = DetachedCriteria.forClass(ChangeLogEntry.class);
+        crit.add(Restrictions.eq("elementId", control.getDbId()));
+        crit.add(Restrictions.eq("elementClass", Control.class.getName()));
+        crit.add(Restrictions.eq("change", ChangeLogEntry.TYPE_INSERT));
+        crit.addOrder(Order.asc("changetime"));
+        List<ChangeLogEntry> result = getChangeLogEntryDao().findByCriteria(crit);
+        if(result!=null && !result.isEmpty() && result.get(0).getUsername()!=null) {
+            owner = result.get(0).getUsername();
+            if (log.isDebugEnabled()) {
+                log.debug("Owner of control: " + control.getUuid() + " is: " + owner);
+            }
+        } else {
+            log.warn("Can not find owner of control: " + control.getUuid() + ", using default owner name: " + owner);
+        }
+        return owner;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IProcessService#findControlExecution(java.lang.String)
+     */
+    public List<ExecutionImpl> findControlExecution(final String uuidControl) {
+        DetachedCriteria executionCrit = DetachedCriteria.forClass(ExecutionImpl.class);
+        String processDefinitionId = findProcessDefinitionId(IControlExecutionProcess.KEY);
+        if (log.isDebugEnabled()) {
+            log.debug("Latest processDefinitionId: " + processDefinitionId);
+        }
+        executionCrit.add(Restrictions.eq("processDefinitionId", processDefinitionId));
+        DetachedCriteria variableCrit = executionCrit.createCriteria("variables");
+        variableCrit.add(Restrictions.eq("key", IControlExecutionProcess.VAR_CONTROL_UUID));
+        variableCrit.add(Restrictions.eq("string", uuidControl));
+        return getJbpmExecutionDao().findByCriteria(executionCrit);
     }
 
 
@@ -200,5 +296,21 @@ public class ProcessService implements IProcessService {
 
     public void setProcessDefinitions(Set<String> processDefinitionSet) {
         this.processDefinitions = processDefinitionSet;
+    }
+    
+    public IDao<ExecutionImpl, Long> getJbpmExecutionDao() {
+        return jbpmExecutionDao;
+    }
+
+    public void setJbpmExecutionDao(IDao<ExecutionImpl, Long> jbpmExecutionDao) {
+        this.jbpmExecutionDao = jbpmExecutionDao;
+    }
+
+    public IDao<ChangeLogEntry, Integer> getChangeLogEntryDao() {
+        return changeLogEntryDao;
+    }
+
+    public void setChangeLogEntryDao(IDao<ChangeLogEntry, Integer> changeLogEntryDao) {
+        this.changeLogEntryDao = changeLogEntryDao;
     }
 }

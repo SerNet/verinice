@@ -25,10 +25,12 @@ Export-Package: de.sernet.sync.data,
  sernet.gs.scraper,
  sernet.gs.service,
  sernet.verinice.interfaces,
+ sernet.verinice.interfaces.bpm,
  sernet.verinice.interfaces.encryption,
  sernet.verinice.interfaces.iso27k,
  sernet.verinice.interfaces.oda,
  sernet.verinice.interfaces.report,
+ sernet.verinice.model.bpm,
  sernet.verinice.model.bsi,
  sernet.verinice.model.bsi.risikoanalyse,
  sernet.verinice.model.common,
@@ -43,7 +45,8 @@ Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
 Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  sernet.hui.common;bundle-version="1.1.1",
- opencsv;bundle-version="2.1.0"
+ opencsv;bundle-version="2.1.0",
+ jbpm;bundle-version="4.4.0"
 Import-Package: org.eclipse.osgi.util,
  org.hibernate.criterion;version="3.2.6.ga",
  org.springframework.orm.hibernate3

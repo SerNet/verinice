@@ -19,10 +19,75 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
+import sernet.gs.server.ServerInitializer;
+import sernet.gs.service.RetrieveInfo;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.service.commands.LoadElementByUuid;
+
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
 public class ControlExecution {
 
+    private final Logger log = Logger.getLogger(ControlExecution.class);
+    
+    ICommandService commandService;
+    
+    public String loadAssignee(String uuidControl) {
+        ServerInitializer.inheritVeriniceContextState();
+        String uuidAssignee = null;
+        try {
+            RetrieveInfo ri = new RetrieveInfo();
+            ri.setLinksUp(true);
+            LoadElementByUuid<Control> command = new LoadElementByUuid(Control.TYPE_ID,uuidControl,ri);
+            command = getCommandService().executeCommand(command);
+            Control control = command.getElement();
+            Set<CnALink> linkSet = control.getLinksDown();
+            for (CnALink link : linkSet) {
+                if(Control.REL_CONTROL_PERSON_ISO.equals(link.getRelationId())) {
+                    uuidAssignee = link.getDependency().getUuid();
+                    break;
+                }
+            }
+        } catch(Throwable t) {
+            log.error("Error while loading assignee.", t);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("uuid control: " + uuidControl + ", uuid assignee: " + uuidAssignee);
+        }
+        return uuidAssignee;
+    }
+    
+    public String loadImplementation(String uuidControl) {
+        ServerInitializer.inheritVeriniceContextState();
+        String implementation = null;
+        try {
+            RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+            LoadElementByUuid<Control> command = new LoadElementByUuid(Control.TYPE_ID,uuidControl,ri);
+            command = getCommandService().executeCommand(command);
+            Control control = command.getElement();
+            implementation = control.getImplementation();
+        } catch(Throwable t) {
+            log.error("Error while loading implementation.", t);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("uuid control: " + uuidControl + ", implementation: " + implementation);
+        }
+        return implementation;
+    }
+    
+    private ICommandService getCommandService() {
+        if(commandService==null) {
+            commandService = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
+        }
+        return commandService;
+    }
 }

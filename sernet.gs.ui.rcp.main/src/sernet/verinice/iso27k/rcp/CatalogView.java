@@ -390,12 +390,12 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 
 	public ICommandService getCommandService() {
 		if (commandService == null) {
-			commandService = createCommandServive();
+			commandService = createCommandService();
 		}
 		return commandService;
 	}
 
-	private ICommandService createCommandServive() {
+	private ICommandService createCommandService() {
 		return ServiceFactory.lookupCommandService();
 	}
 

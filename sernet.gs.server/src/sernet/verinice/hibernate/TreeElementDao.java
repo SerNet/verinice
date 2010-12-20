@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.connect;
+package sernet.verinice.hibernate;
 
 import java.io.Serializable;
 import java.util.List;
@@ -35,13 +35,12 @@ import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSupport implements IBaseDao<T, ID> {
-    private Class<T> type;
+public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, ID> implements IBaseDao<T, ID> {
 
-    private static final Logger log = Logger.getLogger(HibernateBaseDao.class);
+    private static final Logger log = Logger.getLogger(TreeElementDao.class);
 
-    public HibernateBaseDao(Class<T> type) {
-        this.type = type;
+    public TreeElementDao(Class<T> type) {
+        super(type);
     }
 
     /*
@@ -67,41 +66,24 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
 
     /*
      * It is much more easier to implement the check in a class which extends
-     * HibernateBaseDao. Since this is the only possible entry point for updates
+     * TreeElementDao. Since this is the only possible entry point for updates
      * its an appropriate way to go.
      * 
      * see http://zimbra:81/cgi-bin/bugzilla/show_bug.cgi?id=5
      */
 
     /*
-     * CnATElementDao extends HibernateBaseDao and overrides the merge and
+     * SecureTreeElementDao extends TreeElementDao and overrides the merge and
      * delete method. All cnaTreeElement daos must be changed to this type in
      * spring configuration.
      */
 
     public void saveOrUpdate(T entity) {
-        getHibernateTemplate().saveOrUpdate(entity);
+        super.saveOrUpdate(entity);
         if (entity instanceof CnATreeElement) {
             CnATreeElement elmt = (CnATreeElement) entity;
             fireChange(elmt);
         }
-    }
-
-    public void delete(T entity) {
-        // TODO akoderman update protection requirements on delete (see how it's
-        // done during merge())
-        Logger.getLogger(this.getClass()).debug("Deleting element " + entity);
-        getHibernateTemplate().delete(entity);
-    }
-
-    public List findAll() {
-        // this could be used to limit result size:
-        // DetachedCriteria criteria = DetachedCriteria.forClass(type);
-        // List results = getHibernateTemplate().findByCriteria(criteria, 0,
-        // 1000);
-        // return results;
-        DetachedCriteria criteria = DetachedCriteria.forClass(type);
-        return findByCriteria(criteria);
     }
 
     public List findAll(IRetrieveInfo ri) {
@@ -237,14 +219,6 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
         return result;
     }
 
-    public List findByQuery(String hqlQuery, Object[] values) {
-        return getHibernateTemplate().find(hqlQuery, values);
-    }
-
-    public List findByCriteria(DetachedCriteria criteria) {
-        return getHibernateTemplate().findByCriteria(criteria);
-    }
-
     public List findByCallback(HibernateCallback hcb) {
         return getHibernateTemplate().executeFind(hcb);
     }
@@ -266,7 +240,7 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
     }
 
     public T merge(T entity, boolean fireChange) {
-        T mergedElement = (T) getHibernateTemplate().merge(entity);
+        T mergedElement = super.merge(entity);
 
         if (fireChange && mergedElement instanceof CnATreeElement) {
             CnATreeElement elmt = (CnATreeElement) mergedElement;
@@ -279,10 +253,6 @@ public class HibernateBaseDao<T, ID extends Serializable> extends HibernateDaoSu
         }
 
         return mergedElement;
-    }
-
-    public T merge(T entity) {
-        return merge(entity, false);
     }
 
     public void reload(T element, Serializable id) {

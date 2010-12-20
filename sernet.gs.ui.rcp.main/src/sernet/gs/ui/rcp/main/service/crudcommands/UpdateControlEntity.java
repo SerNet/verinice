@@ -19,11 +19,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import sernet.verinice.interfaces.IProcessCommand;
-import sernet.verinice.interfaces.IProcessService;
+import sernet.verinice.interfaces.bpm.IProcessCommand;
+import sernet.verinice.interfaces.bpm.IProcessService;
 import sernet.verinice.model.iso27k.Control;
 
 /**
@@ -72,12 +69,15 @@ public class UpdateControlEntity extends UpdateElementEntity<Control> implements
      */
     @Override
     protected void afterUpdate() {
+        // you can interact with the process service here:
         // there is no process service in standalone mode
+        /*
         if(getProcessService()!=null) {
             Map<String, Object> props = new HashMap<String, Object>();
             props.put("control", getElement());
-            getProcessService().startProcess("control-execution", props);
+            getProcessService().startProcess(IControlExecutionProcess.KEY, props);
         }
+        */
     }
 
     

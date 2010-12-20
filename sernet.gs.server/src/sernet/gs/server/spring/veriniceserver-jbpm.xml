@@ -2,20 +2,61 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
-    
+
     <bean id="springHelper" class="org.jbpm.pvm.internal.processengine.SpringHelper">
-      <property name="jbpmCfg" value="sernet/verinice/bpm/jbpm.cfg.xml"/>
+        <property name="jbpmCfg" value="sernet/verinice/bpm/jbpm.cfg.xml" />
     </bean>
 
-    <bean id="processEngine" factory-bean="springHelper" factory-method="createProcessEngine" />
-    
-    <bean id="processService" class="sernet.verinice.bpm.ProcessService">
+    <bean id="processEngine" factory-bean="springHelper"
+        factory-method="createProcessEngine" />
+
+    <bean id="processService" class="sernet.verinice.bpm.ProcessService" init-method="init">
         <property name="processEngine" ref="processEngine" />
         <property name="processDefinitions">
             <set>
                 <value>sernet/verinice/bpm/control-execution.jpdl.xml</value>
             </set>
-          </property>
+        </property>
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="changeLogEntryDao" ref="changeLogEntryDAO" />
     </bean>
     
+    <bean id="taskService" class="sernet.verinice.bpm.TaskService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="authService" ref="authService" />
+        <property name="controlDao" ref="controlDAO" />  
+    </bean>
+
+    <bean id="jbpmExecutionDao" class="sernet.verinice.hibernate.HibernateDao">
+        <constructor-arg>
+            <value>org.jbpm.pvm.internal.model.ExecutionImpl</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="processJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="sernet.verinice.bpm.ProcessJob" />
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="processCreaterSet">
+                    <set>
+                        <ref bean="controlProcessCreater" />
+                    </set>
+                </entry>
+                <entry key="workObjects" value-ref="workObjects" />
+            </map>
+        </property>
+    </bean>
+
+    <bean name="controlProcessCreater" class="sernet.verinice.bpm.ControlProcessCreator">
+        <property name="processService" ref="processService" />
+        <property name="controlDao" ref="controlDAO" />
+    </bean>
+
+    <bean id="processJobTrigger"
+        class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="processJob" />
+        <property name="cronExpression" value="0 * * * * ?" />
+    </bean>
+
 </beans>

@@ -47,17 +47,18 @@
   </property>
 </bean>
 
+
+
 <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
     <property name="jobDetail" ref="notificationJob" />
     <property name="cronExpression" value="0 ${veriniceserver.notification.minute} ${veriniceserver.notification.hour} * * ?" />
 </bean>
 
-
 <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="triggers">
         <list>
               <ref bean="cronTrigger" />
-            
+              <ref bean="processJobTrigger" />
             <!--  for debugging purposes, fires the mail scheduler after 2 seconds and then every 60
 			<bean class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 				<property name="jobDetail" ref="notificationJob" />

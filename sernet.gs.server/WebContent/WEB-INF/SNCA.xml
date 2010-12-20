@@ -3630,6 +3630,8 @@ the value between <param></param> will be used directly if no string is found fo
         	name="reduces probability of " reversename="probability reduced by" tooltip=""/>
 		<huirelation to="control" id="rel_control_control"
         	name="details" reversename="is detailed by" tooltip="" />
+        <huirelation to="person-iso" id="rel_control_person-iso"
+            name="assignee" reversename="is responsible for" tooltip="" />
         	
         <huiproperty
             name="Title"

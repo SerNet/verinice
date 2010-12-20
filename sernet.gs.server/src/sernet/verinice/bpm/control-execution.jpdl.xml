@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<process key="control-execution" name="verinice Control Execution" version="5" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   <start g="272,19,48,48" name="start">
+<process key="control-execution" name="verinice Control Execution" version="9" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <start g="416,33,48,48" name="start">
       <transition to="evaluate control"/>
    </start>
-   <decision g="279,97,80,40" name="evaluate control">
-      <handler class="sernet.verinice.bpm.ControlEvaluation" />
-      <transition g="-75,-22" name="isAssigned" to="create implementation task"/>
-      <transition g="-98,-22" name="isNotAssigned" to="create assign task"/> 
-  </decision>
-  <task assignee="#{context.adminUuid}" g="438,101,157,40" name="create assign task">
-      <transition to="wait for admin response"/>
-   </task>
-   <state g="420,191,186,40" name="wait for admin response">
-    <transition to="save admin state"/>
-   </state>
-    <java class="sernet.verinice.bpm.ControlExecution" g="429,271,152,40" method="saveState" name="save admin state">
-      <transition to="create implementation task"/>
-   </java>
-   <task assignee="#{context.assigneeUuid}" g="156,282,206,40" name="create implementation task">
-      <transition to="wait for assignee response"/>
-   </task>
-   <state g="178,375,194,40" name="wait for assignee response">
-    <transition to="save assignee state"/>
-   </state>
-   <java class="sernet.verinice.bpm.ControlExecution" g="95,480,193,40" method="saveState" name="save assignee state">
-      <transition to="check result"/>
-   </java>
-   <decision g="459,530,48,48" name="check result">
-      <transition g="-92,-14" name="not implemented" to="wait for assignee response">
-        <condition expr="#{context.implementation!='control_implemented_yes'}"/>
+   <decision g="417,123,80,40" name="evaluate control">
+      <transition g="-78,-22" name="is assigned" to="create implementation task">
+        <condition expr="#{ASSIGNEE_UUID!=null}"/>
       </transition>
-      <transition g="-92,-14" name="implemented" to="end">
-        <condition expr="#{context.implementation=='control_implemented_yes'}"/>
+      <transition g="-59,-22" name="is not assigned" to="create assign task">
+        <condition expr="#{ASSIGNEE_UUID==null}"/>
       </transition>
    </decision>
-   <end g="471,653,48,48" name="end"/>
+   <task assignee="#{OWNER_NAME}" g="591,125,157,40" name="create assign task">
+      <transition to="load assignee"/>
+   </task>
+   <java class="sernet.verinice.bpm.ControlExecution" g="597,291,152,40" method="loadAssignee" name="load assignee" var="ASSIGNEE_UUID">
+      <arg><object expr="#{CONTROL_UUID}"/></arg>
+      <transition to="evaluate control"/>
+   </java>
+   <task assignee="#{ASSIGNEE_UUID}" g="345,288,206,40" name="create implementation task">
+      <transition to="load implementation"/>
+   </task>
+   <java class="sernet.verinice.bpm.ControlExecution" g="371,449,159,40" method="loadImplementation" name="load implementation" var="IMPLEMENTATION">
+      <arg><object expr="#{CONTROL_UUID}"/></arg>
+      <transition to="evaluate implementation"/>
+   </java>
+   <decision g="178,285,48,48" name="evaluate implementation">
+      <transition g="-57,-22" name="not implemented" to="create implementation task">
+        <condition expr="#{IMPLEMENTATION!='control_implemented_yes'}"/>
+      </transition>
+      <transition g="-92,-14" name="implemented" to="end">
+        <condition expr="#{IMPLEMENTATION=='control_implemented_yes'}"/>
+      </transition>
+   </decision>
+   <end g="178,445,48,48" name="end"/>
 </process>
