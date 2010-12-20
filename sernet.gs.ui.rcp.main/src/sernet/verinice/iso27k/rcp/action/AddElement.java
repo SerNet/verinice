@@ -34,6 +34,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -136,11 +137,16 @@ public class AddElement implements IObjectActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		if(selection instanceof IStructuredSelection) {
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
+			boolean allowed = false;
+			boolean enabled = false;		
+			if (sel instanceof CnATreeElement) {
+				allowed = CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) sel);           
+			}
 			if(sel instanceof Audit) {
-			    action.setEnabled(false);
+				enabled = false;
 			    action.setText(Messages.getString("AddElement.20"));
 			} else if(sel instanceof IISO27kGroup) {
-			    action.setEnabled(true);
+			    enabled = true;
 			    IISO27kGroup group = (IISO27kGroup) sel;
 				// TODO - getChildTypes()[0] might be a problem for more than one type
 			    String childType = group.getChildTypes()[0];
@@ -150,7 +156,11 @@ public class AddElement implements IObjectActionDelegate {
 				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(childType)));	
 				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddElement.20") ); //$NON-NLS-1$
 			}
-			
+			// Only change state when it is enabled, since we do not want to
+            // trash the enablement settings of plugin.xml
+            if (action.isEnabled()) {
+                action.setEnabled(allowed && enabled);
+            }
 		}
 	}
 }

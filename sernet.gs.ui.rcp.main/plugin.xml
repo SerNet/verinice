@@ -341,8 +341,6 @@
 		   tooltip="%action.tooltip">
 		   <enablement>
 		      <or>
-		   	     <objectClass name="sernet.verinice.model.iso27k.ImportIsoGroup"/>
-		         <objectClass name="sernet.verinice.model.bsi.ImportBsiGroup"/>
 		   	     <objectClass name="sernet.verinice.model.bsi.IBSIStrukturElement"/>
 		   	     <objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
 		   	     <objectClass name="sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis"/>
@@ -1128,5 +1126,19 @@
 	          	<objectClass name="sernet.hui.common.connect.ITypedElement"/>
 	         </enablement>
 	      </decorator>
+       <decorator
+             adaptable="true"
+             icon="icons/overlays/vda.png"
+             id="sernet.gs.ui.rcp.main.decorator1"
+             label="ISA-Topic"
+             lightweight="true"
+             location="TOP_RIGHT"
+             state="true">
+          <enablement>
+             <objectClass
+                   name="sernet.verinice.model.samt.SamtTopic">
+             </objectClass>
+          </enablement>
+       </decorator>
    </extension>
 </plugin>

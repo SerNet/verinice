@@ -67,10 +67,9 @@ import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.service.commands.CreateLink;
@@ -91,6 +90,10 @@ public class CnAElementHome {
     private static CnAElementHome instance;
     
     protected static final String LINK_NO_COMMENT = ""; //$NON-NLS-1$
+
+    private static final String QUERY_FIND_BY_ID = "from " + CnATreeElement.class.getName() + " as element " + "where element.dbId = ?"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    private static final String QUERY_FIND_CHANGES_SINCE = "from " + ChangeLogEntry.class.getName() + " as change " + "where change.changetime > ? " + "and not change.stationId = ? " + "order by changetime"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     private ICommandService commandService;
 
@@ -338,11 +341,6 @@ public class CnAElementHome {
             return false;
         }
 
-        // first level ISO 27k groups cannot be deleted
-        if (cte instanceof IISO27kGroup && cte.getParent() instanceof Organization) {
-            return false;
-        }
-
         // ITVerbund instances can be removed when
         // one has write access to it (There is no parent to check).
         if (cte instanceof ITVerbund) {
@@ -378,7 +376,7 @@ public class CnAElementHome {
      * @return
      */
     public boolean isNewChildAllowed(CnATreeElement cte) {
-        return cte instanceof BSIModel || isWriteAllowed(cte);
+        return cte instanceof BSIModel || cte instanceof ISO27KModel || isWriteAllowed(cte);
     }
 
     /**

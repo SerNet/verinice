@@ -29,11 +29,28 @@ public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.dialogs.messages"; //$NON-NLS-1$
     public static String AccessControlEditDialog_0;
     public static String AccessControlEditDialog_1;
+	public static String AccessControlEditDialog_10;
+	public static String AccessControlEditDialog_11;
+	public static String AccessControlEditDialog_12;
+	public static String AccessControlEditDialog_13;
+	public static String AccessControlEditDialog_14;
+	public static String AccessControlEditDialog_15;
+	public static String AccessControlEditDialog_16;
     public static String AccessControlEditDialog_2;
+	public static String AccessControlEditDialog_20;
+	public static String AccessControlEditDialog_21;
+	public static String AccessControlEditDialog_22;
     public static String AccessControlEditDialog_3;
     public static String AccessControlEditDialog_4;
     public static String AccessControlEditDialog_5;
     public static String AccessControlEditDialog_6;
+	public static String AccessControlEditDialog_7;
+	public static String AccessControlEditDialog_8;
+	public static String AccessControlEditDialog_9;
+	public static String AccountDialog_0;
+	public static String AccountDialog_1;
+	public static String AccountDialog_2;
+	public static String AccountDialog_3;
     public static String AutoBausteinDialog_0;
     public static String AutoBausteinDialog_1;
     public static String AutoBausteinDialog_10;
@@ -46,7 +63,8 @@ public class Messages extends NLS {
     public static String AutoBausteinDialog_7;
     public static String AutoBausteinDialog_8;
     public static String AutoBausteinDialog_9;
-    public static String BSIModelFilterDialog_10;
+    public static String BSIModelFilterDialog_0;
+	public static String BSIModelFilterDialog_10;
     public static String BSIModelFilterDialog_11;
     public static String BSIModelFilterDialog_12;
     public static String BSIModelFilterDialog_13;
@@ -77,6 +95,7 @@ public class Messages extends NLS {
     public static String BSIModelFilterDialog_9;
     public static String BulkEditDialog_0;
     public static String BulkEditDialog_1;
+	public static String BulkEditDialog_2;
     public static String CnATreeElementSelectionDialog_0;
     public static String CnATreeElementSelectionDialog_2;
     public static String CnATreeElementSelectionDialog_3;

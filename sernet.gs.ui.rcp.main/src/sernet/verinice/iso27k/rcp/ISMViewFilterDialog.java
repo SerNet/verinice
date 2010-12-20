@@ -125,6 +125,9 @@ public class ISMViewFilterDialog extends Dialog {
     private CheckboxTableViewer viewer;
     private String[] checkedElements;
 
+    private Button filterOrgCheckbox;
+    private boolean filterOrg;
+    
     private Button hideEmptyCheckbox;
     private boolean hideEmpty;
     
@@ -135,6 +138,7 @@ public class ISMViewFilterDialog extends Dialog {
         super(parent);
         setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
         this.tagPattern = ismViewFilter.getTagFilter().getPattern();
+        this.filterOrg = ismViewFilter.getTagFilter().isFilterOrg();
         this.hideEmpty = ismViewFilter.getHideEmptyFilter().isHideEmpty();
         this.visibleTypes = ismViewFilter.getTypeFilter().getVisibleTypeSet();
     }
@@ -152,6 +156,7 @@ public class ISMViewFilterDialog extends Dialog {
         
         createTypeGroup(container);
         createTagfilterGroup(container);  
+        createFilterOrgGroup(container);  
         createHideEmptyGroup(container);     
         
         initContent();
@@ -159,7 +164,7 @@ public class ISMViewFilterDialog extends Dialog {
         return container;
     }
 
-    /**
+	/**
      * @param container2
      * @return
      */
@@ -260,6 +265,17 @@ public class ISMViewFilterDialog extends Dialog {
             }
         });
     }
+    
+
+    private Group createFilterOrgGroup(Composite parent) {
+    	Group groupComposite = new Group(parent, SWT.BORDER);
+        GridData gridData = new GridData(GridData.FILL, GridData.END, true, false);
+        groupComposite.setLayoutData(gridData);
+        groupComposite.setLayout(new GridLayout(1, false));
+        filterOrgCheckbox = new Button(groupComposite, SWT.CHECK);
+        filterOrgCheckbox.setText(Messages.ISMViewFilterDialog_7);
+        return groupComposite;
+	}
 
     /**
      * @param container2
@@ -286,6 +302,14 @@ public class ISMViewFilterDialog extends Dialog {
     public boolean isHideEmpty() {
         return getHideEmpty();
     }
+    
+    public boolean isFilterOrgs() {
+		return getFilterOrgs();
+	}
+    
+    public boolean getFilterOrgs() {
+		return filterOrg;
+	}
 
     public Set<String[]> getVisibleTypes() {   
         return visibleTypes;
@@ -304,7 +328,8 @@ public class ISMViewFilterDialog extends Dialog {
         if (tagPattern != null) {
             viewer.setCheckedElements(tagPattern);
         }
-        
+
+        filterOrgCheckbox.setSelection(getFilterOrgs());
         hideEmptyCheckbox.setSelection(getHideEmpty());
     }
 
@@ -313,6 +338,7 @@ public class ISMViewFilterDialog extends Dialog {
         // get checked objects, cast to string:
         List<Object> tagList = Arrays.asList(viewer.getCheckedElements());
         this.checkedElements = tagList.toArray(new String[tagList.size()]);
+        this.filterOrg = filterOrgCheckbox.getSelection();
         this.hideEmpty = hideEmptyCheckbox.getSelection();
         visibleTypes.clear();
         List<Object> typeList = Arrays.asList(viewerType.getCheckedElements());
@@ -332,7 +358,7 @@ public class ISMViewFilterDialog extends Dialog {
         newShell.setText(Messages.ISMViewFilterDialog_5);
 
         // workaround to prevent tableviewer size from exceeding shell size:
-        newShell.setSize(400, 500);
+        newShell.setSize(400, 540);
     }
     
     protected HUITypeFactory getTypeFactory() {

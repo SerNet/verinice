@@ -39,6 +39,7 @@ public interface IItem extends Serializable {
 	static final int CONTROL = 0;
 	static final int THREAT = 1;
 	static final int VULNERABILITY = 2;
+	static final int ISA_TOPIC = 3;
 	
 	String getNumberString();
 	

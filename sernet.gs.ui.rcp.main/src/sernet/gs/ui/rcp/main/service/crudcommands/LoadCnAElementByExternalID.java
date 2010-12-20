@@ -43,12 +43,6 @@ public class LoadCnAElementByExternalID extends GenericCommand {
 	private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
 
 	private String sourceID;
-	
-	// show stopper
-	// [from CnATreeElement elmt where elmt.sourceId = ? and elmt.externalId = ?]
-	//
-	//private static final String QUERY = "from CnATreeElement elmt " +
-	//	"where elmt.sourceId = ? and elmt.externalId = ?"; 
 
 	private static final String QUERY = "from CnATreeElement elmt " +
 		"where elmt.sourceId = ? and elmt.extId = ?"; 
@@ -61,12 +55,6 @@ public class LoadCnAElementByExternalID extends GenericCommand {
 	public void execute() {
 		IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
 		list = dao.findByQuery(QUERY, new Object[] {sourceID, id});
-
-// since we're only using these objects on the server - inside the DB session, everything can be loaded lazyily by hibernate.
-// There is no need to initialize any fields manually, so this is commented out.
-//		for (CnATreeElement elmt : list) {
-//			HydratorUtil.hydrateElement(dao, elmt, false);
-//		}
 	}
 
 	public List<CnATreeElement> getElements() {

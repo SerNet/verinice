@@ -53,6 +53,8 @@ import sernet.snutils.AssertException;
 public class MultiSelectionControl implements IHuiControl {
 	
 	
+	// FIXME: externalize Strings
+	
 	private Entity entity;
 	private PropertyType type;
 	private Composite parent;

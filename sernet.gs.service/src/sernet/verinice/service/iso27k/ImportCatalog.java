@@ -115,23 +115,24 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
             while ((nextLine = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
                 if (nextLine.length >= 3) {
-                    if (isNewTopic(nextLine)) {
+                	String number = nextLine[0];
+                	String heading = nextLine[1];
+                	String type = nextLine[2];
+                	String text = nextLine[3];
+                	String weight1=null, weight2=null,maturity=null,threshold1=null,threshold2=null;
+                	if (hasMaturityLevels(nextLine)) {
+	                	weight1 = nextLine[4];
+	                	weight2 = nextLine[5];
+	                	maturity = nextLine[6];
+	                	threshold1 = nextLine[7];
+	                	threshold2 = nextLine[8];
+                	}
+                    if (isNewTopic(nextLine)) {             	
                         if (getLog().isDebugEnabled()) {
-                            getLog().debug("#: " + nextLine[0]);
-                            getLog().debug("heading: " + nextLine[1]);
-                            getLog().debug("type: " + nextLine[2]);
-                            getLog().debug("text: " + nextLine[3]);
-
-                            // line can have optional weight and threshold
-                            // levels:
-                            if (hasMaturityLevels(nextLine)) {
-                                getLog().debug("maturity: " + nextLine[4]);
-                                getLog().debug("weight 1: " + nextLine[5]);
-                                getLog().debug("weight 2: " + nextLine[6]);
-                                getLog().debug("threshold 1: " + nextLine[7]);
-                                getLog().debug("threshold 2: " + nextLine[8]);
-
-                            }
+                            getLog().debug("#: " + number);
+                            getLog().debug("heading: " + heading);
+                            getLog().debug("type: " + type);
+                            getLog().debug("text: " + text);
                         }
 
                         if (item != null) {
@@ -139,30 +140,47 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
                             catalog.bufferItem(item);
                         }
                         // create a new one
-                        item = new Item(nextLine[1], nextLine[2]);
-                        item.setNumberString(nextLine[0].trim());
+                        item = new Item(heading, type);
+                        item.setNumberString(number.trim());
 
-                        item.setDescription(nextLine[3]);
+                        item.setDescription(text);
 
+                        // line can have optional weight and threshold
+                        // levels:
                         if (hasMaturityLevels(nextLine)) {
-                            fillMaturityLevels(item, nextLine);
+                        	if (getLog().isDebugEnabled()) {
+                        		getLog().debug("maturity: " + maturity);
+                                getLog().debug("weight 1: " + weight1);
+                                getLog().debug("weight 2: " + weight2);
+                                getLog().debug("threshold 1: " + threshold1);
+                                getLog().debug("threshold 2: " + threshold2);
+                        	}
+                        	item.setWeight1(weight1);
+                            item.setWeight2(weight2);
+                            if(maturity==null || maturity.isEmpty()) {
+                                maturity = String.valueOf(IControl.IMPLEMENTED_NOTEDITED_NUMERIC);
+                            }
+                            item.setMaturity(maturity);
+                            item.setThreshold1(threshold1);
+                            item.setThreshold2(threshold2);
+                            item.setMaturityLevelSupport(true);
                         }
 
-                    } else {
+                    } else { // if (isNewTopic(nextLine))
                         // add a new paragraph to the existing item
                         StringBuilder sb = new StringBuilder(item.getDescription());
-                        sb.append("<p>").append(nextLine[3]).append("</p>");
+                        sb.append("<p>").append(text).append("</p>");
                         item.setDescription(sb.toString());
                     }
-                } else {
+                } else { // if (nextLine.length >= 3)
                     log.warn("Invalid line number: " + n + " in CSV file. Line content is: '");
                     for (int i = 0; i < nextLine.length; i++) {
-                        log.warn(nextLine[i]);
+                        log.warn(nextLine[1]);
                     }
                     log.warn("'");
                 }
                 n++;
-            }
+            } // end while
             // buffer the last item
             catalog.bufferItem(item);
 
@@ -185,23 +203,6 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
      */
     private boolean isNewTopic(String[] nextLine) {
         return nextLine[0] != null && nextLine[0].length() > 0;
-    }
-
-    /**
-     * @param item
-     * @param nextLine
-     */
-    private void fillMaturityLevels(Item item, String[] nextLine) {
-        item.setWeight1(nextLine[4]);
-        item.setWeight2(nextLine[5]);
-        String maturity = nextLine[6];
-        if(maturity==null || maturity.isEmpty()) {
-            maturity = String.valueOf(IControl.IMPLEMENTED_NOTEDITED_NUMERIC);
-        }
-        item.setMaturity(maturity);
-        item.setThreshold1(nextLine[7]);
-        item.setThreshold2(nextLine[8]);
-        item.setMaturityLevelSupport(true);
     }
 
     /**

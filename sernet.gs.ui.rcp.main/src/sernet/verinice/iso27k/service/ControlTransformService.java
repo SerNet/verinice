@@ -80,7 +80,11 @@ public class ControlTransformService {
      * @param selectedGroup2
      * @param items
      */
-    public ControlTransformService(IProgressObserver progressObserver, IModelUpdater modelUpdater, Group selectedGroup, List items) {
+    public ControlTransformService(
+    		IProgressObserver progressObserver, 
+    		IModelUpdater modelUpdater, 
+    		Group selectedGroup, 
+    		List items) {
         this(progressObserver, modelUpdater, selectedGroup);
         this.itemList = items;
     }

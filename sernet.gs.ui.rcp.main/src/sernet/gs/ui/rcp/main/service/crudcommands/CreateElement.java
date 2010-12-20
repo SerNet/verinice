@@ -138,7 +138,7 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
         if (child instanceof ITVerbund || child instanceof Organization) {
             addPermissions(child);           
         } else {
-            child.setPermissions(Permission.clonePermissions(child, container.getPermissions()));
+            child.setPermissions(Permission.clonePermissionSet(child, container.getPermissions()));
         }
     }
     

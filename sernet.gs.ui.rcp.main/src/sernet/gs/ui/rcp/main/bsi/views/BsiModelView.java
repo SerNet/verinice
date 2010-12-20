@@ -470,52 +470,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		dropAdapter.addAdapter(new BSIModelViewDropPerformer());
 
 		exportAction = new ExportAction(getSite().getWorkbenchWindow(), "Export");
-		/*
-		exportAction = new Action(){
-			public void run()
-			{
-				ExportSelectedObjectsDialog dialog = new ExportSelectedObjectsDialog(Display.getCurrent().getActiveShell());
-				
-				if( dialog.open() == Dialog.OK )
-				{
-					LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
-					
-					IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-					Iterator iter = selection.iterator();
-					
-					while( iter.hasNext() )
-					{
-						Object o = iter.next();
-						
-						if( o instanceof CnATreeElement )
-						{
-							exportElements.add( (CnATreeElement) o );
-						}
-					}
-					
-					ExportCommand exportCommand;
-					exportCommand = new ExportCommand(exportElements, dialog.getSourceId());
-					
-					try
-					{
-						exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
-					}
-					catch(CommandException ex)
-					{
-						throw new IllegalStateException(ex);
-					}
-					
-					try {
-						IOUtils.write(exportCommand.getResult(),
-								ExportAction.getExportOutputStream(dialog.getStorageLocation(), dialog.getEncryptOutput()));
-					} catch (IOException e) {
-						throw new IllegalStateException(e);
-					}
-				}
-			}
-		};
-		exportAction.setText("Export");
-		*/
 	}
 
 	private void expandAll() {

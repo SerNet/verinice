@@ -73,6 +73,8 @@ public class BSIModelFilterDialog extends FilterDialog {
     private String[] tagPattern;
     private Composite container;
     private Group tagGroup;
+    private Button filterItVerbundCheckbox;
+    private boolean filterItVerbund;
 
     private static HashMap<String, Class<?>> possibleFilters = new HashMap<String, Class<?>>();
 
@@ -94,7 +96,15 @@ public class BSIModelFilterDialog extends FilterDialog {
     private static final String[] LZ_ZIELOBJEKTE_ITEMS = new String[] { Messages.BSIModelFilterDialog_11, Messages.BSIModelFilterDialog_12, Messages.BSIModelFilterDialog_13, Messages.BSIModelFilterDialog_14, Messages.BSIModelFilterDialog_15, Messages.BSIModelFilterDialog_16, Messages.BSIModelFilterDialog_17, Messages.BSIModelFilterDialog_18, Messages.BSIModelFilterDialog_19, Messages.BSIModelFilterDialog_20 };
     private String[] checkedElements;
 
-    public BSIModelFilterDialog(Shell parent, String[] umsetzung, String[] siegel, String lebenszyklus, String objektLebenszyklus, Set<Class<?>> filteredClasses, String[] tags) {
+    public BSIModelFilterDialog(
+    		Shell parent, 
+    		String[] umsetzung, 
+    		String[] siegel, 
+    		String lebenszyklus, 
+    		String objektLebenszyklus, 
+    		Set<Class<?>> filteredClasses, 
+    		String[] tags, 
+    		boolean filterItVerbund) {
         super(parent, umsetzung, siegel, null);
         setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
         this.lebenszyklus = lebenszyklus;
@@ -104,7 +114,7 @@ public class BSIModelFilterDialog extends FilterDialog {
             this.filteredClasses = new HashSet<Class<?>>();
         }
         this.tagPattern = tags;
-
+        this.filterItVerbund = filterItVerbund;
     }
 
     @Override
@@ -144,10 +154,13 @@ public class BSIModelFilterDialog extends FilterDialog {
         groupComposite.setLayoutData(gridData);
         groupComposite.setLayout(new GridLayout(1, false));
 
+        filterItVerbundCheckbox = new Button(groupComposite, SWT.CHECK);
+        filterItVerbundCheckbox.setText(Messages.BSIModelFilterDialog_0);
+        
         ScrolledComposite comp = new ScrolledComposite(groupComposite, SWT.V_SCROLL);
         comp.setLayoutData(new GridData(GridData.FILL_BOTH));
         comp.setExpandHorizontal(true);
-
+   
         viewer = CheckboxTableViewer.newCheckList(comp, SWT.BORDER);
         Table table = viewer.getTable();
         table.setHeaderVisible(false);
@@ -169,32 +182,25 @@ public class BSIModelFilterDialog extends FilterDialog {
         viewer.setContentProvider(new ArrayContentProvider());
 
         viewer.setLabelProvider(new ITableLabelProvider() {
-
             public Image getColumnImage(Object element, int columnIndex) {
                 return null;
             }
-
             public String getColumnText(Object element, int columnIndex) {
                 if (columnIndex == 1) {
                     return (String) element;
                 }
                 return null;
             }
-
             public void addListener(ILabelProviderListener listener) {
             }
-
             public void dispose() {
             }
-
             public boolean isLabelProperty(Object element, String property) {
                 return false;
             }
-
             public void removeListener(ILabelProviderListener listener) {
             }
         });
-
         return groupComposite;
     }
 
@@ -330,6 +336,7 @@ public class BSIModelFilterDialog extends FilterDialog {
                 viewer.setCheckedElements(tagPattern);
             }
             tagGroup.getParent().layout(true);
+            filterItVerbundCheckbox.setSelection(isFilterItVerbund());
         }
 
     }
@@ -339,6 +346,7 @@ public class BSIModelFilterDialog extends FilterDialog {
         // get checked objects, cast to string:
         List<Object> tagList = Arrays.asList(viewer.getCheckedElements());
         this.checkedElements = tagList.toArray(new String[tagList.size()]);
+        this.setFilterItVerbund(filterItVerbundCheckbox.getSelection());
         return super.close();
     }
 
@@ -358,4 +366,12 @@ public class BSIModelFilterDialog extends FilterDialog {
     public String getObjektLebenszyklus() {
         return objektLebenszyklus;
     }
+
+	public boolean isFilterItVerbund() {
+		return filterItVerbund;
+	}
+
+	public void setFilterItVerbund(boolean filterItVerbund) {
+		this.filterItVerbund = filterItVerbund;
+	}
 }

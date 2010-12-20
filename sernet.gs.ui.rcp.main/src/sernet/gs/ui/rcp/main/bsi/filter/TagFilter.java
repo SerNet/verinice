@@ -30,6 +30,7 @@ public class TagFilter extends ViewerFilter {
 
     String[] pattern;
     private StructuredViewer viewer;
+    private boolean filterItVerbund;
 
     public TagFilter(StructuredViewer viewer) {
         this.viewer = viewer;
@@ -37,7 +38,8 @@ public class TagFilter extends ViewerFilter {
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        if (!(element instanceof IBSIStrukturElement) || (element instanceof ITVerbund)) {
+        if (!(element instanceof IBSIStrukturElement) 
+        	|| ((element instanceof ITVerbund) && !filterItVerbund)) {
             return true;
         }
 
@@ -82,5 +84,13 @@ public class TagFilter extends ViewerFilter {
         }
 
     }
+    
+    public boolean isFilterItVerbund() {
+		return filterItVerbund;
+	}
+
+	public void setFilterItVerbund(boolean filterItVerbund) {
+		this.filterItVerbund = filterItVerbund;
+	}
 
 }

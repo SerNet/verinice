@@ -39,6 +39,7 @@ import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.iso27k.service.commands.CreateIsoModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
@@ -67,7 +68,14 @@ import sernet.verinice.model.common.configuration.Configuration;
 @SuppressWarnings("serial")
 public class PrepareNotificationInfo extends GenericCommand {
 	
-	private static final Logger log = Logger.getLogger(PrepareNotificationInfo.class);
+	private transient Logger log = Logger.getLogger(CreateIsoModel.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(CreateIsoModel.class);
+        }
+        return log;
+    }
 	
 	private Map<Configuration, NotificationInfo> resultMap = new HashMap<Configuration, NotificationInfo>();
 	
@@ -504,7 +512,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 					}
 					else
 					{
-						log.warn("Retrieved a child of an element that is supposed to be a BausteinUmsetzung instance that is not a MassnahmenUmsetzung.");
+						getLog().warn("Retrieved a child of an element that is supposed to be a BausteinUmsetzung instance that is not a MassnahmenUmsetzung.");
 					}
 				}
 				

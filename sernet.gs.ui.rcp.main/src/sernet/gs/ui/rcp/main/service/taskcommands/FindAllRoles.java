@@ -43,18 +43,15 @@ public class FindAllRoles extends GenericCommand {
 	}
 
 	public void execute() {
-		LoadGenericElementByType<Configuration> lc = new LoadGenericElementByType<Configuration>(
-				Configuration.class);
+		LoadGenericElementByType<Configuration> lc = new LoadGenericElementByType<Configuration>(Configuration.class);
 
 		try {
 			lc = getCommandService().executeCommand(lc);
 		} catch (CommandException e) {
-			throw new RuntimeException(
-					"Exception while retrieving configuration elements.", e);
+			throw new RuntimeException("Exception while retrieving configuration elements.", e);
 		}
 
 		List<Configuration> confs = lc.getElements();
-
 		for (Configuration c : confs) {
 			roles.addAll(c.getRoles(withUserRoles));
 		}

@@ -123,7 +123,9 @@ public class URLControl implements IHuiControl {
 		if (savedProp == null) {
 			savedProp = entity.createNewProperty(type, "");
 		}
-		link.setText(savedProp.getPropertyValue());
+		if(savedProp.getPropertyValue()!=null) {
+			link.setText(savedProp.getPropertyValue());
+		}
 		link.pack();
 	}
 

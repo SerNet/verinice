@@ -141,7 +141,11 @@ public class CnALink implements Serializable, ITypedElement {
 	}
 	
 	public String getRelationId() {
-		return getId().relationId;
+		String typeId = "";
+		if(getId()!=null && !Id.NO_TYPE.equals(getId().typeId)) {
+			typeId = getId().typeId;
+		}
+		return typeId;
 	}
 
 	public String getComment() {
@@ -149,9 +153,12 @@ public class CnALink implements Serializable, ITypedElement {
 	}
 
 	public static class Id implements Serializable {
+		
+		public static final String NO_TYPE = "NO_TYPE";
+		
 		private Integer dependantId;
 		private Integer dependencyId;
-		private String relationId;
+		private String typeId;
 		
 		public Id() {}
 		
@@ -162,7 +169,9 @@ public class CnALink implements Serializable, ITypedElement {
 		public Id(Integer dependantId, Integer dependencyId, String relationId) {;
 			this.dependantId = dependantId;
 			this.dependencyId = dependencyId;
-			this.relationId = relationId;
+			if(relationId==null || relationId.isEmpty()) {
+				typeId = NO_TYPE;
+			}
 		}
 		
 		public boolean equals(Object o) {
@@ -170,7 +179,7 @@ public class CnALink implements Serializable, ITypedElement {
 				Id that = (Id)o;
 				return this.dependantId.equals(that.dependantId)
 					&& this.dependencyId.equals(that.dependencyId)
-					&& this.relationId.equals(that.relationId);
+					&& this.typeId.equals(that.typeId);
 			} 
 			else {
 				return false;
@@ -178,9 +187,9 @@ public class CnALink implements Serializable, ITypedElement {
 		}
 		
 		public int hashCode() {
-			if (dependantId == null || dependencyId == null || relationId == null)	
+			if (dependantId == null || dependencyId == null || typeId == null)	
 					return super.hashCode();
-			return dependantId.hashCode() + dependencyId.hashCode() + relationId.hashCode();
+			return dependantId.hashCode() + dependencyId.hashCode() + typeId.hashCode();
 		}
 		
 	}
@@ -211,7 +220,12 @@ public class CnALink implements Serializable, ITypedElement {
 		// set IDs:
 		getId().dependantId = dependant.getDbId();
 		getId().dependencyId = dependency.getDbId();
-		getId().relationId = relationId;
+		if(relationId==null || relationId.isEmpty()) {
+			getId().typeId = Id.NO_TYPE;
+		} else {
+			getId().typeId = relationId;
+		}
+		
 	
 		// maintain bi-directional association:
 		dependency.addLinkUp(this);

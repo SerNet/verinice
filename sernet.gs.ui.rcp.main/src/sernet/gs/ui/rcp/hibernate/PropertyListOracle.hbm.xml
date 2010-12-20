@@ -29,13 +29,12 @@
 				<property name="dbId"/>
 				<property name="propertyType"/>
         
-        <!-- size limit to prevent Oracle from using the LONG type which leads to "stream closed" exceptions
-        fixed in Hibernate 3.5, see http://opensource.atlassian.com/projects/hibernate/browse/HHH-3892 
-        currently fixed by a workaround, see class OracleLongStringType.java-->
-		        <property name="propertyValue" type="sernet.gs.ui.rcp.hibernate.OracleLongStringType" length="400000"/>		
-		        
-            <!-- CAUTION: Property is also mapped as non-mutable element in Property.hbm.xml for direct queries -->
-
+        		<!-- Mapped to NCLOB only for Oracle, see Bug 136 -->
+        		<!-- CAUTION: Property is also mapped as non-mutable element in Property.hbm.xml for direct queries -->
+        		<property name="propertyValue" type="java.lang.String" length="400000">
+		        	<column name="propertyValue" sql-type="NCLOB"/>
+		        </property>
+            	         	
 				<!--
 				<many-to-one 
 					name="parent"

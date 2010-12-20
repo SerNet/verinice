@@ -39,10 +39,12 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.commands.PasswordException;
 import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
@@ -58,6 +60,8 @@ import sernet.verinice.model.common.configuration.Configuration;
 
 public class ConfigurationAction implements IObjectActionDelegate {
 
+	// FIXME: externalize strings
+	
 	private static final Logger LOG = Logger.getLogger(ConfigurationAction.class);
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.personconfiguration"; //$NON-NLS-1$
@@ -67,8 +71,6 @@ public class ConfigurationAction implements IObjectActionDelegate {
 	private Configuration configuration;
 
 	private IWorkbenchPart targetPart;
-
-	private String oldPassword;
 	
 	ICommandService commandService;
 
@@ -128,39 +130,46 @@ public class ConfigurationAction implements IObjectActionDelegate {
 			}
 		}
 
-		emptyPasswordField(configuration.getEntity());
-		
-		final BulkEditDialog dialog = new BulkEditDialog(window.getShell(), entType, true, Messages.ConfigurationAction_4, configuration.getEntity());
+		final AccountDialog dialog = new AccountDialog(window.getShell(), entType, true, Messages.ConfigurationAction_4, configuration.getEntity());
 		if (dialog.open() != Window.OK) {
 			return;
 		}
-
-		final boolean updatePassword = updatePassword(configuration.getEntity());
 
 		try {
 			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					Activator.inheritVeriniceContextState();
-
-					// save configuration:
-					SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, updatePassword);
 					try {
+						final boolean updatePassword = updateNameAndPassword(dialog.getUserName(), dialog.getPassword(),dialog.getPassword2());
+						// save configuration:
+						SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, updatePassword);			
 						command = getCommandService().executeCommand(command);
 					} catch (final UsernameExistsException e) {
-						LOG.info("Configuration can not be saved. Username exists: " + e.getUsername()); //$NON-NLS-1$
-						if (LOG.isDebugEnabled()) {
-							LOG.debug("stacktrace: ", e); //$NON-NLS-1$
-						}
-						Display.getDefault().syncExec(new Runnable() {
-							public void run() {
-								MessageDialog.openError(Display.getDefault().getActiveShell(),
-										Messages.ConfigurationAction_7, NLS.bind(Messages.ConfigurationAction_7, e.getUsername()));
-							}
-						});	
+						final String logMessage = "Configuration can not be saved. Username exists: " + e.getUsername(); //$NON-NLS-1$
+						final String messageTitle = Messages.ConfigurationAction_7; 
+						final String userMessage = NLS.bind(Messages.ConfigurationAction_7, e.getUsername());		
+						handleException(e, logMessage, messageTitle, userMessage);	
+					} catch (final PasswordException e) {
+						final String logMessage = "Configuration can not be saved. " + e.getMessage(); //$NON-NLS-1$
+						final String messageTitle = Messages.ConfigurationAction_6; 
+						final String userMessage = e.getMessage();		
+						handleException(e, logMessage, messageTitle, userMessage);	
 					} catch (Exception e) {
 						LOG.error("Error while saving configuration.", e); //$NON-NLS-1$
 						ExceptionUtil.log(e, Messages.ConfigurationAction_5);
 					}
+				}
+
+				private void handleException(final Exception e, final String logMessage, final String messageTitle, final String userMessage) {
+					LOG.info(logMessage);
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("stacktrace: ", e); //$NON-NLS-1$
+					}
+					Display.getDefault().syncExec(new Runnable() {
+						public void run() {
+							MessageDialog.openError(Display.getDefault().getActiveShell(),messageTitle, userMessage);
+						}
+					});
 				}
 
 			});
@@ -170,43 +179,48 @@ public class ConfigurationAction implements IObjectActionDelegate {
 		} 
 	}
 
-
 	/**
-	 * Remove (hashed) password from field, save hash in case user does NOT
-	 * enter a new one.
-	 * 
-	 * @param entity
-	 */
-	private void emptyPasswordField(Entity entity) {
-		Property passwordProperty = entity.getProperties(Configuration.PROP_PASSWORD).getProperty(0);
-		if (passwordProperty != null) {
-			oldPassword = passwordProperty.getPropertyValue();
-			passwordProperty.setPropertyValue("", false); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * Checks if the user has entered a new password. If not, the previously
-	 * saved hashed password is restored. If so, the cleartext password is
+	 * Checks if the user has entered a new password. If so, the cleartext password is
 	 * saved.
+	 * @param string 
 	 * 
 	 * @param entity
 	 *            the entity containing the users input
+	 * @param string 
 	 * @return true if a new cleartext password was saved, that needs to be
 	 *         hashed.
 	 */
-	private boolean updatePassword(Entity entity) {
-		Property passwordProperty = entity.getProperties(Configuration.PROP_PASSWORD).getProperty(0);
-		if (passwordProperty != null) {
-			if (passwordProperty.getPropertyValue().length() > 0) {
-				// new password:
-				return true;
-			} else {
-				// no new password set, insert old one (hash) again:
-				passwordProperty.setPropertyValue(oldPassword, false);
+	private boolean updateNameAndPassword(String name, String newPassword, String newPassword2) {
+		boolean updated = false;
+		final String oldName = configuration.getUser();
+		if(isNewName(oldName,name) && (newPassword==null || newPassword.isEmpty())) {
+			// Exception message must be translated here
+			throw new PasswordException(Messages.ConfigurationAction_9);
+		}	
+		configuration.setUser(name);
+		if(newPassword!=null && !newPassword.isEmpty()) {
+			if(!newPassword.equals(newPassword2)) {
+				// Exception message must be translated here
+				throw new PasswordException(Messages.ConfigurationAction_10);
 			}
+			configuration.setPass(newPassword);
+			updated=true;
 		}
-		return false;
+		return updated;
+	}
+
+	private boolean isNewName(String oldName, String name) {
+		boolean result=false;
+		if(oldName!=null) {
+			if(name==null) {
+				result=true;
+			} else {
+				result = !oldName.equals(name);
+			}
+		} else {
+			result = name!=null;
+		}
+		return result;
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

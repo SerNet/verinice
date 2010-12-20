@@ -37,6 +37,8 @@
         org.springframework.orm.hibernate3.SpringSessionContext
         </property>
 		
+		<property name="hibernate.connection.defaultNChar">true</property>
+		
 		
 		<!-- Enable memory read write cache 
 		-->

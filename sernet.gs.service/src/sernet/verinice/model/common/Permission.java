@@ -18,15 +18,25 @@
 package sernet.verinice.model.common;
 
 import java.io.Serializable;
-import java.security.Permissions;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.ITypedElement;
 
 @SuppressWarnings("serial")
-public class Permission implements Serializable, ITypedElement {
+public class Permission implements Serializable, ITypedElement, Comparable<Permission> {
 
+	private transient Logger log = Logger.getLogger(Permission.class);
+
+    private Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(Permission.class);
+        }
+        return log;
+    }
+	
 	private Integer dbId;
 	
 	private CnATreeElement cnaTreeElement;
@@ -100,15 +110,16 @@ public class Permission implements Serializable, ITypedElement {
 	 * @param writeAllowed
 	 * @return
 	 */
-	public static Permission createPermission(
-			CnATreeElement treeElement, String role, boolean readAllowed, boolean writeAllowed)
-	{
+	public static Permission createPermission( 
+			CnATreeElement treeElement, 
+			String role, 
+			boolean readAllowed, 
+			boolean writeAllowed) {
 		Permission p = new Permission();
 		p.setCnaTreeElement(treeElement);
 		p.setRole(role);
 		p.setReadAllowed(readAllowed);
-		p.setWriteAllowed(writeAllowed);
-		
+		p.setWriteAllowed(writeAllowed);	
 		return p;
 	}
 
@@ -119,22 +130,90 @@ public class Permission implements Serializable, ITypedElement {
 	 * @param perms the permission currently assigned on the source object
 	 * @return newly created set of permissions
 	 */
-	public static Set<Permission> clonePermissions(CnATreeElement cte, Set<Permission> perms)
-	{
-		HashSet<Permission> clone = new HashSet<Permission>();
-		
-		for (Permission p : perms)
-		{
-			Permission np =
-				createPermission(
-						cte,
-						p.getRole(),
-						p.isReadAllowed(),
-						p.isWriteAllowed());
-			
-			clone.add(np);
+	public static Set<Permission> clonePermissionSet(CnATreeElement cte, Set<Permission> perms) {
+		HashSet<Permission> clone = null;
+		if(cte==null) {
+			 Logger.getLogger(Permission.class).warn("Element is null");
 		}
-		
+		if(cte.getUuid()==null) {
+			 Logger.getLogger(Permission.class).warn("Element uuid is null");
+		}
+		if(perms!=null) {
+			clone = new HashSet<Permission>(perms.size());	
+			for (Permission p : perms) {
+				Permission np = clonePermission(cte, p);		
+				clone.add(np);
+			}	
+		}
 		return clone;
+	}
+
+	public static Permission clonePermission(CnATreeElement cte, Permission p) {
+		Permission np = createPermission(
+							cte,
+							p.getRole(),
+							p.isReadAllowed(),
+							p.isWriteAllowed());
+		return np;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 1;
+		try {
+			final int prime = 31;
+			
+			result = prime * result + ((cnaTreeElement==null) ? 0 : cnaTreeElement.hashCode());
+			result = prime * result + ((role == null) ? 0 : role.hashCode());
+		} catch(Throwable t ) {
+			getLog().error("Error while creating hashcode, element UUID: " + cnaTreeElement.getUuid() + ", role: " + role, t);
+		}
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		try {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			Permission other = (Permission) obj;
+			if (cnaTreeElement == null) {
+				if (other.cnaTreeElement != null)
+					return false;
+			} else if (!cnaTreeElement.equals(other.cnaTreeElement)) {
+				return false;
+			}
+			if (role == null) {
+				if (other.role != null)
+					return false;
+			} else if (!role.equals(other.role))
+				return false;
+			return true;
+		} catch(Throwable t ) {
+			getLog().error("Error in equals, element UUID: " + cnaTreeElement.getUuid() + ", role: " + role, t);
+			return false;
+		}
+	}
+
+	@Override
+	public int compareTo(Permission o) {
+		final int THIS_IS_LESS = -1;
+		final int EQUAL = 0;
+		final int THIS_IS_GREATER = 1;
+		int result = THIS_IS_LESS;
+		if(o!=null && o.getRole()!=null) {
+			if(this.getRole()!=null) {
+				result = this.getRole().compareTo(o.getRole());
+			} else {
+				result = THIS_IS_GREATER;
+			}
+		} else {
+			if(this.getRole()==null) {
+				result = EQUAL;
+			}
+		}
+		return result;
 	}
 }

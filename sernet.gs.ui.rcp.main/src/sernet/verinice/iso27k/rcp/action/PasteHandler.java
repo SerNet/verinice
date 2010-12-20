@@ -35,10 +35,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.service.PermissionException;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.CopyBausteine;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.iso27k.rcp.CopyTreeElements;
@@ -72,17 +74,39 @@ public class PasteHandler extends AbstractHandler {
 				if (LOG.isDebugEnabled()) {
                     LOG.debug("Target - type: " + target.getTypeId() + ", title:" + target.getTitle());
                 }
-				if(!CnPItems.getCopyItems().isEmpty()) {
-					copy(target,CnPItems.getCopyItems());
-				} else if(!CnPItems.getCutItems().isEmpty()) {
-					cut(target,CnPItems.getCutItems());
+				if(CnAElementHome.getInstance().isNewChildAllowed(target)) {
+					if(!CnPItems.getCopyItems().isEmpty()) {
+						copy(target,CnPItems.getCopyItems());
+					} else if(!CnPItems.getCutItems().isEmpty()) {
+						cut(target,CnPItems.getCutItems());
+					}
+				} else if (LOG.isDebugEnabled()) {
+					LOG.debug("User is not allowed to add elements to this group"); //$NON-NLS-1$
 				}
+			}		
+		} catch(PermissionException e) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(e);
 			}
-		} catch(Exception e) {
-			LOG.error("Error while pasting", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, Messages.getString("PasteHandler.1")); //$NON-NLS-1$
+			handlePermissionException(e);
+		} catch(Throwable t) {
+			if(t.getCause()!=null && t.getCause() instanceof PermissionException) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug(t);
+				}
+				handlePermissionException((PermissionException) t.getCause());
+			} else {
+				LOG.error("Error while pasting", t); //$NON-NLS-1$
+				ExceptionUtil.log(t, Messages.getString("PasteHandler.1")); //$NON-NLS-1$
+			}
 		}
 		return null;
+	}
+
+	private void handlePermissionException(PermissionException e) {
+		MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+				Messages.getString("PasteHandler.2"), //$NON-NLS-1$
+				e.getMessage());
 	}
 	
 	/**
@@ -119,6 +143,7 @@ public class PasteHandler extends AbstractHandler {
 	
 	
 
+	@SuppressWarnings("restriction")
 	private void cut(CnATreeElement target, List cutList) throws InvocationTargetException, InterruptedException {
 		if(cutList.get(0) instanceof CnATreeElement && target!=null) {
 			CutOperation operation = new CutOperation(target, cutList);

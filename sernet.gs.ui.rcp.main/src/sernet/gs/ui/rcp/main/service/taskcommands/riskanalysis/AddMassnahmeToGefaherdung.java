@@ -76,7 +76,7 @@ public class AddMassnahmeToGefaherdung extends GenericCommand implements IAuthAw
 		if (authService.isPermissionHandlingNeeded())
 		{
 			child.setPermissions(
-				Permission.clonePermissions(
+				Permission.clonePermissionSet(
 						child,
 						parent.getPermissions()));
 		}

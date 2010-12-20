@@ -32,6 +32,7 @@ public class TagFilter extends ViewerFilter {
 
     String[] pattern;
     private StructuredViewer viewer;
+    private boolean filterOrgs;
 
     public TagFilter(StructuredViewer viewer) {
         this.viewer = viewer;
@@ -42,7 +43,7 @@ public class TagFilter extends ViewerFilter {
         boolean result = true;
         if (o instanceof IISO27kElement 
             && !(o instanceof Group)
-            && !(o instanceof IISO27Scope)
+            && (!(o instanceof IISO27Scope) || filterOrgs)
             && pattern!=null) {
             result = false;
             IISO27kElement element = (IISO27kElement) o;
@@ -89,5 +90,13 @@ public class TagFilter extends ViewerFilter {
     public boolean isActive() {
         return getPattern() != null && getPattern().length > 0;
     }
+
+	public boolean isFilterOrg() {
+		return filterOrgs;
+	}
+
+	public void setFilterOrgs(boolean filterOrgs) {
+		this.filterOrgs = filterOrgs;
+	}
 
 }

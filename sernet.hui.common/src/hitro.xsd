@@ -215,7 +215,7 @@ be displayed when one of the given options has been previously selected.
 	<xs:attribute name="editable" type="xs:boolean" default="true"/> 
     
 	<!-- Is visible in GUI? -->
-	<xs:attribute name="visible" type="xs:boolean" default="true"/> 
+	<xs:attribute name="visible" type="xs:boolean" default="true"/>
 	
 	<!-- Should the user be presented with buttons to create / delete entities directly in the selection dialog?
 		If true, a listener must be registered to handle the button's actions.
@@ -227,7 +227,7 @@ be displayed when one of the given options has been previously selected.
 	<xs:attribute name="max" type="xs:int"/> 
 	<xs:attribute name="defaultValue" type="xs:int" default="0" /> 
 
-	<!-- Should this property be included in reports? -->
+	<!-- Should this property be included in reports and exports? -->
 	<xs:attribute name="report" type="xs:boolean" default="true"/>
 
     <!-- Number of rows for text input type -->    

@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.bpm.IProcessService;
 import sernet.verinice.model.iso27k.Control;
@@ -43,7 +44,7 @@ public class ControlProcessCreator implements IProcessCreater {
      */
     @Override
     public void create() {       
-        List<Control> controlList = getControlDao().findAll();
+        List<Control> controlList = getControlDao().findAll(RetrieveInfo.getPropertyInstance());
         if (log.isDebugEnabled()) {
             log.debug("Number of controls: " + controlList.size());
         }

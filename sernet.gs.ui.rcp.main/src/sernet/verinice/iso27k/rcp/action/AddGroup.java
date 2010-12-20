@@ -23,10 +23,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -34,6 +37,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -45,7 +49,6 @@ import sernet.verinice.model.iso27k.DocumentGroup;
 import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.FindingGroup;
-import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.IncidentGroup;
 import sernet.verinice.model.iso27k.IncidentScenarioGroup;
@@ -62,7 +65,7 @@ import sernet.verinice.model.iso27k.VulnerabilityGroup;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-public class AddGroup implements IObjectActionDelegate {
+public class AddGroup extends Action implements IObjectActionDelegate {
 	private IWorkbenchPart targetPart;
 
 	private static final Logger LOG = Logger.getLogger(AddGroup.class);
@@ -92,24 +95,49 @@ public class AddGroup implements IObjectActionDelegate {
         
 	}
 	
+	private IISO27kGroup parent;
+	
+	private String typeId;
+	
+	public AddGroup() {
+		super();
+	}
+
+	public AddGroup(IISO27kGroup element, String typeId, String childTypeId) {
+		super();
+		this.parent = element;
+		this.typeId = typeId;
+		this.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(childTypeId)));	
+		this.setText( TITLE_FOR_TYPE.get(typeId)!=null ? TITLE_FOR_TYPE.get(typeId) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
+	}
+
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		this.targetPart = targetPart;
 	}
 
-	@SuppressWarnings("unchecked")
-	public void run(IAction action) {
-		try {
-			Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+	/* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    public void run() {
+    	try {
+			Object sel = null;
+			if(targetPart!=null) {
+				sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+				if(sel instanceof IISO27kGroup) {
+					parent = (IISO27kGroup) sel;
+				}
+			} 			
 			CnATreeElement newElement = null;
-
-			if (sel instanceof IISO27kGroup) {
-			    IISO27kGroup group = (IISO27kGroup) sel;
-				// child groups have the same type as parents
-				String typeId = group.getTypeId();
-				if(group instanceof Asset) {
-				    typeId = ControlGroup.TYPE_ID;
-                }
-				newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group, typeId, null);		
+			if( parent != null) {		   
+			    String currentType = this.typeId;
+			    if(currentType==null) {
+					// child groups have the same type as parents
+			    	currentType = parent.getTypeId();
+					if(parent instanceof Asset) {
+						currentType = ControlGroup.TYPE_ID;
+	                }
+			    }
+				newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent, currentType, null);		
 			}
 			if (newElement != null) {
 				EditorFactory.getInstance().openEditor(newElement);
@@ -118,7 +146,14 @@ public class AddGroup implements IObjectActionDelegate {
 			LOG.error("Could not add element group", e); //$NON-NLS-1$
 			ExceptionUtil.log(e, Messages.getString("AddGroup.18")); //$NON-NLS-1$
 		}
-
+    }
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 */
+	@SuppressWarnings("unchecked")
+	public void run(IAction action) {
+		run();
 	}
 
 	/* (non-Javadoc)
@@ -128,11 +163,16 @@ public class AddGroup implements IObjectActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		if(selection instanceof IStructuredSelection) {
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
+			boolean allowed = false;
+			boolean enabled = false;
+			if (sel instanceof CnATreeElement) {
+				allowed = CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) sel);
+			}
 			if(sel instanceof Audit) {
-                action.setEnabled(false);
+				enabled = false;
                 action.setText(Messages.getString("AddGroup.19"));
             } else if(sel instanceof IISO27kGroup) {
-                action.setEnabled(true);
+            	enabled = true;
 			    IISO27kGroup group = (IISO27kGroup) sel;
 			    String typeId = group.getChildTypes()[0];
                 if(group instanceof Asset) {
@@ -140,7 +180,13 @@ public class AddGroup implements IObjectActionDelegate {
                 }
 				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(typeId)));	
 				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
-			}		
+			}
+			// Only change state when it is enabled, since we do not want to
+            // trash the enablement settings of plugin.xml
+            if (action.isEnabled()) {
+                action.setEnabled(allowed && enabled);
+            }
 		}
 	}
+
 }

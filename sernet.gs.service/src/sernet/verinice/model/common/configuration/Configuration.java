@@ -117,7 +117,7 @@ public class Configuration implements Serializable, ITypedElement {
 	}
 
 	public void setPass(String pass) {
-		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_USERNAME);
+		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_PASSWORD);
 		entity.setSimpleValue(type, pass);
 	}
 
@@ -254,25 +254,22 @@ public class Configuration implements Serializable, ITypedElement {
 	 */
 	public Set<String> getRoles(boolean withUserRole)
 	{
-		List<Property> properties = entity.getProperties(
-				Configuration.PROP_ROLES).getProperties();
+		List<Property> properties = entity.getProperties(Configuration.PROP_ROLES).getProperties();
 		
 		Set<String> roles = null;
 			
-		if (properties != null)
-		{
+		if (properties != null){
 			roles = new HashSet<String>(properties.size());
-			for (Property p : properties)
-			{
+			for (Property p : properties){
 				roles.add(p.getPropertyValue());
 			}
 		}
-		else
+		else {
 			roles = new HashSet<String>();
-		
-		if (withUserRole)
+		}
+		if (withUserRole) {
 			roles.add(getUser());
-
+		}
 		return roles;
 	}
 	

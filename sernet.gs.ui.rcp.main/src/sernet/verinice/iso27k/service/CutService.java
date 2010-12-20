@@ -25,9 +25,11 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.PermissionException;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -80,6 +82,8 @@ public class CutService extends PasteService implements IProgressTask {
 
 	/**
 	 * Starts the execution of the moving job.
+	 * 
+	 * @see sernet.verinice.iso27k.service.IProgressTask#run()
 	 */
 	public void run()  {
 		try {	
@@ -89,6 +93,7 @@ public class CutService extends PasteService implements IProgressTask {
 			progressObserver.beginTask(Messages.getString("CutService.1",numberOfElements), numberOfElements);
 			numberProcessed = 0;
 			Map<String, String> sourceDestMap = new Hashtable<String, String>();
+			checkPermissions(elementList);
 			for (CnATreeElement element : elementList) {
 				CnATreeElement movedElement = move(progressObserver, selectedGroup, element);
 				// cut: source and dest is the same
@@ -99,8 +104,16 @@ public class CutService extends PasteService implements IProgressTask {
             }	
             if(doFullReload) {
                 CnAElementFactory.getInstance().reloadModelFromDatabase();
-            }
-		} catch (Exception e) {
+            }        
+		} catch (PermissionException e) {
+			if (log.isDebugEnabled()) {
+				log.debug(e);
+			}
+			throw e;
+		} catch (RuntimeException e) {
+			log.error("RuntimeException while copying element", e);
+			throw e;
+		} catch (Throwable e) {
 			log.error("Error while copying element", e);
 			throw new RuntimeException("Error while copying element", e);
 		} finally {
@@ -108,6 +121,29 @@ public class CutService extends PasteService implements IProgressTask {
 		}
 	}
 	
+	private boolean checkPermissions(List<CnATreeElement> elementList) {
+		boolean ok = true;
+		for (CnATreeElement element : elementList) {
+			if(!CnAElementHome.getInstance().isDeleteAllowed(element)) {
+				ok = false;
+				// FIXME: externalize Strings
+				// this message must be multi lingual			
+				throw new PermissionException("No permission to move elment: " + getTitle(element));
+			}
+		}
+		return ok;
+	}
+
+	private String getTitle(CnATreeElement element) {
+		String title = "unknown";
+		try {
+			title = element.getTitle();
+		} catch(Throwable t) {
+			log.error("Error while reading title.", t);
+		}
+		return title;
+	}
+
 	/**
 	 * @param monitor
 	 * @param group 

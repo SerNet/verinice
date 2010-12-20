@@ -38,8 +38,7 @@ public class HitroUIComposite extends ScrolledComposite {
 	
 	public HitroUIComposite(Composite parent, int style, boolean twistie) {
 		// scrollable composite:
-		super(parent, SWT.V_SCROLL
-				| SWT.BORDER);
+		super(parent, SWT.V_SCROLL);
 		this.setExpandHorizontal(true);
 		this.setExpandVertical(true);
 		GridLayout scrollLayout = new GridLayout(4, true);
@@ -72,18 +71,16 @@ public class HitroUIComposite extends ScrolledComposite {
 		contentComp.setLayoutData(contentCompLD);
 
 		GridLayout contentCompLayout = new GridLayout(4, true);
-		contentCompLayout.marginWidth = 1;
-		contentCompLayout.marginHeight = 1;
+		contentCompLayout.marginWidth = 3;
+		contentCompLayout.marginHeight = 3;
 		contentCompLayout.numColumns = 4;
 		contentCompLayout.makeColumnsEqualWidth = false;
-		contentCompLayout.horizontalSpacing = 1;
-		contentCompLayout.verticalSpacing = 1;
+		contentCompLayout.horizontalSpacing = 3;
+		contentCompLayout.verticalSpacing = 3;
 		contentComp.setLayout(contentCompLayout);
 		
 		// HUI composite:
-		ExpandableComposite huiTwistie = new ExpandableComposite(
-				contentComp, SWT.BORDER, ExpandableComposite.EXPANDED
-						);
+		ExpandableComposite huiTwistie = new ExpandableComposite(contentComp, ExpandableComposite.NO_TITLE, ExpandableComposite.EXPANDED);
 		huiTwistie.setText("");
 
 		// set twistie to fill row:
@@ -107,7 +104,7 @@ public class HitroUIComposite extends ScrolledComposite {
 		
 		// set comp layout:
 		GridLayout fieldsCompLayout = new GridLayout(2, false);
-		fieldsCompLayout.verticalSpacing = 2;
+		fieldsCompLayout.verticalSpacing = 4;
 		fieldsCompLayout.marginWidth = 2;
 		fieldsCompLayout.marginHeight = 2;
 		fieldsComposite.setLayout(fieldsCompLayout);
@@ -119,8 +116,7 @@ public class HitroUIComposite extends ScrolledComposite {
 		huiTwistie.setClient(fieldsComposite);
 		huiTwistie.setExpanded(true);
 
-		huiView = new HitroUIView(this,
-				contentComp, fieldsComposite);
+		huiView = new HitroUIView(this,contentComp, fieldsComposite);
 	
 	}
 
@@ -183,8 +179,7 @@ public class HitroUIComposite extends ScrolledComposite {
 		huiTwistie.setClient(fieldsComposite);
 		huiTwistie.setExpanded(true);
 
-		huiView = new HitroUIView(this,
-				contentComp, fieldsComposite);
+		huiView = new HitroUIView(this,contentComp, fieldsComposite);
 	}
 	
 	public void createView(Entity entity, boolean editable, boolean useRules, String[] tags, boolean taggedOnly) throws DBException {

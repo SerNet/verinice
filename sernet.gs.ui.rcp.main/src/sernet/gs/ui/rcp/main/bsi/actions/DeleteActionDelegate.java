@@ -44,6 +44,7 @@ import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
@@ -207,7 +208,8 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
         // when there is no right to do so.
         Object sel = ((IStructuredSelection) selection).getFirstElement();
         if (sel instanceof CnATreeElement) {
-            boolean b = CnAElementHome.getInstance().isDeleteAllowed((CnATreeElement) sel);
+        	CnATreeElement element = (CnATreeElement) sel;
+            boolean b = CnAElementHome.getInstance().isDeleteAllowed(element);
 
             // Only change state when it is enabled, since we do not want to
             // trash the enablement settings of plugin.xml

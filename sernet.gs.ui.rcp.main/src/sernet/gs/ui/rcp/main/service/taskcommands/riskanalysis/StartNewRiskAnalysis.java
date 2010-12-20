@@ -72,7 +72,7 @@ public class StartNewRiskAnalysis extends GenericCommand implements IAuthAwareCo
 		if (authService.isPermissionHandlingNeeded())
 		{
 			finishedRiskAnalysis.setPermissions(
-				Permission.clonePermissions(
+				Permission.clonePermissionSet(
 						finishedRiskAnalysis,
 						cnaElement.getPermissions()));
 		}

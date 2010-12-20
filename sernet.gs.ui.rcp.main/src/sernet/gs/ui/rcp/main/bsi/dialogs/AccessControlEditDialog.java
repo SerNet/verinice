@@ -14,29 +14,42 @@
  * 
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
+ *     Daniel Murygin <dm[at]sernet[dot]de> - New Layout with table, add mode
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import net.miginfocom.swt.MigLayout;
-
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 
+import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdatePermissions;
@@ -49,184 +62,346 @@ import sernet.verinice.model.common.Permission;
  * Simple dialog that allows defining the access options for an element.
  * 
  * @author Robert Schuster <r.schuster@tarent.de>
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-public class AccessControlEditDialog extends Dialog {
+public class AccessControlEditDialog extends TitleAreaDialog {
 
-    private static final Logger log = Logger.getLogger(AccessControlEditDialog.class);
+	private static final Logger log = Logger.getLogger(AccessControlEditDialog.class);
 
-    private List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
+	private static final String INFORMATION_ADD_MODE = Messages.AccessControlEditDialog_7;
 
-    private List<RawPermission> rawPermissions = new ArrayList<RawPermission>();
+	private static final String INFORMATION_OVERRIDE_MODE = Messages.AccessControlEditDialog_8;
+	
+	private List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
 
-    private Button inheritButton;
+	private TableViewer viewer;
 
-    private String[] allRoles;
+	private Set<Permission> permissionSet;
 
-    public AccessControlEditDialog(Shell parent, IStructuredSelection selection) {
-        super(parent);
-        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
+	private Combo comboRole;
 
-        Iterator iterator = selection.iterator();
-        while (iterator.hasNext()) {
-            Object next = iterator.next();
-            if (next instanceof CnATreeElement) {
-                CnATreeElement nextElement = (CnATreeElement) next;
-                elements.add(nextElement);
-            }
-        }
-    }
+	private Button buttonRead;
 
-    @Override
-    protected void configureShell(Shell newShell) {
-        super.configureShell(newShell);
+	private Button buttonWrite;
 
-        // TODO rschuster: Translate me.
-        newShell.setText(Messages.AccessControlEditDialog_6);
-        newShell.setSize(400, 800);
-    }
+	private Button buttonInherit;
+	
+	Button[] radioButtonMode = new Button[2];
+	
+	Button buttonRemove;
 
-    @Override
-    protected Control createDialogArea(Composite parent) {
-        Composite container = (Composite) super.createDialogArea(parent);
-        MigLayout ml = new MigLayout("wrap 3", "[grow, fill][left][left]", "[]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        container.setLayout(ml);
+	@SuppressWarnings("unchecked")
+	public AccessControlEditDialog(Shell parent, IStructuredSelection selection) {
+		super(parent);
+		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
 
-        Label l = new Label(container, SWT.NONE);
-        l.setText(Messages.AccessControlEditDialog_3);
+		Iterator iterator = selection.iterator();
+		while (iterator.hasNext()) {
+			Object next = iterator.next();
+			if (next instanceof CnATreeElement) {
+				CnATreeElement nextElement = (CnATreeElement) next;
+				elements.add(nextElement);
+			}
+		}
+	}
 
-        l = new Label(container, SWT.NONE);
-        l.setText(Messages.AccessControlEditDialog_4);
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText(Messages.AccessControlEditDialog_6);
+		newShell.setSize(460, 600);
+	}
 
-        l = new Label(container, SWT.NONE);
-        l.setText(Messages.AccessControlEditDialog_5);
+	@Override
+	protected Control createDialogArea(Composite parent) {
 
-        // Note: The permissions should always be loaded right from the database
-        // instead of relying on the data that is currently in the
-        // CnATreeElement instance.
-        // Otherwise the client that did modifications to the permissions would
-        // not see
-        // the changes.
+		setTitle(Messages.AccessControlEditDialog_6);
 
-        // TODO akoderman: for now, only the permissions of the first element
-        // are displayed, changes will be writte to all selected elements
-        CnATreeElement firstElement = elements.get(0);
+		final Composite composite = (Composite) super.createDialogArea(parent);
+		GridLayout layoutRoot = (GridLayout) composite.getLayout();
+		layoutRoot.marginWidth = 10;
+		layoutRoot.marginHeight = 10;
+		GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
+		gd.grabExcessHorizontalSpace = true;
+		gd.grabExcessVerticalSpace = true;
+		gd.horizontalAlignment = GridData.FILL;
+		gd.verticalAlignment = GridData.FILL;
+		composite.setLayoutData(gd);
 
-        // TODO rschuster: Do this in a separate thread
-        LoadPermissions lp = new LoadPermissions(firstElement);
-        FindAllRoles findAllRoles = new FindAllRoles(true);
-        try {
-            lp = ServiceFactory.lookupCommandService().executeCommand(lp);
-            findAllRoles = ServiceFactory.lookupCommandService().executeCommand(findAllRoles);
-        } catch (CommandException e) {
-            // TODO rschuster: Handle this more gracefully
-            throw new RuntimeException(e);
-        }
+		final Composite containerSettings = new Composite(composite, SWT.NONE);
+		GridLayout layoutSettings = new GridLayout(2, false);
+		layoutSettings.marginWidth = 10;
+		layoutSettings.marginHeight = 10;
+		containerSettings.setLayout(layoutSettings);
+		GridData gridData = new GridData();
+		gridData.horizontalSpan = 5;
+		containerSettings.setLayoutData(gridData);	
 
-        Set<String> roles = findAllRoles.getRoles();
-        this.allRoles = roles.toArray(new String[roles.size()]);
+		radioButtonMode[0] = new Button(containerSettings, SWT.RADIO);
+		radioButtonMode[0].setSelection(true);
+		radioButtonMode[0].setText(Messages.AccessControlEditDialog_9);
+		radioButtonMode[0].addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				showInformation();
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		radioButtonMode[1] = new Button(containerSettings, SWT.RADIO);
+		radioButtonMode[1].setText(Messages.AccessControlEditDialog_10);
 
-        Set<Permission> perms = lp.getPermissions();
-        Combo t;
-        Button r, w;
-        for (Permission p : perms) {
-            t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
-            t.setItems(allRoles);
-            t.setText(p.getRole());
+		showInformation();
 
-            r = new Button(container, SWT.CHECK | SWT.BORDER);
-            r.setSelection(p.isReadAllowed());
+		buttonInherit = new Button(containerSettings, SWT.CHECK | SWT.BORDER);
+		buttonInherit.setText(Messages.AccessControlEditDialog_11);
+		buttonInherit.setSelection(false);
+		gridData = new GridData();
+		gridData.horizontalSpan = 2;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.horizontalAlignment = GridData.FILL;
+		buttonInherit.setLayoutData(gridData);
+		
+		final Composite containerRoles = new Composite(composite, SWT.NONE);
+		GridLayout layout = new GridLayout(5, false);
+		layout.marginWidth = 10;
+		layout.marginHeight = 10;
+		containerRoles.setLayout(layout);
+		containerRoles.setLayoutData(gd);
+		
+		Label labelRole = new Label(containerRoles, SWT.NONE);
+		labelRole.setText(Messages.AccessControlEditDialog_12);
+		comboRole = new Combo(containerRoles, SWT.DROP_DOWN | SWT.READ_ONLY);
+		comboRole.setItems(getRoles());
+		buttonRead = new Button(containerRoles, SWT.CHECK | SWT.BORDER);
+		buttonRead.setText(Messages.AccessControlEditDialog_13);
+		buttonRead.setSelection(false);
+		buttonWrite = new Button(containerRoles, SWT.CHECK | SWT.BORDER);
+		buttonWrite.setText(Messages.AccessControlEditDialog_14);
+		buttonWrite.setSelection(false);
+		Button buttonAdd = new Button(containerRoles, SWT.PUSH | SWT.BORDER);
+		buttonAdd.setText(Messages.AccessControlEditDialog_15);
+		gridData = new GridData();
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.horizontalAlignment = SWT.RIGHT;
+		buttonAdd.setLayoutData(gridData);
+		buttonAdd.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addPermission();
+			}
 
-            w = new Button(container, SWT.CHECK | SWT.BORDER);
-            w.setSelection(p.isWriteAllowed());
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 
-            rawPermissions.add(new RawPermission(t, r, w));
-        }
+		createViewer(containerRoles);
+		
+		buttonRemove = new Button(containerRoles, SWT.PUSH | SWT.BORDER);
+		buttonRemove.setText(Messages.AccessControlEditDialog_16);
+		buttonRemove.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				removePermission();
+			}
 
-        // TODO rschuster: The next lines provide some empty rows which the
-        // user can use for new permissions. Ideally we want an 'add'
-        // button that dynamically creates a new row for us.
-        t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
-        t.setText(""); //$NON-NLS-1$
-        t.setItems(allRoles);
-        r = new Button(container, SWT.CHECK | SWT.BORDER);
-        r.setSelection(false);
-        w = new Button(container, SWT.CHECK | SWT.BORDER);
-        w.setSelection(false);
-        rawPermissions.add(new RawPermission(t, r, w));
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		gridData = new GridData();
+		gridData.horizontalSpan = 5;
+		gridData.horizontalAlignment = SWT.RIGHT;
+		buttonRemove.setLayoutData(gridData);
 
-        t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
-        t.setText(""); //$NON-NLS-1$
-        t.setItems(allRoles);
-        r = new Button(container, SWT.CHECK | SWT.BORDER);
-        r.setSelection(false);
-        w = new Button(container, SWT.CHECK | SWT.BORDER);
-        w.setSelection(false);
-        rawPermissions.add(new RawPermission(t, r, w));
+		return containerRoles;
+	}
 
-        t = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
-        t.setText(""); //$NON-NLS-1$
-        t.setItems(allRoles);
-        r = new Button(container, SWT.CHECK | SWT.BORDER);
-        r.setSelection(false);
-        w = new Button(container, SWT.CHECK | SWT.BORDER);
-        w.setSelection(false);
-        rawPermissions.add(new RawPermission(t, r, w));
+	protected void showInformation() {
+		if(isOverride()) {
+			setMessage(INFORMATION_OVERRIDE_MODE);
+		} else {
+			setMessage(INFORMATION_ADD_MODE);
+		}
+		
+	}
 
-        inheritButton = new Button(container, SWT.CHECK);
-        inheritButton.setLayoutData("spanx 3, grow"); //$NON-NLS-1$
-        inheritButton.setSelection(false);
-        inheritButton.setText(Messages.AccessControlEditDialog_1);
+	protected void addPermission() {
+		CnATreeElement element = null;
+		if(elements!=null && !elements.isEmpty()) {
+			element=elements.get(0);
+		}
+		if(element!=null) {
+			this.permissionSet.add(Permission.createPermission(element, comboRole.getText(), buttonRead.getSelection(), buttonWrite.getSelection()));
+			try {
+				viewer.setInput(this.permissionSet.toArray());
+			} catch (Throwable t) {
+				log.error("Error while setting table data", t); //$NON-NLS-1$
+			}
+		}
+	}
 
-        return container;
-    }
+	@SuppressWarnings("unchecked")
+	protected void removePermission() {
+		StructuredSelection selection = (StructuredSelection) viewer.getSelection();
+		if (selection != null && !selection.isEmpty()) {
+			for (Iterator<Permission> iterator = selection.iterator(); iterator.hasNext();) {
+				Permission permission = iterator.next();
+				this.permissionSet.remove(permission);
+			}
+			try {
+				viewer.setInput(this.permissionSet.toArray());
+			} catch (Throwable t) {
+				log.error("Error while setting table data", t); //$NON-NLS-1$
+			}
+		}
+	}
 
-    static class RawPermission {
+	private String[] getRoles() {
+		FindAllRoles findAllRoles = new FindAllRoles(true);
+		try {
+			findAllRoles = ServiceFactory.lookupCommandService().executeCommand(findAllRoles);
+		} catch (CommandException e) {
+			throw new RuntimeException(e);
+		}
+		List<String> roleList  = new ArrayList<String>(findAllRoles.getRoles());
+		Collections.sort(roleList);
+		return roleList.toArray(new String[roleList.size()]);
+	}
 
-        Combo role;
+	private void createViewer(Composite parent) {
+		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 
-        Button read, write;
+		createColumns(parent, viewer);
+		final Table table = viewer.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
 
-        RawPermission(Combo role, Button read, Button write) {
-            this.role = role;
-            this.read = read;
-            this.write = write;
-        }
-    }
+		viewer.setContentProvider(new ArrayContentProvider());
 
-    @Override
-    protected void okPressed() {
-        if (this.inheritButton.getSelection()) {
-            boolean openConfirm = MessageDialog.openConfirm(getParentShell(), Messages.AccessControlEditDialog_0, Messages.AccessControlEditDialog_2);
-            if (!openConfirm) {
-                return;
-            }
-        }
+		// TODO dm: for now, only the permissions of the first element
+		// are displayed, changes will be written to all selected elements
+		CnATreeElement firstElement = elements.get(0);
 
-        Set<Permission> newPerms = new HashSet<Permission>();
-        for (RawPermission rp : rawPermissions) {
-            String role = rp.role.getText();
-            boolean r = rp.read.getSelection();
-            boolean w = rp.write.getSelection();
-            if (role != null && role.length() > 0 && (r || w)) {
-                Permission p = Permission.createPermission(null, role, r, w);
+		this.permissionSet = loadPermission(firstElement);
+		List<Permission> permissionList = new ArrayList<Permission>(this.permissionSet);
+		Collections.sort(permissionList);
+		// Get the content for the viewer, setInput will call getElements in the
+		// contentProvider
+		try {
+			viewer.setInput(permissionList.toArray());
+		} catch (Throwable t) {
+			log.error("Error while setting table data", t); //$NON-NLS-1$
+		}
 
-                newPerms.add(p);
-            }
+		// Layout the viewer
+		GridData gridData = new GridData();
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.horizontalSpan = 5;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.horizontalAlignment = GridData.FILL;
+		viewer.getControl().setLayoutData(gridData);
+	}
 
-            for (CnATreeElement element : elements) {
-                UpdatePermissions up = new UpdatePermissions(element, newPerms, inheritButton.getSelection());
+	private Set<Permission> loadPermission(CnATreeElement firstElement) {
+		LoadPermissions lp = new LoadPermissions(firstElement);
+		try {
+			lp = ServiceFactory.lookupCommandService().executeCommand(lp);
+		} catch (CommandException e) {
+			throw new RuntimeException(e);
+		}
+		// clone the permissions because of hashcode trouble in set with instances created by hibernate
+		return this.permissionSet = Permission.clonePermissionSet(firstElement, lp.getPermissions());
+	}
 
-                try {
-                    ServiceFactory.lookupCommandService().executeCommand(up);
-                } catch (CommandException e) {
-                    log.error("Error while updating permissions", e); //$NON-NLS-1$
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+	private void createColumns(final Composite parent, final TableViewer viewer) {
+		String[] titles = { Messages.AccessControlEditDialog_20, Messages.AccessControlEditDialog_21, Messages.AccessControlEditDialog_22 };
+		int[] bounds = { 170, 50, 50 };
 
-        super.okPressed();
-    }
+		// First column: title of the role
+		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return ((Permission) element).getRole();
+			}
+		});
+
+		// 2. column: read
+		col = createTableViewerColumn(titles[1], bounds[1], 1);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return null;
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				if (((Permission) element).isReadAllowed()) {
+					return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+				} else {
+					return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
+				}
+			}
+		});
+
+		// 3. column: write
+		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return null;
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				if (((Permission) element).isWriteAllowed()) {
+					return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+				} else {
+					return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
+				}
+			}
+		});
+	}
+
+	private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber) {
+		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
+		final TableColumn column = viewerColumn.getColumn();
+		column.setText(title);
+		column.setWidth(bound);
+		column.setResizable(true);
+		column.setMoveable(true);
+		return viewerColumn;
+
+	}
+
+	@Override
+	protected void okPressed() {
+		if (this.buttonInherit.getSelection()) {
+			boolean openConfirm = MessageDialog.openConfirm(getParentShell(), Messages.AccessControlEditDialog_0, Messages.AccessControlEditDialog_2);
+			if (!openConfirm) {
+				return;
+			}
+		}
+		for (CnATreeElement element : elements) {
+			UpdatePermissions up = new UpdatePermissions(element, permissionSet, buttonInherit.getSelection(), isOverride());
+			try {
+				ServiceFactory.lookupCommandService().executeCommand(up);
+			} catch (CommandException e) {
+				log.error("Error while updating permissions", e); //$NON-NLS-1$
+				throw new RuntimeException(e);
+			}
+		}
+		super.okPressed();
+	}
+
+	private boolean isOverride() {
+		return radioButtonMode[1].getSelection();
+	}
 
 }

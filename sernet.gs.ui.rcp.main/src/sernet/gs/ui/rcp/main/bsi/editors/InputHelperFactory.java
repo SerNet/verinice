@@ -32,6 +32,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Raum;
@@ -49,6 +50,7 @@ import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Interview;
+import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.iso27k.Record;
@@ -125,6 +127,7 @@ public class InputHelperFactory {
         huiComposite2.setInputHelper(Server.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(SonstIT.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(TelefonKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(ITVerbund.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
 
         // ISO27k elements
         huiComposite2.setInputHelper(Asset.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
@@ -144,6 +147,7 @@ public class InputHelperFactory {
         huiComposite2.setInputHelper(Response.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Threat.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Vulnerability.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Organization.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
 
         setSchutzbedarfHelpers(entityType, huiComposite2, showHint);
 

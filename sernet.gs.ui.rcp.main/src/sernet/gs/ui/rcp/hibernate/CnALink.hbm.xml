@@ -19,7 +19,7 @@
 			<key-property name="dependencyId"
 				access="field"
 				column="DEPENDENCY_ID"/>
-			<key-property name="relationId" access="field">
+			<key-property name="typeId" access="field" >
 				<column name="TYPE_ID" default="''"/>
 			</key-property>
 				
@@ -27,13 +27,12 @@
 		
 		<property name="linkType"/>
 
-		<property name="comment"
-            column='"comment"'/> 
-            
-		<property name="riskConfidentiality" /> 
-		<property name="riskIntegrity" /> 
-		<property name="riskAvailability" /> 
-            
+		<property name="comment" column='"comment"'/>
+
+		<property name="riskConfidentiality" />
+		<property name="riskIntegrity" />
+		<property name="riskAvailability" />
+		
 		<many-to-one name="dependant"
 			column="DEPENDANT_ID"
 			not-null="true"

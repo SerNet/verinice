@@ -65,6 +65,7 @@ public class Messages extends NLS {
     public static String ISMViewFilterDialog_4;
     public static String ISMViewFilterDialog_5;
     public static String ISMViewFilterDialog_6;
+	public static String ISMViewFilterDialog_7;
     public static String SamtExportDialog_0;
     public static String SamtExportDialog_1;
     public static String SamtExportDialog_2;

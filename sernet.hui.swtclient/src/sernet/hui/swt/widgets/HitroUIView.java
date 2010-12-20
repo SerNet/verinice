@@ -106,8 +106,7 @@ public class HitroUIView implements IEntityChangedListener   {
 	 *            container in which dynamic fields will be generated
 	 * @param tabFolderMain
 	 */
-	public HitroUIView(ScrolledComposite scrolledComposite, 
-			Composite formComposite, Composite huiComposite) {
+	public HitroUIView(ScrolledComposite scrolledComposite,Composite formComposite, Composite huiComposite) {
 		this.huiComposite = huiComposite;
 		this.formComp = formComposite;
 		this.scrolledComp = scrolledComposite;
@@ -239,7 +238,7 @@ public class HitroUIView implements IEntityChangedListener   {
 		for (Iterator iter = allElements.iterator(); iter.hasNext();) {
 			Object obj = iter.next();
 			if (obj instanceof PropertyType) {
-				PropertyType type = (PropertyType) obj; 
+				PropertyType type = (PropertyType) obj;
 				createField(type, huiComposite);
 			} else if (obj instanceof PropertyGroup) {
 				PropertyGroup group = (PropertyGroup) obj;

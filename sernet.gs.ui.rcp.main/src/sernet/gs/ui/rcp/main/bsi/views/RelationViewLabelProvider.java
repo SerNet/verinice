@@ -32,6 +32,10 @@ import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -128,11 +132,17 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	 * @return
 	 */
 	private Image getObjTypeImage(CnATreeElement elmt) {
-	    if (elmt.getTypeId().equals(Control.TYPE_ID)) {
+		String typeId = elmt.getTypeId();
+		
+	    if (typeId.equals(Control.TYPE_ID) || typeId.equals(SamtTopic.TYPE_ID) ) {
 	        String impl = Control.getImplementation(elmt.getEntity());
 	        return ImageCache.getInstance().getControlImplementationImage(impl);
+	    }if (elmt instanceof Group && !(elmt instanceof ImportIsoGroup)) {
+			Group group = (Group) elmt;
+			// TODO - getChildTypes()[0] might be a problem for more than one type
+			typeId = group.getChildTypes()[0];
 	    }
-		return ImageCache.getInstance().getObjectTypeImage(elmt.getTypeId());
+		return ImageCache.getInstance().getObjectTypeImage(typeId);
 	}
 
 }

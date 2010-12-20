@@ -76,8 +76,8 @@ public class BSIModelViewFilterAction extends Action {
 				lebenszyklusFilter.getPattern(),
 				objektLebenszyklusFilter.getPattern(),
 				elementFilter.getFilteredClasses(),
-				tagFilter.getPattern()
-				);
+				tagFilter.getPattern(),
+	            tagFilter.isFilterItVerbund());
 
 		
 		if (dialog.open() != InputDialog.OK)
@@ -90,6 +90,10 @@ public class BSIModelViewFilterAction extends Action {
 		objektLebenszyklusFilter.setPattern(dialog.getObjektLebenszyklus());
 		
 		elementFilter.setFilteredClasses(dialog.getFilteredClasses());
+		
+		tagFilter.setFilterItVerbund(dialog.isFilterItVerbund());
 		tagFilter.setPattern(dialog.getCheckedElements());
+		
+		
 	}
 }

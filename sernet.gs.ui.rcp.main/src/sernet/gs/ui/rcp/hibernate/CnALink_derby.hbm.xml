@@ -7,7 +7,7 @@
 	@author koderman@sernet.de
  -->
 <hibernate-mapping package="sernet.verinice.model.common">
-	<class name="CnALink"  table="cnalink"
+	<class name="CnALink" table="cnalink"
 		mutable="true">
 		
 		<composite-id name="id" class="CnALink$Id">
@@ -17,7 +17,7 @@
 			<key-property name="dependencyId"
 				access="field"
 				column="DEPENDENCY_ID"/>
-			<key-property name="relationId" access="field">
+			<key-property name="typeId" access="field" >
 				<column name="TYPE_ID" default="''"/>
 			</key-property>
 				
@@ -25,12 +25,12 @@
 		
 		<property name="linkType"/>
 
-		<property name="comment"/> 
+		<property name="comment"/>
 
-        <property name="riskConfidentiality" /> 
-        <property name="riskIntegrity" /> 
-        <property name="riskAvailability" /> 
-
+		<property name="riskConfidentiality" />
+		<property name="riskIntegrity" />
+		<property name="riskAvailability" />
+		
 		<many-to-one name="dependant"
 			column="DEPENDANT_ID"
 			not-null="true"

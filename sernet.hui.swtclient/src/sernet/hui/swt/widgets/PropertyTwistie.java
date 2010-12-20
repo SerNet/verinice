@@ -81,8 +81,8 @@ public class PropertyTwistie implements IHuiControl {
 		
 		// set comp layout:
 		GridLayout fieldsCompLayout = new GridLayout(2, false);
-		fieldsCompLayout.verticalSpacing = 2;
-		fieldsCompLayout.marginWidth = 2;
+		fieldsCompLayout.verticalSpacing = 4;
+		fieldsCompLayout.marginWidth = 4;
 		fieldsCompLayout.marginHeight = 2;
 		fieldsComposite.setLayout(fieldsCompLayout);
 

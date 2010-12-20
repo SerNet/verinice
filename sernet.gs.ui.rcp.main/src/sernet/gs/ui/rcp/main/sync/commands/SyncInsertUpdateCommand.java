@@ -72,6 +72,7 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.ds.Datenverarbeitung;
 import sernet.verinice.model.ds.Personengruppen;
 import sernet.verinice.model.ds.StellungnahmeDSB;
@@ -212,13 +213,14 @@ public class SyncInsertUpdateCommand extends GenericCommand {
     private String sourceId;
     private SyncMapping syncMapping;
     private SyncData syncData;
+    private String userName;
 
-    private boolean insert, update;
+	private boolean insert, update;
     private List<String> errorList;
 
     private int inserted = 0, updated = 0;
 
-    private CnATreeElement container = null;
+    private Map<Class,CnATreeElement> containerMap = new HashMap<Class,CnATreeElement>(2);
 
     private Set<CnATreeElement> elementSet = new HashSet<CnATreeElement>();
     
@@ -236,10 +238,18 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         return errorList;
     }
 
-    public SyncInsertUpdateCommand(String sourceId, SyncData syncData, SyncMapping syncMapping, boolean insert, boolean update, List<String> errorList) {
+    public SyncInsertUpdateCommand(
+    		String sourceId, 
+    		SyncData syncData, 
+    		SyncMapping syncMapping,
+    		String userName,
+    		boolean insert, 
+    		boolean update, 
+    		List<String> errorList) {
         this.sourceId = sourceId;
         this.syncData = syncData;
         this.syncMapping = syncMapping;
+        this.userName = userName;
         this.insert = insert;
         this.update = update;
         this.errorList = errorList;
@@ -289,18 +299,9 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         // how the associated properties have to be mapped!
         String veriniceObjectType = mot.getIntId();
 
-        CnATreeElement elementInDB = null;
-
-        try {
-            elementInDB = findDbElement(sourceId, extId);
-        } catch (CommandException e1) {
-            throw new RuntimeCommandException(e1);
-        }
-
-        if (elementInDB != null) // object found!
-        {
-            if (update) // this object should be updated!
-            {
+        CnATreeElement elementInDB = findDbElement(sourceId, extId);
+        if (elementInDB != null) {
+            if (update) {
                 /*** UPDATE: ***/
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Element found in db: updating, uuid: " + elementInDB.getUuid());
@@ -376,7 +377,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 
             } // for <syncAttribute>
             IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(elementInDB.getTypeId());
-            dao.merge(elementInDB);
+            elementInDB = dao.merge(elementInDB);
         } // if( null != ... )
 
         idElementMap.put(elementInDB.getExtId(), elementInDB);
@@ -395,22 +396,14 @@ public class SyncInsertUpdateCommand extends GenericCommand {
     
     /**
      * @param syncLink
+     * @throws CommandException 
      */
     private void importLink(SyncLink syncLink) {
         String dependantId = syncLink.getDependant();
         String dependencyId = syncLink.getDependency();
         CnATreeElement dependant = idElementMap.get(dependantId);
-        if(dependant==null) {          
-            DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
-            crit.add(Restrictions.eq("extId", dependantId));
-            List<CnATreeElement> resultList = getDaoFactory().getDAO(CnATreeElement.class).findByCriteria(crit);
-            if(resultList!=null && !resultList.isEmpty()) {
-               if(resultList.size()>1) {
-                   getLog().error("Can not import link. Found more than one dependant element, dependant ext-id: " + dependencyId + " dependency ext-id: " + dependencyId);
-                   return;
-               }
-               dependant = resultList.get(0);
-            }
+        if(dependant==null) {     
+        	dependant = findDbElement(this.sourceId, dependantId);
             if(dependant==null) {
                 getLog().error("Can not import link. dependant not found in xml file and db, dependant ext-id: " + dependantId + " dependency ext-id: " + dependencyId);
                 return;
@@ -419,32 +412,62 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             }
         }
         CnATreeElement dependency = idElementMap.get(dependencyId);
-        if(dependency==null) {    
-            DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
-            crit.add(Restrictions.eq("extId", dependencyId));
-            List<CnATreeElement> resultList = getDaoFactory().getDAO(CnATreeElement.class).findByCriteria(crit);
-            if(resultList!=null && !resultList.isEmpty()) {
-               if(resultList.size()>1) {
-                   getLog().error("Can not import link. Found more than one dependency element, dependency ext-id: " + dependencyId + " dependant ext-id: " + dependantId);
-                   return;
-               }
-               dependency = resultList.get(0);
-            }
+        if(dependency==null) { 
+        	dependency = findDbElement(this.sourceId, dependencyId);
             if(dependency==null) {
-                getLog().error("Can not impor tlink. dependency not found in xml file and db, dependency ext-id: " + dependencyId + " dependant ext-id: " + dependantId);
+                getLog().error("Can not import link. dependency not found in xml file and db, dependency ext-id: " + dependencyId + " dependant ext-id: " + dependantId);
                 return;
             } else if (getLog().isDebugEnabled()) {
                 getLog().debug("dependency not found in XML file but in db, ext-id: " + dependencyId);
             }
         }
+        
         CnALink link = new CnALink(dependant,dependency,syncLink.getRelationId(),syncLink.getComment());
-        dependant.addLinkDown(link);
-        dependency.addLinkUp(link);
-        getDaoFactory().getDAO(CnALink.class).saveOrUpdate(link);
+        
+        String titleDependant = "unknown";
+    	String titleDependency = "unknown";
+    	if (getLog().isDebugEnabled()) {     	
+			try { 
+				titleDependant = dependant.getTitle();
+				titleDependency = dependency.getTitle();
+			} catch(Exception e) {
+				getLog().debug("Error while reading title.", e);
+			}
+    	}
+    	
+        if(isNew(link)) {
+	        dependant.addLinkDown(link);
+	        dependency.addLinkUp(link);
+	        if (getLog().isDebugEnabled()) {
+	        	getLog().debug("Creating new link from: " + titleDependant + " to: " + titleDependency + "...");
+			}
+	        getDaoFactory().getDAO(CnALink.class).saveOrUpdate(link);
+        } else if (getLog().isDebugEnabled()) {
+        	getLog().debug("Link exists: " + titleDependant + " to: " + titleDependency);
+		}
         
     }
 
-    private MapObjectType getMap(String extObjectType) {
+    private boolean isNew(CnALink link) {
+    	String hql = "from CnALink as link where link.id.dependantId=? and link.id.dependencyId=? and (link.id.typeId=? or link.id.typeId=?)";
+    	String relationId = link.getRelationId();
+    	String relationId2 = relationId;
+    	if(CnALink.Id.NO_TYPE.equals(relationId)) {
+    		relationId2 = "";
+    	}
+    	if(relationId!=null && relationId.isEmpty()) {
+    		relationId2 = CnALink.Id.NO_TYPE;
+    	}
+    	Object[] paramArray = new Object[]{
+    			link.getDependant().getDbId(),
+    			link.getDependency().getDbId(),
+    			relationId,
+    			relationId2};
+    	List result = getDaoFactory().getDAO(CnALink.class).findByQuery(hql, paramArray); 	
+		return result==null || result.isEmpty();
+	}
+
+	private MapObjectType getMap(String extObjectType) {
         for (MapObjectType mot : syncMapping.getMapObjectType()) {
             if (extObjectType.equals(mot.getExtId())) {
                 return mot;
@@ -464,52 +487,57 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         return null;
     }
 
-    /************************************************************
-     * findDbElement()
-     * 
+    /**
      * Query element (by externalID) from DB, which has been previously
      * synchronized from the given sourceID.
      * 
-     * @param sourceID
-     * @param externalID
+     * @param sourceId
+     * @param externalId
      * @return the CnATreeElement from the query or null, if nothing was found
-     * @throws CommandException
-     ************************************************************/
-    private CnATreeElement findDbElement(String sourceID, String externalID) throws CommandException {
-        // use a new crudCommand (load by external, source id):
-        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceID, externalID);
-        command = getCommandService().executeCommand(command);
-
+     * @throws RuntimeException if more than one element is found
+     */
+    private CnATreeElement findDbElement(String sourceId, String externalId) {
+    	CnATreeElement result = null;
+    	// use a new crudCommand (load by external, source id):
+        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, externalId);
+        try {
+			command = getCommandService().executeCommand(command);
+		} catch (CommandException e) {
+			final String message = "Error while loading element by source and externeal id";
+    		log.error(message,e);
+			throw new RuntimeCommandException(message,e);
+		}
         List<CnATreeElement> foundElements = command.getElements();
-
-        if (foundElements == null || foundElements.size() == 0) {
-            return null;
-        } else {
-            return foundElements.get(0);
+        if (foundElements != null) {
+        	if(foundElements.size()==1) {  
+        		result = foundElements.get(0);
+        	}
+        	if(foundElements.size()>1) {  
+        		final String message = "Found more than one element with source-id: " + sourceId + " and externeal-id: " + externalId;
+        		log.error(message);
+    			throw new RuntimeCommandException(message);
+        	}
         }
+        return result;
     }
 
-    /************************************************************
-     * findContainerFor()
-     * 
+    /**
      * Find appropriate Category within the tree for a given object type.
      * 
      * @param verbund
      * @param veriniceObjectType
      * @return the Category - CnATreeElement
-     ************************************************************/
+     */
     private CnATreeElement findContainerFor(CnATreeElement root, String veriniceObjectType) {
 
         // If in doubt the root for imported objects should always be used.
         return root;
     }
 
-    /************************************************************
-     * getClassFromTypeId()
-     * 
+    /**
      * @param typeId
      * @return the corresponding Class
-     ************************************************************/
+     */
     @SuppressWarnings("unchecked")
     private Class<CnATreeElement> getClassFromTypeId(String typeId) {
         Class<CnATreeElement> klass = (Class<CnATreeElement>) typeIdClass.get(typeId);
@@ -538,7 +566,8 @@ public class SyncInsertUpdateCommand extends GenericCommand {
     private CnATreeElement accessContainer(Class clazz) {
         // Create the importRootObject if it does not exist yet
         // and set the 'importRootObject' variable.
-        if (container == null) {
+    	CnATreeElement container = containerMap.get(clazz);
+        if (container==null) {
             LoadImportObjectsHolder cmdLoadContainer = new LoadImportObjectsHolder(clazz);
             try {
                 cmdLoadContainer = ServiceFactory.lookupCommandService().executeCommand(cmdLoadContainer);
@@ -549,11 +578,11 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             container = cmdLoadContainer.getHolder();
             if(container==null) {
                 container = createContainer(clazz);
-            }
+            }    
             // load the parent
             container.getParent().getTitle();
-        }
-
+            containerMap.put(clazz,container);
+        } 
         return container;
     }
 
@@ -562,8 +591,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             return createBsiContainer();
         } else {
             return createIsoContainer();
-        }
-       
+        }     
     }
     
     private CnATreeElement createBsiContainer() {
@@ -575,14 +603,15 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             throw new RuntimeCommandException("Fehler beim Anlegen des Behaelters für importierte Objekte.");
         }
         BSIModel model = cmdLoadModel.getModel();
+        ImportBsiGroup holder = null;
         try {
-            ImportBsiGroup holder = new ImportBsiGroup(model);
+            holder = new ImportBsiGroup(model);
+            addPermissions(holder);
             getDaoFactory().getDAO(ImportBsiGroup.class).saveOrUpdate(holder);
-            container = holder;
         } catch (Exception e1) {
             throw new RuntimeCommandException("Fehler beim Anlegen des Behaelters für importierte Objekte.");
         }
-        return container;
+        return holder;
     }
     
     private CnATreeElement createIsoContainer() {
@@ -594,24 +623,24 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             throw new RuntimeCommandException("Fehler beim Anlegen des Behaelters für importierte Objekte.");
         }
         ISO27KModel model = cmdLoadModel.getModel();
+        ImportIsoGroup holder = null;
         try {
-            ImportIsoGroup holder = new ImportIsoGroup(model);
+            holder = new ImportIsoGroup(model);
+            addPermissions(holder);
             getDaoFactory().getDAO(ImportIsoGroup.class).saveOrUpdate(holder);
-            container = holder;
         } catch (Exception e1) {
             throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.");
         }
-        return container;
+        return holder;
     }
-
-    /**
-     * Returns the 'import root object'. May be null if it was not created
-     * during the import.
-     * 
-     * @return
-     */
-    public CnATreeElement getContainer() {
-        return container;
+    
+    private void addPermissions(CnATreeElement element) {
+        // We use the name of the currently
+        // logged in user as a role which has read and write permissions for
+        // the new Organization.
+        HashSet<Permission> auditPerms = new HashSet<Permission>();
+        auditPerms.add(Permission.createPermission(element, getUserName(), true, true));
+        element.setPermissions(auditPerms);
     }
     
     protected void addElement(CnATreeElement element) {
@@ -623,8 +652,20 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         elementSet.add(element);
     }
 
-    public Set<CnATreeElement> getElementSet() {
+    public Map<Class, CnATreeElement> getContainerMap() {
+		return containerMap;
+	}
+
+	public Set<CnATreeElement> getElementSet() {
         return elementSet;
     }
+
+    protected String getUserName() {
+		return userName;
+	}
+
+	protected void setUserName(String userName) {
+		this.userName = userName;
+	}
 
 }

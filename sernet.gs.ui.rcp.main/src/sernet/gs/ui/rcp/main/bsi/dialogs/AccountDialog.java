@@ -17,14 +17,17 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -34,21 +37,28 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.snutils.DBException;
+import sernet.verinice.model.common.configuration.Configuration;
 
-public class BulkEditDialog extends Dialog {
+public class AccountDialog extends TitleAreaDialog {
 
     private EntityType entType;
     private Entity entity = null;
     private boolean useRules = false;
     private String title = Messages.BulkEditDialog_0;
+	private Text textPassword2;
+	private String password2;
+	private Text textPassword;
+	private String password;
+	private Text textName;
+	private String name;
 
-    public BulkEditDialog(Shell parent, EntityType entType) {
+    private AccountDialog(Shell parent, EntityType entType) {
         super(parent);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         this.entType = entType;
     }
 
-    public BulkEditDialog(Shell shell, EntityType entType2, boolean b, String title, Entity entity) {
+    public AccountDialog(Shell shell, EntityType entType2, boolean b, String title, Entity entity) {
         this(shell, entType2);
         useRules = true;
         this.title = title;
@@ -59,7 +69,7 @@ public class BulkEditDialog extends Dialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(title);
-        newShell.setSize(440, 800);
+        newShell.setSize(404, 779);
         
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
@@ -69,11 +79,21 @@ public class BulkEditDialog extends Dialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         try {
+        	setTitle(title);
+        	setMessage(Messages.AccountDialog_0);
+        	
             Composite container = (Composite) super.createDialogArea(parent);
-            container.setLayout(new FillLayout());      
-            
-            HitroUIComposite huiComposite = new HitroUIComposite(container, SWT.NULL, false);        
-            
+            GridLayout layoutRoot = (GridLayout) container.getLayout();
+    		GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
+    		gd.grabExcessHorizontalSpace = true;
+    		gd.grabExcessVerticalSpace = true;
+    		gd.horizontalAlignment = GridData.FILL;
+    		gd.verticalAlignment = GridData.FILL;
+    		container.setLayoutData(gd);
+
+    		createPasswordComposite(container);
+    		
+            HitroUIComposite huiComposite = new HitroUIComposite(container, SWT.NULL, false);
             try {
                 if (this.entity == null) {
                     entity = new Entity(entType.getId());
@@ -95,7 +115,66 @@ public class BulkEditDialog extends Dialog {
         return null;
     }
 
-    public Entity getEntity() {
+	private void createPasswordComposite(final Composite composite) {
+		GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
+		gd.grabExcessHorizontalSpace = true;
+		gd.grabExcessVerticalSpace = true;
+		gd.horizontalAlignment = GridData.FILL;
+		gd.verticalAlignment = GridData.FILL;
+		final Composite compositePassword = new Composite(composite, SWT.NONE);
+		GridLayout layoutPassword = new GridLayout(2, false);
+		compositePassword.setLayout(layoutPassword);
+		compositePassword.setLayoutData(gd);
+		
+		Label labelName = new Label(compositePassword, SWT.NONE);
+		labelName.setText(Messages.AccountDialog_1);
+		
+		textName = new Text(compositePassword, SWT.BORDER | SWT.SINGLE);
+		GridData gdText = new GridData(GridData.GRAB_HORIZONTAL);
+		gdText.grabExcessHorizontalSpace = true;
+		gdText.horizontalAlignment = GridData.FILL;
+		textName.setLayoutData(gdText);
+		
+		Label labelPassword = new Label(compositePassword, SWT.NONE);
+		labelPassword.setText(Messages.AccountDialog_2);
+		
+		textPassword = new Text(compositePassword, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
+		textPassword.setLayoutData(gdText);
+		
+		Label labelPassword2 = new Label(compositePassword, SWT.NONE);
+		labelPassword2.setText(Messages.AccountDialog_3);
+		
+		textPassword2 = new Text(compositePassword, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
+		textPassword2.setLayoutData(gdText);
+		
+		if(getEntity()!=null 
+			&& getEntity().getProperties(Configuration.PROP_USERNAME)!=null
+			&& getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0)!=null) {
+			textName.setText(getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0).getPropertyValue());
+		}
+	}
+	
+	@Override
+	protected void okPressed() {
+		password=textPassword.getText();
+		password2=textPassword2.getText();
+		name=textName.getText();
+		super.okPressed();
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public String getPassword2() {
+		return password2;
+	}
+	
+	public String getUserName() {
+		return name;
+	}
+
+	public Entity getEntity() {
         return entity;
     }
 

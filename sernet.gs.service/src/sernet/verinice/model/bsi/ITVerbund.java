@@ -30,6 +30,7 @@ public class ITVerbund extends CnATreeElement
 	
 	public static final String TYPE_ID = "itverbund"; //$NON-NLS-1$
 	public static final String PROP_NAME = "itverbund_name"; //$NON-NLS-1$
+	public static final String PROP_TAG = "itverbund_tag"; //$NON-NLS-1$
 	
 	private String kuerzel = " "; //$NON-NLS-1$
 	
@@ -50,7 +51,7 @@ public class ITVerbund extends CnATreeElement
 	}
 	
 	public Collection<? extends String> getTags() {
-		return new HashSet<String>(0);
+		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
 	protected ITVerbund() {

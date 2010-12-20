@@ -106,6 +106,10 @@ Eclipse IDE:
  - if spurious classpath errors occur you just right-click on a project and chose 
    'PDE Tools/Update classpath ...'.
    
+ - if you get an error saying that "some.bundle/src" cannot be nested inside "some.bundle", right click on the project, 
+   choose properties / java build path, remove the "src" folder, *add it again* and click "OK". After that, 
+   choose "PDE Tools, Update Class path" (see above) 
+   
  - if you can't get rid of "missing packages" errors and are sure that you have everything in your own plugins or target platform, 
    go to the broken bundle's manifest.mf and remove one of the required bundles, then add it again. This will
    cause a rebuild that sometimes fixes the problem. 

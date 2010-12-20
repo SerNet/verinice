@@ -281,7 +281,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		        continue;
 		    }
 		    
-		    if(propertyType.isSingleSelect()) {
+		    if(propertyType.isSingleSelect() && value!=null) {
 		        List<IMLPropertyOption> optionList = propertyType.getOptions();
 		        boolean found = false;
 		        for (IMLPropertyOption option : optionList) {

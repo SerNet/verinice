@@ -19,28 +19,22 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.xml.bind.DataBindingException;
-import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.namespace.QName;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -51,19 +45,19 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.VeriniceCharset;
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
+import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import de.sernet.sync.data.SyncData;
@@ -82,7 +76,7 @@ import de.sernet.sync.sync.SyncRequest;
  * @author <andreas[at]becker[dot]name>
  */
 @SuppressWarnings("serial")
-public class ExportCommand extends GenericCommand
+public class ExportCommand extends GenericCommand implements IChangeLoggingCommand
 {
     private transient Logger log = Logger.getLogger(ExportCommand.class);
 
@@ -96,7 +90,7 @@ public class ExportCommand extends GenericCommand
     private transient CacheManager manager = null;
     private String cacheId = null;
     private transient Cache cache = null;
-
+    
     transient private IBaseDao<CnATreeElement, Serializable> dao;
     
 	/*+++
@@ -112,29 +106,38 @@ public class ExportCommand extends GenericCommand
 	private String sourceId;
 	private List<CnATreeElement> elements;
 	private Set<CnALink> linkSet;
+	private boolean reImport = false;
 	
 	private HashMap<String,String> entityTypesToBeExported;
 	
 	private Map<String,String> entityTypesBlackList;
+	
+	private Map<Class,Class> entityClassBlackList;
     
 	private byte[] result;
 	
-	public ExportCommand( List<CnATreeElement> elements, String sourceId )
-	{
+    private List<CnATreeElement> changedElements;
+    private String stationId;
+	
+    public ExportCommand( List<CnATreeElement> elements, String sourceId ) {
+    	this(elements, sourceId, false);
+    }
+    
+	public ExportCommand( List<CnATreeElement> elements, String sourceId, boolean reImport ) {
 		this.elements = elements;
 		this.sourceId = sourceId;
+		this.reImport = reImport;
 		this.linkSet = new HashSet<CnALink>();
+        this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
-	public ExportCommand( List<CnATreeElement> elements, String sourceId, HashMap<String,String> entityTypesToBeExported )
-	{
-		this( elements, sourceId );
+	public ExportCommand( List<CnATreeElement> elements, String sourceId, HashMap<String,String> entityTypesToBeExported ) {
+		this( elements, sourceId, false );
 		this.entityTypesToBeExported = entityTypesToBeExported;
-        this.linkSet = new HashSet<CnALink>();
 	}
 	
-	public void execute()
-	{
+	public void execute() {
+		changedElements = new LinkedList<CnATreeElement>();
 	    getCache().removeAll();
 		String timestamp = Long.toString(Calendar.getInstance().getTimeInMillis());
 		exportedObjectIDs = new HashMap<String, String>();
@@ -239,52 +242,54 @@ public class ExportCommand extends GenericCommand
 	 * @param element
 	 * @return List<Element>
 	 */
-	private void export(List<SyncObject> list, CnATreeElement element, String timestamp, Set<EntityType> exportedEntityTypes, Set<String> exportedTypes)
-	{		
-	    element = hydrate( element );
+	private void export(List<SyncObject> list, CnATreeElement element, String timestamp, Set<EntityType> exportedEntityTypes, Set<String> exportedTypes) {	
+		List<SyncObject> childList = null;	
 		
-		List<SyncObject> childList = null;
-		
-		/*++++++++++
+		/**
 		 * Export the given CnATreeElement, if it is NOT blacklisted (i.e. an IT network
 		 * or category element) AND, if we should restrict the exported objects to certain
 		 * entity types, this element's entity type IS allowed:
-		 *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		 **/
 		
 		String typeId = element.getTypeId();
-		if ((exportedObjectIDs.get( element.getId()) == null )
-				&& (entityTypesToBeExported == null || entityTypesToBeExported.get(typeId) != null)
-				&& (getEntityTypesBlackList() == null || getEntityTypesBlackList().get(typeId) == null) )
-		{
+		if(checkElement(element)) {
+			element = hydrate( element );
+			
+			String extId = element.getExtId();
+			if(extId==null || extId.isEmpty()) {
+				extId = element.getId();
+			}
 			SyncObject syncObject = new SyncObject();
-			syncObject.setExtId(element.getId());
+			syncObject.setExtId(extId);
 			syncObject.setExtObjectType(typeId);
 
 			List<SyncAttribute> attributes = syncObject.getSyncAttribute();
 			
-			/*+++++
+			/**
 			 * Retrieve all properties from the entity:
-			 *+++++++++++++++++++++++++++++++++++++++++*/
-			
+			 */		
 			Entity entity = element.getEntity();
 			// Category instance may have no Entity attached to it
 			// For those we do not store any property values.
 			if (entity != null) {
 				Map<String, PropertyList> properties = entity.getTypedPropertyLists();
-
-				for (String s : properties.keySet()) {
-					
-					SyncAttribute syncAttribute = new SyncAttribute();
-					// Add <syncAttribute> to this <syncObject>:
-					syncAttribute.setName(s);
-					
-					int noOfValues = entity.exportProperties(s, syncAttribute.getValue());
-
-					// Only if any value for the attribute could be found the whole
-					// attribute instance is being added to the SyncObject's attribute
-					// list.
-					if (noOfValues > 0) {
-						attributes.add(syncAttribute);
+				for (String propertyTypeId : properties.keySet()) {				
+					PropertyType propertyType = getHuiTypeFactory().getPropertyType(typeId, propertyTypeId);
+					if(propertyType!=null && propertyType.isReportable()) {
+						SyncAttribute syncAttribute = new SyncAttribute();
+						// Add <syncAttribute> to this <syncObject>:
+						syncAttribute.setName(propertyTypeId);
+						
+						int noOfValues = entity.exportProperties(propertyTypeId, syncAttribute.getValue());
+						// Only if any value for the attribute could be found the whole
+						// attribute instance is being added to the SyncObject's attribute
+						// list.
+						if (noOfValues > 0) {
+							attributes.add(syncAttribute);
+						}
+					}
+					if(propertyType==null) {
+						getLog().warn("Property type is null, propertyTypeId: " + propertyTypeId + ", typeId: " + typeId);
 					}
 				}
 				
@@ -292,32 +297,56 @@ public class ExportCommand extends GenericCommand
 				// use it for the mapping generation later on.
 				exportedEntityTypes.add(element.getEntityType());
 			}
-			else
-			{
+			else {
 				// Instance has no EntityType. This is fine but still some mapping
 				// information is needed. We save the typeId for later then.
 				exportedTypes.add(typeId);
 			}
-
 			// add links to linkSet
-			saveLinks(element);
+			addLinks(element);
             		
 			list.add(syncObject);
 			childList = syncObject.getChildren();
 			exportedObjectIDs.put( element.getId(), new String() );
-		}
-		
-		/*++++
-		 * Handle children recursively:
-		 *+++++++++++++++++++++++++++++*/
-		Set<CnATreeElement> children = element.getChildren();
-		
-		List<SyncObject> targetList = (childList == null ? orphaneList : childList);
-		
-		for( CnATreeElement child : children )
-		{
-			export(targetList, child, timestamp, exportedEntityTypes, exportedTypes);
-		}
+			
+			/**
+			 * Save source and external id to re-import element later
+			 */
+			if(isReImport()) {
+				// TODO: what happens if external and source id already set?
+				element.setextId(extId);
+				element.setSourceId(sourceId);
+				saveElement(element);
+				changedElements.add(element);
+			}
+			
+			/**
+			 * Handle children recursively:
+			 */
+			Set<CnATreeElement> children = element.getChildren();		
+			List<SyncObject> targetList = (childList == null ? orphaneList : childList);	
+			for( CnATreeElement child : children ) {
+				export(targetList, child, timestamp, exportedEntityTypes, exportedTypes);
+			}
+		} else if(getLog().isDebugEnabled()) { // else if(checkElement(element))
+			getLog().debug("Element is not exported: Type " + typeId + ", uuid: " + element.getUuid());
+		}		
+	}
+	
+	private boolean isReImport() {
+		return reImport;
+	}
+	
+	private void saveElement(CnATreeElement element) {
+		IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(element.getTypeId());
+		dao.saveOrUpdate(element);	
+	}
+
+	private boolean checkElement(CnATreeElement element) {
+		return exportedObjectIDs.get(element.getId()) == null
+		 && (entityTypesToBeExported == null || entityTypesToBeExported.get(element.getTypeId()) != null)
+		 && (getEntityTypesBlackList() == null || getEntityTypesBlackList().get(element.getTypeId()) == null)
+		 && (getEntityClassBlackList() == null || getEntityClassBlackList().get(element.getClass()) == null);
 	}
 	
 	/**
@@ -335,8 +364,7 @@ public class ExportCommand extends GenericCommand
         syncLinkList.add(syncLink);     
     }
 
-
-    private void saveLinks(CnATreeElement element) {
+    private void addLinks(CnATreeElement element) {
         try {
             linkSet.addAll(element.getLinksDown());
             linkSet.addAll(element.getLinksUp());
@@ -352,6 +380,13 @@ public class ExportCommand extends GenericCommand
         return entityTypesBlackList;
     }
     
+    private Map<Class,Class> getEntityClassBlackList() {
+        if(entityClassBlackList==null) {
+        	entityClassBlackList = createDefaultEntityClassBlackList();
+        }
+        return entityClassBlackList;
+    }
+    
     /**
      * @return
      */
@@ -359,8 +394,12 @@ public class ExportCommand extends GenericCommand
         Map<String, String> blacklist = new HashMap<String, String>();
         // BSI Risk analyses will not be imported or exported(Bug 194)
         blacklist.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.TYPE_ID);
-        blacklist.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.TYPE_ID);
-        blacklist.put(RisikoMassnahmenUmsetzung.TYPE_ID, RisikoMassnahmenUmsetzung.TYPE_ID);
+        return blacklist;
+    }
+    
+    private Map<Class, Class> createDefaultEntityClassBlackList() {
+        Map<Class, Class> blacklist = new HashMap<Class, Class>();
+        blacklist.put(RisikoMassnahmenUmsetzung.class, RisikoMassnahmenUmsetzung.class);
         return blacklist;
     }
 
@@ -395,7 +434,6 @@ public class ExportCommand extends GenericCommand
 		    return element;
 		}
 		
-		
 		//IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
 		RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
 		ri.setLinksDown(true);
@@ -409,17 +447,15 @@ public class ExportCommand extends GenericCommand
         }
 		
 		Set<CnATreeElement> children = element.getChildren();
-		for (CnATreeElement child : children)
-		{
-			if (child instanceof BausteinUmsetzung)
-			{
+		for (CnATreeElement child : children) {
+			if (child instanceof BausteinUmsetzung){
 				// next element:
 				continue;
 			}
-			
-			hydrate(child);
-		}
-		
+			if(checkElement(child)) {
+				hydrate(child);
+			}
+		}		
 		return element;
 	}
 
@@ -447,6 +483,34 @@ public class ExportCommand extends GenericCommand
         cache = new Cache(cacheId, 20000, false, false, 600, 500);
         manager.addCache(cache);
         return cache;
+	}
+	
+	protected HUITypeFactory getHuiTypeFactory() {
+        return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+    }
+
+	/* (non-Javadoc)
+	 * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
+	 */
+	@Override
+	public int getChangeType() {
+		return ChangeLogEntry.TYPE_UPDATE;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
+	 */
+	@Override
+	public List<CnATreeElement> getChangedElements() {
+		return changedElements;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
+	 */
+	@Override
+	public String getStationId() {
+		return stationId;
 	}
 	
 }

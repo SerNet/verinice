@@ -33,12 +33,15 @@ public class Messages extends NLS {
     public static String ChangeOwnPasswordAction_3;
     public static String ConfigurationAction_0;
 	public static String ConfigurationAction_1;
+	public static String ConfigurationAction_10;
 	public static String ConfigurationAction_2;
 	public static String ConfigurationAction_3;
 	public static String ConfigurationAction_4;
 	public static String ConfigurationAction_5;
+	public static String ConfigurationAction_6;
 	public static String ConfigurationAction_7;
 	public static String ConfigurationAction_8;
+	public static String ConfigurationAction_9;
     public static String ExportAction_0;
     public static String ExportAction_1;
     public static String ExportAction_4;

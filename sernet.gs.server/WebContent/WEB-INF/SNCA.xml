@@ -73,12 +73,16 @@ the value between <param></param> will be used directly if no string is found fo
         name="Configuration"
         id="configuration">
 
+	 <!-- Never set configuration_benutzername to visible=true! -->
 	 <huiproperty
             name="Benutzername"
-            id="configuration_benutzername" />
+            id="configuration_benutzername" 
+            visible="false"/>
+     <!-- Never set configuration_passwort to visible=true! -->
 	 <huiproperty
             name="Passwort"
-            id="configuration_passwort" />
+            id="configuration_passwort" 
+            visible="false" />
             
 	 <huiproperty
             name="Rollen"
@@ -844,6 +848,11 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Organisation"
             id="itverbund_organisation" />
+        <huiproperty
+            id="itverbund_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space" 
+            />
         <huiproperty
             name="Anzahl Mitarbeiter"
             id="itverbund_mitarbeiter" />

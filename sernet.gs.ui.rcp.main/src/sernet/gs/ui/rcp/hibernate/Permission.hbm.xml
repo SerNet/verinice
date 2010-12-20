@@ -31,12 +31,10 @@
 				  not-null="true">
 		</property>
 		
-		<many-to-one 
-			name="cnaTreeElement"
+		<many-to-one name="cnaTreeElement"
 			column="cte_id"
 			class="CnATreeElement"
-			not-null="true"
-		/>
+			not-null="true"/>
 		
 	</class>
 </hibernate-mapping>

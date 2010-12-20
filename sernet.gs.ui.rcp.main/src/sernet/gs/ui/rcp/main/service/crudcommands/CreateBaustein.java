@@ -113,13 +113,13 @@ public class CreateBaustein extends GenericCommand implements IChangeLoggingComm
 			if (authService.isPermissionHandlingNeeded())
 			{
 				child.setPermissions(
-					Permission.clonePermissions(
+					Permission.clonePermissionSet(
 							child,
 							container.getPermissions()));
 				
 				for (CnATreeElement elmt: child.getChildren()) {
 					elmt.setPermissions(
-							Permission.clonePermissions(
+							Permission.clonePermissionSet(
 									elmt,
 									container.getPermissions()));
 				}

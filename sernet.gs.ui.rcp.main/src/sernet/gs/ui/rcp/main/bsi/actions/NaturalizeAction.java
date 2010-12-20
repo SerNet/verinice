@@ -70,6 +70,9 @@ public class NaturalizeAction extends Action implements ISelectionListener {
         window.getSelectionService().addSelectionListener(this);
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
+     */
     public void run() {
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {

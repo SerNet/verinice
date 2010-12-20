@@ -59,6 +59,7 @@ public class ISMViewFilter extends Action {
         ISMViewFilterDialog dialog = new ISMViewFilterDialog(shell, this);
         if (dialog.open() == InputDialog.OK) {
             tagFilter.setPattern(dialog.getCheckedElements());
+            tagFilter.setFilterOrgs(dialog.getFilterOrgs());
             hideEmptyFilter.setHideEmpty(dialog.getHideEmpty());
             typeFilter.setVisibleTypeSet(dialog.getVisibleTypes());
         }

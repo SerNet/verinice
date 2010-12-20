@@ -254,7 +254,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
         }       
 		if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0) {
     		Property property = properties.getProperty(0);
-    		if (property != null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
+    		if (property != null && property.getPropertyValue()!=null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
     		    umsetzung = property.getPropertyValue();
 		}
 		return umsetzung;

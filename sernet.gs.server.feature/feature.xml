@@ -585,14 +585,14 @@ Library.
          id="sernet.gs.ui.rcp.main"
          download-size="0"
          install-size="0"
-         version="1.2.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="sernet.gs.service"
          download-size="0"
          install-size="0"
-         version="1.12.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -673,10 +673,10 @@ Library.
          id="sernet.gs.pax_web.fragment"
          download-size="0"
          install-size="0"
-         version="1.0.0"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+         
    <plugin
          id="com.springsource.javax.el"
          download-size="0"

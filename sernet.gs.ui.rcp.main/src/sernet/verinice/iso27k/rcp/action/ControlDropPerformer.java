@@ -36,145 +36,163 @@ import org.eclipse.ui.progress.IProgressService;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.ControlTransformOperation;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ControlDropPerformer implements DropPerformer {
 
-    private boolean isActive;
+	private boolean isActive;
 
-    /**
-     * @param view
-     * @param viewer
-     */
-    public ControlDropPerformer(ViewPart view) {
-    }
+	/**
+	 * @param view
+	 * @param viewer
+	 */
+	public ControlDropPerformer(ViewPart view) {
+	}
 
-    private static final Logger LOG = Logger.getLogger(ControlDropPerformer.class);
+	private static final Logger LOG = Logger.getLogger(ControlDropPerformer.class);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
-     */
-    @SuppressWarnings("unchecked")
-    public boolean performDrop(Object data, Object target, Viewer viewer) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("performDrop..."); //$NON-NLS-1$
-        }
-		
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
+	 */
+	@SuppressWarnings("unchecked")
+	public boolean performDrop(Object data, Object target, Viewer viewer) {
 		if (!validateDropObjects(target)) {
-		    return false;
+			return false;
 		}
-		
-        boolean success = isActive();
-        if (isActive()) {
-            // because of validateDrop only Groups can be a target
-            ControlTransformOperation operation = new ControlTransformOperation((Group) target);
-            try {
-                IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-                progressService.run(true, true, operation);
-                IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-                boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_CONTROLS_ADDED);
-                if (!dontShow) {
-                    MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(
-                            PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                            Messages.getString("ControlDropPerformer.1"),  //$NON-NLS-1$
-                            NLS.bind(Messages.getString("ControlDropPerformer.2"), operation.getNumberOfControls(), ((Group) target).getTitle()), //$NON-NLS-1$
-                            Messages.getString("ControlDropPerformer.3"),  //$NON-NLS-1$
-                            dontShow, 
-                            preferenceStore, 
-                            PreferenceConstants.INFO_CONTROLS_ADDED);
-                    preferenceStore.setValue(PreferenceConstants.INFO_CONTROLS_ADDED, dialog.getToggleState());
-                }
-            } catch (Exception e) {
-                LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
-                ExceptionUtil.log(e, sernet.verinice.iso27k.rcp.action.Messages.getString("ControlDropPerformer.5")); //$NON-NLS-1$
-            }
-        }
-        return success;
-    }
+		boolean success = isActive();
+		if (isActive()) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("performDrop..."); //$NON-NLS-1$
+			}
+			try {
+				// because of validateDrop only Groups can be a target
+				Group group = (Group) target;
+				if(CnAElementHome.getInstance().isNewChildAllowed(group)) {
+					ControlTransformOperation operation = new ControlTransformOperation(group);
+					IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+					progressService.run(true, true, operation);
+					IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+					boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_CONTROLS_ADDED);
+					if (!dontShow) {
+						MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("ControlDropPerformer.1"), //$NON-NLS-1$
+								NLS.bind(Messages.getString("ControlDropPerformer.2"), operation.getNumberOfControls(), ((Group) target).getTitle()), //$NON-NLS-1$
+								Messages.getString("ControlDropPerformer.3"), //$NON-NLS-1$
+								dontShow, preferenceStore, PreferenceConstants.INFO_CONTROLS_ADDED);
+						preferenceStore.setValue(PreferenceConstants.INFO_CONTROLS_ADDED, dialog.getToggleState());
+					}
+				} else if (LOG.isDebugEnabled()) {
+					LOG.debug("User is not allowed to add elements to this group"); //$NON-NLS-1$
+				}
+			} catch (Exception e) {
+				LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
+				ExceptionUtil.log(e, sernet.verinice.iso27k.rcp.action.Messages.getString("ControlDropPerformer.5")); //$NON-NLS-1$
+			}
+		}
+		return success;
+	}
 
-   public boolean validateDrop(Object target, int operation, TransferData transferType) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("validateDrop, target: " + target);
-        }
-        boolean valid = false;
-        if(target instanceof Group) {
-            valid = Arrays.asList(((Group)target).getChildTypes()).contains(Control.TYPE_ID)
-            || Arrays.asList(((Group)target).getChildTypes()).contains(Threat.TYPE_ID)
-            || Arrays.asList(((Group)target).getChildTypes()).contains(Vulnerability.TYPE_ID);
-        }
-        return isActive=valid;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * sernet.verinice.iso27k.rcp.action.DropPerformer#validateDrop(java.lang
+	 * .Object, int, org.eclipse.swt.dnd.TransferData)
+	 */
+	public boolean validateDrop(Object target, int operation, TransferData transferType) {		
+		boolean valid = false;
+		if (target instanceof Group) {
+			List<String> childTypeList = Arrays.asList(((Group) target).getChildTypes());
+			valid = childTypeList.contains(Control.TYPE_ID) 
+			|| childTypeList.contains(Threat.TYPE_ID) 
+			|| childTypeList.contains(Vulnerability.TYPE_ID)
+			|| childTypeList.contains(SamtTopic.TYPE_ID);
+		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("validateDrop, target: " + target + " result: " + valid);
+		}
+		return isActive = valid;
+	}
 
+	/**
+	 * @param target
+	 * @return
+	 */
 	public boolean validateDropObjects(Object target) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("validateDrop, target: " + target);
 		}
 		boolean valid = false;
-		
+
 		List items = DNDItems.getItems();
 
-        if(items==null || items.isEmpty()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No items in drag list");
-            }
-            return isActive=false;
-        }
-		
-		if(target instanceof Group) {
-			if (Arrays.asList(((Group)target).getChildTypes()).contains(Control.TYPE_ID)) {
-			    valid = isCorrectItemsForGroup(items, IItem.CONTROL);
+		if (items == null || items.isEmpty()) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("No items in drag list");
 			}
-			if (Arrays.asList(((Group)target).getChildTypes()).contains(Threat.TYPE_ID)) {
-			    valid = isCorrectItemsForGroup(items, IItem.THREAT);
+			return isActive = false;
+		}
+
+		if (target instanceof Group) {
+			List<String> childTypeList = Arrays.asList(((Group) target).getChildTypes());
+			if(childTypeList.contains(Control.TYPE_ID)) {
+				valid = isCorrectItemsForGroup(items, IItem.CONTROL);			
 			}
-			if (Arrays.asList(((Group)target).getChildTypes()).contains(Vulnerability.TYPE_ID)) {
-			    valid = isCorrectItemsForGroup(items, IItem.VULNERABILITY);
+			if(childTypeList.contains(SamtTopic.TYPE_ID)) {
+				valid = isCorrectItemsForGroup(items, IItem.ISA_TOPIC);
+			}
+			if(childTypeList.contains(Threat.TYPE_ID)) {
+				valid = isCorrectItemsForGroup(items, IItem.THREAT);
+			}
+			if(childTypeList.contains(Vulnerability.TYPE_ID)) {
+				valid = isCorrectItemsForGroup(items, IItem.VULNERABILITY);
 			}
 		}
-		return isActive=valid;
+		return isActive = valid;
 	}
-	
-	/**
-     * @param items
-     * @param control
-     * @return
-     */
-    private boolean isCorrectItemsForGroup(Collection<IItem> items, int type) {
-        boolean valid = true;
-        for (IItem item : items) {
-            // only check leaf nodes for type:
-            if (item.getItems() != null && item.getItems().size()>0) {
-                valid = isCorrectItemsForGroup(item.getItems(), type);
-            }
-            else if(item.getTypeId() != type) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Item did not pass inspection for drop: " + item);
-                }
-                return false;
-            }
-        }
-        return valid;
-    }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.iso27k.rcp.action.DropPerformer#isActive()
-     */
-    public boolean isActive() {
-        return isActive;
-    }
+	/**
+	 * @param items
+	 * @param control
+	 * @return
+	 */
+	private boolean isCorrectItemsForGroup(Collection<IItem> items, int type) {
+		boolean valid = true;
+		for (IItem item : items) {
+			// only check leaf nodes for type:
+			if (item.getItems() != null && item.getItems().size() > 0) {
+				valid = isCorrectItemsForGroup(item.getItems(), type);
+			} else {
+				valid = (item.getTypeId() == type);
+			}
+		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("isCorrectItemsForGroup result: " + valid);
+		}
+		return valid;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see sernet.verinice.iso27k.rcp.action.DropPerformer#isActive()
+	 */
+	public boolean isActive() {
+		return isActive;
+	}
 
 }

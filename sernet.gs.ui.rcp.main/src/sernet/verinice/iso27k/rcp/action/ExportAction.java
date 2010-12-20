@@ -27,6 +27,9 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -53,11 +56,13 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
+import org.eclipse.ui.internal.ViewPluginAction;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
 import sernet.verinice.interfaces.encryption.EncryptionException;
@@ -122,6 +127,9 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
     @Override
     public void run(IAction action) {
 		final ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell(), selectedOrganization);
+		if(action instanceof ViewPluginAction) {
+			
+		}
 		if( dialog.open() == Dialog.OK )
 		{	     
 		    if(dialog.getEncryptOutput()) {
@@ -150,7 +158,12 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                     IStatus status = Status.OK_STATUS;
                     try {
                         monitor.beginTask(NLS.bind(Messages.getString("ExportAction_4"), new Object[] {dialog.getFilePath()}), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-                        export(dialog.getSelectedElement(),filePath,dialog.getSourceId(),password,x509CertificateFile);                    
+                        export( dialog.getSelectedElementSet(),
+                        		filePath,
+                        		dialog.getReImport(),
+                        		dialog.getSourceId(),
+                        		password,
+                        		x509CertificateFile);                    
                     } catch (Throwable e) {
                         LOG.error("Error while exporting data.", e); //$NON-NLS-1$
                         status= new Status(Status.ERROR, "sernet.verinice.samt.rcp", "Error while exporting data.",e); 
@@ -168,27 +181,57 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
             
 		}
 	}
+    
+    private void export(Set<CnATreeElement> elementSet, String path, boolean reImport, String sourceId, char[] exportPassword, File x509CertificateFile) {
+        if(elementSet!=null && elementSet.size()>0) {
+        	if(sourceId==null || sourceId.isEmpty()) {
+        		// if source id is not set by user the first 6 char. of an uuid is used
+        		sourceId = UUID.randomUUID().toString().substring(0, 6);
+        	}
+            Activator.inheritVeriniceContextState();
+        	ExportCommand exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(elementSet), sourceId, reImport);
+        	try {
+        		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
+        		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, x509CertificateFile));
+        		updateModel(exportCommand.getChangedElements());
+        	} catch (Exception e) {
+        		throw new IllegalStateException(e);
+        	}      	
+        }
+    }
 
-    private void export(CnATreeElement element, String path, String sourceId, char[] exportPassword, File x509CertificateFile) {
+    private void export(CnATreeElement element, String path, boolean reImport, String sourceId, char[] exportPassword, File x509CertificateFile) {
         LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
         if(element!=null) {
             sourceId = (sourceId==null || sourceId.isEmpty()) ? element.getUuid() : sourceId;
             Activator.inheritVeriniceContextState();
         	exportElements.add(element);
-        	ExportCommand exportCommand = new ExportCommand(exportElements, sourceId);
-        	try
-        	{
+        	ExportCommand exportCommand = new ExportCommand(exportElements, sourceId, reImport);
+        	try {
         		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
         		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, x509CertificateFile));
-        		//IOUtils.write(exportCommand.getResult(), getExportOutputStream( path ,exportPassword, x509CertificateFile ));
+        		updateModel(exportCommand.getChangedElements());
         	} catch (Exception e) {
         		throw new IllegalStateException(e);
         	}
-
         	String title = "";
         	if(element instanceof Organization) {
         	    title = ((Organization)element).getTitle();
         	}       	
+        }
+    }
+    
+    private void updateModel(List<CnATreeElement> changedElementList) {
+        if(changedElementList!=null && !changedElementList.isEmpty() ) {
+        	if(changedElementList.size()>9) {
+	            // if more than 9 elements changed or added do a complete reload
+	            CnAElementFactory.getInstance().reloadModelFromDatabase();
+        	} else {
+                for (CnATreeElement cnATreeElement : changedElementList) {
+                    CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
+                    CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
+                }
+            }
         }
     }
 	

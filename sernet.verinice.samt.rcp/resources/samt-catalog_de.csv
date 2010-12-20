@@ -1,5 +1,5 @@
 "5","5 Security Policy",,,,,,,
-"5.1","5.1 Informationssicherheitsrichtlinie ","0",,"2","2",,"2","3"
+"5.1","5.1 Informationssicherheitsrichtlinie ","3",,"2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit werden Richtlinien zur Informationssicherheit erstellt, veröffentlicht und verteilt? </h1>",,,,,
 ,,,,,,,,
@@ -34,7 +34,7 @@
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.  ",,,,,
 ,,,,,,,,
 "6","6 Organization of Information Security",,,,,,,
-"6.1","6.1 Zuweisung der Informationssicherheits-Verantwortung ","0","(Referenz zu ISO 27002: Control 6.1.3)","1","1",,"2","3"
+"6.1","6.1 Zuweisung der Informationssicherheits-Verantwortung ","3","(Referenz zu ISO 27002: Control 6.1.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie ist die Informationssicherheit im Unternehmen organisiert?</h1>",,,,,
 ,,,,,,,,
@@ -67,7 +67,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"6.2","6.2 Durch externe Parteien entstehenden Risiken ","0","(Referenz zu ISO 27002: Control 6.2.1)","1","1",,"2","3"
+"6.2","6.2 Durch externe Parteien entstehenden Risiken ","3","(Referenz zu ISO 27002: Control 6.2.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wird vor Auftragsvergabe an Fremdfirmen eine Risikoanalyse der personellen u. organisatorischen Risken durchgeführt?</h1>",,,,,
 ,,,,,,,,
@@ -98,7 +98,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"6.3","6.3 Verträge mit Dritten ","0","(Referenz zu ISO 27002: Control 6.2.3)","1","1",,"2","3"
+"6.3","6.3 Verträge mit Dritten ","3","(Referenz zu ISO 27002: Control 6.2.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie wird die Geheimhaltung bei der Zusammenarbeit mit Fremdfirmen sichergestellt?</h1>",,,,,
 ,,,,,,,,
@@ -130,7 +130,7 @@
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 "7","7 Asset Management",,,,,,,
-"7.1","7.1 Inventarverzeichnis ","0","(Referenz zu ISO 27002: Control 7.1.1)","1","1",,"2","3"
+"7.1","7.1 Inventarverzeichnis ","3","(Referenz zu ISO 27002: Control 7.1.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie werden die (physischen und digitalen) Vermögenswerte des Unternehmens inventarisiert?</h1>",,,,,
 ,,,,,,,,
@@ -166,7 +166,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"7.2","7.2 Kennzeichnung und Behandlung von Informationen ","0","(Referenz zu ISO 27002: Control 7.2.1)","2","2",,"2","3"
+"7.2","7.2 Kennzeichnung und Behandlung von Informationen ","3","(Referenz zu ISO 27002: Control 7.2.1)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie werden die Informationen im Unternehmen eingestuft / klassifiziert?</h1>",,,,,
 ,,,,,,,,
@@ -201,7 +201,7 @@
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 "8","8 Human Resources Security",,,,,,,
-"8.1","8.1 Arbeitsvertrag ","0","(Referenz zu ISO 27002: Control 8.1.3)","1","1",,"2","3"
+"8.1","8.1 Arbeitsvertrag ","3","(Referenz zu ISO 27002: Control 8.1.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit werden Mitarbeiter auf Einhaltung der Vorgaben zur Informationssicherheit verpflichtet?</h1>",,,,,
 ,,,,,,,,
@@ -236,7 +236,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"8.2","8.2 Sensibilisierung und User Schulung ","0","(Referenz zu ISO 27002: Control 8.2.1 und 8.2.2)","2","2",,"2","3"
+"8.2","8.2 Sensibilisierung und User Schulung ","3","(Referenz zu ISO 27002: Control 8.2.1 und 8.2.2)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie werden die Mitarbeiter über die Gefahren beim Umgang mit Informationen und deren Verarbeitung geschult und sensibilisiert?</h1>",,,,,
 ,,,,,,,,
@@ -268,7 +268,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"8.3","8.3 Anpassung der Zutritts-, Zugangs- und Zugriffsmöglichkeiten","0","(Referenz zu ISO 27002: Control 8.3.1 und 8.3.3)","1","1",,"2","3"
+"8.3","8.3 Anpassung der Zutritts-, Zugangs- und Zugriffsmöglichkeiten","3","(Referenz zu ISO 27002: Control 8.3.1 und 8.3.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit werden bei Änderungen des Arbeitsverhältnisses Zutritts-, Zugangs- und Zugriffs- Rechte oder Berechtigungen angepasst (gewähren / widerrufen) und wie werden diese Änderungen dokumentiert?</h1>",,,,,
 ,,,,,,,,
@@ -302,7 +302,7 @@
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 "9","9 Physical and Environmental Security",,,,,,,
-"9.1","9.1 Sicherheitszonen ","0","(Referenz zu ISO 27002: Control 9.1.1)","1","1",,"2","3"
+"9.1","9.1 Sicherheitszonen ","3","(Referenz zu ISO 27002: Control 9.1.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie werden Sicherheitszonen definiert und wie sind diese abgesichert?</h1>",,,,,
 ,,,,,,,,
@@ -334,7 +334,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9.2","9.2 Schutz gegen äußere und umgebungsbezogene Bedrohungen ","0","(Referenz zu ISO 27002: Control 9.1.4)","1","1",,"2","3"
+"9.2","9.2 Schutz gegen äußere und umgebungsbezogene Bedrohungen ","3","(Referenz zu ISO 27002: Control 9.1.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit ist das Unternehmen auf physikalische Bedrohungen (z.B. Feuer, Erdbeben usw.) vorbereitet?</h1>",,,,,
 ,,,,,,,,
@@ -366,7 +366,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9.3","9.3 Zutrittsmanagement ","0","(Referenz zu ISO 27002: Control 9.1.6)","2","2",,"2","3"
+"9.3","9.3 Zutrittsmanagement ","3","(Referenz zu ISO 27002: Control 9.1.6)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie ist das Zutrittsmanagement im Unternehmen organisiert?</h1>",,,,,
 ,,,,,,,,
@@ -398,7 +398,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9.4","9.4 Schutz von Gütern bei Anlieferung und Versand ","0","(Referenz zu ISO 27002: Control 9.1.6)","1","1",,"2","3"
+"9.4","9.4 Schutz von Gütern bei Anlieferung und Versand ","3","(Referenz zu ISO 27002: Control 9.1.6)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Welche Vorsichtsmaßnahmen werden zum Schutz der Waren bei Anlieferung und Versand getroffen?</h1>",,,,,
 ,,,,,,,,
@@ -429,7 +429,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9.5","9.5 Berechtigung zur Entfernung von Betriebsmitteln ","0","(Referenz zu ISO 27002: Control 9.2.5, 9.2.6 und 9.2.7)","1","1",,"2","3"
+"9.5","9.5 Berechtigung zur Entfernung von Betriebsmitteln ","3","(Referenz zu ISO 27002: Control 9.2.5, 9.2.6 und 9.2.7)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie ist der Prozess zum Gebrauch von Betriebsmitteln definiert (einschließlich Mitnahme, Entsorgung und Wiederverwendung)?</h1>",,,,,
 ,,,,,,,,
@@ -463,7 +463,7 @@
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 "10","10 Communications and Operations Management",,,,,,,
-"10.1","10.1 Hard- und Software Dokumentation (Change Management) ","0","(Referenz zu ISO 27002: Control 10.1.1 und 10.1.2)","1","1",,"2","3"
+"10.1","10.1 Hard- und Software Dokumentation (Change Management) ","3","(Referenz zu ISO 27002: Control 10.1.1 und 10.1.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit ist das Änderungs-Management an Systemen im Unternehmen etabliert und werden die Systeme auf dem aktuellsten Stand gehalten?</h1>",,,,,
 ,,,,,,,,
@@ -500,7 +500,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.2","10.2 Trennung der Entwicklungs-, Test- und Produktionsumgebung ","0","(Referenz zu ISO 27002: Control 10.1.4)","1","1",,"2","3"
+"10.2","10.2 Trennung der Entwicklungs-, Test- und Produktionsumgebung ","3","(Referenz zu ISO 27002: Control 10.1.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit sind die Entwicklungs- und Testumgebungen von den Produktivumgebungen getrennt?</h1>",,,,,
 ,,,,,,,,
@@ -535,7 +535,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.3","10.3 Überprüfung der von Fremdfirmen erbrachten Leistungen ","0","(Referenz zu ISO 27002: Control 10.2.2)","1","1",,"2","3"
+"10.3","10.3 Überprüfung der von Fremdfirmen erbrachten Leistungen ","3","(Referenz zu ISO 27002: Control 10.2.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie werden die durch Fremdfirmen erbrachten Leistungen, Berichte und Aufzeichnungen im Bezug auf die Informationssicherheit überwacht und überprüft?</h1>",,,,,
 ,,,,,,,,
@@ -570,7 +570,7 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.4","10.4 Antivirus Programm ","0","(Referenz zu ISO 27002: Control 10.4.1)","2","2",,"2","3"
+"10.4","10.4 Antivirus Programm ","3","(Referenz zu ISO 27002: Control 10.4.1)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit ist der Schutz vor Schadsoftware (Viren, Würmer, …) im Unternehmen ausgeprägt?</h1>",,,,,
 ,,,,,,,,
@@ -612,7 +612,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.5","10.5 Firewall auf lokalen Systemen ","0","(Referenz zu ISO 27002: Control 10.4.1)","1","1",,"2","3"
+"10.5","10.5 Firewall auf lokalen Systemen ","3","(Referenz zu ISO 27002: Control 10.4.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit ist auf den Systemen eine lokale Firewall und/oder IDS/IPS Software installiert?</h1>",,,,,
 ,,,,,,,,
@@ -651,7 +651,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.6","10.6 Schutzvorkehrungen gegen aktive Inhalte ","0","(Referenz zu ISO 27002: Control 10.4.2)","1","1",,"2","3"
+"10.6","10.6 Schutzvorkehrungen gegen aktive Inhalte ","3","(Referenz zu ISO 27002: Control 10.4.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit sind Schutzvorkehrungen gegen aktive Inhalte (z.B. ActiveX-Controls, Java-Applets) getroffen?</h1>",,,,,
 ,,,,,,,,
@@ -685,7 +685,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.7","10.7 Informationssicherung  (Back-Up) ","0","(Referenz zu ISO 27002: Control 10.5.1)","2","2",,"2","3"
+"10.7","10.7 Informationssicherung  (Back-Up) ","3","(Referenz zu ISO 27002: Control 10.5.1)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie werden die Datensicherungen (Back-Up's) erstellt und kontrolliert und in wie weit wird die Wiederherstellung (Restores) regelmäßig getestet?</h1>",,,,,
 ,,,,,,,,
@@ -720,7 +720,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.8","10.8 Verwaltung der Netzwerke ","0","(Referenz zu ISO 27002: Control 10.6.1)","1","1",,"2","3"
+"10.8","10.8 Verwaltung der Netzwerke ","3","(Referenz zu ISO 27002: Control 10.6.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie werden die Netzwerke verwaltet und gesteuert, damit sie vor Bedrohungen geschützt sind?</h1>",,,,,
 ,,,,,,,,
@@ -756,7 +756,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.9","10.9 Regeln zum Betrieb von Modems","0","(Referenz zu ISO 27002: Control 10.6.1)","1","1",,"2","3"
+"10.9","10.9 Regeln zum Betrieb von Modems","3","(Referenz zu ISO 27002: Control 10.6.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie ist der Einsatz von Modemgeräten (z.B. Analog, ISDN, DSL, UMTS, GPRS usw.) im Unternehmen geregelt?</h1>",,,,,
 ,,,,,,,,
@@ -791,7 +791,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.10","10.10 Netzwerkdienste: Definition der Sicherheitsanforderungen ","0","(Referenz zu ISO 27002: Control 10.6.2)","1","1",,"2","3"
+"10.10","10.10 Netzwerkdienste: Definition der Sicherheitsanforderungen ","3","(Referenz zu ISO 27002: Control 10.6.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit sind Sicherheitsanforderungen für die Netzwerkdienste (z.B. DNS, DHCP, VPN, MPLS, ERP, E-Mail, DMS, ...) definiert und umgesetzt?</h1>",,,,,
 ,,,,,,,,
@@ -827,7 +827,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.11","10.11 Netzwerkdienste: Service Level Agreement ","0","(Referenz zu ISO 27002: Control 10.6.2)","1","1",,"2","3"
+"10.11","10.11 Netzwerkdienste: Service Level Agreement ","3","(Referenz zu ISO 27002: Control 10.6.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit sind für Netzwerkdienste (z.B. DNS, DHCP, VPN, MPLS, ERP, E-Mail, DMS, ...) Service-Level-Agreements (SLA) vereinbart?</h1>",,,,,
 ,,,,,,,,
@@ -861,7 +861,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.12","10.12 Verwaltung von entfernbaren Medien ","0","(Referenz zu ISO 27002: Control 10.7.1)","1","1",,"2","3"
+"10.12","10.12 Verwaltung von entfernbaren Medien ","3","(Referenz zu ISO 27002: Control 10.7.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit gibt es Richtlinien zum Umgang mit mobilen Datenträgern (z.B. Bänder, USB-Speichersticks, USB-Festplatten, CD's, DVD's, ...)?</h1>",,,,,
 ,,,,,,,,
@@ -893,7 +893,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.13","10.13 Entsorgung von Medien ","0","(Referenz zu ISO 27002: Control 10.7.2)","1","1",,"2","3"
+"10.13","10.13 Entsorgung von Medien ","3","(Referenz zu ISO 27002: Control 10.7.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit gibt es eine Prozess für die sichere Entsorgung von Computermedien, wenn diese nicht mehr gebraucht werden?</h1>",,,,,
 ,,,,,,,,
@@ -926,7 +926,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.14","10.14 Physischer Transport von Medien ","0","(Referenz zu ISO 27002: Control 10.8.3)","1","1",,"2","3"
+"10.14","10.14 Physischer Transport von Medien ","3","(Referenz zu ISO 27002: Control 10.8.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit werden Vorkehrungen getroffen, wenn  Medien (z.B. CD's, DVD's, Papier-Dokumente), die vertrauliche Informationen enthalten, physisch transportiert werden müssen (z.B. DHL, UPS)? </h1>",,,,,
 ,,,,,,,,
@@ -960,7 +960,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.15","10.15 Elektronischen Austausch von Informationen ","0","(Referenz zu ISO 27002: Control 10.8.4)","1","1",,"2","3"
+"10.15","10.15 Elektronischen Austausch von Informationen ","3","(Referenz zu ISO 27002: Control 10.8.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Welche Vorsichtsmaßnahmen sind getroffen worden, wenn Informationen elektronisch ausgetauscht werden müssen?</h1>",,,,,
 ,,,,,,,,
@@ -1000,7 +1000,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.16","10.16 Überwachung: Protokollierung","0","(Referenz zu ISO 27002: Control 10.10.4)","1","1",,"2","3"
+"10.16","10.16 Überwachung: Protokollierung","3","(Referenz zu ISO 27002: Control 10.10.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie werden die Aktivitäten von Systemadministratoren und Operatoren auf kritischen Systemen protokolliert?</h1>",,,,,
 ,,,,,,,,
@@ -1033,7 +1033,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.17","10.17 Überwachung: Gesetzliche Aufbewahrungsfristen ","0","(Referenz zu ISO 27002: Control 10.10.1, 10.10.2, 10.10.3 und 10.10.5)","1","1",,"2","3"
+"10.17","10.17 Überwachung: Gesetzliche Aufbewahrungsfristen ","3","(Referenz zu ISO 27002: Control 10.10.1, 10.10.2, 10.10.3 und 10.10.5)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit sind Prozesse definiert und umgesetzt, die die gesetzlichen Anforderungen an die Überwachung und Protokollierung der Nutzung von Informationssystemen erfüllen?</h1>",,,,,
 ,,,,,,,,
@@ -1066,7 +1066,7 @@ Schutzsoftware vornehmen können.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 "11","11 Access Control",,,,,,,
-"11.1","11.1 Benutzer Registrierung ","0","(Referenz zu ISO 27002: Control 11.2.1)","2","2",,"2","3"
+"11.1","11.1 Benutzer Registrierung ","3","(Referenz zu ISO 27002: Control 11.2.1)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit besteht ein Antragsverfahren zur Registrierung, Änderung und Löschung von Benutzern, um Zugriff zu allen Informationssystemen und -diensten zu gewähren, zu ändern bzw. aufzuheben?</h1>",,,,,
 ,,,,,,,,
@@ -1104,7 +1104,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.2","11.2 Rechte Management ","0","(Referenz zu ISO 27002: Control 11.2.2 und 10.2.4)","1","1",,"2","3"
+"11.2","11.2 Rechte Management ","3","(Referenz zu ISO 27002: Control 11.2.2 und 10.2.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie werden Anwender- als auch Administratoren- Rechte im jeweiligen Anwendungsfall gewährt und überprüft?</h1>",,,,,
 ,,,,,,,,
@@ -1143,7 +1143,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.3","11.3 Benutzer Passwort Verwendung ","0","(Referenz zu ISO 27002: Control 11.2.3)","1","1",,"2","3"
+"11.3","11.3 Benutzer Passwort Verwendung ","3","(Referenz zu ISO 27002: Control 11.2.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit sind Regeln für den Umgang mit persönlichen Passwörtern definiert?</h1>",,,,,
 ,,,,,,,,
@@ -1179,7 +1179,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.4","11.4 Passwort Komplexität","0","(Referenz zu ISO 27002: Control 11.3.1)","1","1",,"2","3"
+"11.4","11.4 Passwort Komplexität","3","(Referenz zu ISO 27002: Control 11.3.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit sind Regeln zum Aufbau und Komplexitätsgrad für Passwörter definiert?</h1>",,,,,
 ,,,,,,,,
@@ -1215,7 +1215,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.5","11.5 Clean Desk und Clear Screen Richtlinie","0","(Referenz zu ISO 27002: Control 11.3.3)","1","1",,"2","3"
+"11.5","11.5 Clean Desk und Clear Screen Richtlinie","3","(Referenz zu ISO 27002: Control 11.3.3)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Welche Vorgaben zum Umgang mit Geräten und Dokumenten beim Verlassen des Arbeitsplatzes gibt es?</h1>",,,,,
 ,,,,,,,,
@@ -1251,7 +1251,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.6","11.6 Benutzer Authentifizierung für Remote User / Verbindungen ","0","(Referenz zu ISO 27002: Control 11.4.2)","1","1",,"2","3"
+"11.6","11.6 Benutzer Authentifizierung für Remote User / Verbindungen ","3","(Referenz zu ISO 27002: Control 11.4.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit sind Regeln und Maßnahmen für den Fernzugriff (Remote Access) auf das Unternehmensnetz definiert und umgesetzt?</h1>",,,,,
 ,,,,,,,,
@@ -1288,7 +1288,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.7","11.7 Schutz von Konfigurationsports und Fernüberwachung ","0","(Referenz zu ISO 27002: Control 11.4.4)","1","1",,"2","3"
+"11.7","11.7 Schutz von Konfigurationsports und Fernüberwachung ","3","(Referenz zu ISO 27002: Control 11.4.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit wird der netzwerktechnische Zugriff auf Diagnose- und Konfigurationsports von Systemen und Infrastrukturkomponenten überwacht?</h1>",,,,,
 ,,,,,,,,
@@ -1321,7 +1321,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.8","11.8 Trennung von Netzwerken ","0","(Referenz zu ISO 27002: Control 11.4.5)","1","1",,"2","3"
+"11.8","11.8 Trennung von Netzwerken ","3","(Referenz zu ISO 27002: Control 11.4.5)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit wird die Sicherheit der Netzwerke durch eine Segmentierung (Trennung) erhöht?</h1>",,,,,
 ,,,,,,,,
@@ -1354,7 +1354,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.9","11.9 Benutzer Identifizierung und Authentifizierung ","0","(Referenz zu ISO 27002: Control 11.5.2)","1","1",,"2","3"
+"11.9","11.9 Benutzer Identifizierung und Authentifizierung ","3","(Referenz zu ISO 27002: Control 11.5.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit ist die Authentifikation der Benutzter für den Zugriff auf IT Systeme, unter Berücksichtigung der Klassifizierung von Daten und Informationen, umgesetzt?</h1>",,,,,
 ,,,,,,,,
@@ -1389,7 +1389,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.10","11.10 Mobile Datenverarbeitung und Kommunikation ","0","(Referenz zu ISO 27002: Control 11.7.1)","1","1",,"2","3"
+"11.10","11.10 Mobile Datenverarbeitung und Kommunikation ","3","(Referenz zu ISO 27002: Control 11.7.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit wurde eine Richtlinie, die auf die Risiken beim Arbeiten mit mobilen Computern hinweist, entwickelt?</h1>",,,,,
 ,,,,,,,,
@@ -1427,7 +1427,7 @@ Schutzsoftware vornehmen können.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 "12","12 Information Systems Acquisition, Development and Management",,,,,,,
-"12.1","12.1 Verschlüsselung von Informationen ","0","(Referenz zu ISO 27002: Control 12.3.1)","1","1",,"2","3"
+"12.1","12.1 Verschlüsselung von Informationen ","3","(Referenz zu ISO 27002: Control 12.3.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit werden Informationen durch Verschlüsselung (Kryptographie) in angemessener Weise geschützt?</h1>",,,,,
 ,,,,,,,,
@@ -1462,7 +1462,7 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"12.2","12.2 Verlust von Informationen ","0","(Referenz zu ISO 27002: Control 12.5.4) 
+"12.2","12.2 Verlust von Informationen ","3","(Referenz zu ISO 27002: Control 12.5.4) 
 oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit werden beim Kauf bzw. bei der Erstellung von Software die Anforderungen der Informationssicherheit berücksichtigt?</h1>",,,,,
@@ -1495,7 +1495,7 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"12.3","12.3 Verfolgung von Schwachstellen ","0","(Referenz zu ISO 27002: Control 12.6.1)","2","2",,"2","3"
+"12.3","12.3 Verfolgung von Schwachstellen ","3","(Referenz zu ISO 27002: Control 12.6.1)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit werden Informationen über die technischen Schwachstellen der eingesetzten Informationssysteme zeitnah beschafft, beurteilt und geeignete Maßnahmen für eine Umsetzung ergriffen (Patch-Management)?</h1>",,,,,
 ,,,,,,,,
@@ -1531,7 +1531,7 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 "13","13 Information Security Incident Management",,,,,,,
-"13.1","13.1 Berichtswesen für Vorfälle in der Informationssicherheit ","0","(Referenz zu ISO 27002: Control 13.1.1 und 13.1.2)","1","1",,"2","3"
+"13.1","13.1 Berichtswesen für Vorfälle in der Informationssicherheit ","3","(Referenz zu ISO 27002: Control 13.1.1 und 13.1.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Wie und wohin werden Informationssicherheitsvorfälle im Unternehmen gemeldet?</h1>",,,,,
 ,,,,,,,,
@@ -1567,7 +1567,7 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"13.2","13.2 Verantwortlichkeiten und Vorgehensweisen (CERT) ","0","(Referenz zu ISO 27002: Control 13.2.1)","1","1",,"2","3"
+"13.2","13.2 Verantwortlichkeiten und Vorgehensweisen (CERT) ","3","(Referenz zu ISO 27002: Control 13.2.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit werden Informationssicherheitsvorfälle / -schwachstellen ausgewertet und behandelt?</h1>",,,,,
 ,,,,,,,,
@@ -1601,7 +1601,7 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 "14","14 Business Continuity Management",,,,,,,
-"14.1","14.1 Business Continuity Management","0","(Referenz zu ISO 27002: Control 14.1.1)","1","1",,"2","3"
+"14.1","14.1 Business Continuity Management","3","(Referenz zu ISO 27002: Control 14.1.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit sind Maßnahmen für die Entwicklung und Aufrechterhaltung der Business Continuity (Fortführung des ordnungsgemäßen Geschäftsbetriebs) im Unternehmen eingeführt?</h1>",,,,,
 ,,,,,,,,
@@ -1638,7 +1638,7 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
 "15","15 Compliance",,,,,,,
-"15.1","15.1 Rechte des geistigen Eigentums ","0","(Referenz zu ISO 27002: Control 15.1.2)","2","2",,"2","3"
+"15.1","15.1 Rechte des geistigen Eigentums ","3","(Referenz zu ISO 27002: Control 15.1.2)","2","2",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit wird die Einhaltung gesetzlicher Bestimmungen über geistiges Eigentum sichergestellt (z.B. Patente, Softwareentwicklungen und Codes usw.)?</h1>",,,,,
 ,,,,,,,,
@@ -1673,7 +1673,7 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"15.2","15.2 Schutz von Missbrauch von Personen bezogenen Daten ","0","(Referenz zu ISO 27002: Control 15.1.4)","1","1",,"2","3"
+"15.2","15.2 Schutz von Missbrauch von Personen bezogenen Daten ","3","(Referenz zu ISO 27002: Control 15.1.4)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>Welche Regelungen und Maßnahmen sind eingeführt, um personenbezogene Informationen unter Einhaltung der gesetzlichen / vertraglichen Regelungen zu schützen (z.B. Datenschutzgesetz)?</h1>",,,,,
 ,,,,,,,,
@@ -1708,7 +1708,7 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"15.3","15.3 Technische Überprüfung der Compliance ","0","(Referenz zu ISO 27002: Control 15.2.1)","1","1",,"2","3"
+"15.3","15.3 Technische Überprüfung der Compliance ","3","(Referenz zu ISO 27002: Control 15.2.1)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit werden die Bereiche der Organisation auf Einhaltung der Unternehmenssicherheitsrichtlinien und -standards überprüft?</h1>",,,,,
 ,,,,,,,,
@@ -1742,7 +1742,7 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"15.4","15.4 Überprüfung von Informationssystemen ","0","(Referenz zu ISO 27002: Control 15.2.2)","1","1",,"2","3"
+"15.4","15.4 Überprüfung von Informationssystemen ","3","(Referenz zu ISO 27002: Control 15.2.2)","1","1",,"2","3"
 ,,,,,,,,
 ,,,"<h1>In wie weit werden Sicherheitsüberprüfungen (Penetrations- / Verwundbarkeits-Test) an operativen Informationssystemen sorgfältig geplant, abgestimmt und durchgeführt?</h1>",,,,,
 ,,,,,,,,

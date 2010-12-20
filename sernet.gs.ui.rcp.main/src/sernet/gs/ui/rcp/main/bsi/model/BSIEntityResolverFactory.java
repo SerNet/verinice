@@ -176,6 +176,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         }
 
                     } catch (Exception e) {
+                    	LOG.error("Error while loading element", e); //$NON-NLS-1$
                         throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
                     }
                     return result;
@@ -205,6 +206,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         }
 
                     } catch (Exception e) {
+                    	LOG.error("Error while loading elements", e); //$NON-NLS-1$
                         throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
                     }
                     return result;
@@ -241,6 +243,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         }
 
                     } catch (Exception e) {
+                    	LOG.error("Error while loading roles", e); //$NON-NLS-1$
                         throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
                     }
                     return result;
@@ -254,6 +257,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         SaveElement<Entity> command = new SaveElement<Entity>(parentEntity);
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
                     } catch (CommandException e) {
+                    	LOG.error("Error while saving elements", e); //$NON-NLS-1$
                         throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
                     }
                 }

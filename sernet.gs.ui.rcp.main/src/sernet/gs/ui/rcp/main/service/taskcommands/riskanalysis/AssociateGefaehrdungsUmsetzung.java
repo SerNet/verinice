@@ -80,7 +80,7 @@ public class AssociateGefaehrdungsUmsetzung extends GenericCommand implements IA
 		if (authService.isPermissionHandlingNeeded())
 		{
 			gefaehrdungsUmsetzung.setPermissions(
-				Permission.clonePermissions(
+				Permission.clonePermissionSet(
 						gefaehrdungsUmsetzung,
 						riskAnalysis.getPermissions()));
 		}

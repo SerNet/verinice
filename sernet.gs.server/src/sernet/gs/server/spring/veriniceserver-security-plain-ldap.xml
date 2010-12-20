@@ -13,7 +13,14 @@
     
 	<!-- BEGIN Security configuration ============================================================================ -->
 
-	
+	<!--
+	Command to retrieve user configurations. We need to have this as a named bean to explicitly
+    give security privileges to this instance.
+     
+    See the 'internalAuthenticationProvider' bean.
+	-->
+	<bean id="loadUserConfigurationCommand" class="sernet.gs.server.commands.LoadUserConfiguration">
+	</bean>
 
 	<!-- the following beans enable http authentication and role based access -->
 
