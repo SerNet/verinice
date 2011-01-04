@@ -632,6 +632,21 @@
                tooltip="%action.tooltip.20">
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.model.iso27k.Person"
+            objectClass="sernet.verinice.model.iso27k.PersonIso">
+         <action
+               class="sernet.gs.ui.rcp.main.actions.ConfigurationAction"
+               enablesFor="1"
+               icon="icons/user_edit.png"
+               id="sernet.gs.ui.rcp.main.personconfiguration"
+               label="%action.label.12"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.12">
+         </action>
+      </objectContribution>
    </extension>
    <extension point="org.eclipse.ui.menus">
    	  <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=additions">
@@ -1129,7 +1144,7 @@
        <decorator
              adaptable="true"
              icon="icons/overlays/vda.png"
-             id="sernet.gs.ui.rcp.main.decorator1"
+             id="sernet.verinice.rcp.IsaDecorator"
              label="ISA-Topic"
              lightweight="true"
              location="TOP_RIGHT"

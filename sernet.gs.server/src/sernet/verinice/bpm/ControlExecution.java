@@ -19,21 +19,23 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 
 import sernet.gs.server.ServerInitializer;
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadUsername;
 
 /**
+ * Execution class for a jBPM Java task of process control-execution
+ * defined in sernet/verinice/bpm/control-execution.jpdl.xml.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 public class ControlExecution {
 
@@ -41,31 +43,41 @@ public class ControlExecution {
     
     ICommandService commandService;
     
+    /**
+     * Loads an assignee for a {@link Control}.
+     * An assignee of an control is an {@link PersonIso}
+     * linked to the control.
+     * Returns the username of the {@link Configuration}
+     * connected to PersonIso. If there is no linked PersonIso
+     * or no configuration for PersonIso <code>null</code> is returned.
+     * 
+     * @param uuidControl uuid of an control
+     * @return username of the assignee
+     */
     public String loadAssignee(String uuidControl) {
         ServerInitializer.inheritVeriniceContextState();
-        String uuidAssignee = null;
+        String username = null;
         try {
-            RetrieveInfo ri = new RetrieveInfo();
-            ri.setLinksUp(true);
-            LoadElementByUuid<Control> command = new LoadElementByUuid(Control.TYPE_ID,uuidControl,ri);
+            LoadUsername command = new LoadUsername(uuidControl);
             command = getCommandService().executeCommand(command);
-            Control control = command.getElement();
-            Set<CnALink> linkSet = control.getLinksDown();
-            for (CnALink link : linkSet) {
-                if(Control.REL_CONTROL_PERSON_ISO.equals(link.getRelationId())) {
-                    uuidAssignee = link.getDependency().getUuid();
-                    break;
-                }
-            }
+            username = command.getUsername();
         } catch(Throwable t) {
-            log.error("Error while loading assignee.", t);
+            log.error("Error while loading assignee.", t); //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {
-            log.debug("uuid control: " + uuidControl + ", uuid assignee: " + uuidAssignee);
+            log.debug("uuid control: " + uuidControl + ", username: " + username); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        return uuidAssignee;
+        return username;
     }
     
+    
+    /**
+     * Returns the implementation state of the an control
+     * (SNCA property "control_implemented").
+     * 
+     * @param uuidControl uuid of an control
+     * @return implementation state of the an control
+     */
     public String loadImplementation(String uuidControl) {
         ServerInitializer.inheritVeriniceContextState();
         String implementation = null;
@@ -76,10 +88,10 @@ public class ControlExecution {
             Control control = command.getElement();
             implementation = control.getImplementation();
         } catch(Throwable t) {
-            log.error("Error while loading implementation.", t);
+            log.error("Error while loading implementation.", t); //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {
-            log.debug("uuid control: " + uuidControl + ", implementation: " + implementation);
+            log.debug("uuid control: " + uuidControl + ", implementation: " + implementation); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return implementation;
     }

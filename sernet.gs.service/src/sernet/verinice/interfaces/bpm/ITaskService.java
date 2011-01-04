@@ -19,9 +19,19 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.bpm;
 
+import java.util.Date;
 import java.util.List;
 
 /**
+ * Interface to tasks of the jBPM process engine.
+ * Is used on the client site as a service interface
+ * of a Spring HttpInvokerProxyFactoryBean and for the remote implementation
+ * of the service.
+ * 
+ * You can wire instances of this interface to your Spring beans, 
+ * see veriniceclient.xml for examples. Outside of the Spring context
+ * use this method: ServiceFactory.lookupTaskService()
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public interface ITaskService {
@@ -34,6 +44,14 @@ public interface ITaskService {
      */
     List<ITask> getTaskList();
     
+    /**
+     * Returns tasks created after a date for currently logged in user.
+     * If no new tasks exists or current user cannot be determined an empty list is returned.
+     * 
+     * @param since Tasks created after this date are returned, if null all tasks are returned
+     * @return the task list for current user
+     */
+    List<ITask> getTaskList(Date since);
     
     /**
      * Returns the task list for user with name username.
@@ -43,6 +61,16 @@ public interface ITaskService {
      * @return task list for an user
      */
     List<ITask> getTaskList(String username);
+    
+    /**
+     * Returns tasks created after a date for user with name username.
+     * If no tasks exists an empty list is returned.
+     * 
+     * @param username a username
+     * @param since Tasks created after this date are returned, if null all tasks are returned
+     * @return task list for an user
+     */
+    List<ITask> getTaskList(String username, Date since);
     
     void completeTask(String taskId);
 }

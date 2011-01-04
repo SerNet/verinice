@@ -38,6 +38,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
@@ -47,18 +48,30 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.bpm.TaskLoader;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
-import sernet.verinice.iso27k.rcp.Messages;
+import sernet.verinice.interfaces.bpm.ITaskListener;
+import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.model.bpm.TaskInformation;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
+ * RCP view to display task loaded by instances of {@link ITaskService}.
+ * 
+ * New tasks are loaded by a {@link ITaskListener} registered at
+ * {@link TaskLoader}.
+ * 
+ * Double clicking a task opens {@link CnATreeElement} in an editor.
+ * View toolbar provides a button to complete tasks.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
-public class TaskView extends ViewPart {
+public class TaskView extends ViewPart implements IAttachedToPerspective {
     
     private final Logger log = Logger.getLogger(TaskView.class);
     
@@ -67,6 +80,8 @@ public class TaskView extends ViewPart {
     private static final DateFormat DATE_FORMAT = DateFormat.getDateInstance();
     
     private TableViewer viewer;
+    
+    private Action refreshAction;
     
     private Action completeTaskAction;
     
@@ -81,9 +96,9 @@ public class TaskView extends ViewPart {
     public void createPartControl(Composite parent) {
         Composite container = createContainer(parent);
         createViewer(container);
-        makeActions();
-      
+        makeActions();     
         addActions();
+        addListener();
     }
 
     /* (non-Javadoc)
@@ -91,8 +106,7 @@ public class TaskView extends ViewPart {
      */
     @Override
     public void setFocus() {
-        // TODO Auto-generated method stub
-
+        // empty
     }
     
     private void createViewer(Composite parent) {
@@ -105,15 +119,7 @@ public class TaskView extends ViewPart {
 
         viewer.setContentProvider(new ArrayContentProvider());
 
-        List<ITask> taskList = ServiceFactory.lookupTaskService().getTaskList();
-        
-        // Get the content for the viewer, setInput will call getElements in the
-        // contentProvider
-        try {
-            viewer.setInput(taskList.toArray());
-        } catch (Throwable t) {
-            log.error("Error while setting table data", t); //$NON-NLS-1$
-        }
+        loadTasks();
 
         // Layout the viewer
         GridData gridData = new GridData();
@@ -123,6 +129,18 @@ public class TaskView extends ViewPart {
         gridData.grabExcessVerticalSpace = true;
         gridData.horizontalAlignment = GridData.FILL;
         viewer.getControl().setLayoutData(gridData);
+    }
+
+    private void loadTasks() {
+        List<ITask> taskList = ServiceFactory.lookupTaskService().getTaskList();
+        
+        // Get the content for the viewer, setInput will call getElements in the
+        // contentProvider
+        try {
+            viewer.setInput(taskList.toArray());
+        } catch (Throwable t) {
+            log.error("Error while setting table data", t); //$NON-NLS-1$
+        }
     }
     
     private void createColumns(final Composite parent, final TableViewer viewer) {
@@ -158,15 +176,21 @@ public class TaskView extends ViewPart {
     }
     
     private void makeActions() {
+        refreshAction = new Action() {
+            @Override
+            public void run() {
+                loadTasks();
+            }
+        };
+        refreshAction.setText("Refresh");
+        refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
+        
         completeTaskAction = new Action() {
             @Override
             public void run() {
-                StructuredSelection selection = (StructuredSelection) viewer.getSelection();
-                
+                StructuredSelection selection = (StructuredSelection) viewer.getSelection();              
                 for (Iterator<TaskInformation> iterator = selection.iterator(); iterator.hasNext();) {
-                    completeTasks(iterator.next());
-                    
-                    
+                    completeTasks(iterator.next());                               
                 }
             }
         };
@@ -199,6 +223,7 @@ public class TaskView extends ViewPart {
     private void addActions() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
+        manager.add(this.refreshAction);
         manager.add(this.completeTaskAction);
         viewer.addDoubleClickListener(new IDoubleClickListener() {
             public void doubleClick(DoubleClickEvent event) {
@@ -207,6 +232,34 @@ public class TaskView extends ViewPart {
         });
     }
     
+
+    private void addListener() {
+        TaskLoader.addTaskListener(new ITaskListener() {          
+            @Override
+            public void newTasks(List<ITask> taskList) {
+                addTasks(taskList);           
+            }
+        });      
+    }
+    
+    /**
+     * @param taskList
+     */
+    protected void addTasks(final List<ITask> taskList) {
+        Object[] taskArray = (Object[]) viewer.getInput();
+        for (Object task : taskArray) {
+            if(!taskList.contains((ITask)task)) {
+                taskList.add((ITask)task);
+            }
+        }
+        Display.getDefault().syncExec(new Runnable(){
+            public void run() {
+                viewer.setInput(taskList.toArray());
+            }
+        });
+        
+    }
+
     private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber) {
         final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
         final TableColumn column = viewerColumn.getColumn();
@@ -221,8 +274,8 @@ public class TaskView extends ViewPart {
     private Composite createContainer(Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         GridLayout layoutRoot = new GridLayout(1, false);
-        layoutRoot.marginWidth = 10;
-        layoutRoot.marginHeight = 10;
+        layoutRoot.marginWidth = 2;
+        layoutRoot.marginHeight = 2;
         composite.setLayout(layoutRoot);
         GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
         gd.grabExcessHorizontalSpace = true;
@@ -238,6 +291,14 @@ public class TaskView extends ViewPart {
             commandService = ServiceFactory.lookupCommandService();
         }
         return commandService;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
+     */
+    @Override
+    public String getPerspectiveId() {
+        return Iso27kPerspective.ID;
     }
     
     

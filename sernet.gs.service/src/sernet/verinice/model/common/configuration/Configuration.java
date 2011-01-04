@@ -31,6 +31,7 @@ import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Configuration item. Actual configuration values are saved in Entity.
@@ -74,7 +75,7 @@ public class Configuration implements Serializable, ITypedElement {
 	public static final String PROP_AUDITOR_NOTIFICATION_EXPIRATION = "configuration_auditmailing_expiring"; //$NON-NLS-1$
 	public static final String PROP_AUDITOR_NOTIFICATION_EXPIRATION_DAYS = "configuration_auditmailing_expiredays"; //$NON-NLS-1$
 
-	private Person person;
+	private CnATreeElement person;
 	
 	private Integer dbId;
 	
@@ -91,11 +92,11 @@ public class Configuration implements Serializable, ITypedElement {
 		return entity;
 	}
 
-	public Person getPerson() {
+	public CnATreeElement getPerson() {
 		return person;
 	}
 
-	public void setPerson(Person person) {
+	public void setPerson(CnATreeElement person) {
 		this.person = person;
 	}
 

@@ -20,30 +20,35 @@
 package sernet.verinice.bpm;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.jbpm.api.Execution;
 import org.jbpm.api.ExecutionService;
 import org.jbpm.api.ProcessEngine;
+import org.jbpm.api.TaskQuery;
 import org.jbpm.api.task.Task;
+import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 
 import sernet.gs.server.ServerInitializer;
 import sernet.gs.service.RetrieveInfo;
-import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.IControlExecutionProcess;
+import sernet.verinice.interfaces.bpm.IControlExecutionProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.iso27k.Control;
 
 /**
+ * JBoss jBPM implementation of {@link ITaskService}.
+ * Clients access the service by Springs 
+ * {@link HttpInvokerProxyFactoryBean}.
+ * 
+ * See sernet/gs/server/spring/veriniceserver-jbpm.xml
+ * for Spring configuration of this service.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 public class TaskService implements ITaskService{
 
@@ -60,20 +65,48 @@ public class TaskService implements ITaskService{
     public List<ITask> getTaskList() {
         return getTaskList(getAuthService().getUsername());
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList()
+     */
+    @Override
+    public List<ITask> getTaskList(Date since) {
+        return getTaskList(getAuthService().getUsername(),since);
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList(java.lang.String)
      */
     @Override
-    public List<ITask> getTaskList(String username) {
+    public List<ITask> getTaskList(String username) {   
+        return getTaskList(username, null);
+    }
+    
+    /**
+     * Returns tasks created after a date for user with name username.
+     * If no tasks exists an empty list is returned. If date is null
+     * all tasks are returned.
+     * 
+     * Filtering by date is done after loading all tasks since jBPM provides no
+     * date filter for tasks.
+     * 
+     * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList(java.lang.String)
+     */
+    @Override
+    public List<ITask> getTaskList(String username,Date since) {
         ServerInitializer.inheritVeriniceContextState();
         List<ITask> taskList = Collections.emptyList();
         if(username!=null) {
-            List<Task> jbpmTaskList = getTaskService().findPersonalTasks(username);
+            List<Task> jbpmTaskList = getTaskService().createTaskQuery().assignee(username).orderDesc(TaskQuery.PROPERTY_CREATEDATE).list();
             if(jbpmTaskList!=null && !jbpmTaskList.isEmpty()) {
-                taskList = new ArrayList<ITask>(jbpmTaskList.size());
-                for (Task task : jbpmTaskList) {                          
-                    taskList.add(map(task));
+                taskList = new ArrayList<ITask>();
+                for (Task task : jbpmTaskList) {  
+                    if(since==null || since.before(task.getCreateTime())) {
+                        taskList.add(map(task));
+                    } else {
+                        // since task are ordered by create date we can stop here
+                        break;
+                    }
                 }                
             }
         }    
@@ -87,7 +120,7 @@ public class TaskService implements ITaskService{
     private TaskInformation map(Task task) {
         TaskInformation taskInformation = new TaskInformation();
         taskInformation.setId(task.getId());
-        taskInformation.setName(task.getName());
+        taskInformation.setName(Messages.getString(task.getName()));
         taskInformation.setCreateDate(task.getCreateTime());    
         String executionId = task.getExecutionId();   
         String uuidControl = (String) getExecutionService().getVariable(executionId,IControlExecutionProcess.VAR_CONTROL_UUID);      

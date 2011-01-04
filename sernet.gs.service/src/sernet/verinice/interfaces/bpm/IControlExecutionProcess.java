@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces;
+package sernet.verinice.interfaces.bpm;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -28,7 +28,7 @@ public interface IControlExecutionProcess {
     
     String VAR_CONTROL_UUID = "CONTROL_UUID";
     String VAR_OWNER_NAME = "OWNER_NAME";
-    String VAR_ASSIGNEE_UUID = "ASSIGNEE_UUID";
+    String VAR_ASSIGNEE_NAME = "ASSIGNEE_NAME";
     String VAR_IMPLEMENTATION = "IMPLEMENTATION";
     
     String DEFAULT_OWNER_NAME = "admin";

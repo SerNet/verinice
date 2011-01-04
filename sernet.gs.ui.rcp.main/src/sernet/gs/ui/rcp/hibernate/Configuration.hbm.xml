@@ -16,21 +16,14 @@
 			<generator class="native" />
 		</id>
 		
-		<many-to-one 
-			name="entity"
+		<many-to-one name="entity"
 			column="entity_id"
 			class="sernet.hui.common.connect.Entity"
 			cascade="all"
-			fetch="join"
-		/>
+			fetch="join" />
 		
-		<many-to-one 
-			name="person"
-			column="person_id"
-			class="sernet.verinice.model.bsi.Person"	
-		/>
+		<many-to-one name="person"
+			column="person_id" />
 
-		
-		
 	</class>
 </hibernate-mapping>

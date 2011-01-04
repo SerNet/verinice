@@ -56,7 +56,9 @@ import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.iso27k.PersonIso;
 
 public class ConfigurationAction implements IObjectActionDelegate {
 
@@ -100,29 +102,25 @@ public class ConfigurationAction implements IObjectActionDelegate {
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			try {
 				Object o = iter.next();
-				if (o == null || !(o instanceof Person)) {
-					continue;
+				if( o instanceof CnATreeElement) {
+
+    				CnATreeElement elmt = (CnATreeElement) o;
+    
+    				LOG.debug("Loading configuration for user " + elmt.getTitle()); //$NON-NLS-1$
+    				LoadConfiguration command = new LoadConfiguration(elmt);
+    				command = ServiceFactory.lookupCommandService().executeCommand(command);
+    				configuration = command.getConfiguration();
+    
+    				if (configuration == null) {
+    					// create new configuration
+    					LOG.debug("No config found, creating new configuration object."); //$NON-NLS-1$
+    					CreateConfiguration command2 = new CreateConfiguration(elmt);
+    					command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
+    					configuration = command2.getConfiguration();
+    				}
+    
+    				entType = HitroUtil.getInstance().getTypeFactory().getEntityType(configuration.getEntity().getEntityType());
 				}
-
-				Person elmt = null;
-				if (o instanceof Person) {
-					elmt = (Person) o;
-				}
-
-				LOG.debug("Loading configuration for user " + elmt.getTitle()); //$NON-NLS-1$
-				LoadConfiguration command = new LoadConfiguration(elmt);
-				command = ServiceFactory.lookupCommandService().executeCommand(command);
-				configuration = command.getConfiguration();
-
-				if (configuration == null) {
-					// create new configuration
-					LOG.debug("No config found, creating new configuration object."); //$NON-NLS-1$
-					CreateConfiguration command2 = new CreateConfiguration(elmt);
-					command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
-					configuration = command2.getConfiguration();
-				}
-
-				entType = HitroUtil.getInstance().getTypeFactory().getEntityType(configuration.getEntity().getEntityType());
 			} catch (CommandException e) {
 				ExceptionUtil.log(e, Messages.ConfigurationAction_2);
 			} catch (RuntimeException e) {

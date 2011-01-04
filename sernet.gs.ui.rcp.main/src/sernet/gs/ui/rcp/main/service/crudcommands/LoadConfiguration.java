@@ -24,6 +24,7 @@ import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -37,7 +38,7 @@ import sernet.verinice.model.common.configuration.Configuration;
 @SuppressWarnings("serial")
 public class LoadConfiguration extends GenericCommand {
 
-	private Person person;
+	private CnATreeElement person;
 	private Configuration configuration;
 	
 	private static final String QUERY = "from Configuration as conf " +
@@ -47,11 +48,11 @@ public class LoadConfiguration extends GenericCommand {
 	
 	private boolean hydrateElement;
 
-	public LoadConfiguration(Person elmt) {
+	public LoadConfiguration(CnATreeElement elmt) {
 		this(elmt, true);
 	}
 	
-	public LoadConfiguration(Person elmt, boolean hydrateElement) {
+	public LoadConfiguration(CnATreeElement elmt, boolean hydrateElement) {
 		this.person = elmt;
 		this.hydrateElement = hydrateElement;
 	}
@@ -73,7 +74,7 @@ public class LoadConfiguration extends GenericCommand {
 		
 	}
 
-	public Person getPerson() {
+	public CnATreeElement getPerson() {
 		return person;
 	}
 

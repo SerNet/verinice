@@ -19,25 +19,26 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
-import org.jbpm.api.jpdl.DecisionHandler;
-import org.jbpm.api.model.OpenExecution;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class ControlEvaluation implements DecisionHandler {
+public class Messages {
+    private static final String BUNDLE_NAME = "sernet.verinice.bpm.messages"; //$NON-NLS-1$
 
-    
-    public static final String IS_NOT_ASSIGNED = "isNotAssigned";
-    
-    /* (non-Javadoc)
-     * @see org.jbpm.api.jpdl.DecisionHandler#decide(org.jbpm.api.model.OpenExecution)
-     */
-    @Override
-    public String decide(OpenExecution arg0) {
-        // TODO Auto-generated method stub
-        return IS_NOT_ASSIGNED;
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+
+    private Messages() {
     }
 
+    public static String getString(String key) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
 }

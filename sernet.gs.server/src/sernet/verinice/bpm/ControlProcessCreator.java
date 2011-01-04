@@ -29,8 +29,11 @@ import sernet.verinice.interfaces.bpm.IProcessService;
 import sernet.verinice.model.iso27k.Control;
 
 /**
+ * Creates one control-execution processes for every control.
+ * Used in {@link ProcessJob} configured by Spring configuration file: 
+ * sernet/gs/server/spring/veriniceserver-jbpm.xml 
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 public class ControlProcessCreator implements IProcessCreater {
 
@@ -44,7 +47,9 @@ public class ControlProcessCreator implements IProcessCreater {
      */
     @Override
     public void create() {       
-        List<Control> controlList = getControlDao().findAll(RetrieveInfo.getPropertyInstance());
+        RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+        ri.setLinksDown(true);
+        List<Control> controlList = getControlDao().findAll(ri);
         if (log.isDebugEnabled()) {
             log.debug("Number of controls: " + controlList.size());
         }

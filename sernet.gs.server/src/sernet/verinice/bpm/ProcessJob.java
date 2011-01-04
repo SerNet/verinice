@@ -27,7 +27,6 @@ import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import sernet.gs.server.ServerInitializer;
 import sernet.hui.common.VeriniceContext;
 
 /**

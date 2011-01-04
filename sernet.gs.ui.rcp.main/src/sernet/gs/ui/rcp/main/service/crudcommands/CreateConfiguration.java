@@ -20,15 +20,16 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 
 @SuppressWarnings("serial")
 public class CreateConfiguration extends GenericCommand {
 
-	private Person person;
+	private CnATreeElement person;
 	private Configuration configuration;
 
-	public CreateConfiguration(Person elmt) {
+	public CreateConfiguration(CnATreeElement elmt) {
 		this.person = elmt;
 	}
 

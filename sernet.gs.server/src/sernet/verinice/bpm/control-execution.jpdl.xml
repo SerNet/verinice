@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<process key="control-execution" name="verinice Control Execution" version="9" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   <start g="416,33,48,48" name="start">
+<!-- JBoss jBPM process - https://www.jboss.org/jbpm -->
+<!-- To use this process add this file to processDefinitions of Spring bean processService in: -->
+<!-- Spring configuration file: sernet/gs/server/spring/veriniceserver-jbpm.xml -->
+<process key="control-execution" name="verinice Control Execution" version="12" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <description>Describes the implementation of controls in verinice</description>
+   <start g="176,51,48,48" name="start">
       <transition to="evaluate control"/>
    </start>
-   <decision g="417,123,80,40" name="evaluate control">
-      <transition g="-78,-22" name="is assigned" to="create implementation task">
-        <condition expr="#{ASSIGNEE_UUID!=null}"/>
+   <decision g="174,166,80,40" name="evaluate control">
+      <transition g="-77,-14" name="is assigned" to="evaluate implementation">
+        <condition expr="#{ASSIGNEE_NAME!=null}"/>
       </transition>
-      <transition g="-59,-22" name="is not assigned" to="create assign task">
-        <condition expr="#{ASSIGNEE_UUID==null}"/>
+      <transition g="-59,-22" name="is not assigned" to="task.setAssignee">
+        <condition expr="#{ASSIGNEE_NAME==null}"/>
       </transition>
    </decision>
-   <task assignee="#{OWNER_NAME}" g="591,125,157,40" name="create assign task">
+   <task assignee="#{OWNER_NAME}" g="351,124,193,40" name="task.setAssignee">
       <transition to="load assignee"/>
    </task>
-   <java class="sernet.verinice.bpm.ControlExecution" g="597,291,152,40" method="loadAssignee" name="load assignee" var="ASSIGNEE_UUID">
+   <java class="sernet.verinice.bpm.ControlExecution" g="372,229,152,40" method="loadAssignee" name="load assignee" var="ASSIGNEE_NAME">
       <arg><object expr="#{CONTROL_UUID}"/></arg>
       <transition to="evaluate control"/>
    </java>
-   <task assignee="#{ASSIGNEE_UUID}" g="345,288,206,40" name="create implementation task">
+   <task assignee="#{ASSIGNEE_NAME}" g="345,290,206,40" name="task.implement">
       <transition to="load implementation"/>
    </task>
-   <java class="sernet.verinice.bpm.ControlExecution" g="371,449,159,40" method="loadImplementation" name="load implementation" var="IMPLEMENTATION">
+   <java class="sernet.verinice.bpm.ControlExecution" g="368,398,159,40" method="loadImplementation" name="load implementation" var="IMPLEMENTATION">
       <arg><object expr="#{CONTROL_UUID}"/></arg>
       <transition to="evaluate implementation"/>
    </java>
-   <decision g="178,285,48,48" name="evaluate implementation">
-      <transition g="-57,-22" name="not implemented" to="create implementation task">
+   <decision g="175,324,48,48" name="evaluate implementation">
+      <transition g="-70,-27" name="not implemented" to="task.implement">
         <condition expr="#{IMPLEMENTATION!='control_implemented_yes'}"/>
       </transition>
       <transition g="-92,-14" name="implemented" to="end">
         <condition expr="#{IMPLEMENTATION=='control_implemented_yes'}"/>
       </transition>
    </decision>
-   <end g="178,445,48,48" name="end"/>
+   <end g="177,456,48,48" name="end"/>
 </process>

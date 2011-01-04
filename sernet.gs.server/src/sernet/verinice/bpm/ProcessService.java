@@ -20,6 +20,7 @@
 package sernet.verinice.bpm;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,11 +42,17 @@ import org.jbpm.pvm.internal.model.ProcessDefinitionImpl;
 import org.jbpm.pvm.internal.stream.ResourceStreamInput;
 import org.jbpm.pvm.internal.xml.Parse;
 
-import sernet.verinice.interfaces.IControlExecutionProcess;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDao;
+import sernet.verinice.interfaces.bpm.IControlExecutionProcess;
 import sernet.verinice.interfaces.bpm.IProcessService;
 import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.service.commands.LoadUsername;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -61,6 +68,10 @@ public class ProcessService implements IProcessService {
     private IDao<ExecutionImpl, Long> jbpmExecutionDao;
     
     private IDao<ChangeLogEntry, Integer> changeLogEntryDao;
+    
+    private ProcessDao processDao;
+      
+    private IBaseDao<Control, Integer> controlDao;
     
     private boolean wasInitCalled = false;
 
@@ -174,31 +185,46 @@ public class ProcessService implements IProcessService {
         return id;
     }
     
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessService#handleControl(sernet.verinice.model.iso27k.Control)
+     */
     public void handleControl(Control control) {
-        String uuidControl = control.getUuid();
-        List<ExecutionImpl> executionList = findControlExecution(uuidControl);
-        if(executionList==null || executionList.isEmpty()) {
-            if (log.isDebugEnabled()) {
-                log.debug("No process for control: " + uuidControl);
+        try {
+            String uuidControl = control.getUuid();
+            List<ExecutionImpl> executionList = findControlExecution(uuidControl);
+            if(executionList==null || executionList.isEmpty()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("No process for control: " + uuidControl);
+                }
+                startControlExecution(control);
+                if (log.isInfoEnabled()) {
+                    log.info("Process started for control: " + uuidControl);
+                }
+            } else if (log.isDebugEnabled()) {
+                log.debug("Process found for control: " + uuidControl);
+                for (ExecutionImpl executionImpl : executionList) {
+                    log.debug("Process execution id: " + executionImpl.getId());
+                }            
             }
-            startControlExecution(control);
-            if (log.isInfoEnabled()) {
-                log.info("Process started for control: " + uuidControl);
-            }
-        } else if (log.isDebugEnabled()) {
-            log.debug("Process found for control: " + uuidControl);
-            for (ExecutionImpl executionImpl : executionList) {
-                log.debug("Process execution id: " + executionImpl.getId());
-            }            
+        } catch (RuntimeException re) {
+            log.error("RuntimeException while handling control", re);
+            throw re;
+        } catch (Throwable t) {
+            log.error("Error while handling control", t);
+            throw new RuntimeException(t);
         }
     }
     
     /**
      * @param control
+     * @throws CommandException 
      */
-    private void startControlExecution(Control control) {      
+    private void startControlExecution(Control control) throws CommandException {      
         Map<String, Object> props = new HashMap<String, Object>();
-        props.put(IControlExecutionProcess.VAR_ASSIGNEE_UUID, null);
+        
+        String username = getProcessDao().getAssignee(control);
+        
+        props.put(IControlExecutionProcess.VAR_ASSIGNEE_NAME, username);
         props.put(IControlExecutionProcess.VAR_CONTROL_UUID, control.getUuid());
         props.put(IControlExecutionProcess.VAR_OWNER_NAME, getOwnerName(control));
         props.put(IControlExecutionProcess.VAR_IMPLEMENTATION, control.getImplementation());
@@ -312,5 +338,21 @@ public class ProcessService implements IProcessService {
 
     public void setChangeLogEntryDao(IDao<ChangeLogEntry, Integer> changeLogEntryDao) {
         this.changeLogEntryDao = changeLogEntryDao;
+    }
+
+    public ProcessDao getProcessDao() {
+        return processDao;
+    }
+
+    public void setProcessDao(ProcessDao processDao) {
+        this.processDao = processDao;
+    }
+
+    public IBaseDao<Control, Integer> getControlDao() {
+        return controlDao;
+    }
+
+    public void setControlDao(IBaseDao<Control, Integer> controlDao) {
+        this.controlDao = controlDao;
     }
 }
