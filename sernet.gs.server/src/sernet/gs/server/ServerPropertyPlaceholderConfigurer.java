@@ -26,7 +26,7 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 /**
  * An implementation of the {@link PropertyPlaceholderConfigurer} class which
- * provides programmatically overridden properties which are crucial for the
+ * provides programmatically overridden propertyList which are crucial for the
  * verinice server's database connection.
  * 
  * <p>With this class the integrated (OSGi-ified) veriniceserver gains the
@@ -58,9 +58,9 @@ public class ServerPropertyPlaceholderConfigurer extends
 	}
 	
 	/**
-	 * Makes the database connection properties available to the internal server.
+	 * Makes the database connection propertyList available to the internal server.
 	 * 
-	 * <p>The properties will be used when the server's spring configuration
+	 * <p>The propertyList will be used when the server's spring configuration
 	 * is processed. This is when the server's bundle starts!</p>
 	 * 
 	 * @param url

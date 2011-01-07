@@ -99,5 +99,13 @@ public class PropertyOption implements IMLPropertyOption {
     public Integer getValue() {
         return numericValue;
     }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getName();
+    }
 	
 }

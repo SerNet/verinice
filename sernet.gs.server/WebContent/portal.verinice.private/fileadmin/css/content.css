@@ -6,7 +6,7 @@
 **  YAML Version: 2.5.2
 **  Dateiversion: 19.1.07
 **  Datei       : content.css
-**  Funktion    : Formatierung der Inhalte und TYPO3-spezifische Änderungen der content.css
+**  Funktion    : Formatierung der Inhalte und TYPO3-spezifische ï¿½nderungen der content.css
 **
 **  Checked with http://jigsaw.w3.org/css-validator/ 19.1.07 - DB
 */
@@ -20,7 +20,7 @@
 ** ######################################################################################################
 **
 
-/* ### Überschriften, Fließtexte ###################################################################### */
+/* ### ï¿½berschriften, Flieï¿½texte ###################################################################### */
 
 body {color:#222; font-size:83.33%; font-family:'Trebuchet MS', Verdana, Helvetica, Arial, sans-serif;}
 
@@ -70,7 +70,9 @@ a:hover {background-color:#eef; text-decoration:underline;}
 ** ######################################################################################################
 */
 table {border-collapse:collapse; margin-bottom:0.5em;}
-
+	
+td {padding: 1px;}
+	
 table.contenttable {
 	border-width: 2px 2px 2px 2px;
 	border-spacing: 0px;
@@ -98,8 +100,6 @@ table.contenttable td {
 
 form {overflow:hidden;}
 
-input, textarea {width:auto; font:1em Verdana, Arial, Helvetica, Sans-Serif; border:1px #ccc solid; background:#fafafa;padding:3px; color:#777;}
-
 input[type=text]:focus, input[type=password]:focus, textarea:focus {background:#f0f0f0; color:#333; border-color:#666;}
 
 /* ######################################################################################################
@@ -123,7 +123,7 @@ blockquote {color:#222; background:#f8f8f8; border:1px #ddd solid; border-left:8
 ul.linklist {list-style-type:none; margin:0 0 1em 0;}
 ul.linklist li {margin:0 0 1em 0;}
 
-/* Auszeichnungen für Code, Dateien, Verzeichnisse */
+/* Auszeichnungen fï¿½r Code, Dateien, Verzeichnisse */
 em.mono, em.file, em.directory {font-family:"Courier New", Courier, monospace; font-style:normal;}
 em.mono {padding:0 0.3em 0 0.3em; background:#f0f0f4; border:1px #ccd solid;}
 em.file {padding:0 0 0 14px; color:#008; background:transparent url(file.gif) no-repeat left;}
@@ -149,7 +149,15 @@ a.dl_link:hover {text-decoration:none; background-color:transparent;}
 ** ### Spezielle Formatanweisungen des TYPO3 Templates #################
 ** #####################################################################
 */
-input, textarea {margin-left:1em; padding:2px; width:auto; font:1em Verdana, Arial, Helvetica, Sans-Serif; border:1px #ccc solid; background:#fafafa; color:#777;}
+	
+input, textarea {
+	padding:2px; 
+	width:auto; 
+	font:1em Verdana, Arial, Helvetica, Sans-Serif; 
+	border:1px #ccc solid; 
+	background:#fafafa; 
+	color:#777;
+}
 input[type=text]:focus, textarea:focus {background:#f0f0f0; color:#333; border-color:#666;}
 img {border:0;
 }

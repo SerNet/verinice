@@ -31,26 +31,34 @@ import javax.faces.context.FacesContext;
 public class Util {
 
 	public static String getMessage(String key) {
-		return getMessage(key, null);
+		return getMessage(ToDoBean.BOUNDLE_NAME, key, null);
 	}
+	
+	public static String getMessage(String bundleName,String key) {
+        return getMessage(bundleName,key, null);
+    }
 
+	public static String getMessage(String bundleName, String key,Object params[]){
+	    String text = null;
+        Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+        ResourceBundle bundle = ResourceBundle.getBundle(
+                bundleName, 
+                locale);    
+        try{
+            text = bundle.getString(key);
+        } catch(MissingResourceException e){
+            text = "? " + key + " ?";
+        }
+        
+        if(params != null){
+            MessageFormat mf = new MessageFormat(text, locale);
+            text = mf.format(params, new StringBuffer(), null).toString();
+        }   
+        return text;
+	}
+	
 	public static String getMessage(String key,Object params[]){
-		String text = null;
-		Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-		ResourceBundle bundle = ResourceBundle.getBundle(
-				ToDoBean.BOUNDLE_NAME, 
-				locale);	
-		try{
-			text = bundle.getString(key);
-		} catch(MissingResourceException e){
-			text = "? " + key + " ?";
-		}
-		
-		if(params != null){
-			MessageFormat mf = new MessageFormat(text, locale);
-			text = mf.format(params, new StringBuffer(), null).toString();
-		}	
-		return text;
+	    return Util.getMessage(ToDoBean.BOUNDLE_NAME, key, params);
 	}
 
 	public static void english() {
@@ -63,11 +71,11 @@ public class Util {
 	    context.getViewRoot().setLocale(Locale.GERMAN);
 	}
 
-	static void addInfo(String componentId, String text ) {
+	public static void addInfo(String componentId, String text ) {
 		addMessage(componentId, text, FacesMessage.SEVERITY_INFO );
 	}
 
-	static void addError(String componentId, String text ) {
+	public static void addError(String componentId, String text ) {
 		addMessage(componentId, text, FacesMessage.SEVERITY_ERROR );
 	}
 

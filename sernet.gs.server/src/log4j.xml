@@ -23,15 +23,8 @@
 		</layout>
 	</appender>
 
-    <logger name="sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund">
-        <level value="DEBUG" />
-    </logger>
-
     <!-- Add settings for packages here  -->
-    <logger name="sernet.verinice.bpm">
-        <level value="DEBUG" />
-    </logger>
-    <logger name="org.jbpm">
+    <logger name="sernet.verinice.web">
         <level value="DEBUG" />
     </logger>
 	

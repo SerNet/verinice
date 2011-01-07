@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.web;
 
-import sernet.gs.common.SecurityException;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>

@@ -94,6 +94,7 @@ public class TaskService implements ITaskService{
      */
     @Override
     public List<ITask> getTaskList(String username,Date since) {
+
         ServerInitializer.inheritVeriniceContextState();
         List<ITask> taskList = Collections.emptyList();
         if(username!=null) {

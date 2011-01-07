@@ -8,6 +8,8 @@
     xmlns:f="http://java.sun.com/jsf/core">
     
 	<f:loadBundle basename="sernet.gs.web.Messages" var="msg"/>
+	<f:loadBundle basename="sernet.verinice.web.TaskMessages" var="msgTask"/>
+	<f:loadBundle basename="sernet.verinice.web.EditMessages" var="msgEdit"/>
 	
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -32,32 +34,31 @@
 	
 	</head>
 	<body>
-	
 		<script type="text/javascript">if (efa_fontSize) efa_fontSize.efaInit();</script>
 		<div id="page_margins"><!--###page_margins### begin -->
-		<div id="page" class="hold_floats"><!--###page### begin -->
-		
-		<ui:insert name="header">
-			<ui:include src="/header.xhtml"/>
-		</ui:insert>
-		
-		<!-- #nav: Hauptnavigation -->
-		<ui:insert name="navigation">
-			<ui:include src="/navigation.xhtml"/>
-		</ui:insert>
-		<!-- #nav: - Ende -->
-		
-		<!-- #main: Beginn Inhaltsbereich -->
-		<ui:insert name="content">Default content</ui:insert>
-		<!-- #main: - Ende -->
-		
-		<!-- #footer: Beginn Fusszeile -->
-		<ui:insert name="footer">
-			<ui:include src="/footer.xhtml"/>
-		</ui:insert>
-		<!-- #footer: Ende -->
-		<!--###page### end --></div>
-		<!--###page_margins### end --></div>
-	
+			<div id="page" class="hold_floats"><!--###page### begin -->
+			
+				<ui:insert name="header">
+					<ui:include src="/header.xhtml"/>
+				</ui:insert>
+				
+				<!-- #nav: Hauptnavigation -->
+				<ui:insert name="navigation">
+					<ui:include src="/navigation.xhtml"/>
+				</ui:insert>
+				<!-- #nav: - Ende -->
+				
+				<!-- #main: Beginn Inhaltsbereich -->
+				<ui:insert name="content">Default content</ui:insert>
+				<!-- #main: - Ende -->
+				
+				<!-- #footer: Beginn Fusszeile -->
+				<ui:insert name="footer">
+					<ui:include src="/footer.xhtml"/>
+				</ui:insert>
+				<!-- #footer: Ende -->
+				
+			</div> <!--###page### end -->
+		</div> <!--###page_margins### end -->
 	</body>
 </html>

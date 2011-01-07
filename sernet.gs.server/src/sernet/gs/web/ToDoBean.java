@@ -37,10 +37,8 @@ import org.richfaces.model.selection.SimpleSelection;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.GSServiceException;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
-import sernet.gs.ui.rcp.main.common.model.Messages;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
@@ -48,7 +46,6 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadCurrentUserConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.taskcommands.LoadChildrenAndMassnahmen;
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
@@ -56,7 +53,7 @@ import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
- * JSF managed bean for view ToDoList, template: toso/todo.xhtml
+ * JSF managed bean for view ToDoList, template: todo/todo.xhtml
  * Asset-navigation data and methods are located in {@link AssetNavigationBean}.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>

@@ -56,5 +56,13 @@ public class PersonEntityOptionWrapper implements IMLPropertyOption {
 	public void setCheckboxHandler(ICheckBoxHandler checkBoxHandler) {
 		// do nothing
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+	    return getName();
+	}
 
 }

@@ -56,6 +56,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 
 	private HashSet dependencies = new HashSet();
 
+	private String inputName;
+	
 	private byte inputtype = INPUT_LINE;
 
 	public static final byte INPUT_LINE = 0;
@@ -201,6 +203,16 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 		}
 		return null;
 	}
+	
+	public PropertyOption getOption(Integer id) {
+        for (Iterator iter = options.iterator(); iter.hasNext();) {
+            PropertyOption option = (PropertyOption) iter.next();
+            if (option.getValue().equals(id)) {
+                return option;
+            }
+        }
+        return null;
+    }
 
 	/**
 	 * List of <code>DocValue</code> objects.
@@ -324,6 +336,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	 * @param attribute
 	 */
 	public void setInputType(String attribute) {
+	    inputName = attribute;
 		if (attribute.equals("line")) {
 			inputtype = INPUT_LINE;
 		} else if (attribute.equals("singleoption")) {
@@ -341,6 +354,10 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 		} else if (attribute.equals("booleanoption")) {
             inputtype = INPUT_BOOLEANOPTION;
         }
+	}
+	
+	public String getInputName() {
+	    return inputName;
 	}
 
 	public void setInitialFocus(boolean b) {

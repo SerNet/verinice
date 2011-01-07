@@ -69,6 +69,7 @@ This variant:
 				<entry key="huiTypeFactory" value-ref="huiTypeFactory" />
 				<entry key="commandService" value-ref="commandService" />
 				<entry key="authService" value-ref="authService" />
+                <entry key="taskService" value-ref="taskService" />
 			</map>
 		</property>
 	</bean>

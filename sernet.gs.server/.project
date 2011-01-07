@@ -30,6 +30,16 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.jboss.tools.common.verification.verifybuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.jboss.tools.jst.web.kb.kbbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
@@ -38,5 +48,7 @@
 		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
 		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
 		<nature>org.eclipse.pde.PluginNature</nature>
+		<nature>org.jboss.tools.jsf.jsfnature</nature>
+		<nature>org.jboss.tools.jst.web.kb.kbnature</nature>
 	</natures>
 </projectDescription>

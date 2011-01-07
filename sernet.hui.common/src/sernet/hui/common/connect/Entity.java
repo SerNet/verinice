@@ -223,6 +223,31 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		return result.toString();
 	}
 	
+	/**
+     * Convenience method to return a Sring representation of the
+     * given propertyType
+     * 
+     * @param propertyType
+     * @return
+     */
+    public String getValue(String propertyType) {
+        String result = null;
+        PropertyList propertyList = typedPropertyLists.get(propertyType);
+        if (propertyList != null && propertyList.getProperties().size() > 0) {
+            StringBuffer sb = new StringBuffer();
+            for (Iterator<Property> iter = propertyList.getProperties().iterator(); iter.hasNext();) {
+                Property prop = iter.next();       
+                if(prop.getPropertyValue()!=null ) {
+                    sb.append(prop.getPropertyValue());
+                }         
+                if (iter.hasNext())
+                    sb.append(", ");
+            }
+            result = sb.toString();
+        }
+        return result;
+    }
+	
 	public void setSimpleValue(PropertyType type, String value) {
 		PropertyList list = typedPropertyLists.get(type.getId());
 		if (list == null || list.getProperties().size() == 0) {
