@@ -93,7 +93,7 @@
 				    	<a id="c86"></a>
 					    <div class="csc-textpic-text">
 					    	<a4j:outputPanel id="editPanel">
-						    	<a4j:form id="editForm">
+						    	<a4j:form id="editForm" rendered="#{edit.element!=null}">
 						    		<div class="csc-header csc-header-n1">
 					      				<h1><h:outputText value="#{edit.title}"/></h1>					      							      			
 			      						<a4j:commandButton id="submit" value="#{msgEdit['save']}" action="#{edit.save}" style="margin-bottom: 5px;"/>					
