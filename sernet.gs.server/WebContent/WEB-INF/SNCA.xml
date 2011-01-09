@@ -864,6 +864,16 @@ the value between <param></param> will be used directly if no string is found fo
             id="itverbund_dokument"
             isURL="true" />
             
+        <huipropertygroup id="itverbund_report"  name="Reporting" tags="Dok.mgmt." >
+           <huiproperty
+	           id="itverbund_autor" tags="Dok.mgmt." />
+           <huiproperty
+	          id="itverbund_version" tags="Dok.mgmt." />
+           <huiproperty
+	          id="itverbund_freigabe" tags="Dok.mgmt." />
+        </huipropertygroup>
+        
+            
 		
          <huipropertygroup
 			id="itverbund_group_schutzbedarf_normal"

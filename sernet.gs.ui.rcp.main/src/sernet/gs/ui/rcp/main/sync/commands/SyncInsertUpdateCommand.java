@@ -31,6 +31,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.service.CnATypeMapper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
@@ -135,80 +136,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
     }
     
     private static HashMap<String, String> containerTypes = new HashMap<String, String>();
-    private static HashMap<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<String, Class<? extends CnATreeElement>>();
-
-    static {
-        typeIdClass.put(Anwendung.TYPE_ID, Anwendung.class);
-        typeIdClass.put(Gebaeude.TYPE_ID, Gebaeude.class);
-        typeIdClass.put(Client.TYPE_ID, Client.class);
-        typeIdClass.put(Server.TYPE_ID, Server.class);
-        typeIdClass.put(SonstIT.TYPE_ID, SonstIT.class);
-        typeIdClass.put(TelefonKomponente.TYPE_ID, TelefonKomponente.class);
-        typeIdClass.put(Person.TYPE_ID, Person.class);
-        typeIdClass.put(NetzKomponente.TYPE_ID, NetzKomponente.class);
-        typeIdClass.put(Raum.TYPE_ID, Raum.class);
-        typeIdClass.put(AnwendungenKategorie.TYPE_ID, AnwendungenKategorie.class);
-        typeIdClass.put(GebaeudeKategorie.TYPE_ID, GebaeudeKategorie.class);
-        typeIdClass.put(ClientsKategorie.TYPE_ID, ClientsKategorie.class);
-        typeIdClass.put(ServerKategorie.TYPE_ID, ServerKategorie.class);
-        typeIdClass.put(SonstigeITKategorie.TYPE_ID, SonstigeITKategorie.class);
-        typeIdClass.put(TKKategorie.TYPE_ID, TKKategorie.class);
-        typeIdClass.put(PersonenKategorie.TYPE_ID, PersonenKategorie.class);
-        typeIdClass.put(NKKategorie.TYPE_ID, NKKategorie.class);
-        typeIdClass.put(RaeumeKategorie.TYPE_ID, RaeumeKategorie.class);
-        typeIdClass.put(BausteinUmsetzung.TYPE_ID, BausteinUmsetzung.class);
-        typeIdClass.put(ITVerbund.TYPE_ID, ITVerbund.class);
-        typeIdClass.put(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.class);
-        typeIdClass.put(Verarbeitungsangaben.TYPE_ID, Verarbeitungsangaben.class);
-        typeIdClass.put(Personengruppen.TYPE_ID, Personengruppen.class);
-        typeIdClass.put(VerantwortlicheStelle.TYPE_ID, VerantwortlicheStelle.class);
-        typeIdClass.put(StellungnahmeDSB.TYPE_ID, StellungnahmeDSB.class);
-        typeIdClass.put(Datenverarbeitung.TYPE_ID, Datenverarbeitung.class);
-        
-        // BSI Risk analyses will not be imported or exported(Bug 194)
-        // typeIdClass.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.class);
-        // typeIdClass.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.class);
-        // typeIdClass.put(RisikoMassnahmenUmsetzung.TYPE_ID, RisikoMassnahmenUmsetzung.class);
-
-        typeIdClass.put(ResponseGroup.TYPE_ID, ResponseGroup.class);
-        typeIdClass.put(ExceptionGroup.TYPE_ID, ExceptionGroup.class);
-        typeIdClass.put(VulnerabilityGroup.TYPE_ID, VulnerabilityGroup.class);
-        typeIdClass.put(PersonGroup.TYPE_ID, PersonGroup.class);
-        typeIdClass.put(IncidentGroup.TYPE_ID, IncidentGroup.class);
-        typeIdClass.put(ThreatGroup.TYPE_ID, ThreatGroup.class);
-        typeIdClass.put(Organization.TYPE_ID, Organization.class);
-        typeIdClass.put(ProcessGroup.TYPE_ID, ProcessGroup.class);
-        typeIdClass.put(AuditGroup.TYPE_ID, AuditGroup.class);
-        typeIdClass.put(IncidentScenarioGroup.TYPE_ID, IncidentScenarioGroup.class);
-        typeIdClass.put(RecordGroup.TYPE_ID, RecordGroup.class);
-        typeIdClass.put(RequirementGroup.TYPE_ID, RequirementGroup.class);
-        typeIdClass.put(ControlGroup.TYPE_ID, ControlGroup.class);
-        typeIdClass.put(DocumentGroup.TYPE_ID, DocumentGroup.class);
-        typeIdClass.put(AssetGroup.TYPE_ID, AssetGroup.class);
-        typeIdClass.put(EvidenceGroup.TYPE_ID, EvidenceGroup.class);
-        typeIdClass.put(InterviewGroup.TYPE_ID, InterviewGroup.class);
-        typeIdClass.put(FindingGroup.TYPE_ID, FindingGroup.class);
-        
-        typeIdClass.put(Response.TYPE_ID, Response.class);
-        typeIdClass.put(sernet.verinice.model.iso27k.Exception.TYPE_ID, sernet.verinice.model.iso27k.Exception.class);
-        typeIdClass.put(Vulnerability.TYPE_ID, Vulnerability.class);
-        typeIdClass.put(PersonIso.TYPE_ID, PersonIso.class);
-        typeIdClass.put(Incident.TYPE_ID, Incident.class);
-        typeIdClass.put(Threat.TYPE_ID, Threat.class);
-        typeIdClass.put(sernet.verinice.model.iso27k.Process.TYPE_ID, sernet.verinice.model.iso27k.Process.class);
-        typeIdClass.put(Audit.TYPE_ID, Audit.class);
-        typeIdClass.put(IncidentScenario.TYPE_ID, IncidentScenario.class);
-        typeIdClass.put(Record.TYPE_ID, Record.class);
-        typeIdClass.put(Requirement.TYPE_ID, Requirement.class);
-        typeIdClass.put(Control.TYPE_ID, Control.class);
-        typeIdClass.put(Document.TYPE_ID, Document.class);
-        typeIdClass.put(Asset.TYPE_ID, Asset.class);
-        typeIdClass.put(Evidence.TYPE_ID, Evidence.class);
-        typeIdClass.put(Interview.TYPE_ID, Interview.class);
-        typeIdClass.put(Finding.TYPE_ID, Finding.class);
-
-        typeIdClass.put(SamtTopic.TYPE_ID, SamtTopic.class);
-    }
+  
 
     private String sourceId;
     private SyncMapping syncMapping;
@@ -323,7 +251,8 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             // Each new object needs a parent. The top-level element(s) in the
             // import set might not automatically have one. For those objects it is
             // neccessary to use the 'import root object' instead.
-            Class clazz = getClassFromTypeId(veriniceObjectType);
+            CnATypeMapper typeMapper = new CnATypeMapper();
+            Class clazz = typeMapper.getClassFromTypeId(veriniceObjectType);
             parent = (parent == null) ? accessContainer(clazz) : parent;
 
             try {
@@ -534,19 +463,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         return root;
     }
 
-    /**
-     * @param typeId
-     * @return the corresponding Class
-     */
-    @SuppressWarnings("unchecked")
-    private Class<CnATreeElement> getClassFromTypeId(String typeId) {
-        Class<CnATreeElement> klass = (Class<CnATreeElement>) typeIdClass.get(typeId);
-        if (klass == null) {
-            throw new IllegalStateException(String.format("Type ID '%s' was not available in type map.", typeId));
-        }
-
-        return klass;
-    }
+   
 
     /**
      * If during the import action an object has to be created for which no

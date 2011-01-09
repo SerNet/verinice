@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.actions;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -36,10 +37,15 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementList;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithLinks;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRiskAnalysis;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.IncidentScenario;
 
@@ -85,19 +91,42 @@ public class TestAction extends Action {
             
             StringBuilder allsb = new StringBuilder();
             
-            LoadReportElementList cmd = new LoadReportElementList(typeID, dbID);
-            cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
-            List<List<String>> elements = cmd.getResult();
-            
-            for (List<String> list : elements) {
-                Integer myDbid = Integer.parseInt(list.get(0));
-                LoadReportElementWithLinks command = new LoadReportElementWithLinks(null, myDbid);
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
-                List<List<String>> result = command.getResult();
-                allsb.append(list.get(1)).append("\n");
-                allsb.append(print(result)).append("\n");
+            LoadReportElements c2 = new LoadReportElements("riskanalysis", this.dbID);
+            c2 = ServiceFactory.lookupCommandService().executeCommand(c2);
+            List<CnATreeElement> elements = c2.getElements();
+
+            for (CnATreeElement riskana : elements) {
+                LoadReportRiskAnalysis cmd = new LoadReportRiskAnalysis(riskana.getDbId());
+                cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
+                cmd.getAllGefaehrdungsUmsetzungen();
+                cmd.getAssociatedGefaehrdungen();
+                List<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen = cmd.getNotOKGefaehrdungsUmsetzungen();
+                cmd.getZielObjekt();
+                
+                for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : notOKGefaehrdungsUmsetzungen) {
+                    LoadReportElementWithChildren cmd2 = new LoadReportElementWithChildren("mnums", gefaehrdungsUmsetzung.getDbId());
+                    cmd2 = ServiceFactory.lookupCommandService().executeCommand(cmd2);
+                    ArrayList<CnATreeElement> result2 = cmd2.getResult();
+                    result2=null;
+                    
+                }
                 
             }
+            
+            
+//            LoadReportElementList cmd = new LoadReportElementList(typeID, dbID);
+//            cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
+//            List<List<String>> elements = cmd.getResult();
+//            
+//            for (List<String> list : elements) {
+//                Integer myDbid = Integer.parseInt(list.get(0));
+//                LoadReportElementWithLinks command = new LoadReportElementWithLinks(null, myDbid);
+//                command = ServiceFactory.lookupCommandService().executeCommand(command);
+//                List<List<String>> result = command.getResult();
+//                allsb.append(list.get(1)).append("\n");
+//                allsb.append(print(result)).append("\n");
+//                
+//            }
             
             if (LOG.isDebugEnabled()) {
                 LOG.debug(allsb.toString());

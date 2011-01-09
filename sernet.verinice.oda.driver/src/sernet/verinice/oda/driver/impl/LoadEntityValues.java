@@ -54,7 +54,8 @@ public class LoadEntityValues extends GenericCommand {
 		this.classes = classes;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
+    @SuppressWarnings("unchecked")
 	public void execute() {
 		IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(typeId);
 		List<CnATreeElement> elements = dao.findAll();

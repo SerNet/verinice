@@ -27,20 +27,22 @@ import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 
-public class AllItemsReport implements IReportType {
+public class RealisierungsplanReport implements IReportType {
 	
-	private static final Logger LOG = Logger.getLogger(AllItemsReport.class);
+	private static final Logger LOG = Logger.getLogger(RealisierungsplanReport.class);
+	
+    private static final String REPORT_DESIGN = "Realisierungsplan.rptdesign"; //$NON-NLS-1$
 
 	public String getDescription() {
-		return Messages.AllItemsReport_0;
+		return Messages.RealisierungsplanReport_1;
 	}
 
 	public String getId() {
-		return "schutzbedarf"; //$NON-NLS-1$
+		return "realisierung"; //$NON-NLS-1$
 	}
 
 	public String getLabel() {
-		return Messages.AllItemsReport_2;
+		return Messages.RealisierungsplanReport_2;
 	}
 
 	public IOutputFormat[] getOutputFormats() {
@@ -50,7 +52,7 @@ public class AllItemsReport implements IReportType {
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
 		
-		URL reportDesign = AllItemsReport.class.getResource("allitems.rptdesign"); //$NON-NLS-1$
+		URL reportDesign = RealisierungsplanReport.class.getResource(REPORT_DESIGN); //$NON-NLS-1$
 		
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
 		{

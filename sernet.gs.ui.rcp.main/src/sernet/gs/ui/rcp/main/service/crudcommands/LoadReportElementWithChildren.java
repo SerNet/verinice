@@ -43,7 +43,11 @@ public class LoadReportElementWithChildren extends GenericCommand {
 
     public LoadReportElementWithChildren(String typeId, String rootElement) {
         this.filterchildrenByTypeID = typeId;
-        this.rootElement = Integer.parseInt(rootElement);
+        try {
+            this.rootElement = Integer.parseInt(rootElement);
+        } catch(NumberFormatException e) {
+            this.rootElement=-1;
+        }
     }
 	
 	public void execute() {
@@ -52,6 +56,10 @@ public class LoadReportElementWithChildren extends GenericCommand {
             command = getCommandService().executeCommand(command);
         } catch (CommandException e) {
             throw new RuntimeCommandException(e);
+        }
+        if (command.getElements() == null || command.getElements().size()==0) {
+            result = new ArrayList<CnATreeElement>(0);
+            return;
         }
 	    CnATreeElement root = command.getElements().get(0);
 	    

@@ -50,11 +50,14 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
 import bsh.EvalError;
 import bsh.Interpreter;
+
+
 
 public class Query implements IQuery
 {
@@ -141,7 +144,8 @@ public class Query implements IQuery
     			return Activator.getDefault().getCommandService().executeCommand(c);
     		} catch (CommandException e)
     		{
-    			throw new IllegalStateException("Running the command failed.");
+    		    log.error("Query Helper: running a command failed.", e);
+    			throw new IllegalStateException("Running the command failed.", e);
     		}
     	}
     	
@@ -183,10 +187,21 @@ public class Query implements IQuery
     		
     		return command.getResult();
         }
-        
+
         public String[] getAllPropertyTypes(String entityTypeId) {
+            return getAllPropertyTypes(entityTypeId, false);
+        }
+        
+        public String[] getAllPropertyTypes(String entityTypeId, boolean withId) {
             HUITypeFactory htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-            return htf.getEntityType(entityTypeId).getAllPropertyTypeIDsIncludingGroups();
+            String[] props = htf.getEntityType(entityTypeId).getAllPropertyTypeIDsIncludingGroups();
+            if (withId) {
+                String[] arr = new String[props.length+1];
+                System.arraycopy(props, 0, arr, 0, props.length);
+                arr[props.length]  = "dbid";
+                props = arr;
+            }
+            return props;
         }
       
         public List<List<String>> map(List<CnATreeElement> input, String[] props)
@@ -201,18 +216,38 @@ public class Query implements IQuery
          * @param input
          * @param props
          * @param classes
+         * @param addDbId optionally add database ID of the element at the end of each result
          * @return
          */
-        public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes)
+        public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId)
         {
-        	List<List<String>> result = new ArrayList<List<String>>();
-        	
-        	for (CnATreeElement e : input)
-        	{
-        		result.add(LoadEntityValues.retrievePropertyValues(e.getEntity(), props, classes));
-        	}
-        	
-        	return result;
+            if (input == null || input.size()==0)
+                return new ArrayList<List<String>>();
+            
+            
+           	MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(), reduceToIDs(input), props, classes, addDbId);
+        	cmd = (MapEntityValues) execute(cmd);
+        	return cmd.getResult();
+        }
+        
+        /**
+         * @param input
+         * @return
+         */
+        private List<Integer> reduceToIDs(List<CnATreeElement> input) {
+            List<Integer> result = new ArrayList<Integer>();
+            for (CnATreeElement elmt : input) {
+                result.add(elmt.getDbId());
+            }
+            return result;
+        }
+
+        public List<List<String>> map(List<CnATreeElement> input, String[] props, boolean withDbId){
+            return map(input, props, new Class<?>[0], withDbId);
+        }
+
+        public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes){
+            return map(input, props, classes, false);
         }
         
         public Integer getRoot() {
@@ -298,8 +333,8 @@ public class Query implements IQuery
 		try {
 			result = interpreter.eval(queryText);
 		} catch (EvalError e) {
-			log.warn("Error evaluating the query: ", e);
-			result = new String("Unable to execute query: " + e.getErrorText());
+			log.error("Error evaluating the query: ", e);
+			result = new String("Exception while executing query: " + e.getErrorText() + ", " + e.getCause().getMessage());
 		}
 		
 		return result;

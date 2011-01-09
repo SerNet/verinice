@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.dialect.function.CastFunction;
+
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
@@ -16,6 +18,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
@@ -27,19 +30,27 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Load all elements of given type linked to the given root element.
+ * Loads parent of given element.
  */
-public class LoadReportLinkedElements extends GenericCommand {
+public class LoadReportParent extends GenericCommand {
 
 
-	private String typeId;
     private Integer rootElement;
     private List<CnATreeElement> elements;
     
-    public LoadReportLinkedElements(String typeId, Integer rootElement) {
-	    this.typeId = typeId;
+    public LoadReportParent(Integer rootElement) {
 	    this.rootElement = rootElement;
 	}
+
+    public LoadReportParent(String rootElement) {
+        Integer dbid = -1;
+        try {
+            dbid = Integer.parseInt(rootElement);
+        } catch (NumberFormatException e) {
+            // ignore
+        }
+        this.rootElement = dbid;
+    }
 	
 	public void execute() {
 	    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
@@ -54,7 +65,7 @@ public class LoadReportLinkedElements extends GenericCommand {
         }
 	    CnATreeElement root = command.getElements().get(0);
 	    
-	    elements = getLinkedElements(root);
+	    elements = getParentElement(root);
 	    
 	    IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 	    RetrieveInfo ri = new RetrieveInfo();
@@ -73,17 +84,12 @@ public class LoadReportLinkedElements extends GenericCommand {
      * @param typeId2
      * @return
      */
-    private List<CnATreeElement> getLinkedElements(CnATreeElement root) {
+    private List<CnATreeElement> getParentElement(CnATreeElement root) {
         ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>();
-        for (CnALink link : root.getLinksDown()) {
-            if (link.getDependency().getTypeId().equals(this.typeId))
-                result.add(link.getDependency());
+        if (root.getParent() != null) {
+            result.add(root.getParent());
         }
-        for (CnALink link : root.getLinksUp()) {
-            if (link.getDependant().getTypeId().equals(this.typeId))
-                result.add(link.getDependant());
-        }
-        return result;
+        return result; 
     }
 
     /**
@@ -91,6 +97,19 @@ public class LoadReportLinkedElements extends GenericCommand {
      */
     public List<CnATreeElement> getElements() {
         return elements;
+    }
+    
+    public String[][] getRow() {
+        if (elements == null || elements.size()==0) {
+            return new String[0][0];
+        }
+        String[][] row = new String[1][2];
+        CnATreeElement elmt = elements.get(0);
+        if (elmt instanceof IBSIStrukturElement) {
+            row[0][0] = ((IBSIStrukturElement)elmt).getKuerzel();
+        }
+        row[0][1] = elements.get(0).getTitle();
+        return row;
     }
 
   

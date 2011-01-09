@@ -19,7 +19,6 @@ package sernet.verinice.report.service.impl;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.reports.StrukturanalyseReport;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.interfaces.report.IReportType;
 
@@ -43,9 +42,17 @@ public class ReportService implements IReportService {
 			reportTypes = new IReportType[] { 
 		        new UserReportType(), 
 		        new SamtReportType(), 
-		        new AllItemsReport(),
-		        new RiskByAssetReport(),
-		        new RiskTreatmentReport()
+		        
+		        new RiskByAssetReport(), // 27001 reports
+		        new RiskTreatmentReport(),
+
+		        new StrukturanalyseReport(), // BSI reports
+		        new AbhaengigkeitenReport(),
+		        new AllItemsReport(), // this is report ID "schutzbedarf"
+		        new ModellierungReport(),
+		        new BasisSichCheckReport(),
+		        new RisikoanalyseReport(),
+		        new RealisierungsplanReport()
 		    };
 		
 		return reportTypes;

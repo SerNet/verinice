@@ -128,6 +128,19 @@ public class CnALink implements Serializable, ITypedElement {
 		return name;
 	}
 	
+	public static String getRelationNameReplacingEmptyNames(CnATreeElement fromElement, CnALink link) {
+        HuiRelation relation = getTypeFactory().getRelation(link.getRelationId());
+        String name;
+        if (relation == null) {
+            // FIXME externalize strings
+            name = isDownwardLink(fromElement, link) ? "hängt ab von" : "nötig für"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        else {
+            name = isDownwardLink(fromElement, link) ? relation.getName() : relation.getReversename();
+        }
+        return name;
+    }
+	
 	private static HUITypeFactory getTypeFactory() {
 		return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 	}

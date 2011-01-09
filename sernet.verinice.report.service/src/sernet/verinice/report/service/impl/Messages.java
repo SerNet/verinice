@@ -27,16 +27,28 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.report.service.impl.messages"; //$NON-NLS-1$
+    public static String AbhaengigkeitenReport_1;
+    public static String AbhaengigkeitenReport_2;
     public static String AllItemsReport_0;
     public static String AllItemsReport_2;
+    public static String BasisSichCheckReport_1;
+    public static String BasisSichCheckReport_2;
     public static String ComprehensiveSamtReportType_0;
     public static String ComprehensiveSamtReportType_2;
+    public static String ModellierungReport_1;
+    public static String ModellierungReport_2;
+    public static String RealisierungsplanReport_1;
+    public static String RealisierungsplanReport_2;
+    public static String RisikoanalyseReport_1;
+    public static String RisikoanalyseReport_2;
     public static String RiskByAssetReport_0;
     public static String RiskByAssetReport_2;
     public static String RiskTreatmentReport_0;
     public static String RiskTreatmentReport_1;
     public static String SamtReportType_0;
     public static String SamtReportType_2;
+    public static String StrukturanalyseReport_1;
+    public static String StrukturanalyseReport_2;
     public static String UserReportType_1;
     public static String UserReportType_3;
     static {

@@ -15,6 +15,9 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -32,6 +35,17 @@ import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
 
+/**
+ * Load elements for reports. All properties  will be initialized to avoid lazy initialization exceptions.
+ * Result list will be sorted using <code>NumericStringComparator</code>. 
+ * This correctly sorts "M 1.101" *after* "M 1.2" which cannot be accomplished by the comparators normally available in BIRT.
+ * 
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
 public class LoadReportElements extends GenericCommand {
 
     private transient Logger log = Logger.getLogger(LoadReportElements.class);
@@ -61,6 +75,10 @@ public class LoadReportElements extends GenericCommand {
         } catch (CommandException e) {
             throw new RuntimeCommandException(e);
         }
+        if (command.getElements() == null || command.getElements().size()==0) {
+            this.elements = new ArrayList<CnATreeElement>(0);
+            return;
+        }
 	    CnATreeElement root = command.getElements().get(0);
 
 	    //if typeId is that of the root object, just return it itself. else look for children:
@@ -74,29 +92,32 @@ public class LoadReportElements extends GenericCommand {
 	        this.elements = items;
 	    }
 	    
-	    IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
-	    RetrieveInfo ri = new RetrieveInfo();
-	    ri.setProperties(true);
-//	    ri.setParent(true);
-//	    ri.setPermissions(true);
-//	    ri.setParentPermissions(true);
-//	    ri.setChildren(true);
-//	    ri.setChildren(true);
-	    HydratorUtil.hydrateElements(dao, elements, ri);
-
-	}
-
-	/**
-     * @return the elements
-     */
-    public List<CnATreeElement> getElements() {
-        Collections.sort(elements, new Comparator<CnATreeElement>() {
+	    Collections.sort(elements, new Comparator<CnATreeElement>() {
             @Override
             public int compare(CnATreeElement o1, CnATreeElement o2) {
                 NumericStringComparator comparator = new NumericStringComparator();
                 return comparator.compare(o1.getTitle(), o2.getTitle());
             }
         });
+	    
+//	    IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
+//	    RetrieveInfo ri = new RetrieveInfo();
+//	    ri.setProperties(true);
+//	    ri.setParent(true);
+//	    ri.setPermissions(true);
+//	    ri.setParentPermissions(true);
+//	    ri.setChildren(true);
+//	    ri.setChildren(true);
+//	    HydratorUtil.hydrateElements(dao, elements, ri);
+
+	}
+
+	
+
+    /**
+     * @return the elements
+     */
+    public List<CnATreeElement> getElements() {
         return elements;
     }
 
