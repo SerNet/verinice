@@ -40,12 +40,19 @@ import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.common.connect.HuiRelation;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.iso27k.ILink;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.CreateLink;
+import sernet.verinice.service.commands.LoadElementByTypeId;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
@@ -58,7 +65,11 @@ public class EditBean {
     
     public static final String BOUNDLE_NAME = "sernet.verinice.web.EditMessages";
     
+    private LinkBean linkBean;
+    
     private CnATreeElement element;
+    
+    private EntityType entityType;
     
     private String typeId;
     
@@ -66,24 +77,34 @@ public class EditBean {
     
     private String title;
     
-    public List<HuiProperty<String, String>> propertyList;
+    private List<HuiProperty<String, String>> propertyList;
     
-    public List<sernet.verinice.web.PropertyGroup> groupList;
+    private List<sernet.verinice.web.PropertyGroup> groupList;
     
     private Set<String> roles = null;
     
     private boolean generalOpen = true;
     
     private boolean groupOpen = false;
+    
+    private boolean linkOpen = true;
        
     public void init() {
         try {
             RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+            ri.setLinksDownProperties(true);
+            ri.setLinksUpProperties(true);
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(getTypeId(),getUuid(),ri);        
-            command = getCommandService().executeCommand(command);
+            command = getCommandService().executeCommand(command);    
             setElement(command.getElement());
+            
             Entity entity = getElement().getEntity();           
-            EntityType entityType = getHuiService().getEntityType(getTypeId());          
+            setEntityType(getHuiService().getEntityType(getTypeId())); 
+            
+            getLinkBean().setElement(getElement());
+            getLinkBean().setEntityType(getEntityType());
+            getLinkBean().setTypeId(getTypeId());
+            getLinkBean().init();
             
             groupList = new ArrayList<sernet.verinice.web.PropertyGroup>();
             List<PropertyGroup> groupListHui = entityType.getPropertyGroups();     
@@ -109,13 +130,13 @@ public class EditBean {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("prop: " + id + " (" + propertyType.getInputName() + ") - " + value);
                 }
-            }          
+            }                
         } catch(Throwable t) {
             LOG.error("Error while initializatio. ", t);
             Util.addError( "editPanel", Util.getMessage(BOUNDLE_NAME,"init.failed"));
         }
     }
-    
+
     public void save() {
         LOG.debug("save called...");
         try {
@@ -148,6 +169,16 @@ public class EditBean {
             LOG.error("Error while saving element, uuid: " + getUuid(), e);
             ExceptionHandler.handle(e);
         }
+    }
+    
+    public void clear() {
+        groupList.clear();
+        propertyList.clear();
+        uuid = null;
+        typeId = null;
+        title = null;
+        element = null;
+        getLinkBean().clear();
     }
     
     public boolean writeEnabled() {
@@ -195,6 +226,14 @@ public class EditBean {
         return false;
     }
     
+    public LinkBean getLinkBean() {
+        return linkBean;
+    }
+
+    public void setLinkBean(LinkBean linkBean) {
+        this.linkBean = linkBean;
+    }
+
     public String getTypeId() {
         return typeId;
     }
@@ -205,6 +244,14 @@ public class EditBean {
 
     public void setElement(CnATreeElement element) {
         this.element = element;
+    }
+
+    public EntityType getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
     }
 
     public void setTypeId(String typeId) {
@@ -260,6 +307,14 @@ public class EditBean {
 
     public void setGroupOpen(boolean groupOpen) {
         this.groupOpen = groupOpen;
+    }
+
+    public boolean isLinkOpen() {
+        return linkOpen;
+    }
+
+    public void setLinkOpen(boolean linkOpen) {
+        this.linkOpen = linkOpen;
     }
 
     public TimeZone getTimeZone() {

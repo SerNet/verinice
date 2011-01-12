@@ -15,39 +15,41 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service.commands;
+package sernet.verinice.service.commands;
 
 import java.util.List;
-import java.util.Set;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.ISO27KModel;
 
 @SuppressWarnings("serial")
-public class LoadElementByClass extends GenericCommand {
+public class LoadElementByTypeId extends GenericCommand {
 
-    
     private String typeId;
+    private RetrieveInfo ri;
 	private List<? extends CnATreeElement> elementList;
 
-	public LoadElementByClass(String typeId) {
+	public LoadElementByTypeId(String typeId) {
+	    super();
 	    this.typeId = typeId;
 	}
 	
-	public void execute() {
-		RetrieveInfo ri = new RetrieveInfo();
-		//ri.setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
+	public LoadElementByTypeId(String typeId, RetrieveInfo ri) {
+        super();
+        this.typeId = typeId;
+        this.ri = ri;
+    }
+
+    public void execute() {
+        if(ri==null) {
+            RetrieveInfo ri = new RetrieveInfo();
+        }
 		elementList = getDaoFactory().getDAO(typeId).findAll(ri);		
 	}
-
 
 	public List<? extends CnATreeElement> getElementList() {
 		return elementList;
 	}
 	
-	
-
 }

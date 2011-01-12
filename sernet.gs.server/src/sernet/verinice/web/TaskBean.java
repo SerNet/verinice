@@ -84,6 +84,19 @@ public class TaskBean {
         }
     }
     
+    public void completeTask() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("completeTask() called ...");
+        }
+        if(getSelectedTask()!=null) {
+            getTaskService().completeTask(getSelectedTask().getId());
+            getTaskList().remove(getSelectedTask());
+            setSelectedTask(null);
+            getEditBean().clear();
+            Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));  
+        }
+    }
+    
     public EditBean getEditBean() {
         return editBean;
     }

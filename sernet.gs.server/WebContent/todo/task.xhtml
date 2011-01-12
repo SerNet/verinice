@@ -34,21 +34,25 @@
 			<div id="col1">
 				<!--###col1### begin -->
 				<div id="col1_content" class="clearfix">
-					<h1><h:outputText value="#{msgTask['tasks']}" /></h1>
-					<a4j:outputPanel id="tablePanel">					
-		      			<h:form id="tableForm">
+					<h:form id="tableForm">
+						<div class="csc-header csc-header-n1">
+							<h1><h:outputText value="#{msgTask['tasks']}" /></h1>
+							<a4j:commandButton id="complete" value="#{msgTask['complete']}" action="#{task.completeTask}" reRender="tablePanel,editPanel" style="margin-bottom: 5px;"/>					
+						</div>
+						<a4j:outputPanel id="tablePanel">	     
 		      				 <rich:extendedDataTable
 		      				 	id="taskTable"
 				                value="#{task.taskList}" 
 				                var="item"
 				                binding="#{task.table}"
 				                selectionMode="single"
-				                selection="#{task.selection}">						                
+				                selection="#{task.selection}"
+				                width="344">						                
 				                <rich:column id="colTitle"
 		      						sortable="true" 
 		      						sortBy="#{item.name}"
-				                    width="140"
-				                    label="#{msgTask['title']}">
+				                    label="#{msgTask['title']}"
+				                    width="130">
 				                    <f:facet name="header">
 				                        <h:outputText value="#{msgTask['title']}" />
 				                    </f:facet>
@@ -57,7 +61,8 @@
 				                <rich:column id="colElement"
 		      						sortable="true" 
 		      						sortBy="#{item.controlTitle}"
-				                    label="#{msgTask['control']}">
+				                    label="#{msgTask['control']}"
+				                    width="130">
 				                    <f:facet name="header">
 				                        <h:outputText value="#{msgTask['control']}" />
 				                    </f:facet>
@@ -66,7 +71,8 @@
 				                <rich:column id="colDate"
 		      						sortable="true" 
 		      						sortBy="#{item.createDate}"
-				                    label="bis">
+				                    label="bis"
+				                    width="84">
 				                    <f:facet name="header">
 				                        <h:outputText value="#{msgTask['createDate']}" />
 				                    </f:facet>
@@ -77,9 +83,9 @@
 				                <a4j:support reRender="editPanel"
 					                    action="#{task.openTask}"
 					                    event="onselectionchange" />					 
-				            </rich:extendedDataTable>								
-						</h:form>
-					</a4j:outputPanel>
+				            </rich:extendedDataTable>				
+						</a4j:outputPanel>
+					</h:form>
 				</div>
 			 	<!--###col1### end -->
 			</div>
@@ -104,10 +110,10 @@
 					                    </rich:message>
 							        </div>
 				      				<rich:simpleTogglePanel  switchType="client" label="#{msgEdit['general']}" opened="#{edit.generalOpen}">
-					      				<table style="width: 640px;">						
+					      				<table>						
 							      			<a4j:repeat id="propertyList" value="#{edit.propertyList}" var="property">
 							      				<tr>
-													<td style="width: 250px;"><h:outputText value="#{property.name}"/></td>
+													<td style="width: 200px;"><h:outputText value="#{property.name}"/></td>
 													<td>
 														<h:inputText value="#{property.value}" rendered="#{property.isLine}"/>
 														<h:inputTextarea value="#{property.value}" rendered="#{property.isText}" style="height:50px;"/>
@@ -127,10 +133,10 @@
 							      	</rich:simpleTogglePanel>
 						      		<a4j:repeat id="groupList" value="#{edit.groupList}" var="group">
 							      		<rich:simpleTogglePanel  switchType="client" label="#{group.name}" opened="#{edit.groupOpen}">
-						      				<table style="width: 640px;">
+						      				<table>
 						      					<a4j:repeat value="#{group.propertyList}" var="propertyG">
 						      						<tr>
-														<td style="width: 250px;"><h:outputText value="#{propertyG.name}"/></td>
+														<td style="width: 200px;"><h:outputText value="#{propertyG.name}"/></td>
 														<td>
 															<h:inputText value="#{propertyG.value}" rendered="#{propertyG.isLine}"/>
 															<h:inputTextarea value="#{propertyG.value}" rendered="#{propertyG.isText}" style="height:50px;"/>
@@ -149,6 +155,47 @@
 						      				</table>
 							      		</rich:simpleTogglePanel>
 						      		</a4j:repeat>
+						      		<rich:simpleTogglePanel switchType="client" label="#{msgEdit['links']}" opened="#{edit.linkOpen}">
+						      			<table>
+						      				<tr>
+						      					<td>
+						      						<rich:comboBox value="#{link.selectedLinkType}" suggestionValues="#{link.linkTypeList}" defaultLabel="#{msgEdit['selectType']}" enableManualInput="false" width="200" style="margin-bottom:5px;">
+						      							<a4j:support event="onselect" reRender="linkTarget" action="#{link.loadLinkTargets}"/>
+						      						</rich:comboBox>
+						      					</td>
+						      					<td><rich:comboBox id="linkTarget" value="#{link.selectedLinkTargetName}" suggestionValues="#{link.linkTargetNameList}" defaultLabel="#{msgEdit['selectTarget']}" enableManualInput="false" style="margin-bottom:5px"/></td>					      					
+						      					<td><a4j:commandButton id="addLink" value="#{msgEdit['addLink']}" action="#{link.addLink}" reRender="editPanel"/></td>
+						      				</tr>
+						      			</table>				      			
+						      			<rich:extendedDataTable
+					      				 	id="linkTable"
+							                value="#{link.linkList}" 
+							                var="item"
+							                selectionMode="single"
+							                height="150px"
+							                width="400px">
+							                <rich:column id="colType"
+					      						sortable="true" 
+					      						sortBy="#{item.type}"
+							                    label="#{msgEdit['linkType']}"
+							                    width="200px">
+							                    <f:facet name="header">
+							                        <h:outputText value="#{msgEdit['linkType']}" />
+							                    </f:facet>
+							                    <h:outputText value="#{item.type}"/>
+							                </rich:column>				                
+							                <rich:column id="colTarget"
+					      						sortable="true" 
+					      						sortBy="#{item.targetName}"
+							                    label="#{msgEdit['linkTarget']}"
+							                    width="200px">
+							                    <f:facet name="header">
+							                        <h:outputText value="#{msgEdit['linkTarget']}" />
+							                    </f:facet>
+							                    <h:outputText value="#{item.targetName}"/>
+							                </rich:column>
+								            </rich:extendedDataTable>
+						      		</rich:simpleTogglePanel>					    			
 					      		</a4j:form>
 					    	</a4j:outputPanel>							
 				      	</div>

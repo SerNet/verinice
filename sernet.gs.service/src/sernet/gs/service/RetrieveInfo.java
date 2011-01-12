@@ -124,6 +124,9 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	}
 
 	public RetrieveInfo setLinksUpProperties(boolean linksUpProperties) {
+	    if(linksUpProperties) {
+	        this.setLinksUp(linksUpProperties);
+	    }
 		this.linksUpProperties = linksUpProperties;
 		return this;
 	}
@@ -148,6 +151,9 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	}
 
 	public RetrieveInfo setLinksDownProperties(boolean linksDownProperties) {
+	    if(linksDownProperties) {
+            this.setLinksDown(linksDownProperties);
+        }
 		this.linksDownProperties = linksDownProperties;
 		return this;
 	}

@@ -21,8 +21,8 @@ package sernet.verinice.samt.audit.rcp;
 
 import java.util.Arrays;
 
-import sernet.verinice.iso27k.service.commands.LoadElementByClass;
 import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
+import sernet.verinice.service.commands.LoadElementByTypeId;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -43,8 +43,8 @@ public class ElementViewCommandFactory implements ICommandFactory {
      * @see sernet.verinice.samt.audit.rcp.ICommandFactory#getElementCommand()
      */
     @Override
-    public LoadElementByClass getElementCommand() {
-        return new LoadElementByClass(groupTypeId);
+    public LoadElementByTypeId getElementCommand() {
+        return new LoadElementByTypeId(groupTypeId);
     }
 
     /* (non-Javadoc)

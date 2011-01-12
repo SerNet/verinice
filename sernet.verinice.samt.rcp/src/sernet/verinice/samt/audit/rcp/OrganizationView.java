@@ -25,10 +25,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate;
-import sernet.verinice.iso27k.service.commands.LoadElementByClass;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.LoadElementByTypeId;
 
 /**
  * ElementView which shows {@link Organization}s.
@@ -54,7 +54,7 @@ public class OrganizationView extends GenericElementView {
     protected List<? extends CnATreeElement> getElementList() throws CommandException {
         List<? extends CnATreeElement> elementList = Collections.emptyList();
         if(getCommandFactory()!=null) {
-            LoadElementByClass command = getCommandFactory().getElementCommand();
+            LoadElementByTypeId command = getCommandFactory().getElementCommand();
             command = getCommandService().executeCommand(command);
             elementList = command.getElementList();
         }
@@ -72,7 +72,7 @@ public class OrganizationView extends GenericElementView {
      */
     @Override
     protected List<? extends CnATreeElement> getLinkedElements(int selectedId) throws CommandException {
-        LoadElementByClass command = new LoadElementByClass(Organization.TYPE_ID);
+        LoadElementByTypeId command = new LoadElementByTypeId(Organization.TYPE_ID);
         command = getCommandService().executeCommand(command);
         return command.getElementList();
     }

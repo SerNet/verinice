@@ -21,9 +21,9 @@ package sernet.verinice.samt.audit.rcp;
 
 import java.util.Arrays;
 
-import sernet.verinice.iso27k.service.commands.LoadElementByClass;
 import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.LoadElementByTypeId;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -35,8 +35,8 @@ public class OrganizationCommandFactory implements ICommandFactory {
      * @see sernet.verinice.samt.audit.rcp.CommandFactory#getElementCommand()
      */
     @Override
-    public LoadElementByClass getElementCommand() {
-        return new LoadElementByClass(Organization.TYPE_ID);
+    public LoadElementByTypeId getElementCommand() {
+        return new LoadElementByTypeId(Organization.TYPE_ID);
     }
 
     /* (non-Javadoc)

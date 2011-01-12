@@ -17,37 +17,18 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.samt.audit.rcp;
-
-import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.LoadElementByTypeId;
+package sernet.verinice.interfaces.iso27k;
 
 /**
- * Returns commands to load {@link CnATreeElement}s
- * ICommandFactory is used in {@link GenericElementView}
- * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ *
  */
-public interface ICommandFactory {
-
-    public String getElementTypeId();
+public interface ILink {
     
-    public String getGroupTypeId();
+    String getTargetUuid();
     
-    /**
-     * @return a command which loads {@link CnATreeElement}s
-     * for a given class
-     */
-    public LoadElementByTypeId getElementCommand();
+    String getType();
     
-    /**
-     * Returns a command which loads {@link CnATreeElement}s
-     * which are linked to a {@link CnATreeElement} with primary key selectedId
-     * 
-     * @param selectedId primary key of an {@link CnATreeElement}
-     * @return a command which loads linked {@link CnATreeElement}s
-     */
-    public LoadLinkedElements getLinkedElementCommand(int selectedId);
+    String getTargetName();
 
 }

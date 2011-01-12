@@ -27,7 +27,7 @@ import org.springframework.util.StopWatch;
  * 
  * See Spring AOP configuration in veriniceserver-debug.xml.
  * 
- * Activate Logging by setting Log4j-Log-Level of this class and of target class
+ * Activate Logging by setting Log4j-Log-Level of this class and of targetName class
  * to DEBUG.
  * 
  * See: http://murygin.wordpress.com/2007/10/25/logging-mit-spring-aop/
