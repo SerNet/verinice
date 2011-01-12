@@ -4498,6 +4498,9 @@ columns(LoadReportElementWithLinks.COLUMNS);</value>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="paddingTop">20pt</property>
+            <property name="pageBreakAfter">avoid</property>
+            <property name="pageBreakBefore">avoid</property>
+            <property name="pageBreakInside">avoid</property>
             <text-property name="text">Anwendungen</text-property>
         </label>
         <table id="943">
@@ -5201,7 +5204,7 @@ columns(LoadReportElementWithLinks.COLUMNS);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
-            <property name="repeatHeader">false</property>
+            <property name="repeatHeader">true</property>
             <property name="pageBreakInterval">0</property>
             <column id="1652">
                 <property name="width">0.768595041322314in</property>
@@ -5759,6 +5762,7 @@ columns(LoadReportElementWithLinks.COLUMNS);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
+            <property name="pageBreakInterval">0</property>
             <column id="1757">
                 <property name="width">0.768595041322314in</property>
             </column>
@@ -8251,6 +8255,7 @@ columns(LoadReportElementWithLinks.COLUMNS);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
+            <property name="pageBreakInterval">0</property>
             <column id="2039">
                 <property name="width">0.768595041322314in</property>
             </column>

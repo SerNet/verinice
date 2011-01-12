@@ -31,6 +31,8 @@ public class Messages extends NLS {
     public static String AbhaengigkeitenReport_2;
     public static String AllItemsReport_0;
     public static String AllItemsReport_2;
+    public static String AuditberichtReport_0;
+    public static String AuditberichtReport_1;
     public static String BasisSichCheckReport_1;
     public static String BasisSichCheckReport_2;
     public static String ComprehensiveSamtReportType_0;

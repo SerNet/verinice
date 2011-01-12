@@ -2023,6 +2023,98 @@ the value between <param></param> will be used directly if no string is found fo
             name="Dokument"
             id="mnums_dokument"
             isURL="true" />
+            
+        <huipropertygroup id="mnums_gsaudit" name="GS Audit" tags="GS-Audit" >
+
+
+            <huiproperty
+               name="Auditor" id="mnums_gsaudit_auditor" tags="GS-Audit" />
+
+            <huiproperty
+               name="Befragter" id="mnums_gsaudit_befragt" tags="GS-Audit"/>
+
+            <huiproperty
+               name="Prüfmethoden" id="mnums_gsaudit_methode" tags="GS-Audit" inputtype="multioption" >
+                    <option
+                        id="mnums_gsaudit_methode_d"
+                        name="Dokumentationsprüfung A0 - A7" />
+                    <option
+                        id="mnums_gsaudit_methode_i"
+                        name="Interviews" />
+                    <option
+                        id="mnums_gsaudit_methode_c"
+                        name="Inaugenscheinnahme" />
+                    <option
+                        id="mnums_gsaudit_methode_s"
+                        name="Durchsicht von Unterlagen (z.B. Richtlinien, Anweisungen)" />
+                    <option
+                        id="mnums_gsaudit_methode_a"
+                        name="Verwertug Unterlagen Dritter (z.B. Protokolle, Verträge)" />
+                    <option
+                        id="mnums_gsaudit_methode_b"
+                        name="Beobachtung von Aktivitäten u. Arbeitsabläufen" />
+            </huiproperty>
+
+            <huiproperty
+               name="Prüffragen" id="mnums_gsaudit_fragen" tags="GS-Audit" inputtype="text" textrows="10" />
+            <huiproperty
+               name="Auditbeobachtung" id="mnums_gsaudit_beobachtung" tags="GS-Audit" inputtype="text" textrows="10" />
+            <huiproperty
+               name="Auditbericht" id="mnums_gsaudit_bericht" tags="GS-Audit" inputtype="text" textrows="10" />
+
+            <huiproperty
+               name="Auditiert am" id="mnums_gsaudit_auditam" inputtype="date" tags="GS-Audit">
+               <defaultRule class="Today" />
+            </huiproperty>
+            <huiproperty
+               name="Status" id="mnums_gsaudit_status" tags="GS-Audit" inputtype="numericoption" min="0" max="1">
+                    <option
+                        id="mnums_gsaudit_status_0"
+                        name="korrekt"
+                        value="0" />
+                    <option
+                        id="mnums_gsaudit_methode_1"
+                        name="unzureichend" 
+                        value="1" />
+            </huiproperty>
+
+            <huiproperty
+               name="Abweichung" id="mnums_gsaudit_abweichung" tags="GS-Audit" inputtype="numericoption" min="0" max="3">
+                    <option
+                        id="mnums_gsaudit_abweichung_0"
+                        name=" " 
+                        value="0" />
+                    <option
+                        id="mnums_gsaudit_abweichung_1"
+                        name="Empfehlung" 
+                        value="1" />
+                    <option
+                        id="mnums_gsaudit_abweichung_2"
+                        name="Geringfügig" 
+                        value="2" />
+                    <option
+                        id="mnums_gsaudit_abweichung_3"
+                        name="Schwerwiegend" 
+                        value="3" />
+            </huiproperty>
+
+            <huiproperty
+               name="Behebungsfrist" id="mnums_gsaudit_frist" tags="GS-Audit" inputtype="date" > 
+                <defaultRule class="Today" />
+            </huiproperty>
+
+            <huiproperty
+               name="Nachbesserung erfolgt?" id="mnums_gsaudit_nachberfolgt" tags="GS-Audit" inputtype="booleanoption"  defaultValue="0" />
+
+            <huiproperty
+               name="Nachbesserung" id="mnums_gsaudit_nachb" tags="GS-Audit" inputtype="text" textrows="10" />
+
+            <huiproperty
+               name="Auditor-Votum" id="mnums_gsaudit_votum" tags="GS-Audit" inputtype="text" textrows="10" />
+
+        </huipropertygroup>
+            
+            
 		<huipropertygroup
 			id="mnums_group_umsetzung"
 			name="Umsetzung">
@@ -3096,17 +3188,17 @@ the value between <param></param> will be used directly if no string is found fo
             name="impact reduced by" reversename="reduces impact of" tooltip=""/> 
                
         <huiproperty
-            name="Title" tags="Risk"
+            name="Title" 
             id="asset_name"/>
         <huiproperty
-            name="Abbreviation" tags="Risk"
+            name="Abbreviation" 
             id="asset_abbr" />
         <huiproperty
             id="asset_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
 		<huiproperty
-			name="Description" id="asset_description" inputtype="text" tags="Risk"/>
+			name="Description" id="asset_description" inputtype="text"  />
 		
 		<huiproperty
 			name="Type of Asset"
