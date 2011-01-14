@@ -157,7 +157,9 @@ public class LinkBean {
                             reverse = true;
                         } 
                         if(link!=null) {
-                            linkList.add(map(link,reverse));
+                            LinkInformation linkInformation = map(link,reverse);
+                            linkInformation.setType(getTypeName(link));
+                            linkList.add(linkInformation);
                             Util.addInfo("addLink", Util.getMessage(EditBean.BOUNDLE_NAME, "linkAdded", new String[] {target.getTitle()})); 
                         }
                     }
@@ -170,6 +172,22 @@ public class LinkBean {
             LOG.error("Error while creating link, typeId: " + typeId, t);
             ExceptionHandler.handle(t);
         }
+    }
+
+    private String getTypeName(CnALink link) {
+        String typeName = null;
+        Set<HuiRelation> huiRelationSet = entityType.getPossibleRelations();
+        for (HuiRelation huiRelation : huiRelationSet) {
+            if(link.getRelationId()!=null && link.getRelationId().equals(huiRelation.getId())) {
+                if(getTypeId().equals(huiRelation.getFrom())) {
+                    typeName = huiRelation.getName();
+                } else {
+                    typeName = huiRelation.getReversename();
+                }
+                break;
+            }
+        }
+        return typeName;
     }
     
     private CnALink createLink(CnATreeElement source, CnATreeElement target, String typeId, String comment) throws CommandException {

@@ -21,8 +21,10 @@ package sernet.verinice.web;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
@@ -64,6 +66,8 @@ public class EditBean {
     private static final Logger LOG = Logger.getLogger(EditBean.class);
     
     public static final String BOUNDLE_NAME = "sernet.verinice.web.EditMessages";
+
+    private static final CharSequence TAG_WEB = "Web";
     
     private LinkBean linkBean;
     
@@ -98,43 +102,86 @@ public class EditBean {
             command = getCommandService().executeCommand(command);    
             setElement(command.getElement());
             
-            Entity entity = getElement().getEntity();           
-            setEntityType(getHuiService().getEntityType(getTypeId())); 
-            
-            getLinkBean().setElement(getElement());
-            getLinkBean().setEntityType(getEntityType());
-            getLinkBean().setTypeId(getTypeId());
-            getLinkBean().init();
-            
-            groupList = new ArrayList<sernet.verinice.web.PropertyGroup>();
-            List<PropertyGroup> groupListHui = entityType.getPropertyGroups();     
-            for (PropertyGroup groupHui : groupListHui) {
-                sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(groupHui.getId(), groupHui.getName());
-                List<PropertyType> typeListHui = groupHui.getPropertyTypes();
-                List<HuiProperty<String, String>> listOfGroup = new ArrayList<HuiProperty<String,String>>();
-                for (PropertyType huiType : typeListHui) {
-                    String id = huiType.getId();
-                    String value = entity.getValue(id);
-                    listOfGroup.add(new HuiProperty<String, String>(huiType, id, value));
-                }
-                group.setPropertyList(listOfGroup);
-                groupList.add(group);
+            if(getElement()!=null) {
+                Entity entity = getElement().getEntity();           
+                setEntityType(getHuiService().getEntityType(getTypeId())); 
+                
+                getLinkBean().setElement(getElement());
+                getLinkBean().setEntityType(getEntityType());
+                getLinkBean().setTypeId(getTypeId());
+                getLinkBean().init();
+                
+                groupList = new ArrayList<sernet.verinice.web.PropertyGroup>();
+                List<PropertyGroup> groupListHui = entityType.getPropertyGroups();     
+                for (PropertyGroup groupHui : groupListHui) {
+                    if(isVisible(groupHui)) {
+                        sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(groupHui.getId(), groupHui.getName());
+                        List<PropertyType> typeListHui = groupHui.getPropertyTypes();
+                        List<HuiProperty<String, String>> listOfGroup = new ArrayList<HuiProperty<String,String>>();
+                        for (PropertyType huiType : typeListHui) {
+                            if(isVisible(huiType)) {
+                                String id = huiType.getId();
+                                String value = entity.getValue(id);
+                                listOfGroup.add(new HuiProperty<String, String>(huiType, id, value));
+                            }
+                        }
+                        group.setPropertyList(listOfGroup);
+                        groupList.add(group);
+                    }
+                }              
+                propertyList = new ArrayList<HuiProperty<String,String>>();
+                List<PropertyType> typeList = entityType.getPropertyTypes();        
+                for (PropertyType propertyType : typeList) {
+                    if(isVisible(propertyType)) {
+                        String id = propertyType.getId();
+                        String value = entity.getValue(id);
+                        propertyList.add(new HuiProperty<String, String>(propertyType, id, value));
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("prop: " + id + " (" + propertyType.getInputName() + ") - " + value);
+                        }
+                    }
+                }   
+            } else {
+                LOG.error("Element not found, type: " + getTypeId() + ", uuid: " + getUuid());
+                Util.addError( "editPanel", Util.getMessage(BOUNDLE_NAME,"elementNotFound"));
             }
-            
-            propertyList = new ArrayList<HuiProperty<String,String>>();
-            List<PropertyType> typeList = entityType.getPropertyTypes();        
-            for (PropertyType propertyType : typeList) {
-                String id = propertyType.getId();
-                String value = entity.getValue(id);
-                propertyList.add(new HuiProperty<String, String>(propertyType, id, value));
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("prop: " + id + " (" + propertyType.getInputName() + ") - " + value);
-                }
-            }                
         } catch(Throwable t) {
-            LOG.error("Error while initializatio. ", t);
+            LOG.error("Error while initialization. ", t);
             Util.addError( "editPanel", Util.getMessage(BOUNDLE_NAME,"init.failed"));
         }
+    }
+
+    /**
+     * @param huiType
+     * @return
+     */
+    private boolean isVisible(PropertyType huiType) {
+        return isVisible(getTagSet(huiType.getTags()));
+    }
+
+    /**
+     * @param groupHui
+     * @return
+     */
+    private boolean isVisible(PropertyGroup groupHui) {
+        return isVisible(getTagSet(groupHui.getTags()));
+    }
+
+    private Set<String> getTagSet(String allTags) {
+        Set<String> tagSet = new HashSet<String>();
+        StringTokenizer st = new StringTokenizer(allTags,",");
+        while(st.hasMoreTokens()) {
+            tagSet.add(st.nextToken());
+        }
+        return tagSet;
+    }
+
+    /**
+     * @param tagSet
+     * @return
+     */
+    private boolean isVisible(Set<String> tagSet) {
+        return tagSet!=null && tagSet.contains(TAG_WEB);
     }
 
     public void save() {

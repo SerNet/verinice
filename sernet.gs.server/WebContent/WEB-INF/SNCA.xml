@@ -3747,10 +3747,12 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Title"
             id="control_name" 
-            inputtype="text"/>
+            inputtype="text"
+            tags="Web"/>
         <huiproperty
             name="Abbreviation"
-            id="control_abbr" />
+            id="control_abbr"
+            tags="Web" />
         <huiproperty
             id="control_tag"
             name="Tags"
@@ -3759,7 +3761,7 @@ the value between <param></param> will be used directly if no string is found fo
             name="Description"
             id="control_desc"
             visible="false"
-            />
+            tags="Web"/>
      	
    
 
@@ -3768,26 +3770,26 @@ the value between <param></param> will be used directly if no string is found fo
      		 ??? measured effectiveness, notes, date... 
      	</huipropertygroup>
 -->
-     	<huipropertygroup id="control_implementedgroup" name="Implementation" tags="Risk">
-     		<huiproperty name="Implemented" id="control_implemented" inputtype="singleoption" tags="Risk">
+     	<huipropertygroup id="control_implementedgroup" name="Implementation" tags="Risk,Web">
+     		<huiproperty name="Implemented" id="control_implemented" inputtype="singleoption" tags="Risk,Web">
      			<option name="Yes" id="control_implemented_yes"/>
      			<option name="No" id="control_implemented_no"/>
      			<option name="Partly" id="control_implemented_partly"/>
      			<option name="N.a." id="control_implemented_na"/>
      		</huiproperty>
      		<huiproperty 
-            tags="Risk"
+            tags="Risk,Web"
      			name="Explanation" 
      			id="control_implemented_explanation" 
      			inputtype="text" />
             <huiproperty
-            tags="Risk" 
+            tags="Risk,Web" 
                 name="Objective" 
                 id="control_implemented_objective" 
                 inputtype="text" 
                 tooltip="The control objective is the goal that the control is supposed to achieve." />
      		<huiproperty
-            tags="Risk"
+            tags="Risk,Web"
 				id="control_implby"
 				name="Implementation date"
 				inputtype="date">

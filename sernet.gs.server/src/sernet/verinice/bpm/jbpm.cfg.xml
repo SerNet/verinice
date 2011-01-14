@@ -62,8 +62,6 @@
 
   <!-- Job executor is excluded for running the example test cases. -->
   <!-- To enable timers and messages in production use, this should be included. -->
-  <!--
   <import resource="jbpm.jobexecutor.cfg.xml" />
-  -->
 
 </jbpm-configuration>
