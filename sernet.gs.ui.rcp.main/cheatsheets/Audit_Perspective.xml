@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="The Audit Perspective">
+   <intro>
+      <description>
+         This cheatsheet will guide you through the new audit perspective in verinice. The audit perspective allows you to pull all required assets and controls for an audit from an existing ISMS. You can also create new objects solely for audit purposes or in case that the ISMS isn&apos;t full implemented yet. Let&apos;s begin!
+      </description>
+   </intro>
+   <item
+         title="Switching to the audit perspective">
+      <description>
+         Switch to the audit perspective by choosing from the main menu: View -&gt; Perspective -&gt; Audit Perspective.
+      </description>
+   </item>
+   <item
+         title="Understanding the audit perspective">
+      <description>
+         The audit perspective offers multiple views to show you everything that you need during your audit. It allows you to &quot;drill down&quot; from a general overview to individual elements.
+	<br/><br/>
+On the left hand side you see four views, showing from top to bottom: Scopes, Audits, Assets and Controls.
+Each view will show relevant objects for your current selection, so to see controls for an audit, you have to select first the scope, then the audit.
+	<br/><br/>
+The views allow you to &quot;drill down&quot; on all audit elements, for instance you can start with the scope, moving down to a specific audit and then the controls covered in that audit. You could also take a different route, starting with all persons interviewed during an audit, moving down to the controls covered by the individual interview. 
+	<br/><br/>
+This allows you to cover the whole scope during an audit while avoiding redundant questioning and observations - especially when conducting a simultaneous audit at multiple locations with a large audit team.
+      </description>
+   </item>
+   <item
+         title="Creating a new audit">
+      <description>
+         First you have to select an existing scope in which you want to create your audit. Click on a scope in the top left view. If you cannot see any scopes there, you will have to create a scope in the ISM View first. You can open the ISM view by selecting View -&gt; Show view from the main menu.
+<br/><br/>
+When you have selected a scope you can create a new audit. Go to the audit view (second view from the top) and click the &quot;New element&quot; button.	A new audit will be created for the selected scope. Change the title to &quot;Audit 2010.06&quot;. Save with &quot;Ctrl-S&quot;.
+      </description>
+   </item>
+   <item
+         title="Adding assets">
+      <description>
+         You can include the assets that you took into account during your audit. You can create completely new assets or copy them from an existing ISMS. Let&apos;s create a new asset first.
+	<br/><br/>
+Select your created audit by clicking on it once with the left mouse button. Then, create a new asset for this audit by clicking the &quot;New element&quot; button in the asset view. Give your new asset the name &quot;Data center&quot;. Save by pressing &quot;Ctrl-S&quot;.
+      </description>
+   </item>
+   <item
+         title="Adding controls to assets">
+      <description>
+         Finally, you want to add the actual controls that you want to audit. You can add controls to individual assets or simply put them in the audit itself without connecting them to specific assets.
+	<br/><br/>
+Let&apos;s add a control to our asset: select the asset by clicking on it once, then select the &quot;New element&quot; button in the controls view. Give your new control the title &quot;Access control to the data center&quot;. Save with &quot;Ctrl-S&quot;.
+      </description>
+   </item>
+   <item
+         title="Adding generic controls">
+      <description>
+         You can also add controls without connecting them to a specifix asset. Simply select the audit itself again, and then add a new control by clicking the &quot;New element&quot; button in the control view. 
+	<br/><br/>
+	A new control will be created under the audit. Now you can see controls for specific assets or general controls by selecting an asset or the audit respectively.
+      </description>
+   </item>
+   <item
+         title="Adding groups">
+      <description>
+         If you have lots of elements you might want to group them together. You can do so by selecting the &quot;New Group&quot; option. It is availably when you click the small down arrow in the &quot;New element&quot; button. 
+	<br/><br/>
+	Once you have created a group, you can put elements inside the group. Select the group, and then press the &quot;New element&quot; button.
+      </description>
+   </item>
+   <item
+         title="Adding existing elements from the ISMS">
+      <description>
+         You can add elements from an existing ISMS. Open the ISM view using the &quot;View&quot; menu. then select one or more assets. Copy them using the menu or by pressing &quot;Ctrl-C&quot;.
+	<br/><br/>
+Go back to the audit perspective and click on the audit in which you want to include the assets. Choose &quot;Paste&quot; from the menu or press &quot;Ctrl-V&quot;.
+	<br/><br/>
+Assets will always be copied into your audit so they will remain for later reference even if they are removed in the ISMS itself.
+	<br/><br/>
+	You can also add controls in this manner.
+      </description>
+   </item>
+   <item
+         title="Adding controls from a catalog">
+      <description>
+         Most of the time you will not create your own controls for an audit but instead use a control catalog. A catalog may contain controls from a standard such as ISO 27001.
+	<br/><br/>
+Open the catalog view using the view menu. Select an audit or an asset in the audit perspective. Simply drag the wanted controls from the catalog view into the control view showing all controls for the selected asset / audit. Controls will be copied into the audit and you can start auditing them.
+      </description>
+   </item>
+   <item
+         title="But wait, there&apos;s more...">
+      <description>
+         The audit perspective can be used for sophisticated demands such as follow-up audits, comparing audits over different time periods and creating audit reports. We encourage you to explore the availably options if you want.
+      &lt;onCompletion&gt;
+      This concludes this cheatsheet.
+      &lt;/onCompletion&gt;
+      </description>
+   </item>
+</cheatsheet>

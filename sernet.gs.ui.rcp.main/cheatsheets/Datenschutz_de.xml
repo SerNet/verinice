@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Datenschutz">
+
+	<intro>
+		<description>
+			Verfahren für Datenschutz dokumentieren.
+		</description>
+	</intro>
+
+	<item title="Einführung">
+		<description>
+		Verinice hilft Ihnen auch dabei, datenschutzrechtliche Anforderungen zu erfüllen.
+		öffnen Sie die Datenschutz-Ansicht über &quot;Ansicht&quot;, &quot;Zeige View&quot;, &quot;Datenschutz&quot;.
+		</description>
+	</item>
+	<item title="Ansicht Datenschutz">
+		<description>
+		Klappen Sie das Datenschutzkonzept auf. Unter "Verfahren" finden Sie alle Anwendungen 
+		wieder, die Sie bei der Strukturanalyse erstellt haben. Klappen Sie das Verfahren 
+		"Buchhaltung" auf.
+		</description>
+	</item>
+	<item title="Datenverarbeitung">
+		<description>
+		Öffnen Sie den Dokumentationsknoten &quot;Datenverarbeitung&quot; per Doppelklick. 
+		Tragen Sie Kategorie, Herkunft, Rehtsgrundlage und Löschfristen für die
+		verarbeiteten Daten ein. Speichern Sie die Änderungen (Strg-S).
+		</description>
+	</item>
+	<item title="Personengruppen">
+		<description>
+		Hier tragen Sie Betroffene und die Empfänger der Datenverarbeitung ein.
+		</description>
+	</item>
+	<item title="Stellungnahme DSB">
+		<description>
+		Lassen Sie diese Felder ihren Datenschutzbeauftragten ausfüllen.
+		</description>
+	</item>
+	<item title="Verantwortliche Stelle">
+		<description>
+		Dokumentieren Sie, wer die Daten verarbeitet und wer fachlich und technisch für 
+		die Verarbeitung verantwortlich ist. Alle Mitarbeiter und Abteilungen, die
+		die in der Strukturanalyse erfasst haben, werden Ihnen automatisch vorgeschlagen. 
+		Sie können Sie mit den Cursortasten auswählen, oder eine eigene Eingabe machen.
+		</description>
+	</item>
+	<item title="Verarbeitungsangaben">
+		<description>
+		Beschreiben Sie hier, wie die personenbezogenen Daten verarbeitet werden.
+		</description>
+	</item>
+	<item title="Verfahrensübersicht">
+		<description>
+		Sie k?nnen aus den eingegebenen Daten eine Verfahrensübersicht erstellen. Wählen
+		Sie &quot;Bearbeiten&quot;, &quot;Report erstellen&quot;. Wählen Sie aus den angebotenen Reports die 
+		Verfahrensübersicht aus. W?hlen sie &quot;weiter&quot;.
+		<br/><br/>
+		überprüfen Sie den Pfad zu ihrer OpenOffice Installation und wählen Sie &quot;weiter&quot;.
+		Belassen Sie die Auswahl der Felder für den Report auf der Voreinstellung und 
+		wählen Sie &quot;Fertig stellen&quot;.
+		</description>
+	</item>
+	<item title="Fertig">
+		<description>
+		Die Verfahrensübersicht wurde in OpenOffice erstellt. Sie können Sie editieren, 
+		speichern oder verwerfen.
+		</description>
+		<onCompletion>
+		Das wars. Wenn Sie es bis hierher geschafft haben, mailen Sie uns ihre Erfahrungen und Verbesserungsvorschl?ge zu den Tutorials oder zu verinice allgemein an verinice@sernet.de!
+		</onCompletion>
+	</item>
+	
+		
+	
+</cheatsheet>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		targetNamespace="http://www.sernet.de/sync/mapping"
+		elementFormDefault="qualified">
+
+	<!--	
+    <xsd:import namespace="http://www.andreas.becker.name/verinice/data"
+    			schemaLocation="data.xsd"/>
+    		
+	<xsd:import namespace="http://www.sernet.de/hitro"
+				schemaLocation="hitro.xsd"/>
+	 --> 
+
+	<xsd:element name="syncMapping">
+		<xsd:complexType>
+			<xsd:sequence>
+			
+				<xsd:element name="mapObjectType" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+						
+							<xsd:element name="mapAttributeType" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:attribute name="extId" type="xsd:string"/>
+									<xsd:attribute name="intId" type="xsd:string"/>
+								</xsd:complexType>
+							</xsd:element>
+							
+						</xsd:sequence>
+						<xsd:attribute name="extId" type="xsd:ID" use="required"/>
+						<xsd:attribute name="intId" type="xsd:string" use="required"/>
+					</xsd:complexType>
+				</xsd:element>
+				
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

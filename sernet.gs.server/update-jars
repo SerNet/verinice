@@ -1,0 +1,24 @@
+#!/bin/sh
+# Creates Jars from all Verinice components needed for the Verinice
+# server. This script should only be of temporary nature until an
+# automated solution is found.
+#
+# 2009-07-07 Robert Schuster <r.schuster@tarent.de> 
+
+jar_cmd() {
+  webinflib=WebContent/WEB-INF/lib
+  echo "jar cf $1.jar -C ../$1/bin ."
+  jar cf $webinflib/$1.jar -C ../$1/bin .
+}
+
+jar_cmd sernet.gs.ehcache.fragment
+jar_cmd sernet.hui.common
+jar_cmd sernet.hui.swtclient
+jar_cmd sernet.hui.server
+jar_cmd sernet.gs.ui.rcp.main
+jar_cmd sernet.gs.service
+jar_cmd sernet.gs.reveng
+jar_cmd sernet.verinice.samt.service
+jar_cmd sernet.verinice.oda.driver
+jar_cmd sernet.verinice.report.service
+

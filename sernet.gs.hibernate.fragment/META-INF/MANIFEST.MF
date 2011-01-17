@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MSSQL Driver Fragment
+Bundle-SymbolicName: sernet.gs.hibernate.fragment
+Bundle-Version: 1.1.1
+Fragment-Host: com.springsource.org.hibernate;bundle-version="1.0.12"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: lib/mssql/jackcess-1.1.18.jar,lib/mssql/jtds-1.2.2.j
+ ar,.
+Export-Package: com.healthmarketscience.jackcess;uses:="org.apache.com
+ mons.logging,new com.healthmarketscience.jackcess",net.sourceforge.jt
+ ds.jdbc;uses:="net.sourceforge.jtds.util,javax.transaction.xa"
+

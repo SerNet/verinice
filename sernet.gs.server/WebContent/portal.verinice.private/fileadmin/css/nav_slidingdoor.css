@@ -1,0 +1,35 @@
+/* ######################################################################################################
+** # "Yet Another Multicolum Layout" (c) by Dirk Jesse (http://www.yaml.de) #############################
+** # "YAML for TYPO3" (c) by Dieter Bunkerd (http://yaml.t3net.de) ######################################
+** ######################################################################################################
+**
+**  YAML Version: 2.5.2
+**  Dateiversion: 17.1.07
+**  Datei       : nav_slidingdoor.css
+**  Funktion    : Formatierung der Hauptnavigation: Reiternavigation "Sliding Doors"
+**  Checked with http://jigsaw.w3.org/css-validator/ 19.1.07 - DB
+*/
+
+@media all
+{
+/* ######################################################################################################
+** ### Hauptnavigation: "Sliding Doors" von A List Apart ################################################
+** ######################################################################################################
+*/
+
+#nav_main {float:left; width:100%; background-color:#2e2e2e; font-size:93%; line-height:normal;}
+#nav_main ul {margin:0;padding:0 0 0 1em; list-style:none;}
+#nav_main li {display:inline; margin:0; padding:0;}
+#nav_main a {float:left; background:url(left_both.gif) no-repeat left top; background-position:0% -150px; margin:0; padding:0 0 0 9px; border-bottom:1px solid #fff; text-decoration:none;}
+#nav_main a span {float:left; display:block; background:url(right_both.gif) no-repeat right top; background-position:100% -150px; padding:7px 9px 4px 1px; color:#765; white-space:nowrap;}
+/* Commented Backslash Hack hides rule from IE5-Mac \*/
+#nav_main a span {float:none;}
+/* End IE5-Mac hack */
+#nav_main a:hover span {color:#000; background-position:0% -150px;}
+#nav_main #current a {background-position:0 0; border-width:0;}
+#nav_main #current a span {background-position:100% 0; padding-bottom:5px; color:#000; font-weight:bold;}
+#nav_main a:hover {background-position:0% 0;}
+#nav_main a:hover span {background-position:100% 0;}
+
+/* Close @media all - DO NOT DELETE! */
+}
