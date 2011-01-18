@@ -31,6 +31,10 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
 
     String targetName, type, targetUuid;
 
+    private Integer dependantId;
+    private Integer dependencyId;
+    private String typeId;
+    
     public String getTargetName() {
         return targetName;
     }
@@ -55,6 +59,30 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
         this.targetUuid = targetUuid;
     }
 
+    public Integer getDependantId() {
+        return dependantId;
+    }
+
+    public void setDependantId(Integer dependantId) {
+        this.dependantId = dependantId;
+    }
+
+    public Integer getDependencyId() {
+        return dependencyId;
+    }
+
+    public void setDependencyId(Integer dependencyId) {
+        this.dependencyId = dependencyId;
+    }
+
+    public String getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
@@ -77,13 +105,14 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
         }
         return result;
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((targetUuid == null) ? 0 : targetUuid.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        result = prime * result + ((dependantId == null) ? 0 : dependantId.hashCode());
+        result = prime * result + ((dependencyId == null) ? 0 : dependencyId.hashCode());
+        result = prime * result + ((typeId == null) ? 0 : typeId.hashCode());
         return result;
     }
 
@@ -96,17 +125,24 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
         if (getClass() != obj.getClass())
             return false;
         LinkInformation other = (LinkInformation) obj;
-        if (targetUuid == null) {
-            if (other.targetUuid != null)
+        if (dependantId == null) {
+            if (other.dependantId != null)
                 return false;
-        } else if (!targetUuid.equals(other.targetUuid))
+        } else if (!dependantId.equals(other.dependantId))
             return false;
-        if (type == null) {
-            if (other.type != null)
+        if (dependencyId == null) {
+            if (other.dependencyId != null)
                 return false;
-        } else if (!type.equals(other.type))
+        } else if (!dependencyId.equals(other.dependencyId))
+            return false;
+        if (typeId == null) {
+            if (other.typeId != null)
+                return false;
+        } else if (!typeId.equals(other.typeId))
             return false;
         return true;
-    }  
+    }
+    
+   
    
 }

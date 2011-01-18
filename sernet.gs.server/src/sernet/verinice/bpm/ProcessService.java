@@ -196,7 +196,10 @@ public class ProcessService implements IProcessService {
                 if (log.isDebugEnabled()) {
                     log.debug("No process for control: " + uuidControl);
                 }
-                startControlExecution(control);
+                // start process if control is not implemented
+                if(!Control.IMPLEMENTED_YES.equals(control.getImplementation())) {
+                    startControlExecution(control);
+                }
                 if (log.isInfoEnabled()) {
                     log.info("Process started for control: " + uuidControl);
                 }

@@ -51,6 +51,8 @@ public class TaskBean {
     
     ITask selectedTask;
     
+    private String outcomeId;
+    
     private HtmlExtendedDataTable table;
     
     private Selection selection = new SimpleSelection();
@@ -77,6 +79,7 @@ public class TaskBean {
                 getEditBean().setUuid(getSelectedTask().getControlUuid());
                 getEditBean().setTitle(getSelectedTask().getControlTitle());
                 getEditBean().setTypeId(Control.TYPE_ID);
+                setOutcomeId(null);
                 getEditBean().init();
             }
         } catch (Throwable t) {
@@ -89,9 +92,10 @@ public class TaskBean {
             LOG.debug("completeTask() called ...");
         }
         if(getSelectedTask()!=null) {
-            getTaskService().completeTask(getSelectedTask().getId());
+            getTaskService().completeTask(getSelectedTask().getId(),getOutcomeId());
             getTaskList().remove(getSelectedTask());
             setSelectedTask(null);
+            setSelection(null);
             getEditBean().clear();
             Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));  
         }
@@ -122,6 +126,14 @@ public class TaskBean {
 
     public void setSelectedTask(ITask selectedTask) {
         this.selectedTask = selectedTask;
+    }
+
+    public String getOutcomeId() {
+        return outcomeId;
+    }
+
+    public void setOutcomeId(String outcomeId) {
+        this.outcomeId = outcomeId;
     }
 
     public HtmlExtendedDataTable getTable() {

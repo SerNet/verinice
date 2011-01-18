@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -44,10 +44,20 @@ private transient Logger log = Logger.getLogger(RemoveLink.class);
     
     private String stationId;
     private CnALink element;
+    private Integer dependantId;
+    private Integer dependencyId;
+    private String typeId; 
 
     public RemoveLink(CnALink link) {
         this.stationId = ChangeLogEntry.STATION_ID;
         this.element = link;
+    }
+
+    public RemoveLink(Integer dependantId, Integer dependencyId, String typeId) {
+        super();
+        this.dependantId = dependantId;
+        this.dependencyId = dependencyId;
+        this.typeId = typeId;
     }
 
     public void execute() {
@@ -56,7 +66,11 @@ private transient Logger log = Logger.getLogger(RemoveLink.class);
         }
         
         IBaseDao<CnALink, Serializable> dao = getDaoFactory().getDAO(CnALink.class);
-        element = dao.findById(element.getId());
+        if(element!=null) {
+            element = dao.findById(element.getId());
+        } else {
+            element = dao.findById(new CnALink.Id(dependantId, dependencyId, typeId));
+        }
         if (element != null) {
             if (getLog().isDebugEnabled()) {
                 getLog().debug("Found link, removing " + element.getId());
@@ -99,7 +113,9 @@ private transient Logger log = Logger.getLogger(RemoveLink.class);
     public List<CnATreeElement> getChangedElements() {
         // return link category item:
         List<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
-        result.add(element.getDependant());
+        if (element != null) {
+            result.add(element.getDependant());
+        }
         return result;
     }
 

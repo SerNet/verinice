@@ -30,5 +30,11 @@ public interface ILink {
     String getType();
     
     String getTargetName();
+    
+    Integer getDependantId();
+
+    Integer getDependencyId();
+
+    String getTypeId();
 
 }

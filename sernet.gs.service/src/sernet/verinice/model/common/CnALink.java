@@ -184,10 +184,20 @@ public class CnALink implements Serializable, ITypedElement {
 			this.dependencyId = dependencyId;
 			if(relationId==null || relationId.isEmpty()) {
 				typeId = NO_TYPE;
+			} else {
+			    typeId = relationId;
 			}
 		}
 		
-		public boolean equals(Object o) {
+		public Integer getDependantId() {
+            return dependantId;
+        }
+
+        public Integer getDependencyId() {
+            return dependencyId;
+        }
+
+        public boolean equals(Object o) {
 			if (o != null && o instanceof Id) {
 				Id that = (Id)o;
 				return this.dependantId.equals(that.dependantId)

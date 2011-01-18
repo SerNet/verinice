@@ -21,6 +21,7 @@ package sernet.verinice.model.bpm;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import sernet.verinice.interfaces.bpm.ITask;
 
@@ -30,7 +31,6 @@ import sernet.verinice.interfaces.bpm.ITask;
  */
 public class TaskInformation implements ITask,Serializable {
 
-    
     String id;
     
     Date createDate;
@@ -40,6 +40,8 @@ public class TaskInformation implements ITask,Serializable {
     String controlTitle;
     
     String controlUuid;
+    
+    List<KeyValue> outcomeList;
     
     /**
      * 
@@ -106,6 +108,21 @@ public class TaskInformation implements ITask,Serializable {
         this.controlUuid = controlUuid;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITask#getOutcomes()
+     */
+    public List<KeyValue> getOutcomes() {
+        return outcomeList;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITask#setOutcomes(java.util.Set)
+     */
+    @Override
+    public void setOutcomes(List<KeyValue> outcomes) {
+        this.outcomeList = outcomes;        
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -130,7 +147,6 @@ public class TaskInformation implements ITask,Serializable {
             return false;
         return true;
     }
-
     
 
 }

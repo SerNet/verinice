@@ -98,6 +98,7 @@ public class EditBean {
             RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
             ri.setLinksDownProperties(true);
             ri.setLinksUpProperties(true);
+            ri.setPermissions(true);
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(getTypeId(),getUuid(),ri);        
             command = getCommandService().executeCommand(command);    
             setElement(command.getElement());
@@ -212,9 +213,15 @@ public class EditBean {
             else {
                 LOG.warn("Control is null. Can not save.");
             }
+        } catch (SecurityException e) {
+            LOG.error("Saving not allowed, uuid: " + getUuid(), e);
+            Util.addError("submit", Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
+        } catch (sernet.gs.common.SecurityException e) {
+            LOG.error("Saving not allowed, uuid: " + getUuid(), e);
+            Util.addError("submit", Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
         } catch (Exception e) {
             LOG.error("Error while saving element, uuid: " + getUuid(), e);
-            ExceptionHandler.handle(e);
+            Util.addError("submit", Util.getMessage(BOUNDLE_NAME, "save.failed"));
         }
     }
     
@@ -260,15 +267,29 @@ public class EditBean {
                 if (c == null) {
                     return false;
                 }
-                Set<String> roles = c.getRoles();
+                roles = c.getRoles();
             }    
             for (Permission p : cte.getPermissions()) {
-                if (p.isWriteAllowed() && roles.contains(p.getRole())) {
+                if (p!=null && p.isWriteAllowed() && roles.contains(p.getRole())) {
                     return true;
                 }
             }
-        } catch (Exception e) {
-            ExceptionHandler.handle(e);
+        } catch (SecurityException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Write is not allowed", e);
+            }
+            return false;
+        } catch (sernet.gs.common.SecurityException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Write is not allowed", e);
+            }
+            return false;
+        } catch(RuntimeException re) {
+            LOG.error("Error while checking write permissions", re);
+            throw re;
+        } catch(Throwable t) {
+            LOG.error("Error while checking write permissions", t);
+            throw new RuntimeException("Error while checking write permissions", t);
         }
         return false;
     }

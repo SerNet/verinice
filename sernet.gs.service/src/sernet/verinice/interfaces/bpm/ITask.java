@@ -20,6 +20,9 @@
 package sernet.verinice.interfaces.bpm;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -51,5 +54,52 @@ public interface ITask {
      * @return
      */
     String getControlUuid();
+
+    /**
+     * Returns a map with outcomes of this task.
+     * Key is the id of the outcome, value the translated title.
+     * 
+     * @return a map with outcomes
+     */
+    List<KeyValue> getOutcomes();
+    
+    /**
+     * Sets the map of outcomes of this task.
+     * Key is the id of the outcome, value the translated title.
+     * 
+     * @param outcomeMap a map with outcomes
+     */
+    void setOutcomes(List<KeyValue> outcomes);
+    
+    public class KeyValue {
+            
+            String key;
+            
+            String value;
+    
+            public KeyValue(String key, String value) {
+                super();
+                this.key = key;
+                this.value = value;
+            }
+    
+            public String getKey() {
+                return key;
+            }
+    
+            public void setKey(String key) {
+                this.key = key;
+            }
+    
+            public String getValue() {
+                return value;
+            }
+    
+            public void setValue(String value) {
+                this.value = value;
+            }
+            
+            
+        }
 
 }

@@ -21,10 +21,14 @@ package sernet.verinice.web;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.richfaces.component.html.HtmlExtendedDataTable;
+import org.richfaces.model.selection.Selection;
+import org.richfaces.model.selection.SimpleSelection;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.web.ExceptionHandler;
@@ -35,11 +39,14 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.iso27k.ILink;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadElementByTypeId;
+import sernet.verinice.service.commands.RemoveLink;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -57,6 +64,8 @@ public class LinkBean {
 
     private List<ILink> linkList;
     
+    private ILink selectedLink;
+    
     private List<String> linkTypeList;
     
     private String selectedLinkType;
@@ -67,6 +76,12 @@ public class LinkBean {
     
     private String selectedLinkTargetName;
     
+    private boolean deleteVisible = false;
+    
+    private HtmlExtendedDataTable table;
+    
+    private Selection selection = new SimpleSelection();
+    
     public void init() {
         linkList = new ArrayList<ILink>();
         for (CnALink link : getElement().getLinksDown()) {
@@ -75,7 +90,8 @@ public class LinkBean {
         for (CnALink link : getElement().getLinksUp()) {
             linkList.add(map(link, true));
         }
-        
+        setSelectedLink(null);
+        setSelection(null);
         linkTypeList = new ArrayList<String>();
         Set<HuiRelation> huiRelationSet = entityType.getPossibleRelations();
         for (HuiRelation huiRelation : huiRelationSet) {
@@ -173,6 +189,51 @@ public class LinkBean {
             ExceptionHandler.handle(t);
         }
     }
+    
+    public void selectLink() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("selectLink() called ...");
+        }
+        try {
+            Iterator<Object> iterator = getSelection().getKeys();
+            while (iterator.hasNext()) {
+                Object key = iterator.next();
+                table.setRowKey(key);
+                if (table.isRowAvailable()) {
+                    setSelectedLink( (ILink) table.getRowData());
+                }
+            }
+        } catch (Throwable t) {
+            LOG.error("Error while selecting link", t);
+        }
+    }
+    
+    public void showDeleteLink() {
+        deleteVisible = true;
+    }
+    
+    public void hideDeleteLink() {
+        deleteVisible = false;
+    }
+    
+    public void deleteLink() {
+        try {
+            if(getSelectedLink()!=null) {
+                RemoveLink<CnALink> command = new RemoveLink<CnALink>(
+                        getSelectedLink().getDependantId(), 
+                        getSelectedLink().getDependencyId(), 
+                        getSelectedLink().getTypeId());
+                command = getCommandService().executeCommand(command);
+                getLinkList().remove(getSelectedLink());
+                setSelectedLink(null);
+                setSelection(null);
+                deleteVisible = false;
+            }
+        } catch (Throwable t) {
+            LOG.error("Error while deleting link", t);
+            ExceptionHandler.handle(t);
+        }
+    }
 
     private String getTypeName(CnALink link) {
         String typeName = null;
@@ -213,16 +274,27 @@ public class LinkBean {
             linkInformation.setTargetUuid(link.getDependency().getUuid());
         }
         linkInformation.setType(CnALink.getRelationName(getElement(),link));
+        linkInformation.setDependantId(link.getId().getDependantId());
+        linkInformation.setDependencyId(link.getId().getDependencyId());
+        linkInformation.setTypeId(link.getRelationId());
         return linkInformation;
     }
     
     public void clear() {
         setTypeId(null);
         setElement(null);
-        getLinkList().clear();
-        getLinkTargetList().clear();
-        getLinkTargetNameList().clear();
-        getLinkTypeList().clear();
+        if(getLinkList()!=null) {
+            getLinkList().clear();
+        }
+        if(getLinkTargetList()!=null) {
+            getLinkTargetList().clear();
+        }
+        if(getLinkTargetNameList()!=null) {
+            getLinkTargetNameList().clear();
+        }
+        if(getLinkTypeList()!=null) {
+            getLinkTypeList().clear();
+        }
     }
     
     public CnATreeElement getElement() {
@@ -255,6 +327,14 @@ public class LinkBean {
 
     public void setLinkList(List<ILink> linkList) {
         this.linkList = linkList;
+    }
+
+    public ILink getSelectedLink() {
+        return selectedLink;
+    }
+
+    public void setSelectedLink(ILink selectedLink) {
+        this.selectedLink = selectedLink;
     }
 
     public List<String> getLinkTypeList() {
@@ -297,6 +377,30 @@ public class LinkBean {
         this.selectedLinkTargetName = selectedLinkTarget;
     }
     
+    public boolean getDeleteVisible() {
+        return deleteVisible;
+    }
+
+    public void setDeleteVisible(boolean deleteVisible) {
+        this.deleteVisible = deleteVisible;
+    }
+
+    public HtmlExtendedDataTable getTable() {
+        return table;
+    }
+
+    public void setTable(HtmlExtendedDataTable table) {
+        this.table = table;
+    }
+
+    public Selection getSelection() {
+        return selection;
+    }
+
+    public void setSelection(Selection selection) {
+        this.selection = selection;
+    }
+
     private HUITypeFactory getHuiService() {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
     }

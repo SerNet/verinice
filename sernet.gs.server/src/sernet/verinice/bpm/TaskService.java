@@ -22,7 +22,10 @@ package sernet.verinice.bpm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.jbpm.api.ExecutionService;
 import org.jbpm.api.ProcessEngine;
@@ -37,6 +40,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.bpm.IControlExecutionProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.interfaces.bpm.ITask.KeyValue;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.iso27k.Control;
 
@@ -103,7 +107,14 @@ public class TaskService implements ITaskService{
                 taskList = new ArrayList<ITask>();
                 for (Task task : jbpmTaskList) {  
                     if(since==null || since.before(task.getCreateTime())) {
-                        taskList.add(map(task));
+                        ITask taskInfo = map(task);
+                        Set<String> outcomeSet = getTaskService().getOutcomes(task.getId());
+                        List<KeyValue> outcomeList = new ArrayList<KeyValue>(outcomeSet.size());
+                        for (String id : outcomeSet) {
+                            outcomeList.add(new KeyValue(id, Messages.getString(id)));                          
+                        }
+                        taskInfo.setOutcomes(outcomeList);
+                        taskList.add(taskInfo);
                     } else {
                         // since task are ordered by create date we can stop here
                         break;
@@ -137,6 +148,12 @@ public class TaskService implements ITaskService{
     @Override
     public void completeTask(String taskId) {
         getTaskService().completeTask(taskId);
+    }
+    
+
+    @Override
+    public void completeTask(String taskId, String outcomeId) {
+        getTaskService().completeTask(taskId,outcomeId);
     }
 
     public org.jbpm.api.TaskService getTaskService() {

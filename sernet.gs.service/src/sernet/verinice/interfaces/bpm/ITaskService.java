@@ -73,4 +73,6 @@ public interface ITaskService {
     List<ITask> getTaskList(String username, Date since);
     
     void completeTask(String taskId);
+    
+    void completeTask(String taskId, String outcomeId);
 }
