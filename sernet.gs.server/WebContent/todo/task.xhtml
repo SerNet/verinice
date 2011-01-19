@@ -76,13 +76,13 @@
 				                </rich:column>			                
 				                <rich:column id="colDate"
 		      						sortable="true" 
-		      						sortBy="#{item.createDate}"
+		      						sortBy="#{item.dueDate}"
 				                    label="bis"
 				                    width="84">
 				                    <f:facet name="header">
-				                        <h:outputText value="#{msgTask['createDate']}" />
+				                        <h:outputText value="#{msgTask['dueDate']}" />
 				                    </f:facet>
-				                    <h:outputText value="#{item.createDate}">
+				                    <h:outputText value="#{item.dueDate}">
 								    	<f:convertDateTime dateStyle="short" type="date" timeZone="#{task.timeZone}" />
 								    </h:outputText>
 				                </rich:column>

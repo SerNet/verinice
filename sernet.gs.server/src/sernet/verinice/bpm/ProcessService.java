@@ -21,6 +21,7 @@ package sernet.verinice.bpm;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -231,6 +232,15 @@ public class ProcessService implements IProcessService {
         props.put(IControlExecutionProcess.VAR_CONTROL_UUID, control.getUuid());
         props.put(IControlExecutionProcess.VAR_OWNER_NAME, getOwnerName(control));
         props.put(IControlExecutionProcess.VAR_IMPLEMENTATION, control.getImplementation());
+        Date duedate = control.getDueDate();
+        Date now = new Date(System.currentTimeMillis());
+        if(duedate!=null && now.before(duedate)) {
+            props.put(IControlExecutionProcess.VAR_DUEDATE, duedate);
+        } else {
+            props.put(IControlExecutionProcess.VAR_DUEDATE, IControlExecutionProcess.DEFAULT_DUEDATE);
+        }
+        
+        
         startProcess(IControlExecutionProcess.KEY, props);     
     }
     

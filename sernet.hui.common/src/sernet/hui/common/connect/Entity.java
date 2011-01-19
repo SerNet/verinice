@@ -19,6 +19,7 @@ package sernet.hui.common.connect;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -164,6 +165,16 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	        result = new PropertyList();
 	    }
 		return result;
+	}
+	
+	public Date getDate(String propertyType) {
+	    Date date = null;
+	    try {
+	        date = new Date(Long.valueOf(getValue(propertyType)));
+	    } catch (Throwable t) {
+            log.error("Error while returning date for property: " + propertyType, t);
+        }
+	    return date;
 	}
 	
 	/**

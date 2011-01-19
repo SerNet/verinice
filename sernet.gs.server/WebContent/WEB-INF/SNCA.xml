@@ -3840,7 +3840,7 @@ the value between <param></param> will be used directly if no string is found fo
                 
         </huipropertygroup>
         
-            <huipropertygroup id="control_maturitygroup" name="Maturity Level" tags="Maturity" >
+            <huipropertygroup id="control_maturitygroup" name="Maturity Level" tags="Maturity,Web" >
         
             <huiproperty
                 id="control_maturity"
@@ -3878,7 +3878,7 @@ the value between <param></param> will be used directly if no string is found fo
             
             <huiproperty
                     id="control_maturity_duedate"
-                     tags="Maturity" 
+                     tags="Maturity,Web" 
                     name="Realize until"
                     inputtype="date">
                     <defaultRule class="Today">

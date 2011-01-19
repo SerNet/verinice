@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jbpm.api.ExecutionService;
+import org.jbpm.api.JobQuery;
+import org.jbpm.api.ManagementService;
 import org.jbpm.api.ProcessEngine;
 import org.jbpm.api.TaskQuery;
 import org.jbpm.api.task.Task;
@@ -138,7 +140,8 @@ public class TaskService implements ITaskService{
         String uuidControl = (String) getExecutionService().getVariable(executionId,IControlExecutionProcess.VAR_CONTROL_UUID);      
         Control control = getControlDao().findByUuid(uuidControl, RetrieveInfo.getPropertyInstance());
         taskInformation.setControlTitle(control.getTitle());
-        taskInformation.setControlUuid(uuidControl);
+        taskInformation.setControlUuid(uuidControl);     
+        taskInformation.setDueDate(task.getDuedate());      
         return taskInformation;
     }
     
@@ -162,6 +165,10 @@ public class TaskService implements ITaskService{
     
     public ExecutionService getExecutionService() {
         return getProcessEngine().getExecutionService();
+    }
+    
+    public ManagementService getManagementService() {
+        return getProcessEngine().getManagementService();
     }
 
     public ProcessEngine getProcessEngine() {
