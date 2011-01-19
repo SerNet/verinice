@@ -5,11 +5,11 @@ Bundle-SymbolicName: sernet.hui.common
 Bundle-Version: 1.1.1.qualifier
 Bundle-ClassPath: .
 Bundle-Localization: plugin
-Export-Package: sernet.hui.common;version="1.1.1",
- sernet.hui.common.connect;version="1.1.1",
- sernet.hui.common.multiselectionlist;version="1.1.1",
- sernet.hui.common.rules;version="1.1.1",
- sernet.snutils;version="1.1.1"
+Export-Package: sernet.hui.common,
+ sernet.hui.common.connect,
+ sernet.hui.common.multiselectionlist,
+ sernet.hui.common.rules,
+ sernet.snutils
 Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.core.commands;bundle-version="3.5.0",
  org.springframework.core;bundle-version="2.5.6"

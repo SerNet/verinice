@@ -24,9 +24,9 @@ include entities like this: &configuration;
             id="configuration_passwort" />
             
 	 <huiproperty
-            name="Rollen"
+            name="Berechtigungsgruppe"
             id="configuration_rolle"
-            tooltip="Liste von Anwendungsrollen"
+            tooltip="Liste von Berechtigungsgruppen"
 			inputtype="reference" 
 			required="true" 
 			crudButtons="true">

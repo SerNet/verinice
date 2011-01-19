@@ -73,12 +73,13 @@ the value between <param></param> will be used directly if no string is found fo
         name="Configuration"
         id="configuration">
 
-	 <!-- Never set configuration_benutzername to visible=true! -->
+
+	 <!-- Never set configuration_benutzername to visible=true! (Hash value of password will be displayed) -->
 	 <huiproperty
             name="Benutzername"
             id="configuration_benutzername" 
             visible="false"/>
-     <!-- Never set configuration_passwort to visible=true! -->
+     <!-- Never set configuration_passwort to visible=true! (Hash value of password will be displayed) -->
 	 <huiproperty
             name="Passwort"
             id="configuration_passwort" 
@@ -1471,11 +1472,16 @@ the value between <param></param> will be used directly if no string is found fo
 					id="person_anrede_none"
 					name="" />
 				<option
+					id="person_anrede_herr"/>
+				<option
 					id="person_anrede_frau"
 					name="Frau" />
 				<option
-					id="person_anrede_herr"
-					name="Herr" />
+					id="person_anrede_herrdr"
+					/>
+				<option
+					id="person_anrede_fraudr"
+					 />
 
 		</huiproperty>
 		<huiproperty
@@ -3888,10 +3894,11 @@ the value between <param></param> will be used directly if no string is found fo
                 </huiproperty>
         </huipropertygroup>
      	
-     	<huipropertygroup id="control_revisiongroup" name="Revision" >
+     	<huipropertygroup id="control_revisiongroup" name="Revision" tags="Revision" >
      		<huiproperty
 				id="control_lastrev"
 				name="Last revision"
+				tags="Revision"
 				inputtype="date">
                 <defaultRule class="Today">
                 </defaultRule>
@@ -3899,10 +3906,12 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty 
      			name="Notes" 
      			id="control_revision_notes" 
+     			tags="Revision"
      			inputtype="text" />
             <huiproperty
 				id="control_nextrev"
 				name="Next revision"
+				tags="Revision"
 				inputtype="date">
                 <defaultRule class="Today">
                     <param id="control_nextrev_changeField">MONTH</param>
@@ -3986,7 +3995,96 @@ the value between <param></param> will be used directly if no string is found fo
 			</huiproperty>
 		</huipropertygroup>
 		
+		
+		<huipropertygroup id="control_isaaudit" name="ISA Audit" >
+		
+		     <huiproperty
+	           id="control_isa_audit_findings" name="Findings" inputtype="text" tags="VDA_ISA_Audit"
+	           textrows="12"/>
+            
+          <huiproperty 
+            id="control_isa_maturity"      
+            inputtype="numericoption" 
+            min="-2" 
+            max="5" 
+            defaultValue="-2" 
+            tags="VDA-ISA,VDA_ISA_Audit"
+            focus="true">
+                <option id="control_isa_maturity_null"  value="-2" />
+                <option id="control_isa_maturity_na"  value="-1" />
+                <option id="control_isa_maturity_0"  value="0" />
+                <option id="control_isa_maturity_1"  value="1" />
+                <option id="control_isa_maturity_2"  value="2" />
+                <option id="control_isa_maturity_3"  value="3" />
+                <option id="control_isa_maturity_4"  value="4" />
+                <option id="control_isa_maturity_5"  value="5" />
+          </huiproperty>
+            
+          <huiproperty 
+            id="control_isa_weight"  visible="false" inputtype="numericoption" min="0" max="10" />
+          <huiproperty 
+            id="control_isa_ownweight" visible="false" inputtype="numericoption" min="0" max="10" />
+          <huiproperty 
+            id="control_isa_min1"  visible="false" inputtype="numericoption" min="0" max="10" />
+          <huiproperty 
+            id="control_isa_min2"  visible="false" inputtype="numericoption" min="0" max="10" />
+
+            
+          <huiproperty 
+            id="control_isa_externalnote" 
+            tags="VDA-ISA"
+            inputtype="text"/>
+          <huiproperty 
+            id="control_isa_internalnote" 
+            inputtype="text"
+            tags="VDA-ISA"
+            report="false" />
+            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->            
+            <huiproperty
+	           id="control_isa_audit_ra" name="Risk Assessment" tags="VDA_ISA_Audit"
+                 inputtype="numericoption" 
+               min="-1" 
+               max="2" 
+               defaultValue="-1" 
+            >
+                <option id="control_isa_audit_ra_na"  value="-1" />
+                <option id="control_isa_audit_ra_0"  value="0" />
+                <option id="control_isa_audit_ra_1"  value="1" />
+                <option id="control_isa_audit_ra_2"  value="2" />
+            </huiproperty>
+
+            <!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+            <huiproperty
+	           id="control_isa_audit_devi" name="Deviation" tags="VDA_ISA_Audit"
+               inputtype="numericoption" 
+               min="-1" 
+               max="1" 
+               defaultValue="-1" 
+            >
+                <option id="control_isa_audit_devi_na"  value="-1" />
+                <option id="control_isa_audit_devi_0"  value="0" />
+                <option id="control_isa_audit_devi_1"  value="1" />
+          </huiproperty>
+            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+            <huiproperty
+	           id="control_isa_audit_compluntil" name="Complete until" inputtype="date" tags="VDA_ISA_Audit">
+                <defaultRule class="Today">
+                    <param id="control_isa_audit_compluntil_changeField">MONTH</param>
+                    <param id="control_isa_audit_compluntil_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+             <huiproperty 
+	            id="control_isa_isaauditnote" 
+	            tags="VDA_ISA_Audit"
+	            inputtype="text"
+	            textrows="12" />
         
+        </huipropertygroup>
+       
     </huientity>
     
     <huientity
@@ -4755,7 +4853,6 @@ the value between <param></param> will be used directly if no string is found fo
     
       <huientity id="samt_topic" >	
       
-                
           <huirelation to="asset" id="rel_samttopic_asset" 
                name="reduces impact of"  reversename="impact reduced by" />
          
@@ -4787,6 +4884,11 @@ the value between <param></param> will be used directly if no string is found fo
           <huiproperty 
             id="samt_topic_tag" 
              visible="false"/>
+          
+          <!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->  
+          <huiproperty
+	           id="samt_topic_audit_findings" name="Findings" inputtype="text" tags="VDA_ISA_Audit"
+	           textrows="12"/>
             
           <huiproperty 
             id="samt_topic_maturity"      
@@ -4805,7 +4907,7 @@ the value between <param></param> will be used directly if no string is found fo
                 <option id="samt_topic_maturity_4"  value="4" />
                 <option id="samt_topic_maturity_5"  value="5" />
           </huiproperty>
-            
+          
           <huiproperty 
             id="samt_topic_weight"  visible="false" inputtype="numericoption" min="0" max="10" />
           <huiproperty 
@@ -4814,39 +4916,19 @@ the value between <param></param> will be used directly if no string is found fo
             id="samt_topic_min1"  visible="false" inputtype="numericoption" min="0" max="10" />
           <huiproperty 
             id="samt_topic_min2"  visible="false" inputtype="numericoption" min="0" max="10" />
+
             
           <huiproperty 
             id="samt_topic_externalnote" 
-            tags="VDA-ISA,VDA_ISA_Audit"
+            tags="VDA-ISA"
             inputtype="text"/>
           <huiproperty 
             id="samt_topic_internalnote" 
             inputtype="text"
-            tags="VDA-ISA,VDA_ISA_Audit"
+            tags="VDA-ISA"
             report="false" />
             
-            
-            <huipropertygroup
-                id="samt_topic_audit" name="VDA ISA Audit" tags="VDA_ISA_Audit">
-           
-            <huiproperty
-	           id="samt_topic_audit_findings" name="Findings" inputtype="text" tags="VDA_ISA_Audit"/>
-            
-            <huiproperty
-	           id="samt_topic_audit_devi" name="Deviation" tags="VDA_ISA_Audit"
-               inputtype="numericoption" 
-               min="-1" 
-               max="1" 
-               defaultValue="-1" 
-            >
-                <option id="samt_topic_audit_devi_na"  value="-1" />
-                <option id="samt_topic_audit_devi_0"  value="0" />
-                <option id="samt_topic_audit_devi_1"  value="1" />
-          </huiproperty>
-            
-            <huiproperty
-	           id="samt_topic_audit_meas" name="Measures" inputtype="text" tags="VDA_ISA_Audit"/>
-            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->            
             <huiproperty
 	           id="samt_topic_audit_ra" name="Risk Assessment" tags="VDA_ISA_Audit"
                  inputtype="numericoption" 
@@ -4859,6 +4941,47 @@ the value between <param></param> will be used directly if no string is found fo
                 <option id="samt_topic_audit_ra_1"  value="1" />
                 <option id="samt_topic_audit_ra_2"  value="2" />
             </huiproperty>
+
+            <!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+            <huiproperty
+	           id="samt_topic_audit_devi" name="Deviation" tags="VDA_ISA_Audit"
+               inputtype="numericoption" 
+               min="-1" 
+               max="1" 
+               defaultValue="-1" 
+            >
+                <option id="samt_topic_audit_devi_na"  value="-1" />
+                <option id="samt_topic_audit_devi_0"  value="0" />
+                <option id="samt_topic_audit_devi_1"  value="1" />
+          </huiproperty>
+            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+            <huiproperty
+	           id="samt_topic_audit_compluntil" name="Complete until" inputtype="date" tags="VDA_ISA_Audit">
+                <defaultRule class="Today">
+                    <param id="samt_topic_audit_compluntil_changeField">MONTH</param>
+                    <param id="samt_topic_audit_compluntil_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+             <huiproperty 
+	            id="samt_topic_isaauditnote" 
+	            tags="VDA_ISA_Audit"
+	            inputtype="text"
+	            textrows="12" />
+
+			<huiproperty name="Implemented" id="samt_topicimplemented" inputtype="singleoption" tags="Risk">
+    			<option name="Yes" id="samt_topicimplemented_yes"/>
+    			<option name="No" id="samt_topicimplemented_no"/>
+    			<option name="Partly" id="samt_topicimplemented_partly"/>
+    			<option name="N.a." id="samt_topicimplemented_na"/>
+    		</huiproperty>
+
+            <!--  
+            <huiproperty
+	           id="samt_topic_audit_meas" name="Measures" inputtype="text" tags="VDA_ISA_Audit"/>
+            -->
            
            <!-- 
             <huiproperty
@@ -4885,16 +5008,6 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty
                id="samt_topic_audit_extcomm" name="External Comment" inputtype="text" tags="VDA_ISA_Audit"/>
                --> 
-            <huiproperty
-	           id="samt_topic_audit_compluntil" name="Complete until" inputtype="date" tags="VDA_ISA_Audit">
-                <defaultRule class="Today">
-                    <param id="samt_topic_audit_compluntil_changeField">MONTH</param>
-                    <param id="samt_topic_audit_compluntil_timeDifference">2</param>
-                </defaultRule>
-               </huiproperty>
-               
-            </huipropertygroup>
-      
       </huientity>
       
       

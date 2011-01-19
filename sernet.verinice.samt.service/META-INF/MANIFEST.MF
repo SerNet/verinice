@@ -8,7 +8,7 @@ Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  com.springsource.org.hibernate;bundle-version="3.2.6",
  sernet.gs.service,
- sernet.hui.common;bundle-version="1.1.1"
+ sernet.hui.common
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Eclipse-RegisterBuddy: com.springsource.org.hibernate
 Bundle-ActivationPolicy: lazy

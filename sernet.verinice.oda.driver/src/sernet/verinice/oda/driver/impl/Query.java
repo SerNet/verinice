@@ -334,7 +334,10 @@ public class Query implements IQuery
 			result = interpreter.eval(queryText);
 		} catch (EvalError e) {
 			log.error("Error evaluating the query: ", e);
-			result = new String("Exception while executing query: " + e.getErrorText() + ", " + e.getCause().getMessage());
+			result = new String("Exception while executing query: " + e.getErrorText());
+			if(e.getCause()!=null) {
+				result = result + ", " + e.getCause().getMessage();
+			}
 		}
 		
 		return result;

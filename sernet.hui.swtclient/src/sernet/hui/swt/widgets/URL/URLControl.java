@@ -51,7 +51,7 @@ public class URLControl implements IHuiControl {
 	private Link link;
 	private Property savedProp;
 	
-	Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>");
+	Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>"); //$NON-NLS-1$
 
 	public URLControl(Entity entity, PropertyType type, Composite parent,
 			boolean editable) {
@@ -91,7 +91,7 @@ public class URLControl implements IHuiControl {
 		});
 
 		Button editBtn = new Button(container, SWT.PUSH);
-		editBtn.setText("Ändern...");
+		editBtn.setText(Messages.getString("URLControl.1")); //$NON-NLS-1$
 		editBtn.setToolTipText(this.type.getTooltiptext());
 		editBtn.setEnabled(editable);
 		editBtn.addSelectionListener(new SelectionListener() {
@@ -113,7 +113,7 @@ public class URLControl implements IHuiControl {
 			return matcher.group(1);
 
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	private void setLinkText() {
@@ -121,7 +121,7 @@ public class URLControl implements IHuiControl {
 		savedProp = propList != null ? propList.getProperty(0) : null;
 
 		if (savedProp == null) {
-			savedProp = entity.createNewProperty(type, "");
+			savedProp = entity.createNewProperty(type, ""); //$NON-NLS-1$
 		}
 		if(savedProp.getPropertyValue()!=null) {
 			link.setText(savedProp.getPropertyValue());
@@ -130,26 +130,28 @@ public class URLControl implements IHuiControl {
 	}
 
 	protected void showLinkEditDialog() {
-		String href = "";
-		String name = "";
-		Matcher matcher = pattern.matcher(savedProp.getPropertyValue());
-		if (matcher.find()) {
-			href = matcher.group(1);
-			name = matcher.group(2);
-
+		String href = ""; //$NON-NLS-1$
+		String name = ""; //$NON-NLS-1$
+		if(savedProp!=null && savedProp.getPropertyValue()!=null) {
+			Matcher matcher = pattern.matcher(savedProp.getPropertyValue());
+			if (matcher.find()) {
+				href = matcher.group(1);
+				name = matcher.group(2);
+	
+			}
 		}
 		URLControlDialog dialog = new URLControlDialog(Display.getCurrent()
 				.getActiveShell(), name, href, this.type);
 		if (dialog.open() == InputDialog.OK) {
-			savedProp.setPropertyValue("<a href=\"" + dialog.getHref() + "\">" 
+			savedProp.setPropertyValue("<a href=\"" + dialog.getHref() + "\">"  //$NON-NLS-1$ //$NON-NLS-2$
 					+ dialog.getName()
-					+ "</a>");
+					+ "</a>"); //$NON-NLS-1$
 			update();
 		}
 	}
 
 	private String notNull(String propertyValue) {
-		return (propertyValue != null) ? propertyValue : "";
+		return (propertyValue != null) ? propertyValue : ""; //$NON-NLS-1$
 	}
 
 	public Control getControl() {
