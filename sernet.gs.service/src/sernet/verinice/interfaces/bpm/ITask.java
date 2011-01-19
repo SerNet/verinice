@@ -53,6 +53,11 @@ public interface ITask {
     /**
      * @return
      */
+    Date getDueDate();
+    
+    /**
+     * @return
+     */
     String getControlUuid();
 
     /**

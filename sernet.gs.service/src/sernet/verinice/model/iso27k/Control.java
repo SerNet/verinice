@@ -20,6 +20,7 @@
 package sernet.verinice.model.iso27k;
 
 import java.util.Collection;
+import java.util.Date;
 
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
@@ -49,6 +50,7 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	public static final String PROP_WEIGHT2 = "control_ownweight"; //$NON-NLS-1$
 	public static final String PROP_THRESHOLD1 = "control_min1"; //$NON-NLS-1$
 	public static final String PROP_THRESHOLD2 = "control_min2"; //$NON-NLS-1$
+    public static final String PROP_MATURITY_DUEDATE = "control_maturity_duedate"; //$NON-NLS-1$
 	
 	public static final String PROP_EFFECTIVENESS_CONFIDENTIALITY ="control_effectiveness_confidentiality"; 
     public static final String PROP_EFFECTIVENESS_INTEGRITY="control_effectiveness_integrity" ;
@@ -126,6 +128,10 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	public int getMaturity() {
 	    return getEntity().getInt(PROP_MATURITY);
 	}
+	
+	public Date getDueDate() {
+        return getEntity().getDate(PROP_MATURITY_DUEDATE);
+    }
 	
 	public static String getImplementation(Entity entity) {
 	    PropertyList properties = entity.getProperties(PROP_IMPL);

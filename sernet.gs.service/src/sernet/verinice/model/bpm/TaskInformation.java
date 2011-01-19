@@ -35,6 +35,8 @@ public class TaskInformation implements ITask,Serializable {
     
     Date createDate;
     
+    Date dueDate;
+    
     String name;
     
     String controlTitle;
@@ -73,6 +75,14 @@ public class TaskInformation implements ITask,Serializable {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
 
     /* (non-Javadoc)

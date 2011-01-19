@@ -30,8 +30,12 @@ public interface IControlExecutionProcess {
     String VAR_OWNER_NAME = "OWNER_NAME";
     String VAR_ASSIGNEE_NAME = "ASSIGNEE_NAME";
     String VAR_IMPLEMENTATION = "IMPLEMENTATION";
+    String VAR_DUEDATE = "DUEDATE";
     
     String DEFAULT_OWNER_NAME = "admin";
+    
+    // see https://docs.jboss.org/jbpm/v4/devguide/html_single/#timer 
+    String DEFAULT_DUEDATE = "10 business days";
 
     
 }
