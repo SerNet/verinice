@@ -2,6 +2,5 @@
 <cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" 
 	resourceMap="http://svn.verinice.org/svnroot/TRUNK/sernet.hui.swtclient/verinice.rmap" >
 	<cq:rootRequest name="sernet.hui.swtclient" 
-    	componentType="osgi.bundle" 
-    	versionDesignator="[1.1.1,1.1.1]"/>
+    	componentType="osgi.bundle"/>
 </cq:componentQuery>
