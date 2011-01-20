@@ -76,9 +76,9 @@ public class TaskBean {
                 if (table.isRowAvailable()) {
                     setSelectedTask( (ITask) table.getRowData());
                 }
-                getEditBean().setUuid(getSelectedTask().getControlUuid());
+                getEditBean().setUuid(getSelectedTask().getUuid());
                 getEditBean().setTitle(getSelectedTask().getControlTitle());
-                getEditBean().setTypeId(Control.TYPE_ID);
+                getEditBean().setTypeId(getSelectedTask().getType());
                 setOutcomeId(null);
                 getEditBean().init();
             }

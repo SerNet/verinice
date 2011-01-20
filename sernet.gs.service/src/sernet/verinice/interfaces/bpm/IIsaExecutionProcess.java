@@ -23,17 +23,19 @@ package sernet.verinice.interfaces.bpm;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public interface IControlExecutionProcess extends IExecutionProcess {
-    String KEY = "control-execution";
+public interface IIsaExecutionProcess extends IExecutionProcess {
     
-    String VAR_OWNER_NAME = "OWNER_NAME";
-    String VAR_ASSIGNEE_NAME = "ASSIGNEE_NAME";
-    String VAR_IMPLEMENTATION = "IMPLEMENTATION";
-    String VAR_DUEDATE = "DUEDATE";
+    String KEY = "isa-execution";
+
+    String VAR_OWNER_NAME = "ISA_OWNER_NAME";
+    String VAR_ASSIGNEE_NAME = "ISA_ASSIGNEE_NAME";
+    String VAR_IMPLEMENTATION = "ISA_IMPLEMENTATION";
+    String VAR_DUEDATE = "ISA_DUEDATE";
     
     String DEFAULT_OWNER_NAME = "admin";
     
     // see https://docs.jboss.org/jbpm/v4/devguide/html_single/#timer 
     String DEFAULT_DUEDATE = "10 business days";
-      
+
+    
 }

@@ -27,6 +27,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -45,7 +46,6 @@ public class ProcessDao extends HibernateDaoSupport {
     
     public String getAssignee(Control control) {
         String uuidAssignee = null;
-        String username = null;
         Set<CnALink> linkSet = control.getLinksDown();
         for (CnALink link : linkSet) {
             if(Control.REL_CONTROL_PERSON_ISO.equals(link.getRelationId())) {
@@ -53,7 +53,23 @@ public class ProcessDao extends HibernateDaoSupport {
                 break;
             }
         }
-        
+        return loadUsername(uuidAssignee);
+    }
+    
+    public String getAssignee(SamtTopic topic) {
+        String uuidAssignee = null;     
+        Set<CnALink> linkSet = topic.getLinksDown();
+        for (CnALink link : linkSet) {
+            if(SamtTopic.REL_SAMTTOPIC_PERSON_ISO.equals(link.getRelationId())) {
+                uuidAssignee = link.getDependency().getUuid();            
+                break;
+            }
+        }
+        return loadUsername(uuidAssignee);
+    }
+
+    private String loadUsername(String uuidAssignee) {
+        String username = null;
         if(uuidAssignee!=null) {
             List<String> result = getHibernateTemplate().find(ProcessDao.HQL, new String[] {uuidAssignee,Configuration.PROP_USERNAME});
             if(result!=null && !result.isEmpty()) {

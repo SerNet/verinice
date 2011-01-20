@@ -40,10 +40,12 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.bpm.IControlExecutionProcess;
+import sernet.verinice.interfaces.bpm.IExecutionProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.bpm.ITask.KeyValue;
 import sernet.verinice.model.bpm.TaskInformation;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 
 /**
@@ -62,7 +64,7 @@ public class TaskService implements ITaskService{
     
     private IAuthService authService;
     
-    private IBaseDao<Control,Integer> controlDao;
+    private IBaseDao<CnATreeElement,Integer> elementDao;
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList()
@@ -137,10 +139,12 @@ public class TaskService implements ITaskService{
         taskInformation.setName(Messages.getString(task.getName()));
         taskInformation.setCreateDate(task.getCreateTime());    
         String executionId = task.getExecutionId();   
-        String uuidControl = (String) getExecutionService().getVariable(executionId,IControlExecutionProcess.VAR_CONTROL_UUID);      
-        Control control = getControlDao().findByUuid(uuidControl, RetrieveInfo.getPropertyInstance());
-        taskInformation.setControlTitle(control.getTitle());
-        taskInformation.setControlUuid(uuidControl);     
+        String uuidControl = (String) getExecutionService().getVariable(executionId,IExecutionProcess.VAR_UUID);      
+        String typeId = (String) getExecutionService().getVariable(executionId,IExecutionProcess.VAR_TYPE_ID);      
+        CnATreeElement element = getElementDao().findByUuid(uuidControl, RetrieveInfo.getPropertyInstance());
+        taskInformation.setControlTitle(element.getTitle());
+        taskInformation.setUuid(uuidControl); 
+        taskInformation.setType(typeId);
         taskInformation.setDueDate(task.getDuedate());      
         return taskInformation;
     }
@@ -187,12 +191,12 @@ public class TaskService implements ITaskService{
         this.processEngine = processEngine;
     }
 
-    public IBaseDao<Control, Integer> getControlDao() {
-        return controlDao;
+    public IBaseDao<CnATreeElement, Integer> getElementDao() {
+        return elementDao;
     }
 
-    public void setControlDao(IBaseDao<Control, Integer> controlDao) {
-        this.controlDao = controlDao;
+    public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
+        this.elementDao = elementDao;
     }
 
 }

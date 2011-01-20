@@ -25,6 +25,7 @@ import java.util.Map;
 import org.jbpm.pvm.internal.model.ExecutionImpl;
 
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -47,6 +48,13 @@ public interface IProcessService {
     
     List<ExecutionImpl> findControlExecution(final String uuidControl);
     
+    List<ExecutionImpl> findIsaExecution(final String uuidSamtTopic);
+    
     void handleControl(Control control);
+
+    /**
+     * @param control
+     */
+    void handleSamtTopic(SamtTopic control);
 }
 

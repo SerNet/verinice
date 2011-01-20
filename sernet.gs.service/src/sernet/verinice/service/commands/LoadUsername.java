@@ -29,6 +29,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Control;
 
@@ -56,13 +57,16 @@ public class LoadUsername extends GenericCommand {
     "where person.uuid = ? " +
     "and props.propertyType = ?";
     
-    String uuidControl;
+    String uuid;
     
     String username; 
     
-    public LoadUsername(String uuidControl) {
+    String linkId;
+    
+    public LoadUsername(String uuidControl, String linkId) {
         super();
-        this.uuidControl = uuidControl;
+        this.uuid = uuidControl;
+        this.linkId = linkId;
     }
 
     /* (non-Javadoc)
@@ -74,12 +78,12 @@ public class LoadUsername extends GenericCommand {
             String uuidAssignee = null;
             RetrieveInfo ri = new RetrieveInfo();
             ri.setLinksUp(true);
-            LoadElementByUuid<Control> command = new LoadElementByUuid(Control.TYPE_ID,uuidControl,ri);
+            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid(uuid,ri);
             command = getCommandService().executeCommand(command);
-            Control control = command.getElement();
+            CnATreeElement control = command.getElement();
             Set<CnALink> linkSet = control.getLinksDown();
             for (CnALink link : linkSet) {
-                if(Control.REL_CONTROL_PERSON_ISO.equals(link.getRelationId())) {
+                if(this.linkId.equals(link.getRelationId())) {
                     uuidAssignee = link.getDependency().getUuid();            
                     break;
                 }
@@ -92,7 +96,7 @@ public class LoadUsername extends GenericCommand {
                 }
             }
         } catch (Throwable t) {
-            getLog().error("Error while loading username for control uuid: " + uuidControl, t);
+            getLog().error("Error while loading username for control uuid: " + uuid, t);
         }
     }
 

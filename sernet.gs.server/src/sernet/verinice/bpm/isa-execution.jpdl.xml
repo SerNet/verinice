@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="isa-execution" name="verinice ISA Execution" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <description>Describes the implementation of controls in verinice</description>
+   <start g="284,17,48,48" name="start">
+      <transition to="evaluate control"/>
+   </start>
+    <decision g="286,124,80,40" name="evaluate control">
+      <transition g="-113,-15" name="not implemented" to="evaluate assignee">
+        <condition expr="#{ISA_IMPLEMENTATION==-2}"/>
+      </transition>
+      <transition g="151,149;153,670:-92,-22" name="implemented" to="end">
+        <condition expr="#{ISA_IMPLEMENTATION!=-2}"/>
+      </transition>
+   </decision>
+   <decision g="287,238,80,40" name="evaluate assignee">
+      <transition g="-77,-14" name="is assigned" to="evaluate implementation">
+        <condition expr="#{ISA_ASSIGNEE_NAME!=null}"/>
+      </transition>
+      <transition g="-59,-22" name="is not assigned" to="isa.task.setAssignee">
+        <condition expr="#{ISA_ASSIGNEE_NAME==null}"/>
+      </transition>
+   </decision>
+   <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE}" g="461,212,193,40" name="isa.task.setAssignee">
+      <transition g="6,-10" name="isa.transition.complete" to="load assignee"/>
+   </task>
+   <java class="sernet.verinice.bpm.IsaExecution" g="484,285,152,40" method="loadAssignee" name="load assignee" var="ISA_ASSIGNEE_NAME">
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="evaluate assignee"/>
+   </java>
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="464,371,206,40" name="isa.task.implement">
+      <transition g="6,-11" name="isa.transition.complete" to="load implementation"/>
+      <transition g="-12,4" name="isa.transition.escalate" to="isa.task.escalate">
+        <timer duedate="#{ISA_DUEDATE}"/>
+      </transition>
+   </task>
+   <task assignee="#{OWNER_NAME}" g="744,309,118,40" name="isa.task.escalate">
+      <transition g="-8,-19" name="transition.complete" to="load assignee"/>
+   </task>
+   <java class="sernet.verinice.bpm.IsaExecution" g="489,461,159,40" method="loadImplementation" name="load implementation" var="ISA_IMPLEMENTATION">
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="evaluate implementation"/>
+   </java>
+   <decision g="288,396,48,48" name="evaluate implementation">
+      <transition g="-70,-27" name="not implemented" to="isa.task.implement">
+        <condition expr="#{ISA_IMPLEMENTATION==-2}"/>
+      </transition>
+      <transition g="-92,-14" name="implemented" to="isa.task.checkImplementation">
+        <condition expr="#{ISA_IMPLEMENTATION!=-2}"/>
+      </transition>
+   </decision>
+   <task assignee="#{ISA_OWNER_NAME}" g="213,531,201,40" name="isa.task.checkImplementation">
+      <transition g="-128,-17" name="isa.transition.accepted" to="end"/>
+      <transition g="-8,4" name="isa.transition.decline" to="load implementation"/>
+   </task>
+   <end g="292,647,48,48" name="end"/>
+</process>

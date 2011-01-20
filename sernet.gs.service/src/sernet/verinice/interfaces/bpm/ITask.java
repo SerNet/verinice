@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.bpm;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -58,8 +59,13 @@ public interface ITask {
     /**
      * @return
      */
-    String getControlUuid();
+    String getUuid();
 
+    /**
+     * @return
+     */
+    String getType();
+    
     /**
      * Returns a map with outcomes of this task.
      * Key is the id of the outcome, value the translated title.
@@ -76,7 +82,7 @@ public interface ITask {
      */
     void setOutcomes(List<KeyValue> outcomes);
     
-    public class KeyValue {
+    public class KeyValue implements Serializable {
             
             String key;
             

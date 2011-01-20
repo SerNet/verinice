@@ -36,6 +36,10 @@ public class LoadElementByUuid<T extends CnATreeElement> extends GenericCommand 
 	public LoadElementByUuid(String uuid) {
         this(null,uuid,null);
     }
+	
+	public LoadElementByUuid(String uuid, RetrieveInfo ri) {
+        this(null,uuid,ri);
+    }
 
     public LoadElementByUuid(String typeId, String uuid) {
         this(typeId,uuid,null);

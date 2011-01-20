@@ -201,7 +201,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 if(viewer.getSelection() instanceof IStructuredSelection) {
                     try {
                         TaskInformation task = (TaskInformation) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-                        LoadElementByUuid<Control> loadControl = new LoadElementByUuid<Control>(Control.TYPE_ID, task.getControlUuid(), RetrieveInfo.getPropertyInstance());
+                        LoadElementByUuid<Control> loadControl = new LoadElementByUuid<Control>(task.getType(), task.getUuid(), RetrieveInfo.getPropertyInstance());
                         loadControl = getCommandService().executeCommand(loadControl);
                         EditorFactory.getInstance().updateAndOpenObject(loadControl.getElement());
                     } catch (Throwable t) {

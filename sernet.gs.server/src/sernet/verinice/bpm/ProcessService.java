@@ -48,11 +48,15 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.IControlExecutionProcess;
+import sernet.verinice.interfaces.bpm.IExecutionProcess;
+import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.IProcessService;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadUsername;
 
 /**
@@ -219,6 +223,39 @@ public class ProcessService implements IProcessService {
         }
     }
     
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessService#handleControl(sernet.verinice.model.iso27k.Control)
+     */
+    public void handleSamtTopic(SamtTopic samtTopic) {
+        try {
+            String uuid = samtTopic.getUuid();
+            List<ExecutionImpl> executionList = findIsaExecution(uuid);
+            if(executionList==null || executionList.isEmpty()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("No process for isa topic: " + uuid);
+                }
+                // start process if control is not implemented
+                if(SamtTopic.IMPLEMENTED_NOTEDITED_NUMERIC == samtTopic.getMaturity()) {
+                    startIsaExecution(samtTopic);
+                }
+                if (log.isInfoEnabled()) {
+                    log.info("Process started for isa topic: " + uuid);
+                }
+            } else if (log.isDebugEnabled()) {
+                log.debug("Process found for isa topic: " + uuid);
+                for (ExecutionImpl executionImpl : executionList) {
+                    log.debug("Process execution id: " + executionImpl.getId());
+                }            
+            }
+        } catch (RuntimeException re) {
+            log.error("RuntimeException while handling isa topic", re);
+            throw re;
+        } catch (Throwable t) {
+            log.error("Error while handling isa topic", t);
+            throw new RuntimeException(t);
+        }
+    }
+    
     /**
      * @param control
      * @throws CommandException 
@@ -229,7 +266,8 @@ public class ProcessService implements IProcessService {
         String username = getProcessDao().getAssignee(control);
         
         props.put(IControlExecutionProcess.VAR_ASSIGNEE_NAME, username);
-        props.put(IControlExecutionProcess.VAR_CONTROL_UUID, control.getUuid());
+        props.put(IExecutionProcess.VAR_UUID, control.getUuid());
+        props.put(IExecutionProcess.VAR_TYPE_ID, control.getTypeId());    
         props.put(IControlExecutionProcess.VAR_OWNER_NAME, getOwnerName(control));
         props.put(IControlExecutionProcess.VAR_IMPLEMENTATION, control.getImplementation());
         Date duedate = control.getDueDate();
@@ -245,12 +283,35 @@ public class ProcessService implements IProcessService {
     }
     
     /**
-     * @param control
+     * @param topic
+     * @throws CommandException 
      */
-    private String getOwnerName(Control control) {
+    private void startIsaExecution(SamtTopic topic) throws CommandException {      
+        Map<String, Object> props = new HashMap<String, Object>();      
+        String username = getProcessDao().getAssignee(topic);  
+        props.put(IIsaExecutionProcess.VAR_ASSIGNEE_NAME, username);
+        props.put(IExecutionProcess.VAR_UUID, topic.getUuid());
+        props.put(IExecutionProcess.VAR_TYPE_ID, topic.getTypeId());
+        props.put(IIsaExecutionProcess.VAR_OWNER_NAME, getOwnerName(topic));
+        props.put(IIsaExecutionProcess.VAR_IMPLEMENTATION, topic.getMaturity());
+        Date duedate = topic.getCompleteUntil();
+        Date now = new Date(System.currentTimeMillis());
+        if(duedate!=null && now.before(duedate)) {
+            props.put(IIsaExecutionProcess.VAR_DUEDATE, duedate);
+        } else {
+            props.put(IIsaExecutionProcess.VAR_DUEDATE, IControlExecutionProcess.DEFAULT_DUEDATE);
+        }
+             
+        startProcess(IIsaExecutionProcess.KEY, props);     
+    }
+    
+    /**
+     * @param element
+     */
+    private String getOwnerName(CnATreeElement element) {
         String owner = IControlExecutionProcess.DEFAULT_OWNER_NAME;
         DetachedCriteria crit = DetachedCriteria.forClass(ChangeLogEntry.class);
-        crit.add(Restrictions.eq("elementId", control.getDbId()));
+        crit.add(Restrictions.eq("elementId", element.getDbId()));
         crit.add(Restrictions.eq("elementClass", Control.class.getName()));
         crit.add(Restrictions.eq("change", ChangeLogEntry.TYPE_INSERT));
         crit.addOrder(Order.asc("changetime"));
@@ -258,10 +319,10 @@ public class ProcessService implements IProcessService {
         if(result!=null && !result.isEmpty() && result.get(0).getUsername()!=null) {
             owner = result.get(0).getUsername();
             if (log.isDebugEnabled()) {
-                log.debug("Owner of control: " + control.getUuid() + " is: " + owner);
+                log.debug("Owner of control: " + element.getUuid() + " is: " + owner);
             }
         } else {
-            log.warn("Can not find owner of control: " + control.getUuid() + ", using default owner name: " + owner);
+            log.warn("Can not find owner of control: " + element.getUuid() + ", using default owner name: " + owner);
         }
         return owner;
     }
@@ -277,8 +338,24 @@ public class ProcessService implements IProcessService {
         }
         executionCrit.add(Restrictions.eq("processDefinitionId", processDefinitionId));
         DetachedCriteria variableCrit = executionCrit.createCriteria("variables");
-        variableCrit.add(Restrictions.eq("key", IControlExecutionProcess.VAR_CONTROL_UUID));
+        variableCrit.add(Restrictions.eq("key", IExecutionProcess.VAR_UUID));
         variableCrit.add(Restrictions.eq("string", uuidControl));
+        return getJbpmExecutionDao().findByCriteria(executionCrit);
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IProcessService#findControlExecution(java.lang.String)
+     */
+    public List<ExecutionImpl> findIsaExecution(final String uuid) {
+        DetachedCriteria executionCrit = DetachedCriteria.forClass(ExecutionImpl.class);
+        String processDefinitionId = findProcessDefinitionId(IIsaExecutionProcess.KEY);
+        if (log.isDebugEnabled()) {
+            log.debug("Latest processDefinitionId: " + processDefinitionId);
+        }
+        executionCrit.add(Restrictions.eq("processDefinitionId", processDefinitionId));
+        DetachedCriteria variableCrit = executionCrit.createCriteria("variables");
+        variableCrit.add(Restrictions.eq("key", IExecutionProcess.VAR_UUID));
+        variableCrit.add(Restrictions.eq("string", uuid));
         return getJbpmExecutionDao().findByCriteria(executionCrit);
     }
 

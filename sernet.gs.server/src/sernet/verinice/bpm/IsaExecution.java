@@ -26,72 +26,72 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.LoadUsername;
 
 /**
- * Execution class for a jBPM Java task of process control-execution
- * defined in sernet/verinice/bpm/control-execution.jpdl.xml.
+ * Execution class for a jBPM Java task of process isa-execution
+ * defined in sernet/verinice/bpm/isa-execution.jpdl.xml.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class ControlExecution {
+public class IsaExecution {
 
-    private final Logger log = Logger.getLogger(ControlExecution.class);
+    private final Logger log = Logger.getLogger(IsaExecution.class);
     
     ICommandService commandService;
     
     /**
-     * Loads an assignee for a {@link Control}.
-     * An assignee of an control is an {@link PersonIso}
-     * linked to the control.
+     * Loads an assignee for a {@link SamtTopic} (ISA topic).
+     * An assignee of an ISA topic is an {@link PersonIso}
+     * linked to the topic.
      * Returns the username of the {@link Configuration}
      * connected to PersonIso. If there is no linked PersonIso
      * or no configuration for PersonIso <code>null</code> is returned.
      * 
-     * @param uuid uuid of an control
+     * @param uuid uuid of an ISA topic
      * @return username of the assignee
      */
-    public String loadAssignee(String uuidControl) {
+    public String loadAssignee(String uuid) {
         ServerInitializer.inheritVeriniceContextState();
         String username = null;
         try {
-            LoadUsername command = new LoadUsername(uuidControl,Control.REL_CONTROL_PERSON_ISO);
+            LoadUsername command = new LoadUsername(uuid,SamtTopic.REL_SAMTTOPIC_PERSON_ISO);
             command = getCommandService().executeCommand(command);
             username = command.getUsername();
         } catch(Throwable t) {
             log.error("Error while loading assignee.", t); //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {
-            log.debug("uuid control: " + uuidControl + ", username: " + username); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("uuid SamtTopic: " + uuid + ", username: " + username); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return username;
     }
     
     
     /**
-     * Returns the implementation state of the an control
-     * (SNCA property "control_implemented").
+     * Returns the implementation state of the an ISA topic
+     * (SNCA property "samt_topic_maturity").
      * 
-     * @param uuid uuid of an control
-     * @return implementation state of the an control
+     * @param uuid uuid of an ISA topic
+     * @return implementation state of the an ISA topic
      */
-    public String loadImplementation(String uuidControl) {
+    public String loadImplementation(String uuid) {
         ServerInitializer.inheritVeriniceContextState();
         String implementation = null;
         try {
             RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-            LoadElementByUuid<Control> command = new LoadElementByUuid(Control.TYPE_ID,uuidControl,ri);
+            LoadElementByUuid<SamtTopic> command = new LoadElementByUuid(SamtTopic.TYPE_ID,uuid,ri);
             command = getCommandService().executeCommand(command);
-            Control control = command.getElement();
-            implementation = control.getImplementation();
+            SamtTopic topic = command.getElement();
+            implementation = Integer.valueOf(topic.getMaturity()).toString();
         } catch(Throwable t) {
             log.error("Error while loading implementation.", t); //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {
-            log.debug("uuid control: " + uuidControl + ", implementation: " + implementation); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("uuid SamtTopic: " + uuid + ", implementation: " + implementation); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return implementation;
     }

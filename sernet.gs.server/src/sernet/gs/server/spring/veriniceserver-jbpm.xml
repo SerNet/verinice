@@ -19,6 +19,7 @@
         <property name="processDefinitions">
             <set>
                 <value>sernet/verinice/bpm/control-execution.jpdl.xml</value>
+                <value>sernet/verinice/bpm/isa-execution.jpdl.xml</value>
             </set>
         </property>
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
@@ -30,13 +31,13 @@
     <bean id="taskService" class="sernet.verinice.bpm.TaskService">
         <property name="processEngine" ref="processEngine" />
         <property name="authService" ref="authService" />
-        <property name="controlDao" ref="controlDAO" />  
+        <property name="elementDao" ref="cnaTreeElementDao" />  
     </bean>
 
     <!-- Spring/Quartz trigger bean to execute cron job processJob. -->
     <bean id="processJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="processJob" />
-        <property name="cronExpression" value="0 */5 * * * ?" />
+        <property name="cronExpression" value="0 */2 * * * ?" />
     </bean>
     
     <!-- Creates jBPM processes by IProcessCreater implementations. -->
@@ -48,6 +49,7 @@
                 <entry key="processCreaterSet">
                     <set>
                         <ref bean="controlProcessCreater" />
+                        <ref bean="isaProcessCreater" />
                     </set>
                 </entry>
                 <entry key="workObjects" value-ref="workObjects" />
@@ -59,6 +61,12 @@
     <bean name="controlProcessCreater" class="sernet.verinice.bpm.ControlProcessCreator">
         <property name="processService" ref="processService" />
         <property name="controlDao" ref="controlDAO" />
+    </bean>
+    
+    <!-- Creates one isa-execution processes for every isa/samt topic. -->
+    <bean name="isaProcessCreater" class="sernet.verinice.bpm.IsaProcessCreator">
+        <property name="processService" ref="processService" />
+        <property name="samtTopicDao" ref="samtTopicDAO" />
     </bean>
 
     <bean id="jbpmExecutionDao" class="sernet.verinice.hibernate.HibernateDao">

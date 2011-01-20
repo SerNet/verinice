@@ -41,7 +41,9 @@ public class TaskInformation implements ITask,Serializable {
     
     String controlTitle;
     
-    String controlUuid;
+    String uuid;
+    
+    String type;
     
     List<KeyValue> outcomeList;
     
@@ -110,12 +112,20 @@ public class TaskInformation implements ITask,Serializable {
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITask#getControlUuid()
      */
-    public String getControlUuid() {
-        return controlUuid;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setControlUuid(String controlUuid) {
-        this.controlUuid = controlUuid;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     /* (non-Javadoc)

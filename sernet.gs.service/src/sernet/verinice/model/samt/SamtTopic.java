@@ -20,6 +20,7 @@
 package sernet.verinice.model.samt;
 
 import java.util.Collection;
+import java.util.Date;
 
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bsi.TagHelper;
@@ -46,6 +47,9 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
     public static final String PROP_THRESHOLD1 = "samt_topic_min1"; //$NON-NLS-1$
     public static final String PROP_THRESHOLD2 = "samt_topic_min2"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTED = "samt_topic_implemented"; //$NON-NLS-1$
+    public static final String PROP_COMPLETE_UNTIL = "samt_topic_audit_compluntil"; //$NON-NLS-1$
+    
+    public static final String REL_SAMTTOPIC_PERSON_ISO = "rel_samttopic_person-iso_resp"; //$NON-NLS-1$
     
     
     
@@ -173,10 +177,6 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
         
     }
 
-   
-
-   
-
     /* (non-Javadoc)
      * @see sernet.verinice.iso27k.model.IControl#getMaturityPropertyId()
      */
@@ -192,6 +192,10 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
     public boolean isImplemented() {
         // never implemented, use maturity service
         throw new RuntimeException("Use maturity service to determine implementation.");
+    }
+    
+    public Date getCompleteUntil() {
+        return getEntity().getDate(PROP_COMPLETE_UNTIL);
     }
 
 }
