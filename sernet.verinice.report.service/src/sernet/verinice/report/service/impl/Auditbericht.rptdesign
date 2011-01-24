@@ -1755,7 +1755,7 @@ columns(cols);</value>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="type">a4</property>
-            <property name="orientation">landscape</property>
+            <property name="orientation">portrait</property>
             <page-footer>
                 <text id="3">
                     <property name="paddingTop">20pt</property>
@@ -1803,6 +1803,8 @@ columns(cols);</value>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
+            <property name="pageBreakAfter">always</property>
+            <property name="pageBreakInside">avoid</property>
             <property name="width">7.75206611570248in</property>
             <column id="1067">
                 <property name="width">2.4242424242424243in</property>
@@ -2167,12 +2169,6 @@ columns(cols);</value>
                 </cell>
             </row>
         </grid>
-        <label id="1703">
-            <property name="fontSize">12pt</property>
-            <property name="fontWeight">bold</property>
-            <property name="paddingTop">20pt</property>
-            <text-property name="text">Vor-Ort Audit: Verifikation des Basis-Sicherheitschecks</text-property>
-        </label>
         <table id="1573">
             <property name="marginTop">20pt</property>
             <property name="pageBreakAfter">avoid</property>
@@ -2272,13 +2268,13 @@ columns(cols);</value>
                                     <grid id="1618">
                                         <property name="pageBreakAfter">avoid</property>
                                         <property name="pageBreakBefore">avoid</property>
-                                        <property name="width">11.03305785123967in</property>
+                                        <property name="width">7.619834710743802in</property>
                                         <column id="1619">
                                             <property name="width">1.4462809917355373in</property>
                                             <property name="fontWeight">bold</property>
                                         </column>
                                         <column id="1620">
-                                            <property name="width">9.586776859504132in</property>
+                                            <property name="width">6.1735537190082646in</property>
                                         </column>
                                         <row id="1621">
                                             <property name="fontWeight">bold</property>
@@ -2410,7 +2406,7 @@ columns(cols);</value>
                                                 <property name="borderTopStyle">solid</property>
                                                 <property name="borderTopWidth">thin</property>
                                                 <label id="1701">
-                                                    <text-property name="text">Gesprächspartner:</text-property>
+                                                    <text-property name="text">Gesprächspartner im Basis-Sicherheitscheck:</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="1692">
@@ -2654,7 +2650,7 @@ columns(cols);</value>
                                         <property name="pageBreakAfter">avoid</property>
                                         <property name="pageBreakBefore">avoid</property>
                                         <property name="pageBreakInside">avoid</property>
-                                        <property name="width">10.98989898989899in</property>
+                                        <property name="width">7.553719008264463in</property>
                                         <property name="dataSet">bst_mnums</property>
                                         <list-property name="paramBindings">
                                             <structure>
@@ -2843,19 +2839,19 @@ columns(cols);</value>
                                             <property name="width">0.7676767676767676in</property>
                                         </column>
                                         <column id="1909">
-                                            <property name="width">2.9292929292929295in</property>
+                                            <property name="width">2.2644628099173554in</property>
                                         </column>
                                         <column id="1910">
-                                            <property name="width">0.8888888888888888in</property>
+                                            <property name="width">1.0413223140495869in</property>
                                         </column>
                                         <column id="1911">
-                                            <property name="width">2.3636363636363638in</property>
+                                            <property name="width">1.0661157024793388in</property>
                                         </column>
                                         <column id="1912">
-                                            <property name="width">0.9393939393939394in</property>
+                                            <property name="width">1.4958677685950412in</property>
                                         </column>
                                         <column id="1929">
-                                            <property name="width">1.5858585858585859in</property>
+                                            <property name="width">0.9173553719008265in</property>
                                         </column>
                                         <header>
                                             <row id="1890">
@@ -3135,6 +3131,14 @@ columns(cols);</value>
                                                                 </simple-property-list>
                                                                 <text-property name="display">Unzureichend</text-property>
                                                             </structure>
+                                                            <structure>
+                                                                <expression name="testExpr" type="javascript">row["mnums_gsaudit_status"]</expression>
+                                                                <property name="operator">like</property>
+                                                                <simple-property-list name="value1">
+                                                                    <value type="javascript">""</value>
+                                                                </simple-property-list>
+                                                                <text-property name="display">korrekt</text-property>
+                                                            </structure>
                                                         </list-property>
                                                         <property name="resultSetColumn">mnums_gsaudit_status</property>
                                                     </data>
@@ -3211,6 +3215,14 @@ columns(cols);</value>
                                                                     <value type="javascript">3</value>
                                                                 </simple-property-list>
                                                                 <text-property name="display">Schwerwiegend</text-property>
+                                                            </structure>
+                                                            <structure>
+                                                                <expression name="testExpr" type="javascript">row["mnums_gsaudit_abweichung"]</expression>
+                                                                <property name="operator">like</property>
+                                                                <simple-property-list name="value1">
+                                                                    <value type="javascript">""</value>
+                                                                </simple-property-list>
+                                                                <text-property name="display">-</text-property>
                                                             </structure>
                                                         </list-property>
                                                         <property name="resultSetColumn">mnums_gsaudit_abweichung</property>
@@ -3402,8 +3414,8 @@ columns(cols);</value>
                                                     <property name="borderTopColor">#000000</property>
                                                     <property name="borderTopStyle">solid</property>
                                                     <property name="borderTopWidth">thin</property>
-                                                    <data id="2016">
-                                                        <property name="resultSetColumn">mnums_gsaudit_beobachtung</property>
+                                                    <data id="2017">
+                                                        <property name="resultSetColumn">mnums_gsaudit_bericht</property>
                                                     </data>
                                                 </cell>
                                             </row>

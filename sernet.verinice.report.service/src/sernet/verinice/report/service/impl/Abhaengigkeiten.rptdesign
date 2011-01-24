@@ -4130,6 +4130,7 @@ columns(LoadReportElementWithLinks.COLUMNS);</value>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
+            <property name="pageBreakInside">avoid</property>
             <property name="width">7.75206611570248in</property>
             <column id="1067">
                 <property name="width">2.4242424242424243in</property>
@@ -4498,8 +4499,8 @@ columns(LoadReportElementWithLinks.COLUMNS);</value>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="paddingTop">20pt</property>
-            <property name="pageBreakAfter">avoid</property>
-            <property name="pageBreakBefore">avoid</property>
+            <property name="pageBreakAfter">auto</property>
+            <property name="pageBreakBefore">auto</property>
             <property name="pageBreakInside">avoid</property>
             <text-property name="text">Anwendungen</text-property>
         </label>
