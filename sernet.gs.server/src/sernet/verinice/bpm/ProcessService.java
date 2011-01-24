@@ -20,7 +20,6 @@
 package sernet.verinice.bpm;
 
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,19 +44,15 @@ import org.jbpm.pvm.internal.xml.Parse;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.IControlExecutionProcess;
 import sernet.verinice.interfaces.bpm.IExecutionProcess;
 import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.IProcessService;
 import sernet.verinice.model.common.ChangeLogEntry;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.service.commands.LoadUsername;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

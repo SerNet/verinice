@@ -25,6 +25,20 @@
         	</zipfileset>
         </war>
     </target>
+	
+	<!-- ================================= 
+	      target: war              
+	     ================================= -->
+    <target name="war-local" description="creates a war file">
+		<property name="destination" location="${sp:destination}"/>
+        <war destfile="${destination}/${filename}">
+        	<fileset dir="WebContent"/>
+        	<zipfileset dir="bin" prefix="WEB-INF/classes">
+        		<exclude name="log4j-dev.xml"/>
+        		<exclude name="log4j-prod.xml"/>
+        	</zipfileset>
+        </war>
+    </target>
 
 	<!-- ================================= 
           target: copy-jars              
