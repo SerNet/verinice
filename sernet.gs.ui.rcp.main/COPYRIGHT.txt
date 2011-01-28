@@ -1,4 +1,7 @@
 
+COPYRIGHT NOTICE
+================
+
 verinice is Open Source Software, Copyright 1996-2008 SerNet Service Network and
 others.
 
@@ -8,6 +11,8 @@ All source files in the folder "src" are published under the terms of the LGPLv3
 Some files in verinice contain the "SerNet" and/or "verinice" logo which are registered trademarks of SerNet GmbH in Germany and other countries. We kindly ask you to remove these files and the trademark "Sernet" from all files when distributing verinice on your own:
 
 The SerNet logo is contained in the following files:
+(The list may not be comprehensive as development continues.)
+
 
 ./intro/sernetISMS.png
 ./sernet.gif
@@ -17,3 +22,11 @@ The SerNet logo is contained in the following files:
 
 
 
+verinice CI
+===========
+
+FYI, the "verinice red" is
+RGB: 195 / 45 / 43
+Hex: #C32D2B
+CMYK: 17/100/100/7
+Pantone: 180 C
