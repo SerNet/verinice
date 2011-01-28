@@ -22,8 +22,6 @@ package sernet.verinice.interfaces.bpm;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -31,6 +29,10 @@ import java.util.Set;
  */
 public interface ITask {
 
+    public static final String STYLE_READ = "read"; 
+    
+    public static final String STYLE_UNREAD = "unread"; 
+    
     /**
      * @return
      */
@@ -81,6 +83,14 @@ public interface ITask {
      * @param outcomeMap a map with outcomes
      */
     void setOutcomes(List<KeyValue> outcomes);
+    
+    void setIsRead(boolean isRead);
+    
+    boolean getIsRead();
+    
+    String getStyle();
+    
+    void setStyle(String style);
     
     public class KeyValue implements Serializable {
             

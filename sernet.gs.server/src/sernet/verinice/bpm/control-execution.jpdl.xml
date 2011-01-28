@@ -2,6 +2,7 @@
 
 <process key="control-execution" name="verinice Control Execution" version="14" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <description>Describes the implementation of controls in verinice</description>
+   <variable name="TASK_READ_STATUS" type="string" init-expr="TASK_UNREAD"/> 
    <start g="174,-30,48,48" name="start">
       <transition to="evaluate control"/>
    </start>

@@ -36,6 +36,13 @@ import java.util.List;
  */
 public interface ITaskService {
 
+    
+    String VAR_READ_STATUS = "TASK_READ_STATUS";
+    
+    String VAR_READ = "TASK_READ";
+    
+    String VAR_UNREAD = "TASK_UNREAD";
+    
     /**
      * Returns the task list for currently logged in user.
      * If no tasks exists or current user cannot be determined an empty list is returned.
@@ -45,24 +52,6 @@ public interface ITaskService {
     List<ITask> getTaskList();
     
     /**
-     * Returns tasks created after a date for currently logged in user.
-     * If no new tasks exists or current user cannot be determined an empty list is returned.
-     * 
-     * @param since Tasks created after this date are returned, if null all tasks are returned
-     * @return the task list for current user
-     */
-    List<ITask> getTaskList(Date since);
-    
-    /**
-     * Returns the task list for user with name username.
-     * If no tasks exists an empty list is returned.
-     * 
-     * @param username a username
-     * @return task list for an user
-     */
-    List<ITask> getTaskList(String username);
-    
-    /**
      * Returns tasks created after a date for user with name username.
      * If no tasks exists an empty list is returned.
      * 
@@ -70,9 +59,11 @@ public interface ITaskService {
      * @param since Tasks created after this date are returned, if null all tasks are returned
      * @return task list for an user
      */
-    List<ITask> getTaskList(String username, Date since);
+    List<ITask> getTaskList(ITaskParameter parameter);
     
     void completeTask(String taskId);
     
     void completeTask(String taskId, String outcomeId);
+    
+    void markAsRead(String taskId);
 }

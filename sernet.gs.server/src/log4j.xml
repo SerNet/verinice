@@ -24,10 +24,17 @@
 	</appender>
 
     <!-- Add settings for packages here  -->
+    <!-- 
     <logger name="sernet.verinice.web">
         <level value="DEBUG" />
     </logger>
-	
+     -->
+   <!-- 
+    <logger name="org.hibernate.SQL">
+        <level value="DEBUG" />
+    </logger>
+    -->
+    
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />

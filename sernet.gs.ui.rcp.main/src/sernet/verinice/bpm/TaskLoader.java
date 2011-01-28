@@ -29,7 +29,9 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.bpm.ITaskListener;
 import sernet.verinice.interfaces.bpm.ITask;
+import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bpm.TaskParameter;
 
 /**
  * Loads new tasks using the ITaskService.
@@ -59,7 +61,9 @@ public class TaskLoader {
         List<ITask> taskList = Collections.emptyList();
         Date now = new Date(System.currentTimeMillis());
         if(lastChecked!=null) {
-            taskList = getTaskService().getTaskList(lastChecked);
+            ITaskParameter parameter = new TaskParameter();
+            parameter.setSince(lastChecked);
+            taskList = getTaskService().getTaskList(parameter);
             if(taskList!=null && !taskList.isEmpty()) {
                 for (ITaskListener listener : getTaskListenerSet()) {
                     listener.newTasks(taskList);

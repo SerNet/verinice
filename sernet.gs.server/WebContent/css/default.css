@@ -98,7 +98,7 @@ h1+a:visited {
 }
 #messages div {
 	float: left;
-	width: auto;
+	width: 100%;
 	margin-right: 1em;
 	vertical-align: middle;
 }

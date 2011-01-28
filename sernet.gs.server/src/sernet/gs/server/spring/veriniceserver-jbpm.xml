@@ -31,7 +31,8 @@
     <bean id="taskService" class="sernet.verinice.bpm.TaskService">
         <property name="processEngine" ref="processEngine" />
         <property name="authService" ref="authService" />
-        <property name="elementDao" ref="cnaTreeElementDao" />  
+        <property name="elementDao" ref="cnaTreeElementDao" /> 
+        <property name="jbpmTaskDao" ref="jbpmTaskDao" />
     </bean>
 
     <!-- Spring/Quartz trigger bean to execute cron job processJob. -->
@@ -72,6 +73,13 @@
     <bean id="jbpmExecutionDao" class="sernet.verinice.hibernate.HibernateDao">
         <constructor-arg>
             <value>org.jbpm.pvm.internal.model.ExecutionImpl</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="jbpmTaskDao" class="sernet.verinice.hibernate.HibernateDao">
+        <constructor-arg>
+            <value>org.jbpm.pvm.internal.task.TaskImpl</value>
         </constructor-arg>
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>

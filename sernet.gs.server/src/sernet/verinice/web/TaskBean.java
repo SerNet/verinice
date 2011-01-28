@@ -31,9 +31,9 @@ import org.richfaces.model.selection.SimpleSelection;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.bpm.ITask;
+import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.iso27k.Control;
-
+import sernet.verinice.model.bpm.TaskParameter;
 /**
  * JSF managed bean for view and edit Tasks, template: todo/task.xhtml
  * 
@@ -53,6 +53,10 @@ public class TaskBean {
     
     private String outcomeId;
     
+    private boolean showRead = true;
+    
+    private boolean showUnread = true;
+    
     private HtmlExtendedDataTable table;
     
     private Selection selection = new SimpleSelection();
@@ -60,8 +64,11 @@ public class TaskBean {
     /**
      * @return
      */
-    public List<ITask> loadTasks() {   
-        return taskList = getTaskService().getTaskList();
+    public List<ITask> loadTasks() {  
+        ITaskParameter parameter = new TaskParameter();
+        parameter.setRead(getShowRead());
+        parameter.setUnread(getShowUnread());    
+        return taskList = getTaskService().getTaskList(parameter);
     }
     
     public void openTask() {
@@ -76,6 +83,10 @@ public class TaskBean {
                 if (table.isRowAvailable()) {
                     setSelectedTask( (ITask) table.getRowData());
                 }
+                getTaskService().markAsRead(getSelectedTask().getId());
+                getSelectedTask().setIsRead(true);
+                getSelectedTask().setStyle(ITask.STYLE_READ);
+                
                 getEditBean().setUuid(getSelectedTask().getUuid());
                 getEditBean().setTitle(getSelectedTask().getControlTitle());
                 getEditBean().setTypeId(getSelectedTask().getType());
@@ -134,6 +145,22 @@ public class TaskBean {
 
     public void setOutcomeId(String outcomeId) {
         this.outcomeId = outcomeId;
+    }
+
+    public boolean getShowRead() {
+        return showRead;
+    }
+
+    public void setShowRead(boolean showRead) {
+        this.showRead = showRead;
+    }
+
+    public boolean getShowUnread() {
+        return showUnread;
+    }
+
+    public void setShowUnread(boolean showUnread) {
+        this.showUnread = showUnread;
     }
 
     public HtmlExtendedDataTable getTable() {

@@ -46,6 +46,10 @@ public class TaskInformation implements ITask,Serializable {
     String type;
     
     List<KeyValue> outcomeList;
+
+    boolean isRead = false;
+    
+    String style;
     
     /**
      * 
@@ -142,6 +146,30 @@ public class TaskInformation implements ITask,Serializable {
     public void setOutcomes(List<KeyValue> outcomes) {
         this.outcomeList = outcomes;        
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITask#isRead()
+     */
+    @Override
+    public boolean getIsRead() {
+        return isRead;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITask#setIsRead(boolean)
+     */
+    @Override
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;     
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+    }
 
     @Override
     public int hashCode() {
@@ -167,6 +195,5 @@ public class TaskInformation implements ITask,Serializable {
             return false;
         return true;
     }
-    
 
 }
