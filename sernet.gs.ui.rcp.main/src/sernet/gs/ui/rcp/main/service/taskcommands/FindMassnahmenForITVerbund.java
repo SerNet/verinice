@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +33,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.lob.SerializableClob;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.util.StopWatch.TaskInfo;
 
@@ -248,16 +250,25 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
             Properties props = new Properties();
             for (Iterator iterator = result.iterator(); iterator.hasNext();) {
                 Object[] row = (Object[]) iterator.next();
-                if(id==null || id.intValue()!=((Integer) row[0]).intValue()) {
+                Integer currentId = null;
+                if(row[0]!=null) {
+                    // for Oracle row[0] is BigDecimal (bug 165)
+                    if(row[0] instanceof BigDecimal) {
+                        currentId = ((BigDecimal)row[0]).intValue();
+                    } else {
+                        currentId = (Integer) row[0];
+                    }
+                }
+                if(id==null || (currentId!=null && id.intValue()!=currentId.intValue())) {
                     if(id!=null && checkFilter(props,filter)) {
                         idList.add(new TaskItem(id, props.get(sortBy)));               
                     }
-                    id = (Integer) row[0];
-                    props.clear();
+                    id=currentId;               
+                    props.clear();          
+                }  
+                if(row[2]!=null) {
                     props.put(row[1], row[2]);
-                } else {
-                    props.put(row[1], row[2]);
-                }        
+                }
             }
             if(id!=null && checkFilter(props,filter)) {
                 idList.add(new TaskItem(id, props.get(sortBy)));
@@ -287,6 +298,17 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
          * @return
          */
         private boolean checkSiegelFilter(Object prop, Object filter) {
+            if(prop!=null) {
+                // for Oracle prop is SerializableClob (bug 165)
+                if(prop instanceof SerializableClob) {
+                    SerializableClob clob = (SerializableClob) prop;
+                    try {
+                        prop = clob.getSubString(Long.valueOf(1).longValue(), Long.valueOf(clob.length()).intValue());
+                    } catch (SQLException e) {
+                        log.error("Error while getting string value from clob", e);
+                    }
+                }
+            }
             return (filter==null) 
             || ((Set) filter).contains(prop);
         }
@@ -296,9 +318,23 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
          * @param object2
          */
         private boolean checkUmsetzungFilter(Object prop, Object filter) {
+            String value = null;
+            if(prop!=null) {
+                // for Oracle prop is SerializableClob (bug 165)
+                if(prop instanceof SerializableClob) {
+                    SerializableClob clob = (SerializableClob) prop;
+                    try {
+                        value = clob.getSubString(Long.valueOf(1).longValue(), Long.valueOf(clob.length()).intValue());
+                    } catch (SQLException e) {
+                        log.error("Error while getting string value from clob", e);
+                    }
+                } else {
+                    value = (String) prop;
+                }
+            }
             return (filter==null) 
-            || ((Set) filter).contains(prop)
-            || (((Set) filter).contains(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET) && (prop==null || ((String)prop).isEmpty()));
+            || ((Set) filter).contains(value)
+            || (((Set) filter).contains(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET) && (value==null || value.isEmpty()));
             
         }
 
