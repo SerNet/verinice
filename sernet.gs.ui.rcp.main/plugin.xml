@@ -150,7 +150,7 @@
             class="sernet.verinice.bpm.rcp.TaskView"
             icon="icons/tasks.gif"
             id="sernet.verinice.bpm.rcp.TaskView"
-            name="Tasks"
+            name="%view.name.12"
             restorable="true">
       </view>
    </extension>
@@ -645,6 +645,21 @@
                menubarPath="special"
                style="push"
                tooltip="%action.tooltip.12">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartIsaProcess"
+            objectClass="sernet.verinice.model.iso27k.Audit">
+         <action
+               class="sernet.verinice.bpm.rcp.StartIsaProcess"
+               enablesFor="1"
+               icon="icons/tasks.gif"
+               id="sernet.verinice.bpm.rcp.StartIsaProcess.action"
+               label="%action.label.26"
+               menubarPath="additions"
+               style="push"
+               tooltip="%action.tooltip.25">
          </action>
       </objectContribution>
    </extension>
@@ -1145,7 +1160,7 @@
              adaptable="true"
              icon="icons/overlays/vda.png"
              id="sernet.verinice.rcp.IsaDecorator"
-             label="ISA-Topic"
+             label="%decorator.label.2"
              lightweight="true"
              location="TOP_RIGHT"
              state="true">

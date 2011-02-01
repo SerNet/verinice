@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -85,6 +86,7 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
     private AuditGroup auditGroup;
     private Audit isaAudit;
     private String stationId;
+    private List<CnATreeElement> changedElements;
 
     private transient IAuthService authService;
 
@@ -117,6 +119,7 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
     @Override
     public void execute() {
         try {
+            changedElements = new ArrayList<CnATreeElement>();
             if(auditGroup==null) {
                 organization = new Organization(model,true);
                 if (titleOrganization != null) {
@@ -124,10 +127,12 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
                 }
                 model.addChild(organization);
                 addPermissions(organization);
+                changedElements.add(organization);
                 
                 // Create the audit add it to organization
                 auditGroup = getAuditGroup(organization);
                 addPermissions(auditGroup);
+                changedElements.add(auditGroup);
             }
             
             isaAudit = new Audit(auditGroup, true);
@@ -136,6 +141,8 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
             }
             addPermissions(isaAudit);
             auditGroup.addChild(isaAudit);
+            changedElements.add(isaAudit);
+            changedElements.addAll(isaAudit.getChildren());
             
             // read the control items from the csv file
             Collection<IItem> itemCollection = getItemCollection();
@@ -217,6 +224,7 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
                 
                 group.addChild(element);
                 element.setParent(group);
+                changedElements.add(element);
             }
         }
     }
@@ -323,7 +331,7 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
-        return Arrays.asList((CnATreeElement) organization);
+        return changedElements;
     }
 
     /*

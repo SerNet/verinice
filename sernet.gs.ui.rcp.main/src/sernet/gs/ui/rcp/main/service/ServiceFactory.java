@@ -25,6 +25,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.SpringClientPlugin;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.bpm.IProcessService;
 import sernet.verinice.interfaces.bpm.ITaskService;
 
 public abstract class ServiceFactory {
@@ -77,7 +78,7 @@ public abstract class ServiceFactory {
 		return authService;
 	}
 	
-	/** Retrieves the application's ICommandService instance.
+	/** Retrieves the application's ITaskService instance.
      * 
      * <p>The method works on the server as well as the client.</p>
      * 
@@ -89,6 +90,20 @@ public abstract class ServiceFactory {
      */
     public static ITaskService lookupTaskService() {
         return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
+    }
+    
+    /** Retrieves the application's IProcessService instance.
+     * 
+     * <p>The method works on the server as well as the client.</p>
+     * 
+     * <p>Note: Usage of this method is discouraged. If the class that needs
+     * the command service is managed by Spring declare a property and
+     * let the instance being injected by the IoC container.</p> 
+     * 
+     * @return
+     */
+    public static IProcessService lookupProcessService() {
+        return (IProcessService) VeriniceContext.get(VeriniceContext.PROCESS_SERVICE);
     }
 	
 	public static boolean isPermissionHandlingNeeded() {

@@ -127,4 +127,18 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 
+    /**
+     * @return
+     */
+    public ControlGroup getControlGroup() {
+        ControlGroup controlGroup = null;
+        for (CnATreeElement child : getChildren()) {
+            if(ControlGroup.TYPE_ID.equals(child.getTypeId())) {
+                controlGroup = (ControlGroup) child;
+                break;
+            }
+        }
+        return controlGroup;
+    }
+
 }

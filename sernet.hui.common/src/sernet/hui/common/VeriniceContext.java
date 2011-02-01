@@ -90,6 +90,8 @@ public class VeriniceContext {
 	
 	public static String TASK_SERVICE = "taskService";
 
+    public static String PROCESS_SERVICE = "processService";
+
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();
 
 	private static VeriniceContext instance;

@@ -24,7 +24,9 @@
         </property>
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
         <property name="changeLogEntryDao" ref="changeLogEntryDAO" />
-        <property name="controlDao" ref="controlDAO" />
+        <property name="auditDao" ref="auditDAO" />
+        <property name="controlGroupDao" ref="controlGroupDAO" />
+        <property name="samtTopicDao" ref="samtTopicDAO" />
         <property name="processDao" ref="processDao" />
     </bean>
     
@@ -50,7 +52,7 @@
                 <entry key="processCreaterSet">
                     <set>
                         <ref bean="controlProcessCreater" />
-                        <ref bean="isaProcessCreater" />
+                        <!--<ref bean="isaProcessCreater" />-->
                     </set>
                 </entry>
                 <entry key="workObjects" value-ref="workObjects" />
@@ -65,10 +67,12 @@
     </bean>
     
     <!-- Creates one isa-execution processes for every isa/samt topic. -->
+    <!--
     <bean name="isaProcessCreater" class="sernet.verinice.bpm.IsaProcessCreator">
         <property name="processService" ref="processService" />
         <property name="samtTopicDao" ref="samtTopicDAO" />
     </bean>
+    -->
 
     <bean id="jbpmExecutionDao" class="sernet.verinice.hibernate.HibernateDao">
         <constructor-arg>

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.jbpm.pvm.internal.model.ExecutionImpl;
 
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.samt.SamtTopic;
 
@@ -33,7 +34,21 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public interface IProcessService {
 
+    /**
+     * @param processDefinitionKey
+     * @param variables
+     */
     void startProcess(String processDefinitionKey, Map<java.lang.String,?> variables);
+    
+    /**
+     * Starts a process for every Isa-Topic ({@link SamtTopic}) of an
+     * Information Security Assessment (ISA) if no process exists for this topic before.
+     * 
+     * Parameter is an UUID of an audit, since internally an ISA is an {@link Audit}.
+     * 
+     * @param uuidAudit UUID of an {@link Audit} / ISA
+     */
+    IProcessStartInformation startProcessForIsa(final String uuidAudit);
     
     /**
      * Returns the latest process definition id
@@ -46,15 +61,30 @@ public interface IProcessService {
      */
     String findProcessDefinitionId(String processDefinitionKey);
     
+    /**
+     * @param uuidControl
+     * @return
+     */
     List<ExecutionImpl> findControlExecution(final String uuidControl);
     
+    /**
+     * @param uuidSamtTopic
+     * @return
+     */
     List<ExecutionImpl> findIsaExecution(final String uuidSamtTopic);
     
-    void handleControl(Control control);
-
     /**
      * @param control
      */
-    void handleSamtTopic(SamtTopic control);
+    void handleControl(Control control);
+
+    /**
+     * Handles a SAMT / ISA topic and creates an process if necessary.
+     * If a new process is created true is returned, if not false.
+     * 
+     * @param control
+     * @return true if a new process is created
+     */
+    boolean handleSamtTopic(SamtTopic control);
 }
 

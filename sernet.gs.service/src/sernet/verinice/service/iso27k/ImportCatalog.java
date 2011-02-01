@@ -175,7 +175,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
                 } else { // if (nextLine.length >= 3)
                     log.warn("Invalid line number: " + n + " in CSV file. Line content is: '");
                     for (int i = 0; i < nextLine.length; i++) {
-                        log.warn(nextLine[1]);
+                        log.warn(nextLine[i]);
                     }
                     log.warn("'");
                 }

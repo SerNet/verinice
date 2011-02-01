@@ -42,6 +42,8 @@ import org.jbpm.pvm.internal.model.ProcessDefinitionImpl;
 import org.jbpm.pvm.internal.stream.ResourceStreamInput;
 import org.jbpm.pvm.internal.xml.Parse;
 
+import sernet.gs.service.RetrieveInfo;
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;
@@ -49,9 +51,13 @@ import sernet.verinice.interfaces.bpm.IControlExecutionProcess;
 import sernet.verinice.interfaces.bpm.IExecutionProcess;
 import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.IProcessService;
+import sernet.verinice.interfaces.bpm.IProcessStartInformation;
+import sernet.verinice.model.bpm.ProcessInformation;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -71,9 +77,15 @@ public class ProcessService implements IProcessService {
     
     private ProcessDao processDao;
       
-    private IBaseDao<Control, Integer> controlDao;
+    private IBaseDao<Audit, Integer> auditDao;
+      
+    private IBaseDao<ControlGroup, Integer> controlGroupDao;
+      
+    private IBaseDao<SamtTopic, Integer> samtTopicDao;
     
     private boolean wasInitCalled = false;
+    
+    private static VeriniceContext.State state;
 
     public void init() {
         synchronized (this) {
@@ -170,6 +182,38 @@ public class ProcessService implements IProcessService {
     }
     
     /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessService#startProcessForIsa(java.lang.String)
+     */
+    @Override
+    public IProcessStartInformation startProcessForIsa(String uuidAudit) {
+        if(VeriniceContext.getState()==null) {
+            log.warn("Context is not set for this thread. Will now set the context...");
+            VeriniceContext.setState(ProcessService.state);
+        }
+        Audit isaAudit = getAuditDao().findByUuid(uuidAudit, RetrieveInfo.getChildrenInstance());
+        int n=startProcessForControlGroup(isaAudit.getControlGroup(),0);
+        return new ProcessInformation(n);
+    }
+    
+    private int startProcessForControlGroup(ControlGroup controlGroup, int n) {
+        controlGroup = getControlGroupDao().findByUuid(controlGroup.getUuid(), RetrieveInfo.getChildrenInstance());
+        for (CnATreeElement element : controlGroup.getChildren()) {
+            if(SamtTopic.TYPE_ID.equals(element.getTypeId())) {
+                RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+                ri.setLinksDown(true);
+                SamtTopic samtTopic = getSamtTopicDao().findByUuid(element.getUuid(), ri);
+                if(handleSamtTopic(samtTopic)) {
+                    n++;
+                }
+            }
+            if(ControlGroup.TYPE_ID.equals(element.getTypeId())) {
+                n = startProcessForControlGroup((ControlGroup) element,n);
+            }        
+        }
+        return n;
+    }
+    
+    /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IProcessService#findProcessDefinitionId(java.lang.String)
      */
     @Override
@@ -221,8 +265,9 @@ public class ProcessService implements IProcessService {
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IProcessService#handleControl(sernet.verinice.model.iso27k.Control)
      */
-    public void handleSamtTopic(SamtTopic samtTopic) {
+    public boolean handleSamtTopic(SamtTopic samtTopic) {
         try {
+            boolean newProcessCreated = false;
             String uuid = samtTopic.getUuid();
             List<ExecutionImpl> executionList = findIsaExecution(uuid);
             if(executionList==null || executionList.isEmpty()) {
@@ -232,6 +277,7 @@ public class ProcessService implements IProcessService {
                 // start process if control is not implemented
                 if(SamtTopic.IMPLEMENTED_NOTEDITED_NUMERIC == samtTopic.getMaturity()) {
                     startIsaExecution(samtTopic);
+                    newProcessCreated = true;
                 }
                 if (log.isInfoEnabled()) {
                     log.info("Process started for isa topic: " + uuid);
@@ -242,6 +288,7 @@ public class ProcessService implements IProcessService {
                     log.debug("Process execution id: " + executionImpl.getId());
                 }            
             }
+            return newProcessCreated;
         } catch (RuntimeException re) {
             log.error("RuntimeException while handling isa topic", re);
             throw re;
@@ -307,7 +354,6 @@ public class ProcessService implements IProcessService {
         String owner = IControlExecutionProcess.DEFAULT_OWNER_NAME;
         DetachedCriteria crit = DetachedCriteria.forClass(ChangeLogEntry.class);
         crit.add(Restrictions.eq("elementId", element.getDbId()));
-        crit.add(Restrictions.eq("elementClass", Control.class.getName()));
         crit.add(Restrictions.eq("change", ChangeLogEntry.TYPE_INSERT));
         crit.addOrder(Order.asc("changetime"));
         List<ChangeLogEntry> result = getChangeLogEntryDao().findByCriteria(crit);
@@ -433,11 +479,35 @@ public class ProcessService implements IProcessService {
         this.processDao = processDao;
     }
 
-    public IBaseDao<Control, Integer> getControlDao() {
-        return controlDao;
+    public IBaseDao<Audit, Integer> getAuditDao() {
+        return auditDao;
     }
 
-    public void setControlDao(IBaseDao<Control, Integer> controlDao) {
-        this.controlDao = controlDao;
+    public void setAuditDao(IBaseDao<Audit, Integer> auditDao) {
+        this.auditDao = auditDao;
+    }
+
+    public IBaseDao<ControlGroup, Integer> getControlGroupDao() {
+        return controlGroupDao;
+    }
+
+    public void setControlGroupDao(IBaseDao<ControlGroup, Integer> controlGroupDao) {
+        this.controlGroupDao = controlGroupDao;
+    }
+
+    public IBaseDao<SamtTopic, Integer> getSamtTopicDao() {
+        return samtTopicDao;
+    }
+
+    public void setSamtTopicDao(IBaseDao<SamtTopic, Integer> samtTopicDao) {
+        this.samtTopicDao = samtTopicDao;
+    }
+    
+    public void setWorkObjects(VeriniceContext.State workObjects) {
+        ProcessService.state = workObjects;
+    }
+
+    public VeriniceContext.State getWorkObjects() {
+        return ProcessService.state;
     }
 }

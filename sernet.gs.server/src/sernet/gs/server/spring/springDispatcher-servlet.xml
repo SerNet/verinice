@@ -36,5 +36,16 @@
         </property>
     </bean>
     
+    <bean name="/processServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="processService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.IProcessService</value>
+        </property>
+    </bean>
+    
 </beans>
 
