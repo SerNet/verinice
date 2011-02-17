@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="GSTOOL-MDF-Datei-Import">
+	
+	<intro>
+		<description>
+			In diesem Spickzettel wird beschrieben, wie Sie eine aus dem GSTOOL gesicherte Datenbank-Datei, die im MDF-Dateiformat vorliegt, in verinice importieren k&#246;nnen. Dieser Prozess ist prinzipiell analog zum Importieren von Daten aus einer BAK-Datei, nur dass in dem Fall bereits eine MDF-Datei vorliegt.
+		</description>
+	</intro>
+	<item title="Einstellungen f&#252;r den MDF-Datei-Import zum Anh&#228;ngen einer Datenbank">
+		<description>
+			Zuerst m&#252;ssen Sie die Einstellungen f&#252;r die anzuh&#228;ngende Datenbankdatei vornehmen. Gehen Sie daf&#252;r in der Men&#252;leiste auf "Bearbeiten / Einstellungen". Klicken Sie dort auf den Unterpunkt "GSTool Datenbank anh&#228;ngen" des Punktes "GSTool Import". Jetzt k&#246;nnen Sie auf der rechten Seite des Men&#252;fensters die Einstellungen vornehmen. Sollten Sie das erste Feld nicht ausf&#252;llen, so wird die Datenbank des GSTools angeh&#228;ngt, deren Konnektivit&#228;t Sie &#252;ber den Men&#252;punkt "GSTool Import" einstellen. Wenn Sie das erste Feld mit dem Dateinamen der anzuh&#228;ngenden Datenbank f&#252;llen, so werden die Daten aus dieser Datenbankdatei angeh&#228;ngt. Diese Datei muss dann im MDF-Format vorliegen. Sie k&#246;nnen dazu auch den "Durchsuchen..."-Button verwenden. Im zweiten Feld m&#252;ssen Sie einen Namen der anzuh&#228;ngenden Datenbank angeben. Nun k&#246;nnen Sie die Datenbank mit dem Dr&#252;cken des Buttons "Datenbank anh&#228;nen" anh&#228;ngen :).
+		</description>
+	</item>
+	<item title="Einstellungen vervollst&#228;ndigen, Konnektivit&#228;t pr&#252;fen">
+		<description>
+			Sie m&#252;ssen jetzt im Men&#252;punkt "GSTool Import" den neuen Dateinamen Ihrer angeh&#228;ngten Datenbank angeben. Im ersten Feld ersetzen Sie den vorherigen Datenbanknamen gegen den neuen (nach dem letzten Slash). Pr&#252;fen Sie nochmal die Konnektivit&#228;t mit Hilfe des Buttons "Teste Verbindung". Der letzte Schritt ist der eigentliche Import-Prozess, der bereits im Spickzettel "Import der Datenbank aus dem GSTOOL 4.5" erkl&#228;rt wird.
+		</description>
+	</item>
+</cheatsheet> 

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="sernet.verinice.model.bsi">
+	<class name="Addition" table="note">
+		<id column="dbId" name="dbId" type="java.lang.Integer">
+			<generator class="native"/>
+		</id>
+		<discriminator column="OBJECT_TYPE" type="string"/>
+		<property column="cnatreeelement_id" name="cnATreeElementId" type="integer"/>
+		<many-to-one 
+			name="entity" 
+			class="sernet.hui.common.connect.Entity"
+			cascade="all"
+			column="entity_id" 
+			unique="true"/>
+		 	
+		<subclass 
+			name="sernet.verinice.model.bsi.Attachment"
+			extends="Addition"
+			discriminator-value="attachment">
+			<!-- <property name="fileData" type="binary" lazy="true"/>-->
+		</subclass>
+		
+		<subclass 
+			name="sernet.verinice.model.bsi.Note"
+			extends="Addition"
+			discriminator-value="note"/>
+
+	</class>
+</hibernate-mapping>

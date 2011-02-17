@@ -1,0 +1,158 @@
+# 2009-08-11 Robert Schuster <r.schuster@tarent.de>
+# 2009-11-09 akoderman added instructions for JSF, workaround for additional
+#       plugin folder and Tomcat6
+# 2010-05-08 akoderman added some more hints to deal with problems
+
+This document describes how to set up verinice for development. It assumes
+that you are using Eclipse and are familiar with this IDE.
+
+Software requirements:
+  - Subversion client
+  - Eclipse IDE (3.5.2 and higher recommended)
+  - Subversion Eclipse Plugin (SVN support, http://www.eclipse.org/subversive )
+  - Apache Tomcat 6.0.x
+  - PostgreSQL (8.3/8.4 is ok, optional but strongly recommended)
+
+Subversion setup:
+-----------------
+ - install a terminal-based subversion client through your distribution's
+   package manager 
+
+Apache Tomcat:
+--------------
+ 
+ - get a recent release of Apache Tomcat 6.0 and unpack the tar.gz file
+    somewhere (note where this is, we need it at a later point)
+ 
+ - Tomcat 6.0 is available from: http://tomcat.apache.org/
+
+PostgreSQL:
+-----------
+  - install the latest stable version through your distributions'
+    package manager
+
+Eclipse IDE:
+------------
+ 
+ - install the a Subversion Eclipse plugin (Subversive/Subclipse) and the
+    appropriate connector (i.e. from update repository: http://subclipse.tigris.org/update_1.6.x)
+    If  you cannot authenticate using svn+ssh, use SVNKIT (Preferences, SVN) and a private SSH key.
+ 
+ - install the Java Plugin Developer Tools and Eclipse Java EE Developer Tools
+    (if not already part of your Eclipse installation)
+ 
+ - Eclipse 3.5: additionally install 'JST Server Adapters'
+ 
+ - go to Window/Preferences/Server/Runtime Environment and add a Tomcat 6.0
+    environment by pointing at the directory where you unpacked Apache Tomcat
+    Make sure to name it "tomcat-6" !
+ 
+ - use the svn repository explorer and add the repository
+    http://www.verinice.org/svnroot (if you have write access, use svn+ssh:// instead)
+    (you can specify TRUNK, BRANCHES and TAGS as the respective trunk, branches
+     and tags folder)
+ 
+ - you may get problems with Java Heap Space while checking out sernet.gs.ui.rcp.main
+    for this reason, and even just to have more resources you can edit the eclipse.ini
+    and change the default values for maximum heap size, by adding '-Xmx1024m'. This
+    change requires a restart of the IDE
+ 
+ - check out the following projects from trunk:
+  
+  	sernet.gs.db.fragment
+  	sernet.gs.ehcache.fragment
+	sernet.gs.hibernate.fragment
+	sernet.gs.log4j.fragment
+	sernet.gs.reveng
+	sernet.gs.server
+	sernet.gs.server.feature
+	sernet.gs.service
+	sernet.gs.springweb.fragment
+	sernet.gs.ui.rcp.main
+	sernet.gs.ui.rcp.main.feature
+	sernet.hui.common
+	sernet.hui.server
+	sernet.hui.swtclient
+	sernet.springclient
+	sernet.verinice.oda.driver
+	sernet.verinice.oda.driver.designer
+	sernet.verinice.samt.rcp
+	sernet.verinice.samt.service
+	target-platform/eclipse-3.5.2-rcp-sdk
+
+ 
+ - close all projects (important)
+
+  - Eclipse 3.5:
+    - go to Window/Preferences/Plug-In Development/Target Platform/
+    - click 'Add' and 'Nothing: Start with an empty target definition'
+    - click on 'Add' and choose directory 'target-platform/eclipse-3.5.2-rcp-sdk' as location
+    - activate new target platform
+ 
+ - open all projects, do a refresh on all projects
+ 
+ - if eclipse mentions problems with the compiler level, follow the quick
+    fix to set the version to 1.5
+ 
+ - if eclipse mentions 'This projects needs to update WTP data' you simply do 
+    right click on 'sernet.hui.server' and chose validate
+
+ - if you cannot add the tomcat server, check the eclipse error log for problems with parsing config files 
+   (sometimes you have a typo in a tomcat config file) or delete some preferences files as described 
+   here: http://stackoverflow.com/questions/93900/cant-add-server-to-a-moved-workspace
+
+ - if you get "access restricted" error, go to preferences, java, compiler, restricted api and switch from "error" to "warning"
+
+ - if spurious classpath errors occur you just right-click on a project and chose 
+   'PDE Tools/Update classpath ...'.
+   
+ - if you get an error saying that "some.bundle/src" cannot be nested inside "some.bundle", right click on the project, 
+   choose properties / java build path, remove the "src" folder, *add it again* and click "OK". After that, 
+   choose "PDE Tools, Update Class path" (see above) 
+   
+ - if you can't get rid of "missing packages" errors and are sure that you have everything in your own plugins or target platform, 
+   go to the broken bundle's manifest.mf and remove one of the required bundles, then add it again. This will
+   cause a rebuild that sometimes fixes the problem. 
+ 
+ - open the 'Servers' view (Window/Show View/Others...)
+    - do a right-click and chose 'New/Server'
+    - chose Tomcat 6 (with your "tomcat-6" runtime environment)
+    - add the sernet.gs.sever project (if you cannot do this, you did not install the Java EE Development Plugin)
+    - copy sernet.gs.server/lib/jsf-additional/*.jar into tomcat/lib
+ 
+ - download the catalogues IT-Grundschutz and the Datenschutzbaustein
+    and place both files into the WebContent/WEB-INF directory of the
+    sernet.gs.server project (do a refresh in Eclipse for that project)
+    The catalogues can be found on this page:
+    https://www.bsi.bund.de/cln_155/DE/Themen/weitereThemen/ITGrundschutzKataloge/Download/download_node.html
+ 
+ - edit WebContent/WEB-INF/veriniceserver-plain.properties and add your
+    database settings (if you followed the advice to call the db verinicedb,
+    have PostgreSQL running on port 5432 and used verinice as user/password
+    then nothing needs to be configured)
+
+- run ./update-jars in sernet.gs.server
+    - press F5 on project sernet.gs.server to refresh it
+
+  - create a run configuration ('Eclipse Application') based on the file
+    oc.product of the project sernet.gs.ui.rcp.main.feature
+    - double-click on oc.product
+    - open the run configuration dialog, click launch
+    - open run, runconfigurations
+    - go to plugins of the oc.product (verinice) configuration
+    - if it is not checked, manually add: sernet.gs.server and all other pliugins (but not the features!)
+    - click on 'Add Required Plug-ins'
+    - click on apply and then validate to check whether there are really
+      no missing bundles
+
+As of now you can:
+ 
+ - start the standalone (no-OSGI) verinice server by starting Tomcat
+    from Eclipse
+
+  - start the verinice client (oc.product) which automatically starts an
+    internal server on port 8800 when configured for the standalone
+    mode
+
+  - If you get exception saying there is no schema
+    for Spring security, then the OSGi extender is not running.
