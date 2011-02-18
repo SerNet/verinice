@@ -43,4 +43,8 @@ public interface ITaskParameter {
     
     void setUnread(Boolean unread);
     
+    String getAuditUuid();
+    
+    void setAuditUuid(String uuid);
+    
 }

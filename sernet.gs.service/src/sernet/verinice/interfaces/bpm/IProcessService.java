@@ -85,6 +85,6 @@ public interface IProcessService {
      * @param control
      * @return true if a new process is created
      */
-    boolean handleSamtTopic(SamtTopic control);
+    void handleSamtTopic(SamtTopic control);
 }
 

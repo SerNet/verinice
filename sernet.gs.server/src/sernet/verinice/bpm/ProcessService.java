@@ -191,26 +191,73 @@ public class ProcessService implements IProcessService {
             VeriniceContext.setState(ProcessService.state);
         }
         Audit isaAudit = getAuditDao().findByUuid(uuidAudit, RetrieveInfo.getChildrenInstance());
-        int n=startProcessForControlGroup(isaAudit.getControlGroup(),0);
-        return new ProcessInformation(n);
+        IsaProcessContext context = new IsaProcessContext();
+        context.setNumberOfProcesses(0);
+        context.setUuidAudit(uuidAudit);
+        context.setControlGroup(isaAudit.getControlGroup());
+        context=startProcessForControlGroup(context);
+        return new ProcessInformation(context.getNumberOfProcesses());
     }
     
-    private int startProcessForControlGroup(ControlGroup controlGroup, int n) {
+    private IsaProcessContext startProcessForControlGroup(IsaProcessContext context) {
+        ControlGroup controlGroup = context.getControlGroup();
         controlGroup = getControlGroupDao().findByUuid(controlGroup.getUuid(), RetrieveInfo.getChildrenInstance());
         for (CnATreeElement element : controlGroup.getChildren()) {
             if(SamtTopic.TYPE_ID.equals(element.getTypeId())) {
                 RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
                 ri.setLinksDown(true);
                 SamtTopic samtTopic = getSamtTopicDao().findByUuid(element.getUuid(), ri);
-                if(handleSamtTopic(samtTopic)) {
-                    n++;
-                }
+                context.setSamtTopic(samtTopic);
+                context = handleSamtTopic(context);
             }
             if(ControlGroup.TYPE_ID.equals(element.getTypeId())) {
-                n = startProcessForControlGroup((ControlGroup) element,n);
+                context.setControlGroup((ControlGroup) element);
+                context = startProcessForControlGroup(context);
             }        
         }
-        return n;
+        return context;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessService#handleControl(sernet.verinice.model.iso27k.Control)
+     */
+    public void handleSamtTopic(SamtTopic topic) {
+        IsaProcessContext context = new IsaProcessContext();
+        context.setSamtTopic(topic);
+        handleSamtTopic(context);
+    }
+       
+    private IsaProcessContext handleSamtTopic(IsaProcessContext context) {
+        try {
+            SamtTopic samtTopic = context.getSamtTopic();
+            String uuid = samtTopic.getUuid();
+            List<ExecutionImpl> executionList = findIsaExecution(uuid);
+            if(executionList==null || executionList.isEmpty()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("No process for isa topic: " + uuid);
+                }
+                // start process if control is not implemented
+                if(SamtTopic.IMPLEMENTED_NOTEDITED_NUMERIC == samtTopic.getMaturity()) {
+                    startIsaExecution(context);
+                    context.increaseProcessNumber();
+                }
+                if (log.isInfoEnabled()) {
+                    log.info("Process started for isa topic: " + uuid);
+                }
+            } else if (log.isDebugEnabled()) {
+                log.debug("Process found for isa topic: " + uuid);
+                for (ExecutionImpl executionImpl : executionList) {
+                    log.debug("Process execution id: " + executionImpl.getId());
+                }            
+            }
+            return context;
+        } catch (RuntimeException re) {
+            log.error("RuntimeException while handling isa topic", re);
+            throw re;
+        } catch (Throwable t) {
+            log.error("Error while handling isa topic", t);
+            throw new RuntimeException(t);
+        }
     }
     
     /* (non-Javadoc)
@@ -262,42 +309,6 @@ public class ProcessService implements IProcessService {
         }
     }
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessService#handleControl(sernet.verinice.model.iso27k.Control)
-     */
-    public boolean handleSamtTopic(SamtTopic samtTopic) {
-        try {
-            boolean newProcessCreated = false;
-            String uuid = samtTopic.getUuid();
-            List<ExecutionImpl> executionList = findIsaExecution(uuid);
-            if(executionList==null || executionList.isEmpty()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("No process for isa topic: " + uuid);
-                }
-                // start process if control is not implemented
-                if(SamtTopic.IMPLEMENTED_NOTEDITED_NUMERIC == samtTopic.getMaturity()) {
-                    startIsaExecution(samtTopic);
-                    newProcessCreated = true;
-                }
-                if (log.isInfoEnabled()) {
-                    log.info("Process started for isa topic: " + uuid);
-                }
-            } else if (log.isDebugEnabled()) {
-                log.debug("Process found for isa topic: " + uuid);
-                for (ExecutionImpl executionImpl : executionList) {
-                    log.debug("Process execution id: " + executionImpl.getId());
-                }            
-            }
-            return newProcessCreated;
-        } catch (RuntimeException re) {
-            log.error("RuntimeException while handling isa topic", re);
-            throw re;
-        } catch (Throwable t) {
-            log.error("Error while handling isa topic", t);
-            throw new RuntimeException(t);
-        }
-    }
-    
     /**
      * @param control
      * @throws CommandException 
@@ -328,7 +339,8 @@ public class ProcessService implements IProcessService {
      * @param topic
      * @throws CommandException 
      */
-    private void startIsaExecution(SamtTopic topic) throws CommandException {      
+    private void startIsaExecution(IsaProcessContext context) throws CommandException {   
+        SamtTopic topic = context.getSamtTopic();
         Map<String, Object> props = new HashMap<String, Object>();      
         String username = getProcessDao().getAssignee(topic);  
         props.put(IIsaExecutionProcess.VAR_ASSIGNEE_NAME, username);
@@ -336,6 +348,9 @@ public class ProcessService implements IProcessService {
         props.put(IExecutionProcess.VAR_TYPE_ID, topic.getTypeId());
         props.put(IIsaExecutionProcess.VAR_OWNER_NAME, getOwnerName(topic));
         props.put(IIsaExecutionProcess.VAR_IMPLEMENTATION, topic.getMaturity());
+        if(context.getUuidAudit()!=null) {
+            props.put(IIsaExecutionProcess.VAR_AUDIT_UUID, context.getUuidAudit()); 
+        }          
         Date duedate = topic.getCompleteUntil();
         Date now = new Date(System.currentTimeMillis());
         if(duedate!=null && now.before(duedate)) {

@@ -39,7 +39,9 @@ import org.jbpm.api.TaskQuery;
 import org.jbpm.api.task.Task;
 import org.jbpm.pvm.internal.model.ExecutionImpl;
 import org.jbpm.pvm.internal.task.TaskImpl;
+import org.jbpm.pvm.internal.type.Variable;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
+import org.springframework.util.NumberUtils;
 
 import sernet.gs.server.ServerInitializer;
 import sernet.gs.service.RetrieveInfo;
@@ -56,6 +58,7 @@ import sernet.verinice.interfaces.bpm.ITask.KeyValue;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Control;
 
 /**
@@ -77,6 +80,11 @@ public class TaskService implements ITaskService{
     private IBaseDao<CnATreeElement,Integer> elementDao;
 
     private IDao<TaskImpl, Long> jbpmTaskDao;
+    
+    private IDao<Variable, Long> jbpmVariableDao;
+    
+    private IBaseDao<Audit, Integer> auditDao;
+    
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList()
@@ -110,10 +118,11 @@ public class TaskService implements ITaskService{
             if(parameter.getSince()!=null) {
                 taskCrit.add(Restrictions.ge("createTime",parameter.getSince()));
             }
+            DetachedCriteria varCrit = null;
             // create (un)read query if one is false:
             if((parameter.getRead()!=null && !parameter.getRead())
                || (parameter.getUnread()!=null && !parameter.getUnread())) {
-                DetachedCriteria varCrit = taskCrit.createCriteria("execution").createCriteria("variables");
+                varCrit = getVarCrit(taskCrit);
                 varCrit.add(Restrictions.eq("key", ITaskService.VAR_READ_STATUS));
                 if(parameter.getRead()!=null && parameter.getRead() && parameter.getUnread()!=null && !parameter.getUnread()) {            
                     varCrit.add(Restrictions.eq("string", ITaskService.VAR_READ));
@@ -123,6 +132,14 @@ public class TaskService implements ITaskService{
                 } 
                 taskCrit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             }
+            if(parameter.getAuditUuid()!=null) {
+                if(varCrit==null) {
+                    varCrit = getVarCrit(taskCrit);
+                }
+                varCrit.add(Restrictions.eq("key", IIsaExecutionProcess.VAR_AUDIT_UUID));
+                varCrit.add(Restrictions.eq("string", parameter.getAuditUuid()));
+            }
+            
             List<Task> jbpmTaskList = getJbpmTaskDao().findByCriteria(taskCrit);
             //List<Task> jbpmTaskList = getTaskService().createTaskQuery().assignee(parameter.getUsername()).orderDesc(TaskQuery.PROPERTY_CREATEDATE).list();
             
@@ -141,6 +158,26 @@ public class TaskService implements ITaskService{
             }
         }    
         return taskList;
+    }
+
+    private DetachedCriteria getVarCrit(DetachedCriteria taskCrit) {
+        return taskCrit.createCriteria("execution").createCriteria("variables");
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#getAuditList()
+     */
+    @Override
+    public List<Audit> getAuditList() {
+        ServerInitializer.inheritVeriniceContextState();
+        String hql = "select distinct var.string from Variable var where var.key = ?";
+        String[] param = new String[]{IIsaExecutionProcess.VAR_AUDIT_UUID};
+        List<String> uuidAuditList = getJbpmVariableDao().findByQuery(hql, param);
+        List<Audit> auditList = new ArrayList<Audit>(uuidAuditList.size());
+        for (String uuid : uuidAuditList) {
+            auditList.add(getAuditDao().findByUuid(uuid, RetrieveInfo.getPropertyInstance()));
+        }
+        return auditList;
     }
 
     private boolean doSearch(ITaskParameter parameter) {
@@ -170,11 +207,37 @@ public class TaskService implements ITaskService{
         
         CnATreeElement element = getElementDao().findByUuid(uuidControl, RetrieveInfo.getPropertyInstance());
         taskInformation.setControlTitle(element.getTitle());
+        taskInformation.setSortValue(createSortableString(taskInformation.getControlTitle()));     
         
         taskInformation.setUuid(uuidControl); 
         taskInformation.setType(typeId);
         taskInformation.setDueDate(task.getDuedate());      
         return taskInformation;
+    }
+    
+    private String createSortableString(String text) {
+        String sortable = text;
+        if(sortable!=null && sortable.length()>0 && isNumber(sortable.substring(0,1)) ) {
+            if(sortable.length()==1 || !isNumber(sortable.substring(1,2))) {
+                sortable = new StringBuilder("0").append(sortable).toString();
+            }
+            if(sortable.indexOf(".")==2 && sortable.length()>3) {
+                sortable = new StringBuilder(sortable.substring(0, 2))
+                .append(".")
+                .append(createSortableString(sortable.substring(3)))
+                .toString();
+            }
+        }
+        return sortable;
+    }
+    
+    private boolean isNumber(String s) {
+        try {
+            Integer.valueOf(s);
+            return true;
+        } catch(NumberFormatException e) {
+            return false;
+        }
     }
     
     /* (non-Javadoc)
@@ -244,4 +307,21 @@ public class TaskService implements ITaskService{
     public void setJbpmTaskDao(IDao<TaskImpl, Long> jbpmTaskDao) {
         this.jbpmTaskDao = jbpmTaskDao;
     }
+
+    public IDao<Variable, Long> getJbpmVariableDao() {
+        return jbpmVariableDao;
+    }
+
+    public void setJbpmVariableDao(IDao<Variable, Long> jbpmVariableDao) {
+        this.jbpmVariableDao = jbpmVariableDao;
+    }
+
+    public IBaseDao<Audit, Integer> getAuditDao() {
+        return auditDao;
+    }
+
+    public void setAuditDao(IBaseDao<Audit, Integer> auditDao) {
+        this.auditDao = auditDao;
+    }
+
 }

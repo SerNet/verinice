@@ -84,10 +84,12 @@ h1+a:visited {
 #status {
 	position:absolute;
 	top: 50px;
-	right: 50px;
+	right: 10px;
 	color: #fff;
 	background: transparent;
 	text-align: right; 
+	border-width: 1px;
+	border-color: gray;
 }
 
 #messages {

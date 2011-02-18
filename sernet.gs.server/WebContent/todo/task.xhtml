@@ -10,15 +10,6 @@
 		<a4j:queue requestDelay="500" ignoreDupResponce="true"/>
 		<div id="col3" style="width: auto; margin: 0 480px 0 0; *margin-right:0;">
 		<div id="col3_content">
-			<div id="messages" class="clearfix">
-				<div class="messages">
-					<rich:messages>
-						<f:facet name="errorMarker">
-                        	<h:graphicImage value="/image/error.gif" style="margin-right:0.5em"/>   
-                    	</f:facet>
-					</rich:messages>
-				</div>
-			</div>
 			<h:form id="tableForm">
 				<div class="csc-header csc-header-n1">
 					<h1><h:outputText value="#{msgTask['tasks']}" /></h1>
@@ -31,15 +22,29 @@
 					</a4j:outputPanel>
 				</div>
 				<a4j:outputPanel id="tablePanel">
-					 <div style="width=100%; text-align: right; margin:2px;">
-					 <h:selectBooleanCheckbox id="readCheckbox" value="#{task.showRead}">	  			
-			  			<a4j:support action="#{task.loadTasks}" event="onclick" reRender="tablePanel,editPanel"/>
-			  		 </h:selectBooleanCheckbox>
-			  		 <h:outputText value="#{msgTask['read']}" style="margin-right:10px;"/>
-			  		 <h:selectBooleanCheckbox id="unreadCheckbox" value="#{task.showUnread}" style="text-align: right;">	  			
-			  			<a4j:support action="#{task.loadTasks}" event="onclick" reRender="tablePanel,editPanel" style="text-align: right;"/>
-			  		 </h:selectBooleanCheckbox>
-			  		 <h:outputText value="#{msgTask['unread']}" style="margin-right:10px;"/> 
+					 <div style="margin-bottom:4px;">
+					 	 <table>
+					 	 	<tr>
+					 	 		<td><h:outputText value="#{msgTask['isa']}" style="margin-right:4px;"/></td>
+					 	 		<td>
+					 	 			<rich:comboBox value="#{task.selectedAuditName}" suggestionValues="#{task.auditNameList}" defaultLabel="#{msgTask['selectFilter']}" enableManualInput="false"  style="margin-right:10px;">
+			   							<a4j:support event="onselect" reRender="tablePanel,editPanel" action="#{task.selectAudit}"/>
+			   						 </rich:comboBox>
+					 	 		</td>
+					 	 		<td>
+					 	 			<h:selectBooleanCheckbox id="readCheckbox" value="#{task.showRead}">	  			
+							  			<a4j:support action="#{task.loadTasks}" event="onclick" reRender="tablePanel,editPanel"/>
+							  		</h:selectBooleanCheckbox>
+							  		<h:outputText value="#{msgTask['read']}" style="margin-right:10px;"/>
+					 	 		</td>
+					 	 		<td>
+					 	 			<h:selectBooleanCheckbox id="unreadCheckbox" value="#{task.showUnread}" style="text-align: right;">	  			
+							  			<a4j:support action="#{task.loadTasks}" event="onclick" reRender="tablePanel,editPanel" style="text-align: right;"/>
+							  		</h:selectBooleanCheckbox>
+							  		<h:outputText value="#{msgTask['unread']}" style="margin-right:10px;"/>
+					 	 		</td>
+					 	 	</tr>
+					 	 </table>
 			  		 </div>    
       				 <rich:extendedDataTable
       				 	id="taskTable"
@@ -62,7 +67,7 @@
 		                </rich:column>
 		                <rich:column id="colElement"
       						sortable="true" 
-      						sortBy="#{item.controlTitle}"
+      						sortBy="#{item.sortValue}"
 		                    label="#{msgTask['control']}"
 		                    width="250">
 		                    <f:facet name="header">

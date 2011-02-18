@@ -27,7 +27,7 @@ import java.util.List;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public interface ITask {
+public interface ITask extends Comparable<ITask> {
 
     public static final String STYLE_READ = "read"; 
     
@@ -67,6 +67,8 @@ public interface ITask {
      * @return
      */
     String getType();
+    
+    String getSortValue();
     
     /**
      * Returns a map with outcomes of this task.

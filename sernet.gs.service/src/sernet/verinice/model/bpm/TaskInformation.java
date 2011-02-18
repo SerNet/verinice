@@ -45,6 +45,8 @@ public class TaskInformation implements ITask,Serializable {
     
     String type;
     
+    String sortValue;
+    
     List<KeyValue> outcomeList;
 
     boolean isRead = false;
@@ -132,6 +134,14 @@ public class TaskInformation implements ITask,Serializable {
         this.type = type;
     }
 
+    public String getSortValue() {
+        return sortValue;
+    }
+
+    public void setSortValue(String sortValue) {
+        this.sortValue = sortValue;
+    }
+
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITask#getOutcomes()
      */
@@ -194,6 +204,18 @@ public class TaskInformation implements ITask,Serializable {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(ITask o) {
+        int result = 0;
+        if(this.getSortValue()!=null && o!=null && o.getSortValue()!=null) {
+            result = this.getSortValue().compareTo(o.getSortValue());
+        }
+        return result;
     }
 
 }

@@ -31,6 +31,7 @@ public interface IIsaExecutionProcess extends IExecutionProcess {
     String VAR_ASSIGNEE_NAME = "ISA_ASSIGNEE_NAME";
     String VAR_IMPLEMENTATION = "ISA_IMPLEMENTATION";
     String VAR_DUEDATE = "ISA_DUEDATE";
+    String VAR_AUDIT_UUID = "UUID_AUDIT";
     
     String DEFAULT_OWNER_NAME = "admin";
     

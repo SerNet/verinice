@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich">
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j">
 <f:loadBundle basename="sernet.gs.web.Messages" var="msg"/>
 <f:loadBundle basename="sernet.verinice.web.TaskMessages" var="msgTask"/>
 <f:loadBundle basename="sernet.verinice.web.EditMessages" var="msgEdit"/>
@@ -80,83 +81,95 @@
 		<div class="page_margins">
 			<div class="page">
 				<div id="header">
-					<div id="headerLogo"><a href="http://www.verinice.org/"><img
-						src="#{request.contextPath}/image/verinice.gif" width="487" height="100"
-						border="0" alt="" title="" /></a></div>
+					<div id="headerLogo">
+						<a href="http://www.verinice.org/">
+							<img src="#{request.contextPath}/image/verinice.gif" width="487" height="100" border="0" alt="" title="" />
+						</a>
+					</div>
 					<div id="topnav">
-					<div id="supernavigationFirst">
-						<div style="margin-right:0.5em"><a href="#{request.contextPath}/portal.verinice.private/index.html" onfocus="blurLink(this);">Home</a></div>
-					</div>
-					<div id="languageSelect">
-						<div class="tx-srlanguagemenu-pi1">				
-							<div class="inlineLeft">&nbsp;&#124;&nbsp;</div>
-							<div class="inlineLeft">
-								<h:form id="langForm">	
-									<div class="CUR">
-										<h:commandLink action="#{task.english}"><h:graphicImage value="/image/us.png" alt="#{msg['english']}"/></h:commandLink>							
-										<h:commandLink action="#{task.german}"><h:graphicImage value="/image/de.png" alt="#{msg['german']}"/></h:commandLink>
-									</div>					
-								</h:form>
+						<div id="supernavigationFirst">
+							<div style="margin-right:0.5em"><a href="#{request.contextPath}/portal.verinice.private/index.html" onfocus="blurLink(this);">Home</a></div>
+						</div>
+						<div id="languageSelect">
+							<div class="tx-srlanguagemenu-pi1">				
+								<div class="inlineLeft">&nbsp;&#124;&nbsp;</div>
+								<div class="inlineLeft">
+									<h:form id="langForm">	
+										<div class="CUR">
+											<h:commandLink action="#{task.english}"><h:graphicImage value="/image/us.png" alt="#{msg['english']}"/></h:commandLink>							
+											<h:commandLink action="#{task.german}"><h:graphicImage value="/image/de.png" alt="#{msg['german']}"/></h:commandLink>
+										</div>					
+									</h:form>
+								</div>
+								<div class="inlineLeft">&nbsp;&#124;&nbsp;</div>					
 							</div>
-							<div class="inlineLeft">&nbsp;&#124;&nbsp;</div>					
 						</div>
+						<div id="supernavigationSecond">
+							<div style="margin-left:0.5em">
+								<a href="#{request.contextPath}/portal.verinice.private/contact.html" onfocus="blurLink(this);">Kontakt</a>
+							</div>
+						</div>				
 					</div>
-					<div id="supernavigationSecond">
-						<div style="margin-left:0.5em">
-							<a href="#{request.contextPath}/portal.verinice.private/contact.html" onfocus="blurLink(this);">Kontakt</a>
-						</div>
-					</div>				
+					<div id="status">
+						<a4j:status>
+			                <f:facet name="start">
+			                    <h:graphicImage value="/image/ajax-loader.gif"/>
+			                </f:facet>
+			                <f:facet name="stop">
+			                    <h:graphicImage value="/image/not-loading.png"/>
+			                </f:facet>
+			            </a4j:status>
+					</div>
 				</div>
-			</div>
-			<div id="nav">
-				<div id="mainNavi">
-					<ul id="topNavi" class="listNavi">
-						<li class="liNavi" id="liNavi_02"><a
-							href="#{request.contextPath}/portal.verinice.private/index.html">verinice.PRO</a></li>
-						<li class="liNavi active" id="liNavi_02">
-							<div class="navWrap1">
-								<div class="navWrap11">
-									<div class="navWrap2">
-										<div class="navWrap3">
-											<div class="navWrap4"><a href="#">verinice.WEB</a></div>
+				<div id="nav">
+					<div id="mainNavi">
+						<ul id="topNavi" class="listNavi">
+							<li class="liNavi" id="liNavi_02"><a
+								href="#{request.contextPath}/portal.verinice.private/index.html">verinice.PRO</a></li>
+							<li class="liNavi active" id="liNavi_02">
+								<div class="navWrap1">
+									<div class="navWrap11">
+										<div class="navWrap2">
+											<div class="navWrap3">
+												<div class="navWrap4"><a href="#">verinice.WEB</a></div>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</li>
-						<li class="liNavi" id="liNavi_03"><a
-							href="#{request.contextPath}/portal.verinice.private/download.html">Downloads</a></li>		
-					</ul>
-				</div>
-				<div id="fontresize">
-					<div class="tx-efafontsize-pi1">
-						<script type="text/javascript">
-							/*<![CDATA[*/
-							document.write(efa_fontSize06.resetLink);document.write(efa_fontSize06.smallerLink);document.write(efa_fontSize06.biggerLink);
-							/*]]>*/
-						</script>
+							</li>
+							<li class="liNavi" id="liNavi_03"><a
+								href="#{request.contextPath}/portal.verinice.private/download.html">Downloads</a></li>		
+						</ul>
 					</div>
-				</div>	
-			</div>
-			<div id="subNav">
-				<ui:insert name="navigation">
-					<ui:include src="/nav.xhtml"/>
-				</ui:insert>
-			</div>
-			<div id="messages" class="clearfix">
-				<div class="messages">
-					<rich:messages>
-						<f:facet name="errorMarker">
-                        	<h:graphicImage value="/image/error.gif" style="margin-right:0.5em"/>   
-                    	</f:facet>
-					</rich:messages>
+					<div id="fontresize">
+						<div class="tx-efafontsize-pi1">
+							<script type="text/javascript">
+								/*<![CDATA[*/
+								document.write(efa_fontSize06.resetLink);document.write(efa_fontSize06.smallerLink);document.write(efa_fontSize06.biggerLink);
+								/*]]>*/
+							</script>
+						</div>
+					</div>	
 				</div>
-			</div>
-			<div id="main">								
-				<!-- #main: Beginn Inhaltsbereich -->
-				<ui:insert name="content">Default content</ui:insert>
-				<!-- #main: - Ende -->				
-			</div>
+				<div id="subNav">
+					<ui:insert name="navigation">
+						<ui:include src="/nav.xhtml"/>
+					</ui:insert>
+				</div>
+				<div id="messages" class="clearfix">
+					<div class="messages">
+						<rich:messages>
+							<f:facet name="errorMarker">
+	                        	<h:graphicImage value="/image/error.gif" style="margin-right:0.5em"/>   
+	                    	</f:facet>
+						</rich:messages>
+					</div>
+				</div>
+				<div id="main">								
+					<!-- #main: Beginn Inhaltsbereich -->
+					<ui:insert name="content">Default content</ui:insert>
+					<!-- #main: - Ende -->				
+				</div>
 			</div>
 			<!-- IE Column Clearing -->
 			<div id="ie_clearing">&#160;</div>

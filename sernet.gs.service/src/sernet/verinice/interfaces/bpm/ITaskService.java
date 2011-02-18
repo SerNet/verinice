@@ -22,6 +22,8 @@ package sernet.verinice.interfaces.bpm;
 import java.util.Date;
 import java.util.List;
 
+import sernet.verinice.model.iso27k.Audit;
+
 /**
  * Interface to tasks of the jBPM process engine.
  * Is used on the client site as a service interface
@@ -60,6 +62,13 @@ public interface ITaskService {
      * @return task list for an user
      */
     List<ITask> getTaskList(ITaskParameter parameter);
+    
+    /**
+     * Returns all audits in a list which are related to a task.
+     * 
+     * @return a list with audits
+     */
+    List<Audit> getAuditList();
     
     void completeTask(String taskId);
     

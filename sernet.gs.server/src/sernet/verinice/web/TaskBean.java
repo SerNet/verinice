@@ -19,8 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
@@ -34,6 +40,7 @@ import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.TaskParameter;
+import sernet.verinice.model.iso27k.Audit;
 /**
  * JSF managed bean for view and edit Tasks, template: todo/task.xhtml
  * 
@@ -46,6 +53,14 @@ public class TaskBean {
     public static final String BOUNDLE_NAME = "sernet.verinice.web.TaskMessages";
 
     private EditBean editBean;
+    
+    List<Audit> auditList;
+    
+    Audit selectedAudit;
+    
+    String selectedAuditName;
+    
+    Map<String, Audit> nameAuditMap;
     
     List<ITask> taskList;
     
@@ -67,8 +82,13 @@ public class TaskBean {
     public List<ITask> loadTasks() {  
         ITaskParameter parameter = new TaskParameter();
         parameter.setRead(getShowRead());
-        parameter.setUnread(getShowUnread());    
-        return taskList = getTaskService().getTaskList(parameter);
+        parameter.setUnread(getShowUnread());  
+        if(selectedAudit!=null) {
+            parameter.setAuditUuid(selectedAudit.getUuid());
+        }
+        taskList = getTaskService().getTaskList(parameter);
+        Collections.sort(taskList);
+        return taskList;
     }
     
     public void openTask() {
@@ -112,12 +132,55 @@ public class TaskBean {
         }
     }
     
+    public void selectAudit() {
+        selectedAudit = nameAuditMap.get(selectedAuditName);
+        loadTasks();
+    }
+    
+    public List<String> getAuditNameList() {
+        if(nameAuditMap==null) {
+            nameAuditMap = createNameAuditMap();
+        }
+        return new ArrayList<String>(nameAuditMap.keySet());
+    }
+    
+    private Map<String, Audit> createNameAuditMap() {    
+        List<Audit> auditList = getAuditList();
+        nameAuditMap = new Hashtable<String, Audit>(auditList.size());
+        for (Audit audit : auditList) {
+            String name = getUniqueName(audit.getTitle(),0);
+            nameAuditMap.put(name,audit);
+        }
+        return nameAuditMap;
+    }
+    
+    String getUniqueName(String name, int n) {
+        if(nameAuditMap.containsKey(name)) {
+            n++;
+            name = new StringBuilder(name).append(" (").append(n).append(")").toString();
+            return getUniqueName(name, n);
+        } else {
+            return name;
+        }
+    }
+
     public EditBean getEditBean() {
         return editBean;
     }
 
     public void setEditBean(EditBean editBean) {
         this.editBean = editBean;
+    }
+
+    public List<Audit> getAuditList() {
+        if(auditList==null) {
+            auditList = getTaskService().getAuditList();
+        }
+        return auditList;
+    }
+
+    public void setAuditList(List<Audit> auditList) {
+        this.auditList = auditList;
     }
 
     public List<ITask> getTaskList() {
@@ -129,6 +192,22 @@ public class TaskBean {
 
     public void setTaskList(List<ITask> taskList) {     
         this.taskList = taskList;
+    }
+
+    public Audit getSelectedAudit() {
+        return selectedAudit;
+    }
+
+    public void setSelectedAudit(Audit selectedAudit) {
+        this.selectedAudit = selectedAudit;
+    }
+
+    public String getSelectedAuditName() {
+        return selectedAuditName;
+    }
+
+    public void setSelectedAuditName(String selectedAuditName) {
+        this.selectedAuditName = selectedAuditName;
     }
 
     public ITask getSelectedTask() {
@@ -194,5 +273,6 @@ public class TaskBean {
     public void german() {
         Util.german();
     }
+
     
 }

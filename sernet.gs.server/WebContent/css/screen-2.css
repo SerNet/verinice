@@ -330,6 +330,7 @@ ul#listLeftNavi{
 	margin-bottom:20px;
 	float:left;
 	width:100%;
+	min-height: 540px;
 }
 
 #col3_content h1.csc-firstHeader {

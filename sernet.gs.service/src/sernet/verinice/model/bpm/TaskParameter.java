@@ -37,6 +37,8 @@ public class TaskParameter implements ITaskParameter {
     
     String username;
     
+    String auditUuid;
+    
     public TaskParameter() {
         super();
     }
@@ -82,6 +84,14 @@ public class TaskParameter implements ITaskParameter {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getAuditUuid() {
+        return auditUuid;
+    }
+
+    public void setAuditUuid(String auditUuid) {
+        this.auditUuid = auditUuid;
     }
 
 
