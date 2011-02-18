@@ -20,10 +20,10 @@ package sernet.gs.ui.rcp.main.service.migrationcommands;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IVersionConstants;
+import sernet.verinice.service.commands.LoadBSIModel;
 
 /**
  * Version check.

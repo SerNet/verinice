@@ -10,7 +10,7 @@
    </description>
 
    <copyright url="http://verinice.org">
-      Copyright 1997  - 2010 SerNet GmbH and others.
+      Copyright 1997 - 2011 SerNet GmbH and others.
    </copyright>
 
    <license url="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">
@@ -682,6 +682,13 @@ Library.
          download-size="0"
          install-size="0"
          version="2.1.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.apache.commons.lang"
+         download-size="0"
+         install-size="0"
+         version="2.4.0"
          unpack="false"/>
 
 </feature>

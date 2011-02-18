@@ -19,10 +19,10 @@ package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
+import sernet.verinice.model.common.HydratorUtil;
 
 public class FindRiskAnalysisListsByParentID extends GenericCommand {
 

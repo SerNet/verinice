@@ -16,6 +16,7 @@
     	<list>
         	<value>/WEB-INF/veriniceserver-plain.properties</value>
         	<value>/WEB-INF/veriniceserver-plain.properties.local</value>
+        	<value>/WEB-INF/verinice-ldap.properties</value>
         </list>
     </property>
 </bean>

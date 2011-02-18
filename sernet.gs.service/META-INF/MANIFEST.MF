@@ -28,6 +28,7 @@ Export-Package: de.sernet.sync.data,
  sernet.verinice.interfaces.bpm,
  sernet.verinice.interfaces.encryption,
  sernet.verinice.interfaces.iso27k,
+ sernet.verinice.interfaces.ldap,
  sernet.verinice.interfaces.oda,
  sernet.verinice.interfaces.report,
  sernet.verinice.model.bpm,
@@ -39,7 +40,8 @@ Export-Package: de.sernet.sync.data,
  sernet.verinice.model.iso27k;uses:="sernet.gs.ui.rcp.main.common.model",
  sernet.verinice.model.samt,
  sernet.verinice.service.commands,
- sernet.verinice.service.iso27k
+ sernet.verinice.service.iso27k,
+ sernet.verinice.service.ldap
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
 Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",

@@ -114,7 +114,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
             int n=1;
             while ((nextLine = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
-                if (nextLine.length >= 3) {
+                if (nextLine.length >= 4) {
                 	String number = nextLine[0];
                 	String heading = nextLine[1];
                 	String type = nextLine[2];
@@ -172,12 +172,12 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
                         sb.append("<p>").append(text).append("</p>");
                         item.setDescription(sb.toString());
                     }
-                } else { // if (nextLine.length >= 3)
-                    log.warn("Invalid line number: " + n + " in CSV file. Line content is: '");
+                } else { // if (nextLine.length >= 4)
+                    getLog().warn("Invalid line number: " + n + " in CSV file. Line content is: '");
                     for (int i = 0; i < nextLine.length; i++) {
-                        log.warn(nextLine[i]);
+                    	getLog().warn(nextLine[i]);
                     }
-                    log.warn("'");
+                    getLog().warn("'");
                 }
                 n++;
             } // end while

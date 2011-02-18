@@ -252,6 +252,8 @@ public class ImageCache {
     public static final String ISO27K_CONTROL_NO		= "16-em-cross.png";
 	public static final String ISO27K_CONTROL_YES		= "16-em-check.png";
 	
+	public static final String ISA_TOPIC		        = "isa-topic.png";
+	
 	// ISO 27k icons - other:
 	public static final String ISO27K_RISK = "sweetie-verinice/png/16-paper-calculate-percent.png";
 	/* ************************************************************************************************** */

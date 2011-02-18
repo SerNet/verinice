@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.common.model;
+package sernet.verinice.model.common;
 
 import java.io.Serializable;
 import java.util.List;
@@ -34,8 +34,6 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**

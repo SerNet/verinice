@@ -32,7 +32,6 @@ import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.importData.NotizenMassnahmeResult;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.gsimport.TransferData;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -42,6 +41,7 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Note;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.LoadBSIModel;
 
 /**
  * @author koderman@sernet.de

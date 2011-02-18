@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.commands;
+package sernet.verinice.service.commands;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

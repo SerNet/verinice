@@ -58,6 +58,23 @@ public class ControlMaturityService {
         return maturity;
     }
     
+    /**
+     * Calculate accumulated maturity of each control contained in this group.
+     * @return the calculated maturity for each control
+     */
+    public Integer getMaturity(ControlGroup cg) {
+        int maturity = 0;
+        for (CnATreeElement child : cg.getChildren()) {
+            if (child instanceof IControl) {
+                maturity += ((IControl)child).getMaturity();
+            }
+            if (child instanceof ControlGroup) {
+                maturity += getMaturity((ControlGroup) child);
+            }
+        }
+        return maturity;
+    }
+    
     public Double getMaturityByWeight(ControlGroup cg) {
         double result =0;
         if (getWeights(cg) != 0)
@@ -126,14 +143,77 @@ public class ControlMaturityService {
         return Double.valueOf(propertyType.getMaxValue());
     }
     
+    public int getThreshold1(ControlGroup group) {
+        int result = 0;
+        for (CnATreeElement child : group.getChildren()) {
+            if (child instanceof IControl) {
+                result+= ((IControl)child).getThreshold1();
+            }
+            if (child instanceof ControlGroup) {
+            	result+= getThreshold1((ControlGroup)child);
+            }
+        }
+        return result;
+    }
+    
+    public int getThreshold2(ControlGroup group) {
+        int result = 0;
+        for (CnATreeElement child : group.getChildren()) {
+            if (child instanceof IControl) {
+                result+= ((IControl)child).getThreshold2();
+            }
+            if (child instanceof ControlGroup) {
+            	result+= getThreshold2((ControlGroup)child);
+            }
+        }
+        return result;
+    }
+    
     /**
-     * Returns the correct implementaiton state based on the maturity level of the <code>IControl.</code>
-     * Changed to represent just the states "control has been edited or not".
+     * Returns the implementaiton state based on the maturity level of the <code>IControl.</code>
+     * 
+     * @param control
+     * @return the implementation state as definied in the <code>IControl.IMPLEMENTED</code> constants.
+     */
+    public String getImplementationState(ControlGroup group) {
+    	String state = IControl.IMPLEMENTED_NO;
+    	int threshold1 = getThreshold1(group);
+    	int maturity = getMaturity(group);
+    	if (maturity >= threshold1) {
+    		state = IControl.IMPLEMENTED_PARTLY;
+        	int threshold2 = getThreshold2(group); 		
+    		if (maturity >= threshold2) {
+        		state = IControl.IMPLEMENTED_YES;
+        	}
+    	} 	
+    	return state;
+    }
+    
+    /**
+     * Returns the implementaiton state based on the maturity level of the <code>IControl.</code>
      * 
      * @param control
      * @return the implementation state as definied in the <code>IControl.IMPLEMENTED</code> constants.
      */
     public String getImplementationState(IControl control) {
+    	String state = IControl.IMPLEMENTED_NO;
+    	if (control.getMaturity() >= control.getThreshold1()) {
+    		state = IControl.IMPLEMENTED_PARTLY;
+    	}
+    	if (control.getMaturity() >= control.getThreshold2()) {
+    		state = IControl.IMPLEMENTED_YES;
+    	}
+    	return state;
+    }
+    
+    /**
+     * Returns the isa implementaiton state based on the maturity level of the <code>IControl.</code>
+     * Changed to represent just the states "control has been edited or not".
+     * 
+     * @param control
+     * @return the implementation state as definied in the <code>IControl.IMPLEMENTED</code> constants.
+     */
+    public String getIsaState(IControl control) {
         
         if (control.getMaturity() == IControl.IMPLEMENTED_NOTEDITED_NUMERIC) {
             return IControl.IMPLEMENTED_NOTEDITED;
@@ -149,6 +229,8 @@ public class ControlMaturityService {
 //        }
 //        return IControl.IMPLEMENTED_PARTLY;
     }
+    
+      
 }
 
 

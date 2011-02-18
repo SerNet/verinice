@@ -17,12 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * Mark a threat as "OK" which menas it does not need further evaluation

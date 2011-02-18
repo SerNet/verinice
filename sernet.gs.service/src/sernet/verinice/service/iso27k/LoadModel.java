@@ -15,15 +15,13 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service.commands;
+package sernet.verinice.service.iso27k;
 
 import java.util.List;
-import java.util.Set;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
 @SuppressWarnings("serial")

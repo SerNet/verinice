@@ -69,6 +69,10 @@ public class Configuration implements Serializable, ITypedElement {
 	public static final String PROP_NOTIFICATION_MEASURE_ASSIGNMENT = "configuration_mailing_assigned"; //$NON-NLS-1$
 
 	public static final String PROP_ISADMIN = "configuration_isadmin";
+	
+	public static final String PROP_ISADMIN_YES = "configuration_isadmin_yes";
+	
+	public static final String PROP_ISADMIN_NO = "configuration_isadmin_no";
 		
 	
 	public static final String PROP_AUDITOR_NOTIFICATION_GLOBAL = "configuration_auditmailing_owner"; //$NON-NLS-1$
@@ -147,7 +151,16 @@ public class Configuration implements Serializable, ITypedElement {
 	}
 	
 	public boolean isAdminUser() {
-		return isRawPropertyValueEqual(PROP_ISADMIN, "configuration_isadmin_yes");
+		return isRawPropertyValueEqual(PROP_ISADMIN, PROP_ISADMIN_YES);
+	}
+	
+	public void setAdminUser(boolean isAdmin) {
+		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_ISADMIN);
+		if(isAdmin) {
+			entity.setSimpleValue(type, PROP_ISADMIN_YES);
+		} else {
+			entity.setSimpleValue(type, PROP_ISADMIN_NO);
+		}
 	}
 	
 	public void setNotificationExpirationEnabled(boolean b) {

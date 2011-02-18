@@ -25,12 +25,12 @@ import java.util.List;
 import java.util.Set;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.FindRiskAnalysisListsByParentID;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
+import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.PersonenKategorie;
@@ -40,6 +40,8 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.service.commands.LoadConfiguration;
 
 @SuppressWarnings("serial")
 public class RemoveElement<T extends CnATreeElement> extends GenericCommand
@@ -63,8 +65,8 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 				// load element from DB:
 				this.element = (T) getDaoFactory().getDAO(typeId).findById(elementId);
 				
-				if (element instanceof Person)
-					removeConfiguration((Person) element);
+				if (element instanceof Person || element instanceof PersonIso)
+					removeConfiguration(element);
 				
 				int listsDbId = 0;
 				if (element instanceof GefaehrdungsUmsetzung) {
@@ -158,7 +160,7 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand
 		lists.removeGefaehrdungCompletely(gef);
 	}
 
-	private void removeConfiguration(Person person) throws CommandException {
+	private void removeConfiguration(CnATreeElement person) throws CommandException {
 		LoadConfiguration command = new LoadConfiguration(person);
 		command = getCommandService().executeCommand(command);
 		Configuration conf = command.getConfiguration();

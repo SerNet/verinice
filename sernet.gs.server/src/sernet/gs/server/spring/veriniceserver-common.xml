@@ -227,6 +227,7 @@ This variant:
 		<property name="daoFactory" ref="daoFactory" />
 		<property name="exceptionHandler" ref="serverExceptionHandler" />
 		<property name="authService" ref="authService" />
+		<property name="ldapService" ref="ldapService" />
         <property name="processService" ref="processService" />
 	</bean>
 
@@ -234,7 +235,7 @@ This variant:
 		<property name="target" ref="hibernateCommandService" />
 		<property name="transactionAttributes">
 			<props merge="true">
-				<prop key="executeCommand">PROPAGATION_REQUIRED</prop>
+				<prop key="executeCommand">PROPAGATION_REQUIRED,-sernet.gs.ui.rcp.main.service.commands.UsernameExistsException</prop>
 			</props>
 		</property>
 

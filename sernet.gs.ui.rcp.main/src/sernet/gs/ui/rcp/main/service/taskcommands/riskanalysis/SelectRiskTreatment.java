@@ -19,12 +19,12 @@ package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * @author koderman[at]sernet[dot]de

@@ -21,6 +21,7 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.LoadConfiguration;
 
 public class CreateDefaultConfiguration extends GenericCommand {
 

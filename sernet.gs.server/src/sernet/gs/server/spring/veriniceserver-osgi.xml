@@ -14,7 +14,10 @@
 	id="configurer"
 	class="sernet.gs.server.ServerPropertyPlaceholderConfigurer">
     <property name="locations">
-        <value>classpath:WebContent/WEB-INF/veriniceserver-osgi.properties</value>
+        <list>
+	        <value>classpath:WebContent/WEB-INF/veriniceserver-osgi.properties</value>
+	        <value>classpath:WebContent/WEB-INF/verinice-ldap.properties</value>
+        </list>
     </property>
 </bean>
 

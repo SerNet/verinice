@@ -70,7 +70,6 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachmentFile;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachments;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModel;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 import sernet.verinice.interfaces.CommandException;
@@ -82,6 +81,7 @@ import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.iso27k.ImportCatalog;
 import sernet.verinice.service.iso27k.Item;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
@@ -435,6 +435,9 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			}
 			else if(item.getDescription()!=null && item.getTypeId()==IItem.CONTROL) {
 				image = ImageCache.STUFE_NONE;
+			}
+			else if(item.getDescription()!=null && item.getTypeId()==IItem.ISA_TOPIC) {
+				image = ImageCache.ISA_TOPIC;
 			}
 			else if(item.getDescription()!=null && item.getTypeId()==IItem.THREAT) {
 				image = ImageCache.ISO27K_THREAT;

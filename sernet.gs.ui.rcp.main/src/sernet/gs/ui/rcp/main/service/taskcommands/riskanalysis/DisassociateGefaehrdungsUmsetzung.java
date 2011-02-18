@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
+import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * Remove a threat instance from the list of associated threat instances for an object.

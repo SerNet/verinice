@@ -23,8 +23,8 @@ import sernet.gs.model.Baustein;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
-import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.INoAccessControl;
 
 @SuppressWarnings("serial")
 public class LoadBausteine extends GenericCommand implements INoAccessControl {

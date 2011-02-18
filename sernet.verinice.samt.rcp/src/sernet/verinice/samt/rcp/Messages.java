@@ -35,7 +35,8 @@ public class Messages extends NLS {
     public static String AddSelfAssessment_2;
     public static String AddSelfAssessmentMenuAction_1;
     public static String AddSelfAssessmentMenuAction_2;
-    public static String SamtPreferencePage_1;
+    public static String SamtPreferencePage_0;
+	public static String SamtPreferencePage_1;
     public static String SamtPreferencePage_2;
     public static String SamtView_1;
     public static String SamtView_2;

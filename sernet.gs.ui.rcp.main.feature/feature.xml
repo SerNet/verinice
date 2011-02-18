@@ -11,7 +11,7 @@
    </description>
 
    <copyright url="http://www.verinice.org/">
-      Copyright 1997 - 2010 SerNet GmbH and others.
+      Copyright 1997 - 2011 SerNet GmbH and others.
    </copyright>
 
    <license url="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">
@@ -359,56 +359,6 @@ Library.
          os="linux"
          ws="gtk"
          arch="x86_64"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.gtk.solaris.sparc"
-         os="solaris"
-         ws="gtk"
-         arch="sparc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.motif.aix.ppc"
-         os="aix"
-         ws="motif"
-         arch="ppc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.motif.hpux.ia64_32"
-         os="hpux"
-         ws="motif"
-         arch="ia64_32"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.motif.hpux.PA_RISC"
-         os="hpux"
-         ws="motif"
-         arch="PA_RISC"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.launcher.motif.linux.x86"
-         os="linux"
-         ws="motif"
-         arch="x86"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2353,5 +2303,19 @@ Library.
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+         
+   <plugin
+         id="com.springsource.org.apache.commons.logging"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.apache.commons.lang"
+         download-size="0"
+         install-size="0"
+         version="2.4.0"
+         unpack="false"/>
 
 </feature>

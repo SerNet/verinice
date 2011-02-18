@@ -526,13 +526,13 @@ public class FileView extends ViewPart {
 						attachmentFile.writeFileData(path);
 						Program.launch(path);
 					} catch (IOException e) {
-						LOG.error("Error while saving temp file", e); //$NON-NLS-1$
+						LOG.error("Error while loading attachment", e); //$NON-NLS-1$
 						ExceptionUtil.log(e, Messages.FileView_27);
 					}
 				}
 			} catch(Exception e) {
 				LOG.error("Error while loading attachment", e); //$NON-NLS-1$
-				ExceptionUtil.log(e, Messages.FileView_29);
+				ExceptionUtil.log(e, Messages.FileView_27);
 			}
 		}
 	}

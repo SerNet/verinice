@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.samt.rcp;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
@@ -31,11 +32,16 @@ import sernet.gs.service.VeriniceCharset;
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
+@SuppressWarnings("restriction")
 public class SamtPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
     public static final String CHARSET_SAMT = "sernet.verinice.samt.rcp.charset"; //$NON-NLS-1$
     
+    public static final String ISA_RESULTS = "sernet.verinice.samt.rcp.isaResult"; //$NON-NLS-1$
+    
+    
     private ComboFieldEditor encodingFieldEditor;
+	private BooleanFieldEditor showIsaResults;
     
     private static final String[][] encodingComboValues = new String[][]{
             new String[]{VeriniceCharset.CHARSET_UTF_8.displayName(),VeriniceCharset.CHARSET_UTF_8.name()},
@@ -51,6 +57,8 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
     public static void setDefaults() {
         // set default charset for self assessment catalog
         Activator.getDefault().getPreferenceStore().setDefault(CHARSET_SAMT,VeriniceCharset.CHARSET_UTF_8.name());
+        Activator.getDefault().getPreferenceStore().setDefault(ISA_RESULTS,false);
+        
     }
     
     
@@ -68,6 +76,9 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
     protected void createFieldEditors() {
         encodingFieldEditor = new ComboFieldEditor(CHARSET_SAMT, Messages.SamtPreferencePage_2, encodingComboValues, getFieldEditorParent());
         addField(encodingFieldEditor);
+        
+        showIsaResults = new BooleanFieldEditor(ISA_RESULTS, Messages.SamtPreferencePage_0, getFieldEditorParent());
+		addField(showIsaResults);
     }
 
     /* (non-Javadoc)

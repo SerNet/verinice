@@ -14,7 +14,6 @@ import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.PropertyType;
@@ -34,6 +33,7 @@ import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * Load elements for reports. All properties  will be initialized to avoid lazy initialization exceptions.

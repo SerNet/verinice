@@ -73,7 +73,7 @@ public class ISMViewLabelProvider extends LabelProvider  {
 			return image;
 		} else if (obj instanceof SamtTopic) {
 	          SamtTopic topic = (SamtTopic) obj;
-	          image = ImageCache.getInstance().getControlImplementationImage(maturityService.getImplementationState(topic));
+	          image = ImageCache.getInstance().getControlImplementationImage(maturityService.getIsaState(topic));
 	    } else if (obj instanceof Control) {
 		    Control control = (Control) obj;
 		    // using maturity:

@@ -20,7 +20,9 @@ package sernet.gs.ui.rcp.main.bsi.views.chart;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-public class Emptychart extends UmsetzungBarChart {
+import sernet.verinice.model.common.CnATreeElement;
+
+public class Emptychart extends UmsetzungBarChart implements ISelectionChartGenerator{
 
 	@Override
 	public JFreeChart createChart() {
@@ -30,6 +32,11 @@ public class Emptychart extends UmsetzungBarChart {
 	private Object createEmptyBarDataset() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		return dataset;
+	}
+
+	@Override
+	public JFreeChart createChart(CnATreeElement elmt) {
+		return createBarChart(createEmptyBarDataset());
 	}
 	
 	

@@ -13,7 +13,6 @@ import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
@@ -34,6 +33,7 @@ import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.AssetValueService;

@@ -23,8 +23,8 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")

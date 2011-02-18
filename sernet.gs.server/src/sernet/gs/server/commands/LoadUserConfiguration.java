@@ -21,10 +21,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.common.configuration.Configuration;
 
 @SuppressWarnings("serial")

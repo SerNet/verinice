@@ -20,11 +20,11 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 import java.io.Serializable;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**

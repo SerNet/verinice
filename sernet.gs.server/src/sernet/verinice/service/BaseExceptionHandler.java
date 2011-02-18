@@ -18,8 +18,8 @@
 package sernet.verinice.service;
 
 import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
-import sernet.gs.ui.rcp.main.service.commands.UsernameExistsRuntimeException;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.UsernameExistsRuntimeException;
 
 public class BaseExceptionHandler implements ICommandExceptionHandler {
 

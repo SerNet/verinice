@@ -26,6 +26,7 @@ import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.service.iso27k.LoadModel;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

@@ -70,6 +70,7 @@ import sernet.verinice.bpm.rcp.TaskView;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
+import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of
@@ -144,11 +145,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private CheatSheetCategoryBasedSelectionAction showCheatSheetListAction;
 
-    private OpenMultipleViewAction openChartViewAction;
-
     private ImportGstoolAction importGstoolAction;
 
 	private ImportCSVAction importCSVAction;
+
+	private ImportPersonFromLdap importPersonFromLdap;
 
     private OpenViewAction openDocumentViewAction;
 
@@ -235,9 +236,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openDocumentViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_10, DocumentView.ID, ImageCache.VIEW_DOCUMENT);
         register(openDocumentViewAction);
 
-        openChartViewAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_11, ChartView.ID, ImageCache.CHART_PIE);
-        register(openChartViewAction);
-
         openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT);
         register(openAuditViewAction);
         
@@ -252,6 +250,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
         register(importCSVAction);
+        
+        importPersonFromLdap = new ImportPersonFromLdap(window,Messages.ApplicationActionBarAdvisor_32);
+        register(importPersonFromLdap);
 
 		importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27);
 		register(importGSNotesAction);
@@ -347,6 +348,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(importGSNotesAction);
         fileMenu.add(new Separator());
         fileMenu.add(importCSVAction);
+        fileMenu.add(importPersonFromLdap);
 
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);
@@ -367,7 +369,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(openTodoViewAction);
         viewsMenu.add(openAuditViewAction);
         viewsMenu.add(openDSViewAction);
-        viewsMenu.add(openChartViewAction);
         viewsMenu.add(openDocumentViewAction);
         viewsMenu.add(new Separator());
         
@@ -430,7 +431,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(openTodoViewAction);
         myToolbar.add(openAuditViewAction);
         myToolbar.add(openDSViewAction);
-        myToolbar.add(openChartViewAction);
         myToolbar.add(openDocumentViewAction);
 
         myToolbar.add(new Separator());

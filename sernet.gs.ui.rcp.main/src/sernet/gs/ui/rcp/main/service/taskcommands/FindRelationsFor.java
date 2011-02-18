@@ -21,11 +21,11 @@ import java.io.Serializable;
 import java.util.Set;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * Loads an element with all links (up and down) for the relation view.

@@ -34,12 +34,15 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_SURNAME = "person-iso_surname"; //$NON-NLS-1$
 	public static final String PROP_NAME = "person-iso_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "person-iso_tag"; //$NON-NLS-1$
+	public static final String PROP_TELEFON = "person-iso_telefon"; //$NON-NLS-1$
+	public static final String PROP_EMAIL = "person-iso_email"; //$NON-NLS-1$
 	
 	/**
 	 * Creates an empty asset
 	 */
 	public PersonIso() {
 		super();
+		setEntity(new Entity(TYPE_ID));
 	}
 	
 	public PersonIso(CnATreeElement parent) {
@@ -73,6 +76,27 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	
+	public String getSurname() {
+		return getEntity().getSimpleValue(PROP_SURNAME);
+	}
+	
+	public void setSurname(String surname) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_SURNAME), surname);
+	}
+	
+	public String getName() {
+		return getEntity().getSimpleValue(PROP_NAME);
+	}
+	
+	public void setName(String name) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+	}
+	
+	
+	public Collection<? extends String> getTags() {
+		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+	}
+	
 	public String getAbbreviation() {
 		return getEntity().getSimpleValue(PROP_ABBR);
 	}
@@ -81,8 +105,20 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
 	}
 	
-	public Collection<? extends String> getTags() {
-		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+	public String getPhone() {
+		return getEntity().getSimpleValue(PROP_TELEFON);
+	}
+	
+	public void setPhone(String value) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TELEFON), value);
 	}
 
+	public String getEmail() {
+		return getEntity().getSimpleValue(PROP_EMAIL);
+	}
+	
+	public void setEmail(String value) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_EMAIL), value);
+	}
+	
 }

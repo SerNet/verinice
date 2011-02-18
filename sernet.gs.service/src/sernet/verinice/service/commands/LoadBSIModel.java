@@ -15,12 +15,12 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.bsi.BSIModel;
 
 @SuppressWarnings("serial")

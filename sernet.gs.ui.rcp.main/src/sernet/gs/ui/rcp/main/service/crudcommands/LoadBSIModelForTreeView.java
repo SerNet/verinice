@@ -18,12 +18,13 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.common.model.HydratorUtil;
-import sernet.gs.ui.rcp.main.service.commands.INoAccessControl;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.HydratorUtil;
+import sernet.verinice.service.commands.LoadBSIModel;
 
 @SuppressWarnings("serial")
 public class LoadBSIModelForTreeView extends GenericCommand implements INoAccessControl {

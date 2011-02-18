@@ -41,10 +41,11 @@ public class PreferenceConstants {
 	
 	public static final String FIRSTSTART= "cna_derbywarning"; //$NON-NLS-1$
 	public static final String ERRORPOPUPS = "cna_errorpopups"; //$NON-NLS-1$
-	public static final String INPUTHINTS = "cna_inputhelperhints";
-	public static final String INFO_CONTROLS_ADDED = "info_controls_added";
-	public static final String INFO_ELEMENTS_COPIED = "info_elements_copied";
-	public static final String INFO_ELEMENTS_CUT = "info_elements_cut";
+	public static final String INPUTHINTS = "cna_inputhelperhints"; //$NON-NLS-1$
+	public static final String INFO_CONTROLS_ADDED = "info_controls_added"; //$NON-NLS-1$
+	public static final String INFO_ELEMENTS_COPIED = "info_elements_copied"; //$NON-NLS-1$
+	public static final String INFO_ELEMENTS_CUT = "info_elements_cut";  //$NON-NLS-1$
+	public static final String INFO_IMPORT_LDAP = "info_import_ldap"; //$NON-NLS-1$
     public static final String INFO_PROCESSES_STARTED = "info_processes_started";
 
 	

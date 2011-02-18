@@ -69,6 +69,7 @@ public class Messages extends NLS {
 	public static String ApplicationActionBarAdvisor_3;
     public static String ApplicationActionBarAdvisor_30;
     public static String ApplicationActionBarAdvisor_31;
+    public static String ApplicationActionBarAdvisor_32;
 	public static String ApplicationActionBarAdvisor_4;
 	public static String ApplicationActionBarAdvisor_5;
 	public static String ApplicationActionBarAdvisor_6;

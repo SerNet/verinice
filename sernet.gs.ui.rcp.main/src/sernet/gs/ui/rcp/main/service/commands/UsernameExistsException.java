@@ -20,6 +20,7 @@
 package sernet.gs.ui.rcp.main.service.commands;
 
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.UsernameExistsRuntimeException;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
