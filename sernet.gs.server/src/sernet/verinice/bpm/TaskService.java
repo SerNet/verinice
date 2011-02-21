@@ -23,11 +23,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
@@ -104,6 +107,7 @@ public class TaskService implements ITaskService{
      * 
      * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList(java.lang.String)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<ITask> getTaskList(ITaskParameter parameter) {
         ServerInitializer.inheritVeriniceContextState();
@@ -112,56 +116,75 @@ public class TaskService implements ITaskService{
         }
         List<ITask> taskList = Collections.emptyList();
         if(doSearch(parameter)) {      
+            List<Object> paramList = new LinkedList<Object>();
+            StringBuilder hql = new StringBuilder("from org.jbpm.pvm.internal.task.TaskImpl as task ");
                 
-            DetachedCriteria taskCrit = DetachedCriteria.forClass(TaskImpl.class);
-            taskCrit.add(Restrictions.eq("assignee", parameter.getUsername()));
-            if(parameter.getSince()!=null) {
-                taskCrit.add(Restrictions.ge("createTime",parameter.getSince()));
-            }
-            DetachedCriteria varCrit = null;
+            if(parameter.getAuditUuid()!=null) {
+                hql.append("inner join task.execution.variables as auditVar ");
+            }    
             // create (un)read query if one is false:
             if((parameter.getRead()!=null && !parameter.getRead())
                || (parameter.getUnread()!=null && !parameter.getUnread())) {
-                varCrit = getVarCrit(taskCrit);
-                varCrit.add(Restrictions.eq("key", ITaskService.VAR_READ_STATUS));
-                if(parameter.getRead()!=null && parameter.getRead() && parameter.getUnread()!=null && !parameter.getUnread()) {            
-                    varCrit.add(Restrictions.eq("string", ITaskService.VAR_READ));
-                }
-                if(parameter.getUnread()!=null && parameter.getUnread() && parameter.getRead()!=null && !parameter.getRead()) {
-                    varCrit.add(Restrictions.eq("string", ITaskService.VAR_UNREAD));
-                } 
-                taskCrit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-            }
-            if(parameter.getAuditUuid()!=null) {
-                if(varCrit==null) {
-                    varCrit = getVarCrit(taskCrit);
-                }
-                varCrit.add(Restrictions.eq("key", IIsaExecutionProcess.VAR_AUDIT_UUID));
-                varCrit.add(Restrictions.eq("string", parameter.getAuditUuid()));
+                hql.append("inner join task.execution.variables as readVar "); 
             }
             
-            List<Task> jbpmTaskList = getJbpmTaskDao().findByCriteria(taskCrit);
+            hql.append("where task.assignee=? ");
+            paramList.add(parameter.getUsername());
+            
+            if(parameter.getSince()!=null) {
+                hql.append("and task.createTime>? ");
+                paramList.add(parameter.getSince());
+            }
+            
+            if(parameter.getAuditUuid()!=null) {
+                hql.append("and auditVar.key=? ");
+                paramList.add(IIsaExecutionProcess.VAR_AUDIT_UUID);
+                hql.append("and auditVar.string=? ");
+                paramList.add(parameter.getAuditUuid());
+            }
+            
+            if(parameter.getRead()!=null && parameter.getRead() && parameter.getUnread()!=null && !parameter.getUnread()) {            
+                hql.append("and readVar.key=? ");
+                paramList.add(ITaskService.VAR_READ_STATUS);
+                hql.append("and readVar.string=? ");
+                paramList.add(ITaskService.VAR_READ);
+            }
+            if(parameter.getUnread()!=null && parameter.getUnread() && parameter.getRead()!=null && !parameter.getRead()) {
+                hql.append("and readVar.key=? ");
+                paramList.add(ITaskService.VAR_READ_STATUS);
+                hql.append("and readVar.string=? ");
+                paramList.add(ITaskService.VAR_UNREAD);
+            }    
+            
+            //taskCrit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            List jbpmTaskList = getJbpmTaskDao().findByQuery(hql.toString(),paramList.toArray());
             //List<Task> jbpmTaskList = getTaskService().createTaskQuery().assignee(parameter.getUsername()).orderDesc(TaskQuery.PROPERTY_CREATEDATE).list();
             
             if(jbpmTaskList!=null && !jbpmTaskList.isEmpty()) {
                 taskList = new ArrayList<ITask>();
-                for (Task task : jbpmTaskList) { 
-                    ITask taskInfo = map(task);
-                    Set<String> outcomeSet = getTaskService().getOutcomes(task.getId());
-                    List<KeyValue> outcomeList = new ArrayList<KeyValue>(outcomeSet.size());
-                    for (String id : outcomeSet) {
-                        outcomeList.add(new KeyValue(id, Messages.getString(id)));                          
+                Task task=null;
+                for (Iterator iterator = jbpmTaskList.iterator(); iterator.hasNext();) {
+                    Object object = (Object) iterator.next();
+                    if(object instanceof Task ) {
+                        task = (Task) object;
                     }
-                    taskInfo.setOutcomes(outcomeList);
-                    taskList.add(taskInfo);  
+                    if(object instanceof Object[] ) {
+                        task = (Task)((Object[])object)[0];
+                    }       
+                    if(task!=null) {
+                        ITask taskInfo = map(task);
+                        Set<String> outcomeSet = getTaskService().getOutcomes(task.getId());
+                        List<KeyValue> outcomeList = new ArrayList<KeyValue>(outcomeSet.size());
+                        for (String id : outcomeSet) {
+                            outcomeList.add(new KeyValue(id, Messages.getString(id)));                          
+                        }
+                        taskInfo.setOutcomes(outcomeList);
+                        taskList.add(taskInfo);  
+                    }
                 }                
             }
         }    
         return taskList;
-    }
-
-    private DetachedCriteria getVarCrit(DetachedCriteria taskCrit) {
-        return taskCrit.createCriteria("execution").createCriteria("variables");
     }
     
     /* (non-Javadoc)

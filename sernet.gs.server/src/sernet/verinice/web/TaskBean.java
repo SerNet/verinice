@@ -112,6 +112,10 @@ public class TaskBean {
                 getEditBean().setTypeId(getSelectedTask().getType());
                 setOutcomeId(null);
                 getEditBean().init();
+                
+                getLinkBean().setSelectedLink(null);
+                getLinkBean().setSelectedLinkTargetName(null);
+                getLinkBean().setSelectedLinkType(null);
             }
         } catch (Throwable t) {
             LOG.error("Error while opening task", t);
@@ -162,6 +166,10 @@ public class TaskBean {
         } else {
             return name;
         }
+    }
+    
+    public LinkBean getLinkBean() {
+        return getEditBean().getLinkBean();
     }
 
     public EditBean getEditBean() {
