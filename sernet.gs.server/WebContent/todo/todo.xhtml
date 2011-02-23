@@ -283,7 +283,7 @@
 			      						sortBy="#{item.umsetzung}"
 					                    width="35px"
 					                    label="Umsetzung">
-					                     <h:graphicImage url="/image/icon/#{item.umsetzungIcon}" />
+					                     <h:graphicImage id="colUmsetzungImage" url="/image/icon/#{item.umsetzungIcon}" />
 					                </rich:column>
 					                <rich:column id="colUmsetzungBis"
 			      						sortable="true" 
@@ -291,9 +291,9 @@
 					                    width="55px"
 					                    label="bis">
 					                    <f:facet name="header">
-					                        <h:outputText value="#{msg['todo.until']}" />
+					                        <h:outputText id="colUmsetzungBisHeader" value="#{msg['todo.until']}" />
 					                    </f:facet>
-					                    <h:outputText value="#{item.umsetzungBis}">
+					                    <h:outputText id="colUmsetzungBisText" value="#{item.umsetzungBis}">
 									    	<f:convertDateTime dateStyle="short" type="date" timeZone="#{toDo.timeZone}" />
 									    </h:outputText>
 					                </rich:column>
@@ -303,9 +303,9 @@
 					                    width="95px"
 					                    label="Verantwortlich">
 					                    <f:facet name="header">
-					                        <h:outputText value="#{msg['todo.responsible']}" />
+					                        <h:outputText id="colUmsetzungDurchHeader" value="#{msg['todo.responsible']}" />
 					                    </f:facet>
-					                    <h:outputText value="#{item.umsetzungDurch}"/>
+					                    <h:outputText id="colUmsetzungDurchText" value="#{item.umsetzungDurch}"/>
 					                </rich:column>
 					                <rich:column id="colStufe"
 			      						sortable="true" 
@@ -313,9 +313,9 @@
 					                    width="45px"
 					                    label="Stufe">
 					                    <f:facet name="header">
-					                        <h:outputText value="#{msg['todo.level']}" />
+					                        <h:outputText id="colStufeHeader" value="#{msg['todo.level']}" />
 					                    </f:facet>
-					                    <h:outputText value="#{item.stufe}"/>
+					                    <h:outputText id="colStufeText" value="#{item.stufe}"/>
 					                </rich:column>
 					                <rich:column id="colParentTitle"
 			      						sortable="true" 
@@ -323,9 +323,9 @@
 					                    width="160px"
 					                    label="Zielobjekt">
 					                    <f:facet name="header">
-					                        <h:outputText value="#{msg['todo.asset']}" />
+					                        <h:outputText id="colParentTitleHeader" value="#{msg['todo.asset']}" />
 					                    </f:facet>
-					                    <h:outputText value="#{item.parentTitle}"/>
+					                    <h:outputText id="colParentTitleText" value="#{item.parentTitle}"/>
 					                </rich:column>
 					                <rich:column id="colTitel"
 			      						sortable="true" 
@@ -333,9 +333,9 @@
 					                    width="260px"
 					                    label="Titel">
 					                    <f:facet name="header">
-					                        <h:outputText value="#{msg['todo.title']}" />
+					                        <h:outputText id="colTitelHeader" value="#{msg['todo.title']}" />
 					                    </f:facet>
-					                    <h:outputText value="#{item.title}"/>
+					                    <h:outputText id="colTitelText" value="#{item.title}"/>
 					                </rich:column>
 			      					 <a4j:support reRender="editPanel"
 					                    action="#{toDo.loadToDo}"

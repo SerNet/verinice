@@ -205,7 +205,8 @@ public class TaskService implements ITaskService{
 
     private boolean doSearch(ITaskParameter parameter) {
         return parameter!=null 
-           && parameter.getUsername()!=null;
+           && parameter.getUsername()!=null
+           && ((parameter.getRead()==null && parameter.getUnread()==null) || (parameter.getRead() || parameter.getUnread()));
     }
     
     /**
