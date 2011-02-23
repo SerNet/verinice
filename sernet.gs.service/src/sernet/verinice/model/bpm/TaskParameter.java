@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.model.bpm;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import sernet.verinice.interfaces.bpm.ITaskParameter;
@@ -27,11 +28,11 @@ import sernet.verinice.interfaces.bpm.ITaskParameter;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class TaskParameter implements ITaskParameter {
+public class TaskParameter implements ITaskParameter, Serializable {
  
-    boolean read;
+    Boolean read;
     
-    boolean unread;
+    Boolean unread;
     
     Date since;
     

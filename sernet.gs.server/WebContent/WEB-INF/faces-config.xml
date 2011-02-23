@@ -46,6 +46,11 @@
   <managed-bean-class>sernet.verinice.web.LinkBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
+ <managed-bean>
+  <managed-bean-name>auth</managed-bean-name>
+  <managed-bean-class>sernet.verinice.web.AuthBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
  <application>
   <view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
   <locale-config>

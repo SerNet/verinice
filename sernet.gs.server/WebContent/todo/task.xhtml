@@ -11,18 +11,18 @@
 		<div id="col3" style="width: auto; margin: 0 480px 0 0; *margin-right:0;">
 		<div id="col3_content">
 			<h:form id="tableForm">
-				<div class="csc-header csc-header-n1">
+				<div class="csc-header csc-header-n1" style="height:40px;">
 					<h1><h:outputText value="#{msgTask['tasks']}" /></h1>
-					<a4j:outputPanel id="completePanel">
-						<a4j:repeat id="outcomeList" value="#{task.selectedTask.outcomes}" var="outcome" rendered="#{task.selectedTask!=null}">
-					    	<a4j:commandButton id="complete" action="#{task.completeTask}" value="#{outcome.value}" reRender="tablePanel,editPanel" style="margin-bottom: 5px;">
-					    		<a4j:actionparam name="outcomeId" value="#{outcome.key}" assignTo="#{task.outcomeId}"/>
-					    	</a4j:commandButton>
-					    </a4j:repeat>
-					</a4j:outputPanel>
 				</div>
 				<a4j:outputPanel id="tablePanel">
-					 <div style="margin-bottom:4px;">
+					 <div style="margin-bottom:4px; height:40px;">
+					 	 <a4j:outputPanel id="completePanel">
+							<a4j:repeat id="outcomeList" value="#{task.selectedTask.outcomes}" var="outcome" rendered="#{task.selectedTask!=null}">
+						    	<a4j:commandButton id="complete" action="#{task.completeTask}" value="#{outcome.value}" reRender="tablePanel,editPanel" styleClass="button">
+						    		<a4j:actionparam name="outcomeId" value="#{outcome.key}" assignTo="#{task.outcomeId}"/>
+						    	</a4j:commandButton>
+						    </a4j:repeat>
+						 </a4j:outputPanel>
 					 	 <table>
 					 	 	<tr>
 					 	 		<td><h:outputText value="#{msgTask['isa']}" style="margin-right:4px;"/></td>
@@ -99,14 +99,11 @@
 		<div id="col2_content">									    				
 	    	<a4j:outputPanel id="editPanel">
 	    		<a4j:form id="editForm" rendered="#{edit.element!=null}">					    	
-		    		<div class="csc-header csc-header-n1">
-	      				<h1><h:outputText value="#{edit.title}"/></h1>					      							      			
-     						<a4j:commandButton id="submit" value="#{msgEdit['save']}" action="#{edit.save}" style="margin-bottom: 5px;"/>		      								
-						<rich:message for="submit">
-							<f:facet name="errorMarker">
-	                        	<h:graphicImage value="/image/error.gif" style="margin-left:0.5em;margin-right:0.5em;"/>   
-	                    	</f:facet>
-	                    </rich:message>
+		    		<div class="csc-header csc-header-n1" style="height:40px;">
+	      				<h1><h:outputText value="#{edit.title}"/></h1>
+	      			</div>
+	      			<div style="margin-bottom:4px; height:40px;">				      							      			
+     					<a4j:commandButton id="submit" value="#{msgEdit['save']}" action="#{edit.save}" styleClass="button"/>
 			        </div>
       				<rich:simpleTogglePanel  switchType="client" label="#{msgEdit['general']}" opened="#{edit.generalOpen}">
 	      				<table>						

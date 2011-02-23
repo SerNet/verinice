@@ -18,6 +18,8 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
 import org.eclipse.osgi.util.NLS;
 import java.util.Collections;
 import java.util.Comparator;
@@ -92,6 +94,8 @@ import sernet.verinice.model.iso27k.IISO27KModelListener;
 // "owner" immediately.
 public class LinkMaker extends Composite implements IRelationTable {
 
+    private static final Logger LOG = Logger.getLogger(LinkMaker.class);
+    
     private CnATreeElement inputElmt;
     private boolean writeable;
     private List<HuiRelation> allPossibleRelations;
@@ -300,6 +304,7 @@ public class LinkMaker extends Composite implements IRelationTable {
                         }
                         CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
                     } catch (Exception e1) {
+                        LOG.error("Error while removing link",e1);
                         ExceptionUtil.log(e1, Messages.LinkMaker_7);
                     }
                 }
@@ -489,7 +494,7 @@ public class LinkMaker extends Composite implements IRelationTable {
                             viewer.setInput(new PlaceHolder(Messages.LinkMaker_12));
                         }
                     });
-
+                    LOG.error("Error while searching relations",e);
                     ExceptionUtil.log(e, Messages.LinkMaker_13);
                 }
                 return Status.OK_STATUS;

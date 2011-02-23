@@ -212,7 +212,11 @@ public class TaskInformation implements ITask,Serializable {
     @Override
     public int compareTo(ITask o) {
         int result = 0;
-        if(this.getSortValue()!=null && o!=null && o.getSortValue()!=null) {
+        if(this.getName()!=null && o!=null && o.getName()!=null) {
+            result = this.getName().compareTo(o.getName());
+        }
+        if(result==0
+           && this.getSortValue()!=null && o!=null && o.getSortValue()!=null) {
             result = this.getSortValue().compareTo(o.getSortValue());
         }
         return result;

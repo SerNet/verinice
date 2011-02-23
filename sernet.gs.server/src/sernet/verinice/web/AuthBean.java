@@ -17,35 +17,23 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces.bpm;
+package sernet.verinice.web;
 
-import java.io.Serializable;
-import java.util.Date;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.IAuthService;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public interface ITaskParameter extends Serializable {
+public class AuthBean {
+
     
-    String getUsername();
+    public String getUserName() {
+        return getAuthService().getUsername();
+    }
     
-    void setUsername(String username);
-    
-    Date getSince();
-    
-    void setSince(Date since);
-    
-    Boolean getRead();
-    
-    void setRead(Boolean read);
-    
-    Boolean getUnread();
-    
-    void setUnread(Boolean unread);
-    
-    String getAuditUuid();
-    
-    void setAuditUuid(String uuid);
-    
+    private IAuthService getAuthService() {
+        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+    }
 }

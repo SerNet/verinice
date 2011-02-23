@@ -56,7 +56,7 @@ public class LoadUserConfiguration extends GenericCommand {
 		if (username != null && username.length()>0) {
 		    allResults: for (Entity entity : entities) {
 		        if (username.equals(entity.getSimpleValue(Configuration.PROP_USERNAME))) {
-		            HydratorUtil.hydrateEntity(dao, entity);
+		            //HydratorUtil.hydrateEntity(dao, entity);
 		            entities = new ArrayList<Entity>();
 		            entities.add(entity);
 		            break allResults;

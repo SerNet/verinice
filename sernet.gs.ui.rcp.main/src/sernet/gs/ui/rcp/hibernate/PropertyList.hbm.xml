@@ -20,7 +20,7 @@
 		<property name="uuid" />
 		<property name="entityId" column="typedlist_id" insert="false" update="false"/>
 		
-		<list name="properties" cascade="all,delete-orphan" fetch="join" >		
+		<list name="properties" cascade="all,delete-orphan" fetch="join" lazy="false">		
 			<cache usage="read-write" />			
 			<key column="properties_id"  />		
 			<index column="properties_idx" />

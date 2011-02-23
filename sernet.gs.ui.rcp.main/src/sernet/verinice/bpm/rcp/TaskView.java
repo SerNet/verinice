@@ -20,6 +20,7 @@
 package sernet.verinice.bpm.rcp;
 
 import java.text.DateFormat;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -133,7 +134,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
 
     private void loadTasks() {
         List<ITask> taskList = ServiceFactory.lookupTaskService().getTaskList();
-        
+        Collections.sort(taskList);
         // Get the content for the viewer, setInput will call getElements in the
         // contentProvider
         try {
@@ -145,7 +146,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     
     private void createColumns(final Composite parent, final TableViewer viewer) {
         String[] titles = { "Name", "Control", "Date" };
-        int[] bounds = { 100, 150, 100 };
+        int[] bounds = { 130, 370, 100 };
 
         // First column: title of the role
         TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);

@@ -2,7 +2,7 @@
 
 <process key="isa-execution" name="verinice ISA Execution" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <description>Describes the implementation of controls in verinice</description>
-   <variable name="TASK_READ_STATUS" type="string" init-expr="TASK_UNREAD"/> 
+   <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
    <start g="284,17,48,48" name="start">
       <transition to="evaluate control"/>
    </start>
@@ -29,28 +29,37 @@
       <arg><object expr="#{UUID}"/></arg>
       <transition to="evaluate assignee"/>
    </java>
+   <assign from-expr="TASK_UNREAD" name="isa.task.unreadImplement" to-var="TASK_READ_STATUS">
+      <transition to="isa.task.implement"/>
+   </assign>
    <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="464,371,206,40" name="isa.task.implement">
       <transition g="6,-11" name="isa.transition.complete" to="load implementation"/>
-      <transition g="-12,4" name="isa.transition.escalate" to="isa.task.escalate">
+      <transition g="-12,4" name="isa.transition.escalate" to="isa.task.unreadEscalate">
         <timer duedate="#{ISA_DUEDATE}"/>
       </transition>
    </task>
-   <task assignee="#{OWNER_NAME}" g="744,309,118,40" name="isa.task.escalate">
-      <transition g="-8,-19" name="transition.complete" to="load assignee"/>
+   <assign from-expr="TASK_UNREAD" name="isa.task.unreadEscalate" to-var="TASK_READ_STATUS">
+      <transition to="isa.task.escalate"/>
+   </assign>
+   <task assignee="#{ISA_OWNER_NAME}" g="744,309,118,40" name="isa.task.escalate">
+      <transition g="-8,-19" name="isa.transition.complete" to="load assignee"/>
    </task>
    <java class="sernet.verinice.bpm.IsaExecution" g="489,461,159,40" method="loadImplementation" name="load implementation" var="ISA_IMPLEMENTATION">
       <arg><object expr="#{UUID}"/></arg>
       <transition to="evaluate implementation"/>
    </java>
    <decision g="288,396,48,48" name="evaluate implementation">
-      <transition g="-70,-27" name="not implemented" to="isa.task.implement">
+      <transition g="-70,-27" name="not implemented" to="isa.task.unreadImplement">
         <condition expr="#{ISA_IMPLEMENTATION==-2}"/>
       </transition>
-      <transition g="-92,-14" name="implemented" to="isa.task.checkImplementation">
+      <transition g="-92,-14" name="implemented" to="isa.task.unreadCheckImplementation">
         <condition expr="#{ISA_IMPLEMENTATION!=-2}"/>
       </transition>
    </decision>
-   <task assignee="#{ISA_OWNER_NAME}" g="213,531,201,40" name="isa.task.checkImplementation">
+   <assign from-expr="TASK_UNREAD" name="isa.task.unreadCheckImplementation" to-var="TASK_READ_STATUS">
+      <transition to="isa.task.checkImplementation"/>
+   </assign>
+   <task assignee="#{ISA_OWNER_NAME}" g="201,531,223,40" name="isa.task.checkImplementation">
       <transition g="-128,-17" name="isa.transition.accepted" to="end"/>
       <transition g="-8,4" name="isa.transition.decline" to="load implementation"/>
    </task>

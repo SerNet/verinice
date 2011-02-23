@@ -120,12 +120,12 @@ public class TaskService implements ITaskService{
             StringBuilder hql = new StringBuilder("from org.jbpm.pvm.internal.task.TaskImpl as task ");
                 
             if(parameter.getAuditUuid()!=null) {
-                hql.append("inner join task.execution.variables as auditVar ");
+                hql.append("inner join task.execution.processInstance.variables as auditVar ");
             }    
             // create (un)read query if one is false:
             if((parameter.getRead()!=null && !parameter.getRead())
                || (parameter.getUnread()!=null && !parameter.getUnread())) {
-                hql.append("inner join task.execution.variables as readVar "); 
+                hql.append("inner join task.execution.processInstance.variables as readVar "); 
             }
             
             hql.append("where task.assignee=? ");
@@ -205,9 +205,7 @@ public class TaskService implements ITaskService{
 
     private boolean doSearch(ITaskParameter parameter) {
         return parameter!=null 
-           && parameter.getUsername()!=null 
-           && (parameter.getUnread()==null && parameter.getRead()==null) ||
-               (parameter.getUnread()!=null && parameter.getUnread()) || (parameter.getRead()!=null && parameter.getRead());
+           && parameter.getUsername()!=null;
     }
     
     /**
