@@ -391,15 +391,20 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	}
 	
 	public boolean isSelected(String propertyType, String optionId) {
-		List<Property> entries = typedPropertyLists.get(propertyType).getProperties();
-		if (entries == null)
-			return false;
-		
-		for (Property prop : entries) {
-			if (prop.getPropertyValue() != null && prop.getPropertyValue().equals(optionId))
-				return true;
-		}
-		return false;
+	    boolean result = false;
+	    PropertyList propertyList = typedPropertyLists.get(propertyType);
+	    if(propertyList!=null) {
+    		List<Property> entries = typedPropertyLists.get(propertyType).getProperties();
+    		if (entries != null) {
+        		for (Property prop : entries) {
+        			if (prop.getPropertyValue() != null && prop.getPropertyValue().equals(optionId)) {
+        			    result = true;
+        			    break;
+        			}
+        		}
+    		}
+	    }
+		return result;
 	}
 	
 	/**

@@ -110,6 +110,13 @@ public class LinkBean {
         return sb.toString();
     }
     
+    public String getLoadLinkTargets() {
+        return null;
+    }
+    
+    public void loadLinkTargets(String s) {
+    }
+    
     /**
      * Loads the link targets, after a link type is selected.
      * See tasks.xhtml
@@ -143,6 +150,15 @@ public class LinkBean {
             LOG.error("Error while loading link targets, targetTypeId: " + targetTypeId, t);
             ExceptionHandler.handle(t);
         }
+    }
+    
+    public String getAddLink() {
+        addLink();
+        return null;
+    }
+    
+    public void setAddLink(String s) {
+        addLink();
     }
     
     public void addLink() {
@@ -188,6 +204,13 @@ public class LinkBean {
         }
     }
     
+    public String getSelectLink() {  
+        return null;
+    }
+    
+    public void setSelectLink(String s) {
+    }
+    
     public void selectLink() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("selectLink() called ...");
@@ -206,12 +229,35 @@ public class LinkBean {
         }
     }
     
+    public void setShowDeleteLink(String s) {
+    }
+    
+    public String getShowDeleteLink() {;
+        return null;
+    }
+    
     public void showDeleteLink() {
         deleteVisible = true;
     }
     
+    public String getHideDeleteLink() {
+        return null;
+    }
+    
+    public void setHideDeleteLink(String s) {
+    }
+    
     public void hideDeleteLink() {
         deleteVisible = false;
+    }
+    
+    public String getDeleteLink() {
+        deleteLink();
+        return null;
+    }
+    
+    public void setDeleteLink() {
+        deleteLink();
     }
     
     public void deleteLink() {

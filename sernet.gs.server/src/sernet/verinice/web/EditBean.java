@@ -184,6 +184,13 @@ public class EditBean {
     private boolean isVisible(Set<String> tagSet) {
         return tagSet!=null && tagSet.contains(TAG_WEB);
     }
+    
+    public String getSave() {
+        return null;
+    }
+    
+    public void setSave(String save) {
+    }
 
     public void save() {
         LOG.debug("save called...");

@@ -95,13 +95,26 @@ the value between <param></param> will be used directly if no string is found fo
 			<references entitytype="role" />
      </huiproperty>
      
-   	<huiproperty 
-				name="Administrator" 
+   	<huiproperty name="Administrator" 
 				id="configuration_isadmin"
 				inputtype="singleoption">
 				<option id="configuration_isadmin_yes" name="Ja"/>
 				<option id="configuration_isadmin_no" name="Nein"/>
 	</huiproperty>
+    
+    <huiproperty name="Web access" 
+                id="configuration_web"
+                inputtype="singleoption">
+                <option id="configuration_web_yes" name="Ja"/>
+                <option id="configuration_web_no" name="Nein"/>
+    </huiproperty>
+    
+    <huiproperty name="Desktop access" 
+                id="configuration_rcp"
+                inputtype="singleoption">
+                <option id="configuration_rcp_yes" name="Ja"/>
+                <option id="configuration_rcp_no" name="Nein"/>
+    </huiproperty>
      
      <huipropertygroup
 			id="configuration_mailing"

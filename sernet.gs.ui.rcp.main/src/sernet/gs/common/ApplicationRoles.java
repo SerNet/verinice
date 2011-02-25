@@ -32,7 +32,8 @@ package sernet.gs.common;
  */
 public abstract class ApplicationRoles {
     /**
-     * User is authenticated and can access general program functions.
+     * User is authenticated and can access general program functions
+     * and the RCP client
      */
 	public static final String ROLE_USER = "ROLE_USER";
 	
@@ -41,6 +42,11 @@ public abstract class ApplicationRoles {
 	 * other people's passwords etc.
 	 */
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
+	
+	/**
+     * User is authenticated and can access verinice.WEB the web frontend
+     */
+    public static final String ROLE_WEB = "ROLE_WEB";
 	
 	/**
 	 * User was authenticated against a directory service. Therefore he may not change his own password inside verinice as usual

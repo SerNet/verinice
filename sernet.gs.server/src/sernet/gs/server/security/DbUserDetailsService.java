@@ -90,6 +90,7 @@ public class DbUserDetailsService implements UserDetailsService {
 		VeriniceUserDetails user = new VeriniceUserDetails(adminuser, adminpass);
 		user.addRole(ApplicationRoles.ROLE_ADMIN);
 		user.addRole(ApplicationRoles.ROLE_USER);
+        user.addRole(ApplicationRoles.ROLE_WEB);
 		return user;
 	}
 
@@ -98,13 +99,21 @@ public class DbUserDetailsService implements UserDetailsService {
 				.getSimpleValue(Configuration.PROP_USERNAME), entity
 				.getSimpleValue(Configuration.PROP_PASSWORD));
 		
-		// All non-privileged users have the role "ROLE_USER".
-		userDetails.addRole(ApplicationRoles.ROLE_USER);
+		// All users without explicitly set Configuration.PROP_RCP==Configuration.PROP_RCP_NO
+		// get ROLE_USER, user with ROLE_USER can access the RCP client 
+		if (!entity.isSelected(Configuration.PROP_RCP, Configuration.PROP_RCP_NO)) {
+		    userDetails.addRole(ApplicationRoles.ROLE_USER);
+		}
 		
 		// if set in the entity, the user may also have the admin role:
-		if (entity.isSelected(Configuration.PROP_ISADMIN, "configuration_isadmin_yes"))
+		if (entity.isSelected(Configuration.PROP_ISADMIN, Configuration.PROP_ISADMIN_YES)) {
 			userDetails.addRole(ApplicationRoles.ROLE_ADMIN);
+		}
 			
+		// if set in the entity, the user may also have the admin role:
+        if (!entity.isSelected(Configuration.PROP_WEB, Configuration.PROP_WEB_NO)) {
+            userDetails.addRole(ApplicationRoles.ROLE_WEB);
+        }
 		
 		return userDetails;
 	}

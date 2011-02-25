@@ -28,11 +28,13 @@
         	classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
         	classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml 
             
-            <!-- Use this configuration for internal authentication: -->
-        	classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml
+            <!-- Use this configuration for internal authentication: -->        
+        	classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml      
             
             <!-- Use this configuration for LDAP / Active Directory: -->
-        	<!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml -->
+            <!--
+        	classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml
+            -->
         	
             classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
             classpath:sernet/gs/server/spring/veriniceserver-ldap.xml
@@ -53,6 +55,10 @@
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
 		<param-value>.xhtml</param-value>
 	</context-param>
+    <context-param>
+        <param-name>facelets.LIBRARIES</param-name>
+        <param-value>/WEB-INF/verinice-taglib.xml</param-value>
+    </context-param>
     <context-param>
         <param-name>org.richfaces.SKIN</param-name>
         <param-value>ruby</param-value>
@@ -161,6 +167,24 @@
 		</init-param>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
+    
+    
+    <error-page>
+        <error-code>401</error-code>
+        <location>/401.html</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/403.html</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.html</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/500.html</location>
+    </error-page>
 
 	<servlet-mapping>
 		<servlet-name>springDispatcher</servlet-name>

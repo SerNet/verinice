@@ -5,6 +5,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:a4j="http://richfaces.org/a4j"
       xmlns:rich="http://richfaces.org/rich"
+      xmlns:vn="http://www.verinice.org/taglib"
       template="/layout.xhtml">
 	<ui:define name="content">
 		<a4j:queue requestDelay="500" ignoreDupResponce="true"/>
@@ -97,127 +98,8 @@
 		</div>
 		<div id="col2">
 		<div id="col2_content">									    				
-	    	<a4j:outputPanel id="editPanel">
-	    		<a4j:form id="editForm" rendered="#{edit.element!=null}">					    	
-		    		<div class="csc-header csc-header-n1" style="height:40px;">
-	      				<h1><h:outputText value="#{edit.title}"/></h1>
-	      			</div>
-	      			<div style="margin-bottom:4px; height:40px;">				      							      			
-     					<a4j:commandButton id="submit" value="#{msgEdit['save']}" action="#{edit.save}" styleClass="button"/>
-			        </div>
-      				<rich:simpleTogglePanel  switchType="client" label="#{msgEdit['general']}" opened="#{edit.generalOpen}">
-	      				<table>						
-			      			<a4j:repeat id="propertyList" value="#{edit.propertyList}" var="property">
-			      				<tr>
-									<td style="width: 200px;"><h:outputText value="#{property.name}"/></td>
-									<td>
-										<h:inputText value="#{property.value}" rendered="#{property.isLine}"/>
-										<h:inputTextarea value="#{property.value}" rendered="#{property.isText}" style="height:50px;"/>
-										<rich:calendar value="#{property.date}" datePattern="#{property.datePattern}" rendered="#{property.isDate}"/>
-										<rich:comboBox value="#{property.selectedOption}" suggestionValues="#{property.optionList}" enableManualInput="false" rendered="#{property.isSingleSelect}" style="margin-bottom:5px"/>							
-										<rich:comboBox value="#{property.selectedOption}" suggestionValues="#{property.optionList}" enableManualInput="false" rendered="#{property.isNumericSelect and not empty property.optionList}" style="margin-bottom:5px"/>
-										<rich:inputNumberSpinner value="#{property.value}" minValue="#{property.min}" maxValue="#{property.max}" rendered="#{property.isNumericSelect and empty property.optionList}"/>
-									</td>
-									<!-- for debug only -->
-									<!--
-									<td><h:outputText value="#{property.inputName}"/></td>
-									<td><h:outputText value="#{property.value}"/></td>
-									-->
-								</tr>			      				
-			      			</a4j:repeat>
-			      		</table>
-			      	</rich:simpleTogglePanel>
-		      		<a4j:repeat id="groupList" value="#{edit.groupList}" var="group">
-			      		<rich:simpleTogglePanel  switchType="client" label="#{group.name}" opened="#{edit.groupOpen}">
-		      				<table>
-		      					<a4j:repeat value="#{group.propertyList}" var="propertyG">
-		      						<tr>
-										<td style="width: 200px;"><h:outputText value="#{propertyG.name}"/></td>
-										<td>
-											<h:inputText value="#{propertyG.value}" rendered="#{propertyG.isLine}"/>
-											<h:inputTextarea value="#{propertyG.value}" rendered="#{propertyG.isText}" style="height:50px;"/>
-											<rich:calendar value="#{propertyG.date}" datePattern="#{propertyG.datePattern}" rendered="#{propertyG.isDate}"/>
-											<rich:comboBox value="#{propertyG.selectedOption}" suggestionValues="#{propertyG.optionList}" enableManualInput="false" rendered="#{propertyG.isSingleSelect}" style="margin-bottom:5px"/>							
-											<rich:comboBox value="#{propertyG.selectedOption}" suggestionValues="#{propertyG.optionList}" enableManualInput="false" rendered="#{propertyG.isNumericSelect and not empty propertyG.optionList}" style="margin-bottom:5px"/>
-											<rich:inputNumberSpinner value="#{propertyG.value}" minValue="#{propertyG.min}" maxValue="#{propertyG.max}" rendered="#{propertyG.isNumericSelect and empty propertyG.optionList}"/>
-										</td>
-										<!-- for debug only -->
-										<!--
-										<td><h:outputText value="#{property.inputName}"/></td>
-										<td><h:outputText value="#{property.value}"/></td>
-										-->
-									</tr>	
-								</a4j:repeat>
-		      				</table>
-			      		</rich:simpleTogglePanel>
-		      		</a4j:repeat>
-		      		<rich:simpleTogglePanel switchType="client" label="#{msgEdit['links']}" opened="#{edit.linkOpen}">
-		      			<a4j:outputPanel id="linkPanel">	
-			      			<table>
-			      				<tr>
-			      					<td>
-			      						<rich:comboBox value="#{link.selectedLinkType}" suggestionValues="#{link.linkTypeList}" defaultLabel="#{msgEdit['selectType']}" enableManualInput="false" width="200" style="margin-bottom:5px;">
-			      							<a4j:support event="onselect" reRender="linkTarget" action="#{link.loadLinkTargets}"/>
-			      						</rich:comboBox>
-			      					</td>
-			      					<td><rich:comboBox id="linkTarget" value="#{link.selectedLinkTargetName}" suggestionValues="#{link.linkTargetNameList}" defaultLabel="#{msgEdit['selectTarget']}" enableManualInput="false" style="margin-bottom:5px"/></td>					      					
-			      					<td><a4j:commandButton id="addLink" value="#{msgEdit['addLink']}" action="#{link.addLink}" reRender="editPanel"/></td>
-			      				</tr>
-			      			</table>					      						      			
-			      			<rich:extendedDataTable
-		      				 	id="linkTable"
-				                value="#{link.linkList}" 
-				                var="item"
-				                selectionMode="single"
-				                binding="#{link.table}"
-                				selection="#{link.selection}"
-				                height="150px"
-				                width="400px">
-				                <rich:column id="colType"
-		      						sortable="true" 
-		      						sortBy="#{item.type}"
-				                    label="#{msgEdit['linkType']}"
-				                    width="200px">
-				                    <f:facet name="header">
-				                        <h:outputText value="#{msgEdit['linkType']}" />
-				                    </f:facet>
-				                    <h:outputText value="#{item.type}"/>
-				                </rich:column>				                
-				                <rich:column id="colTarget"
-		      						sortable="true" 
-		      						sortBy="#{item.targetName}"
-				                    label="#{msgEdit['linkTarget']}"
-				                    width="200px">
-				                    <f:facet name="header">
-				                        <h:outputText value="#{msgEdit['linkTarget']}" />
-				                    </f:facet>
-				                    <h:outputText value="#{item.targetName}"/>
-				                </rich:column>						                
-	                			<a4j:support action="#{link.selectLink}"
-		                    		event="onselectionchange" 
-		                    		reRender="linkDeletePanel"/>
-					        </rich:extendedDataTable>
-					     </a4j:outputPanel>
-					     <a4j:outputPanel id="linkDeletePanel">
-					        <table style="width: 400px;">
-			      				<tr>
-			      					<td style="text-align: right; vertical-align: middle;width: 330px;">
-			      						<h:outputText value="#{msgEdit['reallyDelete']}" rendered="#{link.deleteVisible}" style="margin-right: 5px;"/>
-			      					</td>
-			      					<td style="text-align: right; vertical-align: middle;width: 20px;">	
-			      						<a4j:commandLink value="#{msgEdit['yes']}" id="deleteConfirmLink" action="#{link.deleteLink}" reRender="linkPanel,linkDeletePanel" rendered="#{link.deleteVisible}"  style="margin-right: 3px; color:#00aa00;"/>
-			      					</td>
-			      					<td style="text-align: left; vertical-align: middle;width: 25px;">	
-			      						<a4j:commandLink value="#{msgEdit['no']}" id="hideDeleteLink" action="#{link.hideDeleteLink}" reRender="linkDeletePanel" rendered="#{link.deleteVisible}"  style="margin-right: 5px; color:#aa0000;"/>
-			      					</td>
-			      					<td style="text-align: right; vertical-align: middle;width: 25px;">
-			      						<a4j:commandLink id="deleteLink" action="#{link.showDeleteLink}" reRender="linkDeletePanel" rendered="#{link.selectedLink!=null}"><h:graphicImage value="/image/delete.png" rendered="#{link.selectedLink!=null}"/></a4j:commandLink>
-			      					</td>				      					
-			      				</tr>
-			      			</table>
-			      		 </a4j:outputPanel>
-		      		</rich:simpleTogglePanel>					    		
-		    	</a4j:form>	
+	    	<a4j:outputPanel id="editPanel" rendered="#{edit.element!=null}">
+	    		<vn:editor />    		
 		    </a4j:outputPanel>						    			    							
 		</div>
 		</div>

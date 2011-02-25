@@ -69,12 +69,17 @@ public class Configuration implements Serializable, ITypedElement {
 	public static final String PROP_NOTIFICATION_MEASURE_ASSIGNMENT = "configuration_mailing_assigned"; //$NON-NLS-1$
 
 	public static final String PROP_ISADMIN = "configuration_isadmin";
-	
 	public static final String PROP_ISADMIN_YES = "configuration_isadmin_yes";
-	
 	public static final String PROP_ISADMIN_NO = "configuration_isadmin_no";
 		
-	
+	public static final String PROP_WEB = "configuration_web";
+    public static final String PROP_WEB_YES = "configuration_web_yes";
+    public static final String PROP_WEB_NO = "configuration_web_no";
+    
+    public static final String PROP_RCP = "configuration_rcp";
+    public static final String PROP_RCP_YES = "configuration_rcp_yes";
+    public static final String PROP_RCP_NO = "configuration_rcp_no";
+    
 	public static final String PROP_AUDITOR_NOTIFICATION_GLOBAL = "configuration_auditmailing_owner"; //$NON-NLS-1$
 	public static final String PROP_AUDITOR_NOTIFICATION_EXPIRATION = "configuration_auditmailing_expiring"; //$NON-NLS-1$
 	public static final String PROP_AUDITOR_NOTIFICATION_EXPIRATION_DAYS = "configuration_auditmailing_expiredays"; //$NON-NLS-1$

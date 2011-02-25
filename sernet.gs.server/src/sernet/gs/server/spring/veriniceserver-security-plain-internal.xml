@@ -114,7 +114,7 @@
 
 		<property name="objectDefinitionSource">
 			<security:filter-invocation-definition-source>
-				<security:intercept-url pattern="/todo/**" access="ROLE_USER" />
+				<security:intercept-url pattern="/todo/**" access="ROLE_WEB" />
 				<security:intercept-url pattern="/service/**" access="ROLE_USER" />
 				<security:intercept-url pattern="/sync/**" access="ROLE_USER" />
 			</security:filter-invocation-definition-source>
