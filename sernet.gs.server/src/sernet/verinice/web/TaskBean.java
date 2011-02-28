@@ -41,6 +41,7 @@ import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.samt.SamtTopic;
 /**
  * JSF managed bean for view and edit Tasks, template: todo/task.xhtml
  * 
@@ -110,6 +111,7 @@ public class TaskBean {
                 getEditBean().setUuid(getSelectedTask().getUuid());
                 getEditBean().setTitle(getSelectedTask().getControlTitle());
                 getEditBean().setTypeId(getSelectedTask().getType());
+                getEditBean().addNoLabelType(SamtTopic.PROP_DESC);
                 setOutcomeId(null);
                 getEditBean().init();
                 

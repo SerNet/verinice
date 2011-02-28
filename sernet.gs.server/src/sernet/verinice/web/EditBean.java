@@ -22,6 +22,7 @@ package sernet.verinice.web;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -85,6 +86,8 @@ public class EditBean {
     
     private List<sernet.verinice.web.PropertyGroup> groupList;
     
+    private List<String> noLabelTypeList = new LinkedList<String>();
+    
     private Set<String> roles = null;
     
     private boolean generalOpen = true;
@@ -123,7 +126,11 @@ public class EditBean {
                             if(isVisible(huiType)) {
                                 String id = huiType.getId();
                                 String value = entity.getValue(id);
-                                listOfGroup.add(new HuiProperty<String, String>(huiType, id, value));
+                                HuiProperty<String, String> prop = new HuiProperty<String, String>(huiType, id, value);
+                                if(getNoLabelTypeList().contains(id)) {
+                                    prop.setShowLabel(false);
+                                }
+                                listOfGroup.add(prop);
                             }
                         }
                         group.setPropertyList(listOfGroup);
@@ -136,7 +143,11 @@ public class EditBean {
                     if(isVisible(propertyType)) {
                         String id = propertyType.getId();
                         String value = entity.getValue(id);
-                        propertyList.add(new HuiProperty<String, String>(propertyType, id, value));
+                        HuiProperty<String, String> prop = new HuiProperty<String, String>(propertyType, id, value);
+                        if(getNoLabelTypeList().contains(id)) {
+                            prop.setShowLabel(false);
+                        }
+                        propertyList.add(prop);
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("prop: " + id + " (" + propertyType.getInputName() + ") - " + value);
                         }
@@ -240,6 +251,7 @@ public class EditBean {
         title = null;
         element = null;
         getLinkBean().clear();
+        noLabelTypeList.clear();
     }
     
     public boolean writeEnabled() {
@@ -301,6 +313,10 @@ public class EditBean {
         return false;
     }
     
+    public void addNoLabelType(String id) {
+        noLabelTypeList.add(id);
+    }
+    
     public LinkBean getLinkBean() {
         return linkBean;
     }
@@ -348,7 +364,33 @@ public class EditBean {
     public void setTitle(String title) {
         this.title = title;
     }
-
+    
+    public List<HuiProperty<String, String>> getLabelPropertyList() {
+        List<HuiProperty<String, String>> labelList = Collections.emptyList();
+        List<HuiProperty<String, String>> list = getPropertyList();
+        if(list!=null) {
+            labelList = new LinkedList<HuiProperty<String,String>>();
+            for (HuiProperty<String, String> property : getPropertyList()) {
+                if(property.isShowLabel()) {
+                    labelList.add(property);
+                }
+            }  
+        }
+        return labelList;
+    }
+    public List<HuiProperty<String, String>> getNoLabelPropertyList() {
+        List<HuiProperty<String, String>> noLabelList = Collections.emptyList();
+        List<HuiProperty<String, String>> list = getPropertyList();
+        if(list!=null) {
+            noLabelList = new LinkedList<HuiProperty<String,String>>();
+            for (HuiProperty<String, String> property : getPropertyList()) {
+                if(!property.isShowLabel()) {
+                    noLabelList.add(property);
+                }
+            }  
+        }
+        return noLabelList;
+    }
     public List<HuiProperty<String, String>> getPropertyList() {
         if(propertyList==null) {
             propertyList = Collections.emptyList();
@@ -366,6 +408,10 @@ public class EditBean {
 
     public void setGroupList(List<sernet.verinice.web.PropertyGroup> groupList) {
         this.groupList = groupList;
+    }
+
+    public List<String> getNoLabelTypeList() {
+        return noLabelTypeList;
     }
 
     public boolean isGeneralOpen() {

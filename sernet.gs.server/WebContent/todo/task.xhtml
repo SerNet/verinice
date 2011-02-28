@@ -88,7 +88,7 @@
 						    	<f:convertDateTime dateStyle="short" type="date" timeZone="#{task.timeZone}" />
 						    </h:outputText>
 		                </rich:column>
-		                <a4j:support reRender="editPanel,completePanel,tablePanel"
+		                <a4j:support reRender="editorPanel,completePanel,tablePanel"
 			                    action="#{task.openTask}"
 			                    event="onselectionchange" />					 
 		            </rich:extendedDataTable>				
@@ -98,9 +98,7 @@
 		</div>
 		<div id="col2">
 		<div id="col2_content">									    				
-	    	<a4j:outputPanel id="editPanel" rendered="#{edit.element!=null}">
-	    		<vn:editor />    		
-		    </a4j:outputPanel>						    			    							
+	    	<vn:editor />    		 				    			    							
 		</div>
 		</div>
 		<!-- #main - Ende -->

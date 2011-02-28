@@ -21,8 +21,10 @@ package sernet.verinice.web;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import sernet.hui.common.connect.Entity;
@@ -57,6 +59,32 @@ public class PropertyGroup implements Serializable {
     }
     public void addPropertyType(HuiProperty<String, String> prop) {
         propertyList.add(prop);
+    }
+    public List<HuiProperty<String, String>> getLabelPropertyList() {
+        List<HuiProperty<String, String>> labelList = Collections.emptyList();
+        List<HuiProperty<String, String>> list = getPropertyList();
+        if(list!=null) {
+            labelList = new LinkedList<HuiProperty<String,String>>();
+            for (HuiProperty<String, String> property : getPropertyList()) {
+                if(property.isShowLabel()) {
+                    labelList.add(property);
+                }
+            }  
+        }
+        return labelList;
+    }
+    public List<HuiProperty<String, String>> getNoLabelPropertyList() {
+        List<HuiProperty<String, String>> noLabelList = Collections.emptyList();
+        List<HuiProperty<String, String>> list = getPropertyList();
+        if(list!=null) {
+            noLabelList = new LinkedList<HuiProperty<String,String>>();
+            for (HuiProperty<String, String> property : getPropertyList()) {
+                if(!property.isShowLabel()) {
+                    noLabelList.add(property);
+                }
+            }  
+        }
+        return noLabelList;
     }
     public List<HuiProperty<String, String>> getPropertyList() {
         return propertyList;

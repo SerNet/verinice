@@ -4883,14 +4883,20 @@ the value between <param></param> will be used directly if no string is found fo
                 reversename="audits" name="audited by" tooltip="" />
                  -->
         
+          <huipropertygroup id="samt_topic_groupdesc" name="Description" tags="Web">
+              <huiproperty 
+                id="samt_topic_desc"
+                inputtype="text"
+                tags="Web"
+                editable="false"
+                visible="false"/>
+          </huipropertygroup>
+               
           <huiproperty 
             id="samt_topic_name" 
             editable="false" 
             />
-          <huiproperty 
-            id="samt_topic_desc"
-            inputtype="text"
-            visible="false"/>
+          
           <huiproperty 
             id="samt_topic_abbr" 
              visible="false"/>
@@ -4900,7 +4906,7 @@ the value between <param></param> will be used directly if no string is found fo
           
           <!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->  
           <huiproperty
-	           id="samt_topic_audit_findings" name="Findings" inputtype="text" tags="VDA_ISA_Audit,Web"
+	           id="samt_topic_audit_findings" name="Findings" inputtype="text" tags="VDA_ISA_Audit"
 	           textrows="12"/>
             
           <huiproperty 
@@ -4933,17 +4939,17 @@ the value between <param></param> will be used directly if no string is found fo
             
           <huiproperty 
             id="samt_topic_externalnote" 
-            tags="VDA-ISA,Web"
+            tags="VDA-ISA"
             inputtype="text"/>
           <huiproperty 
             id="samt_topic_internalnote" 
             inputtype="text"
-            tags="VDA-ISA,Web"
+            tags="VDA-ISA"
             report="false" />
             
 			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->            
             <huiproperty
-	           id="samt_topic_audit_ra" name="Risk Assessment" tags="VDA_ISA_Audit,Web"
+	           id="samt_topic_audit_ra" name="Risk Assessment" tags="VDA_ISA_Audit"
                  inputtype="numericoption" 
                min="-1" 
                max="2" 
@@ -4957,7 +4963,7 @@ the value between <param></param> will be used directly if no string is found fo
 
             <!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
             <huiproperty
-	           id="samt_topic_audit_devi" name="Deviation" tags="VDA_ISA_Audit,Web"
+	           id="samt_topic_audit_devi" name="Deviation" tags="VDA_ISA_Audit"
                inputtype="numericoption" 
                min="-1" 
                max="1" 
@@ -4970,7 +4976,7 @@ the value between <param></param> will be used directly if no string is found fo
             
 			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
             <huiproperty
-	           id="samt_topic_audit_compluntil" name="Complete until" inputtype="date" tags="VDA_ISA_Audit,Web">
+	           id="samt_topic_audit_compluntil" name="Complete until" inputtype="date" tags="VDA_ISA_Audit">
                 <defaultRule class="Today">
                     <param id="samt_topic_audit_compluntil_changeField">MONTH</param>
                     <param id="samt_topic_audit_compluntil_timeDifference">2</param>

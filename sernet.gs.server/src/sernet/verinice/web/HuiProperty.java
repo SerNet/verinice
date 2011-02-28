@@ -52,6 +52,8 @@ public class HuiProperty<K,V> implements Serializable{
     
     private PropertyType type;
     
+    private boolean showLabel = true;
+    
     public HuiProperty(PropertyType type, K key, V value) {
         super();
         this.type = type;
@@ -73,6 +75,14 @@ public class HuiProperty<K,V> implements Serializable{
     
     public boolean getIsText() {
         return type.isText();
+    }
+    
+    public boolean isEditable() {
+        return type.isEditable();
+    }
+    
+    public boolean getIsEditable() {
+        return isEditable();
     }
     
     public boolean getIsSingleSelect() {
@@ -208,6 +218,18 @@ public class HuiProperty<K,V> implements Serializable{
         this.type = type;
     }
     
+    public boolean isShowLabel() {
+        return showLabel;
+    }
+    
+    public boolean getShowLabel() {
+        return isShowLabel();
+    }
+
+    public void setShowLabel(boolean showLabel) {
+        this.showLabel = showLabel;
+    }
+
     public String getDatePattern() {
         return dateFormat.toPattern();
     }

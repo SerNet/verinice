@@ -34,3 +34,7 @@
 	padding-bottom: 1px;
 	margin-right: 2px;
 }
+
+span.roText p {
+	padding: 3px;
+}
