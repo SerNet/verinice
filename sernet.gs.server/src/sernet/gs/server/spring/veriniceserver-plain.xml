@@ -30,6 +30,16 @@
 		<property name="port" value="${veriniceserver.notification.smtp.port}"/>
 </bean>
 
+<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+      <property name="velocityProperties">
+         <value>
+            resource.loader=class
+            class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+         </value>
+      </property>
+   </bean>
+
+
 <bean name="pniCommand" class="sernet.gs.server.commands.PrepareNotificationInfo"/>
 
 <bean name="notificationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
@@ -60,6 +70,7 @@
         <list>
               <ref bean="cronTrigger" />
               <ref bean="processJobTrigger" />
+              <ref bean="taskNotificationTrigger" />  
             <!--  for debugging purposes, fires the mail scheduler after 2 seconds and then every 60
 			<bean class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 				<property name="jobDetail" ref="notificationJob" />

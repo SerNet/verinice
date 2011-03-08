@@ -132,7 +132,7 @@ public class TaskService implements ITaskService{
             paramList.add(parameter.getUsername());
             
             if(parameter.getSince()!=null) {
-                hql.append("and task.createTime>? ");
+                hql.append("and task.createTime>=? ");
                 paramList.add(parameter.getSince());
             }
             
@@ -228,9 +228,11 @@ public class TaskService implements ITaskService{
         String typeId = (String) getExecutionService().getVariable(executionId,IExecutionProcess.VAR_TYPE_ID);      
         
         CnATreeElement element = getElementDao().findByUuid(uuidControl, RetrieveInfo.getPropertyInstance());
-        taskInformation.setControlTitle(element.getTitle());
-        taskInformation.setSortValue(createSortableString(taskInformation.getControlTitle()));     
-        
+        if(element!=null) {
+            taskInformation.setControlTitle(element.getTitle());
+            taskInformation.setSortValue(createSortableString(taskInformation.getControlTitle()));
+        }
+              
         taskInformation.setUuid(uuidControl); 
         taskInformation.setType(typeId);
         taskInformation.setDueDate(task.getDuedate());      

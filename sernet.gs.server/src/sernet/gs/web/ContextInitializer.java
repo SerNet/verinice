@@ -25,10 +25,12 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.server.ServerInitializer;
+import sernet.hui.common.VeriniceContext;
 
 public class ContextInitializer implements Filter {
 
@@ -45,10 +47,32 @@ public class ContextInitializer implements Filter {
 		if (log.isDebugEnabled()) {
 			log.debug("doFilter called...");
 		}
+		if(VeriniceContext.getServerUrl()==null) {
+		    VeriniceContext.setServerUrl(getServerUrl((HttpServletRequest) request));
+		}
+		
 		ServerInitializer.inheritVeriniceContextState();
 		// proceed along the chain
 	    chain.doFilter(request, response);
 	}
+
+    private String getServerUrl(HttpServletRequest request) {
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int portNumber = request.getServerPort();
+        String contextPath = request.getContextPath();
+        StringBuilder sb = new StringBuilder();
+        sb.append(scheme).append("://").append(serverName);
+        if(portNumber!=80) {
+            sb.append(":").append(portNumber);
+        }      
+        if(contextPath!=null && !contextPath.isEmpty()) {
+            sb.append(contextPath).append("/");
+        } else {
+            sb.append("/");
+        }
+        return sb.toString();
+    }
 
 	public void init(FilterConfig arg0) throws ServletException {
 		if (log.isDebugEnabled()) {

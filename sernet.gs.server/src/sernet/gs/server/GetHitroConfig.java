@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +53,16 @@ public class GetHitroConfig extends HttpServlet {
     public GetHitroConfig() {
         super();
         // TODO Auto-generated constructor stub
+    }
+    
+    /* (non-Javadoc)
+     * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
+     */
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        // TODO Auto-generated method stub
+        super.init(config);
+        ServletContext context = config.getServletContext();
     }
 
 	/**

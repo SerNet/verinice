@@ -36,6 +36,7 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_TAG = "person-iso_tag"; //$NON-NLS-1$
 	public static final String PROP_TELEFON = "person-iso_telefon"; //$NON-NLS-1$
 	public static final String PROP_EMAIL = "person-iso_email"; //$NON-NLS-1$
+	public static final String PROP_ANREDE = "person-iso_anrede"; //$NON-NLS-1$
 	
 	/**
 	 * Creates an empty asset
@@ -120,5 +121,9 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 	public void setEmail(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_EMAIL), value);
 	}
+	
+	public String getAnrede() {
+        return getEntity().getSimpleValue(PROP_ANREDE);
+    }
 	
 }

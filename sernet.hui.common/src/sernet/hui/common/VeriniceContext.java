@@ -17,8 +17,12 @@
  ******************************************************************************/
 package sernet.hui.common;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
 
 import org.apache.log4j.Logger;
 
@@ -91,6 +95,8 @@ public class VeriniceContext {
 	public static String TASK_SERVICE = "taskService";
 
     public static String PROCESS_SERVICE = "processService";
+    
+    private static String SERVER_URL = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();
 
@@ -150,6 +156,11 @@ public class VeriniceContext {
 		}
 		
 		return o;
+	}
+	
+	public static boolean exists(String id) {
+	    Map<String, Object> map = instance().threadLocal.get();
+        return map.get(id)!=null;
 	}
 
 	/**
@@ -225,6 +236,14 @@ public class VeriniceContext {
 
 		instance().threadLocal.set(s.getMap());
 	}
+	
+	public static String getServerUrl() {
+	    return SERVER_URL;
+	}
+	
+	public static void setServerUrl(String serverUrl) {
+        SERVER_URL = serverUrl;
+    }
 
 	/** Abstraction of the state of a {@link VeriniceContext}.
 	 * 
