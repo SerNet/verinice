@@ -2303,7 +2303,7 @@ Library.
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-         
+
    <plugin
          id="com.springsource.org.apache.commons.logging"
          download-size="0"
@@ -2316,6 +2316,13 @@ Library.
          download-size="0"
          install-size="0"
          version="2.4.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.apache.velocity"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
