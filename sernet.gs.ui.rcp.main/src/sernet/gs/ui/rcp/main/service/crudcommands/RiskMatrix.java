@@ -17,26 +17,54 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
+import java.io.Serializable;
+
 /**
+ * Matrix to save how often a particular impact / probabiliuty combination was used during risk analysis.
+ * 
+ * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$
  *
  */
-public class RiskMatrix {
+public class RiskMatrix implements Serializable {
         Integer[][] map; 
         
         /**
          * 
          */
-        public RiskMatrix(int maxProb, int maxRisk) {
-            map = new Integer[maxProb+1][maxRisk+1];
+        public RiskMatrix(int maxProb, int maxImpact) {
+            map = new Integer[maxProb+1][maxImpact+1];
+            init(map);
         }
         
-        void increaseCount(Integer probability, Integer risk) {
-            if (risk==null)
+        /**
+         * @param map2
+         */
+        private void init(Integer[][] map2) {
+            for (int i=0; i < map.length; i++) {
+                for (int j=0; j < map[i].length; j++ ) {
+                    map[i][j] = 0;
+                }
+            }
+        }
+
+        public void increaseCount(Integer probability, Integer impact) {
+            if (impact==null || probability == null
+                    || probability < 0 || probability > map.length-1
+                    || impact < 0 || impact > map[0].length-1) {
                 return;
-            map[probability][risk]++;
+            }
+            map[probability][impact]++;
+        }
+        
+        public String[] getColumnTitles() {
+            String[] titles = new String[map[0].length];
+            for (int i=0; i < map[0].length; i++) {
+                titles[i] = "IMPACT_" + i;
+            }
+            return titles;
         }
         
 }

@@ -36,10 +36,12 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportAllRisksForScope;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementList;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithLinks;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportProcessesWithRisk;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRiskAnalysis;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
@@ -91,28 +93,61 @@ public class TestAction extends Action {
             
             StringBuilder allsb = new StringBuilder();
             
-            LoadReportElements c2 = new LoadReportElements("riskanalysis", this.dbID);
-            c2 = ServiceFactory.lookupCommandService().executeCommand(c2);
-            List<CnATreeElement> elements = c2.getElements();
-
-            for (CnATreeElement riskana : elements) {
-                LoadReportRiskAnalysis cmd = new LoadReportRiskAnalysis(riskana.getDbId());
-                cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
-                cmd.getAllGefaehrdungsUmsetzungen();
-                cmd.getAssociatedGefaehrdungen();
-                List<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen = cmd.getNotOKGefaehrdungsUmsetzungen();
-                cmd.getZielObjekt();
-                
-                for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : notOKGefaehrdungsUmsetzungen) {
-                    LoadReportElementWithChildren cmd2 = new LoadReportElementWithChildren("mnums", gefaehrdungsUmsetzung.getDbId());
-                    cmd2 = ServiceFactory.lookupCommandService().executeCommand(cmd2);
-                    ArrayList<CnATreeElement> result2 = cmd2.getResult();
-                    result2=null;
-                    
-                }
-                
-            }
+//            LoadReportProcessesWithRisk cmd = new LoadReportProcessesWithRisk(152);
+//            cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
+//            List<List<String>> result2 = cmd.getResult();
+//            
+//            for (List<String> row : result2) {
+//                for (String col : row) {
+//                    allsb.append(col + ":");
+//                }
+//                allsb.append("\n");
+//            }
             
+            
+            
+            
+            LoadReportAllRisksForScope command = new LoadReportAllRisksForScope(152);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            List<List<String>> result2 = command.getResult();
+            
+            for (List<String> row : result2) {
+              for (String col : row) {
+                  allsb.append(col + ":");
+              }
+              allsb.append("\n");
+          }
+            
+//            for (Integer[] row : countC) {
+//                for (Integer col : row) {
+//                    allsb.append(col + ":");
+//                }
+//                allsb.append("\n");
+//            }
+            
+            
+//            LoadReportElements c2 = new LoadReportElements("riskanalysis", this.dbID);
+//            c2 = ServiceFactory.lookupCommandService().executeCommand(c2);
+//            List<CnATreeElement> elements = c2.getElements();
+
+//            for (CnATreeElement riskana : elements) {
+//                LoadReportRiskAnalysis cmd = new LoadReportRiskAnalysis(riskana.getDbId());
+//                cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
+//                cmd.getAllGefaehrdungsUmsetzungen();
+//                cmd.getAssociatedGefaehrdungen();
+//                List<GefaehrdungsUmsetzung> notOKGefaehrdungsUmsetzungen = cmd.getNotOKGefaehrdungsUmsetzungen();
+//                cmd.getZielObjekt();
+//                
+//                for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : notOKGefaehrdungsUmsetzungen) {
+//                    LoadReportElementWithChildren cmd2 = new LoadReportElementWithChildren("mnums", gefaehrdungsUmsetzung.getDbId());
+//                    cmd2 = ServiceFactory.lookupCommandService().executeCommand(cmd2);
+//                    ArrayList<CnATreeElement> result2 = cmd2.getResult();
+//                    result2=null;
+//                    
+//                }
+//                
+//            }
+//            
             
 //            LoadReportElementList cmd = new LoadReportElementList(typeID, dbID);
 //            cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);

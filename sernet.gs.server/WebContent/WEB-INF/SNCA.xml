@@ -95,13 +95,14 @@ the value between <param></param> will be used directly if no string is found fo
 			<references entitytype="role" />
      </huiproperty>
      
-   	<huiproperty name="Administrator" 
+   	<huiproperty 
+				name="Administrator" 
 				id="configuration_isadmin"
 				inputtype="singleoption">
 				<option id="configuration_isadmin_yes" name="Ja"/>
 				<option id="configuration_isadmin_no" name="Nein"/>
 	</huiproperty>
-    
+     
     <huiproperty name="Web access" 
                 id="configuration_web"
                 inputtype="singleoption">
@@ -3242,6 +3243,147 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Intangible"
 				id="asset_type_intangible" />
 		</huiproperty>
+
+    <!-- TODO externalize strings -->
+		<huipropertygroup id="asset_bcm_group" name="Business Continuity" tags="BCM" >
+            <huiproperty id="asset_bcm_mtpd" name="MTPD (h)" tags="BCM" ></huiproperty>
+            <huiproperty id="asset_bcm_rpo" name="RPO (h)" tags="BCM" ></huiproperty>
+            <huiproperty id="asset_bcm_rto" name="RTO (h)" tags="BCM" ></huiproperty>
+          
+            <huiproperty id="asset_bcm_time1" name="Impact after 8h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_time1_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_time1_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_time1_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_time1_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="asset_bcm_tim24" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_tim24_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_tim24_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_tim24_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_tim24_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="asset_bcm_time48" name="Impact after 48h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_time48_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_time48_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_time48_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_time48_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="asset_bcm_time96" name="Impact after 96h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_time96_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_time96_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_time96_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_time96_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="asset_bcm_time168" name="Impact after 168h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_time168_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_time168_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_time168_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_time168_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="asset_bcm_time720" name="Impact after 720h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_time720_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_time720_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_time720_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_time720_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+             <huiproperty id="asset_bcm_timegt720" name="Impact after >720h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_timegt720_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_timegt720_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_timegt720_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_timegt720_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+        </huipropertygroup>
 		
 		<huipropertygroup id="asset_value_group" name="Business Impact" tags="Risk" >
 		<huiproperty 
@@ -4698,6 +4840,147 @@ the value between <param></param> will be used directly if no string is found fo
             tooltip="List of tags, separated by comma or space"/>
             
             
+       <!-- TODO externalize strings -->
+        <huipropertygroup id="process_bcm_group" name="Business Continuity" tags="BCM" >
+            <huiproperty id="process_bcm_mtpd" name="MTPD (h)" tags="BCM" ></huiproperty>
+            <huiproperty id="process_bcm_rpo" name="RPO (h)" tags="BCM" ></huiproperty>
+            <huiproperty id="process_bcm_rto" name="RTO (h)" tags="BCM" ></huiproperty>
+          
+            <huiproperty id="process_bcm_time1" name="Impact after 8h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_time1_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_time1_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_time1_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_time1_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="process_bcm_tim24" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_tim24_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_tim24_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_tim24_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_tim24_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="process_bcm_time48" name="Impact after 48h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_time48_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_time48_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_time48_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_time48_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="process_bcm_time96" name="Impact after 96h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_time96_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_time96_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_time96_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_time96_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="process_bcm_time168" name="Impact after 168h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_time168_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_time168_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_time168_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_time168_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="process_bcm_time720" name="Impact after 720h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_time720_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_time720_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_time720_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_time720_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+             <huiproperty id="process_bcm_timegt720" name="Impact after >720h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_timegt720_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_timegt720_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_timegt720_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_timegt720_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+        </huipropertygroup>
+            
      <huipropertygroup id="process_value_group" name="Business Impact">
 		<huiproperty
 					id="process_value_method_confidentiality"
@@ -4884,7 +5167,7 @@ the value between <param></param> will be used directly if no string is found fo
                  -->
         
           <huipropertygroup id="samt_topic_groupdesc" name="Description" tags="Web">
-              <huiproperty 
+          <huiproperty 
                 id="samt_topic_desc"
                 inputtype="text"
                 tags="Web"
@@ -4896,7 +5179,6 @@ the value between <param></param> will be used directly if no string is found fo
             id="samt_topic_name" 
             editable="false" 
             />
-          
           <huiproperty 
             id="samt_topic_abbr" 
              visible="false"/>

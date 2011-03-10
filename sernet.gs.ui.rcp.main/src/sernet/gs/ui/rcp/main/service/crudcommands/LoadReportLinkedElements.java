@@ -3,28 +3,18 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.Client;
-import sernet.verinice.model.bsi.Gebaeude;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.NetzKomponente;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.bsi.Raum;
-import sernet.verinice.model.bsi.Server;
-import sernet.verinice.model.bsi.SonstIT;
-import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
+import sernet.verinice.model.common.TransactionAbortedException;
 
 /**
  * Load all elements of given type linked to the given root element.
@@ -32,15 +22,29 @@ import sernet.verinice.model.common.HydratorUtil;
 public class LoadReportLinkedElements extends GenericCommand {
 
 
+    // get these types of elements:
 	private String typeId;
+	
+	// starting element:
     private Integer rootElement;
+    
+    // the result:
     private List<CnATreeElement> elements;
     
-    public LoadReportLinkedElements(String typeId, Integer rootElement) {
+    // recurse down all levels of links to emelents of given type?
+    private boolean goDeep = false;
+    
+    
+    public LoadReportLinkedElements(String typeId, Integer rootElement, boolean goDeep) {
 	    this.typeId = typeId;
 	    this.rootElement = rootElement;
+	    this.goDeep= goDeep;
 	}
-	
+
+    public LoadReportLinkedElements(String typeId, Integer rootElement) {
+        this(typeId, rootElement, false);
+    }
+        
 	public void execute() {
 	    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
 	    try {
@@ -54,7 +58,10 @@ public class LoadReportLinkedElements extends GenericCommand {
         }
 	    CnATreeElement root = command.getElements().get(0);
 	    
-	    elements = getLinkedElements(root);
+	    CascadingTransaction ta = new CascadingTransaction();
+	    ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>();
+	    
+	    elements = getLinkedElements(ta, root, result);
 	    
 	    IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 	    RetrieveInfo ri = new RetrieveInfo();
@@ -73,15 +80,35 @@ public class LoadReportLinkedElements extends GenericCommand {
      * @param typeId2
      * @return
      */
-    private List<CnATreeElement> getLinkedElements(CnATreeElement root) {
-        ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>();
+	private List<CnATreeElement> getLinkedElements(CascadingTransaction ta, CnATreeElement root, ArrayList<CnATreeElement> result) {
+        // FIXME externalize strings in SNCA.xml!
         for (CnALink link : root.getLinksDown()) {
-            if (link.getDependency().getTypeId().equals(this.typeId))
-                result.add(link.getDependency());
+            if (link.getDependency().getTypeId().equals(this.typeId)) {
+                if (!ta.hasBeenVisited(link.getDependency())) {
+                    try {
+                        ta.enter(link.getDependency());
+                    } catch (TransactionAbortedException e) {
+                        return result;
+                    }
+                    result.add(link.getDependency());
+                    if (goDeep)
+                        getLinkedElements(ta, link.getDependency(), result);
+                }
+            }
         }
         for (CnALink link : root.getLinksUp()) {
-            if (link.getDependant().getTypeId().equals(this.typeId))
-                result.add(link.getDependant());
+            if (link.getDependant().getTypeId().equals(this.typeId)) {
+                if (!ta.hasBeenVisited(link.getDependant())) {
+                    try {
+                        ta.enter(link.getDependant());
+                    } catch (TransactionAbortedException e) {
+                        return result;
+                    }
+                    result.add(link.getDependant());
+                    if (goDeep)
+                        getLinkedElements(ta, link.getDependant(), result);
+                }
+            }
         }
         return result;
     }

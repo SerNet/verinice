@@ -39,9 +39,7 @@ import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.Process;
 
 /**
- * Load elements for reports. All properties  will be initialized to avoid lazy initialization exceptions.
- * Result list will be sorted using <code>NumericStringComparator</code>. 
- * This correctly sorts "M 1.101" *after* "M 1.2" which cannot be accomplished by the comparators normally available in BIRT.
+ * Load Process name, CIA, calculated total risk.
  * 
  * 
  * @author koderman@sernet.de
@@ -49,26 +47,35 @@ import sernet.verinice.model.iso27k.Process;
  * $LastChangedBy$
  *
  */
-public class LoadReportElements extends GenericCommand {
+public class LoadReportProcessesWithRisk extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(LoadReportElements.class);
+    private transient Logger log = Logger.getLogger(LoadReportProcessesWithRisk.class);
     
+   private List<List<String>> result = new ArrayList<List<String>>();
    
+   public static final String[] COLUMNS = {
+     "dbid",
+     "abbrev",
+     "name",
+     "C",  
+     "I",  
+     "A",  
+     "risk",  
+   };
     
     public Logger getLog() {
         if(log==null) {
-            log = Logger.getLogger(LoadReportElements.class);
+            log = Logger.getLogger(LoadReportProcessesWithRisk.class);
         }
         return log;
     }
 
-	private String typeId;
+	private String typeId = Process.TYPE_ID;
     private Integer rootElement;
     private ArrayList<CnATreeElement> elements;
 
     
-    public LoadReportElements(String typeId, Integer rootElement) {
-	    this.typeId = typeId;
+    public LoadReportProcessesWithRisk( Integer rootElement) {
 	    this.rootElement = rootElement;
 	}
 
@@ -109,7 +116,11 @@ public class LoadReportElements extends GenericCommand {
             }
         });
 
-	    
+       try {
+        calculateRisk();
+    } catch (CommandException e) {
+        throw new RuntimeCommandException(e);
+    }
 	    
 //	    IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 //	    RetrieveInfo ri = new RetrieveInfo();
@@ -125,14 +136,52 @@ public class LoadReportElements extends GenericCommand {
 
 	
 
+   
+
+    /**
+     * @param elements2
+     * @throws CommandException 
+     */
+    private void calculateRisk() throws CommandException {
+        for (CnATreeElement cnATreeElement : elements) {
+            if (cnATreeElement.getTypeId().equals(Process.TYPE_ID)) {
+                LoadReportLinkedElements loadAssets = new LoadReportLinkedElements(Asset.TYPE_ID, cnATreeElement.getDbId(), true);
+                loadAssets = getCommandService().executeCommand(loadAssets);
+                List<CnATreeElement> assets = loadAssets.getElements();
+                
+                int totalRisk=0;
+                for (CnATreeElement asset : assets) {
+                    AssetValueAdapter assetValueAdapter = new AssetValueAdapter(asset);
+                    totalRisk += assetValueAdapter.getIntegritaet();
+                    totalRisk += assetValueAdapter.getVerfuegbarkeit();
+                    totalRisk += assetValueAdapter.getVertraulichkeit();
+                }
+                
+                ArrayList<String> row = new ArrayList<String>();
+                AssetValueAdapter process = new AssetValueAdapter(cnATreeElement);
+                row.add(Integer.toString(cnATreeElement.getDbId()));
+                row.add(cnATreeElement.getEntity().getSimpleValue(Process.PROP_ABBR));
+                row.add(cnATreeElement.getEntity().getSimpleValue(Process.PROP_NAME));
+                row.add(Integer.toString(process.getVertraulichkeit()));
+                row.add(Integer.toString(process.getIntegritaet()));
+                row.add(Integer.toString(process.getVerfuegbarkeit()));
+                row.add(Integer.toString(totalRisk));
+                result.add(row);
+            }
+        }
+    }
+
+    
   
 
     /**
-     * @return the elements
+     * @return the result
      */
-    public List<CnATreeElement> getElements() {
-        return elements;
+    public List<List<String>> getResult() {
+        return result;
     }
+
+
 
     public void getElements(String typeFilter, List<CnATreeElement> items, CnATreeElement parent) {
         for (CnATreeElement child : parent.getChildren()) {
