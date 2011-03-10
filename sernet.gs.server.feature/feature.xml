@@ -380,13 +380,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.apache.commons.collections"
-         download-size="0"
-         install-size="0"
-         version="3.2.0.v200803061811"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.commons.httpclient"
          download-size="0"
          install-size="0"
@@ -693,6 +686,13 @@ Library.
 
    <plugin
          id="com.springsource.org.apache.velocity"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.apache.commons.collections"
          download-size="0"
          install-size="0"
          version="0.0.0"
