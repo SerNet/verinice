@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
  <description>JSP/Facelet tag library for verinice</description>
  <display-name>verinice components</display-name>
  <tlib-version>1.1</tlib-version>
@@ -10,13 +10,13 @@
   <description>Editor for verinice elements</description>
   <name>editor</name>
   <tag-class/>
-  <body-content/>
+  <body-content>empty</body-content>
  </tag>
  <tag>
   <description>Property list for element editor</description>
   <name>properties</name>
-  <tag-class/>
-  <body-content/>
+  <tag-class />
+  <body-content>empty</body-content>
   <attribute>
    <description>sernet.verinice.web.HuiProperty List</description>
    <name>list</name>
