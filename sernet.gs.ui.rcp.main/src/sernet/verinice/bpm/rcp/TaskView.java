@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
-import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -28,9 +27,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -39,24 +35,22 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.bpm.TaskLoader;
 import sernet.verinice.interfaces.ICommandService;
@@ -121,7 +115,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView";
     
-    private static final DateFormat DATE_FORMAT = DateFormat.getDateInstance();
+    private static final String[] ALLOWED_ROLES = new String[] { ApplicationRoles.ROLE_ADMIN };
     
     private TreeViewer treeViewer;
     
@@ -175,12 +169,9 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     
     private void createTreeViewer(Composite parent) {
         this.treeViewer = new TreeViewer(parent);
-
         Tree tree = this.treeViewer.getTree();
-
         final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         this.treeViewer.getControl().setLayoutData(gridData);
-
         this.treeViewer.setUseHashlookup(true);
 
         /*** Tree table specific code starts ***/
@@ -195,11 +186,15 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         treeColumn.setText("Task");
         
         treeColumn = new TreeColumn(tree, SWT.LEFT);
+        treeColumn.setText("User");
+        
+        treeColumn = new TreeColumn(tree, SWT.LEFT);
         treeColumn.setText("Date");
         
         TableLayout layout = new TableLayout();
-        layout.addColumnData(new ColumnWeightData(60,true));
+        layout.addColumnData(new ColumnWeightData(50,true));
         layout.addColumnData(new ColumnWeightData(25,false));
+        layout.addColumnData(new ColumnWeightData(10,false));
         layout.addColumnData(new ColumnWeightData(15,false));
 
         tree.setLayout(layout);
@@ -235,8 +230,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                     }
                 }
             }
-        };
-        
+        };       
         myTasksAction = new Action("Only my tasks", SWT.TOGGLE) {
             public void run() {
                 onlyMyTasks = !onlyMyTasks;
@@ -246,8 +240,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             }
         };
         myTasksAction.setChecked(onlyMyTasks);
-        myTasksAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_PERSON));
-        
+        myTasksAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_PERSON));     
     }
     
     /**
@@ -275,10 +268,12 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
         manager.add(this.refreshAction);
-        manager.add(myTasksAction);
+        boolean hasRole = AuthenticationHelper.getInstance().currentUserHasRole(ALLOWED_ROLES);
+        if(hasRole) {
+            manager.add(myTasksAction);
+        }
     }
     
-
     private void addListener() {
         TaskLoader.addTaskListener(new ITaskListener() {          
             @Override
@@ -318,20 +313,19 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
      * @param taskList
      */
     protected void addTasks(final List<ITask> taskList) {
-        Object[] taskArray = (Object[]) getViewer().getInput();
-        if(taskArray!=null) {
-            for (Object task : taskArray) {
-                if(!taskList.contains((ITask)task)) {
-                    taskList.add((ITask)task);
+        List<ITask> currentTaskList = (List<ITask>) getViewer().getInput();
+        if(currentTaskList!=null) {
+            for (ITask task : currentTaskList) { 
+                if(!taskList.contains(task)) {
+                    taskList.add(task);
                 }
             }
         }
         Display.getDefault().syncExec(new Runnable(){
             public void run() {
-                getViewer().setInput(taskList.toArray());
+                getViewer().setInput(taskList);
             }
-        });
-        
+        });      
     }
     
     private Composite createContainer(Composite parent) {
@@ -367,7 +361,5 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     public String getPerspectiveId() {
         return Iso27kPerspective.ID;
     }
-    
-    
 
 }

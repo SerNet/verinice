@@ -25,6 +25,9 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.KeyValue;
 
@@ -70,22 +73,20 @@ public class TaskLabelProvider implements ITableLabelProvider {
                 text = task.getControlTitle();
                 break;
             case 1:
-                if(!onlyMyTasks) {
-                    StringBuilder sb = new StringBuilder("[");
-                    sb.append(task.getAssignee()).append("] ").append(task.getName());
-                    text = sb.toString();
-                } else {
-                    text = task.getName();
-                }
+                text = task.getName();
                 break;
             case 2:
+                IAuthService authService = ServiceFactory.lookupAuthService();
+                text = task.getAssignee();
+                if(text!=null && text.equals(authService.getUsername())) {
+                    text = text + " (you)";
+                }                          
+                break;    
+            case 3:
                 if(task.getDueDate()!=null) {
                     text = DateFormat.getDateInstance().format(task.getDueDate());
                 }
-                break;
-            case 3:
-                text = "user";
-                break;
+                break;          
             default:
                 break;
             }
