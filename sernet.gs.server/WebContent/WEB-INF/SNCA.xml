@@ -3469,7 +3469,7 @@ the value between <param></param> will be used directly if no string is found fo
                 <huiproperty
 	               name="Replacement Cost" id="asset_replacementcost" tags="Finance" />
                 <huiproperty
-	               id="asset_replcost_currency" name="Currency" 
+	               id="asset_replcost_currency" name="Currency" tags="Finance"
                    inputtype="singleoption" >
                    <option id="asset_replcost_currency_eur" name="€"/>
                    <option id="asset_replcost_currency_usd" name="$"/>

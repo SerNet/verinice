@@ -17,7 +17,15 @@
  ******************************************************************************/
 package sernet.verinice.report.service.commands;
 
+import java.util.List;
+
+import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Loads and returns the report's title.
@@ -33,14 +41,46 @@ import sernet.verinice.interfaces.GenericCommand;
  */
 @SuppressWarnings("serial")
 public class LoadReportTitleCommand extends GenericCommand {
+    
+    private Integer root;
+    private List<CnATreeElement> elements;
+    private String orgName;
+
+    public LoadReportTitleCommand(Integer root) {
+        this.root = root;
+    }
 
 	public String getResult() {
-		return "<h1>Information Technologie (IT)</h1><h1>Security Assessment at VW TEST - Company 1</h1><h1>Final Report</h1>";
+//		return "<h1>Information Technologie (IT)</h1><h1>Security Assessment at VW TEST - Company 1</h1><h1>Final Report</h1>";
+		return "<h1>Information Technology (IT)</h1><h1>" + elements.get(0).getTitle() + " at " + orgName+ "</h1><h1>Final Report</h1>";
 	}
 
 	@Override
 	public void execute() {
-		// TODO: Implement me.
+	    try {
+	        LoadReportElements command = new LoadReportElements(Audit.TYPE_ID, root);
+            command = getCommandService().executeCommand(command);
+            elements = command.getElements();
+            
+            this.orgName = findOrgName(elements.get(0)); 
+        } catch (CommandException e) {
+            throw new RuntimeCommandException(e);
+        }
 	}
+
+    /**
+     * @param cnATreeElement
+     * @return
+     */
+    private String findOrgName(CnATreeElement cnATreeElement) {
+        CnATreeElement parent = cnATreeElement.getParent();
+        if (parent == null)
+            return "";
+        if (parent.getTypeId().equals(Organization.TYPE_ID)) {
+            return parent.getTitle();
+        }
+        return findOrgName(parent);
+    }
+
 
 }

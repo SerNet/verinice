@@ -8,7 +8,10 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -25,6 +28,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.FileDialog;
 
+import com.sun.xml.messaging.saaj.util.LogDomainConstants;
+
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -33,6 +38,7 @@ import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 
 @SuppressWarnings("restriction")
@@ -65,6 +71,10 @@ public class GenerateReportDialog extends Dialog {
     private ArrayList<CnATreeElement> scopes;
 
     private ArrayList<String> scopeTitles;
+
+    private Integer auditId=null;
+
+    private String auditName=null;
     
     // estimated size of dialog for placement (doesnt have to be exact):
     private static final int SIZE_X = 500;
@@ -83,14 +93,29 @@ public class GenerateReportDialog extends Dialog {
     }
     
 
-	protected GenerateReportDialog(Shell parentShell) {
+	public GenerateReportDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
-
+		this.auditId=null;
+        this.auditName = null;
 		reportTypes = ServiceComponent.getDefault().getReportService().getReportTypes();
 	}
 	
-	/* (non-Javadoc)
+	/**
+     * @param shell
+     * @param audit
+     */
+    public GenerateReportDialog(Shell shell, Audit audit) {
+        this(shell);
+        this.auditId=audit.getDbId();
+        this.auditName = audit.getTitle();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Setting audit in report dialog: " + auditId);
+        }
+    }
+
+
+    /* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
 	 */
     @Override
@@ -211,6 +236,17 @@ public class GenerateReportDialog extends Dialog {
 		gridTextFile.grabExcessHorizontalSpace = true;
 		textFile.setLayoutData(gridTextFile);
 		
+		textFile.addKeyListener(new KeyListener() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                getButton(IDialogConstants.OK_ID).setEnabled(true);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
+		
 //		  try {
 //		      textFile.setText(File.createTempFile("verinice-report-", "").toString());
 //	        } catch (IOException e1) {
@@ -227,6 +263,7 @@ public class GenerateReportDialog extends Dialog {
 		        String fn = dlg.open();
 		        if (fn != null) {
 		          textFile.setText(fn);
+		          getButton(IDialogConstants.OK_ID).setEnabled(true);
 		        }
 		      }
 		    });
@@ -242,6 +279,17 @@ public class GenerateReportDialog extends Dialog {
      * Load list of scopes for user selection of top level element for report.
      */
     private void setupComboScopes() {
+        // check if audit was selected by context menu:
+        if (this.auditId != null) {
+            scopeCombo.removeAll();
+            scopeCombo.add(this.auditName);
+            rootElement=auditId;
+            scopeCombo.setEnabled(true);
+            scopeCombo.select(0);
+            scopeCombo.redraw();
+            return;
+        }
+        
         scopes = new ArrayList<CnATreeElement>();
         scopeTitles = new ArrayList<String>();
         
@@ -250,7 +298,7 @@ public class GenerateReportDialog extends Dialog {
         for (CnATreeElement elmt : scopes) {
             scopeTitles.add(elmt.getTitle());
             if (LOG.isDebugEnabled()) {
-                LOG.debug(Messages.GenerateReportDialog_16 + elmt.getDbId() + ": " + elmt.getTitle()); //$NON-NLS-2$
+                LOG.debug(Messages.GenerateReportDialog_16 + elmt.getDbId() + ": " + elmt.getTitle()); //$NON-NLS-2$ //$NON-NLS-1$
             }
         }
         
@@ -280,6 +328,10 @@ public class GenerateReportDialog extends Dialog {
 
 	@Override
 	protected void okPressed() {
+	    if (textFile.getText().length()==0 || scopeCombo.getSelectionIndex()<0) {
+	        MessageDialog.openWarning(getShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_6);
+	        return;
+	    }
 
 	    String f = textFile.getText();
 		chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
@@ -298,16 +350,16 @@ public class GenerateReportDialog extends Dialog {
 		super.okPressed();
 	}
 
-	File getOutputFile() {
+	public File getOutputFile() {
 		return outputFile;
 	}
 
-	IOutputFormat getOutputFormat()
+	public IOutputFormat getOutputFormat()
 	{
 		return chosenOutputFormat;
 	}
 
-	IReportType getReportType() {
+	public IReportType getReportType() {
 		return chosenReportType;
 	}
 
