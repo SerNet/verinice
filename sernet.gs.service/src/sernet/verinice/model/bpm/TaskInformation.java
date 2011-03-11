@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import sernet.verinice.interfaces.bpm.ITask;
+import sernet.verinice.interfaces.bpm.KeyValue;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -52,6 +53,12 @@ public class TaskInformation implements ITask,Serializable {
     boolean isRead = false;
     
     String style;
+
+    private String uuidAudit;
+
+    private String auditTitle;
+    
+    private String assignee;
     
     /**
      * 
@@ -179,6 +186,38 @@ public class TaskInformation implements ITask,Serializable {
 
     public void setStyle(String style) {
         this.style = style;
+    }
+    
+    /**
+     * @param uuidAudit
+     */
+    public void setUuidAudit(String uuidAudit) {
+        this.uuidAudit = uuidAudit;  
+    }
+
+    public String getUuidAudit() {
+        return uuidAudit;
+    }
+
+    /**
+     * @param title
+     */
+    public void setAuditTitle(String title) {
+       this.auditTitle =title;
+    }
+
+    public String getAuditTitle() {
+        return auditTitle;
+    }
+
+  
+
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
     }
 
     @Override

@@ -32,6 +32,10 @@ public interface ITaskParameter extends Serializable {
     
     void setUsername(String username);
     
+    boolean getAllUser();
+    
+    void setAllUser(boolean allUser);
+    
     Date getSince();
     
     void setSince(Date since);

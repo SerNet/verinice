@@ -57,7 +57,7 @@ import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.interfaces.bpm.ITask.KeyValue;
+import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
@@ -110,8 +110,8 @@ public class TaskService implements ITaskService{
     @SuppressWarnings("unchecked")
     @Override
     public List<ITask> getTaskList(ITaskParameter parameter) {
-        ServerInitializer.inheritVeriniceContextState();
-        if(parameter.getUsername()==null) {
+        ServerInitializer.inheritVeriniceContextState();      
+        if(!parameter.getAllUser() && parameter.getUsername()==null) {
             parameter.setUsername(getAuthService().getUsername());          
         }
         List<ITask> taskList = Collections.emptyList();
@@ -128,33 +128,42 @@ public class TaskService implements ITaskService{
                 hql.append("inner join task.execution.processInstance.variables as readVar "); 
             }
             
-            hql.append("where task.assignee=? ");
-            paramList.add(parameter.getUsername());
+            boolean where = false;
+            if(!parameter.getAllUser() && parameter.getUsername()!=null) {
+                where = concat(hql,where);
+                hql.append("task.assignee=? ");
+                paramList.add(parameter.getUsername());
+            } 
             
             if(parameter.getSince()!=null) {
-                hql.append("and task.createTime>=? ");
+                where = concat(hql,where);
+                hql.append("task.createTime>=? ");
                 paramList.add(parameter.getSince());
             }
             
             if(parameter.getAuditUuid()!=null) {
-                hql.append("and auditVar.key=? ");
+                where = concat(hql,where);
+                hql.append("auditVar.key=? ");
                 paramList.add(IIsaExecutionProcess.VAR_AUDIT_UUID);
                 hql.append("and auditVar.string=? ");
                 paramList.add(parameter.getAuditUuid());
             }
             
-            if(parameter.getRead()!=null && parameter.getRead() && parameter.getUnread()!=null && !parameter.getUnread()) {            
-                hql.append("and readVar.key=? ");
+            if(parameter.getRead()!=null && parameter.getRead() && parameter.getUnread()!=null && !parameter.getUnread()) { 
+                where = concat(hql,where);           
+                hql.append("readVar.key=? ");
                 paramList.add(ITaskService.VAR_READ_STATUS);
                 hql.append("and readVar.string=? ");
                 paramList.add(ITaskService.VAR_READ);
             }
             if(parameter.getUnread()!=null && parameter.getUnread() && parameter.getRead()!=null && !parameter.getRead()) {
-                hql.append("and readVar.key=? ");
+                where = concat(hql,where);
+                hql.append("readVar.key=? ");
                 paramList.add(ITaskService.VAR_READ_STATUS);
                 hql.append("and readVar.string=? ");
                 paramList.add(ITaskService.VAR_UNREAD);
-            }    
+            }
+
             
             //taskCrit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             List jbpmTaskList = getJbpmTaskDao().findByQuery(hql.toString(),paramList.toArray());
@@ -187,6 +196,20 @@ public class TaskService implements ITaskService{
         return taskList;
     }
     
+    /**
+     * @param hql
+     * @param where
+     */
+    private boolean concat(/*not final*/StringBuilder hql,/*not final*/boolean where) {
+        if(!where) {
+            hql.append("where ");
+            where = true;
+        } else {
+            hql.append("and ");
+        }
+        return where;
+    }
+
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskService#getAuditList()
      */
@@ -204,8 +227,7 @@ public class TaskService implements ITaskService{
     }
 
     private boolean doSearch(ITaskParameter parameter) {
-        return parameter!=null 
-           && parameter.getUsername()!=null
+        return parameter!=null
            && ((parameter.getRead()==null && parameter.getUnread()==null) || (parameter.getRead() || parameter.getUnread()));
     }
     
@@ -218,22 +240,32 @@ public class TaskService implements ITaskService{
         taskInformation.setId(task.getId());
         taskInformation.setName(Messages.getString(task.getName()));
         taskInformation.setCreateDate(task.getCreateTime()); 
+        taskInformation.setAssignee(task.getAssignee());
         
         String readStatus = (String) getTaskService().getVariable(task.getId(), ITaskService.VAR_READ_STATUS);
         taskInformation.setIsRead(ITaskService.VAR_READ.equals(readStatus));
         taskInformation.setStyle((taskInformation.getIsRead()) ? ITask.STYLE_READ : ITask.STYLE_UNREAD);
               
         String executionId = task.getExecutionId();   
-        String uuidControl = (String) getExecutionService().getVariable(executionId,IExecutionProcess.VAR_UUID);      
-        String typeId = (String) getExecutionService().getVariable(executionId,IExecutionProcess.VAR_TYPE_ID);      
         
+        String uuidControl = (String) getExecutionService().getVariable(executionId,IExecutionProcess.VAR_UUID);      
+        taskInformation.setUuid(uuidControl);       
         CnATreeElement element = getElementDao().findByUuid(uuidControl, RetrieveInfo.getPropertyInstance());
         if(element!=null) {
             taskInformation.setControlTitle(element.getTitle());
             taskInformation.setSortValue(createSortableString(taskInformation.getControlTitle()));
         }
-              
-        taskInformation.setUuid(uuidControl); 
+        
+        String uuidAudit = (String) getExecutionService().getVariable(executionId,IIsaExecutionProcess.VAR_AUDIT_UUID);      
+        if(uuidAudit!=null) {
+            taskInformation.setUuidAudit(uuidAudit);       
+            CnATreeElement audit = getElementDao().findByUuid(uuidAudit, RetrieveInfo.getPropertyInstance());
+            if(audit!=null) {
+                taskInformation.setAuditTitle(audit.getTitle());
+            }
+        }
+        
+        String typeId = (String) getExecutionService().getVariable(executionId,IExecutionProcess.VAR_TYPE_ID);
         taskInformation.setType(typeId);
         taskInformation.setDueDate(task.getDuedate());      
         return taskInformation;

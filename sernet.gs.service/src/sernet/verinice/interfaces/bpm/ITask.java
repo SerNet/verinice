@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.bpm;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -70,6 +69,8 @@ public interface ITask extends Comparable<ITask> {
     
     String getSortValue();
     
+    String getAssignee();
+    
     /**
      * Returns a map with outcomes of this task.
      * Key is the id of the outcome, value the translated title.
@@ -94,35 +95,8 @@ public interface ITask extends Comparable<ITask> {
     
     void setStyle(String style);
     
-    public class KeyValue implements Serializable {
-            
-            String key;
-            
-            String value;
+    String getUuidAudit();
     
-            public KeyValue(String key, String value) {
-                super();
-                this.key = key;
-                this.value = value;
-            }
-    
-            public String getKey() {
-                return key;
-            }
-    
-            public void setKey(String key) {
-                this.key = key;
-            }
-    
-            public String getValue() {
-                return value;
-            }
-    
-            public void setValue(String value) {
-                this.value = value;
-            }
-            
-            
-        }
+    String getAuditTitle();
 
 }

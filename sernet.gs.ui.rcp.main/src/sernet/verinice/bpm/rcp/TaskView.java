@@ -26,15 +26,22 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -42,6 +49,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
@@ -54,8 +63,10 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskListener;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.model.bpm.TaskInformation;
+import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.rcp.IAttachedToPerspective;
@@ -74,21 +85,57 @@ import sernet.verinice.service.commands.LoadElementByUuid;
  */
 public class TaskView extends ViewPart implements IAttachedToPerspective {
     
+    /**
+     * @author Daniel Murygin <dm[at]sernet[dot]de>
+     *
+     */
+    private final class CompleteTaskAction extends Action {
+        
+        final String id = TaskView.class.getName() + ".complete";      
+        String outcomeId;
+        
+        public CompleteTaskAction() {
+            super();
+            setId(id);
+        }
+
+        public CompleteTaskAction(String outcomeId) {
+            super();
+            this.outcomeId = outcomeId;
+            setId(id + "." + outcomeId);
+        }
+
+        @Override
+        public void run() {
+            StructuredSelection selection = (StructuredSelection) getViewer().getSelection();          
+            for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
+                Object sel = iterator.next();
+                if(sel instanceof TaskInformation) {                  
+                    completeTasks((TaskInformation) sel,outcomeId);
+                }
+            }
+        }
+    }
+
     private final Logger log = Logger.getLogger(TaskView.class);
     
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView";
     
     private static final DateFormat DATE_FORMAT = DateFormat.getDateInstance();
     
-    private TableViewer viewer;
+    private TreeViewer treeViewer;
+    
+    TaskLabelProvider labelProvider;
     
     private Action refreshAction;
     
-    private Action completeTaskAction;
-    
     private Action doubleClickAction;
     
+    private Action myTasksAction;
+    
     private ICommandService commandService;
+    
+    private boolean onlyMyTasks = true;
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -96,7 +143,9 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     @Override
     public void createPartControl(Composite parent) {
         Composite container = createContainer(parent);
-        createViewer(container);
+        //createViewer(container);
+        createTreeViewer(container);
+        loadTasks();
         makeActions();     
         addActions();
         addListener();
@@ -110,70 +159,56 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         // empty
     }
     
-    private void createViewer(Composite parent) {
-        viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
-
-        createColumns(parent, viewer);
-        final Table table = viewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-
-        viewer.setContentProvider(new ArrayContentProvider());
-
-        loadTasks();
-
-        // Layout the viewer
-        GridData gridData = new GridData();
-        gridData.verticalAlignment = GridData.FILL;
-        gridData.horizontalSpan = 5;
-        gridData.grabExcessHorizontalSpace = true;
-        gridData.grabExcessVerticalSpace = true;
-        gridData.horizontalAlignment = GridData.FILL;
-        viewer.getControl().setLayoutData(gridData);
-    }
-
     private void loadTasks() {
-        List<ITask> taskList = ServiceFactory.lookupTaskService().getTaskList();
+        TaskParameter param = new TaskParameter();
+        param.setAllUser(!onlyMyTasks);
+        List<ITask> taskList = ServiceFactory.lookupTaskService().getTaskList(param);
         Collections.sort(taskList);
         // Get the content for the viewer, setInput will call getElements in the
         // contentProvider
         try {
-            viewer.setInput(taskList.toArray());
+            getViewer().setInput(taskList);
         } catch (Throwable t) {
             log.error("Error while setting table data", t); //$NON-NLS-1$
         }
     }
     
-    private void createColumns(final Composite parent, final TableViewer viewer) {
-        String[] titles = { "Name", "Control", "Date" };
-        int[] bounds = { 130, 370, 100 };
+    private void createTreeViewer(Composite parent) {
+        this.treeViewer = new TreeViewer(parent);
 
-        // First column: title of the role
-        TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
-        col.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return ((ITask) element).getName();
-            }
-        });
+        Tree tree = this.treeViewer.getTree();
+
+        final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        this.treeViewer.getControl().setLayoutData(gridData);
+
+        this.treeViewer.setUseHashlookup(true);
+
+        /*** Tree table specific code starts ***/
+
+        tree.setHeaderVisible(true);
+        tree.setLinesVisible(true);
         
-        // 2. column
-        col = createTableViewerColumn(titles[1], bounds[1], 1);
-        col.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {      
-                return ((ITask) element).getControlTitle();
-            }
-        });
+        TreeColumn treeColumn = new TreeColumn(tree, SWT.LEFT);
+        treeColumn.setText("Audit / Control");   
+        
+        treeColumn = new TreeColumn(tree, SWT.LEFT);
+        treeColumn.setText("Task");
+        
+        treeColumn = new TreeColumn(tree, SWT.LEFT);
+        treeColumn.setText("Date");
+        
+        TableLayout layout = new TableLayout();
+        layout.addColumnData(new ColumnWeightData(60,true));
+        layout.addColumnData(new ColumnWeightData(25,false));
+        layout.addColumnData(new ColumnWeightData(15,false));
 
-        // 3. column
-        col = createTableViewerColumn(titles[2], bounds[2], 2);
-        col.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {      
-                return DATE_FORMAT.format(((ITask) element).getCreateDate());
-            }
-        });
+        tree.setLayout(layout);
+
+        /*** Tree table specific code ends ***/
+
+        this.treeViewer.setContentProvider(new TaskContentProvider());
+        labelProvider = new TaskLabelProvider(onlyMyTasks);
+        this.treeViewer.setLabelProvider(labelProvider);
     }
     
     private void makeActions() {
@@ -186,22 +221,12 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         refreshAction.setText("Refresh");
         refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
         
-        completeTaskAction = new Action() {
-            @Override
-            public void run() {
-                StructuredSelection selection = (StructuredSelection) viewer.getSelection();              
-                for (Iterator<TaskInformation> iterator = selection.iterator(); iterator.hasNext();) {
-                    completeTasks(iterator.next());                               
-                }
-            }
-        };
-        completeTaskAction.setText("Complete");
-        completeTaskAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_JA));
         doubleClickAction = new Action() {
             public void run() {
-                if(viewer.getSelection() instanceof IStructuredSelection) {
+                if(getViewer().getSelection() instanceof IStructuredSelection
+                   && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof TaskInformation) {
                     try {
-                        TaskInformation task = (TaskInformation) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+                        TaskInformation task = (TaskInformation) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
                         LoadElementByUuid<Control> loadControl = new LoadElementByUuid<Control>(task.getType(), task.getUuid(), RetrieveInfo.getPropertyInstance());
                         loadControl = getCommandService().executeCommand(loadControl);
                         EditorFactory.getInstance().updateAndOpenObject(loadControl.getElement());
@@ -211,26 +236,46 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 }
             }
         };
+        
+        myTasksAction = new Action("Only my tasks", SWT.TOGGLE) {
+            public void run() {
+                onlyMyTasks = !onlyMyTasks;
+                myTasksAction.setChecked(onlyMyTasks);   
+                labelProvider.setOnlyMyTasks(onlyMyTasks);
+                loadTasks();
+            }
+        };
+        myTasksAction.setChecked(onlyMyTasks);
+        myTasksAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_PERSON));
+        
     }
     
     /**
      * @param next
      */
-    protected void completeTasks(TaskInformation task) {
-        ServiceFactory.lookupTaskService().completeTask(task.getId());
-        viewer.remove(task);
+    protected void completeTasks(TaskInformation task, String outcomeId) {
+        if(outcomeId==null) {
+            ServiceFactory.lookupTaskService().completeTask(task.getId());
+        } else {
+            ServiceFactory.lookupTaskService().completeTask(task.getId(),outcomeId);
+        }
+        getViewer().remove(task);
     }
 
     private void addActions() {
-        IActionBars bars = getViewSite().getActionBars();
-        IToolBarManager manager = bars.getToolBarManager();
-        manager.add(this.refreshAction);
-        manager.add(this.completeTaskAction);
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
+        addToolBarActions();
+        getViewer().addDoubleClickListener(new IDoubleClickListener() {
             public void doubleClick(DoubleClickEvent event) {
                 doubleClickAction.run();
             }
         });
+    }
+
+    private void addToolBarActions() {
+        IActionBars bars = getViewSite().getActionBars();
+        IToolBarManager manager = bars.getToolBarManager();
+        manager.add(this.refreshAction);
+        manager.add(myTasksAction);
     }
     
 
@@ -240,36 +285,53 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             public void newTasks(List<ITask> taskList) {
                 addTasks(taskList);           
             }
-        });      
+        });
+        treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {        
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                if(getViewer().getSelection() instanceof IStructuredSelection
+                        && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof TaskInformation) {
+                     try {
+                         TaskInformation task = (TaskInformation) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
+                         List<KeyValue> outcomeList = task.getOutcomes();
+                         IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
+                         manager.removeAll();
+                         addToolBarActions();
+                         for (KeyValue keyValue : outcomeList) {
+                            CompleteTaskAction completeAction = new CompleteTaskAction(keyValue.getKey());
+                            completeAction.setText(keyValue.getValue());
+                            completeAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_JA));                      
+                            ActionContributionItem item = new ActionContributionItem(completeAction);
+                            item.setMode(ActionContributionItem.MODE_FORCE_TEXT);                          
+                            manager.add(item);
+                        }
+                        getViewSite().getActionBars().updateActionBars();
+                     } catch (Throwable t) {
+                         log.error("Error while opening control.",t);
+                     }
+                 }           
+            }
+        });
     }
     
     /**
      * @param taskList
      */
     protected void addTasks(final List<ITask> taskList) {
-        Object[] taskArray = (Object[]) viewer.getInput();
-        for (Object task : taskArray) {
-            if(!taskList.contains((ITask)task)) {
-                taskList.add((ITask)task);
+        Object[] taskArray = (Object[]) getViewer().getInput();
+        if(taskArray!=null) {
+            for (Object task : taskArray) {
+                if(!taskList.contains((ITask)task)) {
+                    taskList.add((ITask)task);
+                }
             }
         }
         Display.getDefault().syncExec(new Runnable(){
             public void run() {
-                viewer.setInput(taskList.toArray());
+                getViewer().setInput(taskList.toArray());
             }
         });
         
-    }
-
-    private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber) {
-        final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
-        final TableColumn column = viewerColumn.getColumn();
-        column.setText(title);
-        column.setWidth(bound);
-        column.setResizable(true);
-        column.setMoveable(true);
-        return viewerColumn;
-
     }
     
     private Composite createContainer(Composite parent) {
@@ -292,6 +354,10 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             commandService = ServiceFactory.lookupCommandService();
         }
         return commandService;
+    }
+    
+    protected TreeViewer getViewer() {
+        return treeViewer;
     }
 
     /* (non-Javadoc)

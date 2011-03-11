@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.graphics.Color;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.iso27k.service.ControlMaturityService;
@@ -37,7 +39,7 @@ public class TopicDecorator extends LabelProvider implements ILightweightLabelDe
 				if(IControl.IMPLEMENTED_YES.equals(state)) {
 					decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_YES));
 				}			
-				
+				decoration.setForegroundColor(new Color(Display.getCurrent(), 150,90,90));
 	            decoration.addSuffix( new StringBuilder().append(" [")
 	                    .append(maturityService.getWeightedMaturity(control))
 	                    .append("]").toString() );

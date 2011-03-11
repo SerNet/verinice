@@ -40,6 +40,8 @@ public class TaskParameter implements ITaskParameter, Serializable {
     
     String auditUuid;
     
+    boolean allUser;
+    
     public TaskParameter() {
         super();
     }
@@ -93,6 +95,14 @@ public class TaskParameter implements ITaskParameter, Serializable {
 
     public void setAuditUuid(String auditUuid) {
         this.auditUuid = auditUuid;
+    }
+
+    public boolean getAllUser() {
+        return allUser;
+    }
+
+    public void setAllUser(boolean allUser) {
+        this.allUser = allUser;
     }
 
 

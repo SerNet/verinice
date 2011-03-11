@@ -58,6 +58,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -82,6 +83,8 @@ public class ProcessService implements IProcessService {
     private IBaseDao<ControlGroup, Integer> controlGroupDao;
       
     private IBaseDao<SamtTopic, Integer> samtTopicDao;
+    
+    private IBaseDao<CnATreeElement,Integer> elementDao;
     
     private boolean wasInitCalled = false;
     
@@ -190,15 +193,29 @@ public class ProcessService implements IProcessService {
             log.warn("Context is not set for this thread. Will now set the context...");
             VeriniceContext.setState(ProcessService.state);
         }
-        Audit isaAudit = getAuditDao().findByUuid(uuidAudit, RetrieveInfo.getChildrenInstance());
+        Audit isaAudit = getAuditDao().findByUuid(uuidAudit, RetrieveInfo.getChildrenInstance().setParent(true));  
         IsaProcessContext context = new IsaProcessContext();
         context.setNumberOfProcesses(0);
         context.setUuidAudit(uuidAudit);
+        context.setUuidOrganization(loadOrganization(isaAudit.getParent()).getUuid());
         context.setControlGroup(isaAudit.getControlGroup());
         context=startProcessForControlGroup(context);
         return new ProcessInformation(context.getNumberOfProcesses());
     }
     
+    /**
+     * @param isaAudit
+     * @return
+     */
+    private CnATreeElement loadOrganization(CnATreeElement element) {
+        if(Organization.TYPE_ID.equals(element.getTypeId())) {
+            return element;
+        } else {
+            element = getElementDao().findByUuid(element.getUuid(), RetrieveInfo.getPropertyInstance().setParent(true));
+            return loadOrganization(element.getParent());
+        }
+    }
+
     private IsaProcessContext startProcessForControlGroup(IsaProcessContext context) {
         ControlGroup controlGroup = context.getControlGroup();
         controlGroup = getControlGroupDao().findByUuid(controlGroup.getUuid(), RetrieveInfo.getChildrenInstance());
@@ -350,7 +367,7 @@ public class ProcessService implements IProcessService {
         props.put(IIsaExecutionProcess.VAR_IMPLEMENTATION, topic.getMaturity());
         if(context.getUuidAudit()!=null) {
             props.put(IIsaExecutionProcess.VAR_AUDIT_UUID, context.getUuidAudit()); 
-        }          
+        }
         Date duedate = topic.getCompleteUntil();
         Date now = new Date(System.currentTimeMillis());
         if(duedate!=null && now.before(duedate)) {
@@ -518,6 +535,14 @@ public class ProcessService implements IProcessService {
         this.samtTopicDao = samtTopicDao;
     }
     
+    public IBaseDao<CnATreeElement, Integer> getElementDao() {
+        return elementDao;
+    }
+
+    public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
+        this.elementDao = elementDao;
+    }
+
     public void setWorkObjects(VeriniceContext.State workObjects) {
         ProcessService.state = workObjects;
     }

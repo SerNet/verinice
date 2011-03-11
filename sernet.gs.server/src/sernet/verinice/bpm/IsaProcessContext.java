@@ -30,6 +30,8 @@ public class IsaProcessContext {
 
     String uuidAudit;
     
+    String uuidOrganization;
+    
     ControlGroup controlGroup;
     
     SamtTopic samtTopic;
@@ -50,6 +52,14 @@ public class IsaProcessContext {
 
     public void setUuidAudit(String uuidAudit) {
         this.uuidAudit = uuidAudit;
+    }
+
+    public String getUuidOrganization() {
+        return uuidOrganization;
+    }
+
+    public void setUuidOrganization(String uuidOrganization) {
+        this.uuidOrganization = uuidOrganization;
     }
 
     public ControlGroup getControlGroup() {

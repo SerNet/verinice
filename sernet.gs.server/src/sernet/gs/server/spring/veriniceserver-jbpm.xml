@@ -28,6 +28,7 @@
         <property name="controlGroupDao" ref="controlGroupDAO" />
         <property name="samtTopicDao" ref="samtTopicDAO" />
         <property name="processDao" ref="processDao" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
     
     <bean id="taskService" class="sernet.verinice.bpm.TaskService">
