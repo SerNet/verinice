@@ -57,17 +57,10 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 					if(IControl.IMPLEMENTED_YES.equals(state)) {
 						decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_YES));
 					}
-					
-					
-					//decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_PATH));
-		            decoration.addSuffix( new StringBuilder().append(" [")
-		                    .append(maturityService.getWeightedMaturity(group))
-		                    .append("]").toString() );
 				}
 			}
 		} catch(Throwable t) {
 			LOG.error("Error while loading maturity value", t);
-			decoration.addSuffix( new StringBuilder().append(" [?]").toString() );
 		}
 	}
 
