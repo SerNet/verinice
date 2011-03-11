@@ -34,15 +34,11 @@
         <level value="DEBUG" />
     </logger>
     -->
-    <logger name="org.springframework.security.ui.digestauth.DigestProcessingFilter">
-        <level value="DEBUG" />
-    </logger>
     
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
 		<appender-ref ref="FILE" />
-        <appender-ref ref="STDOUT" />
 	</root>
 
 </log4j:configuration>
