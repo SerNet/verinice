@@ -35,14 +35,16 @@ import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
  * Loads an element with all links from / to it.
+ * also includes the dbId of the linked element.
  */
 public class LoadReportElementWithLinks extends GenericCommand {
 
-    public static final String[] COLUMNS = new String[] {"relationName", "toAbbrev", "toElement", "riskC", "riskI", "riskA"};
+    public static final String[] COLUMNS = new String[] {"relationName", "toAbbrev", "toElement", "riskC", "riskI", "riskA", "dbId"};
 
 	private String typeId;
     private Integer rootElement;
     List<List<String>> result;
+    private List<CnALink> linkList;
 
     private transient CnATypeMapper cnATypeMapper;
     
@@ -62,6 +64,7 @@ public class LoadReportElementWithLinks extends GenericCommand {
 	
 	public void execute() {
 	    cnATypeMapper = new CnATypeMapper();
+	    linkList = new ArrayList<CnALink>();
 	    
 	    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement}); 
 	    try {
@@ -111,14 +114,23 @@ public class LoadReportElementWithLinks extends GenericCommand {
      * @return
      */
     private List<String> makeRow(CnATreeElement root, CnALink link) {
+        linkList.add(link);
         String relationName = CnALink.getRelationNameReplacingEmptyNames(root, link);
         String toElementTitle = CnALink.getRelationObjectTitle(root, link);
         String toAbbrev = getAbbreviation(link.getRelationObject(root, link));
         String riskC = Integer.toString( link.getRiskConfidentiality()  != null ? link.getRiskConfidentiality() : 0);
         String riskI = Integer.toString(link.getRiskIntegrity()         != null ? link.getRiskIntegrity()       : 0);
         String riskA = Integer.toString(link.getRiskAvailability()      != null ? link.getRiskAvailability()    : 0);
-        List<String> asList = Arrays.asList(relationName, toAbbrev, toElementTitle, riskC, riskI, riskA);
-        return asList;
+        
+        CnATreeElement otherSide = link.getRelationObject(root, link);
+        String otherSideDbId = Integer.toString(otherSide.getDbId());
+        
+        // arrays.aslist returns a non resizeable list (throws UnsupportedOperationExceptions for half of the List interface),
+        // to prevent error in use we copy it:
+        List<String> asList = Arrays.asList(relationName, toAbbrev, toElementTitle, riskC, riskI, riskA, otherSideDbId);
+        ArrayList<String> resizeableList = new ArrayList<String>();
+        resizeableList.addAll(asList);
+        return resizeableList;
     }
 
 
@@ -152,6 +164,16 @@ public class LoadReportElementWithLinks extends GenericCommand {
     public List<List<String>> getResult() {
         return result;
     }
+
+    /**
+     * @return the linkList
+     */
+    public List<CnALink> getLinkList() {
+        return linkList;
+    }
+    
+    
+    
 
    
 

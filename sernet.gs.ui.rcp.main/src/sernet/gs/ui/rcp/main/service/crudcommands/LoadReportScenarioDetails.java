@@ -1,0 +1,164 @@
+/*******************************************************************************
+ * Copyright (c) 2010 Alexander Koderman <ak@sernet.de>.
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ *     This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU General Public License for more details.
+ *     You should have received a copy of the GNU General Public 
+ * License along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ ******************************************************************************/
+package sernet.gs.ui.rcp.main.service.crudcommands;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import sernet.gs.service.RuntimeCommandException;
+import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.Vulnerability;
+
+/**
+ * Adds more columns to the normal list of links for an element in case of scnearios: threat and vuln. levels and titles
+ * 
+ * @author koderman@sernet.de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ */
+public class LoadReportScenarioDetails extends GenericCommand {
+    
+    public static final String[] COLUMNS = new String[] {"relationName", "toAbbrev", "toElement", "riskC", "riskI", "riskA", "dbid",
+        "threatLevel", "vulnLevel", "threatTitle", "vulnTitle", "threatLevelDesc", "vulnLevelDesc"};
+
+    
+    
+    private LoadReportElementWithLinks loadReportElementWithLinks;
+
+
+
+    private List<List<String>> result;
+
+    public LoadReportScenarioDetails(String typeId, Integer rootElement) {
+        loadReportElementWithLinks = new LoadReportElementWithLinks(typeId, rootElement);
+    }
+
+    public LoadReportScenarioDetails(String typeId, String rootElement) {
+        loadReportElementWithLinks = new LoadReportElementWithLinks(typeId, rootElement);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICommand#execute()
+     */
+    @Override
+    public void execute() {
+        try {
+            loadReportElementWithLinks = getCommandService().executeCommand(loadReportElementWithLinks);
+            result = loadReportElementWithLinks.getResult();
+            List<CnALink> links = loadReportElementWithLinks.getLinkList();
+            int i=0;
+            for (CnALink cnALink : links) {
+                addCols(cnALink, result.get(i));
+                i++;
+            }
+            
+        } catch (CommandException e) {
+            throw new RuntimeCommandException(e);
+        }
+        
+    }
+
+    /**
+     * @param cnALink
+     * @param row 
+     */
+    private void addCols(CnALink cnALink, List<String> row) {
+        CnATreeElement scenario;
+        if (cnALink.getDependant().getTypeId().equals(IncidentScenario.TYPE_ID)) {
+            scenario = cnALink.getDependant();
+        } else {
+            scenario = cnALink.getDependency();
+        }
+        
+        HUITypeFactory hui = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+
+        int threatLevel = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_THREAT_PROBABILITY);
+        PropertyType propertyType = hui.getPropertyType(IncidentScenario.TYPE_ID, IRiskAnalysisService.PROP_SCENARIO_THREAT_PROBABILITY);
+        String threatDesc = propertyType.getNameForValue(threatLevel);
+        
+        int vulnLevel = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_VULN_PROBABILITY);
+        propertyType = hui.getPropertyType(IncidentScenario.TYPE_ID, IRiskAnalysisService.PROP_SCENARIO_VULN_PROBABILITY);
+        String vulnDesc = propertyType.getNameForValue(vulnLevel);
+        
+        String threatTitle;
+        String vulnTitle;
+        
+        Map<CnATreeElement, CnALink> threats = CnALink.getLinkedElements(scenario, Threat.TYPE_ID);
+        Map<CnATreeElement, CnALink> vulns = CnALink.getLinkedElements(scenario, Vulnerability.TYPE_ID);
+        
+        if (threats.size()==0) 
+               threatTitle = "";
+        else {
+            // scenario may be linked to more than one threat, add all to description:
+            // (for risk calculation, the highest threat will be used, see RiskAnalysisServiceImpl.java)
+            StringBuilder sb = new StringBuilder();
+            for (Iterator iterator = threats.keySet().iterator(); iterator.hasNext();) {
+                CnATreeElement t = (CnATreeElement) iterator.next();
+                sb.append(t.getTitle());
+                if (iterator.hasNext())
+                    sb.append(", ");
+            }
+            threatTitle = sb.toString();
+        }
+        
+        if (vulns.size()==0)
+            vulnTitle = "";
+        else {
+            StringBuilder sb = new StringBuilder();
+            for (Iterator iterator = vulns.keySet().iterator(); iterator.hasNext();) {
+                CnATreeElement t = (CnATreeElement) iterator.next();
+                sb.append(t.getTitle());
+                if (iterator.hasNext())
+                    sb.append(", ");
+            }
+            vulnTitle = sb.toString();
+        }
+        
+        row.add(Integer.toString(threatLevel));
+        row.add(Integer.toString(vulnLevel));
+        row.add(threatTitle);
+        row.add(vulnTitle);
+        row.add(threatDesc);
+        row.add(vulnDesc);
+    }
+
+
+    /**
+     * @return the result
+     */
+    public List<List<String>> getResult() {
+        return result;
+    }
+
+}
+
+

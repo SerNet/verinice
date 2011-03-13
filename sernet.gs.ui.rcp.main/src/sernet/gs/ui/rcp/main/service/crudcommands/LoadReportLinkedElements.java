@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import com.sun.xml.messaging.saaj.util.LogDomainConstants;
+
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
@@ -21,6 +25,14 @@ import sernet.verinice.model.common.TransactionAbortedException;
  */
 public class LoadReportLinkedElements extends GenericCommand {
 
+    private transient Logger log = Logger.getLogger(LoadReportLinkedElements.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(LoadReportLinkedElements.class);
+        }
+        return log;
+    }
 
     // get these types of elements:
 	private String typeId;
@@ -62,6 +74,7 @@ public class LoadReportLinkedElements extends GenericCommand {
 	    ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>();
 	    
 	    elements = getLinkedElements(ta, root, result);
+	    
 	    
 	    IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 	    RetrieveInfo ri = new RetrieveInfo();
@@ -110,6 +123,10 @@ public class LoadReportLinkedElements extends GenericCommand {
                 }
             }
         }
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Loaded " + result.size() + " assets for process " + this.rootElement);
+        }
+            
         return result;
     }
 

@@ -126,9 +126,9 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
         }
         
         if(resultList!=null && !resultList.isEmpty() && resultList.size()>1 && dbId != null) {
-            // find group in specified org:
+            // find group in specified org or audit:
             for (ControlGroup controlGroup : resultList) {
-                if (controlGroup.getParent().getParent().getDbId().equals(dbId)) {
+                if (isParent(controlGroup, dbId)) {
                     selfAssessmentGroup =  controlGroup;
                     hydrate(selfAssessmentGroup);
                     if (getLog().isDebugEnabled()) {
@@ -148,6 +148,19 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
                 getLog().debug("result: " + selfAssessmentGroup);
             }
         } 
+    }
+
+    /**
+     * @param controlGroup
+     * @param dbId2
+     * @return
+     */
+    private boolean isParent(CnATreeElement child, Integer parentId) {
+        if (child.getParent()==null)
+            return false;
+        if (child.getParent().getDbId().equals(parentId))
+            return true;
+        return isParent(child.getParent(), parentId);
     }
 
     /**

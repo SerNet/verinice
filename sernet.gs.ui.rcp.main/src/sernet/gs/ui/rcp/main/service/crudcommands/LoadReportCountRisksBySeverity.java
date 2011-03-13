@@ -2,7 +2,7 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -40,28 +40,15 @@ import sernet.verinice.model.iso27k.Process;
 
 /**
  * Starting with all process for a given scope, load all linked assets and their
- * linked scenarios. Returns a list with the following columns:
- * 
- * - probability (from scenario) - impact C (from asset) - impact I (from asset)
- * - impact A (from asset), tolerable levels (by scope: same number in all rows),
+ * linked scenarios. Returns totsla numbetr of risks by color (red, green, yellow).
  * 
  * 
  */
-public class LoadReportAllRisksForScope extends GenericCommand {
+public class LoadReportCountRisksBySeverity extends GenericCommand {
 
     public static final String[] COLUMNS = new String[] { 
-        "Probability", 
-        "Impact C", 
-        "Impact I",
-        "Impact A" ,
-        "RISK_C",
-        "RISK_I",
-        "RISK_A",
-        "TOLERABLE_C",
-        "TOLERABLE_I",
-        "TOLERABLE_A",
-        "Scenario",
-        "Asset"
+        "COUNT_RISK_COLOR",
+        "COUNT_RISK_VALUE",
         };
 
     public static final String PROP_ORG_RISKACCEPT_C = "org_riskaccept_confid";
@@ -69,64 +56,48 @@ public class LoadReportAllRisksForScope extends GenericCommand {
     public static final String PROP_ORG_RISKACCEPT_A = "org_riskaccept_avail";
         
     private Integer rootElmt;
-    private List<List<String>> result;
-    private RiskMatrix riskMatrixC;
-    private RiskMatrix riskMatrixI;
-    private RiskMatrix riskMatrixA;
+
+    private int tolerableRisk;
     
-    private transient Set<String> seenScenarios;
-    private transient Set<String> seenAssets;
+    private Integer[] countRYG = new Integer[3];
 
-    private int tolerableC;
+    private char riskType;
 
-    private int tolerableI;
+    private int numYellowFields;
 
-    private int tolerableA;
-
-    private boolean distinct;
-
-    public LoadReportAllRisksForScope(Integer rootElement) {
-        this(rootElement, false);
-    }
-
-    public LoadReportAllRisksForScope(Integer rootElement, boolean distinct) {
+    public LoadReportCountRisksBySeverity(Integer rootElement, char riskType, int numberOfYellowLevels) {
         this.rootElmt = rootElement;
-        result = new ArrayList<List<String>>();
-        this.distinct = distinct;
+        this.riskType = riskType;
+        this.numYellowFields = numberOfYellowLevels;
+        for(int i=0; i < countRYG.length; i++) {
+            countRYG[i]=0;
+        }
     }
-        
+
     public void execute() {
         try {
             // determine max and tolerable risk values. initialize matrices to save value counts:
             Organization org = (Organization) getDaoFactory().getDAO(Organization.TYPE_ID).findById(rootElmt);
 
             HUITypeFactory huiTypeFactory = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-            PropertyType type = huiTypeFactory.getPropertyType(IncidentScenario.TYPE_ID, RiskAnalysisServiceImpl.PROP_SCENARIO_PROBABILITY);
-            int probMax = type.getMaxValue();
 
-            int cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.CONFIDENTIALITY).getMaxValue();
-            riskMatrixC = new RiskMatrix(probMax, cia_max);
-
-            cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.INTEGRITY).getMaxValue();
-            riskMatrixI = new RiskMatrix(probMax, cia_max);
-
-            cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.AVAILABILITY).getMaxValue();
-            riskMatrixA = new RiskMatrix(probMax, cia_max);
-
-            
-            tolerableC = org.getNumericProperty(PROP_ORG_RISKACCEPT_C);
-            tolerableI = org.getNumericProperty(PROP_ORG_RISKACCEPT_I);
-            tolerableA = org.getNumericProperty(PROP_ORG_RISKACCEPT_A);
+            switch (this.riskType) {
+            case 'c':
+                tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_C);
+                break;
+            case 'i':
+                tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_I);
+                break;
+            case 'a':
+                tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_A);
+                break;
+            }
 
             // load risk values from elements (following links to process, asset, scenario)
-            
-            seenScenarios = new HashSet<String>();
-            seenAssets = new HashSet<String>();
             
             LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt);
             command = getCommandService().executeCommand(command);
             if (command.getElements() == null || command.getElements().size() == 0) {
-                result = new ArrayList<List<String>>(0);
                 return;
             }
             List<CnATreeElement> elements = command.getElements();
@@ -140,15 +111,7 @@ public class LoadReportAllRisksForScope extends GenericCommand {
                     cmnd3 = getCommandService().executeCommand(cmnd3);
                     List<CnATreeElement> scenarios = cmnd3.getElements();
                     for (CnATreeElement scenario : scenarios) {
-                        // only add distinct values: (starting from different processes, recursion can lead to the same element multiple times)
-                        if (!distinct) {
-                            // just add it:
-                            result.add(makeRow(scenario, asset));
-                        }
-                        else if (  ! (seenScenarios.contains(scenario.getTitle()) && seenAssets.contains(asset.getTitle())) )  {
-                            result.add(makeRow(scenario, asset));
-                        }
-
+                        countRisk(scenario, asset);
                     }
                 }
             }
@@ -164,41 +127,29 @@ public class LoadReportAllRisksForScope extends GenericCommand {
      * @param asset
      * @return
      */
-    private List<String> makeRow(CnATreeElement scenario, CnATreeElement asset) {
-        seenScenarios.add(scenario.getTitle());
-        seenAssets.add(asset.getTitle());
-
+    private List<String> countRisk(CnATreeElement scenario, CnATreeElement asset) {
         ArrayList<String> row = new ArrayList<String>();
         AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
         
         int probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY);
         
         // prob. / impact:
-        row.add(Integer.toString(probability));
-        row.add(Integer.toString(valueAdapter.getVertraulichkeit()));
-        row.add(Integer.toString(valueAdapter.getIntegritaet()));
-        row.add(Integer.toString(valueAdapter.getVerfuegbarkeit()));
-        
         int riskC = probability + valueAdapter.getVertraulichkeit();
         int riskI = probability + valueAdapter.getIntegritaet();
         int riskA = probability + valueAdapter.getVerfuegbarkeit();
         
         // risk values:
-        row.add(Integer.toString(riskC));
-        row.add(Integer.toString(riskI));
-        row.add(Integer.toString(riskA));
-        
-        // tolerable values:
-        row.add(Integer.toString(tolerableC));
-        row.add(Integer.toString(tolerableI));
-        row.add(Integer.toString(tolerableA));
-        
-        row.add(scenario.getTitle());
-        row.add(asset.getTitle());
-        
-        riskMatrixC.increaseCount(probability, valueAdapter.getVertraulichkeit());
-        riskMatrixI.increaseCount(probability, valueAdapter.getIntegritaet());
-        riskMatrixA.increaseCount(probability, valueAdapter.getVerfuegbarkeit());
+        switch (this.riskType) {
+        case 'c':
+            increaseCount(riskC);
+            break;
+        case 'i':
+            increaseCount(riskI);
+            break;
+        case 'a':
+            increaseCount(riskA);
+            break;
+        }
         
         return row;
     }
@@ -206,24 +157,29 @@ public class LoadReportAllRisksForScope extends GenericCommand {
   
 
     /**
+     * @param riskC
+     * @param tolerableRisk2
+     */
+    private void increaseCount(int risk) {
+        if (risk > tolerableRisk)
+            countRYG[0]++; // red
+        else if (risk < tolerableRisk-numYellowFields+1)
+            countRYG[2]++; // green
+        else
+            countRYG[1]++; // yellow
+    }
+
+    /**
      * @return the result
      */
-    public List<List<String>> getResult() {
+    public List<List<Object>> getResult() {
+        ArrayList<List<Object>> result = new ArrayList<List<Object>>();
+        result.add(Arrays.asList(new Object[] {"2RED", countRYG[0]}));
+        result.add(Arrays.asList(new Object[] {"1YELLOW", countRYG[1]}));
+        result.add(Arrays.asList(new Object[] {"0GREEN", countRYG[2]}));
         return result;
     }
 
    
-    
-    public Integer[][] getCountC() {
-        return riskMatrixC.map;
-    }
-    
-    public Integer[][] getCountI() {
-        return riskMatrixI.map;
-    }
- 
-    public Integer[][] getCountA() {
-        return riskMatrixA.map;
-    }
-
+  
 }

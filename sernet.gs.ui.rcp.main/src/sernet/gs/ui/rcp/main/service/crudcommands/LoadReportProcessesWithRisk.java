@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.dialect.function.CastFunction;
 
 import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
@@ -32,6 +33,7 @@ import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.iso27k.Asset;
@@ -151,11 +153,18 @@ public class LoadReportProcessesWithRisk extends GenericCommand {
                 
                 int totalRisk=0;
                 for (CnATreeElement asset : assets) {
-                    AssetValueAdapter assetValueAdapter = new AssetValueAdapter(asset);
-                    totalRisk += assetValueAdapter.getIntegritaet();
-                    totalRisk += assetValueAdapter.getVerfuegbarkeit();
-                    totalRisk += assetValueAdapter.getVertraulichkeit();
+                    LoadReportElementWithLinks command2 = new LoadReportElementWithLinks("incident_scenario", asset.getDbId());
+                    command2 = getCommandService().executeCommand(command2);
+                    List<CnALink> links = command2.getLinkList();
+                    
+                    for (CnALink link : links) {
+                        totalRisk += link.getRiskConfidentiality();
+                        totalRisk += link.getRiskIntegrity();
+                        totalRisk += link.getRiskAvailability();
+                    }
                 }
+                
+                getLog().debug("Total risk for process " + cnATreeElement.getDbId() + ": " + totalRisk);
                 
                 ArrayList<String> row = new ArrayList<String>();
                 AssetValueAdapter process = new AssetValueAdapter(cnATreeElement);

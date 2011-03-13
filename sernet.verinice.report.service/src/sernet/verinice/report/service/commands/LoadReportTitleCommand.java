@@ -44,7 +44,7 @@ public class LoadReportTitleCommand extends GenericCommand {
     
     private Integer root;
     private List<CnATreeElement> elements;
-    private String orgName;
+    private String orgName="";
 
     public LoadReportTitleCommand(Integer root) {
         this.root = root;
@@ -61,26 +61,20 @@ public class LoadReportTitleCommand extends GenericCommand {
 	        LoadReportElements command = new LoadReportElements(Audit.TYPE_ID, root);
             command = getCommandService().executeCommand(command);
             elements = command.getElements();
+            if (elements == null)
+                return;
             
-            this.orgName = findOrgName(elements.get(0)); 
+            LoadReportParentOrgForObject command2 = new LoadReportParentOrgForObject(elements.get(0));
+            command2 = getCommandService().executeCommand(command2);
+            if (command2.getOrg() != null)
+                orgName = command2.getOrg().getTitle();
+            
         } catch (CommandException e) {
             throw new RuntimeCommandException(e);
         }
 	}
 
-    /**
-     * @param cnATreeElement
-     * @return
-     */
-    private String findOrgName(CnATreeElement cnATreeElement) {
-        CnATreeElement parent = cnATreeElement.getParent();
-        if (parent == null)
-            return "";
-        if (parent.getTypeId().equals(Organization.TYPE_ID)) {
-            return parent.getTitle();
-        }
-        return findOrgName(parent);
-    }
+    
 
 
 }
