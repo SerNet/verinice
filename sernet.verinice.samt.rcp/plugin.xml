@@ -353,6 +353,18 @@
       </handler>
    </extension>
    <extension point="org.eclipse.ui.decorators">
+          <decorator
+	            adaptable="true"
+	            class="sernet.verinice.samt.rcp.TopicGroupDecorator"
+	            id="sernet.verinice.samt.rcp.AuditDecorator"
+	            label="ISA Audit decorator"
+	            lightweight="true"
+	            location="BOTTOM_RIGHT"
+	            state="true">
+	         <enablement>
+	         	<objectClass name="sernet.verinice.model.iso27k.Audit"/>        
+	         </enablement>
+	      </decorator>
 	      <decorator
 	            adaptable="true"
 	            class="sernet.verinice.samt.rcp.TopicGroupDecorator"

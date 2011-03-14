@@ -12,6 +12,7 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.iso27k.service.ControlMaturityService;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
 
@@ -25,28 +26,22 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 	@Override
 	public void decorate(Object element, IDecoration decoration) {
 		ControlGroup group = null;
-		Set<CnATreeElement> childrenRetrieved = null;
 		try {
 			boolean isActive = Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.ISA_RESULTS); 
-			if(isActive && element instanceof ControlGroup) {
-				sernet.gs.ui.rcp.main.Activator.inheritVeriniceContextState();
-				group = (ControlGroup) element;
-				
+			if(isActive) {
+			    sernet.gs.ui.rcp.main.Activator.inheritVeriniceContextState();
+			    if(element instanceof Audit) {
+			        Audit audit = (Audit) element;
+			        group = (ControlGroup) audit.getGroup(ControlGroup.TYPE_ID);
+			        group = (ControlGroup) Retriever.checkRetrieveChildren(group);
+			    }
+			    if(element instanceof ControlGroup) {	
+    				group = (ControlGroup) element;	
+			    }
 				// add a decorator if at least one isa topic child exists
-				boolean addDecorator = false;
-				Set<CnATreeElement> 
-				children = group.getChildren();
-				childrenRetrieved = new HashSet<CnATreeElement>(children.size());
-				for (CnATreeElement child : children) {
-					if(child instanceof IControl) {
-						addDecorator = true;
-						child = Retriever.checkRetrieveElement(child);
-					}
-					childrenRetrieved.add(child);				
-				}
+				boolean addDecorator = true;
+				retrieveChildren(group);
 				if(addDecorator) {
-					group.setChildren(childrenRetrieved);
-					
 					String state = maturityService.getImplementationState(group);
 					if(IControl.IMPLEMENTED_NO.equals(state)) {
 						decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_NO));
@@ -58,10 +53,26 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 						decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_YES));
 					}
 				}
-			}
+			}		
 		} catch(Throwable t) {
 			LOG.error("Error while loading maturity value", t);
 		}
+	}
+	
+	private void retrieveChildren(/*not final*/ControlGroup group) {
+	    Set<CnATreeElement> children = group.getChildren();
+	    Set<CnATreeElement> childrenRetrieved = new HashSet<CnATreeElement>(children.size());
+        for (CnATreeElement child : children) {
+            if(child instanceof IControl) {
+                child = Retriever.checkRetrieveElement(child);
+            }
+            if(child instanceof ControlGroup) {
+                child = Retriever.checkRetrieveChildren(child);
+                retrieveChildren((ControlGroup) child);
+            }
+            childrenRetrieved.add(child);               
+        }
+        group.setChildren(childrenRetrieved);
 	}
 
 }
