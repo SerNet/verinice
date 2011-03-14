@@ -168,11 +168,6 @@
 		<load-on-startup>3</load-on-startup>
 	</servlet>
     
-    
-    <error-page>
-        <error-code>401</error-code>
-        <location>/401.html</location>
-    </error-page>
     <error-page>
         <error-code>403</error-code>
         <location>/403.html</location>

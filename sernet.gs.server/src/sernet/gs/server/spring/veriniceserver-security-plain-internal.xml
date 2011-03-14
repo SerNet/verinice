@@ -60,7 +60,7 @@
 
 	<bean id="springSecurityFilterChain" class="org.springframework.security.util.FilterChainProxy">
 		<security:filter-chain-map path-type="ant">
-			<security:filter-chain pattern="/todo/**" filters="httpSessionContextIntegrationFilter,digestProcessingFilter,,exceptionTranslationFilter,filterSecurityInterceptor" />
+			<security:filter-chain pattern="/todo/**" filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
 			 <security:filter-chain pattern="/sync/**" filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" /> 
 			<security:filter-chain pattern="/service/**" filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
 		</security:filter-chain-map>
