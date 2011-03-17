@@ -36,26 +36,18 @@ import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCurrentUserConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
-import sernet.gs.web.ExceptionHandler;
 import sernet.gs.web.SecurityException;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.HitroUtil;
-import sernet.hui.common.connect.HuiRelation;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.interfaces.iso27k.ILink;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.service.commands.CreateLink;
-import sernet.verinice.service.commands.LoadElementByTypeId;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
@@ -89,6 +81,8 @@ public class EditBean {
     private List<String> noLabelTypeList = new LinkedList<String>();
     
     private Set<String> roles = null;
+    
+    private List<IActionHandler> actionHandler;
     
     private boolean generalOpen = true;
     
@@ -252,6 +246,12 @@ public class EditBean {
         element = null;
         getLinkBean().clear();
         noLabelTypeList.clear();
+        clearActionHandler();
+    }
+    
+    public String getAction() { return null; };
+    
+    public void setAction(String s) {
     }
     
     public boolean writeEnabled() {
@@ -412,6 +412,27 @@ public class EditBean {
 
     public List<String> getNoLabelTypeList() {
         return noLabelTypeList;
+    }
+
+    public List<IActionHandler> getActionHandler() {
+        return actionHandler;
+    }
+
+    public void setActionHandler(List<IActionHandler> actionHandlerList) {
+        this.actionHandler = actionHandlerList;
+    }
+    
+    public void addActionHandler(IActionHandler newActionHandler) {
+        if(this.actionHandler==null) {
+            this.actionHandler = new LinkedList<IActionHandler>();
+        }
+        this.actionHandler.add(newActionHandler);
+    }
+    
+    public void clearActionHandler() {
+        if(getActionHandler()!=null) {
+            getActionHandler().clear();
+        }
     }
 
     public boolean isGeneralOpen() {

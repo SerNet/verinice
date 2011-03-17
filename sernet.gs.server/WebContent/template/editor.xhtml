@@ -15,6 +15,9 @@
 		    	</div>
 		    	<div style="margin-bottom:4px; height:40px;">				      							      			
 		  			<a4j:commandButton id="submit" value="#{msgEdit['save']}" action="#{edit.save}" styleClass="button"/>
+		  			<a4j:repeat id="actionList" value="#{edit.actionHandler}" var="actionHandler">
+		  				<a4j:commandButton action="#{actionHandler.execute}" value="#{actionHandler.label}" reRender="editorPanel,completePanel,tablePanel" styleClass="button"/>  				
+		  			</a4j:repeat>
 		        </div>
 		   		<rich:simpleTogglePanel switchType="client" label="#{msgEdit['general']}" opened="#{edit.generalOpen}">
 		    		<vn:properties list="#{edit.labelPropertyList}" listNoLabel="#{edit.noLabelPropertyList}"/>
@@ -33,7 +36,7 @@
 	      						</rich:comboBox>
 	      					</td>
 	      					<td><rich:comboBox id="linkTarget" value="#{link.selectedLinkTargetName}" suggestionValues="#{link.linkTargetNameList}" defaultLabel="#{msgEdit['selectTarget']}" enableManualInput="false" style="margin-bottom:5px"/></td>					      					
-	      					<td><a4j:commandButton id="addLink" value="#{msgEdit['addLink']}" action="#{link.addLink}" reRender="editPanel"/></td>
+	      					<td><a4j:commandButton id="addLink" value="#{msgEdit['addLink']}" action="#{link.addLink}" reRender="editorPanel"/></td>
 	      				</tr>
 	      			</table>					      						      			
 	      			<rich:extendedDataTable

@@ -20,8 +20,6 @@
 package sernet.verinice.web;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -51,7 +49,7 @@ public class TaskBean {
 
     private static final Logger LOG = Logger.getLogger(TaskBean.class);
     
-    public static final String BOUNDLE_NAME = "sernet.verinice.web.TaskMessages";
+    public static final String BOUNDLE_NAME = "sernet.verinice.web.TaskMessages"; //$NON-NLS-1$
 
     private EditBean editBean;
     
@@ -93,40 +91,71 @@ public class TaskBean {
     }
     
     public void openTask() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("openTask() called ...");
+    	if (LOG.isDebugEnabled()) {
+            LOG.debug("openTask() called ..."); //$NON-NLS-1$
         }
-        try {
-            Iterator<Object> iterator = getSelection().getKeys();
-            while (iterator.hasNext()) {
-                Object key = iterator.next();
-                table.setRowKey(key);
-                if (table.isRowAvailable()) {
-                    setSelectedTask( (ITask) table.getRowData());
-                }
-                getTaskService().markAsRead(getSelectedTask().getId());
-                getSelectedTask().setIsRead(true);
-                getSelectedTask().setStyle(ITask.STYLE_READ);
-                
-                getEditBean().setUuid(getSelectedTask().getUuid());
-                getEditBean().setTitle(getSelectedTask().getControlTitle());
-                getEditBean().setTypeId(getSelectedTask().getType());
-                getEditBean().addNoLabelType(SamtTopic.PROP_DESC);
-                setOutcomeId(null);
-                getEditBean().init();
-                
-                getLinkBean().setSelectedLink(null);
-                getLinkBean().setSelectedLinkTargetName(null);
-                getLinkBean().setSelectedLinkType(null);
+    	readSelectionFromTable();
+    	doOpenTask();
+    }
+    
+    private void readSelectionFromTable() {
+    	Iterator<Object> iterator = getSelection().getKeys();
+        while (iterator.hasNext()) {
+            Object key = iterator.next();
+            table.setRowKey(key);
+            if (table.isRowAvailable()) {
+                setSelectedTask( (ITask) table.getRowData());
             }
-        } catch (Throwable t) {
-            LOG.error("Error while opening task", t);
         }
+    }
+    
+    private void doOpenTask() {  
+        try {         
+            getTaskService().markAsRead(getSelectedTask().getId());
+            getSelectedTask().setIsRead(true);
+            getSelectedTask().setStyle(ITask.STYLE_READ);
+            
+            getEditBean().setUuid(getSelectedTask().getUuid());
+            getEditBean().setTitle(getSelectedTask().getControlTitle());
+            getEditBean().setTypeId(getSelectedTask().getType());
+            getEditBean().addNoLabelType(SamtTopic.PROP_DESC);
+            setOutcomeId(null);
+            getEditBean().init();
+            getEditBean().clearActionHandler();
+            getEditBean().addActionHandler(new SaveAndNextHandler());
+            getEditBean().addActionHandler(new OpenNextHandler());
+            
+            getLinkBean().setSelectedLink(null);
+            getLinkBean().setSelectedLinkTargetName(null);
+            getLinkBean().setSelectedLinkType(null);
+        } catch (Throwable t) {
+            LOG.error("Error while opening task", t); //$NON-NLS-1$
+        }
+    }
+    
+    public void saveAndOpenNext() {
+        getEditBean().save();
+        openNext();
+    }
+    
+    public void openNext() {
+    	int i = 0;
+    	for (Iterator<ITask> iterator = getTaskList().iterator(); iterator.hasNext();) {
+    		ITask task = iterator.next();
+    		if(task!=null && getSelectedTask()!=null && task.equals(getSelectedTask())) {
+    			setSelectedTask(iterator.next());
+    			SimpleSelection selection = new SimpleSelection();
+    			selection.addKey(Integer.valueOf(i+1));
+    			getTable().setSelection(selection);
+    		}
+    		i++;
+		}
+    	doOpenTask();
     }
     
     public void completeTask() {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("completeTask() called ...");
+            LOG.debug("completeTask() called ..."); //$NON-NLS-1$
         }
         if(getSelectedTask()!=null) {
             getTaskService().completeTask(getSelectedTask().getId(),getOutcomeId());
@@ -134,7 +163,7 @@ public class TaskBean {
             setSelectedTask(null);
             setSelection(null);
             getEditBean().clear();
-            Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));  
+            Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));   //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
     
@@ -163,7 +192,7 @@ public class TaskBean {
     String getUniqueName(String name, int n) {
         if(nameAuditMap.containsKey(name)) {
             n++;
-            name = new StringBuilder(name).append(" (").append(n).append(")").toString();
+            name = new StringBuilder(name).append(" (").append(n).append(")").toString(); //$NON-NLS-1$ //$NON-NLS-2$
             return getUniqueName(name, n);
         } else {
             return name;
@@ -283,6 +312,39 @@ public class TaskBean {
     public void german() {
         Util.german();
     }
-
     
+
+
+    public class SaveAndNextHandler implements IActionHandler {
+    
+        @Override
+        public void execute() {
+            saveAndOpenNext();  
+        }
+    
+        @Override
+        public String getLabel() {
+            return Messages.getString("TaskBean.8"); //$NON-NLS-1$
+        }
+    
+        @Override
+        public void setLabel(String label) {}      
+    }
+    
+    public class OpenNextHandler implements IActionHandler {
+        
+        @Override
+        public void execute() {
+            openNext();  
+        }
+    
+        @Override
+        public String getLabel() {
+            return Messages.getString("TaskBean.9"); //$NON-NLS-1$
+        }
+    
+        @Override
+        public void setLabel(String label) {}      
+    }
+
 }
