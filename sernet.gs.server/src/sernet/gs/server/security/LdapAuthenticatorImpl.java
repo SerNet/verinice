@@ -181,9 +181,18 @@ public class LdapAuthenticatorImpl implements LdapAuthenticator {
     private DirContextOperations ldapUser(Entity entity, String[] specialRoles) {
         DirContextOperations authAdapter = new DirContextAdapter();
         List<String> roles = new ArrayList<String>();
+           
+        // All users without explicitly set Configuration.PROP_RCP==Configuration.PROP_RCP_NO
+        // get ROLE_USER, user with ROLE_USER can access the RCP client 
+        if (!entity.isSelected(Configuration.PROP_RCP, Configuration.PROP_RCP_NO)) {
+            roles.add(ApplicationRoles.ROLE_USER);
+        }
         
-        // All non-privileged users have the role "ROLE_USER".
-        roles.add(ApplicationRoles.ROLE_USER);
+        // All users without explicitly set PROP_WEB==Configuration.PROP_RCP_NO
+        // get ROLE_WEB, user with ROLE_WEB can access the web client 
+        if (!entity.isSelected(Configuration.PROP_WEB, Configuration.PROP_WEB_NO)) {
+            roles.add(ApplicationRoles.ROLE_WEB);
+        }
         
         // if set in the entity, the user may also have the admin role:
         if (entity.isSelected(Configuration.PROP_ISADMIN, "configuration_isadmin_yes"))
