@@ -82,8 +82,7 @@ public class IsaExecution {
         ServerInitializer.inheritVeriniceContextState();
         String implementation = null;
         try {
-            RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-            LoadElementByUuid<SamtTopic> command = new LoadElementByUuid(SamtTopic.TYPE_ID,uuid,ri);
+            LoadElementByUuid<SamtTopic> command = new LoadElementByUuid(SamtTopic.TYPE_ID,uuid,RetrieveInfo.getPropertyInstance());
             command = getCommandService().executeCommand(command);
             SamtTopic topic = command.getElement();
             implementation = Integer.valueOf(topic.getMaturity()).toString();

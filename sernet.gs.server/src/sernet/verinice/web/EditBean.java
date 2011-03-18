@@ -238,14 +238,22 @@ public class EditBean {
     }
     
     public void clear() {
-        groupList.clear();
-        propertyList.clear();
+        if(groupList!=null) {
+            groupList.clear();
+        }
+        if(propertyList!=null) {
+            propertyList.clear();
+        }
         uuid = null;
         typeId = null;
         title = null;
         element = null;
-        getLinkBean().clear();
-        noLabelTypeList.clear();
+        if(getLinkBean()!=null) {
+            getLinkBean().clear();
+        }
+        if(noLabelTypeList!=null) {
+            noLabelTypeList.clear();
+        }
         clearActionHandler();
     }
     

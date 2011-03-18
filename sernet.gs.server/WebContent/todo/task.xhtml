@@ -21,8 +21,13 @@
 							<a4j:repeat id="outcomeList" value="#{task.selectedTask.outcomes}" var="outcome" rendered="#{task.selectedTask!=null}">
 						    	<a4j:commandButton id="complete" action="#{task.completeTask}" value="#{outcome.value}" reRender="tablePanel,editorPanel" styleClass="button">
 						    		<a4j:actionparam name="outcomeId" value="#{outcome.key}" assignTo="#{task.outcomeId}"/>
-						    	</a4j:commandButton>
+						    	</a4j:commandButton>						    
 						    </a4j:repeat>
+						    <a4j:commandButton id="completeAll" action="#{task.completeAllTask}" value="#{msgTask['completeAll']}" reRender="tablePanel,editorPanel" styleClass="button">
+						    	<a4j:support event="onclick" action="#{message.showInfo}" reRender="massagePanel">
+						    		<a4j:actionparam value="Completing all tasks. Please wait..." assignTo="#{message.info}"/>
+						    	</a4j:support>
+						    </a4j:commandButton>
 						 </a4j:outputPanel>
 					 	 <table>
 					 	 	<tr>

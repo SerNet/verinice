@@ -82,8 +82,7 @@ public class ControlExecution {
         ServerInitializer.inheritVeriniceContextState();
         String implementation = null;
         try {
-            RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-            LoadElementByUuid<Control> command = new LoadElementByUuid(Control.TYPE_ID,uuidControl,ri);
+            LoadElementByUuid<Control> command = new LoadElementByUuid(Control.TYPE_ID,uuidControl,RetrieveInfo.getPropertyInstance());
             command = getCommandService().executeCommand(command);
             Control control = command.getElement();
             implementation = control.getImplementation();

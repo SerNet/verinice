@@ -79,6 +79,9 @@ public class TaskBean {
      * @return
      */
     public List<ITask> loadTasks() {  
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("loadTasks called..."); //$NON-NLS-1$
+        }
         ITaskParameter parameter = new TaskParameter();
         parameter.setRead(getShowRead());
         parameter.setUnread(getShowUnread());  
@@ -87,6 +90,9 @@ public class TaskBean {
         }
         taskList = getTaskService().getTaskList(parameter);
         Collections.sort(taskList);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("loadTasks finished"); //$NON-NLS-1$
+        }
         return taskList;
     }
     
@@ -140,17 +146,23 @@ public class TaskBean {
     
     public void openNext() {
     	int i = 0;
+    	boolean isNext = false;
     	for (Iterator<ITask> iterator = getTaskList().iterator(); iterator.hasNext();) {
     		ITask task = iterator.next();
     		if(task!=null && getSelectedTask()!=null && task.equals(getSelectedTask())) {
-    			setSelectedTask(iterator.next());
-    			SimpleSelection selection = new SimpleSelection();
-    			selection.addKey(Integer.valueOf(i+1));
-    			getTable().setSelection(selection);
+    		    if(iterator.hasNext()) {
+    		        isNext = true;
+        			setSelectedTask(iterator.next());
+        			SimpleSelection selection = new SimpleSelection();
+        			selection.addKey(Integer.valueOf(i+1));
+        			getTable().setSelection(selection);
+    		    }
     		}
     		i++;
 		}
-    	doOpenTask();
+    	if(isNext) {
+    	    doOpenTask();
+    	}
     }
     
     public void completeTask() {
@@ -165,6 +177,23 @@ public class TaskBean {
             getEditBean().clear();
             Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));   //$NON-NLS-1$ //$NON-NLS-2$
         }
+    }
+    
+    public void completeAllTask() { 
+        int n = 0;
+        for (ITask task : getTaskList()) {        
+            getTaskService().completeTask(task.getId());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Task completed, id: " + task.getId()); //$NON-NLS-1$
+            }
+            n++;
+        }
+        getTaskList().clear();
+        this.taskList = loadTasks();
+        setSelectedTask(null);
+        setSelection(null);
+        getEditBean().clear();
+        Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "allTaskCompleted", new Object[]{Integer.valueOf(n)}));   //$NON-NLS-1$ //$NON-NLS-2$
     }
     
     public void selectAudit() {

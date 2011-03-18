@@ -38,40 +38,42 @@
 	      					<td><rich:comboBox id="linkTarget" value="#{link.selectedLinkTargetName}" suggestionValues="#{link.linkTargetNameList}" defaultLabel="#{msgEdit['selectTarget']}" enableManualInput="false" style="margin-bottom:5px"/></td>					      					
 	      					<td><a4j:commandButton id="addLink" value="#{msgEdit['addLink']}" action="#{link.addLink}" reRender="editorPanel"/></td>
 	      				</tr>
-	      			</table>					      						      			
-	      			<rich:extendedDataTable
-	     				value="#{link.linkList}" 
-		                var="item"
-		                selectionMode="single"
-		                binding="#{link.table}"
-	             		selection="#{link.selection}"
-		                height="150px"
-		                width="400px">
-		                <rich:column
-	     					sortable="true" 
-	     					sortBy="#{item.type}"
-		                    label="#{msgEdit['linkType']}"
-		                    width="200px">
-		                    <f:facet name="header">
-		                        <h:outputText value="#{msgEdit['linkType']}" />
-		                    </f:facet>
-		                    <h:outputText value="#{item.type}"/>
-		                </rich:column>				                
-		                <rich:column 
-	     					sortable="true" 
-	     					sortBy="#{item.targetName}"
-		                    label="#{msgEdit['linkTarget']}"
-		                    width="200px">
-		                    <f:facet name="header">
-		                        <h:outputText value="#{msgEdit['linkTarget']}" />
-		                    </f:facet>
-		                    <h:outputText value="#{item.targetName}"/>
-		                </rich:column>						                
-	              			<a4j:support action="#{link.selectLink}"
-	                   		event="onselectionchange" 
-	                   		reRender="linkDeletePanel"/>
-			        </rich:extendedDataTable>
-				     <a4j:outputPanel id="linkDeletePanel">
+	      			</table>
+	      			<a4j:outputPanel id="linkPanel">		      						      			
+		      			<rich:extendedDataTable
+		     				value="#{link.linkList}" 
+			                var="item"
+			                selectionMode="single"
+			                binding="#{link.table}"
+		             		selection="#{link.selection}"
+			                height="150px"
+			                width="400px">
+			                <rich:column
+		     					sortable="true" 
+		     					sortBy="#{item.type}"
+			                    label="#{msgEdit['linkType']}"
+			                    width="200px">
+			                    <f:facet name="header">
+			                        <h:outputText value="#{msgEdit['linkType']}" />
+			                    </f:facet>
+			                    <h:outputText value="#{item.type}"/>
+			                </rich:column>				                
+			                <rich:column 
+		     					sortable="true" 
+		     					sortBy="#{item.targetName}"
+			                    label="#{msgEdit['linkTarget']}"
+			                    width="200px">
+			                    <f:facet name="header">
+			                        <h:outputText value="#{msgEdit['linkTarget']}" />
+			                    </f:facet>
+			                    <h:outputText value="#{item.targetName}"/>
+			                </rich:column>						                
+		              			<a4j:support action="#{link.selectLink}"
+		                   		event="onselectionchange" 
+		                   		reRender="linkDeletePanel"/>
+				        </rich:extendedDataTable>
+				    </a4j:outputPanel>
+				    <a4j:outputPanel id="linkDeletePanel">
 				        <table style="width: 400px;">
 		      				<tr>
 		      					<td style="text-align: right; vertical-align: middle;width: 330px;">
