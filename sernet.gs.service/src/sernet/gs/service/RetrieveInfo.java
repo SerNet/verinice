@@ -30,23 +30,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("serial")
 public class RetrieveInfo implements Serializable, IRetrieveInfo{
-
-	private static final RetrieveInfo PROPERTY_INSTANCE;
-	private static final RetrieveInfo CHILDREN_INSTANCE;
-	private static final RetrieveInfo PROPERTY_CHILDREN_INSTANCE;
-	
-	static {
-		PROPERTY_INSTANCE = new RetrieveInfo();
-		PROPERTY_INSTANCE.setProperties(true);
-		
-		CHILDREN_INSTANCE = new RetrieveInfo();
-		CHILDREN_INSTANCE.setChildren(true);
-		
-		PROPERTY_CHILDREN_INSTANCE = new RetrieveInfo();
-		PROPERTY_CHILDREN_INSTANCE.setProperties(true);
-		PROPERTY_CHILDREN_INSTANCE.setChildren(true);
-	}
 	
 	boolean properties = false;
 	
@@ -77,15 +62,22 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	boolean innerJoin = false;
 
 	public static RetrieveInfo getPropertyInstance() {
-		return PROPERTY_INSTANCE;
+	    RetrieveInfo ri = new RetrieveInfo();
+	    ri.setProperties(true);
+		return ri;
 	}
 	
 	public static RetrieveInfo getChildrenInstance() {
-		return CHILDREN_INSTANCE;
+	    RetrieveInfo ri = new RetrieveInfo();
+        ri.setChildren(true);
+		return ri;
 	}
 	
 	public static RetrieveInfo getPropertyChildrenInstance() {
-		return PROPERTY_CHILDREN_INSTANCE;
+	    RetrieveInfo ri = new RetrieveInfo();
+        ri.setProperties(true);
+        ri.setChildren(true);
+		return ri;
 	}
 	
 	public RetrieveInfo() {
