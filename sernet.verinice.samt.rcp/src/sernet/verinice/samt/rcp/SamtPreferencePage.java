@@ -22,6 +22,7 @@ package sernet.verinice.samt.rcp;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -37,6 +38,8 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
 
     public static final String CHARSET_SAMT = "sernet.verinice.samt.rcp.charset"; //$NON-NLS-1$
     
+    public static final String CATALOG_FILENAME = "sernet.verinice.samt.rcp.catalogFilename"; //$NON-NLS-1$
+    
     public static final String EXPAND_ISA = "sernet.verinice.samt.rcp.expandIsa"; //$NON-NLS-1$
     
     public static final String ISA_RESULTS = "sernet.verinice.samt.rcp.isaResult"; //$NON-NLS-1$
@@ -45,6 +48,7 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
     
     
     private ComboFieldEditor encodingFieldEditor;
+    private StringFieldEditor catalogFileName;
     private BooleanFieldEditor expandIsa;
 	private BooleanFieldEditor showIsaResults;
     private BooleanFieldEditor infoControlsLinked;
@@ -63,6 +67,7 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
     public static void setDefaults() {
         // set default charset for self assessment catalog
         Activator.getDefault().getPreferenceStore().setDefault(CHARSET_SAMT,VeriniceCharset.CHARSET_UTF_8.name());
+        Activator.getDefault().getPreferenceStore().setDefault(CATALOG_FILENAME,Messages.SamtWorkspace_0);        
         Activator.getDefault().getPreferenceStore().setDefault(EXPAND_ISA,true);
         Activator.getDefault().getPreferenceStore().setDefault(ISA_RESULTS,false);
         Activator.getDefault().getPreferenceStore().setDefault(INFO_CONTROLS_LINKED,true);
@@ -84,6 +89,9 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
     protected void createFieldEditors() {
         encodingFieldEditor = new ComboFieldEditor(CHARSET_SAMT, Messages.SamtPreferencePage_2, encodingComboValues, getFieldEditorParent());
         addField(encodingFieldEditor);
+        
+        catalogFileName = new StringFieldEditor(CATALOG_FILENAME, Messages.SamtPreferencePage_5, getFieldEditorParent());
+        addField(catalogFileName);
         
         expandIsa = new BooleanFieldEditor(EXPAND_ISA, Messages.SamtPreferencePage_3, getFieldEditorParent());
         addField(expandIsa);
