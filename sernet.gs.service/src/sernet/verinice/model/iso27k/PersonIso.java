@@ -67,9 +67,18 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(getEntity().getSimpleValue(PROP_SURNAME));
-		sb.append(" ");
-		sb.append(getEntity().getSimpleValue(PROP_NAME));
+		final String surname = getEntity().getSimpleValue(PROP_SURNAME);
+		if(surname!=null && !surname.isEmpty()) {
+    		sb.append(surname).append(", ");
+		}
+		final String name = getEntity().getSimpleValue(PROP_NAME);
+		if(name!=null && !name.isEmpty()) {
+		    sb.append(name);
+		}
+		final String abbr = getEntity().getSimpleValue(PROP_ABBR);
+        if(abbr!=null && !abbr.isEmpty()) {
+            sb.append(" (").append(abbr).append(")");
+        }
 		return sb.toString();
 	}
 	
