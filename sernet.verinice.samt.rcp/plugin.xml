@@ -390,4 +390,22 @@
 	         </enablement>
 	      </decorator>
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.model.iso27k.Audit"
+            objectClass="sernet.verinice.model.iso27k.Audit">
+         <action
+               class="sernet.verinice.samt.rcp.AssignAllIsaTopics"
+               enablesFor="+"
+               icon="icons/user.png"
+               id="sernet.verinice.samt.rcp.AssignAllIsaTopics"
+               label="%action.label.15"
+               menubarPath="additions"
+               style="push"
+               tooltip="%action.tooltip.3">
+         </action>
+      </objectContribution>
+   </extension>
 </plugin>

@@ -41,10 +41,13 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
     
     public static final String ISA_RESULTS = "sernet.verinice.samt.rcp.isaResult"; //$NON-NLS-1$
     
+    public static final String INFO_CONTROLS_LINKED = "info_controls_linked"; //$NON-NLS-1$
+    
     
     private ComboFieldEditor encodingFieldEditor;
     private BooleanFieldEditor expandIsa;
 	private BooleanFieldEditor showIsaResults;
+    private BooleanFieldEditor infoControlsLinked;
     
     private static final String[][] encodingComboValues = new String[][]{
             new String[]{VeriniceCharset.CHARSET_UTF_8.displayName(),VeriniceCharset.CHARSET_UTF_8.name()},
@@ -62,6 +65,7 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
         Activator.getDefault().getPreferenceStore().setDefault(CHARSET_SAMT,VeriniceCharset.CHARSET_UTF_8.name());
         Activator.getDefault().getPreferenceStore().setDefault(EXPAND_ISA,true);
         Activator.getDefault().getPreferenceStore().setDefault(ISA_RESULTS,false);
+        Activator.getDefault().getPreferenceStore().setDefault(INFO_CONTROLS_LINKED,true);
         
     }
     
@@ -86,6 +90,9 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
         
         showIsaResults = new BooleanFieldEditor(ISA_RESULTS, Messages.SamtPreferencePage_0, getFieldEditorParent());
 		addField(showIsaResults);
+		
+		infoControlsLinked = new BooleanFieldEditor(INFO_CONTROLS_LINKED, Messages.SamtPreferencePage_0, getFieldEditorParent());
+        addField(infoControlsLinked);
     }
 
     /* (non-Javadoc)

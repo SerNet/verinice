@@ -46,9 +46,8 @@ public class PreferenceConstants {
 	public static final String INFO_ELEMENTS_COPIED = "info_elements_copied"; //$NON-NLS-1$
 	public static final String INFO_ELEMENTS_CUT = "info_elements_cut";  //$NON-NLS-1$
 	public static final String INFO_IMPORT_LDAP = "info_import_ldap"; //$NON-NLS-1$
-    public static final String INFO_PROCESSES_STARTED = "info_processes_started";
+    public static final String INFO_PROCESSES_STARTED = "info_processes_started"; //$NON-NLS-1$
 
-	
 	public static final String DB_DRIVER = "cna_driver"; //$NON-NLS-1$
 	public static final String DB_DRIVER_DERBY = "org.apache.derby.jdbc.EmbeddedDriver"; //$NON-NLS-1$
 	public static final String DB_DRIVER_POSTGRES = "org.postgresql.Driver"; //$NON-NLS-1$

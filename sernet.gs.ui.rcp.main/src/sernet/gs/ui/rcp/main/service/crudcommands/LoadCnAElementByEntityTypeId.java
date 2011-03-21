@@ -49,7 +49,7 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
 	}
 
 	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
+		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
 		list = dao.findByQuery(QUERY, new Object[] {id});
 		
 		// hydrate titles and abbreviations

@@ -289,7 +289,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
                 try {
                     monitor.setTaskName(Messages.CnATreeElementSelectionDialog_8);
 
-                    if (scopeOnly) {
+                    if (scopeOnly && inputElmt!=null) {
                         LoadElementsForScope command = new LoadElementsForScope(entityType, inputElmt.getDbId());
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
                         input = command.getElements();
