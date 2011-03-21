@@ -100,7 +100,9 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
                 return status;
             }
         };
-        JobScheduler.scheduleInitJob(initDataJob);
+        if(Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.EXPAND_ISA)) {      
+            JobScheduler.scheduleInitJob(initDataJob);
+        }
     }
     
     private void makeActions() {

@@ -37,10 +37,13 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
 
     public static final String CHARSET_SAMT = "sernet.verinice.samt.rcp.charset"; //$NON-NLS-1$
     
+    public static final String EXPAND_ISA = "sernet.verinice.samt.rcp.expandIsa"; //$NON-NLS-1$
+    
     public static final String ISA_RESULTS = "sernet.verinice.samt.rcp.isaResult"; //$NON-NLS-1$
     
     
     private ComboFieldEditor encodingFieldEditor;
+    private BooleanFieldEditor expandIsa;
 	private BooleanFieldEditor showIsaResults;
     
     private static final String[][] encodingComboValues = new String[][]{
@@ -57,6 +60,7 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
     public static void setDefaults() {
         // set default charset for self assessment catalog
         Activator.getDefault().getPreferenceStore().setDefault(CHARSET_SAMT,VeriniceCharset.CHARSET_UTF_8.name());
+        Activator.getDefault().getPreferenceStore().setDefault(EXPAND_ISA,true);
         Activator.getDefault().getPreferenceStore().setDefault(ISA_RESULTS,false);
         
     }
@@ -76,6 +80,9 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
     protected void createFieldEditors() {
         encodingFieldEditor = new ComboFieldEditor(CHARSET_SAMT, Messages.SamtPreferencePage_2, encodingComboValues, getFieldEditorParent());
         addField(encodingFieldEditor);
+        
+        expandIsa = new BooleanFieldEditor(EXPAND_ISA, Messages.SamtPreferencePage_3, getFieldEditorParent());
+        addField(expandIsa);
         
         showIsaResults = new BooleanFieldEditor(ISA_RESULTS, Messages.SamtPreferencePage_0, getFieldEditorParent());
 		addField(showIsaResults);

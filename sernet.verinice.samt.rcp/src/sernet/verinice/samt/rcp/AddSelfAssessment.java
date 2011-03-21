@@ -74,7 +74,7 @@ public class AddSelfAssessment implements IViewActionDelegate {
     public void run(IAction action) {
         try {
             samtService.createSelfAssessment();
-            if(samtView!=null) {
+            if(Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.EXPAND_ISA) && samtView!=null) {
                 Display.getDefault().syncExec(new Runnable() {
                     public void run() {
                         samtView.expand();
