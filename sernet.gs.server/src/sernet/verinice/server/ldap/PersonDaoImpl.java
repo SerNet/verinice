@@ -35,12 +35,29 @@ public class PersonDaoImpl implements IPersonDao {
 			           } else if(attrs.get("userPrincipalName")!=null) {
 			        	   // pre windows 2000:
 			        	   login = (String) attrs.get("userPrincipalName").get();
-			           }
+			           } else if(attrs.get("uid")!=null) {
+                           // OpenLDAP
+			               login = (String) attrs.get("uid").get();
+                       }
 		               if(attrs.get("givenName")!=null) {
+		                   // AD
 		            	   person.setName((String) attrs.get("givenName").get());
-		               }
+		               }else {
+                           // OpenLDAP
+                           String forname = getForename((String) attrs.get("cn").get());
+                           if(forname!=null) {
+                               person.setName(forname);
+                           }
+                       }
 		               if(attrs.get("sn")!=null) {
-		            	   person.setSurname((String) attrs.get("sn").get());
+		            	   // AD
+		                   person.setSurname((String) attrs.get("sn").get());
+		               } else {
+		                   // OpenLDAP
+		                   String surname = getSurname((String) attrs.get("cn").get());
+		                   if(surname!=null) {
+		                       person.setSurname(surname);
+		                   }
 		               }
 		               if(attrs.get("telephoneNumber")!=null) {
 		            	   person.setPhone((String) attrs.get("telephoneNumber").get());
@@ -48,8 +65,33 @@ public class PersonDaoImpl implements IPersonDao {
 		               
 		               return new PersonInfo(person, login);
 		            }
+
+                    
 		         });
 	}
+	
+	private String getForename(String fullName) {
+        String forename = null;
+        if(fullName!=null) {
+            int n = fullName.lastIndexOf(" ");
+            if(n!=-1) {
+                forename = fullName.substring(0,n);
+            }
+        }
+        return forename;
+    }
+	
+	private String getSurname(String fullName) {
+        String surname = null;
+        if(fullName!=null) {
+            surname = fullName;
+            int n = fullName.lastIndexOf(" ");
+            if(n!=-1) {
+                surname = fullName.substring(n+1);
+            }
+        }
+        return surname;
+    }
 	
 	private String getUserFilter(PersonParameter parameter) {
 		StringBuilder sb = new StringBuilder();

@@ -185,6 +185,10 @@
             value="${ldap.prefix}" />
             
         <property
+            name="principalSuffix"
+            value="${ldap.suffix}" />
+            
+        <property
             name="guestUser"
             value="${ldap.guestuser}" />
             

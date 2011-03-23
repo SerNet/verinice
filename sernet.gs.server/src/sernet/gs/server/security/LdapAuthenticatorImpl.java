@@ -49,6 +49,9 @@ public class LdapAuthenticatorImpl implements LdapAuthenticator {
     private String principalPrefix = "";
     
     // injected by spring
+    private String principalSuffix = "";
+    
+    // injected by spring
     private String guestUser = "";
     
     // injected by spring
@@ -106,7 +109,7 @@ public class LdapAuthenticatorImpl implements LdapAuthenticator {
 
         // Grab the username and password out of the authentication object.
         String username = authentication.getName();
-        String principal = principalPrefix + username;
+        String principal = principalPrefix + username + principalSuffix;
         String password = "";
         if (authentication.getCredentials() != null) {
             password = authentication.getCredentials().toString();
@@ -283,5 +286,13 @@ public class LdapAuthenticatorImpl implements LdapAuthenticator {
         } else {
             this.principalPrefix = "";
         }
+    }
+
+    public String getPrincipalSuffix() {
+        return principalSuffix;
+    }
+
+    public void setPrincipalSuffix(String principalSuffix) {
+        this.principalSuffix = principalSuffix;
     }
 }
