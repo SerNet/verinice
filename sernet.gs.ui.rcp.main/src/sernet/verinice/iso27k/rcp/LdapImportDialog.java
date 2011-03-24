@@ -233,10 +233,12 @@ public class LdapImportDialog extends TitleAreaDialog {
 						Messages.LdapImportDialog_45,
 						Messages.LdapImportDialog_1);
 			}
-			List<PersonInfo> accountList  = new ArrayList<PersonInfo>(loadLdapUser.getPersonList());
-			
 			personSet.clear();
-			personSet.addAll(accountList);
+			List<PersonInfo> personList = loadLdapUser.getPersonList();		
+			if(personList!=null) {
+    			List<PersonInfo> accountList  = new ArrayList<PersonInfo>(personList);
+    			personSet.addAll(accountList);
+			}
 			// Get the content for the viewer, setInput will call getElements in the
 			// contentProvider
 			refreshTable();

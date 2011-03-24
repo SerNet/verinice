@@ -20,8 +20,9 @@
 package sernet.verinice.interfaces.bpm;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
-public class KeyValue implements Serializable {
+public class KeyValue implements Serializable,Comparable<KeyValue> {
     
     String key;
     
@@ -73,8 +74,25 @@ public class KeyValue implements Serializable {
             return false;
         return true;
     }
-    
-    
-    
-    
+
+    /**
+     * Returns a negative integer,
+     * zero, or a positive integer as this is less than, equal
+     * to, or greater than o.
+     * 
+     * @param o
+     * @return
+     */
+    @Override
+    public int compareTo(KeyValue o) {
+        int result = -1;
+        if(this.getValue()==null) {
+            result = 1;
+        } else {
+            if(o!=null && o.getValue()!=null) {
+                result = this.getValue().compareTo(o.getValue());
+            }
+        }
+        return result;
+    }
 }

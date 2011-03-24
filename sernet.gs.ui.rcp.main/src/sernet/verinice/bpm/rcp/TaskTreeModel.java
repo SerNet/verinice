@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,8 +59,10 @@ public class TaskTreeModel {
         }
     }
     
-    public Object[] getRootElementArray() {
-        return getRootElementSet().toArray();
+    public Object[] getRootElementArray() {   
+        Object[] result = getRootElementSet().toArray();
+        Arrays.sort(result);
+        return result;
     }
     
     public Set<KeyValue> getRootElementSet() {
@@ -71,6 +75,7 @@ public class TaskTreeModel {
     
     public Object[] getChildrenArray(KeyValue parent) {
         List<ITask> children = nodeMap.get(parent);
+        Collections.sort(children);
         Object[] taskArray = null;
         if(children==null) {
             taskArray = new ITask[0];
