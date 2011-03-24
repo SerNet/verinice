@@ -80,12 +80,14 @@ public class IsaExecution {
      */
     public String loadImplementation(String uuid) {
         ServerInitializer.inheritVeriniceContextState();
-        String implementation = null;
+        String implementation = "0";
         try {
             LoadElementByUuid<SamtTopic> command = new LoadElementByUuid(SamtTopic.TYPE_ID,uuid,RetrieveInfo.getPropertyInstance());
             command = getCommandService().executeCommand(command);
             SamtTopic topic = command.getElement();
-            implementation = Integer.valueOf(topic.getMaturity()).toString();
+            if(topic!=null) {
+                implementation = Integer.valueOf(topic.getMaturity()).toString();
+            }
         } catch(Throwable t) {
             log.error("Error while loading implementation.", t); //$NON-NLS-1$
         }

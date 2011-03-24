@@ -81,18 +81,20 @@ public class LoadUsername extends GenericCommand {
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid(uuid,ri);
             command = getCommandService().executeCommand(command);
             CnATreeElement control = command.getElement();
-            Set<CnALink> linkSet = control.getLinksDown();
-            for (CnALink link : linkSet) {
-                if(this.linkId.equals(link.getRelationId())) {
-                    uuidAssignee = link.getDependency().getUuid();            
-                    break;
-                }
-            }
-            if(uuidAssignee!=null) {
-                IBaseDao<Configuration, Serializable> dao = (IBaseDao<Configuration, Serializable>) getDaoFactory().getDAO(Configuration.class);
-                List<String> result = dao.findByQuery(HQL, new String[] {uuidAssignee,Configuration.PROP_USERNAME});
-                if(result!=null && !result.isEmpty()) {
-                    username = result.get(0);
+            if(control!=null) {
+                Set<CnALink> linkSet = control.getLinksDown();
+                for (CnALink link : linkSet) {
+                    if(this.linkId.equals(link.getRelationId())) {
+                        uuidAssignee = link.getDependency().getUuid();            
+                        break;
+                    }
+                }      
+                if(uuidAssignee!=null) {
+                    IBaseDao<Configuration, Serializable> dao = (IBaseDao<Configuration, Serializable>) getDaoFactory().getDAO(Configuration.class);
+                    List<String> result = dao.findByQuery(HQL, new String[] {uuidAssignee,Configuration.PROP_USERNAME});
+                    if(result!=null && !result.isEmpty()) {
+                        username = result.get(0);
+                    }
                 }
             }
         } catch (Throwable t) {

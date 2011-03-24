@@ -431,6 +431,11 @@ public class ProcessService implements IProcessService {
         variableCrit.add(Restrictions.eq("string", uuid));
         return getJbpmExecutionDao().findByCriteria(executionCrit);
     }
+    
+    @Override
+    public void deleteProcess(String id) {
+        getExecutionService().deleteProcessInstance(id);
+    }
 
 
     private void throwException(final String message) {

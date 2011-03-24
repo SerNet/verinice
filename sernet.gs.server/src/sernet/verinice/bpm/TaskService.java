@@ -231,9 +231,12 @@ public class TaskService implements ITaskService{
         String hql = "select distinct var.string from Variable var where var.key = ?";
         String[] param = new String[]{IIsaExecutionProcess.VAR_AUDIT_UUID};
         List<String> uuidAuditList = getJbpmVariableDao().findByQuery(hql, param);
-        List<Audit> auditList = new ArrayList<Audit>(uuidAuditList.size());
+        List<Audit> auditList = new ArrayList<Audit>();
         for (String uuid : uuidAuditList) {
-            auditList.add(getAuditDao().findByUuid(uuid, RetrieveInfo.getPropertyInstance()));
+            Audit audit = getAuditDao().findByUuid(uuid, RetrieveInfo.getPropertyInstance());
+            if(audit!=null) {
+                auditList.add(audit);
+            }
         }
         return auditList;
     }

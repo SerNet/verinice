@@ -86,5 +86,13 @@ public interface IProcessService {
      * @return true if a new process is created
      */
     void handleSamtTopic(SamtTopic control);
+    
+    /**
+     * Deletes a process including sub-processes with process id.
+     * The process id is column id_ (not db-id) of table jbpm4_execution. 
+     * 
+     * @param id a process id
+     */
+    void deleteProcess(String id);
 }
 

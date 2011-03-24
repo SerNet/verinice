@@ -86,6 +86,9 @@
 <!-- Spring/Quartz trigger bean to execute cron job processJob. -->
 <bean id="processJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
     <property name="jobDetail" ref="processJob" />
+    <!-- for debug only, execute every 2 minutes -->
+    <!-- <property name="cronExpression" value="0 */2 * * * ?" /> -->
+    <!-- execute every 30 minutes -->
     <property name="cronExpression" value="0 */30 * * * ?" />
 </bean>
 

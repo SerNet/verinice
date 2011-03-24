@@ -212,8 +212,10 @@ public class TaskBean {
         List<Audit> auditList = getAuditList();
         nameAuditMap = new Hashtable<String, Audit>(auditList.size());
         for (Audit audit : auditList) {
-            String name = getUniqueName(audit.getTitle(),0);
-            nameAuditMap.put(name,audit);
+            if(audit!=null) {
+                String name = getUniqueName(audit.getTitle(),0);
+                nameAuditMap.put(name,audit);
+            }
         }
         return nameAuditMap;
     }

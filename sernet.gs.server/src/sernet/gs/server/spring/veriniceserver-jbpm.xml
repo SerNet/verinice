@@ -50,6 +50,7 @@
                     <set>
                         <!--<ref bean="controlProcessCreater" />-->
                         <!--<ref bean="isaProcessCreater" />-->
+                        <ref bean="processValidator" />
                     </set>
                 </entry>
                 <entry key="workObjects" value-ref="workObjects" />
@@ -57,12 +58,21 @@
         </property>
     </bean>
     
+    <!-- Checks if element with UUID of process exists, deletes process if not -->
+    <bean name="processValidator" class="sernet.verinice.bpm.ProcessValidator">
+        <property name="processService" ref="processService" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
+    </bean>
+    
+    
     <!-- Creates one control-execution processes for every control. -->
+    <!--
     <bean name="controlProcessCreater" class="sernet.verinice.bpm.ControlProcessCreator">
         <property name="processService" ref="processService" />
         <property name="controlDao" ref="controlDAO" />
     </bean>
-    
+    -->
     <!-- Creates one isa-execution processes for every isa/samt topic. -->
     <!--
     <bean name="isaProcessCreater" class="sernet.verinice.bpm.IsaProcessCreator">
