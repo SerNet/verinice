@@ -70,7 +70,7 @@
 -->
     <bean id="authService" class="sernet.gs.server.security.DigestAuthenticationService">
         <property name="entryPoint" ref="digestProcessingFilterEntryPoint" />
-
+		<property name="adminUsername" value="${admin.username}" /> 
         <security:intercept-methods>
              <!-- must be logged in to access roles: -->
             <security:protect method="sernet.gs.server.security.DigestAuthenticationService.getRoles" access="ROLE_USER" />

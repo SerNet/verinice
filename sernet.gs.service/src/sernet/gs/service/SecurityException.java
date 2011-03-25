@@ -15,7 +15,7 @@
  * Contributors:
  *     Daniel <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.common;
+package sernet.gs.service;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>

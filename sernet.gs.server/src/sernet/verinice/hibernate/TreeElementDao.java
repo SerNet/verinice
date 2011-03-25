@@ -301,7 +301,12 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
      */
     @Override
     public void checkRights(T entity) /*throws SecurityException*/ {
-        // empty     
+        // empty    
+    }
+
+    @Override
+    public void checkRights(T entity, String username) {
+        // empty
     }
 
 }

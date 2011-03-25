@@ -19,15 +19,19 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 
 import sernet.gs.server.ServerInitializer;
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.CheckWritingPermission;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.LoadUsername;
 
@@ -60,7 +64,7 @@ public class IsaExecution {
         try {
             LoadUsername command = new LoadUsername(uuid,SamtTopic.REL_SAMTTOPIC_PERSON_ISO);
             command = getCommandService().executeCommand(command);
-            username = command.getUsername();
+            username = command.getUsername();         
         } catch(Throwable t) {
             log.error("Error while loading assignee.", t); //$NON-NLS-1$
         }
@@ -68,6 +72,22 @@ public class IsaExecution {
             log.debug("uuid SamtTopic: " + uuid + ", username: " + username); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return username;
+    }
+    
+    public String loadWritePermission(String uuid, String username) {
+        ServerInitializer.inheritVeriniceContextState();
+        boolean isWriteAllowed = false;
+        try {
+            CheckWritingPermission command = new CheckWritingPermission(uuid,username);
+            command = getCommandService().executeCommand(command);
+            isWriteAllowed = command.isWriteAllowed();         
+        } catch(Throwable t) {
+            log.error("Error while loading write permission.", t); //$NON-NLS-1$
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("uuid element: " + uuid + ", username: " + username + ", write allowed: " + isWriteAllowed); //$NON-NLS-1$ //$NON-NLS-2$
+        } 
+        return Boolean.toString(isWriteAllowed);
     }
     
     

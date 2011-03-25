@@ -159,6 +159,14 @@ public class Configuration implements Serializable, ITypedElement {
 		return isRawPropertyValueEqual(PROP_ISADMIN, PROP_ISADMIN_YES);
 	}
 	
+	public boolean isWebUser() {
+        return !isRawPropertyValueEqual(PROP_WEB, PROP_WEB_NO);
+    }
+	
+	public boolean isRcpUser() {
+        return !isRawPropertyValueEqual(PROP_RCP, PROP_RCP_NO);
+    }
+	
 	public void setAdminUser(boolean isAdmin) {
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_ISADMIN);
 		if(isAdmin) {

@@ -228,7 +228,7 @@ public class EditBean {
         } catch (SecurityException e) {
             LOG.error("Saving not allowed, uuid: " + getUuid(), e);
             Util.addError("submit", Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
-        } catch (sernet.gs.common.SecurityException e) {
+        } catch (sernet.gs.service.SecurityException e) {
             LOG.error("Saving not allowed, uuid: " + getUuid(), e);
             Util.addError("submit", Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
         } catch (Exception e) {
@@ -306,7 +306,7 @@ public class EditBean {
                 LOG.debug("Write is not allowed", e);
             }
             return false;
-        } catch (sernet.gs.common.SecurityException e) {
+        } catch (sernet.gs.service.SecurityException e) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Write is not allowed", e);
             }

@@ -30,7 +30,7 @@ public class ExceptionHandler {
 	public static void handle(Throwable e) {
 		if(e instanceof sernet.gs.web.SecurityException) {
 			Util.addError("submit", Util.getMessage("todo.save.forbidden"));
-		} else if(e.getCause()!=null && e.getCause() instanceof sernet.gs.common.SecurityException) {
+		} else if(e.getCause()!=null && e.getCause() instanceof sernet.gs.service.SecurityException) {
 			Util.addError("submit", Util.getMessage("todo.save.forbidden"));	
 		} else {
 			Util.addError("submit", Util.getMessage("todo.save.failed"));

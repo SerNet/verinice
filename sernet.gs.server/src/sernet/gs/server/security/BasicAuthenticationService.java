@@ -45,6 +45,7 @@ public class BasicAuthenticationService implements IAuthService {
     
     private BasicProcessingFilterEntryPoint entryPoint;
     private String guestUser = "";
+    private String adminUsername;
 
     /**
      * @param guestUser the guestUser to set
@@ -93,6 +94,14 @@ public class BasicAuthenticationService implements IAuthService {
         // no user authenticated:
         return ""; //$NON-NLS-1$
     
+    }
+
+    public String getAdminUsername() {
+        return adminUsername;
+    }
+
+    public void setAdminUsername(String adminUsername) {
+        this.adminUsername = adminUsername;
     }
 
     /**

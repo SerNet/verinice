@@ -121,6 +121,12 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 			Property usernameProperty = usernamePropertyList.getProperty(0);
 			if(usernameProperty!=null && usernameProperty.getPropertyValue()!=null) {
 				String username = usernameProperty.getPropertyValue();
+				if(getAuthService().getAdminUsername().equals(username)) {
+				    if (getLog().isDebugEnabled()) {
+                        getLog().debug("Username is admin name: " + username);
+                    }
+				    throw new UsernameExistsRuntimeException(username,"Username already exists: " + username);
+				}
 				
 				DetachedCriteria criteria = DetachedCriteria.forClass(Property.class);
 				criteria.add(Restrictions.eq("propertyType", Configuration.PROP_USERNAME));

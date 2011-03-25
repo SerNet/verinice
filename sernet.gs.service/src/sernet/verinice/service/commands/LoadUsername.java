@@ -26,10 +26,12 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Control;
 
@@ -78,6 +80,7 @@ public class LoadUsername extends GenericCommand {
             String uuidAssignee = null;
             RetrieveInfo ri = new RetrieveInfo();
             ri.setLinksUp(true);
+            ri.setPermissions(true);
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid(uuid,ri);
             command = getCommandService().executeCommand(command);
             CnATreeElement control = command.getElement();
@@ -93,7 +96,7 @@ public class LoadUsername extends GenericCommand {
                     IBaseDao<Configuration, Serializable> dao = (IBaseDao<Configuration, Serializable>) getDaoFactory().getDAO(Configuration.class);
                     List<String> result = dao.findByQuery(HQL, new String[] {uuidAssignee,Configuration.PROP_USERNAME});
                     if(result!=null && !result.isEmpty()) {
-                        username = result.get(0);
+                        username = result.get(0);                      
                     }
                 }
             }

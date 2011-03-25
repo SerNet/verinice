@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Display;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.exception.GenericJDBCException;
 
-import sernet.gs.common.SecurityException;
+import sernet.gs.service.SecurityException;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
 

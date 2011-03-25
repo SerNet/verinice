@@ -19,11 +19,12 @@ package sernet.verinice.hibernate;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.common.ApplicationRoles;
-import sernet.gs.common.SecurityException;
+import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
@@ -92,52 +93,53 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 		return super.merge(entity, fireChange);
 	}
 
+	public void checkRights(CnATreeElement entity, String username) /*throws SecurityException*/ { 
+	    if (log.isDebugEnabled()) {
+            log.debug("Checking rights for entity: " + entity + " and username: " + username);
+        }
+	    String[] roleArray = getDynamicRoles(username);
+	    if (getAuthService().isPermissionHandlingNeeded() && !hasAdminRole(roleArray)) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < roleArray.length; i++) {
+                sb.append("'").append(roleArray[i]).append("'");
+                if(i<roleArray.length-1) {
+                    sb.append(",");
+                }           
+            }
+            String roleParam = sb.toString();
+            
+            sb = new StringBuilder();
+            sb.append("select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
+            // workaraound, because adding roles as ? param does not work
+            sb.append(roleParam);
+            sb.append(") and p.writeAllowed = ?");
+            String hql = sb.toString();
+            
+            Object[] params = new Object[]{entity.getDbId(),Boolean.TRUE};
+            if (log.isDebugEnabled()) {
+                log.debug("checkRights, hql: " + hql);
+                log.debug("checkRights, entity db-id: " + entity.getDbId() );
+            }
+            List<Integer> idList = getPermissionDao().findByQuery(hql, params);
+            if (log.isDebugEnabled()) {
+                log.debug("checkRights, permission ids: ");
+                for (Integer integer : idList) {
+                    log.debug(integer);
+                }
+            }
+            if(idList==null | idList.isEmpty()) {
+                final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
+                log.warn(message);
+                throw new SecurityException(message);
+            }
+        }
+	}
+	
 	/**
 	 * @param entity
 	 */
 	public void checkRights(CnATreeElement entity) /*throws SecurityException*/ { 
-		if (getAuthService().isPermissionHandlingNeeded() && !hasAdminRole(authService.getRoles())) {
-			final String username = getAuthService().getUsername();
-			if (log.isDebugEnabled()) {
-				log.debug("Username: " + username);
-			}
-			String[] roleArray = getDynamicRoles(username);
-					
-			
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < roleArray.length; i++) {
-				sb.append("'").append(roleArray[i]).append("'");
-				if(i<roleArray.length-1) {
-					sb.append(",");
-				}			
-			}
-			String roleParam = sb.toString();
-			
-			sb = new StringBuilder();
-			sb.append("select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
-			// workaraound, because adding roles as ? param does not work
-			sb.append(roleParam);
-			sb.append(") and p.writeAllowed = ?");
-			String hql = sb.toString();
-			
-			Object[] params = new Object[]{entity.getDbId(),Boolean.TRUE};
-			if (log.isDebugEnabled()) {
-				log.debug("checkRights, hql: " + hql);
-				log.debug("checkRights, entity db-id: " + entity.getDbId() );
-			}
-			List<Integer> idList = getPermissionDao().findByQuery(hql, params);
-			if (log.isDebugEnabled()) {
-				log.debug("checkRights, permission ids: ");
-				for (Integer integer : idList) {
-					log.debug(integer);
-				}
-			}
-			if(idList==null | idList.isEmpty()) {
-				final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
-				log.warn(message);
-				throw new SecurityException(message);
-			}
-		}
+	    checkRights(entity, getAuthService().getUsername());
 	}
 
 	private boolean hasAdminRole(String[] roles) {
@@ -152,32 +154,42 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	private String[] getDynamicRoles(String user) {
 		String[] result = roleMap.get(user);
 		if (result == null) {
+		    if(user.equals(getAuthService().getAdminUsername())) {
+		        result = new String[]{user,ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
+		        roleMap.put(user, result);
+		    }
 			List<Configuration> configurations = getConfigurationDao().findAll();
-
+			String[] current = null;
 			for (Configuration c : configurations) {
+			    // Put result into map and save asking the DB next time.
+			    Set<String> roleSet = c.getRoles();
+			    if(c.isAdminUser()) {
+			        roleSet.add(ApplicationRoles.ROLE_ADMIN);
+			    }
+			    if(c.isWebUser()) {
+                    roleSet.add(ApplicationRoles.ROLE_WEB);
+                }
+			    if(c.isRcpUser()) {
+                    roleSet.add(ApplicationRoles.ROLE_USER);
+                }
+			    current = roleSet.toArray(new String[roleSet.size()]);
+                roleMap.put(c.getUser(), current);
 				if (user.equals(c.getUser()) && result == null) {
-					result = c.getRoles().toArray(new String[c.getRoles().size()]);
-					configurations.clear();
-
-					// Put result into map and save asking the DB next time.
-					roleMap.put(user, result);
-
-					// FIXME: Whenever an admin modifies the roles the roleMap
-					// must be cleared.
-					// We could introduce a special command just for this.
-
-					return result;
+					result = current;
 				}
 			}
-
-			// This should not happen because the login was done using an
-			// existing username
-			// and if that does not exist any more something must have gone
-			// wrong.
-			throw new IllegalStateException();
-
+			configurations.clear();
+			if(result==null) {
+    			// This should not happen because the login was done using an
+    			// existing username
+    			// and if that does not exist any more something must have gone
+    			// wrong.
+    			throw new IllegalStateException();
+			}
 		}
-
+		// FIXME: Whenever an admin modifies the roles the roleMap
+        // must be cleared.
+        // We could introduce a special command just for this.
 		return result;
 	}
 

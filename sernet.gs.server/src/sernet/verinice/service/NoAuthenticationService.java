@@ -72,4 +72,9 @@ public final class NoAuthenticationService implements IAuthService {
     public String hashOwnPassword(String username, String clearText) {
         return null;
     }
+
+    @Override
+    public String getAdminUsername() {
+        return getUsername();
+    }
 }

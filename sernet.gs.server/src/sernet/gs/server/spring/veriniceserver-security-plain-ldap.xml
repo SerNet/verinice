@@ -76,6 +76,10 @@
         <property
             name="guestUser"
             value="${ldap.guestuser}" />
+            
+        <property
+            name="adminUsername"
+            value="${admin.username}" />   
 
         <security:intercept-methods>
             <security:protect

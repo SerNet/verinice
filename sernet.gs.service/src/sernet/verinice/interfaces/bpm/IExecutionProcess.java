@@ -28,4 +28,8 @@ public interface IExecutionProcess {
     String VAR_UUID = "UUID";
     
     String VAR_TYPE_ID = "TYPE";
+
+    String VAR_TASK_READ_STATUS = "TASK_READ_STATUS";
+    
+    String TASK_UNREAD = "TASK_UNREAD";
 }

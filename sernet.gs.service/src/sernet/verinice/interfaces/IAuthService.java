@@ -59,4 +59,7 @@ public interface IAuthService {
 	 * @return
 	 */
 	public boolean isPermissionHandlingNeeded();
+	
+	public String getAdminUsername();
+
 }

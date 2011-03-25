@@ -300,7 +300,7 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
     
-    <bean id="cnaTreeElementDao" class="sernet.verinice.hibernate.TreeElementDao">
+    <bean id="cnaTreeElementDao" parent="secureDao">
         <constructor-arg>
             <value>sernet.verinice.model.common.CnATreeElement</value>
         </constructor-arg>

@@ -25,7 +25,7 @@ import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.ui.digestauth.DigestProcessingFilter;
 import org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint;
 
-import sernet.gs.common.SecurityException;
+import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.IAuthService;
 
 /**
@@ -40,6 +40,7 @@ import sernet.verinice.interfaces.IAuthService;
 public final class DigestAuthenticationService implements IAuthService {
 
 	private DigestProcessingFilterEntryPoint entryPoint;
+    private String adminUsername;
 	
 	public String[] getRoles() {
 		 GrantedAuthority[] authority = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
@@ -50,7 +51,15 @@ public final class DigestAuthenticationService implements IAuthService {
 		 return roles;
 	}
 
-	/**
+	public String getAdminUsername() {
+        return adminUsername;
+    }
+
+    public void setAdminUsername(String adminUsername) {
+        this.adminUsername = adminUsername;
+    }
+
+    /**
 	 * Create a password hash for given user and password string.
 	 * Protected by Spring's security config, must have ROLE_ADMIN to use.
 	 */

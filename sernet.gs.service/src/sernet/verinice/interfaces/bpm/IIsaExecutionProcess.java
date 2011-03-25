@@ -32,6 +32,12 @@ public interface IIsaExecutionProcess extends IExecutionProcess {
     String VAR_IMPLEMENTATION = "ISA_IMPLEMENTATION";
     String VAR_DUEDATE = "ISA_DUEDATE";
     String VAR_AUDIT_UUID = "UUID_AUDIT";
+    String VAR_WRITE_PERMISSION = "ISA_WRITE_PERMISSION";
+    
+    String TRANSITION_IS_WRITE_PERMISSION = "is write permission";
+    String TRANSITION_NO_WRITE_PERMISSION = "no write permission";
+    String TRANSITION_NOT_IMPLEMENTED = "not implemented";
+    String TRANSITION_IMPLEMENTED = "implemented";
     
     String DEFAULT_OWNER_NAME = "admin";
     

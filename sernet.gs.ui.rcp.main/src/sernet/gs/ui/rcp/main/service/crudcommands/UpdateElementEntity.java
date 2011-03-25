@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.common.SecurityException;
+import sernet.gs.service.SecurityException;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
