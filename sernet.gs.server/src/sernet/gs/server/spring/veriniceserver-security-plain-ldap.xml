@@ -163,7 +163,7 @@
         id="contextSource"
         class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
         <constructor-arg
-         value="ldap://${ldap.server}:${ldap.port}/${ldap.base}"/>
+         value="${ldap.protocol}://${ldap.server}:${ldap.port}/${ldap.base}"/>
     </bean>
     
     <bean

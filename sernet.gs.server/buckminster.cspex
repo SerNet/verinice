@@ -34,5 +34,20 @@
                 <path path="./" />
             </products>
         </public>
+        <public name="create.war.no.web" actor="ant">
+            <actorProperties>
+                <property key="buildFile" value="build/war-build.xml" />
+                <property key="targets" value="war-light" />
+            </actorProperties>
+            <properties>
+                <property key="filename" value="veriniceserver.war" />
+            </properties>
+            <prerequisites alias="repository">
+                <attribute name="bundle.jar" />
+            </prerequisites>
+            <products alias="destination" base="${buckminster.output}">
+                <path path="./" />
+            </products>
+        </public>
     </actions>
 </cspecExtension>

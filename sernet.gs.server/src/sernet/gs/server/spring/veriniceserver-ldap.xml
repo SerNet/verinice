@@ -9,7 +9,7 @@
 	This file is referenced in the web.xml. 
  -->
    <bean id="contextSourceImport" class="org.springframework.ldap.core.support.LdapContextSource">
-      <property name="url" value="ldap://${ldap.server}:${ldap.port}/" />
+      <property name="url" value="${ldap.protocol}://${ldap.server}:${ldap.port}/" />
       <property name="userDn" value="${ldap.import.user}" />
       <property name="password" value="${ldap.import.password}" />
    </bean>

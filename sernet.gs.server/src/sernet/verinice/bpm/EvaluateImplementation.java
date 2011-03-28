@@ -13,9 +13,16 @@ public class EvaluateImplementation implements DecisionHandler {
     @Override
     public String decide(OpenExecution execution) {
         String transition;
-        String implementation = (String) execution.getVariable(IIsaExecutionProcess.VAR_IMPLEMENTATION);
+        Object value = execution.getVariable(IIsaExecutionProcess.VAR_IMPLEMENTATION);
+        Integer implementation = null;
+        if(value instanceof Integer) {
+            implementation = (Integer) value;
+        }
+        if(value instanceof String) {
+            implementation = Integer.valueOf((String) value);
+        }
         boolean isImplemented = implementation!=null 
-           && !implementation.equals(String.valueOf(SamtTopic.IMPLEMENTED_NOTEDITED_NUMERIC));
+           && !(implementation.intValue()==SamtTopic.IMPLEMENTED_NOTEDITED_NUMERIC);
         if(isImplemented) {
             transition = IIsaExecutionProcess.TRANSITION_IMPLEMENTED;
         } else {

@@ -14,11 +14,14 @@
 
     <!-- ================================= 
           target: war              
-         ================================= -->
+         ================================= -->	
     <target name="war" depends="copy-jars" description="creates a war file">
 		<property name="destination" location="${sp:destination}"/>
-        <war destfile="${destination}/${filename}">
-        	<fileset dir="WebContent"/>
+        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web.xml">
+        	<fileset dir="WebContent">
+        		<exclude name="WEB-INF/web.xml"/>
+        		<exclude name="WEB-INF/web-light.xml"/>
+        	</fileset>
         	<zipfileset dir="bin" prefix="WEB-INF/classes">
         		<exclude name="log4j-dev.xml"/>
         		<exclude name="log4j-prod.xml"/>
@@ -27,13 +30,37 @@
     </target>
 	
 	<!-- ================================= 
-	      target: war              
+	          target: war-no-web              
+	         ================================= -->
+	<target name="war-light" depends="copy-jars" description="creates a war file">
+		<property name="destination" location="${sp:destination}"/>
+		<echo message="Creating ${destination}/${filename}..."/>
+        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web-light.xml">
+        	<fileset dir="WebContent">
+    			<exclude name="WEB-INF/web.xml"/>
+    			<exclude name="WEB-INF/web-light.xml"/>
+        		<exclude name="**/*.xhtml"/>
+        		<exclude name="todo"/>
+        		<exclude name="template"/>
+        	</fileset>
+        	<zipfileset dir="bin" prefix="WEB-INF/classes">
+        		<exclude name="log4j-dev.xml"/>
+        		<exclude name="log4j-prod.xml"/>
+        	</zipfileset>
+        </war>
+	</target>
+	
+	<!-- ================================= 
+	      target: war-local              
 	     ================================= -->
     <target name="war-local" description="creates a war file">
 		<property name="destination" location="${sp:destination}"/>
-        <war destfile="${destination}/${filename}">
-        	<fileset dir="WebContent"/>
-        	<zipfileset dir="bin" prefix="WEB-INF/classes">
+        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web.xml">
+        	<fileset dir="WebContent">
+        		<exclude name="WEB-INF/web.xml"/>
+        		<exclude name="WEB-INF/web-light.xml"/>
+        	</fileset>
+        	<zipfileset dir="bin" prefix="WEB-INF/classes">       		
         		<exclude name="log4j-dev.xml"/>
         		<exclude name="log4j-prod.xml"/>
         	</zipfileset>
