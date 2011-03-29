@@ -30,7 +30,9 @@ import javax.faces.context.FacesContext;
 
 public class Util {
 
-	public static String getMessage(String key) {
+	private static final String DEFAULT_COMPONENT_ID = "massagePanel";
+
+    public static String getMessage(String key) {
 		return getMessage(ToDoBean.BOUNDLE_NAME, key, null);
 	}
 	
@@ -83,6 +85,9 @@ public class Util {
 		 FacesMessage message = new FacesMessage(severity, text, null);
 	     FacesContext context = FacesContext.getCurrentInstance();
 	     UIComponent component = findComponent(context.getViewRoot(), componentId);
+	     if(component==null) {
+	         component = findComponent(context.getViewRoot(), DEFAULT_COMPONENT_ID);
+	     }
 	     context.addMessage(component.getClientId(context), message);
 	
 	}

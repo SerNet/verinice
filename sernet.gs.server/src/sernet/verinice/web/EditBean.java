@@ -149,11 +149,11 @@ public class EditBean {
                 }   
             } else {
                 LOG.error("Element not found, type: " + getTypeId() + ", uuid: " + getUuid());
-                Util.addError( "editPanel", Util.getMessage(BOUNDLE_NAME,"elementNotFound"));
+                Util.addError( "massagePanel", Util.getMessage(BOUNDLE_NAME,"elementNotFound"));
             }
         } catch(Throwable t) {
             LOG.error("Error while initialization. ", t);
-            Util.addError( "editPanel", Util.getMessage(BOUNDLE_NAME,"init.failed"));
+            Util.addError( "massagePanel", Util.getMessage(BOUNDLE_NAME,"init.failed"));
         }
     }
 

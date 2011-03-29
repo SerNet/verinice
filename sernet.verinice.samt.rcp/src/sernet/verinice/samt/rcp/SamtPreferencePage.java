@@ -99,7 +99,7 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
         showIsaResults = new BooleanFieldEditor(ISA_RESULTS, Messages.SamtPreferencePage_0, getFieldEditorParent());
 		addField(showIsaResults);
 		
-		infoControlsLinked = new BooleanFieldEditor(INFO_CONTROLS_LINKED, Messages.SamtPreferencePage_0, getFieldEditorParent());
+		infoControlsLinked = new BooleanFieldEditor(INFO_CONTROLS_LINKED, Messages.SamtPreferencePage_4, getFieldEditorParent());
         addField(infoControlsLinked);
     }
 

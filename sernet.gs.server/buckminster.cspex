@@ -34,10 +34,10 @@
                 <path path="./" />
             </products>
         </public>
-        <public name="create.war.no.web" actor="ant">
+        <public name="create.war.basic" actor="ant">
             <actorProperties>
                 <property key="buildFile" value="build/war-build.xml" />
-                <property key="targets" value="war-light" />
+                <property key="targets" value="war-basic" />
             </actorProperties>
             <properties>
                 <property key="filename" value="veriniceserver.war" />

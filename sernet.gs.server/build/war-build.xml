@@ -17,11 +17,27 @@
          ================================= -->	
     <target name="war" depends="copy-jars" description="creates a war file">
 		<property name="destination" location="${sp:destination}"/>
+		<echo message="Creating ${destination}/${filename}..."/>
         <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web.xml">
         	<fileset dir="WebContent">
-        		<exclude name="WEB-INF/web.xml"/>
-        		<exclude name="WEB-INF/web-light.xml"/>
+        		<exclude name="nav.xhtml"/>
+        		<exclude name="subNav.xhtml"/>
+        		<exclude name="nav-basic.xhtml"/>
+        		<exclude name="subNav-basic.xhtml"/>
+        		<exclude name="portal.verinice.private/*.html"/>
+        		<exclude name="error/*.html"/>
+        		<exclude name="WEB_INF/faces-config.xml"/>
+        		<exclude name="WEB_INF/faces-config-basic.xml"/>
         	</fileset>
+        	<zipfileset file="WebContent/nav.xhtml" fullpath="nav.xhtml"/>
+        	<zipfileset file="WebContent/subNav.xhtml" fullpath="subNav.xhtml"/>
+        	<zipfileset file="WebContent/portal.verinice.private/contact.html" fullpath="/portal.verinice.private/contact.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/download.html" fullpath="/portal.verinice.private/download.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/index.html" fullpath="/portal.verinice.private/index.html"/>
+        	<zipfileset file="WebContent/error/403.html" fullpath="error/403.html"/>
+        	<zipfileset file="WebContent/error/404.html" fullpath="error/404.html"/>
+        	<zipfileset file="WebContent/error/500.html" fullpath="error/500.html"/>
+        	<zipfileset file="WebContent/WEB-INF/faces-config.xml" fullpath="WEB-INF/faces-config.xml"/>      	
         	<zipfileset dir="bin" prefix="WEB-INF/classes">
         		<exclude name="log4j-dev.xml"/>
         		<exclude name="log4j-prod.xml"/>
@@ -32,35 +48,69 @@
 	<!-- ================================= 
 	          target: war-no-web              
 	         ================================= -->
-	<target name="war-light" depends="copy-jars" description="creates a war file">
+	<target name="war-basic" depends="copy-jars" description="creates a war file">
 		<property name="destination" location="${sp:destination}"/>
 		<echo message="Creating ${destination}/${filename}..."/>
-        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web-light.xml">
+        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web.xml">
         	<fileset dir="WebContent">
-    			<exclude name="WEB-INF/web.xml"/>
-    			<exclude name="WEB-INF/web-light.xml"/>
-        		<exclude name="**/*.xhtml"/>
-        		<exclude name="todo"/>
+        		<exclude name="todo/task.xhtml"/>
         		<exclude name="template"/>
+        		<exclude name="nav.xhtml"/>
+        		<exclude name="subNav.xhtml"/>
+        		<exclude name="nav-basic.xhtml"/>
+        		<exclude name="subNav-basic.xhtml"/>
+        		<exclude name="portal.verinice.private/*.html"/>
+        		<exclude name="error/*.html"/>
+        		<exclude name="WEB_INF/faces-config.xml"/>
+        		<exclude name="WEB_INF/faces-config-basic.xml"/>
         	</fileset>
+        	<zipfileset file="WebContent/nav-basic.xhtml" fullpath="nav.xhtml"/>
+        	<zipfileset file="WebContent/subNav-basic.xhtml" fullpath="subNav.xhtml"/>
+        	<zipfileset file="WebContent/portal.verinice.private/contact-basic.html" fullpath="portal.verinice.private/contact.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/download-basic.html" fullpath="portal.verinice.private/download.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/index-basic.html" fullpath="portal.verinice.private/index.html"/>
+        	<zipfileset file="WebContent/error/403-basic.html" fullpath="error/403.html"/>
+        	<zipfileset file="WebContent/error/404-basic.html" fullpath="error/404.html"/>
+        	<zipfileset file="WebContent/error/500-basic.html" fullpath="error/500.html"/>
+        	<zipfileset file="WebContent/WEB-INF/faces-config-basic.xml" fullpath="WEB-INF/faces-config.xml"/>       	     
         	<zipfileset dir="bin" prefix="WEB-INF/classes">
         		<exclude name="log4j-dev.xml"/>
         		<exclude name="log4j-prod.xml"/>
+        		<exclude name="**/TaskBean*.class"/>
+        		<exclude name="**/EditBean*.class"/>
+        		<exclude name="**/LinkBean*.class"/>
         	</zipfileset>
         </war>
 	</target>
 	
 	<!-- ================================= 
-	      target: war-local              
-	     ================================= -->
-    <target name="war-local" description="creates a war file">
+	          target: war-local            
+	         ================================= -->	
+    <target name="war-local" depends="copy-jars" description="creates a war file">
 		<property name="destination" location="${sp:destination}"/>
+		<echo message="Creating ${destination}/${filename}..."/>
         <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web.xml">
         	<fileset dir="WebContent">
-        		<exclude name="WEB-INF/web.xml"/>
-        		<exclude name="WEB-INF/web-light.xml"/>
+        		<exclude name="nav.xhtml"/>
+        		<exclude name="subNav.xhtml"/>
+        		<exclude name="nav-basic.xhtml"/>
+        		<exclude name="subNav-basic.xhtml"/>
+        		<exclude name="portal.verinice.private/*.html"/>
+        		<exclude name="error/*.html"/>
+        		<exclude name="WEB_INF/faces-config.xml"/>
+        		<exclude name="WEB_INF/faces-config-basic.xml"/>
         	</fileset>
-        	<zipfileset dir="bin" prefix="WEB-INF/classes">       		
+        	<zipfileset file="WebContent/nav.xhtml" fullpath="nav.xhtml"/>
+        	<zipfileset file="WebContent/subNav.xhtml" fullpath="subNav.xhtml"/>
+        	<zipfileset file="WebContent/portal.verinice.private/contact.html" fullpath="/portal.verinice.private/contact.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/download.html" fullpath="/portal.verinice.private/download.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/index.html" fullpath="/portal.verinice.private/index.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/index-basic.html" fullpath="portal.verinice.private/index.html"/>
+        	<zipfileset file="WebContent/error/403.html" fullpath="error/403.html"/>
+        	<zipfileset file="WebContent/error/404.html" fullpath="error/404.html"/>
+        	<zipfileset file="WebContent/error/500.html" fullpath="error/500.html"/>
+        	<zipfileset file="WebContent/WEB-INF/faces-config.xml" fullpath="WEB-INF/faces-config.xml"/>      	
+        	<zipfileset dir="bin" prefix="WEB-INF/classes">
         		<exclude name="log4j-dev.xml"/>
         		<exclude name="log4j-prod.xml"/>
         	</zipfileset>

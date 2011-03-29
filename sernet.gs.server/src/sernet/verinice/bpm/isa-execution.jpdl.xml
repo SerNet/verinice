@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<process key="isa-execution" name="verinice ISA Execution" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<process key="isa-execution" name="verinice ISA Execution" version="2" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <description>Describes the implementation of controls in verinice</description>
    <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
    <start g="287,18,48,48" name="start">
