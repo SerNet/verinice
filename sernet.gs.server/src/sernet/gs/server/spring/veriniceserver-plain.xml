@@ -58,26 +58,6 @@
   </property>
 </bean>
 
-<!-- Sends a notification to users with assigned tasks. -->
-<bean name="taskNotificationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
-    <property name="jobClass" value="sernet.verinice.bpm.NotificationJob" />
-    <property name="jobDataAsMap">
-        <map>             
-            <entry key="workObjects" value-ref="workObjects" />
-            <entry key="jbpmTaskDao" value-ref="jbpmTaskDao" />
-            <entry key="taskService" value-ref="taskService" />
-            <entry key="configurationDao" value-ref="configurationDao" />
-            <entry key="mailSender" value-ref="mailSender" />
-            <entry key="velocityEngine" value-ref="velocityEngine"/>     
-            <entry key="taskListPath" value="todo/task.jsf"/>
-            <entry key="enabled" value="${veriniceserver.notification.enabled}" />
-            <entry key="emailFrom" value="${veriniceserver.notification.email.from}"/>
-            <entry key="replyTo" value="${veriniceserver.notification.email.from}"/> 
-            <entry key="url" value="${veriniceserver.notification.email.linkto}"/>
-        </map>
-    </property>
-</bean>
-
 <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
     <property name="jobDetail" ref="notificationJob" />
     <property name="cronExpression" value="0 ${veriniceserver.notification.minute} ${veriniceserver.notification.hour} * * ?" />

@@ -10,11 +10,11 @@
 
 ###########################################################################
     	Database configuration template for verinice server.
-        Special mapping for Oracle DBMS.
     	
     	Database access credentials are to be found in the
     	'veriniceserver-plain.properties' property file.
     	
+    	@author 2009-01-08 ak@sernet.de
 ###########################################################################
 
 
@@ -37,8 +37,6 @@
         org.springframework.orm.hibernate3.SpringSessionContext
         </property>
 		
-		<property name="hibernate.connection.defaultNChar">true</property>
-		
 		
 		<!-- Enable memory read write cache 
 		-->
@@ -60,8 +58,8 @@
 		<!-- Optimized mappings for real DBMS, not for derby -->
         <mapping resource="sernet/gs/ui/rcp/hibernate/Entity.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/CnALink.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/PropertyListOracle.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/PropertyOracle.hbm.xml"/>
+        <mapping resource="sernet/gs/ui/rcp/hibernate/PropertyList.hbm.xml"/>
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Property.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/CnATreeElement.hbm.xml"/> 
         <mapping resource="sernet/gs/ui/rcp/hibernate/ChangeLogEntry.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/Gefaehrdung.hbm.xml"/>
@@ -72,12 +70,7 @@
         <mapping resource="sernet/gs/ui/rcp/hibernate/BausteinVorschlag.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/Addition.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/AttachmentFile.hbm.xml"/>
-        
-        <mapping resource="jbpm.repository.hbm.xml" />
-        <mapping resource="jbpm.execution.hbm.xml" />
-        <mapping resource="jbpm.history.hbm.xml" />
-        <mapping resource="jbpm.task.hbm.xml" />
-        <mapping resource="jbpm.identity.hbm.xml" />
+  
         
         <!-- Workaround for Hibernate bug HHH-2146
         Will be fixed in hibernate release 3.3.2, until then we use this: -->

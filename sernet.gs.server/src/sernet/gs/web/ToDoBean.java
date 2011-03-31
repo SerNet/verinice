@@ -342,13 +342,17 @@ public class ToDoBean {
 				Util.addError("submit", Util.getMessage("todo.load.failed"));
 			}
 		}
-		int start = text.indexOf("<div id=\"content\">");
-		int end = text.lastIndexOf("</body>");
-		if(start==-1 || end==-1) {
-			LOG.error("Can not find content of control description: " + text);
-			text = "";
+		if(text!=null) {
+    		int start = text.indexOf("<div id=\"content\">");
+    		int end = text.lastIndexOf("</body>");
+    		if(start==-1 || end==-1) {
+    			LOG.error("Can not find content of control description: " + text);
+    			text = "";
+    		} else {
+    			text = text.substring(start, end);
+    		}
 		} else {
-			text = text.substring(start, end);
+		    text = "";
 		}
 		return text;
 	}

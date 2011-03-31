@@ -555,4 +555,14 @@ public class ProcessService implements IProcessService {
     public VeriniceContext.State getWorkObjects() {
         return ProcessService.state;
     }
+
+    /**
+     * True: This is a real implementation.
+     * 
+     * @see sernet.verinice.interfaces.bpm.IProcessService#isActive()
+     */
+    @Override
+    public boolean isActive() {
+        return true;
+    }
 }

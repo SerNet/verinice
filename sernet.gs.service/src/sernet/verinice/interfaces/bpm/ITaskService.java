@@ -86,4 +86,12 @@ public interface ITaskService {
     
     void markAsRead(String taskId);
     
+    /**
+     * Returns true id this process is really active.
+     * Used to determine if it is dummy implementation.
+     * 
+     * @return true id this process is really active
+     */
+    boolean isActive();
+    
 }

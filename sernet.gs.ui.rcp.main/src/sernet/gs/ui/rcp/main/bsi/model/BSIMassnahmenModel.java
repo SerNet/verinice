@@ -42,6 +42,7 @@ import sernet.gs.scraper.PatternGSHB2009;
 import sernet.gs.scraper.URLGSSource;
 import sernet.gs.scraper.ZIPGSSource;
 import sernet.gs.service.GSServiceException;
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.GetBausteinText;
@@ -80,7 +81,7 @@ public class BSIMassnahmenModel {
 	// not configured by Spring
 	private ILayoutConfig layoutConfig;
 
-	private String encoding = "utf-8"; //$NON-NLS-1$
+	private String encoding = VeriniceCharset.CHARSET_UTF_8.name();
 	
 	public BSIMassnahmenModel(IBSIConfig config)
 	{
@@ -282,7 +283,7 @@ public class BSIMassnahmenModel {
 	
 	public String getMassnahmeHtml(String url, String stand) throws GSServiceException {
 		try {
-			InputStreamReader read = new InputStreamReader(getMassnahme(url, stand), encoding ); //$NON-NLS-1$
+			InputStreamReader read = new InputStreamReader(getMassnahme(url, stand), VeriniceCharset.CHARSET_UTF_8 ); //$NON-NLS-1$
 			BufferedReader buffRead = new BufferedReader(read);
 			StringBuilder b = new StringBuilder();
 			String line;

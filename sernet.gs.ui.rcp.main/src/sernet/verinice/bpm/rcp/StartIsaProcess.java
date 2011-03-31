@@ -52,6 +52,8 @@ public class StartIsaProcess implements IObjectActionDelegate {
     
     int numberOfProcess = 0;
     
+    Boolean isActive = null;
+    
     /* (non-Javadoc)
      * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
      */
@@ -75,7 +77,10 @@ public class StartIsaProcess implements IObjectActionDelegate {
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         Activator.inheritVeriniceContextState();
                         IProcessStartInformation info = ServiceFactory.lookupProcessService().startProcessForIsa(selectedAudit.getUuid());           
-                        numberOfProcess=info.getNumber();
+                        numberOfProcess=0;
+                        if(info!=null) {
+                            numberOfProcess=info.getNumber();
+                        }
                     }
                 });
                 InfoDialogWithShowToggle.openInformation(
@@ -95,14 +100,25 @@ public class StartIsaProcess implements IObjectActionDelegate {
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        if(selection instanceof ITreeSelection) {
-            ITreeSelection treeSelection = (ITreeSelection) selection;
-            Object selectedElement = treeSelection.getFirstElement();
-            if(selectedElement instanceof Audit) {
-                selectedAudit = (Audit) selectedElement;
+        if(isActive()) {
+            if(selection instanceof ITreeSelection) {
+                ITreeSelection treeSelection = (ITreeSelection) selection;
+                Object selectedElement = treeSelection.getFirstElement();
+                if(selectedElement instanceof Audit) {
+                    selectedAudit = (Audit) selectedElement;
+                }
             }
+        } else {
+            action.setEnabled(false);
         }
         
+    }
+    
+    private boolean isActive() {
+        if(isActive==null) {
+            isActive = ServiceFactory.lookupProcessService().isActive();
+        }
+        return isActive.booleanValue();
     }
 
 }

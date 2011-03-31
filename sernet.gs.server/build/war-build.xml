@@ -25,23 +25,23 @@
         		<exclude name="nav-basic.xhtml"/>
         		<exclude name="subNav-basic.xhtml"/>
         		<exclude name="portal.verinice.private/*.html"/>
-        		<exclude name="error/*.html"/>
         		<exclude name="WEB_INF/faces-config.xml"/>
         		<exclude name="WEB_INF/faces-config-basic.xml"/>
+        		<exclude name="WEB_INF/web*.xml"/>
         	</fileset>
         	<zipfileset file="WebContent/nav.xhtml" fullpath="nav.xhtml"/>
         	<zipfileset file="WebContent/subNav.xhtml" fullpath="subNav.xhtml"/>
         	<zipfileset file="WebContent/portal.verinice.private/contact.html" fullpath="/portal.verinice.private/contact.html"/>
         	<zipfileset file="WebContent/portal.verinice.private/download.html" fullpath="/portal.verinice.private/download.html"/>
         	<zipfileset file="WebContent/portal.verinice.private/index.html" fullpath="/portal.verinice.private/index.html"/>
-        	<zipfileset file="WebContent/error/403.html" fullpath="error/403.html"/>
-        	<zipfileset file="WebContent/error/404.html" fullpath="error/404.html"/>
-        	<zipfileset file="WebContent/error/500.html" fullpath="error/500.html"/>
         	<zipfileset file="WebContent/WEB-INF/faces-config.xml" fullpath="WEB-INF/faces-config.xml"/>      	
         	<zipfileset dir="bin" prefix="WEB-INF/classes">
         		<exclude name="log4j-dev.xml"/>
         		<exclude name="log4j-prod.xml"/>
+        		<exclude name="server_hibernate*.cfg.xml"/>
         	</zipfileset>
+        	<zipfileset file="bin/server_hibernate.cfg.xml" fullpath="WEB-INF/classes/server_hibernate.cfg.xml"/> 
+        	<zipfileset file="bin/server_hibernate_oracle.cfg.xml" fullpath="WEB-INF/classes/server_hibernate_oracle.cfg.xml"/>
         </war>
     </target>
 	
@@ -51,7 +51,7 @@
 	<target name="war-basic" depends="copy-jars" description="creates a war file">
 		<property name="destination" location="${sp:destination}"/>
 		<echo message="Creating ${destination}/${filename}..."/>
-        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web.xml">
+        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web-basic.xml">
         	<fileset dir="WebContent">
         		<exclude name="todo/task.xhtml"/>
         		<exclude name="template"/>
@@ -60,18 +60,17 @@
         		<exclude name="nav-basic.xhtml"/>
         		<exclude name="subNav-basic.xhtml"/>
         		<exclude name="portal.verinice.private/*.html"/>
-        		<exclude name="error/*.html"/>
-        		<exclude name="WEB_INF/faces-config.xml"/>
-        		<exclude name="WEB_INF/faces-config-basic.xml"/>
+        		<exclude name="error/403.html"/>
+        		<exclude name="error/404.html"/>
+            	<exclude name="error/500.html"/>
+        		<exclude name="WEB-INF/faces-config*.xml"/>
+        		<exclude name="WEB-INF/web*.xml"/>
         	</fileset>
         	<zipfileset file="WebContent/nav-basic.xhtml" fullpath="nav.xhtml"/>
         	<zipfileset file="WebContent/subNav-basic.xhtml" fullpath="subNav.xhtml"/>
         	<zipfileset file="WebContent/portal.verinice.private/contact-basic.html" fullpath="portal.verinice.private/contact.html"/>
         	<zipfileset file="WebContent/portal.verinice.private/download-basic.html" fullpath="portal.verinice.private/download.html"/>
         	<zipfileset file="WebContent/portal.verinice.private/index-basic.html" fullpath="portal.verinice.private/index.html"/>
-        	<zipfileset file="WebContent/error/403-basic.html" fullpath="error/403.html"/>
-        	<zipfileset file="WebContent/error/404-basic.html" fullpath="error/404.html"/>
-        	<zipfileset file="WebContent/error/500-basic.html" fullpath="error/500.html"/>
         	<zipfileset file="WebContent/WEB-INF/faces-config-basic.xml" fullpath="WEB-INF/faces-config.xml"/>       	     
         	<zipfileset dir="bin" prefix="WEB-INF/classes">
         		<exclude name="log4j-dev.xml"/>
@@ -79,7 +78,16 @@
         		<exclude name="**/TaskBean*.class"/>
         		<exclude name="**/EditBean*.class"/>
         		<exclude name="**/LinkBean*.class"/>
+        		<exclude name="**/TaskService.class"/>
+        		<exclude name="**/TaskService$*.class"/>
+        		<exclude name="**/ProcessService.class"/>
+        		<exclude name="**/ProcessService$*.class"/>
+        		<exclude name="**/sernet/verinice/bpm/jbpm*"/>
+        		<exclude name="**/sernet/verinice/bpm/*jpdl*"/> 
+        		<exclude name="**/server_hibernate*.cfg.xml"/>
         	</zipfileset>
+        	<zipfileset file="bin/server_hibernate-basic.cfg.xml" fullpath="WEB-INF/classes/server_hibernate.cfg.xml"/> 
+        	<zipfileset file="bin/server_hibernate_oracle-basic.cfg.xml" fullpath="WEB-INF/classes/server_hibernate_oracle.cfg.xml"/>       	        	
         </war>
 	</target>
 	
@@ -97,8 +105,8 @@
         		<exclude name="subNav-basic.xhtml"/>
         		<exclude name="portal.verinice.private/*.html"/>
         		<exclude name="error/*.html"/>
-        		<exclude name="WEB_INF/faces-config.xml"/>
-        		<exclude name="WEB_INF/faces-config-basic.xml"/>
+        		<exclude name="WEB-INF/faces-config.xml"/>
+        		<exclude name="WEB-INF/faces-config-basic.xml"/>
         	</fileset>
         	<zipfileset file="WebContent/nav.xhtml" fullpath="nav.xhtml"/>
         	<zipfileset file="WebContent/subNav.xhtml" fullpath="subNav.xhtml"/>

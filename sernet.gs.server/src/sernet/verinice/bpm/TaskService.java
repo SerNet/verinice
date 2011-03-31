@@ -427,4 +427,14 @@ public class TaskService implements ITaskService{
         this.auditDao = auditDao;
     }
 
+    /**
+     * True: This is a real implementation.
+     * 
+     * @see sernet.verinice.interfaces.bpm.ITaskService#isActive()
+     */
+    @Override
+    public boolean isActive() {
+        return true;
+    }
+
 }

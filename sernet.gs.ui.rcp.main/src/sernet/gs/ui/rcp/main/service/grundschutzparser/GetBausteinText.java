@@ -42,7 +42,11 @@ public class GetBausteinText extends GenericCommand {
 		try {
 			InputStream in = GSScraperUtil.getInstance().getModel().getBaustein(url, stand);
 			this.encoding = GSScraperUtil.getInstance().getModel().getEncoding();
-			bausteinText = InputUtil.streamToString(in, encoding );
+    		if(in!=null) {
+    			bausteinText = InputUtil.streamToString(in, encoding );
+    		} else {
+    		    bausteinText = "";
+    		}
 		} catch (GSServiceException e) {
 			throw new RuntimeCommandException(e);
 		} catch (IOException e) {
