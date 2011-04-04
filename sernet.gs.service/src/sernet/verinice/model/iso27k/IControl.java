@@ -34,6 +34,7 @@ public interface IControl {
     public static final String IMPLEMENTED_NA = "control_implemented_na";
     public static final String IMPLEMENTED_NOTEDITED = "control_implemented_notedited";
     public static final int IMPLEMENTED_NOTEDITED_NUMERIC = -2;
+    public static final int IMPLEMENTED_NA_NUMERIC = -1;
 
     
     

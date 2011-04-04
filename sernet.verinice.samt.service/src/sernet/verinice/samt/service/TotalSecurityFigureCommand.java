@@ -58,13 +58,13 @@ public class TotalSecurityFigureCommand extends GenericCommand  {
         return log;
     }
     
-    private Integer selfAssessmentGroup = null;
+    private Integer auditDbId = null;
     private Double totalSecurityFigure;
     
 
     public TotalSecurityFigureCommand(Integer   samtGroup)
     {
-        this.selfAssessmentGroup = samtGroup;
+        this.auditDbId = samtGroup;
     }
 
     /* (non-Javadoc)
@@ -73,12 +73,15 @@ public class TotalSecurityFigureCommand extends GenericCommand  {
     @Override
     public void execute() {
         try {
-            FindSamtGroup command = new sernet.verinice.samt.service.FindSamtGroup(true, selfAssessmentGroup);
+            FindSamtGroup command = new sernet.verinice.samt.service.FindSamtGroup(true, auditDbId);
             command = getCommandService().executeCommand(command);
             ControlGroup controlGroup = command.getSelfAssessmentGroup();
             Integer weightedMaturity = getWeightedMaturity(controlGroup);
             Integer weightedThreshold = getWeightedThreshold(controlGroup);
-            totalSecurityFigure = (double) weightedMaturity / (double) weightedThreshold;
+            totalSecurityFigure = 1.0;
+            if(weightedThreshold!=0) {
+                totalSecurityFigure = (double) weightedMaturity / (double) weightedThreshold;
+            }
         } catch (CommandException e) {
             throw new RuntimeCommandException(e);
         }
@@ -109,7 +112,13 @@ public class TotalSecurityFigureCommand extends GenericCommand  {
     }
     
     public Integer getWeightedMaturity(IControl contr) {
-        int value = contr.getMaturity() * contr.getWeight2();
+        int value = 0;
+        int maturity = contr.getMaturity();
+        // maturity less than 0 is counted a 0
+        if(IControl.IMPLEMENTED_NA_NUMERIC!=maturity
+           && IControl.IMPLEMENTED_NOTEDITED_NUMERIC!=maturity) {
+            value = contr.getMaturity() * contr.getWeight2();
+        }
         return value;
     }
     
@@ -129,7 +138,12 @@ public class TotalSecurityFigureCommand extends GenericCommand  {
     }
     
     public Integer getWeightedThreshold(IControl contr) {
-        int value = contr.getThreshold2() * contr.getWeight2();
+        int value = 0;
+        int maturity = contr.getMaturity();
+        // if maturity is "not applicable" we don't count the threshold 
+        if(IControl.IMPLEMENTED_NA_NUMERIC!=maturity) {
+            value = contr.getThreshold2() * contr.getWeight2();
+        }
         return value;
     }
 

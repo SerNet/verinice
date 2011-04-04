@@ -9,17 +9,22 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.ControlMaturityService;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.samt.service.TotalSecurityFigureCommand;
 
 @SuppressWarnings("restriction")
 public class TopicGroupDecorator extends LabelProvider implements ILightweightLabelDecorator {
 
 	private static final Logger LOG = Logger.getLogger(TopicGroupDecorator.class);
+	
+	 private ICommandService commandService;
 	
 	ControlMaturityService maturityService = new ControlMaturityService();
 	
@@ -30,17 +35,20 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 			boolean isActive = Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.ISA_RESULTS); 
 			if(isActive) {
 			    sernet.gs.ui.rcp.main.Activator.inheritVeriniceContextState();
+			    Double securityFigure = null;
 			    if(element instanceof Audit) {
 			        Audit audit = (Audit) element;
 			        group = (ControlGroup) audit.getGroup(ControlGroup.TYPE_ID);
 			        group = (ControlGroup) Retriever.checkRetrieveChildren(group);
+			        TotalSecurityFigureCommand command = new TotalSecurityFigureCommand(audit.getDbId());
+			        command = getCommandService().executeCommand(command);
+			        securityFigure = command.getResult();
 			    }
 			    if(element instanceof ControlGroup) {	
     				group = (ControlGroup) element;	
 			    }
 				// add a decorator if at least one isa topic child exists
-				boolean addDecorator = true;
-				retrieveChildren(group);
+				boolean addDecorator = retrieveChildren(group);
 				if(addDecorator) {
 					String state = maturityService.getImplementationState(group);
 					if(IControl.IMPLEMENTED_NO.equals(state)) {
@@ -52,6 +60,11 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 					if(IControl.IMPLEMENTED_YES.equals(state)) {
 						decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_YES));
 					}
+					if(securityFigure!=null) {
+					    StringBuilder sb = new StringBuilder();
+					    sb.append("[").append(getPercent(securityFigure)).append(" %") .append("]");
+					    decoration.addSuffix(sb.toString());
+					}
 				}
 			}		
 		} catch(Throwable t) {
@@ -59,20 +72,48 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 		}
 	}
 	
-	private void retrieveChildren(/*not final*/ControlGroup group) {
+	/**
+	 * Retrieves all children of a ControlGroup.
+	 * Returns true if at least one {@link IControl} child exists.
+	 * 
+	 * @param group a ControlGroup
+	 * @return true if at least one {@link IControl} child exists
+	 */
+	private boolean retrieveChildren(/*not final*/ControlGroup group) {
+	    boolean isIsa = false;
 	    Set<CnATreeElement> children = group.getChildren();
 	    Set<CnATreeElement> childrenRetrieved = new HashSet<CnATreeElement>(children.size());
         for (CnATreeElement child : children) {
             if(child instanceof IControl) {
                 child = Retriever.checkRetrieveElement(child);
+                isIsa = true;
             }
             if(child instanceof ControlGroup) {
                 child = Retriever.checkRetrieveChildren(child);
-                retrieveChildren((ControlGroup) child);
+                boolean isIsaRecursiv = retrieveChildren((ControlGroup) child);
+                if(isIsaRecursiv) {
+                    isIsa = true; 
+                }
             }
             childrenRetrieved.add(child);               
         }
         group.setChildren(childrenRetrieved);
+        return isIsa;
 	}
+	
+	private Double getPercent(Double d) {
+	    return Math.round(d*10000.0) / 100.0;
+	}
+	
+	private ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = createCommandServive();
+        }
+        return commandService;
+    }
+
+    private ICommandService createCommandServive() {
+        return ServiceFactory.lookupCommandService();
+    }
 
 }
