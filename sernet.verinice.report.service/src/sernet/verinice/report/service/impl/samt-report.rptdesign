@@ -1112,6 +1112,7 @@ inParameters(new String[] { "width", "height" });</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.report.service.commands.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -1121,8 +1122,17 @@ if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
 
+child=null;
+
+c3 = new LoadTopLevelElementById("audit", root);
+child = helper.execute(c3).getFound();
+
+if (child == null) {
+	c3 = new LoadTopLevelElementById("org", root);
+	child = helper.execute(c3).getFound();
+}
 cols = helper.getAllPropertyTypes("org");
-c2 = new LoadReportParentOrgForObject(root);
+c2 = new LoadReportParentOrgForObject(child);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,

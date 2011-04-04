@@ -112,12 +112,15 @@ return helper.execute(c).getSelfAssessmentGroup().getParent().getTitle();]]></xm
             <list-property name="parameters">
                 <structure>
                     <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
                     <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
                     <property name="nativeDataType">12</property>
                     <property name="position">1</property>
                     <expression name="defaultValue">'dummy default value'</expression>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -148,7 +151,9 @@ if (myroot != null &amp;&amp; myroot != -1) {
 }
 
 return helper.execute(
-	new sernet.verinice.samt.service.TotalSecurityFigureCommand(root)
+	new sernet.verinice.samt.service.TotalSecurityFigureCommand(
+		root
+	)
 ).getResult();]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -639,6 +644,14 @@ columns(cols);</value>
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.samt.service.FindSamtGroup;
 
+
+// set top level element for report:
+root = helper.getRoot();
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
 
 c = helper.execute(new FindSamtGroup(true, root));
 sag = c.getSelfAssessmentGroup();
@@ -1172,6 +1185,7 @@ inParameters(new String[] { "width", "height", "root_object" });</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.report.service.commands.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -1181,8 +1195,18 @@ if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
 
+child=null;
+
+c3 = new LoadTopLevelElementById("audit", root);
+child = helper.execute(c3).getFound();
+
+if (child == null) {
+	c3 = new LoadTopLevelElementById("org", root);
+	child = helper.execute(c3).getFound();
+}
+
 cols = helper.getAllPropertyTypes("org");
-c2 = new LoadReportParentOrgForObject(root);
+c2 = new LoadReportParentOrgForObject(child);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
@@ -1289,12 +1313,14 @@ columns(cols);</value>
                                 </column>
                                 <row id="883">
                                     <cell id="884">
+                                        <property name="verticalAlign">bottom</property>
                                         <auto-text id="885">
                                             <property name="textAlign">right</property>
                                             <property name="type">page-number</property>
                                         </auto-text>
                                     </cell>
                                     <cell id="886">
+                                        <property name="verticalAlign">bottom</property>
                                         <text id="887">
                                             <property name="textAlign">center</property>
                                             <property name="contentType">plain</property>
@@ -1302,6 +1328,7 @@ columns(cols);</value>
                                         </text>
                                     </cell>
                                     <cell id="888">
+                                        <property name="verticalAlign">bottom</property>
                                         <auto-text id="889">
                                             <property name="type">total-page</property>
                                         </auto-text>
@@ -1312,10 +1339,11 @@ columns(cols);</value>
                         <cell id="875"/>
                         <cell id="876"/>
                         <cell id="877">
+                            <property name="verticalAlign">bottom</property>
                             <text id="878">
                                 <property name="fontSize">9pt</property>
                                 <property name="contentType">html</property>
-                                <text-property name="content"><![CDATA[printed <value-of>new Date()</value-of>]]></text-property>
+                                <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
                             </text>
                         </cell>
                     </row>
@@ -2307,14 +2335,14 @@ columns(cols);</value>
                                 <simple-property-list name="value1">
                                     <value type="javascript">0</value>
                                 </simple-property-list>
-                                <expression name="value2" type="javascript">0,6</expression>
+                                <expression name="value2" type="javascript">0,7</expression>
                             </structure>
                             <structure>
                                 <property name="operator">between</property>
                                 <property name="color">#FFCA53</property>
                                 <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
                                 <simple-property-list name="value1">
-                                    <value type="javascript">0,6</value>
+                                    <value type="javascript">0,7</value>
                                 </simple-property-list>
                                 <expression name="value2" type="javascript">0,9</expression>
                             </structure>
@@ -2646,7 +2674,6 @@ columns(cols);</value>
             </header>
             <detail>
                 <row id="896">
-                    <property name="height">0.2708333333333333in</property>
                     <cell id="897">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -2734,81 +2761,6 @@ columns(cols);</value>
                     </cell>
                 </row>
             </detail>
-            <footer>
-                <row id="900">
-                    <property name="height">0.16666666666666666in</property>
-                    <cell id="901">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
-                    <cell id="902">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
-                    <cell id="903">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
-                    <cell id="921">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
-                    <cell id="917">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
-                </row>
-            </footer>
         </table>
     </body>
     <list-property name="images">

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # COPY ALL PROPERTIES FILES OUT OF PROJECT FOR TRANSLATION (i.e. with OmegaT)
 # execute this in directory which contains "sernet.gs.ui.rcp.main"
 

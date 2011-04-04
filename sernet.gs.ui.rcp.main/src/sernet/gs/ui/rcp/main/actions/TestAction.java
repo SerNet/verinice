@@ -37,12 +37,14 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportAllRisksForScope;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportCountRisksBySeverity;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementList;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithLinks;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportProcessesWithRisk;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRiskAnalysis;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportScenarioDetails;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BSIModel;
@@ -97,27 +99,36 @@ public class TestAction extends Action {
 //            cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
 //            List<List<String>> result2 = cmd.getResult();
 //            
+//            LoadReportAllRisksForScope command = new LoadReportAllRisksForScope(152);
+//            command = ServiceFactory.lookupCommandService().executeCommand(command);
+//            List<List<String>> result2 = command.getResult();
+            
+            
+            LoadReportCountRisksBySeverity command = new LoadReportCountRisksBySeverity(152, 'c', 3);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            List<List<Object>> result2 = command.getResult();
+
+            
+//            LoadReportProcessesWithRisk command = new LoadReportProcessesWithRisk(152);
+//            command = ServiceFactory.lookupCommandService().executeCommand(command);
+//            List<List<String>> result2 = command.getResult();
+//            
+////            
 //            for (List<String> row : result2) {
 //                for (String col : row) {
 //                    allsb.append(col + ":");
 //                }
 //                allsb.append("\n");
 //            }
+
             
-            
-            
-            
-            LoadReportAllRisksForScope command = new LoadReportAllRisksForScope(152);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            List<List<String>> result2 = command.getResult();
-            
-            for (List<String> row : result2) {
-              for (String col : row) {
+                        for (List<Object> row : result2) {
+              for (Object col : row) {
                   allsb.append(col + ":");
               }
               allsb.append("\n");
           }
-            
+//            
 //            for (Integer[] row : countC) {
 //                for (Integer col : row) {
 //                    allsb.append(col + ":");
@@ -148,7 +159,7 @@ public class TestAction extends Action {
 //                
 //            }
 //            
-            
+//            
 //            LoadReportElementList cmd = new LoadReportElementList(typeID, dbID);
 //            cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
 //            List<List<String>> elements = cmd.getResult();
@@ -161,6 +172,21 @@ public class TestAction extends Action {
 //                allsb.append(list.get(1)).append("\n");
 //                allsb.append(print(result)).append("\n");
 //                
+//            }
+            
+//          LoadReportElementWithLinks command = new LoadReportElementWithLinks(null, 152);
+//          command = ServiceFactory.lookupCommandService().executeCommand(command);
+//          List<List<String>> result = command.getResult();
+            
+//            LoadReportScenarioDetails command = new LoadReportScenarioDetails(IncidentScenario.TYPE_ID, 1232 );
+//            command = ServiceFactory.lookupCommandService().executeCommand(command);
+//            List<List<String>> result2 = command.getResult();
+//            
+//            for (List<String> row : result2) {
+//              for (String col : row) {
+//                  allsb.append(col + ":");
+//              }
+//              allsb.append("\n");
 //            }
             
             if (LOG.isDebugEnabled()) {
