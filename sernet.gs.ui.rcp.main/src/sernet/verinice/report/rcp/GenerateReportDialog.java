@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -302,8 +303,9 @@ public class GenerateReportDialog extends Dialog {
             }
         }
         
-        scopeTitles.toArray(new String[scopeTitles.size()]);
-        scopeCombo.setItems( scopeTitles.toArray(new String[scopeTitles.size()]) );
+        String[] titles = scopeTitles.toArray(new String[scopeTitles.size()]);
+        Arrays.sort( titles );
+        scopeCombo.setItems( titles );
         
     }
 
