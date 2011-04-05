@@ -30,7 +30,7 @@ public class PreferenceConstants {
 	
 
 	
-	// locatio of ZIP-file or URL:
+	// location of ZIP-file or URL:
 	public static final String BSIZIPFILE = "cna_bsizipfile"; //$NON-NLS-1$
 	public static final String DSZIPFILE = "cna_dszipfile"; //$NON-NLS-1$
 	public static final String BSIDIR = "cna_bsiurl"; //$NON-NLS-1$
@@ -101,6 +101,14 @@ public class PreferenceConstants {
 	public static final String VNSERVER_URI_DEFAULT = "http://localhost:8080/veriniceserver";
 	public static final String VNSERVER_USER = "gs_cna_serveruser";
 	public static final String VNSERVER_PASS = "gs_cna_serverpass";
+	
+	// all things crypto
+	public static final String CRYPTO_PKCS11_LIBRARY_PATH = "gs_cna_pkcs11_library_path";
+	public static final String CRYPTO_PKCS11_LIBRARY_ENABLED = "gs_cna_pkcs11_library_enabled";
+	public static final String CRYPTO_TRUSTSTORE_FILE = "gs_cna_truststore_file";
+	public static final String CRYPTO_TRUSTSTORE_ENABLED = "gs_cna_truststore_enabled";
+	public static final String CRYPTO_KEYSTORE_FILE = "gs_cna_keystore_file";
+	public static final String CRYPTO_KEYSTORE_ENABLED = "gs_cna_keystore_enabled";
 	
 	// additional gui preferences
 	public static final String SWITCH_PERSPECTIVE = "switch_perspective";
