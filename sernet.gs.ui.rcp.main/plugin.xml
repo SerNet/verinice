@@ -809,6 +809,11 @@
             id="sernet.gs.ui.rcp.main.preferences.editorpreferencepage"
             name="%page.name.7">
       </page>
+      <page
+            class="sernet.gs.ui.rcp.main.preferences.CryptoPreferencePage"
+            id="sernet.gs.ui.rcp.main.preferences.cryptopreferencepage"
+            name="%page.name.8">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
