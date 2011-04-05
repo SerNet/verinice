@@ -53,8 +53,8 @@ public class PropertiesSelectionPage extends WizardPage {
     private TableEditor editor;
     private List<Text> texts;
     private List<CCombo> combos;
-    private List<String> idCombos;
-    private String[] firstLine = null;
+    private List<String> propertyIDs;
+    private String[] columnHeaders = null;
     private List<List<String>> csvContent = null;
 
     private Charset charset;
@@ -65,7 +65,7 @@ public class PropertiesSelectionPage extends WizardPage {
         this.setDescription(Messages.PropertiesSelectionPage_1);
         setPageComplete(false);
         combos = new Vector<CCombo>();
-        idCombos = new Vector<String>();
+        propertyIDs = new Vector<String>();
         texts = new Vector<Text>();
         csvContent = new ArrayList<List<String>>();
     }
@@ -123,21 +123,21 @@ public class PropertiesSelectionPage extends WizardPage {
     // if next is pressed call this method to fill the table with content
     public void fillTable() throws IOException {
         // get entities from verinice
-        if (idCombos.size() > 0)
-            idCombos.clear();
+        if (propertyIDs.size() > 0)
+            propertyIDs.clear();
 
-        String[] cString = null;
+        String[] propertyNames = null;
         
         if (entityId != null) {
             Activator.inheritVeriniceContextState();
             EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entityId);         
-            List<PropertyType> elements = entityType.getAllPropertyTypes();
-            Collections.sort(elements);
-            cString = new String[elements.size()];
+            List<PropertyType> propertyTypes = entityType.getAllPropertyTypes();
+            Collections.sort(propertyTypes);
+            propertyNames = new String[propertyTypes.size()];
             int count = 0;
-            for (IEntityElement element : elements) {
-                cString[count] = element.getName();
-                idCombos.add(element.getId());
+            for (IEntityElement element : propertyTypes) {
+                propertyNames[count] = element.getName();
+                propertyIDs.add(element.getId());
                 count++;
             }
         }
@@ -175,7 +175,8 @@ public class PropertiesSelectionPage extends WizardPage {
             editor.grabHorizontal = true;
             editor.setEditor(text, items[i], 0);
             texts.add(text);
-
+            
+            
             editor = new TableEditor(mainTable);
             final CCombo combo = new CCombo(mainTable, SWT.NONE);
             combo.addSelectionListener(new SelectionListener() {
@@ -188,12 +189,29 @@ public class PropertiesSelectionPage extends WizardPage {
                 }
             });
             combo.setText(""); //$NON-NLS-1$
-            for (int j = 0; j < cString.length; j++) {
-                combo.add(cString[j]);         
+            for (int j = 0; j < propertyNames.length; j++) {
+                combo.add(propertyNames[j]);         
             }
             combos.add(combo);
+            selectItemByName(combo, propertyColumns[i+1], propertyNames);
             editor.grabHorizontal = true;
             editor.setEditor(combo, items[i], 1);
+        }
+    }
+
+    /**
+     * Pre-select property if it has the same name as a CSV table column.
+     * 
+     * @param combo
+     * @param cString 
+     * @param string
+     */
+    private void selectItemByName(CCombo combo, String name, String[] cString) {
+        for (int i = 0; i < cString.length; i++) {
+            String propName = cString[i];
+            if (name.equalsIgnoreCase(propName)) {
+                combo.select(i);
+            }
         }
     }
 
@@ -238,7 +256,7 @@ public class PropertiesSelectionPage extends WizardPage {
             // first column (ext-id) is not displayed: i-1
             int index = combos.get(i - 1).getSelectionIndex();
             if (index != -1) {
-                temp.add(this.idCombos.get(index));
+                temp.add(this.propertyIDs.get(index));
                 temp.add(spalten[i]);
                 table.add(temp);
             }
@@ -248,7 +266,7 @@ public class PropertiesSelectionPage extends WizardPage {
 
     public void setCSVDatei(File csvDatei) {
         this.csvDatei = csvDatei;
-        this.firstLine = null;
+        this.columnHeaders = null;
         this.csvContent.clear();
     }
 
@@ -266,10 +284,10 @@ public class PropertiesSelectionPage extends WizardPage {
 
     // get property and values of the csv
     public String[] getFirstLine() throws IOException {
-        if (firstLine == null) {
+        if (columnHeaders == null) {
             readFile();
         }
-        return firstLine;
+        return columnHeaders;
     }
 
     public List<List<String>> getContent() throws IOException {
@@ -287,7 +305,7 @@ public class PropertiesSelectionPage extends WizardPage {
                 '"', 
                 false);
         // ignore first line
-        firstLine = reader.readNext();
+        columnHeaders = reader.readNext();
         this.csvContent.clear();
         String[] nextLine = null;
         while ((nextLine = reader.readNext()) != null) {
