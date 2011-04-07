@@ -53,12 +53,12 @@ public class CryptoPreferencePage extends FieldEditorPreferencePage implements I
 		// Requires a restart of the application when changed.
 		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_VERINICE_SSL_SECURITY_ENABLED, "verwende verinice-Sicherheitsinfrastruktur für SSL-Verbindungen", getFieldEditorParent()));
 
-		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE, "Quelle für den Zertifikatspeicher",
+		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE, "Quelle für den Zertifikatspeicher (Server- und CA-Zertifikate)",
 				1, new String[][] { { "Datei", PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_FILE },
 						{ "PKCS#11-Bibliothek", PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_PKCS11_LIBRARY }
 				}, getFieldEditorParent()));
 		
-		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_SOURCE, "Quelle für Schlüsselspeicher",
+		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_SOURCE, "Quelle für Schlüsselspeicher (private Schlüssel und Client-Zertifikate)",
 				1, new String[][] { { "keine", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_NONE },
 						{ "Datei", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_FILE },
 						{ "PKCS#11-Bibliothek", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_PKCS11_LIBRARY }
