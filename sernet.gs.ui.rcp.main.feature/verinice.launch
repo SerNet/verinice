@@ -16,7 +16,7 @@
 <stringAttribute key="location" value="/home/akoderman/galileo-eclipse/runtime-oc.product"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl de"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms64m -Xmx512m -XX:MaxPermSize=128m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost -Dorg.osgi.framework.bootdelegation=com.sun.jndi.ldap"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms64m -Xmx512m -XX:MaxPermSize=128m -Dosgi.parentClassloader=ext -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost -Dorg.osgi.framework.bootdelegation=com.sun.jndi.ldap"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <stringAttribute key="product" value="sernet.gs.ui.rcp.main.product"/>
 <stringAttribute key="productFile" value="/sernet.gs.ui.rcp.main.feature/oc.product"/>
