@@ -123,6 +123,10 @@ public final class VeriniceSecurityProvider extends Provider {
 			// provider.
 			String configFile = createPKCS11ConfigFile();
 			if (configFile != null) {
+				// The availability of this class in an OSGi environment depends on a system property. If
+				// get errors of this class not being available check that you have
+				// -Dosgi.parentClassloader=ext
+				// in your VM arguments.
 				SunPKCS11 p = new SunPKCS11(configFile);
 				p.setCallbackHandler(new Helper() {
 					@Override
