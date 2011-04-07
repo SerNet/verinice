@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.Security;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -49,6 +50,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.security.VeriniceSecurityProvider;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
@@ -167,6 +169,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		CnAWorkspace.getInstance().prepareWorkDir();
 
 		Preferences prefs = getPluginPreferences();
+		
+		// May replace the JDK's built-in security settings
+		VeriniceSecurityProvider.register(prefs);
 
 		// set service factory location to local / remote according to
 		// preferences:
@@ -273,7 +278,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		};
 		repositoryJob.schedule();	
 	}
-
 
 	/*
 	 * (non-Javadoc)
