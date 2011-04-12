@@ -6,9 +6,12 @@ import java.io.FileReader;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.GeneralSecurityException;
 import java.security.KeyPair;
+import java.security.KeyStore;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
@@ -156,6 +159,51 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
 					"There was an IO problem during the en- or decryption process. "
 							+ "See the stacktrace for details.", e);
 		} catch (NoSuchProviderException e) {
+			throw new EncryptionException(
+					"There was an IO problem during the en- or decryption process. "
+							+ "See the stacktrace for details.", e);
+		}
+	}
+
+	public SMIMEDecryptedInputStream(InputStream encryptedInputStream, String keyAlias) 
+		throws CertificateNotYetValidException, CertificateExpiredException, 
+		CertificateException, IOException, EncryptionException {
+		super(encryptedInputStream);
+		
+		try {
+			KeyStore ks = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
+			ks.load(null, null);
+			Certificate cert = ks.getCertificate(keyAlias);
+			X509Certificate x509Certificate = (X509Certificate) cert;
+
+			PrivateKey privateKey = (PrivateKey) ks.getKey(keyAlias, null);
+
+			MimeBodyPart encryptedMimeBodyPart = new MimeBodyPart(encryptedInputStream);
+			SMIMEEnveloped enveloped = new SMIMEEnveloped(encryptedMimeBodyPart);
+
+			// look for our recipient identifier
+			RecipientId recipientId = new RecipientId();
+			recipientId.setSerialNumber(x509Certificate.getSerialNumber());
+			recipientId.setIssuer(x509Certificate.getIssuerX500Principal());
+
+			RecipientInformationStore recipients = enveloped.getRecipientInfos();
+			RecipientInformation recipientInfo = recipients.get(recipientId);
+
+			if (recipientInfo != null) {
+				decryptedByteData = recipientInfo.getContent(privateKey,BouncyCastleProvider.PROVIDER_NAME);
+				decryptedByteData = Base64.decode(decryptedByteData);
+			}
+			ByteArrayInputStream byteInStream = new ByteArrayInputStream(decryptedByteData);
+			super.in = byteInStream;
+		} catch (GeneralSecurityException e) {
+			throw new EncryptionException(
+				"There was an IO problem during the en- or decryption process. "
+						+ "See the stacktrace for details.", e);
+		} catch (MessagingException e) {
+			throw new EncryptionException(
+					"There was an IO problem during the en- or decryption process. "
+							+ "See the stacktrace for details.", e);
+		} catch (CMSException e) {
 			throw new EncryptionException(
 					"There was an IO problem during the en- or decryption process. "
 							+ "See the stacktrace for details.", e);

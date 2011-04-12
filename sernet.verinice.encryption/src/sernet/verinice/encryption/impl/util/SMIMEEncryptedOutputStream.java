@@ -22,6 +22,7 @@ import sernet.verinice.interfaces.encryption.EncryptionException;
 public class SMIMEEncryptedOutputStream extends FilterOutputStream {
 
 	private File x509CertificateFile;
+	private String keyAlias;
 	private byte[] oneByteArray = new byte[1];
 	private byte[] result;
 
@@ -33,9 +34,19 @@ public class SMIMEEncryptedOutputStream extends FilterOutputStream {
 		this.x509CertificateFile = x509CertificateFile;
 	}
 
+	public SMIMEEncryptedOutputStream(OutputStream out, String keyAlias)
+	throws CertificateNotYetValidException, CertificateExpiredException,
+	CertificateException, IOException {
+		super(out);
+		this.keyAlias = keyAlias;
+	}
+
 	private byte[] encrypt(byte[] unencryptedByteData) throws IOException, EncryptionException {	
 		try {
-		    return SMIMEBasedEncryption.encrypt(unencryptedByteData, x509CertificateFile);
+			if (x509CertificateFile != null)
+				return SMIMEBasedEncryption.encrypt(unencryptedByteData, x509CertificateFile);
+			else
+				return SMIMEBasedEncryption.encrypt(unencryptedByteData, keyAlias);
 		} catch (GeneralSecurityException e) {
 			throw new EncryptionException(
 					"There was a problem during the en- or decryption process. See the stacktrace for details.", e);

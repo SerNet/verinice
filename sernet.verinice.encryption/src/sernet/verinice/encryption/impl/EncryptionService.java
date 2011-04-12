@@ -113,4 +113,33 @@ public class EncryptionService implements IEncryptionService {
 		return SMIMEBasedEncryption.decrypt(encryptedDataStream, x509CertificateFile, 
 				privateKeyFile);
 	}
+
+	@Override
+	public OutputStream encrypt(OutputStream unencryptedDataStream,
+			String keyAlias) throws EncryptionException, IOException, CertificateException {
+		return SMIMEBasedEncryption.encrypt(unencryptedDataStream, keyAlias);
+	}
+
+	@Override
+	public byte[] encrypt(byte[] unencryptedByteData, String keyAlias)
+			throws CertificateNotYetValidException,
+			CertificateExpiredException, CertificateException,
+			EncryptionException, IOException {
+		return SMIMEBasedEncryption.encrypt(unencryptedByteData, keyAlias);
+	}
+
+	@Override
+    public byte[] decrypt(byte[] encryptedByteData, String keyAlias)
+            throws IOException, CertificateNotYetValidException, CertificateExpiredException,
+            CertificateException, EncryptionException {
+        return SMIMEBasedEncryption.decrypt(encryptedByteData, keyAlias);
+    }
+
+	@Override
+	public InputStream decrypt(InputStream encryptedDataStream, String keyAlias)
+		throws IOException, CertificateNotYetValidException, 
+			CertificateExpiredException, CertificateException, EncryptionException {
+		return SMIMEBasedEncryption.decrypt(encryptedDataStream, keyAlias);
+	}
+
 }
