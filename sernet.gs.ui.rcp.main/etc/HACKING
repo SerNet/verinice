@@ -38,7 +38,7 @@ Eclipse IDE:
     appropriate connector (i.e. from update repository: http://subclipse.tigris.org/update_1.6.x)
     If  you cannot authenticate using svn+ssh, use SVNKIT (Preferences, SVN) and a private SSH key.
  
- - install the Java Plugin Developer Tools and Eclipse Java EE Developer Tools
+ - install the Java "Plug-In Development Environment"  and Eclipse Java EE Developer Tools
     (if not already part of your Eclipse installation)
  
  - Eclipse 3.5: additionally install 'JST Server Adapters'
