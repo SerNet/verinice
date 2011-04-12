@@ -97,7 +97,9 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	
 	private char[] password = null;
 	
-	private File x509CertificateFile = null; 
+	private File x509CertificateFile = null;
+	
+	private String keyAlias = null;
 	
 	private static ISchedulingRule iSchedulingRule = new Mutex();
 	
@@ -135,11 +137,16 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 		    if(dialog.getEncryptOutput()) {
                 encDialog = new EncryptionDialog(Display.getDefault().getActiveShell());
                 if (encDialog.open() == Window.OK) {
-                    EncryptionMethod encMethod = encDialog.getSelectedEncryptionMethod();            
-                    if (encMethod == EncryptionMethod.PASSWORD) {
-                        password = encDialog.getEnteredPassword();
-                    } else if (encMethod == EncryptionMethod.X509_CERTIFICATE) {
+                    EncryptionMethod encMethod = encDialog.getSelectedEncryptionMethod();
+                    switch (encMethod) {
+                    case PASSWORD:
+                    	password = encDialog.getEnteredPassword();
+                    	break;
+                    case X509_CERTIFICATE:
                         x509CertificateFile = encDialog.getSelectedX509CertificateFile();
+                        break;
+                    case PKCS11_KEY:
+                    	keyAlias = encDialog.getSelectedKeyAlias();
                     }
                 } else {
                     return;
@@ -163,13 +170,15 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                         		dialog.getReImport(),
                         		dialog.getSourceId(),
                         		password,
-                        		x509CertificateFile);                    
+                        		x509CertificateFile,
+                        		keyAlias);                    
                     } catch (Throwable e) {
                         LOG.error("Error while exporting data.", e); //$NON-NLS-1$
                         status= new Status(Status.ERROR, "sernet.verinice.samt.rcp", "Error while exporting data.",e); 
                     } finally {
                         password = null;
                         x509CertificateFile = null;
+                        keyAlias = null;
                         monitor.done();
                         this.done(status);
                     }
@@ -182,7 +191,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 		}
 	}
     
-    private void export(Set<CnATreeElement> elementSet, String path, boolean reImport, String sourceId, char[] exportPassword, File x509CertificateFile) {
+    private void export(Set<CnATreeElement> elementSet, String path, boolean reImport, String sourceId, char[] exportPassword, File x509CertificateFile, String keyAlias) {
         if(elementSet!=null && elementSet.size()>0) {
         	if(sourceId==null || sourceId.isEmpty()) {
         		// if source id is not set by user the first 6 char. of an uuid is used
@@ -192,7 +201,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         	ExportCommand exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(elementSet), sourceId, reImport);
         	try {
         		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
-        		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, x509CertificateFile));
+        		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, x509CertificateFile, keyAlias));
         		updateModel(exportCommand.getChangedElements());
         	} catch (Exception e) {
         		throw new IllegalStateException(e);
@@ -200,7 +209,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         }
     }
 
-    private void export(CnATreeElement element, String path, boolean reImport, String sourceId, char[] exportPassword, File x509CertificateFile) {
+    private void export(CnATreeElement element, String path, boolean reImport, String sourceId, char[] exportPassword, File x509CertificateFile, String keyAlias) {
         LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
         if(element!=null) {
             sourceId = (sourceId==null || sourceId.isEmpty()) ? element.getUuid() : sourceId;
@@ -209,7 +218,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         	ExportCommand exportCommand = new ExportCommand(exportElements, sourceId, reImport);
         	try {
         		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
-        		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, x509CertificateFile));
+        		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, x509CertificateFile, keyAlias));
         		updateModel(exportCommand.getChangedElements());
         	} catch (Exception e) {
         		throw new IllegalStateException(e);
@@ -247,15 +256,16 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
      * @throws CertificateExpiredException 
      * @throws CertificateNotYetValidException 
      */
-    private byte[] encrypt(byte[] result, char[] password, File x509CertificateFile2) throws CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException, IOException {
-        if (password!=null || x509CertificateFile!=null) {               
-            IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
-            if (password!=null) {
-                result = service.encrypt(result, password);
-            } else if (x509CertificateFile!=null) {
-                result = service.encrypt(result, x509CertificateFile);
-            }                     
+    private byte[] encrypt(byte[] result, char[] password, File x509CertificateFile2, String keyAlias) throws CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException, IOException {
+        IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
+        if (keyAlias != null) {
+        	result = service.encrypt(result, keyAlias);
+        } else if (password!=null) {
+            result = service.encrypt(result, password);
+        } else if (x509CertificateFile!=null) {
+            result = service.encrypt(result, x509CertificateFile);
         }
+        
         return result;
     }
 

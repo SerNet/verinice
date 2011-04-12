@@ -1,7 +1,18 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -13,6 +24,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -20,6 +32,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import sernet.verinice.iso27k.rcp.JobScheduler;
 
 /**
  * Dialog asking the user to enter a password or select a X.509 certificate file
@@ -43,7 +57,8 @@ public class EncryptionDialog extends TitleAreaDialog {
 	 */
 	public enum EncryptionMethod {
 		PASSWORD,
-		X509_CERTIFICATE
+		X509_CERTIFICATE,
+		PKCS11_KEY,
 	}
 	
 	/**
@@ -71,6 +86,10 @@ public class EncryptionDialog extends TitleAreaDialog {
 	 * The X.509 public certificate file selected by the user
 	 */
 	private File selectedX509CertificateFile;
+	
+	private String selectedKeyAlias;
+
+	private Combo pkcs11KeyEncryptionCombo;
 	
 	/**
 	 * Creates a new EncryptionDialog.
@@ -178,9 +197,67 @@ public class EncryptionDialog extends TitleAreaDialog {
             }
         });
 
+		// ==== Certificate Based Encryption controls
+		final Button pkcs11KeyEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
+		pkcs11KeyEncryptionRadio.setText("Verschlüsselung mit Schlüssel aus PKCS#11-Bibliothek");
+		pkcs11KeyEncryptionRadio.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				selectedEncryptionMethod = EncryptionMethod.PKCS11_KEY;
+				updateCombo();
+			}
+		});
+		pkcs11KeyEncryptionCombo = new Combo(encryptionChoicePanel, SWT.DROP_DOWN | SWT.READ_ONLY);
+		data = new GridData();
+		data.widthHint = 280;
+		pkcs11KeyEncryptionCombo.setLayoutData(data);
+		pkcs11KeyEncryptionCombo.setEnabled(false);
+		pkcs11KeyEncryptionCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				selectedKeyAlias = pkcs11KeyEncryptionCombo.getText();
+			}
+		});		
+		
 		encryptionChoicePanel.pack();
 		composite.pack();
 		return composite;
+	}
+	
+	private void updateCombo() {
+		WorkspaceJob job = new WorkspaceJob("verfügbare Schlüssel einlesen") {
+			@Override
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				IStatus status = Status.OK_STATUS;
+				
+				try {
+					KeyStore ks = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
+					ks.load(null, null);
+					Enumeration<String> en = ks.aliases();
+					final List<String> l = new ArrayList<String>();
+					while (en.hasMoreElements()) {
+						l.add(en.nextElement());
+	 				}
+				
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							pkcs11KeyEncryptionCombo.removeAll();
+							for (String s : l) {
+								pkcs11KeyEncryptionCombo.add(s);	
+							}
+							pkcs11KeyEncryptionCombo.setEnabled(true);
+						}
+					});
+				} catch (GeneralSecurityException gse) {
+					status = Status.CANCEL_STATUS;
+				} catch (IOException ioe) {
+					status = Status.CANCEL_STATUS;
+				}
+				
+				return status;
+			}
+		};
+		JobScheduler.scheduleJob(job, null);
 	}
 
 	/**
@@ -203,4 +280,9 @@ public class EncryptionDialog extends TitleAreaDialog {
 	public File getSelectedX509CertificateFile() {
 		return selectedX509CertificateFile;
 	}
+	
+	public String getSelectedKeyAlias() {
+		return selectedKeyAlias;
+	}
+	
 }

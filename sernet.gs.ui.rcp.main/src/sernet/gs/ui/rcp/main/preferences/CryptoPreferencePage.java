@@ -21,6 +21,7 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -48,25 +49,29 @@ public class CryptoPreferencePage extends FieldEditorPreferencePage implements I
 	 */
 	@Override
 	public void createFieldEditors() {
+		Composite fep = getFieldEditorParent();
 		// If this is checked the verinice security provider will take over the certificate/key management
 		// for SSL connections.
 		// Requires a restart of the application when changed.
-		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_VERINICE_SSL_SECURITY_ENABLED, "verwende verinice-Sicherheitsinfrastruktur für SSL-Verbindungen", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_VERINICE_SSL_SECURITY_ENABLED, "verwende verinice-Sicherheitsinfrastruktur für SSL-Verbindungen", fep));
 
 		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE, "Quelle für den Zertifikatspeicher (Server- und CA-Zertifikate)",
 				1, new String[][] { { "Datei", PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_FILE },
 						{ "PKCS#11-Bibliothek", PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_PKCS11_LIBRARY }
-				}, getFieldEditorParent()));
+				}, fep));
 		
 		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_SOURCE, "Quelle für Schlüsselspeicher (private Schlüssel und Client-Zertifikate)",
 				1, new String[][] { { "keine", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_NONE },
 						{ "Datei", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_FILE },
 						{ "PKCS#11-Bibliothek", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_PKCS11_LIBRARY }
-				}, getFieldEditorParent()));
+				}, fep));
 		
-		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_FILE, "Pfad zum Zertifikatspeicher", getFieldEditorParent()));
-		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_FILE, "Pfad zum Schlüsselspeicher", getFieldEditorParent()));
-		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_PATH, "Pfad zur PKCS#11-Bibliothek", getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_FILE, "Pfad zum Zertifikatspeicher", fep));
+		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_FILE, "Pfad zum Schlüsselspeicher", fep));
+
+		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED, "PKCS#11-Bibliothek für Verschlüsselung/Entschlüsselung verwenden", fep));
+		
+		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_PATH, "Pfad zur PKCS#11-Bibliothek", fep));
 	}
 
 	@Override

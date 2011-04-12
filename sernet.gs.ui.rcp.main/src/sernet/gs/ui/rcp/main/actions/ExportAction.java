@@ -141,10 +141,21 @@ public class ExportAction extends Action {
 
                 try {
                     EncryptionMethod encMethod = encDialog.getSelectedEncryptionMethod();
-                    if (encMethod == EncryptionMethod.PASSWORD) {
+                    switch (encMethod) {
+                    case PASSWORD:
                         os = service.encrypt(os, encDialog.getEnteredPassword());
-                    } else if (encMethod == EncryptionMethod.X509_CERTIFICATE) {
+                    	break;
+                    case X509_CERTIFICATE:
                         os = service.encrypt(os, encDialog.getSelectedX509CertificateFile());
+                    	break;
+                    case PKCS11_KEY:
+                        os = service.encrypt(os, encDialog.getSelectedKeyAlias());
+                    	break;
+                    default:
+                    	break;
+                    }
+                    if (encMethod == EncryptionMethod.PASSWORD) {
+                    } else if (encMethod == EncryptionMethod.X509_CERTIFICATE) {
                     }
                 } catch (Exception ioe) {
                     throw new IllegalArgumentException(ioe);
