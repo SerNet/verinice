@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
-import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.NoSuchProviderException;
@@ -161,11 +160,10 @@ public class SMIMEBasedEncryption {
         try {
             KeyStore ks = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
             ks.load(null, null);
-            Certificate cert = ks.getCertificate(keyAlias);
-            PublicKey key = cert.getPublicKey();
+            X509Certificate cert = (X509Certificate) ks.getCertificate(keyAlias);
             
             SMIMEEnvelopedGenerator generator = new SMIMEEnvelopedGenerator();
-            generator.addKeyTransRecipient(key, key.getEncoded());
+            generator.addKeyTransRecipient(cert);
             unencryptedByteData = Base64.encode(unencryptedByteData);
             MimeBodyPart unencryptedContent = SMIMEUtil.toMimeBodyPart(unencryptedByteData);
 
