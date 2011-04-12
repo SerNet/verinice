@@ -5,6 +5,8 @@ import java.io.File;
 import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -296,6 +298,14 @@ public class GenerateReportDialog extends Dialog {
         
         scopes.addAll(loadScopes());
         scopes.addAll(loadITVerbuende());
+
+        Collections.sort(scopes, new Comparator<CnATreeElement>() {
+            @Override
+            public int compare(CnATreeElement o1, CnATreeElement o2) {
+                return o1.getTitle().compareToIgnoreCase(o2.getTitle());
+            }
+        });
+        
         for (CnATreeElement elmt : scopes) {
             scopeTitles.add(elmt.getTitle());
             if (LOG.isDebugEnabled()) {
@@ -304,7 +314,6 @@ public class GenerateReportDialog extends Dialog {
         }
         
         String[] titles = scopeTitles.toArray(new String[scopeTitles.size()]);
-        Arrays.sort( titles );
         scopeCombo.setItems( titles );
         
     }
