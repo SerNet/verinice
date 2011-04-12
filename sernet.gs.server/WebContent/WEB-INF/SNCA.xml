@@ -3132,11 +3132,11 @@ the value between <param></param> will be used directly if no string is found fo
                 <defaultRule class="SimpleValue">
                     <param id="org_class_asset_a_default">0 Basic: Possible financial due to downtime loss below ???. Recovery time objective (RTO) is higher than one week.
 
-1 Normal: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Donwtime could impair public image
+1 Normal: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Downtime could impair public image
 
-2 High: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Donwtime could impair public image or client relationship.
+2 High: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Downtime could impair public image or client relationship.
 
-3 Very high: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Donwtime could seriously impair public image or end client relationship. 
+3 Very high: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Downtime could seriously impair public image or end client relationship. 
 
 4 Extraordinary: Special agreements with individual clients which do not fall in one of the above categories. 
                     </param>
