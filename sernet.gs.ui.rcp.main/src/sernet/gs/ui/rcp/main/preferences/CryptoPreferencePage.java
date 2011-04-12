@@ -72,7 +72,8 @@ public class CryptoPreferencePage extends FieldEditorPreferencePage implements I
 		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_FILE, "Pfad zum Zertifikatspeicher", fep));
 		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_FILE, "Pfad zum Schlüsselspeicher", fep));
 
-	//	addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED, "PKCS#11-Bibliothek für Verschlüsselung/Entschlüsselung verwenden", fep));
+		// FIXME compile error:
+		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED, "PKCS#11-Bibliothek für Verschlüsselung/Entschlüsselung verwenden", fep));
 		
 		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_PATH, "Pfad zur PKCS#11-Bibliothek", fep));
 	}
