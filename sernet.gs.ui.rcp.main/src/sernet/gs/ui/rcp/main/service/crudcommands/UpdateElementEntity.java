@@ -76,11 +76,14 @@ public class UpdateElementEntity<T extends CnATreeElement> extends GenericComman
             }
             throw e;
         }
-	    
-	    Entity newEntity = newElement.getEntity();
-	    IBaseDao<Entity, Serializable> entityDao = getDaoFactory().getDAO(Entity.class);
-	    newEntity = entityDao.merge(newEntity);
-	    newElement.setEntity(newEntity);
+        
+        // we have to fireUpdates on save to calculate protection levels for assets and load the changed element afterwards:
+        IBaseDao dao =  getDaoFactory().getDAOforTypedElement(newElement);
+        Entity newEntity = newElement.getEntity();
+        T oldElement = (T) dao.findById(newElement.getDbId());
+        oldElement.setEntity(newEntity);
+        newElement = (T) dao.merge(oldElement, fireupdates);
+        
 	    afterUpdate();
 	}
 
