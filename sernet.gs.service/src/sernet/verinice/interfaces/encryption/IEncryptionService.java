@@ -74,7 +74,14 @@ public interface IEncryptionService {
 	 *             if there was a problem reading from the InputStream
 	 */
 	OutputStream encrypt(OutputStream unencryptedDataStream, char[] password)
-			throws EncryptionException, IOException;
+	throws EncryptionException, IOException;
+
+	OutputStream encrypt(OutputStream unencryptedDataStream, String keyAlias)
+	throws EncryptionException, IOException, CertificateException;
+	
+	byte[] encrypt(byte[] unencryptedByteData, String keyAlias)
+	throws CertificateNotYetValidException, CertificateExpiredException, 
+	CertificateException, EncryptionException, IOException;
 
 	/**
 	 * Decrypts data received from the given InputStream using the AES algorithm.
@@ -284,4 +291,14 @@ public interface IEncryptionService {
     InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, 
         File privateKeyFile, final String privateKeyPassword) throws IOException, CertificateNotYetValidException, 
         CertificateExpiredException, CertificateException, EncryptionException;
+
+	byte[] decrypt(byte[] encryptedByteData, String keyAlias)
+			throws IOException, CertificateNotYetValidException,
+			CertificateExpiredException, CertificateException,
+			EncryptionException;
+
+	InputStream decrypt(InputStream encryptedDataStream, String keyAlias)
+			throws IOException, CertificateNotYetValidException,
+			CertificateExpiredException, CertificateException,
+			EncryptionException;
 }
