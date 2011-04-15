@@ -14172,26 +14172,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                                 <list-property name="highlightRules">
                                                                                     <structure>
                                                                                         <property name="operator">gt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["riskC"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["riskC"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_confid"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_red</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">between</property>
-                                                                                        <expression name="testExpr" type="javascript">row["riskC"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["riskC"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_confid"]-3</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"])-3</value>
                                                                                         </simple-property-list>
-                                                                                        <expression name="value2" type="javascript">row._outer._outer._outer["org_riskaccept_confid"]</expression>
+                                                                                        <expression name="value2" type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"])</expression>
                                                                                         <property name="style">bg_yellow</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">lt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["riskC"]+2</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["riskC"])+2</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_confid"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_green</property>
                                                                                     </structure>
@@ -14207,26 +14207,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                                 <list-property name="highlightRules">
                                                                                     <structure>
                                                                                         <property name="operator">gt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["riskI"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["riskI"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_integ"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_red</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">between</property>
-                                                                                        <expression name="testExpr" type="javascript">row["riskI"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["riskI"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_integ"]-4</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"])-4</value>
                                                                                         </simple-property-list>
-                                                                                        <expression name="value2" type="javascript">row._outer._outer._outer["org_riskaccept_integ"]</expression>
+                                                                                        <expression name="value2" type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"])</expression>
                                                                                         <property name="style">bg_yellow</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">lt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["riskI"]+3</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["riskI"])+3</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_integ"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_green</property>
                                                                                     </structure>
@@ -14242,26 +14242,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                                 <list-property name="highlightRules">
                                                                                     <structure>
                                                                                         <property name="operator">gt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["riskA"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["riskA"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_avail"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_red</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">between</property>
-                                                                                        <expression name="testExpr" type="javascript">row["riskA"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["riskA"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_avail"]-3</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"])-3</value>
                                                                                         </simple-property-list>
-                                                                                        <expression name="value2" type="javascript">row._outer._outer._outer["org_riskaccept_avail"]</expression>
+                                                                                        <expression name="value2" type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"])</expression>
                                                                                         <property name="style">bg_yellow</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">lt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["riskA"]+2</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["riskA"])+2</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_avail"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_green</property>
                                                                                     </structure>
