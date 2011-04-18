@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyStore;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
@@ -24,13 +23,15 @@ import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
+import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipientId;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
 import org.bouncycastle.openssl.PEMReader;
 import org.bouncycastle.openssl.PasswordFinder;
 import org.bouncycastle.util.encoders.Base64;
 
-import sernet.verinice.encryption.impl.SMIMEBasedEncryption;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 
 /**
@@ -137,15 +138,16 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
 			SMIMEEnveloped enveloped = new SMIMEEnveloped(encryptedMimeBodyPart);
 
 			// look for our recipient identifier
-			RecipientId recipientId = new RecipientId();
-			recipientId.setSerialNumber(x509Certificate.getSerialNumber());
-			recipientId.setIssuer(x509Certificate.getIssuerX500Principal());
+			RecipientId recipientId = new JceKeyTransRecipientId(x509Certificate);
 
 			RecipientInformationStore recipients = enveloped.getRecipientInfos();
 			RecipientInformation recipientInfo = recipients.get(recipientId);
 
 			if (recipientInfo != null) {
-				decryptedByteData = recipientInfo.getContent(privateKey,BouncyCastleProvider.PROVIDER_NAME);
+            	JceKeyTransRecipient rec = new JceKeyTransEnvelopedRecipient(privateKey);
+            	rec.setProvider("SunPKCS11-verinice");
+            	rec.setContentProvider(BouncyCastleProvider.PROVIDER_NAME);
+				decryptedByteData = recipientInfo.getContent(rec);
 				decryptedByteData = Base64.decode(decryptedByteData);
 			}
 			ByteArrayInputStream byteInStream = new ByteArrayInputStream(decryptedByteData);
@@ -155,10 +157,6 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
 					"There was an IO problem during the en- or decryption process. "
 							+ "See the stacktrace for details.", e);
 		} catch (CMSException e) {
-			throw new EncryptionException(
-					"There was an IO problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
-		} catch (NoSuchProviderException e) {
 			throw new EncryptionException(
 					"There was an IO problem during the en- or decryption process. "
 							+ "See the stacktrace for details.", e);
@@ -182,15 +180,16 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
 			SMIMEEnveloped enveloped = new SMIMEEnveloped(encryptedMimeBodyPart);
 
 			// look for our recipient identifier
-			RecipientId recipientId = new RecipientId();
-			recipientId.setSerialNumber(x509Certificate.getSerialNumber());
-			recipientId.setIssuer(x509Certificate.getIssuerX500Principal());
+			RecipientId recipientId = new JceKeyTransRecipientId(x509Certificate);
 
 			RecipientInformationStore recipients = enveloped.getRecipientInfos();
 			RecipientInformation recipientInfo = recipients.get(recipientId);
 
 			if (recipientInfo != null) {
-				decryptedByteData = recipientInfo.getContent(privateKey,BouncyCastleProvider.PROVIDER_NAME);
+            	JceKeyTransRecipient rec = new JceKeyTransEnvelopedRecipient(privateKey);
+            	rec.setProvider("SunPKCS11-verinice");
+            	rec.setContentProvider(BouncyCastleProvider.PROVIDER_NAME);
+				decryptedByteData = recipientInfo.getContent(rec);
 				decryptedByteData = Base64.decode(decryptedByteData);
 			}
 			ByteArrayInputStream byteInStream = new ByteArrayInputStream(decryptedByteData);

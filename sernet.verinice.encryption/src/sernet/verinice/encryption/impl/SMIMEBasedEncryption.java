@@ -10,9 +10,7 @@ import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyStore;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
@@ -22,10 +20,17 @@ import java.security.cert.X509Certificate;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 
+import org.bouncycastle.cms.CMSAlgorithm;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
+import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
+import org.bouncycastle.cms.jcajce.JceKeyAgreeRecipientId;
+import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipientId;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
@@ -33,6 +38,7 @@ import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMEUtil;
 import org.bouncycastle.openssl.PEMReader;
 import org.bouncycastle.openssl.PasswordFinder;
+import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.encoders.Base64;
 
 import sernet.verinice.encryption.impl.util.CertificateUtils;
@@ -128,12 +134,14 @@ public class SMIMEBasedEncryption {
 
         try {
             SMIMEEnvelopedGenerator generator = new SMIMEEnvelopedGenerator();
-            generator.addKeyTransRecipient(x509Certificate);
+            generator.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(x509Certificate).setProvider("SunPKCS11-verinice"));
             unencryptedByteData = Base64.encode(unencryptedByteData);
             MimeBodyPart unencryptedContent = SMIMEUtil.toMimeBodyPart(unencryptedByteData);
 
             // Encrypt the byte data and make a MimeBodyPart from it
-            MimeBodyPart encryptedMimeBodyPart = generator.generate(unencryptedContent, SMIMEEnvelopedGenerator.AES256_CBC, BouncyCastleProvider.PROVIDER_NAME);
+            MimeBodyPart encryptedMimeBodyPart = generator.generate(
+            			unencryptedContent,
+            			new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES256_CBC).setProvider(BouncyCastleProvider.PROVIDER_NAME).build());
 
             // Finally get the encoded bytes from the MimeMessage and return
             // them
@@ -149,7 +157,13 @@ public class SMIMEBasedEncryption {
             throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
         } catch (IOException ioe) {
             throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", ioe);
-        }
+        } catch (CMSException e) {
+            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
+		} catch (IllegalArgumentException e) {
+            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
+		} catch (OperatorCreationException e) {
+            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
+		}
         return encryptedMimeData;
     }
 
@@ -163,12 +177,15 @@ public class SMIMEBasedEncryption {
             X509Certificate cert = (X509Certificate) ks.getCertificate(keyAlias);
             
             SMIMEEnvelopedGenerator generator = new SMIMEEnvelopedGenerator();
-            generator.addKeyTransRecipient(cert);
+            generator.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(cert));
+            //.setProvider("SunPKCS11-verinice")
             unencryptedByteData = Base64.encode(unencryptedByteData);
             MimeBodyPart unencryptedContent = SMIMEUtil.toMimeBodyPart(unencryptedByteData);
 
             // Encrypt the byte data and make a MimeBodyPart from it
-            MimeBodyPart encryptedMimeBodyPart = generator.generate(unencryptedContent, SMIMEEnvelopedGenerator.AES256_CBC, BouncyCastleProvider.PROVIDER_NAME);
+            MimeBodyPart encryptedMimeBodyPart = generator.generate(
+            		unencryptedContent,
+            		new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES256_CBC).setProvider(BouncyCastleProvider.PROVIDER_NAME).build());
 
             // Finally get the encoded bytes from the MimeMessage and return
             // them
@@ -184,7 +201,13 @@ public class SMIMEBasedEncryption {
             throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
         } catch (IOException ioe) {
             throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", ioe);
-        }
+        } catch (IllegalArgumentException e) {
+            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
+		/*} catch (OperatorCreationException e) {
+            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
+		*/} catch (CMSException e) {
+            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
+		}
         return encryptedMimeData;
     }
     
@@ -296,22 +319,20 @@ public class SMIMEBasedEncryption {
             SMIMEEnveloped enveloped = new SMIMEEnveloped(encryptedMimeBodyPart);
 
             // look for our recipient identifier
-            RecipientId recipientId = new RecipientId();
-
-            recipientId.setSerialNumber(x509Certificate.getSerialNumber());
-            recipientId.setIssuer(x509Certificate.getIssuerX500Principal());
+            RecipientId recipientId = new JceKeyAgreeRecipientId(x509Certificate);
 
             RecipientInformationStore recipients = enveloped.getRecipientInfos();
             RecipientInformation recipientInfo = recipients.get(recipientId);
 
             if (recipientInfo != null) {
-                decryptedByteData = recipientInfo.getContent(privateKey, BouncyCastleProvider.PROVIDER_NAME);
+            	JceKeyTransRecipient rec = new JceKeyTransEnvelopedRecipient(privateKey);
+            	rec.setProvider("SunPKCS11-verinice");
+            	rec.setContentProvider(BouncyCastleProvider.PROVIDER_NAME);
+            	decryptedByteData = recipientInfo.getContent(rec);
             }
         } catch (MessagingException e) {
             throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
         } catch (CMSException e) {
-            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
-        } catch (NoSuchProviderException e) {
             throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
         }
 
@@ -444,16 +465,16 @@ public class SMIMEBasedEncryption {
             SMIMEEnveloped enveloped = new SMIMEEnveloped(encryptedMimeBodyPart);
 
             // look for our recipient identifier
-            RecipientId recipientId = new RecipientId();
-
-            recipientId.setSerialNumber(x509Certificate.getSerialNumber());
-            recipientId.setIssuer(x509Certificate.getIssuerX500Principal());
+            RecipientId recipientId = new JceKeyTransRecipientId(x509Certificate);
 
             RecipientInformationStore recipients = enveloped.getRecipientInfos();
             RecipientInformation recipientInfo = recipients.get(recipientId);
 
             if (recipientInfo != null) {
-                decryptedByteData = recipientInfo.getContent(privateKey, BouncyCastleProvider.PROVIDER_NAME);
+            	JceKeyTransRecipient rec = new JceKeyTransEnvelopedRecipient(privateKey);
+            	rec.setProvider("SunPKCS11-verinice");
+            	rec.setContentProvider(BouncyCastleProvider.PROVIDER_NAME);
+				decryptedByteData = recipientInfo.getContent(rec);
             }
         } catch (MessagingException e) {
             throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
