@@ -33,6 +33,8 @@ import java.security.cert.CertificateNotYetValidException;
  * 
  */
 public interface IEncryptionService {
+	
+	public enum EncryptionMethod { PASSWORD, EXTERNAL_CERTIFICATE, PKCS11 };
 
 	/**
 	 * Encrypts the given byte data with the given password using the AES algorithm.
