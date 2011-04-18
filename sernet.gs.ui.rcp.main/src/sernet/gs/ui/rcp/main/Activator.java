@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.Security;
+import java.security.spec.PKCS8EncodedKeySpec;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;

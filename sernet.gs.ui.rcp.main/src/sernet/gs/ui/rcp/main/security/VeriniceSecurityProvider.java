@@ -97,11 +97,17 @@ public final class VeriniceSecurityProvider extends Provider {
 			// Routes Key- and TrustStore generation through our code.
 			System.setProperty("javax.net.ssl.trustStoreType", "verinice-ts");
 			System.setProperty("javax.net.ssl.keyStoreType", "verinice-ks");
+		} else if (prefs.getBoolean(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED))
+		{
+			// If the SSL thing was not necessary it is still possible that the user wanted
+			// PKCS#11-based crypto. As the support for PKCS#11 is primarilary used by the
+			// VeriniceSecurityProvider class we at least need an instance of that - however
+			// without registering it as the systems - security provider.
+			VeriniceSecurityProvider provider = new VeriniceSecurityProvider(prefs);
+			provider.setupSunPKCS11Provider();
 		}
-
 	}
 
-	@SuppressWarnings("restriction")
 	public VeriniceSecurityProvider(Preferences prefs) {
 		super(NAME, VERSION, "Verinice' Security Provider");
 		this.prefs = prefs;
@@ -119,25 +125,32 @@ public final class VeriniceSecurityProvider extends Provider {
 				VeriniceTrustStore.class.getName(), null, null));
 		
 		if (isPKCS11LibraryEnabled()) {
-			// If the user enabled anything PKCS#11 related we need to lead the PKCS#11 library and add its
-			// provider.
-			String configFile = createPKCS11ConfigFile();
-			if (configFile != null) {
-				// The availability of this class in an OSGi environment depends on a system property. If
-				// get errors of this class not being available check that you have
-				// -Dosgi.parentClassloader=ext
-				// in your VM arguments.
-				SunPKCS11 p = new SunPKCS11(configFile);
-				p.setCallbackHandler(new Helper() {
-					@Override
-					protected void handle(PasswordCallback cb) {
-						cb.setPassword(getTokenPIN());
-					}
-				});
-				Security.addProvider(p);
-			}
+			setupSunPKCS11Provider();
 		}
+	}
+
+	private void setupSunPKCS11Provider() {
+		// Prevents installing the provider twice.
+		if (Security.getProvider("SunPKCS11-verinice") != null)
+			return;
 		
+		// If the user enabled anything PKCS#11 related we need to lead the PKCS#11 library and add its
+		// provider.
+		String configFile = createPKCS11ConfigFile();
+		if (configFile != null) {
+			// The availability of this class in an OSGi environment depends on a system property. If
+			// get errors of this class not being available check that you have
+			// -Dosgi.parentClassloader=ext
+			// in your VM arguments.
+			SunPKCS11 p = new SunPKCS11(configFile);
+			p.setCallbackHandler(new Helper() {
+				@Override
+				protected void handle(PasswordCallback cb) {
+					cb.setPassword(getTokenPIN());
+				}
+			});
+			Security.addProvider(p);
+		}
 	}
 
 	char[] initKeyStore(KeyStore ks, char[] password) throws NoSuchAlgorithmException,
@@ -149,12 +162,7 @@ public final class VeriniceSecurityProvider extends Provider {
 
 		String keyStoreFile = getKeyStoreFile();
 
-		boolean wasWrong = false;
-		try {
-			loadKeystore(ks, keyStoreFile, password);
-		} catch (NoSuchAlgorithmException e) {
-			holder.reset();
-		}
+		loadKeystore(ks, keyStoreFile, password);
 		
 		return password;
 	}
@@ -168,12 +176,7 @@ public final class VeriniceSecurityProvider extends Provider {
 
 		String trustStoreFile = getTrustStoreFile();
 
-		try {
-			loadKeystore(ks, trustStoreFile, null);
-		} catch (NoSuchAlgorithmException e) {
-			holder.reset();
-		}
-
+		loadKeystore(ks, trustStoreFile, null);
 	}
 
 	char[] getTrustStorePassword(boolean wasWrong) {
@@ -214,7 +217,7 @@ public final class VeriniceSecurityProvider extends Provider {
 	}
 	
 	private boolean isPKCS11LibraryEnabled() {
-		return usePKCS11LibraryAsKeyStore() || usePKCS11LibraryAsTrustStore();
+		return prefs.getBoolean(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED) || usePKCS11LibraryAsKeyStore() || usePKCS11LibraryAsTrustStore();
 	}
 	
 	private boolean usePKCS11LibraryAsTrustStore() {
@@ -496,6 +499,8 @@ public final class VeriniceSecurityProvider extends Provider {
 						}
 					};
 					
+					// TODO: If the type would changeable one could load other storetypes as well (e.g. standardized
+					// pkcs#12 files)
 					c.keyStore = KeyStore.getInstance("jks");
 				}
 			} catch (KeyStoreException e) {
