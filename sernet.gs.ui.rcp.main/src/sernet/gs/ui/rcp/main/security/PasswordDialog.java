@@ -39,19 +39,16 @@ import org.eclipse.swt.widgets.Text;
  *
  */
 final class PasswordDialog extends Dialog {
-	private Text trustStorePasswordText;
 	private Text keyStorePasswordText;
 	private Text tokenPINText;
 
-	private char[] trustStorePassword = null;
 	private char[] keyStorePassword = null;
 	private char[] tokenPIN = null;
 	
-	private boolean isTrustStoreEnabled;
 	private boolean isKeyStoreEnabled;
 	private boolean isTokenPINEnabled;
 	
-	static enum Type { TRUST, KEY, TOKEN };
+	static enum Type { KEY, TOKEN };
 	
 	private Type focus;
 
@@ -59,16 +56,14 @@ final class PasswordDialog extends Dialog {
 	 * Creates a dialog where certain inputs will be disabled, if necessary.
 	 * 
 	 * @param parentShell
-	 * @param isTrustStoreEnabled
 	 * @param isKeyStoreEnabled
 	 * @param isTokenPINEnabled
 	 */
-	protected PasswordDialog(Shell parentShell, boolean isTrustStoreEnabled, boolean isKeyStoreEnabled, boolean isTokenPINEnabled) {
+	protected PasswordDialog(Shell parentShell, boolean isKeyStoreEnabled, boolean isTokenPINEnabled) {
 		super(parentShell);
 		setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		setBlockOnOpen(true);
 		
-		this.isTrustStoreEnabled = isTrustStoreEnabled;
 		this.isKeyStoreEnabled = isKeyStoreEnabled;
 		this.isTokenPINEnabled = isTokenPINEnabled;
 	}
@@ -94,16 +89,6 @@ final class PasswordDialog extends Dialog {
 		GridLayout layout = new GridLayout(2, true);
 		container.setLayout(layout);
 
-		Label l1 = new Label(container, SWT.HORIZONTAL);
-		l1.setText("truststore password: ");
-		l1.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-		l1.setEnabled(isTrustStoreEnabled);
-		
-		trustStorePasswordText = new Text(container, SWT.SINGLE | SWT.PASSWORD | SWT.BORDER);
-		trustStorePasswordText.setTextLimit(15);
-		trustStorePasswordText.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
-		trustStorePasswordText.setEnabled(isTrustStoreEnabled);
-		
 		Label l2 = new Label(container, SWT.HORIZONTAL);
 		l2.setText("keystore password: ");
 		l2.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
@@ -125,9 +110,6 @@ final class PasswordDialog extends Dialog {
 		tokenPINText.setEnabled(isTokenPINEnabled);
 		
 		switch (focus) {
-		case TRUST:
-			trustStorePasswordText.forceFocus();
-			break;
 		case KEY:
 			keyStorePasswordText.forceFocus();
 			break;
@@ -146,7 +128,6 @@ final class PasswordDialog extends Dialog {
     	 * no entry. To make that happens the string values from the textfields have
     	 * to be checked for their lengths.
     	 */
-		trustStorePassword = zeroLengthCheck(trustStorePasswordText.getText());
 		keyStorePassword = zeroLengthCheck(keyStorePasswordText.getText());
 		tokenPIN = zeroLengthCheck(tokenPINText.getText());
 		
@@ -163,10 +144,6 @@ final class PasswordDialog extends Dialog {
     	return (s.trim().length() == 0) ? null : s.toCharArray();
     }
     
-    char[] getTrustStorePassword() {
-    	return trustStorePassword;
-    }
-    
     char[] getKeyStorePassword() {
     	return keyStorePassword;
     }
@@ -178,7 +155,6 @@ final class PasswordDialog extends Dialog {
     /** Removes references to sensitive data from this object.
      */
     void clearPasswords() {
-    	trustStorePassword = null;
     	keyStorePassword = null;
     	tokenPIN = null;
     }

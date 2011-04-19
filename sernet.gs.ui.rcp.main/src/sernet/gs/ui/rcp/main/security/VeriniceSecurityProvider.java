@@ -179,10 +179,6 @@ public final class VeriniceSecurityProvider extends Provider {
 		loadKeystore(ks, trustStoreFile, null);
 	}
 
-	char[] getTrustStorePassword(boolean wasWrong) {
-		return holder.getTrustStorePassword(wasWrong);
-	}
-
 	char[] getKeyStorePassword(boolean wasWrong) {
 		return holder.getKeyStorePassword(wasWrong);
 	}
@@ -262,37 +258,27 @@ public final class VeriniceSecurityProvider extends Provider {
 	 * 
 	 */
 	private class PasswordHolder {
-		private char[] trustStorePassword = null;
 		private char[] keyStorePassword = null;
 		private char[] tokenPIN = null;
 
 		private void showDialog(final PasswordDialog.Type t) {
-			final boolean tse = useFileAsTrustStore();
 			final boolean kse = useFileAsKeyStore();
 			final boolean tpe = isPKCS11LibraryEnabled();
 			
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					PasswordDialog d = new PasswordDialog(Display.getCurrent()
-							.getActiveShell(), tse, kse, tpe);
+							.getActiveShell(), kse, tpe);
 					
 					d.setFocus(t);
 					d.open();
 
-					trustStorePassword = d.getTrustStorePassword();
 					keyStorePassword = d.getKeyStorePassword();
 					tokenPIN = d.getTokenPIN();
 
 					d.clearPasswords();
 				}
 			});
-		}
-
-		char[] getTrustStorePassword(boolean wasWrong) {
-			if (wasWrong || trustStorePassword == null)
-				showDialog(PasswordDialog.Type.TRUST);
-
-			return trustStorePassword;
 		}
 
 		char[] getKeyStorePassword(boolean wasWrong) {
@@ -317,16 +303,12 @@ public final class VeriniceSecurityProvider extends Provider {
 		 * garbage collected.
 		 */
 		void reset() {
-			for(int i=0;i<trustStorePassword.length;i++)
-				trustStorePassword[i] = 0;
-			
 			for(int i=0;i<keyStorePassword.length;i++)
 				keyStorePassword[i] = 0;
 			
 			for(int i=0;i<tokenPIN.length;i++)
 				tokenPIN[i] = 0;
 			
-			trustStorePassword = null;
 			keyStorePassword = null;
 			tokenPIN = null;
 		}
@@ -492,12 +474,8 @@ public final class VeriniceSecurityProvider extends Provider {
 					c.keyStore = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
 				}
 				else {
-					c.maxAttempts = 3;
-					c.passwordHandler = new PasswordHandler() {
-						public void handle(PasswordSession session) {
-							session.setPassword(INSTANCE.getTrustStorePassword(session.wasWrong()));
-						}
-					};
+					// Although theoretically possible trust stores are supposed to be not password protected 
+					c.passwordHandler = null;
 					
 					// TODO: If the type would changeable one could load other storetypes as well (e.g. standardized
 					// pkcs#12 files)
