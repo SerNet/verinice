@@ -59,22 +59,23 @@ public class CryptoPreferencePage extends FieldEditorPreferencePage implements I
 		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_VERINICE_SSL_SECURITY_ENABLED, "use verinice infrastructure for SSL connections", fep));
 
 		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE, "source for certificates",
-				1, new String[][] { { "Datei", PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_FILE },
-						{ "PKCS#11-Bibliothek", PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_PKCS11_LIBRARY }
+				1, new String[][] { { "file", PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_FILE },
+						{ "PKCS#11 library", PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_PKCS11_LIBRARY }
 				}, fep));
 		
 		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_SOURCE, "source for keys",
-				1, new String[][] { { "keine", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_NONE },
-						{ "Datei", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_FILE },
-						{ "PKCS#11-Bibliothek", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_PKCS11_LIBRARY }
+				1, new String[][] { { "none", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_NONE },
+						{ "file", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_FILE },
+						{ "PKCS#11 library", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_PKCS11_LIBRARY }
 				}, fep));
 		
 		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_FILE, "path to the trust store", fep));
 		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_FILE, "path to the key store", fep));
 
-		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED, "use PKCS#11 library für generelle encryption", fep));
+		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED, "use PKCS#11 library for general encryption", fep));
 		
 		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_PATH, "path to PKCS#11 library", fep));
+		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_SERVER_AUTHENTICATION_VIA_CERTIFICATE_ENABLED, "use certificate for authentication", fep));
 	}
 
 	@Override

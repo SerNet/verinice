@@ -1183,4 +1183,8 @@
           </enablement>
        </decorator>
    </extension>
+   <extension point="org.eclipse.core.net.authenticator">
+     <authenticator class="sernet.gs.ui.rcp.main.security.VeriniceAuthenticator">
+     </authenticator>
+   </extension>
 </plugin>
