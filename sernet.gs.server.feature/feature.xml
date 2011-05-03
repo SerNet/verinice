@@ -564,7 +564,7 @@ Library.
          id="org.eclipse.ui.net"
          download-size="0"
          install-size="0"
-         version="1.2.1.r35x_20090812-1200"
+         version="1.2.1.r35x_20090812-1200_FIX_FOR_VERINICE"
          unpack="false"/>
 
    <plugin
