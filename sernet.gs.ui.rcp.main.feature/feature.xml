@@ -221,7 +221,6 @@ Library.
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.ui.net"/>
       <import plugin="com.springsource.net.sf.cglib"/>
       <import plugin="com.springsource.org.apache.log4j"/>
       <import plugin="com.springsource.org.hibernate"/>
