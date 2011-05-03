@@ -2280,12 +2280,6 @@ Library.
          version="1.1.1"/>
 
    <plugin
-         id="bouncycastle"
-         download-size="0"
-         install-size="0"
-         version="1.45.0"/>
-
-   <plugin
          id="gnumail"
          download-size="0"
          install-size="0"
@@ -2303,7 +2297,7 @@ Library.
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-         
+
    <plugin
          id="com.springsource.org.apache.commons.logging"
          download-size="0"
@@ -2317,5 +2311,11 @@ Library.
          install-size="0"
          version="2.4.0"
          unpack="false"/>
+
+   <plugin
+         id="bouncycastle"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
