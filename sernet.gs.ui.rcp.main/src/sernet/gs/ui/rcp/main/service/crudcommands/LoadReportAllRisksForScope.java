@@ -34,6 +34,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.AssetValueService;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Process;
@@ -67,6 +68,12 @@ public class LoadReportAllRisksForScope extends GenericCommand {
     public static final String PROP_ORG_RISKACCEPT_C = "org_riskaccept_confid";
     public static final String PROP_ORG_RISKACCEPT_I = "org_riskaccept_integ";
     public static final String PROP_ORG_RISKACCEPT_A = "org_riskaccept_avail";
+    
+    
+    // present for backwards compatibility, some reports still use the constants in this Class:
+    public static final int RISK_PRE_CONTROLS               = IRiskAnalysisService.RISK_PRE_CONTROLS;
+    public static final int RISK_WITH_IMPLEMENTED_CONTROLS  = IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS;
+    public static final int RISK_WITH_ALL_CONTROLS          = IRiskAnalysisService.RISK_WITH_ALL_CONTROLS;
         
     private Integer rootElmt;
     private List<List<String>> result;
@@ -74,8 +81,8 @@ public class LoadReportAllRisksForScope extends GenericCommand {
     private RiskMatrix riskMatrixI;
     private RiskMatrix riskMatrixA;
     
-    private transient Set<String> seenScenarios;
-    private transient Set<String> seenAssets;
+    private transient Set<Integer> seenScenarios;
+    private transient Set<Integer> seenAssets;
 
     private int tolerableC;
 
@@ -85,14 +92,22 @@ public class LoadReportAllRisksForScope extends GenericCommand {
 
     private boolean distinct;
 
+    private int riskType = IRiskAnalysisService.RISK_PRE_CONTROLS;
+   
+
     public LoadReportAllRisksForScope(Integer rootElement) {
         this(rootElement, false);
     }
 
-    public LoadReportAllRisksForScope(Integer rootElement, boolean distinct) {
+    public LoadReportAllRisksForScope(Integer rootElement, boolean distinct, int riskType) {
         this.rootElmt = rootElement;
         result = new ArrayList<List<String>>();
         this.distinct = distinct;
+        this.riskType = riskType;
+    }
+
+    public LoadReportAllRisksForScope(Integer rootElement, boolean distinct) {
+        this(rootElement, distinct, IRiskAnalysisService.RISK_PRE_CONTROLS);
     }
         
     public void execute() {
@@ -120,8 +135,8 @@ public class LoadReportAllRisksForScope extends GenericCommand {
 
             // load risk values from elements (following links to process, asset, scenario)
             
-            seenScenarios = new HashSet<String>();
-            seenAssets = new HashSet<String>();
+            seenScenarios = new HashSet<Integer>();
+            seenAssets = new HashSet<Integer>();
             
             LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt);
             command = getCommandService().executeCommand(command);
@@ -145,7 +160,7 @@ public class LoadReportAllRisksForScope extends GenericCommand {
                             // just add it:
                             result.add(makeRow(scenario, asset));
                         }
-                        else if (  ! (seenScenarios.contains(scenario.getTitle()) && seenAssets.contains(asset.getTitle())) )  {
+                        else if (  ! (seenScenarios.contains(scenario.getDbId()) && seenAssets.contains(asset.getDbId())) )  {
                             result.add(makeRow(scenario, asset));
                         }
 
@@ -163,25 +178,52 @@ public class LoadReportAllRisksForScope extends GenericCommand {
      * @param process
      * @param asset
      * @return
+     * @throws CommandException 
      */
-    private List<String> makeRow(CnATreeElement scenario, CnATreeElement asset) {
-        seenScenarios.add(scenario.getTitle());
-        seenAssets.add(asset.getTitle());
+    private List<String> makeRow(CnATreeElement scenario, CnATreeElement asset) throws CommandException {
+        seenScenarios.add(scenario.getDbId());
+        seenAssets.add(asset.getDbId());
 
         ArrayList<String> row = new ArrayList<String>();
         AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
+        RiskAnalysisServiceImpl raService = new RiskAnalysisServiceImpl();
         
-        int probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY);
+        int probability = 0;
+        switch (this.riskType) {
+        case IRiskAnalysisService.RISK_PRE_CONTROLS:
+            probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY);
+            break;
+        case IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS:
+            probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+            break;
+        case IRiskAnalysisService.RISK_WITH_ALL_CONTROLS:
+            probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+            break;
+        }
+        
+        Integer impactC = 0;
+        Integer impactI = 0;
+        Integer impactA = 0;
+        impactC = valueAdapter.getVertraulichkeit();
+        impactI = valueAdapter.getIntegritaet();
+        impactA = valueAdapter.getVerfuegbarkeit();
+        
+        Integer[] reducedImpact = raService.applyControlsToImpact(riskType, asset, impactC, impactI, impactA);
+        if (reducedImpact != null) {
+            impactC = reducedImpact[0];
+            impactI = reducedImpact[1];
+            impactA = reducedImpact[2];
+        }
         
         // prob. / impact:
         row.add(Integer.toString(probability));
-        row.add(Integer.toString(valueAdapter.getVertraulichkeit()));
-        row.add(Integer.toString(valueAdapter.getIntegritaet()));
-        row.add(Integer.toString(valueAdapter.getVerfuegbarkeit()));
+        row.add(Integer.toString(impactC));
+        row.add(Integer.toString(impactI));
+        row.add(Integer.toString(impactA));
         
-        int riskC = probability + valueAdapter.getVertraulichkeit();
-        int riskI = probability + valueAdapter.getIntegritaet();
-        int riskA = probability + valueAdapter.getVerfuegbarkeit();
+        int riskC = probability + impactC;
+        int riskI = probability + impactI;
+        int riskA = probability + impactA;
         
         // risk values:
         row.add(Integer.toString(riskC));
@@ -196,14 +238,16 @@ public class LoadReportAllRisksForScope extends GenericCommand {
         row.add(scenario.getTitle());
         row.add(asset.getTitle());
         
-        riskMatrixC.increaseCount(probability, valueAdapter.getVertraulichkeit());
-        riskMatrixI.increaseCount(probability, valueAdapter.getIntegritaet());
-        riskMatrixA.increaseCount(probability, valueAdapter.getVerfuegbarkeit());
+        riskMatrixC.increaseCount(probability, impactC);
+        riskMatrixI.increaseCount(probability, impactI);
+        riskMatrixA.increaseCount(probability, impactA);
         
         return row;
     }
 
   
+
+   
 
     /**
      * @return the result

@@ -68,16 +68,12 @@ public class RunRiskAnalysisCommand extends GenericCommand {
         for (Asset asset : assets) {
             ra.resetRisks(asset);
         }
-        
+
         // determine risk originating from scenarios for all linked assets:
         for (IncidentScenario scenario : scenarios) {
             ra.determineRisks(scenario);
         }
         
-        // finally apply controls to assets to reduce risk:
-        for (Asset asset : assets) {
-            ra.applyControls(asset);
-        }
     }
 
 }

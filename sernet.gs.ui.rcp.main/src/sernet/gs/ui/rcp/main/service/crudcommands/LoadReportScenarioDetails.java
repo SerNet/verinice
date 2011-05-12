@@ -29,8 +29,10 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IncidentScenario;
@@ -48,13 +50,12 @@ import sernet.verinice.model.iso27k.Vulnerability;
 public class LoadReportScenarioDetails extends GenericCommand {
     
     public static final String[] COLUMNS = new String[] {"relationName", "toAbbrev", "toElement", "riskC", "riskI", "riskA", "dbid",
-        "threatLevel", "vulnLevel", "threatTitle", "vulnTitle", "threatLevelDesc", "vulnLevelDesc"};
+        "threatLevel", "vulnLevel", "threatTitle", "vulnTitle", "threatLevelDesc", "vulnLevelDesc", 
+        "treatedRiskC", "treatedRiskI", "treatedRiskA", "scenarioDbId"};
 
     
     
     private LoadReportElementWithLinks loadReportElementWithLinks;
-
-
 
     private List<List<String>> result;
 
@@ -90,13 +91,54 @@ public class LoadReportScenarioDetails extends GenericCommand {
     /**
      * @param cnALink
      * @param row 
+     * @throws CommandException 
      */
-    private void addCols(CnALink cnALink, List<String> row) {
+    private void addCols(CnALink cnALink, List<String> row) throws CommandException {
         CnATreeElement scenario;
+        CnATreeElement asset = null;
+        
         if (cnALink.getDependant().getTypeId().equals(IncidentScenario.TYPE_ID)) {
             scenario = cnALink.getDependant();
+            if (cnALink.getDependency().getTypeId().equals(Asset.TYPE_ID)) {
+                asset = cnALink.getDependency();
+            }
         } else {
             scenario = cnALink.getDependency();
+            if (cnALink.getDependant().getTypeId().equals(Asset.TYPE_ID)) {
+                asset = cnALink.getDependant();
+            }
+        }
+        
+        // get the reduced probability of the scenario:
+        int probabilityWithControls = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+        
+        // initialize risk with base risk - with no controls:
+        Integer treatedRiskC = Integer.parseInt(row.get(3));
+        Integer treatedRiskI = Integer.parseInt(row.get(4));
+        Integer treatedRiskA = Integer.parseInt(row.get(5));
+        
+        // get all controls for the asset and reduce the impact of the asset and thereby the risk:
+        if (asset != null) {
+            Integer impactC = 0;
+            Integer impactI = 0;
+            Integer impactA = 0;
+            AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
+            RiskAnalysisServiceImpl ras = new RiskAnalysisServiceImpl();
+            
+            impactC = valueAdapter.getVertraulichkeit();
+            impactI = valueAdapter.getIntegritaet();
+            impactA = valueAdapter.getVerfuegbarkeit();
+            
+            Integer[] reducedImpact = ras.applyControlsToImpact(IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
+            if (reducedImpact != null) {
+                impactC = reducedImpact[0];
+                impactI = reducedImpact[1];
+                impactA = reducedImpact[2];
+            }
+            
+            treatedRiskC = probabilityWithControls + impactC;
+            treatedRiskI = probabilityWithControls + impactI;
+            treatedRiskA = probabilityWithControls + impactA;
         }
         
         HUITypeFactory hui = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
@@ -149,6 +191,10 @@ public class LoadReportScenarioDetails extends GenericCommand {
         row.add(vulnTitle);
         row.add(threatDesc);
         row.add(vulnDesc);
+        row.add(treatedRiskC.toString());
+        row.add(treatedRiskI.toString());
+        row.add(treatedRiskA.toString());
+        row.add(scenario.getDbId().toString());
     }
 
 

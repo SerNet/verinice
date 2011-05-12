@@ -17,6 +17,9 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 
@@ -64,6 +67,10 @@ public interface IRiskAnalysisService {
     public static final String PROP_CONTROL_EFFECT_A ="control_effectiveness_availability";
     public static final String PROP_CONTROL_EFFECT_P ="control_eff_probability";
     
+    public static final int RISK_PRE_CONTROLS = 0;
+    public static final int RISK_WITH_IMPLEMENTED_CONTROLS = 1;
+    public static final int RISK_WITH_ALL_CONTROLS = 2;
+    
 
     /**
      * Determine probability for this scenario, based on threat and vulnerability.
@@ -86,10 +93,16 @@ public interface IRiskAnalysisService {
     void resetRisks(Asset asset);
 
     /**
-     * Reduce asset's risk by all applicable control effectiveness values.
+     * Apply the controls linked to the given asset to the given business impact values.
+     *  
+     * @param riskType
      * @param asset
+     * @param impactC
+     * @param impactI
+     * @param impactA
+     * @throws CommandException
      */
-    void applyControls(Asset asset);
+    public Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA) throws CommandException;
 
 }
 
